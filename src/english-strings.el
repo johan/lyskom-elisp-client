@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.276 2003-04-05 19:26:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.277 2003-04-05 20:02:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.276 2003-04-05 19:26:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.277 2003-04-05 20:02:29 byers Exp $"))
 
 
 ;;; ================================================================
@@ -602,6 +602,11 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
     (pers-is-member-of-conf-2 . "Number of unread: %#2D (last access %#1s)\n")
     (Unknown-number . "Unknown number")
+    (text-to-check-will-read-for . "...for membership in recipients of text: ")
+    (pers-to-check-will-read-for . "Person to check: ")
+    (pers-is-member-of-rcpt . "Yes, %#1P is a member of at least one recipient to text %#2n.\n")
+    (pers-is-passive-member-of-rcpt . "Well, %#1P is only a passive member of at least one recipient of %#2n.\n")
+    (pers-is-not-member-of-rcpt . "No, %#1P is not a member of any recipient of %#2n.\n")
 
     ; From commands2.el:
 
@@ -2087,6 +2092,8 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-stop-keep-alive      . "Stop keeping connection alive")
 
     (kom-is-person-member-of-conference . "Check (if person is a) member (of conference)")
+    (kom-will-person-read-text . "Check (if person will) read (text)")
+
     (kom-change-conf-faq      . "Change FAQ")
 
     (kom-make-review-mark-as-read . "Review marks as read")

@@ -1,5 +1,8 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 742:
+	* commands2.el (kom-will-person-read-text): New command.
+
 	Fix bug 950:
 	* names.el (lyskom-nameday): Allow a list of nameday lists.
 	(lyskom-nameday-2): Added parameter show-list-name.
