@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.21 1996-02-21 19:48:32 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.22 1996-02-23 12:29:33 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.21 1996-02-21 19:48:32 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.22 1996-02-23 12:29:33 byers Exp $\n"))
 
 
 
@@ -273,7 +273,9 @@ overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
 as interactive LysKOM command and HINT is a function to call. When a button
 is generated while the command COMMAND is being executed, HINT is used as a 
 hint for a new default action. The user has the option to ignore or used the 
-hint.")
+hint.
+
+Also see the function \"kom-add-button-action\".")
 
 
 (defvar lyskom-text-buttons

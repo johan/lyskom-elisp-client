@@ -1,3 +1,8 @@
+Fri Feb 23 13:27:46 1996  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-buttons.el: Lade till lyskom-add-button-action och
+ 	lyskom-set-default-action
+
 Sun Feb 18 06:30:46 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* services.el (blocking-do): Återställ lyskom-quit-flag på rätt
