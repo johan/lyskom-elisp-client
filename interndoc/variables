@@ -1,0 +1,87 @@
+
+
+                          DEFINING VARIABLES
+                             David Byers
+
+
+    This file explains how to define global variables in LysKOM so
+    that they behave the way they are supposed to. It also explains
+    how to define variables whose values depend on the current
+    language.
+
+    All developers need to know this.
+
+
+
+    Variables should be named kom-something or lyskom-something. The
+    kom prefix is for variables that the user is expected to play
+    with. These should also be available in the customization buffer.
+    The lyskom prefix is for internal variables.
+
+    Define global variables using the def-kom-var macro:
+
+        (def-kom-var NAME VALUE &rest PROPERTIES)
+
+    NAME is the name of the variable and VALUE is its initial value,
+    just like in defvar. Unlike defvar, you must provide an initial
+    value. PROPERTIES are properties of the variable. A string
+    property is the documentation for the variable, a symbol is one of 
+    the predefined properties listed below and a list is a widget
+    specification for the variable (see below).
+
+    The following predefined properties are available:
+
+    server      Save the variable in the elisp block of the user's
+                user-area. All user-configurable variables should have 
+                the server property specified, even if it makes more
+                senst to save the value locally, since recent versions 
+                of the client allow the user to specify which
+                variables are stored in the server and which are
+                stored locally. This property implies the local
+                property.
+
+    local       The variable is buffer-local.
+
+    inherited   The value of the variable is inherited from the parent 
+                buffer when the LysKOM buffer management functions are 
+                used to create a new buffer. The bindings are made
+                buffer local. This property implies the protected and
+                local properties.
+
+    protected   The variable is marked as permanent local, and is not
+                affected by kill-all-local-variables. This property
+                implies the local property.
+
+    minibuffer  The variable is inherited as a local variable in the
+                minibuffer. Use this for variables that need to be
+                available to minibuffer hooks and the like.
+
+    server-hook The variable is a hook function that is stored in the
+                server.
+
+    local-hook  The variable is a hook variable that is to be made
+                buffer local.
+
+
+    An element of the PROPERTIES argumens to def-kom-var that is a
+    list is considered a widget specification for the variable.
+    Currently all widget specifications are listed in option-edit.el
+    rather than with the variable definitions, so this functionality
+    is not tested. Feel free to test it or even to move the widget
+    specifications from option-edit.el to the definitions of the
+    corresponding variables.
+
+
+
+    If you need a variable whose value is language-dependent, use the
+    lyskom-language-var function to set its initial value. The
+    variable still needs to be defined with def-kom-var, but the
+    default value will be replaced by the language-specific value with 
+    the language is set.
+
+        (lyskom-language-var NAME LANGUAGE VALUE)
+
+    NAME is the unquoted name of the variable, as in def-kom-var.
+    LANGUAGE is the language the value is valid for, also an unquoted
+    symbol. VALUE is the default value of the variable for the
+    specified language. The VALUE parameter is evaluated.
