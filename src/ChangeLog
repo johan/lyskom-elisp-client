@@ -1,3 +1,9 @@
+2003-01-08  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* Makefile (DEBIANCLIENTVERSIONSUFFIX): New variable.
+	(debian-packages): Use DEBIANCLIENTVERSIONSUFFIX to suffix the
+	client version.
+
 2003-01-07  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 962:
