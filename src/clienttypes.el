@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.25 2004-07-19 20:11:57 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.26 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.25 2004-07-19 20:11:57 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.26 2004-07-20 19:28:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -144,18 +144,30 @@ The range of valid values for N is [0, num-entries - 1]."
 
 (defsubst set-read-list-empty (read-list)
   "Empty READ-LIST destructively."
-  (setcdr read-list nil))
-
+  (let ((tmp (cdr read-list)))
+    (setcdr read-list nil)
+    (lyskom-traverse read-info tmp
+      (when (eq 'CONF (read-info->type read-info))
+        (lp--maybe-update-unreads (conf-stat->conf-no
+                                   (read-info->conf-stat read-info)))))))
 
 (defsubst set-read-list-del-first (read-list)
   "Delete the first entry of READ-LIST if there is one."
-  (if (cdr read-list)
-      (setcdr read-list (cdr (cdr read-list)))))
+  (let ((el (car (cdr read-list))))
+    (if (cdr read-list)
+        (setcdr read-list (cdr (cdr read-list))))
+    (when (and el (eq (read-info->type el) 'CONF))
+      (lp--maybe-update-unreads (conf-stat->conf-no
+                                 (read-info->conf-stat el))))))
 
 
 (defsubst read-list-enter-first (read-info read-list)
   "Enter READ-INFO first into READ-LIST."
-  (setcdr read-list (cons read-info (cdr read-list))))
+  (setcdr read-list (cons read-info (cdr read-list)))
+  (when (eq 'CONF (read-info->type read-info))
+    (lp--maybe-update-unreads (conf-stat->conf-no
+                               (read-info->conf-stat read-info))))
+  )
 
 
 (defun read-list-enter-text (text-no recipient rlist)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.63 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: async.el,v 44.64 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.63 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: async.el,v 44.64 2004-07-20 19:28:10 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -380,10 +380,10 @@ this function shall be with current-buffer the BUFFER."
           ;; Already a member. Perhaps the priority changed.
           ;; Update the cache. The reading list is probably also
           ;; not quite correct since the priority might have changed
-          ;; FIXME: Maybe fix this.
 
           (cur-mship
-           (lyskom-replace-membership membership))
+           (lyskom-replace-membership membership)
+           (lyskom-sort-to-do-list))
 
           ;; Not a member. Completely new. Deal with it.
           (t (lyskom-add-membership membership conf-no))))))
