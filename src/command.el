@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.27 2000-05-26 10:49:38 byers Exp $
+;;;;; $Id: command.el,v 44.28 2000-05-29 10:45:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.27 2000-05-26 10:49:38 byers Exp $\n"))
+	      "$Id: command.el,v 44.28 2000-05-29 10:45:30 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -138,7 +138,7 @@
              (setq forms (cons interactive-decl forms))
              (setq interactive-decl '(interactive))))
 
-  (let ((rsym (intern (concat (format "%S-running-as-kom-command" cmd))))
+  (let ((rsym (intern (format "%S-running-as-kom-command" cmd)))
         (bufsym (intern (format "%S-start-buffer" cmd))))
     `(defun ,cmd ,args
        ,doc
@@ -146,7 +146,7 @@
        (let ((,rsym nil))
          (condition-case nil
              (progn (lyskom-start-of-command ',cmd)
-                    (setq ,rsym) t)
+                    (setq ,rsym t))
            (error nil))
          (let ((,bufsym (current-buffer)))
            (unwind-protect
