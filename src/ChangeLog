@@ -1,3 +1,12 @@
+2002-02-25  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* commands2.el (lyskom-do-list-summary): Print Written/Skrivet
+	instead of Date/Datum in review lists.
+
+	* swedish-strings.el (lyskom-message): Datum --> Skrivet.
+
+	* english-strings.el (lyskom-message): Date --> Written.
+
 2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* copyright: Ditto.

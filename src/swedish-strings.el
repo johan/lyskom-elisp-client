@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.198 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.199 2002-02-25 18:14:18 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.198 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.199 2002-02-25 18:14:18 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -666,7 +666,7 @@ Meddelandet du försökte sända till %#1M var:
 
     (have-to-be-in-conf-with-unread . "Du måste gå till ett icketomt möte först.\n")
     (Texts . "Inlägg")
-    (Date . "Datum")
+    (Written . "Skrivet")
     (Lines . "Rad.")
     (Author . "Författare")
     (Subject . "Ärende")
