@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 22
+Unused-Bug-Id: 25
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -421,4 +421,56 @@ att den säger 'Personen var kanske inte inloggad' när meddelandet var
 för långt?
 ----------------------------------------------------------------
 Läsa nästa text - 
+
+Id: 22
+Summary: who-buffer must not be deleted.
+Version: 0.38
+Created: linus: Mon Jan 10 20:24:51 1994
+Currently handled by: 
+Severity: 1
+Priority: 0
+Difficulty: 8
+Last edit: linus: Mon Jan 10 20:24:51 1994
+Reported by: Lars Aronsson <aronsson@doceye.ivab.se>
+Site: doceye.ivab.se
+Associated mails:
+	aronsson: <m0pJICx-00006NC@doceye.ivab.se>
+	mittsvar: <199401101937.UAA05539@bodil>
+End mails.
+---
+
+Id: 23
+Summary: Manual should point out that the who-buffer must not be deleted.
+Version: 0.38
+Created: linus: Mon Jan 10 20:26:05 1994
+Currently handled by: 
+Severity: 7
+Priority: 9
+Difficulty: 0
+Last edit: linus: Mon Jan 10 20:26:05 1994
+Reported by: Lars Aronsson <aronsson@doceye.ivab.se>
+Site: doceye.ivab.se
+Associated mails:
+	aronsson: <m0pJICx-00006NC@doceye.ivab.se>
+	mittsvar: <199401101937.UAA05539@bodil>
+End mails.
+---
+
+Id: 24
+Summary: Variabelbindningarna lite d}liga.
+Version: 0.37
+Created: linus: Mon Jan 10 21:07:29 1994
+Currently handled by: 
+Severity: 9
+Priority: 9
+Difficulty: 9
+Closed: linus: Mon Jan 10 21:07:34 1994
+Last edit: linus: Mon Jan 10 21:07:29 1994
+Reported by: Lars Aronsson <aronsson@doceye.ivab.se>
+Site: doceye.ivab.se
+Associated mails:
+	aronsson: <m0pJSZh-00000zC@doceye.ivab.se>
+	mittsvar: <199401102012.VAA05602@bodil>
+End mails.
+---
 
