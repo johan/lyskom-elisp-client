@@ -1,5 +1,14 @@
 2004-02-22  David Byers  <byers@lysator.liu.se>
 
+	Clean up for XEmacs:
+	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
+	Don't bind pers-stat. It's not used.
+	(smiley-region): Don't bind plaintext. It's not used.
+	(lyskom-fill-message): Suppress warning about variable timer.
+
+	* defvar.el (def-kom-var): Don't ever do a null doc-string. XEmacs
+	will complain quite loudly.
+
 	Fix bug 1125:
 	* commands1.el (lyskom-read-cross-reference-and-get-aux-item): Use
 	lyskom-a-or-b-or-c-p instead of completing-read.
