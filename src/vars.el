@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.5 1991-09-16 18:03:07 linus Exp $
+;;;;; $Id: vars.el,v 35.6 1991-09-29 03:37:40 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.5 1991-09-16 18:03:07 linus Exp $\n"))
+	      "$Id: vars.el,v 35.6 1991-09-29 03:37:40 ceder Exp $\n"))
 
 
 
@@ -151,7 +151,20 @@ otherwise => the new conf is entered after all conferences.")
 (defvar lyskom-prompt-executing-default-command-text ". "
   "*Text to end the prompt while the default-commands is executing.")
 
+(defvar kom-show-personal-messages-in-buffer t
+  "*Buffer to show personal messages in.
+If nil, discard them.
+If t, insert them in the *kom* buffert.
+If non-nil and non-t this should be a buffer or a name of a (possibly
+nonexistent) buffer in which the message is inserted.")
 
+(defvar kom-pop-personal-messages nil
+  "*Non-nil means pop up a buffer with personal messages as they arrive.
+kom-show-personal-messages-in-buffer decides which buffer to pop.")
+
+(defvar kom-ding-on-personal-messages t
+  "*Non-nil means ding as personal messages arrive.
+Non-nil and non-t means only ding when they really are personal.")
 
 (defconst lyskom-elisp-variables '(
   kom-do-when-done
@@ -421,6 +434,14 @@ The hook is run with current-buffer the lyskom buffer, not the who-info-buffer."
 (defvar lyskom-login-hook nil
   "*Hook to run when we have logged in. Other purposes than kom-do-when-starting.
 This could be set in the user-area.")
+
+(defvar lyskom-personal-message-hook nil
+  "*Hook to run when a personal message is received.
+When the hook is run 'sender' is bound to the pers-stat of the sender
+of the message (or possibly nil), 'recipient' is 0 if the message is a
+public message and otherwise the pers-no of the user, and 'message' is
+a string that holds the message.")
+
 
 (defvar lyskom-executing-command t
   "Non-nil means the client is executing a command.
