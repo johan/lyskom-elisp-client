@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.235 2004-02-29 22:43:30 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.236 2004-05-03 15:12:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.235 2004-02-29 22:43:30 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.236 2004-05-03 15:12:00 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2918,12 +2918,13 @@ See `kom-save-text-body' for an alternative to this command."
 
 (defun lyskom-save-text (text-stat text filename)
   "Save text in TEXT-STAT and TEXT to FILENAME."
-  (let ((buf (lyskom-get-buffer-create 'temp "*kom*-text" t))
-        (kom-print-relative-dates nil)
-        (kom-deferred-printing nil))
+  (let* ((kom-print-relative-dates nil)
+         (kom-deferred-printing nil)
+
+         ;; This has to come last
+         (buf (lyskom-get-buffer-create 'temp "*kom*-text" t)))
     (save-excursion
       (set-buffer buf)
-      (setq kom-deferred-printing nil)
       (erase-buffer)
       (lyskom-view-text (text-stat->text-no text-stat))
       (append-to-file (point-min) (point-max) filename))))

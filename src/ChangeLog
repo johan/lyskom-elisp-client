@@ -1,3 +1,68 @@
+2004-05-02  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-eq-dash): New function.
+	(lyskom-tnpa-prompt): New function.
+	(lyskom-tnpa-valid): New function.
+	(lyskom-tnpa-add-property): New function.
+	(lyskom-tnpa-text-no): New function.
+	(lyskom-tnpa-text-property): New function.
+	(lyskom-tnpa-apply-strategy): New function.
+	(lyskom-read-text-no-prefix-arg): Reimplementation.
+	(lyskom-maybe-get-commented-text): Emptied parameter list.
+	(lyskom-maybe-get-footnoted-text): Ditto.
+	(lyskom-get-explicit-text): Removed.
+	(lyskom-get-command-specified-default-text): Removed.
+	(lyskom-get-last-read-text): Removed parameters.
+	(lyskom-get-previous-text): Ditto. Get value from LysKOM buffer,
+	not current buffer.
+	(lyskom-get-text-at-point): Removed parameters. No error message
+	returned from here.
+	(lyskom-get-text-at-point-ancestor): Removed optional parameters.
+	No error reporting by returning strings; signal instead.
+	(lyskom-prompt-for-text-no): Removed.
+	(lyskom-get-last-text-written-by-me): Removed optional parameters.
+	(lyskom-get-last-written-or-read-by-me): Ditto.
+	(lyskom-get-text-above-point): Ditto.
+	(lyskom-get-text-below-point): Ditto.
+	(lyskom-get-text-below-point): New heuristic. Positiv arg higher
+	than 20 is treated literally.
+
+	* vars.el.in (kom-pick-text-no-strategy-alist): New format.
+	(kom-old-farts-text-prompt-strategy): New format.
+
+	* commands2.el (kom-add-no-comments): Removed params from
+	lyskom-read-text-no-prefix-arg.
+	(kom-add-private-answer): Ditto.
+	(kom-add-request-confirm): Ditto.
+	(kom-will-person-read-text): Ditto.
+	(kom-compare-texts): Ditto.
+	(kom-diff-texts): Ditto.
+
+	* commands1.el (kom-view-previous-commented-text): Removed params
+	from lyskom-read-text-no-prefix-arg.
+	(kom-unread-previous-commented-text): Ditto.
+	(kom-write-footnote): Ditto.
+	(kom-comment-previous): Ditto.
+	(kom-private-answer-previous): Ditto.
+	(kom-set-presentation): Ditto.
+	(kom-set-motd-text): Ditto.
+	(lyskom-add-cross-reference): Ditto.
+
+2004-04-28  David Byers  <byers@lysator.liu.se>
+
+	* services.el (initiate-get-part-of-membership): Get the first
+	read range so we can figure out the last read text.
+
+2004-04-27  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-button-unread-text): New function.
+
+	* vars.el.in (lyskom-text-buttons): Added rtsp urls.
+
+2004-04-11  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-save-text): Fix bug 1307.
+
 2004-04-13  Johan Sundström  <jhs@lysator.liu.se>
 
 	* english-strings.el, swedish-strings.el (global): Give a name for

@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.372 2004-04-13 14:39:50 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.373 2004-05-03 15:12:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.372 2004-04-13 14:39:50 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.373 2004-05-03 15:12:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1796,6 +1796,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     ;; Button actions
 
     (lyskom-button-view-text-action . "Återse texten")
+    (lyskom-button-unread-text-action . "Oläsmarkera texten")
     (lyskom-button-copy-text-no-action . "Kopiera inläggsnumret")
     (lyskom-button-review-converted-action . "Återse konverterat")
     (lyskom-button-review-noconversion-action . "Återse omodifierat")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.204 2004-02-27 18:55:43 byers Exp $
+;;;;; $Id: commands2.el,v 44.205 2004-05-03 15:11:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.204 2004-02-27 18:55:43 byers Exp $\n"))
+              "$Id: commands2.el,v 44.205 2004-05-03 15:11:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2441,8 +2441,7 @@ someone to shut up and get out after making them listen to you).
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no nil
-                                                     'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
     ;; Make sure there is a text there in the first place
@@ -2485,8 +2484,7 @@ Note that such requests are advisory; clients may ignore them.
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no nil
-                                                     'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no)))
   (if text-no
       (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
@@ -2533,8 +2531,7 @@ appropriately.
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-text-no-prefix-arg
-                      'what-request-confirm-no nil 'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-request-confirm-no)))
   (if text-no
       (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
@@ -2720,8 +2717,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-conf-no 'pers-to-check-will-read-for
                                           '(all) nil nil t)
-                     (lyskom-read-text-no-prefix-arg 'text-to-check-will-read-for
-                                                     t)))
+                     (lyskom-read-text-no-prefix-arg 'text-to-check-will-read-for)))
   (let* ((text-stat (blocking-do 'get-text-stat text-no))
          (recipients (and text-stat (lyskom-text-recipients text-stat)))
          (result nil))
@@ -2815,7 +2811,7 @@ to the first text that NEW is a comment or footnote to.
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg') for the NEW text."
   (interactive
-   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
+   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new))
 	  (new-stat (blocking-do 'get-text-stat n))
 	  (o (lyskom-read-number
 	      'diff-what-text-old
@@ -2870,7 +2866,7 @@ to the first text that NEW is a comment or footnote to.
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg') for the NEW text."
   (interactive
-   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
+   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new))
 	  (new-stat (blocking-do 'get-text-stat n))
 	  (o (lyskom-read-number
 	      'diff-what-text-old
