@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.211 2003-08-04 07:49:31 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.212 2003-08-13 21:14:00 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.211 2003-08-04 07:49:31 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.212 2003-08-13 21:14:00 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -4218,12 +4218,16 @@ One parameter - the prompt string."
     nil
 
   ;; Set up default language
-  (let ((languages (list kom-default-language
+  (let ((languages (append
+                    (if (listp kom-default-language)
+                        kom-default-language
+                      (list kom-default-language))
+                    (list
                          (lyskom-language-from-environment "KOMLANGUAGE")
                          (lyskom-language-from-environment "LC_ALL")
                          (lyskom-language-from-environment "LC_MESSAGES")
                          (lyskom-language-from-environment "LANG")
-                         (car (car (last lyskom-languages))))))
+                         (car (car (last lyskom-languages)))))))
     (lyskom-traverse lang languages
       (when (assq lang lyskom-languages)
         (setq kom-default-language lang

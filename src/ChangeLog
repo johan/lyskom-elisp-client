@@ -1,3 +1,8 @@
+2003-08-13  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-is-loaded): Handle the case when
+	kom-default-language is a list.
+
 2003-08-13  David Byers  <byers@lysator.liu.se>
 
 	Work on bug 1075:
