@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 13
+Unused-Bug-Id: 16
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -236,4 +236,49 @@ End mails.
 ---
 Solution: Don't search "backward" for bigger article number.
 	  Don't search "forward" for smaller article number.
+
+Id: 13
+Summary: Forgets that there is nothing to do after unsubscribing a conference
+Created: linus: Tue Aug 11 15:32:45 1992
+Currently handled by: 
+Severity: 7
+Priority: 3
+Difficulty: 8
+Last edit: linus: Tue Aug 11 15:32:45 1992
+Reported by: bellman
+Site: 
+Associated mails:
+	compiled bug-info: <199208091543.AA28631@lysator.liu.se>
+End mails.
+---
+
+Id: 14
+Summary: lyskom-who-info-buffer-is-on is not in the documentation
+Created: linus: Tue Aug 11 15:34:05 1992
+Currently handled by: 
+Severity: 4
+Priority: 1
+Difficulty: 0
+Last edit: linus: Tue Aug 11 15:36:16 1992
+Reported by: mattias olofsson (lysit)
+Site: 
+Associated mails:
+End mails.
+---
+Fix bug 15 first.
+
+Id: 15
+Summary: When turning lyskom-who-info-buffer-is-on t the client hangs.
+Created: linus: Tue Aug 11 15:35:45 1992
+Currently handled by: 
+Severity: 8
+Priority: 4
+Difficulty: 7
+Last edit: linus: Tue Aug 11 15:36:06 1992
+Reported by: linus
+Site: 
+Associated mails:
+End mails.
+---
+See also bug 14. This should be fixed first.
 
