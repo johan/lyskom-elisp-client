@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.4 1996-10-11 01:05:02 davidk Exp $
+;;;;; $Id: commands2.el,v 44.5 1996-10-11 01:16:03 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.4 1996-10-11 01:05:02 davidk Exp $\n"))
+	      "$Id: commands2.el,v 44.5 1996-10-11 01:16:03 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -652,9 +652,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   "Print the number of unread articles to the user."
   (interactive "P")
 
-  ;; This is not really necessary
-  (sit-for 0)
-  (lyskom-prefetch-all-confs)
+  (unless kom-allow-incompleteness
+    (sit-for 0)
+    (lyskom-prefetch-all-confs))
 
   (let ((num-arg (cond
                   ((numberp num) num)
