@@ -1,3 +1,10 @@
+2003-03-08  Per Cederqvist  <ceder@ceder.dyndns.org>
+	
+	kom-review-backward always raised an error.
+
+	* review.el (kom-review-backward): Extract the list of texts to
+	see with text-list->texts, not cdr.  Using cdr no longer works.
+
 2003-03-04  Johan Sundström  <jhs@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-sv-mode-map): [ä], [Ä], [å] and [Å] are
