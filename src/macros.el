@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 40.0 1996-03-26 08:31:41 byers Exp $
+;;;;; $Id: macros.el,v 40.1 1996-03-26 14:14:00 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 40.0 1996-03-26 08:31:41 byers Exp $\n"))
+	      "$Id: macros.el,v 40.1 1996-03-26 14:14:00 byers Exp $\n"))
 
 
 
@@ -59,6 +59,18 @@ Value returned is always nil."
 
 (put 'lyskom-traverse 'edebug-form-spec
      '(sexp form body))
+
+
+;;; Compatibility definition of save-selected-window (19.28) +++
+
+(if (not (fboundp 'save-selected-window))
+    (defmacro save-selected-window (&rest body)
+      "Execute BODY, then select the window that was selected before BODY."
+      (list 'let
+            '((save-selected-window-window (selected-window)))
+            (list 'unwind-protect
+                  (cons 'progn body)
+                  (list 'select-window 'save-selected-window-window)))))
 
 
 ;;;; lyskom-save-excursion Does not save point and mark.

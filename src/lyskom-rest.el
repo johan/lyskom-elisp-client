@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.0 1996-03-26 08:31:37 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.1 1996-03-26 14:13:56 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.0 1996-03-26 08:31:37 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.1 1996-03-26 14:13:56 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1294,6 +1294,18 @@ A symbol other than t means call it as a function."
            (error (message "Error in beep function")
                   (beep))))
         (t (beep))))
+
+
+(if (not (fboundp 'facep))
+    (progn
+      (defsubst internal-facep (x)
+        (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
+
+      (defun facep (x)
+        "Return t if X is a face name or an internal face vector."
+        (and (or (internal-facep x)
+                 (and (symbolp x) (assq x global-face-data)))
+             t))))
 
 (defun lyskom-face-default-p (f1)
   "Return t if f1 is undefined or the default face."
