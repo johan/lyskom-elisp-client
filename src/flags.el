@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.19 1999-12-03 15:33:21 byers Exp $
+;;;;; $Id: flags.el,v 44.20 1999-12-05 22:42:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,207 +34,15 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.19 1999-12-03 15:33:21 byers Exp $\n"))
+	      "$Id: flags.el,v 44.20 1999-12-05 22:42:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
 
 
-;;; Author: Linus Tolke
-
-;;; Dummy defun of original-user-variable-p to eliminate compiler warning.
-
-;;;; (defun original-user-variable-p (x) nil)
-;;;; 
-;;;; (fset 'original-user-variable-p
-;;;; 	   (symbol-function 'user-variable-p))
-;;;; 
-;;;; 
-;;;; (defun lyskom-user-variable-p (symbol)
-;;;;   (and (original-user-variable-p symbol)
-;;;; 	    (or (string-match "^kom-"
-;;;; 			      (symbol-name symbol))
-;;;; 		(string-match "^lyskom-"
-;;;; 			      (symbol-name symbol)))))
-;;;; 
-;;;; (defun lyskom-Edit-options-modify (modfun)
-;;;;   (save-excursion
-;;;; 	(let ((inhibit-read-only t)
-;;;; 	      var pos tmp)
-;;;; 	  (re-search-backward "^;; \\|\\`")
-;;;; 	  (forward-char 3)
-;;;; 	  (setq pos (point))
-;;;; 	  (save-restriction
-;;;; 	    (narrow-to-region pos (progn (end-of-line) (1- (point))))
-;;;; 	    (goto-char pos)
-;;;; 	    (setq var (read (current-buffer))))
-;;;; 	  (goto-char pos)
-;;;; 	  (forward-line 1)
-;;;; 	  (forward-char 1)
-;;;; 	  (save-excursion
-;;;; 	    (set var (setq tmp (funcall modfun var)))
-;;;; 	    (if (boundp 'lyskom-buffer)
-;;;; 		(set-buffer lyskom-buffer))
-;;;; 	    (set var tmp))
-;;;; 	  (kill-sexp 1)
-;;;; 	  (prin1 (symbol-value var) (current-buffer)))))
-;;;; 
 (defvar lyskom-options-text nil
   "Text mass when reading options.")
-;;;; 
-;;;; (def-kom-command kom-save-options ()
-;;;;   "Save options that have been set somewhere."
-;;;;   (interactive)
-;;;;   (lyskom-save-options (or lyskom-buffer 
-;;;; 				(current-buffer))
-;;;; 			    (lyskom-get-string 'saving-settings)
-;;;; 			    (lyskom-get-string 'saving-settings-done)
-;;;; 			    (lyskom-get-string 'could-not-save-options)))
-;;;; 
-;;;; 
-;;;; (lyskom-external-function edit-options)
-;;;; (defun kom-edit-options ()
-;;;;   "Edit options for the lyskom client."
-;;;;   (interactive)
-;;;;   (fset 'user-variable-p
-;;;; 	     (symbol-function 'lyskom-user-variable-p))  
-;;;;   (let ((buf (current-buffer))
-;;;; 	     (curwin (current-window-configuration)))
-;;;; 	 (edit-options)
-;;;; 	 (fset 'Edit-options-modify
-;;;; 	       (symbol-function 'lyskom-Edit-options-modify))
-;;;; 	 (make-local-variable 'lyskom-buffer)
-;;;; 	 (make-local-variable 'lyskom-edit-return-to-configuration)
-;;;; 	 (setq lyskom-buffer buf)
-;;;; 	 (setq lyskom-edit-return-to-configuration curwin)
-;;;; 	 (local-set-key "\C-c\C-c" 'kom-edit-options-send)
-;;;; 	 (local-set-key "\C-c\C-k" 'kom-edit-quit)
-;;;; 	 )
-;;;;   (fset 'user-variable-p
-;;;; 	     (symbol-function 'original-user-variable-p)))
-;;;; 
-;;;; ;;;============================================================
-;;;; ;;;  kom-edit-options-send
-;;;; ;;;
-;;;; ;;;  Finish an edit options session.
-;;;; ;;;  This function must be kept in sync with lyskom-save-options
-;;;; ;;;  below.
-;;;; ;;;
-;;;; 
-;;;; (defun kom-edit-options-send ()
-;;;;   "Finishes the edit options and sends the new settings to the server."
-;;;;   (interactive)
-;;;;   ; The check for changes is not a very good one.
-;;;;   (cond
-;;;; 	((not (eq major-mode 'Edit-options-mode))
-;;;; 	 (error "You are not in the correct buffer. (Couldn't fool me this time."))
-;;;; 	((buffer-modified-p (current-buffer))
-;;;; 	 ;lets do it.
-;;;; 	 ;lyskom-global-variables is a list of variables in the common block.
-;;;; 	 ;lyskom-elisp-variables is a list of varibles in the elisp block.
-;;;; 	 (let* ((optbuf (current-buffer))
-;;;; 		(print-readably t)
-;;;; 		(common-block nil)
-;;;; 		(elisp-block nil))
-;;;; 	   (save-excursion
-;;;; 	     (set-buffer lyskom-buffer)
-;;;; 	     (setq
-;;;; 	      common-block 
-;;;; 	       (concat
-;;;; 		(mapconcat (function
-;;;; 			    (lambda (var)
-;;;; 			      (lyskom-format-objects
-;;;; 			       (substring (symbol-name var) 4) 
-;;;; 			       (if (symbol-value var) "1" "0"))))
-;;;; 			   lyskom-global-boolean-variables
-;;;; 			   "\n")
-;;;; 		"\n"
-;;;; 		(mapconcat (function
-;;;; 			    (lambda (var)
-;;;; 			      (lyskom-format-objects
-;;;; 			       (substring (symbol-name var) 4) 
-;;;; 			       (prin1-to-string (symbol-value var)))))
-;;;; 			   lyskom-global-non-boolean-variables
-;;;; 			   "\n")
-;;;; 		)
-;;;; 	      elisp-block
-;;;; 	       (mapconcat (function
-;;;; 			   (lambda (var)
-;;;; 			     (concat (symbol-name var)
-;;;; 				     " "
-;;;; 				     (let* ((data (prin1-to-string (symbol-value var)))
-;;;; 					    (coding 
-;;;; 					     (lyskom-mime-charset-coding-system
-;;;; 					      (lyskom-mime-string-charset data)))
-;;;; 					    (val (condition-case nil
-;;;; 						     (encode-coding-string data coding)
-;;;; 						   (error nil))))
-;;;; 				       ;; FIXME
-;;;; 				       (if (and val nil)
-;;;; 					   (format "%dC%s%dH%s"
-;;;; 						   (string-bytes (symbol-name coding))
-;;;; 						   (symbol-name coding)
-;;;; 						   (string-bytes val)
-;;;; 						   val)
-;;;; 					 (format "%dH%s"
-;;;; 						 (string-bytes data)
-;;;; 						 data))))))
-;;;; 			  lyskom-elisp-variables
-;;;; 			  "\n"))
-;;;; 	     (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
-;;;; 	     (lyskom-insert-string 'hang-on)
-;;;; 	     (initiate-create-text 
-;;;; 	      'options 'lyskom-edit-options-send
-;;;; 	      ;;; This is a cludge awaiting prot-B
-;;;; 	      (cons 'raw-text
-;;;; 		    (apply 'lyskom-format-objects 
-;;;; 			   (apply 'lyskom-format-objects 
-;;;; 				  "common"
-;;;; 				  "elisp"
-;;;; 				  (mapcar 
-;;;; 				   (function car)
-;;;; 				   (cons 'STRING
-;;;; 					 (cons 'raw-text
-;;;; 					       lyskom-other-clients-user-areas))))
-;;;; 			   (cons 'STRING (cons 'raw-text common-block))
-;;;; 			   (cons 'STRING (cons 'raw-text elisp-block))
-;;;; 			   (mapcar (lambda (el)
-;;;; 				     (cons 'STRING (cons 'raw-text (cdr el))))
-;;;; 				   lyskom-other-clients-user-areas)))
-;;;; 	      (lyskom-create-misc-list) 
-;;;; 	      nil
-;;;; 	      optbuf))))
-;;;; 	(t
-;;;; 	 (let ((optbuf (current-buffer)))
-;;;; 	   (set-buffer lyskom-buffer)
-;;;; 	   (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
-;;;; 	   (lyskom-insert-string 'no-changes)
-;;;; 	   (lyskom-edit-options-done t optbuf)))))
-;;;; 
-;;;; 
-;;;; (defun lyskom-edit-options-send (text-no optbuf)
-;;;;   "Handles the call after the options text has been sent to the buffer."
-;;;;   (if text-no
-;;;; 	   (initiate-set-user-area 'options 'lyskom-edit-options-done
-;;;; 				   lyskom-pers-no text-no optbuf)
-;;;; 	 (lyskom-insert-string 'could-not-create-area)
-;;;; 	 (lyskom-end-of-command)))
-;;;; 
-;;;; 
-;;;; (defun lyskom-edit-options-done (success optbuf)
-;;;;   "Handles the return from the set user area call.
-;;;; If successful then set the buffer not-modified. Else print a warning."
-;;;;   (if success
-;;;; 	   (save-excursion
-;;;; 	     ;;;+++ This should be done with the asynchronous call instead.
-;;;; 	     (cache-del-pers-stat lyskom-pers-no)
-;;;; 	     (set-buffer optbuf)
-;;;; 	     (not-modified)
-;;;; 	     (set-window-configuration lyskom-edit-return-to-configuration))
-;;;; 	 (lyskom-format-insert 'could-not-set-user-area lyskom-errno))
-;;;;   (lyskom-end-of-command))
-;;;; 
-;;;; 
+
 (def-kom-var lyskom-options-done nil
   "When we have read all options this is turned non-nil."
   local)

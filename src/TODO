@@ -3,6 +3,16 @@
 Att göra i elisp-klienten
 =========================
 
+* SHOWSTOPPERS
+
+** Om man går ur ett möte i en server som inte har set-membership-type 
+   så försöker klienten ändå att göra set-membership-type
+   (commands1.el, lyskom-sub-member.)
+
+** När man går med i ett möte så sorteras inte medlemskapet in korrekt 
+   i medlemskapslistan.
+
+
 * MULEification
   These items have to be dealt with before the client can be used in a
   multibyte environment (where the strings sent from the server are in

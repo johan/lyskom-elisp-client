@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.34 1999-12-02 22:30:01 byers Exp $
+;;;;; $Id: view-text.el,v 44.35 1999-12-05 22:42:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.34 1999-12-02 22:30:01 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.35 1999-12-05 22:42:10 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -831,9 +831,16 @@ the client. That is done by lyskom-is-read."
 	      ;; yet. So we better mark it as read in all conferences.
 	      ;; (lyskom-member-p (misc-info->recipient-no misc-info))
 	      )
-	 (initiate-mark-as-read 'background nil
+	 (initiate-mark-as-read 'background 
+                                'lyskom-mark-as-read-callback
 				(misc-info->recipient-no misc-info)
-				(list (misc-info->local-no misc-info)))))))
+				(list (misc-info->local-no misc-info))
+                                text-stat
+                                (misc-info->recipient-no misc-info)
+                                (list (misc-info->local-no misc-info)))))))
+
+(defun lyskom-mark-as-read-callback (result text-stat recipient local-nos)
+  (lp--maybe-update-unreads recipient))
 
 
 (defun lyskom-print-header-recpt (conf-no misc)

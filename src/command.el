@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.24 1999-12-03 15:33:18 byers Exp $
+;;;;; $Id: command.el,v 44.25 1999-12-05 22:42:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.24 1999-12-03 15:33:18 byers Exp $\n"))
+	      "$Id: command.el,v 44.25 1999-12-05 22:42:03 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -284,14 +284,11 @@ chosen according to this"
   (setq lyskom-current-prompt nil)
   (lyskom-insert "\n")
   (if (and (eq (window-buffer (selected-window))
-               (current-buffer))
-           ;; (= (point) (point-max))
-	   ) 
+               (current-buffer))) 
       (progn
 	(if (pos-visible-in-window-p (1- (point-max)))
 	    (goto-char (point-max)))
 	(sit-for 0)))
-                                        ;  (lyskom-scroll)
   (run-hooks 'lyskom-before-command-hook)
   (if kom-page-before-command           ;Nice with dumb terminals.
       (if (or (not (listp kom-page-before-command))

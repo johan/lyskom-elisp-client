@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.2 1999-11-19 13:37:42 byers Exp $
+;;;;; $Id: deferred-insert.el,v 44.3 1999-12-05 22:42:04 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -132,6 +132,8 @@ The insertion will be at (point)."
 (defun lyskom-replace-deferred (defer-info &rest replacement-data)
   "Replace some defered text."
   (save-excursion
+    (when (marker-buffer (defer-info->pos defer-info))
+      (set-buffer (marker-buffer (defer-info->pos defer-info))))
     (goto-char (defer-info->pos defer-info))
     (apply 'lyskom-format-insert-at-point
 	   (defer-info->format defer-info)
