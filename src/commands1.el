@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.6 1996-08-12 14:45:34 davidk Exp $
+;;;;; $Id: commands1.el,v 43.7 1996-08-14 18:37:58 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.6 1996-08-12 14:45:34 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.7 1996-08-14 18:37:58 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1492,7 +1492,11 @@ If MARK-NO == 0, review all marked texts."
      '(error lyskom-error lyskom-no-users))
 
 (def-kom-command kom-who-is-on (&optional arg)
-  "Display a list of all connected users."
+  "Display a list of all connected users.
+The prefix arg controls the idle limit of the sessions showed. If the
+prefix is negativ, invisible sessions are also shown.
+
+If the prefix is 0, all visible sessions are shown."
   (interactive "P")
   (condition-case err
       (if lyskom-dynamic-session-info-flag
