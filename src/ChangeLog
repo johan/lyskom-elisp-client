@@ -1,3 +1,14 @@
+2000-05-29  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-iter-list-news): Added at-least and at-most
+	arguments. Renamed all variables referenced in the calleing
+	environment to lyskom-iter-list-news-*.
+	(kom-list-news): Same here.
+
+	* command.el (def-kom-emacs-command): Moved paren that caused
+	commands never to be run as Emacs commands.
+	(def-kom-emacs-command): Removed pointless concat.
+
 2000-05-29  Johan Sundström  <jhs@lysator.liu.se>
 
 	* view-text.el (lyskom-view-text): Marks now show themselves,
