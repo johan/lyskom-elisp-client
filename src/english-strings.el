@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.217 2002-06-12 22:27:38 byers Exp $
+;;;;; $Id: english-strings.el,v 44.218 2002-06-20 22:36:40 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.217 2002-06-12 22:27:38 byers Exp $"))
+              "$Id: english-strings.el,v 44.218 2002-06-20 22:36:40 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1740,7 +1740,7 @@ Ignoring the following variables in your settings:
 These variables are not registered as LysKOM variables and cannot be
 read from the server. If the variables corresponds to settings that
 have been removed, you can fix the problem by giving the command
-\"Save variables\".\n\n")
+\"Save options\".\n\n")
 
 
     (unknown-aux-item . "Okänd tilläggsinformation")

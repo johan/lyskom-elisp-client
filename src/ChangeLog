@@ -1,3 +1,8 @@
+2002-06-21  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* english-strings.el: Corrected command name in
+	ignored-user-area-var.
+
 2002-06-19  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* swedish-strings.el (lyskom-message): Removed a spurious % in
