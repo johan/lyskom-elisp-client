@@ -581,7 +581,7 @@ When a text is received the new text is displayed."
   (let ((waitfor (or (cond
 		      ((integerp arg) arg)
 		      ((listp arg) (car arg)))
-		       (read-info->priority
+		     (read-info->priority
 		      (read-list->first lyskom-to-do-list))
 		     -2)))
     (lyskom-tell-internat 'kom-tell-wait)
@@ -1148,3 +1148,47 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
     (lyskom-format-insert 'throwing-out session)
     (initiate-disconnect 'main 'lyskom-handle-command-answer
 			 session)))
+
+;;; ================================================================
+;;;                  Skjut upp l{sning - postpone
+
+;;; Author: Per Cederqvist
+
+
+(defun kom-postpone (today)
+  "Postpone the reading of all but the last TODAY articles in the
+current conference to another session."
+  (interactive (list
+		(cond
+		 ((null current-prefix-arg)
+		  (lyskom-read-number
+		   (lyskom-get-string 'postpone-prompt)
+		   17))
+		 (t (prefix-numeric-value current-prefix-arg)))))
+
+  (lyskom-start-of-command 'kom-postpone)
+
+  (let ((len (read-list-length lyskom-reading-list))
+	(finished nil))
+    (while (and (not finished)
+		(> len 0))
+      (let ((type (read-info->type (read-list->first lyskom-reading-list))))
+	(cond 
+	 ((or (eq type 'REVIEW)
+	      (eq type 'REVIEW-TREE)
+	      (eq type 'REVIEW-MARK))
+	  (read-list-rotate lyskom-reading-list))
+	 ((or (eq type 'COMM-IN)
+	      (eq type 'FOOTN-IN))
+	  (set-read-list-del-first lyskom-reading-list))
+	 ((eq type 'CONF)
+	  (let* ((rlist (read-info->text-list
+			 (read-list->first lyskom-reading-list)))
+		 (cell (nthcdr (- (length rlist) today)
+			       rlist)))
+	    (setcdr rlist cell))
+	  (setq finished t))
+	 (t
+	  (signal 'lyskom-internal-error '("lyskom-remove-comment-chains")))))
+      (-- len)))
+  (lyskom-end-of-command))

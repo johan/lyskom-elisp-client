@@ -343,6 +343,7 @@ Lyskom-sessionen är avslutad.
     (removed-motd . "Du har tagit bort loginmeddelandet.\n")
     (who-to-throw-out . "Vilken session vill du kasta ut? ")
     (throwing-out . "Kastar nu ut session %#1d... ")
+    (postpone-prompt . "Hur lite vill du läsa nu? ")
 
     ; From review.el:
     (latest-n . "senaste %#1d")
@@ -554,6 +555,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-list-persons		"Lista personer")
     (kom-list-news              "Lista nyheter")
     (kom-membership		"Lista medlemsskap")
+    (kom-postpone		"Uppskjuta läsning")
     (kom-prioritize		"Prioritera möten")
     (kom-status-person		"Status (för) person")
     (kom-status-conf		"Status (för) möte")
