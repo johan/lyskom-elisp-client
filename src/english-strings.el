@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.156 2001-11-18 23:27:25 qha Exp $
+;;;;; $Id: english-strings.el,v 44.157 2001-11-23 22:46:38 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.156 2001-11-18 23:27:25 qha Exp $"))
+              "$Id: english-strings.el,v 44.157 2001-11-23 22:46:38 qha Exp $"))
 
 
 ;;; ================================================================
@@ -802,6 +802,7 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
     (blank-carbon-copy . "Blind Carbon copy")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
+    (add-recipient . "Add a recipient")
 
     (secret-aux-flag . "secret")
     (anonymous-aux-flag . "anonymous")
