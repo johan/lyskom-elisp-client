@@ -1,4 +1,14 @@
+Mon Mar 25 06:48:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* parse.el (lyskom-parse-unparsed): Se till att meddelandet
+ 	"Databasen synkas" tas bort.
+
+	* review.el (lyskom-review-comments): Se fotnoter först.
+
 Thu Mar 21 20:51:58 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-view-text): Markera filtrerade texter som
+ 	lästa.
 
 	* filter.el (lyskom-filter-text-p-3): Hängde om författaren inte
  	fanns.
@@ -4956,12 +4966,14 @@ Tue Nov  6 22:07:03 1990  Linus Tolke  (linus at laila)
 	* lyskom-edit-quit tillagd. P} C-c k. N{r man skriver inl{gg och
 	  }ngrar sig.
 
-	* lyskom-edit-text/lyskom-cre                                                                                                                                                                                                                                                                                                                                                                                                                                        ate-text-handler som startar ett
-	  inl{gg respektive l{gger in det sparar nu
+	* lyskom-edit-text/lyskom-cre[Här var det en massa NULL-tecken
+ 	  förut, men CVS blev lite förvirrad, så jag tog bort dem
+ 	  /davidk]ate-text-handler som startar ett inl{gg respektive
+ 	  l{gger in det sparar nu
 	  (current-window-configuration) s} att man kommer tillbaka till
-	  hur det s}g ut innan man b|rjade skriva. Kommunikationen dem
-	  emellan sker mha variabeln lyskom-edit-return-to-configuration
-	  som {r lokal i edit-bufferten.
+ 	  hur det s}g ut innan man b|rjade skriva. Kommunikationen dem
+ 	  emellan sker mha variabeln lyskom-edit-return-to-configuration
+ 	  som {r lokal i edit-bufferten.
 
 	* Ny variant av kom-list-unread inlagd. Anv{nder inte l{ngre en
 	  s{rskilld buffert och anropar bara servern efter map om det {r
