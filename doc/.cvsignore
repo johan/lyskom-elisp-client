@@ -1,3 +1,16 @@
-elisp-client
 Topdir.make
+elisp-client
+elisp-client.aux
+elisp-client.cp
+elisp-client.dvi
+elisp-client.fn
+elisp-client.fns
+elisp-client.ky
+elisp-client.kys
+elisp-client.log
+elisp-client.pg
+elisp-client.toc
+elisp-client.tp
 elisp-client.txt
+elisp-client.vr
+elisp-client.vrs
