@@ -8,25 +8,27 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 35.1 1993-09-10 16:45:59 linus Exp $
+$Id: elisp-client.texinfo,v 35.2 1993-12-14 02:10:37 linus Exp $
 @end ifinfo
 
 @iftex
-@hyphenation{data-bas-filen}
+@hyphenation{admini-stra-törs-mode admini-stra-tör använ-dar-namn}
+@hyphenation{data-bas-filen default-prio-ri-tet}
+@hyphenation{email-adress even-tu-ella}
+@hyphenation{inlogg-ningarna}
+@hyphenation{kom-man-don}
+@hyphenation{kom-men-taren kom-men-tarer kom-men-tar}
+@hyphenation{kom-men-tars-träd}
+@hyphenation{kon-ver-terings-tabellen}
+@hyphenation{lösen-ordet}
+@hyphenation{mar-ker-ingen}
 @hyphenation{med-lem-mar}
 @hyphenation{name-server}
-@hyphenation{email-adress}
-@comment @hyphenation{använ-dar-namn}
-@comment @hyphenation{Lösen-ordet}
-@hyphenation{kom-man-don}
-@hyphenation{versions-nummer}
-@hyphenation{kom-men-tar}
-@hyphenation{kom-men-tarer}
-@hyphenation{kom-men-taren}
-@hyphenation{tangent-bords-bind-ningar}
-@hyphenation{even-tu-ella}
 @hyphenation{per-sonen}
-@hyphenation{default-prio-ri-tet}
+@hyphenation{prefix-argu-ment}
+@hyphenation{sessions-nummer-ordning}
+@hyphenation{tangent-bords-bind-ningar}
+@hyphenation{ver-sionen versions-nummer}
 @end iftex
 
 @titlepage
@@ -88,31 +90,87 @@ LysKOM-Projektet
 
 En klient skriven i GNU-emacs-lisp.
 
-Dokumentationen uppdaterad till klient version 0.37
+Dokumentationen uppdaterad till klient version 0.38
 @end ifinfo
 
 @menu
-* Förord::			Förord
-* Bakgrund::			Lite om koms historia fram till LysKOM.
+* Förord::                      Förord
+* Bakgrund::                    Lite om koms historia fram till LysKOM.
 
 Uppstart
 
-* Servern::			Servern
-* Uppstart::			Uppstart
-* Första gången::		Första gången du kör LysKOM
-* Köra LysKOM::			Köra LysKOM
-* Namn::			Namn
-* Skriva inlägg::		Att skriva inlägg
-* Vilkabufferten::		Vilkabufferten
-* Flaggor::			Flaggor
-* Variabler::			Variabler
-* Hookar::			Hookar
-* Environmentvariabler::	Environmentvariabler
-* Buggrapporter::		Buggrapporter
-* Filer::			Filer
-* Index::			Index
-* Tangenterna::			Tangenterna
-* Variabelindex::		Variabelindex
+* Servern::                     Servern
+* Uppstart::                    Uppstart
+* Första gången::               Första gången du kör LysKOM
+* Möten::                       Om möten
+* Köra LysKOM::                 Köra LysKOM
+* Namn::                        Namn
+* Skriva inlägg::               Att skriva inlägg
+* Vilkabufferten::              Vilkabufferten
+* Flaggor::                     Flaggor
+* Variabler::                   Variabler
+* Hookar::                      Hookar
+* Environmentvariabler::        Environmentvariabler
+* Buggrapporter::               Buggrapporter
+* Filer::                       Filer
+* Index::                       Index
+* Tangenterna::                 Tangenterna
+* Variabelindex::               Variabelindex
+
+ --- Den specificerade nodlistan ---
+
+Förord
+
+* Bakgrund:: Lite om koms historia fram till LysKOM.
+
+Uppstart
+
+* Lysator::			Koppla upp sig från lysator.
+* IDA::				Koppla upp sig från elev-sparcarna på IDA.
+* Andra maskiner::		Hur du för annars.
+
+
+Köra LysKOM
+
+* Prompten::			Hur LysKOMs prompt fungerar.
+* Scrollning::			Hur LysKOM scrollar och varför.
+* Kommandon::			Vilka kommandon finns och vad gör de.
+
+* Administratörskommandon::	Administratörskommandon
+
+Kommandon
+
+* Läsa::			De vanligaste kommandona för att läsa texter.
+* Få hjälp::			Hjälpkommandot är beskrivet
+
+* Skriva::			Skriva
+* Lista::			Kommandon för att lista information.
+* Bli medlem::			Hur du blir medlem i och utträder ur möten.
+* Sluta::			När du har läst klart
+
+* Annat::			
+* Ändra::			Kommandon för att ändra dina parametrar.
+
+* Återse::			Kommandon för att återse texter.
+* Status::			Kommandon för att få status.
+
+* Spara text::			Spara text
+* Markeringar::			Kommandon för att hantera markeringar.
+* Kommandon under annat::	Kommandon under annat
+* Skapa::			Kommandon för att skapa möten.
+* Kommandon för att addera och subtrahera::  Kommandon för att addera och subtrahera.
+* Ändra personuppgifter::	
+* Ändra mötesuppgifter::	
+* Meddelande::			Meddelande
+* Prioritera::			Kommando för att prioritera om möten.
+
+* Ändra inställningarna::	
+
+Ändra
+
+* Ändra personuppgifter::	övriga ändrakommandon för personer.
+* Ändra mötesuppgifter::övriga ändrakommandon för möten.
+* Ändra inställningarna:: Hur man ändrar LysKOMklientens parametrar.
 @end menu
 
 @node Förord, Bakgrund, Top, Top
@@ -120,10 +178,10 @@ Uppstart
 @chapter Förord
 
 Meningen med detta dokument är att den ska beskriva allt man behöver
-veta om elisp-klienten (se nedan) för att kunna använda den.  Det
-förutsätts att läsaren känner till GNU-emacs. Om användaren har använt
-QZ-KOM är detta en fördel, men det är på inget vis nödvändigt för
-förståelsen av LysKOM.
+veta om LysKOMs elisp-klient för att kunna använda den. Det förutsätts
+att läsaren känner till GNU-emacs. Om användaren har använt QZ-KOM är
+detta en fördel, men det är på inget vis nödvändigt för förståelsen av
+LysKOM.
 
 @menu
 * Bakgrund:: Lite om koms historia fram till LysKOM.
@@ -228,14 +286,18 @@ databasen för närvarande ligger.
 
 Om du vill hämta LysKOMklienten från någonstans utanför LiTH kan du
 hämta den senaste versionen via anonym ftp från @file{ftp.lysator.liu.se
-(130.236.254.153)}. Skriv @code{ftp ftp.lysator.liu.se} och ge @code{ftp} som
-användarnamn. Ange din emailadress som lösenord. Lösenordet ekas
-inte. Gå ner i directoryt @file{pub/lyskom/elisp-client} och skriv @code{bin}.
-Detta sätter om ftp till BINARY MODE vilket är nödvändigt för att få
-över elispklienten korrekt. Skriv sedan @code{get lyskom-X.elc.Z} där @code{X}
-är det högsta nummer du kan hitta i det directoryt. Filen med det
-högsta numret är alltid den senaste versionen. När överföringen
-är klar, bryt förbindelsen genom att skriva @code{quit}.
+(130.236.254.153)}. Skriv 
+@example
+ftp ftp.lysator.liu.se
+@end example
+och ge @code{ftp} som användarnamn. Ange din emailadress som lösenord.
+Lösenordet ekas inte. Gå ner i directoryt @file{pub/lyskom/elisp-client}
+och skriv @code{bin}.  Detta sätter om ftp till BINARY MODE vilket är
+nödvändigt för att få över elispklienten korrekt. Skriv sedan @code{get
+lyskom-X.elc.Z} där @code{X} är det högsta nummer du kan hitta i det
+directoryt. Filen med det högsta numret är alltid den senaste
+versionen. När överföringen är klar, bryt förbindelsen genom att skriva
+@code{quit}.@refill
 
 Denna dokumentation finner du på samma ställe.
 
@@ -249,7 +311,7 @@ uppdateras varje gång vi flyttar servern till en ny maskin.}, eller länka emacs 
 nameserver. Tyvärr går det inte att ge IP-nummer till Emacs.
 
 
-@node Första gången, Köra LysKOM, Uppstart, Top
+@node Första gången, Möten, Uppstart, Top
 @chapter Första gången du kör LysKOM
 
 När du har svarat på frågan om server och uppkopplingen mellan klient
@@ -258,13 +320,47 @@ ange både för och efternamn samt den organisation du arbetar för, t ex
 @example
 Inge Wallin, ISY
 @end example
+Om du inte är från Linköping kan det också vara bra att på något sätt
+ange vilken stad du normalt finns i, t.ex
+@example
+Salvador Dalberg, Stacken, Stockholm
+@end example
 Om det inte fanns någon med det namn du angav så får du bekräfta att
 du har stavat ditt namn rätt. Därefter får du uppge ett personligt lösenord.
 Kom ihåg att nästan vem som helst kan läsa databasfilen, så använd
-inte ett lösen som du använder någon annanstans!
+inte ett lösen som du använder någon annanstans!@refill
 
+Du blir medlem i mötet @samp{Presentation (av nya) möten} automatiskt
+när du går in i LysKOM första gången. I det mötet hamnar beskrivningar
+av nya möten när de skapas och när beskrivningen ändras. Det kan vara
+bra att i lugn och ro läsa igenom detta möte och efterhand gå med i de
+möten som du finner intressanta.@refill
 
-@node Köra LysKOM, Namn, Första gången, Top
+För att titta på presentationen för ett möte igen kan man använda
+kommandot @code{Återse presentation}.
+@findex Återse presentation
+
+@node Möten, Köra LysKOM, Första gången, Top
+@comment  node-name,  next,  previous,  up
+@chapter Möten
+
+Debatten är uppdelad i olika möten. Möten är dataenheter som bl.a. har
+namn, medlemmar och mottagna inlägg. Medlemmarna förväntas vara
+intresserade av inläggen som skickas till just det mötet och läser
+dem. Namnen används som en kort presentation av mötet när man skall
+referera till det, dvs när man går till mötet eller skickar brev till
+mötet.
+
+Möten har också presentationer som lite mer utförligt beskriver vad
+mötet är tänkt att handla om.
+
+Det finns inga som helst mekanismer eller garantier för att kolla att
+medlemmarna i ett möte, och andra också för den delen, skickar inläggen
+till rätt möte. Det finns möjligheter för administratören av mötet eller
+författaren av inlägget att flytta inlägget om det hamnat fel men oftast
+är det författarens ansvar att se till att det hamnar rätt från början.
+
+@node Köra LysKOM, Namn, Möten, Top
 @chapter Köra LysKOM
 
 
@@ -357,10 +453,13 @@ förra versionen.
 @item @key{SPC}
 @itemx (mellanslag)
 @itemx @key{RET}
-@kindex{ }
+@ifinfo
+@kindex @key{ }
+@end ifinfo
 @kindex SPC
 @kindex mellanslag
 @kindex rymdkrogen
+@kindex space
 @kindex RETURN
 Utför defaulthandlingen, dvs det som står i prompten.
 
@@ -549,10 +648,10 @@ Du kan lista olika saker med dessa olika kommandona.
 @findex Vilka är inloggade
 @kindex v
 Visa en lista över de personer som är inloggade i LysKOM för
-ögonblicket. Man får dessutom reda på vilken maskin de kör ifrån
-samt vad de sysslar med just nu. Inloggningarna visas i sessions-
-nummerordning och den egna inloggningen markeras med en asterisk
-precis efter sessionsnumret.
+ögonblicket. Man får dessutom reda på vilken maskin de kör ifrån samt
+vad de sysslar med just nu. Inloggningarna visas i sessionsnummerordning
+och den egna inloggningen markeras med en asterisk precis efter
+sessionsnumret.
 
 
 @item @kbd{lm}
@@ -676,8 +775,8 @@ eller ta bort LysKOM-bufferten.
 
 @table @asis
 @item @kbd{r}
-@itemx @code{återstarta kom}
-@findex återstarta kom
+@itemx @code{Återstarta kom}
+@findex Återstarta kom
 @kindex r
 Nollställer diverse interna strukturer i klienten. Används då
 klienten har hängt sig eller då klienten och servern har kommit ur
@@ -688,7 +787,7 @@ vid olämpliga tillfällen.
 @item @kbd{t}
 @itemx @code{Se tiden}
 @findex Se tiden
-@kindex r
+@kindex t
 Visar vad klockan är.
 
 
@@ -1028,28 +1127,37 @@ medlem till ett möte eller en text som kommentar till en annan text.
 
 @item @code{Addera mottagare}
 @findex Addera mottagare
-Frågar efter textnummer och namnet på ett möte eller en person.
-Inlägget får då angivet möte eller person som mottagare förutom
-dem som det redan hade.
+Frågar efter inläggsnummer och namnet på ett möte eller en person.
+Defaultvärdet för inläggsnumret är senast lästa inlägg och defaultvärdet
+för mötet är det senast adderade mötet.
+
+Du får bara addera möten som du får lov att skriva inlägg i.
 
 
 @item @code{Addera extra kopiemottagare}
 @findex Addera extra kopiemottagare
 Samma som Addera mottagare men adderar en mottagare av typen extra
-kopiemottagare istället.
+kopiemottagare istället. Defaultvärdet för inläggsnumret är senast lästa
+inlägg och defaultvärdet för mötet är den senast adderade extra
+kopiemottagaren.
+
+Du får bara addera möten som du får lov att skriva inlägg i.
 
 
 @item @code{Subtrahera mottagare}
 @findex Subtrahera mottagare
-Frågar efter textnummer och namnet på ett möte eller en person.
-Inlägget har då inte längre angivet möte eller person som
-mottagare. Du får bara ta bort en mottagare om du är organisatör
-för mottagaren eller författare till inlägget.
+Frågar efter inläggsnummer och namnet på ett möte eller en person.
+Inlägget får då inte längre angivet möte eller person som mottagare.
+Defaultvärdet för i inläggsnumret är senast lästa text och defaultvärdet
+för mötet/personen är det möte som vi står i just nu.
+
+Du får bara ta bort en mottagare om du är organisatör för mottagaren
+eller författare till inlägget.
 
 
 @item @code{Addera kommentar}
 @findex Addera kommentar
-Frågar efter två inläggsnummer. Den första texten kommer att
+Frågar efter två inläggsnummer. Den första inläggsen kommer att
 kommenteras av den andra. Default för det kommenterade inlägget
 är senaste refererade texten.
 
@@ -1107,7 +1215,7 @@ ditt lösenordet. Därefter skall du mata in det nya lösenordet
 två gånger. Detta för att fånga felstavningar.
 
 Man kan ändra lösenordet för alla som man är organisatör
-för. Om man är administratär kan man ändra lösenordet för
+för. Om man är administratör kan man ändra lösenordet för
 vem som helst.
 
 
@@ -1396,7 +1504,7 @@ alla vanliga emacs-kommandon.
 Det enda som är speciellt är alla LysKOM-kommandona.
 
 För att sända in texten trycker du @kbd{C-c C-c}. LysKOM frågar då efter
-@code{ärende:} och du fyller i det. När du trycker @key{RET} så skickas texten in
+@code{Ärende:} och du fyller i det. När du trycker @key{RET} så skickas texten in
 till servern. Om allt gick bra så tas edit-bufferten bort och du får
 tillbaks LysKOM-bufferten.  Textnummret för den skapade texten skrivs ut.
 
@@ -1404,7 +1512,7 @@ Om du när du skall skriva ärendet ser stavfel i texten trycker du @kbd{C-g} så
 kommer du tillbaka i editerings-mode.
 
 Om man ångrar sig och vill slänga texten man håller på att skriva
-trycker man @kbd{C-c C-k} eller @kbd{C-c k}. Då tas bufferten bort, och man kommer
+trycker man @kbd{C-c C-k}. Då tas bufferten bort, och man kommer
 tillbaks till LysKOM-bufferten.
 
 Skulle du vilja ha med delar av den text du kommenterar i ditt eget
@@ -1489,7 +1597,7 @@ tillbaka till exakt det ställe där man var.
 @item @code{nil}
 Bryter inte alls. Vi får vänta tills vi läst ut hela mötet. 
 @item @code{t}
-Bryter när vi läst klart ett kommentarträd, alltså när vi normalt skulle
+Bryter när vi läst klart ett kommentarsträd, alltså när vi normalt skulle
 fått prompten Läsa nästa text.
 @item @code{express}
 Vi bryter mötet direkt, utan hänsyn till var vi är i kommentarkedjan.
@@ -1532,7 +1640,7 @@ inloggade} ges.
 @itemx @code{t} (@code{common})
 @vindex kom-read-depth-first
 Om icke-@code{nil} så läses kommentarer och fotnoter före nya inlägg.
-Detta gör att kommentarträd söks av djup-först. Om flaggan sätts
+Detta gör att kommentarsträd söks av djup-först. Om flaggan sätts
 till @code{nil} så görs sökningen bredd-först.
 
 
@@ -1909,7 +2017,7 @@ En buggrapport skall innehålla information om:
 @end table
 Det är bra om buggrapporten innehåller all tillgänglig
 information från din körning. Dvs att du har kört funktionen
-@code{kom-compile-bug-report} och skickat med resultatet. Annars måste
+@code{kom-bug-report} och skickat med resultatet. Annars måste
 det till en extremt utförlig beskrivning på hur felet uppkom
 för att vi skall ha någon som helst möjlighet att veta vad det
 handlar om.
@@ -1942,3 +2050,6 @@ D:o
 @printindex vr
 
 @bye
+% Local variables:
+% texinfo-master-menu-header: "\n --- Den specificerade nodlistan ---\n"
+% End:
