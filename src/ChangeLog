@@ -1,3 +1,12 @@
+2000-01-10  David Byers  <davby@ida.liu.se>
+
+	* flags.el (lyskom-read-options-eval): Add format argument to
+	lyskom-message to avoid possible problems with
+	error-in-options-short string.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Same here.
+	(kom-insert-last-info-nodename): Same here.
+
 2000-01-06  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (j-or-n-p): Output the answer in the minibuffer

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.56 2000-01-06 12:47:10 byers Exp $
+;;;;; $Id: edit-text.el,v 44.57 2000-01-10 13:33:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.56 2000-01-06 12:47:10 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.57 2000-01-10 13:33:44 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -816,7 +816,7 @@ Cannot be called from a callback."
                                   (funcall kom-check-for-new-comments
                                            buffer misc-list subject))
                                  (t t)))
-      (lyskom-message (lyskom-format 'checking-comments))
+      (lyskom-message "%s" (lyskom-format 'checking-comments))
       (save-excursion
         (set-buffer lyskom-buffer)
         (set-collector->value collector nil)
@@ -848,7 +848,7 @@ Cannot be called from a callback."
 		       (list "%s"
 			     (lyskom-get-string 
 			      'please-check-commented-texts))))))))
-      (lyskom-message (lyskom-format 'checking-comments-done)))
+      (lyskom-message "%s" (lyskom-format 'checking-comments-done)))
     
     
     ;;
@@ -876,7 +876,7 @@ Cannot be called from a callback."
     (if (and (lyskom-default-value 'kom-check-commented-author-membership)
              (assq 'comm-to (cdr misc-list)))
         (progn
-          (lyskom-message (lyskom-get-string 'checking-rcpt))
+          (lyskom-message "%s" (lyskom-get-string 'checking-rcpt))
 
           ;;
           ;; For each commented text, get the author
@@ -1094,7 +1094,7 @@ Cannot be called from a callback."
                              (file-name-nondirectory Info-current-file)
                              Info-current-node)))
         (insert link))
-    (error (lyskom-message (lyskom-get-string 'cant-find-info-node)))))
+    (error (lyskom-message "%s" (lyskom-get-string 'cant-find-info-node)))))
 
 ;;; ================================================================
 ;;;	  Add recipient, copy-recipient - Addera mottagare 
