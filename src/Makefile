@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.6 1996-10-10 13:59:20 davidk Exp $
+# $Id: Makefile,v 44.7 1996-10-20 02:56:38 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.6 1996-10-10 13:59:20 davidk Exp $
+# $Id: Makefile,v 44.7 1996-10-20 02:56:38 davidk Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -39,14 +39,17 @@ RM = /usr/gnu/bin/rm -vf
 
 # for compiling using emacs 19!
 EMACS=emacs
-EMACS-BATCH = $(EMACS) -batch
+EMACS-BATCH = $(EMACS) -batch -l ./lpath.el
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el  deferred-insert.el utilities.el \
 	prefetch.el \
 	startup.el \
 	reading.el \
-	internal.el parse.el services.el cache.el\
+	internal.el \
+	services.el \
+	command.el \
+	parse.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
 	filter.el filter-edit.el lyskom-buttons.el \
 	view-text.el async.el completing-read.el \
@@ -64,7 +67,10 @@ SRC-ELC = komtypes.elc clienttypes.elc deferred-insert.elc utilities.elc \
 	prefetch.elc \
 	startup.elc \
 	reading.elc \
-	internal.elc parse.elc services.elc cache.elc\
+	internal.elc \
+	services.elc \
+	command.elc \
+	parse.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
 	filter.elc filter-edit.elc lyskom-buttons.elc \
 	view-text.elc async.elc completing-read.elc \
@@ -79,7 +85,7 @@ all: lyskom.elc
 
 .SUFFIXES : .el .elc
 .el.elc:
-	$(EMACS-BATCH) -l `pwd`/macros -l `pwd`/vars -f batch-byte-compile $*.el
+	$(EMACS-BATCH) -f batch-byte-compile $*.el
 
 # influenced by autoconf? Yes.
 vars.el: vars.el.in Makefile
@@ -120,7 +126,7 @@ english-lyskom.elc: english-lyskom.el
 # The method of compiling elc files separately is now depreceated
 # I dont want any warnings of the newer file...
 vars.elc: vars.el macros.elc
-	$(EMACS-BATCH) -l `pwd`/macros -f batch-byte-compile $*.el
+	$(EMACS-BATCH) -f batch-byte-compile $*.el
 
 macros.elc: macros.el
 	$(EMACS-BATCH) -f batch-byte-compile $*.el

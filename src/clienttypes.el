@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.1 1996-09-29 15:18:12 davidk Exp $
+;;;;; $Id: clienttypes.el,v 44.2 1996-10-20 02:56:41 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.1 1996-09-29 15:18:12 davidk Exp $\n"))
+	      "$Id: clienttypes.el,v 44.2 1996-10-20 02:56:41 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -644,3 +644,8 @@ The element last pushed is first in the list."
 (defun collector-push (value collector)
   "Push VALUE onto the front of COLLECTOR's value"
   (setcdr collector (cons value (cdr collector))))
+
+
+(provide 'lyskom-clienttypes)
+
+;;; clienttypes.el ends here

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.11 1996-10-11 11:10:40 nisse Exp $
+;;;;; $Id: commands1.el,v 44.12 1996-10-20 02:56:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.11 1996-10-11 11:10:40 nisse Exp $\n"))
+	      "$Id: commands1.el,v 44.12 1996-10-20 02:56:44 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -407,8 +407,6 @@ Returns t if it was possible, otherwise nil."
   "Adds MEMBERSHIP to the sorted list of memberships.
 Args: MEMBERSHIP CONF-STAT THENDO DATA
 Also adds to lyskom-to-do-list."
-  ;;; +++ What should this do if the priority is lower than
-  ;;; kom-session-priority?
   (if membership
       (progn
 	(lyskom-insert-membership membership lyskom-membership)
@@ -596,8 +594,7 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command (concat 
-			    (lyskom-get-string 'kom-write-comment
-					       'lyskom-command)
+			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
 				(format " (%d)" text-no)
 			      "")))
@@ -1072,13 +1069,6 @@ Args: CONF-STAT MEMBERSHIP"
 	    (setq found t)
 	  (++ r)))
 
-      ;; If the membership list is prefetched there is no need to
-      ;; insert empty read-infos, but if there is a chance that
-      ;; there might be unknown texts that will be entered into the
-      ;; read-info later we'll insert an empty read-info. This
-      ;; enables the user to go to a conference before it is
-      ;; prefetched.
-
       (cond (found
 	     (let ((read-info (read-list->nth lyskom-to-do-list r)))
 	       (read-list-enter-first read-info lyskom-reading-list)
@@ -1087,18 +1077,6 @@ Args: CONF-STAT MEMBERSHIP"
 	       (read-list-enter-first read-info lyskom-to-do-list)
 	       (set-read-info->priority read-info priority)
 	       (lyskom-enter-conf conf-stat read-info)))
-	      
-	    ((not (lyskom-membership-is-read))
-	     (let ((read-info (lyskom-create-read-info 
-			       'CONF conf-stat
-			       (membership->priority membership)
-			       (lyskom-create-text-list nil))))
-	       (read-list-enter-first read-info lyskom-reading-list)
-	       (read-list-delete-read-info (conf-stat->conf-no conf-stat)
-					   lyskom-to-do-list)
-	       (read-list-enter-first read-info lyskom-to-do-list)
-	       (lyskom-go-to-empty-conf conf-stat)))
-
 	    (t
 	     (lyskom-go-to-empty-conf conf-stat))))))
 

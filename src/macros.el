@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.3 1996-10-06 05:18:25 davidk Exp $
+;;;;; $Id: macros.el,v 44.4 1996-10-20 02:56:57 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.3 1996-10-06 05:18:25 davidk Exp $\n"))
+	      "$Id: macros.el,v 44.4 1996-10-20 02:56:57 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -106,52 +106,6 @@ Value returned is always nil."
 	      '(set-buffer __buffer__))))
 
 (put 'lyskom-save-excursion 'edebug-form-spec t)
-
-;;; ======================================================================
-;;; LysKOM user commands
-;;; The new, blocking commands have a very similar structure
-;;;
-;;;  (defun kom-cmd (args)
-;;;    "Documentation"
-;;;    (interactive "...")
-;;;    (lyskom-start-of-command 'kom-cmd)
-;;;    (unwind-protect
-;;;        (progn ...)
-;;;      (lyskom-end-of-command)))
-;;;
-;;; This can now be written as
-;;;
-;;; (def-kom-command kom-cmd (args)
-;;;   "Documentation"
-;;;   (interactive "...")
-;;;   ...)
-
-(defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
-  (list 'defun cmd args doc interactive-decl
-	(list 'lyskom-start-of-command (list 'quote cmd))
-	(list 'unwind-protect
-	      (list 'condition-case nil
-		    (cons 'progn
-			  forms)
-		    (list 'quit
-			  (list 'ding)
-			  (list 'lyskom-insert-before-prompt
-				(list 'lyskom-get-string
-				      (list 'quote 'interrupted)))))
-	      (list 'lyskom-end-of-command))))
-
-
-;;(def-edebug-spec def-kom-command
-;;  (&define name lambda-list
-;;                [&optional stringp]   ; Match the doc string, if present.
-;;                ("interactive" interactive)
-;;                def-body))
-(put 'def-kom-command 'edebug-form-spec
-     '(&define name lambda-list
-	       [&optional stringp]	; Match the doc string, if present.
-	       ("interactive" interactive)
-	       def-body))
-
 
 ;;; ======================================================================
 ;;; Some useful macros to make the code more readable.
@@ -311,7 +265,8 @@ STRING should be given if the last search was by `string-match' on STRING."
 ;;; compiler warnings.
 ;;;
 
-(eval-when-compile (defvar lyskom-expected-unresolved-functions nil))
+;; (eval-when-compile (defvar lyskom-expected-unresolved-functions nil))
+(defvar lyskom-expected-unresolved-functions nil)
 
 (defmacro lyskom-external-function (fn)
   (` (eval-when-compile
@@ -372,7 +327,7 @@ STRING should be given if the last search was by `string-match' on STRING."
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
 
-
+(provide 'lyskom-macros)
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
@@ -380,6 +335,3 @@ STRING should be given if the last search was by `string-match' on STRING."
 ;;; eval: (put 'lyskom-provide-function 'lisp-indent-hook 2)
 ;;; eval: (put 'lyskom-provide-subst 'lisp-indent-hook 2)
 ;;; end: 
-
-
-

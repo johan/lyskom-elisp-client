@@ -1,3 +1,36 @@
+;;;;;
+;;;;; $Id: language.el,v 44.4 1996-10-20 02:56:51 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;;
+;;;;; This file is part of the LysKOM server.
+;;;;; 
+;;;;; LysKOM is free software; you can redistribute it and/or modify it
+;;;;; under the terms of the GNU General Public License as published by 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
+;;;;; any later version.
+;;;;; 
+;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
+;;;;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;;;;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+;;;;; for more details.
+;;;;; 
+;;;;; You should have received a copy of the GNU General Public License
+;;;;; along with LysKOM; see the file COPYING.  If not, write to
+;;;;; Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN,
+;;;;; or the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+;;;;; MA 02139, USA.
+;;;;;
+;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
+;;;;;
+;;;; ================================================================
+;;;; ================================================================
+;;;;
+;;;; File: language.el
+;;;; Author: Niels Möller
+;;;;
+;;;;
+
+(require 'lyskom-vars "vars")
 
 ;;(defconst lyskom-category-properties		    
 ;;  '((command . lyskom-command)			    
@@ -11,7 +44,29 @@
 (defvar lyskom-language-categories nil
   "Categories used")
 
-(defun lyskom-define-language (category language alist)
+(defvar lyskom-language-vars nil
+  "A list of all language-dependent variables.")
+
+(defun lyskom-language-var-internal (var language val)
+  "Defines a language-local variable value."
+  (or (memq var lyskom-language-vars)
+      (setq lyskom-language-vars
+	    (cons var lyskom-language-vars)))
+  (let* ((alist (get var 'lyskom-language-var))
+	 (entry (assq language alist)))
+    (if entry
+	(setcdr entry val)
+      (put var 'lyskom-language-var (cons (cons language val) alist)))))
+
+(defmacro lyskom-language-var (var language val)
+  (list 'lyskom-language-var-internal
+	(list 'quote var)
+	(list 'quote language)
+	(list 'quote val)))
+
+(put 'lyskom-language-var 'lisp-indent-function 2)
+
+(defun lyskom-language-strings (category language alist)
   "Associates names to symbols.
 
 CATEGORY and LANGUAGE determines what kind of association to
@@ -35,7 +90,7 @@ create. ALIST is a mapping from symbols to strings."
 			       (cons (cons language string) llist))))))
 	  alist))
 
-(put 'lyskom-define-language 'lisp-indent-function 2)
+(put 'lyskom-language-strings 'lisp-indent-function 2)
 
 (defsubst lyskom-get-string-internal (symbol category)
     (cdr (assq lyskom-language (get symbol category))))
@@ -85,3 +140,6 @@ if 'lyskom-menu is not found."
 		    lyskom-language-symbols)))
 
 			      
+(provide 'lyskom-language)
+
+;;; language.el ends here
