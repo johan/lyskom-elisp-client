@@ -313,6 +313,13 @@
    English name: Unread text [u SPC, u TEXT-NUMBER]
 
 
+** kom-review-cross-references: Reviews all texts cross-referenced 
+   from the selected text.
+
+   Swedish name: Återse alla korsreferenser [å a x]
+   English name: Review all cross references [r a x]
+
+
 ** kom-review-converted: Displays the selected text with all
    conversions enabled, even if some or all of them have are disabled
    by current settings. This command accepts text number prefix
@@ -407,6 +414,9 @@
 ** kom-auto-confirm-new-conferences: automatic confirmation in
    kom-list-new-conferences and kom-list-new-persons.
 
+** kom-fontify-text: controls if bold/italic fontification of texts
+   takes place.
+
 
 
 
@@ -426,6 +436,14 @@
 
 ** It is possible to select any number of nameday lists for display,
    not just one.
+
+** kom-pick-text-no-strategy-alist: The format of this variable has
+   been completely redesigned and may be redesigned in the future. If
+   you have customized this variable, chances are your client won't
+   work until you remove your customization.
+
+
+
 
 
 
@@ -533,12 +551,18 @@
 
 * Additional changes and bug fixes
 
+** Bold and italic markup in texts.
+
 ** When using non-English, a text is shown in English to help users
    switch to a different language.
 
 ** The client will no longer treat texts with unknown content types as
    plain text. This improves performance when displaying virus-laden
    attachments to imported e-mail messages.
+
+** The likelihood of unintentionally sending alarm messages has been
+   reduced further by prompting for recipients in kom-send-alarm and
+   displaying a warning (prominently).
 
 ** Display privileges in person status display.
 
@@ -664,6 +688,14 @@
 ** Filters work on texts without authors.
 
 ** The regular expression for URLs is more RFC compliant.
+
+** Unknown variables saved in the user area are retained, at least to
+   some extent. The user area is versioned to print more informative
+   warnings about  unknown variables.
+
+** Saved texts do not have relative dates.
+
+** The client recognizes RTSP URLs.
 
 
 
