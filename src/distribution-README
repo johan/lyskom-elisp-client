@@ -1,12 +1,14 @@
 
 
 
-                     The LysKOM Emacs Lisp Client
+    The LysKOM Emacs Lisp Client
+    -------------------------------------------
+    Release notes for version @@CLIENTVERSION@@
 
 
 
     LysKOM is a project in progress at the Lysator Academic Computing
-    Society at Linköping University in Sweden. For information abuot
+    Society at Linköping University in Sweden. For information about
     Lysator, see <URL:http://www.lysator.liu.se/>. For more information
     on LysKOM, see <URL:http://www.lysator.liu.se/lyskom/>.
 
@@ -77,7 +79,7 @@
 
       Make sure you do not have a file called macedit.el early in your
       load path. This file redefines a function that the client relies
-      heavly on. The redefinition is buggy. You can recognize this
+      heavily on. The redefinition is buggy. You can recognize this
       problem if your Emacs says something like this: "Key sequence <
       m o u s e - 2 > uses invalid prefix characters" when you load or
       compile the elisp client.
@@ -143,24 +145,39 @@
 
 
     1. Edit the Makefile in the distribution to reflect your
-       environment. You can change the following variables:
+       environment. There are instructions in the Makefile.
 
-          EMACS should be set to the command used to start Emacs. 
-          Usually this will be either `emacs' or `xemacs'.
+       Optionally, use the configure script. It attempts to find
+       suitable defaults for the settings in the Makefile. Simply run
+       ./configure in the directory containing the client sources. 
 
-          LISPDIR is the directory in which the compiled and
-          uncompiled client will go. This will normally be set to your
-          site-lisp directory.
+       You may customize the output of the configure script with the
+       following command-line arguments:
 
-          INFODIR is where the info files will go, once we've written
-          them. You should set this variable on the off chance that we
-          distributed some documentation with the code.
+       --with-emacs=EMACS   Specify the name of the Emacs you want to
+                            use (usually `emacs' or `xemacs'). The
+                            script will attempt to locate an emacs
+                            automatically.
 
-          LANGUAGES is a list of languages to compile in. As of version
-          0.46 there are only two translations of LysKOM. The Makefile
-          states which values are legal. Just list all the languages
-          you want, separated by whitespace. The first language you
-          specify will be the default language.
+       --with-lispdir=DIR   Specify where to install the client. You
+                            will have to specify this if the script
+                            fails to locate a suitable directory
+                            automatically.
+
+       --enable-language=LANG
+                            Enable a language. Currently swedish and
+                            english are available. If you do not
+                            explicitly enable any language, all will
+                            be enabled.
+
+       --with-default-language=LANG
+                            Set the default language to LANG (swedish
+                            or english). If you do not specify a
+                            default language the script will choose
+                            one for you.
+
+       The configure script is an experiment. It might work and it
+       might not. If it doesn't, edit the Makefile by hand instead.
 
     2. Run `make envcheck' to make sure your Emacs environment is set
        up correctly. The environment check does not read your .emacs,
@@ -172,7 +189,8 @@
        path for compiling (this should only happen if the custom
        package is not on your default load path).
 
-    4. If you changed the list of languages, run `make clean'.
+    4. If you changed the list of languages or ran the configure
+       script, run `make clean'.
 
     5. Run `make'. If your environment is set up correctly, LysKOM
        should be compiled. When compilation is finished, type `make
@@ -240,7 +258,7 @@
 
 5. Known issues
 
-   Issue:  I see \201 before swedish characters in the string showing
+   Issue:  I see \201 before Swedish characters in the string showing
            what some other user is doing (e.g. L\201äser).
 
    Reason: The user is probably using an old version of the client in
@@ -263,19 +281,19 @@
            file (e.g. lyskom.elc or lyskom-@@CLIENTVERSION@@.elc).
 
 
-   Issue:  Columns containing swedish characters or characters in
+   Issue:  Columns containing Swedish characters or characters in
            numeric representation are not aligned correctly.
 
    Reason: This happens in certain versions of Emacs when running
-           without multibyte character support and is due to bugs in
+           without multi-byte character support and is due to bugs in
            Emacs. The only workaround is to either upgrade Emacs or
-           enable multibyte character support.
+           enable multi-byte character support.
 
 
    Issue:  Swedish characters show up as blanks, question marks or
            numbers.
 
-   Reason: If swedish characters show up as blanks your font probably
+   Reason: If Swedish characters show up as blanks your font probably
            does not support them. If they show up as question marks or
            numbers your language environment does not support them.
 
