@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.64 2002-05-01 21:42:40 byers Exp $
+;;;;; $Id: view-text.el,v 44.65 2002-05-07 20:12:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.64 2002-05-01 21:42:40 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.65 2002-05-07 20:12:13 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -95,6 +95,7 @@ Note that this function must not be called asynchronously."
 	     (if (and text-stat text)
 		 (progn
                    (run-hooks 'lyskom-view-text-hook)
+                   (run-hooks 'kom-view-text-hook)
 		   ;; Use a marker, because the buffer may lose data
 		   ;; at the top if kom-max-buffer-size is set.
 		   (setq start (point-max-marker))
@@ -391,7 +392,7 @@ Note that this function must not be called asynchronously."
 
 (defun lyskom-filter-signature-hook ()
   "Filter out the signature of imported mail messages. Most useful
-when put in your `lyskom-view-text-hook'."
+when put in your `kom-view-text-hook'."
   (unless (eq 'kom-review-noconversion lyskom-current-command)
     (when (lyskom-text-is-mail-p lyskom-view-text-text-stat)
       (let* ((body (text->text-mass lyskom-view-text-text))
@@ -400,13 +401,13 @@ when put in your `lyskom-view-text-hook'."
 	  (set-text->text-mass lyskom-view-text-text (substring body 0 sign))
 	  (lyskom-signal-reformatted-text 'reformat-signature))))))
 
-;(add-hook 'lyskom-view-text-hook 'lyskom-filter-signature-hook)
+;(add-hook 'kom-view-text-hook 'lyskom-filter-signature-hook)
 
 (defun lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1 ()
   "Display r{ksm|rg}s as räksmörgås unless the text is an imported mail
 or we are reviewing without conversion. In other words, the characters
 ][\\}{| are converted, however ^~@` are not. Yet another useful function
-to put in your `lyskom-view-text-hook'."
+to put in your `kom-view-text-hook'."
   ;; First the hard part - should we patch the text
   ;; in the text object?
   (unless (or (equal lyskom-current-command
@@ -434,7 +435,7 @@ to put in your `lyskom-view-text-hook'."
 	(aset (cdr lyskom-view-text-text) 1
 	      (if brk (concat sbj "\n" txt) sbj))))))
 
-;(add-hook 'lyskom-view-text-hook 'lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1)
+;(add-hook 'kom-view-text-hook 'lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1)
 
 
 

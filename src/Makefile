@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.86 2002-04-27 19:55:47 byers Exp $
+# $Id: Makefile,v 44.87 2002-05-07 20:12:11 byers Exp $
 
 # Useful targets:
 #
@@ -103,8 +103,9 @@ SOURCES	 = 	komtypes.el \
 		option-edit.el \
 		talkback.el \
 		faqs.el \
+		user-hooks.el \
 		lyskom-rest.el
-                # lyskom-rest.el should be the last file!
+                # lyskom-rest.el must be the last file!
 
 # Included in the source distribution archive.
 EXTRA-SRCDIST = \

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.69 2002-05-01 21:42:40 byers Exp $
+;;;;; $Id: startup.el,v 44.70 2002-05-07 20:12:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.69 2002-05-01 21:42:40 byers Exp $\n"))
+	      "$Id: startup.el,v 44.70 2002-05-07 20:12:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -293,11 +293,12 @@ clients of the event. See lyskom-mode for details on lyskom."
                                          (text-stat (get-text-stat
                                                      (server-info->motd-of-lyskom
                                                       lyskom-server-info))))
-		    (lyskom-format-insert "%#1t"
+		    (lyskom-format-insert "%#1t\n"
 		     (if (and text text-stat)
 			 (text->decoded-text-mass text text-stat)
-		       (lyskom-get-string 'lyskom-motd-was-garbed)))
-		    (lyskom-insert "\n")))
+		       (lyskom-get-string 'lyskom-motd-was-garbed))
+                     (when kom-highlight-text-body
+                       '(face kom-text-body-face)))))
 
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil)
@@ -538,6 +539,9 @@ shown to other users."
               (setq lyskom-session-priority
                     (or session-priority kom-default-session-priority)))
 	    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+				       lyskom-current-conf
+				       0)
+	    (lyskom-run-hook-with-args 'kom-change-conf-hook
 				       lyskom-current-conf
 				       0)
 	    (setq lyskom-current-conf 0)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.158 2002-05-01 21:42:39 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.159 2002-05-07 20:12:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.158 2002-05-01 21:42:39 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.159 2002-05-07 20:12:12 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -989,10 +989,17 @@ The position lyskom-last-viewed will always remain visible."
             (remove-text-properties (car bounds) (cdr bounds)
                                     '(special-insert))
             (condition-case val
-                (funcall fn (car bounds) (cdr bounds))
+                (funcall (if (listp fn)
+                             (car fn)
+                           fn)
+                         (car bounds)
+                         (cdr bounds)
+                         (if (listp fn)
+                             (cdr fn)
+                           nil))
               (error (apply 'message "%S" val)))
             (setq start next)
-            (setq bounds (next-text-property-bounds 1 start
+            (setq bounds (next-text-property-bounds 1 (1- start)
                                                     'special-insert))))
       (error (lyskom-ignore var)))))
 
@@ -1112,8 +1119,32 @@ Args: FORMAT-STRING &rest ARGS"
      (lyskom-insert atom)
    (lyskom-insert (lyskom-get-string atom))))
 
+(defun lyskom-format-transform-result (state)
+  "Convert a format-state to a string."
+  (let ((result (format-state->result state)))
+    (lyskom-traverse overlay (format-state->delayed-overlays state)
+      (add-text-properties (aref overlay 0)
+                           (aref overlay 1)
+                           (list 'special-insert 
+                             (cons 'lyskom-special-insert-overlay
+                                   (aref overlay 2)))
+                           result))
+    result))
+
+(defun lyskom-special-insert-overlay (start end args)
+  (lyskom-xemacs-or-gnu
+   (let ((overlay (make-extent start end)))
+     (while args
+       (set-extent-property overlay (car args) (car (cdr args)))
+       (setq args (nthcdr 2 args)))
+     (set-extent-priority overlay 1000))
+   (let ((overlay (make-overlay start end)))
+     (while args
+       (overlay-put overlay (car args) (car (cdr args)))
+       (setq args (nthcdr 2 args))))))
+
 (defun lyskom-format (format-string &rest argl)
-  (format-state->result (lyskom-do-format format-string argl)))
+  (lyskom-format-transform-result (lyskom-do-format format-string argl)))
 
 (defun lyskom-format-insert-overlays (start format-state)
   "Insert delayed overlays according to FORMAT-STATE."
@@ -1176,9 +1207,9 @@ The string is inserted just before the prompt, and if the prompt is not
 currently visible the text is queued to be inserted when the prompt
 reappears.
 
-Deferred insertions and overlays are not supported."
+Deferred insertions are not supported."
   (lyskom-insert-before-prompt
-   (format-state->result (lyskom-do-format format-string argl))))
+   (lyskom-format-transform-result (lyskom-do-format format-string argl))))
 
 
 (defun lyskom-do-format (format-string &optional argl allow-defer)
@@ -1899,7 +1930,7 @@ Deferred insertions and overlays are not supported."
                                       tmp))
                tmp)))))
 
-(defun lyskom-postprocess-text (start end)
+(defun lyskom-postprocess-text (start end &rest args)
   (condition-case nil
       (smiley-region start (min (point-max) (1+ end)))
     (error nil)))
@@ -1915,7 +1946,7 @@ in lyskom-messages."
 
 
 (lyskom-external-function w3-finish-drawing)
-(defun lyskom-w3-region (start end)
+(defun lyskom-w3-region (start end &rest args)
   (unwind-protect
     (condition-case var
       (save-restriction
@@ -3925,6 +3956,7 @@ One parameter - the prompt string."
   (lyskom-set-queue-priority 'async 3)
   (lyskom-set-queue-priority 'prefetch 0)
   (run-hooks 'lyskom-after-load-hook)
+  (run-hooks 'kom-after-load-hook)
   (setq lyskom-is-loaded t))
 
 
@@ -3932,7 +3964,7 @@ One parameter - the prompt string."
 (provide 'lyskom-rest)
 
 ;;; This should be the very last lines of lyskom.el Everything should
-;;; be loaded now, so it's time to run the lyskom-after-load-hook.
+;;; be loaded now, so it's time to run the kom-after-load-hook.
 
 
 (lyskom-end-of-compilation)

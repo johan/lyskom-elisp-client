@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.70 2002-04-26 21:16:12 byers Exp $
+;;;;; $Id: option-edit.el,v 44.71 2002-05-07 20:12:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.70 2002-04-26 21:16:12 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.71 2002-05-07 20:12:12 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -198,7 +198,7 @@
     [kom-ignore-message-senders]
     [kom-ignore-message-recipients]
     [kom-show-personal-message-date]
-    [lyskom-filter-outgoing-messages]
+    [kom-filter-outgoing-messages]
     "\n\n"
     section
     (writing bold centered)
@@ -616,7 +616,7 @@ customize buffer but do not save them to the server."
               (const (group-rcpt group))
               (const (sender-rcpt sender))
               (const (last-recipient-recpt last-recipient)))))
-    (lyskom-filter-outgoing-messages (noggle (yes no)))
+    (kom-filter-outgoing-messages (noggle (yes no)))
     (kom-friends (repeat (person nil :tag name) :indent 4))
     (kom-morons (repeat (person nil :tag name) :indent 4))
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
