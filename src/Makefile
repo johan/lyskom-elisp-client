@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 38.10 1995-11-16 23:46:00 davidk Exp $
+# $Id: Makefile,v 38.11 1996-01-08 08:18:09 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.10 1995-11-16 23:46:00 davidk Exp $
+# $Id: Makefile,v 38.11 1996-01-08 08:18:09 davidk Exp $
 #
 
 CLIENTVERSION = 0.39
@@ -82,6 +82,9 @@ vars.el: vars.el.in Makefile
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 	chmod 444 vars.el
 
+lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
+
 lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
 
@@ -90,11 +93,12 @@ lyskom.elc: lyskom.el
 fast: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
 
-english-lyskom.elc: $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC)
-	cat $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC) > english-lyskom.elc
+# English version
+english-lyskom.el: $(HEADER-EL) $(ENGLISH-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(ENGLISH-EL) $(PARTS-EL) > english-lyskom.el
 
-lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
-	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
+english-lyskom.elc: english-lyskom.el
+	$(EMACS-BATCH) -f batch-byte-compile english-lyskom.el
 
 $(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 

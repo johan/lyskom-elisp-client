@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.9 1995-11-16 23:46:09 davidk Exp $
+;;;;; $Id: commands1.el,v 38.10 1996-01-08 08:18:14 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.9 1995-11-16 23:46:09 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.10 1996-01-08 08:18:14 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -369,7 +369,7 @@ Returns t if it was possible, otherwise nil."
   (if (null answer)
       (progn
 	(lyskom-insert-string 'nope)
-	(if (conf-type->rd_prot conf-conf-stat)
+	(if (conf-type->rd_prot (conf-stat->conf-type conf-conf-stat))
 	    ;; The conference is protected. Tell the user to contact
 	    (let ((supervisorconf (blocking-do
 				   'get-conf-stat

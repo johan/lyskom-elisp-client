@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.6 1995-10-28 11:07:36 byers Exp $
+;;;;; $Id: edit-text.el,v 38.7 1996-01-08 08:18:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.6 1995-10-28 11:07:36 byers Exp $\n"))
+	      "$Id: edit-text.el,v 38.7 1996-01-08 08:18:26 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -90,7 +90,7 @@ Does lyskom-end-of-command."
     (condition-case emacs-18\.55
 	(process-kill-without-query (get-buffer-process (current-buffer)) t)
       (error
-       ;; You loose some...
+       ;; You lose some...
        (message "Old emacs! Upgrade!")
        (process-kill-without-query (get-buffer-process (current-buffer)))))
     (cond
@@ -349,11 +349,12 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (j-or-n-p (lyskom-get-string 'already-sent)))
       (progn 
 	(let ((buffer (current-buffer))
-	      misc-list subject message)
+	      headers misc-list subject message)
 
 	  (save-excursion
-	    (setq misc-list (lyskom-edit-read-misc-list)
-		  subject (lyskom-edit-extract-subject)))
+	    (setq headers (lyskom-edit-parse-headers)
+		  misc-list (apply 'lyskom-create-misc-list (cdr headers))
+		  subject (car headers)))
 	  (setq message (lyskom-edit-extract-text))
 	  (setq mode-name "LysKOM sending")
 	  (save-excursion
@@ -532,62 +533,116 @@ Entry to this mode runs lyskom-edit-mode-hook."
 ;;;                       in lyskom-edit-mode.
 
 
-(defun lyskom-edit-read-misc-list ()
-  "Read misc-list from buffer."
-  ; +++ Should use lyskom-create-misc-list.
+(defun lyskom-looking-at-header (header angled)
+  "Check if point is at the beginning of a header of type HEADER.
+Return the corresponding number (conf no etc.). If ANGLED is non-nil,
+only match a number inside <>."
+  (if (looking-at
+       (concat (downcase (substring (lyskom-get-string header)
+				    0 4))
+	       (if angled
+		   ".*<\\([0-9]+\\)>"
+		 ".*[^0-9]\\([0-9]+\\)")))
+      (string-to-int (buffer-substring (match-beginning 1)
+				       (match-end 1)))
+    nil))
+
+(defun lyskom-edit-parse-headers ()
+  "Parse the headers of an article.
+They are returned as a list where the first element is the subject,
+and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
+either 'recpt, 'cc-recpt, 'comm-to or 'footn-to. This is to make it
+easy to use the result in a call to `lyskom-create-misc-list'."
   (goto-char (point-min))
-  (let ((result (cons 'MISC-LIST nil)))
-    (while (and (< (point) (point-max))
-		(not (or (equal (char-to-string 
-				 (elt 
-				  (if kom-emacs-knows-iso-8859-1
-				      lyskom-header-subject
-				    lyskom-swascii-header-subject)
-				  0))
-				(buffer-substring (point) (1+ (point))))
-			 (equal (char-to-string 
-				 (elt 
-				  (if kom-emacs-knows-iso-8859-1
-				      lyskom-swascii-header-subject
-				    lyskom-header-subject)
-				  0))
-				(buffer-substring (point) (1+ (point)))))))
-      (let ((char (string-to-char
-		   (upcase (buffer-substring (point) (1+ (point)))))))
-	(nconc 
-	 result
-	 (cons
+  (let ((result (cons "" nil)))		; The car will be replaced by
+					; the real subject
+    (save-restriction
+      ;; Narrow to headers
+      (search-forward (if kom-emacs-knows-iso-8859-1
+			  lyskom-header-separator
+			lyskom-swascii-header-separator))
+      (beginning-of-line)
+      (narrow-to-region (point-min) (point))
+      (goto-char (point-min))
+      (while (< (point) (point-max))
+	(let ((case-fold-search t)
+	      n)
 	  (cond
-	   ((eq char (elt (lyskom-get-string 'recipient) 0)) ;recpt
-	    (re-search-forward "<\\([0-9]+\\)>")
-	    (cons 'recpt (string-to-int (buffer-substring
-					 (match-beginning 1)
-					 (match-end 1)))))
-	   ((eq char (elt (lyskom-get-string 'carbon-copy) 0)) ;cc-recpt
-	    (re-search-forward "<\\([0-9]+\\)>")
-	    (cons 'cc-recpt (string-to-int (buffer-substring
-					    (match-beginning 1)
-					    (match-end 1)))))
-	   ((eq char (elt (lyskom-get-string 'comment) 0)) ;comm-to
-	    (re-search-forward "\\([0-9]+\\)")
-	    (cons 'comm-to (string-to-int (buffer-substring
-					   (match-beginning 1)
-					   (match-end 1)))))
-	   ((eq char (elt (lyskom-get-string 'footnote) 0)) ;footn-to
-	    (re-search-forward "\\([0-9]+\\)")
-	    (cons 'footn-to (string-to-int (buffer-substring
-					    (match-beginning 1)
-					    (match-end 1)))))
-	   (t 
-	    (signal 'lyskom-internal-error 
-		    (list "Unknown header line: "
-			  (buffer-substring (point)
-					    (progn 
-					      (end-of-line)
-					      (point)))))))
-	  nil)))
-      (beginning-of-line 2))
-    result))	   
+	   ((setq n (lyskom-looking-at-header 'recipient t))
+	    (nconc result (list 'recpt n)))
+	   ((setq n (lyskom-looking-at-header 'carbon-copy t))
+	    (nconc result (list 'cc-recpt n)))
+	   ((setq n (lyskom-looking-at-header 'comment nil))
+	    (nconc result (list 'comm-to n)))
+	   ((setq n (lyskom-looking-at-header 'footnote nil))
+	    (nconc result (list 'footn-to n)))
+	   ((looking-at (if kom-emacs-knows-iso-8859-1
+			    lyskom-header-subject
+			  lyskom-swascii-header-subject))
+	    (setcar result (lyskom-edit-extract-subject)))))
+	(forward-line 1)))
+    result))
+
+	    
+		 
+
+;;; OBSOLETE!!!
+;;(defun lyskom-edit-read-misc-list ()
+;;  "Read misc-list from buffer."
+;;  ; +++ Should use lyskom-create-misc-list.
+;;  (goto-char (point-min))
+;;  (let ((result (cons 'MISC-LIST nil)))
+;;    (while (and (< (point) (point-max))
+;;		(not (or (equal (char-to-string 
+;;				 (elt 
+;;				  (if kom-emacs-knows-iso-8859-1
+;;				      lyskom-header-subject
+;;				    lyskom-swascii-header-subject)
+;;				  0))
+;;				(buffer-substring (point) (1+ (point))))
+;;			 (equal (char-to-string 
+;;				 (elt 
+;;				  (if kom-emacs-knows-iso-8859-1
+;;				      lyskom-swascii-header-subject
+;;				    lyskom-header-subject)
+;;				  0))
+;;				(buffer-substring (point) (1+ (point)))))))
+;;      (let ((char (string-to-char
+;;		   (upcase (buffer-substring (point) (1+ (point)))))))
+;;	(nconc 
+;;	 result
+;;	 (cons
+;;	  (cond
+;;	   ((eq char (elt (lyskom-get-string 'recipient) 0)) ;recpt
+;;	    (re-search-forward "<\\([0-9]+\\)>")
+;;	    (cons 'recpt (string-to-int (buffer-substring
+;;					 (match-beginning 1)
+;;					 (match-end 1)))))
+;;	   ((eq char (elt (lyskom-get-string 'carbon-copy) 0)) ;cc-recpt
+;;	    (re-search-forward "<\\([0-9]+\\)>")
+;;	    (cons 'cc-recpt (string-to-int (buffer-substring
+;;					    (match-beginning 1)
+;;					    (match-end 1)))))
+;;	   ((eq char (elt (lyskom-get-string 'comment) 0)) ;comm-to
+;;	    (re-search-forward "\\([0-9]+\\)")
+;;	    (cons 'comm-to (string-to-int (buffer-substring
+;;					   (match-beginning 1)
+;;					   (match-end 1)))))
+;;	   ((eq char (elt (lyskom-get-string 'footnote) 0)) ;footn-to
+;;	    (re-search-forward "\\([0-9]+\\)")
+;;	    (cons 'footn-to (string-to-int (buffer-substring
+;;					    (match-beginning 1)
+;;					    (match-end 1)))))
+;;	   (t 
+;;	    (signal 'lyskom-internal-error 
+;;		    (list "Unknown header line: "
+;;			  (buffer-substring (point)
+;;					    (progn 
+;;					      (end-of-line)
+;;					      (point)))))))
+;;	  nil)))
+;;      (beginning-of-line 2))
+;;    result))	   
 
 
 (defun lyskom-edit-extract-subject ()

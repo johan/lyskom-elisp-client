@@ -1,4 +1,50 @@
+Mon Jan  8 08:56:24 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-looking-at-header): Ny funktion.
+	(lyskom-edit-parse-headers): Ny funktion som ersätter
+	lyskom-edit-read-misc-list. Denna använder de fyra första teckning
+	för att matcha headers.
+	(lyskom-edit-send): Använd lyskom-edit-parse-headers och
+	lyskom-create-misc-list istället.
+
+Sun Jan  7 23:37:33 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* english-strings.el (lyskom-strings): Fler fixar av %s -> %M
+	etc.
+
+Sat Jan  6 02:09:41 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* english-strings.el (lyskom-mode-map): Stavfel.
+	(lyskom-strings): Fixade lite fler strängar
+
+	* Makefile (english-lyskom.elc): Gör full kompilering.
+
+Thu Jan  4 02:27:29 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-add-member-answer): Typfel.
+
+Tue Dec 19 23:36:58 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-set-unread): Antog 1 utan prefix.
+
+	* filter.el (lyskom-filter-prompt): Hantera enradare. Visa
+	   under tiden.
+
+Fri Nov 24 02:54:25 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-list-summary): Inläggsnumret tar 8 kolumner.
+
+Mon Nov 20 01:47:47 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (lyskom-elisp-variables): La till
+	   kom-ding-on-personal-messages.
+
 Fri Nov 17 00:40:47 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-prefetch-all-confs): Försökt göra
+	   synkron. Buggar om den anropas från kom-login-hook.
+
+	* commands2.el (kom-list-news): Gjord synkron.
 
 	* flags.el (lyskom-read-options): Tog bort referenser till
 	   kom-do-when-starting.

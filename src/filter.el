@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.3 1995-10-28 11:07:49 byers Exp $
+;;;;; $Id: filter.el,v 38.4 1996-01-08 08:18:37 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -25,7 +25,7 @@
 ;;;; ================================================================
 ;;;; ================================================================
 ;;;;
-;;;; File: ignore.el
+;;;; File: filter.el
 ;;;;
 ;;;; Contains the support functions for text filtering.
 ;;;;
@@ -400,12 +400,13 @@ Returns nil if no such attribute is present."
 			 (substring (text->text-mass text) 
 				    0
 				    (match-beginning 0))
-		       ""))
+		       (text->text-mass text)))
 	       (lyskom-format-insert prompt
 				     text-stat
 				     subject
 				     (or conf-stat
-					 (text-stat->author text-stat))))))))
+					 (text-stat->author text-stat)))
+	       (lyskom-scroll))))))
   (setq lyskom-filter-hack nil))
 
 

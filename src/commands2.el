@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.7 1995-11-16 23:46:15 davidk Exp $
+;;;;; $Id: commands2.el,v 38.8 1996-01-08 08:18:19 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.7 1995-11-16 23:46:15 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.8 1996-01-08 08:18:19 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -528,7 +528,8 @@ means send the message to everybody."
 	  (if (null conf-stat)			;+++ annan errorhantering
 	    (lyskom-insert "Error!\n")		;+++ Hrrrmmmmffff????
 	    (let* ((narg (prefix-numeric-value arg))
-		   (n (if (and (<= 0 narg)
+		   (n (if (and arg
+			       (<= 0 narg)
 			       (<= narg (conf-stat->no-of-texts conf-stat)))
 			  narg
 			(lyskom-read-num-range 
@@ -557,11 +558,12 @@ means send the message to everybody."
 lyskom-prefetch-all-confs."
   (interactive "P")
   (lyskom-start-of-command 'kom-list-news)
-  (lyskom-prefetch-all-confs (cond
-			      ((numberp num) num)
-			      ((and (listp num)
-				    (numberp (car num))) (car num))
-			      (t nil)) 'lyskom-list-news))
+  (lyskom-prefetch-all-confs)
+  (lyskom-list-news (cond
+		     ((numberp num) num)
+		     ((and (listp num)
+			   (numberp (car num))) (car num))
+		     (t nil))))
 
 
 (defvar lyskom-special-conf-name "\\`Inl.gg .t mig\\'"
@@ -687,7 +689,7 @@ on one line."
 			 (read-list->nth lyskom-reading-list r))))))
 
 	  ; Then starts fetching all text-stats and text to list them.
-	  (lyskom-insert (format "%-7s%-6s%5s%s%s\n"
+	  (lyskom-insert (format "%-8s%-6s%5s%s%s\n"
 				 (lyskom-get-string 'Texts)
 				 (lyskom-get-string 'Date)
 				 (lyskom-get-string 'Lines)
