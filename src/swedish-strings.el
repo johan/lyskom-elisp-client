@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.44 1998-06-14 14:16:08 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.45 1998-07-23 15:04:11 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.44 1998-06-14 14:16:08 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.45 1998-07-23 15:04:11 petli Exp $\n"))
 
 
 ;;; ================================================================
@@ -84,6 +84,7 @@
   (define-key lyskom-sv-edit-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-sv-edit-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-sv-edit-mode-map "\C-c*" 'kom-button-press)
+  (define-key lyskom-sv-edit-mode-map "\C-c+" 'kom-menu-button-press)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-i" 'lyskom-sv-edit-insert-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-c" 'kom-edit-send)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-s" 'kom-ispell-message)
@@ -1068,6 +1069,8 @@ Uppkopplad sedan %#8s%#9s")
     (doing-nowhere-conn . "men är")
     (waiting-for-membership . "Väntar på att medlemskapslistan ska läsas in...%d/%d")
 
+    (keyboard-menu-help . "Nästa: SPC  Föreg: DEL  Utför: RET  Avbryt: ESC")
+    
 	   ;; From slow.el
     (no-such-command . "Det finns inget sådant kommando.\n")
     (command-completions . "Du kan mena någon av följande:\n %#1s\n")
@@ -1320,7 +1323,7 @@ Innehåll:    \"%#9s\"
 
     (kom-fast-reply           . "Snabb replik")
     (kom-agree                . "Hålla med")
-
+    
     ))
 
 (lyskom-language-var lyskom-language-codes sv
@@ -1574,6 +1577,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-sv-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-sv-mode-map "*" 'kom-button-press)
+  (define-key lyskom-sv-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-sv-mode-map "\C-i" 'kom-next-link)
   (define-key lyskom-sv-mode-map "\M-\C-i" 'kom-previous-link)
 
@@ -1762,6 +1766,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-prioritize-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-sv-prioritize-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map "*" 'kom-button-press)
+  (define-key lyskom-sv-prioritize-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-sv-prioritize-mode-map "?" 'kom-prioritize-help)
   (define-key lyskom-sv-prioritize-mode-map "\C-k" 'kom-prioritize-select)
   (define-key lyskom-sv-prioritize-mode-map "\C-y" 'kom-prioritize-yank)

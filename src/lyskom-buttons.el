@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.21 1998-06-14 14:15:49 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.22 1998-07-23 15:04:09 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.21 1998-06-14 14:15:49 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.22 1998-07-23 15:04:09 petli Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -118,6 +118,11 @@ on such functions see the documentation for lyskom-add-button-action."
   "Simulate a mouse button press at point."
   (interactive)
   (lyskom-button-press (point)))
+
+(defun kom-menu-button-press ()
+  "Simulate a menu mouse button press at point."
+  (interactive)
+  (lyskom-button-menu (point) 'key))
 
 (defun kom-button-click (event &optional do-default)
   "Execute the default action of the active area under the mouse.
@@ -229,11 +234,106 @@ If there is no active area, then do something else."
 	   ;; from simple keymaps to be title-less. A list consisting
 	   ;; of a single keymap works better. A patch is submittet to
 	   ;; the GNU folks. /davidk
-           (let* ((menu (lyskom-make-button-menu title actl
-                                                 buf arg text)))
-             (lyskom-do-popup-menu menu event))))))
+	   (if (eq event 'key)
+	       (lyskom-keyboard-menu title actl buf arg text)
+	     (let* ((menu (lyskom-make-button-menu title actl
+						   buf arg text)))
+	       (lyskom-do-popup-menu menu event)))))))
 
 
+(defun lyskom-keyboard-menu-get-event (prompt)
+  "Returns `prev', `next', `select', `cancel' or `help'."
+  (lyskom-xemacs-or-gnu
+   (let ((event (next-command-event nil prompt)))
+     (if (eq (event-type event) 'key-press)
+	 (cdr (assq (event-key event)
+		    '((space . next)
+		      (down . next)
+		      (?n . next)
+		      (?d . next)
+		      (delete . prev)
+		      (backspace . prev)
+		      (up . prev)
+		      (?p . prev)
+		      (?u . prev)
+		      (return . select)
+		      (linefeed . select)
+		      (escape . cancel)
+		      (?q . cancel)
+		      (?h . help))))
+       ))
+   (progn
+     (lyskom-message "%s" prompt)
+     (cdr (assq (read-event)
+		'((32 . next)
+		  (down . next)
+		  (?n . next)
+		  (?\C-n . next)
+		  (?d . next)
+		  (delete . prev)
+		  (backspace . prev)
+		  (up . prev)
+		  (?p . prev)
+		  (?\C-p . prev)
+		  (?u . prev)
+		  (return . select)
+		  (linefeed . select)
+		  (?\C-j . select)
+		  (escape . cancel)
+		  (?q . cancel)
+		  (?\C-h . help))))
+     )))
+		  
+(defun lyskom-keyboard-menu (title entries buf arg text)
+  "Do a keyboard menu selection."
+  (let ((cursor-in-echo-area t)
+	(entry entries)
+	(going t)
+	prefix
+	event)
+    (let ((maxlen 0)
+	  (e entries))
+      (while e
+	(if (> (length (car (car e))) maxlen)
+	    (setq maxlen (length (car (car e)))))
+	(setq e (cdr e)))
+      (setq prefix (substring title 0
+			      (min (length title)
+				   (- (window-width (minibuffer-window))
+				      maxlen 3)))))
+    (while going
+      (setq event (lyskom-keyboard-menu-get-event
+		   (format "%s: %s" prefix (car (car entry)))))
+      (cond
+       ;; Next menu item
+       ((eq event 'next)
+	(setq entry (or (cdr entry) entries)))
+
+       ;; Previous menu item
+       ((eq event 'prev)
+	(let ((e entries)
+	      (l nil))
+	  (while (and e (not (eq (cdr e) entry)))
+	    (setq l e
+		  e (cdr e)))
+	  (setq entry (or e l))))
+
+       ;; Select
+       ((eq event 'select)
+	(if entry
+	    (progn
+	      (setq going nil)
+	      (funcall (cdr (car entry)) buf arg text))))
+
+       ;; Help
+       ((eq event 'help)
+	(lyskom-keyboard-menu-get-event
+	 (lyskom-get-string 'keyboard-menu-help)))
+       
+       ;; Escape
+       ((eq event 'cancel)
+	(setq going nil))))))
+       
 
 (defun lyskom-button-press (pos)
   "Execute the default action of the active area at POS if any."
