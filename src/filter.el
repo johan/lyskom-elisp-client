@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 39.0 1996-03-14 18:17:38 davidk Exp $
+;;;;; $Id: filter.el,v 39.1 1996-03-21 20:28:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -184,7 +184,7 @@ Returns nil if no such attribute is present."
 (defun lyskom-filter-text-p-3 (author text &rest data)
   (if (or (null text)
 	  (null author))
-      nil
+      (setq lyskom-filter-hack nil)
     (let (subject recipient-list text-stat)
       
       ;;
