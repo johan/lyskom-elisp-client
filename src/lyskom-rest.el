@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.26 1997-02-19 08:35:42 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.27 1997-03-08 02:57:41 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.26 1997-02-19 08:35:42 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.27 1997-03-08 02:57:41 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1816,6 +1816,7 @@ wait for it to be prefetched."
       (lyskom-message (lyskom-get-string 'waiting-for-membership)
 		      lyskom-membership-is-read
 		      total)
+      (sit-for 0)
       (lyskom-accept-process-output))))
 
 
