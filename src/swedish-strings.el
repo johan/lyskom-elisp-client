@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.335 2003-08-14 14:16:55 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.336 2003-08-14 20:50:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.335 2003-08-14 14:16:55 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.336 2003-08-14 20:50:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1817,9 +1817,9 @@ Antal sessioner:     %21#1d (totalt)
                      %21#6d ej inloggade/hemliga/zombies\n")
     (server-status-first-text . "Äldsta befintliga text:     %14#1n\n")
     (server-status-last-text  . "Yngsta befintliga text:     %14#1n%#2?b%[ (%#2n vid start)%]%[%]\n")
-    (server-status-texts .      "Antal existerande inlägg:   %14#1d (%#2s, %#3d vid start)\n")
-    (server-status-confs .      "Antal existerande möten:    %14#1d (%#2s, %#3d vid start)\n")
-    (server-status-pers .       "Antal existerande personer: %14#1d (%#2s, %#3d vid start)\n")
+    (server-status-texts .      "Antal existerande inlägg:   %14#1d (%#2s just nu, %#3d vid start)\n")
+    (server-status-confs .      "Antal existerande möten:    %14#1d (%#2s just nu, %#3d vid start)\n")
+    (server-status-pers .       "Antal existerande personer: %14#1d (%#2s just nu, %#3d vid start)\n")
     (server-status-has-motd . "\nServern har en lapp på dörren:\n")
     (server-status-time . "Serverns tid:                   %#1s\n")
     (server-status-boot-time . "Servern startades:              %#1s\n")

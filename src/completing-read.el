@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.43 2003-08-13 19:23:35 byers Exp $
+;;;;; $Id: completing-read.el,v 44.44 2003-08-14 20:50:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.43 2003-08-13 19:23:35 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.44 2003-08-14 20:50:47 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -306,7 +306,11 @@ A string:    A name that matched nothing in the database."
                                   before-change-functions)
                             pre-command-hook (cons 'lyskom-read-from-minibuffer-pre-command pre-command-hook)
                             post-command-hook (cons 'lyskom-read-from-minibuffer-post-command post-command-hook)))
-                    minibuffer-setup-hook)))
+                    minibuffer-setup-hook))
+             (minibuffer-exit-hook
+              (cons 'lyskom-read-from-minibuffer-cancel-magic
+                    minibuffer-exit-hook)))
+
          (setq read-string (completing-read (cond ((stringp prompt) prompt)
                                                   ((symbolp prompt) (lyskom-get-string prompt))
                                                   (t (lyskom-get-string 'conf-prompt)))
