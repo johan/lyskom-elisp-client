@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.13 1996-03-12 02:17:56 davidk Exp $
+;;;;; $Id: edit-text.el,v 39.0 1996-03-14 18:17:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.13 1996-03-12 02:17:56 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 39.0 1996-03-14 18:17:20 davidk Exp $\n"))
 
 
 ;;;; ================================================================

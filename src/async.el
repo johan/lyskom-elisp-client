@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.15 1996-02-21 19:47:47 davidk Exp $
+;;;;; $Id: async.el,v 39.0 1996-03-14 18:16:47 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.15 1996-02-21 19:47:47 davidk Exp $\n"))
+	      "$Id: async.el,v 39.0 1996-03-14 18:16:47 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)

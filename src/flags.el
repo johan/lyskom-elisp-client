@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 38.6 1996-02-17 05:41:55 davidk Exp $
+;;;;; $Id: flags.el,v 39.0 1996-03-14 18:17:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 38.6 1996-02-17 05:41:55 davidk Exp $\n"))
+	      "$Id: flags.el,v 39.0 1996-03-14 18:17:40 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
