@@ -331,6 +331,12 @@
    Swedish name: Kopiera inställningar
    English name: Copy options
 
+** kom-set-keep-commented: Change the number of days a text is
+   protected from automatic deletion (garbage collection) after the
+   most recent comment is written.
+
+   Swedish name: Ändra minsta livslängd (för kommenterade texter)
+   English name: Change minimum expiration (for commented texts)
 
 
 * New settings
@@ -372,6 +378,8 @@
    kom-list-new-conferences and kom-list-new-persons.
 
 
+
+
 * Changed settings
 
 ** kom-server-aliases no longer contains the built-in list of servers.
@@ -394,6 +402,33 @@
 
 
 * Other new major features 
+
+** The initial values shown when reding conference names have been
+   altered. Now (nearly) all commands provide an initial value. The
+   initial value is configurable, but users are discouraged from
+   altering the configuration in this version of the client as the
+   format of the configuration parameters is likely to change in
+   future versions of the client.
+
+   In general, commands use the conference name under point (if point
+   is on a conference name) as the initial value. If point is not on a
+   conference name, most commands use the current conference as the
+   initial value. There are several exceptions to this rule, where
+   other defaults make more sense.
+
+   The initial value is deleted automatically if you start typing a
+   new name, and can be edited by moving the cursor before typing.
+
+** On servers that support it, the client uses UTC timestamps, and
+   will display dates and times in the local time zone, rather than
+   the server time zone.
+
+** kom-move-text can move attachments and footnotes with the main
+   text. It asks for confirmation before doing so.
+
+** kom-sub-recipient can remove recipients from attachments and
+   footnotes as it removed recipients from the main text. It asks for
+   confirmation before doing so.
 
 ** Reception of group messages can be controlled separately of the
    passive/active status of a membership. This requires a server that
