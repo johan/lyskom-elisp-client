@@ -63,6 +63,13 @@ tar-arkivet.
 ** Man kan simulera högerknapptryckning med + för att kunna använda
    menyer med tangentbordet.
 
+** Långa inlägg kan kortas av när man återser dem.  Se inställningarna
+   för "Korta av långa inlägg".
+
+** Vilkalistorna kan även visa när en session kopplades upp, och hur
+   länge den har varit inaktiv.  Se inställningen "Visa när personer
+   loggade in och när de var aktiva".
+
 
 * Tilläggsinformation
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.40 1998-07-23 15:04:06 petli Exp $
+;;;;; $Id: english-strings.el,v 44.41 1999-02-18 16:29:38 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.40 1998-07-23 15:04:06 petli Exp $"))
+              "$Id: english-strings.el,v 44.41 1999-02-18 16:29:38 petli Exp $"))
 
 
 ;;; ================================================================
@@ -337,6 +337,9 @@ and you have finished reading. Please come back later.
     (is-in-conf . "In conference")
     (from-machine . "At")
     (is-doing . "Activity")
+    (connection-time . "Connected")
+    (active-last . "Active last")
+    (active . "Active")
     (lyskom-client . "Client")
     (text-to-add-recipient . "Add recipient to which article:")
     (text-to-add-copy . "Add recipient of carbon copy of which article:")
@@ -1064,10 +1067,12 @@ On since %#8s%#9s")
     (language-set-to . "Language set to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
 
-    (reformat-generic . "(%#1s)")
-    (reformat-html . "(HTML)")
-    (reformat-enriched . "(Enriched)")
-    (reformat-filled . "(Filled)")
+;;    (reformat-generic . "(%#1s)")
+    (reformat-html . "HTML")
+    (reformat-enriched . "enriched")
+    (reformat-filled . "filled")
+
+    (reformat-truncated . "truncated")
 
     (need-library . "The \"%#1s\" package is required for this command.\n")
     (calc-expression . "Expression: ")
@@ -1876,6 +1881,8 @@ Select whether to execute command or keyboard macro.")
     (long-format .  "Show help texts")
     (short-format . "Hide help texts")
 
+    (truncate-threshold-lines . "Max lines")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -2154,6 +2161,15 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
   If dashed lines are off the author's name will be shown as in this
   example, but the dashed lines are natually not displayed.")
 
+    (kom-truncate-threshold-doc . "\
+  If this is activated texts longer than the maximum number of lines will
+  be truncated when you review comments, review marked texts or review the
+  first or last texts in a conference.  Texts will not be truncated when
+  you review a text, review a tree or read the next text.")
+
+    (kom-truncate-show-lines-doc . "\
+  The number of lines to show of truncated texts.")
+
     (kom-print-number-of-unread-on-entrance-doc . "\
   Determines whether the number of unread articles is shown when entering
   a conference:
@@ -2205,6 +2221,9 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
      6810 George Berkeley                      Philosophy                     
      7571 John Locke                           Philosophy")
 
+    (kom-show-since-and-when-doc . "\
+  If this is on, the list of active users will include the connection time
+  and the inactivity period for each user.")
 
     (kom-idle-hide-doc . "\
   The listing of active users normally only shows those users who have been
@@ -2429,6 +2448,11 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
     (kom-show-author-at-end-tag .
 "Show the name of the author after the body:       ")
 
+    (kom-truncate-threshold-tag .
+"Truncate long texts:                              ")
+    (kom-truncate-show-lines-tag .
+"Lines to show of truncated texts:                 ")
+
     (kom-reading-puts-comments-in-pointers-last-tag . "Comment links are shown:")
     (kom-read-depth-first-tag . "Read order:")
     (kom-deferred-printing-tag . "Delayed display:")
@@ -2444,6 +2468,8 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 "Number of minutes of inactivity before session is hidden:      ")
     (kom-show-where-and-what-tag . 
 "Show where sessions are logged on from and what they are doing:    ")
+    (kom-show-since-and-when-tag . 
+"Show when sessions connected and how long they have been inactive: ")
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.36 1998-07-23 15:46:22 petli Exp $
+;;;;; $Id: commands1.el,v 44.37 1999-02-18 16:29:35 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.36 1998-07-23 15:46:22 petli Exp $\n"))
+	      "$Id: commands1.el,v 44.37 1999-02-18 16:29:35 petli Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -253,7 +253,10 @@ the other ones."
                 (lyskom-create-text-list (cdr text-nos))
                 lyskom-current-text)
                lyskom-reading-list t))
-          (lyskom-view-text (car text-nos)))
+          (lyskom-view-text (car text-nos)
+			    nil nil nil 
+			    nil nil nil
+			    t))
       (lyskom-insert-string 'no-comment-to))))
 
 
@@ -2200,6 +2203,8 @@ Uses Protocol A version 9 calls"
 			   session-width "P" "M"))
 	 (format-string-2 (lyskom-info-line-format-string
 			   session-width "D" "s"))
+	 (format-string-3 (lyskom-info-line-format-string
+			   session-width "D" "s"))
 	 (lyskom-default-conf-string 'not-present-anywhere)
          (lyskom-default-pers-string 'secret-person))
 
@@ -2222,6 +2227,12 @@ Uses Protocol A version 9 calls"
 			      ""
 			      (lyskom-get-string 'from-machine)
 			      (lyskom-get-string 'is-doing)))
+
+    (if kom-show-since-and-when
+	(lyskom-format-insert format-string-3
+			      ""
+			      (lyskom-get-string 'connection-time)
+			      (lyskom-get-string 'active-last)))
     
     (lyskom-insert
      (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
@@ -2271,6 +2282,42 @@ Uses Protocol A version 9 calls"
 	       username
 	       (concat "(" (dynamic-session-info->what-am-i-doing who-info)
 		       ")"))))
+	(if kom-show-since-and-when
+	    (let ((active (if (< (dynamic-session-info->idle-time who-info) 60)
+			      (lyskom-get-string 'active)
+			    (lyskom-format-secs
+			     (dynamic-session-info->idle-time who-info))))
+		  defer-info
+		  static
+		  since)
+	      (cond (kom-deferred-printing
+		     (setq static (cache-get-static-session-info session-no))
+		     (if static
+			 (setq since
+			       (upcase-initials
+				(lyskom-format-time
+				 (static-session-info->connection-time static))))
+		       (setq defer-info
+			     (lyskom-create-defer-info
+			      'get-static-session-info
+			      session-no
+			      'lyskom-insert-deferred-session-info-since
+			      (make-marker)
+			      (length lyskom-defer-indicator)
+			      "%#1s"))
+		       (setq since defer-info)))
+		    (t
+		     (setq static
+			   (blocking-do 'get-static-session-info session-no))
+		     (setq since (upcase-initials
+				  (lyskom-format-time
+				   (static-session-info->connection-time static))))))
+	      (lyskom-format-insert
+	       format-string-3
+	       ""
+	       since
+	       active)))
+	
 	(setq who-list (cdr who-list))))
     
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
@@ -2323,6 +2370,14 @@ Uses Protocol A version 9 calls"
 				(static-session-info->username session-info)
 				(static-session-info->ident-user session-info)
 				(static-session-info->hostname session-info)))
+    (lyskom-replace-deferred defer-info "")))
+
+(defun lyskom-insert-deferred-session-info-since (session-info defer-info)
+  (if session-info
+      (lyskom-replace-deferred defer-info
+			       (upcase-initials
+				(lyskom-format-time
+				 (static-session-info->connection-time session-info))))
     (lyskom-replace-deferred defer-info "")))
 
 ;;; =====================================================================

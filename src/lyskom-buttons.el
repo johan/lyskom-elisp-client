@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.23 1998-12-15 12:35:30 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.24 1999-02-18 16:29:40 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.23 1998-12-15 12:35:30 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.24 1999-02-18 16:29:40 petli Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -323,6 +323,7 @@ If there is no active area, then do something else."
 	(if entry
 	    (progn
 	      (setq going nil)
+	      (message nil)
 	      (funcall (cdr (car entry)) buf arg text))))
 
        ;; Help

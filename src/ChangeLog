@@ -1,3 +1,15 @@
+Thu Feb 18 17:17:42 1999  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* commands1.el (lyskom-who-is-on-9):
+	(lyskom-insert-deferred-session-info-since): Vilkalistan kan visa
+ 	när en session kopplade upp sig och hur länge den har varit
+ 	inaktiv.
+	
+	* vars.el.in (kom-show-since-and-when):
+	* english-strings.el:
+	* swedish-strings.el:
+	* option-edit.el: Konfigurera ovanstående beteende.
+
 1999-01-09  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (kom-where-is): Nytt kommando.
@@ -25,6 +37,34 @@ Mon Sep 14 19:54:03 1998  David Kagedal  <davidk@lysator.liu.se>
 	* prioritize.el (kom-prioritize): Gör
  	(lyskom-wait-for-membership).
 
+Mon Oct 12 19:45:52 1998  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* lyskom-rest.el (kom-view-next-text): Sätter flat-review till t
+	om texten är en återsedd kommenter eller en markerad text.
+
+	* commands1.el (lyskom-view-commented-text): Sätter
+	flat-review-argumentet till t.
+
+	* vars.el.in (kom-truncate-threshold, kom-truncate-show-lines):
+	Nya variabler.
+
+	* option-edit.el: Konfigurera ovanstående variabler.
+	
+	* english-strings.el (lyskom-message): 
+	  swedish-strings.el (lyskom-message): reformat-* ändrade.
+
+	* lyskom-rest.el (lyskom-signal-reformatted-text): Bygger en lista
+	av formatteringsmetoderna istället för att bara sätta en symbol.
+
+	* view-text.el (lyskom-format-text-footer): format-flags (och
+	därmed lyskom-last-text-format-flags) är nu en lista av symboler i
+	lyskom-messages, som formatteras till en parantes med komman
+	emellan strängarna.
+	
+	(lyskom-view-text, lyskom-print-text): Nytt argument (flat-review)
+	som är t när man återser en kommentar eller en markerad text.
+	Används för att trunkera inlägg om användaren så önskar.
+
 1998-08-16  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (kom-edit-send lyskom-edit-send
@@ -50,6 +90,11 @@ Mon Sep 14 19:54:03 1998  David Kagedal  <davidk@lysator.liu.se>
 	* swedish-strings.el (kom-tell-phrases): Lade till
 	kom-tell-is-anonymous 
 
+Thu Jul 30 18:36:10 1998  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-keyboard-menu): Rensa echo-arean innan
+	kommandot körs.
+	
 Thu Jul 23 15:03:10 1998  Peter Liljenberg  <petli@lysator.liu.se>
 
 	* commands1.el (lyskom-who-is-on-check-membership-9):
