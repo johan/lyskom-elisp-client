@@ -12,7 +12,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.2 1991-08-23 00:41:10 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.3 1991-08-28 03:26:27 ceder Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
@@ -265,7 +265,7 @@ Lyskom-sessionen är avslutad.
     (pers-status-record . "Status för person %#1s (%#2d)\n")
     (created-time .  "Skapad:%34#1s\n\n")
     (created-confs . "Skapade möten:%27#1d\n")
-    (created-confs . "Skapade personer:%24#1d\n")
+    (created-persons . "Skapade personer:%24#1d\n")
     (created-texts . "Skapade texter:%26#1d\n")
     (created-lines . "Skapade rader:%27#1d\n")
     (created-chars . "Antal skapade tecken:%20#1d\n")

@@ -8,7 +8,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.1 1991-08-21 15:44:56 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.2 1991-08-28 03:26:29 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -306,7 +306,7 @@ is the one we are interested in."
 
     (lyskom-format-insert 'created-confs
 			  (pers-stat->created-confs pers-stat))
-    (lyskom-format-insert 'created-confs
+    (lyskom-format-insert 'created-persons
 			  (pers-stat->created-persons pers-stat))
     (lyskom-format-insert 'created-texts
 			  (1- (+ (pers-stat->no-of-created-texts pers-stat)
