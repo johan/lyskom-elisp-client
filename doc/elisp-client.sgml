@@ -845,7 +845,16 @@
         anmärkning från ett inlägg till ett annat som man kan göra med
         ett riktigt inlägg. Anmärkningar visas alltid direkt efter den
         aktuella texten; först de som är skrivna av författaren till
-        inlägget och sedan de skrivna av andra.
+        inlägget och sedan de skrivna av andra. Notera också att det
+        inte går att få reda på när det tillkommer en anmärkning på
+        ett inlägg, och heller inte sparas någon information om vilka
+        anmärkningar man läst. Detta innebär att de enda som kommer se
+	anmärkningen är de som läser inlägget först efter att den
+	lades till. Det i sin tur gör anmärkningar bra lämpade till
+	korta noter som `Oops, glömde ett "inte" före "klok".' och
+	direkt olämpliga för allt som någon som redan läst inlägget
+	(till exempel författaren) skulle kunna tänkas vilja
+	kommentera.
       </para>
 
       <comment>
