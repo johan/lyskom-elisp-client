@@ -1,5 +1,7 @@
 Tue Oct  8 04:44:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* lyskom-rest.el: Anropa lyskom-build-menus på toppnivån.
+
 	* menus.el (lyskom-background-menu): Ny funktion.
 
 Tue Oct  8 03:55:40 1996  David Kågedal  <kg@infovav.se>

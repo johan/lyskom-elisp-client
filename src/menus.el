@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.3 1996-10-08 02:58:49 davidk Exp $
+;;;;; $Id: menus.el,v 44.4 1996-10-08 03:25:51 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,44 +31,51 @@
 ;;;;
 
 
-(setq lyskom-menus
-      '((menu lyskom
-	      ((menu read ((item kom-view-next-text)
-			   hline
-			   (item kom-view-commented-text)
-			   (item kom-view-previous-commented-text)
-			   (item kom-review-comments)
-			   (item kom-review-tree)
-			   (item kom-find-root)))
-	       (menu dont-read((item kom-jump)
-			       (item kom-set-unread)))
-	       (menu write ((item kom-write-text)
-			    (item kom-send-letter)
-			    (item kom-write-comment)
-			    (item kom-comment-previous)
-			    hline
-			    (item kom-send-message)))
-	       (menu move ((item kom-go-to-conf)
-			   (item kom-go-to-next-conf)))
-	       (menu info ((item kom-who-is-on)
-			   (item kom-list-news)
-			   hline
-			   (item kom-status-person)
-			   (item kom-status-conf)
-			   (item kom-review-presentation)
-			   hline
-			   (item kom-list-conferences)
-			   (item kom-list-persons)))))))
+(defvar lyskom-menus
+  '((menu lyskom
+	  ((menu read ((item kom-view-next-text)
+		       hline
+		       (item kom-view-commented-text)
+		       (item kom-view-previous-commented-text)
+		       (item kom-review-comments)
+		       (item kom-review-tree)
+		       (item kom-find-root)))
+	   (menu dont-read((item kom-jump)
+			   (item kom-set-unread)))
+	   (menu write ((item kom-write-text)
+			(item kom-send-letter)
+			(item kom-write-comment)
+			(item kom-comment-previous)
+			hline
+			(item kom-send-message)))
+	   (menu move ((item kom-go-to-conf)
+		       (item kom-go-to-next-conf)))
+	   (menu info ((item kom-who-is-on)
+		       (item kom-list-news)
+		       hline
+		       (item kom-status-person)
+		       (item kom-status-conf)
+		       (item kom-review-presentation)
+		       hline
+		       (item kom-list-conferences)
+		       (item kom-list-persons))))))
+  "The menus used in LysKOM.")
 
-(setq lyskom-menu-names
-      '((lyskom . "LysKOM")
-	(read . "Läs")
-	(dont-read . "Hoppa")
-	(write . "Skriv")
-	(move . "Gå")
-	(info . "Om")))
+(defvar lyskom-menu-names
+  '((lyskom . "LysKOM")
+    (read . "Läs")
+    (dont-read . "Hoppa")
+    (write . "Skriv")
+    (move . "Gå")
+    (info . "Om"))
+  "The titles of the menus and submenus in LysKOM.")
 
-(setq lyskom-menu-map (make-sparse-keymap))
+(defvar lyskom-menu-map nil
+  "A keyamp describing the LysKOM top menu.")
+
+(when (not lyskom-menu-map) 
+  (setq lyskom-menu-map (make-sparse-keymap)))
+
 
 (defun lyskom-build-menus ()
   (define-key lyskom-mode-map [menu-bar]
