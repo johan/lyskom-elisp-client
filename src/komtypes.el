@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.36 2003-08-17 15:33:19 byers Exp $
+;;;;; $Id: komtypes.el,v 44.37 2003-08-30 16:42:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.36 2003-08-17 15:33:19 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.37 2003-08-30 16:42:01 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -793,7 +793,7 @@ Do nothing if the TLIST is less than N elements long."
   (set-text-list->texts-internal tlist (nthcdr (max (- (text-list->length tlist) n) 0)
                                                (text-list->texts tlist)))
   (when (text-list->length-internal tlist)
-    (set-text-list->length-internal tlist (- (text-list->length-internal tlist) n)))
+    (set-text-list->length-internal tlist n))
   (unless (text-list->texts tlist)
     (set-text-list->length-internal tlist 0)
     (set-text-list->tail tlist nil)))
