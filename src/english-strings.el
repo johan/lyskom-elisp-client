@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.14 1997-01-31 21:36:44 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.15 1997-02-07 18:07:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.14 1997-01-31 21:36:44 davidk Exp $"))
+              "$Id: english-strings.el,v 44.15 1997-02-07 18:07:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -62,17 +62,17 @@
 (if lyskom-en-edit-mode-map
     nil
   (setq lyskom-en-edit-mode-map (make-sparse-keymap))
-  (define-prefix-command 'lyskom-edit-prefix)
-  (define-prefix-command 'lyskom-edit-review-prefix)
-  (define-prefix-command 'lyskom-edit-insert-prefix)
-  (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-edit-prefix)
+  (define-prefix-command 'lyskom-en-edit-prefix)
+  (define-prefix-command 'lyskom-en-edit-review-prefix)
+  (define-prefix-command 'lyskom-en-edit-insert-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-en-edit-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
-  (define-key lyskom-en-edit-mode-map "\C-cr"	'lyskom-edit-review-prefix)
-  (define-key lyskom-en-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
-  (define-key lyskom-en-edit-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-en-edit-mode-map [down-mouse-3] 'kom-mouse-3)
-  (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-key-mouse-2)
+  (define-key lyskom-en-edit-mode-map "\C-cr"	'lyskom-en-edit-review-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-ci"	'lyskom-en-edit-insert-prefix)
+  (define-key lyskom-sv-edit-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
+  (define-key lyskom-sv-edit-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-sv-edit-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-sv-edit-mode-map "\C-c*" 'kom-button-press)
   (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
   (define-key lyskom-en-edit-mode-map "\C-ck"	'kom-edit-quit)
   (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
@@ -91,8 +91,8 @@
   (define-key lyskom-en-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-mode-map "\C-ci "	'kom-edit-insert-text)
-  (define-prefix-command 'lyskom-edit-add-prefix)
-  (define-key lyskom-en-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
+  (define-prefix-command 'lyskom-en-edit-add-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-ca" 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-mode-map "\C-car" 'kom-edit-add-recipient)
   (define-key lyskom-en-edit-mode-map "\C-cac" 'kom-edit-add-copy)
   (define-key lyskom-en-edit-mode-map "\C-ca?" 'lyskom-help))
@@ -167,6 +167,7 @@ on how to do this.")
 Email-address:\t\nWWW:\t\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
+    (secret-person . "Secret user")
     (in-secret-conference . "Secret conference (%#1d).")
     (start-new-session-same-server
      . "You are already connected to that server. Do you want a new session? ")
@@ -810,8 +811,10 @@ You should set it to a better value.\n")
 
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
-    (prompt-modifier-ansaphone . "[%s]")
-    (prompt-modifier-messages . "%s (%d messages)")
+
+    (prompt-several-messages . "(%d messages)")
+    (prompt-single-message . "(%d message)")
+
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized article")
     (review-next-text-prompt . "Review next article")
@@ -1190,25 +1193,25 @@ On since %#8s%#9s")
     nil
   (setq lyskom-en-mode-map (make-keymap))
   (suppress-keymap lyskom-en-mode-map)
-  (define-prefix-command 'lyskom-review-prefix)
-  (define-prefix-command 'lyskom-change-prefix)
-  (define-prefix-command 'lyskom-next-prefix)
-  (define-prefix-command 'lyskom-list-prefix)
-  (define-prefix-command 'lyskom-filter-get-prefix)
-  (define-prefix-command 'lyskom-S-prefix)
-  (define-prefix-command 'lyskom-previous-prefix)
-  (define-key lyskom-en-mode-map "A" 'lyskom-change-prefix)
-  (define-key lyskom-en-mode-map "r" 'lyskom-review-prefix)
-  (define-key lyskom-en-mode-map "f" 'lyskom-filter-get-prefix)
-  (define-key lyskom-en-mode-map "n" 'lyskom-next-prefix)
-  (define-key lyskom-en-mode-map "l" 'lyskom-list-prefix)
-  (define-key lyskom-en-mode-map "s" 'lyskom-S-prefix)
-  (define-key lyskom-en-mode-map "b" 'lyskom-previous-prefix)
+  (define-prefix-command 'lyskom-en-review-prefix)
+  (define-prefix-command 'lyskom-en-change-prefix)
+  (define-prefix-command 'lyskom-en-next-prefix)
+  (define-prefix-command 'lyskom-en-list-prefix)
+  (define-prefix-command 'lyskom-en-filter-get-prefix)
+  (define-prefix-command 'lyskom-en-S-prefix)
+  (define-prefix-command 'lyskom-en-previous-prefix)
+  (define-key lyskom-en-mode-map "A" 'lyskom-en-change-prefix)
+  (define-key lyskom-en-mode-map "r" 'lyskom-en-review-prefix)
+  (define-key lyskom-en-mode-map "f" 'lyskom-en-filter-get-prefix)
+  (define-key lyskom-en-mode-map "n" 'lyskom-en-next-prefix)
+  (define-key lyskom-en-mode-map "l" 'lyskom-en-list-prefix)
+  (define-key lyskom-en-mode-map "s" 'lyskom-en-S-prefix)
+  (define-key lyskom-en-mode-map "b" 'lyskom-en-previous-prefix)
 
-  (define-key lyskom-en-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-en-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-en-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
+  (define-key lyskom-en-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-en-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-en-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-en-mode-map "*" 'kom-button-press)
   (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)
   (define-key lyskom-en-mode-map "\M-\C-i" 'kom-previous-link)
 
@@ -1318,8 +1321,6 @@ On since %#8s%#9s")
 ;;; Keymap for filter editing
 ;;;
 
-(lyskom-language-var lyskom-filter-edit-map en nil)
-
 (defvar lyskom-en-filter-edit-map nil)
 (lyskom-language-keymap lyskom-filter-edit-map en lyskom-en-filter-edit-map)
 
@@ -1381,10 +1382,10 @@ On since %#8s%#9s")
     nil
   (setq lyskom-en-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-en-prioritize-mode-map)
-  (define-key lyskom-en-prioritize-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-en-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
+  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-en-prioritize-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-en-prioritize-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-en-prioritize-mode-map "*" 'kom-button-press)
   (define-key lyskom-en-prioritize-mode-map "?" 'kom-prioritize-help)
   (define-key lyskom-en-prioritize-mode-map "\C-k" 'kom-prioritize-select)
   (define-key lyskom-en-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
@@ -1398,10 +1399,10 @@ On since %#8s%#9s")
   (define-key lyskom-en-prioritize-mode-map [up] 'kom-prioritize-previous-line)
   (define-key lyskom-en-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
   (define-key lyskom-en-prioritize-mode-map "p" 'kom-prioritize-previous-line)
-  (define-key lyskom-en-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
+  (define-key lyskom-en-prioritize-mode-map [(meta up)] 'kom-prioritize-move-up)
   (define-key lyskom-en-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
   (define-key lyskom-en-prioritize-mode-map "u" 'kom-prioritize-move-up)
-  (define-key lyskom-en-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
+  (define-key lyskom-en-prioritize-mode-map [(meta down)] 'kom-prioritize-move-down)
   (define-key lyskom-en-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
   (define-key lyskom-en-prioritize-mode-map "d" 'kom-prioritize-move-down)
   (define-key lyskom-en-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
@@ -1426,21 +1427,22 @@ On since %#8s%#9s")
 ;;;; Strings and things for the customize mode
 ;;;;
 
-(defvar lyskom-customize-map nil
-  "Keymap for the customize buffer")
+(defvar lyskom-en-customize-map nil)
+(lyskom-language-keymap lyskom-edit-mode-map en lyskom-en-edit-mode-map)
+
 
 (if lyskom-customize-map
     nil
   (setq lyskom-customize-map (make-sparse-keymap))
   (set-keymap-parent lyskom-customize-map global-map)
-  (define-key lyskom-customize-map "\t" 'widget-forward)
-  (define-key lyskom-customize-map "\M-\t" 'widget-backward)
-  (define-key lyskom-customize-map "\C-m" 'widget-button-press)
-  (define-key lyskom-customize-map [mouse-2] 'widget-button-click)
-  (define-key lyskom-customize-map "\C-c\C-c" 'lyskom-customize-save-and-quit)
-  (define-key lyskom-customize-map "\C-c\C-k" 'lyskom-customize-quit)
-  (define-key lyskom-customize-map "\C-c\C-s" 'lyskom-customize-save)
-  (define-key lyskom-customize-map "\C-c\C-a" 'lyskom-customize-apply)
+  (define-key lyskom-en-customize-map "\t" 'widget-forward)
+  (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
+  (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)
+  (define-key lyskom-en-customize-map (lyskom-keys [mouse-2]) 'widget-button-click)
+  (define-key lyskom-en-customize-map "\C-c\C-c" 'lyskom-customize-save-and-quit)
+  (define-key lyskom-en-customize-map "\C-c\C-k" 'lyskom-customize-quit)
+  (define-key lyskom-en-customize-map "\C-c\C-s" 'lyskom-customize-save)
+  (define-key lyskom-en-customize-map "\C-c\C-a" 'lyskom-customize-apply)
 )
 
 (lyskom-language-strings lyskom-custom-strings en
@@ -1580,13 +1582,47 @@ On since %#8s%#9s")
   are written in some other already existing frame; and in a new frame, which
   means that a new frame is created in which to write the text.")
 
-    (kom-prompt-format-doc . "\
-  The format of the LysKOM prompt. The characters \"%s\" in this string are
-  replaces by the real LysKOM prompt. Some examples:
+    (kom-user-prompt-format-doc . "\
+  The format of the LysKOM prompt. Certain control sequences cause special
+  text to be inserted:
 
-  `kom.lysator.liu.se %s'   gives the prompt    kom.lysator.liu.se Time -
-  `%s, John'                gives the prompt    Time, John -")
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
 
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+
+    (kom-user-prompt-format-executing-doc . "\
+  The format of the LysKOM prompt when the default command is executing.
+  Certain control sequences cause special text to be inserted:
+
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
+
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
     
     (kom-cite-string-doc . "\
   A string that is inserted before each line in a cited text. Normally this
@@ -1794,16 +1830,6 @@ On since %#8s%#9s")
   prioritet det skall ha.")
 
 
-    (lyskom-prompt-text-doc . "\
-  Denna text sätts efter den aktuella prompten, men byts ut om man trycker
-  SPC för att köra kommandot i prompten. Det absolut vanligaste är \" - \".")
-
-
-    (lyskom-prompt-executing-default-command-text-doc . "\
-  Denna text sätts efter prompten om man kör kommandot i prompten. Det 
-  vanligaste här är en enda punkt: \".\"")
-
-
     (kom-show-personal-messages-in-buffer-doc . "\
   Denna inställning bestämmer var personliga, gruppmeddelanden och allmänna
   meddelanden visas. Meddelanden kan antingen visas i LysKOM-bufferten, 
@@ -1951,11 +1977,10 @@ On since %#8s%#9s")
     (kom-write-texts-in-window-tag . "Skriv texter i")
     (kom-prioritize-in-window-tag . "Prioritera möten i")
     (kom-customize-in-window-tag . "Ställ in LysKOM i")
-    (kom-prompt-format-tag . "Promptformat")
+    (kom-user-prompt-format-tag . "Promptformat")
+    (kom-user-prompt-format-executing-tag . "Promptformat vid körning")
     (kom-cite-string-tag . "Citatmarkering")
     (kom-created-texts-are-read-tag . "Läsmarkera skapade texter")
-    (kom-dont-restore-window-after-editing-tag . 
-       "Återställ fönster efter editering")
     (kom-default-mark-tag . "Defaultmarkering")
     (kom-reading-puts-comments-in-pointers-last-tag . "Kommentarslänkar visas")
     (kom-dashed-lines-tag . "Streckade linjer kring inläggstexten")
@@ -1980,8 +2005,6 @@ On since %#8s%#9s")
     (kom-page-before-command-tag . "Rensa skärmen")
     (kom-permissive-completion-tag . "Petig utfyllnad av namn")
     (kom-membership-default-priority-tag . "Prioritet för nya medlemskap")
-    (lyskom-prompt-text-tag . "Text som avslutar aktuell prompt")
-    (lyskom-prompt-executing-default-command-text-tag . "Text att avsluta prompten med när man trycker SPC")
     (kom-show-personal-messages-in-buffer-tag . "Personliga, grupp och allmänna meddelanden visas")
     (kom-pop-personal-messages-tag . "Ploppa upp en buffert med personliga meddelanden när de kommer")
     (kom-ding-on-new-letter-tag . "Pip när det kommer brev")

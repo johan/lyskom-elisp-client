@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: slow.el,v 44.3 1996-10-11 11:21:14 nisse Exp $
+;;;;; $Id: slow.el,v 44.4 1997-02-07 18:08:12 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -52,8 +52,8 @@ If no text is entered, nil is returned."
   (goto-char (point-max))
   (save-restriction
     (narrow-to-region lyskom-last-viewed (point-max))
-    (search-backward lyskom-prompt-text))
-  (forward-char (length lyskom-prompt-text))
+    (search-backward lyskom-current-prompt-text))
+  (forward-char (length lyskom-current-prompt-text))
   (while (looking-at "\\s-")
     (forward-char 1))
   (if (= (point) (point-max))

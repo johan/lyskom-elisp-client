@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.7 1996-10-20 02:56:59 davidk Exp $
+;;;;; $Id: menus.el,v 44.8 1997-02-07 18:07:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,11 @@
 ;;;;
 
 
-(defvar lyskom-menus
+(defvar lyskom-current-menu-category nil
+  "Category of menus currently used in buffer")
+(make-variable-buffer-local 'lyskom-current-menu-category)
+
+(defvar lyskom-menu-template
   '((menu read
 	  ((item kom-view-next-text)
 	   (item kom-list-news)
@@ -77,42 +81,12 @@
 	   (item kom-change-password))))
   "The menus used in LysKOM.")
 
-(defvar lyskom-popup-menus
-  (` ((menu lyskom (, lyskom-menus))))
+(defvar lyskom-popup-menu-template
+  (` (menu lyskom ((,@ lyskom-menu-template))))
   "Popup-menu in the backgrouond of the LysKOM window")
 
-;;; Gamla utseendet
-;;(defvar lyskom-menus
-;;  '((menu lyskom
-;;	    ((menu read ((item kom-view-next-text)
-;;			 hline
-;;			 (item kom-view-commented-text)
-;;			 (item kom-view-previous-commented-text)
-;;			 (item kom-review-comments)
-;;			 (item kom-review-tree)
-;;			 (item kom-find-root)))
-;;	     (menu dont-read((item kom-jump)
-;;			     (item kom-set-unread)))
-;;	     (menu write ((item kom-write-text)
-;;			  (item kom-send-letter)
-;;			  (item kom-write-comment)
-;;			  (item kom-comment-previous)
-;;			  hline
-;;			  (item kom-send-message)))
-;;	     (menu move ((item kom-go-to-conf)
-;;			 (item kom-go-to-next-conf)))
-;;	     (menu info ((item kom-who-is-on)
-;;			 (item kom-list-news)
-;;			 hline
-;;			 (item kom-status-person)
-;;			 (item kom-status-conf)
-;;			 (item kom-review-presentation)
-;;			 hline
-;;			 (item kom-list-conferences)
-;;			 (item kom-list-persons))))))
-;;  "The menus used in LysKOM.")
 
-(defvar lyskom-edit-menus
+(defvar lyskom-edit-menu-template
   '((menu lyskom
 	  ((item kom-edit-send)
 ;	   (item kom-edit-send-anonymous)
@@ -126,46 +100,88 @@
 	   (item kom-edit-quit))))
   "The menus for editing LysKOM messages.")
 
-(defvar lyskom-menu-map nil
+(defvar lyskom-menu-list '((lyskom-mode . lyskom-menu)
+                           (lyskom-edit-mode . lyskom-edit-menu))
+  "List of menu sets in LysKOM")
+
+(defvar lyskom-menu nil
   "A keymap describing the LysKOM top menu.")
 
-(when (not lyskom-menu-map) 
-  (setq lyskom-menu-map (make-sparse-keymap)))
+;(when (not lyskom-menu) 
+;  (setq lyskom-menu (make-sparse-keymap)))
 
-(defvar lyskom-edit-menu-map nil
+(defvar lyskom-edit-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
 
-(when (not lyskom-edit-menu-map)
-  (setq lyskom-edit-menu-map (make-sparse-keymap)))
+;(when (not lyskom-edit-menu)
+;  (setq lyskom-edit-menu (make-sparse-keymap)))
 
-(defvar lyskom-popup-menu-map nil
+(defvar lyskom-popup-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
 
-(when (not lyskom-popup-menu-map)
-  (setq lyskom-popup-menu-map (make-sparse-keymap)))
+;(when (not lyskom-popup-menu)
+;  (setq lyskom-popup-menu (make-sparse-keymap)))
 
 (defun lyskom-build-menus ()
-  "Create menus from according to LYSKOM-MENUS"
-  (interactive)
+  "Create menus according to LYSKOM-MENUS"
+  (lyskom-xemacs-or-gnu (lyskom-build-menus-xemacs)
+                        (lyskom-build-menus-gnu)))
 
-  ;; Menu in lyskom-mode
-  (define-key lyskom-mode-map [menu-bar]
-    lyskom-menu-map)
-  (define-key lyskom-mode-map [menu-bar edit]
-    'undefined)
 
-  ;; Menu in lyskom-edit-mode
-  (lyskom-define-menu lyskom-menu-map lyskom-menus)
-  (define-key lyskom-edit-mode-map [menu-bar]
-    lyskom-edit-menu-map)
-  (lyskom-define-menu lyskom-edit-menu-map lyskom-edit-menus)
+(defun lyskom-build-menus-xemacs ()
+  (setq lyskom-edit-menu (lyskom-define-menu-xemacs lyskom-edit-menu-template))
+  (setq lyskom-popup-menu (lyskom-define-menu-xemacs
+                               lyskom-popup-menu-template))
+  (setq lyskom-menu (lyskom-define-menu-xemacs lyskom-menu-template)))
 
-  ;; Popup-menu
-  (lyskom-define-menu lyskom-popup-menu-map lyskom-popup-menus))
 
-(defun lyskom-define-menu (map menus)
+(defun lyskom-build-menus-gnu ()
+  "Rebuilds the LysKOM menus"
+  (setq lyskom-menu (make-sparse-keymap))
+  (setq lyskom-edit-menu (make-sparse-keymap))
+  (setq lyskom-popup-menu (make-sparse-keymap))
+  (lyskom-define-menu-gnu lyskom-menu lyskom-menu-template)
+  (lyskom-define-menu-gnu lyskom-edit-menu lyskom-edit-menu-template)
+  (lyskom-define-menu-gnu lyskom-popup-menu
+                          (list lyskom-popup-menu-template))
+  (setq lyskom-popup-menu (lookup-key lyskom-popup-menu [lyskom])))
+
+(defun lyskom-define-menu-xemacs (menus)
+  (let ((type nil)
+        (parameters nil))
+    (cond ((null (car menus)))
+          ((listp (car menus))          ; Menu bar
+           (mapcar 'lyskom-define-menu-xemacs
+                   menus))
+
+          ((eq (car menus) 'menu)       ; A menu
+           (let ((menu-title (car (cdr menus)))
+                 (menu-items (car (cdr (cdr menus)))))
+             (cons (lyskom-get-menu-string menu-title)
+                   (mapcar
+                    (function
+                     (lambda (item)
+                       (cond ((eq (car item) 'item)
+                              (vector (lyskom-get-menu-string 
+                                       (car (cdr item)))
+                                       (car (cdr item))
+                                       ':active
+                                       t))
+                             ((eq (car item) 'hline)
+                              (vector "--:shadowEtchedIn" nil ':active nil) )
+                             ((eq (car item) 'menu)
+                              (lyskom-define-menu-xemacs item))
+                             (t
+                              (error "Bad menu item: %S"
+                                     item)))))
+                    menu-items))))
+
+          (t nil))))
+
+
+(defun lyskom-define-menu-gnu (map menus)
   (when menus
-    (lyskom-define-menu map (cdr menus))
+    (lyskom-define-menu-gnu map (cdr menus))
     (let ((type (car (car menus)))
 	  (symbol (car (cdr (car menus)))))
       (cond ((eq 'hline type)
@@ -175,23 +191,55 @@
 		    (submap (make-sparse-keymap name)))
 	       (define-key map (vector symbol)
 		 (cons name submap))
-	       (lyskom-define-menu submap
+	       (lyskom-define-menu-gnu submap
 				   (car (cdr (cdr (car menus)))))))
 	    ((eq 'item type)
 	     (define-key map (vector symbol)
 	       (cons (lyskom-get-menu-string symbol) symbol)))
 	    (t (error "Menu description invalid in lyskom-define-menu"))))))
 
+
+(defun lyskom-get-menu-category (menu-category)
+  (symbol-value (cdr (assq menu-category lyskom-menu-list))))
+
+(defun lyskom-update-menus ()
+  (lyskom-build-menus)
+  (when (and (boundp 'lyskom-current-menu-category)
+             lyskom-current-menu-category)
+    (mapcar (function
+             (lambda (mc)
+               (lyskom-set-menus mc (current-local-map))))
+            lyskom-current-menu-category)))
+
+(defun lyskom-set-menus (menu-category  keymap)
+  (lyskom-xemacs-or-gnu (lyskom-set-menus-xemacs menu-category)
+                        (lyskom-set-menus-gnu menu-category keymap)))
+
+(defun lyskom-set-menus-gnu (menu-category keymap)
+  "Update the menus"
+  (define-key keymap [menu-bar] (lyskom-get-menu-category menu-category))
+  (make-local-variable 'lyskom-current-menu-category)
+  (if (not (boundp 'lyskom-current-menu-category))
+      (setq lyskom-current-menu-category (list menu-category))
+    (add-to-list 'lyskom-current-menu-category menu-category)))
+
+(defun lyskom-set-menus-xemacs (menu-category)
+  "Update the menus"
+  (make-local-variable 'current-menubar)
+  (make-local-variable 'lyskom-current-menu-category)
+  (set-buffer-menubar default-menubar)
+  (mapcar (function
+           (lambda (menu)
+             (add-submenu nil menu)))
+          (lyskom-get-menu-category menu-category))
+  (setq lyskom-current-menu-category (list menu-category)))
+
+
 		   
 (defun lyskom-background-menu (pos event)
   "Pop up a menu with LysKOM commands and execute the selected command."
-  (let* ((menu (lookup-key lyskom-popup-menu-map [lyskom]))
-	 (result (x-popup-menu event (list menu)))
-	 (command (and result
-		       (lookup-key menu
-				   (apply 'vector result)))))
-    (if command
-	(call-interactively command))))
+  (let* ((menu lyskom-popup-menu)
+	 (result (popup-menu menu event)))))
 
 
 

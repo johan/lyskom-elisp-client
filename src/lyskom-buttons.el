@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.6 1996-10-24 09:47:52 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.7 1997-02-07 18:07:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -30,6 +30,9 @@
 ;;;;
 ;;;;
 
+
+(defun lyskom-menu-selection nil
+  "Variable used to work around the handling of menus in XEmacs.")
 
 (defun lyskom-add-button-action (type text func)
   "Add a new action to the popup menu for a class of objects.
@@ -97,41 +100,59 @@ on such functions see the documentation for lyskom-add-button-action."
     (setq num (1- num))))
 
 
-(defun kom-key-mouse-2 ()
+(defun kom-button-press ()
   "Simulate a mouse button press at point."
   (interactive)
-  (lyskom-mouse-2 (point)))
+  (lyskom-button-press (point)))
 
-(defun kom-mouse-2 (click)
+(defun kom-button-click (click)
   "Execute the default action of the active area under the mouse."
   (interactive "@e")
-  (let ((start (event-start click)))
-    (lyskom-mouse-2 (car (cdr start)))))
+  (let ((start (event-point click)))
+    (lyskom-button-press start)))
 
-(defun kom-mouse-3 (event)
+(defun kom-popup-menu (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."
   (interactive "@e")
-  (let ((pos (posn-point (event-start event))))
-    (if (get-text-property pos 'lyskom-button-type)
-	(lyskom-button-menu pos event)
-      (lyskom-background-menu pos event))))
+  (let ((pos (event-point event)))
+        (if (and pos (get-text-property pos 'lyskom-button-type))
+            (lyskom-button-menu pos event)
+          (lyskom-background-menu pos event))))
   
 (defun kom-mouse-null (event)
   "Do nothing."
   ;; This is here to pervent unwanted events when clicking mouse-3
   (interactive "e"))
 
-(defun lyskom-make-button-menu (title entries)
+(defun lyskom-make-button-menu (title entries buf arg text)
   "Create a menu keymap from a list of button actions."
   ;; Use the command as the event for simplicity.  Note that the menu
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
-  (append (list 'keymap title)
-	  (mapcar '(lambda (entry) (cons (cdr entry) (copy-tree entry)))
-		  entries)))
+  (cond ((string-match "XEmacs" (emacs-version))
+         (cons title 
+               (mapcar (function
+                        (lambda (entry)
+                          (vector (car entry)
+                                  (` ((, (cdr entry)) 
+                                      (, buf)
+                                      (, arg)
+                                      (, text)))
+                                  ':active t)))
+                       entries)))
+        (t (append (list 'keymap title)
+                   (mapcar '(lambda (entry)
+                              (cons (` ((, (cdr entry)) 
+                                        (, buf)
+                                        (, arg)
+                                        (, text)))
+                                    (copy-tree entry)))
+                           entries)))))
+
+
 
 (defun lyskom-button-menu (pos event)
-  "Internal function used by kom-mouse-3"
+  "Internal function used by kom-popup-menu"
   (let* ((type  (get-text-property pos 'lyskom-button-type))
          (arg   (get-text-property pos 'lyskom-button-arg))
          (text  (get-text-property pos 'lyskom-button-text))
@@ -157,21 +178,13 @@ on such functions see the documentation for lyskom-add-button-action."
 	   ;; from simple keymaps to be title-less. A list consisting
 	   ;; of a single keymap works better. A patch is submittet to
 	   ;; the GNU folks. /davidk
-           (let* ((menu (lyskom-make-button-menu title actl))
-		  (result (x-popup-menu event (list menu)))
-		  ;; We trust that the menu is really simple.
-		  (command (car result))
-		  )
-	     ;; If mouse-3 is bound to its default
-	     ;; mouse-save-than-kill, we will get an extra mouse event
-	     ;; when the user clicks to get a menu that stays up. So
-	     ;; we bind mouse-3 to a dummy function. Unfortunately it
-	     ;; doesn't work completely.
-             (if command
-                 (funcall command buf arg text)))))))
-         
+           (let* ((menu (lyskom-make-button-menu title actl
+                                                 buf arg text)))
+             (popup-menu menu event))))))
 
-(defun lyskom-mouse-2 (pos)
+
+
+(defun lyskom-button-press (pos)
   "Execute the default action of the active area at POS if any."
   (let* ((type (get-text-property pos 'lyskom-button-type))
          (arg  (get-text-property pos 'lyskom-button-arg))
@@ -270,15 +283,15 @@ the current match-data."
                           (eq lyskom-current-function-phase
                               (elt hint 2))))
                  (setq result (elt hint 3))))
-              ((listp (car hint))
-               (if (and lyskom-executing-command
-                        (memq lyskom-current-command (car hint)))
-                   (setq result (cdr hint))))
-              ((symbolp (car hint))
-               (if (and lyskom-executing-command
-                        lyskom-current-command
-                        (eq lyskom-current-command (car hint)))
-                   (setq result (cdr hint))))))
+            ((listp (car hint))
+             (if (and lyskom-executing-command
+                      (memq lyskom-current-command (car hint)))
+                 (setq result (cdr hint))))
+            ((symbolp (car hint))
+             (if (and lyskom-executing-command
+                      lyskom-current-command
+                      (eq lyskom-current-command (car hint)))
+                 (setq result (cdr hint))))))
     result))
 
 
@@ -407,6 +420,7 @@ type TYPE before being send to lyskom-generate-button."
 ;;;========================================
 ;;; Button actions
 ;;;
+
 
 (defun lyskom-button-view-text (buf arg text)
   "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
@@ -545,13 +559,13 @@ This is a LysKOM button action."
 (defun lyskom-button-copy-url (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
 This is a LysKOM button action."
-  (kill-new text))
+  (kill-new (replace-in-string text "\\s-+" "")))
 
 
 (defun lyskom-button-open-url (buf arg text)
   "In the LysKOM buffer BUF, ignore ARG and open TEXT as an URL.
 This is a LysKOM button action."
-  (let* ((url text)
+  (let* ((url (replace-in-string text "\\s-+" ""))
          protocol
          url-manager)
     (string-match ":" url)
@@ -592,6 +606,10 @@ This is a LysKOM button action."
   (lyskom-message "%s" (lyskom-format (lyskom-get-string 'starting-program)
 				 (elt manager 2))))
 
+
+(defun lyskom-view-url-browse-url (url manager)
+  (require 'browse-url)
+  (funcall browse-url-browser-function url))
 
 (defun lyskom-view-url-w3 (url manager)
   "View the URL URL using W3. Second argument MANAGER is ignored."

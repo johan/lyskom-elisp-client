@@ -4,36 +4,30 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-När man startar en ny session i en återanvänd buffert läggs en session
-för mycket till i sessionslistan. Överhuvudtaget bör nl med vänner
-putsas på. [FIXAT]
+    Läsningen av user-arean buggade i XEmacs av någon anledning. Det
+    såg ut som en XEmacs-bug. Jag *tror* jag har gjort en workaround.
 
-När man har utplånat sig själv, och tryckt C-g vid loginprompten som
-följer blir vissa kommandon förvirrade.
+    Trycka C-g medan man loggar in kan göra att man inte kan logga in
+    igen. (Rapporterat av Tommy Persson.) Felmeddelandet blir "Illegal
+    nånting: listp not-yet-gotten"
 
-lyskom-count-down-edits blir förvirrad om man har
-kom-write-texts-in-window satt till 'other.
+    När man har utplånat sig själv, och tryckt C-g vid loginprompten
+    som följer blir vissa kommandon förvirrade. [ÄR MAN SÅ DUM FÅR MAN
+    VÄL SKYLLA SIG SJÄLV. JU!]
 
-lyskom-replace-deferred verkar inte använda lyskom-last-viewed i alla
-fall. Och den beter sig fel när man står vid prompten och vill bläddra
-bakåt.
+    lyskom-replace-deferred verkar inte använda lyskom-last-viewed i
+    alla fall. Och den beter sig fel när man står vid prompten och
+    vill bläddra bakåt.
 
-prefix-kommandon änndras inte vid språkbyten.
+    Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
 
-Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+    Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
+    endast i ett möte (säg IÅM) innan det prefetchas får man två
+    parallella prefetcher på samma möte.
 
-Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
-endast i ett möte (säg IÅM) innan det prefetchas får man två
-parallella prefetcher på samma möte.
-
-    I vilkalistan borde nog hemliga personer skrivas ut med någon
-    annan text än "Ej närvarande i något möte"
-
-    Gå med i möten startar inte prefetch på mötet.
+    Gå med i möten startar inte prefetch på mötet. [FIXAT?]
 
     Gå ur mötet man prefetchar genererar en bug.
-
-    kom-recover (antagligen lyskom-refetch) är en no-op.
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
@@ -42,16 +36,13 @@ parallella prefetcher på samma möte.
 
     Efter återse senaste fick jag fel prompt. Jag vill ha återse
     nästa-prompten direkt om det finns texter som matchar villkoret.
+    [Lustigt. Jag fick rätt prompt]
 
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
     Problemet är att s xxxx hanteras i lyskom-read-conf-internal som
     bara kan returnera conf-z-info. Man borde låta den returnera info
     om specifikt sessionsnummer också.
-
-    kom-review-tree måste nog skrivas om så den inte är så förbaskat
-    rekursiv. Man överskrider ibland max-specpdl-size eller något
-    sådant.
 
     Fixa så LysKOM och complete.el fungerar ihop genom att sätta om
     samma mappar som complete.el gör, till wrappers runt complete.el
@@ -60,11 +51,6 @@ parallella prefetcher på samma möte.
     Nu när lyskom-bufferten återanvänds så kanske M-x lyskom inte ska
     döda bufferten om den misslyckas med att koppla upp sig...
     
-    Det är knepigt att avmarkera raderade texter, eftersom man inte
-    får se textnumret.
-    
-lyskom-read-session-no hittar inte osynliga sessioner. [FIXAT?]
-
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
 
@@ -73,15 +59,13 @@ lyskom-read-session-no hittar inte osynliga sessioner. [FIXAT?]
     nog spara minst själva huvudinlägget, och nog också fotnoterna
     samtidigt.
 
-Om ett namn som fylls i i efterhand gör att sista raden blir för lång,
-så scrollar klienten trots att den inte borde. Jag trodde jag hade
-fixat det.
+    Om ett namn som fylls i i efterhand gör att sista raden blir för
+    lång, så scrollar klienten trots att den inte borde. Jag trodde
+    jag hade fixat det.
 
-    sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
+    Sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
     ut en session i ett ikonifierat fönster. Eller kanske till och med
     bara i en gömd buffert. (HEISENBUG?)
-
-    text 1306568 [omöjligt att spåra]
 
     kom-review-tree på en text med fotnoter visar fotnoterna på en
     gång. Är det en bug?
@@ -93,6 +77,25 @@ fixat det.
     kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
 
 -------- Allmänna förbättringar
+
+    1385671
+
+    Lista medlemsskap borde hållas uppdaterad. Vi behöver hookar för
+    * Gå in i möte (uppdatera datum)
+    * Ändra prioritet (det har vi)
+    * Ändra olästa
+    * Invalidera conf-stat (kanske)
+    Plus att vi måste fixa en datastruktur till bufferten. Vilket slit.
+    Kanske kan man mergea prioritera och lista medlemsskap? Det skulle
+    ju förenkla...
+
+    Återse senaste borde vara superinkrementell. Man kunde hämta så
+    mycket man hinner under säg tre sekunder och stoppa någonting på
+    read-listan som hämtar nästa tre sekunder eller så.
+
+    "Återse n inlägg av person x till möte y från datum z framåt"
+
+    "Återse n inlägg av person x till möte y under de senaste k dagarna"
 
     Strunta i hemliga texter vid åar.
 
@@ -108,13 +111,6 @@ fixat det.
 
     Skriv inte ut stora fonoter på en gång.
 
-    Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
-    ett inläggs eget nummer, alltså det som står precis innan datumet
-    och det som står inom parentesen precis efter inläggstexten, så
-    vill man antagligen inte återse det, eftersom man ju bevisligen
-    har det framför sig.  I stället vill man antagligen kommentera
-    det. (IGNORERAT FÖR TILLFÄLLET -- JAG GILLADE DET INTE /dcb)
-
     Har detta att göra med lite för optimistisk cache att göra? Kanske
     bör man läsa om person-staten innan man varnar för lapp på dörren?
 
@@ -123,29 +119,30 @@ fixat det.
     Presentationer ska ha samma mottagare som tidigare
     presentationer.
 
-Kommandot kom-review-comments visar fotnoter sist, inte först.
+    Kommandot kom-review-comments visar fotnoter sist, inte först.
 
     Det skulle vara bra om skönsvärde för att skriva fotnot vore den
     senaste text man själv skrev, inte den senaste man läste.
 
     Klickbara kommandon.
 
+
     Reentrant blocking-do
 
-När man sparar texter vill man inte att det ska stå t.ex. "idag".
+   När man sparar texter vill man inte att det ska stå t.ex. "idag".
 
 
 -------- Fixade saker
 
-Fixa klart z-initiate-get-map. [BEHÖVS INTE]
+    Fixa klart z-initiate-get-map. [BEHÖVS INTE]
 
-Modifiera interna datastrukturer vid utträd. [FIXAT]
+    Modifiera interna datastrukturer vid utträd. [FIXAT]
 
-lyskom-add-membership gör membership-listan sorterad, vilket inte
-prefetch-koden är gjord för. Alltså borde det kunna bli problem att gå
-med i möten om man ger dem fel prioritet. [FIXAT]
+    lyskom-add-membership gör membership-listan sorterad, vilket inte
+    prefetch-koden är gjord för. Alltså borde det kunna bli problem
+    att gå med i möten om man ger dem fel prioritet. [FIXAT]
 
-Endast gör fel ibland. [FIXAT]
+    Endast gör fel ibland. [FIXAT]
 
     Jag har satt kom-show-footnotes-immediately till nil. Det verkar
     som man inte får läsa fotnötter först då, t ex fick jag läsa
@@ -197,4 +194,45 @@ Endast gör fel ibland. [FIXAT]
     [FIXAT]
 
     Bygga Ändra Variabler mha widget.el. [FIXAT]
+
+    kom-recover (antagligen lyskom-refetch) är en no-op. [FIXAT]
+
+    Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
+    ett inläggs eget nummer, alltså det som står precis innan datumet
+    och det som står inom parentesen precis efter inläggstexten, så
+    vill man antagligen inte återse det, eftersom man ju bevisligen
+    har det framför sig.  I stället vill man antagligen kommentera
+    det. [IGNORERAT FÖR TILLFÄLLET -- JAG GILLADE DET INTE /dcb]
+
+    Det är knepigt att avmarkera raderade texter, eftersom man inte
+    får se textnumret. [FIXAT -- åam lm så får man se numret]
+
+    Text 1306568 [OMÖJLIGT ATT SPÅRA]
+
+    I vilkalistan borde nog hemliga personer skrivas ut med någon
+    annan text än "Ej närvarande i något möte" [FIXAT]
+
+    lyskom-read-session-no hittar inte osynliga sessioner. [FIXAT]
+
+    kom-find-root måste nog skrivas om så den inte är så förbaskat
+    rekursiv. Man överskrider ibland max-specpdl-size eller något
+    sådant. [FIXAT]
+
+    prefix-kommandon änndras inte vid språkbyten. [FIXAT]
+
+    Hanteringen av buffertlokala variabler är kass. Vi borde lista ut
+    automagiskt vilka variabler som skall vara lokala: alla i
+    user-arean samt alla som deklareras lokala med något makro som vi
+    inte har ännu. [FIXAT!!!]
+
+    lyskom-clear-vars är en konstig funktion. Se över hur och var den
+    används och se om man inte kan ersätta den med
+    lyskom-protect-environment. [FIXAT!!!]
+
+    Prioritera möten i XEmacs resulterar garanterat i
+    lyskom-parse-error. [BUG I XEMACS; FIXAT]
+
+    När man startar en ny session i en återanvänd buffert läggs en session
+    för mycket till i sessionslistan. Överhuvudtaget bör nl med vänner
+    putsas på. [FIXAT]
 

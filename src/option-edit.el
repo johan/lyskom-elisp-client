@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.4 1996-10-27 15:57:44 davidk Exp $
+;;;;; $Id: option-edit.el,v 44.5 1997-02-07 18:07:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.4 1996-10-27 15:57:44 davidk Exp $\n"))
+	      "$Id: option-edit.el,v 44.5 1997-02-07 18:07:57 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -59,12 +59,11 @@
     "\n"
     [kom-friends]
     [kom-deferred-printing]
-    [kom-prompt-format]
+    [kom-user-prompt-format]
+    [kom-user-prompt-format-executing]
     [kom-dashed-lines]
     [kom-continuous-scrolling]
     [kom-permissive-completion]
-    [lyskom-prompt-text]
-    [lyskom-prompt-executing-default-command-text]
     [kom-inhibit-typeahead]
     [kom-max-buffer-size]
     [kom-page-before-command]
@@ -75,6 +74,8 @@
     [kom-show-where-and-what]
     [kom-customize-in-window]
     [kom-customize-format]
+;    [kom-list-membership-in-window]
+;    [kom-edit-filters-in-window]
     
     "\n\n"
     section
@@ -205,17 +206,17 @@ customize buffer but do not save them to the server."
 (defun kom-customize ()
   "Open the customize buffer"
   (interactive)
-  (let ((buf (lyskom-associate-buffer 
-              (get-buffer-create (lyskom-format
-                                  (lyskom-custom-string 'buffer-name)
-                                  lyskom-server-name)))))
+  (let ((buf (lyskom-get-buffer-create 'customize
+                                       (lyskom-format
+                                        (lyskom-custom-string 'buffer-name)
+                                        lyskom-server-name)
+                                       t)))
     (unwind-protect
         (progn
           (lyskom-start-of-command 'kom-customize)
            (save-excursion
              (set-buffer buf)
-             (lyskom-protect-environment
-              (kill-all-local-variables))
+             (kill-all-local-variables)
              (make-local-variable 'lyskom-widgets)
              (setq lyskom-widgets nil)
              (let ((inhibit-read-only t))
@@ -233,9 +234,7 @@ customize buffer but do not save them to the server."
                                             (symbol-value (car variable))))))
                      lyskom-widgets)
              (widget-setup))
-           (lyskom-display-buffer buf
-                                  'kom-customize-in-window
-                                  'kom-dont-restore-window-after-customize))
+           (lyskom-display-buffer buf))
       (save-excursion
         (set-buffer lyskom-buffer)
         (lyskom-end-of-command)))
@@ -288,16 +287,16 @@ customize buffer but do not save them to the server."
 (defvar lyskom-custom-variables
   '((kom-emacs-knows-iso-8859-1 (toggle (yes no)))
     (kom-write-texts-in-window (open-window))
+    (kom-list-membership-in-window (open-window))
+    (kom-edit-filters-in-window (open-window))
     (kom-prioritize-in-window (open-window))
     (kom-customize-in-window (open-window))
     (kom-customize-format (choice ((const (long-format long))
                                    (const (short-format short)))))
-    (kom-prompt-format (string))
+    (kom-user-prompt-format (string))
+    (kom-user-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
-    (kom-dont-restore-window-after-editing (noggle (yes no)))
-    (kom-dont-restore-window-after-customize (noggle (yes no)))
-    (kom-dont-restore-window-after-prioritize (noggle (yes no)))
     (kom-default-mark (choice ((number (0 255) 
                                        :tag selected-mark
                                        :format "%[%t%] (%v)"
@@ -345,8 +344,6 @@ customize buffer but do not save them to the server."
                       :tag fixed-priority 
                       :format "%[%t%] (%v)"
                       :size 0))))
-    (lyskom-prompt-text (string))
-    (lyskom-prompt-executing-default-command-text (string))
     (kom-show-personal-messages-in-buffer
      (choice ((const (messages-in-lyskom-buffer t))
               (const (discard-messages nil))
@@ -499,7 +496,11 @@ customize buffer but do not save them to the server."
         ':format "%v\n"
         ':case-fold t
         ':args
-        (list (list 'item
+        (list (list 'item 
+                    ':tag (lyskom-custom-string 'default-viewer)
+                    ':format "%t"
+                    ':value "default")
+              (list 'item
                     ':tag (lyskom-custom-string 'netscape-viewer)
                     ':format "%t"
                     ':value "netscape")

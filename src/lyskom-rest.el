@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.21 1996-10-28 18:05:36 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.22 1997-02-07 18:07:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.21 1996-10-28 18:05:36 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.22 1997-02-07 18:07:50 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1087,11 +1087,13 @@ Note that it is not allowed to use deferred insertions in the text."
              ((and (integerp arg)
                    (zerop arg))
 	      (setq colon-flag t)
-              (lyskom-format (cond (lyskom-default-conf-string
-				    lyskom-default-conf-string)
-				   ((= format-letter ?P) 'person-is-anonymous)
-				   (t 'conference-does-not-exist))
-			     arg)
+              (lyskom-format (cond ((= format-letter ?P)
+                                    (or lyskom-default-pers-string
+                                        'person-is-anonymous))
+                                   ((= format-letter ?M)
+                                    (or lyskom-default-conf-string
+                                        'conference-does-not-exist)))
+                             arg)
 	      )
 
              ;; Delay the printing
@@ -1336,7 +1338,8 @@ Note that it is not allowed to use deferred insertions in the text."
               (save-excursion
                 (set-buffer tmpbuf)
                 (insert (substring text 5))
-                (w3-preview-this-buffer))
+                (w3-preview-this-buffer)
+                (buffer-string))
             (kill-buffer tmpbuf))))
        ((and (fboundp 'format-decode-buffer)
              (string-match "\\`enriched:" text))
@@ -1459,7 +1462,7 @@ positions are counted from 0, as they are."
 ;;;                             To-do
 
 
-(defun lyskom-update-prompt ()
+(defun lyskom-update-prompt (&optional force-prompt-update)
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
   (if (or lyskom-executing-command
@@ -1532,16 +1535,15 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
      
        (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
 
-      (if (not (equal prompt lyskom-current-prompt))
+      (when (or force-prompt-update
+                (not (equal prompt lyskom-current-prompt)))
 	  (let ((inhibit-read-only t)
 		(prompt-text
 		 (if prompt
-		     (concat
-		      (lyskom-modify-prompt
-		       (cond
-			((symbolp prompt) (lyskom-get-string prompt))
-			(t prompt)))
-		      lyskom-prompt-text)
+                     (lyskom-modify-prompt
+                      (cond
+                       ((symbolp prompt) (lyskom-get-string prompt))
+                       (t prompt)))
 		   ""))
 		(was-at-max (eq (point) (point-max))))
 	    (save-excursion
@@ -1554,26 +1556,113 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 		  (delete-region (point) (point-max))))
 	    (if was-at-max (goto-char (point-max)))
 	  
-	    (setq lyskom-current-prompt prompt))))
+	    (setq lyskom-current-prompt prompt)
+            (setq lyskom-current-prompt-text prompt-text))))
     (lyskom-set-mode-line)))
 
+(defun lyskom-modify-prompt (s &optional executing)
+  (lyskom-format-prompt (cond (lyskom-is-administrator
+                               (if executing 
+                                   kom-enabled-prompt-format-executing
+                                 kom-enabled-prompt-format))
+                              (t (if executing
+                                     kom-user-prompt-format-executing
+                                   kom-user-prompt-format)))
+                        s))
+           
 
-(defun lyskom-modify-prompt (s)
-  "Modify the LysKOM prompt to reflect the current state of LysKOM."
-  (let ((format-string (or kom-prompt-format "%s")))
-    (if (symbolp s) (setq s (lyskom-get-string s)))
-    (if lyskom-ansaphone-messages
-        (if (> (length lyskom-ansaphone-messages) 0)
-            (setq format-string 
-                  (format (lyskom-get-string 'prompt-modifier-messages)
-                          format-string
-                          (length lyskom-ansaphone-messages)))))
-    (if kom-ansaphone-on
-        (setq format-string
-              (format (lyskom-get-string 'prompt-modifier-ansaphone)
-                      format-string)))
 
-    (format format-string s)))
+;(defun lyskom-modify-prompt (s)
+;  "Modify the LysKOM prompt to reflect the current state of LysKOM."
+;  (let ((format-string (or kom-prompt-format "%s")))
+;    (if (symbolp s) (setq s (lyskom-get-string s)))
+;    (if lyskom-ansaphone-messages
+;        (if (> (length lyskom-ansaphone-messages) 0)
+;            (setq format-string 
+;                  (format (lyskom-get-string 'prompt-modifier-messages)
+;                          format-string
+;                          (length lyskom-ansaphone-messages)))))
+;    (if kom-ansaphone-on
+;        (setq format-string
+;              (format (lyskom-get-string 'prompt-modifier-ansaphone)
+;                      format-string)))
+
+;    (format format-string s)))
+
+(defun lyskom-format-prompt (fmt command)
+  (let ((start 0)
+        (len (length fmt))
+        (result nil)
+        (tmp nil)
+        (format-letter nil)
+        (messages (length lyskom-ansaphone-messages)))
+    (while (< start len)
+      (setq tmp (string-match "%[][cm Sswp#]" fmt start))
+      (if tmp
+          (progn
+            (if (> tmp start)
+                (setq result (cons (substring fmt start tmp) result)))
+            (setq format-letter (elt fmt (1- (match-end 0))))
+            (setq start (match-end 0))
+            (setq result 
+                  (cons
+                   (cond ((= format-letter ?\[) (if kom-ansaphone-on "[" ""))
+                         ((= format-letter ?\]) (if kom-ansaphone-on "]" ""))
+                         ((= format-letter ?c)  command)
+                         ((= format-letter ?w) 
+                          (or (conf-stat->name 
+                               (cache-get-conf-stat lyskom-current-conf))
+                              (lyskom-format 'conference-no
+                                             lyskom-current-conf)))
+                         ((= format-letter ?S) lyskom-server-name)
+                         ((= format-letter ?s)
+                          (or (cdr (assoc lyskom-server-name 
+                                          kom-server-aliases))
+                              lyskom-server-name))
+                         ((= format-letter ?p)
+                          (or (conf-stat->name
+                               (cache-get-conf-stat lyskom-pers-no))
+                              (lyskom-format 'person-no
+                                             lyskom-pers-no)))
+
+                         ((= format-letter ?#) (number-to-string 
+                                                lyskom-session-no))
+                         ((= format-letter ?m)
+                          (cond ((< messages 1)
+                                 "")
+                                ((= messages 1)
+                                 (format (lyskom-get-string 
+                                          'prompt-single-message) messages))
+                                ((> messages 1)
+                                 (format (lyskom-get-string
+                                          'prompt-several-messages) 
+                                         messages))))
+                         ((= format-letter ?%) "%")
+                         ((= format-letter ?\ )
+                          'SPC))
+                   result)))
+        (progn
+          (setq result (cons (substring fmt start) result))
+          (setq start len))))
+    (lyskom-build-prompt (nreverse result))))
+
+
+(defun lyskom-build-prompt (data)
+  (let ((result "")
+        (separate nil))
+    (while data
+      (cond ((stringp (car data))
+             (cond ((and separate
+                         (string-match "\\S-$" result)
+                         (string-match "^\\S-" (car data)))
+                    (setq result (concat result " " (car data))))
+                   (t (setq result (concat result (car data)))))
+             (setq separate nil))
+
+            ((eq (car data) 'SPC)
+             (setq separate t)))
+      (setq data (cdr data)))
+    result))
 
 (defun lyskom-what-to-do ()
   "Check what is to be done. Return an atom as follows:
@@ -2022,7 +2111,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
-  (sit-for 0)				; Why?
+  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
   (let (; (inhibit-quit t)		;inhibit-quit is automatically set
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
@@ -2035,6 +2124,12 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	    (progn
 	      (setq lyskom-quit-flag nil)
 	      
+              (if lyskom-debug-communications-to-buffer
+                  (save-excursion
+                    (set-buffer (get-buffer-create "*kom*-replies"))
+                    (goto-char (point-max))
+                    (princ output (current-buffer))))
+
 	      (if lyskom-debug-communications-to-buffer
                   (if (not lyskom-debug-what-i-am-doing)
                       (if (not (and (eq ?: (elt output 0))
@@ -2081,7 +2176,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
       (setq quit-flag nil)
       ;; Restore selected buffer and match data.
       (store-match-data old-match-data)
-      (set-buffer lyskom-filter-old-buffer))))
+      (set-buffer lyskom-filter-old-buffer))
+    (sit-for 0)))
       
 
 ;;; The sentinel
@@ -2356,8 +2452,6 @@ One parameter - the prompt string."
 (lyskom-set-queue-priority 'modeline 6)
 (lyskom-set-queue-priority 'async 3)
 (lyskom-set-queue-priority 'prefetch 0)
-
-(setq lyskom-emacs19-p (string-match "^19" emacs-version))
 
 
 ;;; This should be the very last lines of lyskom.el Everything should

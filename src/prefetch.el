@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.6 1997-02-07 15:23:35 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.7 1997-02-07 18:08:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,14 +35,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.6 1997-02-07 15:23:35 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.7 1997-02-07 18:08:00 byers Exp $\n"))
 
 
 ;;; ================================================================
 ;;;                          Variables.
 
 
-(defvar lyskom-prefetch-stack nil
+(def-kom-var lyskom-prefetch-stack nil
   "A stack where all prefetch requests are entered. New items are entered
 first and when an item is to be prefetched, it is taken from the front of 
 this list. 
@@ -50,30 +50,30 @@ this list.
 Each entry is either the atom 'DONE, a cons cell as described below or a 
 lyskom-queue.
 
-('CONFSTAT . number) - The conf stat of Conference NUMBER.
-('PERSSTAT . number) - The pers stat of person NUMBER.
-('TEXTSTAT . number) - The text stat of text NUMBER.
-('TEXTMASS . number) - The text mass of text NUMBER.
-('TEXTAUTH . number) - The text stat of the text NUMBER 
+\('CONFSTAT . number\) - The conf stat of Conference NUMBER.
+\('PERSSTAT . number\) - The pers stat of person NUMBER.
+\('TEXTSTAT . number\) - The text stat of text NUMBER.
+\('TEXTMASS . number\) - The text mass of text NUMBER.
+\('TEXTAUTH . number\) - The text stat of the text NUMBER 
                        and the conf-stat of the author of it.
-('TEXT-ALL . number) - The text stat and mass of text NUMBER, but also
+\('TEXT-ALL . number\) - The text stat and mass of text NUMBER, but also
                        all information that will be used when writing
                        this text for the user to see, such as conf-stat
                        for the author, text stats for commented texts,
                        comments, a.s.o.
-('TEXTTREE . number) - The text stat, author, textauth of comments to 
+\('TEXTTREE . number\) - The text stat, author, textauth of comments to 
 		       and texttree of all comments and footnotes.
-('CONFSTATFORMAP conf-no first-local) - The conf-stat of the conference
+\('CONFSTATFORMAP conf-no first-local\) - The conf-stat of the conference
 		       number CONF-NO is fetched and then we continue
 		       to fetch the map.
-('MAP conf-stat first-local) -
+\('MAP conf-stat first-local\) -
                        The next part of the map in conference CONF-STAT.
 		       The length fetched per revolution is according to
 		       the value of lyskom-fetch-map-nos.
-('MARKS) -             The whole list of marked texts and then every info about
+\('MARKS\) -             The whole list of marked texts and then every info about
 		       these texts.
-('WHOBUFFER) -         The who-is-on-info to construct the who-buffer.
-('MEMBERSHIP . pers-no) -
+\('WHOBUFFER\) -         The who-is-on-info to construct the who-buffer.
+\('MEMBERSHIP . pers-no\) -
 		       The next part of the membership for person PERS-NO
 		       is fetched. How long we already have fetched is
 		       kept in the variable lyskom-membership-is-read. If 
@@ -81,10 +81,11 @@ lyskom-queue.
 		       are done.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
-('MEMBERSHIPISREAD) -  Just sets the lyskom-membership-is-read variable to t.
+\('MEMBERSHIPISREAD\) -  Just sets the lyskom-membership-is-read variable to t.
 
 
-See further documentation in the source code.")
+See further documentation in the source code."
+  local)
 
 ;;;
 ;;; The four requests CONFSTAT, PERSSTAT, TEXTSTAT and TEXTMASS are 
@@ -110,8 +111,9 @@ See further documentation in the source code.")
 ;;; 
 
 
-(defvar lyskom-prefetch-in-action nil
-  "t when the prefetch-process is started and going.")
+(def-kom-var lyskom-prefetch-in-action nil
+  "t when the prefetch-process is started and going."
+  local)
 
 
 (defvar lyskom-inhibit-prefetch nil
@@ -119,8 +121,9 @@ See further documentation in the source code.")
 This is used to prevent the prefetch code to reenter itself.")
 
 
-(defvar lyskom-pending-prefetch 0
-  "Variable counting the number of unfinished prefetch requests.")
+(def-kom-var lyskom-pending-prefetch 0
+  "Variable counting the number of unfinished prefetch requests."
+  local)
 
 
 ;;; ================================================================

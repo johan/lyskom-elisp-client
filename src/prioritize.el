@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.4 1996-10-28 18:06:08 davidk Exp $
+;;;;; $Id: prioritize.el,v 44.5 1997-02-07 18:08:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.4 1996-10-28 18:06:08 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 44.5 1997-02-07 18:08:02 byers Exp $\n"))
 
 
 
@@ -155,6 +155,30 @@
   "Get a list of all selected entries."
   lyskom-prioritize-selection)
 
+(defun lyskom-prioritize-find-entry-from-conf (conf-no)
+  "Get the entry for conference conf-no"
+  (let ((result nil))
+    (lyskom-traverse entry lyskom-prioritize-entry-list
+      (when (eq (conf-stat->conf-no
+                 (prioritize-entry->conf-stat entry))
+                conf-no)
+        (setq result entry)))
+    result))
+
+(defun lyskom-prioritize-get-entry-from-priority (priority first)
+  (let ((result nil))
+    (lyskom-traverse entry lyskom-prioritize-entry-list
+      (cond ((= (prioritize-entry->priority entry)
+                priority)
+             (when (or (not first)
+                       (null result))
+               (setq result entry)))
+            ((< (prioritize-entry->priority entry)
+                priority)
+             (when (null result)
+               (setq result entry)))))
+    result))
+
 
 (defun lyskom-prioritize-goto-entry (entry)
   "Go to the line containing ENTRY."
@@ -167,7 +191,7 @@
   (save-excursion
     (let ((lineno (+ lyskom-prioritize-header-lines
                      (lyskom-prioritize-get-no-from-entry entry)))
-          (inhibit-read-only t))
+          (buffer-read-only nil))
       (goto-line lineno)
       (delete-region (save-excursion (beginning-of-line) (point))
                      (save-excursion (end-of-line) (point)))
@@ -195,8 +219,87 @@
                                  "\n"))))
               lyskom-prioritize-entry-list))))
 
+(defun lyskom-prioritize-add-membership (membership)
+  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+    (if (buffer-live-p  buffer)
+        (save-excursion
+          (set-buffer buffer)
+          (let ((tmp (lyskom-prioritize-get-entry-from-no
+                      (membership->conf-no membership))))
+            (if tmp (lyskom-prioritize-replace-membership 
+                     membership
+                     (lyskom-default-value 'lyskom-membership))
+              (let* ((entry (lyskom-prioritize-get-entry-from-priority 
+                             (membership->priority membership) t))
+                     (no (lyskom-prioritize-get-no-from-entry entry)))
+                (setq lyskom-prioritize-entry-list
+                      (lyskom-prioritize-add-to-list 
+                       (1- no )
+                       (make-prioritize-entry
+                        (membership->priority membership)
+                        (blocking-do 'get-conf-stat
+                                     (membership->conf-no membership)))
+                       lyskom-prioritize-entry-list))
+                (goto-line (+ no lyskom-prioritize-header-lines))
+                (let ((buffer-read-only nil))
+                  (open-line 1)
+                  (lyskom-prioritize-redraw-entry 
+                   (lyskom-prioritize-get-entry-from-no no)))))))
+      (lyskom-remove-hook 'lyskom-add-membership-hook
+                          'lyskom-prioritize-add-membership))))
+
+(defun lyskom-prioritize-remove-membership (conf-no membership-list)
+  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+    (if (buffer-live-p buffer)
+        (save-excursion
+          (set-buffer buffer)
+          (let ((entry (lyskom-prioritize-find-entry-from-conf conf-no)))
+            (lyskom-prioritize-goto-entry entry)
+            (let ((buffer-read-only nil))
+              (delete-region (save-excursion (beginning-of-line) (point))
+                             (save-excursion (end-of-line) (point)))
+              (delete-char 1))
+            (setq lyskom-prioritize-entry-list
+                  (lyskom-prioritize-remove-from-list 
+                   (1- (lyskom-prioritize-get-no-from-entry entry))
+                   lyskom-prioritize-entry-list))))
+      (lyskom-remove-hook 'lyskom-remove-membership-hook
+                          'lyskom-prioritize-remove-membership))))
+
+(defun lyskom-prioritize-replace-membership (membership membership-list)
+  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+    (if (buffer-live-p buffer)
+        (save-excursion
+          (set-buffer buffer)
+          (let* ((entry (lyskom-prioritize-find-entry-from-conf
+                         (membership->conf-no membership)))
+                 (target-priority (membership->priority membership))
+                 (entry-priority (prioritize-entry->priority entry))
+                 (move-up (> target-priority entry-priority))
+                 (target-entry
+                  (lyskom-prioritize-get-entry-from-priority
+                   target-priority
+                   (not move-up))))
+            (when (not (eq target-priority entry-priority))
+              (set-prioritize-entry->priority entry target-priority)
+              (lyskom-prioritize-move-entry 
+               (lyskom-prioritize-get-no-from-entry entry)
+               (+ (lyskom-prioritize-get-no-from-entry target-entry)
+                  (cond ((and move-up (= (prioritize-entry->priority 
+                                          target-entry)
+                                         target-priority)) 1)
+                        ((not move-up) -1)
+                        (t 0)))
+               t t))))
+      (lyskom-remove-hook 'lyskom-replace-membership-hook
+                          'lyskom-prioritize-replace-membership))))
+
+
 
 (defun lyskom-prioritize-move-entry (from to &optional dontset forceup)
+  "Move entry from position FROM to position TO.
+Non-nil optional DONTSET means don't change priority.
+Non-nil optional FORCEUP means force update of entry."
   (let ((inhibit-read-only t))
     (if (/= from to)
         (let ((entry (lyskom-prioritize-get-entry-from-no from))
@@ -573,8 +676,10 @@ of conferences you are a member of."
   (interactive)
   (lyskom-start-of-command 'kom-prioritize)
   (let* ((buffer (current-buffer))
-         (tmp-buffer (get-buffer-create (concat (buffer-name buffer)
-                                                "-prioritize")))
+         (tmp-buffer (lyskom-get-buffer-create 'prioritize
+                                               (concat (buffer-name buffer)
+                                                       "-prioritize")
+                                               t))
          (collector (make-collector)))
     (unwind-protect
         (progn
@@ -593,7 +698,6 @@ of conferences you are a member of."
                           (string (concat (lyskom-mode-name-from-host)
                                           " prioritize: "
                                           lyskom-server-name)))
-                     (lyskom-associate-buffer tmp-buffer)
                      (set-buffer tmp-buffer)
                      (make-local-variable 'lyskom-pers-no)
                      (make-local-variable 'lyskom-prioritize-entry-list)
@@ -602,7 +706,7 @@ of conferences you are a member of."
 
                      (setq mode-line-buffer-identification string)
 
-                     (lyskom-protect-environment (lyskom-prioritize-mode))
+                     (lyskom-prioritize-mode)
                      (set-buffer buffer)
 
                      (lyskom-traverse memb-ship membership-list
@@ -616,9 +720,7 @@ of conferences you are a member of."
                      
                      (lyskom-save-excursion
                       (lyskom-display-buffer 
-                       tmp-buffer
-                       'kom-prioritize-in-window
-                       'kom-dont-restore-window-after-prioritize)
+                       tmp-buffer)
                       (setq lyskom-prioritize-entry-list
                             (nreverse (collector->value
                                        collector)))
@@ -687,7 +789,16 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (setq mode-line-format lyskom-prioritize-mode-line)
   (lyskom-prioritize-update-mode-line)
   (setq buffer-read-only t)
-  (use-local-map lyskom-prioritize-mode-map)
+  (lyskom-use-local-map lyskom-prioritize-mode-map)
+  (lyskom-add-hook 'lyskom-add-membership-hook
+                   'lyskom-prioritize-add-membership
+                   t)
+  (lyskom-add-hook 'lyskom-remove-membership-hook 
+                   'lyskom-prioritize-remove-membership
+                   t)
+  (lyskom-add-hook 'lyskom-replace-membership-hook 
+                   'lyskom-prioritize-replace-membership
+                   t)
   (run-hooks 'lyskom-prioritize-mode-hook))
 
 
