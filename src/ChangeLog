@@ -1,3 +1,24 @@
+Sat Apr 27 02:48:51 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Töm completion-cachen.
+
+Fri Apr 26 00:01:14 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-print-delayed-header-comm): Nu borde den
+	skriva saker på rätt ställe.
+
+	* services.el (initiate-set-client-version): Ny funktion.
+	(initiate-get-client-name): Ny funktion.
+	(initiate-get-client-version): Ny funktion.
+
+	* startup.el (lyskom): Berätta för servern vad vi heter.
+
+	* lyskom-rest.el (kom-go-to-next-conf): Använd def-kom-command.
+	(lyskom-go-to-pri-conf,lyskom-go-to-next-conf): Flyttade på
+	anropet av lyskom-end-of-command.
+	(lyskom-maybe-move-unread): Felstavat argument.
+	(lyskom-go-to-next-conf): Flyttade om lite.
+
 Thu Apr 25 01:42:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (kom-delayed-printing): Ändrade default till nil.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 40.3 1996-04-23 16:53:21 davidk Exp $
+;;;;; $Id: startup.el,v 40.4 1996-04-27 01:08:45 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 40.3 1996-04-23 16:53:21 davidk Exp $\n"))
+	      "$Id: startup.el,v 40.4 1996-04-27 01:08:45 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -105,6 +105,10 @@ See lyskom-mode for details."
 	    (save-excursion
 	      (lyskom-init-parse buffer))
 
+	    ;; Tell the server who we are
+	    (initiate-set-client-version 'background nil
+					 "lyskom.el" lyskom-clientversion)
+
 	    (setq lyskom-server-info (blocking-do 'get-server-info))
 	    (lyskom-format-insert 
 	     'connection-done
@@ -161,6 +165,10 @@ See lyskom-mode for details."
   (let ((old-me lyskom-pers-no))
     (unwind-protect
         (progn
+	  ;; Clera this cache, so lyskom-read-conf-name-internal won't
+	  ;; be confused later
+	  (lyskom-completing-clear-cache)
+	  
           (if lyskom-first-time-around
               nil
             (lyskom-tell-internat 'kom-tell-login))
@@ -204,7 +212,8 @@ See lyskom-mode for details."
                                      ;; the person when loggin in new
                                      ;; users
                                      (or lyskom-is-new-user
-                                         (silent-read (lyskom-get-string 'password)))))
+                                         (silent-read
+					  (lyskom-get-string 'password)))))
                       (if lyskom-is-new-user
                           (blocking-do 'add-member
                                        (server-info->conf-pres-conf lyskom-server-info)
