@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 39.1 1996-03-16 11:32:38 davidk Exp $
+;;;;; $Id: vars.el.in,v 39.2 1996-03-18 15:43:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 39.1 1996-03-16 11:32:38 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 39.2 1996-03-18 15:43:36 byers Exp $\n"))
 
 
 
@@ -45,7 +45,9 @@
 
 (defvar kom-emacs-knows-iso-8859-1 t
   "*If non-nil then dont convert texts and other things to swascii.
-This variable is not saved. It should be set in your .emacs")
+This variable is not saved. It should be set in your .emacs
+
+This variable is not saved in the LysKOM server.")
 
 
 ;;;; ================================================================
@@ -59,26 +61,40 @@ This variable is not saved. It should be set in your .emacs")
 'other means edit in another window. Creating that window if necessary.
 A buffer or buffer name means use the first window displaying that buffer.
 If no window is displaying that buffer or the buffer does not exits then it
-uses the same window.")
+uses the same window.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-created-texts-are-read t
-  "*Non-nil means automatically mark texts that you create as read.")
+  "*Non-nil means automatically mark texts that you create as read.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-dont-restore-window-after-editing nil
-  "*If non-nil then don't restore the window configuration after sending a text.")
+  "*If non-nil then don't restore the window configuration after sending a text.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-default-mark 100
-  "*If non-nil (must be an integer) then the user is not asked for type of mark.")
+  "*If non-nil (must be an integer) then the user is not asked for type of mark.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-reading-puts-comments-in-pointers-last t
-  "*If Non-nil the texts are shown with comments references at the end.")
+  "*If Non-nil the texts are shown with comments references at the end.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-dashed-lines t
-  "*If Non-nil then all texts will be surrounded by lines of dashes.")
+  "*If Non-nil then all texts will be surrounded by lines of dashes.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-print-number-of-unread-on-entrance t
   "*If Non-nil then print automatically the number of unread articles when
-entering a conference.")
+entering a conference.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-presence-messages t
   "*If non-nil, lyskom prints continuous info about what other people are doing.
@@ -86,42 +102,60 @@ Info is printed on the message line and never in the buffer. If minibuffer is
 used then no message is printed.
 
 If you want the messages in the buffer you could set the variable 
-kom-presence-messages-in-buffer.")
+kom-presence-messages-in-buffer.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-presence-messages-in-buffer nil
   "*If t, lyskom prints information about what other people are doing in buffer.
 All printing is done just before the prompt.
 If nil no messages are printed.
 If 'presence then messages about people logging in, out and people 
-changing name is printed.")
+changing name is printed.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-show-where-and-what t
   "*Non-nil means kom-who-is-on shows from which machine the user is running
-and what he is doing.")
+and what he is doing.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-show-footnotes-immediately t
-  "*Non-nil means show footnotes immediately following the text.")
+  "*Non-nil means show footnotes immediately following the text.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-who-buffer-size-when-displaying 10
   "*Size of window to display the who-buffer.
-This is used when executing the kom-display-who-buffer command.")
+This is used when executing the kom-display-who-buffer command.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-read-depth-first t
-  "*Non-nil means read comments and footnotes to a text before other texts.")
+  "*Non-nil means read comments and footnotes to a text before other texts.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-higher-priority-breaks nil
   "*Non-nil means allow texts from conferences with highter priority to break in.
 If the value is 'express then texts are allowed to break in the middle of a
 comment chain.  Otherwise we dont let them in until the end of the comment
-tree.")
+tree.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-after-load-hook nil
-  "Hook to run once after lyskom is loaded.")
+  "Hook to run once after lyskom is loaded.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-login-hook nil
   "*What to do when logged in.
 This is a list of commands that are executed after we have logged in but before
-any command is accepted from the keyboard.")
+any command is accepted from the keyboard.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-do-when-done '(kom-review-all-marked-texts kom-display-time)
   "*What to do when all texts are read.
@@ -133,18 +167,24 @@ type			prompt
 lyskom-function		from the lyskom-command-name function.
 command			\"Kommandot:\" name of function or definition of
 			lambda expression
-keyboard macro		\"Kommandot:\" keyboard macro definition.")
+keyboard macro		\"Kommandot:\" keyboard macro definition.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-page-before-command nil
   "*This is a list of all commands before which the screen is cleared.
-If it isn't a list and isn't nil the screen is cleared before all commands.")
+If it isn't a list and isn't nil the screen is cleared before all commands.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-membership-default-priority 100
   "*Default priority when joining a new conference.
 If a valid priority then new conferences are read with this priority. 
 Otherwise ask the user for a priority.
 
-Valid priorities are only the range 0-255.")
+Valid priorities are only the range 0-255.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-membership-default-placement 'last
   "*Tells the system where to put new conferences.
@@ -152,79 +192,120 @@ The value can be one of the following:
 'first => before all other conferences.
 'last => after all other conferences.
 a number => at that position
-otherwise => the new conf is entered after all conferences.")
+otherwise => the new conf is entered after all conferences.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-prompt-text " - "
-  "*Text to end the prompt.")
+  "*Text to end the prompt.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-prompt-executing-default-command-text ". "
-  "*Text to end the prompt while the default-commands is executing.")
+  "*Text to end the prompt while the default-commands is executing.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-no-prompt nil
-  "Tells the session that we have no prompt.")
+  "Tells the session that we have no prompt.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-show-personal-messages-in-buffer t
   "*Buffer to show personal messages in.
 If nil, discard them.
 If t, insert them in the *kom* buffert.
 If non-nil and non-t this should be a buffer or a name of a (possibly
-nonexistent) buffer in which the message is inserted.")
+nonexistent) buffer in which the message is inserted.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-pop-personal-messages nil
   "*Non-nil means pop up a buffer with personal messages as they arrive.
-kom-show-personal-messages-in-buffer decides which buffer to pop.")
+kom-show-personal-messages-in-buffer decides which buffer to pop.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-priority-break 1
   "*Non-nil means ding if a higher priority text or conference breaks in.
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.")
+program named by kom-audio-player.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-common-messages 0
   "*Non-nil means ding as common messages arrive. A number means the number of
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.")
+program named by kom-audio-player.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-group-messages 1
   "*Non-nil means ding as group messages arrive. A number means the number of
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.")
+program named by kom-audio-player.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-personal-messages 2
   "*Non-nil means ding as personal messages arrive. A number means the number
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.")
+program named by kom-audio-player.
+
+This variable is stored in the LysKOM server")
+
+(defvar lyskom-ding-on-no-subject 2
+  "How to ding if the user has not entered a subject line.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-audio-player "audioplay"
-  "*Program to play audio files.")
+  "*Program to play audio files.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-default-message-recipient 'group
   "*Determines default recipient of personal messages.
 
 everybody means the default recipient is everybody.
+group     means the default recipient is the group to which the last
+          message was sent, if it was a group message. If the last message
+          was a personal message or a common message, it means the same as 
+          sender. 
+sender    means the sender of the last message received.
 
-group means the default recipient is the group to which the last
-message was sent, if it was a group message. If the last message was a
-personal message or a common message, it means the same as sender.
-
-sender means the sender of the last message received.")
+This variable is stored in the LysKOM server.")
 
 
 (defvar lyskom-filter-outgoing-messages t
   "t if outgoing remote-control messages and automatic replies are not
-to be displayed in the buffer.")
+to be displayed in the buffer.
+
+This variable is not saved in the LysKOM server.")
+
+(defvar kom-friends nil
+  "*List of people whose names should be formatted using kom-friends-face.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-text-properties t
   "*Non-nil means to insert text properties in the Emacs buffer for
-various LysKOM elements.")
+various LysKOM elements.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-use-button-hints t
-  "*Non-nil means use button hints for overriding default actions.")
+  "*Non-nil means use button hints for overriding default actions.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-button-actions
   '((text
      text-text
      lyskom-button-view-text
      (("Återse texten" . lyskom-button-view-text)
+      ("Återse träd" . lyskom-button-review-tree)
+      ("Återse urinlägget" . lyskom-button-find-root)
       ("Kommentera texten" . lyskom-button-comment-text)
       ("Personligt svar" . lyskom-button-private-comment-text)
       ("Markera texten" . lyskom-button-mark-text)
@@ -278,7 +359,9 @@ is generated while the command COMMAND is being executed, HINT is used as a
 hint for a new default action. The user has the option to ignore or used the 
 hint.
 
-Also see the function \"kom-add-button-action\".")
+Also see the function \"kom-add-button-action\".
+
+This variable is not saved in the LysKOM server.")
 
 
 (defvar lyskom-text-buttons
@@ -308,14 +391,29 @@ REGEXP is the regexp to look for in the text.
 TYPE is the button type. Valid button types are defined in lyskom-button-actions
 BUTTON-MATCH is the number of the parenthesized expression that is the actual button.
 BUTTON-ARG-MATCH is the number of the expression to used as the button argument.
-FACE is the text face to apply to the button, or nil to use the default face.")
+FACE is the text face to apply to the button, or nil to use the default face.
+
+This variable is not saved in the LysKOM server")
 
 
 (defvar kom-url-viewer-preferences '("emacs"
 				    "netscape"
 				    "w3")
+
   "*LysKOM will attempt to use URL viewers in the order specified here.
-kom-url-managers is a list of all available viewers.")
+kom-url-managers is a list of all available viewers. Note that the elements
+are all strings.
+
+When you select an URL, this list is used to determine which URL
+viewer to use in the following manner: Each element is in turn matched
+against the manager regexp for each manager in kom-url-managers, and the
+first manager found that matches is used to display the URL.
+
+See kom-url-managers for a list of all available URL viewers. See
+kom-netscape-command and kom-mosaic-command for information specific 
+to some URL viewers.
+
+This variable is not saved in the LysKOM server.")
 
 
 (defvar kom-url-managers '(("w3" 
@@ -348,24 +446,45 @@ view an URL, kom-url-viewer-preferences is scanned, and the URL
 manager whose MANAGER-REGEXP first matches an element in
 kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
 the selected URL is used to view the URL by calling its VIEW-FUNCTION
-with the URL and the manager entry as arguments.")
+with the URL and the manager entry as arguments.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-mosaic-command "/usr/local/bin/mosaic"
-  "*Command to run to start Mosaic")
+  "*Command to run to start Mosaic
 
-(defvar kom-netscape-command "netscape")
+This variable is not saved in the LysKOM server.")
+
+(defvar kom-netscape-command "netscape"
+
+  "*Command to run to start Netscape.
+
+If a string, it should be a command that starts Netscape with no
+arguments. If a list, the first element must be a command that starts
+Netscape. The remaining elements are used as arguments to Netscape.
+
+For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
+is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-confirm-multiple-recipients t
   "*Non-nil means ask the user for confirmation about recipients.
 When the user writes a comment to a text with more than one recipient
-he gets a y-or-n-p question for all recipients.")
+he gets a y-or-n-p question for all recipients.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-max-buffer-size nil
-  "*If non-nil, ensure that buffers won't grow any larger than this")
+  "*If non-nil, ensure that buffers won't grow any larger than this
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-print-complex-dates (and (>= emacs-minor-version 29)
 					(>= emacs-major-version 19))
-  "*If non-nil, print today and yesterday using a special format.")
+  "*If non-nil, print today and yesterday using a special format.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar kom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
@@ -374,7 +493,9 @@ he gets a y-or-n-p question for all recipients.")
     ("kom.csd.uu.se" . "CSD-KOM")
     ("striterax.medio.mh.se" . "MedioKOM")
     ("kom.mds.mdh.se" . "MdS-KOM"))
-  "An alist mapping server names to shorter identification strings")
+  "An alist mapping server names to shorter identification strings
+
+This variable is not saved in the LysKOM server.")
 
 
 (defvar kom-ansaphone-on nil
@@ -382,16 +503,22 @@ he gets a y-or-n-p question for all recipients.")
 
 
 (defvar kom-remote-control t
-  "*t if LysKOM may be remotely controlled.")
+  "*t if LysKOM may be remotely controlled.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-remote-controllers nil 
   "*Persons who may control LysKOM using messages.By default you can
 always control your own sessions. See kom-self-control for more
-information.")
+information.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-self-control t
   "*If non-nil, remote control commands are accepted from sessions logged
-in as the same user as the current session.")
+in as the same user as the current session.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-ansaphone-replies
   '((group nil nil nil nil)
@@ -413,7 +540,9 @@ send. A nil in one of the message-type, sender, recipient or text
 components in the list is taken to mean a wildcard. A null reply means
 don't send a reply.
 
-If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
+If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.
+
+This variable is not saved in the LysKOM server.")
 
 
 (defconst lyskom-elisp-variables
@@ -439,10 +568,11 @@ If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
     kom-write-texts-in-window
     kom-remote-control
     kom-remote-controllers
-    kom-ansaphone-on
+    kom-self-control
     kom-ansaphone-default-reply
     kom-ansaphone-replies
     kom-show-footnotes-immediately
+    kom-friends
     lyskom-fetch-map-nos
     lyskom-new-text-hook
     lyskom-prefetch-conf-tresh 
@@ -548,7 +678,9 @@ At most lyskom-max-pending-calls calls are sent at once.")
 (defvar lyskom-max-pending-calls 20
   "*Max number of calls that are transmitted to the server at once.
 Extra calls are queued in lyskom-output-queue and sent when the replies
-returns.")
+returns.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-number-of-pending-calls 0
   "Number of pending calls that are transmitted to the server.")
@@ -566,7 +698,9 @@ different packets.")
 (defvar lyskom-session-priority 0
   "*This sessions priority.
 Only texts in conferences with a priority equal to or higher than this
-will be shown.")
+will be shown.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-proc nil
   "The process (network connection) that is associated with this buffer.")
@@ -653,7 +787,9 @@ priority) is copied from this list to lyskom-reading-list.
 
 The first element is a dummy.")
 
-;; lyskom-quit-flag is declared in macros.el
+(defvar lyskom-quit-flag nil
+  "A flag indicating if the filter was interrupted by C-g.
+ It is set to the same value as quit-flag on filter exit.")
 
 (defvar lyskom-inhibit-minibuffer-messages nil
   "A flag indicating whether asynchronous minibuffer messages are allowed.
@@ -665,18 +801,26 @@ If this variable is non-nil, no asynchronous messages will appear.")
 ;;; These variables control prefetch of conf-stats, text-stats and texts:
 
 (defvar lyskom-prefetch-texts 3
-  "*Number of texts to prefetch.")
+  "*Number of texts to prefetch.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-prefetch-conf-tresh 50
   "*If fewer than lyskom-prefetch-conf-tresh texts are known, ask for more
-conf-stats from server.")
+conf-stats from server.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-prefetch-confs 10
-  "*Number of confs to ask about at once when checking for unread texts.")
+  "*Number of confs to ask about at once when checking for unread texts.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-fetch-map-nos 50
   "*Number of text-nos lyskom will fetch when fetching maps.
-+++ This is not yet used everywhere.")
++++ This is not yet used everywhere.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-fetch-membership-length 6
   "*Number of entries in the membership-list that is fetched at a time.
@@ -684,7 +828,9 @@ This should be optimized depending on how often you read lyskom and
 the activity in the first groups in you membership list.
 
 Best performance is achieved if you, when logging in, always have an unread
-article in one of the first lyskom-fetch-membership-length conferences.")
+article in one of the first lyskom-fetch-membership-length conferences.
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-last-conf-fetched -1
   "Last conf asked about. Number on the list lyskom-membership.")
@@ -749,13 +895,17 @@ This is used by the command kom-busy-wait.")
   "Hook to run when lyskom-mode is entered.")
 
 (defvar kom-quit-hook nil
-  "Hook to run when the LysKOM session is correctly ended.")
+  "Hook to run when the LysKOM session is correctly ended.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-quit-when-idle t
   "Non-niil to automatically quit when LysKOM is full and the session is idle")
 
 (defvar kom-permanent-filter-list nil
-  "List of patterns to filter permanently")
+  "List of patterns to filter permanently
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-session-filter-list nil
   "List of patterns to filter during this session")
@@ -770,18 +920,24 @@ This hook is run after the prompt is removed if it shall be changed but before
 the text Text 4711 {r skapad! is printed in the message area. And before the
 new prompt is printed.
 If the text: Text 4711 {r skapad! should not be printed then the hook should 
-set the local variable no-message non-nil.")
+set the local variable no-message non-nil.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-who-info-has-changed-hook nil
   "*Hook to run every time the who-info-buffer has changed.
-The hook is run with current-buffer the lyskom buffer, not the who-info-buffer.")
+The hook is run with current-buffer the lyskom buffer, not the who-info-buffer.
+
+This variable is stored in the LysKOM server.")
 
 (defvar lyskom-personal-message-hook nil
   "*Hook to run when a personal message is received.
 When the hook is run 'sender' is bound to the pers-stat of the sender
 of the message (or possibly nil), 'recipient' is 0 if the message is a
 public message and otherwise the pers-no of the user, and 'message' is
-a string that holds the message.")
+a string that holds the message.
+
+This variable is not saved in the LysKOM server.")
 
 
 (defvar lyskom-executing-command t
@@ -794,7 +950,9 @@ Most commands can't be interrupted by another command.")
 (defvar kom-low-priority -1
   "*Priority that the current conference are set to when they are
 aborted. nil means don't alter priority. (That means that
-kom-go-to-next-conf might go to the same conference again.)")
+kom-go-to-next-conf might go to the same conference again.)
+
+This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-membership-is-read nil
   "T when the membership has been read.")
@@ -830,6 +988,11 @@ unread texts in list-unread.")
 
 (defvar lyskom-is-new-user nil
   "An internal variable used in kom-start-anew")
+
+(defvar lyskom-apo-timeout-s nil
+  "Seconds timeout for accept-process-output")
+(defvar lyskom-apo-timeout-ms nil
+  "Microseconds timeout for accept-process-output")
 
 
 ;;;; lyskom-tell-phrases-validation-keyword-list
@@ -920,59 +1083,63 @@ the value of  kom-tell-phrases  for fun.")
 (when (eq window-system 'x)
   (if (x-display-color-p)
       (let* ((bgmode (cdr (assq 'background-mode (frame-parameters))))
-	     (dark-bg (eq bgmode 'dark)))
-	;; Face for text buttons and other KOM buttons
-	(lyskom-make-face 'kom-active-face
-	  (copy-face 'default 'kom-active-face)
-	  (lyskom-set-face-foreground 'kom-active-face
-			       (if dark-bg "lightblue" "blue4")))
-	;; Face for URL buttons
-	(lyskom-make-face 'kom-url-face
-	  (copy-face 'default 'kom-url-face)
-	  (lyskom-set-face-foreground 'kom-url-face
-			       (if dark-bg "Moccasin" "BlueViolet")))
-	;; Face for highlighting you own name
-	(lyskom-make-face 'kom-me-face
-	  (copy-face 'bold 'kom-me-face)
-	  (lyskom-set-face-foreground 'kom-me-face "gold")
-	  (lyskom-set-face-background 'kom-me-face "black"))
-	;; Not sure what this is for
-	(lyskom-make-face 'kom-highlight-face
-	  (copy-face 'highlight 'kom-highlight-face)
-	  (lyskom-set-face-foreground 'kom-highlight-face 
-			       "midnight blue"))
-	;; This face is not used at the moment (960226)
-	(lyskom-make-face 'kom-text-face
-	  (copy-face 'default 'kom-text-face))
-	;; Face for the subject string
-	(lyskom-make-face 'kom-subject-face
-	  (copy-face 'kom-text-face 'kom-subject-face)
-	  (lyskom-set-face-foreground 'kom-subject-face
-			       (if dark-bg "Khaki" "dark green")))
-	;; Not used (960226)
-	(lyskom-make-face 'kom-text-no-face
-	  (copy-face 'kom-text-face 'kom-text-no-face))
-	;; Face for presence messages in the buffer
-	(lyskom-make-face 'kom-presence-face
-	  (make-face 'kom-presence-face)
-	  (make-face-italic 'kom-presence-face nil t)
-	  (set-face-foreground 'kom-presence-face "grey")))
+             (dark-bg (eq bgmode 'dark)))
+        ;; Face for text buttons and other KOM buttons
+        (lyskom-make-face 'kom-active-face
+          (copy-face 'default 'kom-active-face)
+          (lyskom-set-face-foreground 'kom-active-face
+                                      (if dark-bg "lightblue" "blue4")))
+        ;; Face for URL buttons
+        (lyskom-make-face 'kom-url-face
+          (copy-face 'default 'kom-url-face)
+          (lyskom-set-face-foreground 'kom-url-face
+                                      (if dark-bg "Moccasin" "BlueViolet")))
+        ;; Face for highlighting you own name
+        (lyskom-make-face 'kom-me-face
+          (copy-face 'bold 'kom-me-face)
+          (lyskom-set-face-foreground 'kom-me-face "gold")
+          (lyskom-set-face-background 'kom-me-face "black"))
+        ;; Not sure what this is for
+        (lyskom-make-face 'kom-highlight-face
+          (copy-face 'highlight 'kom-highlight-face)
+          (lyskom-set-face-foreground 'kom-highlight-face 
+                                      "midnight blue"))
+        ;; This face is not used at the moment (960226)
+        (lyskom-make-face 'kom-text-face
+          (copy-face 'default 'kom-text-face))
+        ;; Face for the subject string
+        (lyskom-make-face 'kom-subject-face
+          (copy-face 'kom-text-face 'kom-subject-face)
+          (lyskom-set-face-foreground 'kom-subject-face
+                                      (if dark-bg "Khaki" "dark green")))
+        (lyskom-make-face 'kom-text-no-face
+          (copy-face 'kom-active-face 'kom-text-no-face))
+        (lyskom-make-face 'kom-friends-face
+          (copy-face 'default 'kom-friends-face)
+          (set-face-background 'kom-friends-face "cornsilk"))
+        ;; Face for presence messages in the buffer
+        (lyskom-make-face 'kom-presence-face
+          (make-face 'kom-presence-face)
+          (make-face-italic 'kom-presence-face nil t)
+          (set-face-foreground 'kom-presence-face "grey")))
     (progn
       (lyskom-make-face 'kom-active-face
-	(copy-face 'underline 'kom-active-face))
+        (copy-face 'underline 'kom-active-face))
       (lyskom-make-face 'kom-url-face
-	(copy-face 'kom-active-face 'kom-url-face))
+        (copy-face 'kom-active-face 'kom-url-face))
       (lyskom-make-face 'kom-me-face
-	(copy-face 'highlight 'kom-me-face))
+        (copy-face 'highlight 'kom-me-face))
       (lyskom-make-face 'kom-highlight-face
-	(copy-face 'highlight 'kom-highlight-face))
+        (copy-face 'highlight 'kom-highlight-face))
       (lyskom-make-face 'kom-subject-face
-	(copy-face 'default 'kom-subject-face))
+        (copy-face 'default 'kom-subject-face))
       (lyskom-make-face 'kom-text-face
-	(copy-face 'default 'kom-subject-face))
+        (copy-face 'default 'kom-text-face))
       (lyskom-make-face 'kom-text-no-face
-	(copy-face 'default 'kom-subject-face))
+        (copy-face 'default 'kom-text-no-face))
+      (lyskom-make-face 'kom-friends-face
+        (copy-face 'kom-me-face 'kom-friends-face))
       (lyskom-make-face 'kom-presence-face
-	(make-face 'kom-presence-face)
-	(make-face-italic 'kom-presence-face nil t)))))
+        (make-face 'kom-presence-face)
+        (make-face-italic 'kom-presence-face nil t)))))
 

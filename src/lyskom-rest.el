@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.1 1996-03-16 11:32:28 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 39.2 1996-03-18 15:43:18 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.1 1996-03-16 11:32:28 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 39.2 1996-03-18 15:43:18 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1282,7 +1282,8 @@ A symbol other than t means call it as a function."
                         nil
                         kom-audio-player
                         arg))
-        ((symbolp arg)
+        ((and (symbolp arg)
+              (fboundp arg))
          (funcall arg))
         (t (beep))))
 		  
@@ -1642,7 +1643,7 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
     (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
 	  (lyskom-prefetch-confs lyskom-max-int))
       (lyskom-prefetch-conf))
-    (accept-process-output)))
+    (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms)))
 
 ;; ---------------------------------------------------------
 ;; prefetch conf-stats
@@ -1680,7 +1681,7 @@ List news and other things that require the correct count of articles will
 have to wait. The correct way of waiting is:
     (while (not (lyskom-prefetch-done))
       (lyskom-prefetch-conf)
-      (accept-process-output))
+      (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
 
 If we just want to know wether we have fetched all info or not we do the test
 \(lyskom-prefetch-done)."
