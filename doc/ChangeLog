@@ -1,3 +1,8 @@
+2002-03-28  Hans Persson  <hans@localhost.localdomain>
+
+	* elisp-client.sgml: Lagt till beskrivningar av de flesta
+	mötesrelaterade kommandon.
+
 2002-03-26  Hans Persson  <hans@localhost.localdomain>
 
 	En första checkin för DocBook-baserad dokumentation. Det är långt

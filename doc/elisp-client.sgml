@@ -696,6 +696,18 @@
       brevlåda är egentligen bara ett vanligt möte som är slutet
       (vilket innebär att ingen annan kan gå med i det).
     </para>
+
+    <para>
+      Ett <wordasword>originalmöte</wordasword> är ett möte där man
+      inte får skriva kommentarer, bara originalinlägg. Om man
+      försöker kommentera ett inlägg i ett originalmöte så kommer
+      kommentaren istället att hamna i mötets
+      <wordasword>supermöte</wordasword>. 
+    </para>
+
+    <comment>
+      Den här sektionen borde kanske delas upp likadant som nästa?
+    </comment>
   </sect1>
 
   <sect1>
@@ -849,12 +861,12 @@
         inte går att få reda på när det tillkommer en anmärkning på
         ett inlägg, och heller inte sparas någon information om vilka
         anmärkningar man läst. Detta innebär att de enda som kommer se
-	anmärkningen är de som läser inlägget först efter att den
-	lades till. Det i sin tur gör anmärkningar bra lämpade till
-	korta noter som `Oops, glömde ett "inte" före "klok".' och
-	direkt olämpliga för allt som någon som redan läst inlägget
-	(till exempel författaren) skulle kunna tänkas vilja
-	kommentera.
+        anmärkningen är de som läser inlägget först efter att den
+        lades till. Det i sin tur gör anmärkningar bra lämpade till
+        korta noter som <quote>Oops, glömde ett "inte" före
+        "klok".</quote> och direkt olämpliga för allt som någon som
+        redan läst inlägget (till exempel författaren) skulle kunna
+        tänkas vilja kommentera.
       </para>
 
       <comment>
@@ -904,12 +916,12 @@
       <title>Meddelanden</title>
   
       <para>
-        Ett <wordasword>meddelande<wordasword> är en text som skickas ut
-        synkront till alla avsedda mottagare som är inloggade, till
-        skillnad från inlägg som snällt ligger och väntar tills man vill
-        läsa dem, även om man inte var inloggad när inlägget skrevs. Om
-        man inte är inloggad när ett meddelande skickas så får man inte
-        se det. Det finns tre typer av meddelanden:
+        Ett <wordasword>meddelande</wordasword> är en text som skickas
+        ut synkront till alla avsedda mottagare som är inloggade, till
+        skillnad från inlägg som snällt ligger och väntar tills man
+        vill läsa dem, även om man inte var inloggad när inlägget
+        skrevs. Om man inte är inloggad när ett meddelande skickas så
+        får man inte se det. Det finns tre typer av meddelanden:
         <wordasword>alarmmeddelanden</wordasword>,
         <wordasword>gruppmeddelanden</wordasword> och
         <wordasword>personliga meddelanden</wordasword>.
@@ -946,14 +958,15 @@
         (<quote>pipmöten</quote>, eftersom elispklienten normalt piper
         när den tar emot ett meddelande). En anledning kan till exempel
         vara ett möte för sambeställning av pizza i ett visst
-        geografiskt område där man vill ha svar direkt.
+        geografiskt område; i detta fall är det svårt att skriva
+        inlägg eftersom man måste ha svar direkt.
       </para>
   
       <para>
-        Ett personligt meddelande har en enda person som mottagare, men
-        fungerar annars precis som de andra typerna. Om den mottagande
-        personen inte är inloggad så får man ett meddelande om att det
-        personliga meddelandet inte gick fram.
+        Ett personligt meddelande är egentligen bara ett
+        gruppmeddelande med en brevlåda som mottagare. Om den
+        mottagande personen inte är inloggad så får man ett meddelande
+        om att det personliga meddelandet inte gick fram.
       </para>
     </sect2>
   </sect1>
@@ -969,11 +982,337 @@
       <title>Att skapa en LysKOM-användare för första gången</title>
 
       <para>
+        <comment>
+          Borde exemplet med hur en ny person skapas vara här istället
+          för i begrepp-sektionen, kanske?
+
+          Här måste förklaras saker som namnkomplettering, hur man
+          kommer åt kommandon som inte har snabbtangenter och så.
+        </comment>
+      </para>
+    </sect2>
+ 
+    <sect2>
+      <title>Ändra personuppgifter</title>
+  
+      <para>
       </para>
     </sect2>
   </sect1>
-</chapter>
+  
+  <sect1>
+    <title>Få hjälp</title>
 
+    <para>  
+    </para>  
+  </sect1>
+  
+  <sect1>
+    <title>Hantera möten</title>
+  
+    <para>
+      För att använda LysKOM på ett bra sätt behöver man vara med i
+      ett antal möten. Varje möte har ett ämne som inläggen i mötet
+      förväntas relatera till. Hur hårt detta efterlevs varierar
+      väldigt mycket från möte till möte. I vissa möten kan inläggen
+      handla om ungefär vad som helst, i andra säger mötets
+      organisatör till (eller flyttar inlägg) om diskussionen driver
+      iväg från det avsedda ämnet.
+    </para>
+
+    <sect2>
+      <title>Bli medlem i möte - m</title>
+
+      <para>
+        <indexterm><primary>Bli medlem i möte</primary></indexterm>
+        För att kunna börja delta i diskussionen i LysKOM måste man se
+        till att bli medlem i några möten som ser intressanta ut. 
+      </para>
+
+      <comment>
+        Hur ska indexterm fungera, egentligen? Det här verkar inte ha
+        någon effekt.
+      </comment>
+
+      <para>
+        Kommandot <userinput>Bli medlem i möte</userinput>
+        (snabbkommando <userinput>m</userinput>) används för att bli
+        medlem i ett möte. Klienten kommer att fråga efter vilket möte
+        man vill gå med i. Genom att ändra på värdet för inställningen
+        <guilabel>Prioritet för nya medlemsskap</guilabel> kan man
+        bestämma vilken prioritet det nya mötet ska få, och därigenom
+        var i listan av möten man är med i det ska hamna när man läser
+        inlägg. Man kan antingen sätta den till en fast prioritet
+        eller till <guilabel>Fråga varje gång</guilabel> så att man
+        får möjlighet att sätta olika värden för varje möte man går
+        med i. Var det nya mötet hamnar i listan relativt andra möten
+        man redan är med i och som har samma prioritet styrs av
+        inställningen <guilabel>Placering av nya
+        medlemskap</guilabel>.
+      </para>
+
+      <screen>
+        Gå till nästa möte - Bli medlem i möte
+        
+        Bli medlem i Nyheter om LysKOM...klart.
+      </screen>
+
+      <para>
+        Ett möte kan även vara slutet, och i så fall går det inte att
+        gå med i det. För att bli medlem i ett slutet möte måste man
+        kontakta mötets organisatör och be att få bli medlem.
+        Organisatören använder sedan <userinput>Addera
+        medlem</userinput> för att lägga till den nya medlemmen.
+      </para>
+
+      <screen>
+        Bli medlem i Anonyma biblioholister (Legere necesse est)...det gick inte.
+        Anonyma biblioholister (Legere necesse est) är slutet.
+        Skicka ett brev till Hans Persson (Oook!) för medlemskap.
+      </screen>
+
+      <para>
+        Det går även att använda <userinput>Bli medlem i
+        möte</userinput> för att ändra prioritet på ett möte som man
+        redan är medlem i.
+      </para>
+
+      <comment>
+        Den gamla dokumentationen nämner
+        kom-membership-default-priority och
+        kom-membership-default-placement. Jag har valt att inte göra
+        det utan tala om rubrikerna i inställningsbufferten istället.
+      </comment>
+    </sect2>
+
+    <sect2>
+      <title>Gå till möte - g</title>
+
+      <para>
+        Kommandot <userinput>Gå till möte</userinput> (snabbkommando
+        <userinput>g</userinput>) låter användaren gå till ett nytt
+        möte för att börja läsa inlägg där istället för där läsningen
+        nu sker. Klienten frågar efter vilket möte du vill gå till. Om
+        du inte redan är medlem i mötet så frågar klienten om du vill
+        bli det, och om man svarar <userinput>j</userinput> så blir
+        man medlem i mötet på samma sätt som om man hade använt
+        <userinput>Bli medlem i möte</userinput>. Efter det går man till
+        mötet på vanligt sätt.
+      </para>
+
+      <screen>
+        Gå till nästa möte - Gå till möte
+        
+        Gå till Nyheter om LysKOM.
+        Nyheter om LysKOM - 82 olästa
+        
+        Läsa nästa text - 
+      </screen>
+
+      <para>
+        Genom att ändra på värdet för inställningen <guilabel>Visa
+        olästa när man går till ett möte</guilabel> kan man bestämma
+        om antalet olästa inlägg man har i mötet man går till ska
+        visas när man går till mötet eller inte. Normalinställningen
+        är som ovan, att antalet olästa inlägg i ett möte visas när
+        man går till mötet.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Utträda ur möte</title>
+
+      <para>
+        Kommandot <userinput>Utträda ur möte</userinput> (inget
+        snabbkommando) låter användaren sluta vara medlem i ett möte.
+        Klienten frågar efter vilket möte man vill utträda ur (med det
+        möte man befinner sig i för stunden som förval).
+      </para>
+
+      <screen>
+        Läsa nästa text - Utträda ur möte
+        
+        Utträda ur Nyheter om LysKOM...klart.
+        Du är nu passiv medlem i Nyheter om LysKOM.
+        Utträd ur mötet en gång till för gå ur helt.
+        
+        Gå till nästa möte - Lista nyheter
+      </screen>
+
+      <para>
+        Som synes så blir man normalt passiv medlem i ett möte när man
+        utträder ur det. Det betyder att mötet till exempel inte
+        kommer att listas när man gör <userinput>Lista
+        nyheter</userinput>, men LysKOM kommer fortfarande att hålla
+        reda på vilka inlägg i mötet man läst. En nackdel är att ju
+        fler möten man är med i, desto längre tid tar det att logga in
+        i LysKOM. Om man vill gå ur ett möte helt så kan man helt
+        enkelt utföra kommandot <userinput>Utträda ur möte</userinput>
+        en gång till (och då kommer LysKOM att glömma bort vilka
+        inlägg i mötet man läst). Om man inte vill att man ska bli
+        passiv medlem när man utträder ur ett möte så kan man ändra
+        värdet på inställningen <guilabel>Utträda ur möte gör om
+        medlemskap till passiva</guilabel>.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Skapa möte</title>
+
+      <para>
+        Kommandot <userinput>Skapa möte</userinput> (inget
+        snabbkommando) låter användaren skapa ett nytt möte. Klienten
+        ställer sedan ett antal frågor om det nya mötet: vad det ska
+        heta, om vem som helst får bli medlem (om mötet ska vara
+        öppet), om man får skriva kommentarer (om det ska vara ett
+        originalmöte), om man får skriva anonyma texter och om man får
+        gå med som hemlig medlem. Efter det är mötet skapat och man
+        görs till medlem av det. Sedan öppnas en edit-buffert där man
+        förväntas skriva en presentation av det nya mötet.
+      </para>
+
+      <screen>
+        Gå till nästa möte - Skapa möte
+        
+        Möte nummer 10840 Min dagbok, skapat.
+        Bli medlem i Min dagbok...klart.
+        
+        Gå till nästa möte - 
+      </screen>
+    </sect2>
+
+    <sect2>
+      <title>Utplåna (möte/person)</title>
+
+      <para>
+        Kommandot <userinput>Utplåna (möte/person)</userinput> (inget
+        snabbkommando) tar bort ett möte eller en person. Klienten
+        frågar först vilket möte man vill ta bort och ber sedan
+        användaren att bekräfta innan mötet tas bort.
+      </para>
+
+      <screen>
+        Läsa nästa text - Utplåna (möte/person)
+        
+        Ok, nu är Min dagbok utplånad.
+        Du är inte längre medlem i Min dagbok.
+        
+        Läsa nästa text - 
+      </screen>
+    </sect2>
+
+    <sect2>
+      <title>Ändra mötesuppgifter</title>
+
+      <para>
+        <comment>
+          Här borde det vara rimligt att beskriva Ändra FAQ, Ändra
+          livslängd, Ändra mötestyp, Ändra organisatör, Ändra
+          presentation, Ändra supermöte och Ändra tillåtna
+          författare. 
+        </comment>
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Addera medlem</title>
+
+      <para>
+        Kommandot <userinput>Addera medlem</userinput> (inget
+        snabbkommando) används för att addera en person som medlem
+        till ett möte. Detta är det enda sättet som finns för att låta
+        personer bli medlemmar i slutna möten (och kan då bara
+        användas av det slutna mötets organisatör). Det kan också
+        användas för att addera medlemmar till en persons brevlåda om
+        man vill att någon annan ska kunna läsa dennes post. Klienten
+        frågar först efter vem man vill addera till ett möte, sedan
+        vilket möte personen ska adderas till, och till sist vilken
+        prioritet mötet ska få.
+      </para>
+
+      <screen>
+        Gå till nästa möte - Addera medlem
+        
+        Addera Hans Persson (Oook!) som medlem i Min dagbok...klart.
+        
+        Gå till nästa möte - 
+      </screen>
+    </sect2>
+
+    <sect2>
+      <title>Uteslut medlem</title>
+
+      <para>
+        Kommandot <userinput>Uteslut medlem</userinput> (inget
+        snabbkommando) används för att ta bort en person som medlem
+        från ett möte. Klienten frågar först efter vem man vill
+        utesluta, sedan vilket möte man vill utesluta dem från.
+      </para>
+
+      <screen>
+        Gå till nästa möte - Uteslut medlem
+
+        Utesluta Hans Persson (Oook!) från Min dagbok...klart.
+        
+        Gå till nästa möte - 
+      </screen>
+    </sect2>
+  </sect1>
+  
+  <sect1>
+    <title>Läsa inlägg</title>
+  
+    <para>  
+    </para>  
+  </sect1>
+  
+  <sect1>
+    <title>Skriva inlägg</title>
+  
+    <para>  
+    </para>  
+  </sect1>
+  
+  <sect1>
+    <title>Informationskommandon</title>
+ 
+    <para>  
+    </para>  
+  </sect1>
+  
+  <sect1>
+    <title>Meddelanden</title>
+  
+    <para>  
+    </para>  
+  </sect1>
+  
+  <sect1>
+    <title>Diverse</title>
+  
+    <para>  
+    </para>  
+  </sect1>
+</chapter>
+  
+<chapter>
+  <title>Inställningar</title>
+  
+  <para>  
+  </para>  
+</chapter>
+  
+<chapter>
+  <title>Buggrapporter</title>
+  
+  <para>  
+  </para>  
+</chapter>
+  
+<chapter>
+  <title>Administratörskommandon</title>
+
+  <para>
 <comment>
 Här är ett förslag på struktur för hela manualen. Sektioner som börjar
 med "#" är "färdiga".
@@ -995,7 +1334,7 @@ Struktur
 #   Användbara versioner av Emacs [något om gamla Emacsen?]
     Att starta elispklienten
       [underkapitel Lysator och Andra maskiner tas bort]
-Begrepp i LysKOM
+  Begrepp i LysKOM
 #   Personer
 #   Möten och brevlådor
 #   Olika sorters texter
@@ -1041,7 +1380,7 @@ Begrepp i LysKOM
       Fjärrstyrning
     Prompten
     Färgläggning [rubrik?]
-      [namn, nummer, mushantering, kontextmeny, *, <möte 6>]
+      [namn, nummer, mushantering, kontextmeny, *, vinkel-möte 6-vinkel]
     Scrollning
     Namn och namnkomplettering [senare]
   Inställningar
@@ -1062,5 +1401,7 @@ Begrepp i LysKOM
   
   Lägg till ett "Kom igång snabbt"-kapitel.
 </comment>
+  </para>  
+</chapter>
 
 </book>
