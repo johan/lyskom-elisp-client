@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.70 2000-09-09 11:59:29 byers Exp $
+;;;;; $Id: edit-text.el,v 44.71 2000-12-06 22:55:20 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.70 2000-09-09 11:59:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.71 2000-12-06 22:55:20 joel Exp $\n"))
 
 
 ;;;; ================================================================
@@ -955,18 +955,24 @@ Cannot be called from a callback."
                              (setq author-is-member t
                                    tmp nil))
                            (setq tmp (cdr tmp))))
-                             
+
                        (if (and (not author-is-member)
 				(not (zerop author-number))
                                 (lyskom-is-permitted-author
                                  (blocking-do 'get-conf-stat author-number))
                                 (lyskom-j-or-n-p
-                                 (let ((kom-deferred-printing nil))
-                                   (lyskom-format
-                                    'add-recipient-p
-                                    author-number)) t))
+                                 (lyskom-format
+                                  'add-recipient-p
+                                  author-number)
+                                 t))
                            (setq extra-headers
-                                 (nconc (list 'recpt 
+                                 (nconc (list (if (lyskom-j-or-n-p
+                                                   (lyskom-format
+                                                    'really-add-as-recpt-q
+                                                    author-number)
+                                                   t)
+                                                  'recpt
+                                                'cc-recpt)
                                               author-number)
                                         extra-headers)))))
                     author-list))))
