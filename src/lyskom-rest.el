@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.178 2002-11-21 17:05:03 joel Exp $
+;;;;; $Id: lyskom-rest.el,v 44.179 2002-12-09 20:36:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.178 2002-11-21 17:05:03 joel Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.179 2002-12-09 20:36:35 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3393,7 +3393,7 @@ to return nil."
 	     (setq number numdefault done t))
             ((and (string= numstr "") nildefault)
              (setq number nil done t))
-	    ((string-match "\\`[0-9]+\\'" numstr)
+	    ((string-match "\\`\\s-*[0-9]+\\s-*\\'" numstr)
 	     (setq number (string-to-int numstr))
              (setq done number))
 	    (t (beep))))

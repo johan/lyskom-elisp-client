@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.75 2002-11-22 17:38:39 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.76 2002-12-09 20:36:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.75 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.76 2002-12-09 20:36:35 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -799,12 +799,20 @@ This is a LysKOM button action."
   (kill-new (replace-in-string text "\\s-+" "")))
 
 
+(defun lyskom-transform-url (url)
+  (let ((rules kom-url-transformation-rules))
+    (while rules
+      (setq url (replace-in-string url (car (car rules)) (cdr (car rules)))
+            rules (cdr rules))))
+  url)
+
 (defun lyskom-button-open-url (buf arg text)
   "In the LysKOM buffer BUF, ignore ARG and open TEXT as an URL.
 This is a LysKOM button action."
   (let* ((url (lyskom-fix-pseudo-url (replace-in-string text "\\s-+" "")))
          protocol
          url-manager)
+    (setq url (lyskom-transform-url url))
     (string-match lyskom-url-protocol-regexp url)
     (setq protocol (match-string 1 url))
     (setq url-manager (lyskom-get-url-manager protocol))

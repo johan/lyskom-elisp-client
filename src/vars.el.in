@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.212 2002-11-22 17:38:39 byers Exp $
+;;;;; $Id: vars.el.in,v 44.213 2002-12-09 20:36:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.212 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.213 2002-12-09 20:36:36 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -195,6 +195,20 @@ The cdrs on the list may be either of:
   '(my-get-text-no abs 17 4711) entry would result in a my-get-text-no call
   (funcall my-get-text-no (abs prefix-arg) prompt default nil 17 4711)."
   )
+
+(def-kom-var kom-url-transformation-rules 
+  '(("http://[^/]*aftonbladet\\.se/.*" . "\\&."))
+  "*An alist specifying transformations to be applied to URLs.
+
+Elements in this list are of the form `(REGEXP . NEWTEXT)'. Before an
+URL is opened, it is transformed by replacing REGEXP with NEWTEXT.
+Each element in the list is applied in order.
+
+The list elements REGEXP and NEWTEXT correspond to the REGEXP and
+NEWTEXT arguments to `replace-in-string'."
+  server
+  )
+
 
 (def-kom-var kom-check-configuration-on-startup t
   "*When non-nil, check Emacs configuration on client startup.")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.79 2002-10-20 13:20:00 byers Exp $
+;;;;; $Id: option-edit.el,v 44.80 2002-12-09 20:36:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.79 2002-10-20 13:20:00 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.80 2002-12-09 20:36:36 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -226,6 +226,7 @@
     (urls bold centered)
     section
     "\n"
+    [kom-url-transformation-rules]
     [kom-url-viewer-preferences]
     [kom-windows-browser-command]
     [kom-mosaic-command]
@@ -726,6 +727,8 @@ customize buffer but do not save them to the server."
     (kom-extended-status-information (toggle (yes no)))
     (kom-edit-hide-add-button (noggle (yes no)))
     (kom-keyboard-menu-immediate-selection (noggle (yes no)))
+    (kom-url-transformation-rules (repeat (cons ((string nil :tag url-transform-regexp)
+                                                 (string nil :tag url-transform-newtext)))))
 ))
 
 (defvar lyskom-widget-functions 
