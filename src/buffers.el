@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.4 1997-06-29 14:19:20 byers Exp $
+;;;;; $Id: buffers.el,v 44.5 1997-07-03 09:32:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.4 1997-06-29 14:19:20 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.5 1997-07-03 09:32:50 byers Exp $\n"))
 
 
 ;;;;
@@ -261,6 +261,10 @@ The created buffer is made a child of the current buffer."
         (progn (setq buffer (car buffers))
                (save-excursion (set-buffer buffer)
                                (let ((inhibit-read-only t))
+;;; +++ FIXME: This is that erase-buffer works if there are widgets
+                                 (setq before-change-functions
+                                       (delq 'widget-before-change
+                                             before-change-functions))
                                  (erase-buffer))
                                (kill-all-local-variables)
                                (if (equal (buffer-name (current-buffer))
