@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.245 2002-12-16 19:59:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.246 2002-12-16 22:12:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.245 2002-12-16 19:59:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.246 2002-12-16 22:12:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1457,6 +1457,8 @@ On since %#8s%#9s")
     (conf-has-no-faq . "%#1?b%[%#1M%]%[The server%] has no FAQ\n")
     (view-which-faq . "View FAQ for which conference? ")
     (review-faq-for-r . "View FAQ for %#1?b%[%#1M%]%[the server%].\n")
+    (set-faq-for-conf-done . "FAQ for %#1?b%[%#1M%]%[the server%] set to text %#3n.\n")
+    (set-faq-for-conf-failed . "Unable to set the FAQ for %#1?b%[%#1M%]%[the server%] to text %#3n.\n")
     (changed-faq-for-conf-done . "FAQ in text %#2n for %#1?b%[%#1M%]%[the server%] changed to text %#3n.\n")
     (changed-faq-for-conf-failed . "Unable to change FAQ for %#1?b%[%#1M%]%[the server%] to text %#3n.
 %#2?b%[Text %#2n is still the FAQ.

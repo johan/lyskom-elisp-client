@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.281 2002-12-16 19:59:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.282 2002-12-16 22:12:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.281 2002-12-16 19:59:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.282 2002-12-16 22:12:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1472,6 +1472,8 @@ Uppkopplad sedan %#8s%#9s")
     (conf-has-no-faq . "%#1?b%[%#1M%]%[Servern%] har ingen FAQ\n")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1?b%[%#1M%]%[servern%].\n")
+    (set-faq-for-conf-done . "Text %#3n är nu FAQ för %#1?b%[%#1M%]%[servern%].\n")
+    (set-faq-for-conf-failed . "Kunde inte sätta FAQ för %#1?b%[%#1M%]%[servern%] till text %#3n.\n")
     (changed-faq-for-conf-done . "FAQ i text %#2n för %#1?b%[%#1M%]%[servern%] ändrad till text %#3n.\n")
     (changed-faq-for-conf-failed . "Kunde inte ändra FAQ för %#1?b%[%#1M%]%[servern%] till text %#3n.
 %#2?b%[Text %#2n är fortfarande FAQ.
