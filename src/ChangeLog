@@ -1,5 +1,36 @@
 Fri Aug 20 09:56:47 1993  Linus Tolke Y  (linus@dell)
 
+	* startup.el (lyskom-start-anew-create-handler,
+	  lyskom-add-for-new-person): Newly created person are added as
+	  members in the conf-pres conference.
+
+	* commands2.el (kom-busy-wait): telling kom-mercial
+
+	* lyskom-rest.el (lyskom-end-of-command):
+	  lyskom-after-command-hook ([ntligen!).
+
+	* vars.el (kom-presence-messages): better doc.
+
+	* swedish-strings.el (lyskom-error-texts): fixed error message 37.
+
+	* async.el (lyskom-insert-personal-message):
+	  kom-ding-on-personal-messages fixed so it works according to the
+	  documentation.
+
+	* edit-text.el (lyskom-edit-mode-hook, lyskom-edit-mode-mode-hook):
+	  Added documentation.
+
+	* startup.el, flags.el (lyskom-read-options): Now stopping the
+	  main queue while running.
+
+	* commands1.el (kom-sub-self): Default is current-conf.
+	  (kom-change-presentation, kom-change-motd): Using blocking-do.
+	  (kom-change-presentation): No personal default for confs
+	  presentations.
+
+	* edit-text.el (lyskom-edit-text): Possible to start edit sessions
+	  in new or other frames.
+
 	* vars.el,edit-text.el (kom-dont-restore-window-after-editing,
 	  kom-edit-send): New variable.
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.11 1993-08-16 17:03:35 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.12 1993-08-20 21:57:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.11 1993-08-16 17:03:35 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.12 1993-08-20 21:57:55 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -615,7 +615,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
     (new-prio . "%6#1d")
 
     ; From flags.el:
-    (saving-settings . "Sparar flaggorna")
+    (saving-settings . "Sparar inst\344llningarna")
     (hang-on . "V\344nta ett tag...\n")
     (could-not-create-area . "Kunde ej skapa texten.\n")
     (could-not-set-user-area . "Kunde ej st\344lla om user-arean. Servern s\344ger felmeddelande: %#1d\n")
@@ -1041,7 +1041,7 @@ Users are encouraged to use their best sense of humor.")
     (34 . "F\366r m\345nga kommentarer")
     (35 . "F\366r m\345nga fotnoter")
     (36 . "F\366r m\345nga markeringar")
-    (37 . "Du \344r inte f\366rfattare till texten")
+    (37 . "Du \344r inte f\366rfattare till den fotnoterade texten")
     (38 . "Du kan inte koppla upp dig till servern")
     (39 . "Minnet slut")
     (40 . "Servern har ballat ur")
