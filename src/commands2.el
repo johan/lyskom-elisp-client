@@ -1102,9 +1102,23 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
 
 (defun lyskom-set-motd-2 (text-no)
   "Set motd of LysKOM to the newly created text TEXT-NO."
-  (lyskom-format-insert 'setting-motd text-no)
-  (initiate-set-motd-of-lyskom 'background 'lyskom-handle-command-answer
-			       text-no))
+  (lyskom-insert-before-prompt
+   (lyskom-format 'setting-motd text-no))
+  (initiate-set-motd-of-lyskom 'background 'lyskom-set-motd-3
+			       text-no text-no))
+
+
+(defun lyskom-set-motd-3 (result text-no)
+  "Handle the return from the initiate-set-motd-of-lyskom call."
+  (if result
+      (progn
+	(lyskom-insert-before-prompt
+	 (lyskom-get-string (if (zerop text-no)
+				'removed-motd 
+			      'set-motd-success)))
+	(set-server-info->motd-of-lyskom lyskom-server-info text-no))
+    (lyskom-insert-before-prompt
+     (lyskom-get-string 'set-motd-failed))))
 
 
 ;;; ================================================================
@@ -1118,8 +1132,9 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
   (interactive)
   (lyskom-start-of-command 'kom-remove-motd)
   (lyskom-insert-string 'removing-motd)
-  (initiate-set-motd-of-lyskom 'background 'lyskom-handle-command-answer
-			       0))
+  (initiate-set-motd-of-lyskom 'background 'lyskom-set-motd-3
+			       0 0)
+  (lyskom-end-of-command))
 
 ;;; ================================================================
 ;;;                  Kasta ut - force logout

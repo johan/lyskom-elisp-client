@@ -336,8 +336,11 @@ Lyskom-sessionen är avslutad.
     (administrator . "administratör")
     (no-longer-administrator . "en normal användare igen")
     (you-are-now . "Ok, du kör nu som %#1s.\n")
-    (setting-motd . "Sätter loginmeddelandet till text %#1d...")
-    (removing-motd . "Tar bort loginmeddelandet...")
+    (setting-motd . "Sätter loginmeddelandet till text %#1d.\n")
+    (set-motd-success . "Du har satt ett nytt loginmeddelande.\n")
+    (set-motd-failed . "Det gick inte. Du var kanske inte administrat|r.\n")
+    (removing-motd . "Tar bort loginmeddelandet.\n")
+    (removed-motd . "Du har tagit bort loginmeddelandet.\n")
     (who-to-throw-out . "Vilken session vill du kasta ut? ")
     (throwing-out . "Kastar nu ut session %#1d... ")
 
