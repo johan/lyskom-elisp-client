@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.204 2003-11-17 22:56:24 byers Exp $
+;;;;; $Id: commands1.el,v 44.205 2003-12-03 08:47:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.204 2003-11-17 22:56:24 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.205 2003-12-03 08:47:13 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3168,12 +3168,22 @@ prefix argument \(C-u -), list all sessions."
 
 (defun lyskom-list-clients-collect (client version collect)
   "Collect client statistics"
-  (let* ((name (concat client " " version))
-         (el (assoc name (collector->value collect))))
-    (if el
-        (setcdr el (1+ (cdr el)))
-      (set-collector->value collect (cons (cons name 1)
-                                          (collector->value collect))))))
+  (let* ((uversion
+	  (cond ((null version) version)
+		((null client) version)
+		((string-match "(.*; CVS)" version)
+		 (replace-in-string version "(.*; CVS)" "(from CVS)"))
+		((string-match "\\s-*(build [^)]*)" version)
+		 (replace-in-string version "\\s-*(build [^)]*)" ""))
+		(t version)))
+	 (name (concat client " " uversion))
+	 (el (assoc name (collector->value collect))))
+      (if el
+	  (progn (aset (cdr el) 0 (1+ (aref (cdr el) 0)))
+		 (unless (lyskom-string-member version (aref (cdr el) 1))
+		   (aset (cdr el) 1 (cons version (aref (cdr el) 1)))))
+	(set-collector->value collect (cons (cons name (vector 1 (list version)))
+					    (collector->value collect))))))
 
 (defun lyskom-list-clients-statistics-1 (time arg defer-info)
   (initiate-get-time 'deferred
@@ -3190,7 +3200,8 @@ prefix argument \(C-u -), list all sessions."
                                        (if (equal (car el) " ")
                                            (lyskom-get-string 'Unknown)
                                          (car el))
-                                       (cdr el)))
+                                       (aref (cdr el) 0)
+				       (length (aref (cdr el) 1))))
                       (nreverse
                        (sort (collector->value (defer-info->data defer-info))
                              (lambda (a b)
