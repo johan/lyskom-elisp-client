@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 35.6 1991-10-03 15:54:42 linus Exp $
+;;;;; $Id: edit-text.el,v 35.7 1991-10-03 16:33:32 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.6 1991-10-03 15:54:42 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.7 1991-10-03 16:33:32 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -258,9 +258,18 @@ First element is a type-tag."
 (defun lyskom-edit-mode ()
   "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
 Commands:
-\\[kom-edit-send] sends the text when you are ready. The buffer
-will be deleted if (and only if) the server accepts the text.
-\\{lyskom-edit-mode-map}
+\\[kom-edit-send]   sends the text when you are ready. The buffer will be
+	  deleted if (and only if) the server accepts the text.
+\\[kom-edit-quit]   aborts the editing. You will get back to the LysKOM buffer.
+
+\\[kom-edit-show-commented]   shows the commented text in a temporary buffer.
+
+\\[kom-edit-add-recipient]   asks for another recipient and adds him to the header.
+\\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
+
+\\[kom-edit-insert-commented]   inserts the commented of footnoted text.
+\\[kom-edit-insert-text]   inserts the shown text, you tell the number.
+
 The mode is based on the mode in the lyskom-edit-mode-mode-hook or fundamental.
 Entry to this mode runs lyskom-edit-mode-hook."
   (interactive)

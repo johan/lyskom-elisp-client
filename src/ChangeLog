@@ -1,5 +1,8 @@
 Thu Oct  3 16:52:43 1991  Linus Tolke Y  (linus at lysator)
 
+	* edit-text.el, swedish-strings.el (lyskom-edit-mode): Better
+	  documentation. Help on the separator line.
+
 	* edit-text.el (kom-edit-insert-text): Buggfix, this stopped
 	  working when the strings where put in a separate file.
 
