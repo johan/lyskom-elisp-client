@@ -794,3 +794,69 @@ sker.
 Kommentar i text 131100 av Inge Wallin, ISY
 L{sa n{sta text - Kommentera inl{gget (130973)
 Text nummer 131560 {r skapad.
+
+134307 1991-11-01  23:50  /5 rader/ KPJ Jaakkola (digital human)
+Kommentar till text 129519 av Linus Tolke Y
+Mottagare: LysKOM Elispklient; diskussion och idéer <4431>
+Extra kopia: LysKOM fr}gor (&) svar; Elispklienten <193>
+    Sänt:     1991-11-02 17:34
+    Sänt av Linus Tolke Y
+Ärende: 
+------------------------------------------------------------
+Jag {r bergis obeg}vad eller n}t.
+Hur g|r jag f|r att l{sa de inl{gg i ett m|te som jag redan har l{st
+men s} att det senaste visas f|rst, d.v.s. det som jag kallar f|r
+"bak}t" (det heter s} i KOM)?  Bara jag f}r veta det, s} ska jag
+inte s{ga ett dyft om detta mer.
+(134307) -----------------------------------
+Återse nästa text - Kommentera inlägget (134307)
+
+134579 1991-11-02  18:22  /13 rader/ Linus Tolke Y
+Extra kopia: KPJ Jaakkola (digital human) <182>
+Extra kopia: LysKOM fr}gor (&) svar; Elispklienten <194>
+Kommentar till text 134307 av KPJ Jaakkola (digital human)
+Ärende: Återse nyaste inlägget först.
+------------------------------------------------------------
+1. Återse senaste 5 inläggen till detta möte. (5 å s RET RET)
+2. Du läser nu framåt dvs äldsta inlägget först om du trycker SPC.
+3. B (bakåt eller byt läsordning.) Du läser nu bakåt, dvs äldsta
+   inlägget sist.
+4. B (byt läsordning.) Du läser nu framåt igen.
+
+Andra kommandon:
+Ål - Återse lista (listar hur många du har kvar att återse).
+Åh - Slutar återse.
+
+Ja, du kan läsa några i slutet och några i början.
+Ja, jag vet att det är en bugg i återse första 5 inläggen till detta
+möte:  (-5 å s RET RET). Den skiver ut prompten: Återse första -5 ...
+(134579) -----------------------------------
+
+133601 1991-11-01  01:51  /6 rader/ Leif Stensson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <190>
+Mottagare: Lysator <5417>
+Ärende: 
+------------------------------------------------------------
+Jag vet att detta kanske {r ett konstigt m|te att kasta in detta i, men
+hur (och _exakt_ vad) packar man ihop och skickar iv{g f|r att en utl{nning
+ska kunna k|ra LysKOM? (Jag har sagt att jag skulle f|rs|ka skicka kli-
+enten via email, dum som jag var, s} han skulle slippa virra med ftp...)
+(Med tanke p} att jag gl|mde fr}ga vad han hade f|r version av emacs s}
+kanske man skulle skicka c-klienten... :( )
+(133601) -----------------------------------
+Kommentar i text 133763 av ceder (Per Cederqvist  Lysator)
+
+133763 1991-11-01  11:22  /5 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 133601 av Leif Stensson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <191>
+Mottagare: Lysator <5426>
+Markerad av 1 person.
+Ärende: 
+------------------------------------------------------------
+Han beh|ver filen "lyskom.el" eller "lyskom.elc" (programmet) och
+"elisp-client.info" eller "elisp-client.txt" (dokumentationen). Det
+finns p} lysator.liu.se f|r ftp i pub/lyskom/elisp-client, eller i
+/users/ftp/pub/lyskom/elisp-client p} Lysators solar (det {r samma
+directory).
+(133763) -----------------------------------
+Kommentar i text 133783 av Klaus Zeuge (fjärrnärvarande) UPDATE
