@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.6 1996-07-25 16:04:09 byers Exp $
+;;;;; $Id: edit-text.el,v 41.7 1996-07-29 08:44:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.6 1996-07-25 16:04:09 byers Exp $\n"))
+	      "$Id: edit-text.el,v 41.7 1996-07-29 08:44:26 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -347,7 +347,6 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun lyskom-edit-send (send-function)
   "Send the text to the server by calling SEND-FUNCTION."
-  (interactive)
   (condition-case err
       (if (or (string= mode-name lyskom-edit-mode-name)
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
