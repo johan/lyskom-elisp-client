@@ -21,11 +21,6 @@ bort ur den h{r filen.
 
 * lyskom-insert-before-prompt stoppar in saker i fel ordning.
 
-* Addera medlem och subtrahera medlem skall inte {ndra prefetch
-  variablerna om man adderar/subtraherar n}gon annan {n sig sj{lv.
-Inge: G|r den det d}? Kolla rad 367 i commands1.el (addera medlem)
-Linus: Det {r fixat nu.
-
 * lyskom-end-of-command-hook.
 
 * Status person borde ge tiden f|r skapandet.  Samma f|r status m|te
@@ -34,8 +29,6 @@ Linus: Det {r fixat nu.
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
   borde finnas ett asynkront meddelande som s{ger att ett m|te/person
   har {ndrats.
-
-* review.el line 521.  Finns det fler s}dana?
 
 * lyskom-insert-before-prompt borde fixa till variabeln som avg|r hur
   l}ngt vi f}r skrolla.

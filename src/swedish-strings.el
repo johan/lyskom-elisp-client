@@ -356,6 +356,8 @@ Lyskom-sessionen är avslutad.
     (review-n-texts . "Återse %#1d inlägg.\n")
     (review-marked . "Återse %#1d markerade.\n")
     (review-text-no . "Återse text nummer %#1d")
+    (review-one-comment . "Återse en kommentar till inlägg %#1d.\n")
+    (review-many-comments . "Äterse %#2d kommentarer till inlägg %#1d.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")

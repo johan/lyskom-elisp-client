@@ -519,8 +519,9 @@ end."
 	  (lyskom-format-insert 'review-n-texts un))
 	 ((eq type 'REVIEW-TREE)
 	  ; +++ Hmmm. Pluralformer. Besv{rligt!
-	  (lyskom-insert(format "]terse %d kommentar%s till inl{gg %d.\n"
-				 un (if (= un 1) "" "er") cto)))
+	  (if (= un 1)
+	      (lyskom-format-insert 'review-one-comment cto)
+	    (lyskom-format-insert 'review-many-comments cto un)))
 	 ((eq type 'REVIEW-MARK)
 	  (lyskom-format-insert 'review-marked un))))))
    (read-list->all-entries lyskom-reading-list))
