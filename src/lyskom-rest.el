@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.151 2002-04-16 07:41:02 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.152 2002-04-17 19:26:23 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.151 2002-04-16 07:41:02 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.152 2002-04-17 19:26:23 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2650,9 +2650,17 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
               ;; Insert the new prompt
               (goto-char (point-max))
               (beginning-of-line)
-              (add-text-properties 0 (length prompt-text)
-				   '(read-only t rear-nonsticky t)
-                                   prompt-text)
+              (lyskom-xemacs-or-gnu
+               (let ((extent 
+                      (make-extent 0 (length prompt-text)
+                                   prompt-text)))
+                 (set-extent-property extent 'read-only t)
+                 (set-extent-property extent 'rear-nonsticky t)
+                 (set-extent-property extent 'duplicable nil))
+
+               (add-text-properties 0 (length prompt-text)
+                                    '(read-only t rear-nonsticky t)
+                                    prompt-text))
               (insert-string prompt-text)
               ;; Delete the old prompt
               (when lyskom-current-prompt

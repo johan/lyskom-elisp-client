@@ -1,3 +1,13 @@
+2002-04-17  Ulrik Haugen  <qha@lysator.liu.se>
+
+	Fix bug 464:
+	
+	* lyskom-rest.el (lyskom-update-prompt): (This paragraph concerns
+	xemacs only.) Use extents to make the prompt read-only. This seems
+	necessary to set duplicable to nil for the prompt extents/
+	properties though the info-pages on text-properties states: "The
+	predefined properties are the same as those for extents". 
+
 2002-04-16  David Kågedal  <david@kagedal.org>
 
 	* lyskom-rest.el (kom-view-next-text): When calling
@@ -321,7 +331,6 @@
 
 	* Makefile (debian-packages): new target.
 
->>>>>>> 44.514
 2002-03-25  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* distribution-configure.in: Corrected help text for
@@ -4823,7 +4832,7 @@ Mon Jun 28 17:15:28 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* english-strings.el: Synched up with Swedish.
 
-	* vars.el.in (lyskom-language): Set default valie from
+	* vars.el.in (lyskom-language): Set default value from
 	kom-default-language. 
 
 1999-06-22  David Byers  <davby@ida.liu.se>
