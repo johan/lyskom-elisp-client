@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.7 1993-08-16 17:03:51 linus Exp $
+;;;;; $Id: vars.el,v 36.8 1993-08-20 08:03:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.7 1993-08-16 17:03:51 linus Exp $\n"))
+	      "$Id: vars.el,v 36.8 1993-08-20 08:03:50 linus Exp $\n"))
 
 
 
@@ -537,6 +537,16 @@ unread texts in list-unread.")
     )
   "Users must not change this constant, but are encouraged to change
 the value of  kom-tell-phrases  for fun.")
+
+;;; ================================================================
+;;; Commands lists that are removed from extended command depending on
+;;; administrator status.
+
+(defconst lyskom-admin-removed-commands
+  '(kom-enable-adm-caps))
+(defconst lyskom-noadmin-removed-commands
+  '(kom-disable-adm-caps kom-remove-motd kom-set-motd kom-shutdown-server))
+
 
 ;;; ================================================================
 ;;;          Externally defined variables (environment)

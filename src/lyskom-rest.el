@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.8 1993-08-20 07:35:15 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.9 1993-08-20 08:03:36 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.8 1993-08-20 07:35:15 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.9 1993-08-20 08:03:36 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -167,6 +167,13 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 		     lyskom-swascii-commands)))))
 
 
+(defun lyskom-ok-command (alternative)
+  "Returns non-nil if it is ok to do such a command right now."
+  (if administrator
+      (not (memq (car (cdr alternative)) lyskom-admin-removed-commands))
+    (not (memq (car (cdr alternative)) lyskom-noadmin-removed-commands))))
+
+
 (defun kom-extended-command ()
   "Read a LysKOM function name and call the function."
   (interactive)
@@ -175,8 +182,11 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 			       (if kom-emacs-knows-iso-8859-1
 				   lyskom-commands
 				 lyskom-swascii-commands)))
+	 (administrator lyskom-is-administrator)
 	 (name (completing-read (lyskom-get-string 'extended-command)
-				alternatives nil t nil))
+				alternatives 
+				(function lyskom-ok-command)
+				t nil))
 	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
 			     (if kom-emacs-knows-iso-8859-1
 				 lyskom-commands

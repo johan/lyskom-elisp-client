@@ -1,3 +1,9 @@
+Fri Aug 20 09:56:47 1993  Linus Tolke Y  (linus@dell)
+
+	* lyskom-rest.el (kom-extended-command): Remove functions from the
+	  completing possibility if they are not interesting according to
+	  whether I am administrator or not.
+
 Wed Aug 18 17:10:18 1993  Linus Tolke Y  (linus@bodil)
 
 	* lyskom-rest.el (lyskom-read-string): No longer does
