@@ -1,3 +1,8 @@
+Fri Jun 18 12:33:32 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
+
+	* commands2.el, swedish-strings.el (kom-bury): New command.
+	  Hides a lyskom-session. ("z")
+
 Tue Jun  1 21:27:09 1993  Linus Tolke Y  (linus@mauritz.lysator.liu.se)
 
 	* completing-read.el, edit-text.el, lyskom-rest.el
