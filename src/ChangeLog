@@ -1,3 +1,12 @@
+2000-08-10  David Byers  <davby@ida.liu.se>
+
+	* filter.el (kom-super-jump): Protect empty subject with ^$.
+
+2000-08-01  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Truncate menu title
+	to 43 characters.
+
 2000-07-30  Johan Sundström  <jhs@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-trim-buffer): Point no longer flickers

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.13 2000-02-08 13:09:11 byers Exp $
+;;;;; $Id: filter.el,v 44.14 2000-08-10 11:42:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.13 2000-02-08 13:09:11 byers Exp $\n"))
+	      "$Id: filter.el,v 44.14 2000-08-10 11:42:55 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -549,16 +549,16 @@ the current text"
                               (not (zerop lyskom-current-conf)))
                          (blocking-do 'get-conf-stat lyskom-current-conf))))
       (lyskom-traverse misc
-          (text-stat->misc-info-list text-stat)
-        (cond ((eq (misc-info->type misc) 'RECPT) 
-               (setq recipients (cons (misc-info->recipient-no misc)
-                                      recipients)))
-              ((eq (misc-info->type misc) 'CC-RECPT)
-               (setq cc-recipients (cons (misc-info->recipient-no misc)
-                                         cc-recipients)))
-              ((eq (misc-info->type misc) 'BCC-RECPT)
-               (setq bcc-recipients (cons (misc-info->recipient-no misc)
-                                         bcc-recipients)))))
+                       (text-stat->misc-info-list text-stat)
+                       (cond ((eq (misc-info->type misc) 'RECPT) 
+                              (setq recipients (cons (misc-info->recipient-no misc)
+                                                     recipients)))
+                             ((eq (misc-info->type misc) 'CC-RECPT)
+                              (setq cc-recipients (cons (misc-info->recipient-no misc)
+                                                        cc-recipients)))
+                             ((eq (misc-info->type misc) 'BCC-RECPT)
+                              (setq bcc-recipients (cons (misc-info->recipient-no misc)
+                                                         bcc-recipients)))))
 
       (setq filter-recipient (or 
                               (and conf-stat
@@ -573,19 +573,24 @@ the current text"
       (if (null filter-recipient)
           (lyskom-insert-string 'no-recipient)
             
-        (lyskom-add-filter
-         (make-filter (list 
-                       (cons 'subject-re 
-                             (concat "\\([rR][eE]: *\\|[Ff][Ww][Dd]: *\\)*"
-                                     (replace-in-string
-                                      (regexp-quote lyskom-current-subject)
-                                      "[ \t]+" "[ \t]+")))
-                       (cons 'recipient-no filter-recipient))
-                      (list (cons 'action 'skip-tree)
-                            (cons 'expire t))))
-        (lyskom-format-insert 'super-jump
-                              (copy-sequence lyskom-current-subject)
-                              filter-recipient)))))
+        (let ((text lyskom-current-subject))
+          (when (string-match lyskom-current-subject "^\\s-*$") (setq text ""))
+
+          (lyskom-add-filter
+           (make-filter (list 
+                         (cons 'subject-re 
+                               (concat (if (string-equal text "") "^" "")
+                                       "\\([rR][eE]: *\\|[Ff][Ww][Dd]: *\\)*"
+                                       (replace-in-string
+                                        (regexp-quote text)
+                                        "[ \t]+" "[ \t]+")
+                                       (if (string-equal text "") "$" "")))
+                         (cons 'recipient-no filter-recipient))
+                        (list (cons 'action 'skip-tree)
+                              (cons 'expire t))))
+          (lyskom-format-insert 'super-jump
+                                (copy-sequence lyskom-current-subject)
+                                filter-recipient))))))
 
 
 
