@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.9 1992-05-11 01:54:25 linus Exp $
+;;;;; $Id: cache.el,v 35.10 1992-07-26 16:16:58 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.9 1992-05-11 01:54:25 linus Exp $\n"))
+	      "$Id: cache.el,v 35.10 1992-07-26 16:16:58 inge Exp $\n"))
 
 
 
@@ -185,7 +185,7 @@ otherwise return nil"
 ;;;                         who-info cache
 
 
-(defun cache-set-who-info-list (who-info-arr)
+(defun cache-initiate-who-info-buffer (who-info-arr)
   "Sets the cache of who-info items."
   (setq lyskom-who-info-cache (list 'WHO-INFO-LIST))
   (lyskom-save-excursion

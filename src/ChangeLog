@@ -1,3 +1,17 @@
+Sun Jul 26 18:10:38 1992  Inge Wallin  (inge@lysator)
+
+	* cache.el: cleaned up handling of the who info buffer slightly.
+	  This should become very nice once the cookie code is used
+	  instead.
+
+	* async.el: Deleted some unnecessary junk.
+
+	* prefetch.el New functions: lyskom-reset-prefetch,
+	  lyskom-setup-prefetch, lyskom-prefetch-membership,
+	  lyskom-prefetch-all-conf-stats, lyskom-prefetch-marks,
+	  lyskom-prefetch-who-is-on.  Not all of these functions are
+	  working as intended but at least they should do their job.
+
 Sun Jul 19 12:07:22 1992  Linus Tolke Y  (linus@lysator)
 
 	* commands1.el (lyskom-return-who-info-line): Fixed a bug that
