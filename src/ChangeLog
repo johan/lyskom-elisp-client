@@ -1,5 +1,14 @@
 2002-04-10  David Byers  <david.byers@swipnet.se>
 
+	* lyskom-rest.el (lyskom-check-go-to-conf): When we don't want to
+	accept an invitation, don't make the membership *passive*. That
+	causes all kinds of odd messages.
+
+	Better user interaction when an async-new-membership for an
+	invitation is seen:
+	* async.el (lyskom-async-new-membership): Print invitations
+	special.
+
 	We can usually have FAQs on persons too:
 	* commands1.el (kom-change-conf-faq): Can apply to persons too. 
 
