@@ -170,7 +170,7 @@ All format directives accept the =, < and > characters as a flags
 before the field width. Using = will cause the result to be exactly
 the field width wide. Using < will cause the result to be at most the
 field width wide. The default, that the result is at least the field
-width widre corresponds to the > character (in other words, you don't
+width wide corresponds to the > character (in other words, you don't
 have to specify the > character if you don't want to). In a
 MULE-enabled Emacs with a functioning string-width function fields
 will be truncated correctly even if some characters occupy multiple
