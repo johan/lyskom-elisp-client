@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.208 2003-07-30 18:15:11 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.209 2003-07-30 19:34:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.208 2003-07-30 18:15:11 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.209 2003-07-30 19:34:50 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -699,7 +699,8 @@ If CONF is nil, check the first conf on the to-do list."
                                       'change-priority-for 
                                       t)
                conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)
-               (setq continue t)))
+               (setq continue t))
+              (lp--update-buffer (conf-stat->conf-no conf-stat)))
           (progn
             (let ((kom-unsubscribe-makes-passive nil))
               (lyskom-sub-member (blocking-do 'get-conf-stat lyskom-pers-no)
@@ -727,6 +728,7 @@ If CONF is nil, check the first conf on the to-do list."
                            (conf-stat->conf-no conf-stat)
                            (membership->type mship))
               (lyskom-fetch-start-of-map conf-stat mship)
+              (lp--update-buffer (conf-stat->conf-no conf-stat))
               (setq continue t))
           (progn
             (setq continue nil))))
@@ -2239,7 +2241,7 @@ in lyskom-messages."
   (let ((tmp (lyskom-get-holerith text t)))
     (mapcar2 'cons  
              (lyskom-get-holerith-list (car tmp) t)
-             (lyskom-get-holerith-list (cdr tmp) t)))))
+             (lyskom-get-holerith-list (cdr tmp) t))))
 
 (defun lyskom-format-x-kom/user-area-data (data)
   (let* ((values (lyskom-get-holerith-assoc data t))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.14 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: reading.el,v 44.15 2003-07-30 19:34:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.14 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: reading.el,v 44.15 2003-07-30 19:34:50 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -132,7 +132,8 @@ lyskom-membership list then this item is not entered."
   (save-excursion
     (set-buffer lyskom-buffer)
     (lyskom-do-insert-membership membership)
-    (lyskom-update-membership-positions)))
+    (lyskom-update-membership-positions)
+    (lp--update-buffer (membership->conf-no membership))))
 
 (defun lyskom-replace-membership (membership)
   "Find the membership for the same conference as MEMBERSHIP, and
@@ -142,6 +143,7 @@ replace it with MEMBERSHIP into lyskom-membership."
     (when (lyskom-try-get-membership (membership->conf-no membership) t)
       (lyskom-do-remove-membership (membership->conf-no membership))
       (lyskom-do-insert-membership membership)
+      (lp--update-buffer (membership->conf-no membership))
       (lyskom-run-hook-with-args 'lyskom-replace-membership-hook
                                  membership
                                  lyskom-membership))))
@@ -162,6 +164,7 @@ replace it with MEMBERSHIP into lyskom-membership."
   (save-excursion
     (set-buffer lyskom-buffer)
     (lyskom-do-remove-membership conf-no)
+    (lp--update-buffer conf-no)
     (lyskom-run-hook-with-args 'lyskom-remove-membership-hook
                                conf-no lyskom-membership)))
   

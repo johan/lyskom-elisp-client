@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.186 2003-07-28 20:02:33 byers Exp $
+;;;;; $Id: commands1.el,v 44.187 2003-07-30 19:34:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.186 2003-07-28 20:02:33 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.187 2003-07-30 19:34:49 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -567,6 +567,7 @@ See `kom-membership-default-priority' and
                            (conf-stat->conf-no whereto)
                            (membership->type mship))
               (lyskom-format-insert 'activate-mship-done whereto)
+              (lp--update-buffer (membership->conf-no mship))
               (lyskom-fetch-start-of-map whereto mship))
 
           ((and mship (not (membership-type->invitation
@@ -946,7 +947,8 @@ See `kom-unsubscribe-makes-passive'."
              (when (= (conf-stat->conf-no conf) lyskom-current-conf)
                (lyskom-leave-current-conf))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
-					 lyskom-to-do-list)))
+					 lyskom-to-do-list)
+             (lp--update-buffer (conf-stat->conf-no conf))))
 	  (t
            (when self
              (lyskom-prefetch-cancel-prefetch-map (conf-stat->conf-no conf)))

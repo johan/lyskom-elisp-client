@@ -664,7 +664,9 @@ entry priority"
                                    nil)))
                       (when pos
                         (save-excursion
-                          (goto-char (lp--entry->start-marker elem))
+                          (goto-char (if elem
+                                         (lp--entry->start-marker elem)
+                                       lp--list-end-marker))
                           (lp--set-entry-list
                            (lp--add-to-list pos entry (lp--all-entries)))
                           (lp--print-entry entry)))))
@@ -1505,9 +1507,11 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (lp--update-mode-line)
   (setq buffer-read-only t)
   (lyskom-use-local-map lp--mode-map)
-  (lyskom-add-hook 'lyskom-add-membership-hook
-                   'lp--add-membership-callback
-                    t)
+;; I'm hard-coding these instead
+;;
+;;  (lyskom-add-hook 'lyskom-add-membership-hook
+;;                   'lp--add-membership-callback
+;;                    t)
 ;;  (lyskom-add-hook 'lyskom-remove-membership-hook 
 ;;                   'lyskom-prioritize-remove-membership
 ;;                   t)

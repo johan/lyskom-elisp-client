@@ -1,5 +1,21 @@
 2003-07-30  David Byers  <byers@lysator.liu.se>
 
+	Keep membership buffer updated changing membership types:
+	* reading.el (lyskom-insert-membership): Added calls to
+	lp--update-buffer.
+	(lyskom-replace-membership): Added calls to lp--update-buffer.
+	(lyskom-remove-membership): Added calls to lp--update-buffer.
+
+	* lyskom-rest.el (lyskom-check-go-to-conf): Added calls to
+	lp--update-buffer.
+
+	* commands2.el (kom-change-message-flag): Added calls to
+	lp--update-buffer.
+
+	* commands1.el (kom-add-self): Added calls to lp--update-buffer
+	when de-passivating.
+	(lyskom-sub-member): Added calls to lp--update-buffer.
+
 	* lyskom-rest.el (lyskom-get-holerith-list): Return list in
 	original order.
 	(lyskom-split-user-area): Don't reverse the list here.
