@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.200 2002-06-09 21:47:17 byers Exp $
+;;;;; $Id: vars.el.in,v 44.201 2002-06-12 21:21:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.200 2002-06-09 21:47:17 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.201 2002-06-12 21:21:52 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2480,6 +2480,13 @@ See lyskom-compute-char-classes."
 
 (def-kom-var kom-w3-simplify-body t
   "*Strip color information from body tag."
+  server)
+
+(def-kom-var kom-format-html-authors '((t . t))
+  "*Controls from which authors we accept HTML.
+Each element of this list is a cons cell (PERS . VAL), where PERS is
+a person number and VAL is t or nil. If VAL is t, then we format HTML
+written by PERS. Otherwise not."
   server)
 
 (def-kom-var lyskom-format-special 

@@ -1,5 +1,17 @@
 2002-06-12  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 573:
+	* lyskom-rest.el: (lyskom-format-aux-help): Support formatting
+	floating-point numbers since that's what we'll get when the ints
+	from the server are too large for Emacs.
+	(lyskom-format-html): Look at kom-format-html-authors to decide
+	whether to format HTML or not.
+
+	* vars.el.in (kom-format-html-authors): New variable.
+
+	* lyskom-rest.el (lyskom-format-html): Only delete first five
+	characters if we're looking at html:
+
 	Fix bug 457:
 	* aux-items.el (send-comments-to): Changed into to info.
 	(mx-reject-forward): Added text-name property.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.215 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: english-strings.el,v 44.216 2002-06-12 21:21:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.215 2002-06-12 18:29:32 byers Exp $"))
+              "$Id: english-strings.el,v 44.216 2002-06-12 21:21:51 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2660,6 +2660,10 @@ Select whether to execute command or keyboard macro.")
 
     (prompt-for-text-no . "Prompt for text number")
 
+    (all-others . "All others")
+    (some-person . "Person")
+    (format-html . "Format HTML:")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3566,6 +3570,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-edit-hide-add-button-doc . "\
   When this is on, an [Add...] button will be shown after the list of
   recipients and auxiliary information when writing a new text.")
+    (kom-format-html-authors-doc . "\
+  This setting controls which author's HTML messages that the client will
+  attempt to format.")
 
 
     ;;
@@ -3741,6 +3748,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-async-highlight-dashed-lines-tag . "Color dashed lines around messages:")
     (kom-async-highlight-text-body-tag . "Color message backgrounds:")
     (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
+    (kom-format-html-authors-tag . "Format HTML-messages per author:")
     )
 )
 

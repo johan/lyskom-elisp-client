@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.162 2002-05-28 20:56:45 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.163 2002-06-12 21:21:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.162 2002-05-28 20:56:45 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.163 2002-06-12 21:21:51 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1430,9 +1430,10 @@ Deferred insertions are not supported."
      ((or (= format-letter ?d)
           (= format-letter ?o)
           (= format-letter ?x))
-      (setq result (if (integerp arg)
-                       (format (format "%%%c" format-letter)
-                               arg)
+      (setq result (cond ((integerp arg)
+                          (format (format "%%%c" format-letter) arg))
+                         ((and (floatp arg) (= format-letter ?d))
+                          (format "%0.0f" arg))
                      (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error (expected int)")))))
@@ -1932,7 +1933,7 @@ Deferred insertions are not supported."
                          (setq tmp nil))
                        (setq tmp (cdr tmp)))
                      result))))
-         (formatted (and fn (funcall fn text))))
+         (formatted (and fn (funcall fn text text-stat))))
 
 ;;    (when (eq t lyskom-last-text-format-flags)
 ;;      (lyskom-signal-reformatted-text
@@ -1989,39 +1990,22 @@ in lyskom-messages."
       (error (lyskom-ignore var)))))
 
 
-(defun lyskom-format-html (text)
-  (when (condition-case e (progn (require 'w3) t) (error nil))
-    (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
-    (lyskom-signal-reformatted-text 'reformat-html)
-    (substring text 5)))
-
-;;;(defun lyskom-format-html (text)
-;;;  (condition-case e (require 'w3) (error nil))
-;;;  (let ((tmpbuf (lyskom-get-buffer-create 'lyskom-html " lyskom-html" t)))
-;;;    (unwind-protect
-;;;        (save-excursion
-;;;          (set-buffer tmpbuf)
-;;;          (insert (substring text 5))
-;;;          (insert " ")                  ; So we can adjust the extents
-;;;          (w3-region (point-max) (point-min))
-;;;          (let ((tmp nil))
-;;;            (map-extents
-;;;             (lambda (e x)
-;;;               (if (zerop (- (extent-start-position e)
-;;;                             (extent-end-position e)))
-;;;                   (set-extent-endpoints e (extent-start-position e)
-;;;                                         (1+ (extent-end-position e))))
-;;;               (progn
-;;;                 (set-extent-property e 'duplicable t)
-;;;                 (set-extent-property e 'replicable t))
-;;;               nil))
-;;;            (setq tmp (buffer-string))
-;;;            (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
-;;;            tmp)))))
+(defun lyskom-format-html (text text-stat)
+  ;; Find settings for this author
+  (let ((author-setting (and text-stat (or (assq (text-stat->author text-stat)
+                                                 kom-format-html-authors)
+                                           (assq t kom-format-html-authors)))))
+    (when (and (cdr author-setting)
+               (condition-case e (progn (require 'w3) t) (error nil)))
+      (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+      (lyskom-signal-reformatted-text 'reformat-html)
+      (if (string-match "^html:" text)
+          (substring text 5)
+        text))))
 
 
 
-(defun lyskom-format-enriched (text)
+(defun lyskom-format-enriched (text text-stat)
   (if (not (fboundp 'format-decode-buffer))
       nil
     (let ((tmpbuf (lyskom-generate-new-buffer "lyskom-enriched")))
@@ -2036,7 +2020,7 @@ in lyskom-messages."
             )
         (kill-buffer tmpbuf)))))
 
-(defun lyskom-format-ö (text)
+(defun lyskom-format-ö (text text-stat)
   (cond ((string= text "") "")
         (t
          (save-excursion
