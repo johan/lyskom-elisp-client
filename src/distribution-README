@@ -32,7 +32,7 @@
     02139, USA.
 
     Please mail bug reports to bug-lyskom@lysator.liu.se. 
-    Please mail change requests to kom@lysator.liu.se
+    Please mail change requests to kom@lysator.liu.se.
 
 
 
@@ -100,28 +100,26 @@
       calc/calc-2.02f.tar.gz>
 
 
-3.  Installation
+2.  Installation
 
     You will have received the client in a compressed tar archive or
-    in a zip file. The archive contains all the files needed to build
-    the client. It also contains a pre-built client.
+    in a zip archive. The archive contains all the files needed to
+    build the client.
 
-    The client is also available as an RPM and a Debian package. These
-    assume that you are using Gnu Emacs 20.5 or later.
-
-    You can either install manually (see section 3.1) or using the
-    Makefile (section 3.3). However you install, there are a few
+    You can either install manually (see section 2.1) or use the
+    Makefile (section 2.2). However you install, there are a few
     additional steps that you may want to follow to facilitate using
-    the client (section 3.3).
+    the client (section 2.3).
 
-    The client is also available as an RPM and a Debian package. The
-    RPM requires Gnu Emacs 20.x, while the Debian package works for
+    The client is also available as a Debian package, which works for
     all supported Emacs/XEmacs flavors listed in section 1 above. You
     can also get the Debian package automatically via apt; see
     <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/debian/README>
-    for more information.
+    for more information. After installing the package, continue
+    reading section 2.3.
 
-3.1 Manual installation
+
+2.1 Manual installation
 
     This procedure should work on any system, including Windows.
 
@@ -142,7 +140,7 @@
        see possible locations.
 
 
-3.2 Using the Makefile
+2.2 Using the Makefile
 
     If you are on a Unix-like system (or anything that supports
     Makefiles) you can use make to install the client. You have to use
@@ -171,14 +169,14 @@
                             automatically.
 
        --enable-language=LANG
-                            Enable a language. Currently swedish and
-                            english are available. If you do not
+                            Enable a language. Currently Swedish and
+                            English are available. If you do not
                             explicitly enable any language, all will
                             be enabled.
 
        --with-default-language=LANG
-                            Set the default language to LANG (swedish
-                            or english). If you do not specify a
+                            Set the default language to LANG (Swedish
+                            or English). If you do not specify a
                             default language the script will choose
                             one for you.
 
@@ -206,7 +204,7 @@
        bypass the environment check.
 
 
-3.3 After installing
+2.3 After installing
 
     After installing you can set Emacs to load LysKOM automatically.
 
@@ -231,14 +229,13 @@
        The first server listed in kom-server-aliases will be the
        default server for new users.
 
-
     3. Restart Emacs. You should be able to use the command lyskom
        (M-x l y s k o m RET) to start the client. Enjoy!
 
 
 
 
-4.  Reporting Bugs
+3.  Reporting bugs
 
     Before reporting a bug, please check that it is not one of the
     known issues below. Report bugs to bug-lyskom@lysator.liu.se. 
@@ -256,16 +253,16 @@
         reproduce.
 
     o   How you started Emacs, what variables you have changed and
-        which packages you have loaded. If possible, try to  reproduce
+        which packages you have loaded. If possible, try to reproduce
         the bug with Emacs started with the -q command line switch.
 
     The command kom-bug-report may come in handy. It gives us a lot of 
     information that you might not think of (such as what the internal 
-    data structures look like.)
+    data structures look like).
 
 
 
-5. Known issues
+4. Known issues
 
    Issue:  I see \201 before Swedish characters in the string showing
            what some other user is doing (e.g. L\201äser).
