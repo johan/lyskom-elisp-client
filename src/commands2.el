@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.125 2002-04-28 14:06:25 jhs Exp $
+;;;;; $Id: commands2.el,v 44.126 2002-04-28 17:15:03 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.125 2002-04-28 14:06:25 jhs Exp $\n"))
+              "$Id: commands2.el,v 44.126 2002-04-28 17:15:03 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1602,7 +1602,7 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
            (lyskom-report-command-answer
             (blocking-do 'disconnect session)))
           ((< session 0)
-           (lyskom-format-insert 'person-not-logged-in-r (- session)))
+           (lyskom-format-insert 'person-not-logged-in-r (- session) nil))
           (t nil))))
 
 ;;; ================================================================

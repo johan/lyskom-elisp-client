@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.202 2002-04-28 14:06:25 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.203 2002-04-28 17:15:03 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.202 2002-04-28 14:06:25 jhs Exp $"))
+              "$Id: english-strings.el,v 44.203 2002-04-28 17:15:03 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1308,7 +1308,8 @@ Text:
     (who-i-am-emacs . "Running under %#1s%#2?b%[ (MULE)%]%[%].\n")
 
     (no-such-session-r . "That session does not exist. Perhaps the user is not logged on.\n")
-    (person-not-logged-in-r . "%#1P is not logged on.\n")
+    (person-not-logged-in-r . "%#1P %#2?b%[has not been logged on since %#2s%]%[is not logged on%].\n")
+
     (session-status . "Session %#1d is %#2P <%#2p>
 %#5s %#7s %#4M
 Using %#6D from %#3s\n")

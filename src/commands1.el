@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.141 2002-04-28 11:50:34 byers Exp $
+;;;;; $Id: commands1.el,v 44.142 2002-04-28 17:15:03 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.141 2002-04-28 11:50:34 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.142 2002-04-28 17:15:03 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3360,13 +3360,21 @@ Uses Protocol A version 9 calls"
 ;;;
 ;;; Author: David Byers
 
-(def-kom-command kom-status-session (&optional arg)
+(def-kom-command kom-status-session (&optional text-or-session-no)
   "Show status for all sessions a person has. Asks for person name.
-Optional argument ARG should be a list of sessions to get information
-about or a single session number."
-  (interactive "P")
-  (let ((sessions (or (cond ((listp arg) arg)
-                            ((numberp arg) (list arg)))
+Optional argument should be a list of sessions to get information
+about or a single session number. When used interactively, the prefix
+argument is used to find a text whose author's status is shown."
+  (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
+                    (list (lyskom-read-text-no-prefix-arg
+                           'text-to-see-author-status-of))))
+  (let ((sessions (or (when (and text-or-session-no (interactive-p))
+			(lyskom-session-from-conf
+			 (text-stat->author
+			  (blocking-do 'get-text-stat text-or-session-no))))
+		      (cond
+		       ((listp text-or-session-no) text-or-session-no)
+		       ((numberp text-or-session-no) (list text-or-session-no)))
                       (lyskom-read-session-no 
                        (lyskom-get-string 'status-for-session))))
 	who-info)
@@ -3374,9 +3382,13 @@ about or a single session number."
            (lyskom-insert-string 'no-such-session-r))
           ((and (numberp (car sessions))
                 (<= (car sessions) 0))
-           (lyskom-format-insert
-            (lyskom-get-string 'person-not-logged-in-r)
-            (- (car sessions))))
+	   (let ((pers-no (- (car sessions))))
+	     (lyskom-format-insert
+	      (lyskom-get-string 'person-not-logged-in-r)
+	      pers-no
+	      (lyskom-format-time 'date-and-time
+				  (pers-stat->last-login
+				   (blocking-do 'get-pers-stat pers-no))))))
           (t
            (if (lyskom-have-feature dynamic-session-info)
                (progn

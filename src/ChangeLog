@@ -1,8 +1,21 @@
 2002-04-28  Johan Sundström  <jhs@lysator.liu.se>
 
+	* commands1.el (kom-status-session): When a prefix argument is
+	given, see the status of the author of that text (as given by
+	lyskom-read-text-no-prefix-arg), otherwise behave as usual.
+	Also added info on last logout when a person is not available.
+
+	* swedish-strings.el, english-strings.el (lyskom-message):
+	Changed person-not-logged-in-r to optionally state last logout.
+
+	* commands2.el (kom-force-logout): Updated to reflect change in
+	person-not-logged-in-r.
+
+2002-04-28  Johan Sundström  <jhs@lysator.liu.se>
+
 	* commands2.el (kom-status-person): When a prefix argument is
-	given, review the presentation of the author of that text (as given
-	by lyskom-read-text-no-prefix-arg), otherwise behave as usual.
+	given, see the status of the author of that text (as given by
+	lyskom-read-text-no-prefix-arg), otherwise behave as usual.
 
 	* swedish-strings.el, english-strings.el (lyskom-message): 
 	Added text-to-see-author-status-of.
