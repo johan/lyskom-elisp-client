@@ -742,3 +742,29 @@ Prova (p} lysator):
 	(setq lyskom-edit-mode-mode-hook 'swedish-iso-mode)
 i din .emacs.
 (126254) -----------------------------------
+
+128019 1991-10-21  05:49  /3 rader/ Kjetil T. Homme (Ifi, UiO)
+Kommentar till text 127669 av Inge Wallin, ISY
+Mottagare: Emacs erfarenhetsutbyte <583>
+Mottagare: \rjan Berglund <607>
+    Mottaget: 1991-10-21 07:23
+[rende: (setq lyskom-edit-mode-mode-hook 'swedish-iso-mode)
+------------------------------------------------------------
+Eg ville synest det er greiare om skjermen vart delt i to, med *kom*
+nedanfor *kom*-edit... Dessverre kan eg ikkje elsp s} eg kan hakke det
+sj|lv :)
+(128019) -----------------------------------
+Kommentar i text 128431 av ceder (Per Cederqvist  Lysator)
+
+128431 1991-10-21  20:25  /5 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 128019 av Kjetil T. Homme (Ifi, UiO)
+Mottagare: Emacs erfarenhetsutbyte <585>
+[rende: (setq lyskom-edit-mode-mode-hook 'swedish-iso-mode)
+------------------------------------------------------------
+L{gg bara in 
+
+	(setq kom-write-texts-in-window 'other)
+
+i din .emacs och g|r "C-x 2" innan du startar LysKOM s} blir det s}!
+(128431) -----------------------------------
+Kommentar i text 129314 av Kjetil T. Homme (Ifi, UiO)
