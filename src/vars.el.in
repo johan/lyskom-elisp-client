@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.226 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: vars.el.in,v 44.227 2003-01-09 22:30:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -30,10 +30,13 @@
 ;;;; This file contains almost all the variables used in lyskom.
 ;;;;
 
+;;;; Note: put "**" at the front of docstrings that are ready
+;;;; for use in DocBook autogeneration.
+
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.226 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.227 2003-01-09 22:30:00 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -99,9 +102,17 @@ Inheritance only works with the LysKOM buffer handling functions."
 
 (def-kom-var kom-dont-read-saved-variables '(kom-dont-read-saved-variables
                                              lyskom-login-hook)
-  "*Non-nil means don't read some variables from the server.
-t means don't read any variables. A list means don't read variables that
-are in the list.")
+  "'*Determines which LysKOM variables to not store in the server.
+
+For the most part you do not have to modify this variable. Any variables
+set before LysKOM is loaded will not be read from the server.
+This variable should `nil', `t' or a list of symbols. 
+
+The value `nil' means read all variables from the server. The value
+`t' means read no variables from the server. When the value is a list
+of symbols, those variables will not be read from the server.
+
+Any other values are reserved for future use.")
 
 (defmacro lyskom-maybe-setq (var value)
   "This is a wrapper around setq that does nothing
@@ -127,16 +138,43 @@ if the variable is in kom-dont-read-saved-variables."
   '((t ("\\<bug[ \t\n]+\\([0-9]+\\)\\>"
 	"http://bugzilla.lysator.liu.se/show_bug.cgi?id=\\1"
 	0 t)))
-  "*Links in the text.
-This list is an alist where the car is a conference number and the cdr
-a list of link specifications for that conference. Use the value t as the
-car to apply the specification in all conferences. Each link specification
-is a list \(PATTERN REPLACEMENT HIGHLIGHT IGNORE-CASE), where PATTERN is
-a regexp to look for in the text, REPLACEMENT is a replacement text to 
-generate a URL from a match for REGEXP (see the NEWTEXT argument to 
-replace-in-string for more information), HIGHLIGHT is the match group to
-highlight in the LysKOM buffer (use 0 for the entire match) and IGNORE-CASE
-is a flag: when non-nil case is ignored when looking for REGEXP."
+  "**Defines patterns for automatic links in the text.
+
+This variable defines patterns to look for in text and convert to
+links to URLs. The value of this variable must be an alist, where the
+key (car) is a conference number and the value (cdr) is a list of link
+specifications for that conference. The special value `t' for the key
+indicates a list of patterns to apply in all conferences. Key values
+other than positive integers and `t' are reserved for future use.
+
+Each link specification is in turn a list \(`PATTERN' `REPLACEMENT'
+`HIGHLIGHT' `IGNORE-CASE'), where `PATTERN' is a regular expression to
+look for in the text, `REPLACEMENT' is used to generate a URL from the
+text matching `PATTERN', `HIGHLIGHT' is the pattern group to highlight
+as a URL and `IGNORE-CASE' specifies whether matching is
+case-sensitive or not.
+
+Each text is examined for each `PATTERN'. If a match is found, a URL
+is created from `REPLACEMENT'. All characters except \ are copied
+verbatim. The backslash character starts one of the following
+sequences:
+
+    Sequence    Meaning
+    \&          Substitute the matched text
+    \N          Substitute match for text matching the Nth (...)
+                group in `PATTERN'
+    \\          Insert one backslash.
+
+The `HIGHLIGHT' parameter specifies which (...) group in `PATTERN'
+to highlight as an URL. Use `0' to highlight the entire match.
+
+Finally, if `IGNORE-CASE' is `t', then ignore character case while
+looking for `PATTERN'. Values other than `t' and `nil' are reserved
+for future use.
+
+When a text has more than one recipient, links will be generated for
+all recipients. The order in which the recipients are examined and
+the priority among links that match the same text is undefined."
   server)
 
 
@@ -175,7 +213,8 @@ is a flag: when non-nil case is ignored when looking for REGEXP."
 		     (lambda (arg) (/ (logb (car arg)) 2)))
 	      (lyskom-plusp . lyskom-get-text-below-point)
 	      (lyskom-minusp  lyskom-get-text-above-point abs))))
-      "Defines how prefix arguments are used to find a text-no to operate on.
+      "*Defines how prefix arguments are used to find a text-no to operate on.
+
 The cars on the list are either one of the functions which invokes
 `lyskom-read-text-no-prefix-arg' (typically the one of the kom-* functions),
 or the value t for the strategy common to all such functions. For functions in

@@ -1,5 +1,7 @@
 2003-01-09  David Byers  <david.byers@swipnet.se>
 
+	* vars.el.in: Started working on variable documentation.
+
 	* option-edit.el (lyskom-create-widget): Insert the variable name
 	in the buffer, after the help toggle. This is to make the buffer
 	searchable for the actual variable names.
