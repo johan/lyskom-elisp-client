@@ -1,3 +1,10 @@
+1999-08-14  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-show-week-number): New variable.
+
+	* commands1.el (kom-display-time): If calendar and cal-iso are
+	available we can show the week number.
+
 1999-08-13  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (lyskom-try-add-member): Added optional message

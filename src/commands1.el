@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.49 1999-08-14 19:16:07 byers Exp $
+;;;;; $Id: commands1.el,v 44.50 1999-08-18 20:24:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.49 1999-08-14 19:16:07 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.50 1999-08-18 20:24:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1697,21 +1697,39 @@ If MARK-NO is nil, review all marked texts."
 		 (elt (lyskom-get-string 'weekdays)
 		      (time->wday time))))
 
+(lyskom-external-function calendar-iso-from-absolute)
+(lyskom-external-function calendar-absolute-from-gregorian)
+
 (def-kom-command kom-display-time ()
   "Ask server about time and date."
   (interactive)
   (let ((time (blocking-do 'get-time))
-        (lyskom-last-text-format-flags nil))
-    (lyskom-format-insert 'time-is
-			  (lyskom-format-time time)
-			  ;; Kult:
-			  (if (and (= (time->hour time)
-				      (+ (/ (time->sec time) 10)
-					 (* (% (time->sec time) 10) 10)))
-				   (= (/ (time->min time) 10)
-				      (% (time->min time) 10)))
-			      (lyskom-get-string 'palindrome)
-			    ""))
+        (lyskom-last-text-format-flags nil)
+        (weekno nil))
+    (lyskom-format-insert
+     (if kom-show-week-number
+         (condition-case nil
+             (progn (require 'calendar)
+                    (require 'cal-iso)
+                    (setq weekno
+                          (car (calendar-iso-from-absolute
+                                (calendar-absolute-from-gregorian 
+                                 (list (1+ (time->mon time))
+                                       (time->mday time)
+                                       (+ 1900 (time->year time)))))))
+                    'time-is-week)
+           (error 'time-is))
+       'time-is)
+     (lyskom-format-time time)
+     ;; Kult:
+     (if (and (= (time->hour time)
+                 (+ (/ (time->sec time) 10)
+                    (* (% (time->sec time) 10) 10)))
+              (= (/ (time->min time) 10)
+                 (% (time->min time) 10)))
+         (lyskom-get-string 'palindrome)
+       "")
+     weekno)
     ;; Mera kult
     (mapcar (function 
              (lambda (el)
