@@ -71,6 +71,10 @@
 
     TEXT BUTTONS
 
+    Important: Check any new regexps against a text consisting of a
+    single very long word (about 46000 characters long). An old email
+    regexp took forever to match against something like that.
+
     The client is capable of automatically generating buttons in text.
     This happens when you use the %t or %r format directives. The
     function lyskom-button-transform-text does the actual detection

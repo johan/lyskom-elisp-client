@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.102 2000-08-17 17:26:07 byers Exp $
+;;;;; $Id: english-strings.el,v 44.103 2000-08-21 15:19:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.102 2000-08-17 17:26:07 byers Exp $"))
+              "$Id: english-strings.el,v 44.103 2000-08-21 15:19:48 byers Exp $"))
 
 
 ;;; ================================================================
@@ -723,6 +723,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
     ; From review.el:
     (no-review-done . "You need to review something before you can review more.\n")
+    (not-reviewing . "You are currently not reviewing anything.\n")
     (review-how-many . "Review how many?")
     (review-how-many-more . "Review how many more?")
     (latest-n . "last %#1d")
