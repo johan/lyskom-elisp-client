@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.241 2004-07-18 18:50:48 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.242 2004-07-19 11:53:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.241 2004-07-18 18:50:48 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.242 2004-07-19 11:53:42 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3090,8 +3090,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                     (delete-region (point) (match-end 0))
                   (delete-region (point) (point-max))
                   (if saved-suffix (insert saved-suffix)))))
-            (if was-at-max (goto-char (point-max)))
-	  
+            (when was-at-max
+              (goto-char (point-max)))
+
             (setq lyskom-current-prompt prompt)
             (setq lyskom-current-prompt-args prompt-args)
             (setq lyskom-current-prompt-text prompt-text))))

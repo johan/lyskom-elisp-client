@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.52 2004-02-27 18:55:42 byers Exp $
+;;;;; $Id: command.el,v 44.53 2004-07-19 11:53:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.52 2004-02-27 18:55:42 byers Exp $\n"))
+	      "$Id: command.el,v 44.53 2004-07-19 11:53:42 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -104,13 +104,15 @@ Note that :prompt-format requires an argument."
         (progn (message "!! Missing interactive declaration for %S; assuming \(interactive\)" cmd)
                (setq forms (cons interactive-decl forms))
                (setq interactive-decl '(interactive))))
-    (let ((bufsym (intern (format "%S-start-buffer" cmd))))
+    (let ((bufsym (make-symbol (format "%S-start-buffer" cmd)))
+          (winsym (make-symbol (format "%S-start-window" cmd))))
       `(defun ,cmd ,args
          ,doc
          ,(lyskom-fix-interactive-decl interactive-decl cmd)
          (let ((lyskom-command-point (point)))
            (lyskom-start-of-command ',cmd ,may-interrupt ,dead-ok ,prompt-format)
-           (let ((,bufsym (current-buffer)))
+           (let ((,bufsym (current-buffer))
+                 (,winsym (selected-window)))
              (unwind-protect
                  (condition-case nil
                      (progn ,@forms)
@@ -118,9 +120,20 @@ Note that :prompt-format requires an argument."
                          (lyskom-insert-before-prompt
                           (lyskom-get-string 'interrupted))))
                (lyskom-save-excursion
-                 (when (buffer-live-p ,bufsym)
-                   (set-buffer ,bufsym))
-                 (lyskom-end-of-command)))))))))
+                 (cond ((and (buffer-live-p ,bufsym)
+                             (window-live-p ,winsym)
+                             (eq (window-buffer ,winsym) ,bufsym))
+                        (save-selected-window
+                          (set-buffer ,bufsym)
+                          (select-window ,winsym)
+                          (lyskom-end-of-command)))
+
+                       ((buffer-live-p ,bufsym)
+                        (set-buffer ,bufsym)
+                        (lyskom-end-of-command))
+
+                       (t (lyskom-end-of-command)))))))))))
+
 
 ;;
 ;; def-kom-emacs-command works like def-kom-command, but the template 
@@ -178,7 +191,8 @@ Note that :prompt-format requires an argument."
                (setq interactive-decl '(interactive))))
 
     (let ((rsym (intern (format "%S-running-as-kom-command" cmd)))
-          (bufsym (intern (format "%S-start-buffer" cmd))))
+          (bufsym (make-symbol (format "%S-start-buffer" cmd)))
+          (winsym (make-symbol (format "%S-start-window" cmd))))
       `(defun ,cmd ,args
          ,doc
          ,(lyskom-fix-interactive-decl interactive-decl cmd)
@@ -187,7 +201,8 @@ Note that :prompt-format requires an argument."
                (progn (lyskom-start-of-command ',cmd ,may-interrupt ,dead-ok ,prompt-format)
                       (setq ,rsym t))
              (error nil))
-           (let ((,bufsym (current-buffer)))
+           (let ((,bufsym (current-buffer))
+                 (,winsym (selected-window)))
              (unwind-protect
                  (condition-case nil
                      (progn ,@forms)
@@ -196,10 +211,19 @@ Note that :prompt-format requires an argument."
                           (lyskom-get-string 'interrupted))))
                (and ,rsym
                     (lyskom-save-excursion
-                      (when (buffer-live-p ,bufsym)
-                        (set-buffer ,bufsym))
-                      (lyskom-end-of-command))))))))))
+                      (cond ((and (buffer-live-p ,bufsym)
+                                  (window-live-p ,winsym)
+                                  (eq (window-buffer ,winsym) ,bufsym))
+                             (save-selected-window
+                               (set-buffer ,bufsym)
+                               (select-window ,winsym)
+                               (lyskom-end-of-command)))
 
+                            ((buffer-live-p ,bufsym)
+                             (set-buffer ,bufsym)
+                             (lyskom-end-of-command))
+
+                            (t (lyskom-end-of-command))))))))))))
 
 
 (put 'def-kom-command 'edebug-form-spec
@@ -628,38 +652,38 @@ chosen according to this"
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
   (lyskom-save-excursion
-   (message "")
-   (lyskom-clean-all-buffer-lists)
-   (while (and lyskom-to-be-printed-before-prompt
-               (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-     (if (not (bolp)) (lyskom-insert "\n"))
-     (lyskom-insert (car (lyskom-queue->first 
-                          lyskom-to-be-printed-before-prompt)))
-     (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
-   (setq lyskom-executing-command nil)
-   (setq lyskom-current-command nil)
-   (setq lyskom-current-prompt nil)	; Already set in s-o-c really
-   (lyskom-scroll)
-   (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
-   (if (pos-visible-in-window-p (point-max) (selected-window))
-       (lyskom-set-last-viewed))
-   (lyskom-prefetch-and-print-prompt)
-   (run-hooks 'lyskom-after-command-hook)
-   (when (and (lyskom-have-feature idle-time)
-              (not lyskom-is-anonymous))
-     (save-excursion (set-buffer lyskom-buffer)
-                     (initiate-user-active 'background nil)))
-   (if kom-inhibit-typeahead
-       (discard-input))
-   ;; lyskom-pending-commands should probably be a queue or a stack.
-   (when lyskom-pending-commands
+    (message "")
+    (lyskom-clean-all-buffer-lists)
+    (while (and lyskom-to-be-printed-before-prompt
+                (lyskom-queue->first lyskom-to-be-printed-before-prompt))
+      (if (not (bolp)) (lyskom-insert "\n"))
+      (lyskom-insert (car (lyskom-queue->first 
+                           lyskom-to-be-printed-before-prompt)))
+      (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
+    (setq lyskom-executing-command nil)
+    (setq lyskom-current-command nil)
+    (setq lyskom-current-prompt nil)	; Already set in s-o-c really
+    (lyskom-scroll)
+    (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
+    (if (pos-visible-in-window-p (point-max) (selected-window))
+        (lyskom-set-last-viewed))
+    (lyskom-prefetch-and-print-prompt)
+    (run-hooks 'lyskom-after-command-hook)
+    (when (and (lyskom-have-feature idle-time)
+               (not lyskom-is-anonymous))
+      (save-excursion (set-buffer lyskom-buffer)
+                      (initiate-user-active 'background nil)))
+    (if kom-inhibit-typeahead
+        (discard-input))
+    ;; lyskom-pending-commands should probably be a queue or a stack.
+    (when lyskom-pending-commands
       (let ((command (car lyskom-pending-commands)))
-       (setq lyskom-pending-commands (cdr lyskom-pending-commands))
-       (if (symbolp command)
-           (call-interactively command)
-         (eval command))))
-   (when lyskom-slow-mode
-     (buffer-enable-undo))))
+        (setq lyskom-pending-commands (cdr lyskom-pending-commands))
+        (if (symbolp command)
+            (call-interactively command)
+          (eval command))))
+    (when lyskom-slow-mode
+      (buffer-enable-undo))))
 
 (eval-and-compile (provide 'lyskom-command))
 

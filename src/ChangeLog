@@ -1,3 +1,19 @@
+2004-07-19  David Byers  <byers@lysator.liu.se>
+
+	Nicen up lyskom-end-of-command:
+	* command.el (def-kom-command): Use make-symbol, not intern, to
+	get an uninterned symbol for the macro. Added winsym to save
+	selected window.
+	(def-kom-emacs-command): Ditto.
+	(def-kom-command): Select the correct window for
+	lyskom-end-of-command so point can be moved to the end of the
+	prompt in that window.
+	(def-kom-emacs-command): Same here.
+
+	Fix problem tracking unreads in membership buffer:
+	* clienttypes.el (read-list-enter-text): When updating unreads,
+	pass conf-no, not conf-stat, to lp--maybe-update-unreads.
+
 2004-07-18  David Byers  <byers@lysator.liu.se>
 
 	* mship-edit.el (lp--maybe-update-unreads): Zero unreads are
