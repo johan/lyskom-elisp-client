@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.29 1997-11-14 21:37:24 byers Exp $
+;;;;; $Id: edit-text.el,v 44.30 1997-11-30 17:19:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.29 1997-11-14 21:37:24 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.30 1997-11-30 17:19:11 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -716,7 +716,8 @@ text is a member of some recipient of this text."
          (buffer (current-buffer))
          (me (save-excursion (set-buffer lyskom-buffer)
                              lyskom-pers-no))
-         (num-me 0))
+         (num-me 0)
+         (num-real-recpt 0))
     (ignore text-stat)                  ; Have no idea if its ever used...
 
     ;;
@@ -731,7 +732,9 @@ text is a member of some recipient of this text."
             ((or (eq (car misc) 'recpt)
                  (eq (car misc) 'cc-recpt))
                  (eq (car misc) 'bcc-recpt)
-             (if (eq (cdr misc) me) (setq num-me (1+ num-me)))
+             (when (eq (car misc) 'recpt)
+               (setq num-real-recpt (1+ num-real-recpt))
+               (when (eq (cdr misc) me) (setq num-me (1+ num-me))))
              (setq recipient-list (cons (cdr misc) recipient-list)))))
 
     ;;
@@ -789,7 +792,8 @@ text is a member of some recipient of this text."
     (if (and (lyskom-default-value 'kom-confirm-multiple-recipients)
              (not (eq (lyskom-default-value 'kom-confirm-multiple-recipients)
                       'before))
-             (> (- (length recipient-list) num-me) 1))
+             (> (- num-real-recpt num-me) 1))
+
         (save-excursion
           (goto-char (point-min))
           (if (not 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.24 1997-10-23 12:19:20 byers Exp $
+;;;;; $Id: startup.el,v 44.25 1997-11-30 17:19:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.24 1997-10-23 12:19:20 byers Exp $\n"))
+	      "$Id: startup.el,v 44.25 1997-11-30 17:19:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -372,18 +372,7 @@ connect %s:%d HTTP/1.0\r\n\
 	  
           ;; Now we are logged in.
           (lyskom-insert-string 'are-logged-in)
-          (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-            (if (and conf-stat
-                     (/= (conf-stat->msg-of-day conf-stat) 0))
-                (progn
-                  (lyskom-insert-string 'you-have-motd)
-                  (let ((lyskom-show-comments ; +++SOJGE
-                         (not kom-no-comments-to-motd)))
-                    (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
-            (if (and conf-stat
-                     (zerop (conf-stat->presentation conf-stat))
-                     (not (zerop (conf-stat->no-of-texts conf-stat))))
-                (lyskom-insert-string 'presentation-encouragement)))
+          
           (if (not lyskom-dont-read-user-area)
               (lyskom-read-options))
           (lyskom-run-hook-with-args 'lyskom-change-conf-hook
@@ -398,25 +387,44 @@ connect %s:%d HTTP/1.0\r\n\
           (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
             (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
 	  
-      ;; If something failed, make sure we are someone
+      ;; If login succeeded, clear the caches and set the language
+
       (if login-successful
-	  (clear-all-caches)
+	  (progn (clear-all-caches)
+                 (unless (eq lyskom-language kom-default-language)   
+                   (when (lyskom-set-language kom-default-language)
+                     (lyskom-format-insert-before-prompt 
+                      'language-set-to
+                      (lyskom-language-name kom-default-language)))))
 	(setq lyskom-pers-no old-me))
+
+      ;; Show motd and encourage writing a presentation
+
+      (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+        (if (and conf-stat
+                 (/= (conf-stat->msg-of-day conf-stat) 0))
+            (progn
+              (lyskom-insert-string 'you-have-motd)
+              (let ((lyskom-show-comments ; +++SOJGE
+                     (not kom-no-comments-to-motd)))
+                (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
+        (if (and conf-stat
+                 (zerop (conf-stat->presentation conf-stat))
+                 (not (zerop (conf-stat->no-of-texts conf-stat))))
+            (lyskom-insert-string 'presentation-encouragement)))
+
       (setq lyskom-is-new-user nil)
       (lyskom-end-of-command)))
+
   ;; Run the hook kom-login-hook. We don't want to hang the
   ;; login, just because something crashed here.
+
   (condition-case err
       (progn
         (run-hooks 'lyskom-login-hook)
         (run-hooks 'kom-login-hook))
     (error (lyskom-format-insert-before-prompt
-            'error-in-login-hook (format "%s" err))))
-  (unless (eq lyskom-language kom-default-language)   
-    (when (lyskom-set-language kom-default-language)
-      (lyskom-format-insert-before-prompt 
-       'changing-language-to
-       (lyskom-language-name kom-default-language)))))
+            'error-in-login-hook (format "%s" err)))))
 
 
 (defun lyskom-refetch ()
