@@ -1,3 +1,12 @@
+2001-11-17  Per Cederqvist  <ceder@moria>
+
+	Use content types as specified in the current version of the
+	protocol A specification.
+	* vars.el.in (lyskom-format-special): Treat "x-kom/text" as an
+	alias for "text/x-kom-basic".
+	* edit-text.el (lyskom-edit-send): Set the content type
+	"text/x-kom-basic", not "x-kom/text", on new texts.
+
 2001-11-13  David Byers  <davby@ida.liu.se>
 
 	List unique subjects when prefix is given to kom-list-summary

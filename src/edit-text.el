@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.83 2001-11-13 00:12:19 qha Exp $
+;;;;; $Id: edit-text.el,v 44.84 2001-11-17 09:09:00 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.83 2001-11-13 00:12:19 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.84 2001-11-17 09:09:00 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -590,7 +590,7 @@ anonymously and take actions to avoid revealing the sender."
                                (cons (lyskom-create-aux-item 0 1 nil nil
                                                              (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
                                                              0
-                                                             (format "x-kom/text;charset=%S" mime-charset))
+                                                             (format "text/x-kom-basic;charset=%S" mime-charset))
                                      aux-list)))
                         ((null charset)
                          (set-aux-item->data (car content-type)

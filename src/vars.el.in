@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.152 2001-11-13 00:12:25 qha Exp $
+;;;;; $Id: vars.el.in,v 44.153 2001-11-17 09:08:59 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.152 2001-11-13 00:12:25 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.153 2001-11-17 09:08:59 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2445,6 +2445,7 @@ See lyskom-compute-char-classes."
     ("text/enriched"      . lyskom-format-enriched)
     ("text/plain"         . nil)
     ("text/x-kom-basic"   . nil)
+    ("x-kom/text"         . nil)  ;Archaic alias for text/x-kom-basic.
     ("x-kom/basic"        . nil)  ;Archaic alias for text/x-kom-basic.
     ("x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
