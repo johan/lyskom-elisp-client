@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.2 1996-10-20 02:56:41 davidk Exp $
+;;;;; $Id: clienttypes.el,v 44.3 1997-02-13 11:35:51 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.2 1996-10-20 02:56:41 davidk Exp $\n"))
+	      "$Id: clienttypes.el,v 44.3 1997-02-13 11:35:51 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -144,10 +144,7 @@
 
 
 (defsubst read-info-append-text-list (read-info texts)
-  (set-read-info->text-list
-   read-info
-   (nconc (read-info->text-list read-info)
-	  texts)))
+  (text-list->append (read-info->text-list read-info) texts))
 
 (defsubst read-info-enter-text-last (read-info text-no)
   (read-info-append-text-list read-info (list text-no)))
@@ -250,12 +247,11 @@ TEXT-NO may be nil, in which case only empty read-infos on RLIST are removed."
 		  (eq type 'REVIEW-MARK))))
 	   (t				; Do change all other entries.
 	    (let ((tl  (read-info->text-list (car curr))))
-	      (set-text-list->texts
-	       tl (delq text-no (text-list->texts tl)))))))
-       
+	      (text-list->delq tl text-no)))))
+      
       ;; Delete this element from RLIST if the text-list became or was empty.
-	
-      (if (null (text-list->texts (read-info->text-list (car curr))))
+      
+      (if (text-list->empty (read-info->text-list (car curr)))
 	  (setcdr prev (cdr curr))
 	(setq prev curr))
       (setq curr (cdr curr))))
