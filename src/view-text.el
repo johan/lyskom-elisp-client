@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.18 1999-06-22 14:54:40 byers Exp $
+;;;;; $Id: view-text.el,v 44.19 1999-06-23 12:25:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.18 1999-06-22 14:54:40 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.19 1999-06-23 12:25:31 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -524,6 +524,8 @@ blocking-do."
            end-dash
            format-flag-string))
 
+      ;; User-specified format. Do all kinds of weird stuff
+
       (while (string-match "%\\(=?-?[0-9]+\\)?\\([-nPpf% ]\\)" format start)
         (setq result (concat result (substring format start 
                                                (match-beginning 0))))
@@ -657,10 +659,10 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
-          (if kom-dashed-lines
-              (lyskom-insert 
-               "------------------------------------------------------------\n")
-            (lyskom-insert "\n"))
+          (when kom-dashed-lines
+            (lyskom-insert 
+             (make-string kom-text-header-dash-length ?-)))
+          (lyskom-insert "\n")
           (lyskom-format-insert "%#1t" (cons text-stat str))
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))

@@ -1,4 +1,14 @@
+1999-06-23  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el: Synched up with Swedish.
+
+	* vars.el.in (lyskom-language): Set default valie from
+	kom-default-language. 
+
 1999-06-22  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-print-text): Print correct header for texts 
+	without subjects too.
 
 	Support long dashed lines in a variety of places.
 	* language.el (lyskom-get-string-sol): New function.
