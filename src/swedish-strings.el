@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.48 1999-02-11 16:27:30 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.49 1999-02-18 16:29:48 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.48 1999-02-11 16:27:30 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.49 1999-02-18 16:29:48 petli Exp $\n"))
 
 
 ;;; ================================================================
@@ -322,6 +322,9 @@ du har läst klart allting. Kom tillbaks senare.
     (is-in-conf . "Närvarande i möte")
     (from-machine . "Kör från")
     (is-doing . "Gör")
+    (connection-time . "Loggade in")
+    (active-last . "Aktiv senast")
+    (active . "Aktiv")
     (lyskom-client . "Klient")
     (text-to-add-recipient . "Vilket inlägg vill du addera mottagare till:")
     (text-to-add-copy . "Vilket inlägg vill du addera en extra kopia till:")
@@ -1080,10 +1083,12 @@ Uppkopplad sedan %#8s%#9s")
     (language-set-to . "Språket är %#1s.\n")
     (language-not-loaded . "%#1s finns inte tillgängligt.\n")
 
-    (reformat-generic . "(%#1s)")
-    (reformat-html . "(HTML)")
-    (reformat-enriched . "(Enriched)")
-    (reformat-filled . "(Ombruten)")
+;;    (reformat-generic . "(%#1s)")
+    (reformat-html . "HTML")
+    (reformat-enriched . "enriched")
+    (reformat-filled . "ombruten")
+
+    (reformat-truncated . "nedkortad")
     
     (need-library . "Paketet \"%#1s\" behövs för att utföra detta kommando.\n")
     (calc-expression . "Uttryck: ")
@@ -1709,7 +1714,10 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map "sm" 'kom-status-conf)
   (define-key lyskom-sv-mode-map "sp" 'kom-status-person)
   (define-key lyskom-sv-mode-map "ss" 'kom-status-session)
-
+  (define-key lyskom-sv-mode-map (lyskom-keys [s ä]) 'kom-send-message)
+  (define-key lyskom-sv-mode-map "s{" 'kom-send-message)
+  (define-key lyskom-sv-mode-map "s[" 'kom-send-message)
+  
   ;; Running in buffer
 
   (define-key lyskom-sv-mode-map "\M-p" 'backward-text)
@@ -1959,6 +1967,8 @@ Innehåll:    \"%#9s\"
     (long-format  . "Visa hjälptexter")
     (short-format . "Göm hjälptexter ")
 
+    (truncate-threshold-lines . "Max rader")
+    
     ;;
     ;; Misc doc strings
     ;;
@@ -2210,7 +2220,15 @@ i servern. Annars sparas det i din .emacs.")
   Om man har streckade linjer avslaget så visas författaren på samma 
   sätt, men de streckade linjerna finns naturligtvis inte med.")
 
+    (kom-truncate-threshold-doc . "\
+  Om detta är påslaget kommer inlägg som är längre än maxantalet att kortas
+  ner när man återser kommentarer, återser markerade inlägg eller återser de
+  senaste eller första.  Inlägg kortas inte av då man återser inlägg, återser
+  träd eller bara läser nästa inlägg.")
 
+    (kom-truncate-show-lines-doc . "\
+  Antalet rader som visas när ett inlägg avkortats.")
+     
     (kom-dashed-lines-doc . "\
   Om detta är påslaget visas streckade linjer före och efter inläggstexten,
   annars visas en tomrad efter ärenderaden, och ingenting speciellt i slutet.
@@ -2292,6 +2310,9 @@ i servern. Annars sparas det i din .emacs.")
      6810 George Berkeley                      Filosofimötet                  
      7571 John Locke                           Filosofimötet")
 
+    (kom-show-since-and-when-doc . "\
+  Information i vilkalistan om när en person loggade in och hur länge sedan
+  personen var aktiv.")
 
     (kom-idle-hide-doc . "\
   I vilkalistan visas per default enbart de sessioner som har varit aktiva
@@ -2541,6 +2562,11 @@ i servern. Annars sparas det i din .emacs.")
     (kom-show-author-at-end-tag .
 "Visa författarens namn efter inlägget:    ")
 
+    (kom-truncate-threshold-tag .
+"Korta av långa inlägg:                    ")
+    (kom-truncate-show-lines-tag .
+"Rader att visa vid avkortade inlägg:      ")
+    
     (kom-reading-puts-comments-in-pointers-last-tag . "Kommentarslänkar visas:")
     (kom-read-depth-first-tag . "Läsordning:")
     (kom-deferred-printing-tag . "Fördröjda utskrifter:")
@@ -2556,6 +2582,8 @@ i servern. Annars sparas det i din .emacs.")
 "Antal minuter en session får vara inaktiv och ändå visas: ")
     (kom-show-where-and-what-tag . 
 "Visa varifrån personer är inloggade och vad de gör:         ")
+    (kom-show-since-and-when-tag . 
+"Visa när personer loggade in och när de var aktiva:         ")
 
 
 

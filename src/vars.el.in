@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.55 1999-02-11 16:27:33 byers Exp $
+;;;;; $Id: vars.el.in,v 44.56 1999-02-18 16:29:51 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.55 1999-02-11 16:27:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.56 1999-02-18 16:29:51 petli Exp $\n"))
 
 (provide 'lyskom)
 
@@ -253,6 +253,20 @@ nil                 nil                         \"(%n) %f\"
   server
   inherited)
 
+(def-kom-var kom-truncate-threshold nil
+  "*If non-nil, truncate long texts when revieiwing.
+If the text is longer (in lines) then the threshold it will be
+truncated to `kom-truncate-show-lines' length."
+  server)
+
+(def-kom-var kom-truncate-show-lines nil
+  "*How many lines to show after truncating.
+If the text is truncated by `kom-truncate-threshold', show this many
+lines.  If this is greater than the threshold, the threshold will be
+used."
+  server)
+
+
 (def-kom-var kom-print-number-of-unread-on-entrance t
   "*If Non-nil then print automatically the number of unread articles when
 entering a conference."
@@ -284,6 +298,10 @@ changing name is printed."
 and what he is doing."
   server)
 
+(def-kom-var kom-show-since-and-when nil
+  "*Non-nil means kom-who-is-on shows when the user connected and when
+he was active last."
+  server)
 
 (def-kom-var kom-idle-hide 30
   "*The number of minutes of idle-time before a user is excluded from the list
@@ -930,27 +948,6 @@ this string is used as the argument to lyskom-tell-server.
 Users are encouraged to use their best sense of humor."
   server)
 
-
-;;; =================================================================
-;;;
-;;; Email import variables
-;;; 
-
-(def-kom-var kom-mail-importer-persons nil
-  "*List of persons (numbers) which are mail importers.
-Texts by these persons are formatted as email texts, rather than
-ordinary LysKOM texts."
-  server)
-
-(def-kom-var kom-mail-address
-  (concat (user-full-name) " <" user-mail-address ">")
-  "*Email address to use in From:-header."
-  server)
-
-(def-kom-var kom-mail-visible-headers
-  '("to" "cc" "reply-to")
-  "*List of headers to show when displaying an email text."
-  server)
 
 
 ;;; =================================================================

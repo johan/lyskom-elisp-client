@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.14 1998-06-02 12:15:35 byers Exp $
+;;;;; $Id: view-text.el,v 44.15 1999-02-18 16:29:53 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,21 +35,24 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.14 1998-06-02 12:15:35 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.15 1999-02-18 16:29:53 petli Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
 				 follow-comments conf-stat priority
-				 build-review-tree filter-active)
+				 build-review-tree filter-active
+				 flat-review)
   "Display text number TEXT-NO.
 Args: TEXT-NO &optional MARK-AS-READ FOLLOW-COMMENTS CONF-STAT 
-PRIORITY BUILD-REVIEW-TREE.
+PRIORITY BUILD-REVIEW-TREE FLAT-REVIEW.
 If MARK-AS-READ is non-nil the text will be marked as read.
 If FOLLOW-COMMENTS is non-nil all comments and footnotes to this text will be
 read before the next text. CONF-STAT must be the conference status of the
 current conference, and PRIORITY the priority, if FOLLOW-COMMENTS is non-nil.
 If BUILD-REVIEW-TREE is non-nil then it fixes a new entry in the 
 lyskom-reading-list to read the comments to this.
+If FLAT-REVIEW is non-nil this is a review caused by lyskom-view-commented or
+kom-view-text viewing REVIEW or REVIEW-MARK text.
 
 Note that this function must not be called asynchronously."
 
@@ -201,7 +204,7 @@ Note that this function must not be called asynchronously."
 					       num-marks))))))
 		   
 		     (lyskom-print-text text-stat text
-					mark-as-read text-no))
+					mark-as-read text-no flat-review))
 		   
 		   
                    (let ((text nil))
@@ -488,8 +491,19 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                  ""
                (make-string (- 42 (length author-name)) ?-))
            "------------------------------------------")
-         (if format-flags
-             (lyskom-get-string format-flags)
+         (if (and format-flags (listp format-flags))
+	     (let ((first-flag t))
+	       (concat
+		"("
+		(mapconcat (function
+			    (lambda (str)
+			      (cond
+			       (first-flag
+				(setq first-flag nil)
+				(upcase-initials (lyskom-get-string str)))
+			       (t (lyskom-get-string str)))))
+			   format-flags ", ")
+		")"))
            ""))
 
       (while (string-match "%\\(=?-?[0-9]+\\)?\\([-nPpf% ]\\)" format start)
@@ -565,11 +579,11 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                                                         format-flags))))
 
 
-(defun lyskom-print-text (text-stat text mark-as-read text-no)
+(defun lyskom-print-text (text-stat text mark-as-read text-no flat-review)
   "Print a text. The header must already be printed.
 Print an error message if TEXT-STAT or TEXT is nil.
 Mark the text as read if (and only if) MARK-AS-READ is non-nil.
-Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
+Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
   (let ((lyskom-current-function 'lyskom-print-text))
     (cond
      ((or (null text)
@@ -579,6 +593,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
       (setq lyskom-current-text text-no))
      (t
       (let* ((str (text->text-mass text))
+	     (truncated nil)
              ;; s1 s2 t1 t2
 	     body)
         (cond
@@ -594,8 +609,32 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
                "------------------------------------------------------------\n")
             (lyskom-insert "\n"))
           ;; (setq t1 (point-max))
+
+	  ;; Truncate body if flat-review and long text
+	  (if (and flat-review kom-truncate-show-lines kom-truncate-threshold)
+	      (let ((lines 0)
+		    (pos 0)
+		    (show-lines (min kom-truncate-show-lines
+				     kom-truncate-threshold))
+		    last-line)
+		(while (and pos (setq pos (string-match "\n" body pos)))
+		  (setq pos (1+ pos))
+		  (setq lines (1+ lines))
+		  (if (= lines show-lines)
+		      (setq last-line (1- pos)))
+		  (if (>= lines kom-truncate-threshold)
+		      (setq body (substring body 0 last-line)
+			    pos nil
+			    truncated t)))))
+		    
           (let ((lyskom-current-function-phase 'body))
             (lyskom-format-insert "%#1t" (cons text-stat body)))
+
+	  ;; Indicate that the text was truncated
+	  (if truncated
+	      (setq lyskom-last-text-format-flags
+		    (cons 'reformat-truncated lyskom-last-text-format-flags)))
+	  
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
