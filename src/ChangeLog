@@ -1,5 +1,50 @@
 2004-07-19  David Byers  <byers@lysator.liu.se>
 
+	Support for entry filters and buffer headers:
+	* mship-edit.el (lp--add-entry-filter): New function.
+	(lp--del-entry-filter): New function.
+	(lp--apply-entry-filter): New function.
+	(lp--entry-filter-description): New function.
+	(lp--update-filter-description): New function.
+	(lp--entry-filter-read): New function.
+	(lp--entry-filter-passive): New function.
+	(lp--entry-filter-hidden): New function.
+	(lp--set-header): New function.
+	(lp--create-buffer): Enable use of lp--set-header.
+
+	Integrate mship-edit:
+	* commands2.el (kom-membership): Removed old implementation and
+	associated functions. Turned into an alias for kom-prioritize.
+
+	* mship-edit.el (kom-prioritize): Renamed from
+	kom-handle-membership.
+
+	Improve membership edit:
+	* mship-edit.el: Numerous minor changes. No details :-/
+
+	* prioritize.el: Removed.
+
+	* avltree.el: Removed.
+
+	* elib-node.el: Removed.
+
+	* clienttypes.el (read-list-delete-read-info): Update unreads in
+	the membership buffer.
+
+	* commands1.el (lyskom-add-member): Do replace-membership even
+	when working under the session priority.
+	(lyskom-add-member): Removed lp--update-buffer when adding a new
+	membership or changing priority since lyskom-replace-membership
+	will take care of that.
+
+	* mship-edit.el (lp--print-entry): Recompute and obey visibility
+	of entry. Erase entries that are invisible.
+	(lp--erase-entry): Survive being called on an undrawn entry.
+	(lp--entry-at): New implementation based on linear search that
+	deals with invisible entries.
+	(lp--maybe-update-unreads): Handle entry visibility and visibility
+	changes correctly.
+
 	Nicen up lyskom-end-of-command:
 	* command.el (def-kom-command): Use make-symbol, not intern, to
 	get an uninterned symbol for the macro. Added winsym to save

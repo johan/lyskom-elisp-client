@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.209 2004-07-15 17:13:03 byers Exp $
+;;;;; $Id: commands2.el,v 44.210 2004-07-19 20:11:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.209 2004-07-15 17:13:03 byers Exp $\n"))
+              "$Id: commands2.el,v 44.210 2004-07-19 20:11:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -42,113 +42,10 @@
 ;;; ================================================================
 ;;;              Lista medlemsskap - List membership
 
-;;; Author: Linus Tolke
-;;; Rewritten by ceder
-
-
-;; This functions is left in its "asynchronous way".
 (def-kom-command kom-membership ()
-  "Show memberships last visited, priority, unread and name.
-This command is semi-obsolete and will be removed in a future
-version of the client.
-
-See `kom-list-membership-in-window'."
+  "Alias for `kom-prioritize'."
   (interactive)
-  (let ((buffer (lyskom-get-buffer-create 'list-membership
-                                          (concat (buffer-name 
-                                                   (current-buffer))
-                                                  "-membership")
-                                          t)))
-    (save-window-excursion
-      (set-buffer buffer)
-      (lyskom-view-mode)
-      (lyskom-add-hook 'lyskom-new-membership-list-hook
-                       'lyskom-update-membership-when-changed t)
-      (setq truncate-lines t)
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert (lyskom-get-string 'your-memberships))
-        (insert (lyskom-get-string 'memberships-header))))
-    (save-selected-window
-      (lyskom-display-buffer buffer))
-    (lyskom-update-membership-buffer)))
-
-(defun lyskom-update-membership-buffer ()
-  (let ((buf (car (lyskom-buffers-of-category 'list-membership))))
-    (when (buffer-live-p buf)
-      (let ((inhibit-read-only t))
-        (save-excursion (set-buffer buf)
-                        (erase-buffer))
-        (lyskom-traverse-membership x
-          (initiate-get-conf-stat 'membership 'lyskom-memb-received-1
-                                  (membership->conf-no x)
-                                  x buf))))))
-
-(defun lyskom-update-membership-when-changed ()
-  (let ((buffer (car (lyskom-buffers-of-category 'list-membership))))
-    (if (buffer-live-p buffer)
-        (save-excursion (set-buffer buffer)
-                        (lyskom-update-membership-buffer))
-      (lyskom-remove-hook 
-       'lyskom-new-membership-list-hook
-       'lyskom-update-membership-when-changed))))
-
-
-;; This code uses get-map, but I don't think it's worth spending
-;; time on fixing it. Go fix kom-handle-membership instead.
-
-(defun lyskom-memb-received-1 (conf-stat membership buffer)
-  "Part of kom-membership.
-Get maps for the conference CONF-STAT. MEMBERSHIP is the users
-membership in that conference. Call lyskom-memb-received with
-the resulting MAP, CONF-STAT, MEMBERSHIP and BUFFER.
-Args: CONF-STAT MEMBERSHIP BUFFER."
-  (if (/= (conf-stat->conf-no conf-stat)
-          (membership->conf-no membership))
-      (signal 'lyskom-internal-error '("lyskom-memb-received-1")))
-  (let* ((first-wanted (1+ (membership->last-text-read membership)))
-         (last-existing  (+ (conf-stat->first-local-no conf-stat)
-                            (conf-stat->no-of-texts conf-stat)
-                            -1)))
-    (if (> first-wanted last-existing)
-        (lyskom-run 'membership 'lyskom-memb-received
-                    nil conf-stat membership buffer)
-      (if (> (- last-existing first-wanted) 50)
-          (lyskom-run 'membership 'lyskom-memb-received
-                      (- last-existing first-wanted)
-                      conf-stat membership buffer)
-        (initiate-get-map 'membership 'lyskom-memb-received
-                          (membership->conf-no membership)
-                          first-wanted
-                          (+ 1 last-existing
-                             (- first-wanted))
-                          conf-stat membership buffer)))))
-
-(defun lyskom-memb-received (map conf-stat membership buffer)
-  "Args: MAP CONF-STAT MEMBERSHIP BUFFER.
-Prints membership in a conferences.
-MAP may be nil if there are no new texts."
-  (save-window-excursion
-    (set-buffer buffer)
-    (goto-char (point-max))
-    (let ((lyskom-executing-command 'kom-membership)
-          (lyskom-current-command 'kom-membership)
-          (inhibit-read-only t)
-          (kom-print-seconds-in-time-strings nil))
-      (lyskom-format-insert 'memberships-line
-                            (lyskom-format-time 'date-and-time
-                                                (membership->last-time-read
-                                                 membership))
-                            (membership->priority membership)
-                            (cond
-                             ((null map) 0)
-                             ((numberp map) map)
-                             ((listp map)
-                              (length (lyskom-list-unread map membership)))
-                             (t (signal
-                                 'lyskom-internal-error
-                                 '("Erroneous map in lyskom-memb-received"))))
-                            conf-stat))))
+  (lyskom-prioritize))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.332 2004-07-18 14:58:04 byers Exp $
+;;;;; $Id: english-strings.el,v 44.333 2004-07-19 20:11:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.332 2004-07-18 14:58:04 byers Exp $"))
+              "$Id: english-strings.el,v 44.333 2004-07-19 20:11:57 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1136,36 +1136,6 @@ Alarm from %#1P (%#3s):
     (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
     (conf-prompt . "Which conference/person? ")
 
-    ; From prioritize.el:
-
-    (cant-move-nothing-nowhere . "Can't move nothing anywhere.")
-    (goto-priority-prompt . "Go to priority: ")
-    (priority-prompt . "New priority for %#1M: ")
-    (priority-prompt-marked . "New priority for selected conferences: ")
-    (beginning-of-list . "Beginning of list")
-    (end-of-list . "End of list")
-    (reprioritize-from . "Reprioritize from: ")
-    (reprioritize-to . "Reprioritize to: ")
-    (no-selection . "No selection")
-    (selection . "%d selected")
-
-    (cannot-get-membership . "Cannot retrieve your membership list.")
-    (cannot-get-pers-stat . "Cannot retrieve your personal status.")
-    (prioritize-help .
-"u,n Move conference, SPC select, p prioritize selection, q quit, C-h m help")
-    (your-priorities . " Priority   Conference
--------------------------------------------------------------------------------
-")
-    (your-membship . "Your memberships:
-  Prio Conf# Conference\n")
-    (prio-row . " %5#1d%5#2m  %#3M\n")
-    (too-high-goto-2 . "You are too high up. Move down to line two.")
-    (too-low-go-up . "You can't push the last line. Move up one line.")
-    (all-confs-popped .  "All conferences have been popped.")
-    (prio-died . "Couldn't complete the move. Sorry. Kill the buffer.")
-    (new-priority . "New priority? (0 (low) - 255 (high)) ")
-    (new-prio . "%6#1d")
-
     ; From flags.el:
     (saving-settings . "Saving options...")
     (saving-settings-done . "Saving options...done")
@@ -2080,6 +2050,39 @@ Change privileges for %#1P (%#1p)...")
     (set-flg16-priv-q . "Activate unknown privilege 16? ")
 
     (canceling-command . "Canceling command...")
+
+    ;; From mship-edit.el
+
+    (no-selection . "No selection")
+    (selection . "%d selected")
+    (priority-prompt . "New priority for %#1M: ")
+    (priority-prompt-marked . "New priority for selected conferences: ")
+    (lp-no-creation-info . "No information on when the membership was created")
+    (lp-invited . "Invited")
+    (lp-added . "Added")
+    (lp-nope . "Operation failed: %#1s")
+    (lp-no-entry . "No membership on this line")
+    (lp-no-active-filter . "(no filters active)")
+    (lp-active-filters . "Active filters: %#1s")
+    (lp-mark-mship-with-prio . "Select memberships with priority: ")
+    (lp-unmark-mship-with-prio . "Deselect memberships with priority: ")
+    (lp-no-selection . "No memberships selected")
+    (lp-at-min-prio . "Already at minimum priority")
+    (lp-at-max-prio . "Already at maximum priority")
+    (lp-beginning-of-list . "Beginning of list")
+    (lp-end-of-list . "End of list")
+    (lp-goto-priority . "Go to priority: ")
+    (lp-mode-name . "Membership")
+    (lp-header-main . "Membership for %#1M on %#2s")
+    (lp-list-header . " Prio   %#1s  Last entered Unread IHPM\n")
+    (lp-help-footer . "
+ Select membership:  SPC      Select region:  C-w      Flytta markerade:   C-y
+ Set priority:       p        Increase prio:  +        Decrease prio:      -
+ Move up:            M-p      Move down:      M-n      Toggle flags:   I,H,P,M
+ Quit:               C-c C-c                           More help:        C-h m
+")
+    (lp-hide-read-efter . "Hide memberships read after: ")
+    (lp-hide-read-since . "Hide memberships not read since: ")
     ))
 
 
@@ -2778,6 +2781,64 @@ Change privileges for %#1P (%#1p)...")
   )
 
 
+;;; ================================================================
+;;; Prioritization
+
+(defvar lyskom-en-prioritize-mode-map nil "Keymap used in lyskom-prioritize-mode")
+(lyskom-language-keymap lyskom-prioritize-mode-map en lyskom-en-prioritize-mode-map)
+
+(if lyskom-en-prioritize-mode-map
+    nil
+  (setq lyskom-en-prioritize-mode-map (make-keymap))
+  (suppress-keymap lyskom-en-prioritize-mode-map)
+  (define-key lyskom-en-prioritize-mode-map (kbd "SPC") 'lp--toggle-membership-selection)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-k") 'lp--toggle-membership-selection)
+  (define-key lyskom-en-prioritize-mode-map (kbd "p")   'lp--set-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-w") 'lp--select-region)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-w") 'lp--select-region)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-y") 'lp--yank)
+  (define-key lyskom-en-prioritize-mode-map (kbd "#")   'lp--select-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-#")   'lp--deselect-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-DEL") 'lp--deselect-all)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-p") 'lp--previous-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "<up>") 'lp--previous-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-n") 'lp--next-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "<down>") 'lp--next-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "<home>") 'lp--first-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "<end>") 'lp--last-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-<") 'lp--first-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M->") 'lp--last-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd "g") 'lp--goto-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "RET") 'lp--toggle-entry-expansion)
+  (define-key lyskom-en-prioritize-mode-map (kbd "+") 'lp--increase-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "-") 'lp--decrease-priority)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-p") 'lp--move-up)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-n") 'lp--move-down)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-<up>") 'lp--move-up)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-<down>") 'lp--move-down)
+  (define-key lyskom-en-prioritize-mode-map (kbd "I") 'lp--toggle-invitation)
+  (define-key lyskom-en-prioritize-mode-map (kbd "H") 'lp--toggle-secret)
+  (define-key lyskom-en-prioritize-mode-map (kbd "P") 'lp--toggle-passive)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M") 'lp--toggle-message-flag)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-c C-c") 'lp--quit)
+  (define-key lyskom-en-prioritize-mode-map (kbd "q") 'lp--quit)
+  (define-key lyskom-en-prioritize-mode-map (kbd "(") 'lp--expand-entry)
+  (define-key lyskom-en-prioritize-mode-map (kbd ")") 'lp--contract-entry)
+
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-en-prioritize-mode-map (kbd "*") 'kom-button-press)
+  (define-key lyskom-en-prioritize-mode-map (kbd "=") 'kom-menu-button-press)
+  (define-key lyskom-en-prioritize-mode-map (kbd "TAB") 'kom-next-link)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-en-prioritize-mode-map (kbd "C-i") 'kom-next-link)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-C-i") 'kom-previous-link)
+  )
+
+
+
 ;;;==============================================================
 ;;; Keymap for filter editing
 ;;;
@@ -2821,60 +2882,6 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-filter-edit-map (kbd "?") 'lyskom-filter-edit-brief-help)
   (define-key lyskom-en-filter-edit-map (kbd "h") 'lyskom-filter-edit-brief-help)
   )
-
-
-(defvar lyskom-en-prioritize-mode-map nil)
-(lyskom-language-keymap lyskom-prioritize-mode-map en lyskom-en-prioritize-mode-map)
-
-(if lyskom-en-prioritize-mode-map 
-    nil
-  (setq lyskom-en-prioritize-mode-map (make-keymap))
-  (suppress-keymap lyskom-en-prioritize-mode-map)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
-  (define-key lyskom-en-prioritize-mode-map (kbd "*") 'kom-button-press)
-  (define-key lyskom-en-prioritize-mode-map (kbd "+") 'kom-menu-button-press)
-  (define-key lyskom-en-prioritize-mode-map (kbd "?") 'kom-prioritize-help)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-k") 'kom-prioritize-select)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-y") 'kom-prioritize-yank)
-  (define-key lyskom-en-prioritize-mode-map (kbd "SPC") 'kom-prioritize-select)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-m") 'kom-prioritize-next-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-j") 'kom-prioritize-next-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "DEL") 'kom-prioritize-previous-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-DEL") 'kom-prioritize-deselect-all)
-  (define-key lyskom-en-prioritize-mode-map (kbd "<down>") 'kom-prioritize-next-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-n") 'kom-prioritize-next-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "<up>") 'kom-prioritize-previous-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-p") 'kom-prioritize-previous-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "p") 'kom-prioritize-previous-line)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-<up>") 'kom-prioritize-move-up)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-p") 'kom-prioritize-move-up)
-  (define-key lyskom-en-prioritize-mode-map (kbd "u") 'kom-prioritize-move-up)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-<down>") 'kom-prioritize-move-down)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-n") 'kom-prioritize-move-down)
-  (define-key lyskom-en-prioritize-mode-map (kbd "d") 'kom-prioritize-move-down)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-<") 'kom-prioritize-beginning)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M->") 'kom-prioritize-end)
-  (define-key lyskom-en-prioritize-mode-map (kbd "r") 'kom-prioritize-reprioritize)
-  (define-key lyskom-en-prioritize-mode-map (kbd "g") 'kom-prioritize-goto-priority)
-  (define-key lyskom-en-prioritize-mode-map (kbd "p") 'kom-prioritize-set-priority)
-  (define-key lyskom-en-prioritize-mode-map (kbd "s") 'kom-prioritize-save)
-  (define-key lyskom-en-prioritize-mode-map (kbd "q") 'kom-prioritize-quit)
-  (define-key lyskom-en-prioritize-mode-map (kbd "C-c C-c") 'kom-prioritize-quit)
-  (define-key lyskom-en-prioritize-mode-map (kbd "TAB") 'kom-next-link)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-C-i") 'kom-previous-link)
-  (define-key lyskom-en-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
-  (define-key lyskom-en-prioritize-mode-map (kbd "<S-tab>") 'kom-previous-link)
-)
-
-(lyskom-language-var local lyskom-prioritize-header-lines en 2)
-
-(lyskom-language-var local lyskom-prioritize-header en 
-" Prio   Conference
------------------------------------------------------------------------------
-")
 
 
 

@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.115 2004-07-18 14:58:04 byers Exp $
+# $Id: Makefile,v 44.116 2004-07-19 20:11:57 byers Exp $
 
 # Useful targets:
 #
@@ -98,7 +98,6 @@ SOURCES	 = 	komtypes.el \
 		view-text.el \
 		async.el \
 		mship-edit.el \
-		prioritize.el \
 		flags.el \
 		messages.el \
 		ansaphone.el \

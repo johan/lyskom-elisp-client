@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.375 2004-07-15 17:13:03 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.376 2004-07-19 20:11:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.375 2004-07-15 17:13:03 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.376 2004-07-19 20:11:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1168,36 +1168,6 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
     (conf-prompt . "Vilket möte/person? ")
 
-    ;; From prioritize.el:
-
-    (cant-move-nothing-nowhere . "Kan inte flytta ingenting någonstans.")
-    (goto-priority-prompt . "Hoppa till prioritet: ")
-    (priority-prompt . "Ny prioritet för %#1M: ")
-    (priority-prompt-marked . "Ny prioritet på markerade möten: ")
-    (beginning-of-list . "Början av listan")
-    (end-of-list . "Slutet av listan")
-    (reprioritize-from . "Prioritera om från: ")
-    (reprioritize-to . "Prioritera om till: ")
-    (no-selection . "Ingen markerad")
-    (selection . "%d markerade")
-
-    (cannot-get-membership . "Kan ej hämta medlemskap för dig.")
-    (cannot-get-pers-stat . "Kan ej hämta personstatus för dig.")
-    (prioritize-help .
-		     "u,n Flytta möte, SPC markera, p prioritera markerade, q avsluta, C-h m hjälp")
-    (your-priorities . " Prioritet  Mötesnamn
--------------------------------------------------------------------------------
-")
-    (your-membship . "Ditt medlemskap i olika KOM-möten:
-  Prio Mötesnr Mötesnamn\n")
-    (prio-row . " %5#1d%5#2m  %#3M\n")
-    (too-high-goto-2 . "Du står för högt upp. Gå ner till rad 2.")
-    (too-low-go-up . "Du kan inte pusha sista raden. Gå upp en rad.")
-    (all-confs-popped .  "Alla möten är poppade.")
-    (prio-died . "Flyttningen misslyckades. Ledsen. Döda bufferten.")
-    (new-priority . "Ny prioritet? (0 (låg) - 255 (hög)) ")
-    (new-prio . "%6#1d")
-
     ;; From flags.el:
     (saving-settings . "Sparar inställningarna...")
     (saving-settings-done . "Sparar inställningarna...klart")
@@ -2109,7 +2079,38 @@ Nuvarande rättigheter för %#1P (%#1p):
     (set-flg16-priv-q . "Aktivera okänd rättighet 16? ")
 
     (canceling-command . "Abryter kommandot...")
-))
+
+    (no-selection . "Ingen markerad")
+    (selection . "%d markerade")
+    (priority-prompt . "Ny prioritet för %#1M: ")
+    (priority-prompt-marked . "Ny prioritet på markerade möten: ")
+    (lp-no-creation-info . "Ingen information om när medlemskapet skapades")
+    (lp-invited . "Inbjuden")
+    (lp-added . "Adderad")
+    (lp-nope . "Det gick inte: %#1s")
+    (lp-no-entry . "Det finns inget medlemskap här")
+    (lp-no-active-filter . "(inga filter aktiva)")
+    (lp-active-filters . "Aktiva filter: %#1s")
+    (lp-mark-mship-with-prio . "Markera medlemskap med prioritet: ")
+    (lp-unmark-mship-with-prio . "Avmarkera medlemskap med prioritet: ")
+    (lp-no-selection . "Inga medlemskap är markerade")
+    (lp-at-min-prio . "Medlemskapet har redan lägsta möjliga prioritet")
+    (lp-at-max-prio . "Medlemskapet har redan högsta möjliga prioritet")
+    (lp-beginning-of-list . "Listans början")
+    (lp-end-of-list . "Listans slut")
+    (lp-goto-priority . "Gå till prioritet: ")
+    (lp-mode-name . "Medlemskap")
+    (lp-header-main . "Medlemskap för %#1M på %#2s")
+    (lp-list-header . " Prio   %#1s  Senast inne  Oläst  IHPM\n")
+    (lp-help-footer . "
+ Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
+ Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
+ Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:  I,H,P,M
+ Avsluta:            C-c C-c                           Mer hjälp:        C-h m
+")
+    (lp-hide-read-efter . "Dölj medlemskap lästa efter: ")
+    (lp-hide-read-since . "Dölj medlemskap ej lästa sedan: ")
+    ))
 
 (lyskom-language-var local lyskom-month-names sv
   '(("januari" . 1)   ("jan" . 1)
@@ -2886,10 +2887,65 @@ Nuvarande rättigheter för %#1P (%#1p):
 )
 
 
+;;; ================================================================
+;;; Prioritization
+
+(defvar lyskom-sv-prioritize-mode-map nil "Keymap used in lyskom-prioritize-mode")
+(lyskom-language-keymap lyskom-prioritize-mode-map sv lyskom-sv-prioritize-mode-map)
+
+(if lyskom-sv-prioritize-mode-map
+    nil
+  (setq lyskom-sv-prioritize-mode-map (make-keymap))
+  (suppress-keymap lyskom-sv-prioritize-mode-map)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "SPC") 'lp--toggle-membership-selection)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-k") 'lp--toggle-membership-selection)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "p")   'lp--set-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-w") 'lp--select-region)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-w") 'lp--select-region)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-y") 'lp--yank)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "#")   'lp--select-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-#")   'lp--deselect-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-DEL") 'lp--deselect-all)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-p") 'lp--previous-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "<up>") 'lp--previous-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-n") 'lp--next-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "<down>") 'lp--next-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "<home>") 'lp--first-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "<end>") 'lp--last-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<") 'lp--first-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M->") 'lp--last-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "g") 'lp--goto-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "RET") 'lp--toggle-entry-expansion)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "+") 'lp--increase-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "-") 'lp--decrease-priority)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-p") 'lp--move-up)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-n") 'lp--move-down)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<up>") 'lp--move-up)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<down>") 'lp--move-down)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "I") 'lp--toggle-invitation)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "H") 'lp--toggle-secret)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "P") 'lp--toggle-passive)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M") 'lp--toggle-message-flag)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-c C-c") 'lp--quit)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "q") 'lp--quit)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "(") 'lp--expand-entry)
+  (define-key lyskom-sv-prioritize-mode-map (kbd ")") 'lp--contract-entry)
+
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "*") 'kom-button-press)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "=") 'kom-menu-button-press)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "TAB") 'kom-next-link)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "C-i") 'kom-next-link)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-C-i") 'kom-previous-link)
+  )
 
 
 
-;;;==============================================================
+;;; ==============================================================
 ;;; Keymap for filter editing
 ;;;
 
@@ -2932,67 +2988,6 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-filter-edit-map (kbd "?")   'lyskom-filter-edit-brief-help)
   (define-key lyskom-sv-filter-edit-map (kbd "h")   'lyskom-filter-edit-brief-help)
   )
-
-
-
-(defvar lyskom-sv-prioritize-mode-map nil)
-(lyskom-language-keymap lyskom-prioritize-mode-map sv 
-  lyskom-sv-prioritize-mode-map)
-
-(if lyskom-sv-prioritize-mode-map 
-    nil
-  (setq lyskom-sv-prioritize-mode-map (make-keymap))
-  (suppress-keymap lyskom-sv-prioritize-mode-map)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "*") 'kom-button-press)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "=") 'kom-menu-button-press)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "?") 'kom-prioritize-help)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-k") 'kom-prioritize-select)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-y") 'kom-prioritize-yank)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "SPC") 'kom-prioritize-select)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-m") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "RET") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-j") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "<down>") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-n") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "DEL") 'kom-prioritize-previous-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-DEL") 'kom-prioritize-deselect-all)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "<up>") 'kom-prioritize-previous-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-p") 'kom-prioritize-previous-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "p") 'kom-prioritize-previous-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<up>") 'kom-prioritize-move-up)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-p") 'kom-prioritize-move-up)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "u") 'kom-prioritize-move-up)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<down>") 'kom-prioritize-move-down)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-n") 'kom-prioritize-move-down)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "d") 'kom-prioritize-move-down)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "n") 'kom-prioritize-move-down)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-<") 'kom-prioritize-beginning)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M->") 'kom-prioritize-end)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "r") 'kom-prioritize-reprioritize)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "g") 'kom-prioritize-goto-priority)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "p") 'kom-prioritize-set-priority)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "s") 'kom-prioritize-save)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "q") 'kom-prioritize-quit)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-c C-c") 'kom-prioritize-quit)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-i") 'kom-next-link)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "TAB") 'kom-next-link)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "<S-tab>") 'kom-previous-link)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-C-i") 'kom-previous-link)
-)
-
-
-(lyskom-language-var local lyskom-prioritize-header-lines sv 2)
-
-(lyskom-language-var local lyskom-prioritize-header sv
-" Prio   Möte
--------------------------------------------------------------------------------
-")
-
 
 
 ;;;; ============================================================
