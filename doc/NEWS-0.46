@@ -27,6 +27,23 @@ för projektet så att det fortsätter att utvecklas.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Kommandot "Spara text (på fil)" har bytt namn till "Arkivera inlägg 
+   (till fil)". Ett nytt kommando "Spara inläggstext (på fil)" sparar
+   bara inläggskroppen (och tömmer filen om den redan fanns.) 
+
+** Mail som importeras av en modern importör, till exempel
+   komimportmail, visas prydligt. Variablerna
+   kom-show-imported-envelope-sender,
+   kom-show-imported-external-recipients och
+   kom-show-imported-importer styr detaljerna.
+
+** Nytt kommando Återse brevhuvud visar e-mail-headers för mail
+   importerade med en modern importör.
+
+** Se tiden kan visa veckonummer. 
+
+** Personliga meddelanden kan visas med klockslaget då de kom.
+
 ** Nytt kommando "Ändra prioritet" för att ändra prioritet på ett
    visst möte. Det går som förut att göra med "Bli medlem" också.
 

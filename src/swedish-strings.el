@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.75 1999-10-09 16:45:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.76 1999-10-11 13:01:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.75 1999-10-09 16:45:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.76 1999-10-11 13:01:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -239,6 +239,7 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (where-to-add-self . "Vilket möte vill du bli medlem i? ")
     (priority-q . "Prioritet på mötet? (0 (passivt medlemskap), 1 (låg) - 255 (hög)) ")
     (done . "klart.\n")
+    (cancelled . "avbrutet.\n")
     (nope . "Det gick inte.\n")
 
     (cant-find-supervisor . "Hittar inte organisatören för %#1M.\n")
@@ -983,7 +984,11 @@ Du bör sätta den till ett bättre värde.\n")
     (several-unread . "%#1M - %#2d olästa\n")
     (enter-conf . "%#1M\n")
 
-    (save-on-file-q . "Spara inlägg på fil: (%#1s) ")
+    (save-on-file-q . "Arkivera inlägg till fil: (%#1s) ")
+    (save-text-to-file-q . "Spara inläggstext %#1n på fil: ")
+    (save-text-confirm . "Filen %#1s finns redan. Vill du skriva över den? ")
+    (saving-text . "Sparar inlägg %#1n som %#2s...")
+    (what-save-no . "Vilket inlägg vill du spara? ")
     (wait-for-prompt . "Vänta på prompten.")
 
     (conference-no . "<möte %#1d>")
@@ -1461,7 +1466,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-set-super-conf       . "Ändra supermöte")
     (kom-set-permitted-submitters . "Ändra tillåtna författare")
     (kom-unset-conf-motd      . "Ta bort lapp på dörren")
-    (kom-save-text	      . "Spara text (på fil)")
+    (kom-save-text	      . "Arkivera inlägg (till fil)")
+    (kom-save-text-body	      . "Spara inläggstext (på fil)")
     (kom-edit-options	      . "Ändra variabler")
     (kom-save-options         . "Spara variabler")
     (kom-shutdown-server      . "Stäng av servern")
@@ -2090,6 +2096,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (ask . "Fråga varje gång")
     (before . "Före texten")
     (after . "Efter texten")
+    (fist . "Först")
+    (last . "Sist ")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
 
@@ -2143,6 +2151,17 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (short-format . "Göm hjälptexter ")
 
     (truncate-threshold-lines . "Max rader")
+
+    (first . "Först")
+    (last . "Sist")
+    (specific-placement . "Specifik plats")
+    (priority . "Prioritet")
+    (same-as-conf . "Samma som aktuellt möte")
+    (custom-format . "Eget format")
+    (default-format . "Standardformat")
+    (a-string . "En text")
+    (some-string . "En slumpmässig text")
+    (unspecified . "Ospecificerat")
     
     ;;
     ;; Misc doc strings
@@ -2685,6 +2704,111 @@ i servern. Annars sparas det i din .emacs.")
   kommer detta att ersättas av ett nytt kommando i någon kommande version
   av elispklienten, men det var visst någon som ville ha det, så ...")
 
+    (kom-show-week-number-doc . "\
+  Se tiden visar veckonummer om detta är påslaget. Annars visas inte 
+  veckonummer.")
+
+    (kom-membership-default-placement-doc . "\
+  Denna inställning styr var nya medlemskap hamnar. Först betyder att nya
+  medlemskap hamnar före gamla med samma prioritet. Sist betyder att nya 
+  medlemskap hamnar efter gamla med samma prioritet. En siffra är en fix
+  placering i medlemskapslistan (men medlemskapet kommer att flyttas
+  såsmåningom.)")
+
+    (kom-show-imported-importer-doc . "\
+  Påslaget betyder visa vilken person som importerade ett importerat e-mail.")
+
+    (kom-show-imported-envelope-sender-doc . "\
+  Visa den verkliga avsändaren till ett importerat e-mail om detta är 
+  påslaget.")
+
+    (kom-show-imported-external-recipients-doc . "\
+  Visa externa mottagare och extra-kopiemottagare om detta är påslaget.")
+
+    (kom-agree-text-doc . "\
+  Text som används av kommandot Hålla med. Det kan antingen vara en text
+  eller en lista av texter. Om det är en lista så väljs ett alternativ
+  slumpmässigt.")
+
+    (kom-silent-ansaphone-doc . "\
+  On detta är avslaget så piper inte klienten när det kommer meddelanden och
+  automatsvar är påslaget.")
+
+    (kom-default-session-priority-doc . "\
+  Läsnivå för nya sessioner. Detta är den läsnivå som nya sessioner får
+  automatiskt.")
+
+    (kom-unsubscribe-makes-passive-doc . "\
+  Om detta är påslaget så gör kommandot Utträda ur möte att man först blir
+  passiv medlem i mötet. Om man utträder ur mötet igen så går man ur på
+  riktigt. Om detta är avslaget så går man ur mötet första gången man försöker
+  utträda.")
+
+    (kom-review-priority-doc . "\
+  Prioritet för återsekommandon. Detta är den prioritet som inläggen man ser
+  när man gör återse får. Det används för att avgöra om nya inlägg skall
+  avbryta återsefunktionen. Sätt till 256 eller högre om du inte vill att nya
+  inlägg någonsin skall avbryta en återsefunktion.")
+
+    (kom-show-creating-software-doc . "\
+  Om detta är påslaget så visas vilken klient som skapade inlägget tillsammans
+  med varje inlägg, förutsatt att informationen finns överhuvudtaget.")
+
+    (kom-text-footer-format-doc . "\
+  Format för inläggsfoten. I texten ersätts %n med inläggsnumret, %P med
+  författarens namn, %p med författarens nummer, %f med information om
+  inlägget (ombruten, HTML mm.) och %- med en lagom lång streckad linje.
+  En siffra efter procenttecknet är minsta bredd på texten. Ett minustecken
+  före siffran betyder att texten skall vänsterjusteras. Ett likhetstecken
+  betyder att fältlängden är exakt och texten kanske kortas av.")
+
+    (kom-long-lines-doc . "\
+  Om detta är påslaget så görs de flesta streckade linjer i klienten mycket
+  längre än normalt.")
+
+    (kom-postpone-default-doc . "\
+  Antalet inlägg som skall uppskjutas med Uppskjuta läsning.")
+
+    (kom-allow-incompleteness-doc . "\
+  Påslaget betyder att klienten inte väntar på att information om alla
+  olästa har kommit fram innan den tillåter kommandon som Lista nyheter.
+  Avslaget innebär att klienten väntar på information om olästa inlägg om
+  den upptäcker att informationen behövs och inte har kommit fram.")
+
+    (kom-smileys-doc . "\
+  Gladmän, som :-), visas grafiskt när denna inställning är på, förutsatt
+  att Emacs klarar det och paketet smiley.el (en del av gnus) är installerat.")
+
+    (kom-ignore-message-senders-doc . "\
+  Visa inte personliga, grupp och alarmmeddelanden från dessa personer.")
+
+    (kom-ignore-message-recipients-doc . "\
+  Visa inte gruppmeddelanden riktade till dessa möten.")
+
+    (kom-text-footer-dash-length-doc . "\
+  Den totala längden på inläggsfoten när streckade linjer, men inte extra
+  långa linjer, och inte ett eget format används.")
+
+    (kom-text-header-dash-length-doc . "\
+  Den totala längden på den streckade linjen ovanför inläggstexten när
+  extra långa linjer inte används.")
+
+    (kom-show-personal-message-date-doc . "\
+  När detta är påslaget så visas datum och klockslag för alla personliga,
+  grupp och alarmmeddelanden.")
+
+    (kom-ding-on-no-subject-doc . "")
+    (kom-ding-on-personal-messages-doc . "")
+    (kom-ding-on-group-messages-doc . "")
+    (kom-ding-on-common-messages-doc . "")
+    (kom-ding-on-no-subject-doc . "")
+    (kom-ding-on-wait-done-doc . "")
+    (kom-ding-on-priority-break-doc . "")
+    (kom-ding-on-new-letter-doc . "")
+    (kom-check-for-new-comments-doc . "")
+    (kom-check-commented-author-membership . "")
+    (kom-confirm-multiple-recipients-doc . "")
+
 
     ;;
     ;; Tags for variables
@@ -2799,9 +2923,30 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-customize-format-tag . "Visa hjälptexterna för inställningar:")
     (kom-default-language-tag . "Språk:           ")
-    (kom-show-namedays-tag .        "Visa dagens namn:")
     (kom-ispell-dictionary-tag . "Ordlista:")
+    (kom-show-namedays-tag .    "Visa dagens namn:")
 
+    (kom-show-week-number-tag . "Visa veckonummer:")
+    (kom-membership-default-placement-tag . "Placering av nya medlemskap:")
+    (kom-show-imported-importer-tag . "Visa importör av importerade inlägg:")
+    (kom-show-imported-envelope-sender-tag . "Visa avsändare av importerade inlägg:")
+    (kom-show-imported-external-recipients-tag . "Visa externa mottagare till importerade inlägg:")
+    (kom-agree-text-tag . "Text för Hålla med:")
+    (kom-silent-ansaphone-tag . "Pip när automatsvar är påslaget:")
+    (kom-default-session-priority-tag . "Läsnivå för nya sessioner:")
+    (kom-unsubscribe-makes-passive-tag . "Utträda ur möte gör om medlemskap till passiva:")
+    (kom-review-priority-tag . "Prioritet för återsekommandon:")
+    (kom-show-creating-software-tag . "Visa skapande klient:")
+    (kom-text-footer-format-tag . "Format för inläggsfot:")
+    (kom-long-lines-tag . "Långa streckade linjer:")
+    (kom-postpone-default-tag . "Skönsvärde för uppskjuta läsning:")
+    (kom-allow-incompleteness-tag . "Tillåt ofullständig information om olästa:")
+    (kom-smileys-tag . "Visa gladmän grafiskt")
+    (kom-ignore-message-senders-tag . "Visa inte meddelanden från")
+    (kom-ignore-message-recipients-tag . "Visa inte meddelanden till")
+    (kom-text-footer-dash-length-tag . "Inläggsfotens längd")
+    (kom-text-header-dash-length-tag . "Längden på linjen ovanför inläggstexten")
+    (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden")
     )
 )
 
