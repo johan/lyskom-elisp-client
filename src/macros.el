@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 41.0 1996-05-02 19:27:30 davidk Exp $
+;;;;; $Id: macros.el,v 41.1 1996-05-20 16:28:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 41.0 1996-05-02 19:27:30 davidk Exp $\n"))
+	      "$Id: macros.el,v 41.1 1996-05-20 16:28:39 davidk Exp $\n"))
 
 
 
@@ -161,6 +161,7 @@ Value returned is always nil."
 	(setq call-list (cdr call-list)))
       (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
       (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+		  (memq (process-status lyskom-proc) '(open run))
 		  (not lyskom-quit-flag))
 	(accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
       (if lyskom-quit-flag

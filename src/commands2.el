@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.3 1996-05-08 12:31:00 davidk Exp $
+;;;;; $Id: commands2.el,v 41.4 1996-05-20 16:28:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.3 1996-05-08 12:31:00 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.4 1996-05-20 16:28:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -218,14 +218,12 @@ otherwise: the conference is read with lyskom-completing-read."
 	  (lyskom-insert-string 'member-list-header)
 	  (lyskom-traverse 
 	      member (conf-no-list->conf-nos member-list)
-	    (let ((member-conf-stat (blocking-do 'get-conf-stat member))
-		  (membership (blocking-do 'query-read-texts 
+	    (let ((membership (blocking-do 'query-read-texts 
 					   member
 					   (conf-stat->conf-no conf-stat))))
-	      ;; Print a row describing the membership of MEMBER-CONF-STAT 
+	      ;; Print a row describing the membership of MEMBER
 	      ;; (described by MEMBERSHIP) in CONF-STAT.
-	      (if (or (null member-conf-stat)
-		      (null membership))
+	      (if (or (null membership))
 		  (lyskom-insert-string 'secret-membership)
 		(lyskom-insert 
 		 (format "%17s"
@@ -241,7 +239,7 @@ otherwise: the conference is read with lyskom-completing-read."
 					(if (zerop unread)
 					    "         "
 					  (format "%7d  " unread))
-					member-conf-stat))))))))))
+					member))))))))))
 
 
 ;;; ================================================================
@@ -1263,29 +1261,82 @@ membership info."
       (bury-buffer))))
 
 
+(defun lyskom-buffer-p (buf)
+  ;; Returns non-nil if BUF is an active LysKOM buffer
+  (if (and buf (bufferp buf) (buffer-name buf))
+      (save-excursion
+	(set-buffer buf)
+	(and (eq major-mode 'lyskom-mode)
+	     (boundp 'lyskom-proc)
+	     lyskom-proc
+	     (processp lyskom-proc)
+	     (memq (process-status lyskom-proc) '(run open))))))
+
+(defun lyskom-update-lyskom-buffer-list ()
+  (mapcar (function
+	   (lambda (buf)
+	     (if (and (lyskom-buffer-p buf)
+		      (not (memq buf lyskom-buffer-list)))
+		 ;; This is a LysKOM buffer that we haven't seen yet --
+		 ;; add it to the end of lyskom-buffer-list.
+		 (setq lyskom-buffer-list
+		       (nconc lyskom-buffer-list (list buf))))))
+	  (buffer-list))
+  (mapcar (function
+	   (lambda (buf)
+	     (if buf
+		 (setq lyskom-buffer-list
+		       (delete buf lyskom-buffer-list)))))
+	  (mapcar (function
+		   (lambda (buf)
+		     (if (lyskom-buffer-p buf) nil buf)))
+		  lyskom-buffer-list)))
+
+
 (defun kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
-  (and (boundp 'lyskom-proc)
-       lyskom-proc
-       (processp lyskom-proc)
-       (lyskom-tell-internat 'kom-tell-next-lyskom))
-  (let ((buffers (buffer-list)))
-    (while (and buffers
-		(or (eq (car buffers) (current-buffer))
-		    (not (save-excursion
-			   (set-buffer (car buffers))
-			   (and (boundp 'lyskom-proc)
-				lyskom-proc
-				(processp lyskom-proc)
-				(memq (process-status lyskom-proc) '(run open))
-				(eq (current-buffer)
-				    (process-buffer lyskom-proc)))))))
-      (setq buffers (cdr buffers)))
-    (if buffers
-	(progn
-	  (kom-bury)
-	  (switch-to-buffer (car buffers))))))
+  (lyskom-tell-internat 'kom-tell-next-lyskom)
+  (lyskom-update-lyskom-buffer-list)
+  ;; Now we are ready to select the next LysKOM buffer
+  (if lyskom-buffer-list
+      (progn
+	;;(kom-bury)
+	(setq lyskom-buffer-list (nconc (cdr lyskom-buffer-list)
+					(list (car lyskom-buffer-list))))
+	(switch-to-buffer (car lyskom-buffer-list)))
+    (error "No active LysKOM buffers")))
+
+
+(defun kom-previous-kom ()
+  "Pop up the previous lyskom-session."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-next-lyskom)
+  (lyskom-update-lyskom-buffer-list)
+  ;; Now we are ready to select the previous LysKOM buffer
+  (if lyskom-buffer-list
+      (let (lastbuf
+	    (last-but-one lyskom-buffer-list))
+	;;(kom-bury)
+	(while (cdr (cdr last-but-one))
+	  (setq last-but-one (cdr last-but-one)))
+	(if (setq lastbuf (car (cdr last-but-one)))
+	    (progn
+	      (setq lyskom-buffer-list (cons lastbuf lyskom-buffer-list))
+	      (rplacd last-but-one nil)
+	      (switch-to-buffer lastbuf))))
+    (error "No active LysKOM buffers")))
+
+
+(defun kom-next-unread-kom ()
+  "Pop up the next LysKOM session with unread texts in."
+  (interactive)
+  (let ((thisbuf (current-buffer)))
+    (kom-next-kom)
+    (while (and (not (eq thisbuf (current-buffer)))
+		(not (memq lyskom-proc lyskom-sessions-with-unread)))
+      (kom-next-kom))))
+
 
 ;;;============================================================
 ;;;  Visa user-arean                    (kom-show-user-area)
