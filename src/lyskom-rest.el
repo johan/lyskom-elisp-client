@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.78 1999-08-25 09:14:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.79 1999-10-11 13:01:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.78 1999-08-25 09:14:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.79 1999-10-11 13:01:16 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2165,14 +2165,14 @@ A list of pairs means OPTARG will be used as a key to look up the real
     (forward-paragraph arg)))
 
 
-(defun kom-save-text (&optional arg)
+(def-kom-command kom-save-text (&optional arg)
   "Saves/appends the article before point to a file.
 The article is determined by a search-backward the same as backward-text 
 and then a forward-text.
 With an argument ARG the search is done over that number of texts.
 The name of the file is read using the minibuffer and the default is kom-text."
   (interactive "p")
-  (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text"))
+  (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text" t))
         (lyskom-print-complex-dates nil)
         (list-of-texts nil)
         (kom-deferred-printing nil)
@@ -2187,6 +2187,7 @@ The name of the file is read using the minibuffer and the default is kom-text."
                       arg (1- arg))
               (setq arg 0)))
           (set-buffer buf)
+          (erase-buffer)
           (mapcar (function
                    (lambda (n)
                      (lyskom-view-text n)
@@ -2206,8 +2207,51 @@ The name of the file is read using the minibuffer and the default is kom-text."
                                 lyskom-saved-file-name))))
           (append-to-file (point-min) (point-max) (expand-file-name name))
           (setq lyskom-saved-file-name name))
-;      (kill-buffer buf)
-)))
+      )))
+
+(def-kom-command kom-save-text-body (text-no &optional filename)
+  "Save the body of text TEXT-NO to file FILENAME."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-save-no t)
+                     nil))
+  (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                         (text (get-text text-no)))
+    (if (or (null text-stat) (null text))
+        (lyskom-format-insert 'no-such-text-no text-no)
+      (let* ((mx-filename (lyskom-get-aux-item (text-stat->aux-items text-stat) 10104))
+             (filename  nil))
+        (while (null filename)
+          (setq filename
+                (read-file-name (lyskom-format 'save-text-to-file-q text-no)
+                                (and mx-filename
+                                     (file-name-directory (aux-item->data (car mx-filename))))
+                                nil
+                                nil
+                                (and mx-filename
+                                     (aux-item->data (car mx-filename)))))
+          (if (file-directory-p filename)
+              (setq filename nil)
+            (if (or (not (file-exists-p filename))
+                    (prog1 
+                        (lyskom-j-or-n-p
+                         (lyskom-format 'save-text-confirm filename)
+                         t)
+                      (lyskom-message "")))
+                (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text" t))
+                      (str (text->text-mass text)))
+                  (condition-case nil
+                      (progn
+                        (lyskom-format-insert 'saving-text text-no filename)
+                        (when (string-match "\n" str)
+                          (setq str (substring str (match-end 0))))
+                        (save-excursion
+                          (set-buffer buf)
+                          (erase-buffer)
+                          (insert str)
+                          (write-region (point-min) (point-max) filename))
+                        (lyskom-insert (lyskom-get-string 'done)))
+                    (quit (lyskom-insert (lyskom-get-string 'cancelled)))
+                    (error (lyskom-insert (lyskom-get-string 'nope))))))))))))
+
 
 
 

@@ -1,3 +1,27 @@
+1999-10-11  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el: Added several missing variables to widget
+	definitions and buffer format.
+
+	* english-strings.el: Added customize strings.
+	
+	* swedish-strings.el: Added customize strings.
+
+1999-10-10  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (kom-save-text): Use def-kom-command.
+	(kom-save-text-body): New command.
+
+	* vars.el.in (kom-show-imported-envelope-sender): New variable.
+	(kom-show-imported-importer): New variable.
+	(kom-show-imported-external-recipients): New variable.
+
+	* view-text.el (lyskom-deferred-insert-footer): Always set the
+	name variable so that the footer will have the right number of
+	dashes.
+	(lyskom-view-text): Only show importer, external recipients and
+	envelope sender if the user wants to.
+
 Sat Oct  9 18:54:16 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-8

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.60 1999-10-09 16:45:11 byers Exp $
+;;;;; $Id: english-strings.el,v 44.61 1999-10-11 13:01:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.60 1999-10-09 16:45:11 byers Exp $"))
+              "$Id: english-strings.el,v 44.61 1999-10-11 13:01:14 byers Exp $"))
 
 
 ;;; ================================================================
@@ -253,6 +253,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (where-to-add-self . "Join which conference? ")
     (priority-q . "Conference priority? (0 (passive membership), 1 (low) - 255 (high)) ")
     (done . "done.\n")
+    (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
@@ -975,7 +976,11 @@ You should set it to a better value.\n")
     (several-unread . "%#1M - %#2d unread texts\n")
     (enter-conf . "%#1M\n")
 
-    (save-on-file-q . "Save which text in file: (%#1s) ")
+    (save-on-file-q . "Archive text on file: (%#1s) ")
+    (save-text-to-file-q . "Save body of text %#1n in which file: ")
+    (save-text-confirm . "File %#1s exists. Overwrite? ")
+    (saving-text . "Saving text %#1n as %#2s...")
+    (what-save-no . "Which text do you want to save? ")
     (wait-for-prompt . "Wait for the prompt.")
 
     (conference-no . "<möte %#1d>")
@@ -1449,7 +1454,8 @@ You must become an active member of the conference to enter it.\n")
     (kom-set-super-conf       . "Change superconference")
     (kom-set-permitted-submitters . "Change allowed authors")
     (kom-unset-conf-motd      . "Remove notice")
-    (kom-save-text            . "Save text (in file)")
+    (kom-save-text            . "Archive text (in file)")
+    (kom-save-text-body       . "Save text body (in file)")
     (kom-edit-options         . "Change options")
     (kom-save-options         . "Save options")
     (kom-shutdown-server      . "Shut down (server)")
@@ -2103,6 +2109,17 @@ Select whether to execute command or keyboard macro.")
 
     (truncate-threshold-lines . "Max lines")
 
+    (first . "First")
+    (last . "Last")
+    (specific-placement . "Specific location")
+    (priority . "Priority")
+    (same-as-conf . "Same as current conference")
+    (custom-format . "Custom format")
+    (default-format . "Standard format")
+    (a-string . "The string")
+    (some-string . "A random string")
+    (unspecified . "Unspecified")
+    
     ;;
     ;; Misc doc strings
     ;;
@@ -2632,6 +2649,113 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This only works in Swedish. If you're running LysKOM in Swedish, turning
   this on causes today's names to be shown when you ask for the time.")
 
+    (kom-show-week-number-doc . "\
+  The Time command shows week numbers if this is on.")
+
+    (kom-membership-default-placement-doc . "\
+  This controls where new memberships are placed. First means before
+  all existing memberships of the same priority. Last means after all
+  existing memberships of the same priority. A number indicates a
+  fixed placement (although the client will eventually sort the membership
+  list in order of priority.)")
+
+    (kom-show-imported-importer-doc . "\
+  The importer of an imported e-mail message is shown if this is on.
+  This only works with compliant e-mail importers.")
+
+    (kom-show-imported-envelope-sender-doc . "\
+  The actual sender (the envelope sender) of imported e-mails is shown 
+  if this is on. This only works with compliant e-mail importers.")
+
+    (kom-show-imported-external-recipients-doc . "\
+  Show external recipients and CC recipients of imported e-mails if this
+  is on. This only works with compilant e-mail importers.")
+
+    (kom-agree-text-doc . "\
+  Default text for the Agree command. It can either be a text of a list
+  of texts. If it is a list, one of the texts will be chosen at random.")
+
+    (kom-silent-ansaphone-doc . "\
+  If this is off, the client will not beep when a personal, group, or
+  public message is received when the auto reply feature is on.")
+
+    (kom-default-session-priority-doc . "\
+  The session priority of new sessions. Conferences with a lower priority
+  will not be read.")
+
+    (kom-unsubscribe-makes-passive-doc . "\
+  When this is on, the first time you leave a conference you become a
+  passive member. Leaving the conference again ubsubscribes you completely.
+  When this is off, leaving a conference unsubscribes you immediately.")
+
+    (kom-review-priority-doc . "\
+  Priority for review commands. This setting can be used to give review
+  commands a higher priority than normal. The default priority is the
+  same as the conference currently being read. Set this to 256 or higher
+  if you want review commands to take precedence over all conferences.")
+
+    (kom-show-creating-software-doc . "\
+  Show the name of the client used to create a text if the information
+  is present and this setting is on.")
+
+    (kom-text-footer-format-doc . "\
+  Format for the text footer. In the format string, %n is replaced by the
+  text number, %P with the author's name, %p with the authods number, %f
+  with information about the text (HTML, filled, etc), and %- with a
+  suitable dashed line. A number after the percent sign is the minimum
+  number of characters to use. A minus sign before the number causes text
+  to be left justified within the field. An equals sign causes text
+  longer than the indicated width to be truncated.")
+ 
+    (kom-long-lines-doc . "\
+  When this is on, most of the dashed lines are made longer than normal.")
+
+    (kom-postpone-default-doc . "\
+  Number of texts to postpone with the Postpone reading command.")
+
+    (kom-allow-incompleteness-doc . "\
+  When this is on, the client will not wait for information about all
+  unread texts, even if it is needed. The result is that List news and
+  some other commands do not yield accurate results shortly after logging
+  in. When this is off, the client will wait for informationn on all
+  unread texts when it is needed.")
+
+    (kom-smileys-doc . "\
+  When this is on, Emacs supports it, and the appropriate package 
+  (smiley.el, which is part of gnus) is installed, smileys will be
+  shown graphically.")
+  
+    (kom-ignore-message-senders-doc . "\
+  Don't show personal, group or alarm messages from these senders.")
+
+    (kom-ignore-message-recipients-doc . "\
+  Don't show group messages to these recipients.")
+
+    (kom-text-footer-dash-length-doc . "\
+  The total length of the text footer when long dashed lines are not
+  in effect and no custom format is being used.")
+
+    (kom-text-header-dash-length-doc . "\
+  The total length of the text header when long dashed lines are not
+  in effect.")
+
+    (kom-show-personal-message-date-doc . "\
+  When this is on, the date and time is shown on all personal, group and
+  alarm messages.")
+
+
+    (kom-ding-on-no-subject-doc . "")
+    (kom-ding-on-personal-messages-doc . "")
+    (kom-ding-on-group-messages-doc . "")
+    (kom-ding-on-common-messages-doc . "")
+    (kom-ding-on-no-subject-doc . "")
+    (kom-ding-on-wait-done-doc . "")
+    (kom-ding-on-priority-break-doc . "")
+    (kom-ding-on-new-letter-doc . "")
+    (kom-check-for-new-comments-doc . "")
+    (kom-check-commented-author-membership . "")
+    (kom-confirm-multiple-recipients-doc . "")
+
     ;;
     ;; Tags for variables
     ;;
@@ -2747,6 +2871,28 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-default-language-tag . "Default language:  ")
     (kom-show-namedays-tag    . "Show today's names:")
     (kom-ispell-dictionary-tag . "Spelling dictionary:")
+
+    (kom-show-week-number-tag . "Show week number:")
+    (kom-membership-default-placement-tag . "Placement of new memberships:")
+    (kom-show-imported-importer-tag . "Show importer of imported messages:")
+    (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")
+    (kom-show-imported-external-recipients-tag . "Show external recipients of impoted messages:")
+    (kom-agree-text-tag . "Default text for Agree:")
+    (kom-silent-ansaphone-tag . "Beep when auto reply is on:")
+    (kom-default-session-priority-tag . "Default session priority:")
+    (kom-unsubscribe-makes-passive-tag . "Leaving a conference converts membership to passive:")
+    (kom-review-priority-tag . "Priority for review commands:")
+    (kom-show-creating-software-tag . "Show creating software:")
+    (kom-text-footer-format-tag . "Text footer format:")
+    (kom-long-lines-tag . "Long dashed lines:")
+    (kom-postpone-default-tag . "Default number of texts to postpone:")
+    (kom-allow-incompleteness-tag . "Allow incomplete information about unread texts:")
+    (kom-smileys-tag . "Show smileys graphically")
+    (kom-ignore-message-senders-tag . "Don't show messages from")
+    (kom-ignore-message-recipients-tag . "Don't show messages to")
+    (kom-text-footer-dash-length-tag . "Text footer length")
+    (kom-text-header-dash-length-tag . "Length of dashed line before text")
+    (kom-show-personal-message-date-tag . "Show date and time of messages")
     )
 )
 
