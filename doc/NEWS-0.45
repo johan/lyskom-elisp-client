@@ -21,6 +21,10 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 * Fitjurs och förbättringar
 
+** Ett nytt kommando, "Inställningar (för) LysKOM" har lagts till. Det 
+   ger ett (förhoppningsvis) enklare och bättre sätt att ställa in
+   vanliga variabler i Elispklienten.
+
 ** Det går att köra elispklienten under XEmacs. Man behöver minst
    version 19.14 av XEmacs för att det skall fungera, men på grund av
    buggar i XEmacs 19.14 så kan LysKOM ibland dra förskräckligt mycket
@@ -30,7 +34,8 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 ** Man kan byta språk under körning. För tillfället finns engelska och
    svenska att tillgå, men om någon känner för att översätta klienten
    till något annat språk, till exempel esperanto, swahili, urdu eller
-   japanska så tar vi tacksamt emot hjälpen.
+   japanska så tar vi tacksamt emot hjälpen. Kommandot "Ändra språk"
+   kan vara skoj att prova.
 
 ** I variabeln som väljer hur URLer hanteras kan man lägga in symbolen
    "default". Då kommer LysKOM att använda browse-url för att visa
@@ -44,7 +49,9 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 ** Elispklienten kodar ajtomagiskt av HTML och enriched text in
    inlägg. Inläggen måste vara markerade på ett speciellt för att det
    skall fungera, och för HTML så måste man ha en rätt färsk version
-   av w3 installerad.
+   av w3 installerad. Man kan även skicka in text som enriched genom
+   att sätta variabeln lyskom-send-text-transform-function till
+   lyskom-send-enriched. 
 
 ** En ny hook, lyskom-send-text-hook har skapats. Se
    variabeldokumentationen för detaljer. För att få automagisk
@@ -123,7 +130,6 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    kontrollera att man inte har olästa kommentarer till en text man
    håller på kommentera.
 
-
 ** Elispklienten är snabbare överlag.
 
 
@@ -133,7 +139,6 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 ** Funktionerna lyskom-send-message-resize-minibuffer och
    lyskom-send-message-auto-fill är bra att stoppa in i
    lyskom-minibuffer-send-message-setup-hook fungerar numera. 
-
 
 ** Koden för att läsa in textmappar har optimerats rejält. Det,
    tillsammans med den nya prefetchen gör att man kan läsa I]M, även
@@ -154,6 +159,14 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 
 
+* Kända buggar som behöver rapporteras
+
+** Det verkar som om LysKOM-parsern har en liten bug, men vi lyckas
+   inte reproducera den. Om du kan reproducera en lyskom-parse-error
+   så vill vi veta hur.
+
+
+
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
 ** Under XEmacs verkar interaktion med klienten gå trögt när det
@@ -168,3 +181,5 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    trycker SPC verkar Emacs hänga sig. Tryck C-g ett par gånger så
    hämtar den sig. Detta beror förmodligen på en bug i XEmacs
    event-hantering.
+
+** LysKOM kan krasche betaversioner av XEmacs.
