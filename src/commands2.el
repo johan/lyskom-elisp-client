@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.12 1996-07-25 03:50:22 davidk Exp $
+;;;;; $Id: commands2.el,v 41.13 1996-07-27 14:15:52 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.12 1996-07-25 03:50:22 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.13 1996-07-27 14:15:52 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1356,7 +1356,8 @@ membership info."
 (defun kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
-  (lyskom-tell-internat 'kom-tell-next-lyskom)
+  (if (lyskom-buffer-p (current-buffer))
+      (lyskom-tell-internat 'kom-tell-next-lyskom))
   (if lyskom-buffer-list
       (progn
 	(if (lyskom-buffer-p (car lyskom-buffer-list))
@@ -1373,7 +1374,13 @@ membership info."
 		    (nconc (cdr lyskom-buffer-list)
 			   (list (car lyskom-buffer-list)))))
 	  ;; The "active" lyskom buffer is dead, so we remove it from
-	  ;; the list.
+	  ;; some lists.
+	  (setq lyskom-sessions-with-unread
+		(delq (car lyskom-buffer-list)
+		      lyskom-sessions-with-unread))
+	  (setq lyskom-sessions-with-unread-letters
+		(delq (car lyskom-buffer-list)
+		      lyskom-sessions-with-unread-letters))
 	  (setq lyskom-buffer-list (cdr lyskom-buffer-list)))
 	;; Don't switch to dead sessions.
 	(if (lyskom-buffer-p (car lyskom-buffer-list))
@@ -1385,7 +1392,8 @@ membership info."
 (defun kom-previous-kom ()
   "Pop up the previous lyskom-session."
   (interactive)
-  (lyskom-tell-internat 'kom-tell-next-lyskom)
+  (if (lyskom-buffer-p (current-buffer))
+      (lyskom-tell-internat 'kom-tell-next-lyskom))
   (if (> (length lyskom-buffer-list) 1)
       (let (lastbuf
 	    (last-but-one lyskom-buffer-list))
@@ -1405,7 +1413,13 @@ membership info."
 	      (setq lyskom-buffer-list (cons lastbuf lyskom-buffer-list))
 	      (rplacd last-but-one nil))
 	  ;; The "active" lyskom buffer is dead, so we remove it from
-	  ;; the list.
+	  ;; some lists.
+	  (setq lyskom-sessions-with-unread
+		(delq (cdr last-but-one)
+		      lyskom-sessions-with-unread))
+	  (setq lyskom-sessions-with-unread-letters
+		(delq (cdr last-but-one)
+		      lyskom-sessions-with-unread-letters))
 	  (rplacd last-but-one nil))
 	(if (lyskom-buffer-p (car last-but-one))
 	    (switch-to-buffer lastbuf)
@@ -1417,10 +1431,12 @@ membership info."
 (defun kom-next-unread-kom ()
   "Pop up the next LysKOM session with unread texts in."
   (interactive)
+  (if (not (lyskom-buffer-p (current-buffer)))
+      (kom-next-kom))
   (let ((thisbuf (current-buffer)))
     (kom-next-kom)
     (while (and (not (eq thisbuf (current-buffer)))
-		(not (memq lyskom-proc lyskom-sessions-with-unread)))
+		(not (memq lyskom-buffer lyskom-sessions-with-unread)))
       (kom-next-kom))))
 
 
