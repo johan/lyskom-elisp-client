@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.162 2003-04-05 18:14:25 byers Exp $
+;;;;; $Id: commands2.el,v 44.163 2003-04-05 20:02:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.162 2003-04-05 18:14:25 byers Exp $\n"))
+              "$Id: commands2.el,v 44.163 2003-04-05 20:02:28 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2671,6 +2671,36 @@ See `kom-keep-alive' for more information."
                                                  1))))))
               nil nil "%#1s" conf-stat))))
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no (conf-stat->conf-no conf-stat)))))
+
+(def-kom-command kom-will-person-read-text (pers-no text-no)
+  "Check if a particular person is a member of any recipient of a text..
+If a prefix argument is given, that text will be checked.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-will-read-for)
+                                          '(all) nil nil t)
+                     (lyskom-read-text-no-prefix-arg 'text-to-check-will-read-for
+                                                     t)))
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+         (recipients (and text-stat (lyskom-text-recipients text-stat)))
+         (result nil))
+    (lyskom-traverse rcpt recipients
+      (let ((mship (lyskom-is-member rcpt pers-no)))
+        (when mship
+          (if (membership-type->passive (membership->type mship))
+              (setq result 'passive)
+            (setq result t)
+            (lyskom-traverse-break)))))
+
+    (cond ((null result)
+           (lyskom-format-insert 'pers-is-not-member-of-rcpt
+                                 pers-no text-stat))
+          ((eq result 'passive)
+           (lyskom-format-insert 'pers-is-passive-member-of-rcpt
+                                 pers-no text-stat))
+          (t (lyskom-format-insert 'pers-is-member-of-rcpt
+                                   pers-no text-stat)))))
 
 
 ;;; ================================================================
