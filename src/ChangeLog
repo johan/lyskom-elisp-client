@@ -1,5 +1,11 @@
 2002-02-25  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* swedish-strings.el (lyskom-sv-mode-map): Bind
+	kom-change-conf-faq to "ä q".
+
+	* english-strings.el (lyskom-en-mode-map): Bind
+	kom-change-conf-faq to "A q".
+
 	* vars.el.in (kom-server-aliases): Call com.lysator.liu.se "LysCOM
 	(LysKOM in English)" for now.
 
