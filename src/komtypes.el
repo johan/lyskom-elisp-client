@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.9 1999-06-29 14:21:14 byers Exp $
+;;;;; $Id: komtypes.el,v 44.10 1999-08-22 16:04:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.9 1999-06-29 14:21:14 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.10 1999-08-22 16:04:51 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -1304,9 +1304,10 @@ FOOTN-TO or FOOTN-IN."
 ;;; Special stuff
 
 (defun lyskom-member-list-find-member (person members)
-  (lyskom-traverse member (member-list->members members)
-    (when (eq person (member->pers-no member))
-      (lyskom-traverse-break member))))
+  (when members
+    (lyskom-traverse member (member-list->members members)
+      (when (eq person (member->pers-no member))
+        (lyskom-traverse-break member)))))
 
 
 

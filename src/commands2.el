@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.42 1999-08-21 22:07:36 byers Exp $
+;;;;; $Id: commands2.el,v 44.43 1999-08-22 16:04:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.42 1999-08-21 22:07:36 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.43 1999-08-22 16:04:46 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1623,145 +1623,127 @@ is alive."
 
 
 
-(defun lyskom-next-kom ()
-  "Internal version of kom-next-kom"
-  (if lyskom-buffer-list
-      (progn
-	(if (lyskom-buffer-p (car lyskom-buffer-list))
-	    ;; If there is an "active" lyskom buffer, send it to the
-	    ;; back of the list.
-	    (progn
-	      ;; If the "active" lyskom buffer is the current buffer,
-	      ;; and kom-bury-buffers is non-nil, bury it.
-	      (if (and kom-bury-buffers
-		       (eq (car lyskom-buffer-list)
-			   (current-buffer)))
-		  (kom-bury))
-	      (setq lyskom-buffer-list
-		    (nconc (cdr lyskom-buffer-list)
-			   (list (car lyskom-buffer-list)))))
-	  ;; The "active" lyskom buffer is dead, so we remove it from
-	  ;; some lists.
-	  (setq lyskom-sessions-with-unread
-		(delq (car lyskom-buffer-list)
-		      lyskom-sessions-with-unread))
-	  (setq lyskom-sessions-with-unread-letters
-		(delq (car lyskom-buffer-list)
-		      lyskom-sessions-with-unread-letters))
-	  (setq lyskom-buffer-list (cdr lyskom-buffer-list)))
-	;; Don't switch to dead sessions.
-	(if (lyskom-buffer-p (car lyskom-buffer-list))
-	    (switch-to-buffer (car lyskom-buffer-list))
-	  (lyskom-next-kom)))
-    (error "No active LysKOM buffers")))
+(defun lyskom-clean-buffer-list (buffers)
+  "Remove all dead buffers from BUFFERS"
+  (let ((result nil))
+    (while buffers
+      (when (lyskom-buffer-p (car buffers))
+        (setq result (cons (car buffers) result)))
+      (setq buffers (cdr buffers)))
+    (nreverse result)))
 
-;; (defun lyskom-next-kom ()
-  "Internal version of kom-next-kom"
+(defun lyskom-next-kom (buffer-list-name direction)
+  "Internal version of kom-next-kom
+BUFFER-LIST-NAME is the list of buffers to rotate through. It must be a 
+name since this function may modify the list.
+DIRECTION should be one of 'forward or 'backward and is the direction to
+rotate through the buffer list.
+Return-value: 'no-session if there is no suitable session to switch to
+              'same-session if the current buffer is the only suitable one
+              nil if everything went well"
 
-  ;; Find the lyskom-buffer to go from, to the next
-  ;;    If we are in a lyskom buffer that is in lyskom-buffer-list
-  ;;                    switch from the current buffer.
-  ;;    If we are in a lyskom buffer that is unlisted, 
-  ;;                    put this buffer in the list and switch from it
-  ;;    If we are in another buffer, switch from the last listed buffer
+  ;; Clean the buffer lists 
 
-  ;;    If we are switching from nil, then the target buffer is
-  ;;                    the first buffer in lyskom-buffer-list.
-  ;;    If we are switching from a buffer, then the target buffer is the
-  ;;                    first in the rest of the list, or the first buffer
-  ;;                    if we are at the end of the list
-  ;;    Splice the list as follows:
-  ;;    Put the rest of the list, after the current buffer in front of the
-  ;;                    buffer list, and remove it from the back. Now the
-  ;;                    buffer we switched from is at the back and the one
-  ;;                    we want to switch to is at the front.
-  ;;    Iterate over the buffer list and switch to the first buffer that
-  ;;                    is active. Remove any buffers that are inactive.
-  ;;    If the new target buffer after this is the one we were switching
-  ;;                    from, then signal an error
-;;)
+  (setq lyskom-sessions-with-unread
+        (lyskom-clean-buffer-list lyskom-sessions-with-unread)
+        lyskom-sessions-with-unread-letters
+        (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
+        lyskom-buffer-list
+        (lyskom-clean-buffer-list lyskom-buffer-list))
 
+  (let ((current (lyskom-buffer-root-ancestor (current-buffer)))
+        (buffer-list (symbol-value buffer-list-name))
+        (result nil))
 
-(defun lyskom-previous-kom ()
-  "Internal version of kom-previous-kom"
-  (if (> (length lyskom-buffer-list) 1)
-      (let (lastbuf
-	    (last-but-one lyskom-buffer-list))
-	(while (cdr (cdr last-but-one))
-	  (setq last-but-one (cdr last-but-one)))
-	(setq lastbuf (car (cdr last-but-one)))
-	(if (lyskom-buffer-p (car lyskom-buffer-list))
-	    ;; If there is an "active" lyskom buffer, send it to the
-	    ;; back of the list.
-	    (progn
-	      ;; If the "active" lyskom buffer is the current buffer,
-	      ;; and kom-bury-buffers is non-nil, bury it.
-	      (if (and kom-bury-buffers
-		       (eq (car lyskom-buffer-list)
-			   (current-buffer)))
-		  (kom-bury))
-	      (setq lyskom-buffer-list (cons lastbuf lyskom-buffer-list))
-	      (rplacd last-but-one nil))
-	  ;; The "active" lyskom buffer is dead, so we remove it from
-	  ;; some lists.
-	  (setq lyskom-sessions-with-unread
-		(delq (cdr last-but-one)
-		      lyskom-sessions-with-unread))
-	  (setq lyskom-sessions-with-unread-letters
-		(delq (cdr last-but-one)
-		      lyskom-sessions-with-unread-letters))
-	  (rplacd last-but-one nil))
-	(if (lyskom-buffer-p (car last-but-one))
-	    (switch-to-buffer lastbuf)
-	  (lyskom-previous-kom)))
-    (if (null lyskom-buffer-list)
-        (error
-         (lyskom-get-string 'no-lyskom-session)))))
+    ;; Figure out the start buffer. The target buffer will be the
+    ;; following buffer in lyskom-buffer-list
 
+    (cond
+     ((null buffer-list) (setq result 'no-session
+                               current nil))
 
+     ;; If we are in a lyskom buffer that is in lyskom-buffer-list
+     ;; switch from the current buffer. If unlisted, list it.
+     ((lyskom-buffer-p current) 
+      (unless (memq current buffer-list)
+        (setq lyskom-buffer-list (cons current lyskom-buffer-list))))
+
+     ;; If we are in a non-LysKOM buffer, the start buffer is the
+     ;; last one in the list
+     (t (setq current (car lyskom-buffer-list))))
+
+    ;; Rotate the buffer list so the target buffer is first
+
+    (when current
+      (cond ((eq direction 'forward)
+             (setq buffer-list 
+                   (lyskom-rotate-list buffer-list
+                                       (car (cdr (memq current lyskom-buffer-list))))))
+            (t
+             (setq buffer-list
+                   (lyskom-rotate-list buffer-list
+                                       (or (car (lyskom-preceding-cons 
+                                                 buffer-list
+                                                 current))
+                                           (car (last buffer-list)))))))
+      (set buffer-list-name buffer-list)
+
+      ;; If the current buffer and the target buffer are the same
+      ;; do nothing. Otherwise, flip around the buffers
+
+      (if (eq (current-buffer) (car buffer-list))
+          (setq result 'same-session)
+        ;; Possibly bury the current buffer
+        (when (and kom-bury-buffers (eq current (current-buffer)))
+          (kom-bury))
+
+        ;; Switch to the new buffer
+        (switch-to-buffer (car buffer-list))
+        (setq result nil)))
+    result))
 
 (def-kom-emacs-command kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
-  (let ((start-buffer (current-buffer)))
-    (if (lyskom-buffer-p (current-buffer))
-        (lyskom-tell-internat 'kom-tell-next-lyskom))
-    (lyskom-next-kom)
-    (when (eq (current-buffer) start-buffer)
-      (if kom-next-kom-running-as-kom-command
-          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
-        (error (lyskom-get-string 'no-lyskom-session))))))
-
+  (let ((result (lyskom-next-kom 'lyskom-buffer-list 'forward)))
+    (cond ((eq result 'no-session)
+           (error (lyskom-get-string 'no-lyskom-session)))
+          ((eq result 'same-session)
+           (if kom-next-kom-running-as-kom-command
+               (lyskom-insert-before-prompt (lyskom-get-string
+                                             'no-other-lyskom-r))
+             (error (lyskom-get-string 'no-lyskom-session))))
+          (t nil))))
 
 (def-kom-emacs-command kom-previous-kom ()
   "Pop up the previous lyskom-session."
   (interactive)
-  (let ((start-buffer (current-buffer)))
-    (if (lyskom-buffer-p (current-buffer))
-        (lyskom-tell-internat 'kom-tell-next-lyskom))
-    (lyskom-previous-kom)
-    (when (eq (current-buffer) start-buffer)
-      (if kom-previous-kom-running-as-kom-command
-          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
-        (error 'no-lyskom-session)))))
-
+  (let ((result (lyskom-next-kom 'lyskom-buffer-list 'backward)))
+    (cond ((eq result 'no-session)
+           (error (lyskom-get-string 'no-lyskom-session)))
+          ((eq result 'same-session)
+           (if kom-previous-kom-running-as-kom-command
+               (lyskom-insert-before-prompt (lyskom-get-string
+                                             'no-other-lyskom-r))
+             (error (lyskom-get-string 'no-lyskom-session))))
+          (t nil))))
+               
 
 (def-kom-emacs-command kom-next-unread-kom ()
-  "Pop up the next LysKOM session with unread texts in."
+  "Pop up the previous lyskom-session."
   (interactive)
-  (let ((start-buffer (current-buffer)))
-    (if (not (lyskom-buffer-p (current-buffer)))
-        (lyskom-next-kom))
-    (let ((thisbuf (current-buffer)))
-      (lyskom-next-kom)
-      (while (and (not (eq thisbuf (current-buffer)))
-                  (not (memq lyskom-buffer lyskom-sessions-with-unread)))
-        (lyskom-next-kom)))
-    (when (eq start-buffer (current-buffer))
-        (if kom-next-unread-kom-running-as-kom-command
-            (lyskom-insert-before-prompt 
-             (lyskom-get-string 'no-unread-lyskom-r))
-          (error (lyskom-get-string 'no-unread-lyskom))))))
+  (let ((result (lyskom-next-kom 'lyskom-sessions-with-unread 'forward)))
+    (cond ((eq result 'no-session)
+           (if kom-next-unread-kom-running-as-kom-command
+               (lyskom-insert-before-prompt (lyskom-get-string 
+                                             'no-unread-lyskom-r))
+             (error (lyskom-get-string 'no-unread-lyskom))))
+          ((eq result 'same-session)
+           (if kom-next-unread-kom-running-as-kom-command
+               (lyskom-insert-before-prompt (lyskom-get-string
+                                             'no-other-unread-lyskom-r))
+             (error (lyskom-get-string 'no-lyskom-session))))
+          (t nil))))
 
 
 ;;; ============================================================

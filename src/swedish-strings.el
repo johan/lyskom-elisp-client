@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.72 1999-08-21 22:07:41 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.73 1999-08-22 16:04:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.72 1999-08-21 22:07:41 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.73 1999-08-22 16:04:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -106,11 +106,12 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-a")     'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-m") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a <RET>") 'kom-edit-add-recipient)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a C-e") 'kom-edit-add-copy)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a C-b") 'kom-edit-add-bcc)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a C-f") 'kom-edit-move-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-j") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a <LFD>") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-k") 'kom-edit-add-comment)
-  (define-key lyskom-sv-edit-prefix (kbd "C-a C-e") 'kom-edit-add-copy)
-  (define-key lyskom-sv-edit-prefix (kbd "C-a C-f") 'kom-edit-move-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
@@ -446,6 +447,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (checking-comments-done . "Kontrollerar kommenterade texter...klart")
     (please-check-commented-texts . "Återse de kommenterade texterna och deras kommentarer.")
     (have-unread-comment . "Skicka in trots olästa kommentarer till text %#1n? ")
+    (duplicate-recipients . "Kan inte skicka in texten. En mottagare förekommer flera gånger (%#1M)")
+    (no-recipients . "Kan inte skicka in texten. Inga mottagare har angivits.")
 
     (add-recipient-p . "Addera %#1P som mottagare? ")
     (matching-regexp . "Möten/personer som matchar '%#1s'\n")
@@ -457,6 +460,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (no-other-lyskom-r . "Det finns inga fler aktiva LysKOM-sessioner.\n")
     (no-lyskom-session . "Det finns ingen aktiv LysKOM-session.")
+    (no-other-unread-lyskom-r . "Hittar ingen annan LysKOM-session med olästa.\n")
     (no-unread-lyskom-r . "Hittar ingen aktiv LysKOM-session med olästa.\n")
     (no-unread-lyskom . "Hittar ingen aktiv LysKOM-session med olästa.")
 
