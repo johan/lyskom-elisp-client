@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: docgen.el,v 44.1 2003-01-09 00:43:26 byers Exp $
+;;;;; $Id: docgen.el,v 44.2 2003-01-09 01:37:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -62,9 +62,9 @@
 (defun lyskom-docgen-fixup-sgml (str)
   (when str
     (let ((s str))
+      (setq s (replace-in-string s "&" "&amp;"))
       (setq s (replace-in-string s "<" "&lt;"))
       (setq s (replace-in-string s ">" "&lt;"))
-      (setq s (replace-in-string s "&" "&amp;"))
       s)))
 
 (defun lyskom-docgen-get-name (fn lang)
@@ -128,11 +128,10 @@
    (lambda (x) 
      (format "<keycap>%s</keycap>" 
              (lyskom-docgen-fixup-sgml (key-description x))))
-   binding " "))
+   binding "; "))
 
 
 (defun lyskom-docgen-2 ()
-  (lyskom-docgen-princ "<variablelist>\n")
   (lyskom-traverse command lyskom-commands
     (let* ((name-sv (lyskom-docgen-get-name command 'sv))
            (name-en (lyskom-docgen-get-name command 'en))
@@ -141,35 +140,34 @@
            (doc-en (lyskom-docgen-get-doc command)))
       (lyskom-docgen-princ
        (format "\
-  <varlistentry>
-    <term><anchor id=\"fn:%s\" />%s</term>
-    <listitem>
-      <informaltable frame=\"top\">
-        <tgroup cols=\"2\">
-          <tbody valign=\"top\">
-            <row>
-              <entry>English name</entry>
-              <entry>%s</entry>
-            </row>
-            <row>
-              <entry>English binding</entry>
-              <entry>%s</entry>
-            </row>
-            <row>
-              <entry>Swedish name</entry>
-              <entry>%s</entry>
-            </row>
-            <row>
-              <entry>Swedish binding</entry>
-              <entry>%s</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
+    <section id=\"fn:%s\"><title>%s (%s)</title>
+
+    <informaltable frame=\"top\">
+      <tgroup cols=\"2\">
+        <tbody valign=\"top\">
+          <row>
+            <entry>English name</entry>
+            <entry>%s</entry>
+          </row>
+          <row>
+            <entry>English binding</entry>
+            <entry>%s</entry>
+          </row>
+          <row>
+            <entry>Swedish name</entry>
+            <entry>%s</entry>
+          </row>
+          <row>
+            <entry>Swedish binding</entry>
+            <entry>%s</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
 %s
-    </listitem>
-  </varlistentry>\n\n" 
+  </section>\n\n" 
                command 
+               name-en
                command 
                name-en
                (lyskom-docgen-format-key-sequence bind-en)
@@ -177,21 +175,20 @@
                (lyskom-docgen-format-key-sequence bind-sv)
                doc-en))
       (setq lyskom-docgen-found-functions
-            (cons command lyskom-docgen-found-functions))))
-  (lyskom-docgen-princ "</variablelist>\n\n"))
+            (cons command lyskom-docgen-found-functions)))))
 
 (defun lyskom-docgen-generate-missing-anchors ()
-  (lyskom-docgen-princ "<para>")
+  (lyskom-docgen-princ "<section><title>Dummy anchors</title><para>\n")
   (lyskom-traverse fn (set-difference lyskom-docgen-xrefd-functions
                                       lyskom-docgen-found-functions)
     (lyskom-docgen-princ
-     (format "<anchor id=\"fn:%s\" />Missing target: %s;" fn fn)))
+     (format "<anchor id=\"fn:%s\" />Missing target: %s; \n" fn fn)))
 
   (lyskom-traverse var (set-difference lyskom-docgen-xrefd-variables
                                        lyskom-docgen-found-variables)
         (lyskom-docgen-princ
-         (format "<anchor id=\"var:%s\" />Missing target: %s;" var var)))
-  (lyskom-docgen-princ "</para>"))
+         (format "<anchor id=\"var:%s\" />Missing target: %s; \n" var var)))
+  (lyskom-docgen-princ "</para></section>\n"))
 
 
 
