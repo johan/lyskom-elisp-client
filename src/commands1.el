@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.8 1993-07-26 19:07:28 linus Exp $
+;;;;; $Id: commands1.el,v 36.9 1993-07-28 18:28:11 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.8 1993-07-26 19:07:28 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.9 1993-07-28 18:28:11 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -233,49 +233,33 @@ as TYPE. If no such misc-info, return NIL"
 ;;;                         Brev - Send letter
 
 ;;; Author: Inge Wallin
-
+;;; Rewritten using read-conf-no by Linus Tolke (4=>1)
 
 (defun kom-send-letter ()
-  "Send a personal letter to a person."
+  "Send a personal letter to a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-send-letter)
   (lyskom-tell-internat 'kom-tell-write-letter)
-  (lyskom-completing-read-conf-stat 'main 'lyskom-send-letter-2
-				    (lyskom-get-string 'who-letter-to)
-				    nil nil ""))
-
-			  
-(defun lyskom-send-letter-2 (conf-stat)
-  "Send a letter to the person or conference with conf-stat CONF-STAT.
-If the conference has a set motd, show it and confirm that the user
-still wants to send the letter."
-  (if (zerop (conf-stat->msg-of-day conf-stat))
-      (lyskom-do-send-letter (conf-stat->conf-no conf-stat))
-    (progn
-      (recenter 0)
-      (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
-      (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))
-      (lyskom-run 'main 'lyskom-send-letter-3
-		  (conf-stat->conf-no conf-stat)))))
-
-
-(defun lyskom-send-letter-3 (conf-no)
-  "Ask for confirmation if the recipient of the letter has a motd."
-  (if (j-or-n-p (lyskom-get-string 'motd-persist-q))
-      (lyskom-do-send-letter conf-no)
-    (lyskom-end-of-command)))
-
-
-(defun lyskom-do-send-letter (conf-no)
-  "Asks for subject for the letter to be written and starts the editing."
-  (if (= conf-no lyskom-pers-no)
-      (lyskom-edit-text lyskom-proc
-			(lyskom-create-misc-list 'recpt conf-no)
-			"" "")
-    (lyskom-edit-text lyskom-proc
-		      (lyskom-create-misc-list 'recpt conf-no
-					       'recpt lyskom-pers-no)
-		      "" "")))
+  (let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to) 'all))
+	 (conf-stat (blocking-do 'get-conf-stat tono)))
+    (if (if (zerop (conf-stat->msg-of-day conf-stat))
+	    t
+	  (progn
+	    (recenter 0)
+	    (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
+	    (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))
+	    (if (j-or-n-p (lyskom-get-string 'motd-persist-q))
+		t
+	      (lyskom-end-of-command)
+	      nil)))
+	(if (= tono lyskom-pers-no)
+	    (lyskom-edit-text lyskom-proc
+			      (lyskom-create-misc-list 'recpt tono)
+			      "" "")
+	  (lyskom-edit-text lyskom-proc
+			    (lyskom-create-misc-list 'recpt tono
+						     'recpt lyskom-pers-no)
+			    "" "")))))
 
 
 ;;; ================================================================
@@ -666,11 +650,11 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 				(format " (%d)" text-no)
 			      "")))
   (if text-no
-      (progn
-	(lyskom-collect 'main)
-	(initiate-get-text-stat 'main nil text-no)
-	(initiate-get-text 'main nil text-no)
-	(lyskom-use 'main 'lyskom-write-comment-soon text-no 'comment))
+      (lyskom-write-comment-soon
+       (blocking-do 'get-text-stat text-no)
+       (blocking-do 'get-text text-no)
+       text-no
+       'comment)
     (lyskom-insert-string 'confusion-what-to-comment)
     (lyskom-end-of-command)))
 
@@ -690,11 +674,10 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command 'kom-write-footnote)
   (if text-no
-      (progn
-	(lyskom-collect 'main)
-	(initiate-get-text-stat 'main nil text-no)
-	(initiate-get-text 'main nil text-no)
-	(lyskom-use 'main 'lyskom-write-comment-soon text-no 'footnote))
+      (lyskom-write-comment-soon
+       (blocking-do 'get-text-stat text-no)
+       (blocking-do 'get-text text-no)
+       text-no 'footnote)
     (lyskom-insert-string 'confusion-what-to-footnote)
     (lyskom-end-of-command)))
 
@@ -704,12 +687,10 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
   (interactive)
   (lyskom-start-of-command 'kom-comment-previous)
   (if lyskom-previous-text
-      (progn
-	(lyskom-collect 'main)
-	(initiate-get-text-stat 'main nil lyskom-previous-text)
-	(initiate-get-text 'main nil lyskom-previous-text)
-	(lyskom-use 'main 'lyskom-write-comment-soon 
-		    lyskom-previous-text 'comment))
+      (lyskom-write-comment-soon 
+       (blocking-do 'get-text-stat lyskom-previous-text)
+       (blocking-do 'get-text lyskom-previous-text)
+       lyskom-previous-text 'comment)
     (lyskom-insert-string 'confusion-what-to-comment)
     (lyskom-end-of-command)))
 
@@ -745,19 +726,26 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
 				'kom-tell-write-comment
 			      'kom-tell-write-footnote))
       (lyskom-collect 'edit)
-      (lyskom-traverse
-       misc-info (text-stat->misc-info-list text-stat)
-       (cond
-	((eq 'RECPT (misc-info->type misc-info))
-	 (initiate-get-conf-stat 'edit nil (misc-info->recipient-no 
-					    misc-info)))
-	((and (eq type 'footnote)
-	      (eq 'CC-RECPT (misc-info->type misc-info)))
-	 (setq ccrep (cons (misc-info->recipient-no misc-info) ccrep))
-	 (initiate-get-conf-stat 'edit nil (misc-info->recipient-no
-					    misc-info)))))
-      (lyskom-list-use 'edit 'lyskom-comment-recipients lyskom-proc text-stat
-		       subject type ccrep))))
+      (let (data)
+	(mapcar 
+	 (function
+	  (lambda (misc-info)
+	    (cond
+	     ((eq 'RECPT (misc-info->type misc-info))
+	      (setq data 
+		    (cons (blocking-do 'get-conf-stat 
+				       (misc-info->recipient-no misc-info))
+			  data)))
+	     ((and (eq type 'footnote)
+		   (eq 'CC-RECPT (misc-info->type misc-info)))
+	      (setq ccrep (cons (misc-info->recipient-no misc-info) 
+				ccrep))
+	      (setq data (cons (bloking-do 'get-conf-stat
+					   (misc-info->recipient-no misc-info))
+			       data))))))
+	 (text-stat->misc-info-list text-stat))
+	(lyskom-comment-recipients data lyskom-proc text-stat
+				   subject type ccrep)))))
 
 
 (defun lyskom-comment-recipients (data lyskom-proc text-stat

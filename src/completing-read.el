@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.4 1993-06-01 19:39:51 linus Exp $
+;;;;; $Id: completing-read.el,v 36.5 1993-07-28 18:29:18 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,10 +33,197 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.4 1993-06-01 19:39:51 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.5 1993-07-28 18:29:18 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
+
+
+;;; Completing-function
+
+(defvar lyskom-name-hist nil)
+
+(defvar lyskom-minibuffer-local-completion-map
+  (let ((map (copy-keymap minibuffer-local-completion-map)))
+    (define-key map " " nil)
+    map)
+  "Keymap used for reading LysKOM names.")
+
+(defvar lyskom-minibuffer-local-must-match-map
+  (let ((map (copy-keymap minibuffer-local-must-match-map)))
+    (define-key map " " nil)
+    map)
+  "Keymap used for reading LysKOM names.")
+
+(defun lyskom-read-conf-no (prompt type &optional empty initial)
+  "Returns the conf-no of a conf or person read by lyskom-read-conf-name.
+The question is prompted with PROMPT.
+Only the conferences of TYPE are allowed.
+If EMPTY is non-nil then the empty string is allowed (returns 0).
+INITIAL is the initial contents of the input field."
+  (let (read)
+    (while (and (string= (setq read
+				(lyskom-read-conf-name prompt type t initial))
+			 "")
+		(not empty)))
+    (if (string= read "")
+	0
+      (lyskom-read-conf-name-internal read type 'conf-no))))
+
+(defun lyskom-read-conf-name (prompt type 
+				     &optional mustmatch 
+				     initial)
+  "Read a LysKOM name, prompting with PROMPT.
+The TYPE allows for subsets of the entire Lyskom-name space:
+* all
+* confs only conferences
+* pers only persons
+* logins only persons that are logged in right now.
+The third argument MUSTMATCH makes the function always return the conf-no and 
+never the read string.
+The fourth argument INITIAL is the initial contents of the input-buffer.
+
+Returns the name."
+  (let* ((completion-ignore-case t)
+	 (current-lyskom-process lyskom-proc) ;What an ugly hack.
+	 (minibuffer-local-completion-map 
+	  lyskom-minibuffer-local-completion-map)
+	 (minibuffer-local-must-match-map 
+	  lyskom-minibuffer-local-must-match-map))
+    (completing-read prompt 
+		     'lyskom-read-conf-name-internal
+		     type
+		     mustmatch
+		     initial
+		     'lyskom-name-hist)))
+
+
+(defun lyskom-read-conf-name-internal (string predicate all)
+  "The \"try-completion\" for the lyskom-read name.
+STRING is the string to be matched.
+PREDICATE is one of:
+* all
+* confs only conferences
+* pers only persons
+* logins only persons that are logged in right now.
+If third argument ALL is t then we are called from all-completions.
+If third argument ALL is nil then we are called from try-completion.
+If third argument ALL is 'conf-no then we are called from lyskom name
+to conf-no translator."
+  (let* ((alllogins (and (string= string "")
+			 (eq predicate 'logins)))
+	 (list (if (not alllogins)
+		   (blocking-do 'lookup-name string)))
+	 (nos (append (conf-list->conf-nos list) nil))
+	 (parlist (if (memq predicate '(pers confs))
+		      (let ((nos nos)
+			    (typs (append (conf-list->conf-types list) nil))
+			    res)
+			(while nos
+			  (setq res (cons (cons (car nos) (car typs)) res))
+			  (setq nos (cdr nos)
+				typs (cdr typs)))
+			res)))
+	 (logins (and (eq predicate 'logins)
+		      (mapcar
+		       (function (lambda (ele)
+				   (who-info->pers-no ele)))
+		       (append (blocking-do 'who-is-on) nil))))
+	 (mappedlist (cond
+		      (alllogins
+		       logins)
+		      ((eq predicate 'all)
+		       nos)
+		      ((eq predicate 'confs)
+		       (apply 'append 
+			(mapcar (function 
+				 (lambda (par)
+				   (and (not (conf-type->letterbox (cdr par)))
+					(list (car par)))))
+				parlist)))
+		      ((eq predicate 'pers)
+		       (apply 'append
+			(mapcar (function
+				 (lambda (par)
+				   (and (conf-type->letterbox (cdr par))
+					(list (car par)))))
+				parlist)))
+		      ((eq predicate 'logins)
+		       (let ((nos (sort nos '<))
+			     (lis (sort logins '<))
+			     res)
+			 (while (and nos
+				     lis)
+			   (if (= (car nos) (car lis))
+			       (setq res (cons (car nos) res)))
+			   (if (> (car nos)
+				  (car lis))
+			       (setq lis (cdr lis))
+			     (setq nos (cdr nos))))
+			 res)))))
+    (cond
+     ((eq all 'conf-no)
+      (car mappedlist))
+     ((eq all 'lambda)
+      (= (length mappedlist) 1))
+     (all
+      (mapcar (function (lambda (no)
+			  (conf-stat->name 
+			   (blocking-do 'get-conf-stat no))))
+	      mappedlist))
+     ((and (= (length mappedlist) 1)
+	   (string= string (conf-stat->name
+			    (blocking-do 'get-conf-stat (car mappedlist)))))
+      t)
+     ((= (length mappedlist) 0)
+      nil)
+     (t					; No exact match
+      (lyskom-try-complete-partials 
+       string
+       (mapcar (function (lambda (no)
+			   (list (conf-stat->name 
+				  (blocking-do 'get-conf-stat no)))))
+	       mappedlist))))))
+
+
+(defun lyskom-try-complete-partials (string alist)
+  "Returns the longest string matching STRING.
+Where every word matches the corresponding word in the car part of ALIST.
+parst matching ([^)]) in string and alist are disgarded."
+  (let* ((a-whitespace "\\([ \t]\\|([^)]*)\\)+")
+	 (endfirstword (string-match a-whitespace string))
+	 (firstword (substring string 0 endfirstword))
+	 (reststring (and endfirstword
+			  (substring string (match-end 0))))
+	 (words (let ((res (try-completion firstword alist)))
+		  (cond
+		   ((eq res t) string)
+		   (res)
+		   (t string))))	;+++ Buggfix. Inget error om []\->{}|
+	 (endfirstwords (string-match a-whitespace words))
+	 (firstwords (substring words 0 endfirstwords))
+	 (restlist (mapcar
+		    (function
+		     (lambda (part)
+		       (cond
+			((string-match a-whitespace
+				       (car part))
+			 (list (substring (car part) (match-end 0))))
+			((list "")))))
+		    alist)))
+    (if	(= (length reststring) 0)
+	words
+      (concat (if (> (length firstwords) (length firstword))
+		  firstwords
+		firstword)
+	      " " (lyskom-try-complete-partials reststring
+						restlist)))))	 
+
+					  
+;;; Old stuff:
+;;
+;; The functions below are slowly being replaced by the functions above.
+;; i.e. when they are no longer used in the client.
 
 
 ;;; ================================================================
@@ -352,36 +539,7 @@ The variable that the name is tested against is the locally bound initial."
   "Returns a list of the name (a string) in CONF-STAT."
   (list (conf-stat->name stat)))
 
-(defun lyskom-try-complete-partials (string alist)
-  "Returns the longest string matching STRING.
-Where every word matches the corresponding word in the car part of ALIST.
-parst matching ([^)]) in string and alist are disgarded."
-  (let* ((a-whitespace "\\([ \t]\\|([^)]*)\\)+")
-	 (endfirstword (string-match a-whitespace string))
-	 (firstword (substring string 0 endfirstword))
-	 (reststring (and endfirstword
-			  (substring string (match-end 0))))
-	 (words (or (try-completion firstword alist)
-		    string))		;+++ Buggfix. Inget error om []\->{}|
-	 (endfirstwords (string-match a-whitespace words))
-	 (firstwords (substring words 0 endfirstwords))
-	 (restlist (mapcar
-		    (function
-		     (lambda (part)
-		       (cond
-			((string-match a-whitespace
-				       (car part))
-			 (list (substring (car part) (match-end 0))))
-			((list "")))))
-		    alist)))
-    (if	(= (length reststring) 0)
-	words
-      (concat (if (> (length firstwords) (length firstword))
-		  firstwords
-		firstword)
-	      " " (lyskom-try-complete-partials reststring
-						restlist)))))
-	
+;; lyskom-try-complete-partials used in the new version also.
 
 (defun lyskom-complete-verify-type (conf-stat
 				    kom-queue handler prompt type new empty
