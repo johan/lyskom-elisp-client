@@ -1,8 +1,45 @@
+2003-04-06  David Byers  <byers@lysator.liu.se>
+
+	Cosmetic fix:
+	* commands1.el (lyskom-list-conf-print): Don't make each line
+	clickable in its entirety. Just print things normally.
+
+	Handle conf-z-info more correctly in lyskom-format:
+	* lyskom-buttons.el (lyskom-default-button): Support conf-z-info
+	as argument for conf and pers buttons.
+
+	* lyskom-rest.el (lyskom-format-aux-help): When conf-z-info is
+	passed to %M, create a button.
+
+	Fix error message when trying to unread everything:
+	* review.el (lyskom-get-texts-globally): Added do-unread parameter.
+	(kom-unread-more): Pass do-unread to lyskom-get-texts-by-to.
+	(lyskom-unread-by-to): Ditto.
+	(lyskom-get-texts-by-to): Added do-unread parameter to
+	lyskom-get-texts-by-to.
+
+	Fix bug 697:
+	* commands1.el (kom-jump): Treat REVIEW-FAQ-TREE like REVIEW-TREE.
+
+	* lyskom-rest.el (kom-view-next-text): Treat REVIEW-FAQ-TREE like
+	review when altering the read list, but not otherwise.
+	(lyskom-update-prompt): Treat REVIEW-FAQ-TREE like REVIEW-FAQ.
+
+	* commands2.el (lyskom-list-summary): Added REVIEW-FAQ-TREE and
+	REVIEW-TREE to if statement towards the end.
+
+	* vars.el.in (lyskom-review-types-list): Added REVIEW-FAQ-TREE.
+
+	* faqs.el (lyskom-present-unread-faqs): Pass t as review-tree
+	argument to lyskom-do-review-faq.
+	(lyskom-do-review-faq): Added argument review-tree.
+
 2003-04-05  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-highlight-has-no-presentation): Don't
+	highlight secret conferences.
 
 	* Changed my e-mail address to one I actually read.
-
-2003-04-05  David Byers  <byers@lysator.liu.se>
 
 	Fix bugs 951 and 952:
 	* Makefile: Echo x-ctext coding to all emacs lisp files created in

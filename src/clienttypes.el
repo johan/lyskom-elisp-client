@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.19 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.20 2003-04-06 20:23:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.19 2003-01-05 21:37:05 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.20 2003-04-06 20:23:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -55,6 +55,7 @@
 ;;;		    commands: kom-find-root-review, kom-review-tree
 ;;;   REVIEW-MARK - List of texts created by the review-mark command
 ;;;   REVIEW-FAQ  - List of texts created by kom-review-faq or similar
+;;;   REVIEW-FAQ-TREE  - Like REVIEW-TREE but for FAQs
 ;;;   COMM-IN     - Type containing the list of comments to a text
 ;;;   FOOTN-IN    - Type containing the list of footnotes to a text
 ;;;   CONF        - Basic type of unread in a conf.

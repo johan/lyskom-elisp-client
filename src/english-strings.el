@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.278 2003-04-05 20:41:24 byers Exp $
+;;;;; $Id: english-strings.el,v 44.279 2003-04-06 20:23:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.278 2003-04-05 20:41:24 byers Exp $"))
+              "$Id: english-strings.el,v 44.279 2003-04-06 20:23:14 byers Exp $"))
 
 
 ;;; ================================================================
@@ -883,6 +883,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-cant-read-letterbox . "You can't review texts to somebody else's mailbox.\n")
     (review-cant-read-empty . "The conference is empty.\n")
     (cant-review-everything . "You cannot review every text in LysKOM.\n")
+    (cant-unread-everything . "You cannot unread every text in LysKOM.\n")
 
     (more-than-one-root . "Text %#1n has more than one root.\n")
     (more-than-one-root-review . "\

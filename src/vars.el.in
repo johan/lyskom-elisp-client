@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.241 2003-04-05 20:41:26 byers Exp $
+;;;;; $Id: vars.el.in,v 44.242 2003-04-06 20:23:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.241 2003-04-05 20:41:26 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.242 2003-04-06 20:23:16 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4007,7 +4007,8 @@ environment variable for this, but it shouldn't be used if there is."
 (defconst lyskom-comment-types-list '(COMM-IN FOOTN-IN))
 (defconst lyskom-recpt-types-list '(RECPT CC-RECPT BCC-RECPT))
 (defconst lyskom-review-types-list '(REVIEW REVIEW-TREE
-                                            REVIEW-MARK REVIEW-FAQ))
+                                            REVIEW-MARK REVIEW-FAQ
+                                            REVIEW-FAQ-TREE))
 
 (eval-and-compile (provide 'lyskom-vars))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.178 2003-04-05 18:14:24 byers Exp $
+;;;;; $Id: commands1.el,v 44.179 2003-04-06 20:23:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.178 2003-04-05 18:14:24 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.179 2003-04-06 20:23:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2000,8 +2000,7 @@ See `kom-allow-incompleteness'."
 (defun lyskom-list-conf-print (conf-z)
   "Print a line of info about CONF-NO.
 If you are not member in the conference it will be flagged with an asterisk."
-  (lyskom-format-insert "%[%#1@%5#2:m %#3c %#2M%]\n"
-			(lyskom-default-button 'conf (conf-z-info->conf-no conf-z))
+  (lyskom-format-insert "%5#1m %#2c %#1M\n"
 			conf-z
                         (lyskom-list-conf-membership-char (conf-z-info->conf-no conf-z))))
 
@@ -3511,7 +3510,8 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'jump-from-text)))
   (cond ((and (null current-prefix-arg)
-              (eq 'REVIEW-TREE (read-info->type (read-list->first lyskom-reading-list))))
+              (or (eq 'REVIEW-TREE (read-info->type (read-list->first lyskom-reading-list)))
+                  (eq 'REVIEW-FAQ-TREE (read-info->type (read-list->first lyskom-reading-list)))))
          (lyskom-start-of-command 'kom-jump)
          (lyskom-format-insert 'jumping-from-text-review)
          (unwind-protect
