@@ -1,3 +1,8 @@
+Mon Sep  2 00:26:03 1991  Linus Tolke Y  (linus at lysator)
+
+	* review.el (kom-review-backward): Fixat s} att den skriver ut
+	  korrekta texter om huruvida vi l{ser fram}t eller bak}t.
+
 Sun Sep  1 18:03:44 1991  Linus Tolke Y  (linus at robin)
 
 	* commands1.el (kom-write-comment): Lagt till s} att vi visar
