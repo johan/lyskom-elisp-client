@@ -1,5 +1,8 @@
 Thu Sep  5 15:55:30 1991  Linus Tolke Y  (linus at lysator)
 
+	* lyskom-rest.el, vars.el, swedish-strings.el (kom-save-text): Nu
+	  kommer den ih}g default fil och dir.
+
 	* view-text.el (lyskom-print-text): Nu uppdaterar vi sk{rmen innan
 	  vi jobbar vidare med parsningen av cachen.
 
