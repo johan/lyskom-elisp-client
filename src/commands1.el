@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.54 1999-11-12 14:30:32 byers Exp $
+;;;;; $Id: commands1.el,v 44.55 1999-11-17 23:11:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.54 1999-11-12 14:30:32 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.55 1999-11-17 23:11:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -408,7 +408,6 @@ PERS-CONF-STAT: the conf-stat of the person being added.
 PERS-STAT: the pers-stat of the person being added.
 
 Optional MESSAGE-STRING is the message to print before making server call.
-
 Returns t if it was possible, otherwise nil."
   (if (or (null conf-conf-stat)
 	  (null pers-conf-stat))
@@ -464,26 +463,39 @@ Returns t if it was possible, otherwise nil."
                      priority where
                      membership-type)))))
 
-
 (defun lyskom-add-member-answer (answer conf-conf-stat pers-conf-stat)
   "Handle the result from an attempt to add a member to a conference."
   (if (null answer)
       (progn
 	(lyskom-insert-string 'nope)
-	(if (conf-type->rd_prot (conf-stat->conf-type conf-conf-stat))
-	    ;; The conference is protected. Tell the user to contact
-	    (let ((supervisorconf (blocking-do
-				   'get-conf-stat
-				   (conf-stat->supervisor conf-conf-stat))))
-	      (if supervisorconf
-		  (lyskom-format-insert 'is-read-protected-contact-supervisor
-					conf-conf-stat
-					supervisorconf)
-		(lyskom-format-insert 'cant-find-supervisor
-				      conf-conf-stat)))
-	  (lyskom-format-insert 'error-code
-				(lyskom-get-error-text lyskom-errno)
-				lyskom-errno)))
+        (let* ((errno lyskom-errno)
+               (is-supervisor (lyskom-is-supervisor (conf-stat->conf-no conf-conf-stat)
+                                               lyskom-pers-no))
+               (is-member (lyskom-is-member (conf-stat->conf-no conf-conf-stat)
+                                            (conf-stat->conf-no pers-conf-stat)))
+               (rd-prot (conf-type->rd_prot (conf-stat->conf-type conf-conf-stat))))
+
+
+          (cond (is-member
+                 (lyskom-format-insert 'add-already-member 
+                                       pers-conf-stat
+                                       conf-conf-stat))
+                ((and rd-prot is-supervisor)
+                 (lyskom-format-insert 'error-code (lyskom-get-error-text errno)))
+
+                (rd-prot (let ((supervisorconf (blocking-do
+                                              'get-conf-stat
+                                              (conf-stat->supervisor conf-conf-stat))))
+                         (if supervisorconf
+                             (lyskom-format-insert 'is-read-protected-contact-supervisor
+                                                   conf-conf-stat
+                                                   supervisorconf)
+                           (lyskom-format-insert 'cant-find-supervisor
+                                                 conf-conf-stat))))
+
+                (t (lyskom-format-insert 'error-code
+                                         (lyskom-get-error-text lyskom-errno)
+                                         lyskom-errno)))))
 
     (lyskom-insert-string 'done)
     ;;+++Borde {ndra i cachen i st{llet.

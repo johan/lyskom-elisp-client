@@ -10,6 +10,14 @@ eftersom den just nu inte kan användas i svar på asynkront anrop.
 * Den parsade strängen måste bort innan man anropar callback-funktionen.
 
 
+ispell-hooken rättar ärendet i bufferten men det blir inte rättat i
+den inskickade versionen av inlägget. KAnske.
+
+Om det kommer ett async-new-recipient och vi inte kan hitta lokalt
+textnummer i mottagaren, ignorera meddelandet. 
+
+
+
 Någon form at reply till importerade brev som använder mx-reply-to
 eller mx-to, mx-cc om de finns.
 

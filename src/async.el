@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.27 1999-11-08 14:39:51 byers Exp $
+;;;;; $Id: async.el,v 44.28 1999-11-17 23:11:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.27 1999-11-08 14:39:51 byers Exp $\n"))
+	      "$Id: async.el,v 44.28 1999-11-17 23:11:29 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -724,7 +724,9 @@ This call is used in response to a deleted text message"
       (when (and membership
                  (lyskom-visible-membership membership))
         (read-list-delete-text (text-stat->text-no text-stat) 
-                               lyskom-to-do-list)))
+                               lyskom-to-do-list)
+        (read-list-delete-text (text-stat->text-no text-stat) 
+                               lyskom-reading-list)))
 
     (lyskom-set-mode-line)))
                  
