@@ -1,3 +1,19 @@
+Fri Aug 23 00:39:03 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-view-text): Använd no-such-text-no istället
+ 	för no-such-text som felmeddelande när ett inlägg inte finns.
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): Sätt
+ 	ingen knapp på textnumret i no-such-text-no.
+
+	* async.el (lyskom-parse-async): Ändra i cachen om ett namn har
+ 	ändrats.
+
+Thu Aug 22 16:52:15 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* utilities.el (lyskom-unicase): Byt buffert till rätt
+ 	KOM-buffert.
+
 Thu Aug 22 08:50:20 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* startup.el (lyskom-clear-vars): Lade till lyskom-collate-table

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.9 1996-08-22 06:57:43 byers Exp $
+;;;;; $Id: english-strings.el,v 43.10 1996-08-23 10:38:11 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.9 1996-08-22 06:57:43 byers Exp $"))
+              "$Id: english-strings.el,v 43.10 1996-08-23 10:38:11 davidk Exp $"))
 
 
 
@@ -640,7 +640,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "today")
     (yesterday . "yesterday")
-    (no-such-text-no . "The article doesn't exist. (%#1n)\n")
+    (no-such-text-no . "The article doesn't exist. (%#1:n)\n")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 43.2 1996-08-22 06:58:16 byers Exp $
+;;;;; $Id: view-text.el,v 43.3 1996-08-23 10:38:30 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 43.2 1996-08-22 06:58:16 byers Exp $\n"))
+	      "$Id: view-text.el,v 43.3 1996-08-23 10:38:30 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -181,7 +181,7 @@ Note that this function must not be called asynchronously."
 		       (lyskom-follow-comments text-stat conf-stat mark-as-read
 					       priority build-review-tree))
 		   )
-	       (lyskom-format-insert 'no-such-text text-no)))))
+	       (lyskom-format-insert 'no-such-text-no text-no)))))
     todo))
 	  
 	  
