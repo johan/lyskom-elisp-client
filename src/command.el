@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.11 1997-09-22 08:35:01 byers Exp $
+;;;;; $Id: command.el,v 44.12 1997-10-12 10:31:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -327,6 +327,6 @@ chosen according to this"
    (when lyskom-slow-mode
      (buffer-enable-undo))))
 
-(provide 'lyskom-command)
+(eval-and-compile (provide 'lyskom-command))
 
 ;;; command.el ends here

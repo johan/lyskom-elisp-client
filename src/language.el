@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.10 1997-07-06 14:27:37 byers Exp $
+;;;;; $Id: language.el,v 44.11 1997-10-12 10:31:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -237,6 +237,6 @@ if 'lyskom-menu is not found."
            t)))
 
 			      
-(provide 'lyskom-language)
+(eval-and-compile (provide 'lyskom-language))
 
 ;;; language.el ends here

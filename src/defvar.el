@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: defvar.el,v 44.7 1997-10-11 13:26:15 byers Exp $
+;;;;; $Id: defvar.el,v 44.8 1997-10-12 10:31:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.7 1997-10-11 13:26:15 byers Exp $\n"
+  "$Id: defvar.el,v 44.8 1997-10-12 10:31:44 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -125,9 +125,6 @@ is saved before executing FORMS and restored when FORMS have finished."
 
          
 
-
-
-(if (not (fboundp 'def-kom-var))
 (defmacro def-kom-var (name value &rest args)
     "Define a variable with name NAME and initial value VALUE.
 Remaining args, ARGS may be
@@ -231,14 +228,14 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                  minibuffer
                                  widget-spec
                                  )))))))
-)
+
 
 (put 'def-kom-var 'edebug-form-spec
      '(&define name form &rest sexp))
 
 
 
-(provide 'lyskom-defvar)
+(eval-and-compile (provide 'lyskom-defvar))
 
 
 
