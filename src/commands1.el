@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.211 2004-02-22 15:48:25 byers Exp $
+;;;;; $Id: commands1.el,v 44.212 2004-02-22 16:30:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.211 2004-02-22 15:48:25 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.212 2004-02-22 16:30:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2042,19 +2042,20 @@ CASE-SENSITIVE is true, that conversion will not be performed.
 
 If the optional argument WHAT is 'person, only persons will be listed.
 If it is 'conf, only conferences will be listed."
-  (interactive (list (lyskom-read-string
-		      (lyskom-get-string 'search-re))
-		     current-prefix-arg
-		     (let ((sel (lyskom-a-or-b-or-c-p 'search-re-for-what
-                                                      '(search-re-confs
-                                                        search-re-persons
-                                                        search-re-all)
-                                                      'search-re-all)))
-                       (cond
-			((eq sel 'search-re-all) nil)
-			((eq sel 'search-re-persons) 'pers)
-			((eq sel 'search-re-confs) 'conf)
-			(t nil)))))
+  (interactive (let ((xwhat (let ((sel (lyskom-a-or-b-or-c-p 'search-re-for-what
+                                                             '(search-re-confs
+                                                               search-re-persons
+                                                               search-re-all)
+                                                             'search-re-all)))
+                              (cond
+                               ((eq sel 'search-re-all) nil)
+                               ((eq sel 'search-re-persons) 'pers)
+                               ((eq sel 'search-re-confs) 'conf)
+                               (t nil)))))
+                 (list (lyskom-read-string
+                        (lyskom-get-string 'search-re))
+                       current-prefix-arg
+                       xwhat)))
   (unless case-sensitive
     (setq regexp (lyskom-make-re-case-insensitive regexp)))
   (lyskom-format-insert  (cond
@@ -4110,22 +4111,15 @@ Arguments:
 (defun lyskom-read-cross-reference-and-get-aux-item ()
   "Query user about cross reference type and value, and return the
 corresponding aux-item."
-  (let* ((completions (list (cons (lyskom-get-string 'Conference) 'conf)
-                            (cons (lyskom-get-string 'Person) 'pers)
-                            (cons (lyskom-get-string 'Text) 'text)))
-         (completion-ignore-case t)
-         (type (cdr (lyskom-string-assoc
-                     (lyskom-completing-read
-                      (lyskom-get-string 'xref-type)
-                      (lyskom-maybe-frob-completion-table
-                       completions)
-                      nil
-                      t)
-                     completions)))
+  (let* ((type (lyskom-a-or-b-or-c-p 'xref-type
+                                     '(abc-conference
+                                       abc-person
+                                       abc-text)
+                                     nil))
          (obj nil)
          (char nil))
     (cond
-     ((eq type 'text)
+     ((eq type 'abc-text)
       (let ((prompt 'which-text-to-xref))
         (while (null obj)
           (setq obj (text-stat->text-no
@@ -4133,11 +4127,11 @@ corresponding aux-item."
                                   (lyskom-read-number prompt))))
           (setq prompt 'which-text-to-xref-err )))
       (setq char "T"))
-     ((eq type 'conf)
+     ((eq type 'abc-conference)
       (while (null obj)
         (setq obj (lyskom-read-conf-no 'which-conf-to-xref '(conf) nil nil t)))
       (setq char "C"))
-     ((eq type 'pers)
+     ((eq type 'abc-person)
       (while (null obj)
         (setq obj (lyskom-read-conf-no 'which-pers-to-xref '(pers) nil nil t)))
       (setq char "P")))
@@ -4148,49 +4142,6 @@ corresponding aux-item."
                                nil nil nil nil nil nil nil nil)
                               0
                               (format "%s%d" char obj)))))
-
-
-(defun lyskom-read-link ()
-  "Query user about link type and value, and return the corresponding
-link as a string."
-  (let* ((completions (list (cons (lyskom-get-string 'Conference) 'conf)
-                            (cons (lyskom-get-string 'Person) 'pers)
-                            (cons (lyskom-get-string 'Text) 'text)))
-         (completion-ignore-case t)
-         (type (cdr (lyskom-string-assoc
-                     (lyskom-completing-read
-                      (lyskom-get-string 'link-type)
-                      (lyskom-maybe-frob-completion-table
-                       completions)
-                      nil
-                      t)
-                     completions)))
-         (obj nil))
-    (cond
-     ((eq type 'text)
-      (let ((prompt 'which-text-to-link))
-        (while (null obj)
-          (setq obj (blocking-do 'get-text-stat
-                                 (lyskom-read-number prompt)))
-          (setq prompt 'which-text-to-link-err )))
-      (let* ((text-no (text-stat->text-no obj))
-             (text (blocking-do 'get-text text-no))
-	     (txt (text->decoded-text-mass text obj))
-	     (eos (string-match (regexp-quote "\n") txt))
-	     (subject (substring txt 0 eos)))
-	(format "<text %d: %s>" text-no subject)))
-     
-     ((eq type 'conf)
-      (while (null obj)
-        (setq obj (lyskom-read-conf-stat 'which-conf-to-link '(conf) nil nil t)))
-      (format "<möte %d: %s>" (conf-stat->conf-no obj)
-			   (conf-stat->name obj)))
-
-     ((eq type 'pers)
-      (while (null obj)
-        (setq obj (lyskom-read-conf-stat 'which-pers-to-link '(pers) nil nil t)))
-      (format "<person %d: %s>" (conf-stat->conf-no obj)
-			   (conf-stat->name obj))))))
 
 
 ;;; ================================================================

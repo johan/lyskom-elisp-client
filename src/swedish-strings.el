@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.365 2004-02-22 15:48:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.366 2004-02-22 16:31:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.365 2004-02-22 15:48:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.366 2004-02-22 16:31:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -987,7 +987,7 @@ Annat se \\[describe-mode] ---")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
     (cant-find-info-node . "Hittar inte info-bufferten")
 
-    (link-type . "Vad vill du länka till (inlägg, möte eller person)? ")
+    (link-type . "Vad vill du länka till? ")
     (which-text-to-link . "Lägg in länk till text nummer: ")
     (which-text-to-link-err . "Hittar inte texten. Lägg in länk till text nummer: ")
     (which-pers-to-link . "Lägg in länk till person: ")
@@ -1659,8 +1659,11 @@ Innehåll:    \"%#9s\"
     (Server . "Server")
     (server . "server")
     (servers . "servrar")
+    (abc-conference . "mMöte")
+    (abc-person . "pPerson")
+    (abc-text . "iInlägg")
 
-    (xref-type . "Vad vill du referera till (inlägg, möte eller person)? ")
+    (xref-type . "Vad vill du referera till? ")
     (which-text-to-xref . "Lägg till referens till text nummer: ")
     (which-text-to-xref-err . "Hittar inte texten. Lägg till referens till text nummer: ")
     (which-pers-to-xref . "Lägg till referens till person: ")

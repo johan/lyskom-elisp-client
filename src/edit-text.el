@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.116 2003-12-05 00:04:21 byers Exp $
+;;;;; $Id: edit-text.el,v 44.117 2004-02-22 16:31:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.116 2003-12-05 00:04:21 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.117 2004-02-22 16:31:00 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1382,8 +1382,43 @@ RECPT-TYPE is the type of recipient to add."
   (let ((item (lyskom-read-link)))
     (when item
       (insert item))))
-    
 
+
+
+(defun lyskom-read-link ()
+  "Query user about link type and value, and return the corresponding
+link as a string."
+  (let* ((type (lyskom-a-or-b-or-c-p 'link-type
+                                     '(abc-conference
+                                       abc-person
+                                       abc-text)
+                                     nil))
+         (obj nil))
+    (cond
+     ((eq type 'abc-text)
+      (let ((prompt 'which-text-to-link))
+        (while (null obj)
+          (setq obj (blocking-do 'get-text-stat
+                                 (lyskom-read-number prompt)))
+          (setq prompt 'which-text-to-link-err )))
+      (let* ((text-no (text-stat->text-no obj))
+             (text (blocking-do 'get-text text-no))
+	     (txt (text->decoded-text-mass text obj))
+	     (eos (string-match (regexp-quote "\n") txt))
+	     (subject (substring txt 0 eos)))
+	(format "<text %d: %s>" text-no subject)))
+     
+     ((eq type 'abc-conference)
+      (while (null obj)
+        (setq obj (lyskom-read-conf-stat 'which-conf-to-link '(conf) nil nil t)))
+      (format "<möte %d: %s>" (conf-stat->conf-no obj)
+			   (conf-stat->name obj)))
+
+     ((eq type 'abc-person)
+      (while (null obj)
+        (setq obj (lyskom-read-conf-stat 'which-pers-to-link '(pers) nil nil t)))
+      (format "<person %d: %s>" (conf-stat->conf-no obj)
+			   (conf-stat->name obj))))))
 
 
 (defun lyskom-edit-insert-aux-item (item)
