@@ -205,7 +205,7 @@ bilder för.
     skriver in parenteserna också. Problem uppstår till exempel om det
     finns två möten "(På) TV" och "(Gamla) TV-spel erfarenhetsutbyte".
     Om man skriver in "TV" så betraktas det inte som en exakt match.
-    FIX BY: 0.46-0.47
+    FIX BY: 0.46-0.47                           KLART!
 
     Man kan få oländiga loopar i completion. Just nu är det inte så
     lätt, men det går fortfarande. Problemet uppstår då två teckern
@@ -490,7 +490,7 @@ bilder för.
     till i servern som talar om för servern att inte garba ett inlägg.
     Det i sin tur kräver att man fixar dbck att forcera garb av inlägg
     med den här flaggan som inte borde ha den eller nåt sånt.
-    FIX BY: 0.46
+    FIX BY: 0.46                                    KLART!
 
 
 ** MARKERINGAR

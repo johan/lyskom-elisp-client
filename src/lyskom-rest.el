@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.72 1999-06-28 15:16:56 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.73 1999-06-28 16:09:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.72 1999-06-28 15:16:56 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.73 1999-06-28 16:09:58 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2089,29 +2089,33 @@ in lyskom-messages."
 ;;;                     Faces and colors
 ;;;
 
-(defun lyskom-beep (arg)
-  "Beep. ARG is how to beep. 
+(defun lyskom-beep (arg &optional optarg)
+  "Beep. ARG is how to beep. Optional OPTARG is a modifier. 
 nil means don't beep.
 t means beep once.
 A number means beep that number of times (.1 second delay between beeps).
 A string means start the command kom-audio-player with the string as argument.
-A symbol other than t means call it as a function."
+A symbol other than t means call it as a function.
+A list of pairs means OPTARG will be used as a key to look up the real
+  value of ARG. The special key t is used when OPTARG is not found."
   (cond ((null arg))
         ((eq t arg) (ding t))
         ((numberp arg) (while (> arg 0)
                          (ding t)
                          (sit-for kom-ding-pause-amount)
                          (setq arg (1- arg))))
-        ((stringp arg)
-         (condition-case nil
-             (start-process "audio" nil kom-audio-player arg)
-           (error nil)))
-        ((and (symbolp arg)
-              (fboundp arg))
+        ((stringp arg) (condition-case nil
+                           (start-process "audio" nil kom-audio-player arg)
+                         (error nil)))
+        ((and (symbolp arg) (fboundp arg))
          (condition-case nil
              (funcall arg)
            (error (message "Error in beep function")
                   (beep))))
+        ((and (listp arg)
+              (or (assq optarg arg)
+                  (assq t arg)))
+         (lyskom-beep (cdr (assq optarg arg)) optarg))
         (t (beep))))
 
 (defun lyskom-face-default-p (f1)

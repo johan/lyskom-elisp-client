@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.71 1999-06-28 13:45:35 byers Exp $
+;;;;; $Id: vars.el.in,v 44.72 1999-06-28 16:10:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.71 1999-06-28 13:45:35 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.72 1999-06-28 16:10:00 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -817,6 +817,10 @@ part is optional. If it is not specified, port 80 is assumed.")
 (def-kom-var kom-ansaphone-on nil
   "t if automatic replies to personal messages are in effect."
   local)
+
+(def-kom-var kom-silent-ansaphone nil
+  "*Non-nil if messages should not cause beeps when the ansaphone is on."
+  server)
 
 (def-kom-var kom-ansaphone-record-messages t
   "*t if messages are recorded while the ansaphone is on."
