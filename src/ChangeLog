@@ -1,3 +1,8 @@
+2005-01-12  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* english-strings.el (lyskom-en-mode-map): replaced reference to
+	lyskom-sv-mode-map with lyskom-en-mode-map.
+
 2005-01-12  David Byers  <byers@lysator.liu.se>
 
 	* check-strings.el (lcs-check-strings): If environment variable
