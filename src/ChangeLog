@@ -1,3 +1,8 @@
+2003-07-23  Per Cederqvist  <ceder@ingate.com>
+
+	* swedish-strings.el (lyskom-message): Fixed spelling error in
+	Swedish 'pers-is-member-of-rcpt: inlågg => inlägg.
+
 2003-07-21  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 708:
