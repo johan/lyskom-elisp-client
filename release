@@ -1,5 +1,28 @@
 #!/bin/sh
 
+E1=`echo -e "FOO\c"`
+E2=`echo -n "FOO"`
+E3=`echo "FOO\c"`
+
+if [ $E3 = "FOO" ] ; then
+    epre=""
+    epost="\c"
+elif [ $E2 = "FOO" ] ; then
+    epre="-n"
+    epost=""
+elif   [ $E1 = "FOO" ] ; then
+    epre="-e"
+    epost="\c"
+else
+    epre=""
+    epost=">>>"
+fi
+
+xecho ()
+{
+    echo $epre "$*$epost"
+}
+
 ask ()
 {
     if [ "$2" = "yes" -o "$2" = "ja" ] ; then
@@ -12,7 +35,7 @@ ask ()
     
     ask1=""
     while [ ! "$ask1" ] ; do
-        echo $1 "(y/n)? [$2] \c"
+        xecho $1 "(y/n)? [$2] "
         read ans
         case "$ans" in
             [yYjJ]*) yes="X"; no=""; ask1="X" ;;
@@ -32,7 +55,7 @@ askedit ()
 }
 
 
-echo "Versionsnummer: \c"
+xecho "Versionsnummer: "
 read version
 echo "Förbereder release av elispklient version $version"
 
@@ -113,7 +136,7 @@ done
 revision=""
 ask "Vill du göra en numerisk revision för alla filer" ja
 if [ "$yes" ] ; then
-    echo "Revision: \c"
+    xecho "Revision: \c"
     read revision
 fi
         
@@ -167,7 +190,7 @@ if [ "$revision" ] ; then
     fi
 fi
 
-echo "Revisionens symboliska tag: [$tag] \c"
+xecho "Revisionens symboliska tag: [$tag] "
 read ans
 case $ans in
     "") ;;
@@ -185,7 +208,9 @@ else
 fi
 
 echo "Bygger release i src/"
-if ( cd src; set -x; make release) ; then
+if ( cd src; set -x; make release ) ; then
+    echo "Det verkar som om det gick att göra release. Beklagar."
+else
     echo "Det gick kanske inte att göra release. Någonting kan vara galet."
     echo "Eventuellt måste du göra det manuellt istället."
 fi
