@@ -1,7 +1,9 @@
 2001-08-16  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* edit-text.el (kom-edit-add-link): new. Inserts a link
+	* edit-text.el (kom-edit-insert-link): new. Inserts a link
 	in the text you are writing.
+	(lyskom-edit-mode): add documentation for
+	kom-edit-add-cross-reference and kom-edit-insert-link.
 
 	* commands1.el (lyskom-read-link): new. Returns a link to a text,
 	person or conference.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.81 2001-08-15 23:41:09 qha Exp $
+;;;;; $Id: edit-text.el,v 44.82 2001-08-16 15:29:28 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.81 2001-08-15 23:41:09 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.82 2001-08-16 15:29:28 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -402,9 +402,11 @@ Commands:
 
 \\[kom-edit-add-recipient]   asks for another recipient and adds him to the header.
 \\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
+\\[kom-edit-add-cross-reference]   asks for what to refer to and adds a cross reference to it.
 
 \\[kom-edit-insert-commented]   inserts the commented or footnoted text.
 \\[kom-edit-insert-text]   inserts the shown text, you tell the number.
+\\[kom-edit-insert-link]   asks for what to link to and inserts a link to it.
 
 Even though this is a minor mode, it's not intended to be turned on and off,
 so it's not as clean as it ought to be."
@@ -1309,7 +1311,7 @@ RECPT-TYPE is the type of recipient to add."
                             nil nil nil nil nil nil nil nil)
                            0 "")))
 
-(defun kom-edit-add-link ()
+(defun kom-edit-insert-link ()
   (interactive)
   (let ((item (lyskom-read-link)))
     (when item
