@@ -1,3 +1,14 @@
+2000-03-16  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el: Renamed set-lp--entry-pri-and-pos to
+	lp--set-entry-pri-and-pos.
+	(lyskom-change-membership-priority): Don't lyskom-sort-to-do-list
+	since lyskom-sort-membership will.
+	(lyskom-change-membership-position): Don't lyskom-sort-to-do-list
+	since lyskom-update-membership-positions will.
+	(lp--update-membership): Don't update position or priority unless
+	necessary. 
+
 2000-03-15  David Byers  <davby@ida.liu.se>
 
 	* option-edit.el (lyskom-create-widget): Use `-' and not `!' in

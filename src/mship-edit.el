@@ -59,7 +59,7 @@
 ;;   the prompt.
 ;; - Sort the membership list.
 ;;
-;; Done in set-lp--entry-pri-and-pos and lp--update-membership.
+;; Done in lp--set-entry-pri-and-pos and lp--update-membership.
 ;;
 ;; TODO UNSORTED
 ;; Keep the unread counter updated. Hook in lyskom-mark-as-read
@@ -113,7 +113,8 @@ This function does not tell the server about the change."
       (cond
        ((and (>= old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
-        (lyskom-sort-to-do-list))
+        ; Don't (lyskom-sort-to-do-list) since lyskom-sort-membership will.
+        )
 
        ((and (< old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
@@ -133,14 +134,13 @@ This function does not tell the server about the change."
 This function does not tell the server about the change."
 
   ;; FIXME: We have to update all positions in the membership 
-  ;; list, not just the one we changed.
+  ;; FIXME: list, not just the one we changed.
 
   (let ((mship (lyskom-get-membership conf-no t)))
     (when mship
       (set-membership->position mship new-position)
       (setq lyskom-membership (lyskom-move-in-list mship lyskom-membership new-position))
-      (lyskom-update-membership-positions)
-      (lyskom-sort-to-do-list))))
+      (lyskom-update-membership-positions))))
 
 
 ;;; ============================================================
@@ -178,103 +178,124 @@ only recomputed if the window width changes."
 
 (defun lp--format-insert-entry (entry)
   "Format ENTRY and insert it into the current buffer at point."
-  (lyskom-format-insert-at-point 
-   "%#1D"
-   (lyskom-create-defer-info 'get-conf-stat
-                             (membership->conf-no (lp--entry->membership entry))
-                             'lp--format-entry
-                             (point-marker)
-                             (length lyskom-defer-indicator)
-                             "%#1s"
-                             entry))
+  (let* ((mship-conf-no (membership->conf-no (lp--entry->membership entry)))
+         (adder-conf-no (membership->created-by (lp--entry->membership entry)))
+         (mship-conf-stat (cache-get-conf-stat mship-conf-no))
+         (adder-conf-stat (cache-get-conf-stat adder-conf-no)))
 
-  (when (or (eq (lp--entry->state entry) 'expanded)
-            (and (not (eq (membership->created-by (lp--entry->membership entry))
-                          lyskom-pers-no))
-                 (not (eq (membership->created-by (lp--entry->membership entry)) 0))
-                 (not (eq (lp--entry->state entry) 'contracted))))
-    (lyskom-insert-at-point "\n        ")
-    (lyskom-format-insert-at-point 
-     "%#1D"
-     (lyskom-create-defer-info 'get-conf-stat
-                               (membership->created-by (lp--entry->membership entry))
-                               'lp--format-entry-expansion
-                               (point-marker)
-                               (length lyskom-defer-indicator)
-                               "%#1s"
-                               entry))))
+    (if (null mship-conf-stat)
+        (lyskom-format-insert-at-point 
+         "%#1D"
+         (lyskom-create-defer-info 'get-conf-stat
+                                   mship-conf-no
+                                   'lp--format-entry
+                                   (point-marker)
+                                   (length lyskom-defer-indicator)
+                                   "%#1s"
+                                   entry))
+      (lp--format-entry mship-conf-stat entry))
+
+    (when (or (eq (lp--entry->state entry) 'expanded)
+              (and (not (eq (membership->created-by (lp--entry->membership entry))
+                            lyskom-pers-no))
+                   (not (eq (membership->created-by (lp--entry->membership entry)) 0))
+                   (not (eq (lp--entry->state entry) 'contracted))))
+      (lyskom-insert-at-point "\n        ")
+      (if (null adder-conf-stat)
+          (lyskom-format-insert-at-point 
+           "%#1D"
+           (lyskom-create-defer-info 'get-conf-stat
+                                     adder-conf-no
+                                     'lp--format-entry-expansion
+                                     (point-marker)
+                                     (length lyskom-defer-indicator)
+                                     "%#1s"
+                                     entry))
+        (lp--format-entry-expansion adder-conf-stat entry)))))
 
 
 (defun lp--format-entry (conf-stat defer-info)
-  (let* ((entry (defer-info->data defer-info))
-         (un (lyskom-find-unread (membership->conf-no
-                                  (lp--entry->membership entry)))))
-    (lyskom-replace-deferred
-     defer-info
-     (lyskom-format
-      (lp--compute-format-string)
-      (if (lp--entry->selected entry) ?* ?\ )
-      (if (zerop (membership->priority
-                  (lp--entry->membership entry)))
-          "-"
-        (int-to-string (membership->priority
-                        (lp--entry->membership entry))))
-      (if (null conf-stat)
-          (lyskom-format 'conference-does-not-exist 
-                         (membership->conf-no 
-                          (lp--entry->membership entry)))
-        conf-stat)
-      (lyskom-return-date-and-time
-       (membership->last-time-read (lp--entry->membership entry))
-       'time-yyyy-mm-dd)
-      (if un (int-to-string un) "")
+  (let ((entry nil))
+    (if (lyskom-lp--entry-p defer-info)
+        (progn (setq entry defer-info)
+               (setq defer-info nil))
+      (setq entry (defer-info->data defer-info)))
+    (let* ((un (lyskom-find-unread (membership->conf-no
+                                    (lp--entry->membership entry))))
+           (string (lyskom-format
+                    (lp--compute-format-string)
+                    (if (lp--entry->selected entry) ?* ?\ )
+                    (if (zerop (membership->priority
+                                (lp--entry->membership entry)))
+                        "-"
+                      (int-to-string (membership->priority
+                                      (lp--entry->membership entry))))
+                    (if (null conf-stat)
+                        (lyskom-format 'conference-does-not-exist 
+                                       (membership->conf-no 
+                                        (lp--entry->membership entry)))
+                      conf-stat)
+                    (lyskom-return-date-and-time
+                     (membership->last-time-read (lp--entry->membership entry))
+                     'time-yyyy-mm-dd)
+                    (if un (int-to-string un) "")
                     
-      (if (membership-type->invitation (membership->type (lp--entry->membership entry))) ?I ?.)
-      (if (membership-type->secret (membership->type (lp--entry->membership entry))) ?H ?.)
-      (if (membership-type->passive (membership->type (lp--entry->membership entry))) ?P ?.)
-      (if (and conf-stat (eq lyskom-pers-no (conf-stat->supervisor conf-stat))) ?O ?\ )
-      (lyskom-default-button 'prioritize-flag-menu
-                             (list entry 'invitation)
-                             (list "%#1s (%=#2M)"
-                                   (lyskom-get-string 'Invitation-mt-type)
-                                   (membership->conf-no
-                                    (lp--entry->membership entry))))
-      (lyskom-default-button 'prioritize-flag-menu
-                             (list entry 'secret)
-                             (list "%#1s (%=#2M)"
-                                   (lyskom-get-string 'Secret-mt-type)
-                                   (membership->conf-no
-                                    (lp--entry->membership entry))))
-      (lyskom-default-button 'prioritize-flag-menu
-                             (list entry 'passive)
-                             (list "%#1s (%=#2M)"
-                                   (lyskom-get-string 'Passive-mt-type)
-                                   (membership->conf-no
-                                    (lp--entry->membership entry))))
-      '(lp--unread t)))))
+                    (if (membership-type->invitation (membership->type (lp--entry->membership entry))) ?I ?.)
+                    (if (membership-type->secret (membership->type (lp--entry->membership entry))) ?H ?.)
+                    (if (membership-type->passive (membership->type (lp--entry->membership entry))) ?P ?.)
+                    (if (and conf-stat (eq lyskom-pers-no (conf-stat->supervisor conf-stat))) ?O ?\ )
+                    (lyskom-default-button 'prioritize-flag-menu
+                                           (list entry 'invitation)
+                                           (list "%#1s (%=#2M)"
+                                                 (lyskom-get-string 'Invitation-mt-type)
+                                                 (membership->conf-no
+                                                  (lp--entry->membership entry))))
+                    (lyskom-default-button 'prioritize-flag-menu
+                                           (list entry 'secret)
+                                           (list "%#1s (%=#2M)"
+                                                 (lyskom-get-string 'Secret-mt-type)
+                                                 (membership->conf-no
+                                                  (lp--entry->membership entry))))
+                    (lyskom-default-button 'prioritize-flag-menu
+                                           (list entry 'passive)
+                                           (list "%#1s (%=#2M)"
+                                                 (lyskom-get-string 'Passive-mt-type)
+                                                 (membership->conf-no
+                                                  (lp--entry->membership entry))))
+                    '(lp--unread t))))
+      (if defer-info
+          (lyskom-replace-deferred defer-info string)
+        (lyskom-insert-at-point string)))))
 
 
 (defun lp--format-entry-expansion (conf-stat defer-info)
-  (let* ((entry (defer-info->data defer-info))
-        (membership (lp--entry->membership entry)))
-    (lyskom-replace-deferred
-     defer-info
-     (if (and (null conf-stat)
-              (eq 0 (time->sec (membership->created-at membership)))
-              (eq 0 (time->min (membership->created-at membership)))
-              (eq 0 (time->mon (membership->created-at membership)))
-              (eq 1 (time->mday (membership->created-at membership)))
-              (eq 70 (time->year (membership->created-at membership))))
-         (lyskom-format "Ingen information om när medlemskapet skapades")
-     (lyskom-format "%#1s %#2s av %#3P"
-                    (if (membership-type->invitation (membership->type (lp--entry->membership entry)))
-                        "Inbjuden" "Adderad")
-                    (lyskom-return-date-and-time
-                     (membership->created-at (lp--entry->membership entry)))
-                    (if (null conf-stat)
-                        (lyskom-format 'person-does-not-exist
-                                       (membership->created-by (lp--entry->membership entry)))
-                      conf-stat))))))
+  (let ((entry nil))
+    (if (lyskom-lp--entry-p defer-info)
+        (progn (setq entry defer-info)
+               (setq defer-info nil))
+      (setq entry (defer-info->data defer-info)))
+
+  (let* ((membership (lp--entry->membership entry))
+         (string 
+          (if (and (null conf-stat)
+                   (eq 0 (time->sec (membership->created-at membership)))
+                   (eq 0 (time->min (membership->created-at membership)))
+                   (eq 0 (time->mon (membership->created-at membership)))
+                   (eq 1 (time->mday (membership->created-at membership)))
+                   (eq 70 (time->year (membership->created-at membership))))
+              (lyskom-format "Ingen information om när medlemskapet skapades")
+            (lyskom-format "%#1s %#2s av %#3P"
+                           (if (membership-type->invitation (membership->type (lp--entry->membership entry)))
+                               "Inbjuden" "Adderad")
+                           (lyskom-return-date-and-time
+                            (membership->created-at (lp--entry->membership entry)))
+                           (if (null conf-stat)
+                               (lyskom-format 'person-does-not-exist
+                                              (membership->created-by (lp--entry->membership entry)))
+                             conf-stat)))))
+    (if defer-info
+        (lyskom-replace-deferred defer-info string)
+      (lyskom-insert-at-point string)))))
 
 
 (defun lp--print-entry (entry)
@@ -739,10 +760,12 @@ Forces a mode line update"
     (let ((saved-pos (lp--entry-position entry)))
       (set-buffer lyskom-buffer)
       (let ((mship (lp--entry->membership entry)))
-        (lyskom-change-membership-position (membership->conf-no mship)
-                                           saved-pos)
-        (lyskom-change-membership-priority (membership->conf-no mship)
-                                           (lp--entry->priority mship))
+        (unless (eq old-pos saved-pos)
+          (lyskom-change-membership-position (membership->conf-no mship)
+                                             saved-pos))
+        (unless (eq old-pri (lp--entry->priority mship))
+          (lyskom-change-membership-priority (membership->conf-no mship)
+                                             (lp--entry->priority mship)))
         (cond ((and (>= old-pri lyskom-session-priority)
                     (< (membership->priority mship) lyskom-session-priority))
                (when (eq lyskom-current-conf (membership->conf-no mship))
@@ -832,7 +855,7 @@ SELECT specifies new select."
 ;;; ============================================================
 ;; Reprioritization functions
 
-(defun set-lp--entry-pri-and-pos (entry priority position)
+(defun lp--set-entry-pri-and-pos (entry priority position)
   "Set the priority of ENTRY to PRIORITY and the position to POSITION.
 If PRIORITY or POSITION is nil, the parameter is ignored.
 If the position changes, lp--move-entry is called.
@@ -847,6 +870,7 @@ lp--update-membership is called automatically before this function exits."
     (when (and position (not (eq position old-pos)))
       (lp--move-entry entry position)
       (setq need-redraw nil))
+    (sit-for 0)
     (lp--update-membership entry old-pri old-pos)
     (when need-redraw (lp--redraw-entry entry))))
 
@@ -862,7 +886,7 @@ lp--update-membership is called automatically before this function exits."
            ((null entries) (error "No entries selected"))
            (t (mapcar 
                (lambda (entry)
-                 (set-lp--entry-pri-and-pos
+                 (lp--set-entry-pri-and-pos
                   entry priority
                   (lp--entry-position (lp--find-new-position entry nil pos))))
                entries))))))
@@ -894,7 +918,7 @@ possible in the list."
      (mapcar (lambda (entry)
                (let ((new-pos (lp--entry-position
                                (lp--find-new-position entry priority))))
-                 (set-lp--entry-pri-and-pos entry priority new-pos)))
+                 (lp--set-entry-pri-and-pos entry priority new-pos)))
              entries))))
 
 (defun lp--bump-priority (amount)
@@ -922,7 +946,7 @@ possible in the list."
      (cond ((null cur) (error "Nor on an entry"))
            (t (let ((new-pos (lp--entry-position 
                               (lp--find-new-position cur (+ pri amount)))))
-                (set-lp--entry-pri-and-pos cur new-pri new-pos)))))))
+                (lp--set-entry-pri-and-pos cur new-pri new-pos)))))))
 
 
 (defun lp--increase-priority (arg)
@@ -947,11 +971,11 @@ possible in the list."
            (t (if (/= (lp--entry->priority cur)
                       (lp--entry->priority prev))
                   (progn
-                    (set-lp--entry-pri-and-pos cur
+                    (lp--set-entry-pri-and-pos cur
                                                (lp--entry->priority prev)
                                                nil)
                     (lp--redraw-entry cur))
-                (set-lp--entry-pri-and-pos cur nil (1- pos))))))))
+                (lp--set-entry-pri-and-pos cur nil (1- pos))))))))
 
 (defun lp--move-down ()
   "Move the current entry up down notch."
@@ -965,11 +989,11 @@ possible in the list."
            (t (if (/= (lp--entry->priority cur)
                       (lp--entry->priority prev))
                   (progn
-                    (set-lp--entry-pri-and-pos cur
+                    (lp--set-entry-pri-and-pos cur
                                                (lp--entry->priority prev)
                                                nil)
                     (lp--redraw-entry cur))
-                (set-lp--entry-pri-and-pos cur nil (1+ pos))))))))
+                (lp--set-entry-pri-and-pos cur nil (1+ pos))))))))
 
 
 
@@ -1069,6 +1093,11 @@ entry with an adjacent priority."
        (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
       (lp--redraw-entry entry))))
 
+(defun lp--quit ()
+  "Remove the membership buffer and quit"
+  (interactive)
+  (lyskom-undisplay-buffer))
+
 
 
 (defun lp--scroll-advice (fn)
@@ -1127,6 +1156,7 @@ entry with an adjacent priority."
   (define-key lp--mode-map (kbd "I") 'lp--toggle-invitation)
   (define-key lp--mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lp--mode-map (kbd "P") 'lp--toggle-passive)
+  (define-key lp--mode-map (kbd "C-c C-c") 'lp--quit)
 
   (define-key lp--mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lp--mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
@@ -1175,7 +1205,8 @@ entry with an adjacent priority."
   "Pop up a buffer to manage memberships in"
   (interactive)
   (set-buffer (lp--create-buffer))
-  (lp--mode))
+  (lp--mode)
+  (lp--first-entry))
 
 (defun lp--mode ()
   "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
