@@ -17,6 +17,16 @@ Att göra i elisp-klienten
 
 ** OSORTERADE
 
+    LysKOM fungerar inte i XEmacs i tty-mode. No such face:
+    kom-active-face. Antingen är det fixat eller så är det inte fel i
+    20.2.
+
+    Om förbindelsen bryts så får man args out of range ibland.
+
+    Om förbindelsen bryts i en buffert så ofungerar scrollningen en
+    gång i en annan buffert. Man trycker SPC och får inte nästa
+    kommando, utan hamnar överst i bufferten.
+
     Om man byter buffert med C-x b till den sista aktiva KOM-bufferten
     så tycker Nästa LysKOM att det inte finns fler aktiva
     KOM-sessioner. Funktionen verkar vara lite för känslig för hur
@@ -25,7 +35,7 @@ Att göra i elisp-klienten
 
     Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
     och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
-    blev det rätt. 
+    blev det rätt. Det verkar som om window-width ljuger.
 
     Race condition när man skickar in inlägg. Fönsterkonfigurationen
     återställs asynkront, och det går att trycka C-c C-c k
@@ -43,12 +53,6 @@ Att göra i elisp-klienten
     läst dem. Om det är så, så är det *inte* bra, för att om man
     kommenterar så måste inlägget hämtas igen. [DET VERKAR INTE VARA
     SÅ]
-
-
-** MULE-RELATERAT SKRÄP
-
-    Vi har kanske inte satt enable-multibyte-characters till nil i
-    minibufferten. 
 
 
 ** VIKTIGA BUGGAR
@@ -99,7 +103,11 @@ Att göra i elisp-klienten
 
 ** COMPLETING READ
 
-    I LysKOM verkar "Da " expanderas till "D", vilket är Helt Fel.
+    Om man skriver in ett namn exakt, modulo parenteser, borde det
+    *antagligen* accepteras som exakt. Jus nu krävs det att man
+    skriver in parenteserna också. Problem uppstår till exempel om det
+    finns två möten "(På) TV" och "(Gamla) TV-spel erfarenhetsutbyte".
+    Om man skriver in "TV" så betraktas det inte som en exakt match.
 
     Man kan få oländiga loopar i completion. Just nu är det inte så
     lätt, men det går fortfarande. Problemet uppstår då två teckern
@@ -160,24 +168,13 @@ Att göra i elisp-klienten
     Tommy Persson får LysKOM protocol error. Det kan bero på strulande
     modem. Tyvärr var det någon annan som också fick det, som kanske
     inte sitter bakom modem. Nu fick Kågedal också problemet, men
-    fortfarande kan ingen reproducera det. 
+    fortfarande kan ingen reproducera det. Nu har jag också fått det. 
 
 
 
 * FÖRBÄTTRINGAR
 
 ** LÄSA INLÄGG
-
-    Problem: När ett inlägg är längre än en skärm så är det jobbigt
-    att tappa bort sig när inlägget är slut och man scrollar mindre än
-    en skärmlängd. Lösningsförslag: Använd Emacs' kod för att blinka
-    parentesmatchning (finns i simple.el(blink-matching-open)) för att
-    blinka på första kolumnen i raden som var längst ner på skärmen
-    innan man tryckte space. Från Teddy (inlägg 2495321.)
-
-        * En testimplementation av detta finns nu och fungerar rätt så
-          bra. Att använda simple.el var dock inte en bra idé.
-
 
     Det vore skoj om lyskom.el kunde, som jag har för mig att någon
     föreslog en gång, parsa fotnoter av det där slaget [sed-mönster
@@ -189,11 +186,8 @@ Att göra i elisp-klienten
 
         * Krävs inkrokningar view-text.el för att inte skriva ut att
           det finns en fotnot.
-
         * Krävs mer flexibel formatmarkering.
-
         * Krävs att man hämtar fotnoter innan man visar inlägget.
-
         * Troligtvis är det bättre att använda aux-items för detta.
 
 
@@ -320,7 +314,7 @@ Att göra i elisp-klienten
     Har detta att göra med lite för optimistisk cache att göra? Kanske
     bör man läsa om person-staten innan man varnar för lapp på dörren?
 
-    Reentrant blocking-do [FINNS, MEN ANVÄNDS INTE]
+    Använd blocking.el som innehåller en reentrant blocking-do.
 
 
 ** FOTNOTER
@@ -362,6 +356,9 @@ Att göra i elisp-klienten
     till i servern som talar om för servern att inte garba ett inlägg.
     Det i sin tur kräver att man fixar dbck att forcera garb av inlägg
     med den här flaggan som inte borde ha den eller nåt sånt.
+
+    Implementera aux-items på medlemskap. En iten skulle vara att
+    medlemskapet egentligen är en inbjudan.
 
 
 ** MARKERINGAR

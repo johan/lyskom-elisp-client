@@ -1,5 +1,5 @@
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.18 1997-11-30 17:19:19 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.19 1997-12-28 19:16:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.18 1997-11-30 17:19:19 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.19 1997-12-28 19:16:33 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -639,7 +639,9 @@ This is a LysKOM button action."
 (defun lyskom-button-open-email (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and open TEXT as an e-mail address.
 This is a LysKOM button action."
-  (mail nil text))
+  (if (fboundp 'compose-mail)
+      (compose-mail text)
+    (mail nil text)))
 
 (defun lyskom-button-copy-url (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.

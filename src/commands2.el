@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.23 1997-12-04 20:39:34 byers Exp $
+;;;;; $Id: commands2.el,v 44.24 1997-12-28 19:16:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.23 1997-12-04 20:39:34 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.24 1997-12-28 19:16:21 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -796,24 +796,6 @@ on one line."
 		  (setq len 0)
 		(++ r))))
 	  (read-list->nth lyskom-reading-list r)))))))
-
-;; This function is commented out untile we might implement marks in a
-;; new way. But it works as it is.
-
-;;(def-kom-command kom-list-marks (&optional mark)
-;;  "List a summary of marked texts with mark MARK."
-;;  (interactive (list (or (and current-prefix-arg
-;;			      (prefix-numeric-value current-prefix-arg))
-;;			 (lyskom-read-num-range
-;;			  1 255
-;;			  (lyskom-get-string 'what-mark-to-list)))))
-;;  (let ((texts (delq nil
-;;		     (mapcar (function
-;;			      (lambda (x) (and (= (elt (cdr x) 1) mark)
-;;					       (elt (cdr x) 0))))
-;;			     (blocking-do 'get-marks)))))
-;;    (lyskom-list-summary texts)
-;;    (lyskom-format-insert 'you-have-marks (length texts) mark)))
 
 
 (defun lyskom-list-summary (texts)

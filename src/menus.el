@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.16 1997-10-12 10:31:48 byers Exp $
+;;;;; $Id: menus.el,v 44.17 1997-12-28 19:16:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,16 +32,17 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.16 1997-10-12 10:31:48 byers Exp $\n"))
+	      "$Id: menus.el,v 44.17 1997-12-28 19:16:35 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
 (lyskom-external-function add-submenu)
 
 
-(defvar lyskom-current-menu-category nil
-  "Category of menus currently used in buffer")
-(make-variable-buffer-local 'lyskom-current-menu-category)
+(def-kom-var lyskom-current-menu-category nil
+  "Category of menus currently used in buffer"
+  local)
+
 
 (defvar lyskom-menu-template
   '((menu read
@@ -54,6 +55,11 @@
 	   (item kom-review-tree)
 	   (item kom-find-root)
            (item kom-find-root-review)
+           (item kom-review-clear)
+           (hline marks-separator)
+           (item kom-list-marks)
+           (item kom-review-marked-texts)
+           (item kom-review-all-marked-texts)
            (item kom-review-clear)
 	   (hline jump-separator)
 	   (item kom-jump)
@@ -102,13 +108,18 @@
   '((menu lyskom
 	  ((item kom-ispell-message)
            (item kom-edit-send)
-;	   (item kom-edit-send-anonymous)
 	   (hline reciever-separator)
 	   (item kom-edit-add-recipient)
 	   (item kom-edit-add-copy)
+           (item kom-edit-add-bcc)
+           (item kom-edit-move-text)
+           (item kom-edit-add-cross-reference)
+           (hline special-separator)
+           (item kom-edit-add-no-comments)
+           (item kom-edit-add-personal-comments)
+           (item kom-edit-add-read-confirm-request)
 	   (hline comment-separator)
 	   (item kom-edit-show-commented)
-;	   (item kom-edit-insert-commented)
 	   (hline send-separator)
 	   (item kom-edit-quit))))
   "The menus for editing LysKOM messages.")
@@ -120,20 +131,11 @@
 (defvar lyskom-menu nil
   "A keymap describing the LysKOM top menu.")
 
-;(when (not lyskom-menu) 
-;  (setq lyskom-menu (make-sparse-keymap)))
-
 (defvar lyskom-edit-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
 
-;(when (not lyskom-edit-menu)
-;  (setq lyskom-edit-menu (make-sparse-keymap)))
-
 (defvar lyskom-popup-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
-
-;(when (not lyskom-popup-menu)
-;  (setq lyskom-popup-menu (make-sparse-keymap)))
 
 (defun lyskom-build-menus ()
   "Create menus according to LYSKOM-MENUS"
