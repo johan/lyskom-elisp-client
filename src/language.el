@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.28 2003-03-16 17:34:44 byers Exp $
+;;;;; $Id: language.el,v 44.29 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -280,6 +280,8 @@ if 'lyskom-menu is not found."
 (defun lyskom-set-language (language scope)
   "Set the current language to LANGUAGE.
 Returns non-nil on success and nil on failure."
+  (when (listp language) 
+    (setq language (lyskom-first-available-language language)))
   (cond ((not (assq language lyskom-languages))
          (lyskom-format-insert-before-prompt 'language-not-loaded
                                              (lyskom-language-name language))
@@ -295,6 +297,13 @@ Returns non-nil on success and nil on failure."
          (lyskom-update-prompt t)
          (lyskom-update-command-completion)
          t)))
+
+(defun lyskom-first-available-language (langs)
+  "Return the first language in LANGS that is supported."
+  (or (lyskom-traverse el (if (listp langs) langs (list langs))
+        (when (assq el lyskom-languages)
+          (lyskom-traverse-break el)))
+      (car (car lyskom-languages))))
 
 (eval-and-compile (provide 'lyskom-language))
 

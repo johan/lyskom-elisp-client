@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.182 2003-07-02 19:10:01 byers Exp $
+;;;;; $Id: commands1.el,v 44.183 2003-07-20 22:12:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.182 2003-07-02 19:10:01 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.183 2003-07-20 22:12:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -552,38 +552,53 @@ See `kom-membership-default-priority' and
   (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
                     (lyskom-read-conf-stat 
                      (lyskom-get-string 'where-to-add-self)
-                     '(all) nil "" t))))
-    (if (lyskom-is-member (conf-stat->conf-no whereto)
-                          lyskom-pers-no)
-        (lyskom-format-insert 'you-already-member whereto)
-      (let* ((who (blocking-do 'get-conf-stat lyskom-pers-no))
-             (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
-             (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
-             (no-of-unread
-              (unless (and mship (not (membership-type->passive
-                                       (membership->type mship))))
-                (lyskom-read-num-range-or-date 
-                 0 
-                 (conf-stat->no-of-texts whereto)
-                 (lyskom-format 'initial-unread)
-                 nil
-                 t
-                 nil)))
-             (kom-membership-default-priority
-              (if (and mship (membership-type->passive (membership->type mship)))
-                  (membership->priority mship)
-                kom-membership-default-priority)))
+                     '(all) nil "" t)))
+         (mship (lyskom-is-member (conf-stat->conf-no whereto)
+                                  lyskom-pers-no)))
 
-        (lyskom-add-member-answer (lyskom-try-add-member whereto
-                                                         who
-                                                         pers-stat
-                                                         nil
-                                                         nil
-                                                         t
-                                                         nil
-                                                         no-of-unread)
-                                  whereto who
-                                  no-of-unread)))))
+    (cond ((and mship (membership-type->passive
+                       (membership->type mship)))
+              (set-membership-type->passive (membership->type mship) nil)
+              (blocking-do 'set-membership-type
+                           lyskom-pers-no
+                           (conf-stat->conf-no whereto)
+                           (membership->type mship))
+              (lyskom-format-insert 'activate-mship-done whereto)
+              (lyskom-fetch-start-of-map whereto mship))
+
+          ((and mship (not (membership-type->invitation
+                            (membership->type mship))))
+           (lyskom-format-insert 'you-already-member whereto))
+
+          (t 
+           (let* ((who (blocking-do 'get-conf-stat lyskom-pers-no))
+                  (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
+                  (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
+                  (no-of-unread
+                   (unless (and mship (not (membership-type->passive
+                                            (membership->type mship))))
+                     (lyskom-read-num-range-or-date 
+                      0 
+                      (conf-stat->no-of-texts whereto)
+                      (lyskom-format 'initial-unread)
+                      nil
+                      t
+                      nil)))
+                  (kom-membership-default-priority
+                   (if (and mship (membership-type->passive (membership->type mship)))
+                       (membership->priority mship)
+                     kom-membership-default-priority)))
+
+             (lyskom-add-member-answer (lyskom-try-add-member whereto
+                                                              who
+                                                              pers-stat
+                                                              nil
+                                                              nil
+                                                              t
+                                                              nil
+                                                              no-of-unread)
+                                       whereto who
+                                       no-of-unread))))))
 
 
 (def-kom-command kom-change-priority (&optional conf)

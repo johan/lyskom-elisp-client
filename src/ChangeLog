@@ -1,4 +1,71 @@
+2003-07-21  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 708:
+	* flags.el (lyskom-flag-global-variable-from-common): New function.
+	(lyskom-flag-global-variable-from-elisp): New function.
+	(lyskom-flag-write-boolean): New function.
+	(lyskom-flag-read-boolean): New function.
+	(lyskom-flag-write-symbol-list): New function.
+	(lyskom-flag-read-symbol-list): New function.
+	(lyskom-flag-read-from-string): New function.
+
 2003-07-20  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 708:
+	* language.el (lyskom-first-available-language): New function.
+	(lyskom-set-language): Use it to support setting language from a
+	list.
+
+	* startup.el (kom-start-anew): Use lyskom-first-available-language
+	when dealing with kom-default-language.
+
+	* defvar.el (def-kom-var): Added support for common flag. Use
+	lyskom-global-variables instead of the old stuff. Added support
+	for transition flag.
+	(lyskom-global-variables): New variable.
+	(lyskom-transition-variables): New variable.
+
+	* check-strings.el (lcs-check-customize-variables): Handle new
+	lyskom-global-variables. 
+
+	* flags.el (lyskom-set-var-from-string): Added type parameter.
+	(lyskom-maybe-set-var-from-string): Ditto.
+	(lyskom-save-options): Use lyskom-global-variables, not the old
+	stuff.
+	(lyskom-maybe-set-var-from-string): Require that variable is a
+	symbol, not a string.
+	(lyskom-set-var-from-string): Ditto.
+
+	* vars.el.in (lyskom-global-boolean-variables): Removed.
+	(lyskom-global-non-boolean-variables): Removed.
+	(lyskom-global-variable-types): New variable.
+
+	Fix bugs adding self to conferences:
+	* commands1.el (kom-add-self): Handle re-joining passive
+	conferences and conferences with invitations (how did this slip
+	through).
+
+	Make text-list operations more constant-time:
+	* komtypes.el (text-list->append): Use the tail field to make this
+	a constant time operation.
+	(text-list->delq): Support the tail field.
+	(text-list->trim-head): Ditto.
+	(set-text-list->texts): Ditto.
+	(text-list): Added tail field.
+	(text-list): Added length-internal field.
+	(text-list->length): Wrapper for length-internal.
+	(text-list->delq): Handle length-internal.
+	(text-list->append): Ditto.
+	(text-list->trim-head): Ditto.
+
+	Fix for fix of bug 409:
+	* komtypes.el (text-mapping->remove-local): Fixed bug that made
+	clearing local no in a dense map impossible.
+
+	Better error reporting:
+	* parse.el (lyskom-parse-unparsed): Do not catch non-protocol
+	errors. This finally allows us to get decent backtraces even for
+	errors in callbacks.
 
 	Fix bug 409 (use local-to-global):
 	* prefetch.el (lyskom-fetch-start-of-map): Use text-mapping
@@ -559,7 +626,6 @@
 
 2003-02-09  David Byers  <byers@lysator.liu.se>
 
-	
 	* lyskom-buttons.el (lyskom-generate-button): Use
 	kom-highlight-conferences instead of kom-friends and kom-morons.
 

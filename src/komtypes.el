@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.27 2003-07-19 22:26:14 byers Exp $
+;;;;; $Id: komtypes.el,v 44.28 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.27 2003-07-19 22:26:14 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.28 2003-07-20 22:12:26 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -68,7 +68,7 @@ Optional FLAGS are additional modifiers.
 If :nil-safe is included, then calling accessors on nil object will
 return nil and not signal an error.
 
-If :constructor-hook HOOK is included, HOOK will be inserted into the
+If :create-hook HOOK is included, HOOK will be inserted into the
 constructor function. When HOOK is evaluated, OBJECT (uppercase) is
 bound to the newly created object. It may be modified.
 "
@@ -79,13 +79,13 @@ bound to the newly created object. It may be modified.
         (access-method 'aref)
         (type-sym (intern (upcase (symbol-name type))))
         (constructor-body nil)
-        (constructor-hook nil))
+        (create-hook nil))
 
     (while flags
       (cond ((eq (car flags) ':nil-safe) (setq access-method 'elt))
-            ((eq (car flags) ':constructor-hook)
+            ((eq (car flags) ':create-hook)
              (setq flags (cdr flags))
-             (setq constructor-hook (car flags))))
+             (setq create-hook (car flags))))
       (setq flags (cdr flags)))
 
     ;; Create constructor
@@ -106,10 +106,10 @@ bound to the newly created object. It may be modified.
                                    ))
                            args)))))
 
-    (when constructor-hook
+    (when create-hook
       (setq constructor-body
             `(let ((OBJECT ,constructor-body))
-               ,constructor-hook
+               ,create-hook
                OBJECT)))
 
     (setq constructor
@@ -606,7 +606,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
          (setq local (- local (text-mapping->range-begin map)))
          (when (and (>= local 0)
                     (< local (text-mapping->block-size map)))
-           (aset local (map->text-nos (text-mapping->block map)) 0)))
+           (aset (map->text-nos (text-mapping->block map)) local 0)))
 
         ((eq (text-mapping->type map) 'sparse)
          (let ((el (assq local (text-mapping->block map))))
@@ -618,7 +618,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   ((map         :read-only t)
    (next-value  :automatic nil)
    (state       :automatic nil))
-  :constructor-hook (text-mapping-iterator->init OBJECT))
+  :create-hook (text-mapping-iterator->init OBJECT))
 
 (defun text-mapping->iterator (map)
   (lyskom-create-text-mapping-iterator map))
@@ -708,8 +708,19 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 ;;; Constructor:
 
-(def-komtype text-list (texts)
+(def-komtype text-list 
+  (texts-internal 
+   (tail :automatic (last texts-internal))
+   (length-internal :automatic (length texts-internal)))
   :nil-safe)
+
+(defsubst text-list->texts (text-list)
+  (text-list->texts-internal text-list))
+
+(defsubst set-text-list->texts (text-list texts)
+  (set-text-list->texts-internal text-list texts)
+  (set-text-list->tail text-list (last texts))
+  (set-text-list->length-internal text-list (length texts)))
 
 (defsubst text-list->empty (text-list)
   "Return t if TEXT-LIST is empty."
@@ -717,24 +728,44 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 (defsubst text-list->length (text-list)
   "Return the length of TEXT-LIST."
-  (length (text-list->texts text-list)))
+  (unless (text-list->length-internal text-list)
+    (set-text-list->length-internal text-list
+                                    (length (text-list->texts text-list))))
+  (text-list->length-internal text-list))
 
 (defsubst text-list->delq (text-list no)
   "Remove text NO from TEXT-LIST."
-  (set-text-list->texts text-list
-                        (delq no (text-list->texts text-list))))
+  (set-text-list->texts-internal text-list (delq no (text-list->texts text-list)))
+  (when (eq no (car (text-list->tail text-list)))
+    (set-text-list->tail text-list (last (text-list->texts text-list))))
+  (set-text-list->length-internal text-list nil))
 
 (defsubst text-list->append (text-list texts)
   "Destructively append TEXTS to the end of TEXT-LIST."
-  (set-text-list->texts text-list
-                        (nconc (text-list->texts text-list)
-                               texts)))
+  (if (text-list->texts text-list)
+      (progn
+        (nconc (or (text-list->tail text-list)
+                   (text-list->texts-internal text-list))
+               texts)
+        (when (text-list->length-internal text-list)
+          (set-text-list->length-internal 
+           text-list
+           (+ (text-list->length-internal text-list)
+              (length texts)))))
+    (set-text-list->texts-internal text-list texts)
+    (set-text-list->length-internal text-list nil))
+  (set-text-list->tail text-list (last texts)))
 
 (defun text-list->trim-head (tlist n)
   "Destructively remove all but the N last elements from TLIST.
 Do nothing if the TLIST is less than N elements long."
-  (set-text-list->texts tlist (nthcdr (max (- (text-list->length tlist) n) 0)
-				      (text-list->texts tlist))))
+  (set-text-list->texts-internal tlist (nthcdr (max (- (text-list->length tlist) n) 0)
+                                               (text-list->texts tlist)))
+  (when (text-list->length-internal tlist)
+    (set-text-list->length-internal tlist (- (text-list->length-internal tlist) n)))
+  (unless (text-list->texts tlist)
+    (set-text-list->length-internal tlist 0)
+    (set-text-list->tail tlist nil)))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.16 2003-01-12 22:30:43 byers Exp $
+;;;;; $Id: defvar.el,v 44.17 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.16 2003-01-12 22:30:43 byers Exp $\n"
+  "$Id: defvar.el,v 44.17 2003-07-20 22:12:26 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -59,12 +59,21 @@
   "Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")
 
+(defvar lyskom-transition-variables nil
+  "Tells the client what variables are not to be saved in the server, but
+are to be read from the server. This is for transitioning.")
+
 (defvar lyskom-minibuffer-variables nil
   "These are variables that should be set in the minibuffer by 
 lyskom-with-lyskom-minibuffer.")
 
 (defvar lyskom-minibuffer-values nil
   "Dynamic binding of values that minibuffer variables are to take on")
+
+(defvar lyskom-global-variables nil
+  "List of flags that are to be saved as booleans in the common block.
+
+Don't change these. They are defined by the protocol.")
 
 
 (defmacro lyskom-save-variables (var-list &rest forms)
@@ -143,6 +152,7 @@ language-force  A language-variable whose value is to be forced."
     (let ((inherited nil)
           (protected nil)
           (elisp-block nil)
+          (transition-block nil)
           (buffer-local nil)
           (widget-spec nil)
           (doc-string nil)
@@ -165,14 +175,27 @@ language-force  A language-variable whose value is to be forced."
                (cond ((eq (car arglist) 'server)
                       (setq local-var-doc t server-doc t)
                       (setq elisp-block
-                            (` ((if (and (not (memq (quote (, name))
-                                                      lyskom-global-boolean-variables))
-                                           (not (memq (quote (, name))
-                                                      lyskom-global-non-boolean-variables)))
-                                           (add-to-list 'lyskom-elisp-variables
-                                                        (quote (, name))))
-                                      (add-to-list 'lyskom-local-variables
-                                                   (quote (, name)))))))
+                            `((add-to-list 'lyskom-elisp-variables ', name)
+                              (add-to-list 'lyskom-local-variables ', name))))
+
+                     ((eq (car arglist) 'common)
+                      (setq local-var-doc t server-doc t)
+                      (let ((common-name (car (cdr arglist)))
+                            (type (car (cdr (cdr arglist)))))
+                        (setq arglist (cdr (cdr arglist)))
+                        (setq elisp-block
+                              `((add-to-list 'lyskom-local-variables ',name)
+                                (add-to-list 'lyskom-global-variables
+                                             (vector ',common-name ',name ',type))))))
+
+                     ((eq (car arglist) 'transition)
+                      (let ((converter (car (cdr arglist))))
+                        (setq arglist (cdr arglist))
+                        (setq local-var-doc t server-doc t)
+                        (setq transition-block
+                              `((add-to-list 'lyskom-transition-variables 
+                                             '(,name . ,converter))
+                                (add-to-list 'lyskom-local-variables ',name)))))
 
                      ((eq (car arglist) 'server-hook)
                       (setq local-hook-doc t server-doc t)
@@ -260,6 +283,7 @@ it using setq or defvar.")))
                            (list inherited
                                  protected
                                  elisp-block
+                                 transition-block
                                  buffer-local
                                  minibuffer
                                  widget-spec

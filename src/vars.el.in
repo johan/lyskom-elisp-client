@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.248 2003-06-01 18:10:34 byers Exp $
+;;;;; $Id: vars.el.in,v 44.249 2003-07-20 22:12:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.248 2003-06-01 18:10:34 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.249 2003-07-20 22:12:27 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -49,27 +49,15 @@
 
 (require 'lyskom-defvar "defvar")
 
-(defconst lyskom-global-boolean-variables '(
-  kom-created-texts-are-read
-  kom-dashed-lines
-  kom-presence-messages
-  kom-print-number-of-unread-on-entrance
-  kom-read-depth-first
-  kom-reading-puts-comments-in-pointers-last
-  kom-confirm-multiple-recipients
-)
-  "List of flags that are to be saved as booleans in the common block.
-
-Don't change these. They are defined by the protocol.")
-
-(defconst lyskom-global-non-boolean-variables '(
-  kom-default-mark
-)
-  "List of flags that are to be saved in the common block.
-These are the non-boolean ones. See: lyskom-global-boolean-variables.
-
-Don't change these. They are defined by the protocol.")
-
+(defconst lyskom-global-variable-types
+  '((boolean (read . lyskom-flag-read-boolean)
+             (write . lyskom-flag-write-boolean))
+    (integer (read . string-to-int)
+             (write . prin1-to-string))
+    (symbol-list (read . lyskom-flag-read-symbol-list)
+                 (write . lyskom-flag-write-symbol-list))
+    (t (read . lyskom-flag-read-from-string)
+       (write . prin1-to-string))))
 
 
 (defun lyskom-protect-variable (sym) 
@@ -126,7 +114,7 @@ if the variable is in kom-dont-read-saved-variables."
 if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
          ((memq ,var kom-dont-read-saved-variables) nil)
-         (t (set-default ,var ,value))))
+         (t (set-default ',var ,value))))
 
 ;;;; ================================================================
 ;;;;                     Variables and constants.
@@ -638,7 +626,7 @@ except when running in anonymous mode. When set to `nil', your texts
 will be shown as all others.
 
 Values other than `t' and `nil' are reserved for future extensions."
-  server)
+  common created-texts-are-read boolean)
 
 (def-kom-var kom-mark-read-texts-as-read-in-new-recipient t
   "**Controls whether to mark read texts as read in new recipients the acquire.
@@ -672,7 +660,7 @@ simply mark with that number. When set to `nil', `kom-mark-text' will
 ask for a mark.
 
 Values other than integers and `nil' are reserved for future use."
-  server)
+  common default-mark integer)
 
 (def-kom-var kom-symbolic-marks-alist '(("Standard" . 100))
   "**Association list that maps symbolic marks to mark numbers.
@@ -710,7 +698,7 @@ When set to `nil', comment references are shwon in the headers.
     (398331) -----------------------------------
     Comment in text 398374 by John Locke
 "
-  server
+  common reading-puts-comments-in-pointers-last boolean
   inherited)
 
 (def-kom-var kom-review-uses-cache t
@@ -778,7 +766,7 @@ Values other than `t' and `nil' are reserved for future use.
 See `kom-highlight-dashed-lines' and
 `kom-async-highlight-dashed-lines' for additional settings that affect
 these lines."
-  server
+  common dashed-lines boolean
   inherited)
 
 (def-kom-var kom-long-lines nil
@@ -940,7 +928,7 @@ of unread texts is not shown. Shortly after logging on, using
 incorrect.
 
 Values other than `t' and `nil' are reserved for future use."
-  server)
+  common print-number-of-unread-on-entrance boolean)
 
 (def-kom-var kom-show-unread-in-frame-title t
   "**Controls display of the unread indicator in the frame title.
@@ -970,7 +958,7 @@ messages about people logging in and out of LysKOM.  Here this is instead
 controlled by `kom-presence-messages-in-echo-area' and
 `kom-presence-messages-in-buffer', so only use this variable to
 influence what this client stores in the common block of the user-area."
-  server)
+  common presence-messages boolean)
 
 (def-kom-var kom-presence-messages-in-echo-area t
   "**Controls display of presence messages in the echo area.
@@ -1125,7 +1113,7 @@ next text is a comment to another text. Reading in comment order lets
 you view threads of discussion.
 
 Values other than `t' or `nil' are reserved for future use."
-  server)
+  common read-depth-first boolean)
 
 (def-kom-var kom-continuous-scrolling t
   "**Controls frequency of scrolling.
@@ -2022,7 +2010,7 @@ editing the text. This is the preferred value since it is difficult to
 judge the relevance of a recipient until the text has been written.
 
 Values other than `t' and `nil' are reserved for future use."
-  server)
+  common confirm-multiple-recipients boolean)
 
 (def-kom-var kom-check-for-new-comments t
   "**Controls check for new comments when writing comments.
@@ -2387,7 +2375,8 @@ the ISO 630 code for the desired language (e.g. `sv' for Swedish and
 `en' for English). Available languages depend on how LysKOM was built.
 
 All valid choices are listed in `lyskom-languages'."
-  server 
+  common language symbol-list
+  transition (lambda (x) (cond ((listp x) x) (t (list x))))
   inherited
   protected)
 

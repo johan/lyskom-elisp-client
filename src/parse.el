@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.46 2003-03-16 15:57:30 byers Exp $
+;;;;; $Id: parse.el,v 44.47 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.46 2003-03-16 15:57:30 byers Exp $\n"))
+	      "$Id: parse.el,v 44.47 2003-07-20 22:12:26 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1249,31 +1249,32 @@ functions and variables that are connected with the lyskom-buffer."
         (set-buffer lyskom-unparsed-buffer)
         (while (not (zerop (1- (point-max)))) ;Parse while replies.
           (let* ((lyskom-parse-pos 1)
-                 (key (lyskom-parse-nonwhite-char)))
-            (condition-case err
-                (let ((inhibit-quit t))	; Used to be nil, but that can
+                 (key (lyskom-parse-nonwhite-char))
+                 (endpos nil))
+            (unwind-protect
+                (condition-case err
+                    (let ((inhibit-quit t)) ; Used to be nil, but that can
 					; cause hard-to-repair
 					; problems
-                  (cond
-                   ((= key ?=)		;The call succeeded.
-                    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-                   ((= key ?%)		;The call was not successful.
-                    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-                   ((= key ?:)		;An asynchronous message.
-                    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer))
-                   (t
-                    (lyskom-protocol-error 'lyskom-parse-unparsed
-                                           "Expected =, %% or :, got %S"
-                                           (lyskom-string-to-parse))))
-                  (delete-region (point-min) lyskom-parse-pos))
-              ;; One reply is now parsed.
-              (lyskom-protocol-error
-               (delete-region (point-min) (min (point-max) (1+ lyskom-parse-pos)))
-               (signal 'lyskom-protocol-error err))
-              (lyskom-parse-incomplete (signal (car err) (cdr err)))
-              (error (delete-region (point-min) lyskom-parse-pos)
-                     (signal (car err) (cdr err)))
-)
+                      (cond
+                       ((= key ?=)      ;The call succeeded.
+                        (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+                       ((= key ?%)      ;The call was not successful.
+                        (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+                       ((= key ?:)      ;An asynchronous message.
+                        (lyskom-parse-async (lyskom-parse-num) lyskom-buffer))
+                       (t
+                        (lyskom-protocol-error 'lyskom-parse-unparsed
+                                               "Expected =, %% or :, got %S"
+                                               (lyskom-string-to-parse))))
+                      (setq endpos lyskom-parse-pos))
+                  ;; One reply is now parsed.
+                  (lyskom-protocol-error
+                   (setq endpos (min (point-max) (1+ lyskom-parse-pos)))
+                   (signal 'lyskom-protocol-error err))
+                  (lyskom-parse-incomplete (setq endpos (point-min))
+                                           (signal (car err) (cdr err))))
+              (delete-region (point-min) (or endpos lyskom-parse-pos)))
             (goto-char (point-min))
             (if (looking-at "[ \n]+")
                 (delete-region (match-beginning 0) (match-end 0)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.286 2003-07-02 19:10:01 byers Exp $
+;;;;; $Id: english-strings.el,v 44.287 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.286 2003-07-02 19:10:01 byers Exp $"))
+              "$Id: english-strings.el,v 44.287 2003-07-20 22:12:26 byers Exp $"))
 
 
 ;;; ================================================================
@@ -477,6 +477,7 @@ and you have finished reading. Please come back later.
     (exclude-from . "Removing %#1P from %#2M...")
 
     (unsubscribe-failed . "\nDidn't work. Perhaps %#1P isn't a member of %#2M?\n")
+    (activate-mship-done . "Activated passive membership of %#1M.\n")
     (passivate-done . "You are now a passive member of %#1M.
 Leave the conference again to unsubscribe completely.\n")
 
@@ -2932,6 +2933,7 @@ Select whether to execute command or keyboard macro.")
     (highlight-conflist . "Conference list")
 
     (yes-dont-pop . "Yes, but don't uniconify frames")
+    (language . "Language")
 
     ;;
     ;; Misc doc strings
@@ -3594,7 +3596,8 @@ up menus.")
     (kom-default-language-doc . "\
   Default language to use in LysKOM. If you change this setting the new
   language will not be applied to the current setting. Use the Change
-  language command to do that.")
+  language command to do that. The first langauge in the list will be used
+  in all clients that support this function.")
 
     (kom-ispell-dictionary-doc . "\
   This specifies the dictionary ispell is to use for spell checking. If set
@@ -4098,7 +4101,7 @@ up menus.")
     (kom-remote-controllers-tag . "People allowed to use remove commands:")
 
     (kom-customize-format-tag . "Show documentation for all settings:")
-    (kom-default-language-tag . "Default language:")
+    (kom-default-language-tag . "Language list:")
     (kom-show-namedays-tag    . "Show today's names:")
     (kom-ispell-dictionary-tag . "Spelling dictionary:")
 
