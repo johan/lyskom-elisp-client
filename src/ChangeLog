@@ -1,3 +1,13 @@
+2002-08-05  David Byers  <david.byers@swipnet.se>
+
+	Bug 662:
+	* async.el (lyskom-add-new-text): When we get a new text in the
+	conference we're in, enter the info in lyskom-reading-list in the
+	proper priority order. Entering it first fscks up reviewing.
+
+	* english-strings.el (lyskom-en-prioritize-mode-map): Use kbd for
+	all bindings (how did we ever miss this).
+
 2002-08-01  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 685:
