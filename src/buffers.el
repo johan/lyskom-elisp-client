@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.19 2000-11-18 23:14:56 ceder Exp $
+;;;;; $Id: buffers.el,v 44.20 2000-12-31 21:47:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.19 2000-11-18 23:14:56 ceder Exp $\n"))
+	      "$Id: buffers.el,v 44.20 2000-12-31 21:47:26 byers Exp $\n"))
 
 
 ;;;;
@@ -446,7 +446,8 @@ Returns the window displaying BUFFER."
     ;;
 
     (while windows
-      (cond ((eq (frame-visible-p (window-frame (car windows))) 'icon)
+      (cond ((not (frame-live-p (window-frame (car windows)))))
+            ((eq (frame-visible-p (window-frame (car windows))) 'icon)
              (setq iconified-frame (car windows)))
             ((frame-visible-p (window-frame (car windows)))
              (setq visible-frame (car windows))
@@ -460,7 +461,7 @@ Returns the window displaying BUFFER."
     (cond
      (visible-frame (select-window visible-frame)
                     visible-frame)
-     (iconified-frame (make-frame-visible iconified-frame)
+     (iconified-frame (make-frame-visible (window-frame iconified-frame))
                       (select-window iconified-frame)
                       iconified-frame)
 

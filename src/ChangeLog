@@ -1,3 +1,20 @@
+2000-12-22  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (kom-page-next-command): Added (temporary)
+	workaround for emacs-21.0.94.
+	(kom-view): Same here.
+
+2000-12-15  David Byers  <davby@ida.liu.se>
+
+	* buffers.el (lyskom-display-buffer): Fixed problem with
+	displaying windows in iconified frames. This could cause Emacs to
+	lock up. Maybe.
+
+2000-12-12  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (kom-move-text): Default recipient of kom-move-text
+	is finally correct.
+
 2000-12-29  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-rest.el (j-or-n-p lyskom-j-or-n-p): Rmoved the parameter
