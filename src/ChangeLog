@@ -1,5 +1,8 @@
 1999-10-09  David Byers  <davby@ida.liu.se>
 
+	* swedish-strings.el (lyskom-command): Updated translation of mail 
+	header.
+
 	* view-text.el: Updated all functions to format imported e-mail
 	properly
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.24 1999-10-09 16:13:32 byers Exp $
+;;;;; $Id: view-text.el,v 44.25 1999-10-09 16:45:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.24 1999-10-09 16:13:32 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.25 1999-10-09 16:45:15 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -99,7 +99,7 @@ Note that this function must not be called asynchronously."
                          (mx-cc (lyskom-get-aux-item (text-stat->aux-items text-stat) 20))
                          (mx-filename (lyskom-get-aux-item (text-stat->aux-items text-stat) 10104))
                          (mx-sender (lyskom-get-aux-item (text-stat->aux-items text-stat) 10103))
-                         (mx-reply-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 28)))
+                         (mx-reply-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 18)))
                          
 
                      ;; Insert date
@@ -198,7 +198,7 @@ Note that this function must not be called asynchronously."
                            mx-cc)
                    (mapcar (lambda (el)
                              (lyskom-format-insert "%#1s: %#2s\n"
-                                                   (lyskom-get-string 'mx-Reply-to)
+                                                   (lyskom-get-string 'mx-Extern-reply-to)
                                                    (aux-item->data el)))
                            mx-reply-to)
 
