@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.173 2002-03-03 19:59:05 joel Exp $
+;;;;; $Id: english-strings.el,v 44.174 2002-03-11 19:19:34 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.173 2002-03-03 19:59:05 joel Exp $"))
+              "$Id: english-strings.el,v 44.174 2002-03-11 19:19:34 joel Exp $"))
 
 
 ;;; ================================================================
@@ -615,7 +615,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (created-chars . "Characters created:%23#1d\n")
     (no-of-sessions . "Session count:%28#1d\n")
     (present-time-d-h-m-s . "Total presence:%16#1d d %02#2d:%02#3d:%02#4d\n")
-    (last-log-in . "Last session:%29#1s\n")
+    (last-log-in . "Last login or logout:%21#1s\n")
     (user-name . "User: %36#1s\n")
 
     (read-texts . "Texts read:%31#1d\n")
