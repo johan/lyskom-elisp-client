@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.4 1996-04-29 11:58:58 byers Exp $
+;;;;; $Id: english-strings.el,v 40.5 1996-05-01 13:55:13 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 40.4 1996-04-29 11:58:58 byers Exp $"))
+              "$Id: english-strings.el,v 40.5 1996-05-01 13:55:13 byers Exp $"))
 
 
 
@@ -360,7 +360,7 @@ and you have finished reading. Please come back later.
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     
     (conf-for-status . "Get status of which conference: ")
-    (no-such-conf . "The conference doesn't exist.")
+    (no-such-conf . "The conference doesn't exist.\n")
     (status-record . "Status of conference %#1M (%#2m) %#3s\n\n")
     (Mailbox . "Mailbox")
     (Protected . "Protected")
@@ -389,7 +389,7 @@ and you have finished reading. Please come back later.
     (secret-membership . "--- Secret line ---\n")
     (conf-membership-line . "%#1s%#2M\n")
     (pers-for-status . "Get status of which user: ")
-    (no-such-pers . "The user doesn't exist.")
+    (no-such-pers . "The user doesn't exist.\n")
     (pers-status-record . "Status of user %#1P (%#2p)\n")
     (created-time .  "Created:%34#1s\n\n")
     (created-confs . "Conferences created:%22#1d\n")
@@ -1216,9 +1216,13 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
   (define-key lyskom-prioritize-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-prioritize-mode-map "*" 'kom-key-mouse-2)
-  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-select)
-  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "?" 'kom-prioritize-help)
+  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
   (define-key lyskom-prioritize-mode-map " " 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
@@ -1237,7 +1241,7 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-set-priority)
   (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-save)
   (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank))
+)
 
 (defvar lyskom-prioritize-header-lines 2
   "Number of lines in the header of the prioritization buffer")
@@ -1279,7 +1283,9 @@ This variable is stored in the LysKOM server.")
       ("Write personal reply" . lyskom-button-private-comment-text)
       ("Mark article" . lyskom-button-mark-text)
       ("Unmark article" . lyskom-button-unmark-text))
-     ((nil lyskom-print-text footer lyskom-button-comment-text)))
+     nil
+;     ((nil lyskom-print-text footer lyskom-button-comment-text))
+     )
     (conf 
      conf-text
      lyskom-button-view-conf-presentation
@@ -1293,8 +1299,7 @@ This variable is stored in the LysKOM server.")
     (pers 
      pers-text
      lyskom-button-view-pers-presentation
-     (("View presentation" . 
-                             lyskom-button-view-pers-presentation)
+     (("View presentation" . lyskom-button-view-pers-presentation)
       ("View user status" . lyskom-button-view-pers-status)
       ("Send letter" . lyskom-button-mail)
       ("Send personal message" . lyskom-button-send-message))

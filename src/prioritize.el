@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 40.2 1996-04-29 11:59:13 byers Exp $
+;;;;; $Id: prioritize.el,v 40.3 1996-05-01 13:55:40 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 40.2 1996-04-29 11:59:13 byers Exp $\n"))
+	      "$Id: prioritize.el,v 40.3 1996-05-01 13:55:40 byers Exp $\n"))
 
 
 
@@ -272,6 +272,11 @@
 ;;; ================================================================
 ;;; User commands
 ;;;
+
+(defun kom-prioritize-help ()
+  "Get brief help on prioritize mode."
+  (interactive)
+  (lyskom-message "%s" (lyskom-get-string 'prioritize-help)))
 
 (defun kom-prioritize-select (&optional arg)
   "Select the record on the line containing point.
@@ -681,12 +686,15 @@ of conferences you are a member of."
   "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
 
 Commands:
-\\[kom-prioritize-move-up]\tMove conference on current line one line up.
-\\[kom-prioritize-move-down]\tMove conference on current line one line down.
-\\[kom-prioritize-set-priority]\tAlter the priority of the conference.
-\\[kom-prioritize-save]\tSave changes to priorities.
+\\[kom-prioritize-move-up]\tMove conference on current line up one line.
+\\[kom-prioritize-move-down]\tMove conference on current line down one line.
+\\[kom-prioritize-yank]\tMove all selected conferences to near the current line.
+\\[kom-prioritize-select]\tToggle selection of the conference on the current line.
+\\[kom-prioritize-goto-priority]\tMove cursor to an entry with a certain priority.
+\\[kom-prioritize-set-priority]\tAlter the priority of the selected conferences.
 \\[kom-prioritize-repriorize]\tChange one priority to another.
-\\[kom-prioritize-quit]\tReturn to LysKOM.
+\\[kom-prioritize-save]\tSave changes to priorities.
+\\[kom-prioritize-quit]\tSave changes and return to LysKOM.
 
 All bindings:
 \\{lyskom-prioritize-mode-map}

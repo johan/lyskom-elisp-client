@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.13 1996-04-29 11:59:07 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.14 1996-05-01 13:55:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.13 1996-04-29 11:59:07 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.14 1996-05-01 13:55:31 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1123,55 +1123,56 @@ The string is inserted at point."
           (= format-letter ?P))
       (setq result
             (cond
-	     ;; The string is already supplied
-	     ((stringp arg) arg)
+             ;; The string is already supplied
+             ((stringp arg) arg)
 
-	     ;; Conference 0 does not exist, and person 0 means anonymous
-	     ((and (integerp arg)
-		   (zerop arg))
-	      (lyskom-format (if (= format-letter ?P)
-				 'person-is-anonymous
-			       'conference-does-not-exist)
-			     arg))
+             ;; Conference 0 does not exist, and person 0 means anonymous
+             ((and (integerp arg)
+                   (zerop arg))
+              (lyskom-format (if (= format-letter ?P)
+                                 'person-is-anonymous
+                               'conference-does-not-exist)
+                             arg))
 
-	     ;; Delay the printing
-	     ((and accept-delay
-		   kom-delayed-printing
-		   (integerp arg))
-	      (let ((tmp (cache-get-conf-stat arg)))
-		(if (null tmp)
-		    (let ((place (cons oldpos (+ oldpos 5))))
-		      (set-format-state->delayed-content
-		       format-state
-		       (cons place
-			     (format-state->delayed-content
-			      format-state)))
-		      (initiate-get-conf-stat
-		       'background 'lyskom-delayed-print-conf arg
-		       arg format-letter colon-flag place)
-		      "[...]")
-		  (setq arg tmp)
-		  (conf-stat->name arg))))
+             ;; Delay the printing
+             ((and accept-delay
+                   kom-delayed-printing
+                   (integerp arg))
+              (let ((tmp (cache-get-conf-stat arg)))
+                (if (null tmp)
+                    (let ((place (cons oldpos (+ oldpos 5))))
+                      (set-format-state->delayed-content
+                       format-state
+                       (cons place
+                             (format-state->delayed-content
+                              format-state)))
+                      (initiate-get-conf-stat
+                       'background 'lyskom-delayed-print-conf arg
+                       arg format-letter colon-flag place)
+                      "[...]")
+                  (setq arg tmp)
+                  (conf-stat->name arg))))
 	     
-	     ;; Find the name and return it
-	     ((integerp arg)
-	      (let ((conf-stat (blocking-do 'get-conf-stat arg)))
-		(if (null conf-stat)
-		    (lyskom-format (if (= format-letter ?P)
-				       'person-does-not-exist
-				     'conference-does-not-exist)
-				   arg)
-		  (conf-stat->name conf-stat))))
+             ;; Find the name and return it
+             ((integerp arg)
+              (let ((conf-stat (blocking-do 'get-conf-stat arg)))
+                (if (null conf-stat)
+                    (lyskom-format (if (= format-letter ?P)
+                                       'person-does-not-exist
+                                     'conference-does-not-exist)
+                                   arg)
+                  (conf-stat->name conf-stat))))
 	     
-	     ;; We got a conf-stat, and can use it directly
-	     ((lyskom-conf-stat-p arg) (conf-stat->name arg))
+             ;; We got a conf-stat, and can use it directly
+             ((lyskom-conf-stat-p arg) (conf-stat->name arg))
 
-	     ;; Something went wrong
-	     (t (signal 'lyskom-internal-error
-			(list 'lyskom-format
-			      ": argument error")))))
+             ;; Something went wrong
+             (t (signal 'lyskom-internal-error
+                        (list 'lyskom-format
+                              ": argument error")))))
       (if (and (not colon-flag)
-               (lyskom-conf-stat-p arg))
+               (or (lyskom-conf-stat-p arg)
+                   (numberp arg)))
           (setq propl 
                 (append
                  (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 40.2 1996-04-29 11:59:02 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 40.3 1996-05-01 13:55:23 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -337,7 +337,7 @@ type TYPE before being send to lyskom-generate-button."
                       (setq type 'pers))
                   (setq xarg (conf-stat->conf-no arg)
                         text (conf-stat->name arg)))
-                 ((numberp arg) (setq text ""))
+                 ((numberp arg) (setq text "" xarg arg))
                  (t (setq text "" xarg 0))))
           ((eq type 'pers)
            (cond ((lyskom-conf-stat-p arg)
@@ -346,7 +346,7 @@ type TYPE before being send to lyskom-generate-button."
                   ((lyskom-pers-stat-p arg)
                    (setq xarg (pers-stat->pers-no arg)
                          text ""))
-                  ((numberp arg) (setq text ""))
+                  ((numberp arg) (setq text "" xarg arg))
                   (t (setq text "" xarg 0))))
           ((eq type 'text)
            (cond ((stringp arg) (setq xarg (string-to-number arg)

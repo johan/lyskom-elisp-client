@@ -1,6 +1,31 @@
+Wed May  1 11:34:02 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * english-strings.el,swedish-strings.el (lyskom-strings): Lade till
+    newline i några strängar. Lade till några strängar, rättade andra.
+
+    * prioritize.el (kom-prioritize-help): Ny funktion
+    (lyskom-prioritize-mode): Bättre doc-sträng
+
+    * english-strings.el, swedish-strings.el (lyskom-prioritize-mode-map):
+    Byggde om keymappen lite.
+
+    * lyskom-rest.el (lyskom-format-aux-help): Generera knappar för ?M och
+    ?P även om argumentet inte är en conf-stat.
+
+    * lyskom-buttons.el (lyskom-default-button): Hantera knappskapande för
+    möten och personer utan att ha hela conf-staten.
+
+    * cache.el (cache-construct-uconf-stat): Rättade en bug.
+
+    * komtypes.el (lyskom-uconf-stat-p): Lade till denna funktion.
+    (uconf-stat->garb-nice): Rättade en bug.
+
+    * english-strings.el, swedish-strings.el (lyskom-button-actions):
+    Kommenterade bort särbehandling av textnumret i inläggsfoten.
+
 Mon Apr 29 09:24:16 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * review-new.el (lyskom-get-texts-by): Fixade så inte information om
+    * review.el (lyskom-get-texts-by): Fixade så inte information om
     hemliga texter returneras.
 
 Mon Apr 29 02:26:14 1996  David Kågedal  <davidk@lysator.liu.se>
