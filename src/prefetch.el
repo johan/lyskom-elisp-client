@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 35.7 1992-07-31 01:49:12 linus Exp $
+;;;;; $Id: prefetch.el,v 35.8 1992-08-01 15:53:07 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 35.7 1992-07-31 01:49:12 linus Exp $\n"))
+	      "$Id: prefetch.el,v 35.8 1992-08-01 15:53:07 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -86,6 +86,7 @@ lyskom-queue.
 		       are done.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
+(MEMBERSHIPISREAD) -   Just sets the lyskom-membership-is-read variable to t.
 
 
 See further documentation in the source code.")
@@ -356,6 +357,11 @@ Return t if an element was prefetched, otherwise return nil."
 	    (setcar prefetch-list queue)
 	    (lyskom-prefetch-one-request element queue)
 	    (setq result t)))
+
+	 ;; Special request
+	 ((and (listp element)
+	       (eq (car element 'MEMBERSHIPISREAD)))
+	  (setq lyskom-membership-is-read t))
        
 	 (t (signal 'lyskom-internal-error 
 		    '(lyskom-prefetch-one-item ": unknown key"))))
@@ -504,7 +510,9 @@ Put the requests on QUEUE."
       (setq list (cdr list)))
     (if (and (numberp lyskom-membership-is-read)
 	     (< (length membership) lyskom-fetch-membership-length))
-	(setq lyskom-membership-is-read 'almost)
+	(progn
+	  (setq lyskom-membership-is-read 'almost)
+	  (lyskom-queue-enter queue (list 'MEMBERSHIPISREAD)))
       (setq lyskom-membership-is-read (+ lyskom-membership-is-read
 					 lyskom-fetch-membership-length))
       (lyskom-prefetch-membership pers-no queue)))
