@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.5 1995-10-23 11:55:55 byers Exp $
+;;;;; $Id: startup.el,v 38.6 1995-10-27 03:00:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.5 1995-10-23 11:55:55 byers Exp $\n"))
+	      "$Id: startup.el,v 38.6 1995-10-27 03:00:09 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -55,9 +55,9 @@ See lyskom-mode for details."
 
   (run-hooks 'lyskom-init-hook)
   (setq username
-	(if username username (getenv "KOMNAME")))
+	(or username (getenv "KOMNAME")))
   (setq password
-	(if password password (getenv "KOMPASSWORD")))
+	(or password (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (setq host (or (getenv "KOMSERVER")
 		     lyskom-default-server)))
@@ -72,62 +72,64 @@ See lyskom-mode for details."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (unwind-protect
-	(let* ((buffer (generate-new-buffer host))
-	       (name (buffer-name buffer))
-	       (proc (open-network-stream name buffer host port)))
-	  (switch-to-buffer buffer)
-	  (lyskom-mode)			;Clearing lyskom-default...
-	  (setq kom-buffer buffer)
-	  (setq lyskom-default-user-name username)
-	  (setq lyskom-default-password password)
-	  (setq lyskom-server-name host)
-	  (setq lyskom-proc proc)
-	  (lyskom-insert
-	   (lyskom-format 'try-connect lyskom-clientversion host))
-	  (set-process-filter proc 'lyskom-connect-filter)
-	  (lyskom-process-send-string proc
-				      (concat "A"
-					      (lyskom-format-objects
-					       (concat (user-login-name)
-						       "%" (system-name)))))
-	  (while (eq 'lyskom-connect-filter (process-filter proc))
-	    (accept-process-output proc))
-					; Now we have gotten the correct response.
+    (let* ((buffer (generate-new-buffer host))
+	   (name (buffer-name buffer))
+	   (proc nil))
+      (unwind-protect
+	  (progn
+	    (setq proc (open-network-stream name buffer host port))
+	    (switch-to-buffer buffer)
+	    (lyskom-mode)		;Clearing lyskom-default...
+	    (setq kom-buffer buffer)
+	    (setq lyskom-default-user-name username)
+	    (setq lyskom-default-password password)
+	    (setq lyskom-server-name host)
+	    (setq lyskom-proc proc)
+	    (lyskom-insert
+	     (lyskom-format 'try-connect lyskom-clientversion host))
+	    (set-process-filter proc 'lyskom-connect-filter)
+	    (lyskom-process-send-string proc
+					(concat "A"
+						(lyskom-format-objects
+						 (concat (user-login-name)
+							 "%" (system-name)))))
+	    (while (eq 'lyskom-connect-filter (process-filter proc))
+	      (accept-process-output proc))
+	    ;; Now we have got the correct response.
+	    (set-process-sentinel proc 'lyskom-sentinel)
 
-	  (set-process-sentinel proc 'lyskom-sentinel)
+	    (save-excursion
+	      (lyskom-init-parse))
 
-	  (save-excursion
-	    (lyskom-init-parse))
-
-	  (setq lyskom-server-info (blocking-do 'get-server-info))
-	  (lyskom-format-insert 
-	   'connection-done
-	   (if (zerop (% (server-info->version lyskom-server-info) 100))
-	       (format "%d.%d"
+	    (setq lyskom-server-info (blocking-do 'get-server-info))
+	    (lyskom-format-insert 
+	     'connection-done
+	     (if (zerop (% (server-info->version lyskom-server-info) 100))
+		 (format "%d.%d"
+			 (/ (server-info->version lyskom-server-info) 10000)
+			 (/ (% (server-info->version lyskom-server-info) 10000) 
+			    100))
+	       (format "%d.%d.%d"
 		       (/ (server-info->version lyskom-server-info) 10000)
-		       (/ (% (server-info->version lyskom-server-info) 10000) 
-			  100))
-	     (format "%d.%d.%d"
-		     (/ (server-info->version lyskom-server-info) 10000)
-		     (/ (% (server-info->version lyskom-server-info) 10000)
-			100)
-		     (% (server-info->version lyskom-server-info) 100))))
-	  (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
-	      (lyskom-insert 
-	       (text->text-mass 
-		(blocking-do 'get-text 
-			     (server-info->motd-of-lyskom lyskom-server-info)))))
-	  ;; Can't use lyskom-end-of-command here.
-	  (setq lyskom-executing-command nil) 
+		       (/ (% (server-info->version lyskom-server-info) 10000)
+			  100)
+		       (% (server-info->version lyskom-server-info) 100))))
+	    (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
+		(lyskom-insert 
+		 (text->text-mass 
+		  (blocking-do 'get-text 
+			       (server-info->motd-of-lyskom
+				lyskom-server-info)))))
+	    ;; Can't use lyskom-end-of-command here.
+	    (setq lyskom-executing-command nil) 
 	  ;;; B|rja
-	  (kom-start-anew t)
-	  (setq init-done t))
-      ;; Something went wrong. Lets cleanup everything. :->
-      (if init-done
-	  nil
-	(delete-process (get-buffer-process (current-buffer)))
-	(kill-buffer (current-buffer))))))
+	    (kom-start-anew t)
+	    (setq init-done t))
+	;; Something went wrong. Lets cleanup everything. :->
+	(if init-done
+	    nil
+	  (if proc (delete-process proc))
+	  (kill-buffer buffer))))))
 
 
 (defun lyskom-connect-filter (proc output)
@@ -201,6 +203,7 @@ See lyskom-mode for details."
   (lyskom-refetch)
   ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
   (cache-set-marked-texts (blocking-do 'get-marks))
+  ;; What is this variable? It is never used. It is ust to fill the cache?
   (setq lyskom-who-am-i (blocking-do 'who-am-i))
   (lyskom-end-of-command))
 
