@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.31 1997-09-22 08:35:06 byers Exp $
+;;;;; $Id: english-strings.el,v 44.32 1997-09-26 10:07:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.31 1997-09-22 08:35:06 byers Exp $"))
+              "$Id: english-strings.el,v 44.32 1997-09-26 10:07:42 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1628,7 +1628,6 @@ On since %#8s%#9s")
 (if lyskom-en-customize-map
     nil
   (setq lyskom-en-customize-map (make-sparse-keymap))
-  (set-keymap-parent lyskom-en-customize-map global-map)
   (define-key lyskom-en-customize-map "\t" 'widget-forward)
   (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
   (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)

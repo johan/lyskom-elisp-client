@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.6 1997-07-09 14:41:18 byers Exp $
+;;;;; $Id: flags.el,v 44.7 1997-09-26 10:07:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.6 1997-07-09 14:41:18 byers Exp $\n"))
+	      "$Id: flags.el,v 44.7 1997-09-26 10:07:45 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -127,53 +127,56 @@
     ;lets do it.
     ;lyskom-global-variables is a list of variables in the common block.
     ;lyskom-elisp-variables is a list of varibles in the elisp block.
-    (let* ((buf lyskom-buffer)
-           (optbuf (current-buffer))
+    (let* ((optbuf (current-buffer))
            (print-readably t)
-           (common-block 
-            (concat
-             (mapconcat (function
-                         (lambda (var)
-                           (lyskom-format-objects
-                            (substring (symbol-name var) 4) 
-                            (if (symbol-value var) "1" "0"))))
-                        lyskom-global-boolean-variables
-                        "\n")
-             "\n"
-             (mapconcat (function
-                         (lambda (var)
-                           (lyskom-format-objects
-                            (substring (symbol-name var) 4) 
-                            (prin1-to-string (symbol-value var)))))
-                        lyskom-global-non-boolean-variables
-                        "\n")
-             ))
-           (elisp-block
-            (mapconcat (function
-                        (lambda (var)
-                          (lyskom-format-objects (symbol-name var) 
-                                                 (prin1-to-string
-                                                  (symbol-value var)))))
-                       lyskom-elisp-variables
-                       "\n")))
-      (set-buffer buf)
-      (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
-      (lyskom-insert-string 'hang-on)
-      (initiate-create-text 'options 'lyskom-edit-options-send
+           (common-block nil)
+           (elisp-block nil))
+      (save-excursion
+        (set-buffer lyskom-buffer)
+        (setq
+         common-block 
+          (concat
+           (mapconcat (function
+                       (lambda (var)
+                         (lyskom-format-objects
+                          (substring (symbol-name var) 4) 
+                          (if (symbol-value var) "1" "0"))))
+                      lyskom-global-boolean-variables
+                      "\n")
+           "\n"
+           (mapconcat (function
+                       (lambda (var)
+                         (lyskom-format-objects
+                          (substring (symbol-name var) 4) 
+                          (prin1-to-string (symbol-value var)))))
+                      lyskom-global-non-boolean-variables
+                      "\n")
+           )
+         elisp-block
+          (mapconcat (function
+                      (lambda (var)
+                        (lyskom-format-objects (symbol-name var) 
+                                               (prin1-to-string
+                                                (symbol-value var)))))
+                     lyskom-elisp-variables
+                     "\n"))
+        (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
+        (lyskom-insert-string 'hang-on)
+        (initiate-create-text 'options 'lyskom-edit-options-send
 			    ;;; This is a cludge awaiting prot-B
-			    (apply 'lyskom-format-objects 
-				   (apply 'lyskom-format-objects 
-					  "common"
-					  "elisp"
-					  (mapcar 
-					   (function car)
-					   lyskom-other-clients-user-areas))
-				   common-block
-				   elisp-block
-				   (mapcar (function cdr) 
-					   lyskom-other-clients-user-areas))
-;			    (concat common-block "----------\n" elisp-block)
-			    (lyskom-create-misc-list) optbuf)))
+                              (apply 'lyskom-format-objects 
+                                     (apply 'lyskom-format-objects 
+                                            "common"
+                                            "elisp"
+                                            (mapcar 
+                                             (function car)
+                                             lyskom-other-clients-user-areas))
+                                     common-block
+                                     elisp-block
+                                     (mapcar (function cdr) 
+                                             lyskom-other-clients-user-areas))
+                                        ;			    (concat common-block "----------\n" elisp-block)
+                              (lyskom-create-misc-list) optbuf))))
    (t
     (let ((optbuf (current-buffer)))
       (set-buffer lyskom-buffer)
