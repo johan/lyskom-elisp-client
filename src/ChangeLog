@@ -1,3 +1,11 @@
+Fri Nov  8 13:51:32 1991  Linus Tolke Y  (linus at robert)
+
+	* lyskom-rest.el, edit-text.el, commands2.el, vars.el:
+	  lyskom-swascii-commands, lyskom-swascii-header-subject,
+	  lyskom-swascii-header-separator, New variables, added to make it
+	  possible to switch the value of kom-emacs-knows-iso-8859-1 after
+	  loading.
+
 Sat Nov  2 19:03:57 1991  Linus Tolke Y  (linus at robin)
 
 	* commands1.el, swedish-strings.el (kom-add-copy): New command.

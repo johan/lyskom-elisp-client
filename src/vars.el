@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.11 1991-10-25 15:23:13 linus Exp $
+;;;;; $Id: vars.el,v 35.12 1991-11-08 13:15:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.11 1991-10-25 15:23:13 linus Exp $\n"))
+	      "$Id: vars.el,v 35.12 1991-11-08 13:15:43 linus Exp $\n"))
 
 
 
@@ -180,7 +180,6 @@ Non-nil and non-t means only ding when they really are personal.")
   kom-write-texts-in-window
   kom-quit-hook
   lyskom-fetch-map-nos
-  lyskom-header-separator
   lyskom-new-text-hook
   lyskom-prefetch-conf-tresh 
   lyskom-prefetch-confs
