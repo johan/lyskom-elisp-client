@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.196 2003-08-17 13:21:32 byers Exp $
+;;;;; $Id: commands1.el,v 44.197 2003-08-24 14:36:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.196 2003-08-17 13:21:32 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.197 2003-08-24 14:36:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -984,6 +984,7 @@ probably a general Q&A conference where you can ask."
          (secmem (and (lyskom-have-feature long-conf-types)
                       (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed)))))
 	 (life-expectancy (lyskom-read-number 'new-garb-nice-q))
+	 (keep-commented (lyskom-read-number 'new-keep-commented-q))
 	 (conf-no (blocking-do 'create-conf
 			       conf-name
 			       (lyskom-create-conf-type (not open)
@@ -1016,7 +1017,8 @@ probably a general Q&A conference where you can ask."
 				     nil ; Don't write a presentation
 				   'lyskom-create-conf-handler-2)
 				 conf-no conf-name)
-	(blocking-do 'set-garb-nice conf-no life-expectancy)))))
+	(blocking-do 'set-garb-nice conf-no life-expectancy)
+	(blocking-do 'set-keep-commented conf-no keep-commented)))))
 
 
 (defun lyskom-create-conf-handler-2 (conf-no conf-name)
