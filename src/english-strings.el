@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.150 2001-08-23 23:13:14 qha Exp $
+;;;;; $Id: english-strings.el,v 44.151 2001-08-25 19:12:12 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.150 2001-08-23 23:13:14 qha Exp $"))
+              "$Id: english-strings.el,v 44.151 2001-08-25 19:12:12 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1633,12 +1633,12 @@ You must become an active member of the conference to enter it.\n")
     (kom-review-presentation  . "Review presentation")
     (kom-review-backward      . "(Review) Backwards")
     (kom-view-next-text       . "(Read) next text")
-    (kom-who-is-on            . "Who is on") 
+    (kom-who-is-on            . "Who (is on)")
     (kom-who-is-on-in-conference
-                              . "Who is on in conference")
+                              . "Who (is on in) conference")
     (kom-who-is-present-in-conference
-                              . "Who is present in conference")
-    (kom-who-is-on-and-friend . "Which friends are on")
+                              . "Who (is) present (in) conference")
+    (kom-who-is-on-and-friend . "Which friends (are on)")
     (kom-who-am-i             . "Where (am) i")
     (kom-list-clients	      . "List clients")
     (kom-busy-wait            . "Wait (for news)")
@@ -2026,9 +2026,9 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "f s") 'kom-filter-subject)
   (define-key lyskom-en-mode-map (kbd "f a") 'kom-filter-author)
   (define-key lyskom-en-mode-map (kbd "f c") 'kom-filter-text)
-  (define-key lyskom-en-mode-map (kbd "w l") 'kom-who-is-on)
+  (define-key lyskom-en-mode-map (kbd "w w") 'kom-who-is-on)
   (define-key lyskom-en-mode-map (kbd "w c") 'kom-who-is-on-in-conference)
-  (define-key lyskom-en-mode-map (kbd "w a") 'kom-who-is-present-in-conference)
+  (define-key lyskom-en-mode-map (kbd "w p") 'kom-who-is-present-in-conference)
   (define-key lyskom-en-mode-map (kbd "w f") 'kom-who-is-on-and-friend)
   (define-key lyskom-en-mode-map (kbd "I")  'kom-who-am-i)
   (define-key lyskom-en-mode-map (kbd "W")  'kom-busy-wait)

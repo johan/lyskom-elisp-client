@@ -1,3 +1,16 @@
+2001-08-25  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* commands1.el (lyskom-select-friends-from-who-list): change endp
+	to null which is built in.
+
+	* english-strings.el (lyskom-en-mode-map): moved "w l" to "w w",
+	"w a" to "w p"
+
+	* swedish-strings.el (lyskom-sv-mode-map): moved "v a" to "v n".
+
+	* swedish-strings.el, english-strings.el (lyskom-command):
+	Parenthesised kom-who-is-command-names.
+
 2001-08-24  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (lyskom-help-categories, lyskom-commands): added

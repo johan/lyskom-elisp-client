@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.182 2001-08-23 23:13:15 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.183 2001-08-25 19:12:13 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.182 2001-08-23 23:13:15 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.183 2001-08-25 19:12:13 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1631,12 +1631,12 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-review-presentation  . "Återse presentation")
     (kom-review-backward      . "(Återse) Baklänges")
     (kom-view-next-text	      . "Läsa nästa inlägg")
-    (kom-who-is-on	      . "Vilka är inloggade") 
+    (kom-who-is-on	      . "Vilka (är) inloggade") 
     (kom-who-is-on-in-conference
-     			      . "Vilka är inloggade i möte") 
+     			      . "Vilka (är inloggade i) möte") 
     (kom-who-is-present-in-conference
-     			      . "Vilka är närvarande i möte")
-    (kom-who-is-on-and-friend . "Vilka vänner är inloggade")
+     			      . "Vilka (är) närvarande (i möte)")
+    (kom-who-is-on-and-friend . "Vilka vänner (är inloggade)")
     (kom-who-am-i             . "Var (är) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")
@@ -2467,7 +2467,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "f i") 'kom-filter-text)
   (define-key lyskom-sv-mode-map (kbd "v i") 'kom-who-is-on)
   (define-key lyskom-sv-mode-map (kbd "v m") 'kom-who-is-on-in-conference)
-  (define-key lyskom-sv-mode-map (kbd "v a") 'kom-who-is-present-in-conference)
+  (define-key lyskom-sv-mode-map (kbd "v n") 'kom-who-is-present-in-conference)
   (define-key lyskom-sv-mode-map (kbd "v v") 'kom-who-is-on-and-friend)
   (define-key lyskom-sv-mode-map (kbd "J")   'kom-who-am-i)
   (define-key lyskom-sv-mode-map (kbd "V")   'kom-busy-wait)
