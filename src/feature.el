@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: feature.el,v 1.1 1999-06-10 13:41:30 byers Exp $
+;;;;; $Id: feature.el,v 1.2 1999-06-17 12:58:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: feature.el,v 1.1 1999-06-10 13:41:30 byers Exp $\n"))
+	      "$Id: feature.el,v 1.2 1999-06-17 12:58:23 byers Exp $\n"))
 
 (def-kom-var lyskom-feature-defaults nil
   "Alist with default values of all feature variables")
@@ -49,7 +49,7 @@
                 (cons (cons ',name ,default) lyskom-feature-defaults))
           (def-kom-var ,(lyskom-feature-variable name) ,default
             "LysKOM feature flag variable."
-            inherited local)))
+            inherited minibuffer local)))
 
 (defmacro lyskom-set-feature (name value)
   "Set the value of feature NAME to VALUE"
