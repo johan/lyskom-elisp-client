@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.15 1999-06-14 14:19:13 byers Exp $
+;;;;; $Id: async.el,v 44.16 1999-06-20 11:26:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.15 1999-06-14 14:19:13 byers Exp $\n"))
+	      "$Id: async.el,v 44.16 1999-06-20 11:26:26 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -312,7 +312,7 @@ according to the value of FLAG."
        "%s"
        (lyskom-format 'has-entered
                       (or conf-stat
-                          (lyskom-get-string 'secret-person))
+                          (lyskom-get-string 'unknown-person))
                       server
                       ))))
 
@@ -325,7 +325,7 @@ according to the value of FLAG."
                                                    '(face kom-presence-face))
                                               server)
         (lyskom-format-insert-before-prompt 'has-entered-r
-                                            (lyskom-get-string 'secret-person)
+                                            (lyskom-get-string 'unknown-person)
                                             (and kom-text-properties
                                                  '(face kom-presence-face))
                                             server))))))
@@ -343,7 +343,7 @@ according to the value of FLAG."
     (lyskom-message
      "%s"
      (lyskom-format 'has-left (or conf-stat
-				  (lyskom-get-string 'secret-person))
+				  (lyskom-get-string 'unknown-person))
                     server))))
   (cond
    ((lyskom-show-presence (conf-stat->conf-no conf-stat)
@@ -354,7 +354,7 @@ according to the value of FLAG."
 						 '(face kom-presence-face))
                                             server)
       (lyskom-format-insert-before-prompt 'has-left-r
-					  (lyskom-get-string 'secret-person)
+					  (lyskom-get-string 'unknown-person)
 					  (and kom-text-properties
 					       '(face kom-presence-face))
                                           server))))))

@@ -7,6 +7,37 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+Använd face-flag i lyskom-format-aux för att bestämma om man skall
+visa faces eller inte. Kolla att 
+
+1) det går att visa faces
+2) lyskom-show-faces är satt
+
+innan man försöker. Man skulle till och med kunna sätta face-flag
+efter de här villkoren. Lägg till användarvariabeln kom-show-faces som 
+talar om när man vill ha faces:
+
+0) alltid/aldrig
+1) vilkalistan (working conf och person)
+2) status möte/person   (föreslagen default)
+3) varje inlägg
+4) brev
+5) in- och utloggningar
+6) personliga meddelanden
+7) mottagarna till inlägg
+8) namnändring
+
+dessa funktioner får sedan binda om lyskom-show-faces dynamiskt till
+true eller false.
+
+Visa bilder mindre än X * Y pixels, mindre än X bytes
+
+Kombinera med möjlighet att bara visa bilder för kom-friends
+
+För varje punkt på listan, tala om vilka man vill eller inte vill se
+bilder för. 
+
+
 
 * SAKER ATT KOLLA
 

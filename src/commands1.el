@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.40 1999-06-12 16:53:10 byers Exp $
+;;;;; $Id: commands1.el,v 44.41 1999-06-20 11:26:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.40 1999-06-12 16:53:10 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.41 1999-06-20 11:26:29 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2161,7 +2161,7 @@ Uses Protocol A version 8 calls"
 	 (format-string-2 (lyskom-info-line-format-string
 			   session-width "s" "s"))
 	 (lyskom-default-conf-string 'not-present-anywhere)
-         (lyskom-default-pers-string 'secret-person))
+         (lyskom-default-pers-string 'unknown-person))
 
     (if conf-stat
 	(lyskom-format-insert 'who-is-active-and-member conf-stat))
@@ -2237,7 +2237,7 @@ Uses Protocol A version 9 calls"
 	 (format-string-3 (lyskom-info-line-format-string
 			   session-width "D" "s"))
 	 (lyskom-default-conf-string 'not-present-anywhere)
-         (lyskom-default-pers-string 'secret-person))
+         (lyskom-default-pers-string 'unknown-person))
 
     (if (zerop idle-hide)
 	(lyskom-insert (lyskom-get-string 'who-is-active-all))
