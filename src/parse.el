@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 41.5 1996-08-06 21:33:50 davidk Exp $
+;;;;; $Id: parse.el,v 41.6 1996-08-07 09:10:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 41.5 1996-08-06 21:33:50 davidk Exp $\n"))
+	      "$Id: parse.el,v 41.6 1996-08-07 09:10:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -502,6 +502,11 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 
 ;;; ================================================================
 ;;;         High level parsing. Parsing of entire datatypes.
+
+
+(defun lyskom-parse-number-array ()
+  "Parse an array of integers."
+  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-num))
 
 
 (defun lyskom-parse-membership ()
