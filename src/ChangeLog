@@ -1,3 +1,8 @@
+2002-09-19  David Byers  <david.byers@swipnet.se>
+
+	* english-strings.el (local): Added server-has-motd, which was
+	missing.
+
 2002-09-19  Joel Rosdahl  <joel@rosdahl.net>
 
 	* swedish-strings.el, english-strings.el: Added missing group in

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.238 2002-09-19 17:33:15 joel Exp $
+;;;;; $Id: english-strings.el,v 44.239 2002-09-19 19:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.238 2002-09-19 17:33:15 joel Exp $"))
+              "$Id: english-strings.el,v 44.239 2002-09-19 19:57:30 byers Exp $"))
 
 
 ;;; ================================================================
@@ -177,6 +177,7 @@ below:\n")
     (wrong-password-email . "* %#1t\n")
     (are-logged-in . "You have entered LysKOM. Please wait...\n")
     (you-have-motd . "\nYou have a notice on your mailbox:\n\n")
+    (server-has-motd . "There is a notice on the server:\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
 The message that was supposed to be shown after login has disappeared.
 Please contact the LysKOM administrator.\n")
