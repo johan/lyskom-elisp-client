@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.55 2000-05-04 12:12:48 byers Exp $
+;;;;; $Id: utilities.el,v 44.56 2000-05-04 13:57:43 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.55 2000-05-04 12:12:48 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.56 2000-05-04 13:57:43 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -482,34 +482,47 @@ The value is actually the element of LIST whose car equals KEY."
 ;;; ============================================================
 ;;; Prefix arguments
 
-(defun lyskom-read-text-no-prefix-arg (prompt &optional always-read)
+(defun lyskom-read-text-no-prefix-arg (prompt &optional always-read default)
   "Call in interactive list to read text-no.
 If optional argument ALWAYS-READ is non-nil the user is prompted if
 an explicit prefix argument was not given. A positive prefix argument
 is interpreted as a text-no, whereas a negative prefix argument will
 try to find the text-no of the text `arg' messages above point from
-the current kom buffer."
-  (cond
-   ((null current-prefix-arg)
-    (if always-read
-        (lyskom-read-number prompt lyskom-current-text)
-      lyskom-current-text))
-   ((or (integerp current-prefix-arg)
-	(eq '- current-prefix-arg))
-    (let ((current-prefix-arg
-	   (if (eq '- current-prefix-arg) -1 current-prefix-arg)))
-      (if (> current-prefix-arg 0)
-	  current-prefix-arg
-	(save-excursion
-	  (backward-text (- 1 current-prefix-arg))
-	  (if (looking-at "\\([0-9]+\\)\\s-")
-	      (string-to-int (match-string 1))
-	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-	    current-prefix-arg))))))
-   ((listp current-prefix-arg)
-    (lyskom-read-number prompt (lyskom-text-at-point)))
-   (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-                    current-prefix-arg))))
+the current kom buffer. DEFAULT specifies the default text to use. If
+it is nil, the most recently read text is the default. The symbol 
+last-written means use the text most recently written. The symbol
+last-seen-written means use the text in lyskom-last-seen-written. 
+A number means use that text as the default."
+  (let ((default (cond ((numberp default) default)
+                       ((eq default 'last-written)
+                        (or (lyskom-default-value 'lyskom-last-seen-written)
+                            (lyskom-default-value 'lyskom-current-text)))
+                       ((eq default 'last-seen-written)
+                        (or (lyskom-default-value 'lyskom-last-seen-written)
+                            (lyskom-default-value 'lyskom-current-text)))
+                       ((null default) 
+                        (lyskom-default-value 'lyskom-current-text)))))
+    (cond
+     ((null current-prefix-arg)
+      (if always-read
+          (lyskom-read-number prompt default)
+        default))
+     ((or (integerp current-prefix-arg)
+          (eq '- current-prefix-arg))
+      (let ((current-prefix-arg
+             (if (eq '- current-prefix-arg) -1 current-prefix-arg)))
+        (if (> current-prefix-arg 0)
+            current-prefix-arg
+          (save-excursion
+            (backward-text (- 1 current-prefix-arg))
+            (if (looking-at "\\([0-9]+\\)\\s-")
+                (string-to-int (match-string 1))
+              (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+                            current-prefix-arg))))))
+     ((listp current-prefix-arg)
+      (lyskom-read-number prompt (lyskom-text-at-point)))
+     (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+                      current-prefix-arg)))))
 
 ;;; ============================================================
 ;;; Set functions

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.61 2000-05-04 12:12:43 byers Exp $
+;;;;; $Id: edit-text.el,v 44.62 2000-05-04 13:57:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.61 2000-05-04 12:12:43 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.62 2000-05-04 13:57:41 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1666,7 +1666,7 @@ Point must be located on the line where the subject is."
     ;; Record the text number
 
     (lyskom-setq-default lyskom-last-written text-no)
-
+    (lyskom-setq-default lyskom-last-seen-written text-no)
 
     ;; Select the old configuration.
 
