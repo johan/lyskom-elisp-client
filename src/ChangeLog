@@ -1,3 +1,13 @@
+Wed May 14 13:08:50 1997  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-lynx):  Lynx kan användas för
+	att visa URL:er.
+	
+	* vars.el.in (kom-lynx-terminal): Ny variabel.
+	(kom-lynx-xterm-command): Ny variabel.
+	(kom-lynx-terminal-command): Ny variabel.
+
+
 Tue Apr  8 22:49:59 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Fråga bara om
