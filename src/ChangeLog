@@ -1,3 +1,9 @@
+Wed Aug 11 11:39:44 1993  Linus Tolke Y  (linus@rudolf)
+
+	* commands2.el (kom-send-message): Allowed quitting.
+	* commands1.el (lyskom-write-comment): No blocking of edit-queue,
+	  corrected misspelled blocking-do.
+
 Mon Aug  9 13:29:37 1993  Linus Tolke Y  (linus@rune)
 
 	* commands1.el (kom-send-letter): Now allowed to quit.
