@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.6 1996-10-22 03:05:44 nisse Exp $
+;;;;; $Id: language.el,v 44.7 1997-01-31 21:34:37 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,13 +32,18 @@
 
 (require 'lyskom-vars "vars")
 
+;;; Variables
+
 ;;(defvar lyskom-language-symbols nil
 ;;  "Symbols with language data bound to them")
 
+(defvar lyskom-languages nil
+  "A alist of defined languages.
+Each entry is a pair (SYMBOL . (NAME NAME ...)) where symbol is the symbol
+used for identification, and the NAMEs are names of the language.")
+
 (defvar lyskom-language-categories nil
   "Categories used")
-
-;;; Variables
 
 (defvar lyskom-language-vars nil
   "A list of all language-dependent variables.")
@@ -190,9 +195,11 @@ if 'lyskom-menu is not found."
 	  (get category 'lyskom-language-symbols)))
 
 
-(defun lyskom-define-language (language name)
-  ;; Do nothing for now
-  )
+(defun lyskom-define-language (language &rest names)
+  (let ((match (assq language lyskom-languages)))
+    (if match
+	(setcdr match names)
+      (setq lyskom-languages (cons (cons language names) lyskom-languages)))))
 
 (defun lyskom-set-language (language)
   "Set the current language to LANGUAGE."
