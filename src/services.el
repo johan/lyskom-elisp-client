@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.35 2003-03-15 18:25:23 byers Exp $
+;;;;; $Id: services.el,v 44.36 2003-03-16 15:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.35 2003-03-15 18:25:23 byers Exp $\n"))
+	      "$Id: services.el,v 44.36 2003-03-16 15:57:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -193,18 +193,31 @@ Args: KOM-QUEUE HANDLER PERS-NO OLD-PW NEW-PW &rest DATA."
 ;;; by another call.
 ;;;
 (defun initiate-query-read-texts (kom-queue handler
-					    pers-no conf-no &rest data)
+					    pers-no 
+                                            conf-no
+                                            want-read-ranges
+                                            max-ranges
+                                            &rest data)
   "Get a membership struct describing the membership of PERS-NO in CONF-NO.
 Args: KOM-QUEUE HANDLER PERS-NO CONF-NO &rest DATA"
   (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 
-                 (if (lyskom-have-call 98)
-                     'lyskom-parse-membership
-                   'lyskom-parse-membership-old))
-    (lyskom-send-packet kom-queue 
-                        (lyskom-format-objects
-                         (if (lyskom-have-call 98) 98 9)
-                         pers-no conf-no))))
+    (cond ((lyskom-have-call 107)
+           (lyskom-call kom-queue lyskom-ref-no handler data 
+                        'lyskom-parse-membership-11)
+           (lyskom-send-packet kom-queue
+                               (lyskom-format-objects 107 pers-no conf-no
+                                                      want-read-ranges
+                                                      max-ranges)))
+          ((lyskom-have-call 98)
+           (lyskom-call kom-queue lyskom-ref-no handler data 
+                        'lyskom-parse-membership)
+           (lyskom-send-packet kom-queue
+                               (lyskom-format-objects 98 pers-no conf-no)))
+          (t
+           (lyskom-call kom-queue lyskom-ref-no handler data 
+                        'lyskom-parse-membership-old)
+           (lyskom-send-packet kom-queue
+                               (lyskom-format-objects 9 pers-no conf-no))))))
 
 
 (defun initiate-create-conf (kom-queue handler

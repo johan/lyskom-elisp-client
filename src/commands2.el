@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.158 2003-03-16 14:29:11 byers Exp $
+;;;;; $Id: commands2.el,v 44.159 2003-03-16 15:57:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.158 2003-03-16 14:29:11 byers Exp $\n"))
+              "$Id: commands2.el,v 44.159 2003-03-16 15:57:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -318,7 +318,9 @@ otherwise: the conference is read with lyskom-completing-read."
                        (let ((membership (blocking-do
                                           'query-read-texts 
                                           (member->pers-no member)
-                                          (conf-stat->conf-no conf-stat))))
+                                          (conf-stat->conf-no conf-stat)
+                                          t
+                                          0)))
                          ;; Print a row describing the membership of MEMBER
                          ;; (described by MEMBERSHIP) in CONF-STAT.
                          (if (or (null membership))
@@ -801,7 +803,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                 ((numberp n) 
                  (lyskom-format-insert 'set-unread-n n)
                  (blocking-do 'set-unread conf-no n)))
-          (setq membership (blocking-do 'query-read-texts lyskom-pers-no conf-no))
+          (setq membership (blocking-do 'query-read-texts lyskom-pers-no conf-no t 0))
           (lyskom-replace-membership membership)
           (if (= conf-no lyskom-current-conf)
               (set-read-list-empty lyskom-reading-list))

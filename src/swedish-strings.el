@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.305 2003-03-16 14:29:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.306 2003-03-16 15:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.305 2003-03-16 14:29:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.306 2003-03-16 15:57:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -634,7 +634,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
-    (show-membership-info-q . "Visa antalet olästa? ")
+    (show-membership-info-q . "Visa medlemskapsinformation och antalet olästa? ")
     (conf-has-these-members . "\n%#1M har följande medlemmar:\n")
     (conf-has-no-members . "\n%#1M har inga medlemmar.\n")
     (member-list-header . "\nSenast inne         Osett   Namn\n")
@@ -2424,6 +2424,7 @@ teckenkodning.
   ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-sv-change-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-sv-review-prefix     (kbd "?") 'lyskom-help)
+  (define-key lyskom-sv-unread-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-sv-filter-get-prefix (kbd "?") 'lyskom-help)
   (define-key lyskom-sv-next-prefix       (kbd "?") 'lyskom-help)
   (define-key lyskom-sv-list-prefix       (kbd "?") 'lyskom-help)

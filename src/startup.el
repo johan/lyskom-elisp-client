@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.88 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: startup.el,v 44.89 2003-03-16 15:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.88 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: startup.el,v 44.89 2003-03-16 15:57:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -474,18 +474,23 @@ clients of the event. See lyskom-mode for details on lyskom."
   (let ((protocol-version 
          (version-info->protocol-version lyskom-server-version-info)))
 
+  (when (>= protocol-version 8)
+    (lyskom-set-feature long-conf-types t))
+
+  (when (>= protocol-version 9)
+    (lyskom-set-feature dynamic-session-info t)
+    (lyskom-set-feature idle-time t))
+
   (when (>= protocol-version 10)
     (lyskom-set-feature bcc-misc t)
     (lyskom-set-feature aux-items t)
     (lyskom-set-feature highest-call 105)
     (lyskom-set-feature local-to-global t))
 
-  (when (>= protocol-version 9)
-    (lyskom-set-feature dynamic-session-info t)
-    (lyskom-set-feature idle-time t))
-
-  (when (>= protocol-version 8)
-    (lyskom-set-feature long-conf-types t))))
+  (when (>= protocol-version 11)
+    (lyskom-set-feature read-ranges t)
+    (lyskom-set-feature highest-call 110))
+  ))
 
 
 (defun lyskom-connect-filter (proc output)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: feature.el,v 1.6 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: feature.el,v 1.7 2003-03-16 15:57:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: feature.el,v 1.6 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: feature.el,v 1.7 2003-03-16 15:57:29 byers Exp $\n"))
 
 (def-kom-var lyskom-feature-defaults nil
   "Alist with default values of all feature variables")
@@ -96,6 +96,7 @@
 ;;; The features
 
 (lyskom-define-feature bcc-misc nil)
+(lyskom-define-feature read-ranges nil)
 (lyskom-define-feature aux-items nil)
 (lyskom-define-feature highest-call 0)
 (lyskom-define-feature local-to-global nil)

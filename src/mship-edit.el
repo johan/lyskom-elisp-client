@@ -796,7 +796,8 @@ clicked on."
         (let ((mship
                (blocking-do 'query-read-texts
                             lyskom-pers-no
-                            (membership->conf-no (lp--entry->membership entry)))))
+                            (membership->conf-no (lp--entry->membership entry))
+                            t 0)))
           (lyskom-replace-membership mship)
           (set-lp--entry->membership entry mship)
           (when (eq flag 'passive)
