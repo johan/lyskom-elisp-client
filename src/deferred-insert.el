@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 43.2 1996-08-23 22:07:08 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 43.3 1996-08-29 20:52:29 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -141,23 +141,24 @@ The insertion will be at (point)."
   (if lyskom-executing-command
       nil
     (let ((window (get-buffer-window lyskom-buffer)))
-      (if (pos-visible-in-window-p (point-max) window)
-	  nil
-	;; This means that this insertion moved point out of the
-	;; window. The scrolling becomes tricky. One big problem is
-	;; that we can't use lyskom-last-viewed, because it has been
-	;; updated to the new prompt. Until that is solved we make
-	;; sure that we never scroll.
-	;;
-	;; The solution is to save lyskom-last-viewed in the defer-info
-	(save-selected-window
-	  (select-window window)
-	  (lyskom-scroll))
-	;; (move-to-window-line -1)
-	;; (vertical-motion 1)
-	;; (if (not (pos-visible-in-window-p))
-	;;     (forward-char -1))
-	))))
+      (if window
+	  (if (pos-visible-in-window-p (point-max) window)
+	      nil
+	    ;; This means that this insertion moved point out of the
+	    ;; window. The scrolling becomes tricky. One big problem is
+	    ;; that we can't use lyskom-last-viewed, because it has been
+	    ;; updated to the new prompt. Until that is solved we make
+	    ;; sure that we never scroll.
+	    ;;
+	    ;; The solution is to save lyskom-last-viewed in the defer-info
+	    (save-selected-window
+	      (select-window window)
+	      (lyskom-scroll))
+	    ;; (move-to-window-line -1)
+	    ;; (vertical-motion 1)
+	    ;; (if (not (pos-visible-in-window-p))
+	    ;;     (forward-char -1))
+	    )))))
 
 
 (defun lyskom-deferred-insert-conf (conf-stat defer-info)
