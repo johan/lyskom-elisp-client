@@ -1,3 +1,9 @@
+Wed Oct  2 17:35:34 1991  Linus Tolke Y  (linus at lysator)
+
+	* async.el (lyskom-insert-personal-message): Man vill ha
+	  display-buffer f|r att visa meddelandebufferten, inte
+	  pop-to-buffer.
+
 Sun Sep 29 04:26:52 1991  Per Cederqvist  (ceder at ruben)
 
 	* flags.el (lyskom-read-options-2): Run lyskom-login-hook even if
