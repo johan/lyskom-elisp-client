@@ -1,3 +1,10 @@
+Fri Dec 13 19:50:56 1991  Linus Tolke Y  (linus at ruben)
+
+	* lyskom-rest.el, review.el, swedish-strings.el, vars.el
+	  (lyskom-is-read, lyskom-normally-read-texts,
+	  kom-review-last-normally-read): Nu finns det m|jlighet att
+	  }terse senaste normalt l{sta igen.
+
 Fri Dec 13 19:17:48 1991  Inge Wallin  (inge at lysator)
 
 	* commands2.el, swedish-strings.el: Nytt kommando "[ndra

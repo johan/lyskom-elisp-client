@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 35.3 1991-09-15 10:04:56 linus Exp $
+;;;;; $Id: review.el,v 35.4 1991-12-13 19:20:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 35.3 1991-09-15 10:04:56 linus Exp $\n"))
+	      "$Id: review.el,v 35.4 1991-12-13 19:20:48 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -634,3 +634,38 @@ text is shown and a REVIEW list is built to shown the other ones."
 	  (lyskom-view-text 'main (car text-nos)))
       (lyskom-insert-string 'no-such-text)))
   (lyskom-run 'main 'lyskom-end-of-command))
+
+
+;;; ================================================================
+;;;          ]terse igen - kom-review-last-normally-read
+;;;
+;;; Author: Linus Tolke
+
+
+(defun kom-review-last-normally-read (no)
+  "Reviews the NO last normally read texts."
+  (interactive 
+   (list 
+    (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
+  (lyskom-start-of-command 'kom-review-last-normally-read)
+  (let* ((text-nos (reverse (nfirst no lyskom-normally-read-texts))))
+    (if text-nos
+	(progn
+	  (lyskom-format-insert 'review-text-no (car text-nos))
+	  (if (cdr text-nos)
+	      (read-list-enter-read-info
+	       (lyskom-create-read-info
+		'REVIEW nil (lyskom-get-current-priority)
+		(lyskom-create-text-list (cdr text-nos))
+		lyskom-current-text)
+	       lyskom-reading-list t))
+	  (lyskom-view-text 'main (car text-nos)))
+      (lyskom-format-insert 'no-such-text)))
+  (lyskom-run 'main 'lyskom-end-of-command))
+      
+(defun nfirst (n list)
+  "Return a list of the N first elements of LIST."
+  (if (or (<= n 0) (not list))
+      nil
+    (cons (car list) (nfirst (1- n) (cdr list)))))
+			
