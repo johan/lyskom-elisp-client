@@ -1,5 +1,14 @@
 2005-02-14  David Byers  <byers@lysator.liu.se>
 
+	Fixed bug 1520:
+	* lyskom-buttons.el (lyskom-button-menu): Pass filter to functions
+	that build menus.
+	(lyskom-make-button-menu): Changed old-style backquote to
+	new-style backquote. Removed function quotes.
+
+	* vars.el.in (lyskom-button-actions): Introduced filter function
+	for the context menu.
+
 	Fix bug 1519:
 	* lyskom-buttons.el (lyskom-button-add-self): Pass conf-stat, not
 	conf-no to kom-add-self.

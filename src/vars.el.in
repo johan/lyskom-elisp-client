@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.313 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.314 2005-02-14 18:59:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.313 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.314 2005-02-14 18:59:09 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3132,11 +3132,20 @@ Values other than `nil' and strings are reserved for future use."
      lyskom-button-view-pers-presentation
      ((lyskom-button-view-pers-presentation-action . lyskom-button-view-pers-presentation)
       (lyskom-button-view-pers-status-action . lyskom-button-view-pers-status)
+      (lyskom-button-goto-conf-action . lyskom-button-goto-conf)
       (lyskom-button-view-session-status-action . lyskom-button-view-session-status)
       (lyskom-button-mail-action . lyskom-button-mail)
       (lyskom-button-send-message-action . lyskom-button-send-message))
+     ; Hints
      ((kom-list-news . lyskom-button-goto-conf)
-      (kom-membership . lyskom-button-goto-conf)))
+      (kom-membership . lyskom-button-goto-conf))
+     ; Filter
+     (lambda (item arg) 
+       (cond ((not (numberp arg)) t)
+             ((eq 'lyskom-button-goto-conf item)
+              (or (eq arg lyskom-pers-no) (lyskom-is-supervisor arg lyskom-pers-no)))
+             (t t)))
+     )
     (url 
      url-popup-title
      lyskom-button-open-url

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.100 2005-02-14 18:21:50 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.101 2005-02-14 18:59:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.100 2005-02-14 18:21:50 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.101 2005-02-14 18:59:09 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -175,7 +175,7 @@ If there is no active area, then do something else."
   ;; This is here to pervent unwanted events when clicking mouse-3
   (identity 1))
 
-(defun lyskom-make-button-menu (title entries buf arg text)
+(defun lyskom-make-button-menu (title entries buf arg text filter)
   "Create a menu keymap from a list of button actions."
   ;; Use the command as the event for simplicity.  Note that the menu
   ;; function alters the menu, so we copy the entries to prevent it
@@ -186,30 +186,29 @@ If there is no active area, then do something else."
                                                     " ...")))
     (cond ((string-match "XEmacs" (emacs-version))
            (cons (lyskom-maybe-recode-string title 'iso-8859-1 t)
-                 (mapcar (function
-                          (lambda (entry)
-                            (vector (lyskom-maybe-recode-string
-                                     (lyskom-get-string (car entry)) 'iso-8859-1 t)
-                                    (list (cdr entry)
-                                          buf
-                                          (if (listp arg)
-                                              (list 'quote arg)
-                                            arg)
-                                          text)
-                                    ':active t)))
-                         entries)))
+                 (delq nil
+                       (mapcar (lambda (entry)
+                                 (and (funcall filter (cdr entry) arg)
+                                      (vector (lyskom-maybe-recode-string
+                                               (lyskom-get-string (car entry)) 'iso-8859-1 t)
+                                              (list (cdr entry)
+                                                    buf
+                                                    (if (listp arg)
+                                                        (list 'quote arg)
+                                                      arg)
+                                                    text)
+                                              ':active t)))
+                               entries))))
           (t (append (list 'keymap title)
-                     (mapcar (function (lambda (entry)
-                                         (let ((tmp (copy-tree entry)))
-                                           (setcar tmp (lyskom-maybe-recode-string
-                                                        (lyskom-get-string (car tmp))
-                                                        'iso-8859-1 t))
-                                           (cons (` ((, (cdr entry)) 
-                                                     (, buf)
-                                                     (, arg)
-                                                     (, text)))
-                                                 tmp))))
-                             entries))))))
+                     (delq nil 
+                           (mapcar (lambda (entry)
+                                     (and (funcall filter (cdr entry) arg)
+                                          (let ((tmp (copy-tree entry)))
+                                            (setcar tmp (lyskom-maybe-recode-string
+                                                         (lyskom-get-string (car tmp))
+                                                         'iso-8859-1 t))
+                                            (cons `(,(cdr entry) ,buf ,arg ,text) tmp))))
+                                   entries)))))))
 
 
 
@@ -227,7 +226,8 @@ If there is no active area, then do something else."
                  ((elt data 1)
                   (lyskom-format (lyskom-get-string (elt data 1)) text))
                  (t (lyskom-format (lyskom-get-string 'generic-popup-title) text))))
-         (actl  (or (and data (elt data 3)) nil)))
+         (actl  (or (and data (elt data 3)) nil))
+         (filter (or (and data (elt data 5)) (lambda (&rest args) t))))
     (cond ((null data) (goto-char pos))
           ((null actl) (goto-char pos))
           ((null buf) (goto-char pos))
@@ -242,19 +242,25 @@ If there is no active area, then do something else."
 	   ;; of a single keymap works better. A patch is submittet to
 	   ;; the GNU folks. /davidk
 	   (if (eq event 'key)
-	       (lyskom-keyboard-menu title actl buf arg text)
+	       (lyskom-keyboard-menu title actl buf arg text filter)
 	     (let* ((menu (lyskom-make-button-menu title actl
-						   buf arg text)))
+						   buf arg text filter)))
 	       (lyskom-do-popup-menu menu event)))))))
 
 
-(defun lyskom-keyboard-menu (title entries buf arg text)
+(defun lyskom-keyboard-menu (title entries buf arg text filter)
   "Do a keyboard menu selection."
   (let* ((prompt nil)
          (maxlen 0)
-         (entries (mapcar (lambda (el)
-                            (cons (if (stringp (car el)) (car el) (lyskom-get-string (car el)))
-                                  (cdr el))) entries))
+         (entries 
+          (delq nil 
+                (mapcar (lambda (el)
+                          (and (funcall filter (cdr el) arg)
+                               (cons (if (stringp (car el)) 
+                                         (car el)
+                                       (lyskom-get-string (car el)))
+                                     (cdr el))))
+                        entries)))
          (title (if (stringp title) title (lyskom-get-string title)))
          (completion-ignore-case t))
     (lyskom-traverse e entries
