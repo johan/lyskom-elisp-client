@@ -1,3 +1,14 @@
+2001-08-09  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-button-find-root-review): this
+	function is now the action for the "Review tree" menu item. For
+	obvious reasons review-tree was used before.
+
+	* vars.el.in (lyskom-button-actions): related changes.
+
+	* english-strings.el, swedish-strings.el (lyskom-message): related
+	changes.
+
 2001-07-31  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-view-url-galeon): ... and the other
