@@ -415,6 +415,13 @@ Att göra i elisp-klienten
     FIX BY: 0.47-0.48
 
 
+** PREFETCH
+
+    Förbättra prefetchen. Till exempel borde ett mötes inlägg
+    prefetchas vid lämpligt tillfälle, t.ex. när man går till
+    det. Idag prefetchas bara kommentarskedjor.
+
+
 ** DIVERSE OSORTERAT
 
     Lista sessioner, ungefär som lista klienter, men som ger mer

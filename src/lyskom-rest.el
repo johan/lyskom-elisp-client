@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.56 1998-02-11 14:41:25 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.57 1998-02-24 22:51:52 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.56 1998-02-11 14:41:25 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.57 1998-02-24 22:51:52 davidk Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -94,17 +94,17 @@
 (put 'lyskom-protocol-error 'error-conditions
      '(error lyskom-error lyskom-protocol-error))
 (put 'lyskom-protocol-error 'error-message
-     "LysKOM protocol error:")
+     "LysKOM protocol error")
 
 (put 'lyskom-internal-error 'error-conditions
      '(error lyskom-error lyskom-internal-error))
 (put 'lyskom-internal-error 'error-message
-     "Internal LysKOM error.")
+     "Internal LysKOM error")
 
 (put 'lyskom-format-error 'error-conditions
      '(error lyskom-error lyskom-format-error))
 (put 'lyskom-internal-error 'error-message
-     "Internal LysKOM format error.")
+     "Internal LysKOM format error")
 
 
 ;;; ================================================================
