@@ -4,6 +4,10 @@ Tue Mar 24 03:03:41 1992  Lars Willf|r  (willfor@lysator)
 	  i lyskom-start-of-command. Borde g|ra s} att scrollningen funkar
 	  b{ttre.
 
+Mon Mar 23 00:09:41 1992  Linus Tolke Y  (linus@robert)
+
+	* Distribuerat version 0.34.4	 	   23:00
+
 Thu Mar 12 04:23:51 1992  Linus Tolke Y  (linus@ruben)
 
 	* async.el, cache.el (logga ut, logga in): Nu klarar who-bufferten
