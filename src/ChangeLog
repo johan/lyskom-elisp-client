@@ -1,3 +1,24 @@
+Mon Aug  3 05:55:46 1992  Linus Tolke Y  (linus@robin)
+
+	* async.el (lyskom-conf-fetched-p): required function.
+
+	* lyskom-rest.el (lyskom-go-to-next-conf): Prefetch of all
+	  text-trees started on entrance.
+	  (lyskom-end-of-command): Try to shut of prefetch while fetching
+	  text to get next prompt.
+
+	* prefetch.el (lyskom-prefetch-limit): limit = 1;
+	  MEMBERSHIPISREAD: new special type.
+	  (lyskom-prefetch-one-item): Bugfix. lyskom-prefetch-textauth
+	  shall fetch text-stat first.
+	  (lyskom-prefetch-textauth-handler,
+	  lyskom-prefetch-texttree-handler): handle error. This is needed
+	  in all the prefetch-function handlers.
+
+	* startup.el (lyskom-fetch-until-we-have-an-unread): New function
+	  to be called from lyskom-end-of-command.
+	  (lyskom-decide-unread-conf): sets lyskom-membership-is-read to t.
+
 Sat Aug  1 17:45:37 1992  Linus Tolke Y  (linus@robin)
 
 	* prefetch.el (lyskom-prefetch-membership-handler,

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 35.8 1992-08-01 15:53:07 linus Exp $
+;;;;; $Id: prefetch.el,v 35.9 1992-08-03 04:09:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 35.8 1992-08-01 15:53:07 linus Exp $\n"))
+	      "$Id: prefetch.el,v 35.9 1992-08-03 04:09:55 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -124,7 +124,7 @@ See further documentation in the source code.")
 
 
 ;+++These should really be in vars.el:
-(defvar lyskom-prefetch-limit 2
+(defvar lyskom-prefetch-limit 1
   "Number of prefetch requests the client will try to keep going
 at a time.")
 
@@ -147,9 +147,11 @@ at a time.")
   "Prefetch the conf-stat for the conference with number CONF-NO.
 If QUEUE is non-nil, put the request on it, otherwise put it on 
 lyskom-prefetch-stack."
-  (if queue
-      (lyskom-queue-enter queue (cons 'CONFSTAT conf-no))
-    (lyskom-stack-push lyskom-prefetch-stack (cons 'CONFSTAT conf-no)))
+  (if conf-no
+      (if queue
+	  (lyskom-queue-enter queue (cons 'CONFSTAT conf-no))
+	(lyskom-stack-push lyskom-prefetch-stack (cons 'CONFSTAT conf-no)))
+    (signal 'lyskom-internal-error "No argument to lyskom-prefetch-conf"))
   (lyskom-continue-prefetch))
 
 
@@ -360,7 +362,7 @@ Return t if an element was prefetched, otherwise return nil."
 
 	 ;; Special request
 	 ((and (listp element)
-	       (eq (car element 'MEMBERSHIPISREAD)))
+	       (eq (car element) 'MEMBERSHIPISREAD))
 	  (setq lyskom-membership-is-read t))
        
 	 (t (signal 'lyskom-internal-error 
@@ -389,8 +391,8 @@ Return t if an element was prefetched, otherwise return nil."
    ((eq (car request) 'TEXTMASS)
     (initiate-get-text 'prefetch 'lyskom-prefetch-handler (cdr request)))
    ((eq (car request) 'TEXTAUTH)
-    (initiate-get-text 'prefetch 'lyskom-prefetch-textauth-handler 
-		       (cdr request) queue))
+    (initiate-get-text-stat 'prefetch 'lyskom-prefetch-textauth-handler 
+			    (cdr request) queue))
    ((eq (car request) 'TEXT-ALL)
     (initiate-get-text-stat 'prefetch 'lyskom-prefetch-text-all-handler
 			    (cdr request) queue))
@@ -435,8 +437,10 @@ Return t if an element was prefetched, otherwise return nil."
   "Prefetch the conf-stat of the author of the text TEXT-STAT.
 Put the request on QUEUE."
   (lyskom-stop-prefetch)
-  (lyskom-prefetch-conf (text-stat->author text-stat) queue)
-  (lyskom-queue-enter queue 'FINISHED)
+  (if (not text-stat)
+      nil
+    (lyskom-prefetch-conf (text-stat->author text-stat) queue)
+    (lyskom-queue-enter queue 'FINISHED))
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
 
@@ -473,27 +477,29 @@ Put the requests on QUEUE."
   "Prefetch all info neccessary to write the text with text-stat TEXT-STAT.
 Then prefetch all info (texttree) of comments.
 Put the requests on QUEUE."
-  (lyskom-stop-prefetch)
-  (lyskom-prefetch-conf (text-stat->author text-stat) queue)
-  (lyskom-prefetch-textmass (text-stat->text-no text-stat) queue)
-  (lyskom-traverse
-   misc
-   (text-stat->misc-info-list text-stat)
-   (let ((type (misc-info->type misc)))
-     (cond
-      ((or (eq type 'RECPT)
-	   (eq type 'CC-RECPT))
-       (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
-      ((eq type 'COMM-IN)
-       (lyskom-prefetch-texttree (misc-info->comm-in misc) queue))
-      ((eq type 'FOOTN-IN)
-       (lyskom-prefetch-texttree (misc-info->footn-in misc) queue))
-      ((eq type 'COMM-TO)
-       (lyskom-prefetch-textauth (misc-info->comm-to misc) queue))
-      ((eq type 'FOOTN-TO)
-       (lyskom-prefetch-textauth (misc-info->footn-to misc) queue))
-      (t nil))))
-  (lyskom-queue-enter queue 'FINISHED)
+  (if (not text-stat)
+      nil				; We did not get anything
+    (lyskom-stop-prefetch)
+    (lyskom-prefetch-conf (text-stat->author text-stat) queue)
+    (lyskom-prefetch-textmass (text-stat->text-no text-stat) queue)
+    (lyskom-traverse
+     misc
+     (text-stat->misc-info-list text-stat)
+     (let ((type (misc-info->type misc)))
+       (cond
+	((or (eq type 'RECPT)
+	     (eq type 'CC-RECPT))
+	 (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
+	((eq type 'COMM-IN)
+	 (lyskom-prefetch-texttree (misc-info->comm-in misc) queue))
+	((eq type 'FOOTN-IN)
+	 (lyskom-prefetch-texttree (misc-info->footn-in misc) queue))
+	((eq type 'COMM-TO)
+	 (lyskom-prefetch-textauth (misc-info->comm-to misc) queue))
+	((eq type 'FOOTN-TO)
+	 (lyskom-prefetch-textauth (misc-info->footn-to misc) queue))
+	(t nil))))
+    (lyskom-queue-enter queue 'FINISHED))
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
 

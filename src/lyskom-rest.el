@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.26 1992-08-01 15:52:59 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.27 1992-08-03 04:09:45 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.26 1992-08-01 15:52:59 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.27 1992-08-03 04:09:45 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -439,6 +439,17 @@ in the current conf is placed."
 	   (read-list->first lyskom-to-do-list)
 	   lyskom-reading-list)
 
+	;; Prefetch this conf
+	(let ((textlist (nreverse 
+			 (lyskom-array-to-list
+			  (text-list->texts 
+			   (read-info->text-list 
+			    (read-list->first lyskom-reading-list)))))))
+	  (lyskom-stop-prefetch)
+	  (while textlist
+	    (lyskom-prefetch-texttree (car textlist))
+	    (setq textlist (cdr textlist)))
+	  (lyskom-start-prefetch))
 	;; Tell server which conf the user is reading.
 	(if (read-info->conf-stat (read-list->first lyskom-reading-list))
 	    (let ((conf-stat (read-info->conf-stat
@@ -993,9 +1004,13 @@ lyskom-is-waiting nil.
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
-  (lyskom-print-prompt)
-  (lyskom-start-prefetch)		; Verify that prefetch i running
-  (run-hooks 'lyskom-after-command-hook))
+  (if (eq (lyskom-what-to-do) 'unknown)
+      (progn
+	(lyskom-stop-prefetch)
+	(lyskom-fetch-until-we-have-an-unread))
+    (lyskom-print-prompt)
+    (lyskom-start-prefetch)		; Verify that prefetch i running
+    (run-hooks 'lyskom-after-command-hook)))
 
 
 (defun lyskom-print-prompt ()
