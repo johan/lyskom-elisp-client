@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.7 1996-10-20 02:56:38 davidk Exp $
+# $Id: Makefile,v 44.8 1996-10-21 00:59:12 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.7 1996-10-20 02:56:38 davidk Exp $
+# $Id: Makefile,v 44.8 1996-10-21 00:59:12 davidk Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -93,8 +93,8 @@ vars.el: vars.el.in Makefile
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 	chmod 444 vars.el
 
-lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
-	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
+lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(ENGLISH-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(SWEDISH-EL) $(ENGLISH-EL) $(PARTS-EL) > lyskom.el
 
 lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile lyskom.el

@@ -1,4 +1,31 @@
+Mon Oct 21 00:54:00 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-language-sv): Rensade bort
+ 	kom-put-files, kom-get-files och kom-list files.
+
+	* english-strings.el (lyskom-strings): Dito.
+
+	* macros.el (map-keymap): Ignorera symboler i keymapen.
+
+	* language.el (lyskom-language-keymaps): Ny variabel
+	(lyskom-language-keymap-internal): Ny funktion.
+	(lyskom-language-keymap): Nytt makro.
+	(lyskom-set-language-keymaps): Ny funktion.
+	(lyskom-set-language-vars): Ny funktion.
+	(lyskom-set-language): Anropa lyskom-set-language-vars och
+ 	lyskom-set-language-keymaps.
+
+	* lyskom-rest.el (lyskom-get-error-text): Använd
+ 	lyskom-get-string-internal.
+
+	* language.el (lyskom-language-strings): Gjorde om till ett makro.
+
 Sun Oct 20 03:46:22 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el: La till ett anrop av lyskom-set-language, något
+ 	malplacerat.
+
+	* language.el (lyskom-set-language): Ny funktion.
 
 	* swedish-strings.el: Flyttade alla defvar till vars.el.in (med
  	nil-värden) och ersatte med lyskom-language-var.

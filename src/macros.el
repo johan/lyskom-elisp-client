@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.4 1996-10-20 02:56:57 davidk Exp $
+;;;;; $Id: macros.el,v 44.5 1996-10-21 00:59:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.4 1996-10-20 02:56:57 davidk Exp $\n"))
+	      "$Id: macros.el,v 44.5 1996-10-21 00:59:27 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -304,7 +304,9 @@ STRING should be given if the last search was by `string-match' on STRING."
              (setq r (1+ r))))
           (t (mapcar (function 
                       (lambda (x)
-                        (funcall fn (car x) (cdr x))))
+			;; It might be an inherited keymap
+                        (if (consp x)
+			    (funcall fn (car x) (cdr x)))))
                      (cdr keymap))))))
 
 
