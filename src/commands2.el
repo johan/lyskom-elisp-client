@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.11 1996-07-25 03:11:12 davidk Exp $
+;;;;; $Id: commands2.el,v 41.12 1996-07-25 03:50:22 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.11 1996-07-25 03:11:12 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.12 1996-07-25 03:50:22 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1379,7 +1379,7 @@ membership info."
 	(if (lyskom-buffer-p (car lyskom-buffer-list))
 	    (switch-to-buffer (car lyskom-buffer-list))
 	  (kom-next-kom)))
-    (error "No active LysKOM buffers"))))
+    (error "No active LysKOM buffers")))
 
 
 (defun kom-previous-kom ()
