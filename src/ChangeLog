@@ -1,5 +1,8 @@
 1999-11-22  David Byers  <davby@ida.liu.se>
 
+	* completing-read.el (lyskom-complete-string): Use character space
+	and not ASCII space.
+
 	* lyskom-rest.el (lyskom-modeline-keymap): Go to unread session on
 	mouse up, not mouse down since mouse up event is bound to bad
 	things in XEmacs.
