@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.14 1996-10-28 18:02:00 davidk Exp $
+;;;;; $Id: commands1.el,v 44.15 1996-12-30 17:53:15 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.14 1996-10-28 18:02:00 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.15 1996-12-30 17:53:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -936,17 +936,22 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
     (lyskom-dispatch-edit-text
      lyskom-proc
-     (lyskom-create-misc-list 'recpt
-			      (cond
-			       ((eq type 'motd)
-				(server-info->motd-conf lyskom-server-info))
-			       ((eq type 'pres)
-				(if (conf-type->letterbox
-				     (conf-stat->conf-type conf-stat))
-				    (server-info->pers-pres-conf 
-				     lyskom-server-info)
-				  (server-info->conf-pres-conf
-				   lyskom-server-info)))))
+     (apply 'lyskom-create-misc-list
+	    (append (list 'recpt
+			  (cond
+			   ((eq type 'motd)
+			    (server-info->motd-conf lyskom-server-info))
+			   ((eq type 'pres)
+			    (if (conf-type->letterbox
+				 (conf-stat->conf-type conf-stat))
+				(server-info->pers-pres-conf 
+				 lyskom-server-info)
+			      (server-info->conf-pres-conf
+			       lyskom-server-info)))))
+		    (if (and (eq type 'pres)
+			     (not (zerop (conf-stat->presentation conf-stat))))
+			(list 'comm-to
+			      (conf-stat->presentation conf-stat)))))
      (conf-stat->name conf-stat)
      (let ((text-mass (blocking-do 'get-text 
 				   (cond
