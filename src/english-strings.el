@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.181 2002-04-10 19:50:24 byers Exp $
+;;;;; $Id: english-strings.el,v 44.182 2002-04-10 22:24:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.181 2002-04-10 19:50:24 byers Exp $"))
+              "$Id: english-strings.el,v 44.182 2002-04-10 22:24:26 byers Exp $"))
 
 
 ;;; ================================================================
@@ -596,6 +596,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
+    (status-aux-item . "Extra information:         %15#1s%#3s (skapad av %#2M)\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1468,11 +1469,26 @@ Contents:     \"%#9s\"
     (default-agree-string . "I agree")
     (what-agree-no . "Agree with which text? ")
 
+    (what-kind-to-add-aux-to . "Attach information to what? ")
+    (which-conf-to-add-aux-to . "Which conference to you want to attach information to? ")
+    (which-text-to-add-aux-to . "Which article to you want to attach information to? ")
+    (which-aux-item-tag . "Information tag: ")
+    (which-aux-item-inherit . "Set the  inherit-flag? ")
+    (which-aux-item-secret . "Set the secret-flag? ")
+    (which-aux-item-anonymous . "Set the anonymous-flag? ")
+    (which-aux-item-rsv1 . "Set the reserved1-flag? ")
+    (which-aux-item-rsv2 . "Set the reserved2-flag? ")
+    (which-aux-item-rsv3 . "Set the reserved3-flag? ")
+    (which-aux-item-rsv4 . "Set the reserved4-flag? ")
+    (which-aux-item-inherit-limit . "Inherit limit: ")
+    (which-aux-item-data . "Data: ")
+
     ;; Cross-reference stuff
 
     (person . "User")
     (conference . "Conference")
     (text . "Text")
+    (server . "Server")
 
     (xref-type . "What to you want to refer to (text, conference or person)? ")
     (which-text-to-xref . "Add reference to text: ")

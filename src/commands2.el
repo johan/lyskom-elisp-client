@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.111 2002-04-10 19:23:23 byers Exp $
+;;;;; $Id: commands2.el,v 44.112 2002-04-10 22:24:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.111 2002-04-10 19:23:23 byers Exp $\n"))
+              "$Id: commands2.el,v 44.112 2002-04-10 22:24:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -265,7 +265,15 @@ otherwise: the conference is read with lyskom-completing-read."
 
         (lyskom-traverse-aux item
             (conf-stat->aux-items conf-stat)
-          (lyskom-aux-item-call item 'status-print item conf-stat))
+          (if (lyskom-aux-item-definition-field item 'status-print)
+              (lyskom-aux-item-call item 'status-print item conf-stat)
+            (lyskom-format-insert 'status-aux-item
+                                  (format "%d/%d" 
+                                          (aux-item->aux-no item)
+                                          (aux-item->tag item))
+                                  (aux-item->creator item)
+                                  (lyskom-aux-item-terminating-button item conf-stat))
+            ))
 
         (let ((mship (lyskom-try-get-membership (conf-stat->conf-no conf-stat) t)))
           (when mship
@@ -2620,3 +2628,54 @@ to the first text that NEW is a comment or footnote to."
     (ediff-buffers
      (lyskom-create-text-buffer old old-text old-text-stat)
      (lyskom-create-text-buffer new new-text new-text-stat))))
+
+;;; ================================================================
+;;;             Skapa aux-item
+
+(def-kom-command kom-create-aux-item ()
+  "Create arbitrary aux-items"
+  (interactive)
+  (let* ((completions
+          (mapcar (lambda (x) (cons (lyskom-get-string x) x))
+                  '(server conference text)))
+         (completion-ignore-case t)
+         (object-type 
+          (cdr (lyskom-string-assoc 
+                (lyskom-completing-read 'what-kind-to-add-aux-to
+                                        completions
+                                        nil t)
+                completions)))
+         (object-id (cond ((eq object-type 'server) nil)
+                           ((eq object-type 'conference)
+                            (lyskom-read-conf-no 'which-conf-to-add-aux-to '(pers conf)))
+                           ((eq object-type 'text)
+                            (lyskom-read-number 'which-text-to-add-aux-to 
+                                                (if (and lyskom-current-text
+                                                         (not (zerop lyskom-current-text)))
+                                                    lyskom-current-text
+                                                  nil)))))
+         (tag (lyskom-read-number 'which-aux-item-tag))
+         (inherit (lyskom-j-or-n-p 'which-aux-item-inherit))
+         (secret (lyskom-j-or-n-p 'which-aux-item-secret))
+         (anonymous (lyskom-j-or-n-p 'which-aux-item-anonymous))
+         (rsv1 (lyskom-j-or-n-p 'which-aux-item-rsv1))
+         (rsv2 (lyskom-j-or-n-p 'which-aux-item-rsv2))
+         (rsv3 (lyskom-j-or-n-p 'which-aux-item-rsv3))
+         (rsv4 (lyskom-j-or-n-p 'which-aux-item-rsv4))
+         (inherit-limit (lyskom-read-number 'which-aux-item-inherit-limit))
+         (data (lyskom-read-string 'which-aux-item-data))
+         (flags (lyskom-create-aux-item-flags nil inherit secret anonymous
+                                              rsv1 rsv2 rsv3 rsv4))
+         (item (lyskom-create-aux-item 0 tag 0 0 flags inherit-limit data)))
+    
+    (lyskom-report-command-answer 
+     (cond ((eq object-type 'server) 
+            (blocking-do 'modify-server-info nil (list item)))
+           ((eq object-type 'conference)
+            (progn (cache-del-conf-stat object-id)
+                   (blocking-do 'modify-conf-info object-id nil (list item))))
+           ((eq object-type 'text)
+            (progn (cache-del-text-stat object-id)
+                   (blocking-do 'modify-text-info object-id nil (list item))))))
+    (when (eq object-type 'server)
+      (setq lyskom-server-info (blocking-do 'get-server-info)))))
