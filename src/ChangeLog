@@ -1,3 +1,11 @@
+2004-06-09  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (kom-builtin-server-aliases): Added MysKOM.
+
+	* Makefile (DPKG_BUILDPACKAGE_OPTIONS): New variable.
+	(debian-packages): Pass DPKG_BUILDPACKAGE_OPTIONS along to
+	dpkg-buildpackage.
+
 2004-05-26  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1326:
