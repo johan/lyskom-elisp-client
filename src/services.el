@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.24 1999-11-23 08:09:27 cardeci Exp $
+;;;;; $Id: services.el,v 44.25 1999-12-20 19:32:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.24 1999-11-23 08:09:27 cardeci Exp $\n"))
+	      "$Id: services.el,v 44.25 1999-12-20 19:32:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -858,11 +858,13 @@ MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
    (if (lyskom-have-call 87)
        (lyskom-send-packet kom-queue
                            (lyskom-format-objects 87
-                                                  message
+                                                  (cons 'STRING message)
                                                   misc-list
                                                   (cons 'LIST aux-items)))
      (lyskom-send-packet kom-queue
-                         (lyskom-format-objects 59 message misc-list)))))
+                         (lyskom-format-objects 59 
+                                                (cons 'STRING message)
+                                                misc-list)))))
 
 
 (defun initiate-find-next-text-no (kom-queue handler text-no &rest data)
