@@ -1,3 +1,16 @@
+2000-02-17  David Byers  <davby@sen2.ida.liu.se>
+
+	* aux-items.el: Encode aux-items that need to be encoded with the
+	default server coding system.
+
+2000-02-17  David Byers  <davby@ida.liu.se>
+
+	* utilities.el: Honor standard-output if no stream is specified.
+
+	* swedish-strings.el: Bind swedish characters explicitly as well
+	as with lyskom-keys so that bindings will work in Windows XEmacs
+	too. 
+
 Wed Feb 16 16:13:46 2000  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-G
