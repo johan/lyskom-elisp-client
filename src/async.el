@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.20 1999-06-29 10:20:07 byers Exp $
+;;;;; $Id: async.el,v 44.21 1999-06-29 14:21:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.20 1999-06-29 10:20:07 byers Exp $\n"))
+	      "$Id: async.el,v 44.21 1999-06-29 14:21:08 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -94,9 +94,12 @@ this function shall be with current-buffer the BUFFER."
 	      new-name
 	      (lyskom-default-button 'conf conf-no)))
 	 ;; (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
-	 (let ((cached-stat (cache-get-conf-stat conf-no)))
-	   (if cached-stat
-	       (set-conf-stat->name cached-stat new-name)))
+	 (let ((cached-stat (cache-get-conf-stat conf-no))
+               (cached-ustat (cache-get-uconf-stat conf-no)))
+	   (when cached-stat
+             (set-conf-stat->name cached-stat new-name))
+	   (when cached-ustat
+             (set-uconf-stat->name cached-ustat new-name)))
 	 (cond
 	  ((lyskom-is-in-minibuffer))
           ((lyskom-show-presence conf-no kom-presence-messages)

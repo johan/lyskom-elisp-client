@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.30 1999-06-29 10:20:17 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.30 1999-06-29 10:20:17 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -984,7 +984,7 @@ depending on the value of `kom-lynx-terminal'."
 
 (defun lyskom-button-delete-aux (buf arg text)
   (let ((aux nil))
-    (cond ((aux-item-p arg))
+    (cond ((lyskom-aux-item-p arg))
           ((listp arg)
            (let ((items (cond ((eq 'text (car arg))
                                (text-stat->aux-items 
@@ -1017,7 +1017,7 @@ depending on the value of `kom-lynx-terminal'."
 (defun lyskom-button-info-aux (buf arg text)
   (pop-to-buffer buf)
   (let ((aux nil))
-    (cond ((aux-item-p arg))
+    (cond ((lyskom-aux-item-p arg))
           ((listp arg) 
            (let ((items (cond ((eq 'text (car arg))
                                (text-stat->aux-items 

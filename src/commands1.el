@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.47 1999-06-28 10:41:01 byers Exp $
+;;;;; $Id: commands1.el,v 44.48 1999-06-29 14:21:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.47 1999-06-28 10:41:01 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.48 1999-06-29 14:21:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -678,13 +678,7 @@ This does lyskom-end-of-command"
   "Write a comment to a text.
 If optional arg TEXT-NO is present write a comment to that text instead."
   (interactive (list 
-		(cond
-		 ((null current-prefix-arg) lyskom-current-text)
-		 ((integerp current-prefix-arg) current-prefix-arg)
-		 ((listp current-prefix-arg) 
-		  (lyskom-read-number (lyskom-get-string 'what-comment-no) 
-                                      (lyskom-text-at-point)))
-		 (t (signal 'lyskom-internal-error '(kom-write-comment))))))
+		(lyskom-read-text-no-prefix-arg 'what-comment-to)))
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
@@ -911,18 +905,11 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 ;;; Rewritten using blocking-do by: Linus Tolke
 
 
-(def-kom-command kom-private-answer (&optional text-no)
+(def-kom-command kom-private-answer (text-no)
   "Write a private answer to the current text.
 If optional arg TEXT-NO is present write a private answer to
 that text instead."
-  (interactive (list
-		(cond
-		 ((null current-prefix-arg) lyskom-current-text)
-		 ((integerp current-prefix-arg) current-prefix-arg)
-		 ((listp current-prefix-arg) 
-                  (lyskom-read-number (lyskom-get-string 'what-private-no)
-                                      (lyskom-text-at-point)))
-		 (t (signal 'lyskom-internal-error '(kom-private-answer))))))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no)))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
                              (text (get-text text-no)))

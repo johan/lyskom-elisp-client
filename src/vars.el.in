@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.73 1999-06-29 10:20:33 byers Exp $
+;;;;; $Id: vars.el.in,v 44.74 1999-06-29 14:21:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.73 1999-06-29 10:20:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.74 1999-06-29 14:21:21 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -528,24 +528,33 @@ function to call."
   server)
 
 (def-kom-var kom-ding-on-common-messages 0
-  "*Non-nil means ding as common messages arrive. 
-A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player. A symbol is interpreted as a function to
-call."
+  "*Non-nil means ding as alarm messages arrive. 
+A number means the number of times to ding. A string is an argument
+for the program named by kom-audio-player. A symbol is interpreted as
+a function to call. A list consisting of pairs (KEY . VALUE) is used
+for fine-grained control. The list is searched for a pair where KEY
+matches the sender identity. The corresponding VALUE is used as the
+specification on how to beep."
   server)
 
 (def-kom-var kom-ding-on-group-messages 1
   "*Non-nil means ding as group messages arrive.
-A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player. A symbol is interpreted as a function
-to call."
+A number means the number of times to ding. A string is an argument
+for the program named by kom-audio-player. A symbol is interpreted as
+a function to call. A list consisting of pairs (KEY . VALUE) is used
+for fine-grained control. The list is searched for a pair where KEY
+matches the recipient identity. The corresponding VALUE is used as the
+specification on how to beep."
   server)
 
 (def-kom-var kom-ding-on-personal-messages 2
   "*Non-nil means ding as personal messages arrive.
-A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player. A symbol is interpreted as a function 
-to call."
+A number means the number of times to ding. A string is an argument
+for the program named by kom-audio-player. A symbol is interpreted as
+a function to call. A list consisting of pairs (KEY . VALUE) is used
+for fine-grained control. The list is searched for a pair where KEY
+matches the sender identity. The corresponding VALUE is used as the
+specification on how to beep."
   server)
 
 
@@ -561,6 +570,14 @@ to call."
   "*Program to play audio files."
   server)
 
+
+(def-kom-var kom-ignore-message-senders nil
+  "*List of senders whose personal, group and alarm messages are ignored."
+  server)
+
+(def-kom-var kom-ignore-message-recipients nil
+  "*List of recipients you do not want group messages to."
+  server)
 
 (def-kom-var kom-default-message-recipient 'group
   "*Determines default recipient of personal messages.
@@ -1906,7 +1923,7 @@ the value of  kom-tell-phrases  for fun.")
   '(kom-active-face kom-url-face kom-me-face kom-highlight-face
 		    kom-text-face kom-subject-face kom-text-no-face
 		    kom-friends-face kom-presence-face
-		    kom-first-line-face kom-mark-face)
+		    kom-first-line-face kom-warning-face kom-mark-face)
   "This is a list of the faces that LysKOM uses.")
 
 (def-kom-var lyskom-face-schemes
@@ -1921,6 +1938,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-friends-face default "blue3" "lavender")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face bold "blue3" "lavender")
+     (kom-warning-face bold "red" nil)
      (kom-first-line-face default nil nil))
     (inverse
      (kom-active-face default "lightblue" nil)
@@ -1933,6 +1951,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-friends-face default "red" nil)
      (kom-presence-face italic "grey" nil)
      (kom-mark-face default "gold" "black")
+     (kom-warning-face bold "red" nil)
      (kom-first-line-face default nil nil))
     (monochrome
      (kom-active-face default nil nil)
@@ -1945,6 +1964,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-friends-face underline nil nil)
      (kom-presence-face italic nil nil)
      (kom-mark-face bold nil "black")
+     (kom-warning-face bold nil nil)
      (kom-first-line-face default nil nil))
     (minimal
      (kom-active-face default nil nil)
@@ -1957,6 +1977,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-friends-face default nil "alice blue")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face default nil "black")
+     (kom-warning-face bold nil nil)
      (kom-first-line-face default nil nil))
     (highlight
      (kom-active-face    default   nil          "aliceblue")
@@ -1969,6 +1990,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-subject-face   default   nil          nil)
      (kom-presence-face  italic    "dim gray"   nil)
      (kom-mark-face      bold      "darkblue"   "thistle")
+     (kom-warning-face   bold      "yellow"     "red")
      (kom-first-line-face default  nil          "lavender")))
   "Face schemes for LysKOM.
 
