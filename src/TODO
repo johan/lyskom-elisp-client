@@ -3,6 +3,9 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Den försöker fortfarande följa hemliga kommentarer om
+    kom-show-footnotes-immediately är satt.
+
     Endast gör fel ibland.
 
     Completion-koden är ivägen när man vill skapa nya personer. [Nåja,
