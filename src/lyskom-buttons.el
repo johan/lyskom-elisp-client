@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.65 2002-04-10 22:24:26 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.66 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.65 2002-04-10 22:24:26 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.66 2002-04-11 18:49:09 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1168,6 +1168,9 @@ depending on the value of `kom-lynx-terminal'."
                               ((eq 'conf (car arg))
                                (conf-stat->aux-items 
                                 (blocking-do 'get-conf-stat (elt arg 1))))
+                              ((eq 'server (car arg))
+                               (server-info->aux-item-list
+                                (blocking-do 'get-server-info)))
                               (t nil))))
              (while items
                (when (eq (aux-item->aux-no (car items)) (elt arg 2))
@@ -1179,13 +1182,23 @@ depending on the value of `kom-lynx-terminal'."
       (lyskom-start-of-command nil)
       (unwind-protect
           (progn
-            (if (blocking-do (cond ((eq 'text (car arg)) 'modify-text-info)
-                                   ((eq 'conf (car arg)) 'modify-conf-info))
-                             (elt arg 1)
-                             (list (aux-item->aux-no aux))
-                             nil)
-                (cond ((eq 'text (car arg)) (cache-del-text-stat (elt arg 1)))
-                      ((eq 'conf (car arg)) (cache-del-conf-stat (elt arg 1))))
+            (unless (cond ((eq 'text (car arg))
+                           (cache-del-text-stat (elt arg 1))
+                           (blocking-do 'modify-text-info
+                                        (elt arg 1)
+                                        (list (aux-item->aux-no aux))
+                                        nil))
+                          ((eq 'conf (car arg))
+                           (cache-del-conf-stat (elt arg 1))
+                           (blocking-do 'modify-conf-info
+                                        (elt arg 1)
+                                        (list (aux-item->aux-no aux))
+                                        nil))
+                          ((eq 'server (car arg))
+                           (prog1 (blocking-do 'modify-server-info
+                                               (list (aux-item->aux-no aux))
+                                               nil)
+                             (lyskom-set-default 'lyskom-server-info (blocking-do 'get-server-info)))))
               (lyskom-report-command-answer nil)))
         (lyskom-end-of-command)))))
           
@@ -1196,13 +1209,17 @@ depending on the value of `kom-lynx-terminal'."
   (let ((aux nil))
     (cond ((lyskom-aux-item-p arg))
           ((listp arg) 
-           (let ((items (cond ((eq 'text (car arg))
-                               (text-stat->aux-items 
-                                (blocking-do 'get-text-stat (elt arg 1))))
-                              ((eq 'conf (car arg))
-                               (conf-stat->aux-items 
-                                (blocking-do 'get-conf-stat (elt arg 1))))
-                              (t nil))))
+           (let ((items 
+                  (cond ((eq 'text (car arg))
+                         (text-stat->aux-items 
+                          (blocking-do 'get-text-stat (elt arg 1))))
+                        ((eq 'conf (car arg))
+                         (conf-stat->aux-items 
+                          (blocking-do 'get-conf-stat (elt arg 1))))
+                        ((eq 'server (car arg))
+                         (server-info->aux-item-list
+                          (blocking-do 'get-server-info)))
+                        (t nil))))
              (while items
                (when (eq (aux-item->aux-no (car items)) (elt arg 2))
                  (setq aux (car items))
@@ -1211,11 +1228,13 @@ depending on the value of `kom-lynx-terminal'."
               
     (if aux
         (let ((header (cond ((eq 'text (car arg)) 
-                             (lyskom-format 'text-no (elt arg 1)))
+                             (lyskom-format 'aux-item-for-text-no (elt arg 1)))
                             ((eq 'conf (car arg))
-                             (lyskom-format 'conference-no
+                             (lyskom-format 'aux-item-for-conference-no
                                             (blocking-do 'get-conf-stat
                                                          (elt arg 1))))
+                            ((eq 'server (car arg))
+                             (lyskom-format 'aux-item-for-server))
                             (t "????"))))
           (lyskom-start-of-command nil)
           (unwind-protect
@@ -1225,7 +1244,7 @@ depending on the value of `kom-lynx-terminal'."
                                                        header)
                                  (lyskom-aux-item-info aux header)))
             (lyskom-end-of-command)))
-      (lyskom-format-insert 'cant-get-aux-item))))
+      (lyskom-format-insert-before-prompt 'cant-get-aux-item))))
            
 (defun lyskom-button-apply (buf arg text)
   (apply (car arg) (cdr arg)))

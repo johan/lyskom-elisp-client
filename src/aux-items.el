@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.26 2002-04-10 19:23:23 byers Exp $
+;;;;; $Id: aux-items.el,v 44.27 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.26 2002-04-10 19:23:23 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.27 2002-04-11 18:49:09 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -123,21 +123,18 @@ return non-nil if the item is to be included in the list."
 
 (defun lyskom-aux-item-terminating-button (item obj)
   (if obj
-       (lyskom-format " %#1@%[[*]%]" 
-                      (lyskom-default-button 'aux 
-                                             (cond ((lyskom-text-stat-p obj)
-                                                    (list 'text
-                                                          (text-stat->text-no
-                                                           obj)
-                                                          (aux-item->aux-no
-                                                           item)))
-                                                   ((lyskom-conf-stat-p obj)
-                                                    (list 'conf
-                                                          (conf-stat->conf-no
-                                                           obj)
-                                                          (aux-item->aux-no
-                                                           item)))
-                                                   (t item))))
+       (lyskom-format 
+        " %#1@%[[*]%]" 
+        (lyskom-default-button 
+         'aux 
+         (cond ((lyskom-text-stat-p obj) (list 'text
+                                               (text-stat->text-no obj)
+                                               (aux-item->aux-no item)))
+               ((lyskom-conf-stat-p obj) (list 'conf
+                                               (conf-stat->conf-no obj)
+                                               (aux-item->aux-no item)))
+               ((eq obj 'server) (list 'server nil (aux-item->aux-no item)))
+               (t item))))
      ""))
 
 (defun lyskom-aux-item-after-parse (item)
@@ -280,10 +277,29 @@ return non-nil if the item is to be included in the list."
   (info . lyskom-aux-item-info))
 
 (def-aux-item recommended-conf 29
+  (status-print . lyskom-print-recommended-conf)
   (info . lyskom-aux-item-info))
 
 (def-aux-item allowed-content-type 30
   (info . lyskom-aux-item-info))
+
+(def-aux-item canonical-name 31
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-list-name 32
+  (info . lyskom-aux-item-info)
+  (status-print . lyskom-print-mx-list-name))
+
+(def-aux-item send-comments-to 33
+  (into . lyskom-print-aux-item-info)
+  (status-print . lyskom-print-send-comments-to))
+
+(def-aux-item world-readable 34
+  (info . lyskom-aux-item-info)
+  (text-print . lyskom-print-world-readable)
+  (parse . lyskom-parse-world-readable)
+  (edit-insert . lyskom-edit-insert-world-readable)
+  (text-print-when . header))
 
 
 
@@ -602,5 +618,30 @@ return non-nil if the item is to be included in the list."
      (lyskom-format 'creating-software-aux (aux-item->data item))
      (lyskom-aux-item-terminating-button item obj))))
 
+(defun lyskom-parse-world-readable ()
+  (and (looking-at (regexp-quote 
+                    (lyskom-get-string 'world-readable-text-edit-aux)))
+       ""))
+
+(defun lyskom-edit-insert-world-readable (item &optional obj)
+  (concat
+   (lyskom-format 'world-readable-text-edit-aux)
+   (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
+
+(defun lyskom-print-world-readable (item &optional obj)
+  (concat (lyskom-format 'world-readable-text-aux)
+          (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-print-mx-list-name (item &optional obj)
+  (lyskom-format-insert 'conf-mx-list-name 
+                        (aux-item->data item)
+                        (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-print-recommended-conf (item &optional obj)
+  
+  (let ((conf-no (string-to-int (if (string-match " " (aux-item->data item))
+                                    (substring (aux-item->data item) 0 (match-beginning 0))
+                                  (aux-item->data item)))))
+    (lyskom-format-insert 'recommended-conf-aux conf-no)))
 
 (provide 'lyskom-aux-items)

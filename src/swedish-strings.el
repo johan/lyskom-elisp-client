@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.216 2002-04-10 22:31:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.217 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.216 2002-04-10 22:31:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.217 2002-04-11 18:49:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -122,6 +122,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
+  (define-key lyskom-sv-edit-prefix (kbd "C-x C-l") 'kom-edit-add-world-readable)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-b") 'kom-edit-add-read-confirm-request)
   (define-key lyskom-sv-edit-prefix (kbd "C-a ?")   'lyskom-help))
 
@@ -576,7 +577,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (conf-has-motd . "\n%#1M har en lapp på dörren:\n")
     (status-conf-generic . "%-40#1s %#2s\n")
-    (status-aux-item . "Tilläggsinformation:       %15#1s%#3s (skapad av %#2M)\n")
+    (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
+    (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
+    (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m>\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1436,8 +1439,10 @@ Uppkopplad sedan %#8s%#9s")
     (label-secret    . "Skall andra kunna se namnet? ")
 
     (creating-software-aux . "Skapad med %#1s")
+    (world-readable-text-aux . "Inlägget kan läsas utan inloggning")
+    (world-readable-text-edit-aux . "Gör inlägget läsbart utan inloggning")
 
-    (cant-get-aux-item . "Hittar inte tilläggsinformationen")
+    (cant-get-aux-item . "Hittar inte tilläggsinformationen\n")
     (aux-item-no-info . "Ingen information tillgänglig\n")
     (aux-item-info . "\
 Nummer:       %#1d %#6s
@@ -1458,8 +1463,9 @@ Innehåll:    \"%#9s\"
     (inherit-steps . "%#1d steg")
 
     (aux-item-for . "Tilläggsinformation för ")
-    (conference-no . "möte <%#1m> %#1M")
-    (text-no . "inlägg %#1n")
+    (aux-item-for-conference-no . "möte <%#1m> %#1M")
+    (aux-item-for-text-no . "inlägg %#1n")
+    (aux-item-for-server . "servern")
 
     (what-fast-reply-no . "Anmärkning till vilket inlägg? ")
     (fast-reply-prompt . "Anmärkning: ")
@@ -1641,6 +1647,22 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-prioritize-flag-toggle-action . "Växla")
     (lyskom-prioritize-flag-set-action . "Sätt på")
     (lyskom-prioritize-flag-clear-action . "Stäng av")
+
+    (server-status-header   . "Status för LysKOM-server %#1s%#2?b%[ (%#2s:%#3d)%]%[%]\n\n")
+    (server-status-server   . "Kanonisk server:                         %#1s%#2?b%[:%#2s%]%[%]")
+    (server-status-version  . "Programversion:                          %#1s %#2s\n")
+    (server-status-protocol . "Protokollversion:          %15#1d\n")
+    (server-status-sessions . "\
+Antal sessioner:     %21#1d (totalt)
+                     %21#2d aktiva under de senaste %#7d minuterna
+                     %21#3d inaktiva sessioner
+                     %21#4d okänd aktivitet
+                     %21#5d osynliga sessioner
+                     %21#6d ej inloggade/hemliga/zombies\n")
+    (server-status-first-text . "Äldsta befintliga text:    %15#1n\n")
+    (server-status-last-text  . "Yngsta befintliga text:    %15#1n\n")
+    (server-status-has-motd . "\nServern har en lapp på dörren:\n")
+    (server-status-time . "Serverns tid:                   %#1s\n")
 ))
 
 (lyskom-language-var lyskom-month-names sv
@@ -1835,6 +1857,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-remove-presentation  . "Ta bort presentation")
     (kom-set-motd-text        . "Addera lapp på dörren")
     (kom-create-aux-item      . "Skapa tilläggsinformation")
+    (kom-status-server        . "Status (för) servern")
     ))
 
 (lyskom-language-strings lyskom-help-strings sv
@@ -2615,6 +2638,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "s m") 'kom-status-conf)
   (define-key lyskom-sv-mode-map (kbd "s p") 'kom-status-person)
   (define-key lyskom-sv-mode-map (kbd "s s") 'kom-status-session)
+  (define-key lyskom-sv-mode-map (kbd "s k") 'kom-status-server)
   (define-key lyskom-sv-S-prefix (lyskom-keys 'ä) 'kom-send-message)
   (define-key lyskom-sv-S-prefix (lyskom-keys 'Ä) 'kom-send-message)
   (define-key lyskom-sv-S-prefix [ä] 'kom-send-message)
