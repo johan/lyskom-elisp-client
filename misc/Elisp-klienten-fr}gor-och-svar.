@@ -2477,3 +2477,83 @@ h}ller en del information. En del av den kan vara gammal. Det spelar
 ingen roll utom just i fallet "sp", d{r det kan resultera i att n}gon
 har ett negativt antal l{sta i ett m|te...
 (111635) -----------------------------------
+
+116204 1991-09-28  23:57  /4 rader/ Tomas Tengling, CD
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <121>
+[rende: [ndra ett m|tes flaggor
+------------------------------------------------------------
+Hur g|r man f|r att {ndra flaggorna f|r ett m|te s} att kommentarer
+inte l{ngre {r till}tna?  Det {r allts} presentationsm|tena hos oss
+som inte har s} bra inst{llningar.  Har inte funnit n}got om detta i
+dokumentationen.
+(116204) -----------------------------------
+G} till n{sta m|te - Kommentera inl{gget (116204)
+Text nummer 116211 {r skapad.
+
+116211 1991-09-29  00:11  /5 rader/ Linus Tolke Y
+Kommentar till text 116204 av Tomas Tengling, CD
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <122>
+[rende: [ndra ett m|tes flaggor
+------------------------------------------------------------
+Du skall anv{nda kommandot: [ndra superm|te (kommer i
+n{sta version av elisp-klienten. 0.35) och [ndra m|tesstatus
+(ocks} i n{sta version).
+Detta givetvis med reservation f|r namnet som kan komma att vara
+annorlunda.
+(116211) -----------------------------------
+
+116255 1991-09-29  01:15  /4 rader/ Tomas Tengling, CD
+Mottagare: LysKOM Elispklient; buggar, nyheter och annat. <4190>
+[rende: Completion av namn vid inloggning {r inte s} bra
+------------------------------------------------------------
+Hur g|r man f|r att registrera sig som ny anv{ndare om man r}kar ha
+ett namn som best}r av ett 'subset' av ett namn som redan finns?
+Som det {r nu s} tycker ju n}gon att han {r smart och g|r completion
+p} namnet vilket man i detta fall inte vill.
+(116255) -----------------------------------
+
+116284 1991-09-29  01:45  /3 rader/ Linus Tolke Y
+Kommentar till text 116255 av Tomas Tengling, CD
+Mottagare: LysKOM Elispklient; buggar, nyheter och annat. <4191>
+[rende: Completion av namn vid inloggning {r inte s} bra
+------------------------------------------------------------
+Jag tycker inte det skall g} att registrera sig som subset. Det
+{r dumt att ha samma namn, men har man det {nd} s} tror
+jag man kan registrera sig som ett l{ngre namn och sedan byta.
+(116284) -----------------------------------
+
+116414 1991-09-29  12:03  /7 rader/ M/S Polarstern (Ceci)
+Mottagare: Linus Tolke Y <2029>
+    Mottaget: 1991-09-29 20:16
+Mottagare: M/S Polarstern (Ceci) <1267>
+    Mottaget: 1991-09-29 12:03
+[rende: 
+------------------------------------------------------------
+Hej igen Linus, fr[gvisa jag h'r.
+ Finns det n[got enkelt s'tt att:
+>f[ se kommentaren till det inl'gg jag nu l'ser? Allts[ inte }terse de
+ kommenterade, utan }terse kommentaren.
+>f[ se hur m[nga ol'sta markerade jag har och helst ocks[ en lista p[
+ vem som skrivit dem?
+/Ceci
+(116414) -----------------------------------
+Kommentar i text 116535 av Linus Tolke Y
+
+116535 1991-09-29  20:21  /11 rader/ Linus Tolke Y
+Kommentar till text 116414 av M/S Polarstern (Ceci)
+Mottagare: Linus Tolke Y <2031>
+Mottagare: M/S Polarstern (Ceci) <1281>
+[rende: Avancerade }terse-kommandon
+------------------------------------------------------------
+1. ] a k ]terser alla kommentarer till det senast
+   l{sta/skrivna inl{gget.
+   ] a r }terser alla kommentarer men g}r ner rekursivt till
+   deras kommentarer.
+
+   H{r kan det vara bra att veta att ] h slutar }terse.
+
+2. Om du g|r ] a m (]terse alla markerade) s} kan du sedan
+   direkt anv{nda kommandona: ] l (]terse lista) f|r att
+   se hur m}nga inl{gg det r|r sig om och l { (lista
+   {renden) f|r att se vem som har skrivit och vilket {rende.
+(116535) -----------------------------------
