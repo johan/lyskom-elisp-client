@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.4 1996-07-18 08:22:57 byers Exp $
+;;;;; $Id: edit-text.el,v 41.5 1996-07-23 13:16:54 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.4 1996-07-18 08:22:57 byers Exp $\n"))
+	      "$Id: edit-text.el,v 41.5 1996-07-23 13:16:54 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -449,8 +449,7 @@ text is a member of some recipient of this text."
   (let* ((comm-to-list nil)
          (recipient-list nil)
          (author-list nil)
-         (membership-list nil)
-         (check-rcpt-membership-list nil)
+         (author-is-member nil)
          (extra-headers nil)
          (me (save-excursion (set-buffer (process-buffer lyskom-proc))
                              lyskom-pers-no))
@@ -482,7 +481,7 @@ text is a member of some recipient of this text."
                                                    'please-edit-recipients)))))
 
     (if (and kom-check-commented-author-membership
-             (memq 'comm-to misc-list))
+             (assq 'comm-to (cdr misc-list)))
         (progn
           (lyskom-message (lyskom-get-string 'checking-rcpt))
 
@@ -497,7 +496,7 @@ text is a member of some recipient of this text."
                              comm-to-list))
 
           ;;
-          ;; For each author, see if the author is a direct decipient
+          ;; For each author, see if the author is a direct recipient
           ;; of the text. If so, there is no point in continuing.
           ;; (People can unsubscribe from their mailboxes, but if they
           ;; do, this code won't help anyway.)
@@ -513,64 +512,44 @@ text is a member of some recipient of this text."
                            (eq (cdr misc) me))
                        (setq author-list (delq (cdr misc) author-list))))))
 
-
           ;;
-          ;; For each author, check that the author is a member of one of
-          ;; the recipients (I'd like a quick server call for this, rather
-          ;; than get the entire membership for the author).
+          ;; For each author, get his or her memberships in all
+          ;; recipient conferences.
           ;;
 
-    
           (save-excursion
             (set-buffer (process-buffer lyskom-proc))
-            (mapcar (function (lambda (check-recipient-author-map-variable)
-                                (initiate-get-membership
-                                 'sending
-                                 (function
-                                  (lambda (x y)
-                                    (setq check-rcpt-membership-list
-                                          (cons
-                                           (cons y x)
-                                           check-rcpt-membership-list))))
-                                 check-recipient-author-map-variable
-                                 check-recipient-author-map-variable)))
-                    author-list)
-            (lyskom-wait-queue 'sending))
+            (mapcar (function
+                     (lambda (author-number)
+                       (lyskom-collect 'sending)
+                       (mapcar
+                        (function
+                         (lambda (conference-number)
+                           (initiate-query-read-texts 
+                            'sending
+                            nil
+                            author-number conference-number)))
+                        recipient-list)
+                       (lyskom-list-use 'sending
+                                        (function
+                                         (lambda (x)
+                                           (setq author-is-member
+                                                 (memq nil
+                                                       (mapcar 'not x))))))
+                       (lyskom-wait-queue 'sending)
+                       (if (and (null author-is-member)
+                                (lyskom-j-or-n-p
+                                 (let ((kom-deferred-printing nil))
+                                   (lyskom-format
+                                    'add-recipient-p
+                                    author-number)) t))
+                           (setq extra-headers
+                                 (nconc (list 'recpt 
+                                              author-number)
+                                        extra-headers)))))
+                    author-list))))
 
-          (lyskom-message (lyskom-get-string 'checking-rcpt-done))
-
-
-          (setq membership-list
-                (mapcar
-                 (function (lambda (x)
-                             (cons (car x)
-                                   (mapcar 'membership->conf-no
-                                           (listify-vector (cdr x))))))
-                 check-rcpt-membership-list))
-
-          (while membership-list
-            (if (not (lyskom-edit-check-membership (cdr (car membership-list))
-                                                   recipient-list))
-                (if (lyskom-j-or-n-p
-                     (let ((kom-deferred-printing nil))
-                       (lyskom-format 'add-recipient-p
-                                      (car (car membership-list)))) t)
-                    (setq extra-headers
-                          (nconc (list 'recpt (car (car membership-list)))
-                                 extra-headers))))
-            (setq membership-list (cdr membership-list)))))
     extra-headers))
-
-
-(defun lyskom-edit-check-membership (membership conf-list)
-  (let ((found nil))
-    (while (and conf-list (not found))
-      (setq found (or found
-                      (memq (car conf-list) membership)))
-      (setq conf-list (cdr conf-list)))
-    found))
-  
-
     
 
 

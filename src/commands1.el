@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.10 1996-07-19 16:55:19 davidk Exp $
+;;;;; $Id: commands1.el,v 41.11 1996-07-23 13:16:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.10 1996-07-19 16:55:19 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.11 1996-07-23 13:16:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -70,7 +70,7 @@
   (interactive)
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'what-conf-to-delete)
-				'(all))))
+				'(all) nil nil t)))
     (if conf-stat
 	(if (lyskom-ja-or-nej-p
 	     (lyskom-format 'confirm-delete-pers-or-conf

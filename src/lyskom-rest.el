@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.14 1996-07-18 08:23:03 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.15 1996-07-23 13:17:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.14 1996-07-18 08:23:03 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.15 1996-07-23 13:17:14 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -118,13 +118,6 @@
 	(cdr pair)
       (lyskom-format 'error-not-found errno))))
 
-
-(defun lyskom-handle-command-answer (answer)
-  "Handles a void return from call to the server."
-  (lyskom-report-command-answer answer)
-  (lyskom-end-of-command))
-
-
 (defun lyskom-report-command-answer (answer)
   "Handles a void return from call to the server."
   (if answer 
@@ -151,27 +144,6 @@ assoc list."
   ;; anymore, anyway.
   (lyskom-tell-server (lyskom-tell-string key)))
 
-
-;;;; ================================================================
-;;;; Aronsson was here 5 MAY 1991
-					; kom-dict-*
-(defconst kom-dict
-  (append
-   '(
-     (kom-dict-vfsh		"VFSH") ; sample assoc entry
-     )
-   kom-tell-phrases			; Really?
-   lyskom-commands)			; Really?
-
-  "These texts are used all over the client. They were collected into
-one huge assoc list to facilitate internationalization and personal
-profiling. Users are encouraged to change this dictionary for fun.
-
-Related variables are kom-tell-phrases and lyskom-commands.")
-
-(defun lyskom-dict-string (key)
-  "Retrieve the string indexed by the key from the kom-dict assoc list."
-  (car (cdr (assoc key kom-dict))))
 
 
 ;;;; ================================================================
@@ -549,24 +521,6 @@ Args: CONF-STAT READ-INFO"
 			  num-unread)))
   
 
-(defun lyskom-put-back-on-to-do-list (read-list low-priority)
-  "Add the conferences on READ-LIST on lyskom-to-do-list.
-Alter the priority to kom-low-priority if LOW-PRIORITY is non-nil."
-  (lyskom-traverse
-      to-read (read-list->all-entries read-list)
-    (if (or (eq 'CONF (read-info->type to-read))
-	    (eq 'REVIEW-MARK (read-info->type to-read)))
-	;; Only unread conferences and viewings of marked texts
-	;; are put back on the to-do-list.
-	;; E. g. unread comments to a text are not put back since they
-	;; are anyhow present on a 'CONF-item's text-list.
-	(progn
-	  (if (and kom-low-priority
-		   low-priority)
-	      (set-read-info->priority to-read kom-low-priority))
-	  (read-list-enter-read-info to-read
-				     lyskom-to-do-list
-				     (not low-priority))))))
 
 
 ;;;================================================================
@@ -682,19 +636,6 @@ The value is actually the membership for the conference."
     found))
 
 
-;;; ================================================================
-;;; +++ Where shall this function move?
-
-(defun lyskom-return-time (time)
-  "Return a string containing the time TIME."
-  (lyskom-format 'time-yyyy-mm-dd-hh-mm
-	  (+ (time->year time) 1900)
-	  (1+ (time->mon  time))
-	  (time->mday time)
-	  (time->hour time)
-	  (time->min  time)))
-
-
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
 
@@ -772,9 +713,6 @@ kom-emacs-knows-iso-8859-1."
   "Insert STRING just before the prompt of if no prompt then just buffers.
 If prompt on screen then do the scroll if necessary.
 The strings buffered are printed before the prompt by lyskom-print-prompt."
-  (lyskom-do-insert-before-prompt string))
-
-(defun lyskom-do-insert-before-prompt (string)
   (cond
    ((and lyskom-executing-command
          (not (eq lyskom-is-waiting t)))
@@ -2143,6 +2081,17 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
       (setq nagging t))
     (not (string-match (lyskom-get-string 'no-regexp) answer))))
 
+;;;
+;;; j-or-n-p is similar to y-or-n-p. If optional argument QUITTABLE is
+;;; non-nil C-g will abort. 
+;;;
+
+
+(defun lyskom-lookup-key (char)
+  "Look up the character CHAR in the current local and global keymaps."
+  (let ((tmp (vector char)))
+    (or (lookup-key (current-local-map) tmp)
+        (lookup-key (current-global-map) tmp))))
 
 (defun j-or-n-p (prompt &optional quittable)
   "Same as y-or-n-p but language-dependent.
@@ -2151,18 +2100,37 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (let ((input-char 0)
 	(cursor-in-echo-area t)
 	(nagging nil))
-    (while (or (not (char-in-string input-char
-                                    (lyskom-get-string 'y-or-n-instring)))
-               (and (eq input-char 7) quittable))
+    (while (and (not (char-in-string input-char
+                                     (lyskom-get-string 'y-or-n-instring)))
+                (not (and (or (eq input-char 7)
+                              (eq 'keyboard-quit
+                                  (lyskom-lookup-key input-char)))
+                          quittable)))
 	(lyskom-message "%s" (concat (if nagging 
 					 (lyskom-get-string 'j-or-n-nag)
 				       "") 
 				     prompt
 				     (lyskom-get-string 'j-or-n)))
-	(if nagging 
-	    (beep))
-	(setq input-char (read-char))
-	(setq nagging t))
+	(if nagging (beep))
+
+        ;;
+        ;; Workaround for Emacs whose read-char does not accept C-g
+        ;;
+
+	(setq input-char 
+              (let ((inhibit-quit t))
+                (prog1 (read-char)
+                  (setq quit-flag nil))))
+
+        ;;
+        ;; Redisplay prompt on C-l
+        ;;
+
+        (if (or (eq input-char 12)
+                (eq 'recenter (lyskom-lookup-key input-char)))
+            (setq nagging nil)
+          (setq nagging t)))
+
     (if (and quittable (eq input-char 7)) (keyboard-quit))
     (char-in-string input-char (lyskom-get-string 'y-instring))))
 

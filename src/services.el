@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.4 1996-07-17 09:00:06 byers Exp $
+;;;;; $Id: services.el,v 41.5 1996-07-23 13:17:20 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.4 1996-07-17 09:00:06 byers Exp $\n"))
+	      "$Id: services.el,v 41.5 1996-07-23 13:17:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -492,8 +492,14 @@ Args: KOM-QUEUE HANDLER LEVEL &rest DATA."
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
   (lyskom-send-packet kom-queue (lyskom-format-objects 42 level)))
 
-;;; Call 43 is sync. That should not be done too often, so no
-;;; function is written... Use 'kill -SIGUSR1' instead.
+;;; Call 43 is sync. Starting with version 1.9 of lyskomd it is a
+;;; privileged operation, so there is no harm in having the function
+;;; easily available any more.
+
+(defun initiate-sync (kom-queue handler &rest data)
+  "Sync the LysKOM datbase. This is a prioritized call."
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 43)))
 
 ;;; Call 44 is shutdown. Use 'kill -HUP' instead.
 

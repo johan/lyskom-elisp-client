@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.12 1996-07-17 09:00:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.13 1996-07-23 13:17:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.12 1996-07-17 09:00:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.13 1996-07-23 13:17:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -333,6 +333,17 @@ du har l\344st klart allting. Kom tillbaks senare.
     (no-marked-texts-mark . 
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
 
+;;; For later
+    (norhtward . "norrut")
+    (soutward . "söderut")
+    (permanent-sundown . "Solen kommer inte att gå upp. Flytta %#1s!")
+    (permanent-sunup . "Solen kommer inte att gå ned. Fytta %#1s!")
+    (sunup-soon . "Solen går snart upp")
+    (sundown-recently . "Solen gick nyligen ned")
+    (after-sunset . "Solen har gått ned")
+    (before-sunup . "Solen har inte gått upp ännu")
+    (sun-is-up . "Solen är uppe")
+;;;
     (weekdays . ["s\366ndag" "m\345ndag" "tisdag" "onsdag" "torsdag"
 		 "fredag" "l\366rdag" "s\366ndag"])
     (time-is . "Det \344r %#1s %#2s(enligt servern).")
@@ -380,6 +391,7 @@ i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
     (conf-for-status . "Vilket m\366te vill du se statusen f\366r? ")
     (no-such-conf . "M\366tet finns ej.\n")
     (status-record . "Status f\366r m\366te %#1M (%#2m) %#3s\n\n")
+    (change-type-prompt . "\304ndra m\366testyp f\366r m\366te %#1M (%#2m) %#3s\n")
     (Mailbox . "Brevl\345da")
     (Protected . "Skyddat")
     (no-comments . "original")
@@ -549,6 +561,8 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 
     (really-shutdown . "\304r du s\344ker p\345 att du vill st\344nga av servern? ")
     (closing-server . "St\344nga av servern...")
+    (really-sync . "\304r du s\344ker p\345 att du vill spara databasen? ")
+    (syncing-server . "Spara databasen...")
     (administrator . "administrat\366r")
     (no-longer-administrator . "en normal anv\344ndare igen")
     (you-are-now . "Ok, du k\366r nu som %#1s.\n")
@@ -628,14 +642,15 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 ;; The format of this function should coincide with the format of the 
 ;; lyskom-text-start variable. DONT change one without changing the other.
 
+
+    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "idag")
     (yesterday . "ig\345r")
-; used by lyskom-return-time
-    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
     (no-such-text-no . "Det finns ingen s\345dan text. (%#1n)\n")
 
     (head-Subject . "\304rende: ")
@@ -1038,6 +1053,7 @@ K\366r %#6D fr\345n %#3s\n")
     (kom-edit-options		"\304ndra variabler")
     (kom-save-options           "Spara variabler")
     (kom-shutdown-server        "St\344ng av servern")
+    (kom-sync-database          "Spara databasen")
     (kom-enable-adm-caps        "\326verg\345 till administrat\366rsmod")
     (kom-disable-adm-caps       "\326verg\345 till normalmod")
     (kom-set-motd               "S\344tt loginmeddelande")

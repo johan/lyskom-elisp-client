@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 41.0 1996-05-02 19:26:48 davidk Exp $
+;;;;; $Id: filter-edit.el,v 41.1 1996-07-23 13:17:05 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 41.0 1996-05-02 19:26:48 davidk Exp $\n"))
+	      "$Id: filter-edit.el,v 41.1 1996-07-23 13:17:05 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -786,13 +786,13 @@ If NOERROR is non-nil, return nil instead of signaling an error."
       (setq lyskom-filter-list 
             (append
              (setq kom-permanent-filter-list (nreverse xpermanent-list))
-             (setq kom-session-filter-list (nreverse xtemporary-list))))))
-  (setq filter-edit-change-flag nil)
-  (lyskom-message "%s" (lyskom-get-string 'filter-edit-saving))
-  (lyskom-save-options lyskom-buffer
-                       (lyskom-get-string 'filter-edit-saving)
-                       (lyskom-get-string 'filter-edit-saving-done)
-                       (lyskom-get-string 'filter-edit-saving-error)))
+             (setq kom-session-filter-list (nreverse xtemporary-list))))
+      (setq filter-edit-change-flag nil)
+      (lyskom-message "%s" (lyskom-get-string 'filter-edit-saving))
+      (lyskom-save-options lyskom-buffer
+                           (lyskom-get-string 'filter-edit-saving)
+                           (lyskom-get-string 'filter-edit-saving-done)
+                           (lyskom-get-string 'filter-edit-saving-error)))))
 
 
 (defun lyskom-filter-edit-revert ()
