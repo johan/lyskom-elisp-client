@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.0 1996-08-07 16:41:19 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.1 1996-08-07 20:02:32 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.0 1996-08-07 16:41:19 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.1 1996-08-07 20:02:32 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1144,14 +1144,14 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "[" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "}" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "]" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "\344" 'lyskom-change-prefix) ; 8-bit keymap
-  (define-key lyskom-mode-map "\304" 'lyskom-change-prefix)
-  (define-key lyskom-mode-map "\345" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "\305" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "\033{" 'lyskom-change-prefix) ; 7(8)-bit emacs.
-  (define-key lyskom-mode-map "\033[" 'lyskom-change-prefix) 
-  (define-key lyskom-mode-map "\033}" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "\033]" 'lyskom-review-prefix) 
+  ;; (define-key lyskom-mode-map "\344" 'lyskom-change-prefix) ; 8-bit keymap
+  ;; (define-key lyskom-mode-map "\304" 'lyskom-change-prefix)
+  ;; (define-key lyskom-mode-map "\345" 'lyskom-review-prefix)
+  ;; (define-key lyskom-mode-map "\305" 'lyskom-review-prefix)
+  ;; (define-key lyskom-mode-map "\M-{" 'lyskom-change-prefix)
+  ;; (define-key lyskom-mode-map "\M-[" 'lyskom-change-prefix) 
+  ;; (define-key lyskom-mode-map "\M-}" 'lyskom-review-prefix)
+  ;; (define-key lyskom-mode-map "\M-]" 'lyskom-review-prefix) 
 
   (define-key lyskom-mode-map "f" 'lyskom-filter-get-prefix)
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
@@ -1213,10 +1213,10 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "ls" 'kom-membership)
   (define-key lyskom-mode-map "l{" 'kom-list-summary)
   (define-key lyskom-mode-map "l[" 'kom-list-summary)
-  (define-key lyskom-mode-map "l\344" 'kom-list-summary) ; 8-bit emacs
-  (define-key lyskom-mode-map "l\304" 'kom-list-summary)
-  (define-key lyskom-mode-map "l\033{" 'kom-list-summary) ; 7(8)-bit emacs
-  (define-key lyskom-mode-map "l\033[" 'kom-list-summary)
+  ;; (define-key lyskom-mode-map "l\344" 'kom-list-summary) ; 8-bit emacs
+  ;; (define-key lyskom-mode-map "l\304" 'kom-list-summary)
+  ;; (define-key lyskom-mode-map "l\M-{" 'kom-list-summary) ; 7(8)-bit emacs
+  ;; (define-key lyskom-mode-map "l\M-[" 'kom-list-summary)
   (define-key lyskom-mode-map "lf" 'kom-list-filters)
   (define-key lyskom-mode-map "m"  'kom-add-self)
   (define-key lyskom-mode-map "M"  'kom-mark-text)
@@ -1235,10 +1235,10 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "fs" 'kom-get-abuse)
   (define-key lyskom-mode-map "f{" 'kom-filter-subject)
   (define-key lyskom-mode-map "f[" 'kom-filter-subject)
-  (define-key lyskom-mode-map "f\344" 'kom-filter-subject)
-  (define-key lyskom-mode-map "f\304" 'kom-filter-subject)
-  (define-key lyskom-mode-map "f\033{" 'kom-filter-subject)
-  (define-key lyskom-mode-map "f\033[" 'kom-filter-subject)
+  ;; (define-key lyskom-mode-map "f\344" 'kom-filter-subject)
+  ;; (define-key lyskom-mode-map "f\304" 'kom-filter-subject)
+  ;; (define-key lyskom-mode-map "f\M-{" 'kom-filter-subject)
+  ;; (define-key lyskom-mode-map "f\M-[" 'kom-filter-subject)
   (define-key lyskom-mode-map "ff" 'kom-filter-author)
   (define-key lyskom-mode-map "fi" 'kom-filter-text)
   (define-key lyskom-mode-map "v"  'kom-who-is-on)
@@ -1285,8 +1285,8 @@ Cf. paragraph-start.")
 
   ;; Running in buffer
 
-  (define-key lyskom-mode-map "\033p" 'backward-text)
-  (define-key lyskom-mode-map "\033n" 'forward-text)
+  (define-key lyskom-mode-map "\M-p" 'backward-text)
+  (define-key lyskom-mode-map "\M-n" 'forward-text)
   (define-key lyskom-mode-map "st" 'kom-save-text)
 
   (define-key lyskom-mode-map "\C-?" 'scroll-down)
