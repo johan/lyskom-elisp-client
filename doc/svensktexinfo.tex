@@ -660,26 +660,26 @@ where each line of input produces a line of output.}
 
 \ifx\bigger\relax
 \let\mainmagstep=\magstep1
-\font\textrm=cmr12
-\font\texttt=cmtt12
+\font\textrm=l1cmr12
+\font\texttt=l1cmtt12
 \else
-\font\textrm=cmr10 scaled \mainmagstep
-\font\texttt=cmtt10 scaled \mainmagstep
+\font\textrm=l1cmr10 scaled \mainmagstep
+\font\texttt=l1cmtt10 scaled \mainmagstep
 \fi
-% Instead of cmb10, you many want to use cmbx10.
-% cmbx10 is a prettier font on its own, but cmb10
-% looks better when embedded in a line with cmr10.
-\font\textbf=cmb10 scaled \mainmagstep 
-\font\textit=cmti10 scaled \mainmagstep
-\font\textsl=cmsl10 scaled \mainmagstep
-\font\textsf=cmss10 scaled \mainmagstep
-\font\textsc=cmcsc10 scaled \mainmagstep
+% Instead of l1cmb10, you many want to use l1cmbx10.
+% l1cmbx10 is a prettier font on its own, but l1cmb10
+% looks better when embedded in a line with l1cmr10.
+\font\textbf=l1cmb10 scaled \mainmagstep 
+\font\textit=l1cmti10 scaled \mainmagstep
+\font\textsl=l1cmsl10 scaled \mainmagstep
+\font\textsf=l1cmss10 scaled \mainmagstep
+\font\textsc=l1cmcsc10 scaled \mainmagstep
 \font\texti=cmmi10 scaled \mainmagstep
 \font\textsy=cmsy10 scaled \mainmagstep
 
 % A few fonts for @defun, etc.
-\font\defbf=cmbx10 scaled \magstep1 %was 1314
-\font\deftt=cmtt10 scaled \magstep1
+\font\defbf=l1cmbx10 scaled \magstep1 %was 1314
+\font\deftt=l1cmtt10 scaled \magstep1
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
 % Fonts for indices and small examples.
@@ -687,9 +687,9 @@ where each line of input produces a line of output.}
 % because texinfo normally uses the slanted fonts for that.
 % Do not make many font distinctions in general in the index, since they
 % aren't very useful.
-\font\ninett=cmtt9
-\font\indrm=cmr9
-\font\indit=cmsl9
+\font\ninett=l1cmtt9
+\font\indrm=l1cmr9
+\font\indit=l1cmsl9
 \let\indsl=\indit
 \let\indtt=\ninett
 \let\indsf=\indrm
@@ -699,23 +699,23 @@ where each line of input produces a line of output.}
 \font\indsy=cmsy9
 
 % Fonts for headings
-\font\chaprm=cmbx12 scaled \magstep2
-\font\chapit=cmti12 scaled \magstep2
-\font\chapsl=cmsl12 scaled \magstep2
-\font\chaptt=cmtt12 scaled \magstep2
-\font\chapsf=cmss12 scaled \magstep2
+\font\chaprm=l1cmbx12 scaled \magstep2
+\font\chapit=l1cmti12 scaled \magstep2
+\font\chapsl=l1cmsl12 scaled \magstep2
+\font\chaptt=l1cmtt12 scaled \magstep2
+\font\chapsf=l1cmss12 scaled \magstep2
 \let\chapbf=\chaprm
-\font\chapsc=cmcsc10 scaled\magstep3
+\font\chapsc=l1cmcsc10 scaled\magstep3
 \font\chapi=cmmi12 scaled \magstep2
 \font\chapsy=cmsy10 scaled \magstep3
 
-\font\secrm=cmbx12 scaled \magstep1
-\font\secit=cmti12 scaled \magstep1
-\font\secsl=cmsl12 scaled \magstep1
-\font\sectt=cmtt12 scaled \magstep1
-\font\secsf=cmss12 scaled \magstep1
-\font\secbf=cmbx12 scaled \magstep1
-\font\secsc=cmcsc10 scaled\magstep2
+\font\secrm=l1cmbx12 scaled \magstep1
+\font\secit=l1cmti12 scaled \magstep1
+\font\secsl=l1cmsl12 scaled \magstep1
+\font\sectt=l1cmtt12 scaled \magstep1
+\font\secsf=l1cmss12 scaled \magstep1
+\font\secbf=l1cmbx12 scaled \magstep1
+\font\secsc=l1cmcsc10 scaled\magstep2
 \font\seci=cmmi12 scaled \magstep1
 \font\secsy=cmsy10 scaled \magstep2
 
@@ -733,20 +733,20 @@ where each line of input produces a line of output.}
 
 %\let\ssecbf=\ssecrm
 
-\font\ssecrm=cmbx12 scaled \magstephalf
-\font\ssecit=cmti12 scaled \magstephalf
-\font\ssecsl=cmsl12 scaled \magstephalf
-\font\ssectt=cmtt12 scaled \magstephalf
-\font\ssecsf=cmss12 scaled \magstephalf
-\font\ssecbf=cmbx12 scaled \magstephalf
-\font\ssecsc=cmcsc10 scaled \magstep1 
+\font\ssecrm=l1cmbx12 scaled \magstephalf
+\font\ssecit=l1cmti12 scaled \magstephalf
+\font\ssecsl=l1cmsl12 scaled \magstephalf
+\font\ssectt=l1cmtt12 scaled \magstephalf
+\font\ssecsf=l1cmss12 scaled \magstephalf
+\font\ssecbf=l1cmbx12 scaled \magstephalf
+\font\ssecsc=l1cmcsc10 scaled \magstep1 
 \font\sseci=cmmi12 scaled \magstephalf
 \font\ssecsy=cmsy10 scaled \magstep1
 % The smallcaps and symbol fonts should actually be scaled \magstep1.5,
 % but that is not a standard magnification.
 
 % Fonts for title page:
-\font\titlerm = cmbx12 scaled \magstep3
+\font\titlerm = l1cmbx12 scaled \magstep3
 \let\authorrm = \secrm
 
 % In order for the font changes to affect most math symbols and letters,
@@ -802,9 +802,9 @@ where each line of input produces a line of output.}
 \newcount\fontdepth \fontdepth=0
 
 % Fonts for short table of contents.
-\font\shortcontrm=cmr12
-\font\shortcontbf=cmbx12
-\font\shortcontsl=cmsl12
+\font\shortcontrm=l1cmr12
+\font\shortcontbf=l1cmbx12
+\font\shortcontsl=l1cmsl12
 
 %% Add scribe-like font environments, plus @l for inline lisp (usually sans
 %% serif) and @ii for TeX italic
@@ -3614,12 +3614,12 @@ Section\xreftie'char\the\appendixno.\the\secno.\the\subsecno.\the\subsubsecno %
 
 % Iso-characters.
 
-\catcode `\ä=13 \xdefä{\"a}
-\catcode `\å=13 \xdefå{\aa}
-\catcode `\Ä=13 \xdefÄ{\"A}
-\catcode `\Å=13 \xdefÅ{\AA}
-\catcode `\ö=13 \xdefö{\"o}
-\catcode `\Ö=13 \xdefÖ{\"O}
+\catcode `\ä=11
+\catcode `\å=11
+\catcode `\Ä=11
+\catcode `\Å=11
+\catcode `\ö=11
+\catcode `\Ö=11
 
 \lccode `Ä=`ä
 \lccode `Å=`å
@@ -3628,6 +3628,14 @@ Section\xreftie'char\the\appendixno.\the\secno.\the\subsecno.\the\subsubsecno %
 \uccode `ä=`Ä
 \uccode `å=`Å
 \uccode `ö=`Ö
+
+\lccode `ä=`ä
+\lccode `å=`å
+\lccode `ö=`ö
+
+\uccode `Ä=`Ä
+\uccode `Å=`Å
+\uccode `Ö=`Ö
 
 % Set up an active definition for =, but don't enable it most of the time.
 {\catcode`\==\active
