@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.22 2004-07-12 13:14:00 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.23 2004-07-18 19:23:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.22 2004-07-12 13:14:00 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.23 2004-07-18 19:23:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -172,6 +172,7 @@ Returns t if there was a conference to insert this text into."
 	       (conf-stat->conf-no (read-info->conf-stat read-info))))
        (read-info-enter-text-last read-info text-no)
        (setq inserted t))))
+    (when inserted (lp--maybe-update-unreads recipient))
     inserted))
 
 
@@ -185,14 +186,17 @@ TEXT-NO may be nil, in which case only empty read-infos on RLIST are removed."
   (let* ((prev rlist)			;"Previous" cons-celll
 	 (curr (cdr rlist)))		;Current cons-cell
     (while curr
-      (if text-no
-	  (cond
-	   ((let ((type (read-info->type (car curr)))) 
+      (when text-no
+        (cond
+         ((let ((type (read-info->type (car curr)))) 
 					; Don't change REVIEW et c.
-	      (memq type lyskom-review-types-list)))
-	   (t				; Do change all other entries.
-	    (let ((tl  (read-info->text-list (car curr))))
-	      (text-list->delq tl text-no)))))
+            (memq type lyskom-review-types-list)))
+         (t				; Do change all other entries.
+          (let ((tl  (read-info->text-list (car curr))))
+            (when (text-list->memq tl text-no)
+              (text-list->delq tl text-no)
+              (lp--maybe-update-unreads
+               (conf-stat->conf-no (read-info->conf-stat (car curr)))))))))
       
       ;; Delete this element from RLIST if the text-list became or was empty.
       
@@ -228,8 +232,9 @@ will be inserted before it."
 	(read-info-append-text-list
 	 (car (cdr rlist))
 	 (text-list->texts (read-info->text-list read-info)))
+        (lp--maybe-update-unreads (conf-stat->conf-no conf-stat))
 	(setq continue nil)) 
-       
+
        ((null (cdr rlist)) 
 	(setcdr rlist (list read-info))
 	(setq continue nil))
@@ -237,7 +242,11 @@ will be inserted before it."
 	(setcdr rlist (cons read-info (cdr rlist)))
 	(setq continue nil))
        (t 
-	(setq rlist (cdr rlist)))))))
+	(setq rlist (cdr rlist)))))
+
+    (when (eq type 'CONF)
+      (lp--maybe-update-unreads (conf-stat->conf-no conf-stat)) )))
+
 
 (defun read-list-delete-read-info (conf-no rlist)
   "Destructively removes all the entries for the conf CONF-NO in RLIST.
@@ -249,7 +258,6 @@ RLIST is a list of read-info."
 	(setcdr rlist (cdr (cdr rlist)))
       (setq rlist (cdr rlist)))))
  
-	  
 (defun read-list-rotate (read-list)
   "Put the first element of READ-LIST last in the same list. The second
 element will be the new first element."

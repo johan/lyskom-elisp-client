@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.78 2004-07-11 23:01:05 byers Exp $
+;;;;; $Id: view-text.el,v 44.79 2004-07-18 19:23:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.78 2004-07-11 23:01:05 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.79 2004-07-18 19:23:48 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -966,16 +966,12 @@ the client. That is done by lyskom-is-read."
 	      ;; (lyskom-member-p (misc-info->recipient-no misc-info))
 	      )
 	 (initiate-mark-as-read 'background 
-                                'lyskom-mark-as-read-callback
+                                nil
 				(misc-info->recipient-no misc-info)
 				(list (misc-info->local-no misc-info))
                                 text-stat
                                 (misc-info->recipient-no misc-info)
                                 (list (misc-info->local-no misc-info)))))))
-
-(defun lyskom-mark-as-read-callback (result text-stat recipient local-nos)
-  (lp--maybe-update-unreads recipient))
-
 
 (defun lyskom-print-header-recpt (conf-no misc)
   "Print a line of info about a recipient (or cc-recipient) of a text."

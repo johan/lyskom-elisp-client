@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.40 2004-07-12 13:14:00 byers Exp $
+;;;;; $Id: komtypes.el,v 44.41 2004-07-18 19:23:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.40 2004-07-12 13:14:00 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.41 2004-07-18 19:23:48 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -763,6 +763,10 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
     (set-text-list->length-internal text-list
                                     (length (text-list->texts text-list))))
   (text-list->length-internal text-list))
+
+(defsubst text-list->memq (text-list no)
+  "Return non-nil if TEXT-LIST contains TEXT-NO."
+  (memq no (text-list->texts text-list)))
 
 (defsubst text-list->delq (text-list no)
   "Remove text NO from TEXT-LIST."
