@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.31 2002-12-31 00:22:09 byers Exp $
+;;;;; $Id: flags.el,v 44.32 2003-01-06 11:18:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.31 2002-12-31 00:22:09 byers Exp $\n"))
+	      "$Id: flags.el,v 44.32 2003-01-06 11:18:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -55,6 +55,32 @@
                        (lyskom-get-string 'saving-settings)
                        (lyskom-get-string 'saving-settings-done)
                        (lyskom-get-string 'could-not-save-options)))
+
+(def-kom-command kom-copy-options ()
+  "Copy options from one setting to another."
+  (interactive)
+  (let* ((completions
+          (mapcar (lambda (x)
+                    (cons (save-excursion
+                            (set-buffer x)
+                            (buffer-name))
+                          x))
+                  (delq (or lyskom-buffer (current-buffer))
+                        (copy-sequence lyskom-buffer-list))))
+         (from-session (completing-read 
+                        (lyskom-get-string 'session-to-copy-options-from)
+                        completions
+                        nil t)))
+    (lyskom-message (lyskom-get-string 'reading-settings-from) from-session)
+    (lyskom-read-options from-session)
+    (lyskom-message (lyskom-get-string 'reading-settings-from-done) from-session)
+
+    ;; Inline kom-save-options
+    (lyskom-save-options (or lyskom-buffer (current-buffer))
+                         (lyskom-get-string 'saving-settings)
+                         (lyskom-get-string 'saving-settings-done)
+                         (lyskom-get-string 'could-not-save-options))
+))
 
 
 ;;;============================================================

@@ -1,3 +1,33 @@
+2003-01-06  David Byers  <david.byers@swipnet.se>
+
+	Clean up :variable assignments:
+	* compatibility.el (lyskom-make-self-evaluating): New macro. Use
+	it to make several :symbols self-evalutaing in Emacs 19.
+
+	Fix bug 964:
+	* faces.el (lyskom-setup-faces-for-buffer): Catch errors cause
+	when generating faces since running this code in a tty usually
+	causes problems. Don't just check window-system, because the color
+	stuff might work on some implementations.
+
+	Fix bug 753:
+	* flags.el (kom-copy-options): New command.
+
+	* english-strings.el (lyskom-command): Added kom-copy-options.
+
+	* swedish-strings.el (lyskom-command): Renamed "Spara variabler"
+	to "Spara inställningar". Added kom-copy-options.
+
+	Fix bug 831 as well as possible:
+	* lyskom-rest.el (lyskom-scroll): Cleaned up for readability. Move
+	point six chars in from the right margin when not scrolling to the
+	end to prevent automatic hscrolling in Emacs 21.x.
+
+	Fix bug 927:
+	* commands1.el (lyskom-who-is-on-check-membership-9): Don't
+	include passive members.
+	(lyskom-who-is-on-check-membership-8): Ditto.
+
 2003-01-05  David Byers  <david.byers@swipnet.se>
 
 	* I have cleaned up all over the place. There are no ChangeLog

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.164 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: commands1.el,v 44.165 2003-01-06 11:18:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.164 2003-01-05 21:37:05 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.165 2003-01-06 11:18:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2542,7 +2542,7 @@ Uses Protocol A version 9 calls"
                             (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
 				     't wants-invisibles (* idle-hide 60)))
-	 (who-list (sort	
+	 (who-list (sort 
 		    (funcall (if show-friends-only
 				 #'lyskom-select-friends-from-who-list
 			       #'identity)
@@ -2718,11 +2718,34 @@ Uses Protocol A version 9 calls"
                               0 (conf-stat->no-of-members conf-stat)))
 	(len (length who-info-list))
 	(i 0)
-	(res nil))
+	(res nil)
+        (mship nil))
     (while (< i len)
-      (if (lyskom-member-list-find-member
-           (who-info->pers-no (aref who-info-list i))
-           members)
+      (setq mship (lyskom-member-list-find-member
+                   (who-info->pers-no (aref who-info-list i))
+                   members))
+      (when (and mship
+               (not (membership-type->passive 
+                     (member->membership-type mship))))
+	  (setq res (cons (aref who-info-list i) res)))
+      (setq i (1+ i)))
+    res))
+
+(defun lyskom-who-is-on-check-membership-9 (who-info-list conf-stat)
+  "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
+  (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
+			      0 (conf-stat->no-of-members conf-stat)))
+	(len (length who-info-list))
+	(i 0)
+	(res nil)
+        (mship nil))
+    (while (< i len)
+      (setq mship (lyskom-member-list-find-member
+                   (dynamic-session-info->person (aref who-info-list i))
+                   members))
+      (when (and mship
+               (not (membership-type->passive 
+                     (member->membership-type mship))))
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
@@ -2735,23 +2758,6 @@ Uses Protocol A version 9 calls"
     (while (< i len)
       (if (eq (who-info->working-conf (aref who-info-list i))
 	      (conf-stat->conf-no conf-stat))
-	  
-	  (setq res (cons (aref who-info-list i) res)))
-      (setq i (1+ i)))
-    res))
-
-(defun lyskom-who-is-on-check-membership-9 (who-info-list conf-stat)
-  "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
-  (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
-			      0 (conf-stat->no-of-members conf-stat)))
-	(len (length who-info-list))
-	(i 0)
-	(res nil))
-    (while (< i len)
-      (if (lyskom-member-list-find-member 
-           (dynamic-session-info->person (aref who-info-list i))
-           members)
-
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
@@ -2764,7 +2770,6 @@ Uses Protocol A version 9 calls"
     (while (< i len)
       (if (eq (dynamic-session-info->working-conference (aref who-info-list i))
 	      (conf-stat->conf-no conf-stat))
-
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))

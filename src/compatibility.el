@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.63 2003-01-02 17:12:26 byers Exp $
+;;;;; $Id: compatibility.el,v 44.64 2003-01-06 11:18:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.63 2003-01-02 17:12:26 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.64 2003-01-06 11:18:25 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -635,16 +635,17 @@ Otherwise treat \\ in NEWTEXT string as special:
 ;; Emacs 21.
 
 (eval-and-compile
-  (condition-case nil
-      (setq lyskom-dummy-variable-to-fool-the-byte-compiler
-            (symbol-value ':default-help-echo))
-    (error (set ':default-help-echo ':default-help-echo)))
-  (condition-case nil
-      (setq lyskom-dummy-variable-to-fool-the-byte-compiler
-            (symbol-value ':group))
-    (error (set ':group ':group))))
+  (defmacro lyskom-make-self-evaluating (var)
+    `(condition-case nil
+         (setq lyskom-dummy-variable-to-fool-the-byte-compiler
+               (symbol-value ',var))
+       (error (set ',var ',var))))
 
-
+  (lyskom-make-self-evaluating :default)
+  (lyskom-make-self-evaluating :default-help-echo)
+  (lyskom-make-self-evaluating :group)
+  (lyskom-make-self-evaluating :automatic)
+  (lyskom-make-self-evaluating :read-only))
 
 
 ;;; Local Variables:

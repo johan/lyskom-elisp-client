@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.290 2003-01-03 21:50:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.291 2003-01-06 11:18:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.290 2003-01-03 21:50:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.291 2003-01-06 11:18:26 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1873,6 +1873,10 @@ teckenkodning.
     (jump-from-text . "Hoppa över kommentarer till vilken text? ")
     (jumping-from-text . "Hoppar över kommentarer till inlägg %#1n.\n")
     (jumping-from-text-review . "Hoppar över återsedda kommentarer.\n")
+    
+    (session-to-copy-options-from . "Kopiera inställningar från session: ")
+    (reading-settings-from . "Läser inställningar från %s...")
+    (reading-settings-from-done . "Läser inställningar från %s...klart")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -1995,7 +1999,7 @@ teckenkodning.
     (kom-unset-conf-motd      . "Ta bort lapp på dörren")
     (kom-save-text	      . "Arkivera inlägg (till fil)")
     (kom-save-text-body	      . "Spara inläggstext (på fil)")
-    (kom-save-options         . "Spara variabler")
+    (kom-save-options         . "Spara inställningar")
     (kom-shutdown-server      . "Stäng av servern")
     (kom-sync-database        . "Spara databasen")
     (kom-enable-adm-caps      . "Övergå till administratörsmod")
@@ -2075,6 +2079,8 @@ teckenkodning.
     (kom-recommend-conference . "Rekommendera möte")
     (kom-redirect-comments    . "Dirigera om kommentarer")
     (kom-move-text-tree       . "Flytta träd")
+
+    (kom-copy-options         . "Kopiera inställningar")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
