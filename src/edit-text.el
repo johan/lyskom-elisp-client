@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.10 1996-02-01 09:36:52 byers Exp $
+;;;;; $Id: edit-text.el,v 38.11 1996-02-02 05:00:22 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.10 1996-02-01 09:36:52 byers Exp $\n"))
+	      "$Id: edit-text.el,v 38.11 1996-02-02 05:00:22 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -453,7 +453,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (if (or (eq (car headers) 'comm-to)
 		  (eq (car headers) 'footn-to))
 	      (setq no (car (cdr headers))
-		    headers nil)))
+		    headers nil)
+	    (setq headers (cdr (cdr headers)))))
 	(cond
 	 (no
 	  (goto-char p)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.15 1996-02-01 09:36:40 byers Exp $
+;;;;; $Id: commands1.el,v 38.16 1996-02-02 05:00:06 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.15 1996-02-01 09:36:40 byers Exp $\n"))
+	      "$Id: commands1.el,v 38.16 1996-02-02 05:00:06 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -396,6 +396,8 @@ Returns t if it was possible, otherwise nil."
   "Adds MEMBERSHIP to the sorted list of memberships.
 Args: MEMBERSHIP CONF-STAT THENDO DATA
 Also adds to lyskom-to-do-list."
+  ;;; +++ What should this do if the priority is lower than
+  ;;; kom-session-priority?
   (if membership
       (progn
 	(setq lyskom-membership (sort (cons membership lyskom-membership)
@@ -408,7 +410,7 @@ Also adds to lyskom-to-do-list."
 		    (conf-stat->no-of-texts conf-stat))))
 	  (if map
 	      (let ((texts (skip-first-zeros
-			    (sort (append (map->text-nos map) nil)
+			    (sort (listify-vector (map->text-nos map))
 				  '<))))
 		(if texts
 		    (read-list-enter-read-info

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.13 1996-02-01 09:36:45 byers Exp $
+;;;;; $Id: commands2.el,v 38.14 1996-02-02 05:00:13 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.13 1996-02-01 09:36:45 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.14 1996-02-02 05:00:13 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -262,7 +262,8 @@ otherwise: the conference is read with lyskom-completing-read."
 	      (if (or (null member-conf-stat)
 		      (null membership))
 		  (lyskom-insert-string 'secret-membership)
-		(lyskom-print-date-and-time (membership->last-time-read membership))
+		(lyskom-print-date-and-time
+		 (membership->last-time-read membership))
 		(let ((unread (- (+ (conf-stat->first-local-no conf-stat)
 				    (conf-stat->no-of-texts conf-stat))
 				 (membership->last-text-read membership)
@@ -1220,6 +1221,25 @@ current conference to another session."
    ((zerop today)
     (read-list-delete-text nil lyskom-reading-list)
     (read-list-delete-text nil lyskom-to-do-list))))
+
+
+
+;;; ================================================================
+;;;              S{tt l{sniv} - Sess session priority
+
+;;; Author: David K}gedal
+
+(def-kom-command kom-set-session-priority (priority)
+  "Set the priority level of the current session.
+This sets the variable kom-session-priority and refetches all
+membership info."
+  (interactive "P")
+  (let ((pri (or priority
+		 (lyskom-read-number (lyskom-get-string
+				      'set-session-priority)
+				     100))))
+    (setq lyskom-session-priority pri)
+    (lyskom-refetch)))
 
 
 

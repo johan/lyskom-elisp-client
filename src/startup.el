@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.13 1996-02-01 09:37:14 byers Exp $
+;;;;; $Id: startup.el,v 38.14 1996-02-02 05:00:49 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.13 1996-02-01 09:37:14 byers Exp $\n"))
+	      "$Id: startup.el,v 38.14 1996-02-02 05:00:49 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -242,7 +242,7 @@ This is called at login and after prioritize and set-unread."
 (defun lyskom-set-membership (membership)
   "Sets lyskom-membership to a new value.
 Args: MEMBERSHIP."
-  (setq lyskom-membership (sort (lyskom-array-to-list membership)
+  (setq lyskom-membership (sort (listify-vector membership)
 				'lyskom-membership-<))
   (setq lyskom-membership-is-read t))
 
@@ -527,6 +527,7 @@ to see, set of call."
     (make-local-variable 'lyskom-server-info)
     (make-local-variable 'lyskom-server-name)
     (make-local-variable 'lyskom-session-no)
+    (make-local-variable 'lyskom-session-priority)
     (make-local-variable 'lyskom-text-cache)
     (make-local-variable 'lyskom-text-mass-cache)
     (make-local-variable 'lyskom-to-be-printed-before-prompt)

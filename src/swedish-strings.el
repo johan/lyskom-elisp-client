@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.12 1996-02-01 09:37:18 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.13 1996-02-02 05:00:55 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.12 1996-02-01 09:37:18 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.13 1996-02-02 05:00:55 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -521,6 +521,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (who-to-throw-out . "Vilken session vill du kasta ut? ")
     (throwing-out . "Kastar nu ut session %#1d... ")
     (postpone-prompt . "Hur lite vill du l\344sa nu? ")
+    (set-session-priority . "S\344tt l\344sniv\345:")
 
     ; From review.el:
     (latest-n . "senaste %#1d")
@@ -864,6 +865,7 @@ Text:
     (kom-list-news              "Lista nyheter")
     (kom-membership		"Lista medlemsskap")
     (kom-postpone		"Uppskjuta l\344sning")
+    (kom-set-session-priority	"S\344tt l\344sniv\345")
     (kom-prioritize		"Prioritera m\366ten")
     (kom-status-person		"Status (f\366r) person")
     (kom-status-conf		"Status (f\366r) m\366te")

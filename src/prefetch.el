@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 38.0 1994-01-06 01:58:44 linus Exp $
+;;;;; $Id: prefetch.el,v 38.1 1996-02-02 05:00:43 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 38.0 1994-01-06 01:58:44 linus Exp $\n"))
+	      "$Id: prefetch.el,v 38.1 1996-02-02 05:00:43 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -507,7 +507,7 @@ Put the requests on QUEUE."
 (defun lyskom-prefetch-membership-handler (membership pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
-  (let ((list (lyskom-array-to-list membership)))
+  (let ((list (listify-vector membership)))
     (lyskom-add-membership-to-membership membership)
     (while list
       (lyskom-prefetch-map (membership->conf-no (car list))
@@ -541,7 +541,8 @@ Put the requests on QUEUE."
 Maps are `cached' in lyskom-to-do-list."
   (lyskom-stop-prefetch)
   (if map
-      (let ((list (lyskom-array-to-list (map->text-nos map))))
+      (let ((list (listify-vector (map->text-nos map))))
+	;; +++ Check kom-session-priority
 	(if list
 	    (lyskom-prefetch-map-using-conf-stat 
 	     conf-stat (+ first-local lyskom-fetch-map-nos)
