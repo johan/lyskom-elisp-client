@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.127 2001-04-01 13:18:34 joel Exp $
+;;;;; $Id: english-strings.el,v 44.128 2001-04-01 14:15:53 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.127 2001-04-01 13:18:34 joel Exp $"))
+              "$Id: english-strings.el,v 44.128 2001-04-01 14:15:53 joel Exp $"))
 
 
 ;;; ================================================================
@@ -404,7 +404,8 @@ and you have finished reading. Please come back later.
     (change-priority-for-q . "Change priority of conference: ")
     (change-priority-for . "Changing priority of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
-    (passivate-done . "You are now a passive member of %#1M.\n")
+    (passivate-done . "You are now a passive member of %#1M.
+Leave the conference again to unsubscribe completely.\n")
 
     (exclude-from . "Removing %#1P from %#2M...")
 
