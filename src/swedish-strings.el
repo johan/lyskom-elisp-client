@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.237 2002-04-28 17:15:03 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.238 2002-05-01 21:42:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.237 2002-04-28 17:15:03 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.238 2002-05-01 21:42:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -166,8 +166,8 @@ Använd kommandot Äp. Om du inte vill skriva någon presentation tryck fs.\n")
 
     (first-greeting . "%#1s
 Det tycks vara första gången du använder LysKOM. Välkommen!
-Kontrollera att du stavat ditt namn rätt.  Använd gärna ditt fullständiga
-namn och organisation, t ex \"Eskil Block, FOA\".  Om du stavat ditt namn
+Kontrollera att du stavat ditt namn rätt. Använd gärna ditt fullständiga
+namn och organisation, t ex \"Eskil Block, FOA\". Om du stavat ditt namn
 fel, eller vill ändra ditt namn, svara nej på frågan nedan.
 
 Observera att all information än så länge sparas så att vem som helst
@@ -175,7 +175,8 @@ kan läsa den. Dock är lösenordet krypterat.
 
 Om du är osäker på hur man använder LysKOM kan du hämta en manual via
 anonym ftp från ftp.lysator.liu.se. Fråga din systemadministratör om
-du är osäker.\n")
+du är osäker. Du kan även skriva \"?\" för kommandot \"Hjälp\".
+")
 
     (is-name-correct . "Är namnet %#1s korrekt? ")
     (personal-password . "Ange ett personligt lösen: ")
@@ -184,8 +185,15 @@ du är osäker.\n")
 
     (could-not-create-you .  "Det gick inte att skapa personen.\n")
     (presentation-subject . "%#1s")
-    (presentation-form . "Namn:\t\nAdress:\t\nStad:\t\nTelefon:
-Email-adress:\nWWW:\t\n\nAnnat:\t")
+    (presentation-form . "\
+Namn:    
+Adress:  
+Stad:    
+Telefon: 
+E-post:  
+WWW:     
+
+Annat:   ")
     (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej närvarande i något möte.")
     (in-secret-conference . "Hemligt möte (%#1d).")
@@ -394,6 +402,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-add-bcc . "Vilket inlägg vill du skicka som dold kopia:")
     (text-to-delete-recipient . "Vilket inlägg vill du subtrahera mottagare från:")
     (text-to-move . "Vilket inlägg vill du flytta:")
+    (text-tree-to-move . "Vilket inläggs är rot till trädet vill du flytta:")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till:")
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
@@ -489,6 +498,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
     (who-to-move-to-q . "Vart vill du flytta texten? ")
+    (who-to-move-to-or-sub-q . "Vart vill du flytta texten (tomt för att bara subtrahera)? ")
 
     (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
@@ -503,7 +513,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (error-access-denied-add-recpt . "Du får inte addera inlägg till %#2M.\n")
     (error-not-recipient . "%#2M är inte mottagare till inlägg %#1n.\n")
 
+    (moving-tree-what-action-q . "Vad vill du göra? (flytta) ")
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
+    (moving-already-moved . "Inlägg %#1n har inte %#2M som mottagare.\nFlytter inte inlägget eller dess kommentarsträd.\n")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar till %#1n? ")
     (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar från %#1n? ")
     (text-to-add-footn-q . "Vilket inlägg vill du addera som fotnot till %#1n? ")
@@ -1780,7 +1792,6 @@ Antal sessioner:     %21#1d (totalt)
      			      . "Vilka (är) närvarande (i möte)")
     (kom-who-is-on-and-friend . "Vilka vänner (är inloggade)")
     (kom-who-am-i             . "Var (är) jag")
-;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")
     (kom-busy-wait	      . "Vänta på ett inlägg")
     (kom-write-comment	      . "Kommentera inlägget")
@@ -1899,6 +1910,7 @@ Antal sessioner:     %21#1d (totalt)
     (kom-change-server-faq    . "Ändra server-FAQ")
     (kom-recommend-conference . "Rekommendera möte")
     (kom-redirect-comments    . "Dirigera om kommentarer")
+    (kom-move-text-tree       . "Flytta träd")
     ))
 
 (lyskom-language-strings local lyskom-help-strings sv
@@ -2482,8 +2494,11 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
     (kom-edit-move-text . "Flytta till en ny mottagare")
 ))
 
-;;(defvar lyskom-swascii-commands nil
-;;  "The swascii-versions of lyskom-commands.")
+(lyskom-language-var local lyskom-move-tree-actions sv
+                     '(("Flytta eller subtrahera mottagare" . move)
+                       ("Lämna kvar och fortsätt med kommentarerna" . skip)
+                       ("Avsluta helt" . quit)
+                       ("Hoppa över inlägget och dess kommentarsträd" . jump)))
 
 (lyskom-language-var local lyskom-onoff-table sv
   '(("på" . on) ("av" . off)))
@@ -2626,6 +2641,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "f u") 'kom-get-appreciation)
   (define-key lyskom-sv-mode-map (kbd "f s") 'kom-get-abuse)
   (define-key lyskom-sv-mode-map (kbd "f t") 'kom-move-text)
+  (define-key lyskom-sv-mode-map (kbd "f T") 'kom-move-text-tree)
   (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'ä) 'kom-filter-subject)
   (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'Ä) 'kom-filter-subject)
   (define-key lyskom-sv-filter-get-prefix [ä] 'kom-filter-subject)

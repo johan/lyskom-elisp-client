@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.142 2002-04-28 17:15:03 jhs Exp $
+;;;;; $Id: commands1.el,v 44.143 2002-05-01 21:42:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.142 2002-04-28 17:15:03 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.143 2002-05-01 21:42:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1263,7 +1263,7 @@ Don't ask for confirmation."
 	 (type (misc-info->type info)))
     (cond ((null misc-list) '())
 	  ((memq type lyskom-recpt-types-list)
-	   (append (list (intern (downcase (symbol-name type)))
+	   (append (list (intern (symbol-name type))
 			 (misc-info->recipient-no info))
 		   (lyskom-get-recipients-from-misc-list
 		    (cdr misc-list))))
@@ -3710,8 +3710,12 @@ The value of RECIPIENTS should be the result of a call to
             (lyskom-format-insert 'text-has-no-recipients-r text-no)))
       (lyskom-format-insert 'no-such-text-no text-no))))
 
+
 (def-kom-command kom-move-text (text-no)
-  "Move text TEXT-NO from one conference to another."
+  "Move text TEXT-NO from one conference to another.
+CONTINUATION is the function that does the actual moving. It is called
+with three arguments: source, target and text-stat, where source is the
+recipient to remove and target the recipient to add to text-stat."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-move)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
     (if text-stat
@@ -3745,7 +3749,146 @@ The value of RECIPIENTS should be the result of a call to
                 (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
                 (lyskom-move-recipient text-no source target 'RECPT)))))
       (lyskom-format-insert 'no-such-text-no text-no))))
-         
+
+
+(def-kom-command kom-move-text-tree (text-no)
+  "Move text TEXT-NO and all its descendants from one conference to another."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-tree-to-move)))
+  (let ((root-text-stat (blocking-do 'get-text-stat text-no)))
+    (if root-text-stat
+
+        ;; Set up default recipients for from and to.
+
+        (let* ((recipients (lyskom-text-recipients root-text-stat t))
+               (default-from (lyskom-default-recpt-for-sub recipients))
+               (default-to (blocking-do
+                            'get-conf-stat
+                            (or (lyskom-default-value 'lyskom-last-added-rcpt)
+                                lyskom-current-conf))))
+
+          ;; Check that the text has recipients at all.
+
+          (if (null default-from)
+              (lyskom-format-insert 'text-has-no-recipients-r text-no)
+
+            ;; Read the conference we are moving the tree away from.
+
+            (let ((source (lyskom-read-conf-stat 
+                           'who-to-move-from-q
+                           (list (cons 'restrict (mapcar 'car recipients)))
+                           nil
+                           (cons (if default-from
+                                     (conf-stat->name default-from)
+                                   "") 0)
+                           t))
+                  (to-do (list (text-stat->text-no root-text-stat)))
+                  (done nil))
+
+
+              ;; Now loop over the tree
+
+              (while to-do
+                (let* ((text-to-move (car to-do))
+                       (text-stat (blocking-do 'get-text-stat text-to-move))
+                       (text-to-move-recipients
+                        (lyskom-text-recipients text-stat)))
+                  (setq to-do (cdr to-do))
+
+                  ;; Check that this text is a candidate for moving
+                  ;; If not, put it in done to fool the next control
+                  ;; structure.
+
+                  (unless (memq (conf-stat->conf-no source)
+                                text-to-move-recipients)
+                    (lyskom-format-insert 'moving-already-moved 
+                                          text-to-move source)
+                    (setq done (cons text-to-move done)))
+
+                  ;; Use memoing to ensure that we don't loop.
+
+                  (unless (memq text-to-move done)
+                    (setq done (cons (car to-do) done))
+
+                    ;; Check that the text has the source as a
+                    ;; recipient. If not, skip to the next in the
+                    ;; tree (and don't traverse downwards).
+
+                    ;; Show the text that we are planning on moving
+                    ;; Truncate it. This may be a bad idea, but it
+                    ;; kind of makes sense since we don't have the
+                    ;; opportunity to scroll the buffer.
+
+                    (let ((kom-truncate-show-lines 
+                           (if (numberp kom-truncate-show-lines)
+                               (min kom-truncate-show-lines 10)
+                             10))
+                          (kom-truncate-threshold 
+                           (if (numberp kom-truncate-threshold)
+                               (min kom-truncate-threshold 10)
+                             10)))
+                      (lyskom-view-text text-to-move nil nil nil
+                                        nil nil nil t)
+                      (setq lyskom-last-viewed (point-max)))
+
+
+                    ;; Ask the user what to do
+
+                    (let* ((completion-ignore-case t)
+                           (action
+                            (cdr
+                             (lyskom-string-assoc
+                              (lyskom-completing-read (lyskom-get-string 'moving-tree-what-action-q)
+                                                      lyskom-move-tree-actions
+                                                      nil
+                                                      t
+                                                      nil
+                                                      nil
+                                                      (car (rassoc 'move lyskom-move-tree-actions)))
+                              lyskom-move-tree-actions))))
+                      (cond
+
+                       ;; Move the text.
+
+                       ((eq action 'move)
+                        (condition-case nil
+                            (let ((target
+                                   (lyskom-read-conf-stat
+                                    (if (> (length text-to-move-recipients) 1)
+                                        'who-to-move-to-or-sub-q
+                                      'who-to-move-to-q)
+                                    '(all)
+                                    (> (length text-to-move-recipients) 1)
+                                    (cons (if default-to 
+                                              (conf-stat->name default-to)
+                                            "") 0)
+                                    t)))
+                              (if target
+                                  (progn
+                                    (setq default-to target)
+                                    (lyskom-format-insert 'moving-name source target text-stat)
+                                    (lyskom-set-default 'lyskom-last-added-rcpt (conf-stat->conf-no target))
+                                    (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source)))
+                                (lyskom-format-insert 'remove-name-as-recipient
+                                                      source
+                                                      (text-stat->text-no text-stat))
+                                (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source)))
+                              (lyskom-move-recipient text-to-move source target 'RECPT)
+                              (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
+                              )
+                          (quit (setq to-do (cons text-to-move to-do))))
+                        )
+
+
+                       ((eq action 'skip)
+                        (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
+                        )
+
+                       ((eq action 'quit)
+                        (setq to-do nil))
+
+                       ((eq action 'jump))))))))))
+      (lyskom-format-insert 'no-such-text-no text-no)
+      )))
 
 
 

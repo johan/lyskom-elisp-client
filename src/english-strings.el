@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.203 2002-04-28 17:15:03 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.204 2002-05-01 21:42:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.203 2002-04-28 17:15:03 jhs Exp $"))
+              "$Id: english-strings.el,v 44.204 2002-05-01 21:42:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -194,7 +194,7 @@ anybody can read it. Only passwords are encrypted.
 
 If you are uncertain about how to use LysKOM, you can retrieve a manual by
 anonymous ftp to ftp.lysator.liu.se. Ask your system administrator for help
-on how to do this.
+on how to do this. You can also type \"?\" for the command \"Help\".
 ")
 
     (is-name-correct . "Is the name %#1s correct? ")
@@ -204,8 +204,15 @@ on how to do this.
 
     (could-not-create-you .  "LysKOM couldn't create that user.\n")
     (presentation-subject . "%#1s")
-    (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:\t
-Email address:\t\nWWW:\t\n\nOther:\t")
+    (presentation-form . "\
+Name:      
+Address:   
+           
+Telephone: 
+E-mail:    
+WWW:       
+
+Other:     ")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
     (unknown-person . "Unknown user")
@@ -426,6 +433,8 @@ and you have finished reading. Please come back later.
     (text-to-add-bcc . "Add recipient of blind carbon copy to which text:")
     (text-to-delete-recipient . "Remove recipient from which text:")
     (text-to-move . "Which text do you want to move:")
+    (text-tree-to-move . "Which text is the root of the tree you want to move:")
+
     (text-to-add-comment-to . "Add comment to which text:")
     (text-to-delete-comment-from . "Remove comment from which text:")
     (text-to-add-footnote-to . "Add footnote to which text:")
@@ -498,6 +507,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-to-sub-q . "Remove whom/what as a recipient? ")
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
+    (who-to-move-to-or-sub-q . "Move to where (empty to just remove recipient)? ")
 
     (adding-name-as-recipient . "Adding %#1M as recipient of text %#2n...")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
@@ -512,7 +522,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (error-access-denied-add-recpt . "You are not allowed to add texts to %#2M.\n")
     (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
 
+    (moving-tree-what-action-q . "What do you want to do? (flytta) ")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
+    (moving-already-moved . "Text %#1n does not have %#2M as a mottagare.\nSkipping this text and its comments.\n")
     (text-to-add-q . "Add which text as a comment to %#1n? ")
     (text-to-remove-q . "Remove which text as a comment from %#1n? ")
     (text-to-add-footn-q . "Add which text as a footnote to %#1n? ")
@@ -1806,6 +1818,7 @@ Number of sessions:  %21#1d (total)
     (kom-add-bcc	      . "Addera (recipient of) blind carbon copy")
     (kom-sub-recipient        . "Remove recipient")
     (kom-move-text            . "Move text")
+    (kom-move-text-tree       . "Move tree")
     (kom-add-comment          . "Add comment")
     (kom-sub-comment          . "Remove comment")
     (kom-add-cross-reference  . "Add cross reference")
@@ -2072,8 +2085,11 @@ Number of sessions:  %21#1d (total)
     (kom-edit-move-text . "Move to new recipient")
 ))
 
-;;(defvar lyskom-swascii-commands nil
-;;  "The swascii-versions of lyskom-commands.")
+(lyskom-language-var local lyskom-move-tree-actions en
+                     '(("Move text or subtract recipient" . move)
+                       ("Leave text and continue with comments" . skip)
+                       ("Abort this command" . quit)
+                       ("Skip this command and its comment tree" . jump)))
 
 (lyskom-language-var local lyskom-onoff-table en
   '(("on" . on) ("off" . off)))
@@ -2196,6 +2212,7 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-mode-map (kbd "A f") 'kom-filter-edit)
   (define-key lyskom-en-mode-map (kbd "A m") 'kom-change-auto-reply)
   (define-key lyskom-en-mode-map (kbd "A t") 'kom-move-text)
+  (define-key lyskom-en-mode-map (kbd "A T") 'kom-move-text-tree)
   (define-key lyskom-en-mode-map (kbd "r SPC") 'kom-view)
   (define-key lyskom-en-mode-map (kbd "r 0") 'kom-initial-digit-view)
   (define-key lyskom-en-mode-map (kbd "r 1") 'kom-initial-digit-view)
