@@ -1,3 +1,19 @@
+Mon May  6 00:27:19 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (lyskom-faces): Ny variabel.
+	Leta efter X-resurser som bestämmer utseendet på faces.
+
+	* deferred-insert.el (lyskom-defer-insertion): Gjorde så att man
+ 	anger serveranrop på samma sätt som i blocking-do.
+
+	* view-text.el (lyskom-print-header-comm): Skrev om.
+	(lyskom-insert-deferred-header-comm): Skrev om.
+	(lyskom-insert-header-comm): Skrev om.
+
+	* deferred-insert.el (lyskom-replace-deferred): Gjorde om till en
+ 	funktion.
+	(lyskom-deferred-insert-conf): Gör om därefter.
+
 Sun May  5 03:18:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Makefile (PARTS-EL): Flyttade deferred-insert.el till HEADER-EL.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.2 1996-05-05 22:20:03 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.3 1996-05-06 14:58:09 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.2 1996-05-05 22:20:03 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.3 1996-05-06 14:58:09 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1149,7 +1149,7 @@ The string is inserted at point."
 				    (if colon-flag ":" "")
 				    (char-to-string format-letter)))
 			   (defer-info (lyskom-create-defer-info
-					'initiate-get-conf-stat
+					'get-conf-stat
 					arg
 					'lyskom-deferred-insert-conf
 					oldpos
@@ -2477,7 +2477,7 @@ from the value of kom-tell-phrases-internal."
 
 
 ;;; This should be the very last lines of lyskom.el Everything should
-;;; be loaded now, so it's time to run the lyskom-load-hook.
+;;; be loaded now, so it's time to run the lyskom-after-load-hook.
 
 (run-hooks 'lyskom-after-load-hook)
 
