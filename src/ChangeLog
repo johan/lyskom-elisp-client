@@ -1,3 +1,10 @@
+2001-11-21  Johan Sundström  <jhs@lysator.liu.se>
+
+	* startup.el (lyskom): A `C-u' prefix argument makes the session
+	invisible.
+
+	* startup.el (kom-start-anew): New argument `invisiblep'.
+
 2001-11-19  David Byers  <davby@ida.liu.se>
 
 	Make it possible to remove recipients by removing their name and
