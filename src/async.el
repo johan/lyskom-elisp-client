@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.17 1992-08-03 04:09:36 linus Exp $
+;;;;; $Id: async.el,v 35.18 1992-08-30 18:07:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.17 1992-08-03 04:09:36 linus Exp $\n"))
+	      "$Id: async.el,v 35.18 1992-08-30 18:07:33 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -321,16 +321,15 @@ The text is converted, before insertion."
 
 (defun lyskom-default-new-text-hook (text-stat)
   "Print a message if the user was waiting. Change the prompt. run hooks."
-  (if (and (not lyskom-no-prompt)	           ;There is a prompt
-	   (not lyskom-dont-change-prompt) 	   ;We shall change it
-	   (not lyskom-executing-command)) 	   ;We have time to do it.
+  (if (and (not lyskom-dont-change-prompt) ;We shall change it
+	   (not lyskom-executing-command)) ;We have time to do it.
       ;; Alter the prompt.
       (let ((buffer-read-only nil))
 	(lyskom-save-excursion
-	  (goto-char (point-max))
-	  (beginning-of-line)
-	  (delete-region (point) (point-max)))
-	(setq lyskom-no-prompt t)))
+	 (goto-char (point-max))
+	 (beginning-of-line)
+	 (delete-region (point) (point-max)))
+	(lyskom-run 'async 'lyskom-print-prompt)))
 
   (let ((no-message nil))
     (run-hooks 'lyskom-new-text-hook)
@@ -368,11 +367,8 @@ The text is converted, before insertion."
 		     "Unexpected misc-info in new text "
 		     type))))))
 
-  ;; Give a message if the user is waiting.
-  (lyskom-run 'async 'lyskom-default-new-text-hook text-stat)
-
-  (lyskom-run 'async 'lyskom-print-prompt))
-
+  ;; Give a message if the user is waiting. Update the prompt.
+  (lyskom-run 'async 'lyskom-default-new-text-hook text-stat))
 
 
 (defun lyskom-conf-fetched-p (conf-no)

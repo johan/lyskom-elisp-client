@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.14 1992-08-12 04:40:27 linus Exp $
+;;;;; $Id: startup.el,v 35.15 1992-08-30 18:08:01 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.14 1992-08-12 04:40:27 linus Exp $\n"))
+	      "$Id: startup.el,v 35.15 1992-08-30 18:08:01 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -633,7 +633,6 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'lyskom-membership)
     (make-local-variable 'lyskom-prefetch-texts)
     (make-local-variable 'lyskom-prefetch-conf-tresh)
-    (make-local-variable 'lyskom-no-prompt)
     (make-local-variable 'lyskom-reading-list)
     (make-local-variable 'lyskom-to-do-list)
     (make-local-variable 'lyskom-fetched-texts)

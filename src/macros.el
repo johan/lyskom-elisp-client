@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 35.2 1991-09-15 10:05:18 linus Exp $
+;;;;; $Id: macros.el,v 35.3 1992-08-30 18:07:53 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 35.2 1991-09-15 10:05:18 linus Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 35.3 1992-08-30 18:07:53 linus Exp $\n"
   "Version for every file in the client.")
 
 
@@ -85,3 +85,4 @@ Value returned is always nil."
 (defmacro -- (var)
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
+
