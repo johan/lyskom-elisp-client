@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.20 1999-06-15 14:38:18 byers Exp $
+;;;;; $Id: compatibility.el,v 44.21 1999-06-29 10:20:11 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.20 1999-06-15 14:38:18 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.21 1999-06-29 10:20:11 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -96,18 +96,12 @@ of the lyskom-provide-* functions instead."
 ;;;
 
 (defmacro lyskom-provide (definer name rest)
-  (` (progn ;(eval-when-compile 
-            ;  (if (not (fboundp (quote (, name))))
-            ;      (message "Compatibility %S for %S"
-            ;               (quote (, definer))
-            ;               (quote (, name)))))
-            (eval-and-compile 
-              (if (not (fboundp (quote (, name))))
-                  (progn
-                    (setq lyskom-compatibility-definitions
-                          (cons (quote (, name)) 
-                                lyskom-compatibility-definitions))
-                    ((, definer) (, name) (,@ rest))))))))
+  `(eval-and-compile
+     (if (not (fboundp ',name))
+         (progn (setq lyskom-compatibility-definitions
+                      (cons ',name lyskom-compatibility-definitions))
+                (,definer ,name ,@rest)))))
+
 
 (defmacro lyskom-provide-macro (name &rest rest)
   "If NAME is not already defined, define it as a macro."
@@ -128,9 +122,9 @@ of the lyskom-provide-* functions instead."
 
 (defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
   "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
-  (` (if (string-match "XEmacs" (emacs-version))
-         (, xemacs-form)
-       (, gnu-form))))
+  (if (string-match "XEmacs" (emacs-version))
+      xemacs-form
+    gnu-form))
 
 (put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
 
@@ -146,7 +140,7 @@ of the lyskom-provide-* functions instead."
 
 (lyskom-compatibility-definition
 
-    (condition-case error
+    (condition-case nil
         (or (equal (kbd (identity "<down-mouse-2>"))
                    [down-mouse-2])
             (error "Bad definition of kbd"))
@@ -288,6 +282,7 @@ string to search in."
 ;;; ======================================================================
 ;;; Event stuff
 
+(lyskom-external-function event-start)
 (lyskom-provide-function event-point (e)
   "Return the character position of the given mouse event.
 If the event did not occur over a window, or did not occur over text,

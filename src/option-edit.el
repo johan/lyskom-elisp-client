@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.21 1999-02-18 16:29:45 petli Exp $
+;;;;; $Id: option-edit.el,v 44.22 1999-06-29 10:20:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.21 1999-02-18 16:29:45 petli Exp $\n"))
+	      "$Id: option-edit.el,v 44.22 1999-06-29 10:20:23 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -573,7 +573,7 @@ customize buffer but do not save them to the server."
                                 (symbol-value variable)))
          (storage-widget nil))
 
-    (ignore value help-sym dummy)       ; Are they ever used?
+    (lyskom-ignore value help-sym dummy)       ; Are they ever used?
 
     (setq storage-widget
           (condition-case nil

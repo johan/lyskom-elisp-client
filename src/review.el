@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.18 1999-06-28 10:41:09 byers Exp $
+;;;;; $Id: review.el,v 44.19 1999-06-29 10:20:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.18 1999-06-28 10:41:09 byers Exp $\n"))
+	      "$Id: review.el,v 44.19 1999-06-29 10:20:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -134,13 +134,13 @@ The order of the list a is kept."
                       (- count)
                     count))
             (if list
-                (read-list-enter-read-info (lyskom-create-read-info
-                                            'REVIEW
-                                            nil
-                                            (lyskom-get-current-priority)
-                                            (lyskom-create-text-list list)
-                                            nil t)
-                                           lyskom-reading-list t)
+                (lyskom-review-enter-read-info
+                 (lyskom-create-read-info
+                  'REVIEW
+                  nil
+                  (lyskom-review-get-priority)
+                  (lyskom-create-text-list list)
+                  nil t) t)
               (lyskom-insert-string 'no-such-text)))
         (lyskom-review-error (if arg
                                  nil
@@ -244,13 +244,13 @@ The defaults for this command is the conference that you are in."
     (condition-case arg
         (let ((list (lyskom-get-texts-by-to by to count)))
           (if list
-              (read-list-enter-read-info (lyskom-create-read-info
-                                          'REVIEW
-                                          nil
-                                          (lyskom-get-current-priority)
-                                          (lyskom-create-text-list list)
-                                          nil t)
-                                         lyskom-reading-list t)
+              (lyskom-review-enter-read-info
+               (lyskom-create-read-info
+                'REVIEW
+                nil
+                (lyskom-review-get-priority)
+                (lyskom-create-text-list list)
+                nil t) t)
             (lyskom-insert-string 'no-such-text)))
       (lyskom-review-error (if arg
                                nil 
@@ -997,7 +997,7 @@ instead. In this case the text TEXT-NO is first shown."
       (let ((ts (blocking-do 'get-text-stat text-no)))
 	(lyskom-follow-comments ts
 				nil 'review
-				(lyskom-get-current-priority)
+				(lyskom-review-get-priority)
 				t))
     (lyskom-insert-string 'read-text-first)))
 
@@ -1013,15 +1013,14 @@ instead. In this case the text TEXT-NO is first shown."
 	   (r (lyskom-find-root ts t)))
       (cond ((> (length r) 1)
              (lyskom-format-insert-before-prompt
-              (lyskom-get-string 'more-than-one-root)
-              ts)
-             (read-list-enter-read-info (lyskom-create-read-info
-                                         'REVIEW
-                                         nil
-                                         (lyskom-get-current-priority)
-                                         (lyskom-create-text-list r)
-                                         nil t)
-                                        lyskom-reading-list t))
+              (lyskom-get-string 'more-than-one-root) ts)
+             (lyskom-review-enter-read-info
+              (lyskom-create-read-info
+               'REVIEW
+               nil
+               (lyskom-review-get-priority)
+               (lyskom-create-text-list r)
+               nil t) t))
             (r (lyskom-view-text (car r)))
             (t (signal 'lyskom-internal-error "Could not find root")))
       )
@@ -1110,7 +1109,7 @@ Does a lyskom-end-of-command.
 Text is a text-no."
   (cond
    ((integerp text)
-    (lyskom-view-text text nil t nil (lyskom-get-current-priority) t))
+    (lyskom-view-text text nil t nil (lyskom-review-get-priority) t))
    (t
     (signal 'lyskom-internal-error
 	    (list 'lyskom-review-tree
@@ -1243,12 +1242,11 @@ text is shown and a REVIEW list is built to shown the other ones."
 	(progn
 	  (lyskom-format-insert 'review-text-no (car text-nos))
 	  (if (cdr text-nos)
-	      (read-list-enter-read-info
-	       (lyskom-create-read-info
-		'REVIEW nil (lyskom-get-current-priority)
-		(lyskom-create-text-list (cdr text-nos))
-		lyskom-current-text)
-	       lyskom-reading-list t))
+              (lyskom-review-enter-read-info
+               (lyskom-create-read-info
+                'REVIEW nil (lyskom-review-get-priority)
+                (lyskom-create-text-list (cdr text-nos))
+                lyskom-current-text) t))
 	  (lyskom-view-text (car text-nos)))
       (lyskom-insert-string 'no-such-text))))
 
@@ -1270,12 +1268,11 @@ text is shown and a REVIEW list is built to shown the other ones."
 	(progn
 	  (lyskom-format-insert 'review-text-no (car text-nos))
 	  (if (cdr text-nos)
-	      (read-list-enter-read-info
-	       (lyskom-create-read-info
-		'REVIEW nil (lyskom-get-current-priority)
-		(lyskom-create-text-list (cdr text-nos))
-		lyskom-current-text)
-	       lyskom-reading-list t))
+	      (lyskom-review-enter-read-info
+               (lyskom-create-read-info
+                'REVIEW nil (lyskom-review-get-priority)
+                (lyskom-create-text-list (cdr text-nos))
+                lyskom-current-text) t))
 	  (lyskom-view-text (car text-nos)))
       (lyskom-format-insert 'no-such-text))))
 
@@ -1303,16 +1300,25 @@ text is shown and a REVIEW list is built to shown the other ones."
         (lyskom-format-special nil)
         (kom-smileys nil)
         (kom-autowrap nil))
-    (ignore kom-emacs-knows-iso-8859-1)
+    (lyskom-ignore kom-emacs-knows-iso-8859-1)
     (lyskom-view-text text-no))
   (lyskom-end-of-command))
 
 
 
+(defun lyskom-review-get-priority ()
+  "Get the priority to use for reviewing texts."
+  (or kom-review-priority (lyskom-get-current-priority)))
+
+(defun lyskom-review-enter-read-info (read-info before)
+  "Enter READ-INFO into lyskom-reading-list and lyskom-to-do-list."
+  (read-list-enter-read-info read-info lyskom-reading-list before)
+  (read-list-enter-read-info read-info lyskom-to-do-list before))
+
 ;;; ============================================================
 ;;;         Återse senaste dagarnas inlägg
 ;;;
-;;; Author: David Byers
+;;; Author: Up for grabs
 
 ;;;
 ;;; Algorithm:

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.19 1999-06-28 16:09:54 byers Exp $
+;;;;; $Id: async.el,v 44.20 1999-06-29 10:20:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.19 1999-06-28 16:09:54 byers Exp $\n"))
+	      "$Id: async.el,v 44.20 1999-06-29 10:20:07 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -245,6 +245,7 @@ this function shall be with current-buffer the BUFFER."
           (cache-del-conf-stat conf-no)
           (cache-del-text-stat text-no)
          ;; FIXME: Code here.
+          (lyskom-ignore misc-type)
          )))
 
      ((eq msg-no 18)                    ; New membership

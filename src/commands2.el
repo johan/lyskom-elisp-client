@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.39 1999-06-28 16:09:56 byers Exp $
+;;;;; $Id: commands2.el,v 44.40 1999-06-29 10:20:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.39 1999-06-28 16:09:56 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.40 1999-06-29 10:20:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -637,6 +637,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   (remove-hook 'lyskom-send-message-exit-hook
                'lyskom-send-message-turn-off-resize-on-exit))
                
+(defvar resize-minibuffer-mode)
 (defun lyskom-send-message-resize-minibuffer ()
   "Temporarily turn on resizing of minibuffer"
   (let ((tmp nil))
@@ -690,7 +691,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                (membership (blocking-do 'query-read-texts
 					lyskom-pers-no
 					conf-no)))
-          (ignore result)
+          (lyskom-ignore result)
 	  (lyskom-replace-membership membership lyskom-membership)
 	  (if (= conf-no lyskom-current-conf)
 	      (set-read-list-empty lyskom-reading-list))
@@ -1915,6 +1916,7 @@ is alive."
 ;;; ============================================================
 ;;; Beräkna
 
+(lyskom-external-function calc-eval)
 (def-kom-command kom-calculate (&optional exprx)
   "Calculate optional arg EXPRX, or prompt the user for an expression."
   (interactive)

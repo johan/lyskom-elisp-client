@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.22 1999-06-22 13:37:04 byers Exp $
+;;;;; $Id: macros.el,v 44.23 1999-06-29 10:20:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.22 1999-06-22 13:37:04 byers Exp $\n"))
+	      "$Id: macros.el,v 44.23 1999-06-29 10:20:20 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -223,13 +223,21 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
                 (consp (car-safe byte-compile-unresolved-functions))
                 (symbolp (car-safe (car-safe 
                                     byte-compile-unresolved-functions))))
-           (mapcar (function (lambda (x)
-                               (setq byte-compile-unresolved-functions
-                                     (delq
-                                      (assq x
-                                            byte-compile-unresolved-functions)
-                                      byte-compile-unresolved-functions))))
-                   lyskom-expected-unresolved-functions))
+           (progn
+             (mapcar (function (lambda (x)
+                                 (setq byte-compile-unresolved-functions
+                                       (delq
+                                        (assq x
+                                              byte-compile-unresolved-functions)
+                                        byte-compile-unresolved-functions))))
+                     lyskom-expected-unresolved-functions)
+             (mapcar (function (lambda (x)
+                                 (setq byte-compile-unresolved-functions
+                                       (delq
+                                        (assq x
+                                              byte-compile-unresolved-functions)
+                                        byte-compile-unresolved-functions))))
+                     lyskom-compatibility-definitions)))
        (if lyskom-compatibility-definitions
            (message "Compatibility definitions: %s"
                     (mapconcat '(lambda (sym)
@@ -265,27 +273,21 @@ the current buffer, and its value is copied from the LysKOM buffer."
 ;;; Widget gunk
 ;;;
 
-(defmacro lyskom-widget-wrapper (fn)
-  (` (if (not (fboundp (quote (, fn))))
-         (defun (, fn) (&rest args)
-           (require 'custom)            ; lww
-           (require 'widget)            ; lww
-           (require 'wid-edit)          ; lww
-           (require 'wid-browse)        ; lww
-           (require 'cus-edit)          ; lww
-           (require 'cus-face)          ; lww
-           (apply (quote (, fn)) args)))))
+(defmacro lyskom-widget-wrapper (fn file)
+  `(eval-and-compile
+     (if (not (fboundp ',fn))
+         (autoload ',fn ,file))))
 
-(lyskom-widget-wrapper define-widget)
-(lyskom-widget-wrapper widget-at)
-(lyskom-widget-wrapper widget-value)
-(lyskom-widget-wrapper widget-button-click)
-(lyskom-widget-wrapper widget-setup)
-(lyskom-widget-wrapper widget-value-set)
-(lyskom-widget-wrapper widget-insert)
-(lyskom-widget-wrapper widget-create)
-(lyskom-widget-wrapper widget-get)
-(lyskom-widget-wrapper widget-put)
+(lyskom-widget-wrapper define-widget "widget")
+(lyskom-widget-wrapper widget-at "wid-edit")
+(lyskom-widget-wrapper widget-value "wid-edit")
+(lyskom-widget-wrapper widget-button-click "wid-edit")
+(lyskom-widget-wrapper widget-setup "wid-edit")
+(lyskom-widget-wrapper widget-value-set "wid-edit")
+(lyskom-widget-wrapper widget-insert "wid-edit")
+(lyskom-widget-wrapper widget-create "wid-edit")
+(lyskom-widget-wrapper widget-get "wid-edit")
+(lyskom-widget-wrapper widget-put "wid-edit")
 
 ;;; ============================================================
 ;;; Signal gunk

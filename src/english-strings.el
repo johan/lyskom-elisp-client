@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.52 1999-06-28 10:41:03 byers Exp $
+;;;;; $Id: english-strings.el,v 44.53 1999-06-29 10:20:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.52 1999-06-28 10:41:03 byers Exp $"))
+              "$Id: english-strings.el,v 44.53 1999-06-29 10:20:14 byers Exp $"))
 
 
 ;;; ================================================================
@@ -969,7 +969,9 @@ You should set it to a better value.\n")
     (read-next-footnote-prompt . "Read next footnote")
     (read-next-comment-prompt . "Read next comment")
     (read-next-text-prompt . "Read next article")
-    (go-to-conf-of-marked-prompt . "Review next marked")
+    (go-to-conf-of-marked-prompt . "Resume reviewing marked")
+    (go-to-conf-of-review-tree-prompt . "Resume reviewing comments")
+    (go-to-conf-of-review . "Resume reviewing texts")
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
     (the-command . "Command: %#1C")

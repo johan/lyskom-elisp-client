@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.72 1999-06-28 16:10:00 byers Exp $
+;;;;; $Id: vars.el.in,v 44.73 1999-06-29 10:20:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.72 1999-06-28 16:10:00 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.73 1999-06-29 10:20:33 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -372,10 +372,16 @@ You might want to turn this off to have the old, linear behaviour.")
 (def-kom-var lyskom-defer-indicator "[...]"
   "String to display while LysKOM is waiting for the real string.")
 
+(def-kom-var kom-review-priority nil
+  "*If non-nil, the priority to use when reviewing texts. Set this to
+255 or higher to avoid texts and conferences with higher priority to
+break in while reviewing."
+  server)
+
 (def-kom-var kom-higher-priority-breaks nil
   "*Non-nil means allow texts from conferences with highter priority to break in.
 If the value is 'express then texts are allowed to break in the middle of a
-comment chain.  Otherwise we dont let them in until the end of the comment
+comment chain.  Otherwise we don't let them in until the end of the comment
 tree."
   server)
 
@@ -1320,8 +1326,8 @@ different packets.")
   "Session number in the server for this connection"
   local)
 
-(def-kom-var kom-default-session-priority 0
-  "* The default session priority.
+(def-kom-var kom-default-session-priority 1
+  "*The default session priority.
 Only texts in conferences with a priority equal to or higher than this
 will be shown by default.
 
