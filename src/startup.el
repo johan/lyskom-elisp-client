@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.11 1996-10-24 09:48:09 byers Exp $
+;;;;; $Id: startup.el,v 44.12 1996-12-30 17:51:12 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.11 1996-10-24 09:48:09 byers Exp $\n"))
+	      "$Id: startup.el,v 44.12 1996-12-30 17:51:12 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -257,8 +257,8 @@ variable documentation for lyskom-server-feautres"
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
   (lyskom-completing-clear-cache)
-  (clear-all-caches)
-  (let ((old-me lyskom-pers-no))
+  (let ((old-me lyskom-pers-no)
+	(login-successful nil))
     (unwind-protect
         (progn
           (if lyskom-first-time-around
@@ -308,10 +308,12 @@ variable documentation for lyskom-server-feautres"
                                      (or lyskom-is-new-user
                                          (silent-read
 					  (lyskom-get-string 'password)))))
-                      (if lyskom-is-new-user
-                          (blocking-do 'add-member
-                                       (server-info->conf-pres-conf lyskom-server-info)
-                                       lyskom-pers-no 100 1))
+		      (progn
+			(if lyskom-is-new-user
+			    (blocking-do 'add-member
+					 (server-info->conf-pres-conf lyskom-server-info)
+					 lyskom-pers-no 100 1))
+			(setq login-successful t))
                     (lyskom-insert-string 'wrong-password)
                     (setq lyskom-pers-no nil))
                   (setq lyskom-is-new-user nil))))
@@ -342,7 +344,9 @@ variable documentation for lyskom-server-feautres"
             (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
 	  
       ;; If something failed, make sure we are someone
-      (if (null lyskom-pers-no) (setq lyskom-pers-no old-me))
+      (if login-successful
+	  (clear-all-caches)
+	(setq lyskom-pers-no old-me))
       (setq lyskom-is-new-user nil)
       (lyskom-end-of-command)))
   ;; Run the hook kom-login-hook. We don't want to hang the
