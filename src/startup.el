@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.0 1996-08-30 14:48:05 davidk Exp $
+;;;;; $Id: startup.el,v 44.1 1996-09-03 18:43:00 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.0 1996-08-30 14:48:05 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.1 1996-09-03 18:43:00 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -594,14 +594,15 @@ to see, set of call."
     (kill-all-local-variables)
     (make-local-variable 'kom-ansaphone-show-messages)
     (make-local-variable 'kom-ansaphone-record-messages)
-    (make-local-variable 'kom-prompt-format)
     (make-local-variable 'kom-ansaphone-on)
     (make-local-variable 'kom-ansaphone-default-reply)
+    (make-local-variable 'kom-friends)
+    (make-local-variable 'kom-login-hook)
+    (make-local-variable 'kom-membership-default-priority)
+    (make-local-variable 'kom-permanent-filter-list)
+    (make-local-variable 'kom-prompt-format)
     (make-local-variable 'kom-remote-control)
     (make-local-variable 'kom-remote-controllers)
-    (make-local-variable 'kom-login-hook)
-    (make-local-variable 'kom-friends)
-    (make-local-variable 'kom-permanent-filter-list)
     (make-local-variable 'kom-session-filter-list)
     (make-local-variable 'lyskom-accept-async-flag)
     (make-local-variable 'lyskom-blocking-return)
