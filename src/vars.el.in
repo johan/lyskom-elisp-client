@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.123 2000-09-01 14:13:27 byers Exp $
+;;;;; $Id: vars.el.in,v 44.124 2000-09-13 22:08:15 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.123 2000-09-01 14:13:27 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.124 2000-09-13 22:08:15 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -55,7 +55,7 @@
 )
   "List of flags that are to be saved as booleans in the common block.
 
-Dont change this. These are defined by the protocol.")
+Don't change these. They are defined by the protocol.")
 				  
 (defconst lyskom-global-non-boolean-variables '(
   kom-default-mark
@@ -63,7 +63,7 @@ Dont change this. These are defined by the protocol.")
   "List of flags that are to be saved in the common block.
 These are the non-boolean ones. See: lyskom-global-boolean-variables.
 
-Dont change these. These are defined by the protocol.")
+Don't change these. They are defined by the protocol.")
 
 
 
@@ -89,7 +89,7 @@ Dont change these. These are defined by the protocol.")
 
 (def-kom-var kom-dont-read-saved-variables '(kom-dont-read-saved-variables
                                              lyskom-login-hook)
-  "*Non nil means don't read some variables from the server.
+  "*Non-nil means don't read some variables from the server.
 t means don't read any variables. A list means don't read variables that
 are in the list.")
 
@@ -104,7 +104,7 @@ are in the list.")
 (def-kom-var kom-allow-incompleteness nil
   "*If nil, commands like kom-list-news will wait for the prefetch.
 If this flag is set to t, some commands may give incomplete answers,
-but it might give them faster, especially during the login phase."
+but it might make them faster, especially during the login phase."
   server
 )
 
@@ -116,19 +116,19 @@ of the buffer list when one of the commands `kom-next-kom',
   server)
 
 (def-kom-var kom-write-texts-in-window nil
-  "*Where to edit texts. One of nil, other, new-frame, other-frame, a string
+  "*Where to edit texts. One of nil, 'other, 'new-frame, 'other-frame, a string
 or a buffer.
 
 nil means edit texts in the same window as the LysKOM buffer.
-other means edit in another window, creating it if necessary.
-other-frame means edit in another frame, if there is one.
-new-frame means create a new frame for editing. The frame will be removed 
+'other means edit in another window, creating it if necessary.
+'other-frame means edit in another frame, if there is one.
+'new-frame means create a new frame for editing. The frame will be removed 
           when editing is finished.
-a string or buffer means edit in the indicated buffer."
+A string or buffer means edit in the indicated buffer."
   server)
 
 (def-kom-var kom-view-commented-in-window 'other
-  "*Where to view commented texts. See kom-write-texts-in-window for details"
+  "*Where to view commented texts. See kom-write-texts-in-window for details."
   server)
 
 (def-kom-var kom-edit-filters-in-window nil
@@ -198,19 +198,19 @@ The value of this variable is the file name on which to save new texts."
   server)
 
 (def-kom-var kom-customize-in-window nil
-  "*Where to customize LysKOM. See kom-write-texts-in-window"
+  "*Where to customize LysKOM. See kom-write-texts-in-window."
   server)
 
 (def-kom-var kom-prioritize-in-window nil
-  "*Where to prioritize conferences. See kom-write-texts-in-window"
+  "*Where to prioritize conferences. See kom-write-texts-in-window."
   server)
 
 (def-kom-var kom-default-mark 100
-  "*If non-nil (must be an integer) then the user is not asked for type of mark."
+  "*If non-nil (must be an integer), the user is not asked for type of mark."
   server)
 
 (def-kom-var kom-reading-puts-comments-in-pointers-last t
-  "*If Non-nil the texts are shown with comments references at the end."
+  "*If non-nil, the texts are shown with comment references at the end."
   server
   inherited)
 
@@ -220,12 +220,12 @@ The value of this variable is the file name on which to save new texts."
 
 
 (def-kom-var kom-dashed-lines t
-  "*If Non-nil then all texts will be surrounded by lines of dashes."
+  "*If non-nil, all texts will be surrounded by lines of dashes."
   server
   inherited)
 
 (def-kom-var kom-long-lines nil
-  "*If non-nil, then some lines and borders will be made longer."
+  "*If non-nil, some lines and borders will be made longer."
   server
   inherited)
 
@@ -260,10 +260,10 @@ The following format directives are legal:
 Format letters can be prefixed with a number specifying the minimum
 field width. The field width can be prefixed with an equals sign which
 means that the field is exactly as wide as specified (contents may be
-truncated.) A negative field width means left justify the contents.
+truncated). A negative field width means left justify the contents.
 
 The field width of %- is special. It specifies the maximum number of
-dashes the print. The actual number will be the maximum minus the
+dashes printed. The actual number will be the maximum minus the
 length of the author's name, if it is included anywhere in the format
 string.
 
@@ -285,18 +285,18 @@ nil                 nil                         \"(%n) %f\"
 
 
 (def-kom-var kom-show-creating-software nil
-  "*If non-nil then show the creating software of each text, if specitfied."
+  "*If non-nil, show the creating software of each text, if specified."
   server
   inherited)
 
 (def-kom-var kom-show-author-at-end t
-  "*If non-nil then the author will be shown at the end of each text."
+  "*If non-nil, the author will be shown at the end of each text."
   server
   inherited)
 
 (def-kom-var kom-truncate-threshold nil
-  "*If non-nil, truncate long texts when revieiwing.
-If the text is longer (in lines) then the threshold it will be
+  "*If non-nil, truncate long texts when reviewing.
+If the text is longer (in lines), the threshold it will be
 truncated to `kom-truncate-show-lines' length."
   server)
 
@@ -309,19 +309,19 @@ used."
 
 
 (def-kom-var kom-print-number-of-unread-on-entrance t
-  "*If Non-nil then print automatically the number of unread articles when
+  "*If non-nil, print automatically the number of unread articles when
 entering a conference."
   server)
 
 (def-kom-var kom-show-unread-in-frame-title t
-  "*If non-nil, then show an unread indicator in the frame title of each
+  "*If non-nil, show an unread indicator in the frame title of each
 LysKOM session."
   server)
 
 (def-kom-var kom-presence-messages t
-  "*If non-nil, lyskom prints continuous info about what other people are doing.
+  "*If non-nil, LysKOM prints continuous info about what other people are doing.
 Info is printed on the message line and never in the buffer. If minibuffer is
-used then no message is printed.
+used, no message is printed.
 
 A list of integers means show messages for those users.
 
@@ -332,16 +332,16 @@ The value 'morons means show messages for the users in kom-morons.
 The value 'friends-and-morons means show messages for the users in 
 kom-friends and kom-morons.
 
-If you want the messages in the buffer you could set the variable 
+If you want the messages in the buffer, you could set the variable 
 kom-presence-messages-in-buffer."
   server)
 
 (def-kom-var kom-presence-messages-in-buffer nil
-  "*If t, lyskom prints information about what other people are doing in buffer.
+  "*If t, LysKOM prints information about what other people are doing in the buffer.
 All printing is done just before the prompt.
 If nil no messages are printed.
-If 'presence then messages about people logging in, out and people 
-changing name is printed."
+If 'presence, messages about people logging in, out and people 
+changing name are printed."
   server)
 
 (def-kom-var kom-show-where-and-what t
@@ -351,7 +351,7 @@ and what he is doing."
 
 (def-kom-var kom-show-since-and-when nil
   "*Non-nil means kom-who-is-on shows when the user connected and when
-he was active last."
+he last was active."
   server)
 
 (def-kom-var kom-idle-hide 30
@@ -405,36 +405,36 @@ break in while reviewing."
   server)
 
 (def-kom-var kom-higher-priority-breaks nil
-  "*Non-nil means allow texts from conferences with highter priority to break in.
-If the value is 'express then texts are allowed to break in the middle of a
-comment chain.  Otherwise we don't let them in until the end of the comment
+  "*Non-nil means allow texts from conferences with higher priority to break in.
+If the value is 'express, texts are allowed to break in the middle of a
+comment chain. Otherwise we don't let them in until the end of the comment
 tree."
   server)
 
 (def-kom-var kom-server-priority-breaks nil
   "*Non-nil means allow servers with a higher priority to break in.
-Valid values are express, express-letters, letters, after-conf, 
-after-conf-letters, t and when-done.
+Valid values are 'express, 'express-letters, 'letters, 'after-conf, 
+'after-conf-letters, t and 'when-done.
 
-express means break immediately when a text arrives in a prioritized
+'express means break immediately when a text arrives in a prioritized
 session.
 
-express-letters means break immediately when a letter arrives in a 
+'express-letters means break immediately when a letter arrives in a 
 prioritized session.
 
 t means break after the current comment chain when a text arrives in 
 a prioritized session.
 
-letters means break after the current comment chain when a letter
+'letters means break after the current comment chain when a letter
 arrives in a prioritized session.
 
-after-conf means break after the current conference when a text
+'after-conf means break after the current conference when a text
 arrives in a prioritized session.
 
-after-conf-letters means break after the current conference when a
+'after-conf-letters means break after the current conference when a
 letter arrives in a prioritized session.
 
-when-done means prompt user to go to the next session with unreads
+'when-done means prompt user to go to the next session with unreads
 after everything has been read. This overrides kom-do-when-done as
 long as there are sessions with unread texts.
 "
@@ -469,11 +469,11 @@ be sent."
 
 (def-kom-var lyskom-send-text-hook nil
   "*Hook that is called before sending a text. Hook functions return t to
-signal suggess and nil to prevent the text from being sent."
+signal success and nil to prevent the text from being sent."
   local-hook)
 
 (def-kom-var lyskom-after-load-hook nil
-  "*Hook to run once after lyskom is loaded.")
+  "*Hook to run once after LysKOM is loaded.")
 
 (def-kom-var lyskom-change-conf-hook nil
   "*Hook to run when changing conferences.
@@ -483,7 +483,7 @@ current conf-no and the second is the conf-no being changed to."
 
 (def-kom-var lyskom-login-hook nil
   "*What to do when logged in.
-This hook is called after we have logged in but before and command is
+This hook is called after we have logged in but before any command is
 accepted from the keyboard. It is called immediately before
 kom-login-hook."
   local-hook)
@@ -505,11 +505,13 @@ This is a list of commands and lists of commands that are prompted for
 and executed when there are no more new texts.  The last element in
 the list is the one that will never be removed from the list.
 A command can be one of:
+
 type			prompt
-lyskom-function		from the lyskom-command-name function.
-command			\"Kommandot:\" name of function or definition of
-			lambda expression
-keyboard macro		\"Kommandot:\" keyboard macro definition."
+------------------------------
+lyskom-function		from the lyskom-command-name function
+command			\"Command:\" (name of function or definition of
+			lambda expression)
+keyboard macro		\"Command:\" (keyboard macro definition)"
   server)
 
 (def-kom-var kom-page-before-command nil
@@ -542,13 +544,13 @@ The value can be one of the following:
 'first => before all other conferences.
 'last => after all other conferences.
 a number => at that position
-otherwise => the new conf is entered after all conferences."
+otherwise => the new conference is entered after all conferences."
   server)
 
 (def-kom-var lyskom-current-prompt nil
   "The current prompt or nil.
 This is either nil, indicating that there is currently no prompt, or
-one a symbol indcating which command is prompted in the LysKOM buffer."
+a symbol indicating which command is prompted in the LysKOM buffer."
   local)
 
 (def-kom-var lyskom-current-prompt-text nil
@@ -660,12 +662,12 @@ to call."
 (def-kom-var kom-default-message-recipient 'group
   "*Determines default recipient of personal messages.
 
-everybody means the default recipient is everybody.
-group     means the default recipient is the group to which the last
-          message was sent, if it was a group message. If the last message
-          was a personal message or a common message, it means the same as 
-          sender. 
-sender    means the sender of the last message received."
+'everybody means the default recipient is everybody.
+'group     means the default recipient is the group to which the last
+           message was sent, if it was a group message. If the last message
+           was a personal message or a common message, it means the same as 
+           'sender. 
+'sender    means the sender of the last message received."
   server)
 
 
@@ -760,9 +762,9 @@ conference and person buttons are not expected.")
   "List of buttons to install in the text mass of LysKOM objects. Each element is
 a list consisting of REGEXP TYPE BUTTON-MATCH BUTTON-ARG-MATCH FACE.
 REGEXP is the regexp to look for in the text.
-TYPE is the button type. Valid button types are defined in lyskom-button-actions
+TYPE is the button type. Valid button types are defined in lyskom-button-actions.
 BUTTON-MATCH is the number of the parenthesized expression that is the actual button.
-BUTTON-ARG-MATCH is the number of the expression to used as the button argument.
+BUTTON-ARG-MATCH is the number of the expression to be used as the button argument.
 FACE is the text face to apply to the button, or nil to use the default face.")
 
 (def-kom-var kom-url-viewer-preferences '("emacs"
@@ -773,7 +775,7 @@ FACE is the text face to apply to the button, or nil to use the default face.")
 kom-url-managers is a list of all available viewers. Note that the elements
 are all strings.
 
-When you select an URL, this list is used to determine which URL
+When you select a URL, this list is used to determine which URL
 viewer to use in the following manner: Each element is in turn matched
 against the manager regexp for each manager in kom-url-managers, and the
 first manager found that matches is used to display the URL.
@@ -823,14 +825,14 @@ to some URL viewers."
 
   "List of URL managers. Each element is a list consisting of
 (MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
-view an URL, kom-url-viewer-preferences is scanned, and the URL
+view a URL, kom-url-viewer-preferences is scanned, and the URL
 manager whose MANAGER-REGEXP first matches an element in
 kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
 the selected URL is used to view the URL by calling its VIEW-FUNCTION
 with the URL and the manager entry as arguments.")
 
 (def-kom-var kom-mosaic-command "/usr/local/bin/mosaic"
-  "*Command to run to start Mosaic"
+  "*Command to run to start Mosaic."
   server)
 
 (def-kom-var kom-netscape-command "netscape"
@@ -847,7 +849,7 @@ is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)"
 (def-kom-var kom-lynx-terminal 'xterm
   "*Where to start Lynx.
 Valid values are 'xterm (start Lynx in an xterm) and 'terminal (start
-Lynx in Emacs terminal mode.")
+Lynx in Emacs terminal mode).")
 
 (def-kom-var kom-lynx-xterm-command
   '("xterm" "-geometry" "90x50+100+100" "-e" "lynx")
@@ -892,14 +894,14 @@ executing. "
   server)
 
 (def-kom-var kom-max-buffer-size nil
-  "*If non-nil, ensure that buffers won't grow any larger than this"
+  "*If non-nil, ensure that buffers won't grow any larger than this."
   server)
 
 (def-kom-var lyskom-print-complex-dates t
   "If non-nil, print today and yesterday using a special format.")
 
 (def-kom-var kom-show-namedays nil
-  "*Non-nil means display namedays when running in swedish.
+  "*Non-nil means display namedays when running in Swedish.
 This variable will eventually be replaced with something else."
   server)
 
@@ -910,8 +912,8 @@ method.
 
 If this variable is a string, it is assumed to be a proxy
 specification for all LysKOM servers. If it is a list, it is assumed
-to be a list of pairs, (SERVER . PROXY) where SERVER is the server for
-which PROXY, a proxy specification is to be used. The special value t
+to be a list of pairs, (SERVER . PROXY), where SERVER is the server for
+which PROXY specification is to be used. The special value t
 can be used for SERVER to indicate a default proxy.
 
 A proxy specification has the form \"HOST:PORT\" where HOST is the
@@ -975,7 +977,7 @@ The most recent message is the first message in the list."
   server)
 
 (def-kom-var kom-remote-controllers nil 
-  "*Persons who may control LysKOM using messages.By default you can
+  "*Persons who may control LysKOM using messages. By default you can
 always control your own sessions. See kom-self-control for more
 information."
   server)
@@ -991,7 +993,7 @@ in as the same user as the current session."
   "*List of automatic replies to various messages.
 
 A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
-    MESSAGE-TYPE is one of personal, group or common or nil
+    MESSAGE-TYPE is one of 'personal, 'group or 'common or nil
     SENDER is a list of integers or a single integer or nil
     RECIPIENT is a list of integers or a single integer or nil
     TEXT is a regular expression or nil
@@ -1005,11 +1007,11 @@ send. A nil in one of the message-type, sender, recipient or text
 components in the list is taken to mean a wildcard. A null reply means
 don't send a reply.
 
-If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent."
+If none of the elements match, kom-ansaphone-default-reply is sent."
   server)
 
 (def-kom-var kom-agree-text nil
-  "*If non-nil the default text to use when agreeing with a text.
+  "*If non-nil, the default text to use when agreeing with a text.
 This variable can be a string, function or list. If a string, the
 string is used as the message. If a function, the function is called
 and the return value is used. If a list, one of the elements is selected
@@ -1034,7 +1036,7 @@ at random and used. This element may be a string, function or list."
   local)
 
 (def-kom-var lyskom-edit-prefix nil
-  "Mode-map for lyskom edit mode.")
+  "Mode map for LysKOM edit mode.")
 
 (def-kom-var lyskom-customize-map nil
   "Keymap for the customize buffer"
@@ -1078,7 +1080,7 @@ each time ."
       local)
 
 (def-kom-var lyskom-filter-edit-map nil
-  "Keymap for LysKOM filter edit"
+  "Keymap for LysKOM filter edit."
   local)
 
 (def-kom-var lyskom-prioritize-mode-map nil
@@ -1086,11 +1088,11 @@ each time ."
   local)
 
 (def-kom-var lyskom-prioritize-header-lines nil
-  "Number of lines in the header of the prioritization buffer"
+  "Number of lines in the header of the prioritization buffer."
   local)
 
 (def-kom-var lyskom-prioritize-header nil
-  "Header for the reprioritization buffer"
+  "Header for the reprioritization buffer."
   inherited)
 
 (def-kom-var kom-ansaphone-default-reply nil
@@ -1401,7 +1403,7 @@ Users are encouraged to use their best sense of humor."
   "Version of the LysKOM elisp client.")
 
 (defconst lyskom-max-int 8388607
-  "The largest int emacs, and thus this LysKOM client, can handle.")
+  "The largest int Emacs, and thus this LysKOM client, can handle.")
 
 (defconst lyskom-server-features
   '((10 lyskom-bcc-flag
@@ -1450,7 +1452,7 @@ arguments to setq, symbols are interpreted as variable names set
 
 
 (def-kom-var lyskom-server-version '(0 0 0)
-  "The version of the server.  A list of three integers, major
+  "The version of the server.  A list of three integers: major
 version, minor version and revision."
   local)
 
@@ -1469,8 +1471,8 @@ if any problems are detected.")
 When a command finishes, it checks this variable to see if another command
 should be run.
 
-It should be a lest where each element should be either a symbol or an
-expression. If it is a symbol it is invoked with `call-interactively', and
+It should be a list where each element should be either a symbol or an
+expression. If it is a symbol, it is invoked with `call-interactively', and
 an expression is evaluated with `eval'."
   local)
 
@@ -1479,14 +1481,14 @@ an expression is evaluated with `eval'."
   local)
 
 (def-kom-var lyskom-do-when-starting nil
-  "Internal of kom-do-when-starting. Obsolete")
+  "Internal of kom-do-when-starting. Obsolete.")
 
 (def-kom-var lyskom-sessions-with-unread nil
-  "List of lyskom-sessions with unread texts.
+  "List of LysKOM sessions with unread texts.
 This is not buffer-local.")
 
 (def-kom-var lyskom-sessions-with-unread-letters nil
-  "List of lyskom-sessions with unread letters.
+  "List of LysKOM sessions with unread letters.
 This is not buffer-local.")
 
 (def-kom-var lyskom-session-has-unread-letters nil
@@ -1502,12 +1504,12 @@ This is not buffer-local.")
   inherited)
 
 (def-kom-var lyskom-buffer nil
-  "What is the lyskom-buffer we are connected to."
+  "The LysKOM buffer we are connected to."
   inherited
   minibuffer)
 
 (def-kom-var lyskom-buffer-type nil
-  "What type of buffer is the current buffer."
+  "Type of the current buffer."
   local
   protected)
 
@@ -1530,29 +1532,30 @@ This is not buffer-local.")
   local)
 
 (def-kom-var lyskom-unparsed-marker nil
-  "Here are we inserting now."
+  "Where we now are inserting."
   local)
 
 (def-kom-var lyskom-to-be-printed-before-prompt nil
-  "Contains the strings to be printed out before the next prompt."
+  "Contains the strings to be printed before the next prompt."
   local)
 
 (def-kom-var lyskom-other-clients-user-areas nil
-  "Contains the parts of the user areas of unknown klients.
+  "Contains the parts of the user areas of unknown clients.
 The area is a pair: name . info (both strings)."
   local)
 
 (def-kom-var lyskom-pending-calls nil
-  "Assoc-list of calls to LysKOM server that have not yet completed.
+  "Assoc list of calls to LysKOM server that have not yet completed.
 Each element on the list has the format
+
 	(REF-NO . KOM-QUEUE)
 REF-NO	   unique number assigned by lyskom-send-packet.
-KOM-QUEUE is a kom-queue. (See lyskom-call-data)."
+KOM-QUEUE is a kom-queue. (See lyskom-call-data.)"
   local)
 
 (def-kom-var lyskom-output-queues nil
   "Pending output to the server.
-This is a vector of ten elements, each of which is a kom-queue. calls from
+This is a vector of ten elements, each of which is a kom-queue. Calls from
 queues with a higher index (priority) are always sent first.
 
 At most lyskom-max-pending-calls calls are sent at once."
@@ -1570,7 +1573,7 @@ This variable is not saved in the LysKOM server.")
   local)
 
 ;; This variable is used to prevent "starvation" of the blocking-do call.
-;; When there are heavy prefetch going on in the background and a
+;; When there is heavy prefetch going on in the background and a
 ;; blocking-do call is made there is a good chance that the
 ;; accept-process-output call will not return within a reasonable
 ;; time, because there will always be data to read from the server,
@@ -1589,7 +1592,7 @@ different packets.")
   inherited)
 
 (def-kom-var lyskom-session-no 0
-  "Session number in the server for this connection"
+  "Session number in the server for this connection."
   local)
 
 (def-kom-var kom-default-session-priority 1
@@ -1624,15 +1627,15 @@ will be shown."
   minibuffer)
 
 (def-kom-var lyskom-server-info nil
-  "Info about the server"
+  "Info about the server."
   local)
 
 (def-kom-var lyskom-server-version-info nil
-  "Version information about the client"
+  "Version information about the client."
   local)
 
 (def-kom-var lyskom-server-name ""
-  "The name of the server"
+  "The name of the server."
   inherited)
 
 (def-kom-var lyskom-server-port nil
@@ -1679,13 +1682,13 @@ will be shown."
   local)
 
 (def-kom-var lyskom-who-info-buffer-is-on nil
-  "Says wether we are collecting who-information or not."
+  "Says whether we are collecting who-information or not."
   local)
 
 
 (def-kom-var lyskom-is-parsing t
   "True when parsing a result.
-This is used to prevent parallell parsing since the parser is not reentrant."
+This is used to prevent parallel parsing since the parser is not reentrant."
   local)
 
 (def-kom-var lyskom-string-bytes-missing 0
@@ -1698,7 +1701,7 @@ This variable is buffer-local in the unparsed-buffer."
   inherited)
 
 (def-kom-var lyskom-last-viewed 0       ;
-  "Postition of the first char of the last line that the user has had
+  "Position of the first char of the last line that the user has had
 time to view. This is normally the pos of the first char of the prompt."
   local)
 
@@ -1730,7 +1733,7 @@ The first element is a dummy."
 (def-kom-var lyskom-to-do-list nil
   "List of conferences with unread texts.
 Each element is a read-info. All have the type 'CONF and there is one for
-every conference with unread articles that have been prefetched already.
+every conference with unread articles that have already been prefetched.
 The list is sorted in falling priority. 
 When going to a conference the first element (the one with the highest
 priority) is copied from this list to lyskom-reading-list.
@@ -1777,7 +1780,7 @@ This is currently not used."
 
 (def-kom-var lyskom-fetch-membership-length 6
   "*Number of entries in the membership-list that is fetched at a time.
-This should be optimized depending on how often you read lyskom and
+This should be optimized depending on how often you read LysKOM and
 the activity in the first groups in you membership list.
 
 Best performance is achieved if you, when logging in, always have an unread
@@ -1791,7 +1794,7 @@ at a time.")
 ;;;
 
 (def-kom-var lyskom-membership nil
-  "Sorted membership-list of the logged in person."
+  "Sorted membership list of the logged in person."
   local)
 
 (def-kom-var lyskom-unread-confs nil
@@ -1807,8 +1810,8 @@ at a time.")
   local)
 
 (def-kom-var lyskom-is-waiting nil
-  "If non-nil then this is the condition for the waiting to be stopped.
-If t however just meaning user is waiting for a text with prompt.
+  "If non-nil, this is the condition for the waiting to be stopped.
+If t, however, it means that the user is waiting for a text with a prompt.
 It is a form that will be evaluated (using eval) every time the asynchronous
 message \"new text\" is received.
 
@@ -1835,7 +1838,7 @@ set to that text."
   local)
 
 (def-kom-var lyskom-previous-text nil
-  "Text-no of previous text.  Nil means no text."
+  "Text-no of previous text. Nil means no text."
   local)
 
 (def-kom-var lyskom-normally-read-texts nil
@@ -1881,11 +1884,11 @@ set to that text."
   "Non-nil to automatically quit when LysKOM is full and the session is idle")
 
 (def-kom-var kom-permanent-filter-list nil
-  "List of patterns to filter permanently"
+  "List of patterns to filter permanently."
   server)
 
 (def-kom-var kom-session-filter-list nil
-  "List of patterns to filter during this session"
+  "List of patterns to filter during this session."
   local)
 
 (def-kom-var kom-prompt-for-text-no 
@@ -1908,7 +1911,7 @@ set to that text."
     kom-add-no-comments
     kom-add-private-answer
     kom-add-request-confirm)
-  "*Commands that prompt for a text number rather than assume a default"
+  "*Commands that prompt for a text number rather than assume a default."
   server
   inherited)
 
@@ -1930,7 +1933,7 @@ IS-ANONYMOUS    Non-nil if the user is currently anonymous.
 &rest RESERVED  Additional arguments may be added in the future.
 
 The hook can change the message by modifying the variable
-full-message, the misc-info list my modifying misc-list and the
+full-message, the misc-info list by modifying misc-list and the
 aux-item list by modifying aux-list. This is not encouraged."
   local-hook)
 
@@ -1939,7 +1942,7 @@ aux-item list by modifying aux-list. This is not encouraged."
 (def-kom-var lyskom-new-text-hook nil
   "Hook to run when a new text is created.
 This hook is run after the prompt is removed if it shall be changed but before
-the text Text 4711 är skapad! is printed in the message area. And before the
+the text \"Text 4711 är skapad!\" is printed in the message area. And before the
 new prompt is printed."
   local-hook)
 
@@ -1950,7 +1953,7 @@ before the new prompt is printed."
   local-hook)
 
 (def-kom-var lyskom-new-recipient-hook nil
-  "Hook to run when a text gains a new recipient.
+  "Hook to run when a text receives a new recipient.
 This hook is run after the prompt is removed if it shall be changed but before
 the new prompt is printed. It is not run if the text has been marked as read
 in any conference other than the person's letterbox."
@@ -1964,7 +1967,7 @@ in any conference other than the person's letterbox."
 
 (def-kom-var lyskom-personal-message-hook nil
   "*Hook to run when a personal message is received.
-When the hook is run 'sender' is bound to the pers-stat of the sender
+When the hook is run, 'sender' is bound to the pers-stat of the sender
 of the message (or possibly nil), 'recipient' is 0 if the message is a
 public message and otherwise the pers-no of the user, and 'message' is
 a string that holds the message."
@@ -1985,17 +1988,17 @@ Most commands can't be interrupted by another command."
   local)
 
 (def-kom-var lyskom-current-function-phase nil
-  "Sometimes set to the phase of the curreht high-level function being
+  "Sometimes set to the phase of the current high-level function being
 executed."
   local)
 
 (def-kom-var kom-low-priority -1
-  "*Priority that the current conference are set to when they are
-aborted. nil means don't alter priority. (That means that
+  "*Priority that the current conference is set to when
+aborted. nil means don't alter priority. (This means that
 kom-go-to-next-conf might go to the same conference again.)")
 
 (def-kom-var lyskom-membership-is-read nil
-  "T when the membership has been read."
+  "t when the membership has been read."
   local)
 
 (def-kom-var lyskom-is-writing nil
@@ -2007,7 +2010,7 @@ kom-go-to-next-conf might go to the same conference again.)")
 The name is stored in lyskom-debug-communications-to-buffer-buffer.")
 
 (def-kom-var lyskom-backtrace-list nil
-  "List containing debugging information")
+  "List containing debugging information.")
   
 (def-kom-var lyskom-debug-what-i-am-doing t
   "Non-nil means asynchronous message 5 will be logged to the debug
@@ -2050,7 +2053,7 @@ lyskom-format-insert if you want to replace the usual description of
 an unknown conference.")
 
 (def-kom-var lyskom-default-pers-string nil
-  "The default string to use for an unknown person
+  "The default string to use for an unknown person.
 Set this locally when inserting a conference name using
 lyskom-format-insert if you want to replace the usual description of
 an unknown person.")
@@ -2062,11 +2065,11 @@ an unknown person.")
   minibuffer)
 
 (def-kom-var lyskom-last-personal-message-sender ""
-  "Name of sender of last personal message received"
+  "Name of sender of last personal message received."
   local)
 
 (def-kom-var lyskom-last-group-message-recipient ""
-  "Name of target for last group message received"
+  "Name of target for last group message received."
   local)
 
 (def-kom-var lyskom-last-message-recipient nil
@@ -2074,13 +2077,13 @@ an unknown person.")
   local)
 
 (def-kom-var lyskom-is-new-user nil
-  "An internal variable used in kom-start-anew")
+  "An internal variable used in kom-start-anew.")
 
 (def-kom-var lyskom-apo-timeout-s 1
-  "Seconds timeout for accept-process-output")
+  "Seconds timeout for accept-process-output.")
 
 (def-kom-var lyskom-apo-timeout-ms nil
-  "Microseconds timeout for accept-process-output")
+  "Microseconds timeout for accept-process-output.")
 
 (def-kom-var lyskom-collate-table nil
   "Table mapping characters to equivalent characters."
@@ -2115,7 +2118,7 @@ The function should accept a single argument and return the transformed
 texts that is to be sent to the server.")
 
 (def-kom-var lyskom-slow-mode nil
-  "Non-nil when in slow mode"
+  "Non-nil when in slow mode."
   local)
 
 (def-kom-var lyskom-saved-read-only nil
@@ -2127,7 +2130,7 @@ texts that is to be sent to the server.")
   "Characters that may start a line in a paragraph to be broken.")
 
 (def-kom-var lyskom-line-start-chars nil
-  "Computer-friendly version of lyskom-line-start-string")
+  "Computer-friendly version of lyskom-line-start-string.")
 
 
 (def-kom-var lyskom-last-text-format-flags nil
@@ -2142,15 +2145,15 @@ should be dynamically bound whenever it needs to be used.")
 ;;;
 
 (def-kom-var lyskom-add-membership-hook nil
-  "Functions to call when a membership is added"
+  "Functions to call when a membership is added."
   local-hook)
 
 (def-kom-var lyskom-replace-membership-hook nil
-  "Functions to call when a membership is replaced"
+  "Functions to call when a membership is replaced."
   local-hook)
 
 (def-kom-var lyskom-remove-membership-hook nil
-  "Functions to call when a membership is removed"
+  "Functions to call when a membership is removed."
   local-hook)
 
 (def-kom-var lyskom-new-membership-list-hook nil
@@ -2204,7 +2207,7 @@ selected language will be selected.")
     (kom-tell-next-lyskom)
     )
   "Users must not change this constant, but are encouraged to change
-the value of  kom-tell-phrases  for fun.")
+the value of  kom-tell-phrases for fun.")
 
 ;;; ================================================================
 ;;; Commands lists that are removed from extended command depending on
@@ -2229,7 +2232,7 @@ the value of  kom-tell-phrases  for fun.")
   local)
 
 (def-kom-var lyskom-default-password nil
-  "Default LysKOM PASSWORD."
+  "Default LysKOM password."
   local)
 
 (def-kom-var mode-line-conf-name nil
@@ -2323,7 +2326,7 @@ the value of  kom-tell-phrases  for fun.")
 This variable is an association list that defines the face and color
 schemes in LysKOM. The car of each element is the scheme key, a
 symbol, and the cdr is a list of face definitions. Each face
-definition in tur, is a list of four elements: the face name, the base
+definition in turn is a list of four elements: the face name, the base
 face, foreground color and background color. When LysKOM defines a
 face from such a specification, the base face is first copied and then
 the foreground and background colors are set. If it permissible to

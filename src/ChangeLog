@@ -1,3 +1,7 @@
+2000-09-14  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* vars.el.in: Proof-read variable descriptions.
+
 2000-09-09  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46.1-BETA-1
