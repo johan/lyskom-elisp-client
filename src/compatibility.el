@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.27 1999-11-19 22:00:08 byers Exp $
+;;;;; $Id: compatibility.el,v 44.28 1999-11-19 23:19:50 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.27 1999-11-19 22:00:08 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.28 1999-11-19 23:19:50 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -289,6 +289,7 @@ string to search in."
 (lyskom-provide-function string-width (str) (length str))
 (lyskom-provide-function char-width (c) 1)
 (lyskom-provide-function find-charset-string (str) '(ascii))
+(lyskom-provide-function string-as-unibyte (str) str)
 
 (lyskom-provide-function last (x &optional n)
   "Returns the last link in the list LIST.

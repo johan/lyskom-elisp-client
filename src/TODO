@@ -3,6 +3,9 @@
 Att göra i elisp-klienten
 =========================
 
+Fixa aux-item-data och format-objects så att strängen kodas som
+raw-text. Hur hanteras då åäö i den?
+
 Kolla alla användningar av length och substring för att se var man
 borde använda string-width och truncate-string-to-width istället.
 
