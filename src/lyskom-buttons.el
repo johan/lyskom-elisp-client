@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.97 2004-05-03 15:12:00 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.98 2004-05-25 18:01:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.97 2004-05-03 15:12:00 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.98 2004-05-25 18:01:00 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -43,6 +43,7 @@
 (lyskom-external-function w3-popup-menu)
 (lyskom-external-function Info-goto-node)
 (lyskom-external-function term-char-mode)
+(lyskom-external-function w3m)
 
 
 (defun lyskom-add-button-action (type text func)
@@ -124,6 +125,7 @@ this-command-keys."
                    (and parent (widget-get parent ':href))
                    (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href))))
+         (w3m-url (and pos (get-text-property pos 'w3m-href-anchor)))
          (type  (and pos (get-text-property pos 'lyskom-button-type)))
          (data  (and type (assq type lyskom-button-actions)))
          (hint (and pos (get-text-property pos 'lyskom-button-hint)))
@@ -131,6 +133,8 @@ this-command-keys."
                    (and data (elt data 2)))))
     (cond (href (require 'w3)
                 (w3-widget-button-click event))
+          (w3m-url (require 'w3m)
+               (w3m w3m-url))
           ((and do-default
                 (or (null pos)
                     (null (get-text-property pos 'lyskom-button-type))))

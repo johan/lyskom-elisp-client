@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.291 2004-05-12 19:14:26 byers Exp $
+;;;;; $Id: vars.el.in,v 44.292 2004-05-25 18:01:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.291 2004-05-12 19:14:26 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.292 2004-05-25 18:01:00 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4238,15 +4238,15 @@ Values other than those listed are reserved for future use."
   server)
 
 (def-kom-var lyskom-format-special 
-  '(("html"               . lyskom-format-html)
+  '(("html"               . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
     ("enriched"           . lyskom-format-enriched)
-    ("text/html"          . lyskom-format-html)
-    ("text/enriched"      . lyskom-format-enriched)
+    ("^text/html"          . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
+    ("^text/enriched"      . lyskom-format-enriched)
     ("^text/"             . lyskom-format-plaintext)
-    ("x-kom/text"         . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
-    ("x-kom/basic"        . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
-    ("x-kom/user-area"    . lyskom-format-x-kom/user-area)
-    ("x-kom/ö\\."         . lyskom-format-ö))
+    ("^x-kom/text"         . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
+    ("^x-kom/basic"        . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
+    ("^x-kom/user-area"    . lyskom-format-x-kom/user-area)
+    ("^x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")

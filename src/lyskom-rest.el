@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.236 2004-05-03 15:12:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.237 2004-05-25 18:01:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.236 2004-05-03 15:12:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.237 2004-05-25 18:01:00 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1082,14 +1082,10 @@ back, and works even if from has the property."
           (setq fn (get-text-property (car bounds) sym))
           (remove-text-properties (car bounds) (cdr bounds) (list sym))
           (condition-case val
-              (funcall (if (listp fn)
-                           (car fn)
-                         fn)
+              (funcall (if (listp fn) (car fn) fn)
                        (car bounds)
                        (cdr bounds)
-                       (if (listp fn)
-                           (cdr fn)
-                         nil))
+                       (if (listp fn) (cdr fn) nil))
             (error (apply 'message "%S" val)))
           (setq start next)
           (setq bounds (lyskom-next-property-bounds
@@ -1893,6 +1889,9 @@ Deferred insertions are not supported."
      ((= format-letter ?n)
       (setq result
             (cond ((integerp arg) (int-to-string arg))
+                  ((numberp arg) 
+                   (setq colon-flag t)
+                   (format "%.0f" arg))
                   ((lyskom-text-stat-p arg) (int-to-string
                                              (text-stat->text-no arg)))
                   (t (signal 'lyskom-internal-error
@@ -2131,7 +2130,14 @@ Deferred insertions are not supported."
                                             (symbol-name (car el)))
                                           content-type))
                                (lyskom-traverse-break el)))))))
-           (formatted (and fn (funcall fn text text-stat))))
+           (formatted (cond ((null fn) nil)
+                            ((listp fn) 
+                             (lyskom-traverse el fn
+                               (let ((a (funcall el text text-stat)))
+                                 (when a (lyskom-traverse-break a)))))
+                            ((functionp fn)
+                             (funcall fn text text-stat))
+                            (t nil))))
       (or formatted text)))
 
   (defun lyskom-format-plaintext (text text-stat)
@@ -2219,39 +2225,54 @@ in lyskom-messages."
       (setq lyskom-last-text-format-flags (cons how lyskom-last-text-format-flags))))
 
 
-(lyskom-with-external-functions (w3-fetch w3-region w3-finish-drawing)
+(lyskom-with-external-functions (w3m-region)
+  (defun lyskom-w3m-region (start end &rest args)
+    (lyskom-render-html-region start end 'w3m-region)))
+
+(lyskom-with-external-functions (w3-region)
   (defun lyskom-w3-region (start end &rest args)
-    (unwind-protect
-        (condition-case var
-            (save-restriction
-              (let ((buffer-read-only nil))
-                (setq start (set-marker (make-marker) start))
-                (setq end (set-marker (make-marker) end))
-                (narrow-to-region start end)
-                (when kom-w3-simplify-body
-                  (save-excursion
-                    (let ((case-fold-search t))
-                      (goto-char start)
-                      (while (re-search-forward "<body[^>]*>" end t)
-                        (replace-match "<body>")))))
-                (w3-region start end)
-                (w3-finish-drawing)
-                (add-text-properties (point-min) (point-max) '(end-closed nil))))
-          (error (lyskom-ignore var))))))
+    (lyskom-render-html-region start end 'w3-region)))
+
+(defun lyskom-render-html-region (start end fun)
+  (unwind-protect
+      (condition-case var
+          (save-restriction
+            (let ((buffer-read-only nil))
+              (setq start (set-marker (make-marker) start))
+              (setq end (set-marker (make-marker) end))
+              (narrow-to-region start end)
+              (when kom-w3-simplify-body
+                (save-excursion
+                  (let ((case-fold-search t))
+                    (goto-char start)
+                    (while (re-search-forward "<body[^>]*>" end t)
+                      (replace-match "<body>")))))
+              (funcall fun start end)
+              (add-text-properties (point-min) (point-max) '(end-closed nil))))
+        (error (lyskom-ignore var)))))
 
 
-(defun lyskom-format-html (text text-stat)
+(defun lyskom-format-html-plaintext (text text-stat)
+  (lyskom-button-transform-text text-stat))
+
+(defun lyskom-format-html (text text-stat package function)
   ;; Find settings for this author
   (let ((author-setting (and text-stat (or (assq (text-stat->author text-stat)
                                                  kom-format-html-authors)
                                            (assq t kom-format-html-authors)))))
     (when (and (cdr author-setting)
-               (condition-case e (progn (require 'w3) t) (error nil)))
-      (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+               (condition-case e (progn (require package) t) (error nil)))
+      (add-text-properties 0 (length text) `(special-insert ,function) text)
       (lyskom-signal-reformatted-text 'reformat-html)
       (if (string-match "^html:" text)
           (substring text 5)
         text))))
+
+(defun lyskom-format-html-w3 (text text-stat)
+  (lyskom-format-html text text-stat 'w3 'lyskom-w3-region))
+
+(defun lyskom-format-html-w3m (text text-stat)
+  (lyskom-format-html text text-stat 'w3m 'lyskom-w3m-region))
 
 
 
@@ -4333,6 +4354,10 @@ One parameter - the prompt string."
   (lyskom-set-queue-priority 'modeline 6)
   (lyskom-set-queue-priority 'async 3)
   (lyskom-set-queue-priority 'prefetch 0)
+
+  ;; Seed the randomizer
+
+  (random t)
   (run-hooks 'lyskom-after-load-hook)
   (run-hooks 'kom-after-load-hook)
   (setq lyskom-is-loaded t))
