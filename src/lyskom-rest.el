@@ -50,7 +50,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.2 1991-09-05 16:15:41 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.3 1991-09-08 20:03:21 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -334,9 +334,12 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 
 
 (defun lyskom-is-read (text-no)
-  "Tell lyskom that TEXT-NO is about to be read.
+  "Remove TEXT-NO from the list of texts to read.
 Deletes TEXT-NO from lyskom-reading-list and lyskom-to-do-list.
-Adds info in lyskom-membership."
+Adds info in lyskom-membership.
+
+This function only modifies the internal state of the client. It does
+mark the text as read in the server."
   (read-list-delete-text text-no lyskom-reading-list)
   (read-list-delete-text text-no lyskom-to-do-list)
   (initiate-get-text-stat 'background 'lyskom-is-read-handler
