@@ -1,3 +1,12 @@
+1999-12-01  David Byers  <davby@ida.liu.se>
+
+	* compatibility.el (decode-coding-string, encode-coding-string):
+	Copy the string using copy-sequence to really emulate the real
+	thing.
+
+	* utilities.el (lyskom-string=):  Works even if an argument is
+	nil.
+
 Thu Nov 25 17:05:19 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-C på riktigt

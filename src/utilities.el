@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.44 1999-11-21 17:59:43 byers Exp $
+;;;;; $Id: utilities.el,v 44.45 1999-12-01 20:46:03 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.44 1999-11-21 17:59:43 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.45 1999-12-01 20:46:03 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -373,14 +373,14 @@ the resulting string may be narrower than END-COLUMN."
    (if (< emacs-major-version 20)
        (fset 'lyskom-string= (symbol-function 'string=))
      (defun lyskom-string= (s1 s2)
-       (string= (if (multibyte-string-p s1)
+       (string= (and s1 (if (multibyte-string-p s1)
 		    s1
 		  (decode-coding-string s1 (lyskom-language-coding
-					    lyskom-language)))
-		(if (multibyte-string-p s2)
+					    lyskom-language))))
+		(and s2 (if (multibyte-string-p s2)
 		    s2
 		  (decode-coding-string s2 (lyskom-language-coding
-					    lyskom-language))))))))
+					    lyskom-language)))))))))
 
 (defun lyskom-string-assoc (key list)
   "Return non-nil if KEY is the same string as the car of an element of LIST.
