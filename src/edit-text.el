@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 39.2 1996-03-20 13:15:00 davidk Exp $
+;;;;; $Id: edit-text.el,v 39.3 1996-03-25 15:42:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 39.2 1996-03-20 13:15:00 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 39.3 1996-03-25 15:42:21 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -374,7 +374,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 				       nil t)
 		    (end-of-line)
 		    (if (/= (point) old)
-			(signal 'lyskom-no-subject 'enter-subject-idi))))
+			(signal 'lyskom-no-subject '(enter-subject-idi)))))
 	      (setq message (lyskom-edit-extract-text))
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
@@ -402,7 +402,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
      (if (cdr (cdr err))
 	 (goto-char (car (cdr (cdr err)))))
      (lyskom-beep lyskom-ding-on-no-subject)
-     (lyskom-message (lyskom-get-string (cdr err))))))
+     (lyskom-message (lyskom-get-string (car (cdr err)))))))
 
 
 (defun kom-edit-quit ()
