@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.0 1996-05-02 19:26:21 davidk Exp $
+;;;;; $Id: edit-text.el,v 41.1 1996-06-23 00:28:27 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.0 1996-05-02 19:26:21 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 41.1 1996-06-23 00:28:27 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -628,7 +628,8 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	    (nconc result (list 'footn-to n)))
 	   ((lyskom-looking-at-header (if kom-emacs-knows-iso-8859-1
 					  lyskom-header-subject
-					lyskom-swascii-header-subject)
+					(regexp-quote
+					 lyskom-swascii-header-subject))
 				      nil)
 	    (setcar result (lyskom-edit-extract-subject)))
 	   (t
