@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.5 1998-06-14 14:15:47 byers Exp $
+;;;;; $Id: komtypes.el,v 44.6 1999-06-10 13:36:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.5 1998-06-14 14:15:47 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.6 1999-06-10 13:36:11 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -47,7 +47,7 @@
   "Create a conf-no-list from all parameters."
   (cons
    'CONF-NO-LIST
-   (vector conf-nos)))
+   (apply 'vector conf-nos)))
 
 
 ;;; Selector:
@@ -155,6 +155,7 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 				super-conf
 				msg-of-day
 				garb-nice
+                                keep-commented
 				no-of-members
 				first-local-no
 				no-of-texts
@@ -1227,24 +1228,26 @@ FOOTN-TO or FOOTN-IN."
 
 (def-komtype member-list members)
 
-(def-komtype member conf-no created-by created-at membership-type)
+(def-komtype member pers-no created-by created-at membership-type)
 
 (def-komtype membership-type invitation passive secret rsv1 
   rsv2 rsv3 rsv4 rsv5)
 
-(defsubst lyskom-create-membership (last-time-read
-				 conf-no
-				 priority
-				 last-text-read
-				 read-texts
-                                 created-by
-                                 created-at
-                                 type)
+(defsubst lyskom-create-membership ( position
+                                     last-time-read
+                                     conf-no
+                                     priority
+                                     last-text-read
+                                     read-texts
+                                     created-by
+                                     created-at
+                                     type
+                                     )
   "Create a membership from all parameters."
   (cons
    'MEMBERSHIP
    (vector last-time-read conf-no priority last-text-read read-texts 
-           created-by created-at type
+           created-by created-at type position
 	   )))
 
 
@@ -1282,6 +1285,10 @@ FOOTN-TO or FOOTN-IN."
   "Get type from membership"
   (elt (cdr membership) 7))
 
+(defsubst membership->position (membership)
+  "Get position from membership, if known"
+  (elt (cdr membership) 8))
+
 
 
 ;;; Modifiers:
@@ -1318,12 +1325,24 @@ FOOTN-TO or FOOTN-IN."
   "Set type in membership to NEWVAL."
   (aset (cdr membership) 7 newval))
 
+(defsubst set-membership->position (membership newval)
+  "Set position in membership to NEWVAL."
+  (aset (cdr membership) 8 newval))
+
 
 ;;; Predicate:
 
 (defsubst lyskom-membership-p (object)
   "Return t if OBJECT is a membership."
   (eq (car-safe object) 'MEMBERSHIP))
+
+;;; Special stuff
+
+(defun lyskom-member-list-find-member (person members)
+  (lyskom-traverse member (member-list->members members)
+    (when (eq person (member->pers-no member))
+      (lyskom-traverse-break member))))
+
 
 
 ;;; ================================================================
@@ -1390,6 +1409,15 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
       (lyskom-create-map first (apply 'vconcat maplist)))))
 
 
+;;; ============================================================
+;;; Local to global mapping
+;;; - Sparse map
+;;; - Text mapping
+
+(def-komtype sparse-map mapping)
+(def-komtype text-mapping have-more type mapping)
+
+
 ;;; ================================================================
 ;;;                            mark
 
@@ -1443,11 +1471,13 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 			       working-conf
 			       connection
 			       doing-what
-			       username)
+			       username
+                               &optional hostname ident-user)
   "Create a who-info from all parameters."
   (cons
    'WHO-INFO
-   (vector pers-no working-conf connection doing-what username 
+   (vector pers-no working-conf connection doing-what 
+           username hostname ident-user
 	   )))
 
 
@@ -1473,6 +1503,14 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get username from who-info."
   (elt (cdr who-info) 4))
 
+(defsubst who-info->hostname (who-info)
+  "Get hostname from who-info."
+  (elt (cdr who-info) 5))
+
+(defsubst who-info->ident-user (who-info)
+  "Get ident-user from who-info."
+  (elt (cdr who-info) 6))
+
 
 ;;; Modifiers:
 
@@ -1496,6 +1534,14 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Set username in who-info to NEWVAL."
   (aset (cdr who-info) 4 newval))
 
+(defsubst set-who-info->hostname (who-info newval)
+  "Set hostname in who-info to NEWVAL."
+  (aset (cdr who-info) 5 newval))
+
+(defsubst set-who-info->ident-user (who-info newval)
+  "Set ident-user in who-info to NEWVAL."
+  (aset (cdr who-info) 6 newval))
+
 
 ;;; Predicate:
 
@@ -1515,13 +1561,15 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 				   connection
 				   doing
 				   username
+                                   hostname
+                                   ident-user
 				   idletime
 				   connect-time)
   "Create a session-info from all parameters."
   (cons
    'SESSION-INFO
    (vector pers-no working-conf connection doing username idletime 
-	   connect-time )))
+	   connect-time hostname ident-user)))
 
 
 ;;; Selectors:
@@ -1554,6 +1602,14 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get connect-time from session-info."
   (elt (cdr session-info) 6))
 
+(defsubst session-info->hostname (session-info)
+  "Get hostname from session-info."
+  (elt (cdr session-info) 7))
+
+(defsubst session-info->ident-user (session-info)
+  "Get connect-time from session-info."
+  (elt (cdr session-info) 8))
+
 
 ;;; Modifiers:
 
@@ -1585,6 +1641,14 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Set connect-time in session-info to NEWVAL."
   (aset (cdr session-info) 6 newval))
 
+(defsubst set-session-info->hostname (session-info newval)
+  "Set hostname in session-info to NEWVAL."
+  (aset (cdr session-info) 7 newval))
+
+(defsubst set-session-info->ident-user (session-info newval)
+  "Set ident-user in session-info to NEWVAL."
+  (aset (cdr session-info) 8 newval))
+
 
 
 ;;; Predicate:
@@ -1603,7 +1667,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 (defsubst lyskom-create-conf-type (rd_prot original secret letterbox 
                                            &optional anarchy
-                                           rsv1 rsv2 rsv3)
+                                           forbid-secret rsv2 rsv3)
   "Create a conf-type object. Args: RD_PROT ORIGINAL SECRET LETTERBOX."
   (list 'CONF-TYPE 
 	rd_prot 
@@ -1611,7 +1675,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 	secret 
 	letterbox
         anarchy
-        rsv1
+        forbid-secret
         rsv2
         rsv3
 	))
@@ -1639,7 +1703,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get anarchy from conf-type."
   (elt (cdr conf-type) 4))
 
-(defsubst conf-type->rsv1 (conf-type)
+(defsubst conf-type->forbid-secret (conf-type)
   "Get reserved bit from conf-type."
   (elt (cdr conf-type) 5))
 

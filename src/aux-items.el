@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.5 1998-06-14 14:15:36 byers Exp $
+;;;;; $Id: aux-items.el,v 44.6 1999-06-10 13:35:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.5 1998-06-14 14:15:36 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.6 1999-06-10 13:35:59 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -241,7 +241,7 @@
        (match-string 1)))
 
 (defun lyskom-print-fast-reply (item &optional obj)
-  (concat (lyskom-format 'fast-reply
+  (concat (lyskom-format 'fast-reply-aux
                          (aux-item->data item)
                          (aux-item->creator item))
           (lyskom-aux-item-terminating-button item obj)))
@@ -254,8 +254,8 @@
       (and (looking-at (lyskom-get-string 'cross-reference-pers-regexp))
            (concat "P" (match-string 1)))))
 
-(defun lyskom-edit-insert-cross-reference (item)
-  (lyskom-print-cross-reference item nil lyskom-pers-no))
+(defun lyskom-edit-insert-cross-reference (item pers)
+  (lyskom-print-cross-reference item nil pers))
 
 (defun lyskom-print-cross-reference (item &optional obj pers)
   (let ((pers (if (and (zerop (aux-item->creator item))

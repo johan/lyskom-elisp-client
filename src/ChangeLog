@@ -1,3 +1,85 @@
+1999-01-16  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (j-or-n-p): Don't compare character to int. It's
+	not kosher in MULE.
+
+1999-01-11  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-create-text-handler): Fixed bug that
+	prevented texts from being read automatically.
+
+1999-01-10  David Byers  <davby@ida.liu.se>
+
+	* services.el (initiate-query-read-texts): Parse membership
+	position too.
+
+	* parse.el (lyskom-parse-membership-and-position): New function.
+
+	* review.el (lyskom-get-texts-by-generic): Ta inte med user-arean
+	i resultatet.
+
+	* command.el (lyskom-start-of-command): Don't rely on lyskom-proc
+	being nil if a session is dead.
+
+	* commands1.el (lyskom-quit): Sätt inte lyskom-proc till nil. Då
+	fungerar inte lyskom-buffer-p. (Fast frågan är vad som går sönder
+	istället...)
+
+	* parse.el (lyskom-parse-text-mapping): Ny funktion.
+	(lyskom-parse-list): Ny funktion.
+	(lyskom-parse-text-number-pair): Ny funktion.
+	(lyskom-parse-sparse-map): Ny funktion.
+	(lyskom-parse-text-mapping): Ny funktion.
+
+	* services.el (initiate-get-session-info-ident): Ny funktion.
+	(initiate-re-lookup-person): Ny funktion.
+	(initiate-lookup-person): Ny funktion.
+	(initiate-lookup-conf): Ny funktion.
+	(initiate-set-info): Ny funktion.
+	(initiate-local-to-global): Ny funktion.
+	(initiate-map-created-texts): Ny funktion.
+
+	* komtypes.el (session-info): Lade till fält från who-info-ident
+
+	* parse.el (lyskom-parse-who-info-ident-list): Lade till parsning
+	av who-info-ident.
+	(lyskom-parse-session-info-ident): Ny funktion.
+	(lyskom-parse-session-info): Hantera nya fält i session-info.
+
+	* services.el (initiate-who-is-on-ident): Ny funktion.
+
+	* komtypes.el (who-info): Lade in fälten från who-info-ident.
+
+	* lyskom-rest.el (lyskom-format-object): Add ability to format
+	time.
+	(lyskom-format-objects): Använd mapconcat istället för concat,
+	apply och mapcar.
+	(lyskom-format-object): Stoppa inte in space före objektet.
+	lyskom-format-objects tar hand om det.
+	Bytte namn på lyskom-format-X till lyskom-prot-a-format-X för att
+	undvika namnkrockar i framtiden.
+	(lyskom-prot-a-format-string): Allt i en format-sats.
+
+	* services.el (initiate-get-last-text): New function.
+
+1999-01-09  David Byers  <davby@ida.liu.se>
+
+	* services.el (initiate-login): Swap initiate-login and
+	initiate-login-new.
+	(initiate-mark-text): Folded initiate-mark-text-old into
+	initiate-mark-text.
+	(initiate-unmark-text): Do (mark-text text-no 0) if call 73 is not 
+	implemented.
+
+1999-01-06  David Byers  <davby@ida.liu.se>
+
+	* internal.el: Don't concat an integer.
+
+1999-01-02  David Byers  <davby@ida.liu.se>
+
+	* utilities.el: Sätt lyskom-max-int efter lyskom-maxint har
+	definierats.
+
 1999-05-05  Per Cederqvist  <ceder@signum.se>
 
 	* commands1.el (kom-change-parenthesis): Nytt kommando.
@@ -139,6 +221,45 @@ Wed Jul  8 13:12:48 1998  David Kagedal  <davidk@lysator.liu.se>
 Fri Jul  3 13:52:46 1998  David Kagedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom-mode): Stavfel i dokumentationen.
+
+1998-06-14  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-read-conf-expand-specials): Använd
+	uconf-stat istf conf-stat.
+	(lyskom-read-conf-no): Använd uconf-stat vid behov.
+	(lyskom-read-uconf-stat): Ny funktion.
+	(lyskom-read-conf-name): Använd uconf-stat vid behov.
+	(lyskom-read-session-resolve-ambiguity): Använd uconf-stat.
+
+	* cache.el (cache-get-uconf-stat): Bygg en uconf-stat bara om vi
+	kör protokollversion 10.
+
+	* commands1.el (kom-create-conf): Fråga om man tillåter hemliga
+	medlemmar. 
+
+	* commands2.el (kom-status-conf): Skriv ut om hemliga medlemmar
+	och anonyma texter är tillåtna.
+	(kom-status-conf): Använd uconf-stat för mötestypen. Annars blir
+	det fel.
+	(kom-change-conf-type): Fråga om man tillåter hemliga medlemmar.
+	Använd genomgående uconf-stat.
+
+	* macros.el (lyskom-traverse-break): Nytt makro.
+	(lyskom-traverse): Definiera om med backquote och gör det möjligt
+	att returnera ett resultat.
+
+	* commands1.el (lyskom-who-is-on-check-membership-9): Använd
+	member-list-funktioner istället för conf-no-list.
+	(lyskom-who-is-on-check-membership-8): Dito.
+
+	* komtypes.el (lyskom-member-list-find-member): Ny funktion.
+
+	* commands2.el (kom-status-conf): Byt member->conf-no till
+	member->pers-no.
+
+	* parse.el (lyskom-parse-conf-no-list): Ny funktion.
+
+	* komtypes.el (lyskom-create-conf-no-list): Fixade buggen.
 
 1998-06-10  David Byers  <davby@ida.liu.se>
 

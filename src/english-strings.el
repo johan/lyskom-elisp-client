@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.42 1999-05-05 14:38:37 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.43 1999-06-10 13:36:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.42 1999-05-05 14:38:37 ceder Exp $"))
+              "$Id: english-strings.el,v 44.43 1999-06-10 13:36:09 byers Exp $"))
 
 
 ;;; ================================================================
@@ -73,9 +73,9 @@
   (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-en-edit-mode-map "\C-c\C-r" 'lyskom-en-edit-review-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c\C-i" 'lyskom-en-edit-insert-prefix)
-  (define-key lyskom-en-edit-mode-map (lyskom-keys [mouse-2]) 'kom-button-click-or-yank)
-  (define-key lyskom-en-edit-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
-  (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click-or-yank)
+  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-button-press)
   (define-key lyskom-en-edit-mode-map "\C-c+" 'kom-menu-button-press)
   (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
@@ -1529,9 +1529,9 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-mode-map "s" 'lyskom-en-S-prefix)
   (define-key lyskom-en-mode-map "b" 'lyskom-en-previous-prefix)
 
-  (define-key lyskom-en-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
-  (define-key lyskom-en-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
-  (define-key lyskom-en-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-en-mode-map (kbd (lyskom-keyd 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-mode-map "*" 'kom-button-press)
   (define-key lyskom-en-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)
@@ -1706,9 +1706,9 @@ Contents:     \"%#9s\"
     nil
   (setq lyskom-en-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-en-prioritize-mode-map)
-  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
-  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
-  (define-key lyskom-en-prioritize-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-prioritize-mode-map "*" 'kom-button-press)
   (define-key lyskom-en-prioritize-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-prioritize-mode-map "?" 'kom-prioritize-help)
@@ -1765,7 +1765,7 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-customize-map "\t" 'widget-forward)
   (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
   (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)
-  (define-key lyskom-en-customize-map (lyskom-keys [mouse-2]) 'widget-button-click)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
   (define-key lyskom-en-customize-map "\C-c\C-c" 'lyskom-customize-save-and-quit)
   (define-key lyskom-en-customize-map "\C-c\C-k" 'lyskom-customize-quit)
   (define-key lyskom-en-customize-map "\C-c\C-s" 'lyskom-customize-save)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.29 1999-02-11 16:27:23 byers Exp $
+;;;;; $Id: commands2.el,v 44.30 1999-06-10 13:36:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.29 1999-02-11 16:27:23 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.30 1999-06-10 13:36:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -159,150 +159,163 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((conf-no
 	 (or conf-no
 	     (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-				  '(all) nil nil t)))
-	conf-stat)
+				  '(all) nil nil t))))
     (cache-del-conf-stat conf-no)
-    (setq conf-stat (blocking-do 'get-conf-stat conf-no))
-    (if (null conf-stat)
-	(lyskom-insert-string 'no-such-conf)
-      (let* ((type (conf-stat->conf-type conf-stat))
-	     (box (conf-type->letterbox type))
-	     (ori (conf-type->original type))
-	     (pro (conf-type->rd_prot type))
-	     (sec (conf-type->secret type)))
-	(lyskom-format-insert 'status-record
-			      conf-stat
-			      conf-stat
-			      (cond
-			       ((or box ori pro sec)
-				(concat
-				 "("
-				 (if box (lyskom-get-string 'Mailbox) "")
-				 (if (and box (or sec ori pro)) ", " "")
-				 (if sec (lyskom-get-string
-					  'Protected) "")
-				 (if (and sec (or ori pro)) ", " "")
-				 (if ori (lyskom-get-string
-					  'no-comments) "")
-				 (if (and ori pro) ", " "")
-				 (if pro (lyskom-get-string 'closed) "")
-				 ")"))
-			       (t ""))))
-      (let ((creator (conf-stat->creator conf-stat)))
-	(lyskom-format-insert 'created-by
-			      creator
-			      creator
-			      (if (and 
-				   (lyskom-conf-stat-p creator)
-				   (> (length (conf-stat->name creator))
-				      (- (lyskom-window-width) 46)))
-				  "\n"
-				"")))
-      (lyskom-format-insert 'created-at
-			    (lyskom-return-date-and-time
-			     (conf-stat->creation-time conf-stat)))
-      (lyskom-format-insert 'members
-			    (conf-stat->no-of-members conf-stat))
-      (lyskom-format-insert 'garb-nice
-			    (conf-stat->garb-nice conf-stat))
-      (lyskom-format-insert 'lowest-local-no
-			    (conf-stat->first-local-no conf-stat))
-      (lyskom-format-insert 'highest-local-no
-			    (1- (+ (conf-stat->no-of-texts conf-stat)
-				   (conf-stat->first-local-no conf-stat))))
-      (lyskom-format-insert 'last-text-time
-			    (lyskom-return-date-and-time
-			     (conf-stat->last-written conf-stat)))
-      (lyskom-format-insert 'no-of-motd
-			    (conf-stat->msg-of-day conf-stat))
-      (let ((superconf (conf-stat->super-conf conf-stat)))
-	(lyskom-format-insert 'superconf-is-no-name
-			      superconf
-			      superconf
-			      (if (and 
-				   (lyskom-conf-stat-p superconf)
-				   (> (length (conf-stat->name superconf))
-				      (- (lyskom-window-width) 46)))
-				  "\n"
-				"")))
-      (let ((permitted-submitters (conf-stat->permitted-submitters conf-stat)))
-	(lyskom-format-insert 'permitted-submitters-no-name
-			      permitted-submitters
-			      (if (zerop permitted-submitters)
-				  (lyskom-get-string 'Everybody)
-				permitted-submitters)
-			      ""))
-      (let ((supervisor (conf-stat->supervisor conf-stat)))
-	(lyskom-format-insert 'supervisor-is-no-name
-			      supervisor
-			      supervisor
-			      ""))
-      (lyskom-format-insert 'presentation-no
-			    (conf-stat->presentation conf-stat))
+    (cache-del-uconf-stat conf-no)
+    (blocking-do-multiple ((conf-stat (get-conf-stat conf-no))
+                           (uconf-stat (get-uconf-stat conf-no)))
+      (if (null conf-stat)
+          (lyskom-insert-string 'no-such-conf)
+        (let* ((type (uconf-stat->conf-type uconf-stat))
+               (box (conf-type->letterbox type))
+               (ori (conf-type->original type))
+               (pro (conf-type->rd_prot type))
+               (sec (conf-type->secret type)))
+          (lyskom-format-insert 'status-record
+                                conf-stat
+                                conf-stat
+                                (cond
+                                 ((or box ori pro sec)
+                                  (concat
+                                   "("
+                                   (if box (lyskom-get-string 'Mailbox) "")
+                                   (if (and box (or sec ori pro)) ", " "")
+                                   (if sec (lyskom-get-string
+                                            'Protected) "")
+                                   (if (and sec (or ori pro)) ", " "")
+                                   (if ori (lyskom-get-string
+                                            'no-comments) "")
+                                   (if (and ori pro) ", " "")
+                                   (if pro (lyskom-get-string 'closed) "")
+                                   ")"))
+                                 (t ""))))
+        (let ((creator (conf-stat->creator conf-stat)))
+          (lyskom-format-insert 'created-by
+                                creator
+                                creator
+                                (if (and 
+                                     (lyskom-conf-stat-p creator)
+                                     (> (length (conf-stat->name creator))
+                                        (- (lyskom-window-width) 46)))
+                                    "\n"
+                                  "")))
+        (lyskom-format-insert 'created-at
+                              (lyskom-return-date-and-time
+                               (conf-stat->creation-time conf-stat)))
+        (lyskom-format-insert 'members
+                              (conf-stat->no-of-members conf-stat))
+        (lyskom-format-insert 'conf-allows-secret-members
+                              (lyskom-get-string 
+                               (if (conf-type->forbid-secret 
+                                    (uconf-stat->conf-type uconf-stat))
+                                   'secret-members-not-permitted
+                                 'secret-members-permitted)))
+        (lyskom-format-insert 'conf-allows-anon-texts
+                              (lyskom-get-string 
+                               (if (conf-type->anarchy
+                                    (uconf-stat->conf-type uconf-stat))
+                                   'anon-texts-permitted
+                                 'anon-texts-not-permitted))) 
+        (lyskom-format-insert 'garb-nice
+                              (conf-stat->garb-nice conf-stat))
+        (lyskom-format-insert 'lowest-local-no
+                              (conf-stat->first-local-no conf-stat))
+        (lyskom-format-insert 'highest-local-no
+                              (1- (+ (conf-stat->no-of-texts conf-stat)
+                                     (conf-stat->first-local-no conf-stat))))
+        (lyskom-format-insert 'last-text-time
+                              (lyskom-return-date-and-time
+                               (conf-stat->last-written conf-stat)))
+        (lyskom-format-insert 'no-of-motd
+                              (conf-stat->msg-of-day conf-stat))
+        (let ((superconf (conf-stat->super-conf conf-stat)))
+          (lyskom-format-insert 'superconf-is-no-name
+                                superconf
+                                superconf
+                                (if (and 
+                                     (lyskom-conf-stat-p superconf)
+                                     (> (length (conf-stat->name superconf))
+                                        (- (lyskom-window-width) 46)))
+                                    "\n"
+                                  "")))
+        (let ((permitted-submitters (conf-stat->permitted-submitters conf-stat)))
+          (lyskom-format-insert 'permitted-submitters-no-name
+                                permitted-submitters
+                                (if (zerop permitted-submitters)
+                                    (lyskom-get-string 'Everybody)
+                                  permitted-submitters)
+                                ""))
+        (let ((supervisor (conf-stat->supervisor conf-stat)))
+          (lyskom-format-insert 'supervisor-is-no-name
+                                supervisor
+                                supervisor
+                                ""))
+        (lyskom-format-insert 'presentation-no
+                              (conf-stat->presentation conf-stat))
 
-      (if (zerop (conf-stat->msg-of-day conf-stat))
-	  nil
-	(lyskom-format-insert 'conf-has-motd conf-stat)
-	(lyskom-view-text (conf-stat->msg-of-day conf-stat)))
+        (if (zerop (conf-stat->msg-of-day conf-stat))
+            nil
+          (lyskom-format-insert 'conf-has-motd conf-stat)
+          (lyskom-view-text (conf-stat->msg-of-day conf-stat)))
 
-      ;; Show all members of CONF-STAT if the user so wishes."
-      (lyskom-scroll)
-      (if (lyskom-j-or-n-p
-	   (lyskom-get-string 'show-members-list-also-q))
-	  (let ((member-list (blocking-do 'get-members
-                                           (conf-stat->conf-no conf-stat)
-                                           0 lyskom-max-int)))
+        ;; Show all members of CONF-STAT if the user so wishes."
+        (lyskom-scroll)
+        (if (lyskom-j-or-n-p
+             (lyskom-get-string 'show-members-list-also-q))
+            (let ((member-list (blocking-do 'get-members
+                                            (conf-stat->conf-no conf-stat)
+                                            0 lyskom-max-int)))
 	    
-	    (lyskom-format-insert 'conf-has-these-members
-				  conf-stat)
-	    (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
+              (lyskom-format-insert 'conf-has-these-members
+                                    conf-stat)
+              (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
 		
-		(progn
-		  (lyskom-insert-string 'member-list-header)
-		  (lyskom-traverse 
-		   member (member-list->members member-list)
-		   (let ((membership (blocking-do
-				      'query-read-texts 
-				      (member->conf-no member)
-				      (conf-stat->conf-no conf-stat))))
-		     ;; Print a row describing the membership of MEMBER
-		     ;; (described by MEMBERSHIP) in CONF-STAT.
-		     (if (or (null membership))
-			 (lyskom-insert-string 'secret-membership)
-		       (lyskom-insert 
-			(format "%17s"
-				(lyskom-return-date-and-time
-				 (membership->last-time-read membership))))
-		       (let ((unread (- (+ (conf-stat->first-local-no
-					    conf-stat)
-					   (conf-stat->no-of-texts conf-stat))
-					(membership->last-text-read membership)
-					(length (membership->read-texts
-						 membership))
-					1)))
-			 (lyskom-format-insert 'conf-membership-line
-					       (if (zerop unread)
-						   "         "
-						 (format "%7d  " unread))
-					       (member->conf-no member)
-                                               (lyskom-return-membership-type (member->membership-type member))
-                                               )
-                         (when (and (member->created-by member)
-                                    (not (zerop (member->created-by member)))
-                                    (not (eq (member->conf-no member)
-                                             (member->created-by member))))
-                           (lyskom-format-insert 'conf-membership-line-2
-                                                 (lyskom-return-date-and-time
-                                                  (member->created-at member))
-                                                 (member->created-by member)))
-                         )))))
+                  (progn
+                    (lyskom-insert-string 'member-list-header)
+                    (lyskom-traverse 
+                        member (member-list->members member-list)
+                      (let ((membership (blocking-do
+                                         'query-read-texts 
+                                         (member->pers-no member)
+                                         (conf-stat->conf-no conf-stat))))
+                        ;; Print a row describing the membership of MEMBER
+                        ;; (described by MEMBERSHIP) in CONF-STAT.
+                        (if (or (null membership))
+                            (lyskom-insert-string 'secret-membership)
+                          (lyskom-insert 
+                           (format "%17s"
+                                   (lyskom-return-date-and-time
+                                    (membership->last-time-read membership))))
+                          (let ((unread (- (+ (conf-stat->first-local-no
+                                               conf-stat)
+                                              (conf-stat->no-of-texts conf-stat))
+                                           (membership->last-text-read membership)
+                                           (length (membership->read-texts
+                                                    membership))
+                                           1)))
+                            (lyskom-format-insert 'conf-membership-line
+                                                  (if (zerop unread)
+                                                      "         "
+                                                    (format "%7d  " unread))
+                                                  (member->pers-no member)
+                                                  (lyskom-return-membership-type (member->membership-type member))
+                                                  )
+                            (when (and (member->created-by member)
+                                       (not (zerop (member->created-by member)))
+                                       (not (eq (member->pers-no member)
+                                                (member->created-by member))))
+                              (lyskom-format-insert 'conf-membership-line-2
+                                                    (lyskom-return-date-and-time
+                                                     (member->created-at member))
+                                                    (member->created-by member)))
+                            )))))
 	      
-	      ;; Don't show membership info
-	      (lyskom-insert "\n")
-	      (lyskom-traverse
-	       member (member-list->members member-list)
-	       (lyskom-format-insert "  %#1P\n" 
-                                     (member->conf-no member)))))))))
+                ;; Don't show membership info
+                (lyskom-insert "\n")
+                (lyskom-traverse
+                    member (member-list->members member-list)
+                  (lyskom-format-insert "  %#1P\n" 
+                                        (member->pers-no member))))))))))
 
 
 ;;; ================================================================
@@ -484,7 +497,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((target (or who
 		    (lyskom-read-conf-no
 		     (format (lyskom-get-string 'who-to-send-message-to)
-			     (lyskom-get-string 'everybody))
+			     (lyskom-get-string 'nobody))
                      (if kom-permissive-completion
                          '(all)
                        '(login conf))
@@ -509,14 +522,16 @@ otherwise: the conference is read with lyskom-completing-read."
 			 "")))
                      t))))
     (if (zerop target)
-	(lyskom-insert (lyskom-get-string 'message-all-info))
-      (lyskom-format-insert 'message-recipient-info target))
-    (lyskom-send-message target message)))
+        (lyskom-format-insert 'message-use-alarm-instead
+                              (lyskom-command-name 'kom-send-alarm))
+      (lyskom-format-insert 'message-recipient-info target)
+      (lyskom-send-message target message))))
   
 
 (def-kom-command kom-send-alarm (&optional message)
   "Send a message to all of the users in KOM right now."
   (interactive)
+  (lyskom-insert (lyskom-get-string 'message-all-info))
   (lyskom-send-message 0 message))
 
 
@@ -659,8 +674,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 	       (result (blocking-do 'set-unread conf-no n))
                (membership (blocking-do 'query-read-texts
 					lyskom-pers-no
-					conf-no))
-	       )
+					conf-no)))
           (ignore result)
 	  (lyskom-replace-membership membership lyskom-membership)
 	  (if (= conf-no lyskom-current-conf)
@@ -1775,53 +1789,54 @@ is alive."
 (def-kom-command kom-change-conf-type ()
   "Change type of a conference"
   (interactive)
-  (let* ((conf-stat (lyskom-read-conf-stat
-                     (lyskom-get-string 'what-conf-to-change)
-                     '(conf pers) nil "" t))
-	 (type (conf-stat->conf-type conf-stat))
+  (let* ((uconf-stat (lyskom-read-uconf-stat
+                      (lyskom-get-string 'what-conf-to-change)
+                      '(conf pers) nil "" t))
+	 (type (uconf-stat->conf-type uconf-stat))
 	 (box (conf-type->letterbox type))
 	 (ori (conf-type->original type))
 	 (pro (conf-type->rd_prot type))
-	 (sec (conf-type->secret type)))
-    (lyskom-format-insert 'change-type-prompt
-			  conf-stat
-			  conf-stat
-			  (cond
-			   ((or box ori pro sec)
-			    (concat
-			     "("
-			     (if box (lyskom-get-string 'Mailbox) "")
-			     (if (and box (or sec ori pro)) ", " "")
-			     (if sec (lyskom-get-string
-				      'Protected) "")
-			     (if (and sec (or ori pro)) ", " "")
-			     (if ori (lyskom-get-string
-				      'no-comments) "")
-			     (if (and ori pro) ", " "")
-			     (if pro (lyskom-get-string 'closed) "")
-			     ")"))
-			   (t "")))
-    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
+	 (sec (conf-type->secret type))
+         (ano (conf-type->anarchy type))
+         (ope (conf-type->forbid-secret type)))
+    (lyskom-format-insert 
+     'change-type-prompt
+     uconf-stat
+     uconf-stat
+     (mapconcat 'identity
+                (delq nil
+                      (list (and box (lyskom-get-string 'Mailbox))
+                            (and sec (lyskom-get-string 'Protected))
+                            (and ori (lyskom-get-string 'no-comments))
+                            (and pro (lyskom-get-string 'closed))
+                            (and ano (lyskom-get-string 'allow-anon))
+                            (and ope (lyskom-get-string 'allow-secret))))))
+    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member) t))
 	   (secret (if (not open)
-		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
-	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
-	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed))))
-      (cache-del-conf-stat (conf-stat->conf-no conf-stat))
+		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf) t)))
+	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed) t))
+	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed) t))
+           (secmem (and (lyskom-have-feature long-conf-types)
+                        (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed) t)))))
+      (cache-del-conf-stat (uconf-stat->conf-no uconf-stat))
+      (cache-del-uconf-stat (uconf-stat->conf-no uconf-stat))
       (if (not (blocking-do 
 		'set-conf-type
-		(conf-stat->conf-no conf-stat)
+		(uconf-stat->conf-no uconf-stat)
 		(lyskom-create-conf-type (not open)
 					 (not orig)
 					 secret
 					 (conf-type->letterbox
-					  (conf-stat->conf-type  conf-stat))
+					  (uconf-stat->conf-type  uconf-stat))
 					 anarchy
-					 (conf-type->rsv1
-					  (conf-stat->conf-type conf-stat))
+                                         (if (lyskom-have-feature long-conf-types)
+                                             secmem
+                                           (conf-type->forbid-secret
+                                            (uconf-stat->conf-type uconf-stat)))
 					 (conf-type->rsv2
-					  (conf-stat->conf-type conf-stat))
+					  (uconf-stat->conf-type uconf-stat))
 					 (conf-type->rsv3
-					  (conf-stat->conf-type conf-stat)))))
+					  (uconf-stat->conf-type uconf-stat)))))
 	  (progn (lyskom-insert-string 'nope)
 		 (lyskom-format-insert 'error-code
 				       (lyskom-get-error-text lyskom-errno)
@@ -1996,13 +2011,16 @@ is alive."
   "Convenience function to add agreement."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no
                                                      'kom-agree)))
-  (lyskom-fast-reply text-no  (lyskom-read-string (lyskom-get-string 'agree-prompt)
-                                                  (lyskom-get-string 'default-agree-string)
-                                                  'lyskom-fast-reply-history)))
+  (cache-del-text-stat text-no)
+  (lyskom-fast-reply text-no
+                     (lyskom-read-string (lyskom-get-string 'agree-prompt)
+                                         (lyskom-get-string 'default-agree-string)
+                                         'lyskom-fast-reply-history)))
     
 
 (defun lyskom-fast-reply (text-no message)
   "To text TEXT-NO add MESSAGE as a fast reply."
+  (cache-del-text-stat text-no)
   (lyskom-report-command-answer
    (blocking-do 'modify-text-info
                 text-no

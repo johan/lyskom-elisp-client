@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.63 1999-02-18 16:29:42 petli Exp $
+;;;;; $Id: lyskom-rest.el,v 44.64 1999-06-10 13:36:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.63 1999-02-18 16:29:42 petli Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.64 1999-06-10 13:36:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1451,7 +1451,7 @@ Note that it is not allowed to use deferred insertions in the text."
   "Format a text for insertion. Does parsing of special markers in the text."
   (let* ((ct-item (car (text-stat-find-aux text-stat 1)))
          (content-type (cond (ct-item (aux-item->data ct-item))
-                             ((and (string-match "^\\(\\S-+\\):" text)
+                             ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
                                    (match-beginning 1))
                               (match-string 1 text))
                              (t nil)))
@@ -1461,7 +1461,11 @@ Note that it is not allowed to use deferred insertions in the text."
                          (result nil)
                          (case-fold-search t))
                      (while tmp
-                       (when (eq 0 (string-match (car (car tmp)) content-type))
+                       (when (eq 0 (string-match 
+                                    (if (stringp (car (car tmp)))
+                                        (car (car tmp))
+                                      (symbol-name (car (car tmp))))
+                                    content-type))
                          (setq result (car tmp))
                          (setq tmp nil))
                        (setq tmp (cdr tmp)))
@@ -1475,10 +1479,25 @@ Note that it is not allowed to use deferred insertions in the text."
 ;;         nil)))
 
     (cond (formatted formatted)
-          (kom-text-properties 
-           (lyskom-button-transform-text
-            (lyskom-fill-message text)))
-          (t (lyskom-fill-message text)))))
+          (t (let ((tmp (if kom-text-properties
+                            (lyskom-button-transform-text
+                             (lyskom-fill-message text))
+                          (lyskom-fill-message text))))
+               (when (and kom-smileys
+                          (fboundp 'smiley-region))
+                 (add-text-properties 0 
+                                      (length tmp) 
+                                      '(special-insert lyskom-postprocess-text)
+                                      tmp))
+               tmp)))))
+
+(defun lyskom-postprocess-text (start end)
+  (condition-case nil
+      (smiley-region start (min (point-max) (1+ end)))
+    (error nil)))
+
+
+
 
 (defun lyskom-signal-reformatted-text (how)
   "Signal that the last text was reformatted HOW, which should be a string
@@ -1488,16 +1507,21 @@ in lyskom-messages."
 
 
 (defun lyskom-w3-region (start end)
-  (when kom-w3-simplify-body
-    (save-excursion
-      (let ((case-fold-search t))
-        (goto-char start)
-        (while (re-search-forward "<body[^>]*>" end t)
-          (replace-match "<body>")))))
-  
-    (w3-region start end)
-  (w3-finish-drawing)
-  (add-text-properties start (min (point-max) end) '(end-closed nil)))
+  (unwind-protect
+    (condition-case nil
+      (progn
+        (narrow-to-region start end)
+        (when kom-w3-simplify-body
+          (save-excursion
+            (let ((case-fold-search t))
+              (goto-char start)
+              (while (re-search-forward "<body[^>]*>" end t)
+                (replace-match "<body>")))))
+        (w3-region start end)
+        (w3-finish-drawing)
+        (add-text-properties (point-min) (point-max) '(end-closed nil)))
+      (error nil))))
+
 
 (defun lyskom-format-html (text)
   (when (condition-case e (progn (require 'w3) t) (error nil))
@@ -2628,7 +2652,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 	(nagging nil))
     (while (and (not (char-in-string input-char
                                      (lyskom-get-string 'y-or-n-instring)))
-                (not (and (or (eq input-char 7)
+                (not (and (or (eq input-char ?\C-g)
                               (eq 'keyboard-quit
                                   (lyskom-lookup-key (current-local-map)
                                                      input-char
@@ -2654,14 +2678,14 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
         ;; Redisplay prompt on C-l
         ;;
 
-        (if (or (eq input-char 12)
+        (if (or (eq input-char ?\C-l)
                 (eq 'recenter (lyskom-lookup-key (current-local-map)
                                                  input-char
                                                  t)))
             (setq nagging nil)
           (setq nagging t)))
 
-    (if (and quittable (eq input-char 7)) (keyboard-quit))
+    (if (and quittable (eq input-char ?\C-g)) (keyboard-quit))
     (char-in-string input-char (lyskom-get-string 'y-instring))))
 
   
@@ -2746,8 +2770,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                   (if (not lyskom-debug-what-i-am-doing)
                       (if (not (and (eq ?: (elt output 0))
                                     (eq ?5 (elt output 1))))
-                          (lyskom-debug-insert proc "<- " output))
-                    (lyskom-debug-insert proc "<- " output)))
+                          (lyskom-debug-insert proc "From " output))
+                    (lyskom-debug-insert proc "From " output)))
 	      
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker)
@@ -2823,15 +2847,18 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	      (save-excursion
 		(goto-char (point-max))
 		(insert "\n"
+                        prefix
 			(format "%s" proc)
-			prefix  string))
+                        ": "
+                        string))
 	      (if move (goto-char (point-max))))))
       (save-excursion
 	(set-buffer buf)
 	(goto-char (point-max))
 	(insert "\n"
+                prefix
 		(format "%s" proc)
-		prefix  string)))))
+		": "  string)))))
 
 
 ;;; For serious bugs
@@ -2850,128 +2877,147 @@ Press q to leave this buffer, and please run M-x kom-bug-report afterwards.")))
   "Arguments: (&rest ARGS). Format ARGS to correct format to send to server.
 Strings are converted to Hollerith strings.
 Other objects are converted correctly."
-  (apply 'concat (mapcar 'lyskom-format-object args)))
+  (concat " " (mapconcat 'lyskom-format-object args " ")))
 
 
 (defun lyskom-format-object (object)
-  (concat " "
-	  (cond
-	   ((stringp object) (lyskom-format-string object))
-	   ((integerp object) (int-to-string object))
-           ((null object) "0")
-	   ((listp object)
-	    (cond
-	     ((eq (car object) 'MISC-LIST)
-	      (lyskom-format-misc-list (cdr object)))
-             ((eq (car object) 'AUX-ITEM)
-              (lyskom-format-aux-item object))
-             ((eq (car object) 'AUX-ITEM-FLAGS)
-              (lyskom-format-aux-item-flags object))
-	     ((eq (car object) 'CONF-TYPE)
-	      (lyskom-format-conf-type object))
-	     ((eq (car object) 'PRIVS)
-	      (lyskom-format-privs object))
-             ((eq (car object) 'MEMBERSHIP-TYPE)
-              (lyskom-format-membership-type object))
-	     ((eq (car object) 'LIST)
-	      (lyskom-format-simple-list (cdr object)))
-	     (t
-	      (signal 'lyskom-internal-error
-		      (list 'lyskom-format-object
-			    ": no support for object "
-			    object)))))
-           ((eq object t) "1")
-	   (t (signal 'lyskom-internal-error
-		      (list 'lyskom-format-object
-			    ": no support for object "
-			    object))))))
+  (cond
+   ((stringp object) (lyskom-prot-a-format-string object))
+   ((integerp object) (int-to-string object))
+   ((null object) "0")
+   ((listp object)
+    (cond
+     ((eq (car object) 'MISC-LIST)
+      (lyskom-prot-a-format-misc-list (cdr object)))
+     ((eq (car object) 'AUX-ITEM)
+      (lyskom-prot-a-format-aux-item object))
+     ((eq (car object) 'AUX-ITEM-FLAGS)
+      (lyskom-prot-a-format-aux-item-flags object))
+     ((eq (car object) 'CONF-TYPE)
+      (lyskom-prot-a-format-conf-type object))
+     ((eq (car object) 'PRIVS)
+      (lyskom-prot-a-format-privs object))
+     ((eq (car object) 'FLAGS)
+      (lyskom-prot-a-format-flags object))
+     ((eq (car object) 'MEMBERSHIP-TYPE)
+      (lyskom-prot-a-format-membership-type object))
+     ((eq (car object) 'LIST)
+      (lyskom-prot-a-format-simple-list (cdr object)))
+     ((eq (car object) 'TIME)
+      (lyskom-prot-a-format-time (cdr object)))
+     (t
+      (signal 'lyskom-internal-error
+              (list 'lyskom-format-object
+                    ": no support for object "
+                    object)))))
+   ((eq object t) "1")
+   (t (signal 'lyskom-internal-error
+              (list 'lyskom-format-object
+                    ": no support for object "
+                    object)))))
 
 
-(defun lyskom-format-membership-type (membership-type)
+(defun lyskom-prot-a-format-time (time)
+  "Format a TIME for output to the server."
+  (mapconcat 'int-to-string time " "))
+
+(defun lyskom-prot-a-format-flags (flags)
+  "Format personal flags for the server."
+  (concat
+   (lyskom-prot-a-format-bool (flags->unread_is_secret flags))
+   (lyskom-prot-a-format-bool (flags->flg2 flags))
+   (lyskom-prot-a-format-bool (flags->flg3 flags))
+   (lyskom-prot-a-format-bool (flags->flg4 flags))
+   (lyskom-prot-a-format-bool (flags->flg5 flags))
+   (lyskom-prot-a-format-bool (flags->flg6 flags))
+   (lyskom-prot-a-format-bool (flags->flg7 flags))
+   (lyskom-prot-a-format-bool (flags->flg8 flags))))
+
+
+(defun lyskom-prot-a-format-membership-type (membership-type)
   "Format a MEMBERSHIP-TYPE for output to the server."
   (concat
-   (lyskom-format-bool (membership-type->invitation membership-type))
-   (lyskom-format-bool (membership-type->passive membership-type))
-   (lyskom-format-bool (membership-type->secret membership-type))
-   (lyskom-format-bool (membership-type->rsv1 membership-type))
-   (lyskom-format-bool (membership-type->rsv2 membership-type))
-   (lyskom-format-bool (membership-type->rsv3 membership-type))
-   (lyskom-format-bool (membership-type->rsv4 membership-type))
-   (lyskom-format-bool (membership-type->rsv5 membership-type))))
+   (lyskom-prot-a-format-bool (membership-type->invitation membership-type))
+   (lyskom-prot-a-format-bool (membership-type->passive membership-type))
+   (lyskom-prot-a-format-bool (membership-type->secret membership-type))
+   (lyskom-prot-a-format-bool (membership-type->rsv1 membership-type))
+   (lyskom-prot-a-format-bool (membership-type->rsv2 membership-type))
+   (lyskom-prot-a-format-bool (membership-type->rsv3 membership-type))
+   (lyskom-prot-a-format-bool (membership-type->rsv4 membership-type))
+   (lyskom-prot-a-format-bool (membership-type->rsv5 membership-type))))
 
-(defun lyskom-format-conf-type (conf-type)
+(defun lyskom-prot-a-format-conf-type (conf-type)
   "Format a CONF-TYPE for output to the server."
   (concat
-   (lyskom-format-bool (conf-type->rd_prot conf-type))
-   (lyskom-format-bool (conf-type->original conf-type))
-   (lyskom-format-bool (conf-type->secret conf-type))
-   (lyskom-format-bool (conf-type->letterbox conf-type))
-   (if lyskom-long-conf-types-flag
+   (lyskom-prot-a-format-bool (conf-type->rd_prot conf-type))
+   (lyskom-prot-a-format-bool (conf-type->original conf-type))
+   (lyskom-prot-a-format-bool (conf-type->secret conf-type))
+   (lyskom-prot-a-format-bool (conf-type->letterbox conf-type))
+   (if (lyskom-have-feature long-conf-types)
        (concat
-         (lyskom-format-bool (conf-type->anarchy conf-type))
-         (lyskom-format-bool (conf-type->rsv1 conf-type))
-         (lyskom-format-bool (conf-type->rsv2 conf-type))
-         (lyskom-format-bool (conf-type->rsv3 conf-type)))
+         (lyskom-prot-a-format-bool (conf-type->anarchy conf-type))
+         (lyskom-prot-a-format-bool (conf-type->forbid-secret conf-type))
+         (lyskom-prot-a-format-bool (conf-type->rsv2 conf-type))
+         (lyskom-prot-a-format-bool (conf-type->rsv3 conf-type)))
      "")))
 
-(defun lyskom-format-aux-item (item)
+(defun lyskom-prot-a-format-aux-item (item)
   "Format an AUX-ITEM for output to the server."
   (concat
-   (int-to-string (aux-item->aux-no item))                  " "
    (int-to-string (aux-item->tag item))                     " "
-   (lyskom-format-aux-item-flags (aux-item->flags item))    " "
+   (lyskom-prot-a-format-aux-item-flags (aux-item->flags item))    " "
    (int-to-string (aux-item->inherit-limit item))           " "
-   (lyskom-format-string (aux-item->data item))))
+   (lyskom-prot-a-format-string (aux-item->data item))))
 
-(defun lyskom-format-aux-item-flags (flags)
+(defun lyskom-prot-a-format-aux-item-flags (flags)
   "Format AUX-ITEM-FLAGS for output to the server."
   (concat
-   (lyskom-format-bool (aux-item-flags->deleted flags))
-   (lyskom-format-bool (aux-item-flags->inherit flags))
-   (lyskom-format-bool (aux-item-flags->secret flags))
-   (lyskom-format-bool (aux-item-flags->anonymous flags))
-   (lyskom-format-bool (aux-item-flags->reserved1 flags))
-   (lyskom-format-bool (aux-item-flags->reserved2 flags))
-   (lyskom-format-bool (aux-item-flags->reserved3 flags))
-   (lyskom-format-bool (aux-item-flags->reserved4 flags))))
+   (lyskom-prot-a-format-bool (aux-item-flags->deleted flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->inherit flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->secret flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->anonymous flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->reserved1 flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->reserved2 flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->reserved3 flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->reserved4 flags))))
 
 
-(defun lyskom-format-privs (privs)
+(defun lyskom-prot-a-format-privs (privs)
   "Format PRIVS for output to the server."
   (concat
-   (lyskom-format-bool (privs->wheel privs))
-   (lyskom-format-bool (privs->admin privs))
-   (lyskom-format-bool (privs->statistic privs))
-   (lyskom-format-bool (privs->create_pers privs))
-   (lyskom-format-bool (privs->create_conf privs))
-   (lyskom-format-bool (privs->change_name privs))
-   (lyskom-format-bool (privs->flg7 privs))
-   (lyskom-format-bool (privs->flg8 privs))
-   (lyskom-format-bool (privs->flg9 privs))
-   (lyskom-format-bool (privs->flg10 privs))
-   (lyskom-format-bool (privs->flg11 privs))
-   (lyskom-format-bool (privs->flg12 privs))
-   (lyskom-format-bool (privs->flg13 privs))
-   (lyskom-format-bool (privs->flg14 privs))
-   (lyskom-format-bool (privs->flg15 privs))
-   (lyskom-format-bool (privs->flg16 privs))))
+   (lyskom-prot-a-format-bool (privs->wheel privs))
+   (lyskom-prot-a-format-bool (privs->admin privs))
+   (lyskom-prot-a-format-bool (privs->statistic privs))
+   (lyskom-prot-a-format-bool (privs->create_pers privs))
+   (lyskom-prot-a-format-bool (privs->create_conf privs))
+   (lyskom-prot-a-format-bool (privs->change_name privs))
+   (lyskom-prot-a-format-bool (privs->flg7 privs))
+   (lyskom-prot-a-format-bool (privs->flg8 privs))
+   (lyskom-prot-a-format-bool (privs->flg9 privs))
+   (lyskom-prot-a-format-bool (privs->flg10 privs))
+   (lyskom-prot-a-format-bool (privs->flg11 privs))
+   (lyskom-prot-a-format-bool (privs->flg12 privs))
+   (lyskom-prot-a-format-bool (privs->flg13 privs))
+   (lyskom-prot-a-format-bool (privs->flg14 privs))
+   (lyskom-prot-a-format-bool (privs->flg15 privs))
+   (lyskom-prot-a-format-bool (privs->flg16 privs))))
 
-(defun lyskom-format-bool (bool)
+(defun lyskom-prot-a-format-bool (bool)
   "Format a BOOL for output to the server."
-  (if bool 1 0))
+  (if bool "1" "0"))
       
 
-(defun lyskom-format-misc-list (misc-list)
+(defun lyskom-prot-a-format-misc-list (misc-list)
   "Format a misc-list for output to the server."
   (let ((result (format "%d {" (length misc-list))))
     (while (not (null misc-list))
       (setq result (concat result " "
-			    (lyskom-format-misc-item (car misc-list))))
+			    (lyskom-prot-a-format-misc-item (car misc-list))))
       (setq misc-list (cdr misc-list)))
     (setq result (concat result " }"))))
 
 
-(defun lyskom-format-misc-item (misc-item)
+(defun lyskom-prot-a-format-misc-item (misc-item)
   "Format a misc-item for output to the server."
   (format "%d %d"
 	  (cond
@@ -2980,20 +3026,20 @@ Other objects are converted correctly."
 	   ((eq (car misc-item) 'comm-to) 2)
 	   ((eq (car misc-item) 'footn-to) 4)
            ((eq (car misc-item) 'bcc-recpt) 
-            (if lyskom-bcc-flag 15 1)))
+            (if (lyskom-have-feature bcc-misc) 15 1)))
 	  (cdr misc-item)))
 
 
-(defun lyskom-format-simple-list (list)
+(defun lyskom-prot-a-format-simple-list (list)
   "Format some kind of list to send to server."
   (apply 'concat (list (format "%d {" (length list))
 		       (apply 'lyskom-format-objects list)
 		       " }")))
 
   
-(defun lyskom-format-string (string)
-  (concat (format "%d" (length string))
-	  "H" string))
+(defun lyskom-prot-a-format-string (string)
+  (format "%dH%s" (length string) string))
+
 
 
 
@@ -3014,6 +3060,7 @@ One parameter - the prompt string."
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
+    (set-buffer-multibyte nil)
     (while (not (or (eq (setq input-char 
 			      (condition-case err
 				  (read-char)
@@ -3079,13 +3126,16 @@ One parameter - the prompt string."
 ;;;
 
 (setq lyskom-line-start-chars
-      (let ((tmp (make-vector 256 nil)))
-        (mapcar 
-         (function
-          (lambda (x)
-            (aset tmp (char-to-int x) t)))
-         lyskom-line-start-chars-string)
-        tmp))
+;;      (if (fboundp 'string-to-vector)
+;;          (string-to-vector lyskom-line-start-chars-string)
+        (let ((tmp (make-vector 256 nil)))
+          (mapcar 
+           (function
+            (lambda (x)
+              (aset tmp (char-to-int x) t)))
+           lyskom-line-start-chars-string)
+          tmp))
+;;)
 		 
 
 

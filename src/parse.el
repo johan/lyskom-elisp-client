@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.17 1999-01-01 19:51:46 ceder Exp $
+;;;;; $Id: parse.el,v 44.18 1999-06-10 13:36:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.17 1999-01-01 19:51:46 ceder Exp $\n"))
+	      "$Id: parse.el,v 44.18 1999-06-10 13:36:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -276,6 +276,22 @@ Each element is parsed by PARSER, a function that takes no arguments."
       (prog1
 	  (lyskom-fill-vector (make-vector len nil) parser)
 	(lyskom-expect-char ?})))))
+
+(defun lyskom-parse-list (len parser)
+  "Parse a vector with LEN elements and return it as a list.
+Each element is parsed by PARSER, a function that takes no arguments."
+  (cond
+   ((zerop len) (if (lyskom-char-p ?*)
+                    (lyskom-expect-char ?*)
+                  (lyskom-expect-char ?\{)
+                  (lyskom-expect-char ?\})) nil)
+   ((lyskom-char-p ?*) (lyskom-expect-char ?*) nil)
+   (t (lyskom-expect-char ?{)
+      (let ((result nil))
+        (while (> len 0)
+          (setq result (cons (funcall parser) result))
+          (setq len (1- len)))
+        (nreverse result)))))
 
 
 (defun lyskom-fill-vector (vector parser)
@@ -519,20 +535,22 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 
 (defun lyskom-parse-membership ()
   "Parse a membership."
-  (lyskom-create-membership
-   (lyskom-parse-time)			;last-time-read
-   (lyskom-parse-num)			;conf-no
-   (lyskom-parse-num)			;priority
-   (lyskom-parse-num)			;last-text-read
-   (lyskom-parse-vector			;read-texts
-    (lyskom-parse-num) 'lyskom-parse-num)
-   (lyskom-parse-num)
-   (lyskom-parse-time)
-   (lyskom-parse-membership-type)))
+    (lyskom-create-membership
+     (lyskom-parse-num)                 ;position
+     (lyskom-parse-time)                ;last-time-read
+     (lyskom-parse-num)			;conf-no
+     (lyskom-parse-num)			;priority
+     (lyskom-parse-num)			;last-text-read
+     (lyskom-parse-vector               ;read-texts
+      (lyskom-parse-num) 'lyskom-parse-num)
+     (lyskom-parse-num)                 ;added-by
+     (lyskom-parse-time)                ;added-at
+     (lyskom-parse-membership-type)))
 
 (defun lyskom-parse-membership-old ()
   "Parse a membership."
   (lyskom-create-membership
+   nil
    (lyskom-parse-time)			;last-time-read
    (lyskom-parse-num)			;conf-no
    (lyskom-parse-num)			;priority
@@ -580,6 +598,31 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-vector			;text-nos
     (lyskom-parse-num) 'lyskom-parse-num)))
 
+(defun lyskom-parse-sparse-map ()
+  "Parse a sparce l2g block."
+  (lyskom-create-sparse-map
+   (lyskom-parse-list (lyskom-parse-num)
+                      'lyskom-parse-text-number-pair)))
+
+(defun lyskom-parse-text-number-pair ()
+  (cons (lyskom-parse-num) (lyskom-parse-num)))
+
+
+(defun lyskom-parse-text-mapping ()
+  "Parse a text-mapping"
+  (let ((have-more (lyskom-parse-1-or-0))
+        (kind (lyskom-parse-num)))
+    (cond ((= kind 0) 
+           (lyskom-create-text-mapping have-more
+                                       'sparse
+                                       (lyskom-parse-sparse-map)))
+          ((= kind 1)
+           (lyskom-create-text-mapping have-more
+                                       'dense
+                                       (lyskom-parse-map))))))
+
+
+
 
 (defun lyskom-parse-who-info ()
   "Parse a who-info."
@@ -590,6 +633,19 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-string)		;doing-what
    (lyskom-parse-string)))		;userid@host
 
+(defun lyskom-parse-who-info-ident ()
+  "Parse a who-info-ident"
+  (lyskom-create-who-info
+   (lyskom-parse-num)			;pers-no
+   (lyskom-parse-num)			;working-conf
+   (lyskom-parse-num)			;connection
+   (lyskom-parse-string)		;doing-what
+   (lyskom-parse-string)		;userid@host
+   (lyskom-parse-string)                ;hostname
+   (lyskom-parse-string)                ;ident-user
+   ))
+
+
 (defun lyskom-parse-session-info ()
   "Parse a session-info."
   (lyskom-create-session-info
@@ -598,9 +654,23 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-num)			;connection
    (lyskom-parse-string)		;doing
    (lyskom-parse-string)		;userid@host
+   nil                                  ;username
+   nil                                  ;ident-user
    (lyskom-parse-num)			;idletime
    (lyskom-parse-time)))		;connect-time
 
+(defun lyskom-parse-session-info-ident ()
+  "Parse a session-info."
+  (lyskom-create-session-info
+   (lyskom-parse-num)			;pers-no
+   (lyskom-parse-num)			;working-conf
+   (lyskom-parse-num)			;connection
+   (lyskom-parse-string)		;doing
+   (lyskom-parse-string)		;userid@host
+   (lyskom-parse-string)                ;username
+   (lyskom-parse-string)                ;ident-user
+   (lyskom-parse-num)			;idletime
+   (lyskom-parse-time)))                ;connect-time
 
 ;; prot-A.txt says that this should allow more or less flags than
 ;; specified, but I can't figure out how. /davidk
@@ -630,6 +700,12 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   "Parse result from functions that only return an OK/FAILURE."
   t)					;Needn't do anything.
 			  
+
+(defun lyskom-parse-conf-no-list ()
+  "Parse result from functions that return conf-no-list"
+  (apply 'lyskom-create-conf-no-list
+         (lyskom-parse-vector (lyskom-parse-num)
+                              'lyskom-parse-num)))
 
 (defun lyskom-parse-conf-list ()
   "Parse result from functions that return a conf-list."
@@ -714,6 +790,7 @@ Retuns the conf-stat. Args: CONF-NO."
 		   (lyskom-parse-num)	;super-conf
 		   (lyskom-parse-num)	;msg-of-day
 		   (lyskom-parse-num)	;garb-nice
+                   77                   ;fake keep-commented
 		   (lyskom-parse-num)	;no-of-members
 		   (lyskom-parse-num)	;first-local-no
 		   (lyskom-parse-num)))) ;no-of-texts
@@ -741,6 +818,7 @@ Retuns the conf-stat. Args: CONF-NO."
 		   (lyskom-parse-num)	;super-conf
 		   (lyskom-parse-num)	;msg-of-day
 		   (lyskom-parse-num)	;garb-nice
+                   (lyskom-parse-num)   ;keep-commented
 		   (lyskom-parse-num)	;no-of-members
 		   (lyskom-parse-num)	;first-local-no
 		   (lyskom-parse-num)   ;no-of-texts
@@ -879,6 +957,10 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-parse-who-info-list ()
   "Parse a who-info-list. Returns a vector."
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info))
+  
+(defun lyskom-parse-who-info-ident-list ()
+  "Parse a who-info-ident-list. Returns a vector."
+  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info-ident))
   
 
 (defun lyskom-parse-dynamic-session-info-list ()
@@ -1052,7 +1134,7 @@ functions and variables that are connected with the lyskom-buffer."
   (when lyskom-debug-communications-to-buffer
     (lyskom-debug-insert lyskom-proc
                          (format " Protocol error in %S: " function)
-                         (format format-string args))
+                         (apply 'format format-string args))
     (lyskom-debug-insert lyskom-proc
                          " Backtrace:"
                          "")
@@ -1066,5 +1148,5 @@ functions and variables that are connected with the lyskom-buffer."
   (signal 'lyskom-protocol-error
           (format "Protocol error in %S: %s"
                   function
-                  (format format-string args))))
+                  (apply 'format format-string args))))
 

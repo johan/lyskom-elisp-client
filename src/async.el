@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.12 1998-02-11 14:41:18 byers Exp $
+;;;;; $Id: async.el,v 44.13 1999-06-10 13:35:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,8 +37,12 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.12 1998-02-11 14:41:18 byers Exp $\n"))
+	      "$Id: async.el,v 44.13 1999-06-10 13:35:58 byers Exp $\n"))
 
+
+(defun lyskom-is-ignoring-async (message &rest args)
+  (let ((tmp (assq message lyskom-ignoring-async-list)))
+    (and tmp (equal args (cdr tmp)))))
 
 (defun lyskom-parse-async (tokens buffer)
   "Parse an asynchronous message from the server.
@@ -55,9 +59,12 @@ function is called with as the current-buffer, while all calls from
 this function shall be with current-buffer the BUFFER."
   (let ((msg-no (lyskom-parse-num)))
     (cond
-     ((eq msg-no 0)			; New text
+     ((or (eq msg-no 0)
+          (eq msg-no 15)) ; New text
       (let* ((text-no (lyskom-parse-num))
-	     (text-stat (lyskom-parse-text-stat-old text-no)))
+	     (text-stat (if (eq msg-no 0)
+                            (lyskom-parse-text-stat-old text-no)
+                          (lyskom-parse-text-stat text-no))))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
 	 (lyskom-async-new-text text-stat)))) ;
@@ -128,7 +135,14 @@ this function shall be with current-buffer the BUFFER."
 	   (initiate-get-time 'async nil))))
      
      ((eq msg-no 8)			; Forced leave conference
-      (lyskom-skip-tokens tokens))
+      (let ((conf-no (lyskom-parse-num)))
+        (unless (lyskom-is-ignoring-async 8 conf-no)
+          (lyskom-save-excursion
+              (set-buffer buffer)
+              (initiate-get-conf-stat 'follow
+                                      'lyskom-async-forced-leave-conf
+                                      conf-no
+                                      conf-no)))))
      
      ((eq msg-no 9)			; A person has logged in
       (let ((pers-no (lyskom-parse-num))
@@ -197,9 +211,77 @@ this function shall be with current-buffer the BUFFER."
 	 (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
 	     (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
 
+     ((eq msg-no 14)                    ; Deleted text
+      (let* ((text-no (lyskom-parse-text-no))
+            (text-stat (lyskom-parse-text-stat text-no)))
+        (lyskom-save-excursion
+         (set-buffer buffer)
+         (lyskom-async-deleted-text text-stat))))
+
+     ((eq msg-no 16)                    ; New recipient
+      (let ((text-no (lyskom-parse-num))
+            (conf-no (lyskom-parse-num))
+            (misc-type (lyskom-parse-num)))
+        (lyskom-save-excursion
+          (set-buffer buffer)
+          (cache-del-conf-stat conf-no)
+          (cache-del-text-stat text-no)
+          ;; FIXME: Code here.
+          )))
+
+     ((eq msg-no 17)                    ; Deleted recipient
+      (let ((text-no (lyskom-parse-num))
+            (conf-no (lyskom-parse-num))
+            (misc-type (lyskom-parse-num)))
+        (lyskom-save-excursion
+         (set-buffer buffer)
+          (cache-del-conf-stat conf-no)
+          (cache-del-text-stat text-no)
+         ;; FIXME: Code here.
+         )))
+
+     ((eq msg-no 18)                    ; New membership
+      (let ((pers-no (lyskom-parse-num))
+            (conf-no (lyskom-parse-num)))
+        (unless (lyskom-is-ignoring-async 18 pers-no conf-no)
+          (lyskom-save-excursion
+              (set-buffer buffer)
+              (cache-del-pers-stat pers-no)
+              (cache-del-conf-stat conf-no)
+              (when (and (eq pers-no lyskom-pers-no)
+                         (not (lyskom-try-get-membership conf-no)))
+                (lyskom-collect 'follow)
+                (initiate-get-conf-stat 'follow nil conf-no)
+                (initiate-query-read-texts 'follow nil pers-no conf-no)
+                (lyskom-use 'follow 'lyskom-async-new-membership pers-no conf-no))
+            ))))
+
      (t
       (lyskom-skip-tokens tokens)))))
 
+
+(defun lyskom-async-forced-leave-conf (conf-stat conf-no)
+  (if conf-stat
+      (lyskom-format-insert-before-prompt 'no-longer-member conf-stat)
+    (lyskom-format-insert-before-prompt 'no-longer-member-n conf-no))
+  (lyskom-remove-membership conf-no lyskom-membership)
+  (when (eq conf-no lyskom-current-conf)
+    (set-read-list-empty lyskom-reading-list)
+    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                               lyskom-current-conf 0)
+    (setq lyskom-current-conf 0))
+  (read-list-delete-read-info conf-no lyskom-to-do-list)
+  (lyskom-update-prompt))
+
+(defun lyskom-async-new-membership (conf-conf-stat
+                                    membership
+                                    pers-no 
+                                    conf-no)
+  (when (and membership conf-conf-stat)
+    (lyskom-format-insert-before-prompt 'have-become-member conf-conf-stat))
+    (lyskom-add-membership membership conf-no))
+    
+    
 
 (defun lyskom-show-presence (num flag)
   "Returns non-nil if presence messages for NUM should be displayed
@@ -441,7 +523,7 @@ converted, before insertion."
   
 
 ;;; ================================================================
-;;;            Functions for dealing with a new text
+;;;            Functions for dealing with a new or deleted text
 
 
 (defun lyskom-default-new-text-hook (text-stat)
@@ -459,7 +541,15 @@ converted, before insertion."
 	(lyskom-message "%s" (lyskom-format 'text-is-created
 					    (text-stat->text-no text-stat))))))
 
-  
+(defun lyskom-default-deleted-text-hook (text-stat)
+  "Update the prompt. Run hooks"
+  (if (and (not lyskom-dont-change-prompt) ;We shall change it
+	   (not lyskom-executing-command)) ;We have time to do it.
+      (lyskom-update-prompt))
+
+  (let ((no-message nil))
+    (run-hooks 'lyskom-deleted-text-hook)))
+
 (defun lyskom-async-new-text (text-stat)
   "Take care of a message that a new text has been created."
   (cache-del-pers-stat (text-stat->author text-stat)) ;+++Borde {ndra i cachen i st{llet.
@@ -501,6 +591,53 @@ converted, before insertion."
   (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))
 
 
+(defun lyskom-async-deleted-text (text-stat)
+  "Take care of a message that a text has been deleted."
+      (cache-del-pers-stat (text-stat->author text-stat))
+      (lyskom-traverse
+          misc-info (text-stat->misc-info-list text-stat)
+        (let ((type (misc-info->type misc-info)))
+          (cond ((or (eq type 'RECPT)
+                     (eq type 'CC-RECPT)
+                     (eq type 'BCC-RECPT))
+                 (initiate-get-conf-stat 'async 'lyskom-delete-old-text
+                                         (misc-info->recipient-no misc-info)
+                                         text-stat
+                                         (misc-info->local-no misc-info)))
+                ((eq type 'COMM-TO)
+                 (cache-del-text-stat (misc-info->comm-to misc-info)))
+                ((eq type 'FOOTN-TO)
+                 (cache-del-text-stat (misc-info->footn-to misc-info))))))
+      (lyskom-run 'async 'lyskom-default-deleted-text-hook text-stat)
+      (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))
+
+(defun lyskom-delete-old-text (recipient text-stat local-no)
+  "RECIPIENT is a conf-stat and previous recipient of TEXT-STAT.
+This call is used in response to a deleted text message"
+  (when recipient
+
+    ;; Update the cache
+
+    (cache-del-text-stat (text-stat->text-no text-stat))
+    (cache-del-text (text-stat->text-no text-stat))
+    (set-conf-stat->no-of-texts 
+     recipient
+     (min (conf-stat->no-of-texts recipient)
+          (min (conf-stat->no-of-texts recipient)
+               (1- (conf-stat->no-of-texts recipient)))))
+
+    ;; Update the read lists
+
+    (let ((membership (lyskom-try-get-membership
+                       (conf-stat->conf-no recipient))))
+      (when (and membership
+                 (lyskom-visible-membership membership))
+        (read-list-delete-text text-no recipient lyskom-to-do-list)))
+
+    (lyskom-set-mode-line)))
+                 
+
+    
 
 (defun lyskom-add-new-text (recipient text-no local-no)
   "RECIPIENT is a conf-stat and recipient of TEXT-NO.

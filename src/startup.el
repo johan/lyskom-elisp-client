@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.32 1998-07-08 11:14:28 davidk Exp $
+;;;;; $Id: startup.el,v 44.33 1999-06-10 13:36:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.32 1998-07-08 11:14:28 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.33 1999-06-10 13:36:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -219,6 +219,9 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	      (save-excursion
 		(lyskom-init-parse buffer))
 
+              ;; Async messages
+              (lyskom-accept-async)
+
 	      ;; +++PREFETCH+++
 	      (lyskom-setup-prefetch)
 
@@ -228,7 +231,9 @@ CONNECT %s:%d HTTP/1.0\r\n\
 
 	      (setq lyskom-server-info (blocking-do 'get-server-info))
               (setq lyskom-server-version-info (blocking-do 'get-version-info))
-              (when (null lyskom-server-version-info)
+              (when (or (null lyskom-server-version-info)
+                        (<= (version-info->protocol-version 
+                             lyskom-server-version-info) 7))
                 (lyskom-error 'too-old-server))
 
 	      (lyskom-setup-client-for-server-version)
@@ -264,6 +269,12 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	    (unless reused-buffer (kill-buffer buffer))))))))
 
 
+(defun lyskom-accept-async ()
+  (let ((res (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18))))
+    (when (and (null res)
+               (eq 50 lyskom-errno))
+      (blocking-do 'accept-async '(0 5 7 8 9 11 12 13 14 16 17 18)))))
+
 
 (defun lyskom-www-proxy-connect-filter (proc output)
   "Receive connection acknowledgement from proxy."
@@ -284,21 +295,22 @@ CONNECT %s:%d HTTP/1.0\r\n\
 
 (defun lyskom-setup-client-for-server-version ()
   "Setup flags according to protocol versions."
-  (mapcar
-   (function
-    (lambda (spec)
-      (let ((version (car spec))
-            (flags (cdr spec)))
-        (when (>= (version-info->protocol-version lyskom-server-version-info)
-                  version)
-          (mapcar
-           (function
-            (lambda (flag)
-              (cond ((symbolp flag) (set flag t))
-                    ((consp flag) (set (car flag) (cdr flag)))
-                    (t nil))))
-           flags)))))
-   lyskom-server-features))
+  (lyskom-clear-features)
+  (let ((protocol-version 
+         (version-info->protocol-version lyskom-server-version-info)))
+
+  (when (>= protocol-version 10)
+    (lyskom-set-feature bcc-misc t)
+    (lyskom-set-feature aux-items t)
+    (lyskom-set-feature highest-call 105)
+    (lyskom-set-feature local-to-global t))
+
+  (when (>= protocol-version 9)
+    (lyskom-set-feature dynamic-session-info t)
+    (lyskom-set-feature idle-time t))
+
+  (when (>= protocol-version 8)
+    (lyskom-set-feature long-conf-types t))))
 
 
 ;;;(defun lyskom-setup-client-check-version (spec version)
@@ -435,7 +447,8 @@ CONNECT %s:%d HTTP/1.0\r\n\
 				       ;; users
 				       (or lyskom-is-new-user
 					   (silent-read
-					    (lyskom-get-string 'password)))))
+					    (lyskom-get-string 'password))))
+                                     0)
 			(progn
 			  (if lyskom-is-new-user
 			      (blocking-do 'add-member
@@ -589,7 +602,17 @@ WANT-PERSONS is t for persons, nil for confs."
 	nil)
        (t
 	;; Entered the same password twice
-	(let ((new-person (blocking-do 'create-person name password nil)))
+	(let ((new-person (blocking-do 'create-person name
+                                       password
+                                       (lyskom-create-flags nil
+                                                            nil
+                                                            nil
+                                                            nil
+                                                            nil
+                                                            nil
+                                                            nil
+                                                            nil)
+                                       nil)))
 	  (if (null new-person)
 	      (lyskom-insert-string 'could-not-create-you)
 	    ;; Raise a flag so the user will be added to the
@@ -800,7 +823,6 @@ to see, set of call."
 ;    (make-local-variable 'kom-remote-control)
 ;    (make-local-variable 'kom-remote-controllers)
 ;    (make-local-variable 'kom-session-filter-list)
-;    (make-local-variable 'lyskom-accept-async-flag)
 ;    (make-local-variable 'lyskom-blocking-return)
 ;    (make-local-variable 'lyskom-buffer)
 ;    (make-local-variable 'lyskom-command-to-do)
@@ -813,11 +835,9 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-default-user-name)
 ;    (make-local-variable 'lyskom-do-when-done)
 ;    (make-local-variable 'lyskom-dynamic-session-info-flag)
-;    (make-local-variable 'lyskom-dont-change-prompt)
 ;    (make-local-variable 'lyskom-errno)
 ;    (make-local-variable 'lyskom-executing-command)
 ;    (make-local-variable 'lyskom-filter-list)
-;    (make-local-variable 'lyskom-idle-time-flag)
 ;    (make-local-variable 'lyskom-is-administrator)
 ;    (make-local-variable 'lyskom-is-parsing)
 ;    (make-local-variable 'lyskom-is-waiting)
@@ -827,7 +847,6 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-last-personal-message-sender)
 ;    (make-local-variable 'lyskom-last-viewed)
 ;    (make-local-variable 'lyskom-list-of-edit-buffers)
-;    (make-local-variable 'lyskom-long-conf-types-flag)
 ;    (make-local-variable 'lyskom-marked-text-cache)
 ;    (make-local-variable 'lyskom-membership)
 ;    (make-local-variable 'lyskom-membership-is-read)
@@ -855,10 +874,8 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-server-name)
 ;    (make-local-variable 'lyskom-server-version)
 ;    (make-local-variable 'lyskom-server-supports)
-;    (make-local-variable 'lyskom-long-conf-types-flag)
 ;    (make-local-variable 'lyskom-set-last-read-flag)
 ;    (make-local-variable 'lyskom-uconf-stats-flag)
-;    (make-local-variable 'lyskom-z-lookup-flag)
 ;    (make-local-variable 'lyskom-session-no)
 ;    (make-local-variable 'lyskom-session-priority)
 ;    (make-local-variable 'lyskom-text-cache)

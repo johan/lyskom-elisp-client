@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.11 1998-09-14 17:56:44 davidk Exp $
+;;;;; $Id: prioritize.el,v 44.12 1999-06-10 13:36:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.11 1998-09-14 17:56:44 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 44.12 1999-06-10 13:36:18 byers Exp $\n"))
 
 
 
@@ -229,80 +229,86 @@
               lyskom-prioritize-entry-list))))
 
 (defun lyskom-prioritize-add-membership (membership)
-  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
-    (if (buffer-live-p  buffer)
-        (save-excursion
-          (set-buffer buffer)
-          (let ((tmp (lyskom-prioritize-get-entry-from-no
-                      (membership->conf-no membership))))
-            (if tmp (lyskom-prioritize-replace-membership 
-                     membership
-                     (lyskom-default-value 'lyskom-membership))
-              (let* ((entry (lyskom-prioritize-get-entry-from-priority 
-                             (membership->priority membership) t))
-                     (no (lyskom-prioritize-get-no-from-entry entry)))
-                (setq lyskom-prioritize-entry-list
-                      (lyskom-prioritize-add-to-list 
-                       (1- no )
-                       (make-prioritize-entry
-                        (membership->priority membership)
-                        (blocking-do 'get-conf-stat
-                                     (membership->conf-no membership))
-                        membership)
-                       lyskom-prioritize-entry-list))
-                (goto-line (+ no lyskom-prioritize-header-lines))
-                (let ((buffer-read-only nil))
-                  (open-line 1)
-                  (lyskom-prioritize-redraw-entry 
-                   (lyskom-prioritize-get-entry-from-no no)))))))
-      (lyskom-remove-hook 'lyskom-add-membership-hook
-                          'lyskom-prioritize-add-membership))))
+  (condition-case nil
+      (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+        (if (buffer-live-p  buffer)
+            (save-excursion
+              (set-buffer buffer)
+              (let ((tmp (lyskom-prioritize-get-entry-from-no
+                          (membership->conf-no membership))))
+                (if tmp (lyskom-prioritize-replace-membership 
+                         membership
+                         (lyskom-default-value 'lyskom-membership))
+                  (let* ((entry (lyskom-prioritize-get-entry-from-priority 
+                                 (membership->priority membership) t))
+                         (no (lyskom-prioritize-get-no-from-entry entry)))
+                    (setq lyskom-prioritize-entry-list
+                          (lyskom-prioritize-add-to-list 
+                           (1- no )
+                           (make-prioritize-entry
+                            (membership->priority membership)
+                            (blocking-do 'get-conf-stat
+                                         (membership->conf-no membership))
+                            membership)
+                           lyskom-prioritize-entry-list))
+                    (goto-line (+ no lyskom-prioritize-header-lines))
+                    (let ((buffer-read-only nil))
+                      (open-line 1)
+                      (lyskom-prioritize-redraw-entry 
+                       (lyskom-prioritize-get-entry-from-no no)))))))
+          (lyskom-remove-hook 'lyskom-add-membership-hook
+                              'lyskom-prioritize-add-membership)))
+    (error (message "Problem maintaining prioritize buffer. Recovering."))))
 
 (defun lyskom-prioritize-remove-membership (conf-no membership-list)
-  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
-    (if (buffer-live-p buffer)
-        (save-excursion
-          (set-buffer buffer)
-          (let ((entry (lyskom-prioritize-find-entry-from-conf conf-no)))
-            (lyskom-prioritize-goto-entry entry)
-            (let ((buffer-read-only nil))
-              (delete-region (save-excursion (beginning-of-line) (point))
-                             (save-excursion (end-of-line) (point)))
-              (delete-char 1))
-            (setq lyskom-prioritize-entry-list
-                  (lyskom-prioritize-remove-from-list 
-                   (1- (lyskom-prioritize-get-no-from-entry entry))
-                   lyskom-prioritize-entry-list))))
-      (lyskom-remove-hook 'lyskom-remove-membership-hook
-                          'lyskom-prioritize-remove-membership))))
+  (condition-case nil
+      (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+        (if (buffer-live-p buffer)
+            (save-excursion
+              (set-buffer buffer)
+              (let ((entry (lyskom-prioritize-find-entry-from-conf conf-no)))
+                (lyskom-prioritize-goto-entry entry)
+                (let ((buffer-read-only nil))
+                  (delete-region (save-excursion (beginning-of-line) (point))
+                                 (save-excursion (end-of-line) (point)))
+                  (delete-char 1))
+                (setq lyskom-prioritize-entry-list
+                      (lyskom-prioritize-remove-from-list 
+                       (1- (lyskom-prioritize-get-no-from-entry entry))
+                       lyskom-prioritize-entry-list))))
+          (lyskom-remove-hook 'lyskom-remove-membership-hook
+                              'lyskom-prioritize-remove-membership)))
+    (error (message "Problem maintaining prioritize buffer. Recovering."))))
 
 (defun lyskom-prioritize-replace-membership (membership membership-list)
-  (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
-    (if (buffer-live-p buffer)
-        (save-excursion
-          (set-buffer buffer)
-          (let* ((entry (lyskom-prioritize-find-entry-from-conf
-                         (membership->conf-no membership)))
-                 (target-priority (membership->priority membership))
-                 (entry-priority (prioritize-entry->priority entry))
-                 (move-up (> target-priority entry-priority))
-                 (target-entry
-                  (lyskom-prioritize-get-entry-from-priority
-                   target-priority
-                   (not move-up))))
-            (when (not (eq target-priority entry-priority))
-              (set-prioritize-entry->priority entry target-priority)
-              (lyskom-prioritize-move-entry 
-               (lyskom-prioritize-get-no-from-entry entry)
-               (+ (lyskom-prioritize-get-no-from-entry target-entry)
-                  (cond ((and move-up (= (prioritize-entry->priority 
-                                          target-entry)
-                                         target-priority)) 1)
-                        ((not move-up) -1)
-                        (t 0)))
-               t t))))
-      (lyskom-remove-hook 'lyskom-replace-membership-hook
-                          'lyskom-prioritize-replace-membership))))
+  (condition-case nil
+      (let ((buffer (car (lyskom-buffers-of-category 'prioritize))))
+        (if (buffer-live-p buffer)
+            (save-excursion
+              (set-buffer buffer)
+              (let* ((entry (lyskom-prioritize-find-entry-from-conf
+                             (membership->conf-no membership)))
+                     (target-priority (membership->priority membership))
+                     (entry-priority (prioritize-entry->priority entry))
+                     (move-up (> target-priority entry-priority))
+                     (target-entry
+                      (lyskom-prioritize-get-entry-from-priority
+                       target-priority
+                       (not move-up))))
+                (when (not (eq target-priority entry-priority))
+                  (set-prioritize-entry->priority entry target-priority)
+                  (lyskom-prioritize-move-entry 
+                   (lyskom-prioritize-get-no-from-entry entry)
+                   (+ (lyskom-prioritize-get-no-from-entry target-entry)
+                      (cond ((and move-up (= (prioritize-entry->priority 
+                                              target-entry)
+                                             target-priority)) 1)
+                            ((not move-up) -1)
+                            (t 0)))
+                   t t))))
+          (lyskom-remove-hook 'lyskom-replace-membership-hook
+                              'lyskom-prioritize-replace-membership)))
+    (error (message "Problem maintaining prioritize buffer. Recovering."))))
 
 
 

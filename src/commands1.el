@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.38 1999-05-05 14:38:11 ceder Exp $
+;;;;; $Id: commands1.el,v 44.39 1999-06-10 13:36:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.38 1999-05-05 14:38:11 ceder Exp $\n"))
+	      "$Id: commands1.el,v 44.39 1999-06-10 13:36:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -421,11 +421,13 @@ Returns t if it was possible, otherwise nil."
 	(lyskom-format-insert 'add-member-in
 			      pers-conf-stat
 			      conf-conf-stat))
-      (blocking-do 'add-member 
-		   (conf-stat->conf-no conf-conf-stat)
-		   (conf-stat->conf-no pers-conf-stat)
-		   priority where
-                   membership-type))))
+      (lyskom-ignoring-async (18 lyskom-pers-no
+                                 (conf-stat->conf-no conf-conf-stat))
+        (blocking-do 'add-member 
+                     (conf-stat->conf-no conf-conf-stat)
+                     (conf-stat->conf-no pers-conf-stat)
+                     priority where
+                     membership-type)))))
 
 
 (defun lyskom-add-member-answer (answer conf-conf-stat pers-conf-stat)
@@ -529,9 +531,10 @@ of the person."
 	       (lyskom-format-insert 'unsubscribe-to conf)
 	     (lyskom-format-insert 'exclude-from pers conf))
 
-	   (setq reply (blocking-do 'sub-member
-				    (conf-stat->conf-no conf)
-				    (conf-stat->conf-no pers)))
+           (lyskom-ignoring-async (8 (conf-stat->conf-no conf))
+             (setq reply (blocking-do 'sub-member
+                                      (conf-stat->conf-no conf)
+                                      (conf-stat->conf-no pers))))
 	   (if self
 	       (lyskom-remove-membership (conf-stat->conf-no conf)
 					 lyskom-membership))
@@ -573,6 +576,8 @@ of the person."
 		     (j-or-n-p (lyskom-get-string 'secret-conf) t)))
 	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed) t))
          (anarchy (j-or-n-p (lyskom-get-string 'anonymous-allowed) t))
+         (secmem (and (lyskom-have-feature long-conf-types)
+                      (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed) t))))
 	 (conf-no (blocking-do 'create-conf 
 			       conf-name
 			       (lyskom-create-conf-type (not open) 
@@ -580,7 +585,7 @@ of the person."
 							secret
 							nil
                                                         anarchy
-                                                        nil
+                                                        secmem
                                                         nil
                                                         nil)
                                nil)))
@@ -993,7 +998,6 @@ Don't ask for confirmation."
 	  (delq lyskom-buffer lyskom-sessions-with-unread-letters))
     (set-process-sentinel lyskom-proc nil)
     (delete-process lyskom-proc)
-    (setq lyskom-proc nil)
     (lyskom-insert-string 'session-ended)
     (lyskom-scroll)
     (setq mode-line-process (lyskom-get-string 'mode-line-down))
@@ -2110,7 +2114,7 @@ prefix is negativ, invisible sessions are also shown.
 If the prefix is 0, all visible sessions are shown."
   (interactive "P")
   (condition-case nil
-      (if lyskom-dynamic-session-info-flag
+      (if (lyskom-have-feature dynamic-session-info)
 	  (lyskom-who-is-on-9 arg)
 	(lyskom-who-is-on-8))
     (lyskom-no-users
@@ -2132,7 +2136,7 @@ If the prefix is 0, all visible sessions are shown."
 	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-on-in-what-conference)
 			      '(all) nil nil t)))
     (condition-case nil
-	(if lyskom-dynamic-session-info-flag
+	(if (lyskom-have-feature dynamic-session-info)
 	    (lyskom-who-is-on-9 arg conf-stat)
 	  (lyskom-who-is-on-8 conf-stat))
       (lyskom-no-users
@@ -2370,7 +2374,9 @@ Uses Protocol A version 9 calls"
     (setq members (mapcar 'member->conf-no
 			  (append (member-list->members members))))
     (while (< i len)
-      (if (memq (who-info->pers-no (aref who-info-list i)) members)
+      (if (lyskom-member-list-find-member
+           (who-info->pers-no (aref who-info-list i))
+           members)
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
@@ -2385,7 +2391,10 @@ Uses Protocol A version 9 calls"
     (setq members (mapcar 'member->conf-no
 			  (append (member-list->members members))))
     (while (< i len)
-      (if (memq (dynamic-session-info->person (aref who-info-list i)) members)
+      (if (lyskom-member-list-find-member 
+           (dynamic-session-info->person (aref who-info-list i))
+           members)
+
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
@@ -2570,7 +2579,7 @@ about or a single session number."
             (lyskom-get-string 'person-not-logged-in-r)
             (- (car sessions))))
           (t
-           (if lyskom-dynamic-session-info-flag
+           (if (lyskom-have-feature dynamic-session-info)
                (progn
                  (setq who-info (listify-vector
                                  (blocking-do 'who-is-on-dynamic t t 0)))
