@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.128 2001-04-01 14:15:53 joel Exp $
+;;;;; $Id: english-strings.el,v 44.129 2001-04-21 16:21:43 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.128 2001-04-01 14:15:53 joel Exp $"))
+              "$Id: english-strings.el,v 44.129 2001-04-21 16:21:43 joel Exp $"))
 
 
 ;;; ================================================================
@@ -366,6 +366,9 @@ and you have finished reading. Please come back later.
     (text-to-unmark . "Unmark which text? ")
     (what-mark . "Set which mark type (name or 0-255)? ")
     (erroneous-mark . "Erroneous mark type.\n")
+    (want-to-create-symbolic-mark . "The mark type \"%#1s\" does not exist. Do you want to create it? ")
+    (creating-symbolic-mark-type . "Creating mark type \"%#1s\" (%#2d).\n")
+    (no-mark-types-left . "Sorry, there are no free mark types. Remove an old one first.")
     (unmarking-textno . "Unmarking text %#1n...")
     (marking-textno . "Marking text %#1n...")
     (list-which-mark . "List texts with which mark type (name or 0-255, RET for all)? ")

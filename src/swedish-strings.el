@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.158 2001-04-01 14:15:55 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.159 2001-04-21 16:21:44 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.158 2001-04-01 14:15:55 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.159 2001-04-21 16:21:44 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -342,6 +342,9 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-unmark . "Vilket inlägg vill du avmarkera? ")
     (what-mark . "Vilken typ av markering vill du sätta (namn eller 0-255)? ")
     (erroneous-mark . "Felaktig markeringstyp.\n")
+    (want-to-create-symbolic-mark . "Markeringstypen \"%#1s\" finns inte. Vill du skapa den? ")
+    (creating-symbolic-mark-type . "Skapar markeringstypen \"%#1s\" (%#2d).\n")
+    (no-mark-types-left . "Ledsen, det finns inga lediga markeringstyper. Rensa bland de gamla först.")
     (unmarking-textno . "Avmarkering av text %#1n...")
     (marking-textno . "Markering av text %#1n...")
     (list-which-mark . "Lista vilken markeringstyp (namn eller 0-255, RET för alla)? ")
