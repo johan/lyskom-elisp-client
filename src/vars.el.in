@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.147 2001-10-13 13:17:57 qha Exp $
+;;;;; $Id: vars.el.in,v 44.148 2001-10-16 17:25:23 kent Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.147 2001-10-13 13:17:57 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.148 2001-10-16 17:25:23 kent Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -993,7 +993,8 @@ Do not use this variable for proxy authentication.")
     ("kom.stacken.kth.se" . "TokKOM")
     ("com.helsinki.fi" . "HelKOM")
     ("kom.cd.chalmers.se" . "CD-KOM")
-    ("community.roxen.com" . "Roxen Community KOM"))
+    ("community.roxen.com" . "Roxen Community KOM")
+    ("dskom.studkar.hj.se" . "DSKOM"))
   "*An alist mapping server names to shorter identification strings")
 
 (def-kom-var kom-ansaphone-on nil
