@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.19 1997-07-06 14:27:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.20 1997-07-07 09:14:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.19 1997-07-06 14:27:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.20 1997-07-07 09:14:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1008,8 +1008,8 @@ On since %#8s%#9s")
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
 
-    (which-language . "Ändra språk till: ")
-    (send-formatted . "Skicka in som formatterad text? ")
+    (which-language . "Change language to: ")
+    (send-formatted . "Send as formatted text? ")
     (changing-language-to . "Changing to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
     ))

@@ -1,5 +1,13 @@
 Sun Jul  6 14:41:16 1997  David Byers  <davby@ida.liu.se>
 
+	* lyskom-rest.el (lyskom-format-html): Markera bara att texten 
+	är HTML. 
+	(lyskom-do-insert): Ny funktion. Rätt onödig just nu, men bra 
+	om man skall experimentera.
+	(lyskom-insert): Använd den.
+	(lyskom-insert-at-point): Använd den.
+	(lyskom-insert-before-prompt): Använd den.
+
 	* language.el (lyskom-set-language): Byt bara om språket finns.
 
 	* option-edit.el (lyskom-language-widget): Använd 
