@@ -1,5 +1,20 @@
 2003-04-06  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 678:
+	* vars.el.in (lyskom-text-buttons): Made RFC-compliant URL
+	specifications "pseudo" URLs, since there may be incomplete URLs
+	inside brackets and stuff. Added validity check to RFC-compliant
+	URL specifications, so not anything in <> will pass.
+
+	* utilities.el (lyskom-is-url): New function.
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Support match
+	predicates in lyskom-text-buttons.
+	(lyskom-button-get-pred): New function.
+
+	* vars.el.in (lyskom-text-buttons): Added support for URLs
+	according to Appendix E in RFC2396.
+
 	Cosmetic fix:
 	* commands1.el (lyskom-list-conf-print): Don't make each line
 	clickable in its entirety. Just print things normally.

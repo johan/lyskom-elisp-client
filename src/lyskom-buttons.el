@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.85 2003-04-06 20:23:15 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.86 2003-04-06 21:07:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.85 2003-04-06 20:23:15 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.86 2003-04-06 21:07:38 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -327,6 +327,30 @@ LINKS is a list of lyskom-text-link objects."
          text)))))
 
 
+
+(defun lyskom-button-get-arg (el text)
+  "Get the button argument for button type EL from TEXT according to
+the current match-data."
+  (let ((no (or (elt el 3) 0)))
+    (substring text (match-beginning no) (match-end no))))
+
+(defun lyskom-button-get-text (el text)
+  "Get the button text for button type EL from TEXT according to
+the current match-data."
+  (let ((no (or (elt el 2) 0)))
+    (substring text (match-beginning no) (match-end no))))
+
+(defun lyskom-button-get-face (el)
+  "Get the button face for button type EL from TEXT according to
+the current match-data."
+  (let ((face (elt el 4)))
+    (or (and (boundp face) (symbol-value face))
+        (and (facep face) face))))
+
+(defsubst lyskom-button-get-pred (el)
+  "Return the match predicate for bitton type EL."
+  (elt el 5))
+
 (defun lyskom-button-transform-text (text &optional text-stat)
   "Add text properties to the string TEXT according to the definition of
 lyskom-text-buttons. Returns the modified string."
@@ -349,75 +373,61 @@ lyskom-text-buttons. Returns the modified string."
       (setq el (car blist))
       (setq start 0)
       (while (string-match (elt el 0) text start)
-        (add-text-properties 
-         (match-beginning (or (elt el 2) 0))
-         (match-end (or (elt el 2) 0))
-         (cond ((and (eq (elt el 1) 'text)
-                     (not lyskom-transforming-external-text))
-                (lyskom-generate-button 'text
-                                        (lyskom-button-get-arg el text)
-                                        (lyskom-button-get-text el text)
-                                        (lyskom-button-get-face el)))
-               ((eq (elt el 1) 'conf)
-                (lyskom-generate-button 'conf
-                                        (lyskom-button-get-arg el text)
-                                        (lyskom-button-get-text el text)
-                                        (lyskom-button-get-face el)))
-               ((eq (elt el 1) 'pers)
-                (lyskom-generate-button 'pers
-                                        (lyskom-button-get-arg el text)
-                                        (lyskom-button-get-text el text)
-                                        (lyskom-button-get-face el)))
-               ((eq (elt el 1) 'url)
-                (lyskom-generate-button 'url
-                                        nil
-                                        (lyskom-button-get-text el text)
-                                        (lyskom-button-get-face el)))
+        (if (or (null (lyskom-button-get-pred el))
+                  (funcall (lyskom-button-get-pred el)
+                           (lyskom-button-get-text el text)))
+          (progn
+            (add-text-properties 
+             (match-beginning (or (elt el 2) 0))
+             (match-end (or (elt el 2) 0))
+             (cond ((and (eq (elt el 1) 'text)
+                         (not lyskom-transforming-external-text))
+                    (lyskom-generate-button 'text
+                                            (lyskom-button-get-arg el text)
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
+                   ((eq (elt el 1) 'conf)
+                    (lyskom-generate-button 'conf
+                                            (lyskom-button-get-arg el text)
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
+                   ((eq (elt el 1) 'pers)
+                    (lyskom-generate-button 'pers
+                                            (lyskom-button-get-arg el text)
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
+                   ((eq (elt el 1) 'url)
+                    (lyskom-generate-button 'url
+                                            nil
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
 
-               ((eq (elt el 1) 'pseudo-url)
-                (let ((url (lyskom-fix-pseudo-url
-                            (lyskom-button-get-text el text))))
-                  (lyskom-generate-button 'url
-                                          nil
-                                          url
-                                          (lyskom-button-get-face el))))
+                   ((eq (elt el 1) 'pseudo-url)
+                    (let ((url (lyskom-fix-pseudo-url
+                                (lyskom-button-get-text el text))))
+                      (lyskom-generate-button 'url
+                                              nil
+                                              url
+                                              (lyskom-button-get-face el))))
 
- 	       ((eq (elt el 1) 'info-node)
- 		(lyskom-generate-button 'info-node
- 					(lyskom-button-get-arg el text)
- 					(lyskom-button-get-text el text)
- 					(lyskom-button-get-face el)))
+                   ((eq (elt el 1) 'info-node)
+                    (lyskom-generate-button 'info-node
+                                            (lyskom-button-get-arg el text)
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
 
 
-               ((eq (elt el 1) 'email)
-                (lyskom-generate-button 'email
-                                        nil
-                                        (lyskom-button-get-text el text)
-                                        (lyskom-button-get-face el)))
-               (t nil))
-         text)
-        (setq start (match-end 0)))
+                   ((eq (elt el 1) 'email)
+                    (lyskom-generate-button 'email
+                                            nil
+                                            (lyskom-button-get-text el text)
+                                            (lyskom-button-get-face el)))
+                   (t nil))
+             text)
+            (setq start (match-end 0)))
+          (setq start (1+ (match-beginning 0)))))
       (setq blist (cdr blist))))
   text)
-
-(defun lyskom-button-get-arg (el text)
-  "Get the button argument for button type EL from TEXT according to
-the current match-data."
-  (let ((no (or (elt el 3) 0)))
-    (substring text (match-beginning no) (match-end no))))
-
-(defun lyskom-button-get-text (el text)
-  "Get the button text for button type EL from TEXT according to
-the current match-data."
-  (let ((no (or (elt el 2) 0)))
-    (substring text (match-beginning no) (match-end no))))
-
-(defun lyskom-button-get-face (el)
-  "Get the button face for button type EL from TEXT according to
-the current match-data."
-  (let ((face (elt el 4)))
-    (or (and (boundp face) (symbol-value face))
-        (and (facep face) face))))
 
 
 (defun lyskom-get-button-hint (hints)

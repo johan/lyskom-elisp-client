@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.242 2003-04-06 20:23:16 byers Exp $
+;;;;; $Id: vars.el.in,v 44.243 2003-04-06 21:07:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.242 2003-04-06 20:23:16 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.243 2003-04-06 21:07:38 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1809,13 +1809,16 @@ conference and person buttons are not expected.")
 
     ;; URLs
 
+    ("<URL:\\s-*\\([^>]*\\)\\s-*>"
+     pseudo-url 1 1 kom-url-face lyskom-is-url)
+    ("<\\s-*\\([^>]*\\)\\s-*>"
+     pseudo-url 1 1 kom-url-face lyskom-is-url)
+
     ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      pseudo-url 0 nil kom-url-face)
 
     ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      url 0 nil kom-url-face)
-    ("<URL:\\s-*\\([^>]*\\)\\s-*>"
-     url 1 1 kom-url-face)
 
     ;; JySKom enhancements
 
@@ -1832,13 +1835,17 @@ conference and person buttons are not expected.")
      info-node 1 3 kom-url-face)
 
     )
-  "List of buttons to install in the text mass of LysKOM objects. Each element is
-a list consisting of REGEXP TYPE BUTTON-MATCH BUTTON-ARG-MATCH FACE.
+  "List of buttons to install in the text mass of LysKOM objects. Each 
+element is a list consisting of REGEXP TYPE BUTTON-MATCH BUTTON-ARG-MATCH
+FACE &optional PRED.
+
 REGEXP is the regexp to look for in the text.
 TYPE is the button type. Valid button types are defined in lyskom-button-actions.
 BUTTON-MATCH is the number of the parenthesized expression that is the actual button.
 BUTTON-ARG-MATCH is the number of the expression to be used as the button argument.
-FACE is the text face to apply to the button, or nil to use the default face.")
+FACE is the text face to apply to the button, or nil to use the default face.
+If PRED is given, it is a function that will be passed the matched string; if 
+it returns non-nil, the match is considered valid.")
 
 (def-kom-var kom-url-viewer-preferences '("emacs"
                                           "windows"
