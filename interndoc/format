@@ -149,6 +149,9 @@ a MULE-enabled Emacs with a functioning string-width function fields
 will be truncated correctly even if some characters occupy multiple
 columns.
 
+All format directives accept the _ character as a flag (before the
+format letter). This means downcase the result.
+
 
 
 2.4 Conditionals
