@@ -1,5 +1,8 @@
 Wed Aug 28 22:06:21 1991  Linus Tolke Y  (linus at lysator)
 
+	* edit-text.el (lyskom-edit-mode): paragraph-separate initierades
+	  fr}n paragraph-start.
+
 	* internal.el (lyskom-apply-handler): h{r f}ngade vi quit utan att
 	  }terskapa det igen.
 
