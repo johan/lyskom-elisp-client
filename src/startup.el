@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.28 1998-02-11 14:41:32 byers Exp $
+;;;;; $Id: startup.el,v 44.29 1998-02-22 10:51:00 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.28 1998-02-11 14:41:32 byers Exp $\n"))
+	      "$Id: startup.el,v 44.29 1998-02-22 10:51:00 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -196,6 +196,7 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	      (setq lyskom-default-user-name username)
 	      (setq lyskom-default-password password)
 	      (setq lyskom-server-name host)
+	      (setq lyskom-server-port port)
 	      (setq lyskom-proc proc)
 	      (lyskom-setup-faces)
 	      (lyskom-insert
