@@ -86,7 +86,7 @@
     <URL:ftp://prep.ai.mit.edu/pub/gnu/calc-2.02f.tar.gz>
 
 
-3.  Installation
+3.  Installation from the tar archive
 
     Edit the Makefile in the distribution to reflect your environment. 
     You can change the following variables:
@@ -140,8 +140,23 @@
 
 
 
+4.  Installation from a single .el file
 
-4.  Reporting Bugs
+    If you have received the client as a single file named
+    lyskom-0.46.el or something similar, first rename the file to
+    lyskom.el. Make sure that the custom package is in the default
+    load path (they are if you're using XEmacs 19.15 or later, or Gnu
+    Emacs 20.1 or later.) To compile, simply issue the following
+    commend:
+
+        emacs -batch -f batch-byte-compile lyskom.el
+
+    This will create a file named lyskom.elc which should be placed
+    somewhere where Emacs will find it.
+
+
+
+5.  Reporting Bugs
 
     Please report bugs to bug-lyskom@lysator.liu.se. Please give us the 
     following information (at least):
