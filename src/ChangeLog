@@ -71,6 +71,12 @@ Sat Sep 28 21:33:38 1991  Per Cederqvist  (ceder at ruben)
 
 	* async.el (lyskom-parse-async): Removed the "info" backdoor.
 
+Tue Sep 24 06:30:37 1991  Inge Wallin  (inge at lysator)
+
+	* swedish-strings.el (lyskom-strings): first-greeting: Bytt ut
+	  passusen som sade att vem som helst kunde se l|senordet i
+	  databasen mot en mening som sa att det {r krypterat.
+
 Tue Sep 17 18:44:08 1991  Linus Tolke Y  (linus at lysator)
 
 	* lyskom-rest.el, prioritize.el (lyskom-start-of-command): Nu

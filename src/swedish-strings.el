@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.12 1991-10-07 17:18:41 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.13 1991-10-08 18:10:34 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.12 1991-10-07 17:18:41 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.13 1991-10-08 18:10:34 inge Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
@@ -70,8 +70,7 @@ namn och organisation, t ex \"Eskil Block, FOA\".  Om du stavat ditt namn
 fel, eller vill ändra ditt namn, svara nej på frågan nedan.
 
 Observera att all information än så länge sparas så att vem som helst
-kan läsa den. Till exempel så kan vem som helst se vilket lösenord
-du använder.
+kan läsa den. Dock är lösenordet krypterat.
 
 Om du är osäker på hur man använder LysKOM kan du hämta en manual via
 anonym ftp från ftp.lysator.liu.se. Fråga din systemadministratör om
