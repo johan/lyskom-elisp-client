@@ -6,6 +6,6 @@ Standards-Version: 3.1.0
 
 Package: lyskom-elisp-client
 Architecture: all
-Depends: emacsen, custom | emacs20 | xemacs19 | xemacs20-bin | xemacs21-bin
+Depends: emacsen, emacs20 | custom | xemacs19 | xemacs20-bin | xemacs21-bin
 Description: Elisp client for LysKOM.
  This package is not part of the official Debian distribution.

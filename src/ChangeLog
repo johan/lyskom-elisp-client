@@ -1,3 +1,7 @@
+2000-11-27  Joel Rosdahl  <joel@rosdahl.net>
+
+	* debian/control (Depends): Saner dependency default.
+
 2000-11-23  David Byers  <davby@ida.liu.se>
 
 	* filter.el (kom-super-jump): Check for empty subject by matching
