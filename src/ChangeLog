@@ -1,3 +1,16 @@
+2001-05-22  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (kom-review-presentation): Print FAQs as if they
+	were comments.
+	(lyskom-print-comment-like-aux): New function.
+	(lyskom-insert-comment-like-aux): New function.
+	(lyskom-insert-deferred-comment-like-aux): New function.
+
+2001-05-21  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-report-command-answer): Report error
+	status.
+
 2001-05-21  Joel Rosdahl  <joel@rosdahl.net>
 
 	* debian/control (Maintainer): Changed maintainer address.

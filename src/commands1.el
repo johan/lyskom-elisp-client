@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.110 2001-05-21 12:39:21 byers Exp $
+;;;;; $Id: commands1.el,v 44.111 2001-05-22 10:01:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.110 2001-05-21 12:39:21 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.111 2001-05-22 10:01:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -169,7 +169,99 @@
       (if (/= (conf-stat->presentation conf-stat) 0)
           (lyskom-view-text (conf-stat->presentation conf-stat))
         (lyskom-format-insert 'has-no-presentation
-                              conf-stat)))))
+                              conf-stat))
+      (lyskom-traverse faq (lyskom-get-aux-item 
+                            (conf-stat->aux-items conf-stat)
+                            14)
+        (lyskom-print-comment-like-aux faq conf-stat)))))
+
+(defun lyskom-print-comment-like-aux (item object)
+  (let* ((text-no (string-to-int (aux-item->data item)))
+         (text-stat (if kom-deferred-printing
+                        (cache-get-text-stat text-no)
+                      (blocking-do 'get-text-stat text-no))))
+    (cond ((or text-stat (not kom-deferred-printing))
+           (lyskom-insert-comment-like-aux item text-no text-stat object))
+          (t (let ((defer-info (lyskom-create-defer-info
+                                'get-text-stat
+                                text-no
+                                'lyskom-insert-deferred-comment-like-aux
+                                (point-max-marker)
+                                (length lyskom-defer-indicator)
+                                nil     ; Filled in later
+                                (list item object text-no))))
+               (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+               (lyskom-defer-insertion defer-info))))))
+
+(defun lyskom-insert-comment-like-aux (item text-no text-stat object)
+  (let* ((author (if text-stat (text-stat->author text-stat) nil))
+         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                            17)))
+         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                              16)))
+         (formats (lyskom-aux-item-definition-field item 'text-header-line))
+         content-type
+         )
+    (if (and mx-from
+             (setq content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data content-type))
+               (setq content-type (format "(%s) "
+                                          (aux-item->data content-type))))
+      (setq content-type ""))
+    (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
+
+    (lyskom-format-insert (cond ((not (listp formats)) formats)
+                                ((<= (length formats) 1) (car formats))
+                                (author (elt formats 1))
+                                (t (elt formats 0)))
+                          text-no
+                          author
+                          content-type
+                          (lyskom-aux-item-terminating-button item
+                                                              object))
+    (lyskom-insert "\n")))
+
+;;; FIXME: This contains code that duplicates the code in 
+;;; lyskom-insert-deferred-header-comm. That's a BAD THING.
+
+(defun lyskom-insert-deferred-comment-like-aux (text-stat defer-info)
+  (let* ((author (if text-stat (text-stat->author text-stat) nil))
+         (item (elt (defer-info->data defer-info) 0))
+         (object (elt (defer-info->data defer-info) 1))
+         (text-no (elt (defer-info->data defer-info) 2))
+         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                            17)))
+         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                              16)))
+         (formats (lyskom-aux-item-definition-field item 'text-header-line))
+         content-type
+         )
+    (if (and mx-from
+             (setq content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data content-type))
+               (setq content-type (format "(%s) "
+                                          (aux-item->data content-type))))
+      (setq content-type ""))
+    (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
+
+    (set-defer-info->format defer-info 
+                            (cond ((not (listp formats)) formats)
+                                  ((<= (length formats) 1) (car formats))
+                                  (author (elt formats 1))
+                                  (t (elt formats 0))))
+    (lyskom-replace-deferred defer-info
+                             text-no
+                             author
+                             content-type
+                             (lyskom-aux-item-terminating-button item
+                                                                 object))))
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.167 2001-05-21 12:39:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.168 2001-05-22 10:01:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.167 2001-05-21 12:39:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.168 2001-05-22 10:01:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1024,7 +1024,7 @@ Skicka en bugrapport.\n")
     (unread-letters . "olästa brev")
 
     (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
-    (error-code . "Felkod %#2d: %#1s.\n")
+    (error-code . "Felkod %#2d/%#3S: %#1s.\n")
     (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt värde.
 Du bör sätta den till ett bättre värde.\n")
     (extended-command . "LysKOM: ")
@@ -1331,6 +1331,9 @@ Uppkopplad sedan %#8s%#9s")
     (changed-faq-for-conf-failed . "Kunde inte ändra FAQ för %#1M till text %#3n.
 %#2?b%[Text %#2n är fortfarande FAQ.
 %]%[%]%#4s")
+    (faq-in-text . "FAQ i text %#1n %#3s%#4s")
+    (faq-in-text-by . "FAQ i text %#1n %#3sav %#2P %#4s")
+
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
 
