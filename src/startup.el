@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.58 2001-04-23 21:39:49 joel Exp $
+;;;;; $Id: startup.el,v 44.59 2001-11-21 00:02:27 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.58 2001-04-23 21:39:49 joel Exp $\n"))
+	      "$Id: startup.el,v 44.59 2001-11-21 00:02:27 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -52,11 +52,13 @@
    so in this phase we wait for an empty line.")
 
 ;;;###autoload
-(defun lyskom (&optional host username password session-priority)
+(defun lyskom (&optional host username password session-priority invisiblep)
   "Start a LysKOM session.
-Optional arguments: HOST, USERNAME and PASSWORD.
+Optional arguments: HOST, USERNAME, PASSWORD and INVISIBLEP.
 
-See lyskom-mode for details."
+A numeric prefix argument sets the session priority. A prefix argument
+of `C-u', on the other hand, logs in the session without notifying other
+clients of the event. See lyskom-mode for details on lyskom."
   (interactive (list (lyskom-read-server-name
 		      (lyskom-format 'server-q
 				     (or (getenv "KOMSERVER")
@@ -65,7 +67,8 @@ See lyskom-mode for details."
 		     nil
 		     (if current-prefix-arg
 			 (prefix-numeric-value current-prefix-arg)
-		       nil)))
+		       nil)
+		     (and current-prefix-arg (listp current-prefix-arg))))
 
   (run-hooks 'lyskom-init-hook)
   (setq username
@@ -278,7 +281,7 @@ See lyskom-mode for details."
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil) 
 	      ;; Log in
-	      (kom-start-anew t session-priority)
+	      (kom-start-anew t session-priority invisiblep)
 	      (if (memq lyskom-buffer lyskom-buffer-list)
 		  (while (not (eq lyskom-buffer (car lyskom-buffer-list)))
 		    (setq lyskom-buffer-list
@@ -405,8 +408,9 @@ See lyskom-mode for details."
 ;;;                        Start anew
 
 
-(defun kom-start-anew (&optional lyskom-first-time-around session-priority)
-  "Start as a new person."
+(defun kom-start-anew (&optional lyskom-first-time-around session-priority invisiblep)
+  "Start/login as a new person. If INVISIBLEP is not nil, the login will not be
+shown to other users."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
   (lyskom-completing-clear-cache)
@@ -473,7 +477,7 @@ See lyskom-mode for details."
 				       (or lyskom-is-new-user
 					   (silent-read
 					    (lyskom-get-string 'password))))
-                                     0)
+                                     (if invisiblep 1 0))
 			(progn
 			  (if lyskom-is-new-user
 			      (blocking-do 'add-member
