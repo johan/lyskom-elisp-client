@@ -1,3 +1,10 @@
+Sun Jan 12 06:00:17 1992  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest.el(lyskom-filter),
+	  startup.el(lyskom-connect-filter): Stoppat in (sit-for 0) som
+	  Klaus Zeuge har f|reslagit f|r att inte klienten skall sv{lta ut
+	  andra emacsprocesser.
+
 Mon Jan  6 19:46:50 1992  Linus Tolke Y  (linus at lysator)
 
 	* swedish-strings.el, english-strings.el, commands1.el
