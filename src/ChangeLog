@@ -1,5 +1,7 @@
 Mon Sep 16 18:10:59 1991  Linus Tolke Y  (linus at lysator)
 
+	* Distribuerat version 0.34.1		22:00
+
 	* lyskom-rest.el (kom-view-next-text): Lagt till ett anrop som
 	  t|mmer lyskom-to-do-list ocks} n}r man l{ser. ]terse markerade
 	  buggen berodde av detta.
