@@ -1,3 +1,8 @@
+2002-06-12  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* Makefile (EXTRA-SRCVERBATIM): name the help files by their
+	actual names after renaming.
+
 2002-06-12  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 573:

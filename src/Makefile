@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.92 2002-06-02 15:12:51 byers Exp $
+# $Id: Makefile,v 44.93 2002-06-12 21:49:28 qha Exp $
 
 # Useful targets:
 #
@@ -115,7 +115,7 @@ EXTRA-SRCDIST = \
 	distribution-Makefile.in
 EXTRA-SRCVERBATIM = \
 	envcheck.el lpath.el autoconf.el \
-	help-compile.el	help.en help.sv \
+	help-compile.el help-en.xml help-sv.xml \
 	$(DOCFILES)
 
 # Included in the non-source distribution archives.
