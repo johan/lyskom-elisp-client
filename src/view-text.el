@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.66 2002-05-21 22:05:44 byers Exp $
+;;;;; $Id: view-text.el,v 44.67 2002-06-12 18:29:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.66 2002-05-21 22:05:44 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.67 2002-06-12 18:29:33 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -229,26 +229,21 @@ Note that this function must not be called asynchronously."
 
                      ;; Insert aux-items that go in the header.
 
-                     (let ((text nil))
-                       (lyskom-traverse-aux aux
-                                            (text-stat->aux-items text-stat)
-                         (when (and
-                             (or (eq (lyskom-aux-item-definition-field aux
-                                                                 'text-print-when)
-                                     'header)
-                              (and (eq (lyskom-aux-item-definition-field aux
-                                                                  'text-print-when)
-                                       'comment)
-                               (not kom-reading-puts-comments-in-pointers-last)
-                               ))
-                             (setq text 
-                                   (lyskom-aux-item-call 
-                                    aux
-                                    'text-print
-                                    aux
-                                    text-stat)))
-                           (lyskom-insert text)
-                           (lyskom-insert "\n"))))
+                     (lyskom-traverse-aux aux (text-stat->aux-items text-stat)
+                       (let ((tpw (lyskom-aux-item-definition-field aux 'text-print-when)))
+                       (when (or (and (lyskom-viewing-noconversion) (not (eq tpw 'footer)))
+                                 (eq tpw 'header)
+                                 (and (eq tpw 'comment) (not kom-reading-puts-comments-in-pointers-last)))
+                         (lyskom-insert
+                          (or (lyskom-aux-item-call aux 'text-print aux text-stat)
+                              (lyskom-format 'text-header-aux-item
+                                             (lyskom-get-string
+                                              (or (car (lyskom-aux-item-definition-field aux 'text-name))
+                                                  'unknown-aux-item))
+                                             (aux-item->tag aux)
+                                             (aux-item->data aux)
+                                             (lyskom-aux-item-terminating-button aux text-stat))))
+                         (lyskom-insert "\n"))))
 
 
                      ;; If the text is marked, insert line saying so.
@@ -304,7 +299,7 @@ Note that this function must not be called asynchronously."
                          (other-fast-replies nil))
                      (lyskom-traverse-aux aux (text-stat->aux-items text-stat)
                       (when (eq (aux-item->tag aux) 2)
-                        (if (or (eq lyskom-current-command 'kom-review-noconversion)
+                        (if (or (lyskom-viewing-noconversion)
                                 (not (eq (text-stat->author text-stat)
                                          (aux-item->creator aux))))
                             (setq other-fast-replies
@@ -393,7 +388,7 @@ Note that this function must not be called asynchronously."
 (defun lyskom-filter-signature-hook ()
   "Filter out the signature of imported mail messages. Most useful
 when put in your `kom-view-text-hook'."
-  (unless (eq 'kom-review-noconversion lyskom-current-command)
+  (unless (lyskom-viewing-noconversion)
     (when (lyskom-text-is-mail-p lyskom-view-text-text-stat)
       (let* ((body (text->text-mass lyskom-view-text-text))
 	     (sign (string-match "^-- $" body)))
@@ -410,8 +405,7 @@ or we are reviewing without conversion. In other words, the characters
 to put in your `kom-view-text-hook'."
   ;; First the hard part - should we patch the text
   ;; in the text object?
-  (unless (or (equal lyskom-current-command
-		     'kom-review-noconversion)
+  (unless (or (lyskom-viewing-noconversion)
 	      (lyskom-text-is-mail-p lyskom-view-text-text-stat))
     ;; Yes, modify the text from the text-object (stored in mod)
     (let* ((mod (aref (cdr lyskom-view-text-text) 1))

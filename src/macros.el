@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.28 2002-05-26 21:34:16 byers Exp $
+;;;;; $Id: macros.el,v 44.29 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.28 2002-05-26 21:34:16 byers Exp $\n"))
+	      "$Id: macros.el,v 44.29 2002-06-12 18:29:32 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -86,7 +86,7 @@ Value returned is always nil."
            (setq (, atom) (car (, seq)))
            (if (not (aux-item-flags->deleted
                      (aux-item->flags (, atom))))
-               (,@ body))
+               (progn (,@ body)))
            (setq (, seq) (cdr (, seq))))))))
 
 

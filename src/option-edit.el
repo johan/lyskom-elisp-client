@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.74 2002-06-09 21:47:16 byers Exp $
+;;;;; $Id: option-edit.el,v 44.75 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.74 2002-06-09 21:47:16 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.75 2002-06-12 18:29:32 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -575,7 +575,7 @@ customize buffer but do not save them to the server."
                                          (const (after-conf-server-break after-conf))
                                          (const (after-conf-letters-server-break after-conf-letters))
                                          (const (when-done-server-break when-done))
-                                         (const (no-break nil)))))
+                                         (const (no-server-break nil)))))
     (kom-login-hook (repeat (command nil :tag command)
                             :indent 4))
     (kom-do-when-done (repeat (choice ((command nil :tag command)

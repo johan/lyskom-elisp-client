@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.34 2002-04-24 21:20:37 byers Exp $
+;;;;; $Id: aux-items.el,v 44.35 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.34 2002-04-24 21:20:37 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.35 2002-06-12 18:29:32 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -89,6 +89,11 @@
              (apply (lyskom-aux-item-definition-field item method) args)
              default))))
 
+(defun lyskom-aux-item-has-call (item method)
+  "Return non-nil if aux-item ITEM has a defined method METHOD"
+  (when (lyskom-aux-item-p item)
+    (setq item (lyskom-find-aux-item-definition item)))
+  (lyskom-aux-item-definition-field item method))
 
 (defun lyskom-aux-item-call (def method &rest args)
   (apply 'lyskom-aux-item-try-call def method nil args))
@@ -151,18 +156,20 @@ return non-nil if the item is to be included in the list."
 ;;; ======================================================================
 
 (def-aux-item content-type 1
-  (text-print-when . never) 
+  (text-name aux-content-type-name)
   (parse . lyskom-parse-content-type)
   (text-print . lyskom-print-content-type)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item fast-reply 2
+  (text-name aux-fast-reply-name)
   (parse . nil)
   (parse-data . lyskom-aux-item-decode-data)
   (encode-data . lyskom-aux-item-encode-data)
   (info . lyskom-aux-item-info))
 
 (def-aux-item cross-reference 3
+  (text-name aux-cross-reference-name)
   (status-print . lyskom-status-print-cross-reference)
   (text-print-when . comment)
   (parse . lyskom-parse-cross-reference)
@@ -173,6 +180,7 @@ return non-nil if the item is to be included in the list."
   (info  . lyskom-aux-item-info))
 
 (def-aux-item no-comments 4
+  (text-name aux-no-comments-name)
   (text-print-when . footer)
   (parse . lyskom-parse-no-comments)
   (text-print . lyskom-print-no-comments)
@@ -180,6 +188,7 @@ return non-nil if the item is to be included in the list."
   (info  . lyskom-aux-item-info))
 
 (def-aux-item personal-comment 5
+  (text-name aux-personal-comment-name)
   (text-print-when . footer)
   (parse . lyskom-parse-personal-comments)
   (text-print . lyskom-print-personal-comments)
@@ -187,6 +196,7 @@ return non-nil if the item is to be included in the list."
   (info  . lyskom-aux-item-info))
 
 (def-aux-item request-confirmation 6
+  (text-name aux-request-confirmation-name)
   (text-print-when . header)
   (parse . lyskom-parse-request-confirmation)
   (text-print . lyskom-print-request-confirmation)
@@ -195,19 +205,23 @@ return non-nil if the item is to be included in the list."
   (read-action . lyskom-request-confirmation-action))
 
 (def-aux-item read-confirm 7
+  (text-name aux-read-confirm-name)
   (text-print-when . header)
   (text-print . lyskom-print-read-confirm)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item redirect 8
+  (text-name aux-redirect-name)
   (print . lyskom-print-redirect)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item x-face 9
+  (text-name aux-x-face-name)
   (print . lyskom-print-xface)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item alternate-name 10
+  (text-name aux-alternate-name-name)
   (text-print-when . header)
   (text-print . lyskom-print-alternate-name)
   (encode-data . lyskom-aux-item-encode-data)
@@ -215,20 +229,25 @@ return non-nil if the item is to be included in the list."
   (info  . lyskom-aux-item-info))
 
 (def-aux-item pgp-signature 11
+  (text-name aux-pgp-signature-name)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item pgp-public-key 12
+  (text-name aux-pgp-public-key-name)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item e-mail-address 13
+  (text-name aux-e-mail-address-name)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item faq-text 14
+  (text-name aux-faq-text-name)
   (info . lyskom-aux-item-info)
   (text-header-line . (faq-in-text faq-in-text-by))
   (status-print . lyskom-status-print-faq-text))
 
 (def-aux-item creating-software 15
+  (text-name aux-creating-software-name)
   (info . lyskom-aux-item-info)
   (text-print-when . header)
   (parse-data . lyskom-aux-item-decode-data)
@@ -236,42 +255,55 @@ return non-nil if the item is to be included in the list."
   (text-print . lyskom-print-creating-software))
 
 (def-aux-item mx-author 16
+  (text-name aux-mx-author-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-from 17
+  (text-name aux-mx-from-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-reply-to 18
+  (text-name aux-mx-reply-to-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-to 19
+  (text-name aux-mx-to-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-cc 20
+  (text-name aux-mx-cc-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-date 21
+  (text-name aux-mx-date-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-message-id 22
+  (text-name aux-mx-message-id-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-in-reply-to 23
+  (text-name aux-mx-in-reply-to-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-misc 24
+  (text-name aux-mx-misc-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-allow-filter 25
+  (text-name aux-mx-allow-filter-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-reject-forward 26
+  (text-name aux-mx-reject-forward-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item notify-comments 27
+  (text-name aux-notify-comments-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item faq-for-conf 28
+  (text-name aux-faq-for-conf-name)
   (text-print . lyskom-print-faq-for-conf)
   (text-print-when . header)
   (info . lyskom-aux-item-info)
@@ -279,24 +311,30 @@ return non-nil if the item is to be included in the list."
 
 
 (def-aux-item recommended-conf 29
+  (text-name aux-recommended-conf-name)
   (status-print . lyskom-print-recommended-conf)
   (info . lyskom-aux-item-info))
 
 (def-aux-item allowed-content-type 30
+  (text-name aux-allowed-content-type-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item canonical-name 31
+  (text-name aux-canonical-name-name)
   (info . lyskom-aux-item-info))
 
 (def-aux-item mx-list-name 32
+  (text-name aux-mx-list-name-name)
   (info . lyskom-aux-item-info)
   (status-print . lyskom-print-mx-list-name))
 
 (def-aux-item send-comments-to 33
-  (into . lyskom-print-aux-item-info)
+  (text-name aux-send-comments-to-name)
+  (info . lyskom-print-aux-item-info)
   (status-print . lyskom-print-send-comments-to))
 
 (def-aux-item world-readable 34
+  (text-name aux-world-readable-name)
   (info . lyskom-aux-item-info)
   (text-print . lyskom-print-world-readable)
   (parse . lyskom-parse-world-readable)
@@ -304,10 +342,12 @@ return non-nil if the item is to be included in the list."
   (text-print-when . header))
 
 (def-aux-item elisp-client-read-faq 10000
+  (text-name aux-elisp-client-read-faq-name)
   (info . lyskom-aux-item-info)
   (status-print . lyskom-print-elisp-client-read-faq))
 
 (def-aux-item elisp-client-rejected-invitation 10001
+  (text-name aux-elisp-client-rejected-invitation-name)
   (info . lyskom-aux-item-info)
   (status-print . lyskom-print-elisp-client-rejected-invitation))
 
@@ -324,7 +364,6 @@ return non-nil if the item is to be included in the list."
 (defun lyskom-aux-item-encode-data (item)
   (encode-coding-string (aux-item->data item) lyskom-server-coding-system)
   )
-
 
 
 (defun lyskom-aux-item-info (item header)
@@ -628,7 +667,7 @@ return non-nil if the item is to be included in the list."
 
 (defun lyskom-print-creating-software (item &optional obj)
   (when (or kom-show-creating-software
-            (eq lyskom-current-command 'kom-review-noconversion))
+            (lyskom-viewing-noconversion))
     (concat
      (lyskom-format 'creating-software-aux (aux-item->data item))
      (lyskom-aux-item-terminating-button item obj))))

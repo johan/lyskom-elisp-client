@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.146 2002-05-22 21:40:50 byers Exp $
+;;;;; $Id: commands1.el,v 44.147 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.146 2002-05-22 21:40:50 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.147 2002-06-12 18:29:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3648,7 +3648,7 @@ footnotes) to it as read in the server."
 
 (def-kom-command kom-add-bcc (text-no)
   "Add a recipient to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-copy)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-bcc)))
   (lyskom-add-helper text-no 
                      'lyskom-last-added-bccrcpt
                      'who-to-add-bcc-q

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.27 2002-06-09 21:47:16 byers Exp $
+;;;;; $Id: flags.el,v 44.28 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.27 2002-06-09 21:47:16 byers Exp $\n"))
+	      "$Id: flags.el,v 44.28 2002-06-12 18:29:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -131,7 +131,8 @@
       (set-buffer kombuf)
       (lyskom-message "%s" start-message)
       (initiate-create-text
-       'options 'lyskom-save-options-2
+       'options 
+       'lyskom-save-options-2
        (cons 'raw-text
 	     (apply 'lyskom-format-objects
 		    (apply 'lyskom-format-objects
@@ -147,7 +148,12 @@
 			     (cons 'STRING (cons 'raw-text (cdr el))))
 			    lyskom-other-clients-user-areas)))
                             (lyskom-create-misc-list) 
-                            nil
+                            (list
+                             (lyskom-create-aux-item 
+                              0 1 nil nil
+                              (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
+                              0
+                              "x-kom/user-area"))
                             kombuf
                             done-message
                             error-message))))
