@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.11 1991-10-23 18:03:53 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.12 1991-10-23 19:21:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.11 1991-10-23 18:03:53 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.12 1991-10-23 19:21:42 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -267,13 +267,17 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 (defun kom-view (text-no)
   "View text number TEXT-NO."
   (interactive "P")
-  (lyskom-start-of-command 'kom-view)
+  (let ((kom-page-before-command nil))
+    (lyskom-start-of-command 'kom-view))
   (if (setq text-no (cond ((null text-no) nil)
 			  ((listp text-no) (car text-no))
 			  (t text-no)))
       nil
     (setq text-no (lyskom-read-number (lyskom-get-string 'review-text-q)
 				      lyskom-current-text)))
+  (if (or (not (listp kom-page-before-command))
+	  (memq 'kom-view kom-page-before-command))
+      (recenter 0))
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-format-insert 'review-text-no text-no)
   (lyskom-view-text 'main text-no)
