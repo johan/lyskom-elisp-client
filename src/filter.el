@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 41.2 1996-07-08 09:46:21 byers Exp $
+;;;;; $Id: filter.el,v 41.3 1996-07-31 09:29:24 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 41.2 1996-07-08 09:46:21 byers Exp $\n"))
+	      "$Id: filter.el,v 41.3 1996-07-31 09:29:24 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -461,7 +461,7 @@ Otherwise return nil."
                       '(all)
                       t
                       (or (and (conf-stat->conf-no conf-stat)
-                               (conf-stat->name conf-stat))
+                               (cons (conf-stat->name conf-stat) 0))
                           "")
                       t))
 	      (if (/= conf 0)
@@ -497,7 +497,7 @@ Otherwise return nil."
                                  '(pers)
                                  t
                                  (or (and auth-stat
-                                          (conf-stat->name auth-stat))
+                                          (cons (conf-stat->name auth-stat) 0))
                                      "")
                                  t))
       (if (/= author 0)
@@ -508,7 +508,7 @@ Otherwise return nil."
                   t
                   (or 
                    (and conf-stat
-                        (conf-stat->name conf-stat))
+                        (cons (conf-stat->name conf-stat) 0))
                    "")
                   t))
       (if (/= conf 0)
@@ -600,7 +600,7 @@ the current text"
                           (lyskom-get-string 'filter-in-conf)
                           '(all) t
                           (or (and (conf-stat->conf-no conf-stat)
-                                   (conf-stat->name conf-stat))
+                                   (cons (conf-stat->name conf-stat) 0))
                               "")
                           t))
               (if (/= conf 0)
