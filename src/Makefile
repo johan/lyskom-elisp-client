@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.62 2000-08-29 16:59:31 joel Exp $
+# $Id: Makefile,v 44.63 2000-08-29 17:09:34 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.62 2000-08-29 16:59:31 joel Exp $
+# $Id: Makefile,v 44.63 2000-08-29 17:09:34 joel Exp $
 #
 
 
@@ -198,7 +198,7 @@ debian-package: release-files debian-build release-cleanup
 debian-build: release-files
 	cp -R debian lyskom-$(CLIENTVERSION)
 	$(RM) -rf lyskom-$(CLIENTVERSION)/debian/CVS
-	sed '1s/(.*)/($(DEBIANCLIENTVERSION))/' <debian/changelog >lyskom-$(CLIENTVERSION)/debian/changelog
+	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-1)/' <debian/changelog >lyskom-$(CLIENTVERSION)/debian/changelog
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >lyskom-$(CLIENTVERSION)/debian/rules
 	mv lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 	cp lyskom-$(CLIENTVERSION).tar.gz lyskom-elisp-client_$(DEBIANCLIENTVERSION).orig.tar.gz
