@@ -1,5 +1,5 @@
 #
-# $Id: mailing-do-list,v 35.4 1992-03-28 19:53:00 linus Exp $
+# $Id: mailing-do-list,v 35.5 1993-05-27 15:21:57 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -53,3 +53,9 @@ ACTIVE -m hamcom@hh.se
 
 # Nixon
 ACTIVE -m nixon@lysator.liu.se
+
+# Luddarna
+ACTIVE -m luddkom@mother.ludd.luth.se
+
+# Lokalt
+ACTIVE -m lyskom@lysator.liu.se
