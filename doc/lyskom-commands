@@ -1,0 +1,31 @@
+;;
+;; Open this file using forms-find-file!
+;;
+
+(setq forms-file "lyskom-commands.data")
+(setq forms-read-only nil)
+(setq forms-number-of-fields 6)
+
+(make-face 'lyskom-db-rw)
+(make-face 'lyskom-db-ro)
+(copy-face 'default 'lyskom-db-rw)
+(copy-face 'default 'lyskom-db-ro)
+(make-face-bold 'lyskom-db-ro)
+
+(setq forms-rw-face 'lyskom-db-rw)
+(setq forms-ro-face 'lyskom-db-ro)
+(setq forms--rw-face 'lyskom-db-rw)
+(setq forms--ro-face 'lyskom-db-ro)
+
+(setq forms-format-list
+    '(
+    "====== LysKOM Command Documentation Database ======\n"
+    "\nFunktionsnamn:     " 1
+    "\nKommandonamn:      " 2
+    "\nTangentbindningar: " 3
+
+    "\n\nRelaterade variabler:\n" 4
+    "\nRelaterade kommandon:\n" 5
+    "\n\nDokumentation:\n\n" 6))
+
+

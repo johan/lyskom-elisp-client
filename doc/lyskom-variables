@@ -1,0 +1,33 @@
+;;
+;; Open this file using forms-find-file!
+;;
+
+(setq forms-file "lyskom-variables.data")
+(setq forms-read-only nil)
+(setq forms-number-of-fields 7)
+
+(make-face 'lyskom-db-rw)
+(make-face 'lyskom-db-ro)
+(copy-face 'default 'lyskom-db-rw)
+(copy-face 'default 'lyskom-db-ro)
+(make-face-bold 'lyskom-db-ro)
+
+(setq forms-rw-face 'lyskom-db-rw)
+(setq forms-ro-face 'lyskom-db-ro)
+(setq forms--rw-face 'lyskom-db-rw)
+(setq forms--ro-face 'lyskom-db-ro)
+
+(setq forms-format-list
+    '(
+    "====== LysKOM Variable Documentation Database ======\n"
+    "\nFunktionsnamn:     " 1
+    "\nTillåtna värden:   " 2
+    "\nDefaultvärde:      " 3
+    "\nSparas i servern:  " 4
+    "\nAnvändarvariabel:  " 5
+
+    "\n\nRelaterade saker:\n" 6
+
+    "\n\nDokumentation:\n" 7))
+
+
