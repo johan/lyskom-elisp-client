@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.0 1994-01-06 01:57:33 linus Exp $
+;;;;; $Id: edit-text.el,v 38.1 1994-01-10 15:37:36 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.0 1994-01-06 01:57:33 linus Exp $\n"))
+	      "$Id: edit-text.el,v 38.1 1994-01-10 15:37:36 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -65,7 +65,7 @@ Does lyskom-end-of-command."
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
 					    lyskom-list-of-edit-buffers))
-    (condition-case emacs-18.55
+    (condition-case emacs-18\.55
 	(process-kill-without-query (get-buffer-process (current-buffer)) t)
       (error
        ;; You loose some...
@@ -781,7 +781,7 @@ buffer and edit buffers."
       (while (and lyskom-list-of-edit-buffers
 		  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
 	(setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
-      (condition-case emacs-18.55
+      (condition-case emacs-18\.55
 	  (if lyskom-list-of-edit-buffers
 	      (process-kill-without-query proc t)
 	    (process-kill-without-query proc nil))
