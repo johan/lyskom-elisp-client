@@ -103,6 +103,11 @@ Wed Sep 25 12:14:48 1996  David Byers  <davby@sen2.ida.liu.se>
 	* review.el (lyskom-get-texts-globally): Hantera att eftersökt
  	inlägg inte finns.
 
+Wed Sep 25 00:03:10 1996  David Kågedal  <kg@infovav.se>
+
+	* english-strings.el,swedish-strings.el: Städade upp så att make
+ 	check inte klagar så mycket.
+
 Tue Sep 24 13:23:40 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* english-strings.el (lyskom-strings): Fixade mismatchande
