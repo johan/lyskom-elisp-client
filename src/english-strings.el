@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.50 1999-06-25 20:17:15 byers Exp $
+;;;;; $Id: english-strings.el,v 44.51 1999-06-26 21:11:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.50 1999-06-25 20:17:15 byers Exp $"))
+              "$Id: english-strings.el,v 44.51 1999-06-26 21:11:55 byers Exp $"))
 
 
 ;;; ================================================================
@@ -230,10 +230,8 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (what-text-to-delete . "Remove which article? ")
     (delete-marked-text . "The article is %#1s. Delete anyway? ")
     (delete-marked-by-you . "marked by you")
-    (delete-marked-by-you-and-one . "marked by you and someone else")
-    (delete-marked-by-you-and-several . "marked by you and %#1d others")
-    (delete-marked-by-one . "marked by 1 user")
-    (delete-marked-by-several . "marked %#1d users")
+    (delete-marked-by-you-and-others . "marked by you and %#1?d%[someone else%]%[%#1d others%]")
+    (delete-marked-by-several . "marked by %#1d user%#1?d%[%]%[s%]")
     (deleting-text . "Removing article %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")
@@ -414,10 +412,10 @@ formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
 
     (total-users . "    A total of %#1d users (%#2s.)\n")
-    (total-visible-users . "    A total of %#1d visible users (%#2s.)\n")
-    (total-active-users . "    A total of %#1d active users (%#2s.)\n")
+    (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s.)\n")
+    (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s.)\n")
     (total-visible-active-users
-     . "    A total of %#1d visible active users (%#2s.)\n")
+     . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy? ")
     (who-to-sub-q . "Remove who/what as a recipient? ")
@@ -581,13 +579,11 @@ The message you were sending to %#1M was:
     (only-last . "Last (0 - %#1d) articles in %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
-    (you-have-unreads . "You have %#1d unread articles in %#2M\n")
-    (you-have-an-unread . "You have 1 unread article in %#1M\n")
-    (you-have-unreads-special . "You have %#1d uncommented articles in %#2M\n")
-    (you-have-an-unread-special . "You have 1 uncommented article in %#1M\n")
+    (you-have-unreads . "You have %#1d unread article%#1?d%[%]%[s%] in %#2M\n")
+    (you-have-unreads-special . "You have %#1d uncommented article%#1?d%[%]%[s%] in %#2M\n")
+    (you-have-no-unreads . "You have read everything in %#1M\n")
     (you-have-read-everything . "No news (is bad news).\n")
-    (total-unreads . "\nYou have %#1d unread articles.\n")
-    (total-unread . "\nYou have 1 unread article.\n")
+    (total-unreads . "\nYou have %#1d unread article%#1?d%[%]%[s%] articles in %#2M.\n")
     (list-unread-with-n-unread . "Listing conferences with at least %#1d unread.\n")
     (waiting-for-anything .
      "You are waiting for an article in any conference.\n")
@@ -700,9 +696,13 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-n-texts . "Review %#1d articles.\n")
     (review-marked . "Review %#1d marked articles.\n")
     (review-text-no . "Review article %#1n\n")
-    (review-one-comment . "Review one comment to article %#1n.\n")
-    (review-many-comments . "Review %#2d comments to article %#1n.\n")
+    (review-many-comments . "Review %#2?d%[one%]%[%#2d] comment%#2?d%[%]%[s%] to article %#1n.\n")
+    (view-many-comments . "Read %#2?d%[one%]%[%#2d] comment%#2?d%[%]%[s%] to %#1n.\n")
+    (view-texts-in-conf . "Grand total of %#1d articles to read in %#2M.\n")
+
+    (not-reading-anywhere . "You are not reading in any conference.\n")
     (read-normally-read . "How many articles to you want to read again? ")
+
     (review-conf-gone . "The conference does not exist.\n")
     (review-pers-gone . "The user does not exist.\n")
     (review-cant-read-conf . "You can't review articles to a closed conference you are not a member of.\n")
@@ -757,10 +757,8 @@ Help: \\[describe-mode] ---")
     (lines ." /%#1d lines/ ")
 
     (marked-by-you . "Marked by you.\n")
-    (marked-by-you-and-one . "Marked by you and someone else.\n")
-    (marked-by-you-and-several . "Marked by you and %#1d other users.\n")
-    (marked-by-one . "Marked by 1 user.\n")
-    (marked-by-several . "Marked by %#1d users.\n")
+    (marked-by-you-and-others . "Marked by you and %#1?d%[someone else%]%[%#1d others%].\n")
+    (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
 
 ;; The format of this function should coincide with the format of the 
 ;; lyskom-text-start variable. DONT change one without changing the other.
@@ -774,6 +772,7 @@ Help: \\[describe-mode] ---")
     (today . "today")
     (yesterday . "yesterday")
     (no-such-text-no . "The article doesn't exist. (%#1:n)\n")
+    (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
@@ -824,9 +823,10 @@ for an article.
     (has-left-r . "%#2@%#1P has left %#3s.\n")
     (unknown . "unknown")
 
-    (no-longer-member . "You are no longer a member of %#1M\n")
+    (no-longer-member . "You are no longer a member of %#1M.\n")
     (no-longer-member-n . "You are no longer a member of %#1m (conference is gone.)\n")
-    (have-become-member . "You have become a member of %#1M\n")
+    (have-become-member . "You have become a member of %#1M.\n")
+    (have-become-passive-member . "You have become a passive member of %#1M.\n")
 
 
     (message-broadcast . "\
@@ -1777,6 +1777,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "r A") 'kom-review-all)
   (define-key lyskom-en-mode-map (kbd "r M") 'kom-review-more)
   (define-key lyskom-en-mode-map (kbd "r g") 'kom-review-last-normally-read)
+  (define-key lyskom-en-mode-map (kbd "r q") 'kom-review-faq)
   (define-key lyskom-en-mode-map (kbd "B")  'kom-review-backward)
   (define-key lyskom-en-mode-map (kbd "r s") 'kom-review-stack)
   (define-key lyskom-en-mode-map (kbd "r p") 'kom-review-presentation)
@@ -1784,8 +1785,8 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "r m") 'kom-review-marked-texts)
   (define-key lyskom-en-mode-map (kbd "r a m") 'kom-review-all-marked-texts)
   (define-key lyskom-en-mode-map (kbd "r a SPC") 'kom-review-all)
-  (define-key lyskom-en-mode-map (kbd "r q a") 'kom-agree)
-  (define-key lyskom-en-mode-map (kbd "r q q") 'kom-fast-reply)
+  (define-key lyskom-en-mode-map (kbd "r x a") 'kom-agree)
+  (define-key lyskom-en-mode-map (kbd "r x q") 'kom-fast-reply)
   (define-key lyskom-en-mode-map (kbd "s c") 'kom-status-conf)
   (define-key lyskom-en-mode-map (kbd "s u") 'kom-status-person)
   (define-key lyskom-en-mode-map (kbd "s s") 'kom-status-session)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.62 1999-06-26 20:48:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.63 1999-06-26 21:11:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.62 1999-06-26 20:48:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.63 1999-06-26 21:11:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1817,6 +1817,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "} p") 'kom-review-presentation)
   (define-key lyskom-sv-mode-map (kbd "} t") 'kom-find-root-review)
   (define-key lyskom-sv-mode-map (kbd "} m") 'kom-review-marked-texts)
+  (define-key lyskom-sv-mode-map (kbd "} q") 'kom-review-faq)
   (define-key lyskom-sv-mode-map (kbd "} a m") 'kom-review-all-marked-texts)
   (define-key lyskom-sv-mode-map (kbd "} a SPC") 'kom-review-all)
   (define-key lyskom-sv-mode-map (kbd "B")   'kom-review-backward)
