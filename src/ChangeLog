@@ -1,5 +1,18 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 854:
+	* commands2.el (kom-join-all-conferences): New command.
+	(kom-leave-all-conferences): New command.
+
+	* commands1.el (lyskom-add-member-by-no): Added no-of-unread
+	parameter.
+
+	* lyskom-buttons.el (lyskom-highlight-i-am-supervisor): Use
+	lyskom-i-am-supervisor.
+
+	* utilities.el (lyskom-i-am-supervisor): New function.
+	(lyskom-get-all-conferences): New function.
+
 	Fix bug 842:
 	* commands1.el (kom-add-member-answer): Don't enter memberships
 	under the current session priority.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.308 2003-03-16 17:52:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.309 2003-03-16 19:49:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.308 2003-03-16 17:52:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.309 2003-03-16 19:49:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -445,6 +445,23 @@ du har läst klart allting. Kom tillbaks senare.
     (change-priority-for-q . "Ändra prioritet för möte: ")
     (change-priority-for . "Ändra prioritet på %#2M...")
     (unsubscribe-to . "Utträda ur %#1M...")
+    (unsubscribe-to-2 . "Utträda ur %#1M%#2s...")
+    (confirm-each-join . "Vill du bekräfta medlemskap i varje enskilt möte? ")
+    (no-confirm-each-sure . "Är du helt säker på att du vill gå med i %#1d möten automatiskt? ")
+    (confirm-join . "Gå med i %#1M? ")
+    (getting-all-confs . "Hämtar en lista med alla möten...")
+    (getting-all-confs-progress . "Hämtar en lista med alla möten (%#1d/%#2d)...")
+    (getting-all-confs-done . "Hämtar en lista med alla möten...klart")
+    (unsub-all-skipping-letterbox . "nix\nMötet är din brevlåda.\n")
+    (unsub-all-skipping-supervised . "nix\nDu är organisatör för mötet.\n")
+    (unsub-secret-conf-q . "%#1M är hemligt. Vill du gå ur mötet ändå? ")
+    (unsub-all-secret . "aGå ur alla hemliga möten")
+    (unsub-closed-conf-q . "%#1M är slutet. Vill du gå ur mötet ändå? ")
+    (unsub-all-closed . "aGå ur alla slutna möten")
+    (unsub-open-conf-q . "Vill du gå ur %#1M? ")
+    (unsub-all-open . "aGå ur alla öppna möten")
+    (abc-yes . "jJa")
+    (abc-no . "nNej")
 
     (exclude-from . "Utesluta %#1P från %#2M...")
 
@@ -2136,6 +2153,9 @@ teckenkodning.
     (kom-unread-faq           . "Oläsmarkera FAQ")
     (kom-unread-marked-texts  . "Oläsmarkera markerade")
     (kom-unread-all-marked-texts . "Oläsmarkera alla markerade")
+
+    (kom-join-all-conferences . "Bli medlem i alla möten")
+    (kom-leave-all-conferences . "Utträd ur (nästan) alla möten")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv

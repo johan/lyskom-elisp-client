@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.270 2003-03-16 17:52:35 byers Exp $
+;;;;; $Id: english-strings.el,v 44.271 2003-03-16 19:49:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.270 2003-03-16 17:52:35 byers Exp $"))
+              "$Id: english-strings.el,v 44.271 2003-03-16 19:49:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -454,12 +454,29 @@ and you have finished reading. Please come back later.
     (change-priority-for-q . "Change priority of conference: ")
     (change-priority-for . "Changing priority of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
-    (passivate-done . "You are now a passive member of %#1M.
-Leave the conference again to unsubscribe completely.\n")
+    (unsubscribe-to-2 . "Leaving %#1M%#2s...")
+    (confirm-each-join . "Confirm joining each individual conference? ")
+    (no-confirm-each-sure . "Are you sure you want to join %#1d conferences automatically? ")
+    (confirm-join . "Join %#1M? ")
+    (getting-all-confs . "Getting a list of all conferences...")
+    (getting-all-confs-progress . "Getting a list of all conferences (%#1d/%#2d)...")
+    (getting-all-confs-done . "Getting a list of all conferences...done")
+    (unsub-all-skipping-letterbox . "nix\nThis is your letterbox.\n")
+    (unsub-all-skipping-supervised . "nix\nYou are the supervisor of the conference.\n")
+    (unsub-secret-conf-q . "%#1M is secret. Leave anyway? ")
+    (unsub-all-secret . "aLeave all secret conferences")
+    (unsub-closed-conf-q . "%#1M är close. Leave anyway? ")
+    (unsub-all-closed . "aLeave all closed conferences")
+    (unsub-open-conf-q . "Leave %#1M? ")
+    (unsub-all-open . "aLeave all open conferences")
+    (abc-yes . "yYes")
+    (abc-no . "nNo")
 
     (exclude-from . "Removing %#1P from %#2M...")
 
     (unsubscribe-failed . "\nDidn't work. Perhaps %#1P isn't a member of %#2M?\n")
+    (passivate-done . "You are now a passive member of %#1M.
+Leave the conference again to unsubscribe completely.\n")
 
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\n")
@@ -2103,6 +2120,9 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-unread-faq           . "Unread FAQ")
     (kom-unread-marked-texts  . "Unread marked (texts)")
     (kom-unread-all-marked-texts . "Unread all markeed (texts)")
+
+    (kom-join-all-conferences . "Join all conferences")
+    (kom-leave-all-conferences . "Leave (almost) all conferences")
     ))
 
 (lyskom-language-var global lyskom-language-codes en

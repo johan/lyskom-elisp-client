@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.132 2003-03-16 15:57:33 byers Exp $
+;;;;; $Id: utilities.el,v 44.133 2003-03-16 19:49:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.132 2003-03-16 15:57:33 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.133 2003-03-16 19:49:01 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1292,7 +1292,14 @@ is the conference to use and TYPE is the type of recipient (numeric)."
                          (t nil)))))
     (if want-type result (car result))))
     
-
+(defun lyskom-get-all-conferences (&optional feep)
+  "Return a list of all conferences.
+If FEEP is non-nil, show progress messages"
+  (and feep (lyskom-message (lyskom-get-string 'getting-all-confs)))
+  (prog1 (mapcar 'conf-z-info->conf-no
+                 (conf-z-info-list->conf-z-infos
+                  (blocking-do 'lookup-z-name "" nil t)))
+    (and feep (lyskom-message (lyskom-get-string 'getting-all-confs-done)))))
 
 (defun lyskom-is-supervisor (conf-no viewer-no)
   "Return non-nil if the supervisor of CONF-NO is VIEWER-NO."
@@ -1315,6 +1322,26 @@ Cannot be called from a callback."
           ((eq viewer-no (conf-stat->supervisor conf-stat)) t)
           ((lyskom-is-member (conf-stat->supervisor conf-stat) viewer-no) t)
           (t nil))))
+
+(defun lyskom-i-am-supervisor (conf-stat &optional may-block)
+  "Returns non-nil if lyskom-pers-no is the supervisor of CONF-STAT.
+
+If MAY-BLOCK is non-nil, this function never makes server calls, so if
+the information required to answer accurately is not cached, this
+function will return an incorrect result (nil instead of t)."
+  (let ((marshal nil))
+    (when conf-stat
+      (let ((conf (conf-stat->supervisor conf-stat))
+            (result nil))
+        (while (and (not (memq conf marshal)) conf (not result))
+          (setq marshal (cons conf marshal))
+          (if (lyskom-try-get-membership conf t)
+              (setq result t)
+            (if may-block
+                (setq conf (conf-stat->supervisor 
+                            (blocking-do 'get-conf-stat conf)))
+              (setq conf (conf-stat->supervisor (cache-get-conf-stat conf))))))
+        result))))
 
 
 (defun lyskom-is-member (conf-no pers-no &optional queue)
