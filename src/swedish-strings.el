@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.4 1996-08-09 20:56:44 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.5 1996-08-10 03:35:55 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.4 1996-08-09 20:56:44 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.5 1996-08-10 03:35:55 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -301,6 +301,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (text-to-add-recipient . "Vilket inl\344gg vill du addera mottagare till:")
     (text-to-add-copy . "Vilket inl\344gg vill du addera en extra kopia till:")
     (text-to-delete-recipient . "Vilket inl\344gg vill du subtrahera mottagare fr\345n:")
+    (text-to-move . "Vilket inl\344gg vill du flytta: ")
     (text-to-add-comment-to . "Vilket inl\344gg vill du addera en kommentar till:")
     (text-to-delete-comment-from . "Vilket inl\344gg vill du subtrahera en kommentar fr\345n:")
 
@@ -366,11 +367,14 @@ i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
     (who-to-add-q . "Vilket m\366te/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket m\366te/person vill du addera som kopiemottagare? ")
     (who-to-sub-q . "Vilket m\366te/person vill du subtrahera som mottagare? ")
+    (who-to-move-from-q . "Fr\345n vilket m\366te vill du flytta texten: ")
+    (who-to-move-to-q . "Vart vill du flytta texten: ")
 
     (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
     (remove-name-as-recipient .
      "Subtraherar %#1M som mottagare fr\345n text %#2n...")
+    (moving-name . "Flyttar text %#3n fr\345n %#1M till %#2M...")
     (text-to-add-q . "Vilket inl\344gg vill du addera som kommentar? ")
     (text-to-remove-q . "Vilket inl\344gg vill du subtrahera som kommentar? ")
     (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...")
@@ -386,6 +390,7 @@ i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
     (who-is-active-all . "Visar alla sessioner.\n")
     (who-is-active-last-minutes . "Visar alla sessioner som har varit aktiva de senaste %#1d minuterna.\n")
     (showing-invisibles . "Visar osynliga sessioner.\n")
+    (null-who-info . "Det finns inga (aktiva) inloggade.\n")
 
     ; From commands2.el:
 
@@ -779,6 +784,8 @@ Skicka en bugrapport.\n")
     (mode-line-letters . "brev ")
 
     (error-code . "Felkod %#2d: %#1s.\n")
+    (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt v\344.
+Du b\366r s\344tta den till ett b\344ttre v\344rde.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM v\344ntar p\345 svar fr\345n servern. V\344nta tills du f\345r en prompt.\n")
     (review-text-q . "\305terse text nummer: ")
@@ -1053,6 +1060,7 @@ och har inte varit aktiv p\345 %#9d minuter\n")
     (kom-add-recipient          "Addera mottagare")
     (kom-add-copy		"Addera extra kopiemottagare")
     (kom-sub-recipient          "Subtrahera mottagare")
+    (kom-move-text              "Flytta inl\344gg")
     (kom-add-comment		"Addera kommentar")
     (kom-sub-comment		"Subtrahera kommentar")
     (kom-add-member		"Addera medlem")
@@ -1244,6 +1252,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "t"  'kom-display-time)
   (define-key lyskom-mode-map "fu" 'kom-get-appreciation)
   (define-key lyskom-mode-map "fs" 'kom-get-abuse)
+  (define-key lyskom-mode-map "ft" 'kom-move-text)
   (define-key lyskom-mode-map "f{" 'kom-filter-subject)
   (define-key lyskom-mode-map "f[" 'kom-filter-subject)
   ;; (define-key lyskom-mode-map "f\344" 'kom-filter-subject)
