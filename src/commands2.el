@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.81 2000-09-01 13:15:51 byers Exp $
+;;;;; $Id: commands2.el,v 44.82 2000-09-09 11:59:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.81 2000-09-01 13:15:51 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.82 2000-09-09 11:59:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1976,7 +1976,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                             (lyskom-get-string 'need-library))
     (let* ((expr (or exprx
                      (lyskom-with-lyskom-minibuffer
-                      (read-from-minibuffer 
+                      (lyskom-read-from-minibuffer 
                        (lyskom-get-string 'calc-expression)
                        nil nil nil 'lyskom-expression-history))))
            (result (calc-eval expr)))
@@ -2020,7 +2020,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                               (lyskom-get-string 'label-secret))))
            (setq label
                  (lyskom-with-lyskom-minibuffer
-                  (read-from-minibuffer 
+                  (lyskom-read-from-minibuffer 
                    (lyskom-get-string 'label-what-label))))
            (blocking-do 
             'modify-text-info
@@ -2050,7 +2050,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                               (lyskom-get-string 'label-secret))))
            (setq label
                  (lyskom-with-lyskom-minibuffer
-                  (read-from-minibuffer 
+                  (lyskom-read-from-minibuffer 
                    (lyskom-get-string 'label-what-label))))
            (blocking-do 
             'modify-conf-info

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.141 2000-09-04 22:03:26 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.142 2000-09-09 11:59:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.141 2000-09-04 22:03:26 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.142 2000-09-09 11:59:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3101,7 +3101,7 @@ i servern. Annars sparas det i din .emacs.")
   längre än normalt.")
 
     (kom-postpone-default-doc . "\
-  Antalet inlägg som skall uppskjutas med Uppskjuta läsning.")
+  Antalet inlägg som inte skall uppskjutas med Uppskjuta läsning.")
 
     (kom-allow-incompleteness-doc . "\
   Påslaget betyder att klienten inte väntar på att information om alla
@@ -3247,7 +3247,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-write-texts-in-window-tag     . "Skriv inlägg:             ")
     (kom-prioritize-in-window-tag      . "Prioritera möten:         ")
     (kom-edit-filters-in-window-tag    . "Ändra filter:             ")
-    (kom-view-commented-in-window-tag  . "Återse kommenterer:       ")
+    (kom-view-commented-in-window-tag  . "Återse kommentarer:       ")
     (kom-list-membership-in-window-tag . "Lista medlemskap:         ")
 
     (kom-user-prompt-format-tag . "Promptformat:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.44 2000-09-02 13:22:57 byers Exp $
+;;;;; $Id: compatibility.el,v 44.45 2000-09-09 11:59:27 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.44 2000-09-02 13:22:57 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.45 2000-09-09 11:59:27 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -397,7 +397,34 @@ string to search in."
                                         &optional predicate require-match
                                         init hist def inherit-input-method)
            (completing-read prompt table predicate require-match init hist)))))
-     
+
+(eval-and-compile
+  (cond ((eval-when-compile (string-match "XEmacs" (emacs-version)))
+	 (defun lyskom-read-from-minibuffer (prompt 
+					     &optional initial-contents
+					     keymap read hist default-value
+					     inherit-input-method)
+	   (read-from-minibuffer prompt
+				 initial-contents
+				 keymap
+				 read
+				 hist)))
+	((eval-when-compile (> emacs-major-version 19))
+	 (fset 'lyskom-read-from-minibuffer 
+	       (symbol-function 'read-from-minibuffer)))
+	(t (defun lyskom-read-from-minibuffer (prompt 
+					       &optional initial-contents
+					       keymap read hist default-value
+					       inherit-input-method)
+	     (read-from-minibuffer prompt
+				   initial-contents
+				   keymap
+				   read
+				   hist)))))
+
+(lyskom-external-function temp-minibuffer-message)
+(lyskom-provide-function minibuffer-message (message)
+  (temp-minibuffer-message message))
 
 
 (lyskom-provide-function last (x &optional n)

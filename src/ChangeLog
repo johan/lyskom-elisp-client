@@ -1,3 +1,57 @@
+2000-09-09  David Byers  <davby@sen2.ida.liu.se>
+
+	* buffers.el (lyskom-buffer-kill-trim-hook): New function. Add
+	call to lyskom-ignore to avoid warnings about unused variables.
+	(kill-buffer-hook): Add lyskom-buffer-kill-trim-hook instead of
+	anonymous lambda. Add to the global value since the local value of
+	the hook is undefined at load time.
+
+	Compatibility definition lyskom-read-from-minibuffer:
+	* option-edit.el (lyskom-widget-string-action): Use
+	lyskom-read-from-minibuffer.
+
+	* filter.el (kom-filter-subject): Use lyskom-read-from-minibuffer.
+	(kom-filter-text): Use lyskom-read-from-minibuffer.
+
+	* filter-edit.el (lyskom-filter-edit-insert-pattern): Use
+	lyskom-read-from-minibuffer.
+
+	* edit-text.el (kom-edit-insert-text): Use
+	lyskom-read-from-minibuffer.
+
+	* commands2.el (kom-calculate): Use lyskom-read-from-minibuffer.
+	(kom-set-personal-label): Same here.
+	(kom-set-personal-label): Same here.
+
+	* ansaphone.el (kom-change-auto-reply): Use
+	lyskom-read-from-minibuffer.
+
+	Start to fix command completion:
+	* command.el (lyskom-read-extended-command): Roll our own
+	completing-read by emulating the standard behavior.
+
+	* compatibility.el (lyskom-read-from-minibuffer): New
+	compatibility definition.
+
+	* command.el (lyskom-completing-strip-command): Replace parens
+	with empty string, not space.
+	(lyskom-command-match-string-regexp): Allow initial space. 
+
+2000-09-05  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands1.el (kom-change-priority): Bind
+	kom-membership-default-priority to nil to force
+	lyskom-try-add-member to ask.
+	(kom-change-priority): Don't break when user is not a member of
+	the conference. Useful error message when conference does not
+	exist.
+
+2000-09-03  David Byers  <davby@sen2.ida.liu.se>
+
+	* command.el (lyskom-update-command-completion): Save unicased
+	version of string.
+	(lyskom-complete-command): Fix updating of exact.
+
 2000-09-05  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* distribution-README: Information about the Debian package.
