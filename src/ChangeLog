@@ -1,3 +1,13 @@
+Tue Mar 26 08:21:18 1996  David Byers  <byers@lysator.liu.se>
+
+	* Satte cvs-version till 40.0 och symbolisk tag till v0-40
+
+	* lyskom-rest.el, view-text.el: face-equal bortbytt mod
+ 	lyskom-face-default-p som fungerar om man inte kör med
+ 	fönstersystem.
+
+	* vars.el.in: Bättre val av face scheme.
+
 Mon Mar 25 16:22:42 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el: Formatteringen täcker inte padding.
