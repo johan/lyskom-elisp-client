@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.60 2002-08-06 19:43:32 byers Exp $
+;;;;; $Id: compatibility.el,v 44.61 2002-09-18 19:06:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.60 2002-08-06 19:43:32 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.61 2002-09-18 19:06:56 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -472,7 +472,7 @@ If DIR-FLAG is non-nil, create a new empty directory instead of a file."
                                            temporary-file-directory))))
 		 (if dir-flag
 		     (make-directory file)
-		   (write-region "" nil file nil 'silent nil 'excl))
+		   (write-region "" nil file nil 'silent nil))
 		 nil)
              (file-already-exists t))
       ;; the file was somehow created by someone else between
