@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.87 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: option-edit.el,v 44.88 2003-01-09 21:41:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.87 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.88 2003-01-09 21:41:43 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -344,7 +344,7 @@ customize buffer but do not save them to the server."
                                        (symbol-value (elt e 0)))
                                  var-list)))))
        lyskom-customize-buffer-format)
-      
+
       (let* ((actual-save-options-init-file
               (or (and (boundp 'save-options-init-file)
                        save-options-init-file)
@@ -860,11 +860,15 @@ customize buffer but do not save them to the server."
                        ':lyskom-storage-widget storage-widget
                        )
                  (cdr spec))))
+
     (let ((widget (apply 'widget-create spec)))
       (condition-case nil
           (progn
             (if (string= "" (lyskom-custom-string doc-sym))
-                (widget-insert "\n")
+                (progn (widget-insert (lyskom-format " %#1@(%#2s)" 
+                                                     `(face ,kom-dim-face)
+                                                     (symbol-name variable)))
+                       (widget-insert "\n"))
               (widget-insert "  ")
               (widget-create 'lyskom-widget-help
                              ':value (lyskom-default-value 'kom-customize-format)
@@ -884,7 +888,9 @@ customize buffer but do not save them to the server."
                                          ""
                                          (lyskom-custom-string 'show-doc)
                                          "?"))
-                             ':format "%[[%T]%]\n%D")))
+                             ':format (lyskom-format "%%[[%%T]%%] %[%#1@(%#2s)%]\n%%D"
+                                                     `(face ,kom-dim-face)
+                                                     (symbol-name variable)))))
         (error (widget-insert "\n")))
         widget)))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: docgen.el,v 44.3 2003-01-09 01:45:01 byers Exp $
+;;;;; $Id: docgen.el,v 44.4 2003-01-09 21:41:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -30,6 +30,31 @@
 ;;;;
 ;;;; Generate documentation data for inclusion in the user manual
 ;;;;
+
+
+;;; TO DO
+;;;
+;;; Read templates from a file, so we don't hard-code the
+;;; format here.
+;;;
+;;; Specify output file on the command line.
+;;;
+;;; Specify lyskom.elc on the command line.
+;;;
+;;; Read a list of external references from a file. Ideally we'd read
+;;; and parse the actual XML, but that is probably too much work. We
+;;; need to map references like lyskom-read-text-no-prefix-arg to the
+;;; actual ID to link to. Specify this file on the command line too.
+;;;
+;;; Do variable documentation.
+;;;
+;;; Write or find a stylesheed that doesn't suck. Mainly paragraph
+;;; spacing is way too big, and the period after section numbers is
+;;; just plain wrong. Maybe this can be fixed by setting parameters to
+;;; the DSSSL processor -- see
+;;; /usr/share/sgml/docbook/stylesheet/dsssl/modular/print/dbparam.dsl
+;;; for all available parameters. %para-sep% is interesting.
+;;;
 
 (require 'cl)
 
