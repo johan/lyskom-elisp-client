@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.165 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: english-strings.el,v 44.166 2002-02-25 18:14:18 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.165 2002-02-24 20:23:26 joel Exp $"))
+              "$Id: english-strings.el,v 44.166 2002-02-25 18:14:18 joel Exp $"))
 
 
 ;;; ================================================================
@@ -687,7 +687,7 @@ The message you were sending to %#1M was:
     
     (have-to-be-in-conf-with-unread . "You must go to a non-empty conference first.\n")
     (Texts . "Text")
-    (Date . "Date")
+    (Written . "Written")
     (Lines . "Len.")
     (Author . "  Author")
     (Subject . "  Subject")
