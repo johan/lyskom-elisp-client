@@ -3,6 +3,9 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Man kan inte skicka in inlägg med kom-emacs-knows-iso-8859-1 satt
+    till nil.
+
     LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
 
     lyskom-try-complete-partials borde returnera exakta matchar före
@@ -38,6 +41,8 @@ Buggar
     Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
 
 Allmänna förbättringar
+
+    Skriv inte ut stora fonoter på en gång.
 
     Definiera faces när man startar klienten istället för när den
     laddas.
