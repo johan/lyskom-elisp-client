@@ -100,11 +100,11 @@
    eftersom de bara sträcker sig till slutet av texten och inte till
    fönstrets kant. Detta går tyvärr inte att undvika.
 
-** Standardinstallationen av XEmacs i åtminstone Debian/Gnu Linux
-   innehåller en fil som heter macedit.el. Denna fil bör tas bort
-   eftersom den kan orsaka problem för ett flertal Emacs-paket.
-   Elispklienten detekterar dock om den finns och undviker i så fall
-   att ladda den.
+** Vissa installationer av framförallt XEmacs innehåller en fil som
+   heter macedit.el (eller macedit.elc) som innehåller en felaktig
+   definition av en funktion som elispklienten använder. Problemen som
+   uppstår gör det omöjligt att kompilera och ladda elispklienten. Se
+   README för mer fullständig information om macedit.el.
 
 ** Förr hette många hookvariabler (oriktigt) "lyskom-..." i stället
    för "kom-...". De gamla namnen är tänkta att fungera i 0.47, men
@@ -209,6 +209,9 @@
 *** Tangenterna * och = i inläggsskrivarbufferten fungerar på samma
     sätt som i LysKOM-bufferten. TAB och M-TAB kan användas för att
     flytta markören mellan intressanta områden i bufferten.
+
+*** Shift TAB gör samma sak som M-TAB (men fungerar inte om man kör i
+    en tty).
 
 *** Klienten kan visa och skapa fler sorters tilläggsinformation än
     förr. Klienten hanterar tilläggsinformation som är satt på

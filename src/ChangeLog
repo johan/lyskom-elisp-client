@@ -1,7 +1,23 @@
+2002-07-30  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 675:
+	* startup.el (lyskom-setup-ssh-relay): Set LC_ALL before starting
+	ssh (and restore it afterwards).
+
+	Fix bug 620:
+	* english-strings.el, swedish-strings.el: Added bindings for
+	lyskom-help to lyskom-sv­who-prefix, lyskom-en-who-prefix and
+	lyskom-en-previous-prefix.
+
+	* commands2.el (kom-change-language): With prefix arg, set both
+	local and global language attributes (like the NEWS file says we
+	do).
+
 2002-07-30  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	cadr, caar and cdar are not portable to all Emacsen.
 	* vars.el.in (lyskom-button-actions): Don't use cadr.
+
 	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use caar or
 	cdar.
 
