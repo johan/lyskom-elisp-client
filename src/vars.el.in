@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.143 2001-08-21 22:03:50 qha Exp $
+;;;;; $Id: vars.el.in,v 44.144 2001-08-23 23:13:17 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.143 2001-08-21 22:03:50 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.144 2001-08-23 23:13:17 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1479,6 +1479,7 @@ Users are encouraged to use their best sense of humor."
                        [command kom-who-is-on]
                        [command kom-who-is-on-in-conference]
                        [command kom-who-is-present-in-conference]
+                       [command kom-who-is-on-and-friend]
                        [command kom-who-am-i]
                        [command kom-get-appreciation]
                        [command kom-get-abuse]
@@ -1579,6 +1580,7 @@ is a list of vectors, where each vector specifies an item.
     kom-view-next-text
     kom-who-is-on
     kom-who-is-on-in-conference
+    kom-who-is-on-and-friend
     kom-who-am-i
     ;;   kom-display-who-buffer
     kom-list-clients
