@@ -1,9 +1,16 @@
 2002-10-20  David Byers  <david.byers@swipnet.se>
 
+	* autoconf.el (extract-site-lisp-dir): Fixed regexp for site-lisp
+	directory.
+
 	* utilities.el (lyskom-check-configuration): New function to check
 	Emacs configuration on startup.
 
 	* startup.el (lyskom): Added call to lyskom-check-configuration.
+
+	Fix bug 832:
+	* async.el (lyskom-async-new-recipient): Check
+	kom-mark-texts-as-read-in-new-recipient.
 
 	* vars.el.in (kom-mark-read-texts-as-read-in-new-recipient): New
 	variable.
