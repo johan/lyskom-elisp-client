@@ -302,9 +302,8 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 	     (mark-as-read    (not is-review)))
 	(if is-review
 	    (delq text-no (read-info->text-list tri)))  ;First entry only
-	(lyskom-is-read (if mark-as-read
-			    text-no
-			  0))
+	(if mark-as-read
+	    (lyskom-is-read text-no))
 	(lyskom-view-text 'main text-no mark-as-read (and kom-read-depth-first
 							  (not is-review))
 			  (read-info->conf-stat
