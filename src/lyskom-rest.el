@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.10 1991-10-16 17:00:41 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 35.11 1991-10-23 18:03:53 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.10 1991-10-16 17:00:41 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.11 1991-10-23 18:03:53 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -947,7 +947,9 @@ lyskom-is-waiting nil.
 	(sit-for 0)))
 ;  (lyskom-scroll)
   (if kom-page-before-command		;Nice with dumb terminals.
-      (recenter 0)))
+      (if (or (not (listp kom-page-before-command))
+	      (memq function kom-page-before-command))
+	  (recenter 0))))
 
 
 (defun lyskom-end-of-command ()
