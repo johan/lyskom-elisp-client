@@ -1,3 +1,29 @@
+* Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
+  skall bli obsolete!
+
+* who-bufferten skall ha antalet inloggade i sin statusrad.
+
+* Kunna st{nga av who-bufferten (uppsnabbning).
+
+* N{r n}gon g|r "aB|rja med nytt namn" s} hamnar hans session sist i
+  who-bufferten hos alla andra som {r med i LysKOM.
+
+* VIKTIGT
+  N{r man kommenterar s} har f|rsta tangentnedtryckningen fel keymap.
+
+* Svensk text p}:
+   "[rende:" (i editbufferten)
+    ^
+   "--- Skriv texten nedanf|r denna rad ---" (i editbufferten)
+                           ^
+   "Ditt medlemsskap i olika KOM-möten:
+      Prio Mötesnr Mötesnamn"          (i prioritera-bufferten.)
+   Fler st{llen?
+
+* ]terse markerade g|r fel n{r man har }tersett det sista markerade.
+  Man f}r aldrig tillbaka prompten Se (tiden).  N{r det kommer ett
+  nytt inl{gg s} blir det r{tt igen.
+
 * ]terse senaste verkar missa ett inl{gg n{r vi g|r }terse fr}n b|rjan
   p} m|tet.
 
@@ -96,6 +122,7 @@ Linus: R{cker inte ceders uppdelning av anropen?
 * Kolla s} att man kan ha flera sessioner ig}ng alltid, dvs kolla att
   alla variabler {r bufferlokala (utom t ex
   kom-emacs-knows-iso-8859-1). 
+Inge: klart?
 
 * Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
 
@@ -118,14 +145,13 @@ Linus: R{cker inte ceders uppdelning av anropen?
   {ndringar som rationaliserade bort ett (initiate-get-text-stat 0)
   Jag tror det {r det som strular.
 
-
-
 * cookie-mode skall anv{ndas till:
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
     cookie-moden)
   - prioritera m|ten
   - editera flaggor. En helt ny och f|rb{ttrad options.el
   - ge privilegier (nytt kommando)
+
 
 ================================================================
 2. Saker som borde fixas inom en inte alltf|r avl{gsen framtid:
@@ -147,9 +173,6 @@ Inge: Linus p}st}r att det h{r beror p} en emacsbug.
 
 * G} igenom *.el och fixa alla st{llen d{r man kan f} ett nummer eller
   current text.  G|r en speciell funktion av det.
-
-* fullst{ndigt oberoende lyskom-sessioner i samma emacs. det finns nog
-  n}gra variabler som inte {r korrekt behandlade.
 
 * str{ngar f|r att tala om vilket tecken prompten slutar med.
 
@@ -183,16 +206,8 @@ linus: snyggare.
 * lyskom-pending-calls borde bli en lyskom-queue i st. f en vanlig
   lista. detta skulle vara effektivare.
 
-* underst|d f|r felrapportering i klartext. vi vill inte ha
-  felmeddelanden av typen "felkod 25".
-
 * flagga som anger om man vill ha de inl{gg som man sj{lv skriver
   inlagda i sin lyskombuffert.
-
-* ta bort saker ur cachearna n{r de inte beh|vs l{ngre (text-stat:ar och
-
-* b{ttre prefetch. prefetch av samtliga conf-stat:ar, eller }tminstone
-  deras nummer & namn.
 
 * ers{tta borttagning av cacheentries efter asynkrona meddelanden med
   n}gon form av modifiering av cache-entries.
