@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: feature.el,v 1.4 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: feature.el,v 1.5 2002-02-28 18:43:13 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: feature.el,v 1.4 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: feature.el,v 1.5 2002-02-28 18:43:13 joel Exp $\n"))
 
 (def-kom-var lyskom-feature-defaults nil
   "Alist with default values of all feature variables")
@@ -57,11 +57,11 @@
 
 (defmacro lyskom-have-feature (name)
   "Return non-nil if feature NAME is non-nil"
-  ,(lyskom-feature-variable name))
+  (lyskom-feature-variable name))
 
 (defmacro lyskom-feature-value (name)
   "Return the value of feature NAME"
-  ,(lyskom-feature-variable name))
+  (lyskom-feature-variable name))
 
 (defun lyskom-clear-features ()
   "Set the feature variables to their defaults"

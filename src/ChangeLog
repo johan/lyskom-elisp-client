@@ -1,3 +1,22 @@
+2002-02-28  Joel Rosdahl  <joel@lysator.liu.se>
+
+	Made it possible to run the client uncompiled.
+
+	* feature.el (lyskom-have-feature): Removed comma so that the
+	client can run uncompiled.
+	(lyskom-feature-value): Ditto.
+
+	* startup.el (lyskom-compilation-in-progress): New, horrid
+	function.
+	(lyskom-is-running-compiled): New constant.
+	(lyskom): Inform the user that it is a good idea to compile the
+	client, should it not be compiled.
+
+	* swedish-strings.el (lyskom-message): Added
+	warning-about-uncompiled-client string.
+
+	* english-strings.el (lyskom-message): Ditto.
+
 2002-02-26  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-message): Likewise.

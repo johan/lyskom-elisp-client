@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.60 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: startup.el,v 44.61 2002-02-28 18:43:13 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.60 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: startup.el,v 44.61 2002-02-28 18:43:13 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -50,6 +50,26 @@
 2: we have seen the connection string. After this, it may come lines stating
    proxy-agents and other things. They all seem to end with an empty line,
    so in this phase we wait for an empty line.")
+
+
+(eval-and-compile
+  (defun lyskom-compilation-in-progress ()
+    "Returns non-nil if the client currently is being compiled, else nil."
+
+    ;; This horrid code is inspired from how cl-compiling-file in the
+    ;; cl package works.
+    (let ((outbuffersym (lyskom-xemacs-or-gnu 'byte-compile-outbuffer
+                                              'outbuffer)))
+      (and (boundp outbuffersym)
+           (bufferp (symbol-value outbuffersym))
+           (equal (buffer-name (symbol-value outbuffersym))
+                  " *Compiler Output*")))))
+
+
+(defconst lyskom-is-running-compiled
+  (eval-when-compile (lyskom-compilation-in-progress))
+  "Non-nil if the client is running compiled, else nil.")
+
 
 ;;;###autoload
 (defun lyskom (&optional host username password session-priority invisiblep)
@@ -506,6 +526,9 @@ shown to other users."
 	    ;; Now we are logged in.
 	    (lyskom-insert-string 'are-logged-in)
 	    
+            (unless lyskom-is-running-compiled
+              (lyskom-insert-string 'warning-about-uncompiled-client))
+
 	    (if (not lyskom-dont-read-user-area)
 		(lyskom-read-options))
             (when (or session-priority kom-default-session-priority)
