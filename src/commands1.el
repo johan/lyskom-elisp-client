@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.91 2000-10-10 13:04:41 byers Exp $
+;;;;; $Id: commands1.el,v 44.92 2000-11-18 13:03:17 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.91 2000-10-10 13:04:41 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.92 2000-11-18 13:03:17 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1767,12 +1767,13 @@ converted so that the search is case insensitive."
 		    '(all) nil nil t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
-      (if (string-match "^\\([^(]*\\)(\\(.*\\))$" (conf-stat->name conf-stat))
-	  (let* ((non-paren (match-string 1 (conf-stat->name conf-stat)))
+      (if (string-match "^\\(.*\\)(\\(.*\\))\\(.*\\)$" (conf-stat->name conf-stat))
+	  (let* ((pre-paren (match-string 1 (conf-stat->name conf-stat)))
+                 (post-paren (match-string 3 (conf-stat->name conf-stat)))
 		 (old-paren (match-string 2 (conf-stat->name conf-stat)))
 		 (paren (lyskom-read-string (lyskom-get-string 'new-paren)
 					    old-paren))
-		 (name (concat non-paren "(" paren ")")))
+		 (name (concat pre-paren "(" paren ")" post-paren)))
 	    (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
                 (progn
                   (lyskom-format-insert 'change-name-done name
