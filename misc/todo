@@ -1,3 +1,6 @@
+* N{r man skickat in en text s} borde den v{nta tills det {r klart
+  innan den accepterar andra kommandon.
+
 * read-list-enter-read-info skall vara iterativ, inte rekursiv.
 
 * Lappar p} d|rrar f|r m|ten.
