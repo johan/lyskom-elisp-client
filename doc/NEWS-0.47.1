@@ -8,10 +8,10 @@
       <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>
       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
-    Filen heter lyskom-0.47.tar.gz, och en kopia av den text du läser
-    just nu finns under namnet NEWS-0.47.1 i tar-arkivet. Det finns
-    även en zip-fil för folk som sitter med system som inte förstår
-    tar-filer.
+    Filen heter lyskom-0.47.1.tar.gz, och en kopia av den text du
+    läser just nu finns under namnet NEWS-0.47.1 i tar-arkivet. Det
+    finns även en zip-fil för folk som sitter med system som inte
+    förstår tar-filer.
 
     Det finns viktig information i NEWS-0.47 som också ingår i
     tar-arkivet och zip-filen.
@@ -24,6 +24,10 @@
 
 
 * Features och förbättringar
+
+** Om servern har en lapp på dörren så visas den tydligare än
+   tidigare. Klientens defaultinställningar används vid visningen
+   eftersom den görs före inloggning (bug 522).
 
 ** När man skickar in inlägg anonymt och ens brevlåda är mottagare
    till inlägget så får man en fråga om man vill ta bort sin brevlåda
@@ -39,13 +43,22 @@
 ** Status (för) person och Status (för) möte visar passiva medlemskap
    i en blekare färg än aktiva medlemskap.
 
-** Man får en meny när man trycker "*" på tilläggsinformation
-   medan man skriver inlägg. (bug 750).
-
+** Man får en meny när man trycker "*" på tilläggsinformation medan
+   man skriver inlägg. (bug 750).
 
 ** Bättre användargränssnitt för Lista (med) regexpar (bug 752).
 
+
+
 * Bugfixar
+
+** Kommandot "Sätt loginmeddelande" är mer stabilt och väljer nu en
+   mottagare automatiskt (bug 762).
+
+** Extra-kopiemottagare och dolda kopior fungerar i edit-bufferten
+   även med engelska texter (bug 763).
+
+** Kommandot "Se diff" fungerar i XEmacs (bug 757).
 
 ** Man kan ge kommandon som arbetar på inlägg innan man har läst något
    utan att det kommer upp ett felmeddelande (bug 733).
