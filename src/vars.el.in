@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.274 2003-08-28 20:58:22 byers Exp $
+;;;;; $Id: vars.el.in,v 44.275 2003-08-28 21:54:00 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.274 2003-08-28 20:58:22 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.275 2003-08-28 21:54:00 qha Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2521,7 +2521,7 @@ Values other than those listed are reserved for future use.")
 (def-kom-var kom-server-aliases nil
   "**An alist mapping server names to shorter identification strings.
 
-Each value in this string should be of the form `(NICKNAME . SERVER)',
+Each value in this string should be of the form `(SERVER . NICKNAME)',
 where `NICKNAME' is the short name for the server `SERVER'. You can
 set this in init files before loading LysKOM.
 
@@ -2544,7 +2544,7 @@ Values other than those described are reserved for future use.")
     ("kom.sno.pp.se" . "SnoppKOM"))
   "**An alist mapping server names to shorter identification strings.
 
-Each value in this string should be of the form `(NICKNAME . SERVER)',
+Each value in this string should be of the form `(SERVER . NICKNAME)',
 where `NICKNAME' is the short name for the server `SERVER'. Avoid
 setting this variable since that will override the list compiled into
 the client. Use `kom-server-aliases' instead.
