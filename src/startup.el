@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.3 1991-09-15 16:59:10 linus Exp $
+;;;;; $Id: startup.el,v 35.4 1991-10-05 18:15:32 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.3 1991-09-15 16:59:10 linus Exp $\n"))
+	      "$Id: startup.el,v 35.4 1991-10-05 18:15:32 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -411,7 +411,7 @@ Commands:
 \\[kom-who-is-on]	gives you a list of all the users of lyskom right now.
 
 \\[kom-extended-command]	reads a command using the minibuffer and executes it.
-This is another way to give commands.
+	This is another way to give commands.
 
 \\[kom-write-text]	asks for subject and start editing of a new text.
 \\[kom-write-comment]	starts editing of a comment to the last read article.
