@@ -4,10 +4,11 @@ Att göra i elisp-klienten
 =========================
 
 Fixa aux-item-data och format-objects så att strängen kodas som
-raw-text. Hur hanteras då åäö i den?
+raw-text. Hur hanteras då åäö i den? KLART.
 
 Kolla alla användningar av length och substring för att se var man
 borde använda string-width och truncate-string-to-width istället.
+substring klart.
 
 Kolla alla aset och aref så att de inte använder tecken som nyckel
 utan omkodning till iso-8859-1 först.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.19 1999-11-19 13:37:26 byers Exp $
+;;;;; $Id: command.el,v 44.20 1999-11-21 15:39:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.19 1999-11-19 13:37:26 byers Exp $\n"))
+	      "$Id: command.el,v 44.20 1999-11-21 15:39:47 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -327,7 +327,7 @@ chosen according to this"
        (discard-input))
    ;; lyskom-pending-commands should probably be a queue or a stack.
    (when lyskom-pending-commands
-     (let ((command (car lyskom-pending-commands)))
+      (let ((command (car lyskom-pending-commands)))
        (setq lyskom-pending-commands (cdr lyskom-pending-commands))
        (if (symbolp command)
            (call-interactively command)

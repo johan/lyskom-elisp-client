@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.55 1999-11-19 13:37:33 byers Exp $
+;;;;; $Id: commands2.el,v 44.56 1999-11-21 15:39:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.55 1999-11-19 13:37:33 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.56 1999-11-21 15:39:49 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -195,7 +195,7 @@ otherwise: the conference is read with lyskom-completing-read."
                                 creator
                                 (if (and 
                                      (lyskom-conf-stat-p creator)
-                                     (> (length (conf-stat->name creator))
+                                     (> (lyskom-string-width (conf-stat->name creator))
                                         (- (lyskom-window-width) 46)))
                                     "\n"
                                   "")))
@@ -234,7 +234,7 @@ otherwise: the conference is read with lyskom-completing-read."
                                 superconf
                                 (if (and 
                                      (lyskom-conf-stat-p superconf)
-                                     (> (length (conf-stat->name superconf))
+                                     (> (lyskom-string-width (conf-stat->name superconf))
                                         (- (lyskom-window-width) 46)))
                                     "\n"
                                   "")))

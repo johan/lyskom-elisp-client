@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.23 1999-11-19 13:37:39 byers Exp $
+;;;;; $Id: completing-read.el,v 44.24 1999-11-21 15:39:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.23 1999-11-19 13:37:39 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.24 1999-11-21 15:39:50 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -922,7 +922,7 @@ the LysKOM rules of string matching."
   (lyskom-insert "\n")
   (let* ((s-width (1+ (apply 'max (mapcar (function
 					   (lambda (x)
-					     (length (int-to-string x))))
+					     (string-width (int-to-string x))))
 					  sessions))))
 	 (format-string-s (lyskom-info-line-format-string s-width "s" "s"))
 	 (format-string-p (lyskom-info-line-format-string s-width "P" "M")))

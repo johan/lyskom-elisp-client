@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.31 1999-11-19 13:38:28 byers Exp $
+;;;;; $Id: option-edit.el,v 44.32 1999-11-21 15:39:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.31 1999-11-19 13:38:28 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.32 1999-11-21 15:39:57 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1127,8 +1127,8 @@ customize buffer but do not save them to the server."
     (if (null size)
         (insert string)
       (insert string)
-      (if (< (length value) size)
-          (insert-char ?\  (- size (length value)))))
+      (if (< (lyskom-string-width value) size)
+          (insert-char ?\  (- size (lyskom-string-width value)))))
 
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
@@ -1195,8 +1195,8 @@ customize buffer but do not save them to the server."
     (if (null size)
         (insert string)
       (insert string)
-      (if (< (length value) size)
-          (insert-char ?\  (- size (length value)))))
+      (if (< (lyskom-string-width value) size)
+          (insert-char ?\  (- size (lyskom-string-width value)))))
 
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
@@ -1322,8 +1322,8 @@ customize buffer but do not save them to the server."
     (if (null size)
         (insert string)
       (insert string)
-      (if (< (length string) size)
-          (insert-char ?\  (- size (length string)))))
+      (if (< (lyskom-string-width string) size)
+          (insert-char ?\  (- size (lyskom-string-width string)))))
 
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
