@@ -1,3 +1,64 @@
+1999-08-25  David Byers  <davby@ida.liu.se>
+
+	* reading.el (lyskom-sort-to-do-list): New function.
+	(lyskom-read-info-<): New function.
+
+	* lyskom-rest.el (lyskom-set-mode-line): Compute total-unread even 
+	if we are not in any conference.
+
+	* commands2.el (lyskom-next-kom): Removed references to
+	lyskom-buffer-list. 
+
+1999-08-24  David Byers  <davby@ida.liu.se>
+
+	* reading.el (lyskom-update-membership-positions): New function.
+
+	* utilities.el (lyskom-move-in-list): New function.
+
+	* reading.el (lyskom-sort-membership): Set the position of
+	elements in the list and sort the to-do-list after sorting the
+	membership list.
+
+	* lyskom-rest.el (lyskom-leave-current-conf): New function.
+
+	* commands1.el (lyskom-sub-member): Use lyskom-leave-current-conf.
+
+	* async.el (lyskom-async-forced-leave-conf): Use
+	lyskom-leave-current-conf.
+	(lyskom-async-new-membership): Same here.
+
+1999-08-23  David Byers  <davby@ida.liu.se>
+
+	* slow.el (kom-expand-slow-command): Test for exact matches if
+	optional TRY-EXACT is non-nil.
+
+	* lyskom-rest.el (lyskom-format-aux): Typo fix.
+
+	* language.el (lyskom-tell-string): Return the empty string if the 
+	key we're looking for is not in kom-tell-phrases.
+
+1999-08-22  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--create-buffer): Sort the membership list
+	before creating the buffer.
+	(lp--toggle-entry-expansion): New function.
+
+	* reading.el (lyskom-insert-membership): Use
+	lyskom-sort-membership.
+	(lyskom-sort-membership): New function.
+	(lyskom-insert-memberships-in-membership): Use it.
+
+	* mship-edit.el (lp--previous-entry): New function.
+	(lp--next-entry): New function.
+	(lp--first-entry): New function.
+	(lp--last-entry): New function.
+	(lp--goto-priority): New function.
+	(lp--update-membership): New function.
+	(lp--set-priority): Made this function work.
+
+	* commands2.el (kom-set-unread): Fixed bug when not in any
+	conference.
+
 Mon Aug 23 13:03:27 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Released 0.46-BETA-6
