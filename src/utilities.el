@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.149 2003-12-07 16:38:51 byers Exp $
+;;;;; $Id: utilities.el,v 44.150 2003-12-17 22:34:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.149 2003-12-07 16:38:51 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.150 2003-12-17 22:34:16 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2200,6 +2200,17 @@ It ignores leading spaces and tabs."
                             ))
                  '(lyskom-no-privileges))
              sep))
+
+(defvar lyskom-gensym-index 0
+  "Index to use in lyskom-gensym")
+
+(defun lyskom-gensym ()
+  "Generate a unique symbol"
+  (let ((name "t"))
+    (while (intern-soft name)
+      (setq lyskom-gensym-index (1+ lyskom-gensym-index))
+      (setq name (format "lyskom-gensym: %d" lyskom-gensym-index)))
+    (intern name)))
 
 
 (put 'lyskom-with-magic-minibuffer 'edebug-form-spec '(body))
