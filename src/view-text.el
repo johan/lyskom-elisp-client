@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.25 1999-10-09 16:45:15 byers Exp $
+;;;;; $Id: view-text.el,v 44.26 1999-10-11 13:01:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.25 1999-10-09 16:45:15 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.26 1999-10-11 13:01:24 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -162,7 +162,7 @@ Note that this function must not be called asynchronously."
 
                    ;; Insert sender
 
-                   (when mx-sender
+                   (when (and mx-sender kom-show-imported-envelope-sender)
                      (lyskom-format-insert 'envelope-sender 
                                            (aux-item->data (car mx-sender))))
                    (when mx-filename
@@ -171,7 +171,9 @@ Note that this function must not be called asynchronously."
 
                    ;; Insert imported at
 
-                   (cond ((and mx-from (text-stat->author text-stat))
+                   (cond ((and mx-from 
+                               (text-stat->author text-stat)
+                               kom-show-imported-importer)
                           (lyskom-format-insert 'text-imported-at-by
                                                 (lyskom-return-date-and-time (text-stat->creation-time
                                                                               text-stat)
@@ -186,21 +188,23 @@ Note that this function must not be called asynchronously."
                                                         (lyskom-return-date-and-time (text-stat->creation-time
                                                                                       text-stat)
                                                                                      'time-y-m-d-h-m))))
-                   (mapcar (lambda (el)
-                             (lyskom-format-insert "%#1s: %#2s\n"
-                                                   (lyskom-get-string 'mx-Recipient)
-                                                   (aux-item->data el)))
-                           mx-to)
-                   (mapcar (lambda (el)
-                             (lyskom-format-insert "%#1s: %#2s\n"
-                                                   (lyskom-get-string 'mx-Extra-recipient)
-                                                   (aux-item->data el)))
-                           mx-cc)
-                   (mapcar (lambda (el)
-                             (lyskom-format-insert "%#1s: %#2s\n"
-                                                   (lyskom-get-string 'mx-Extern-reply-to)
-                                                   (aux-item->data el)))
-                           mx-reply-to)
+                   (when kom-show-imported-external-recipients
+                     (mapcar (lambda (el)
+                               (lyskom-format-insert "%#1s: %#2s\n"
+                                                     (lyskom-get-string 'mx-Recipient)
+                                                     (aux-item->data el)))
+                             mx-to)
+                     (mapcar (lambda (el)
+                               (lyskom-format-insert "%#1s: %#2s\n"
+                                                     (lyskom-get-string 'mx-Extra-recipient)
+                                                     (aux-item->data el)))
+                             mx-cc)
+                     (mapcar (lambda (el)
+                               (lyskom-format-insert "%#1s: %#2s\n"
+                                                     (lyskom-get-string 'mx-Extern-reply-to)
+                                                     (aux-item->data el)))
+                             mx-reply-to)
+                     )
 
 		   
 		   (setq end (point-max))
@@ -572,7 +576,10 @@ blocking-do."
          (format-letter nil)
          (field-width nil)
          (kom-deferred-printing nil)
+         (author-name-len nil)
          (have-author (and format (string-match "%=?[0-9]*P" format))))
+
+    (setq author-name-len (length (or author-name (conf-stat->name author))))
 
     ;; No user-specified format, so output dashes and stuff
 
@@ -607,7 +614,7 @@ blocking-do."
                    (length (int-to-string (text-stat->text-no text))) 
                    3                             ; Parens and space
                    (if kom-show-author-at-end
-                       (+ (length author-name) 2) 
+                       (+ author-name-len 2) 
                      0)
                    (length format-flag-string)))
                (end-dash (if (> end-dash-chars 0)
@@ -669,8 +676,8 @@ blocking-do."
                    (lyskom-format 
                     "%#1s"
                     (if have-author
-                        (if (< (length author-name) width)
-                            (make-string (- width (length author-name)) ?-)
+                        (if (< author-name-len width)
+                            (make-string (- width author-name-len) ?-)
                           "")
                       (make-string width ?-)))))
 
@@ -689,13 +696,12 @@ blocking-do."
   "Insert the name of a conference at a previously reserved place."
   (let* ((text-stat (elt (defer-info->data defer-info) 0))
          (format-flags (elt (defer-info->data defer-info) 1))
-         (name (cond (conf-stat nil)
-                     ((= (defer-info->call-par defer-info) 0)
-                      (lyskom-get-string 'person-is-anonymous))
-                     (t (lyskom-format 'person-does-not-exist
-                                       (defer-info->call-par defer-info)))))
          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16))))
+         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
+         (name (cond (conf-stat nil)
+                      ((= (defer-info->call-par defer-info) 0)
+                       (lyskom-get-string 'person-is-anonymous))
+                      (t (lyskom-format 'person-does-not-exist)))))
 
     (setq name (or (lyskom-format-mx-author mx-from mx-author) name))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.22 1999-06-29 10:20:23 byers Exp $
+;;;;; $Id: option-edit.el,v 44.23 1999-10-11 13:01:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.22 1999-06-29 10:20:23 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.23 1999-10-11 13:01:18 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -63,6 +63,7 @@
     "\n"
     [kom-default-language]
     [kom-show-namedays]
+    [kom-show-week-number]
     "\n"
     [kom-idle-hide]
     [kom-show-where-and-what]
@@ -74,6 +75,7 @@
     [kom-presence-messages-in-buffer]
     "\n"
     [kom-page-before-command]
+    [kom-agree-text]
     "\n\n"
     section
     (window-locations bold centered)
@@ -105,31 +107,51 @@
     [kom-ding-on-priority-break]
     [kom-ding-on-new-letter]
     [kom-ding-on-wait-done]
+    [kom-ding-on-no-subject]
     [kom-ding-on-common-messages]
     [kom-ding-on-group-messages]
     [kom-ding-on-personal-messages]
-    [kom-ding-on-no-subject]
-
+    [kom-silent-ansaphone]
     "\n\n"
     section
     (reading bold centered)
     section
     "\n"
+    [kom-default-session-priority]
+    [kom-print-number-of-unread-on-entrance]
+    [kom-allow-incompleteness]
     [kom-created-texts-are-read]
     [kom-higher-priority-breaks]
+    [kom-review-priority]
     [kom-show-footnotes-immediately]
     [kom-follow-comments-outside-membership]
     "\n"
     [kom-default-mark]
     [kom-membership-default-priority]
+    [kom-membership-default-placement]
+    [kom-unsubscribe-makes-passive]
+    [kom-postpone-default]
     "\n"
-    [kom-print-number-of-unread-on-entrance]
     [kom-autowrap]
-    [kom-dashed-lines]
     [kom-show-author-at-end]
+    [kom-show-creating-software]
+    [kom-show-imported-importer]
+    [kom-show-imported-external-recipients]
+    [kom-show-imported-envelope-sender]
+    [kom-smileys]
+    "\n"
+    [kom-dashed-lines]
+    [kom-long-lines]
+    [kom-text-footer-format]
+    [kom-text-header-dash-length]
+    [kom-text-footer-dash-length]
     "\n"
     [kom-truncate-threshold]
     [kom-truncate-show-lines]
+    "\n"
+    [kom-ignore-message-senders]
+    [kom-ignore-message-recipients]
+    [kom-show-personal-message-date]
     "\n\n"
     section
     (writing bold centered)
@@ -535,6 +557,46 @@ customize buffer but do not save them to the server."
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
     (kom-show-namedays (toggle (on off)))
+
+    (kom-show-week-number (toggle (on off)))
+    (kom-membership-default-placement (choice ((const (last last))
+                                               (const (first first))
+                                               (number nil
+                                                       :tag specific-placement
+                                                       ))))
+    (kom-show-imported-importer (toggle (on off)))
+    (kom-show-imported-envelope-sender (toggle (on off)))
+    (kom-show-imported-external-recipients (toggle (on off)))
+    (kom-agree-text (choice ((string nil :tag a-string)
+                             (repeat (string nil
+                                             :tag a-string
+                                             :format "%[%t%] `%v'\n")
+                                     :indent 4
+                                     :tag some-string
+                                     :menu-tag some-string))))
+    (kom-silent-ansaphone (noggle (on off)))
+    (kom-default-session-priority (choice ((const (unspecified nil))
+                                           (number nil
+                                                   :tag priority))))
+    (kom-unsubscribe-makes-passive (toggle (on off)))
+    (kom-review-priority (choice ((const (same-as-conf nil))
+                                  (number nil :tag fixed-priority))))
+    (kom-show-creating-software (toggle (on off)))
+    (kom-text-footer-format (choice ((const (default-format nil))
+                                     (string nil :tag custom-format))))
+    (kom-long-lines (toggle (on off)))
+    (kom-postpone-default (number))
+    (kom-allow-incompleteness (toggle (on off)))
+    (kom-smileys (toggle (on off)))
+    (kom-ignore-message-senders (repeat (person nil :tag name)
+                                    :indent 4))
+    (kom-ignore-message-recipients (repeat (person nil 
+                                                   :tag name
+                                                   :lyskom-predicate (pers conf))
+                                    :indent 4))
+    (kom-text-header-dash-length (number))
+    (kom-text-footer-dash-length (number))
+    (kom-show-personal-message-date (toggle (on off)))
 ))
 
 (defvar lyskom-widget-functions 

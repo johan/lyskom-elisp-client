@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.80 1999-10-09 16:54:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.81 1999-10-11 13:01:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.80 1999-10-09 16:54:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.81 1999-10-11 13:01:22 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1030,6 +1030,18 @@ Also see the function \"lyskom-add-button-action\"."
 
 (put 'lyskom-button-actions 'lyskom-language-force t)
 
+(def-kom-var kom-show-imported-envelope-sender t
+  "*If non-nil, show the envelope sender of texts imported by komimportmail."
+  server)
+
+(def-kom-var kom-show-imported-importer t
+  "*If non-nil, show the name of the importer of an imported text."
+  server)
+
+(def-kom-var kom-show-imported-external-recipients t
+  "*If non-nil, show the external recipients to an imported text."
+  server)
+
 (def-kom-var kom-mercial nil
   "*When the user has seen all texts and has reached the view-time prompt,
 this string is used as the argument to lyskom-tell-server.
@@ -1127,6 +1139,7 @@ Users are encouraged to use their best sense of humor."
     kom-set-permitted-submitters
     kom-unset-conf-motd
     kom-save-text
+    kom-save-text-body
     kom-edit-options
     kom-save-options
     kom-shutdown-server
