@@ -1,5 +1,7 @@
 2000-09-14  David Byers  <davby@sen2.ida.liu.se>
 
+	* Release av 0.46.1-BETA-2
+
 	* english-strings.el: We tried to bind things in the *swedish*
 	keymaps. Bad idea. Fixed.
 
