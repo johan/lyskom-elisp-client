@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.1 1996-10-06 05:18:15 davidk Exp $
+;;;;; $Id: filter-edit.el,v 44.2 1996-10-11 11:16:04 nisse Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.1 1996-10-06 05:18:15 davidk Exp $\n"))
+	      "$Id: filter-edit.el,v 44.2 1996-10-11 11:16:04 nisse Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -279,10 +279,7 @@ If NEG is non-nil, format the negation."
 	       (if (stringp (cdr (car pat)))
 		   "    %s %s \"%s\""
 		 "    %s %s %s"))
-	     (cdr (assoc (car (car pat)) 
-			 (if kom-emacs-knows-iso-8859-1
-			     lyskom-filter-what
-			   lyskom-swascii-filter-what)))
+	     (cdr (assoc (car (car pat)) lyskom-filter-what))
 	     (if neg
 		 " != "
 	       " = ")
@@ -307,10 +304,7 @@ If NEWLINE is non-nil, insert a newline after the header."
     (insert 
      (format "--- %s %s"
 	     (cdr 
-	      (assq action 
-		    (if kom-emacs-knows-iso-8859-1
-			lyskom-filter-actions
-		      lyskom-swascii-filter-actions)))
+	      (assq action lyskom-filter-actions		    ))
 	     (lyskom-get-string
 	      (if permanent 'permanent 'temporary))))
     (if newline (insert "\n"))))
@@ -478,9 +472,7 @@ If NEWLINE is non-nil, insert a newline after the header."
   (let ((buffer-read-only nil)
         (completion-ignore-case t)
         (rev-actions 
-         (lyskom-reverse-pairs (if kom-emacs-knows-iso-8859-1
-                                   lyskom-filter-actions
-                                 lyskom-swascii-filter-actions)))
+         (lyskom-reverse-pairs lyskom-filter-actions))
         action permanent filter start end entry)
     (if filter-edit-currently-edited-filter-entry-list
         (progn
@@ -528,9 +520,7 @@ If NEWLINE is non-nil, insert a newline after the header."
         (pat nil)
         (buffer-read-only nil)
         (completion-ignore-case t)
-        (rev-what (lyskom-reverse-pairs (if kom-emacs-knows-iso-8859-1
-                                            lyskom-filter-what
-                                          lyskom-swascii-filter-what))))
+        (rev-what (lyskom-reverse-pairs lyskom-filter-what)))
     (setq what (completing-read
                 (lyskom-get-string 'filter-edit-filter-what)
                 rev-what
@@ -839,9 +829,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
     (if (= -1 entry-no)
         (lyskom-error (lyskom-get-string 'filter-edit-outside-entry)))
     (let* ((entry (elt filter-edit-currently-edited-filter-entry-list entry-no))
-           (action-list (if kom-emacs-knows-iso-8859-1
-                            lyskom-filter-actions
-                          lyskom-swascii-filter-actions))
+           (action-list lyskom-filter-actions)
            (action (car
                     (cdr (memq 
                           (assq
