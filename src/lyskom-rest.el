@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.18 1992-01-24 23:11:33 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.19 1992-01-27 17:44:34 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.18 1992-01-24 23:11:33 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.19 1992-01-27 17:44:34 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -667,7 +667,8 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
   (cond
    ((and lyskom-executing-command
 	 (not lyskom-is-waiting))
-    (or lyskom-to-be-printed-before-prompt
+    ;; Don't insert the string until the current command is finished.
+    (if (null lyskom-to-be-printed-before-prompt)
 	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
     (lyskom-queue-enter lyskom-to-be-printed-before-prompt string))
    (t
