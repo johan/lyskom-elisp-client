@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.40 1998-02-22 11:06:14 nisse Exp $
+;;;;; $Id: swedish-strings.el,v 44.41 1998-05-06 18:05:28 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.40 1998-02-22 11:06:14 nisse Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.41 1998-05-06 18:05:28 petli Exp $\n"))
 
 
 ;;; ================================================================
@@ -430,6 +430,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (no-unread-lyskom-r . "Hittar ingen aktiv LysKOM-session med olästa.\n")
     (no-unread-lyskom . "Hittar ingen aktiv LysKOM-session med olästa.")
 
+    (who-is-on-in-what-conference . "Vilka i vilket möte: ")
+    (who-is-active-and-member . "Visar endast medlemmar i %#1M.\n")
+    
     ;; From commands2.el:
 
     (your-memberships . "Ditt medlemskap i olika KOM-möten:\n")
@@ -1220,6 +1223,8 @@ Innehåll:    \"%#9s\"
     (kom-review-backward      . "(Återse) Baklänges")
     (kom-view-next-text	      . "Läsa nästa inlägg")
     (kom-who-is-on	      . "Vilka är inloggade") 
+    (kom-who-is-on-in-conference
+     			      . "Vilka (är inloggade) i möte") 
     (kom-who-am-i             . "Var (är) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")
@@ -1604,6 +1609,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map "l{" 'kom-list-summary)
   (define-key lyskom-sv-mode-map "l[" 'kom-list-summary)
   (define-key lyskom-sv-mode-map "lf" 'kom-list-filters)
+  (define-key lyskom-sv-mode-map "lv" 'kom-who-is-on-in-conference)
   (define-key lyskom-sv-mode-map "m"  'kom-add-self)
   (define-key lyskom-sv-mode-map "M"  'kom-mark-text)
   (define-key lyskom-sv-mode-map "A"  'kom-unmark-text)
@@ -1947,7 +1953,8 @@ i servern. Annars sparas det i din .emacs.")
     (audio-cues .         "Ljudsignaler\n")
     (audio-cues-when    . "Ge ljudsignal:\n")
     (automatic-replies .  "Automatiskt svar\n")
-
+    (mail-import .        "Emailimport\n")
+    
     (audio-cues-doc . "\
   Efterföljande inställningar bestämmer vilken ljudsignal LysKOM skall ge 
   i olika situationer. Följande alternativ går att välja:
@@ -2446,6 +2453,17 @@ i servern. Annars sparas det i din .emacs.")
   av elispklienten, men det var visst någon som ville ha det, så ...")
 
 
+    (kom-mail-address-doc . "\
+  Värde för From:-headern i skickade email.")
+    
+    (kom-mail-importer-persons-doc . "\
+  Personer som i själva verket är emailimportörer.  Inlägg av dessa
+  personer kommer att formatteras som emailtexter istället för som
+  vanliga inlägg.")
+
+    (kom-mail-visible-headers-doc . "\
+  Visa dessa headers i emailtexter.")
+				  
     ;;
     ;; Tags for variables
     ;;
@@ -2554,6 +2572,10 @@ i servern. Annars sparas det i din .emacs.")
     (kom-default-language-tag . "Språk:           ")
     (kom-show-namedays-tag .        "Visa dagens namn:")
     (kom-ispell-dictionary-tag . "Ordlista:")
+
+    (kom-mail-address-tag .          "Emailadress:       ")
+    (kom-mail-importer-persons-tag . "Mailimportörer:    ")
+    (kom-mail-visible-headers-tag .  "Visa dessa headers:")
     )
 )
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.36 1998-02-11 14:41:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.37 1998-05-06 18:05:25 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.36 1998-02-11 14:41:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.37 1998-05-06 18:05:25 petli Exp $"))
 
 
 ;;; ================================================================
@@ -431,6 +431,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (no-unread-lyskom-r . "There is no active LysKOM session with unread texts.\n")
     (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
 
+    (who-is-on-in-what-conference . "Who in which conference: ")
+    (who-is-active-and-member . "Only members in %#1M are shown.\n")
 
     ; From commands2.el:
 
@@ -1204,6 +1206,8 @@ Contents:     \"%#9s\"
     (kom-review-backward      . "(Review) Backwards")
     (kom-view-next-text       . "(Read) next article")
     (kom-who-is-on            . "Who is on") 
+    (kom-who-is-on-in-conference
+                              . "Who (is on) in conference") 
     (kom-who-am-i             . "Where (am) i")
 ;    (kom-display-who-buffer   .  "Display who (list)")
     (kom-list-clients	      . "List clients")
@@ -1554,6 +1558,7 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-mode-map "ls" 'kom-membership)
   (define-key lyskom-en-mode-map "la" 'kom-list-summary)
   (define-key lyskom-en-mode-map "lf" 'kom-list-filters)
+  (define-key lyskom-en-mode-map "lw" 'kom-who-is-on-in-conference)
   (define-key lyskom-en-mode-map "S"  'kom-add-self)
   (define-key lyskom-en-mode-map "M"  'kom-mark-text)
   (define-key lyskom-en-mode-map "U"  'kom-unmark-text)
