@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.48 2003-03-13 21:11:52 byers Exp $
+;;;;; $Id: review.el,v 44.49 2003-03-15 23:00:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.48 2003-03-13 21:11:52 byers Exp $\n"))
+	      "$Id: review.el,v 44.49 2003-03-15 23:00:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -65,6 +65,19 @@
 (defvar lyskom-last-review-saved-smallest nil)
 (defvar lyskom-last-review-saved-largest nil)
 (defvar lyskom-have-review nil)
+
+(defvar lyskom-last-unread-by nil)
+(defvar lyskom-last-unread-to nil)
+(defvar lyskom-last-unread-num nil)
+(defvar lyskom-last-unread-pmark nil)
+(defvar lyskom-last-unread-cmark nil)
+(defvar lyskom-last-unread-saved-result-list nil)
+(defvar lyskom-last-unread-saved-by-list nil)
+(defvar lyskom-last-unread-saved-to-list nil)
+(defvar lyskom-last-unread-saved-result-size 0)
+(defvar lyskom-last-unread-saved-smallest nil)
+(defvar lyskom-last-unread-saved-largest nil)
+(defvar lyskom-have-unread nil)
 
 
 (defun lyskom-remove-zeroes (a)
@@ -161,6 +174,55 @@ all review-related functions."
                   (lyskom-review-get-priority)
                   (lyskom-create-text-list list)
                   nil t) t)
+              (lyskom-insert-string 'no-such-text)))
+        (lyskom-review-error (if arg
+                                 nil
+                               (lyskom-insert-string 'no-such-text)))))))
+
+(def-kom-command kom-unread-more (count)
+  "Mark more articles unread using the same critera as the last 
+mark unread performed with `kom-unread-by-to'."
+  (interactive "P")
+  (if (not lyskom-have-unread)
+      (lyskom-format-insert 'no-unread-done)
+    (let* ((count (or count
+		      (lyskom-read-number
+		       (lyskom-get-string 'unread-how-many-more)
+		       (abs lyskom-last-unread-num))))
+           (info (progn (if (and (listp count)
+                                 (integerp (car count))
+                                 (null (cdr count)))
+                            (setq count (car count)))
+                        (cond ((zerop count) 
+                               (setq count nil)
+                               (lyskom-get-string 'unread-rest))
+                              ((> count 0)
+                               (lyskom-format (lyskom-get-string 'unread-more)
+                                              count)))))
+           (by lyskom-last-unread-by)
+           (to lyskom-last-unread-to))
+
+      (lyskom-format-insert 'unread-more-info-by-to
+                            info
+                            (if (zerop by)
+                                (lyskom-get-string 'anybody)
+                              by)
+                            (if (zerop to)
+                                (lyskom-get-string 'all-confs)
+                              to))
+    
+      (condition-case arg
+          (let ((list (lyskom-get-texts-by-to by to count t)))
+            (setq lyskom-last-unread-num 
+                  (if (< lyskom-last-unread-num 0)
+                      (- count)
+                    count))
+            (if list
+              (lyskom-traverse text-no list
+                (unless (lyskom-mark-unread text-no)
+                  (lyskom-format-insert 'cant-mark-text-unread
+                                        text-no
+                                        (lyskom-get-error-text lyskom-errno))))
               (lyskom-insert-string 'no-such-text)))
         (lyskom-review-error (if arg
                                  nil
@@ -278,6 +340,97 @@ all review-related functions."
       (lyskom-review-error (if arg
                                nil 
                              (lyskom-insert-string 'no-such-text))))))
+
+
+(def-kom-command kom-unread-by-to (&optional count)
+  "Mark the last N articles written by a particular author to some
+conference as unread. With no author specified, review texts by all 
+authors. With zero texts specified, review all text. With no conference
+specified, review texts to all conferences. With a negative number of
+texts, review the last N texts instead of the first (you can use
+`kom-unread-first' instead."
+  (interactive "P")
+  (lyskom-unread-by-to (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'unread-how-many) 1))))
+  
+
+(defun lyskom-unread-by-to (count)
+  "Common function for kom-review-by-to and kom-review-first"
+  (let* ((info (progn (if (and (listp count)
+                               (integerp (car count))
+                               (null (cdr count)))
+                          (setq count (car count)))
+                      (cond ((zerop count) 
+                             (setq count nil)
+                             (lyskom-get-string 'everything))
+                            ((> count 0)
+                             (lyskom-format 'latest-n count))
+                            ((< count 0)
+                             (lyskom-format 'first-n
+                                            (- count))))))
+         (by (lyskom-read-conf-no 
+              (lyskom-format 'unread-info (lyskom-format 'info-by-whom info))
+              '(pers) t nil t))
+         (to (lyskom-read-conf-no 
+              (lyskom-format 'unread-info
+                             (lyskom-format 'info-to-conf info))
+              '(all) 
+              t
+              ;; If person is not given we must give
+              ;; conf  -- Not anymore!
+              ;; (not (zerop by))
+              (if (or (null lyskom-current-conf)
+                      (zerop lyskom-current-conf))
+                  ""
+                (cons (conf-stat->name
+                         (blocking-do 'get-conf-stat
+                                      lyskom-current-conf)) 0))
+              t)))
+
+    (if (not (zerop to))
+        (cache-del-conf-stat to))
+    (if (not (zerop by)) 
+        (cache-del-pers-stat by))
+
+    (lyskom-format-insert 'unread-info-by-to
+                          info
+                          (if (zerop by)
+                              (lyskom-get-string 'anybody)
+                            by)
+                          (if (zerop to)
+                              (lyskom-get-string 'all-confs)
+                            to))
+
+    (setq lyskom-last-unread-by by)
+    (setq lyskom-last-unread-to to)
+    (setq lyskom-last-unread-num count)
+    (setq lyskom-last-unread-pmark nil)
+    (setq lyskom-last-unread-cmark nil)
+    (setq lyskom-last-unread-saved-result-list nil)
+    (setq lyskom-last-unread-saved-by-list nil)
+    (setq lyskom-last-unread-saved-to-list nil)
+    (setq lyskom-last-unread-saved-result-size 0)
+    (setq lyskom-last-unread-saved-smallest nil)
+    (setq lyskom-last-unread-saved-largest nil)
+    (setq lyskom-have-unread t)
+
+    (condition-case arg
+        (let ((list (lyskom-get-texts-by-to by to count)))
+          (if list
+              (lyskom-traverse text-no list
+                (unless (lyskom-mark-unread text-no)
+                  (lyskom-format-insert 'cant-mark-text-unread
+                                        text-no
+                                        (lyskom-get-error-text lyskom-errno))))
+            (lyskom-insert-string 'no-such-text)))
+      (lyskom-review-error (if arg
+                               nil 
+                             (lyskom-insert-string 'no-such-text))))))
+
+
+
+
 
 
 ;;; ================================================================
@@ -1034,6 +1187,42 @@ all review-related functions."
     (lyskom-insert-string 'read-text-first)))
 
 
+(def-kom-command kom-unread-tree (text-no)
+    "Recursively mark all comments to the selected text as unread.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-tree-q)))
+  (lyskom-unread-tree text-no nil))
+
+(defun lyskom-unread-tree (text-no visited-list)
+  "Perform the function of kom-unread-tree."
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+         (worklist (and text-stat
+                        (lyskom-text-comments text-stat))))
+    (if (null (car worklist))
+        (lyskom-format-insert 'no-such-text-no text-no)
+      (while worklist
+        (let ((cur (car worklist)))
+          (setq worklist (cdr worklist))
+          (unless (memq cur visited-list)
+            (setq visited-list (cons cur visited-list)
+                  cur (blocking-do 'get-text-stat cur))
+            (when cur
+              (when (delq nil (mapcar 'lyskom-get-membership
+                                      (lyskom-text-recipients cur)))
+                (lyskom-format-insert 'marking-text-unread
+                                      (text-stat->text-no cur))
+                (lyskom-report-command-answer
+                 (lyskom-mark-unread (text-stat->text-no cur))))
+              (lyskom-traverse text-no (lyskom-text-comments cur)
+                (unless (or (memq text-no visited-list)
+                            (memq text-no worklist)
+                  (setq worklist (cons text-no worklist)))))))))))
+  visited-list)
+
+
+
 (def-kom-command kom-find-root (text-no)
   "Finds the root text of the tree containing the selected text.
 When there is more than one root, all will be included in a review
@@ -1072,6 +1261,22 @@ all review-related functions."
    (t
     (lyskom-insert-string 'confusion-what-to-find-root))))
 
+(def-kom-command kom-unread-root (text-no)
+  "Finds the root text of the tree containing the selected text
+and marks it as unread.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-root-q)))
+  (if text-no
+      (let* ((ts (blocking-do 'get-text-stat text-no))
+             (r (lyskom-find-root ts t)))
+        (lyskom-traverse text-no r
+          (lyskom-format-insert 'marking-text-unread text-no)
+          (lyskom-report-command-answer
+           (lyskom-mark-unread text-no))))
+    (lyskom-insert-string 'confusion-what-to-unread-root)))
+
 
 (def-kom-command kom-find-root-review (text-no)
   "Finds the root of the comment tree containing the selected texts
@@ -1100,6 +1305,23 @@ all review-related functions."
             (start (lyskom-review-tree (car start)))
             (t (signal 'lyskom-internal-error "Could not find root")))))
    (t (lyskom-insert-string 'confusion-what-to-find-root-review))))
+
+(def-kom-command kom-unread-root-review (text-no)
+  "Finds the root of the comment tree containing the selected texts
+and then recursively marks all its comments as unread. For texts with
+a single root, this is equivalent to doing `kom-find-root' followed by
+`kom-unread-tree'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-root-review-q)))
+  (if text-no
+      (let* ((ts (blocking-do 'get-text-stat text-no))
+             (start (lyskom-find-root ts t))
+             (marked nil))
+        (lyskom-traverse text-no start
+          (setq marked (lyskom-unread-tree text-no marked))))
+    (lyskom-insert-string 'confusion-what-to-unread-root-review)))
 
 
 (defun lyskom-find-root (text-stat &optional all)
@@ -1347,6 +1569,57 @@ all review-related functions."
       (lyskom-insert-string 'no-such-text))))
 
 
+
+
+
+(def-kom-command kom-unread-comments (text-no)
+  "Mark all comments to the selected text text as unread. This
+command only marks one level of comments as unread. To mark the 
+entire comment tree unread, use `kom-unrad-tree' instead.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-comments-q)))
+  (cond (text-no
+         (lyskom-unread-comments
+          (blocking-do 'get-text-stat text-no)))
+        (t (lyskom-insert-string 'read-text-first))))
+
+
+(defun lyskom-unread-comments (text-stat)
+  "Handles the return from the initiate-get-text-stat, displays and builds list."
+  (let* ((misc-info-list (and text-stat
+			      (text-stat->misc-info-list text-stat)))
+	 (misc-infos (and misc-info-list
+			  (append (lyskom-misc-infos-from-list 
+				   'FOOTN-IN misc-info-list)
+				  (lyskom-misc-infos-from-list 
+				   'COMM-IN misc-info-list))))
+	 (all-text-nos (and misc-infos
+                            (mapcar
+                             (lambda (misc-info)
+                               (if (equal (misc-info->type misc-info)
+                                          'COMM-IN)
+                                   (misc-info->comm-in misc-info)
+                                 (misc-info->footn-in misc-info)))
+                             misc-infos)))
+         text-nos)
+    ;; Only try to review texts that we can read.
+    (while all-text-nos
+      (if (blocking-do 'get-text-stat (car all-text-nos))
+          (setq text-nos (cons (car all-text-nos) text-nos)))
+      (setq all-text-nos (cdr all-text-nos)))
+    (setq text-nos (nreverse text-nos))
+
+    (if text-nos
+        (lyskom-traverse text-no text-nos
+          (lyskom-format-insert 'marking-text-unread text-no)
+          (lyskom-report-command-answer
+           (lyskom-mark-unread text-no)))
+      (lyskom-insert-string 'no-such-text))))
+
+
+
 ;;; ================================================================
 ;;;          ]terse igen - kom-review-last-normally-read
 ;;;
@@ -1378,6 +1651,21 @@ all review-related functions."
           (unless kom-review-uses-cache
             (cache-del-text-stat (car text-nos)))
 	  (lyskom-view-text (car text-nos)))
+      (lyskom-format-insert 'no-such-text))))
+
+
+(def-kom-command kom-unread-last-normally-read (no)
+  "Marks the N texts most recently read using normal commands unread.
+After marking a number of texts unread, this will mark the N texts
+read prior to that."
+  (interactive 
+   (list (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
+  (let* ((text-nos (nreverse (nfirst no lyskom-normally-read-texts))))
+    (if text-nos
+        (lyskom-traverse text-no text-nos
+          (lyskom-format-insert 'marking-text-unread text-no)
+          (lyskom-report-command-answer
+           (lyskom-mark-unread text-no)))
       (lyskom-format-insert 'no-such-text))))
 
 

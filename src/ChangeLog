@@ -1,6 +1,27 @@
 2003-03-15  David Byers  <david.byers@swipnet.se>
 
 	Work on bug 984:
+	* review.el (kom-unread-last-normally-read): New command.
+	(kom-unread-tree): New command.
+	(kom-unread-comments): New command.
+	(kom-unread-root): New command.
+	(kom-unread-root-review): New command.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Added ?+ format
+	directive.
+	(lyskom-insert-error): Handle negative error codes (used for
+	internal error reporting).
+
+	* commands1.el (kom-view-previous-commented-text): This command
+	always did the next-to-last text, regardless of prefix args.
+	(lyskom-unread-commented-text): New function.
+	(kom-unread-previous-commented-text): New command.
+	(kom-unread-commented-text): New command.
+
+	* review.el (lyskom-unread-by-to): New function.
+	(kom-unread-more): New command.
+	(kom-unread-by-to): New command.
+
 	* lyskom-rest.el (kom-initial-digit-unread): New command.
 
 	* vars.el.in (lyskom-text-no-prompts-defaults): Added

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.300 2003-03-15 18:25:23 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.301 2003-03-15 23:00:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.300 2003-03-15 18:25:23 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.301 2003-03-15 23:00:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -835,9 +835,12 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (set-session-priority . "Sätt läsnivå: ")
 
     ;; From review.el:
+    (no-unread-done . "Du måste markera inlägg olästa innan du kan markera fler olästa.\n")
     (no-review-done . "Du måste återse innan du kan återse mer.\n")
     (not-reviewing . "Du håller inte på att återse något nu.\n")
+    (unread-how-many . "Oläsmarkera hur många?")
     (review-how-many . "Återse hur många?")
+    (unread-how-many-more . "Oläsmarkera ytterligare hur många?")
     (review-how-many-more . "Återse ytterligare hur många?")
     (latest-n . "senaste %#1d")
     (first-n . "första %#1d")
@@ -850,6 +853,12 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (no-get-pers . "Du får inte hämta personen.\n")
     (no-review-info . "Ej tillåtet återse %#1s\n")
     ;; +++
+    (unread-info . "Oläsmarkera %#1s")
+    (unread-info-by-to . "Oläsmarkera  %#1s av %#2P till %#3M.\n")
+    (unread-more-info-by-to . "Oläsmarkera %#1s av %#2P till %#3M.\n")
+    (unread-rest . "resten")
+    (unread-more . "nästa %#1d")
+
     (review-info . "Återse %#1s")
     (review-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
     (review-more-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
@@ -1155,7 +1164,7 @@ Skicka en bugrapport.\n")
 
     (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
     (prefix-arg-try-again . "Ange en annan text eller tryck control-g för att avbryta.\n")
-    (error-code . "Felkod %#2d/%#3S: %#1s.\n")
+    (error-code . "%#2?+%[Felkod %#2d/%#3S: %]%[%]%#1s.\n")
     (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt värde.
 Du bör sätta den till ett bättre värde.\n")
     (extended-command . "LysKOM: ")
@@ -1641,10 +1650,15 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (review-converted-q . "Återse vilket inlägg konverterat?")
     (review-noconversion-q . "Återse vilket inlägg omodifierat?")
+    (unread-commented-q . "Oläsmarkera vilket inläggs kommenterade?")
     (review-commented-q . "Återse vilket inlägg kommenterade?")
+    (unread-tree-q . "Oläsmarkera alla kommentarer rekursivt för vilket inlägg?")
     (review-tree-q . "Återse alla kommentarer rekursivt för vilket inlägg?")
+    (unread-root-q . "Oläsmarkera urinlägget för vilken text?")
     (find-root-q . "Återse urinlägget för vilken text?")
+    (unread-root-review-q . "Oläsmarkera träd för vilket inlägg?")
     (find-root-review-q . "Återse träd för vilket inlägg?")
+    (unread-comments-q . "Oläsmarkera alla kommentarer till vilket inlägg?")
     (review-comments-q . "Återse alla kommentarer till vilket inlägg?")
 
     (confusion-who-to-reply-to . "Jag förstår inte vems inlägg du vill skriva ett privat svar till.\n")
@@ -1675,7 +1689,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-save . "Jag förstår inte vilket inlägg du vill spara.\n")
 
     (confusion-what-to-review-mail-headers . "Jag förstår inte vilket inläggs brevhuvud du vill se.\n")
+    (confusion-what-to-unread-root . "Jag förstår inte vilket inläggs urinlägg du vill markera oläst.\n")
     (confusion-what-to-find-root . "Jag förstår inte vilket inläggs urinlägg du vill återse.\n")
+    (confusion-what-to-unread-root-review . "Jag förstår inte vilket inläggsträd du vill markera oläst.\n")
     (confusion-what-to-find-root-review . "Jag förstår inte vilket inläggsträd du vill återse.\n")
 
 
@@ -1885,7 +1901,9 @@ teckenkodning.
 
     (unread-text-q . "Gör vilket inlägg oläst? ")
     (marking-text-unread . "Markerar inlägg %#1n oläst...")
-
+    (cant-mark-text-unread . "Kunde inte markera inlägg %#1n som oläst (%#2s)\n")
+    (confusion-what-to-mark-unread . "Jag förstår inte vilken text du vill markera oläst.\n")
+    (no-comment-to-to-unread . "Det finns inget kommenterat inlägg att markera som oläst.\n")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2092,6 +2110,16 @@ teckenkodning.
 
     (kom-copy-options         . "Kopiera inställningar")
     (kom-mark-unread          . "Oläsmarkera inlägg")
+    (kom-unread-by-to         . "Oläsmarkera senaste")
+    (kom-unread-more          . "Oläsmarkera fler inlägg")
+    (kom-unread-commented-text . "Oläsmarkera det kommenterade")
+    (kom-unread-previous-commented-text . "Oläsmarkera det föregående kommenterade")
+    (kom-unread-comments      . "Oläsmarkera alla kommentarer")
+    (kom-unread-tree          . "Oläsmarkera alla kommentarer rekursivt")
+    (kom-unread-root          . "Oläsmarkera urinlägget")
+    (kom-unread-root-review   . "Oläsmarkera träd")
+    (kom-unread-last-normally-read
+     			      . "Oläsmarkera igen")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -2495,6 +2523,17 @@ teckenkodning.
   (define-key lyskom-sv-unread-prefix (kbd "7") 'kom-initial-digit-unread)
   (define-key lyskom-sv-unread-prefix (kbd "8") 'kom-initial-digit-unread)
   (define-key lyskom-sv-unread-prefix (kbd "9") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "k") 'kom-unread-commented-text)
+  (define-key lyskom-sv-unread-prefix (kbd "K") 'kom-unread-previous-commented-text)
+  (define-key lyskom-sv-unread-prefix (kbd "a ?") 'lyskom-help)
+  (define-key lyskom-sv-unread-prefix (kbd "a k") 'kom-unread-comments)
+  (define-key lyskom-sv-unread-prefix (kbd "a r") 'kom-unread-tree)
+  (define-key lyskom-sv-unread-prefix (kbd "i") 'kom-unread-last-normally-read)
+  (define-key lyskom-sv-unread-prefix (kbd "r") 'kom-unread-root)
+  (define-key lyskom-sv-unread-prefix (kbd "u") 'kom-unread-root)
+  (define-key lyskom-sv-unread-prefix (kbd "s") 'kom-unread-by-to)
+  (define-key lyskom-sv-unread-prefix (kbd "y") 'kom-unread-more)
+  (define-key lyskom-sv-unread-prefix (kbd "t") 'kom-unread-root-review)
 
   (define-key lyskom-sv-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-sv-review-prefix (kbd "0") 'kom-initial-digit-view)
@@ -4307,6 +4346,8 @@ i servern. Annars sparas det i din .emacs.")
     (error-52 . "Funktionen avstängd i servern")
     (error-53 . "Meddelandet kunde inte sändas")
     (error-54 . "Otillåten typ på medlemskap")
+
+    (error--1 . "Du är inte medlem i något mottagarmöte")
 ))
 
 (lyskom-language-var global lyskom-unread-mode-line sv
