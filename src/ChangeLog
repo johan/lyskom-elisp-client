@@ -1,8 +1,24 @@
+2000-05-19  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in: Reinstated changes lost between 44.98 and 44.99.
+
+	* commands1.el (kom-write-footnote): Reinstated changes lost
+	between 44.66 and 44.67.
+
+	* commands2.el (kom-add-faq): Reinstated changes lost between
+	44.63 and 44.64.
+
+2000-05-15  David Byers  <davby@ida.liu.se>
+	
+	* commands2.el (lyskom-send-message-resize-minibuffer): New
+	implementation. 
+
 2000-05-19  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands2.el (kom-is-person-member-of-conference): New function.
 
-	* vars.el.in (lyskom-commands): New function.
+	* vars.el.in (lyskom-commands): New function. [Added
+	kom-is-person-member-of-conference]
 
 	* swedish-strings.el, english-strings.el (lyskom-message): Added
 	the strings pers-to-check-mship-for, conf-to-check-mship-of,
@@ -23,6 +39,25 @@
 
 	* lyskom-buttons.el (lyskom-button-mark-text,
 	lyskom-button-unmark-text): Function calls to the above altered.
+
+2000-05-04  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Added default
+	parameter.
+	
+	* commands2.el (kom-add-faq): Default text is the most recently
+	seen text the user wrote, or the most recently written one.
+
+	* commands1.el (kom-write-footnote): Default text is the most
+	recently seen text the user wrote, or the most recently written
+	one.
+
+	* view-text.el (lyskom-print-text): Update
+	lyskom-last-seen-written.
+
+	* commands2.el (kom-add-faq): Use lyskom-read-text-no-prefix-arg.
+
+	* vars.el.in (lyskom-last-seen-written): New variable.
 
 Thu May  4 15:05:51 2000  David Byers  <davby@sen2.ida.liu.se>
 
