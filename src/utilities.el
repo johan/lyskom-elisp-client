@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.92 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: utilities.el,v 44.93 2002-03-03 15:49:10 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.92 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: utilities.el,v 44.93 2002-03-03 15:49:10 joel Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -252,18 +252,6 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
   "Call accept-process-output with the correct timeout values."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
-
-(defun lyskom-current-time (&optional secs)
-  "Return the time in a format that LysKOM understands.
-If optional argument SECS is set, it is used in place of the value
-of \(current-time\)."
-  (let ((time (decode-time (or secs (current-time)))))
-    (setcar (cdr (cdr (cdr (cdr time))))
-            (1- (car (cdr (cdr (cdr (cdr time)))))))
-    (setcar (cdr (cdr (cdr (cdr (cdr time)))))
-            (- (car (cdr (cdr (cdr (cdr (cdr time))))))
-               1900))
-    time))
 
 (defun lyskom-set-alist (alist item value)
   "Modifies (non-destructively) an alist ALIST to set item
