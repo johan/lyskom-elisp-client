@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.22 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: language.el,v 44.23 2002-03-13 20:48:59 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,12 +39,12 @@
 ;;  "Symbols with language data bound to them")
 
 (defvar lyskom-languages nil
-  "A alist of defined languages.
+  "An alist of defined languages.
 Each entry is a pair (SYMBOL . (NAME NAME ...)) where symbol is the symbol
 used for identification, and the NAMEs are names of the language.")
 
 (defvar lyskom-language-categories nil
-  "Categories used")
+  "Categories of language-specific variables.")
 
 (defvar lyskom-language-vars nil
   "A list of all language-dependent variables.")
@@ -81,10 +81,10 @@ used for identification, and the NAMEs are names of the language.")
 ;;; Keymaps
 
 (defvar lyskom-language-keymaps nil
-  "A list of all language-dependent variables.")
+  "A list of all language-dependent keymaps.")
 
 (defun lyskom-language-keymap-internal (keymap language langmap)
-  "Defines a language-local variable value."
+  "Defines a language-local keymap."
   ;; If the "real" keymap has no value, set it to an empty keymap
   (if (eval keymap)
       nil

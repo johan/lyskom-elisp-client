@@ -1,3 +1,9 @@
+2002-03-12  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* language.el (lyskom-languages)
+	(lyskom-language-categories)
+	(lyskom-language-keymaps): Corrected spelling in doc strings.
+
 2002-03-12  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-insert-before-prompt): don't let xemacs
@@ -9,7 +15,7 @@
 	* english-strings.el (lyskom-message): Changed last-log-in to say
 	"Last login or logout" instead of "Last login", since that's what
 	the server gives us.
-	
+
 	* swedish-strings.el (lyskom-message): Likewise.
 
 2002-03-03  Joel Rosdahl  <joel@lysator.liu.se>
