@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.393 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.394 2005-01-12 18:15:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.393 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.394 2005-01-12 18:15:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1973,6 +1973,9 @@ version %#3s av elispklienten, medan detta är version %#4s.
     (review-marking-as-read . "Återse läsmarkerar")
     (review-not-marking-as-read . "Återse läsmarkerar inte")
 
+    (review-using-cache . "Återse använder cache")
+    (review-not-using-cache . "Återse använder inte cache")
+
     (using-ssh-connection . "Använder ssh-uppkoppling till %#1s...")
     (opening-ssh-connection . "Öppnar ssh-uppkoppling till %#1s...")
     (ssh-cant-connect . "Kan inte göra ssh-uppkopplingen: %s")
@@ -2724,6 +2727,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (lyskom-try-define-key lyskom-sv-mode-map [3941]    'lyskom-sv-review-prefix)
 
   (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
+  (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
 
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)

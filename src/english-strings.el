@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.349 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.350 2005-01-12 18:15:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.349 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.350 2005-01-12 18:15:31 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1931,6 +1931,9 @@ Unknown variables may be the result of saving your settings in version
     (review-marking-as-read . "Review marks as read")
     (review-not-marking-as-read . "Review does not mark as read")
 
+    (review-using-cache . "Review uses cache")
+    (review-not-using-cache . "Review doesn't use cache")
+
     (using-ssh-connection . "Using ssh connection to %#1s...")
     (opening-ssh-connection . "Opening ssh connection to %#1s...")
     (ssh-cant-connect . "Unable to open ssh connection: %s")
@@ -2658,6 +2661,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-mode-map (kbd "u") 'lyskom-en-unread-prefix)
 
   (define-key lyskom-en-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
+  (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
 
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)

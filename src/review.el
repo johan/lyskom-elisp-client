@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.62 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: review.el,v 44.63 2005-01-12 18:15:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.62 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: review.el,v 44.63 2005-01-12 18:15:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -100,6 +100,21 @@ kom-review-marks-texts-as-read toggled."
                              (if kom-review-marks-texts-as-read 
                                  'review-marking-as-read
                                'review-not-marking-as-read)))))
+         (command (lookup-key (current-local-map) sequence)))
+    (when (commandp command)
+      (call-interactively command))))
+
+(defun kom-toggle-cache-prefix ()
+  "Read one key sequence and run one command with state of
+kom-review-marks-texts-as-read toggled."
+  (interactive)
+  (let* ((kom-review-uses-cache (not kom-review-uses-cache))
+         (sequence (read-key-sequence
+                    (format "%s: " 
+                            (lyskom-get-string
+                             (if kom-review-uses-cache 
+                                 'review-using-cache
+                               'review-not-using-cache)))))
          (command (lookup-key (current-local-map) sequence)))
     (when (commandp command)
       (call-interactively command))))
