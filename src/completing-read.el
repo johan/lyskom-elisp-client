@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.2 1993-05-05 03:12:31 linus Exp $
+;;;;; $Id: completing-read.el,v 36.3 1993-05-25 15:50:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.2 1993-05-05 03:12:31 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.3 1993-05-25 15:50:55 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -413,15 +413,23 @@ parst matching ([^)]) in string and alist are disgarded."
 (if lyskom-initial-completing-map
     nil
   (setq lyskom-initial-completing-map (make-keymap))
-  (if (fboundp 'map-keymap)		;lucid-emacs' way of doing things.
-      (map-keymap 
-       (function (lambda (keydesc binding)
-		   (define-key lyskom-initial-completing-map keydesc 
-		     'lyskom-hack-minibuf)))
-       global-map)
+  (cond
+   ((fboundp 'map-keymap)		;lucid-emacs' way of doing things.
+    (map-keymap 
+     (function (lambda (keydesc binding)
+		 (define-key lyskom-initial-completing-map keydesc 
+		   'lyskom-hack-minibuf)))
+     global-map))
+   ((string-match "^19" emacs-version)
+    (let ((i (length (car (cdr lyskom-initial-completing-map)))))
+      (while (>= (setq i (1- i)) 0)
+	(aset (car (cdr lyskom-initial-completing-map))
+	      i 'lyskom-hack-minibuf)))
+    )
+   (t					; emacs-18.
     (let ((i (length lyskom-initial-completing-map)))
       (while (>= (setq i (1- i)) 0)
-	(aset lyskom-initial-completing-map i 'lyskom-hack-minibuf))))
+	(aset lyskom-initial-completing-map i 'lyskom-hack-minibuf)))))
   (define-key lyskom-initial-completing-map "\C-g" 'lyskom-complete-quit))
    
 

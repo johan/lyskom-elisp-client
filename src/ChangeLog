@@ -1,3 +1,8 @@
+Tue May 25 17:47:28 1993  Linus Tolke Y  (linus@bodil)
+
+	* completing-read.el, edit-text.el: Keymaps look different in
+	  emacs19 - special patch updated.
+
 Sat May 22 23:00:27 1993  Linus Tolke Y  (linus@bodil)
 
 	* vars.el, swedish-strings.el (kom-tell-phrases-internal): Entered
