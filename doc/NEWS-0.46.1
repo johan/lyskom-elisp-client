@@ -2,24 +2,24 @@
                       Nyheter i lyskom.el 0.46.1
                       ==========================
 
-    Version 0.46.1 rättar vissa fel som fanns i 0.46. Den finns att
+    Version 0.46.1 rättar vissa fel som finns i 0.46. Den finns att
     hämta på följande adress:
 
        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
     Filen heter lyskom-0.46.1.tar.gz, och en kopia av den text du
-    läser just nu finns under namnet NEWS-0.46.1 samt under namnet
-    NEWS-0.46.1 i tar-arkivet. Det finns även en zip-fil för folk som
-    sitter med system som inte förstår tar-filer.
+    läser just nu finns under namnet NEWS-0.46.1 i tar-arkivet. Det
+    finns även en zip-fil för folk som sitter med system som inte
+    förstår tar-filer.
 
     För information om nyheterna i 0.46, se NEWS-0.46.
 
     Om du hittar ett fel i elispklienten och inte klarar av att rätta
-    den själv, använd M-x kom-bug-report för att rapportera den. 
+    den själv, använd M-x kom-bug-report för att rapportera den.
     Buggar blir omhändertagna i mån av tid, ork och lust. Färdiga
     patchar blir inlagda mycket snabbare.
 
-    
+
 
 
                          ====================
@@ -82,8 +82,9 @@
 
 ** Om man ger ett prefixargument till "Lista (med) regexpar" kommer
    kommandot att översätta regexpen så att vissa tecken behandlas
-   lika.  Vilka tecken som ska behandlas lika avgörs av servern; samma
-   ekvivalensklasser används av de vanliga kommandona som listar namn.
+   lika. Vilka tecken som skall behandlas lika avgörs av servern;
+   samma ekvivalensklasser används av de vanliga kommandona som listar
+   namn.
 
    Specialtecken som påverkar regexpens funktion översätts inte.
    Tecken skrivna inom en []-grupp översätts inte.
@@ -100,7 +101,7 @@
 
 ** När klienten frågar om man vill addera den kommenterades brevlåda
    om man skriver en kommentar i ett möte där den kommentarade inte är
-   medlem får man numera en fråga om huruvida det ska vara en extra
+   medlem får man numera en fråga om huruvida det skall vara en extra
    kopiemottagare eller vanlig mottagare.
 
 ** En del funktionalitet som tidigare var begränsad till XEmacs finns
@@ -151,3 +152,11 @@
 
 ** Kolumnen "Osett" i medlemslistningarna skapade av "Status (för)
    möte" och "Status (för) person" klarar större tal.
+
+** Defaultmottagaren för kommandot "Flytta inlägg" blir rätt.
+
+** Klienten hämtar numera varje inlägg *en* gång från servern vid
+   normal läsning, inte (som förut) två gånger.
+
+** Det ska nu gå att klistra in text i editeringsbuffertar med
+   mittenmusknappen även i trilskande XEmacsar.
