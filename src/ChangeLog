@@ -1,3 +1,8 @@
+Sat Jan  3 22:25:51 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* internal.el (lyskom-halt,lyskom-resume): Använd assq istället
+ 	för assoc.
+
 Thu Dec 25 10:39:23 1997  David Byers  <dbyers@atp>
 
 	* lyskom-buttons.el (lyskom-button-open-email): Använd
