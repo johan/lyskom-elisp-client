@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.23 1997-09-13 16:07:09 byers Exp $
+;;;;; $Id: edit-text.el,v 44.24 1997-09-16 10:19:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.23 1997-09-13 16:07:09 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.24 1997-09-16 10:19:20 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -866,7 +866,7 @@ CC recipients."
 	(insert-at (point-min-marker))
 	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
     (lyskom-save-excursion
-     ;;(save-excursion
+     (save-excursion
      (set-buffer lyskom-buffer)
      ;; +++ The information about msg-of-day might be old. We should
      ;; make sure it is up-to-date.
@@ -892,7 +892,7 @@ CC recipients."
              (if what-to-do
                  (funcall what-to-do conf-stat insert-at edit-buffer)
                (lyskom-edit-insert-misc-conf conf-stat string
-                                             insert-at nil)))))))))
+                                             insert-at nil))))))))))
 
 
 

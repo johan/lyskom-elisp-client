@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.16 1997-08-18 14:22:58 byers Exp $
+# $Id: Makefile,v 44.17 1997-09-16 10:19:14 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.16 1997-08-18 14:22:58 byers Exp $
+# $Id: Makefile,v 44.17 1997-09-16 10:19:14 byers Exp $
 #
 
 
@@ -36,7 +36,7 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.45-beta
+CLIENTVERSION = 0.45
 DOCFILES=NEWS-0.45 MIGRATION-0.44-0.45
 
 FTPDIR=/home/davby/www-pub
