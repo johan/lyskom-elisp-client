@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.101 2002-07-23 18:28:40 byers Exp $
+;;;;; $Id: edit-text.el,v 44.102 2002-08-06 19:43:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.101 2002-07-23 18:28:40 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.102 2002-08-06 19:43:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1157,6 +1157,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
 (defvar Info-current-node)
 (defvar Info-current-file)
 
+;; NOTUSED: kom-yank-info-nodename
 (defun kom-yank-info-nodename ()
   "Put the current Info-node on the kill-ring."
   (interactive)
@@ -1165,6 +1166,8 @@ WINDOW plus any optional arguments given in ARG-LIST."
 		    (file-name-nondirectory Info-current-file)
 		    Info-current-node)))
 
+
+;; NOTUSED: kom-insert-last-info-nodename
 (defun kom-insert-last-info-nodename ()
   "Insert a reference to the most recently visited info node."
   (interactive)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.59 2002-07-29 18:00:38 byers Exp $
+;;;;; $Id: compatibility.el,v 44.60 2002-08-06 19:43:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.59 2002-07-29 18:00:38 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.60 2002-08-06 19:43:32 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -79,26 +79,6 @@ of the lyskom-provide-* functions instead."
             ;               (quote (, (car definition)))
             ;               (quote (, (car (cdr definition)))))))
               (eval-and-compile
-                (if (not (, predicate))
-                    (progn
-                      (, definition)
-                      (setq lyskom-compatibility-definitions
-                            (cons (quote (, (car (cdr definition))))
-                                  lyskom-compatibility-definitions))))))))
-
-(defmacro lyskom-compatibility-definition-ct (predicate definition)
-  "If PREDICATE is nil, evaluate DEFINITION at compile and run time.
-Definition should be a function definition of some kind, with syntax 
-similar to defun or defmacro.
-
-To simply define a function if it is not already defined, used one
-of the lyskom-provide-* functions instead."
-  (` (progn ;(eval-when-compile
-            ;  (if (not (, predicate))
-            ;      (message "Compatibility %S for %S"
-            ;               (quote (, (car definition)))
-            ;               (quote (, (car (cdr definition)))))))
-              (eval-when-compile
                 (if (not (, predicate))
                     (progn
                       (, definition)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.71 2002-06-26 20:19:28 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.72 2002-08-06 19:43:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.71 2002-06-26 20:19:28 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.72 2002-08-06 19:43:33 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1145,12 +1145,6 @@ depending on the value of `kom-lynx-terminal'."
    (t (lyskom-error "Bad Lynx terminal: %s" kom-lynx-terminal))
    ))
 
-;;;
-;;;	email buttons
-;;;
-
-(defun lyskom-button-send-mail (to)
-  (mail nil to))
 
 ;;;
 ;;;     aux-item buttons

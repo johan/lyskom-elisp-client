@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.11 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: cache.el,v 44.12 2002-08-06 19:43:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.11 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: cache.el,v 44.12 2002-08-06 19:43:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -235,6 +235,7 @@ otherwise return nil"
   (cache-add session info 'lyskom-static-session-info-cache))
 
 
+;; NOTUSED: cache-del-static-session-info
 (defun cache-del-static-session-info (session)
   "Delete a text from the cache. Args: SESSION."
   (cache-del session 'lyskom-static-session-info-cache))
