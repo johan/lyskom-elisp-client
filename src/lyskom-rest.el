@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.27 1996-02-27 23:15:24 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.28 1996-03-02 21:38:17 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.27 1996-02-27 23:15:24 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.28 1996-03-02 21:38:17 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -759,7 +759,8 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
   (cond
    ((and lyskom-executing-command
 	 (not lyskom-is-waiting)	; Looks weird /davidk
-	 (not (eq lyskom-is-waiting t)))
+	 ;;(not (eq lyskom-is-waiting t))
+	 )
     ;; Don't insert the string until the current command is finished.
     (if (null lyskom-to-be-printed-before-prompt)
 	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
@@ -1601,11 +1602,12 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
            (eval lyskom-is-waiting))
       (progn
         (setq lyskom-is-waiting nil)
-        (beep)
-        (lyskom-end-of-command)
-        (if (read-list-isempty lyskom-reading-list)
-            (kom-go-to-next-conf))
-        (kom-next-command)))
+        ;;(beep)
+        ;;(lyskom-end-of-command)
+        ;;(if (read-list-isempty lyskom-reading-list)
+        ;;    (kom-go-to-next-conf))
+        ;;(kom-next-command)
+	))
   (if lyskom-no-prompt
       (lyskom-print-prompt)))
 
@@ -2066,16 +2068,21 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	    (progn
 	      (setq lyskom-quit-flag nil)
 
-	      (cond
-	       (lyskom-debug-communications-to-buffer
-		(set-buffer (get-buffer-create
-			     lyskom-debug-communications-to-buffer-buffer))
-		(save-excursion
-		  (goto-char (point-max))
-		  (insert "\n"
-			  (format "%s" proc)
-			  "-----> "  output))))
-
+	      ;; Test
+	      (if lyskom-debug-communications-to-buffer
+		  (lyskom-debug-insert proc "-----> " output))
+	      
+;;;	      (cond
+;;;	       (lyskom-debug-communications-to-buffer
+;;;		(set-buffer (get-buffer-create
+;;;			     lyskom-debug-communications-to-buffer-buffer))
+;;;		  (save-excursion
+;;;		    (goto-char (point-max))
+;;;		    (insert "\n"
+;;;			    (format "%s" proc)
+;;;			    "-----> "  output))
+;;;		  ))
+	      
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
 	      (if quit-flag		; We are allowed to break here.
@@ -2118,6 +2125,27 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
   (beep)
   (lyskom-scroll))
 
+
+;;; ================================================================
+;;;         Debug buffer
+
+(defun lyskom-debug-insert (proc prefix string)
+  ;;(save-excursion
+    (let* ((buf (get-buffer-create
+		 lyskom-debug-communications-to-buffer-buffer))
+	   (win (get-buffer-window buf 'visible)))
+      (save-selected-window
+	(if win
+	    (select-window win)
+	  (set-buffer buf))
+	(let ((move (eobp)))
+	  (save-excursion
+	    (goto-char (point-max))
+	    (insert "\n"
+		    (format "%s" proc)
+		    prefix  string))
+	  (if move (goto-char (point-max)))))))
+;;)
 
 ;;; ================================================================
 ;;;         Formatting functions for different data types
@@ -2345,6 +2373,11 @@ from the value of kom-tell-phrases-internal."
 
 (setq lyskom-emacs19-p (string-match "^19" emacs-version))
 
+
+;;; This should be the very last lines of lyskom.el Everything should
+;;; be loaded now, so it's time to run the lyskom-load-hook.
+
+(run-hooks 'lyskom-after-load-hook)
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

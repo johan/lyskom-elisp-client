@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.11 1996-02-02 05:00:22 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.12 1996-03-02 21:38:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.11 1996-02-02 05:00:22 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.12 1996-03-02 21:38:10 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -692,8 +692,10 @@ Point must be located on the line where the subject is."
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)
       (lyskom-run 'background 'set 'lyskom-dont-change-prompt nil)
-      (lyskom-run 'background 'lyskom-set-mode-line)))
-
+      (lyskom-run 'background 'lyskom-set-mode-line))
+     (t
+      (setq lyskom-dont-change-prompt nil)))
+    
     (set-buffer edit-buffer)		;Need local variables.
 
     ;; Select the old configuration.

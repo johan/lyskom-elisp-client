@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 38.3 1996-02-23 16:02:43 byers Exp $
+$Id: elisp-client.texinfo,v 38.4 1996-03-02 21:37:46 davidk Exp $
 @end ifinfo
 
 @iftex
@@ -27,7 +27,7 @@ $Id: elisp-client.texinfo,v 38.3 1996-02-23 16:02:43 byers Exp $
 @hyphenation{data-bas-filen default-prio-ri-tet}
 @hyphenation{email-adress even-tu-ella}
 @hyphenation{emacs-lisp-biblioteket}
-@hypgenation{emacs-lisp-program}
+@hyphenation{emacs-lisp-program}
 @hyphenation{förut-sätt-ningar}
 @hyphenation{inlogg-ningarna}
 @hyphenation{klient-modell}
@@ -1491,7 +1491,7 @@ I nästa version av LysKOM-systemet (Protokoll B) kommer det att vara två
 olika möten beroende på om mötet är skrivskyddat eller kommentarsskyddat.
 @end table
 
-@node Meddelande, Prioritera, Ändra mötesuppgifter, Kommandon
+@node Meddelande, Filtrera, Ändra mötesuppgifter, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Meddelande
 
@@ -1571,10 +1571,10 @@ Radera den rad markören står på.
 @item @kbd{D, M-d}
 Radera det filter markören står i.
 
-@item @kbd{i}
+@item @kbd{i, I}
 Lägg till en rad i ett filter. Frågar efter filterfunktion.
 
-@item @kbd{I, M-i}
+@item @kbd{M-i}
 Lägg till ett filter. Frågar efter filtertyp och tidsbegränsning.
 
 @item @kbd{a}
@@ -2123,7 +2123,7 @@ funktionen. En knapp skapas på texten som matchar hela REGEXP, eller om
 REGEXP innehåller en @code{\(\)}-konstruktion, den text som matchas av
 den första sådana konstruktionen.
 
-@item{kom-mosaic-command}
+@item @code{kom-mosaic-command}
 @itemx @code{"/usr/local/bin/mosaic"} (@code{elisp})
 @vindex kom-mosaic-command
 Variabeln anger var mosaic finns.
