@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.96 2000-03-15 17:15:52 byers Exp $
+;;;;; $Id: vars.el.in,v 44.97 2000-03-26 13:30:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.96 2000-03-15 17:15:52 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.97 2000-03-26 13:30:57 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -310,6 +310,11 @@ used then no message is printed.
 A list of integers means show messages for those users.
 
 The value 'friends means show messages for the users in kom-friends.
+
+The value 'morons means show messages for the users in kom-morons.
+
+The value 'friends-and-morons means show messages for the users in 
+kom-friends and kom-morons.
 
 If you want the messages in the buffer you could set the variable 
 kom-presence-messages-in-buffer."
@@ -641,6 +646,10 @@ to be displayed in the buffer."
 
 (def-kom-var kom-friends nil
   "*List of people whose names should be formatted using kom-friends-face."
+  server)
+
+(def-kom-var kom-morons nil
+  "*List of people whose names should be formatted using kom-morons-face."
   server)
 
 (def-kom-var kom-default-face-scheme nil  
@@ -2043,7 +2052,7 @@ the value of  kom-tell-phrases  for fun.")
 (def-kom-var lyskom-faces
   '(kom-active-face kom-url-face kom-me-face kom-highlight-face
 		    kom-text-face kom-subject-face kom-text-no-face
-		    kom-friends-face kom-presence-face
+		    kom-friends-face kom-morons-face kom-presence-face
 		    kom-first-line-face kom-warning-face kom-mark-face)
   "This is a list of the faces that LysKOM uses.")
 
@@ -2057,6 +2066,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-subject-face default nil nil)
      (kom-text-no-face kom-active-face nil nil)
      (kom-friends-face default "blue3" "lavender")
+     (kom-morons-face default "blue3" "yellow")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face bold "blue3" "lavender")
      (kom-warning-face bold "red" nil)
@@ -2070,6 +2080,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-subject-face default "Khaki" nil)
      (kom-text-no-face kom-active-face nil nil)
      (kom-friends-face default "red" nil)
+     (kom-morons-face default "yellow" nil)
      (kom-presence-face italic "grey" nil)
      (kom-mark-face default "gold" "black")
      (kom-warning-face bold "red" nil)
@@ -2083,6 +2094,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-subject-face default nil nil)
      (kom-text-no-face kom-active-face nil nil)
      (kom-friends-face underline nil nil)
+     (kom-morons-face strikethrough nil nil)
      (kom-presence-face italic nil nil)
      (kom-mark-face bold nil "black")
      (kom-warning-face bold nil nil)
@@ -2096,6 +2108,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-subject-face default nil nil)
      (kom-text-no-face default nil nil)
      (kom-friends-face default nil "alice blue")
+     (kom-morons-face default nil "red")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face default nil "black")
      (kom-warning-face bold nil nil)
@@ -2108,6 +2121,7 @@ the value of  kom-tell-phrases  for fun.")
      (kom-text-face      default   nil          nil)
      (kom-text-no-face   default   nil          nil)
      (kom-friends-face   default   "darkblue"   "thistle")
+     (kom-morons-face    strikethrough   "red"        "seagreen")
      (kom-subject-face   default   nil          nil)
      (kom-presence-face  italic    "dim gray"   nil)
      (kom-mark-face      bold      "darkblue"   "thistle")

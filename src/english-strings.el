@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.81 2000-03-15 17:15:42 byers Exp $
+;;;;; $Id: english-strings.el,v 44.82 2000-03-26 13:30:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.81 2000-03-15 17:15:42 byers Exp $"))
+              "$Id: english-strings.el,v 44.82 2000-03-26 13:30:49 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2766,6 +2766,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   The users named in this list will be displayed using a special face in
   the LysKOM buffer.")
 
+    (kom-morons-doc . "\
+  The users named in this list will be displayed using a warning face in
+  the LysKOM buffer.")
+
     (kom-url-viewer-preferences-doc . "\
   This setting controls which WWW browser that will be used to open URLs
   found in LysKOM. If the first browser in the list cannor handle the type
@@ -3090,6 +3094,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (lyskom-filter-outgoing-messages-tag . "Show automatic messages:")
     (kom-friends-tag . "Friends and other special people:")
+    (kom-morons-tag . "Morons and other \"special\" people:")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
     (kom-netscape-command-tag . "Command to start Netscape Navigator:")

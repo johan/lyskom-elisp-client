@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.39 2000-03-15 15:45:08 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.40 2000-03-26 13:30:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.39 2000-03-15 15:45:08 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.40 2000-03-26 13:30:51 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -420,6 +420,7 @@ information."
                        (or face
                            (cond ((eq persno numarg) 'kom-me-face)
                                  ((memq numarg kom-friends) 'kom-friends-face)
+                                 ((memq numarg kom-morons) 'kom-morons-face)
                                  (t 'kom-active-face)))
                        'mouse-face 'kom-highlight-face
                        'lyskom-button-text text
