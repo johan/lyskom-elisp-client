@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.7 1996-10-02 16:59:01 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.8 1996-10-03 00:20:49 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.7 1996-10-02 16:59:01 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.8 1996-10-03 00:20:49 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2149,9 +2149,9 @@ VECTOR has to be sorted with regard to <."
   (let* ((split (/ (+ first last+1) 2))
 	 (splitval (aref vector split)))
     (cond
-     ;; This means that first = last+1 - 1, ie only one element.
-     ((= split first) (if (= num splitval) split nil))
-     ;; This is not really necesary, but it _might_ speed it up..
+     ;; Only one element
+     ((= (- last+1 first) 1) (if (= num splitval) split nil))
+     ;; This is not really necessary, but it _might_ speed it up..
      ((= num splitval) split)
      ;; Search the left subtree
      ((< num splitval)
