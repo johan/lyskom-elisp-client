@@ -1,3 +1,9 @@
+Wed Nov 27 23:21:43 1991  Per Cederqvist  (ceder at robin)
+
+	* completing-read.el (lyskom-hack-minibuf): Raden 
+	  "(setq foo minibuffer-scroll-window)" (som antagligen bara var
+	  en bortgl|md debugrad) borttagen.
+
 Sun Nov 24 03:41:56 1991  Per Cederqvist  (ceder at robert)
 
 	* commands1.el (lyskom-write-comment-soon): Skrev lite kommentarer.
