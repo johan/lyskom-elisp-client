@@ -1,3 +1,10 @@
+1999-04-01  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-postpone-default): Ny variabel.
+
+	* commands2.el (kom-postpone): Defaultvärdet inte hårdkodat
+	längre.
+
 1999-06-11  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-miscs): Fix parameter list for

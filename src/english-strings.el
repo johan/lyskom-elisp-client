@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.45 1999-06-11 12:21:30 byers Exp $
+;;;;; $Id: english-strings.el,v 44.46 1999-06-11 12:56:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.45 1999-06-11 12:21:30 byers Exp $"))
+              "$Id: english-strings.el,v 44.46 1999-06-11 12:56:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1700,7 +1700,7 @@ Contents:     \"%#9s\"
 ;;;)
 
 (defvar lyskom-en-prioritize-mode-map nil)
-(lyskom-language-keymap lyskom-filter-edit-map en lyskom-en-filter-edit-map)
+(lyskom-language-keymap lyskom-prioritize-mode-map en lyskom-en-prioritize-mode-map)
 
 (if lyskom-en-prioritize-mode-map 
     nil

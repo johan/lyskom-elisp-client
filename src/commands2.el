@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.30 1999-06-10 13:36:05 byers Exp $
+;;;;; $Id: commands2.el,v 44.31 1999-06-11 12:56:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.30 1999-06-10 13:36:05 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.31 1999-06-11 12:56:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -266,56 +266,56 @@ otherwise: the conference is read with lyskom-completing-read."
                                             (conf-stat->conf-no conf-stat)
                                             0 lyskom-max-int)))
 	    
-              (lyskom-format-insert 'conf-has-these-members
-                                    conf-stat)
-              (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
-		
-                  (progn
-                    (lyskom-insert-string 'member-list-header)
-                    (lyskom-traverse 
-                        member (member-list->members member-list)
-                      (let ((membership (blocking-do
-                                         'query-read-texts 
-                                         (member->pers-no member)
-                                         (conf-stat->conf-no conf-stat))))
-                        ;; Print a row describing the membership of MEMBER
-                        ;; (described by MEMBERSHIP) in CONF-STAT.
-                        (if (or (null membership))
-                            (lyskom-insert-string 'secret-membership)
-                          (lyskom-insert 
-                           (format "%17s"
-                                   (lyskom-return-date-and-time
-                                    (membership->last-time-read membership))))
-                          (let ((unread (- (+ (conf-stat->first-local-no
-                                               conf-stat)
-                                              (conf-stat->no-of-texts conf-stat))
-                                           (membership->last-text-read membership)
-                                           (length (membership->read-texts
-                                                    membership))
-                                           1)))
-                            (lyskom-format-insert 'conf-membership-line
-                                                  (if (zerop unread)
-                                                      "         "
-                                                    (format "%7d  " unread))
-                                                  (member->pers-no member)
-                                                  (lyskom-return-membership-type (member->membership-type member))
-                                                  )
-                            (when (and (member->created-by member)
-                                       (not (zerop (member->created-by member)))
-                                       (not (eq (member->pers-no member)
-                                                (member->created-by member))))
-                              (lyskom-format-insert 'conf-membership-line-2
-                                                    (lyskom-return-date-and-time
-                                                     (member->created-at member))
-                                                    (member->created-by member)))
-                            )))))
+              (if (null member-list)
+                  (lyskom-format-insert 'conf-has-no-members conf-stat)
+                (lyskom-format-insert 'conf-has-these-members conf-stat)
+                (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
+                    (progn
+                      (lyskom-insert-string 'member-list-header)
+                      (lyskom-traverse 
+                       member (member-list->members member-list)
+                       (let ((membership (blocking-do
+                                          'query-read-texts 
+                                          (member->pers-no member)
+                                          (conf-stat->conf-no conf-stat))))
+                         ;; Print a row describing the membership of MEMBER
+                         ;; (described by MEMBERSHIP) in CONF-STAT.
+                         (if (or (null membership))
+                             (lyskom-insert-string 'secret-membership)
+                           (lyskom-insert 
+                            (format "%17s"
+                                    (lyskom-return-date-and-time
+                                     (membership->last-time-read membership))))
+                           (let ((unread (- (+ (conf-stat->first-local-no
+                                                conf-stat)
+                                               (conf-stat->no-of-texts conf-stat))
+                                            (membership->last-text-read membership)
+                                            (length (membership->read-texts
+                                                     membership))
+                                            1)))
+                             (lyskom-format-insert 'conf-membership-line
+                                                   (if (zerop unread)
+                                                       "         "
+                                                     (format "%7d  " unread))
+                                                   (member->pers-no member)
+                                                   (lyskom-return-membership-type (member->membership-type member))
+                                                   )
+                             (when (and (member->created-by member)
+                                        (not (zerop (member->created-by member)))
+                                        (not (eq (member->pers-no member)
+                                                 (member->created-by member))))
+                               (lyskom-format-insert 'conf-membership-line-2
+                                                     (lyskom-return-date-and-time
+                                                      (member->created-at member))
+                                                     (member->created-by member)))
+                             )))))
 	      
-                ;; Don't show membership info
-                (lyskom-insert "\n")
-                (lyskom-traverse
-                    member (member-list->members member-list)
-                  (lyskom-format-insert "  %#1P\n" 
-                                        (member->pers-no member))))))))))
+                  ;; Don't show membership info
+                  (lyskom-insert "\n")
+                  (lyskom-traverse
+                   member (member-list->members member-list)
+                   (lyskom-format-insert "  %#1P\n" 
+                                         (member->pers-no member)))))))))))
 
 
 ;;; ================================================================
@@ -1480,7 +1480,7 @@ current conference to another session."
 		 ((null current-prefix-arg)
 		  (lyskom-read-number
 		   (lyskom-get-string 'postpone-prompt)
-		   17))
+		   kom-postpone-default))
 		 (t (prefix-numeric-value current-prefix-arg)))))
 
   (let ((len (read-list-length lyskom-reading-list))
