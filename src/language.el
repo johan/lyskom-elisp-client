@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.18 1999-11-21 17:59:36 byers Exp $
+;;;;; $Id: language.el,v 44.19 2000-03-11 15:11:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -214,9 +214,11 @@ lyskom-define-language."
 
 Looks for the 'lyskom-menu category, or 'lyskom-command
 if 'lyskom-menu is not found."
+  (encode-coding-string 
     (or (lyskom-get-string-internal symbol 'lyskom-menu)
         (lyskom-get-string-internal symbol 'lyskom-command)
-        (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu)))
+        (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu))
+    'iso-8859-1))
 
 (defun lyskom-string-check-category (category)
   "Returns list of names for the category, and their supported languages"

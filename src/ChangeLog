@@ -1,3 +1,40 @@
+2000-03-11  David Byers  <davby@ida.liu.se>
+
+	* menus.el (lyskom-define-menu-xemacs): Encode menu item strings
+	to avoid the 201s showing up in menus.
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Encode menu item
+	strings to avoid the 201s showing up in popup menus.
+
+	* mship-edit.el: Tweaked various motion commands.
+
+2000-03-10  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--format-entry-expansion): New function.
+	(lp--format-entry): Split off formatting the second line. Do
+	lyskom-replace-deferred here.
+	(lp--format-insert-entry-2): Removed.
+	(lp--format-insert-entry): Call lp--format-entry do replace
+	deferred on the first line and lp--format-entry-expansion for the
+	second line, if needed. Check if the second line needs to be
+	formatted here rather than in lp--format-entry.
+
+2000-03-07  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-ispell-dictionary-widget): Fixed bug that
+	caused no dictionary names to be listed if ispell was installed.
+
+	* swedish-strings.el (lyskom-sv-customize-map): Bound button2 and
+	button3 to kom-mouse-null.
+
+	* english-strings.el (lyskom-en-customize-map): Fixed definition
+	of lyskom-sv-customize-map.
+
+2000-03-06  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-netscape): Quote parens in
+	URLs sent to Netscape.
+
 2000-03-03  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-w3-region): Save restriction, make start

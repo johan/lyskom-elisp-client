@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.37 2000-02-25 23:47:37 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.38 2000-03-11 15:11:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.37 2000-02-25 23:47:37 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.38 2000-03-11 15:11:07 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -165,7 +165,8 @@ If there is no active area, then do something else."
          (cons title 
                (mapcar (function
                         (lambda (entry)
-                          (vector (car entry)
+                          (vector (encode-coding-string
+                                   (car entry) 'iso-8859-1)
                                   (list (cdr entry)
                                         buf
                                         (if (listp arg)
@@ -175,12 +176,16 @@ If there is no active area, then do something else."
                                   ':active t)))
                        entries)))
         (t (append (list 'keymap title)
-                   (mapcar '(lambda (entry)
-                              (cons (` ((, (cdr entry)) 
-                                        (, buf)
-                                        (, arg)
-                                        (, text)))
-                                    (copy-tree entry)))
+                   (mapcar (function (lambda (entry)
+                                       (let ((tmp (copy-tree entry)))
+                                         (setcar tmp (encode-coding-string 
+                                                      (car tmp)
+                                                      'iso-8859-1))
+                                         (cons (` ((, (cdr entry)) 
+                                                   (, buf)
+                                                   (, arg)
+                                                   (, text)))
+                                               tmp))))
                            entries)))))
 
 
@@ -852,6 +857,8 @@ MANAGER is the URL manager that started Netscape.
 This function attempts to load the URL in a running Netscape, but failing
 that, starts a new one."
   (setq url (replace-in-string url "," "%2C"))
+  (setq url (replace-in-string url "(" "%28"))
+  (setq url (replace-in-string url ")" "%29"))
   (let* ((url-string (if (or (eq window-system 'win32)
                              (eq window-system 'mswindows)
                              (eq window-system 'w32))

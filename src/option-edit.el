@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.38 2000-02-25 23:47:38 byers Exp $
+;;;;; $Id: option-edit.el,v 44.39 2000-03-11 15:11:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.38 2000-02-25 23:47:38 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.39 2000-03-11 15:11:09 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -829,8 +829,8 @@ customize buffer but do not save them to the server."
 (defun lyskom-ispell-dictionary-widget (type &optional args propl)
   (let ((tmp-dictionary-alist nil))
     (condition-case nil 
-        (require 'ispell)
-      (setq tmp-dictionary-alist ispell-dictionary-alist)
+        (progn (require 'ispell)
+               (setq tmp-dictionary-alist ispell-dictionary-alist))
       (error (if (null ispell-dictionary-alist)
                  (setq tmp-dictionary-alist '("american" "brasiliano"
                                               "british" "castellano"
