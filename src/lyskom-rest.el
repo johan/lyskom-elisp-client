@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.12 1996-10-08 02:46:39 nisse Exp $
+;;;;; $Id: lyskom-rest.el,v 44.13 1996-10-08 03:25:46 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.12 1996-10-08 02:46:39 nisse Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.13 1996-10-08 03:25:46 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2659,6 +2659,10 @@ from the value of kom-tell-phrases-internal."
 		  kom-tell-phrases
 		  lyskom-tell-phrases-validation-keyword-list))
 	   (error "%s should not be in kom-tell-phrases" invalid)))))
+
+
+;; Build the menus
+(lyskom-build-menus)
 
 
 (or (memq 'lyskom-unread-mode-line global-mode-string)
