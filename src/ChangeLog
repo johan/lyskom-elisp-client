@@ -1,3 +1,8 @@
+Mon Feb 26 12:31:30 1996  David Byers  <byers@lysator.liu.se>
+
+	* completing-read.el: Fixade bug i inläsning av mötesnamn och
+	mötesstatus.
+
 Fri Feb 23 13:27:46 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el: Lade till lyskom-add-button-action och
