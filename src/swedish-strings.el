@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.4 1995-10-23 11:55:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.5 1995-10-24 14:38:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.4 1995-10-23 11:55:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.5 1995-10-24 14:38:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1340,7 +1340,8 @@ Users are encouraged to use their best sense of humor.")
        (,@ body))))
 
 
-(if (x-display-color-p)
+(if (and (eq window-system 'x)
+	 (x-display-color-p))
     (progn
       (lyskom-make-face 'kom-active-face
 			(copy-face 'default 'kom-active-face)
