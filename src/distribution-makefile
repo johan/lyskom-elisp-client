@@ -1,5 +1,5 @@
 #
-# $Id: distribution-makefile,v 35.2 1991-10-08 19:38:30 linus Exp $
+# $Id: distribution-makefile,v 35.3 1991-12-19 12:03:56 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -68,6 +68,8 @@ lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
 
 elc-files: $(HEADER-ELC) $(PARTS-ELC) 
+
+$(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 
 tags:
 	-etags $(HEADER-EL) $(PARTS-EL)
