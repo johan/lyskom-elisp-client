@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.175 2002-09-14 20:56:54 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.176 2002-09-15 14:52:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.175 2002-09-14 20:56:54 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.176 2002-09-15 14:52:00 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1054,33 +1054,36 @@ The position lyskom-last-viewed will always remain visible."
 ;;;
 
 
+(defun lyskom-do-special-inserts (start sym)
+  (condition-case var
+      (let ((bounds (next-text-property-bounds 1 (max (point-min) (1- start))
+                                               sym))
+            (next (make-marker))
+            (fn nil))
+        (while bounds
+          (set-marker next (cdr bounds))
+          (setq fn (get-text-property (car bounds) sym))
+          (remove-text-properties (car bounds) (cdr bounds) (list sym))
+          (condition-case val
+              (funcall (if (listp fn)
+                           (car fn)
+                         fn)
+                       (car bounds)
+                       (cdr bounds)
+                       (if (listp fn)
+                           (cdr fn)
+                         nil))
+            (error (apply 'message "%S" val)))
+          (setq start next)
+          (setq bounds (next-text-property-bounds 1 (1- start) sym))))
+    (error (lyskom-ignore var))))
+
 (defun lyskom-do-insert (string)
   (let ((start (point)))
     (insert string)
-    (condition-case var
-        (let ((bounds (next-text-property-bounds 1 (max (point-min) (1- start))
-                                                 'special-insert))
-              (next (make-marker))
-              (fn nil))
-          (while bounds
-            (set-marker next (cdr bounds))
-            (setq fn (get-text-property (car bounds) 'special-insert))
-            (remove-text-properties (car bounds) (cdr bounds)
-                                    '(special-insert))
-            (condition-case val
-                (funcall (if (listp fn)
-                             (car fn)
-                           fn)
-                         (car bounds)
-                         (cdr bounds)
-                         (if (listp fn)
-                             (cdr fn)
-                           nil))
-              (error (apply 'message "%S" val)))
-            (setq start next)
-            (setq bounds (next-text-property-bounds 1 (1- start)
-                                                    'special-insert))))
-      (error (lyskom-ignore var)))))
+    (lyskom-do-special-inserts start 'lyskom-overlay)
+    (lyskom-do-special-inserts start 'special-insert)
+))
 
 
 
@@ -1204,7 +1207,7 @@ Args: FORMAT-STRING &rest ARGS"
     (lyskom-traverse overlay (format-state->delayed-overlays state)
       (add-text-properties (aref overlay 0)
                            (aref overlay 1)
-                           (list 'special-insert 
+                           (list 'lyskom-overlay 
                              (cons 'lyskom-special-insert-overlay
                                    (aref overlay 2)))
                            result))
@@ -1242,24 +1245,6 @@ Args: FORMAT-STRING &rest ARGS"
 (defun lyskom-format (format-string &rest argl)
   (lyskom-format-transform-result (lyskom-do-format format-string argl)))
 
-(defun lyskom-format-insert-overlays (start format-state)
-  "Insert delayed overlays according to FORMAT-STATE."
-  (lyskom-traverse overlay (format-state->delayed-overlays format-state)
-    (lyskom-xemacs-or-gnu
-     (let ((overlay (lyskom-limited-make-overlay (+ start (aref overlay 0))
-                                                 (+ start (aref overlay 1))))
-           (args (aref overlay 2)))
-       (while args
-         (set-extent-property overlay (car args) (car (cdr args)))
-         (setq args (nthcdr 2 args)))
-       (set-extent-priority overlay 1000))
-     (let ((overlay (lyskom-limited-make-overlay (+ start (aref overlay 0))
-                                                 (+ start (aref overlay 1))))
-           (args (aref overlay 2)))
-       (while args
-         (overlay-put overlay (car args) (car (cdr args)))
-         (setq args (nthcdr 2 args)))))))
-
 (defun lyskom-format-insert (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at the end of the buffer with `lyskom-insert'."
@@ -1267,10 +1252,8 @@ The string is inserted at the end of the buffer with `lyskom-insert'."
 	 ;; We have to use a marker, because lyskom-insert may trim
 	 ;; the buffer size.
 	 (start (point-max-marker))
-	 (deferred (format-state->delayed-content state))
-         (insert-start (point-max)))
-    (lyskom-insert (format-state->result state))
-    (lyskom-format-insert-overlays insert-start state)
+	 (deferred (format-state->delayed-content state)))
+    (lyskom-insert (lyskom-format-transform-result state))
 
     (while deferred
       (let ((defer-info (car deferred))
@@ -1285,10 +1268,9 @@ The string is inserted at the end of the buffer with `lyskom-insert'."
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at point."
   (let* ((state (lyskom-do-format format-string argl t))
-	 (start (point))
+         (start (point))
 	 (deferred (format-state->delayed-content state)))
-    (lyskom-insert-at-point (format-state->result state))
-    (lyskom-format-insert-overlays start state)
+    (lyskom-insert-at-point (lyskom-format-transform-result state))
     (while deferred
       (let ((defer-info (car deferred))
 	    (m (make-marker)))

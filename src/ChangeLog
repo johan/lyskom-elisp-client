@@ -1,5 +1,22 @@
 2002-09-15  David Byers  <david.byers@swipnet.se>
 
+	kom-write-footnote footnoted the wrong text:
+	* utilities.el (lyskom-read-text-no-prefix-arg): Use default
+	parameter as default in prompt when the command is specified to
+	always prompt.
+
+	Fix problem with overlays in XEmacs when viewing HTML:
+	* lyskom-rest.el (lyskom-do-special-inserts): Extracted logic to
+	handle special-insert from lyskom-do-insert.
+	(lyskom-do-insert): Call the new function once for overlays and
+	once for special-insert.
+	(lyskom-format-insert-at-point): Call
+	lyskom-format-transform-result to convert overlay positions to
+	text properties. Don't explicitly insert overlays.
+	(lyskom-format-insert): Same here.
+	(lyskom-format-insert-overlays): Removed this function. No longer
+	used as we use lyskom-special-insert-overlay instead.
+
 	Fix bug 746:
 	* commands2.el (kom-status-person): Count unreads in passive
 	conferences separately. Show passive memberships in gray.
