@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.10 1992-06-13 21:15:59 linus Exp $
+;;;;; $Id: commands2.el,v 35.11 1992-06-15 22:38:07 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.10 1992-06-13 21:15:59 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.11 1992-06-15 22:38:07 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -850,7 +850,17 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 (defun lyskom-help ()
   "Prints a short list of alternatives when you don't know what you can do."
   (interactive)
-  (let* ((tohere (substring (this-command-keys) 0 -1))
+  (let* ((tohere (cond
+		  ((stringp (this-command-keys))
+		   (substring (this-command-keys) 0 -1))
+		  (t			;This is the case in the lucid-emacs.
+		   (let* ((tck (this-command-keys))
+			  (newvec (make-vector (1- (length tck)) nil))
+			  (r 0))
+		     (while (< r (length newvec))
+		       (aset newvec r (aref tck r))
+		       (++ r))
+		     newvec))))
 	 (binding (key-binding tohere))
 	 (keymap (cond
 		  ((and (symbolp binding)
@@ -858,6 +868,15 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 		   (symbol-function binding))
 		  (t binding)))
 	 (keylis (cond
+		  ((fboundp 'map-keymap)
+		   (and keymap
+			(let (list)
+			  (map-keymap
+			   (function
+			    (lambda (event function)
+			      (setq list (cons (cons event function) list))))
+			   keymap t)
+			  (nreverse list))))
 		  ((vectorp keymap)
 		   (let ((lis nil)
 			 (r 0))
@@ -874,8 +893,12 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 		       (mapconcat
 			(function
 			 (lambda (arg)
-			   (format "%c - %s" 
-				   (car arg) 
+			   (format "%s - %s" 
+				   (if (fboundp 'map-keymap)
+				       (if (symbolp (car arg))
+					   (format "%s" (car arg))
+					 (format "%c" (car arg)))
+				     (format "%c" (car arg)))
 				   (or (lyskom-command-name (cdr arg))
 				       (and (keymapp (cdr arg))
 					    (lyskom-get-string 'multiple-choice))

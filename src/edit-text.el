@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 35.11 1991-11-12 22:56:29 linus Exp $
+;;;;; $Id: edit-text.el,v 35.12 1992-06-15 22:38:18 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.11 1991-11-12 22:56:29 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.12 1992-06-15 22:38:18 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -340,7 +340,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun kom-edit-insert-digit-text ()
   (interactive)
-  (setq unread-command-char last-command-char)
+  (if (fboundp 'map-keymap)		;Special for lucid-emacs
+      (setq unread-command-event last-command-event)
+    (setq unread-command-char last-command-char))
   (call-interactively 'kom-edit-insert-text nil))
 
 
@@ -735,16 +737,24 @@ BUG: does not descend in the maps."
    (t
     (let ((map (copy-keymap oldmap))
 	  (r 0))
-      (if (arrayp newmap)
-	  (while (< r (length newmap))
-	    (if (aref newmap r)
-		(define-key map (char-to-string r) (aref newmap r)))
-	    (setq r (1+ r)))
-	(mapcar
+      (cond
+       ((fboundp 'map-keymap)		;Special for lucid-emacs
+	(map-keymap
 	 (function
-	  (lambda (ele)
-	    (define-key map (char-to-string (car ele)) (cdr ele))))
-	 (cdr newmap)))
+	  (lambda (event function)
+	    (define-key map event function)))
+	 newmap))
+      ((arrayp newmap)
+       (while (< r (length newmap))
+	 (if (aref newmap r)
+	     (define-key map (char-to-string r) (aref newmap r)))
+	 (setq r (1+ r))))
+      (t
+       (mapcar
+	(function
+	 (lambda (ele)
+	   (define-key map (char-to-string (car ele)) (cdr ele))))
+	(cdr newmap))))
       map))))
 
 
