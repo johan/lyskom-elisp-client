@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.9 1996-10-11 01:08:24 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.10 1996-10-11 01:15:26 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.9 1996-10-11 01:08:24 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.10 1996-10-11 01:15:26 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -55,6 +55,14 @@ This variable is not saved in the LysKOM server.")
 
 
 ;;; User flags
+
+(defvar kom-allow-incompleteness nil
+  "*If nil, commands like kom-list-news will wait for the prefetch.
+
+If this flag is set to t, some commands may give incomplete answers,
+but it might give them faster, especially during the login phase.
+
+This variable is not stored in the LysKOM server, but it should be.")
 
 (defvar kom-bury-buffers t
   "*Controls the behaviour of kom-next-kom and its cousins.
