@@ -1,3 +1,7 @@
+Mon Aug  9 13:29:37 1993  Linus Tolke Y  (linus@rune)
+
+	* commands1.el (kom-send-letter): Now allowed to quit.
+
 Wed Jul 28 20:18:24 1993  Linus Tolke Y  (linus@varg)
 
 	* commands1.el, command2.el, completing-read.el, edit-text.el:
