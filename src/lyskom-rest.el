@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.1 1996-09-03 16:01:32 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.2 1996-09-03 18:42:57 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.1 1996-09-03 16:01:32 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.2 1996-09-03 18:42:57 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2270,7 +2270,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(condition-case error
 	    (progn
 	      (setq lyskom-quit-flag nil)
-
+	      
 	      (if lyskom-debug-communications-to-buffer
                   (if (not lyskom-debug-what-i-am-doing)
                       (if (not (and (eq ?: (elt output 0))
@@ -2279,7 +2279,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                     (lyskom-debug-insert proc "-----> " output)))
 	      
 	      (set-buffer (process-buffer proc))
-	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
+	      (princ output lyskom-unparsed-marker)
+	      ;;+++lyskom-string-skip-whitespace
 	      (if quit-flag		; We are allowed to break here.
 		  (setq inhibit-quit nil)) ; This will break
 					   ; instantly.
@@ -2296,14 +2297,14 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	       ((not (string-match "\n" output)))
 	       
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
-		(setq lyskom-is-parsing t)
-		(unwind-protect
-		    (condition-case error-type
-			(lyskom-parse-unparsed)
-		      (lyskom-parse-incomplete)) ;Incomplete answers are normal.
-		  (set-buffer (process-buffer proc)) ;In case it was changed by
-					;        ;the handler.
-		  (setq lyskom-is-parsing nil)))))
+		(let ((lyskom-is-parsing t))
+		  (unwind-protect
+		      (condition-case error-type
+			  (lyskom-parse-unparsed)
+			;; Incomplete answers are normal.
+			(lyskom-parse-incomplete))
+		    ;; In case it was changed by the handler.
+		    (set-buffer (process-buffer proc)))))))
 	  ;; condition-case handler
 	  (quit (setq lyskom-quit-flag t))
 	  ;; (lyskom-protocol-error

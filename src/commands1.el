@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.0 1996-08-30 14:45:32 davidk Exp $
+;;;;; $Id: commands1.el,v 44.1 1996-09-03 18:42:50 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.0 1996-08-30 14:45:32 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.1 1996-09-03 18:42:50 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -337,7 +337,7 @@ Returns t if it was possible, otherwise nil."
 		      (> kom-membership-default-priority 0))
 		 kom-membership-default-priority
 	       (lyskom-read-num-range
-		1 255 (lyskom-get-string 'priority-q)))))
+		0 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
