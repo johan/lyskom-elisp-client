@@ -1,5 +1,12 @@
 2002-12-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 701:
+	* utilities.el (lyskom-get-ancestors-of-text): Provide completions
+	when reading text numbers.
+
+	* lyskom-rest.el (lyskom-read-number): Set require-match when
+	reading numbers with completion.
+
 	Fix bug 919:
 	* faqs.el (lyskom-change-faq-3): Handle creating FAQs.
 	(lyskom-change-faq-2): Ditto.
