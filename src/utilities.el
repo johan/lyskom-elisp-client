@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.34 1999-10-11 15:44:03 byers Exp $
+;;;;; $Id: utilities.el,v 44.35 1999-10-13 15:50:41 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.34 1999-10-11 15:44:03 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.35 1999-10-13 15:50:41 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -686,3 +686,18 @@ name of the day of week."
     (if (string= tmp "") 
         tmp
       (concat "[" tmp "]"))))
+
+(defun lyskom-find-unread (conf-no)
+  "Return the number of unread texts in CONF-NO.
+If this function is unable to calculate the number of unread texts it will
+return nil."
+  (save-excursion
+   (set-buffer lyskom-buffer)
+   (let ((rlist (read-list->all-entries lyskom-to-do-list))
+         (found nil))
+     (while (and (not found) rlist)
+       (when (eq conf-no (conf-stat->conf-no
+                          (read-info->conf-stat (car rlist))))
+         (setq found (length (cdr (read-info->text-list (car rlist))))))
+       (setq rlist (cdr rlist)))
+     found)))

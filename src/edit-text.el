@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $
+;;;;; $Id: edit-text.el,v 44.45 1999-10-13 15:50:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.45 1999-10-13 15:50:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1587,6 +1587,8 @@ Point must be located on the line where the subject is."
     (lyskom-edit-mode 1)
 ;++MINOR    (setq mode-name lyskom-edit-mode-name)
     (sit-for 0))
+   (is-anonymous
+    (lyskom-format-insert-before-prompt 'text-created-anonymous text-no))
    (t
     (lyskom-insert-before-prompt
      (lyskom-format 'text-created  text-no))

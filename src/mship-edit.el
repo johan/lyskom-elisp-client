@@ -112,27 +112,11 @@ only recomputed if the window width changes."
       (setq lp--last-format-string
             (concat "%#1c %=3#2s %#9c %=-" (number-to-string total)
                     "#3M  %=-12#4s %=5#5s  %[%#10@%#6c%]%[%#11@%#7c%]%[%#12@%#8c%]")))))
-          
-
-(defun lp--find-unread (conf-no)
-  "Return the number of unread texts in CONF-NO.
-If this function is unable to calculate the number of unread texts it will
-return nil."
-  (save-excursion
-   (set-buffer lyskom-buffer)
-   (let ((rlist (read-list->all-entries lyskom-to-do-list))
-         (found nil))
-     (while (and (not found) rlist)
-       (when (eq conf-no (conf-stat->conf-no
-                          (read-info->conf-stat (car rlist))))
-         (setq found (length (cdr (read-info->text-list (car rlist))))))
-       (setq rlist (cdr rlist)))
-     found)))
 
 (defun lp--format-entry (entry)
   "Format ENTRY for insertion in a buffer.
 Returns a string suitable for insertion in a membership list."
-  (let ((un (lp--find-unread (membership->conf-no
+  (let ((un (lyskom-find-unread (membership->conf-no
                               (lp--entry->membership entry))))
         (conf-stat (blocking-do 'get-conf-stat
                                 (membership->conf-no

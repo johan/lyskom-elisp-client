@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.48 1999-10-13 15:50:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.48 1999-10-13 15:50:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1802,6 +1802,32 @@ Return-value: 'no-session if there is no suitable session to switch to
 		      nil nil nil nil nil)
     (lyskom-run 'main 'lyskom-end-of-command)))
 
+
+;;;============================================================
+;;; Bli anonym
+
+(def-kom-command kom-become-anonymous ()
+  "Become pseudo-anonymous"
+  (interactive)
+  (if lyskom-is-anonymous
+      (lyskom-insert 'you-are-already-anonymous)
+;    (initiate-pepsi 'main nil 0)
+    (setq lyskom-is-anonymous t)
+    (lyskom-tell-server kom-mercial)
+    (lyskom-insert 'you-are-anonymous)
+    (lyskom-update-prompt t)))
+
+(def-kom-command kom-become-nonanonymous ()
+  "Leave pseudo-anonymous mode"
+  (interactive)
+  (if lyskom-is-anonymous
+      (progn (when (and lyskom-current-conf 
+                        (not (zerop lyskom-current-conf)))
+               (initiate-pepsi 'main nil lyskom-current-conf))
+             (setq lyskom-is-anonymous nil)
+             (lyskom-update-prompt t)
+             (lyskom-insert 'you-are-nonanonymous))
+    (lyskom-insert 'you-are-already-nonanonymous)))
 
 ;;;============================================================
 ;;;   Ändra mötestyp                    (kom-change-conf-type)
