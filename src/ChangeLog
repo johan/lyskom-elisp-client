@@ -1,5 +1,12 @@
 2004-01-01  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1236:
+	* vars.el.in (lyskom-default-conference-strategy): Added
+	kom-force-logout.
+
+	* commands1.el (lyskom-return-username): Handle
+	static-session-info and session-info in addition to who-info.
+
 	Fix bug 1237:
 	* vars.el.in (lyskom-commands-not-in-menu): New variable.
 
