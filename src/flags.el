@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.20 1999-12-05 22:42:05 byers Exp $
+;;;;; $Id: flags.el,v 44.21 2000-01-10 13:33:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.20 1999-12-05 22:42:05 byers Exp $\n"))
+	      "$Id: flags.el,v 44.21 2000-01-10 13:33:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -254,7 +254,7 @@
 		    (while (stringp (cdr (car (cdr pos))))
 		      (setq pos (cdr pos)))
 		    (setcdr pos nil))))))
-    (error (lyskom-message (lyskom-get-string 'error-in-options-short))))
+    (error (lyskom-message "%s" (lyskom-get-string 'error-in-options-short))))
   (setq lyskom-options-done t))
 
 
