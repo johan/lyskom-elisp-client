@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.196 2002-05-25 18:22:40 byers Exp $
+;;;;; $Id: vars.el.in,v 44.197 2002-05-26 21:34:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.196 2002-05-25 18:22:40 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.197 2002-05-26 21:34:16 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -106,14 +106,14 @@ are in the list.")
 if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
          ((memq ,var kom-dont-read-saved-variables) nil)
-         (t (set ,var (eval ,value)))))
+         (t (set ,var ,value))))
 
 (defmacro lyskom-maybe-setq-default (var value)
   "This is a wrapper around setq-default that does nothing
 if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
          ((memq ,var kom-dont-read-saved-variables) nil)
-         (t (set-default ,var (eval ,value)))))
+         (t (set-default ,var ,value))))
 
 
 ;;;; ================================================================
@@ -1241,6 +1241,11 @@ Each element is a cons cell consisting of the name of the month
 appear more than once"
   local
   inherited
+  language-force)
+
+(def-kom-var lyskom-help-data nil
+  "Help strings."
+  local
   language-force)
 
 (def-kom-var lyskom-onoff-table nil

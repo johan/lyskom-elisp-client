@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.132 2002-05-22 21:40:50 byers Exp $
+;;;;; $Id: commands2.el,v 44.133 2002-05-26 21:34:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.132 2002-05-22 21:40:50 byers Exp $\n"))
+              "$Id: commands2.el,v 44.133 2002-05-26 21:34:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1898,8 +1898,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 (def-kom-emacs-command kom-where-is (cmd)
   "Show on which key a LysKOM command is"
-  (interactive
-   (list (lyskom-read-extended-command)))
+  (interactive (list (lyskom-read-extended-command)))
   (let ((w (where-is-internal cmd))
         (msg nil))
     (cond ((null cmd)
@@ -2447,29 +2446,58 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no))
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
-(def-kom-command kom-help ()
-  "Get some help with LysKOM"
-  (interactive)
-  (let* ((completion-ignore-case t)
-         (table (mapcar (lambda (x)
-                          (cons (lyskom-get-string (car x) 'lyskom-help-strings)
-                                (car x)))
-                        lyskom-help-categories))
-         (category nil))
+;; (def-kom-command kom-help ()
+;;   "Get some help with LysKOM"
+;;   (interactive)
+;;   (let* ((completion-ignore-case t)
+;;          (table (mapcar (lambda (x)
+;;                           (cons (lyskom-get-string (car x) 'lyskom-help-strings)
+;;                                 (car x)))
+;;                         lyskom-help-categories))
+;;          (category nil))
+;; 
+;;     (while (null category)
+;;       (setq category
+;;             (lyskom-string-assoc
+;;              (lyskom-completing-read (lyskom-get-string 'help-with-what)
+;;                                      table
+;;                                      nil
+;;                                      t
+;;                                      nil
+;;                                      'lyskom-help-history)
+;;              table)))
+;;     (lyskom-format-insert "Hjälp för %#1s\n\n" 
+;;                           (car category))
+;;     (lyskom-display-help-category (cdr category))))
 
-    (while (null category)
-      (setq category
+(def-kom-command kom-help ()
+  "Get some help with LysKOM."
+  (interactive)
+  (let* ((alternatives (delq nil
+                             (mapcar (lambda (section)
+                                       (unless (string= "" (elt section 1))
+                                         (cons (elt section 1) 
+                                               (elt section 0))))
+                                     lyskom-help-data)))
+         (completion-ignore-case t)
+         (section nil))
+    (while (null section)
+      (setq section
             (lyskom-string-assoc
              (lyskom-completing-read (lyskom-get-string 'help-with-what)
-                                     table
+                                     alternatives
                                      nil
                                      t
                                      nil
                                      'lyskom-help-history)
-             table)))
-    (lyskom-format-insert "Hjälp för %#1s\n\n" 
-                          (car category))
-    (lyskom-display-help-category (cdr category))))
+             alternatives)))
+    (lyskom-format-insert 'help-for (car section))
+    (lyskom-help-format-section (cdr section))))
+
+
+
+
+
 
 (defun lyskom-display-help-category (category &optional flags)
   "Display help category CATEGORY."
