@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.168 2002-03-20 07:30:41 joel Exp $
+;;;;; $Id: vars.el.in,v 44.169 2002-03-21 19:44:52 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.168 2002-03-20 07:30:41 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.169 2002-03-21 19:44:52 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1184,16 +1184,16 @@ appear more than once"
       (lyskom-button-review-noconversion-action . lyskom-button-review-noconversion)
       (lyskom-button-find-root-review-action . lyskom-button-find-root-review)
       (lyskom-button-find-root-action . lyskom-button-find-root)
+      (lyskom-button-review-comments-action . lyskom-button-review-comments)
+      (lyskom-button-review-tree-action . lyskom-button-review-tree)
       (lyskom-button-comment-text-action . lyskom-button-comment-text)
       (lyskom-button-private-comment-text-action . lyskom-button-private-comment-text)
+      (lyskom-button-write-footnote-action . lyskom-button-write-footnote)
+      (lyskom-button-fast-reply-action . lyskom-button-fast-reply)
       (lyskom-button-mark-text-action . lyskom-button-mark-text)
       (lyskom-button-unmark-text-action . lyskom-button-unmark-text)
       (lyskom-button-save-text-action . lyskom-button-save-text)
       (lyskom-button-save-text-body-action . lyskom-button-save-text-body)
-      (lyskom-button-review-comments-action . lyskom-button-review-comments)
-      (lyskom-button-review-tree-action . lyskom-button-review-tree)
-      (lyskom-button-write-footnote-action . lyskom-button-write-footnote)
-      (lyskom-button-fast-reply-action . lyskom-button-fast-reply)
       )
      nil
      ;; ((nil lyskom-print-text footer lyskom-button-comment-text))
@@ -1214,6 +1214,7 @@ appear more than once"
      lyskom-button-view-pers-presentation
      ((lyskom-button-view-pers-presentation-action . lyskom-button-view-pers-presentation)
       (lyskom-button-view-pers-status-action . lyskom-button-view-pers-status)
+      (lyskom-button-view-session-status-action . lyskom-button-view-session-status)
       (lyskom-button-mail-action . lyskom-button-mail)
       (lyskom-button-send-message-action . lyskom-button-send-message))
      ((kom-list-news . lyskom-button-goto-conf)
