@@ -10,11 +10,6 @@ administrat|rsmode:
 
 * Titta igenom och komplettera den engelska dokumentationen.
 
-* I docen: Att Ändra inställningarna heter Ändra variabler
-  {r en bugg. 
-Linus: Jag har f|r mig jag fixade det. Det {r bara som funktion [ndra
-       variabler finns kvar.
-
 * M kan vara din egen brevl\aa{}da, men du kan inte Review texter till
 n\aa{}gon annans brevl\aa{}da. Det beror p\aa{} en bug i server som kommer att
 r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
@@ -61,9 +56,6 @@ bort ur den h{r filen.
 ================================================================
 1. Saker som skall fixas innan n{sta release (0.35):
 ================================================================
-
-* lyskom-connect-filter skall skrivas om s} att den klarar av ifall
-  LysKOM\n delar paket med ett annat asynkront meddelande.
 
 * H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
   conf-stat eller membership vilka delar av mappen f|r m|tet som vi
