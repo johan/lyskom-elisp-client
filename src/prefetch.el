@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 35.5 1992-07-30 02:04:49 linus Exp $
+;;;;; $Id: prefetch.el,v 35.6 1992-07-30 19:49:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 35.5 1992-07-30 02:04:49 linus Exp $\n"))
+	      "$Id: prefetch.el,v 35.6 1992-07-30 19:49:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -496,14 +496,7 @@ Put the requests on QUEUE."
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
   (let ((list (lyskom-array-to-list membership)))
-    (while list
-      (if (memq (membership->conf-no (car list))
-		(mapcar (function membership->conf-no) lyskom-membership))
-	  (if (numberp lyskom-membership-is-read)
-	      (-- lyskom-membership-is-read))
-	(setq lyskom-membership (append lyskom-membership (list (car list)))))
-      (setq list (cdr list)))
-    (setq list (lyskom-array-to-list membership))
+    (lyskom-add-membership-to-membership membership)
     (while list
       (lyskom-prefetch-map (membership->conf-no (car list))
 			   (membership->last-text-read (car list))
@@ -539,16 +532,7 @@ Maps are `cached' in lyskom-to-do-list."
 	    (lyskom-prefetch-map-using-conf-stat 
 	     conf-stat (+ first-local lyskom-fetch-map-nos)
 	     queue))
-	(while list
-	  (if (read-list-enter-text (car list) conf-stat lyskom-to-do-list)
-	      (setq list (cdr list))
-	    (let ((info (lyskom-create-read-info 
-			 'CONF conf-stat
-			 (membership->priority 
-			  (lyskom-member-p (conf-stat->conf-no conf-stat)))
-			 (lyskom-create-text-list list))))
-	      (read-list-enter-read-info info lyskom-to-do-list)
-	      (setq list nil))))))
+	(lyskom-enter-map-in-to-do-list map conf-stat)))
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch)
@@ -569,6 +553,7 @@ Maps are `cached' in lyskom-to-do-list."
 (defun lyskom-prefetch-whobuffer-handler (who-is-on queue)
   "Handle the who-is-on info. The goal here is to get an updated who-buffer."
   (cache-initiate-who-info-buffer who-is-on)  ;+++ should be done later
+  (-- lyskom-pending-prefetch)
   )
 
 
