@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.101 2000-05-26 14:35:24 byers Exp $
+;;;;; $Id: vars.el.in,v 44.102 2000-05-31 15:35:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.101 2000-05-26 14:35:24 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.102 2000-05-31 15:35:37 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -427,8 +427,9 @@ long as there are sessions with unread texts.
 
 (def-kom-var lyskom-view-text-hook nil
   "*Hook that is called before a text is shown. When the hooks is
-called, text is bound to the text mass of the text and text-stat to
-the text-stat of the text to be shown.")
+called, lyskom-view-text-text is bound to the text mass of the 
+text and lyskom-view-text-text-stat to the text-stat of the text
+to be shown.")
 
 
 (def-kom-var lyskom-send-message-hook '(lyskom-send-message-trim-newlines)

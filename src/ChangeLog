@@ -1,3 +1,28 @@
+2000-05-31  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-J
+
+2000-05-31  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (kom-edit-insert-commented): Don't use 62 instead
+	of ">" or ?>. Please.
+	(kom-edit-insert-commented): Don't send the default prefix to
+	lyskom-edit-insert-commented. nil now means default.
+	(lyskom-edit-insert-commented): Prefix nil means use default prefix.
+
+ 	New calling conventions for lyskom-view-text-hook
+	* view-text.el (lyskom-filter-signature-hook): Use
+	lyskom-view-text-text and lyskom-view-text-text-stat
+
+	* vars.el.in (lyskom-view-text-hook): Fixed docstring.
+
+	* view-text.el (lyskom-view-text): Set lyskom-view-text-text and
+	lyskom-view-text-text-stat.
+
+	Scrolling problems
+	* mship-edit.el (lp--scroll-advice): Fixed bug that caused most of
+	the code to run in any buffer.
+
 2000-05-30  David Byers  <davby@ida.liu.se>
 
 	* command.el (lyskom-fix-interactive-decl): Bind

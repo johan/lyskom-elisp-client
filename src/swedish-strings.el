@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.116 2000-05-30 01:41:52 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.117 2000-05-31 15:35:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.116 2000-05-30 01:41:52 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.117 2000-05-31 15:35:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1576,7 +1576,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-keep-alive           . "Håll förbindelsen aktiv")
     (kom-stop-keep-alive      . "Avbryt håll förbindelsen aktiv")
 
-    (kom-is-person-member-of-conference . "Kontrollera (om Person är) medlem (i Möte)")
+    (kom-is-person-member-of-conference . "Kontrollera (om person är) medlem (i möte)")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
