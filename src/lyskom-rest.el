@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.17 1996-10-11 11:19:02 nisse Exp $
+;;;;; $Id: lyskom-rest.el,v 44.18 1996-10-20 02:56:54 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,9 +74,12 @@
 ;;;;    work is needed.
 ;;;;
 
+(require 'lyskom-menus "menus")
+
+
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.17 1996-10-11 11:19:02 nisse Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.18 1996-10-20 02:56:54 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -133,10 +136,10 @@
 ;;; ----------------------------------------------------------------
 ;;; Author: Aronsson
 
-(defun lyskom-tell-string (key)
+(defsubst lyskom-tell-string (key)
   "Retrieve the phrase indexed by the key from the kom-tell-phrases
 assoc list."
-  (car (cdr (assoc key kom-tell-phrases))))
+  (lyskom-get-string key 'kom-tell-phrases))
 
 
 (defun lyskom-tell-internat (key)
@@ -147,51 +150,6 @@ assoc list."
   (lyskom-tell-server (lyskom-tell-string key)))
 
 
-
-;;;; ================================================================
-;;;;                User-level commands and functions.
-
-
-(defun lyskom-command-name (command)
-  "Get the command name for the command COMMAND"
-  (lyskom-get-string command 'lyskom-command)) 
-
-(defun lyskom-ok-command (alternative administrator)
-  "Returns non-nil if it is ok to do such a command right now."
-  (if administrator
-      (not (memq (cdr alternative) lyskom-admin-removed-commands))
-    (not (memq (cdr alternative) lyskom-noadmin-removed-commands))))
-
-
-(defun kom-extended-command ()
-  "Read a LysKOM function name and call the function."
-  (interactive)
-  (let ((fnc (lyskom-read-extended-command)))
-    (cond
-     (fnc (call-interactively fnc))
-     (t (kom-next-command)))) )
-
-(defun lyskom-read-extended-command ()
-  "Reads and returns a command"
-  (let* ((completion-ignore-case t)
-	 (alternatives (mapcar (function (lambda (pair)
-					   (cons (cdr pair) (car pair))))
-			       (lyskom-get-strings lyskom-commands 'lyskom-command)))
-	 (name (completing-read (lyskom-get-string 'extended-command)
-				alternatives 
-				;; lyskom-is-administrator is buffer-local and
-				;; must be evalled before the call to 
-				;; completing-read
-				;; Yes, this is not beautiful
-				;;(list 'lambda '(alternative)	     
-				;;	(list 'lyskom-ok-command 'alternative
-				;;	      lyskom-is-administrator))
-				(` (lambda (alternative)
-				     (lyskom-ok-command
-				      alternative
-				      (, lyskom-is-administrator))))
-				t nil)))
-    (cdr (assoc name alternatives))))
 
 ;;; Resume operation after a crash.
 
@@ -1500,100 +1458,6 @@ positions are counted from 0, as they are."
 ;;;                             To-do
 
 
-(defun lyskom-start-of-command (function &optional may-interrupt)
-  "This function is run at the beginning of every LysKOM command.
-It moves the cursor one line down, and +++ later it will tell the server
-that the previous text has been read.
-
-Argument FUNCTION is a string the string will be written in the buffer
-on start of the command. If it is a symbol it searches for the corresponding
-command name in lyskom-commands and writes this in the message buffer.
-
-If optional argument MAY-INTERRUPT is present and non-nil,
-don't signal an error if this call is interrupting another command.
-
-Special: if lyskom-is-waiting then we are allowed to break if we set 
-lyskom-is-waiting nil.
-
-This function checks if lyskom-doing-default-command and
-lyskom-first-time-around are bound. The text entered in the buffer is
-chosen according to this"
-
-  (if (not lyskom-proc)
-      (lyskom-error "%s" (lyskom-get-string 'dead-session)))
-
-  (if (and lyskom-is-waiting
-           (listp lyskom-is-waiting))
-      (progn
-        (setq lyskom-is-waiting nil)
-        (lyskom-end-of-command)))
-
-  (setq lyskom-is-waiting nil)
-  (if (and lyskom-executing-command (not may-interrupt))
-      (lyskom-error "%s" (lyskom-get-string 'wait-for-prompt)))
-  (if (not (and (boundp 'lyskom-doing-default-command)
-                lyskom-doing-default-command))
-      (cond
-       (lyskom-first-time-around)
-       ((stringp function) (lyskom-insert function))
-       ((and function (symbolp function))
-        (let ((name (lyskom-command-name function)))
-          (if name (lyskom-insert name)))))
-    (save-excursion
-      (if lyskom-current-prompt
-          (let ((inhibit-read-only t))
-            (goto-char (point-max))
-            (delete-char (- (length lyskom-prompt-text))))))
-    (lyskom-insert lyskom-prompt-executing-default-command-text))
-  (setq mode-line-process (lyskom-get-string 'mode-line-working))
-  (if (pos-visible-in-window-p (point-max))
-      (save-excursion
-        (goto-char (point-max))
-        (lyskom-set-last-viewed)))
-  (setq lyskom-executing-command t)
-  (setq lyskom-current-command function)
-  (setq lyskom-current-prompt nil)
-  (lyskom-insert "\n")
-  (if (and (eq (window-buffer (selected-window))
-               (current-buffer))
-           ;; (= (point) (point-max))
-	   ) 
-      (progn
-	(if (pos-visible-in-window-p (1- (point-max)))
-	    (goto-char (point-max)))
-        (sit-for 0))) 
-                                        ;  (lyskom-scroll)
-  (run-hooks 'lyskom-before-command-hook)
-  (if kom-page-before-command           ;Nice with dumb terminals.
-      (if (or (not (listp kom-page-before-command))
-              (memq function kom-page-before-command))
-          (recenter 1))))
-
-
-(defun lyskom-end-of-command ()
-  "Print prompt, maybe scroll, prefetch info."
-  (message "")
-  (while (and lyskom-to-be-printed-before-prompt
-	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-    (if (not (bolp)) (lyskom-insert "\n"))
-    (lyskom-insert (car (lyskom-queue->first 
-			 lyskom-to-be-printed-before-prompt)))
-    (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
-  (setq lyskom-executing-command nil)
-  (setq lyskom-current-command nil)
-  (setq lyskom-current-prompt nil)	; Already set in s-o-c really
-  (lyskom-scroll)
-  (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
-  (if (pos-visible-in-window-p (point-max) (selected-window))
-      (lyskom-set-last-viewed))
-  (lyskom-prefetch-and-print-prompt)
-  (run-hooks 'lyskom-after-command-hook)
-  (if lyskom-idle-time-flag
-      (initiate-user-active 'background nil))
-  (if kom-inhibit-typeahead
-      (discard-input)))
-
-
 (defun lyskom-update-prompt ()
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
@@ -2433,32 +2297,7 @@ One parameter - the prompt string."
 ;;;
 ;;; Author: Roger Mikael Adolfsson
 
-(defun lyskom-missing-fields (alist blist)
-  "Returns the list of fields from ALIST that are missing in BLIST."
-  (let (caralist clist (alist (copy-alist alist)))
-    (while alist
-      (setq caralist (car (car alist)))
-      (if (assq caralist blist)
-	  nil
-	(setq clist (cons caralist clist)))
-      (setq alist (cdr alist)))
-    clist))
-
-(defun lyskom-tell-phrases-validate ()
-  "Attempts to validate the value of kom-tell-phrases
-from the value of kom-tell-phrases-internal."
-  (interactive)
-  (let (invalid)
-    (cond ((setq invalid
-		 (lyskom-missing-fields
-		  lyskom-tell-phrases-validation-keyword-list
-		  kom-tell-phrases))
-	   (error "%s must be in kom-tell-phrases" invalid))
-	  ((setq invalid
-		 (lyskom-missing-fields 
-		  kom-tell-phrases
-		  lyskom-tell-phrases-validation-keyword-list))
-	   (error "%s should not be in kom-tell-phrases" invalid)))))
+;;; This code removed (lyskom-tell-phrases-validate)
 
 
 ;; Build the menus

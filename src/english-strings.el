@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.8 1996-10-11 11:15:25 nisse Exp $
+;;;;; $Id: english-strings.el,v 44.9 1996-10-20 02:56:48 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.8 1996-10-11 11:15:25 nisse Exp $"))
+              "$Id: english-strings.el,v 44.9 1996-10-20 02:56:48 davidk Exp $"))
 
 
 
@@ -1122,7 +1122,7 @@ On since %#8s%#9s")
     (dont-read . "Jump")
     (write     . "Write")
     (conference . "Conference")
-    (person    . "Person")
+    (person    . "User")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
@@ -1603,30 +1603,6 @@ This variable is stored in the LysKOM server.")
 
 
      
-;; Review a non-converted text
-;; Author: Linus Tolke
- 
-
-(defun kom-review-noconversion (&optional text-no)
-  "Displays the last read text without any conversion."
-  (interactive (list 
-		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
-		 ((and (listp current-prefix-arg) 
-		       (integerp (car current-prefix-arg)) 
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
-		 (t
-		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
-  (lyskom-start-of-command 'kom-review-noconversion)
-  (let ((kom-emacs-knows-iso-8859-1 t))
-    (lyskom-view-text text-no))
-  (lyskom-end-of-command))
-
-
 ;; A bag of goodies for sojge. 
 
 (defun kom-put-file (filename)
@@ -1641,3 +1617,8 @@ This variable is stored in the LysKOM server.")
 (defun kom-list-files ()
   (interactive)
   (list-directory "/ftp@ftp.lysator.liu.se:/open"))
+
+
+(provide 'lyskom-strings)
+
+;;; english-strings ends here

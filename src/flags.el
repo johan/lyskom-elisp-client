@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.1 1996-10-06 05:18:18 davidk Exp $
+;;;;; $Id: flags.el,v 44.2 1996-10-20 02:56:50 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.1 1996-10-06 05:18:18 davidk Exp $\n"))
+	      "$Id: flags.el,v 44.2 1996-10-20 02:56:50 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -292,7 +292,7 @@ If successful then set the buffer not-modified. Else print a warning."
 	  (setq lyskom-other-clients-user-areas)
 	  (if (zerop (pers-stat->user-area pers-stat))
 	      (progn
-		(lyskom-tell-phrases-validate)
+		;; (lyskom-tell-phrases-validate)
 		(setq lyskom-options-done t))
 	    (lyskom-read-options-eval 
 	     (blocking-do 'get-text
