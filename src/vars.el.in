@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.10 1996-10-11 01:15:26 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.11 1996-10-11 11:21:48 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.10 1996-10-11 01:15:26 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.11 1996-10-11 11:21:48 nisse Exp $\n"
   "Version for every file in the client.")
 
 
@@ -40,14 +40,14 @@
 (provide 'lyskom)
 
 
-;;;; ================================================================
-;;;;                    Emacs dependant variables
-
-(defvar kom-emacs-knows-iso-8859-1 t
-  "*If non-nil then dont convert texts and other things to swascii.
-This variable is not saved. It should be set in your .emacs
-
-This variable is not saved in the LysKOM server.")
+;;;;;; ================================================================
+;;;;;;                    Emacs dependant variables
+;;
+;;(defvar kom-emacs-knows-iso-8859-1 t
+;;  "*If non-nil then dont convert texts and other things to swascii.
+;;This variable is not saved. It should be set in your .emacs
+;;
+;;This variable is not saved in the LysKOM server.")
 
 
 ;;;; ================================================================
@@ -662,7 +662,7 @@ This variable is not saved in the LysKOM server.")
   ;; preference order.
   "*Which language to use.
 
-Supported languages are 'sv, 'en and 'swascii.")
+Supported languages are 'sv and 'en")
 
 
 ;;; =================================================================
