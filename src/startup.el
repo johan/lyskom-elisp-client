@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.15 1992-08-30 18:08:01 linus Exp $
+;;;;; $Id: startup.el,v 35.16 1992-11-08 23:17:54 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.15 1992-08-30 18:08:01 linus Exp $\n"))
+	      "$Id: startup.el,v 35.16 1992-11-08 23:17:54 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -600,10 +600,8 @@ Entry to this mode runs lyskom-mode-hook."
 	(last-viewed lyskom-last-viewed)
 	(replies-buffer lyskom-unparsed-buffer)
 	(replies-marker lyskom-unparsed-marker)
-	(server-info lyskom-server-info)
-	(default-password lyskom-default-password))
+	(server-info lyskom-server-info))
     (kill-all-local-variables)
-    (make-local-variable 'lyskom-default-password)
     (make-local-variable 'lyskom-unparsed-buffer)
     (make-local-variable 'lyskom-unparsed-marker)
     (make-local-variable 'lyskom-is-writing)
@@ -655,7 +653,6 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'mode-line-conf-name)
     (make-local-variable 'lyskom-debug-communications-to-buffer)
     (make-local-variable 'lyskom-debug-communications-to-buffer-buffer)
-    (setq lyskom-default-password default-password)
     (setq lyskom-proc proc)
     (setq lyskom-ref-no ref-no)
     (setq lyskom-pers-no pers-no)
