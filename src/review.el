@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 35.4 1991-12-13 19:20:48 linus Exp $
+;;;;; $Id: review.el,v 35.5 1992-06-13 19:11:30 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 35.4 1991-12-13 19:20:48 linus Exp $\n"))
+	      "$Id: review.el,v 35.5 1992-06-13 19:11:30 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -668,4 +668,3 @@ text is shown and a REVIEW list is built to shown the other ones."
   (if (or (<= n 0) (not list))
       nil
     (cons (car list) (nfirst (1- n) (cdr list)))))
-			
