@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 41.0 1996-05-02 19:26:52 davidk Exp $
+;;;;; $Id: filter.el,v 41.1 1996-05-05 22:19:58 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 41.0 1996-05-02 19:26:52 davidk Exp $\n"))
+	      "$Id: filter.el,v 41.1 1996-05-05 22:19:58 davidk Exp $\n"))
 
 
 ;;;============================================================
@@ -541,16 +541,16 @@ the current text"
                (lyskom-end-of-command))
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
 	    (if conf-stat
-            (progn
-              (lyskom-add-filter
-               (make-filter
-                (list (cons 'subject lyskom-current-subject)
-                      (cons 'recipient-no (conf-stat->conf-no conf-stat)))
-                (list (cons 'action 'skip-tree)
-                      (cons 'expire t))))
-              (lyskom-format-insert 'super-jump
-                                    (copy-sequence lyskom-current-subject)
-                                    conf-stat)))))))
+		(progn
+		  (lyskom-add-filter
+		   (make-filter
+		    (list (cons 'subject lyskom-current-subject)
+			  (cons 'recipient-no (conf-stat->conf-no conf-stat)))
+		    (list (cons 'action 'skip-tree)
+			  (cons 'expire t))))
+		  (lyskom-format-insert 'super-jump
+					(copy-sequence lyskom-current-subject)
+					conf-stat)))))))
 
 
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.1 1996-05-03 22:41:34 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.2 1996-05-05 22:20:03 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.1 1996-05-03 22:41:34 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.2 1996-05-05 22:20:03 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -393,10 +393,6 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 	    (if is-review
 		(delq text-no 
 		      (read-info->text-list tri))) ;First entry only
-	    (if mark-as-read
-		(lyskom-is-read text-no)
-	      (read-list-delete-text nil lyskom-reading-list)
-	      (read-list-delete-text nil lyskom-to-do-list))
 	    (setq action
 		  (lyskom-view-text text-no mark-as-read 
 				    (and kom-read-depth-first
@@ -406,7 +402,11 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 				      lyskom-reading-list))
 				    priority
 				    is-review-tree
-				    (not is-review)))))))))
+				    (not is-review)))
+	    (if mark-as-read
+		(lyskom-is-read text-no)
+	      (read-list-delete-text nil lyskom-reading-list)
+	      (read-list-delete-text nil lyskom-to-do-list))))))))
   
 
 ;;; Modified to handle filters
