@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.151 2001-11-04 21:57:04 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.152 2001-11-13 00:12:25 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.151 2001-11-04 21:57:04 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.152 2001-11-13 00:12:25 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1245,6 +1245,21 @@ each time ."
      (lambda (buffer argument text) nil)
      ((lyskom-button-copy-timestamp-action . lyskom-button-copy-timestamp))
      nil)
+    (recpt-type
+     recpt-type-popup-title
+     (lambda (buffer argument text) nil)
+     ((lyskom-button-recpt-type-recipient
+       . (lambda (buffer argument text)
+	   (lyskom-edit-do-add-recipient/copy
+	    'recpt (car argument) (cadr argument))))
+      (lyskom-button-recpt-type-copy
+       . (lambda (buffer argument text)
+	   (lyskom-edit-do-add-recipient/copy
+	    'cc-recpt (car argument) (cadr argument))))
+      (lyskom-button-recpt-type-bcc
+       . (lambda (buffer argument text)
+	   (lyskom-edit-do-add-recipient/copy
+	    'bcc-recpt (car argument) (cadr argument))))))
     )
   "This variable defines valid button types in LysKOM. Each element is a
 list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.154 2001-11-04 21:57:00 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.155 2001-11-13 00:12:20 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.154 2001-11-04 21:57:00 jhs Exp $"))
+              "$Id: english-strings.el,v 44.155 2001-11-13 00:12:20 qha Exp $"))
 
 
 ;;; ================================================================
@@ -796,10 +796,10 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the text.")
-    (recipient . "Recipient:")
+    (recipient . "Recipient")
     (recipient-prefix . "[Rr]")
-    (carbon-copy . "Carbon copy:")
-    (blank-carbon-copy . "Blind Carbon copy:")
+    (carbon-copy . "Carbon copy")
+    (blank-carbon-copy . "Blind Carbon copy")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
 
@@ -1255,6 +1255,7 @@ Text:
     (url-popup-title  . "URL %#1s")
     (aux-popup-title  . "Extra information")
     (timestamp-popup-title . "Timestamp %#1s")
+    (recpt-type-popup-title . "Recipient type: %#1s")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
@@ -1566,6 +1567,9 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-info-aux-action . "Information")
     (lyskom-button-delete-aux-action . "Delete")
     (lyskom-button-copy-timestamp-action . "Copy")
+    (lyskom-button-recpt-type-recipient . "Recipient")
+    (lyskom-button-recpt-type-copy . "Carbon copy")
+    (lyskom-button-recpt-type-bcc . "Blind Carbon copy")
     (lyskom-edit-toggle-secret-aux-action . "Toggle \"secret\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Toggle \"anonymous\"")
     (lyskom-edit-toggle-inherit-aux-action . "Toggle \"inherited\"")
