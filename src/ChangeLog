@@ -1,5 +1,8 @@
 Sun Jul  5 05:02:37 1992  Linus Tolke Y  (linus@lysator)
 
+	* commands1.el (lyskom-return-who-info-line): Now removes all
+	  ending spaces.
+
 	* commands1.el (lyskom-write-comment, lyskom-comment-recipients):
 	  Now writing footnotes keep the cc-recipients.
 
