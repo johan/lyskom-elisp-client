@@ -1,3 +1,8 @@
+2003-01-08  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-month-limits): Wrong number of days for
+	July. Fixed.
+
 2003-01-08  David Byers  <david.byers@swipnet.se>
 
 	Documetned the remaining commands:
