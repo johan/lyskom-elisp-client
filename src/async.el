@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.13 1992-03-12 03:32:03 linus Exp $
+;;;;; $Id: async.el,v 35.14 1992-04-29 12:52:35 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.13 1992-03-12 03:32:03 linus Exp $\n"))
+	      "$Id: async.el,v 35.14 1992-04-29 12:52:35 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -108,17 +108,18 @@ this function shall be with current-buffer the BUFFER."
 	  (set-buffer buffer)
 	  (if (zerop lyskom-pers-no)
 	      nil
-	    (if (and (/= (who-info->pers-no info) 0)
-		     (/= (who-info->pers-no info) lyskom-pers-no))
-					;Don't show myself.
-		(initiate-get-conf-stat 'follow
-					'lyskom-show-changed-person
-					(who-info->pers-no info)
-					(who-info->working-conf info)
-					(who-info->doing-what info)))
-	    (if (/= (who-info->working-conf info) 0)
-		(initiate-get-conf-stat 'void nil
-					(who-info->working-conf info)))
+; This fetches the conf-stats once to much.
+;	    (if (and (/= (who-info->pers-no info) 0)
+;		     (/= (who-info->pers-no info) lyskom-pers-no))
+;					;Don't show myself.
+;		(initiate-get-conf-stat 'follow
+;					'lyskom-show-changed-person
+;					(who-info->pers-no info)
+;					(who-info->working-conf info)
+;					(who-info->doing-what info)))
+;	    (if (/= (who-info->working-conf info) 0)
+;		(initiate-get-conf-stat 'void nil
+;					(who-info->working-conf info)))
 	    (cache-add-who-info info)))))
 
      ((eq msg-no 7)			; Database is syncing.
