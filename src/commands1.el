@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.9 1996-08-27 15:14:59 byers Exp $
+;;;;; $Id: commands1.el,v 43.10 1996-08-29 20:52:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.9 1996-08-27 15:14:59 byers Exp $\n"))
+	      "$Id: commands1.el,v 43.10 1996-08-29 20:52:27 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1672,11 +1672,13 @@ Uses Protocol A version 9 calls"
     (lyskom-insert (lyskom-format 'total-users total-users))))
 
 (defun lyskom-insert-deferred-session-info (session-info defer-info)
-  (lyskom-replace-deferred defer-info
-			   (lyskom-combine-username
-			    (static-session-info->username session-info)
-			    (static-session-info->ident-user session-info)
-			    (static-session-info->hostname session-info))))
+  (if session-info
+      (lyskom-replace-deferred defer-info
+			       (lyskom-combine-username
+				(static-session-info->username session-info)
+				(static-session-info->ident-user session-info)
+				(static-session-info->hostname session-info)))
+    (lyskom-replace-deferred defer-info "")))
 
 ;;; =====================================================================
 ;;;                 Lista klienter - List clients
