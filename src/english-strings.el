@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.139 2001-05-30 05:46:17 joel Exp $
+;;;;; $Id: english-strings.el,v 44.140 2001-05-30 13:02:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.139 2001-05-30 05:46:17 joel Exp $"))
+              "$Id: english-strings.el,v 44.140 2001-05-30 13:02:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2385,6 +2385,8 @@ Select whether to execute command or keyboard macro.")
     (symbolic-mark-name . "Symbolic name: ")
     (mark-type-to-assoc . "Mark type to associate with: ")
 
+    (prompt-for-text-no . "Prompt for text number")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3206,11 +3208,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   network connection to the LysKOM server active. If your network connection
   shuts down after a period of inactivity, set this to approximately half
   that period and use the command `Keep connection alive'.")
-    (kom-prompt-for-text-no-doc . "\
-  These commands will always prompt for text numbers, unless one is
-  specified via a prefix argument. Commands that are not listed will
-  assume a suitable default and only prompt if the prefix argument is
-  zero.")
+    (kom-text-no-prompts-doc . "\
+  Specifies which commands will always prompt for text numbers and which
+  will not. Commands that are not listed here will use default behavior.")
     (kom-saved-file-name-doc . "\
   Specifies the default file to archive texts in. The client will always
   prompt for the file name, using this as the default.")
@@ -3404,7 +3404,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM:")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names:")
     (kom-keep-alive-interval-tag . "Keep connection alive interval:")
-    (kom-prompt-for-text-no-tag . "Commands that prompt for text numbers:")
+    (kom-text-no-prompts-tag . "How commands prompt for text numbers:")
     (kom-saved-file-name-tag . "File to archive texts in:")
     (kom-follow-attachments-tag . "Read imported attachments as texts:")
     (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar:")

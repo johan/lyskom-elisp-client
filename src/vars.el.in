@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.138 2001-05-24 12:02:37 byers Exp $
+;;;;; $Id: vars.el.in,v 44.139 2001-05-30 13:02:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.138 2001-05-24 12:02:37 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.139 2001-05-30 13:02:21 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2162,7 +2162,7 @@ set to that text."
   "List of patterns to filter during this session."
   local)
 
-(def-kom-var kom-prompt-for-text-no 
+(def-kom-var lyskom-text-no-prompts-defaults
   '(kom-delete-text
     kom-view
     kom-write-footnote
@@ -2183,7 +2183,14 @@ set to that text."
     kom-add-no-comments
     kom-add-private-answer
     kom-add-request-confirm)
-  "*Commands that prompt for a text number rather than assume a default."
+  "Commands that prompt for a text number rather than assume a default."
+  inherited)
+
+(def-kom-var kom-text-no-prompts nil
+  "*Configure which commands ask for text numbers.
+A list containing pairs of (COMMAND . VALUE). If VALUE is non-nil, COMMAND
+will prompt for text numbers. If VALUE is nil, COMMAND will use a suitable
+default value."
   server
   inherited)
 

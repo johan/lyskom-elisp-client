@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.55 2001-05-24 12:02:38 byers Exp $
+;;;;; $Id: view-text.el,v 44.56 2001-05-30 13:02:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.55 2001-05-24 12:02:38 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.56 2001-05-30 13:02:22 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -1038,6 +1038,8 @@ Args: TEXT-STAT of the text being read."
 	 (type (misc-info->type misc))
          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
                                             17)))
+         (read-mx-from (car (lyskom-get-aux-item (text-stat->aux-items read-text-stat)
+                                                 17)))
          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
                                               16)))
          (mx-attachments-in (lyskom-get-text-attachments read-text-stat))
@@ -1047,6 +1049,7 @@ Args: TEXT-STAT of the text being read."
                          (lyskom-get-aux-item (text-stat->aux-items 
                                                read-text-stat) 10100)))
          (content-type "")
+         (read-content-type "")
 	 fmt data)
 
     (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
@@ -1061,18 +1064,29 @@ Args: TEXT-STAT of the text being read."
                                           (aux-item->data content-type))))
       (setq content-type ""))
     
+    (if (and read-mx-from
+             (setq read-content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              read-text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data read-content-type))
+               (setq read-content-type (format "(%s) "
+                                          (aux-item->data read-content-type))))
+      (setq read-content-type ""))
+    
     (cond
      ((eq type 'COMM-TO)
       (setq fmt (cond ((memq (misc-info->comm-to misc) mx-belongs-to)
                        'attachment-to-text)
                       (author 'comment-to-text-by)
                       (t 'comment-to-text))
+            content-type read-content-type
 	    data (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
       (setq fmt (cond ((memq (misc-info->footn-to misc) mx-belongs-to)
                        'attachment-to-text)
                       (author 'footnote-to-text-by)
                       (t 'footnote-to-text))
+            content-type read-content-type
 	    data (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
       (setq fmt (cond ((memq (misc-info->comm-in misc) mx-attachments-in) 
@@ -1099,6 +1113,7 @@ Args: TEXT-STAT of the text being read."
 		    (text-stat->author text-stat)
 		  nil))
         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
+        (read-mx-from (car (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 17)))
         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
         (mx-attachments-in (lyskom-get-text-attachments read-text-stat))
         (mx-belongs-to (mapcar
@@ -1106,6 +1121,7 @@ Args: TEXT-STAT of the text being read."
                           (string-to-number (aux-item->data el)))
                         (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
         (content-type "")
+        (read-content-type "")
         (is-attachment nil)
         (type (misc-info->type misc)))
 
@@ -1122,6 +1138,15 @@ Args: TEXT-STAT of the text being read."
                                           (aux-item->data content-type))))
       (setq content-type ""))
 
+    (if (and read-mx-from
+             (setq read-content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              read-text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data read-content-type))
+               (setq read-content-type (format "(%s) "
+                                          (aux-item->data read-content-type))))
+      (setq read-content-type ""))
+
     
     (cond
      ((eq type 'COMM-TO)
@@ -1131,7 +1156,7 @@ Args: TEXT-STAT of the text being read."
                               'comment-to-text)
                             (misc-info->comm-to misc)
                             nil
-                            content-type))
+                            read-content-type))
      ((eq type 'FOOTN-TO)
       (lyskom-format-insert (if (and (memq (misc-info->footn-to misc) mx-belongs-to)
                                      (setq is-attachment t))
@@ -1139,7 +1164,7 @@ Args: TEXT-STAT of the text being read."
                               'footnote-to-text)
                             (misc-info->footn-to misc)
                             nil
-                            content-type))
+                            read-content-type))
      ((eq type 'COMM-IN)
       (lyskom-format-insert (if (and (memq (misc-info->comm-in misc) mx-attachments-in)
                                      (setq is-attachment t))

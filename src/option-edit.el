@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.56 2001-05-21 12:39:26 byers Exp $
+;;;;; $Id: option-edit.el,v 44.57 2001-05-30 13:02:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.56 2001-05-21 12:39:26 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.57 2001-05-30 13:02:18 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -78,7 +78,7 @@
     [kom-presence-messages]
     [kom-presence-messages-in-buffer]
     "\n"
-    [kom-prompt-for-text-no]
+    [kom-text-no-prompts]
     [kom-page-before-command]
     [kom-deferred-printing]
     [kom-max-buffer-size]
@@ -672,7 +672,9 @@ customize buffer but do not save them to the server."
     (kom-ansaphone-replies (ansaphone))
     (kom-complete-numbers-before-names (toggle (on off)))
     (kom-keep-alive-interval (number))
-    (kom-prompt-for-text-no (repeat (command nil :tag command)))
+    (kom-text-no-prompts (repeat (cons ((command nil :tag command :format "%[%t%]: %v")
+                                        (toggle (yes no)  :tag prompt-for-text-no :format "%[%t%]: %v")
+                                        ))))
     (kom-saved-file-name (file))
     (kom-follow-attachments (toggle (yes no)))
     (kom-show-unread-in-frame-title (toggle (yes no)))
@@ -693,6 +695,7 @@ customize buffer but do not save them to the server."
     (number . lyskom-number-widget)
     (const .  lyskom-item-widget)
     (repeat . lyskom-repeat-widget)
+    (cons . lyskom-cons-widget)
     (kbd-macro . lyskom-kbd-macro-widget)
     (url-viewer . lyskom-url-viewer-widget)
     (ispell-dictionary . lyskom-ispell-dictionary-widget)
@@ -1096,6 +1099,15 @@ customize buffer but do not save them to the server."
          (list (lyskom-widget-convert-specification args)))
    propl))
 
+(defun lyskom-cons-widget (type &optional args propl)
+  (lyskom-build-simple-widget-spec
+   'cons
+   (list ':format "%v\n"
+         ':tag ""
+         ':args (list (lyskom-widget-convert-specification (elt args 0))
+                      (lyskom-widget-convert-specification (elt args 1))))
+   propl))
+
 (defun lyskom-choice-widget (type &optional args propl)
   (lyskom-build-simple-widget-spec
    'menu-choice
@@ -1302,7 +1314,9 @@ customize buffer but do not save them to the server."
   (widget-value-set widget
 		    (save-excursion
 		      (set-buffer lyskom-buffer)
-		      (lyskom-read-extended-command)))
+		      (lyskom-read-extended-command nil (concat 
+                                                         (widget-get widget ':tag)
+                                                         ": "))))
   (widget-setup))
                
 (defun lyskom-widget-command-value-create (widget)

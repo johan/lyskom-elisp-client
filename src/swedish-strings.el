@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.170 2001-05-30 05:46:16 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.171 2001-05-30 13:02:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.170 2001-05-30 05:46:16 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.171 2001-05-30 13:02:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2819,6 +2819,8 @@ till ett visst möte.")
     (symbolic-mark-name . "Symboliskt namn: ")
     (mark-type-to-assoc . "Markeringstyp att associera till: ")
 
+    (prompt-for-text-no . "Fråga efter textnummer")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3645,10 +3647,10 @@ i servern. Annars sparas det i din .emacs.")
   hålla nätverkskopplingen till LysKOM-servern aktiv. Om din förbindelse
   kopplar ned efter en stunds inaktivitet så kan du sätta detta till ungefär 
   hälften och sedan ge kommandot \"Håll förbindelsen aktiv\".")
-    (kom-prompt-for-text-no-doc . "\
-  Dessa kommandon kommer alltid att fråga efter textnummer om man inte 
-  anger något explicit med prefixargument. Kommaondon som inte står med 
-  här kommer att gissa ett textnummer och inte fråga.")
+    (kom-text-no-prompts-doc . "\
+  Den är inställningen styr vilka kommandon som alltid frågar efter 
+  textnummer (om man inte anger ett explicit som prefixargument). För 
+  kommandon som inte står med här används inbyggda standardinställningar.")
     (kom-saved-file-name-doc . "\
   Anger vilken fil som inlägg skall arkiveras till. Klienten kommer ändå
   att fråga, men detta blir det förifyllda svaret.")
@@ -3841,7 +3843,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa:")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn:")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång:")
-    (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer:")
+    (kom-text-no-prompts-tag . "Hur kommandon frågar efter textnummer:")
     (kom-saved-file-name-tag . "Fil att arkivera inlägg i:")
     (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt:")
     (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden:")
