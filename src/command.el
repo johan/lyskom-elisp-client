@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.17 1999-10-13 15:50:26 byers Exp $
+;;;;; $Id: command.el,v 44.18 1999-11-17 23:11:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.17 1999-10-13 15:50:26 byers Exp $\n"))
+	      "$Id: command.el,v 44.18 1999-11-17 23:11:31 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -303,6 +303,7 @@ chosen according to this"
   "Print prompt, maybe scroll, prefetch info."
   (lyskom-save-excursion
    (message "")
+   (lyskom-clean-all-buffer-lists)
    (while (and lyskom-to-be-printed-before-prompt
                (lyskom-queue->first lyskom-to-be-printed-before-prompt))
      (if (not (bolp)) (lyskom-insert "\n"))

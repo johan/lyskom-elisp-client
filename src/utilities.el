@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.39 1999-10-18 18:54:36 byers Exp $
+;;;;; $Id: utilities.el,v 44.40 1999-11-17 23:11:45 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.39 1999-10-18 18:54:36 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.40 1999-11-17 23:11:45 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -733,3 +733,66 @@ return nil."
           (goto-char (point-max))
           (setq num 1))))
     (setq num (1- num))))
+
+;;; ============================================================
+;;; Database stuff
+
+;; Extracted from edit-text.el
+;;(defun lyskom-is-supervisor (conf-stat &optional memo)
+;;  "Return non-nil if lyskom-pers-no is a supervisor of CONF-STAT."
+;;  (cond ((null conf-stat) nil)
+;;        ((memq (conf-stat->conf-no conf-stat) memo) nil)
+;;        ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
+;;        ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
+;;        ((eq 0 (conf-stat->supervisor conf-stat)) nil)
+;;        ((lyskom-get-membership (conf-stat->conf-no conf-stat) t) t)
+;;        ((lyskom-is-supervisor
+;;          (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
+;;          (cons (conf-stat->conf-no conf-stat) memo)))))
+
+(defun lyskom-is-supervisor (conf-no viewer-no)
+  "Return non-nil if the supervisor of CONF-NO is VIEWER-NO."
+  (or (eq viewer-no conf-no)
+      (lyskom-is-strictly-supervisor conf-no viewer-no)))
+
+(defun lyskom-is-strictly-supervisor (conf-no viewer-no)
+  "Return non-nil if VIEWER-NO is strictly a supervisor of CONF-NO
+
+Cannot be called from a callback."
+  (let ((collector (make-collector))
+        (conf-stat nil))
+    (initiate-get-conf-stat 'background 'collector-push conf-no collector)
+    (lyskom-wait-queue 'background)
+    (setq conf-stat (car (collector->value collector)))
+
+    (cond ((null viewer-no) nil)
+          ((eq viewer-no 0) nil)
+          ((null conf-stat) nil)
+          ((eq viewer-no (conf-stat->supervisor conf-stat)) t)
+          ((lyskom-is-member (conf-stat->supervisor conf-stat) viewer-no) t)
+          (t nil))))
+
+(defun lyskom-is-member (conf-no pers-no &optional queue)
+  "Return the membership in CONF-NO of PERS-NO
+Optional argument QUEUE is the queue to send the queries on.
+
+Cannot be called from a callback."
+  (or (and (eq pers-no lyskom-pers-no)
+           (lyskom-try-get-membership conf-no t))
+      (let ((collector (make-collector)))
+        (initiate-query-read-texts (or queue 'background)
+                                   'collector-push
+                                   pers-no
+                                   conf-no
+                                   collector)
+        (lyskom-wait-queue (or queue 'background))
+        (car (collector->value collector)))))
+
+
+
+
+
+            
+
+          
+                          

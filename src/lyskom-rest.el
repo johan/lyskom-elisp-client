@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.85 1999-11-17 12:53:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.86 1999-11-17 23:11:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.85 1999-11-17 12:53:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.86 1999-11-17 23:11:38 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -394,7 +394,9 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 
 ;; This is horribly ugly. It acts like a user command, but it isn't.
 (defun lyskom-view-priority-text ()
-  "Display the first text from the next conference on the lyskom-to-do-list."
+  "Display the first text from the next conference on the lyskom-to-do-list.
+
+Cannot be called from a callback."
   (lyskom-start-of-command 'kom-view-next-text)
   (unwind-protect
       (progn
@@ -2204,6 +2206,7 @@ The name of the file is read using the minibuffer and the default is kom-text."
                       arg (1- arg))
               (setq arg 0)))
           (set-buffer buf)
+          (setq kom-deferred-printing nil)
           (erase-buffer)
           (mapcar (function
                    (lambda (n)
@@ -3062,6 +3065,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
   "Handles changes in the lyskom-process."
   (setq lyskom-sessions-with-unread
 	(delq proc lyskom-sessions-with-unread))
+  (setq lyskom-sessions-with-unread-letters
+	(delq proc lyskom-sessions-with-unread-letters))
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
   (lyskom-format-insert 'closed-connection sentinel 
@@ -3352,7 +3357,7 @@ One parameter - the prompt string."
      (let ((extent (make-extent nil nil nil)))
        (set-extent-keymap extent lyskom-modeline-keymap)
        (setq global-mode-string
-             (append (list "" (cons extent lyskom-unread-mode-line))
+             (append (list "" (cons extent 'lyskom-unread-mode-line))
                      global-mode-string)))
      (setq global-mode-string
             (append '("" lyskom-unread-mode-line) global-mode-string))))
@@ -3362,6 +3367,9 @@ One parameter - the prompt string."
               (list 'lyskom-sessions-with-unread-letters
                     (lyskom-get-string 'mode-line-letters))
               " "))
+
+  (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)
+
 
 ;;;
 ;;; Set up lyskom-line-start-chars. The reason we do it here is that

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.8 1998-06-02 12:14:12 byers Exp $
+;;;;; $Id: buffers.el,v 44.9 1999-11-17 23:11:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.8 1998-06-02 12:14:12 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.9 1999-11-17 23:11:30 byers Exp $\n"))
 
 
 ;;;;
@@ -174,6 +174,35 @@ the children object"
 
 ;;;; ======================================================================
 ;;;; ======================================================================
+
+(defun lyskom-clean-all-buffer-lists ()
+  "Remove dead buffers from all relevant buffer lists"
+  (setq lyskom-sessions-with-unread
+        (lyskom-clean-buffer-list lyskom-sessions-with-unread)
+        lyskom-sessions-with-unread-letters
+        (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
+        lyskom-buffer-list
+        (lyskom-clean-buffer-list lyskom-buffer-list)))
+
+(defun lyskom-clean-buffer-list (buffers)
+  "Remove all dead buffers from BUFFERS"
+  (let ((result nil))
+    (while buffers
+      (when (lyskom-buffer-p (car buffers))
+        (setq result (cons (car buffers) result)))
+      (setq buffers (cdr buffers)))
+    (nreverse result)))
+
+(defun lyskom-remove-buffer-from-lists (&optional buffer)
+    "Remove BUFFER from all internal lists.
+If BUFFER is not specified, assume the current buffer"
+  (unless buffer (setq buffer (current-buffer)))
+  (setq lyskom-sessions-with-unread
+        (delq buffer lyskom-sessions-with-unread))
+  (setq lyskom-sessions-with-unread-letters
+        (delq buffer lyskom-sessions-with-unread-letters))  
+  (setq lyskom-buffer-list
+        (delq buffer lyskom-buffer-list)))
 
 (defvar lyskom-associated-buffer-list nil
   "List of (CATEGORY . BUFFER-LIST) listing all buffers of various

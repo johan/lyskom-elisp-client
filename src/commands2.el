@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.52 1999-11-17 12:52:55 byers Exp $
+;;;;; $Id: commands2.el,v 44.53 1999-11-17 23:11:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.52 1999-11-17 12:52:55 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.53 1999-11-17 23:11:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1173,99 +1173,6 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;     (t (lyskom-message "%s" (lyskom-get-string 'does-not-exist))))
 
 
-;;; ================================================================
-;;;           Skapa bugg-rapport - Compile bugg-report
-
-;;; Author: Linus Tolke
-
-
-(defun kom-bug-report ()
-  "This command should make it easier to include the correct info in a buggreport"
-  (interactive)
-  (let* ((curbuf (current-buffer))
-         (old-buf (if (boundp 'debugger-old-buffer)
-                      (symbol-value 'debugger-old-buffer)
-                    (current-buffer)))
-         (repname "*lyskom-bugreport*"))
-    (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
-    (set-buffer old-buf)
-    (cond
-     ((condition-case nil
-          (eq old-buf (process-buffer lyskom-proc))
-        (error nil)))
-     ((condition-case nil
-          (save-excursion
-            (set-buffer (process-buffer lyskom-proc))
-            (set-buffer lyskom-unparsed-buffer)
-            (eq old-buf (current-buffer)))
-        (error nil))
-      (set-buffer (process-buffer lyskom-proc)))
-     (t
-      (error "I dont know what buffer you are running lyskom in (%s)?" 
-             old-buf)))
-    (with-output-to-temp-buffer repname
-      (princ (lyskom-get-string 'buggreport-description))
-      (princ (lyskom-get-string 'buggreport-internals))
-      (princ (lyskom-get-string 'buggreport-command-keys))
-      (terpri)
-      (princ (key-description (recent-keys)))
-      (terpri)
-      (princ (lyskom-get-string 'buggreport-version))
-      (print lyskom-clientversion)
-      (princ (lyskom-get-string 'buggreport-emacs-version))
-      (print (emacs-version))
-      (princ (lyskom-get-string 'buggreport-system-id))
-      (print system-type)
-      (princ (lyskom-get-string 'buggreport-ctl-arrow-doc))
-      (print (condition-case nil
-                 (documentation-property 'ctl-arrow 'variable-documentation)
-               (error)))
-
-      (princ (lyskom-get-string 'buggreport-unparsed))
-      (print (save-excursion
-               (set-buffer lyskom-unparsed-buffer)
-               (goto-char (point-min))
-               (forward-line 10)
-               (buffer-substring (point-min) (point))))
-      (if (and (boundp 'debugger-old-buffer) 
-               (symbol-value 'debugger-old-buffer))
-          (princ (lyskom-format 'buggreport-backtrace
-                                (save-excursion
-                                  (set-buffer curbuf)
-                                  (buffer-substring (point-min) 
-                                                    (point-max))))))
-      (if lyskom-debug-communications-to-buffer
-          (progn
-            (princ (lyskom-get-string 'buggreport-communications))
-            (print (save-excursion
-                     (set-buffer lyskom-debug-communications-to-buffer-buffer)
-                     (buffer-substring (point-min) (point-max))))))
-      (princ (lyskom-get-string 'buggreport-all-kom-variables))
-      (mapatoms
-       (function
-        (lambda (symbol)
-          (and (boundp symbol)
-               (string-match "^\\(kom-\\|lyskom-\\)" (symbol-name symbol))
-               (not (string-match "-cache$\\|^kom-dict$\\|^lyskom-strings$\
-\\|-map$\\|^lyskom-commands$"
-                                  (symbol-name symbol)))
-               (progn
-                 (terpri)
-                 (princ (symbol-name symbol))
-                 (princ ":")
-                 (print (symbol-value symbol))))))))
-    
-    (save-excursion
-      (set-buffer repname)
-      (goto-char (point-min))
-      (replace-regexp "byte-code(\".*\""
-                      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
-    (lyskom-message "%s" (lyskom-get-string 'buggreport-compileend))))
-
-(fset 'kom-compile-bug-report (symbol-function 'kom-bug-report))
-
-
-
 
 ;;; ================================================================
 ;;;      [ndra livsl{ngd - Set lifespan of texts in a conference
@@ -1638,16 +1545,6 @@ is alive."
 ;;;		     (if (lyskom-buffer-p buf) nil buf)))
 ;;;		  lyskom-buffer-list)))
 
-
-
-(defun lyskom-clean-buffer-list (buffers)
-  "Remove all dead buffers from BUFFERS"
-  (let ((result nil))
-    (while buffers
-      (when (lyskom-buffer-p (car buffers))
-        (setq result (cons (car buffers) result)))
-      (setq buffers (cdr buffers)))
-    (nreverse result)))
 
 (defun lyskom-next-kom (buffer-list-name direction)
   "Internal version of kom-next-kom
@@ -2203,6 +2100,16 @@ Return-value: 'no-session if there is no suitable session to switch to
       (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
      ((null faq-list) 
       (lyskom-format-insert 'conf-has-no-faq conf-stat))
+     ((eq 1 (length faq-list))
+      (lyskom-format-insert 'review-faq-for-r conf-stat)
+      (lyskom-view-text (car faq-list) 
+                        nil             ;mark-as-read
+                        nil             ;follow-comments
+                        nil             ;conf-stat
+                        nil             ;priority
+                        nil             ;build-review-tree
+                        t               ;flat-review
+                        ))
      (t 
       (lyskom-format-insert 'review-faq-for-r conf-stat)
       (read-list-enter-read-info

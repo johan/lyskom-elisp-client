@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.48 1999-10-19 13:11:43 byers Exp $
+;;;;; $Id: edit-text.el,v 44.49 1999-11-17 23:11:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.48 1999-10-19 13:11:43 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.49 1999-11-17 23:11:36 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -715,25 +715,16 @@ Based on ispell-message."
 (defun lyskom-is-permitted-author (conf-stat)
   (and conf-stat
        (or (eq 0 (conf-stat->permitted-submitters conf-stat))
-           (lyskom-is-supervisor conf-stat))))
-
-(defun lyskom-is-supervisor (conf-stat &optional memo)
-  "Return non-nil if lyskom-pers-no is a supervisor of CONF-STAT."
-  (cond ((null conf-stat) nil)
-        ((memq (conf-stat->conf-no conf-stat) memo) nil)
-        ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
-        ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
-        ((eq 0 (conf-stat->supervisor conf-stat)) nil)
-        ((lyskom-get-membership (conf-stat->conf-no conf-stat) t) t)
-        ((lyskom-is-supervisor
-          (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
-          (cons (conf-stat->conf-no conf-stat) memo)))))
+           (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
+                                 lyskom-pers-no))))
 
 
 (defun lyskom-edit-send-check-recipients (misc-list subject) 
   "Check that the recipients of this text are OK. Ask the user to
 confirm multiple recipients; check that the author of the commented
-text is a member of some recipient of this text."
+text is a member of some recipient of this text.
+
+Cannot be called from a callback."
   (let* ((comm-to-list nil)
          (recipient-list nil)
          (author-list nil)
