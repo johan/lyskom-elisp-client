@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.25 1996-02-18 05:51:29 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.26 1996-02-21 19:48:07 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.25 1996-02-18 05:51:29 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.26 1996-02-21 19:48:07 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -758,7 +758,7 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
 (defun lyskom-do-insert-before-prompt (string)
   (cond
    ((and lyskom-executing-command
-	 (not lyskom-is-waiting)
+	 (not lyskom-is-waiting)	; Looks weird /davidk
 	 (not (eq lyskom-is-waiting t)))
     ;; Don't insert the string until the current command is finished.
     (if (null lyskom-to-be-printed-before-prompt)
@@ -1152,6 +1152,14 @@ Args: FORMAT-STRING &rest ARGS"
      ;;  should parse the text for buttons
      ;;
      ((= format-letter ?t)
+
+      ;; +++ One would want to do this before or after, but then
+      ;; buttons will not be visible and other highlighting will
+      ;; disappear.
+
+      ;; (if (not colon-flag)
+      ;;     (setq propl (append (list 'face 'kom-text-face) propl)))
+
       (setq result
             (cond ((stringp arg) (lyskom-format-text-body arg))
                   ((lyskom-text-p arg) 
@@ -1161,7 +1169,7 @@ Args: FORMAT-STRING &rest ARGS"
                                    ": argument error"))))))
      
      (t (signal 'lyskom-internal-error
-                (list 'lyskom-format-help format-letter))))
+		 (list 'lyskom-format-help format-letter))))
     
     ;;
     ;; Pad the result to the appropriate length
@@ -1219,6 +1227,8 @@ Args: FORMAT-STRING &rest ARGS"
 (defvar lyskom-format-experimental nil)
 
 (defun lyskom-format-text-body (text)
+  "Format a text for insertion. Does parsing of special markers in the text."
+  ;; This function is probably not written as it should
   (if lyskom-format-experimental
       (cond
        ((and (string-match "\\`html:" text)
@@ -1241,7 +1251,9 @@ Args: FORMAT-STRING &rest ARGS"
                 (substring (buffer-string) 0 -1)) ; Remove the \n
             (kill-buffer tmpbuf))))
        (t
-        (lyskom-button-transform-text text)))
+	text
+        ;;(lyskom-button-transform-text text)
+	))
     (lyskom-button-transform-text text)))
     
 
@@ -1584,7 +1596,8 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
          lyskom-prefetch-conf-tresh)
       (lyskom-prefetch-conf))
   (lyskom-prefetch-text)
-  (if (and (listp lyskom-is-waiting)
+  (if (and lyskom-is-waiting
+	   (listp lyskom-is-waiting)
            (eval lyskom-is-waiting))
       (progn
         (setq lyskom-is-waiting nil)
@@ -2254,7 +2267,7 @@ One parameter - the prompt string."
 (defun lyskom-mode-name-from-host ()
   "Calculate what to identify the buffer with."
   (let ((server  (process-name (get-buffer-process (current-buffer)))))
-    (or (cdr (assoc server lyskom-server-aliases))
+    (or (cdr (assoc server kom-server-aliases))
 	(format "LysKOM(%s)" server))))
 
 

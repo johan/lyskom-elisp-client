@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.4 1996-02-17 05:42:05 davidk Exp $
+;;;;; $Id: macros.el,v 38.5 1996-02-21 19:48:16 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.4 1996-02-17 05:42:05 davidk Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 38.5 1996-02-21 19:48:16 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -135,7 +135,7 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-(defmacro when (expr body)
+(defmacro when (expr &rest body)
   "Execute BODY if EXPR evaluates to non-nil"
   (list 'if expr (cons 'progn body)))
 
@@ -203,6 +203,7 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 (put 'blocking-do-multiple 'edebug-form-spec
      '(sexp body))
 
+(put 'blocking-do-multiple 'lisp-indent-function 1)
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
