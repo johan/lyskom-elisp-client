@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.83 2000-11-18 11:43:23 ceder Exp $
+;;;;; $Id: commands2.el,v 44.84 2000-12-09 09:22:21 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.83 2000-11-18 11:43:23 ceder Exp $\n"))
+	      "$Id: commands2.el,v 44.84 2000-12-09 09:22:21 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -308,8 +308,8 @@ otherwise: the conference is read with lyskom-completing-read."
                                             1)))
                              (lyskom-format-insert 'conf-membership-line
                                                    (if (zerop unread)
-                                                       "         "
-                                                     (format "%7d  " unread))
+                                                       "           "
+                                                     (format "%9d  " unread))
                                                    (member->pers-no member)
                                                    (lyskom-return-membership-type (member->membership-type member))
                                                    )
@@ -472,7 +472,7 @@ otherwise: the conference is read with lyskom-completing-read."
 				  1)))
 		   (lyskom-format-insert
 		    'pers-membership-line
-		    (if (zerop unread) "       " (format "%6d " unread))
+		    (if (zerop unread) "          " (format "%9d " unread))
 		    (if (= (conf-stat->conf-no conf-stat)
 			   (conf-stat->supervisor member-conf-stat))
 			(lyskom-get-string 'is-supervisor-mark)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.115 2000-12-03 16:15:41 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.116 2000-12-09 09:22:24 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.115 2000-12-03 16:15:41 ceder Exp $"))
+              "$Id: english-strings.el,v 44.116 2000-12-09 09:22:24 joel Exp $"))
 
 
 ;;; ================================================================
@@ -562,10 +562,10 @@ Read all about it at http://www.lysator.liu.se/history/")
     (show-membership-info-q . "Show number of unreads? ")
     (conf-has-these-members . "\n%#1M has the following members:\n")
     (conf-has-no-members . "\n%#1M has no members.\n")
-    (member-list-header . "Last entered       Unread  Name\n\n")
+    (member-list-header . "Last entered        Unread  Name\n\n")
     (secret-membership . "--- Secret line ---\n")
     (conf-membership-line . "%#1s%#2M %#3s\n")
-    (conf-membership-line-2 . "                          Added %#1s by %#2P\n")
+    (conf-membership-line-2 . "                            Added %#1s by %#2P\n")
     (pers-for-status . "Get status of which user? ")
     (no-such-pers . "The user doesn't exist.\n")
     (pers-status-record . "Status of user %#1P (%#2p)\n")
@@ -590,9 +590,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (show-membership-list-also-q . "List memberships? ")
     (not-allowed-see-confs . "You are not permitted to see which conferences %#1P is a member of.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
-    (membership-list-header . "Last access       Unread Conference\n\n")
+    (membership-list-header . "Last access          Unread  Conference\n\n")
     (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
-    (pers-membership-line-2 . "                          Added %#1s by %#2P\n")
+    (pers-membership-line-2 . "                             Added %#1s by %#2P\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Send message to whom? (%s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
