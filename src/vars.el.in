@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.127 2000-11-18 13:02:22 joel Exp $
+;;;;; $Id: vars.el.in,v 44.128 2000-11-19 15:14:29 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.127 2000-11-18 13:02:22 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.128 2000-11-19 15:14:29 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -688,7 +688,8 @@ to be displayed in the buffer."
 (def-kom-var kom-dont-check-commented-authors nil
   "*List of recipients who do not need to be added to comments that they
 might not see. Typically this list consists of import agents."
-  server)
+  server
+  inherited)
 
 (def-kom-var kom-default-face-scheme nil  
   "*Face scheme to use per default for new logins.")
