@@ -1,5 +1,11 @@
 2004-11-12  Pontus Freyhult  <pont@soua.net>
 
+        * commands2.el (kom-list-sessions): Use session-list-no-unread-in
+	if there are no texts in the session.
+
+	* english-strings.el, swedish-strings.el (local):
+	Added session-list-no-unread-in.
+	
 	* commands2.el (kom-modeline-select-unread-kom): Use 
 	lyskom-session-nickname.
 	(kom-status-server): Dito.
