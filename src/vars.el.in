@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.25 1996-03-04 15:13:21 byers Exp $
+;;;;; $Id: vars.el.in,v 38.26 1996-03-12 07:29:24 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.25 1996-03-04 15:13:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.26 1996-03-12 07:29:24 byers Exp $\n"))
 
 
 
@@ -359,7 +359,8 @@ he gets a y-or-n-p question for all recipients.")
 (defvar kom-max-buffer-size nil
   "*If non-nil, ensure that buffers won't grow any larger than this")
 
-(defvar lyskom-print-complex-dates t
+(defvar lyskom-print-complex-dates (and (>= emacs-minor-version 28)
+					(>= emacs-major-version 19))
   "*If non-nil, print today and yesterday using a special format.")
 
 (defvar kom-server-aliases
