@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                      "docbook/dtd/xml/4.2/docbookx.dtd" [
+  <!ENTITY % chp SYSTEM "chp.xml">
+  <!ENTITY % fnc SYSTEM "fnc.ent">
+  <!ENTITY % var SYSTEM "var.ent">
+
+  %fnc;   <!-- LysKOM functions -->
+  %var;   <!-- LysKOM variables -->
+  %chp;   <!-- Book chapters -->
+]>
+
+<book>
+  <!-- There is a bit of magic going on here. Each chapter is a   -->
+  <!-- self-contained DocBook file with one and only one chapter. -->
+  <!-- The makefile will take care of extracting that chapter to  -->
+  <!-- a file with the same name, but suffixed with .inc. The     -->
+  <!-- makefile will also create chp.xml, which defines entities  -->
+  <!-- for all chapters, and defines the chapter entity to expand -->
+  <!-- to all chapters. The fnc.ent and var.ent files are created -->
+  <!-- by docgen.el, also from the makefile. You should only have -->
+  <!-- to concern yourself with writing DocBook.                  -->
+
+  <title>The LysKOM Elisp Client</title>
+  <subtitle>User's Manual</subtitle>
+
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>David</firstname>
+        <surname>Byers</surname>
+        <affiliation>
+          <orgname>Lysator</orgname>
+        </affiliation>
+        <email>
+          <ulink url="mailto:byers@lysator.liu.se">
+            byers@lysator.liu.se
+          </ulink>
+        </email>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2003</year>
+      <holder>Lysator Academic Computing Society</holder>
+    </copyright>
+  </bookinfo>
+
+  &chapters;
+</book>
