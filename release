@@ -117,7 +117,7 @@ fi
 tag=`echo v$version | tr "." "-"`
 
 
-if [ "$revision" ] then
+if [ "$revision" ] ; then
     echo "cvs revision blir $revision"
 else
     echo "cvs revision blir oförändrad"
@@ -146,7 +146,7 @@ echo "Checkar in för säkerhets skull..."
 if ( set -x; cvs commit -m "Synkning inför release av $version" ) ; then
     ;
 else
-    echo "Fortsätt trots att incheckningen inte gick bra" nej
+    ask "Fortsätt trots att incheckningen inte gick bra" nej
     if [ "$no" ] ; then
         exit 1
     fi
@@ -157,7 +157,7 @@ if [ "$revision" ] ; then
     if ( set -x; cvs commit -r $version ) ; then
         ;
     else
-        echo "Fortsätt trots att revisionsändringen inte gick bra" nej
+        ask "Fortsätt trots att revisionsändringen inte gick bra" nej
         if [ "$no" ] ; then
             exit 1
         fi
@@ -175,7 +175,7 @@ echo "Sätter symbolisk tag..."
 if ( set -x ; cvs tag "$tag" ) ; then
     ;
 else
-    echo "Forstsätt trots att taggningen inte gick bra" nej
+    ask "Forstsätt trots att taggningen inte gick bra" nej
     if [ "$no" ] ; then
         exit 1
     fi

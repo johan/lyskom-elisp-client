@@ -3,6 +3,15 @@
 Att göra i elisp-klienten
 =========================
 
+* SAKER ATT KOLLA
+
+    XEmacs 20.3 kanske har init-filer i .xemacs/init.el. Kolla att vi
+    fortfarande kan spara variabelinställningar där. Om inte där så
+    kommer den kanske att spara saker i custom-file eller nåt sånt. 
+    .xemacs-options är det väl. Hur ser man till att inte XEmacs
+    zappar sånt som LysKOM sätter dit?
+
+
 * BUGGAR
 
 ** VIKTIGA BUGGAR
@@ -11,6 +20,12 @@ Att göra i elisp-klienten
     huvudbuffert. De borde alla undersöka om det finns några köer i
     den aktuella bufferten, och om det inte gör det, försöka hitta en
     LysKOM-buffert att göra anropet i.
+
+
+** OMBRYTNING
+
+    Vi klarar inte emailheaders som är brutna över flera rader.
+
 
 ** DEFERRED INSERT
 
