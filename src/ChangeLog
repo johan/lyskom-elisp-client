@@ -1,3 +1,16 @@
+2002-09-11  David Byers  <david.byers@swipnet.se>
+
+	Speculative fix for bug 738:
+	* utilities.el (lyskom-recode-string-for-title): Recode string in
+	win32. This should fix the problem.
+
+	Fix bug 737:
+	* distribution-README.install-nonsrc: Fix name of .el file.
+
+	Fix bug 718:
+	* lyskom-buttons.el (lyskom-view-url-windows): Post starting
+	messages before attempting to start the process.
+
 2002-09-10  David Byers  <david.byers@swipnet.se>
 
 	* mime.el (lyskom-mime-string-charset): Deal with not having any

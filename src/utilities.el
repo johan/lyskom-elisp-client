@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.116 2002-08-09 15:14:50 byers Exp $
+;;;;; $Id: utilities.el,v 44.117 2002-09-11 19:06:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.116 2002-08-09 15:14:50 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.117 2002-09-11 19:06:25 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -316,9 +316,11 @@ only encode when multibyte strings are not supported."
   "Encode S with CODING for use in frame titles.
 Attempts to encode the string only in Emacs versions that do not require
 MULE coding for frame titles"
-  (if (> emacs-major-version 20)
-      s
-    (lyskom-maybe-recode-string s coding t)))
+  (cond
+   ((memq window-system '(win32 mswindows w32))
+    (lyskom-maybe-recode-string s coding t))
+   ((> emacs-major-version 20) s)
+   (t (lyskom-maybe-recode-string s coding t))))
 
 (defun lyskom-maybe-frob-completion-table (table &optional copy)
   "Recode the cars of alist TABLE to default coding system unless multibyte
