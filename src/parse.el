@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.55 2003-08-30 16:16:54 byers Exp $
+;;;;; $Id: parse.el,v 44.56 2004-01-26 21:51:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.55 2003-08-30 16:16:54 byers Exp $\n"))
+	      "$Id: parse.el,v 44.56 2004-01-26 21:51:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1131,6 +1131,10 @@ Args: TEXT-NO. Value: text-stat."
 ;;; ================================================================
 ;;;          Parsing of complex datatypes without cache.
 
+
+(defun lyskom-parse-membership-list-11 ()
+  "Parse a membership-list. Returns a vector."
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership-11))
 
 (defun lyskom-parse-membership-list ()
   "Parse a membership-list. Returns a vector."

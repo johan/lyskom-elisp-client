@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.56 2003-08-24 22:05:34 byers Exp $
+;;;;; $Id: review.el,v 44.57 2004-01-26 21:51:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.56 2003-08-24 22:05:34 byers Exp $\n"))
+	      "$Id: review.el,v 44.57 2004-01-26 21:51:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -52,32 +52,33 @@
 ;;; ======================================================================
 ;;; State-saving variables
 ;;;
+;;; All these need to be buffer-local
 
-(defvar lyskom-last-review-by nil)
-(defvar lyskom-last-review-to nil)
-(defvar lyskom-last-review-num nil)
-(defvar lyskom-last-review-pmark nil)
-(defvar lyskom-last-review-cmark nil)
-(defvar lyskom-last-review-saved-result-list nil)
-(defvar lyskom-last-review-saved-by-list nil)
-(defvar lyskom-last-review-saved-to-list nil)
-(defvar lyskom-last-review-saved-result-size 0)
-(defvar lyskom-last-review-saved-smallest nil)
-(defvar lyskom-last-review-saved-largest nil)
-(defvar lyskom-have-review nil)
+(def-kom-var lyskom-last-review-by nil local)
+(def-kom-var lyskom-last-review-to nil local)
+(def-kom-var lyskom-last-review-num nil local)
+(def-kom-var lyskom-last-review-pmark nil local)
+(def-kom-var lyskom-last-review-cmark nil local)
+(def-kom-var lyskom-last-review-saved-result-list nil local)
+(def-kom-var lyskom-last-review-saved-by-list nil local)
+(def-kom-var lyskom-last-review-saved-to-list nil local)
+(def-kom-var lyskom-last-review-saved-result-size 0 local)
+(def-kom-var lyskom-last-review-saved-smallest nil local)
+(def-kom-var lyskom-last-review-saved-largest nil local)
+(def-kom-var lyskom-have-review nil local)
 
-(defvar lyskom-last-unread-by nil)
-(defvar lyskom-last-unread-to nil)
-(defvar lyskom-last-unread-num nil)
-(defvar lyskom-last-unread-pmark nil)
-(defvar lyskom-last-unread-cmark nil)
-(defvar lyskom-last-unread-saved-result-list nil)
-(defvar lyskom-last-unread-saved-by-list nil)
-(defvar lyskom-last-unread-saved-to-list nil)
-(defvar lyskom-last-unread-saved-result-size 0)
-(defvar lyskom-last-unread-saved-smallest nil)
-(defvar lyskom-last-unread-saved-largest nil)
-(defvar lyskom-have-unread nil)
+(def-kom-var lyskom-last-unread-by nil local)
+(def-kom-var lyskom-last-unread-to nil local)
+(def-kom-var lyskom-last-unread-num nil local)
+(def-kom-var lyskom-last-unread-pmark nil local)
+(def-kom-var lyskom-last-unread-cmark nil local)
+(def-kom-var lyskom-last-unread-saved-result-list nil local)
+(def-kom-var lyskom-last-unread-saved-by-list nil local)
+(def-kom-var lyskom-last-unread-saved-to-list nil local)
+(def-kom-var lyskom-last-unread-saved-result-size 0 local)
+(def-kom-var lyskom-last-unread-saved-smallest nil local)
+(def-kom-var lyskom-last-unread-saved-largest nil local)
+(def-kom-var lyskom-have-unread nil local)
 
 
 (defun lyskom-remove-zeroes (a)

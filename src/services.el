@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.43 2003-08-17 15:33:19 byers Exp $
+;;;;; $Id: services.el,v 44.44 2004-01-26 21:51:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.43 2003-08-17 15:33:19 byers Exp $\n"))
+	      "$Id: services.el,v 44.44 2004-01-26 21:51:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -685,15 +685,24 @@ Args: KOM-QUEUE HANDLER MESSAGE &rest DATA."
   "Get membership-list for PERS-NO from server.
 Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
   (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data
-                 (if (lyskom-have-call 99)
-                     'lyskom-parse-membership-list
-                   'lyskom-parse-membership-list-old))
-    (lyskom-send-packet kom-queue (lyskom-format-objects
-                                   (if (lyskom-have-call 99) 99 46)
-                                   pers-no
-                                   0 lyskom-max-int ;all confs.
-                                   1)))) ;want read texts.
+    (cond ((lyskom-have-call 108)
+           (lyskom-call kom-queue lyskom-ref-no handler data
+                        'lyskom-parse-membership-list-11)
+           (lyskom-send-packet 
+            kom-queue 
+            (lyskom-format-objects 108 pers-no 0 lyskom-max-int
+                                   1 lyskom-max-int)))
+          ((lyskom-have-call 99)
+           (lyskom-call kom-queue lyskom-ref-no handler data
+                        'lyskom-parse-membership-list-old)
+           (lyskom-send-packet 
+            kom-queue 
+            (lyskom-format-objects 99 pers-no 0 lyskom-max-int 1)))
+          (t (lyskom-call kom-queue lyskom-ref-no handler data
+                          'lyskom-parse-membership-list)
+             (lyskom-send-packet 
+              kom-queue 
+              (lyskom-format-objects 46 pers-no 0 lyskom-max-int 1))))))
 
 
 (defun initiate-get-part-of-membership (kom-queue handler pers-no first length
@@ -701,15 +710,24 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
   "Get membership-list for PERS-NO from server.
 Args: KOM-QUEUE HANDLER PERS-NO FIRST-IN-LIST LENGHT &rest DATA."
   (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data
-                 (if (lyskom-have-call 99)
-                     'lyskom-parse-membership-list
-                   'lyskom-parse-membership-list-old))
-    (lyskom-send-packet kom-queue (lyskom-format-objects 
-                                   (if (lyskom-have-call 99) 99 46)
-                                   pers-no
-                                   first length ;all confs.
-                                   1))))
+    (cond ((lyskom-have-call 108)
+           (lyskom-call kom-queue lyskom-ref-no handler data
+                        'lyskom-parse-membership-list-11)
+           (lyskom-send-packet 
+            kom-queue 
+            (lyskom-format-objects 108 pers-no first length
+                                   1 lyskom-max-int)))
+          ((lyskom-have-call 99)
+           (lyskom-call kom-queue lyskom-ref-no handler data
+                        'lyskom-parse-membership-list)
+           (lyskom-send-packet 
+            kom-queue 
+            (lyskom-format-objects 99 pers-no first length 1)))
+          (t (lyskom-call kom-queue lyskom-ref-no handler data
+                          'lyskom-parse-membership-list-old)
+             (lyskom-send-packet 
+              kom-queue 
+              (lyskom-format-objects 46 pers-no first length 1))))))
 
 
 (defun initiate-get-created-texts (kom-queue handler pers-no first-local

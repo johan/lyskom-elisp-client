@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.318 2004-01-01 22:01:38 byers Exp $
+;;;;; $Id: english-strings.el,v 44.319 2004-01-26 21:51:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.318 2004-01-01 22:01:38 byers Exp $"))
+              "$Id: english-strings.el,v 44.319 2004-01-26 21:51:09 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1214,9 +1214,9 @@ You should set it to a better value.\n")
     (text-buffer-missing . "The text buffer no longer exists.\n")
     (re-edit-text-prompt . "Edit the text that couldn't be created")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
-    (go-to-pri-mailbox-prompt . "Gå to prioritized mailbox")
+    (go-to-pri-mailbox-prompt . "Gå to your mailbox (prioritized)")
     (read-pri-text-conf . "Read next prioritized text")
-    (read-pri-letter-prompt . "Read next prioritized letter")
+    (read-pri-letter-prompt . "Read next letter (prioritized)")
     (review-next-text-prompt . "Review next text")
     (review-next-comment-prompt . "Review next comment")
     (review-next-marked-prompt . "Review next marked text")
@@ -1654,6 +1654,7 @@ You must become an active member of the conference to enter it.\n")
     (Secret-mt-type . "Secret")
     (Message-flag-mt-type . "Group messages")
 
+    (not-author . "You are not the author of text %#1n.")
     (not-author-try-anyway-p . "You are not the author of the text. Try anyway? ")
     (what-no-comments-no . "Which text do you want to prevent comments to: ")
     (adding-no-comments . "Preventing comments to text %#1n...")
