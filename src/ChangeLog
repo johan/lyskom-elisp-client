@@ -1,3 +1,7 @@
+Thu Feb  6 00:41:34 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* async.el (lyskom-async-new-text): Prefetch all the information.
+
 Fri Jan 31 16:37:48 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* prefetch.el (lyskom-prefetch-texttree-handler): Anropa
