@@ -1,5 +1,8 @@
 2002-04-11  David Byers  <david.byers@swipnet.se>
 
+	* aux-items.el (lyskom-print-faq-for-conf): Show FAQ for server
+	correctly.
+
 	Show extended server status:
 	* commands2.el (kom-status-server): New command.
 
