@@ -1,0 +1,4 @@
+#!/bin/sh
+/usr/lib/emacsen-common/emacs-package-remove lyskom-elisp-client
+
+#DEBHELPER#

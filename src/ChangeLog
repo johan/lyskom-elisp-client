@@ -1,3 +1,8 @@
+1999-11-17  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* Added README.debian and a debian subdirectory with files for
+ 	building a Debian package.
+
 Wed Nov 17 13:54:15 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-B

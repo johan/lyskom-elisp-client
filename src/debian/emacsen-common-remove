@@ -1,0 +1,13 @@
+#!/bin/sh
+# /usr/lib/emacsen-common/packages/remove/lyskom-elisp-client
+
+set -e 
+
+FLAVOR=$1
+echo remove/lyskom-elisp-client: Handling removal of emacsen flavor ${FLAVOR}
+
+if [ ${FLAVOR} != emacs ]; then
+  echo emacsen-common: purging byte-compiled files for ${FLAVOR}
+  rm -f /usr/share/${FLAVOR}/site-lisp/lyskom-elisp-client.elc
+fi
+exit 0

@@ -1,0 +1,40 @@
+#!/bin/sh
+# /usr/lib/emacsen-common/packages/install/lyskom-elisp-client
+set -e
+
+FLAVOR=$1
+echo install/lyskom-elisp-client: Handling install of emacsen flavor ${FLAVOR}
+
+el_dir=/usr/share/emacs/site-lisp/lyskom-elisp-client
+elc_dir=/usr/share/${FLAVOR}/site-lisp
+byte_compile_options="-batch -q -no-site-file -l $el_dir/lpath.el -f batch-byte-compile"
+
+if [ ${FLAVOR} != emacs ]; then
+    echo install/lyskom-elisp-client: byte-compiling for ${FLAVOR}
+    echo Please wait...
+
+    # We need to make sure custom is available
+    if [ "$1" = "emacs19" ]; then
+        if [ -f /usr/share/emacs/site-lisp/custom-init.el ]; then
+            byte_compile_options="-l /usr/share/emacs/site-lisp/custom-init.el $byte_compile_options"
+        else
+            cat <<EOF
+
+===========================================
+ERROR:
+
+The "custom" package must be installed when
+using lyskom-elisp-client and emacs19!
+===========================================
+
+EOF
+            exit 17
+        fi
+    fi
+
+    cd ${elc_dir}
+    gunzip -c ${el_dir}/lyskom.el.gz > lyskom-elisp-client.el
+    ${FLAVOR} ${byte_compile_options} lyskom-elisp-client.el
+    rm -f ${elc_dir}/*.el
+fi
+exit 0
