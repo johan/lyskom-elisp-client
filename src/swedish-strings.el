@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.142 2000-09-09 11:59:34 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.143 2000-09-09 12:38:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.142 2000-09-09 11:59:34 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.143 2000-09-09 12:38:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -434,18 +434,18 @@ På denna dag, år 1973, grundades Lysator, och det var en stor dag
 i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
 
-    (total-users . "    Sammanlagt %#1d användare (%#2s.)\n")
+    (total-users . "    Sammanlagt %#1d användare (%#2s).\n")
     (total-users-sans-date . "    Sammanlagt %#1d användare\n")
-    (total-visible-users . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] användare (%#2s.)\n")
-    (total-active-users . "    Sammanlagt %#1d aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
+    (total-visible-users . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] användare (%#2s).\n")
+    (total-active-users . "    Sammanlagt %#1d aktiv%#1?d%[%]%[a%] användare (%#2s).\n")
     (total-visible-active-users
-     . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
+     . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s).\n")
     (client-statistics . "    Klienternas fördelning:\n")
     (client-statistics-line . "    %=-35#1s: %3#2d")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
-    (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också hamna i %#1M? ") 
+    (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också skickas till %#1M? ") 
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
     (who-to-move-to-q . "Vart vill du flytta texten? ")
@@ -900,7 +900,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (unknown-person . "Okänd person")
 
     (no-longer-member . "Du är inte längre medlem i %#1M.\n")
-    (no-longer-member-n . "Du är inte längre medlem i möte %#1m (finns inte.)\n")
+    (no-longer-member-n . "Du är inte längre medlem i möte %#1m (finns inte).\n")
 
     (have-become-member . "Du har blivit medlem i %#1M.\n")
     (have-become-passive-member . "Du har blivit passiv medlem i %#1M.\n")
@@ -2443,7 +2443,7 @@ i servern. Annars sparas det i din .emacs.")
         fråga vilka av mottagarna som är relevanta för inlägget. Antingen
         görs detta innan man skriver inlägget (då får man en fråga för
         varje defaultmottagare), eller när man skickar in inlägget (då får
-        man bekräfta alla mottagare i klump.) Det går också att slå av
+        man bekräfta alla mottagare i klump). Det går också att slå av
         helt.
 
     Kontroll av kommenterad författares medlemskap
@@ -2469,11 +2469,11 @@ i servern. Annars sparas det i din .emacs.")
 
     Något annat fönster 
         I ett annat fönster i samma frame som LysKOM. Om det bara finns ett
-        fönster så kommer ett nytt att skapas (och tas bort när man är klar.)
+        fönster så kommer ett nytt att skapas (och tas bort när man är klar).
 
     I en annan frame
         I en annan frame än LysKOM. Om det bara finns en frame så kommer en
-        ny frame att skapas, och (tas bort när man är klar.)
+        ny frame att skapas, och (tas bort när man är klar).
 
     I en ny frame
         En ny frame skapas för ändamålet, och tas bort när man är klar.
@@ -2917,7 +2917,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-permissive-completion-doc . "\
   Om detta är påslaget så kommer TAB bara att fylla ut namn på inloggade
   personer när kommandot bara kan utföras på inloggade personer (till
-  exempel Status (för) session och Sända meddelande.) Om det är avslaget
+  exempel Status (för) session och Sända meddelande). Om det är avslaget
   kommer TAB att fylla ut även med namn på personer som inte är inloggade.")
 
 
@@ -3003,7 +3003,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ansaphone-default-reply-doc . "\
   Automatsvararen skickar detta meddelande om inget annat meddelande har
   specificerats via någon annan mekanism (och den är bara till för försiktiga
-  experter.)")
+  experter).")
 
     (kom-remote-control-doc . "\
   Påslagen innebär att det går att fjärrstyra klienten. Fjärrstyrningen är
@@ -3047,7 +3047,7 @@ i servern. Annars sparas det i din .emacs.")
   medlemskap hamnar före gamla med samma prioritet. Sist betyder att nya 
   medlemskap hamnar efter gamla med samma prioritet. En siffra är en fix
   placering i medlemskapslistan (men medlemskapet kommer att flyttas
-  såsmåningom.)")
+  såsmåningom).")
 
     (kom-show-imported-importer-doc . "\
   Påslaget betyder visa vilken person som importerade ett importerat e-mail.")

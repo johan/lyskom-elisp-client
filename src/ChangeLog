@@ -1,5 +1,11 @@
 2000-09-09  David Byers  <davby@sen2.ida.liu.se>
 
+	* Release av 0.46.1-BETA-1
+
+	* swedish-strings.el: Changed ".)" to ")." where appropriate.
+
+	* english-strings.el: Changed ".)" to ")." where appropriate.
+
 	* buffers.el (lyskom-buffer-kill-trim-hook): New function. Add
 	call to lyskom-ignore to avoid warnings about unused variables.
 	(kill-buffer-hook): Add lyskom-buffer-kill-trim-hook instead of

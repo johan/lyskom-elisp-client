@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.112 2000-09-04 22:03:23 joel Exp $
+;;;;; $Id: english-strings.el,v 44.113 2000-09-09 12:38:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.112 2000-09-04 22:03:23 joel Exp $"))
+              "$Id: english-strings.el,v 44.113 2000-09-09 12:38:46 byers Exp $"))
 
 
 ;;; ================================================================
@@ -443,12 +443,12 @@ On this day, in 1973, the Lysator Academic Computer Society was
 formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
 
-    (total-users . "    A total of %#1d users (%#2s.)\n")
+    (total-users . "    A total of %#1d users (%#2s).\n")
     (total-users-sans-date . "    A total of %#1d users\n")
-    (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s.)\n")
-    (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s.)\n")
+    (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s).\n")
+    (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s).\n")
     (total-visible-active-users
-     . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
+     . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s).\n")
     (client-statistics . "    Distribution of clients:\n")
     (client-statistics-line . "    %=-35#1s: %3#2d")
     (who-to-add-q . "Add whom/what as a recipient? ")
@@ -901,7 +901,7 @@ for a text.
     (unknown . "unknown")
 
     (no-longer-member . "You are no longer a member of %#1M.\n")
-    (no-longer-member-n . "You are no longer a member of %#1m (conference is gone.)\n")
+    (no-longer-member-n . "You are no longer a member of %#1m (conference is gone).\n")
     (have-become-member . "You have become a member of %#1M.\n")
     (have-become-passive-member . "You have become a passive member of %#1M.\n")
 
