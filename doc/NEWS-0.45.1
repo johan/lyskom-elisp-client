@@ -34,11 +34,27 @@ tar-arkivet.
    välja "grundmode" via lyskom-edit-mode-mode-hook och att man kan
    byta mode medan man skriver ett inlägg. 
 
+** Man kan bestämma formatet på texten som skrivs efter ett inlägg
+   genom att använda variabeln kom-text-footer-format. Om den används
+   så har inte kom-dashed-lines eller kom-show-author-at-end någon
+   betydelse för inläggsfotens utseende. Den här funktionen är
+   experimentiell. Det finns inga garantier för att det fungerar.
+
+** Den automagiska ombrytningen av inlägg håller sig borta från
+   stycken där alla rader börjar met ett ord och ett kolon. Detta har
+   en tendens att skydda mail-headers.
+
 ** Klienten startar Netscape bättre på en Windows-maskin. Patch från
    Daniel Bratell.
 
 
+
 * Bugfixar
+
+** Ändra variablern fungerar nog igen. Detta kommando kommer troligen
+   att försvinna i nästa version av elispklienten, för det har aldrig
+   fungerat riktigt bra, och jag är trött på att försöka hålla det vid
+   liv. Använd Inställningar (för) LysKOM istället.
 
 ** Näsa LysKOM och Föregående LysKOM är nu riktiga kommandon, så man
    kan ha dem i kom-do-when-done och liknande.
@@ -52,6 +68,11 @@ tar-arkivet.
 
 ** En bug som gjorde att Status Session i vissa fall inte fungerade
    har blivit rättad.
+
+** Man kunde få globala ombindningar av vissa tangenter förut. Det kan
+   vi tacka Emacs för, men elispklienten triggar inte längre det
+   beteendet.
+
 
 
 * Kända buggar
