@@ -1,3 +1,8 @@
+Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
+
+	* vars.el, lyskom-rest.el (kom-start-of-command): Tommys
+	  kom-page-before-command included.
+
 Thu Oct 17 04:08:53 1991  Linus Tolke Y  (linus at lysator)
 
 	* async.el (lyskom-parse-async): lyskom-show-logged-in-person
