@@ -29,7 +29,18 @@ nu finns under namnet NEWS-0.43.
    när den loggade in, förutsatt att servern har stöd för de
    nödvändiga anropen (lyskomd 1.9.0 och senare.)
 
-** Långsamma kommandon fungerar bättre.
+** Långsamma kommandon fungerar bättre. Åtminstone i den svenska
+   versionen.
+
+** En intern ändring gör att olika köer av serveranrop får olika
+   prioritet, vilket bland annat gör att man kan fortsätta att utföra
+   kommandon även om den väntar på fördröjda utskrifter.
+
+** Försöker man start en andra session mot samma server får man en
+   fråga om man vill växla till den gamla istället.
+
+** Om det fanns en buffert med en död session i, och man startar en ny
+   session mot samma server återanvänds bufferten.
 
 
 
@@ -39,6 +50,10 @@ nu finns under namnet NEWS-0.43.
 
 ** Hanteringen av prompten fungerar bättre.
 
+** Den försöker inte göra (recenter -1) i fel buffert.
+
+** Klienten försöker inte lägga till Anonym peson som mottagare till
+   inlägg.
 
 
 
