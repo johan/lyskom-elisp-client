@@ -1,0 +1,469 @@
+
+
+                           LYSKOM FUNCTIONS
+                             David Byers
+
+
+    This file lists utility functions and functions defined in the
+    LysKOM code that replace standard functions. Always use the
+    LysKOM-specific function when available.
+
+    All developers need to know this.
+
+    Functions that are replaced by lyskom versions
+    ----------------------------------------------------------------------
+    nbutlast                          * lyskom-nbutlast
+    butlast                           * lyskom-butlast
+    looking-at                        * lyskom-looking-at
+    truncate-string-to-width          * lyskom-truncate-string-to-width
+    princ                             * lyskom-princ [1]
+    lookup-key                        * lyskom-lookup-key
+    set-default                         lyskom-set-default
+    setq-default                        lyskom-setq-default
+    default-value                       lyskom-default-value
+    default-value                       lyskom-default-value-safe
+    run-hook-with-args                  lyskom-run-hook-with-args
+    add-hook                            lyskom-add-hook
+    remove-hook                         lyskom-remove-hook
+    insert                            * lyskom-insert [2]
+                                      * lyskom-insert-at-point [2]
+                                      * lyskom-insert-before-prompt [2]
+    format                            * lyskom-format [2]
+                                      * lyskom-format-insert [2]
+                                      * lyskom-format-insert-at-point [2]
+                                      * lyskom-format-insert-before-prompt [2]
+    message                           * lyskom-message [2]
+    error                             * lyskom-error [2]
+    fill-region                       * lyskom-fill-region
+    beep                              * lyskom-beep [2]
+    ding                              * lyskom-beep [2]
+    read-string                       * lyskom-read-string [2]
+                                      * lyskom-read-number [2]
+    y-or-n-p                          * j-or-n-p [2]
+    yes-or-no-p                       * ja-or-nej-p [2]
+    mapc                                lyskom-traverse
+    mapcar                              lyskom-traverse
+    use-local-map                     * lyskom-use-local-map
+    ignore-errors                     * lyskom-ignore-errors
+    save-excursion                      lyskom-save-excursion
+    generate-new-buffer               * lyskom-generate-new-buffer [2]
+    get-buffer-create                 * lyskom-get-buffer-create [2]
+    display-buffer                    * lyskom-display-buffer [2]
+    delete-window                     * lyskom-undisplay-buffer [2]
+    defvar                              def-kom-var
+    defun                               def-kom-command
+    defstruct                           def-komtype
+    read-from-minibuffer                lyskom-with-lyskom-minibuffer
+    completing-read                     lyskom-with-lyskom-minibuffer
+    
+    
+
+    Note that in some cases "replaced" isn't exactly the right word.
+    the LysKOM functions may have different semantics, but if you're
+    thinking about one of the functions in the left-hand column, you
+    should have a look at the function in the right-hand column. The
+    functions that are straight replacements are marked with an
+    asterisk.
+
+    [1] Restrictions on the type of stream. Only does special stuff
+        for strings. If you're printing other objects you might as
+        well use princ.
+
+    [2] Perhaps not straight replacements, but they should always be
+        used in place of the non-lyskom functions.
+
+
+
+    Creating lists from other lists (and other sources)
+    ----------------------------------------------------------------------
+
+    listify-vector
+
+        Convert a vector to a list.
+
+    nfirst
+
+        Return a copy of the N first elements of a list.
+
+    lyskom-nbutlast
+
+        Like standard Common Lisp nbutlast. Removes the last N
+        elements from a list.
+
+    butlast
+
+        Like standard Common Lisp butlast. Returns a copy of a list
+        with the last N elements removed.
+
+    skip-first-zeros
+
+        Return a pointer to the first list element that is not a zero.
+        For example (skip-first-zeroes '(0 0 1 0 3)) returns (1 0 3).
+
+    filter-list
+
+        Return a copy of a list containing only those elements that
+        pass a particular test. The test function is a one-argument
+        function that returns non-nil if the argument passes. For
+        example (filter-list 'symbolp '(1 2 a b c) returns (a b c).
+        This function is currently recursive, so it cannot handle very 
+        long lists.
+
+    mapcar2
+
+        Like mapcar, but iterates over two lists for as long as both
+        have elements (thus skipping the last elements of the longer
+        list). The function argument should be a function that takes
+        two arguments, the first an element from the first list and
+        the second an element from the other list. The function
+        returns a list of the result. For example (mapcar2 'cons '(a b 
+        c d) '(1 2 3)) returns ((a . 1) (b . 2) (c . 3)).
+
+
+    Sets
+    ----------------------------------------------------------------------
+
+    lyskom-intersection
+
+        Return the intersection of two lists. 
+
+    lyskom-subset-p
+
+        Check if a list is a subset of another list.
+
+    The set functions are not designed to be efficient at all, so be
+    careful not to feed them huge amounts of data. They aren't
+    recursive though, so they shouldn't run out of stack space.
+
+
+
+    Manipulating Lists
+    ----------------------------------------------------------------------
+
+    lyskom-insert-in-list
+
+        Destructively insert a value in a list before the first
+        element eq to a particular value. 
+
+    lyskom-rotate-list  
+
+        Destructively rotate a list so that a specific element becomes 
+        the first element of the list. For example (lyskom-rotate-list 
+        '(a b c d) 'c) will return '(c d a b). 
+
+    lyskom-move-in-list
+
+        Destructively move an element from one position in a list to
+        another. The first element eq to a particular value is moved
+        so that it will be located at the specified position in the
+        list. For example (lyskom-move-in-list '(a b c d) 'b 3) will
+        return (a c d b). 
+
+    Note that all destructive functions may change the first element
+    of a list (or move it around), so if you want to change the value
+    of a particular variable using these functions you need to use
+    setq, or the results may not be what you expect.
+
+
+
+    Finding things in lists
+    ----------------------------------------------------------------------
+
+    reverse-assoc
+
+        Do assoc using the last element of each alist element as the
+        key. This function is pretty slow and creates lots of new
+        short-lived cons cells. Use with care. Note that this is *not* 
+        the same as rassoc, which compares the cdr of list elements.
+        This function actually compares the *last* element of list
+        elements. 
+
+    lyskom-preceding-cons
+
+        Return the cons cell of a list immediately preceding the first
+        cons cell in the list that has a car eq to a particular value.
+        This is useful if you need the element before a particular
+        element in a list. For example (lyskom-preceding-cons '(a b c
+        d) 'c) will return (b c d).
+
+    lyskom-string-assoc
+
+        Like assoc, but does case-insensitive string comparisons of
+        the key (using downcase, not lyskom-unicase).
+
+    lyskom-string-rassoc
+
+        Like rassoc, but does case-insensitive string comparisons of
+        the key (using downcase, not lyskom-unicase).
+
+    lyskom-traverse
+
+        Traverse any sequence, applying a function to each element in
+        turn. The value returned is always nil. This is what you want
+        when you're thinking about mapc or mapcar (and don't want the
+        result). 
+
+    lyskom-traverse-break
+
+        Stop traversal started with lyskom-traverse. This allows you
+        to stop traversal prematurely. The rest of the body is still
+        executed, so it's not like break in C or C++. It just makes
+        sure that there are no more iterations.
+
+
+
+    Type and range checking
+    ----------------------------------------------------------------------
+
+    lyskom-maxint
+
+        Return the maximum integer value the system can represent. If
+        your Emacs happens to implement bignums for integers you will
+        want to rewrite this function...
+
+    regexpp
+
+        Check if the argument is a valid regexp. This function
+        attempts to use the argument as a regexp and catches the error 
+        if it isn't one.
+
+
+    Compiler warnings
+    ----------------------------------------------------------------------
+
+    lyskom-ignore
+
+        Ignore all arguments. This kills compiler warnings about
+        variables being bound but not used. This should only be used
+        in those cases where a variable is bound so it has a dynamic
+        binding when calling some other function. Use with care.
+
+    lyskom-external-function
+
+        Specify that a function is loaded from elsewhere. This will
+        stop the compiler from complaining about it being undefined.
+
+
+    Loading and using external functions
+    ----------------------------------------------------------------------
+
+    lyskom-try-require
+
+        Attempt to load a library using require, but don't die if it
+        is unavailable. Optional arguments can specify an error
+        message to insert in the LysKOM buffer if the library cannot
+        be loaded.
+
+
+        
+    Implementing compatibility between Emacs versions
+    ----------------------------------------------------------------------
+
+    lyskom-emacs-version
+
+        Return a symbol representing the Emacs version. The result is
+        either emacs or xemacs. You should never need this. Use
+        lyskom-xemacs-or-gnu instead.
+
+
+    Process input and output
+    ----------------------------------------------------------------------
+
+    lyskom-accept-process-output
+
+        Like accept-process-output but behaves nicely on Emacs
+        versions with broken process handling (like XEmacs). This
+        function will call accept-process-output with increasing
+        timeouts (up to a maximum) until process output is avaiable.
+        Call lyskom-reset-apo-timeout after reading process output to
+        reset the timeout.
+
+
+    Date and time functions
+    ----------------------------------------------------------------------
+
+    lyskom-current-time
+
+        Convert the current time in a format that LysKOM understands.
+        The result can be used as the argument list to
+        lyskom-create-time. Use this if you want to put the local time 
+        into a LysKOM data structure that contains a LysKOM time.
+
+    lyskom-client-date-string
+
+        Return a string containg the current time and date.
+
+    lyskom-client-date
+
+        This appears to be very similar to lyskom-current-time.
+
+
+
+    String encoding and decoding, aka MULE, aka Pain in the Ass
+    ----------------------------------------------------------------------
+
+    lyskom-maybe-recode-string
+
+        If multibyte characters are not supported, encode the string
+        using the default coding system for the language or raw text.
+        Does nothing if multibyte characters are supported. 
+
+
+    String and character manipulation
+    ----------------------------------------------------------------------
+
+    lyskom-unicase-char
+
+        Convert a character to the canonical case for the character
+        according the current collate table (which should have been
+        retreived from the server).
+
+    lyskom-unicase
+
+        Convert a string to the canonical cases. Does not modify the
+        original string. If you need case-insensitive string
+        comparisons that follow the equality rules of the server, use
+        this function to canonize the strings before comparing them.
+
+    char-in-string
+
+        Check if a particular character is in a string.
+
+
+    Getting and setting global variables
+    ----------------------------------------------------------------------
+
+    lyskom-set-default
+
+        Set the value of a variable in the LysKOM buffer associated
+        with the current buffer. This is useful if a function in, say, 
+        the edit buffer wants to set a variable in the LysKOM session, 
+        not just in the edit buffer.
+
+    lyskom-default-value
+
+        Return the value of a variable in the LysKOM buffer associated 
+        with the current buffer. This is useful if a function in, say, 
+        the edit buffer needs the value of a variable that is not
+        inherited (which in turn is necessary if the edit buffer needs 
+        to know the current value, not just the value at the time the
+        edit buffer was created).
+
+    lyskom-default-value-safe
+
+        This is just like lyskom-default-value, but instead of
+        signalling an error if the variable is unbound in the LysKOM
+        buffer, this function just returns nil.
+
+
+    Prefix arguments
+    ----------------------------------------------------------------------
+
+    lyskom-read-text-no-prefix-arg
+
+        Use for all functions that want a user-supplied text number as
+        their argument. Read the docstring.
+
+
+    Hooks
+    ----------------------------------------------------------------------
+
+    lyskom-add-hook
+    lyskom-remove-hook
+    lyskom-run-hook-with-args
+
+        These functions behave just like their non-lyskom
+        counterparts, but do their job in the LysKOM buffer associated 
+        with the current buffer. This is useful for code that runs in
+        one buffer but needs to modify or run hooks in the main LysKOM 
+        buffer.
+
+
+    Magic wrappers
+    ----------------------------------------------------------------------
+
+    These don't fit in any particular category, but you need to know
+    them. 
+
+    lyskom-ignoring-async
+
+        Run the body, but ignore any asynchronous messages that match
+        a particular pattern while the body is running. This can be
+        used when you do a server call and know you'll se an async
+        message that you will handle in a different manner, and would
+        rather like that it isn't handled twice. Be careful not to
+        filter out messages that you *do* want. Make the pattern
+        specific.
+
+    lyskom-save-excursion
+
+        Like save-excursion but does not save point and mark, just the 
+        current buffer. When you're thinking about doing
+        save-excursion and then running stuff that might change point
+        in the LysKOM buffer (such as displaying a text), perhaps this 
+        is what you mean.
+
+    lyskom-server-call
+
+        This macro surrounds every single server call implementation.
+        The functions in services.el show how it's used.
+
+    lyskom-with-lyskom-minibuffer
+
+        Run the body after setting up the minibuffer according to the
+        LysKOM configuration. Anything you do where the user may
+        interact with the minibuffer using any non-lyskom functions
+        (such as read-from-minibuffer or completing-read) should be
+        surrounded by this.
+
+
+    Text insertion
+    ----------------------------------------------------------------------
+
+    lyskom-insert
+    lyskom-insert-at-point
+    lyskom-insert-before-prompt
+    lyskom-format-insert
+    lyskom-format-insert-at-point
+    lyskom-format-insert-before-prompt
+
+        All these functions insert text in the current buffer. The
+        "-insert" functions insert the text at the end of the buffer.
+        The "-insert-at-point" functions insert the text at point. The 
+        "-insert-before-prompt" functions insert the text before the
+        current prompt (or next prompt for that matter).
+
+        The functions with "format" in their names run lyskom-format
+        on the arguments. (lyskom-format-insert X) is essentially the
+        same as (lyskom-insert (lyskom-format X)), but the former
+        allows deferred printing and special insertion (such as HTML)
+        and is generally faster and nicer than latter piece of code.
+        Always use lyskom-format-insert if you can.
+
+        All functions may cause the buffer to scroll (I think)
+        according to the inscrutable rules of LysKOM scrolling. 
+
+
+
+    Defining commands
+    ----------------------------------------------------------------------
+
+    See the file named "commands" for more information.
+
+
+    Defining variables
+    ----------------------------------------------------------------------
+
+    See the file named "variables" for more information.
+
+
+    Buffer management
+    ----------------------------------------------------------------------
+
+    See the file named "buffers" for more information.
+
+    
+    Text formatting
+    ----------------------------------------------------------------------
+
+    Se the file named "format" for more information.
