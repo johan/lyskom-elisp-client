@@ -1,3 +1,18 @@
+2001-10-13  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* swedish-strings.el, english-strings.el (lyskom-message,
+	lyskom-message): timestamp-button strings.
+
+	* lyskom-buttons.el (lyskom-default-button): add a timestamp-button
+	property to the prompt.
+	(lyskom-button-copy-timestamp): new function.
+
+	* lyskom-rest.el (lyskom-modify-prompt): add a timestamp-button
+	property to the prompt.
+
+	* vars.el.in (lyskom-current-prompt-timestamp): new variable.
+	(lyskom-button-actions): added button-type: timestamp.
+
 2001-10-09  Joel Rosdahl  <joel@rosdahl.net>
 
 	* swedish-strings.el (lyskom-sv-edit-mode-map): Make C-c TAB an

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.152 2001-10-09 18:42:15 joel Exp $
+;;;;; $Id: english-strings.el,v 44.153 2001-10-13 13:17:53 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.152 2001-10-09 18:42:15 joel Exp $"))
+              "$Id: english-strings.el,v 44.153 2001-10-13 13:17:53 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1254,6 +1254,7 @@ Text:
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
     (aux-popup-title  . "Extra information")
+    (timestamp-popup-title . "Timestamp %#1s")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
@@ -1564,6 +1565,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-copy-email-action . "Copy")
     (lyskom-button-info-aux-action . "Information")
     (lyskom-button-delete-aux-action . "Delete")
+    (lyskom-button-copy-timestamp-action . "Copy")
     (lyskom-edit-toggle-secret-aux-action . "Toggle \"secret\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Toggle \"anonymous\"")
     (lyskom-edit-toggle-inherit-aux-action . "Toggle \"inherited\"")
