@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.10 1996-01-21 17:54:44 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.11 1996-02-01 09:36:56 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.10 1996-01-21 17:54:44 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.11 1996-02-01 09:36:56 byers Exp $"))
 
 
 ;;; ================================================================
@@ -659,6 +659,7 @@ Group message to %#3s from %#2s (%#4s):
 
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
+    (prompt-modifier-ansaphone . "[%s]")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized article")
     (review-next-text-prompt . "Review next article")
@@ -751,6 +752,55 @@ Error message: %#1s**************************************************")
     (no-filters . "No filters are defined.")
     (view-filters-header . "\nActive filters:\n\n")
     (view-filters-footer . "")
+
+    (ansaphone-new-message . "New Ansaphone message: ")
+    (ansaphone-message . "Ansaphone message:
+----------------------------------------------------------------------
+%#1s
+----------------------------------------------------------------------
+")
+    (ansaphone-state . "The Ansaphone is %#1s.")
+    (ansaphone-state-r . "The Ansaphone is no %#1s.\n")
+    (ansaphone-messages-gone . "Recorded messages have been erased.")
+    (ansaphone-no-messages . "No recorded messages.\n")
+    (ansaphone-message-list-start . "Recorded messages:\n\n")
+    (ansaphone-message-list-end . "\n\n")
+    (ansaphone-message-header . "Automatic reply (set %#1s):\n")
+
+    (remote-erase-messages . "Remote control (%#1P %#2s): Erased recorded messages\n")
+    (remote-set-message . "Remote control (%#1P %#2s): Ansaphone message:
+----------------------------------------------------------------------
+%#3s
+----------------------------------------------------------------------
+")
+    (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
+    (remote-list-messages . "Remote control (%#1P %#2s): Listed recorded messages\n")
+    (remote-quit . "Remote control (%#1P %#2s): Quit\n")
+
+    (illegal-remote . 
+"Illegal remote control attempt:
+Time: %#1s
+From: %#2P <%#2p>
+To  : %#3P <%#3p>
+Text: 
+%#4t")
+    (illegal-remote-reply . "Remote control rejected: %#1s") 
+    (remote-not-in-list . "Unauthorised person")
+    (remote-bad-command . "Unknown or malformed command")
+    (remote-unknown-error . "Unknown error")
+
+    (remote-control-who . "Remotely control which session? ")
+    (remote-control-autoreply . "Ansaphone on or off? ")
+
+    (state-on . "on")
+    (state-off . "off")
+    
+
+    (text-popup-title . "Article %#1s")
+    (conf-popup-title . "Conference %#1s")
+    (pers-popup-title . "User %#1s")
+    (url-popup-title  . "URL %#1s")
+    (generic-popup-title . "%#1s")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -856,11 +906,26 @@ Error message: %#1s**************************************************")
     (kom-list-filters           "List filters")
     (kom-show-user-area         "Show user area")
     (kom-change-conf-type "Change conference type")
+
+    (kom-change-auto-reply "Change ansaphone message")
+    (kom-toggle-auto-reply "Ansaphone")
+    (kom-list-messages     "List messages")
+    (kom-erase-messages    "Erase messages")
+
+    (kom-remote-autoreply  "Remote control ansaphone")
+    (kom-remote-set-message "Remote control change ansaphone message")
+    (kom-remote-list-messages "Remote control list messages")
+    (kom-remote-erase-messages "Remote control erase messages")
+    (kom-remote-quit "Remote control quit")
     )
   "A list of LysKOM-commands recognized by the extended parser.")
 
 (defvar lyskom-swascii-commands nil
   "The swascii-versions of lyskom-commands.")
+
+(defvar lyskom-onoff-table
+  '(("on" . on) ("off" . off))
+  "A completion table for on and off selections.")
 
 (defvar lyskom-filter-predicate-list
       '(("=" . nil) ("!=" . t))
@@ -915,6 +980,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
 
   (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
   (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
   (define-key lyskom-mode-map "\M-f" 'kom-next-link)
   (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
@@ -971,6 +1037,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "W"  'kom-busy-wait)
   (define-key lyskom-mode-map "Ap" 'kom-change-presentation)
   (define-key lyskom-mode-map "Af" 'kom-filter-edit)
+  (define-key lyskom-mode-map "Am" 'kom-change-auto-reply)
   (define-key lyskom-mode-map "r " 'kom-view)
   (define-key lyskom-mode-map "r0" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "r1" 'kom-initial-digit-view)
@@ -1072,6 +1139,18 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
   (define-key lyskom-prioritize-mode-map "d"     'kom-prioritize-move-down)
 )
+
+
+;;;; ============================================================
+;;;; The default Ansaphone message goes here. The more complex 
+;;;; message specification probably should too, but it's not here
+;;;; yet. People who know how to use it are smart enough to do it
+;;;; right.
+
+(defvar kom-ansaphone-default-reply 
+  "I am not reading LysKOM right not. Please write a letter instead."
+  "*Default message to send when the ansaphone is on.")
+        
 
 ;;;; ================================================================
 ;;;; Tell phrases should be configured with the default language used

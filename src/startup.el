@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.12 1996-01-21 17:55:06 davidk Exp $
+;;;;; $Id: startup.el,v 38.13 1996-02-01 09:37:14 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.12 1996-01-21 17:55:06 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.13 1996-02-01 09:37:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -126,9 +126,9 @@ See lyskom-mode for details."
 	  ;;; B|rja
 	    (kom-start-anew t)
 	    (setq init-done t))
+	;; Something went wrong. Lets cleanup everything. :->
 	(if init-done
 	    nil
-	  ;; Something went wrong. Lets cleanup everything. :->
 	  (if proc (delete-process proc))
 	  (kill-buffer buffer))))))
 
@@ -211,7 +211,8 @@ See lyskom-mode for details."
 	  (cache-set-marked-texts (blocking-do 'get-marks))
 	  ;; What is this variable? It is never used. It is ust to
 	  ;; fill the cache?
-	  (let ((lyskom-who-am-i (blocking-do 'who-am-i)))))
+	  (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
+        (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i)))
 
       ;; If something failed, make sure we are someone
       (if (null lyskom-pers-no) (setq lyskom-pers-no old-me))
@@ -221,7 +222,7 @@ See lyskom-mode for details."
   (condition-case err
       (run-hooks 'kom-login-hook)
     (error (lyskom-format-insert-before-prompt
-	    'error-in-login-hook (format "%s" err)))))
+	    'error-in-login-hook (format "%s" err))))))
 
 
 (defun lyskom-refetch ()
@@ -475,6 +476,10 @@ to see, set of call."
 	(server-name lyskom-server-name)
 	)
     (kill-all-local-variables)
+    (make-local-variable 'kom-ansaphone-on)
+    (make-local-variable 'kom-ansaphone-default-reply)
+    (make-local-variable 'kom-remote-control)
+    (make-local-variable 'kom-remote-controllers)
     (make-local-variable 'kom-login-hook)
     (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-buffer)
