@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.69 1999-11-19 13:37:52 byers Exp $
+;;;;; $Id: english-strings.el,v 44.70 1999-11-19 14:01:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.69 1999-11-19 13:37:52 byers Exp $"))
+              "$Id: english-strings.el,v 44.70 1999-11-19 14:01:06 byers Exp $"))
 
 
 ;;; ================================================================
@@ -255,6 +255,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (done . "done.\n")
     (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")
+    (add-already-member . "%#1P is already a member of %#2M.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
     (is-read-protected-contact-supervisor . "%#1M is closed.
@@ -1244,6 +1245,9 @@ On since %#8s%#9s")
     (view-which-faq . "View FAQ for which conference? ")
     (review-faq-for-r . "View FAQ for %#1M.\n")
     
+    (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
+    (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
+
     (cross-reference-text-status-aux . "See text:              %10#1n /%#2P/")
     (cross-reference-conf-status-aux . "See conference:                         <%#1m> %#1M /%#2P/")
     (cross-reference-pers-status-aux . "See person:                             <%#1p> %#1P /%#2P/")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.89 1999-11-19 13:39:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.90 1999-11-19 14:01:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.89 1999-11-19 13:39:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.90 1999-11-19 14:01:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -242,7 +242,7 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (priority-q . "Prioritet på mötet? (0 (passivt medlemskap), 1 (låg) - 255 (hög)) ")
     (done . "klart.\n")
     (cancelled . "avbrutet.\n")
-    (nope . "Det gick inte.\n")
+    (nope . "det gick inte.\n")
     (add-already-member . "%#1P är redan medlem i %#2M.\n")
 
     (cant-find-supervisor . "Hittar inte organisatören för %#1M.\n")

@@ -1,3 +1,7 @@
+Fri Nov 19 15:00:32 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-C
+
 1999-11-19  David Byers  <davby@ida.liu.se>
 
 	* parse.el (lyskom-init-parse): Turn off multibyte chars in the
