@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.72 2000-06-02 13:51:12 byers Exp $
+;;;;; $Id: commands2.el,v 44.73 2000-06-11 18:15:01 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.72 2000-06-02 13:51:12 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.73 2000-06-11 18:15:01 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2411,12 +2411,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 	 (conf-no
 	  (or conf-no
 	      (lyskom-read-conf-no (lyskom-get-string 'conf-to-check-mship-of)
-				   '(all) nil nil t)))
-	 (member-list (blocking-do 'get-members conf-no 0 lyskom-max-int)))
-    (if (null member-list)
-	(lyskom-format-insert 'conf-is-empty conf-no)
-      (or (lyskom-traverse member (member-list->members member-list)
-	    (when (= pers-no (member->pers-no member))
-	      (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
-	      (lyskom-traverse-break t)))
-	  (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no)))))
+				   '(all) nil nil t))))
+    (if (lyskom-is-member pers-no conf-no)
+	(lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
+      (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))

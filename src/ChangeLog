@@ -1,3 +1,8 @@
+2000-06-11  Johan Sundström  <jhs@lysator.liu.se>
+
+	* commands2.el (kom-is-person-member-of-conference): Replaced
+	redundant check code with a call to lyskom-is-member.
+
 2000-06-11  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* swedish-strings.el: Spelling updates.
