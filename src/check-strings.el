@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.0 1996-08-30 14:45:17 davidk Exp $
+;;;;; $Id: check-strings.el,v 44.1 1996-09-24 16:24:30 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -10,19 +10,125 @@
 ;;;;
 ;;;;
 
+(defvar language-files '((english . "english-strings.el")
+                         (swedish . "swedish-strings.el")))
+(defvar language-values nil)
+(defvar language-variables '(lyskom-strings lyskom-commands lyskom-keybindings))
 
-(defvar swedish-strings)
-(defvar swedish-missing-strings)
-(defvar english-strings)
-(defvar english-missing-strings)
-(defvar swedish-commands)
-(defvar swedish-missing-bindings)
-(defvar english-commands)
-(defvar english-missing-bindings)
-(defvar swedish-bindings)
-(defvar english-bindings)
+(defun language-value (language sym)
+  (cdr (assq sym (cdr (assq language language-values)))))
 
-(defvar keybindings nil)
+
+(defun missing-sym (sym)
+  (intern (concat (symbol-name sym) "-missing")))
+
+(defun symbol-value-safe (sym)
+  (and (boundp sym)
+       (symbol-value sym)))
+
+
+(defun read-language (language file vars)
+  (let ((result (list language)))
+    (load-file file)
+    (while vars
+      (setq result (append result (list (cons (car vars) 
+					      (symbol-value-safe
+					       (car vars))))))
+      (setq result (append result (list (cons (missing-sym (car vars))
+					      (symbol-value-safe
+					       (missing-sym (car vars)))))))
+      (setq vars (cdr vars)))
+    (setq language-values (cons result language-values))))
+
+
+(defvar lyskom-format-format
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxc]\\)"
+  "regexp matching format string parts.")
+
+
+(defun format-string (string)
+  (let ((result nil)
+	(start 0))
+    (while (and (< start (length string))
+		(string-match lyskom-format-format
+			      string
+			      start)
+		(setq start (match-end 0))
+		(setq result (cons 
+			      (concat
+			       (match-string 1 string)
+			       (match-string 3 string)
+			       (match-string 5 string)
+			       (match-string 6 string))
+			      result))))
+    result))
+
+
+(defun check-format-string (template string)
+  (if (not (stringp string))
+      nil
+    (let* ((tmp (format-string string))
+	   (result t))
+      (setq template (copy-sequence template))
+      (while tmp
+	(if (not (member (car tmp) template))
+	    (setq result nil tmp nil)
+	  (setq template (delete (car tmp) template))
+	  (setq tmp (delete (car tmp) tmp))))
+      (and result (null template)))))
+	    
+      
+
+(defun check-language-value (language sym)
+  (message "  Checking %s %S" language sym)
+  (let ((tmp (language-value language sym))
+        (missing nil)
+        (check nil))
+    (while tmp
+      (setq check (car tmp))
+      (if (and (cdr check)
+	       (stringp (cdr check)))
+	  (setq format-list (format-string (cdr check)))
+	(setq format-list nil))
+      (setq tmp (cdr tmp))
+      (setq missing nil)
+      (mapcar '(lambda (lang)
+                 (if (and (not (assq (car check)
+				     (language-value (car lang) sym)))
+			  (not (memq (car check)
+				     (language-value 
+				      (car lang)
+				      (missing-sym sym)))))
+                     (setq missing (cons lang missing))
+		   (if (and (stringp (cdr check))
+			    (assq (car check)
+				  (language-value (car lang) sym)))
+		       (if (not
+			    (check-format-string 
+			     format-list
+			     (cdr (assq (car check)
+					(language-value (car lang) sym)))))
+			   (message "    Format mismatch for %S in %s and %s\n    %S\n    %S"
+				    (car check)
+				    language
+				    (cdr lang)
+				    format-list
+				    (format-string 
+				     (cdr (assq (car check)
+						(language-value (car lang) sym))))
+)))))
+              language-files)
+      (if missing
+          (message "    Missing %S in %s"
+                   (car check)
+                   (mapconcat
+                    '(lambda (x) (format "%s" (cdr x)))
+                    missing
+                    ", "))))))
+
+
+
+(defvar lyskom-keybindings nil)
 (defvar keymaps nil)
 
 (defun suppress-keymap (&rest args) nil)
@@ -34,74 +140,37 @@
 (defun define-prefix-command (&rest args) nil)
 
 (defun x-define-key (cmd)
-  (if (not (assq cmd keybindings))
-      (setq keybindings (cons (cons cmd nil) keybindings))))
+  (if (not (assq cmd lyskom-keybindings))
+      (setq lyskom-keybindings (cons (cons cmd nil) lyskom-keybindings))))
 
 (defun reset-keybindings ()
-  (setq keybindings nil)
+  (setq lyskom-keybindings nil)
   (mapcar (function (lambda (x) (set x nil))) keymaps)
   (setq keymaps nil))
 
-(defun do-check (var &optional missing)
-  (do-check-strings (symbol-value (intern (concat "swedish-" 
-                                                  (symbol-name var))))
-                    "Swedish"
-                    (symbol-value (intern (concat "english-" 
-                                                  (symbol-name var))))
-                    "English"
-                    (if missing
-                        (symbol-value
-                         (intern
-                          (concat "english-"
-                                  (symbol-name missing))))))
-  (do-check-strings (symbol-value (intern (concat "english-" 
-                                                  (symbol-name var))))
-                    "English"
-                    (symbol-value (intern (concat "swedish-" 
-                                                  (symbol-name var))))
-                    "Swedish"
-                    (if missing
-                        (symbol-value (intern
-                                       (concat "swedish-"
-                                               (symbol-name missing)))))))
 
 
 
-(defun lyskom-check-strings ()
-  (load-file "vars.el")
-  (load-file "swedish-strings.el")
-  (setq swedish-strings lyskom-strings)
-  (setq swedish-missing-strings lyskom-missing-strings)
-  (setq swedish-commands lyskom-commands)
-  (setq swedish-bindings keybindings)
-  (setq swedish-missing-bindings lyskom-missing-bindings)
-  (makunbound 'lyskom-strings)
-  (makunbound 'lyskom-commands)
-  (makunbound 'lyskom-missing-bindings)
-  (makunbound 'lyskom-missing-strings)
-  (reset-keybindings)
-  (load-file "english-strings.el")
-  (setq english-strings lyskom-strings)
-  (setq english-missing-strings lyskom-missing-strings)
-  (setq english-commands lyskom-commands)
-  (setq english-bindings keybindings)
-  (setq english-missing-bindings lyskom-missing-bindings)
-  (message "Checking lyskom-strings")
-  (do-check 'strings 'missing-strings)
-  (message "Checking lyskom-commands")
-  (do-check 'commands)
-  (message "Checking keybindings")
-  (do-check 'bindings 'missing-bindings)
-)
+;;; ============================================================
+;;; Here are the functions that do the deed
+;;;
 
+(defun run ()
+  (setq language-values nil)
+  (load-file "./vars.el.in")
+  (mapcar 'load-language language-files)
+  (mapcar 'check-language language-files))
+   
 
+(defun load-language (file-spec)
+  (message "Loading %S from %s" (car file-spec) (cdr file-spec))
+  (read-language (car file-spec) (cdr file-spec)
+		 language-variables)
+  (reset-keybindings))
 
-(defun do-check-strings (l1 n1 l2 n2 &optional ignores)
-  (while l1
-    (if (and (not (assq (car (car l1)) l2))
-             (not (memq (car (car l1)) ignores)))
-        (message "%-25S present in %s, but not in %s"
-                 (car (car l1))
-                 n1
-                 n2))
-    (setq l1 (cdr l1))))
+(defun check-language (file-spec)
+  (message "Checking %S in %s" (car file-spec) (cdr file-spec))
+  (mapcar (function
+           (lambda (x) (check-language-value (car file-spec)
+                                             x)))
+	  language-variables))
