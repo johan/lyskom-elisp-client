@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.112 2004-06-09 11:06:09 qha Exp $
+# $Id: Makefile,v 44.113 2004-07-03 16:17:53 qha Exp $
 
 # Useful targets:
 #
@@ -313,7 +313,7 @@ DEBIANCLIENTVERSIONSUFFIX = 1
 # and when you're the only one who'll use the package and you're not
 # really the maintainer you might want to set this to something like
 # '-us -uc' and perhaps -rfakeroot aswell.
-DPKG_BUILDPACKAGE_OPTIONS = ''
+DPKG_BUILDPACKAGE_OPTIONS =
 
 DEBIANCLIENTVERSION := $(subst -,.,$(CLIENTVERSION))
 

@@ -1,3 +1,8 @@
+2004-07-03  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* Makefile (DPKG_BUILDPACKAGE_OPTIONS): Buggfix, don't set
+	DPKG_BUILDPACKAGE_OPTIONS to "''".
+
 2004-06-26  David Byers  <byers@lysator.liu.se>
 
 	* reading.el (lyskom-add-memberships-to-membership): Use
