@@ -1,0 +1,106 @@
+<HEAD>
+<TITLE>Att installera elisp-klienten för LysKOM under
+    Windows 2000</TITLE>
+</HEAD>
+<BODY>
+<H1>Att installera elisp-klienten för LysKOM under Windows 2000</H1>
+
+<OL>
+
+    <H2>Förberedelse</H2>
+
+<LI>Se till att ha en fungerande <A
+    HREF="ftp://ftp.gnu.org/gnu/windows/emacs/latest" >GNU-emacs för
+    Windows 2000</A> installerad
+<LI>Notera var filkatalogen site-lisp finns, t.ex. med
+    <STRONG><TT>M-x shell RET</TT></STRONG> och sedan kommandot
+    <STRONG><TT>dir c:\site-lisp/s</TT></STRONG>; kontrollera att
+    denna filkatalog nämns i GNU-emacs variabel <EM>load-path</EM>
+    genom att skriva <STRONG><TT>C-h v load-path RET</TT></STRONG>
+<LI>Hämta ett Zip-program, t.ex. <A HREF="http://www.winzip.com/"
+    >WinZip</A> eller <A HREF="http://www.powerarchiver.com/"
+    >PowerArchiver</A> och associera filtypen .ZIP med programmet
+<LI>Skapa en temporärfilkatalog, t.ex. <EM>c:\temp\lyskom</EM>
+
+    <H2>Hämta lyskom.el</H2>
+
+<LI>Hämta <A
+    HREF="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-0.46.1.zip"
+    >ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-0.46.1.zip</A>
+    till temporärfilkatalogen <EM>c:\temp\lyskom</EM>, t.ex. med hjälp
+    av en webbläsare
+<LI>Dubbelklicka på filen <EM>lyskom-0.46.1.zip</EM> så att
+    Zip-programmet startar. Bland alla filer finns en enda som är
+    intressant, det är den färdighopsatta filen <EM>lyskom-0.46.el</EM>; resten
+    av filerna är delarna som man kan bygga ihop denna från plus filer
+    som hjälper till att bygga - alla dessa är ointressanta
+<LI>Extrahera <EM>lyskom-0.46.el</EM> till filkatalogen site-lisp, 
+    t.ex. <EM>c:\Programs\Emacs\site-lisp\lyskom\lyskom-0.46.1.el</EM>
+
+    <H2>Skapa lyskom.elc</H2>
+
+<LI>Bytekompilera filen med kommandot <STRONG><TT>M-x byte-compile
+    RET c:\Programs\Emacs\site-lisp\lyskom\lyskom-0.46.1.el
+    RET</TT></STRONG>, en .elc-fil skapas, i detta exempel
+    <EM>c:\Programs\Emacs\site-lisp\lyskom\lyskom-0.46.1.elc</EM>
+    
+    <H2>Ladda lyskom</H2>
+
+<LI>Nu finns en fil <EM>lyskom-0.46.1.elc</EM> i en filkatalog som
+    listas i emacsvariabeln <EM>load-path</EM>, det är bara att ladda
+    filen som ett bibliotek, <STRONG><TT>M-x load-library RET
+    lyskom-0.46.1 RET</TT></STRONG>
+<LI>Om du vill så kan du addera automatisk laddning av biblioteket när
+    du ger kommandot <STRONG><TT>M-x lyskom RET</TT></STRONG>, det är
+    bara att lägga till kodstycket<BR><STRONG><TT>(autoload 'lyskom
+    "lyskom-0.46.1.elc" "LysKOM emacs client" t)</TT></STRONG><BR>
+    till filen <EM>~/.emacs</EM>; se till att exekvera kodstycket på
+    direkten genom att trycka <STRONG><TT>M-C-x</TT></STRONG> denna
+    gång. I fortsättningen kommer koden att köras automatiskt vid
+    start av emacs<BR><BR>
+
+    Observera att filen <EM>~/.emacs</EM> är en fil men namn
+    <EM>.emacs</EM> om hamnar i den filkatalog som emacs anser vara
+    "<A
+    HREF="http://www.gnu.org/software/emacs/windows/faq3.html#startup"
+    >hemmakatalogen</A>". (Du kommer till filen genom att skriva
+    <STRONG><TT>C-x C-f ~/.emacs RET</TT></STRONG>, knappa in
+    ovanstående kodstycke samt spara till fil genom att skriva
+    <STRONG><TT>C-x C-s</TT></STRONG>, fortsätt därefter med att
+    exekvera kodstycket)
+
+    <H2>Starta lyskom</H2>
+
+<LI>Kör elispklienten och logga in på <EM>kom.lysator.liu.se</EM>
+    genom att ge kommandot <STRONG><TT>M-x lyskom RET
+    kom.lysator.liu.se RET Ditt Namn RET Lösenordet RET</TT></STRONG>,
+    lägg märke till att en del värden redan är förifyllda, då räcker
+    det att bekräfta att dessa är riktiga genom att trycka
+    <STRONG><TT>RET</TT></STRONG>
+
+</OL>
+    
+<HR>
+
+<H1>Referenser</H1>
+
+<UL>
+<LI>Färdigkompilerad GNU-emacs för Windows: <A
+    HREF="ftp://ftp.gnu.org/gnu/windows/emacs/latest"
+    >ftp://ftp.gnu.org/gnu/windows/emacs/latest</A>
+<LI>WinZip: <A HREF="http://www.winzip.com/"
+    >http://www.winzip.com/</A>
+<LI>PowerArchiver: <A HREF="http://www.powerarchiver.com/"
+    >http://www.powerarchiver.com/</A>
+<LI>Paket med elispklienten lyskom.el: <A
+    HREF="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-0.46.1.zip"
+    >ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-0.46.1.zip</A>
+<LI>Information om var GNU-emacs lagrar filen .emacs: <A
+    HREF="http://www.gnu.org/software/emacs/windows/faq3.html#startup"
+    >http://www.gnu.org/software/emacs/windows/faq3.html#startup</A>
+</UL>
+
+<P ALIGN="right" >[Skrivet av <A HREF="mailto:kz_vid_kz_punkt_kz" >Klaus
+Zeuge</A> 20011002]</P>
+    
+</BODY>

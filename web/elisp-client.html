@@ -1,0 +1,2030 @@
+<!-- This HTML file has been created by texi2html 1.29
+     from elisp-client.texinfo on 6 June 1994 -->
+
+<TITLE>Användarhandledning för LysKOMs emacslispklient</TITLE>
+<H1>Användarhandledning för LysKOMs emacslispklient</H1>
+<H1><A NAME="SEC1" HREF="elisp-client_toc.html#SEC1">Förord</A></H1>
+<P>
+Meningen med detta dokument är att den ska beskriva allt man behöver
+veta om LysKOMs emacslisp-klient för att kunna använda den. Det förutsätts
+att läsaren känner till GNU-emacs. Om användaren har använt QZ-KOM är
+detta en fördel, men det är på inget vis nödvändigt för förståelsen av
+LysKOM.
+<P>
+All utveckling av LysKOMs emacslispklient, lyskom-systemet och i detta
+dokument nämnda andra klienter är ideelt arbete utfört av medlemmar i
+Lysator, datorföreningen vid Universitet och Tekniska Högskolan i
+Linköping.
+<P>
+Om du vill deltaga i arbetet så är det bra om du skaffar dig en
+ordentlig introduktion till hur systemet fungerar. Om du finns i
+Linköping så är det enklast att prata med någon av de som varit med och
+som är ansvariga för det som hittills är gjort. Om du inte finns i
+Linköping är du utelämnad åt självstudier av de få dokument som finns
+och källkoden. Jag skulle nog vilja rekommendera ett veckosluts
+intensivkurs i Linköping för att få riktigt grepp om hur det hela
+hänger ihop.
+<P>
+Det finns alternativ till LysKOMs emacslispklient som också är fritt
+tillgängliga. Än så länge har de inte riktigt LysKOMs emacslispklients
+funktionalitet utan är begränsade i något avseende men det sker
+utveckling av dem hela tiden.
+<P>
+Samtliga här beskrivna LysKOMklienter har fördelen framför LysKOMs
+emacslispklient att de är mindre cpu-krävande och därför snabbare.
+<P>
+<DL COMPACT>
+<P>
+<DT>tty-klienten
+<DD><DT>C-klienten
+<DD>tty-klienten är skriven i C med det ursprungliga målet att så troget som
+möjligt likna QZ-kom. Avvikelser från detta målet har skett dels
+beroende på de olika förutsättningar som LysKOM har jämför med QZ-kom
+och dels beroende på personlig smak hos utvecklarna. När detta skrivs är
+tty-klienten (version L0.11) ganska stabil, den går lätt att kompilera
+och köra på flera olika system <A NAME="FOOT1" HREF="elisp-client_foot.html#FOOT1">(1)</A> förusatt att man har GCC
+installerad.
+<P>
+Den senaste versionen av tty-klienten finns att hämta via ftp från
+<TT>`ftp.lysator.liu.se'</TT> i underbiblioteket <TT>`/pub/lyskom/tty-client/'</TT>
+<P>
+Den som gjort mest i tty-klienten är Thomas Bellman
+<CODE>&#60;bellman@lysator.liu.se&#62;</CODE>.
+<P>
+Den som för närvarande gör något och som är ansvarig för de senaste
+versionerna är Linus Tolke <CODE>&#60;linus@lysator.liu.se&#62;</CODE>.
+<P>
+<DT>tkom
+<DD><DT>nilkom
+<DD><DT>kom++
+<DD>tkom och nilkom är två olika klienter som bygger på samma grundstomme.
+Grundprogrammet som pratar med lyskom-servern är skrivet i C++ och sedan
+finns det två olika användargränssnitt som är skrivna i TCL. Nilkom kör
+mot en terminal medan tkom öppnar X-fönster.
+<P>
+Målet med denna klient är att erbjuda ett gränssnitt till lyskom-servern
+som är bättre än protokollet och det finns redan nu rutiner för cache av
+personer och möten.
+<P>
+tkom, nilkom, kom++-paketet kräver att C++ och TCL/Tk finns installerat på
+maskinen men om man vill använda paketet för att bygga en helt egen
+klient kan man klara sig utan TCL.
+<P>
+Den senaste versionen av kom++-klienten finns att hämta via anonym ftp
+från <TT>`ftp.lysator.liu.se'</TT> i underbiblioteket <TT>`/pub/lyskom'</TT>.
+<P>
+De som för närvarande jobbar med kom++-klienten är Per Cederqvist
+<CODE>&#60;ceder@lysator.liu.se&#62;</CODE> och Inge Wallin <CODE>&#60;ingwa@isy.liu.se&#62;</CODE>
+eller <CODE>&#60;inge@lysator.liu.se&#62;</CODE>.
+<P>
+</DL>
+<P>
+<H1><A NAME="SEC2" HREF="elisp-client_toc.html#SEC2">Historia</A></H1>
+<P>
+LysKOM är ett konferenssystem som är inspirerat av KOM, det
+konferenssystem som skapades av QZ i Stockholm. Orsaken till att LysKOM
+skrevs var att det KOMsystem Lysators medlemmar hade tillgång till lades
+ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och den sista
+DEC-20-maskinen på LiTH som studenterna hade tillgång till såldes och
+försvann. KOM hade blivit vanebildande för en del och det bedömdes att
+en ersättning var nödvändig.
+<P>
+En tidig tanke när vi började jobba med LysKOM var att det skulle gå att
+ha flera olika användargränssnitt samtidigt. Någon vill se en grafisk
+struktur på hur inläggen hänger ihop på sin grafiska skärm, någon annan
+vill kunna fortsätta att använda sin gamla vt100. Det var också klart
+att systemet skulle köra under UNIX eftersom detta operativsystem
+bedömdes som vanligt i framtiden. Lysators medlemmar hade dessutom stor
+erfarenhet av UNIX och Lysator äger ett antal UNIX- maskiner.
+<P>
+Bland annat av dessa orsaker valde vi att använda en
+server-klientmodell. En central server tar hand om alla inlägg och
+LysKOM:s hela databas. Mot denna server kan flera stycken klienter
+koppla upp sig via TCP/IP.
+<P>
+När servern började fungera behövdes det en enkel klient för att kunna
+testa. Per Cederqvist skrev en enkel klient i emacslisp som sedan byggts
+på av ett antal lysatormedlemmar. Även personer utanför Lysator har
+bidragit till utvecklingen med färdiga funktioner och framför allt
+kommentarer och idéer. Det är detta som idag är LysKOMs emacslispklient.
+<P>
+<H1><A NAME="SEC3" HREF="elisp-client_toc.html#SEC3">Servern</A></H1>
+<P>
+Servern, databashanteraren, är skriven i C och körs på
+<TT>`varg.lysator.liu.se'</TT> (IP-nummer 130.236.254.151). Databasfilen är 
+läsbar för flera av lysators medlemmar, vilket kan tyckas vara en
+bugg, men den är medveten. Vi vill inte ge någon en falsk känsla av
+säkerhet och på ett system sådant som Lysators är det alltför många
+som har privilegier för att man skall kunna garantera någon hemlighet.
+På andra serverinstallationer i framtiden blir naturligtvis
+situationen en annan.
+<P>
+<H1><A NAME="SEC4" HREF="elisp-client_toc.html#SEC4">Uppstart</A></H1>
+<H2><A NAME="SEC5" HREF="elisp-client_toc.html#SEC5">Från Lysators maskiner</A></H2>
+<P>
+Enklast är att köra LysKOM från någon av Lysators UNIX-maskiner.
+När man har startat emacs räcker det med att skriva:
+<PRE>
+M-x lyskom RET
+</PRE>
+för att sätta igång. Svara på frågan om server med
+att trycka <KBD>RET</KBD>.
+<P>
+<H2><A NAME="SEC6" HREF="elisp-client_toc.html#SEC6">Från elev-sparcarna på IDA (Inst. för Datavetenskap på LiTH):</A></H2>
+<P>
+Lägg in
+<PRE>
+(autoload 'lyskom "~d88perce/lyskom" "Köra LysKOM" t)
+</PRE>
+i din <TT>`.emacs'</TT>. Starta om emacs eller läs in <TT>`.emacs'</TT> i din emacs igen.
+Skriv <CODE>M-x lyskom</CODE> <KBD>RET</KBD>. När du får frågan om server svarar du <CODE>diag19</CODE> och
+hoppas att allt fungerar. Kör inte från IDA:s maskiner om de är
+nerlastade - vi vill inte att någon ska få för sig att stänga
+denna möjlighet att köra LysKOM. På <TT>`diag19.ida.liu.se'</TT> ligger ett litet
+program som reläar anropen vidare till <TT>`varg.lysator.liu.se'</TT> där
+servern ligger.
+<H2><A NAME="SEC7" HREF="elisp-client_toc.html#SEC7">Från andra maskiner</A></H2>
+<P>
+Om du vill hämta LysKOMs emacslispklient från någonstans utanför LiTH
+kan du hämta den senaste versionen via anonym ftp från
+<TT>`ftp.lysator.liu.se (130.236.254.153)'</TT>. Ange din emailadress som
+lösenord. Gå ner i directoryt <TT>`pub/lyskom/elisp-client'</TT> och skriv
+code{get lyskom-X.el.gz} där <CODE>X</CODE> är det högsta nummer du kan hitta
+i det directoryt. Filen med det högsta numret är alltid den senaste
+versionen. När överföringen är klar, bryt förbindelsen genom att skriva
+<CODE>quit</CODE>.<P>
+Du installerar LysKOMs emacslispklient genom att flytta den hämtade
+filen till det lokala emacslispbiblioteket <TT>`site-lisp'</TT> under namnet
+<TT>`lyskom.el'</TT> och lägga in en rad
+<PRE>
+(autoload 'lyskom "lyskom" "Köra LysKOM" t)
+</PRE>
+i filen defaults.el i samma directory.
+<P>
+Om du bara skall installera klienten för dig själv, ett måste om du inte
+får lov att installera emacslispprogram på systemet så flyttar du
+istället filen med namnet <TT>`lyskom.el'</TT> till ditt egna emacslispbibliotek
+och stoppar in raden ovan i din <TT>`.emacs'</TT>-fil.
+<P>
+Det kan löna sig att byte-kompilera klienten.
+See Info file `emacs', node `Lispbibliotek för emacs'.
+<P>
+Denna dokumentation finner du på samma ställe under namnet
+<TT>`elisp-client.info-X.tar.gz'</TT> för den infoiserade versionen och
+<TT>`elisp-client.txt-X.gz'</TT> för den enkla text-versionen. Detta
+dokument är ett texinfodokument och om du planerar att skriva ut det på
+skrivar så kontakta utvecklarna så kan de generera en <TT>`.dvi'</TT>-fil
+eller en postscript-fil.
+<P>
+Om Emacs säger <CODE>"Unknown host"</CODE> när du skrivit <CODE>M-x lyskom RET</CODE>
+och angivit <CODE>kom.lysator.liu.se</CODE> som svar på frågan om vilken server
+du vill koppla upp dig mot så beror det på att nameservern på din maskin
+inte fungerar som den skall. Du måste du be din systemadministratör att
+fixa den.
+<P>
+Om du har en gammal version av emacs kan det hända att den inte använder
+nameservern för att slå upp namnet och då fixar man det genom att lägga in 
+<PRE>
+130.236.254.151 kom.lysator.liu.se
+</PRE>
+i host-tabellen <A NAME="FOOT2" HREF="elisp-client_foot.html#FOOT2">(2)</A>.
+<P>
+I emacs version 19 är en alternativ lösning att ange numret till
+maskinen som LysKOMservern kör på (<TT>`130.236.254.151'</TT>).
+<P>
+<H1><A NAME="SEC8" HREF="elisp-client_toc.html#SEC8">Första gången du kör LysKOM</A></H1>
+<P>
+När du har svarat på frågan om server och uppkopplingen mellan klient
+och server är klar så får du en ny fråga; ditt namn. Det är sed att
+ange både för och efternamn samt den organisation du arbetar för, t ex
+<PRE>
+Inge Wallin, ISY
+</PRE>
+Om du inte är från Linköping <A NAME="FOOT3" HREF="elisp-client_foot.html#FOOT3">(3)</A> kan det också vara
+bra att på något sätt ange vilken stad du normalt finns i, t.ex
+<PRE>
+Salvador Dalberg, Stacken, Stockholm
+</PRE>
+Om det inte fanns någon med det namn du angav så får du bekräfta att
+du har stavat ditt namn rätt. Därefter får du uppge ett personligt lösenord.
+<P>
+Du blir medlem i mötet <SAMP>`Presentation (av nya) möten'</SAMP> automatiskt
+när du går in i LysKOM första gången. I det mötet hamnar beskrivningar
+av nya möten när de skapas och när beskrivningen ändras. Det kan vara
+bra att i lugn och ro läsa igenom detta möte och efterhand gå med i de
+möten som du finner intressanta.<P>
+För att titta på presentationen för ett möte igen kan man använda
+kommandot <CODE>Återse presentation</CODE>.
+<A NAME="IDX1"></A>
+<P>
+<H1><A NAME="SEC9" HREF="elisp-client_toc.html#SEC9">Möten</A></H1>
+<P>
+Debatten är uppdelad i olika möten. Möten är dataenheter som bl.a. har
+namn, medlemmar och mottagna inlägg. Medlemmarna förväntas vara
+intresserade av inläggen som skickas till just det mötet och läser
+dem. Namnen används som en kort presentation av mötet när man skall
+referera till det, dvs när man går till mötet eller skickar brev till
+mötet.
+<P>
+Möten har också presentationer som lite mer utförligt beskriver vad
+mötet är tänkt att handla om.
+<P>
+Det finns inga som helst mekanismer eller garantier för att kolla att
+medlemmarna i ett möte, och andra också för den delen, skickar inläggen
+till rätt möte. Det finns möjligheter för administratören av mötet eller
+författaren av inlägget att flytta inlägget om det hamnat fel men oftast
+är det författarens ansvar att se till att det hamnar rätt från början.
+<P>
+<H1><A NAME="SEC10" HREF="elisp-client_toc.html#SEC10">Köra LysKOM</A></H1>
+<P>
+<H2><A NAME="SEC11" HREF="elisp-client_toc.html#SEC11">Prompten</A></H2>
+<P>
+När LysKOM är klart att ta emot ett kommando skrivs en prompt ut. Den
+kan se ut på t.ex följande sätt:
+<P>
+<PRE>
+Gå till nästa möte -
+Läsa nästa text -
+Se tiden - 
+</PRE>
+När du ser prompten kan du ge ett kommando. Var snäll mot klienten!
+Tryck inte på en massa knappar innan du ser prompten! Det blir bara
+problem om du gör det! Speciellt känslig är den i inloggningsfasen.
+Kom ihåg att LysKOMs emacslispklient från början var avsedd bara som ett
+surrogat för den egentliga klienten och att det som du nu kör är en
+alfarelease.
+<P>
+<H2><A NAME="SEC12" HREF="elisp-client_toc.html#SEC12">Scrollning</A></H2>
+<P>
+Om inte allt ryms på skärmsidan så syns en procentsats i mode-raden.
+Tryck på mellanslag när du läst klart så scrollas nästa sida fram.
+<P>
+<H2><A NAME="SEC13" HREF="elisp-client_toc.html#SEC13">Kommandon</A></H2>
+<P>
+Det finns två slags kommandon, dels de som är bundna till enskilda
+tangenter, dels de som du måste ange i klartext. Många kommandon kan
+anges på båda sätten. För att ange ett kommando med dess fulla namn
+trycker du tangenten <KBD>a</KBD>, vilket skall uttydas <CODE>(Något) Annat</CODE>,
+<A NAME="IDX2"></A>
+ett kommando som fanns i gamla QZ-KOM. Detta ger dig en fråga på emacs
+meddelanderad och du kan nu trycka <KBD>?</KBD> och få en lista på vilka
+kommandon som finns.
+<P>
+Antalet kommandon ökar hela tiden med ökande versionsnummer.
+Följande kommandon finns i LysKOMs emacslispklient i den version 
+som anges i titeln på detta dokument. Först visas vilken tangent
+som funktionen ligger på och därefter vad man anger under <KBD>a</KBD>.
+I mötet <SAMP>`LysKOM Elispklient; diskussion och ideer'</SAMP> på Lysators
+LysKOM-system diskuteras nyheter om klienten. När en ny version
+släpps annonseras det också i det mötet, för det mesta
+tillsammans med en lista på de ändringar som är gjorda sen
+förra versionen.
+<P>
+<H3><A NAME="SEC14" HREF="elisp-client_toc.html#SEC14">Kommandon för att läsa inlägg.</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<DT><KBD>SPC</KBD>
+<DD><DT>(mellanslag)
+<DD><A NAME="IDX3"></A>
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+<A NAME="IDX6"></A>
+<A NAME="IDX7"></A>
+<DT><KBD>RET</KBD>
+<DD>Utför defaulthandlingen, dvs det som står i prompten.
+<P>
+<DT><KBD>LFD</KBD>
+<DD><A NAME="IDX8"></A>
+<A NAME="IDX9"></A>
+<DT>(eller <KBD>NEWLINE</KBD>)
+<DD>Samma som mellanslag eller <KBD>RET</KBD>, men placera först markören
+överst på skärmen.
+<P>
+<DT><KBD>ni</KBD>
+<DD><A NAME="IDX10"></A>
+<A NAME="IDX11"></A>
+<DT><CODE>Läsa nästa inlägg</CODE>
+<DD>Gå till nästa inlägg och visa den. Om du håller på att återse sparas
+informationen om vad du återser undan. Med <CODE>ån</CODE> kan du sedan
+återse nästa inlägg.
+<P>
+<DT><KBD>nm</KBD>
+<DD><A NAME="IDX12"></A>
+<A NAME="IDX13"></A>
+<DT><CODE>Gå till nästa möte</CODE>
+<DD>Går till nästa möte med olästa inlägg. Alla olästa i det nuvarande
+mötet sparas och mötet placeras sist i listan över möten med
+olästa inlägg.
+<P>
+<DT><KBD>h</KBD>
+<DD><A NAME="IDX14"></A>
+<A NAME="IDX15"></A>
+<DT><CODE>Hoppa över alla kommentarer</CODE>
+<DD>Hoppa över alla kommentarer till det senast lästa inlägget, dvs
+markera dem som lästa utan att visa dem. Detta sker rekursivt så
+att alla kommentarer till kommentarerna också markeras som lästa,
+osv. För att undvika att detta kommando jobbar för evigt läsmarkerar 
+och söker klienten bara rekursivt vidare om kommentaren i varje steg
+är nyare än det kommenterade inlägget.
+<P>
+<DT><KBD>e</KBD>
+<DD><A NAME="IDX16"></A>
+<A NAME="IDX17"></A>
+<DT><CODE>Endast läsa senaste</CODE>
+<DD>Man får ange ett antal inlägg som man vill läsa i det nuvarande
+mötet. Alla andra inlägg i mötet markeras såsom lästa. 
+<P>
+<DT>
+<DD><A NAME="IDX18"></A>
+<DT><CODE>Uppskjuta läsning</CODE>
+<DD>Man får ange hur många inlägg i mötet man vill läsa nu.
+Klienten kommer att "glömma bort" att du borde få läsa alla utom
+de sista N inläggen i det möte du befinner dig i. Nästa gång du
+startar klienten kommer du att få läsa de "bortglömda" inläggen.
+De glöms bara tillfälligt.
+<P>
+<DT><KBD>M-p</KBD>
+<DD><A NAME="IDX19"></A>
+<A NAME="IDX20"></A>
+<A NAME="IDX21"></A>
+<A NAME="IDX22"></A>
+<DT><CODE>(Spring till) början av texten</CODE>
+<DD>Detta kommando är bara till för att snabbare kunna hitta början på
+det inlägg man är vid, eller hitta föregående inlägg.
+<P>
+<DT><KBD>M-n</KBD>
+<DD><A NAME="IDX23"></A>
+<A NAME="IDX24"></A>
+<A NAME="IDX25"></A>
+<DT><CODE>(Spring till) nästa text</CODE>
+<DD>Detta kommando är motsatsen till <KBD>M-p</KBD>. Det springer till nästa
+inlägg istället.
+<P>
+<DT><KBD>DEL</KBD>
+<DD><A NAME="IDX26"></A>
+<A NAME="IDX27"></A>
+<A NAME="IDX28"></A>
+<DT><CODE>Scrolla ner</CODE>
+<DD>Detta kommando rullar tillbaka skärmen så att man kan se det som skrevs
+innan. För att komma framåt igen är det bara att trycka <KBD>SPC</KBD>. 
+</DL>
+<H3><A NAME="SEC15" HREF="elisp-client_toc.html#SEC15">Få hjälp</A></H3>
+<P>
+Du kan alltid få hjälp.
+<P>
+<DL COMPACT>
+<DT><KBD>?</KBD>
+<DD><A NAME="IDX29"></A>
+<A NAME="IDX30"></A>
+<DT><CODE>Hjälp</CODE>
+<DD>Beskriv LysKOM-moden och alla dess tangentbordsbindningar.
+Om du redan gett en del av ett kommando och trycker <KBD>?</KBD> så får du en
+lista på vilka alternativa kommandon som finns från det läget.
+Alternativlistan innehåller vad du skulle tryckt för att välja
+just det alternativet samt kommandots namn.
+<P>
+</DL>
+<H3><A NAME="SEC16" HREF="elisp-client_toc.html#SEC16">Skriva</A></H3>
+<P>
+Här är samtliga kommandon som används för att skriva ett inlägg listade.
+<P>
+<DL COMPACT>
+<P>
+<DT><KBD>b</KBD>
+<DD><A NAME="IDX31"></A>
+<A NAME="IDX32"></A>
+<DT><CODE>Skicka brev</CODE>
+<DD>Skicka ett brev till en person eller ett möte. Programmet frågar
+efter vilket möte/person som man vill skicka brevet till. Man kan
+skicka brev även till slutna möten. Om personen eller mötet har en
+lapp på dörren så visas lappen i LysKOM-bufferten. 
+<P>
+<DT><KBD>i</KBD>
+<DD><A NAME="IDX33"></A>
+<A NAME="IDX34"></A>
+<DT><CODE>Skriva ett inlägg</CODE>
+<DD>Skriv ett inlägg i det möte där du befinner dig för tillfället. Se
+avsnittet nedan som beskriver vad du kan göra medan du skriver.
+<P>
+<DT><KBD>k</KBD>
+<DD><A NAME="IDX35"></A>
+<A NAME="IDX36"></A>
+<A NAME="IDX37"></A>
+<DT><CODE>Kommentera inlägget</CODE>
+<DD>Kommentera det senast lästa eller skrivna inlägget. Man kan också
+kommentera ett valfritt inlägg genom att istället för att trycka <KBD>k</KBD>
+trycka inläggsnummret för det inlägg man vill kommentera följt av
+<KBD>k</KBD>. Alternativ till detta är att trycka <KBD>C-u k</KBD> varpå man får
+ange inläggsnumret.
+<P>
+Om inlägget skulle ha flera mottagare så får man, för var och 
+en av dessa mottagare en kontrollfråga om man vill att den skall vara
+kvar som mottagare eller inte. Detta går givetvis att stänga av.
+<P>
+<DT><KBD>K</KBD>
+<DD><A NAME="IDX38"></A>
+<A NAME="IDX39"></A>
+<DT><CODE>Kommentera föregående inlägg</CODE>
+<DD>Kommentera det näst senast lästa eller skrivna inlägget. Det kan 
+vara bra om man gör <KBD>åk</KBD> (<CODE>Återse det kommenterade</CODE>) innan man
+bestämmer sig för att kommentera.
+<P>
+<DT><KBD>F</KBD>
+<DD><A NAME="IDX40"></A>
+<A NAME="IDX41"></A>
+<A NAME="IDX42"></A>
+<DT><CODE>Fotnot till inlägg</CODE>
+<DD>Skriv en fotnot till det senast lästa inlägget. Kommandot fungerar som
+kommandot <CODE>Kommentera inlägget</CODE>. Observera att om man inte explicit
+anger inläggsnummer skriver man alltid fotnoter till senast lästa
+inlägg. Detta innebär att man "tvingas" återse sitt senast skrivna inlägg
+innan man kan skriva en fotnot till det.
+<P>
+<DT><KBD>p</KBD>
+<DD><A NAME="IDX43"></A>
+<A NAME="IDX44"></A>
+<A NAME="IDX45"></A>
+<DT><CODE>Personligt svar</CODE>
+<DD>Skriv ett personligt svar till författaren av det senast lästa
+inlägget. Detta är detsamma som att skicka ett brev till honom som
+är en kommentar till inlägget. 
+<P>
+Man kan liksom när man skriver kommentarer skriva personligt svar till
+godtyckligt inlägg genom att antingen skriva inläggsnummer <KBD>p</KBD> eller
+<KBD>C-u p</KBD> följt av inläggsnumret och <KBD>RET</KBD>.
+<P>
+<DT><KBD>P</KBD>
+<DD><A NAME="IDX46"></A>
+<A NAME="IDX47"></A>
+<DT><CODE>Personligt svar på föregående inlägg</CODE>
+<DD>Skriv ett personligt svar till författaren av det näst senast
+lästa inlägget. Jämför kommentera föregående 
+inlägg.
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC17" HREF="elisp-client_toc.html#SEC17">Lista</A></H3>
+<P>
+Du kan lista olika saker med dessa olika kommandona.
+<P>
+<DL COMPACT>
+<DT><KBD>v</KBD>
+<DD><A NAME="IDX48"></A>
+<A NAME="IDX49"></A>
+<DT><CODE>Vilka är inloggade</CODE>
+<DD>Visa en lista över de personer som är inloggade i LysKOM för
+ögonblicket. Man får dessutom reda på vilken maskin de kör ifrån samt
+vad de sysslar med just nu. Inloggningarna visas i sessionsnummerordning
+och den egna inloggningen markeras med en asterisk precis efter
+sessionsnumret.
+<P>
+<DT><KBD>lm</KBD>
+<DD><A NAME="IDX50"></A>
+<A NAME="IDX51"></A>
+<DT><CODE>Lista möten</CODE>
+<DD>Lista alla möten som matchar ett givet mönster. LysKOM frågar
+efter mönstret innan sökningen startar. En asterisk (<CODE>*</CODE>) skrivs
+ut framför namnet på alla möten som man inte är medlem i.
+<P>
+<DT><KBD>ln</KBD>
+<DD><A NAME="IDX52"></A>
+<A NAME="IDX53"></A>
+<DT><CODE>Lista nyheter</CODE>
+<DD>Lista alla nyheter, dvs alla möten i vilka du har olästa inlägg.
+Talar också om hur många olästa du har i resp. möte.
+<P>
+<A NAME="IDX54"></A>
+<A NAME="IDX55"></A>
+<DT><KBD>lN</KBD>
+<DD>Samma som <KBD>ln</KBD>, men använder en något långsammare metod. Detta anrop
+finns endast med som kontroll eftersom metoden som används för
+<KBD>ln</KBD> visserligen är snabbare, men också mycket mer komplicerad.
+Detta kommando kommer att försvinna snart(?).
+<P>
+<DT><KBD>lp</KBD>
+<DD><A NAME="IDX56"></A>
+<A NAME="IDX57"></A>
+<DT><CODE>Lista personer</CODE>
+<DD>Lista alla personer som matchar ett givet mönster. LysKOM frågar
+efter mönstret innan sökningen startar.
+<P>
+<DT><KBD>ls</KBD>
+<DD><A NAME="IDX58"></A>
+<A NAME="IDX59"></A>
+<DT><CODE>Lista medlemsskap</CODE>
+<DD>Listar vilka möten du är medlem i, vilka prioriteter som gäller
+för mötena samt hur många olästa du har i varje möte.
+<P>
+<DT><KBD>lä</KBD>
+<DD><A NAME="IDX60"></A>
+<A NAME="IDX61"></A>
+<DT><CODE>Lista ärenden</CODE>
+<DD>Listar ärenden och författare på de inlägg som du har olästa i
+mötet, eller på dina markerade inlägg, när du har prompten 
+<CODE>Återse nästa markerade -</CODE>.
+</DL>
+<P>
+<H3><A NAME="SEC18" HREF="elisp-client_toc.html#SEC18">Bli medlem</A></H3>
+<P>
+Här beskriver vi hur du kan bli medlem i ett möte, samt hur du gör för
+att utträda.
+<P>
+<DL COMPACT>
+<DT><KBD>g</KBD>
+<DD><A NAME="IDX62"></A>
+<A NAME="IDX63"></A>
+<DT><CODE>Gå till möte</CODE>
+<DD>Gå till ett nytt möte för att börja läsa inlägg där. LysKOM frågar
+efter vilket möte du vill gå till.
+<P>
+Om du inte är medlem i mötet så frågar LysKOM om du vill bli medlem
+i mötet och om man då svarar <KBD>j</KBD> så blir man medlem i mötet på samma
+sätt som om man hade gjort <KBD>m</KBD> (<CODE>Bli medlem i möte</CODE>). Efter det så går
+man till mötet på vanligt sätt.
+<P>
+<DT><KBD>m</KBD>
+<DD><A NAME="IDX64"></A>
+<A NAME="IDX65"></A>
+<DT><CODE>Bli medlem i möte</CODE>
+<DD>Frågar efter ett möte och ser till att du blir medlem i det. I samband
+med detta får du ange en prioritet för mötet och var mötet skall läsas i
+förhållande till andra möten med samma prioritet.  LysKOM kommer att
+sätta prioriteten till <CODE>100</CODE> om du inte har ändrat variabeln
+<CODE>kom-membership-default-priority</CODE> som kontrollerar detta.
+<P>
+För att LysKOM skall veta i vilken ordning du vill läsa dina
+möten måste du ange det för varje möte du går med i.
+Du kan (givetvis) sätta en variabel som kontrollerar detta också,
+nämligen <CODE>kom-membership-default-placement</CODE>, men om du inte anger
+något så måste du ange det. LysKOM frågar var du vill lägga det.
+0 är allra först (före din brevlåda) och det högsta numret
+som finns som alternativ är sist i listan.
+<P>
+Om mötet är slutet så kan man inte gå med i det. Detta kommando
+kan även användas för att ändra prioritet för ett möte som du
+redan är medlem i.
+<P>
+<A NAME="IDX66"></A>
+<DT><CODE>Utträda ur</CODE>
+<DD>Frågar efter namnet på ett möte och gör så att du utträder ur
+mötet. Alla markeringar om eventuella lästa inlägg försvinner.
+Detta kommando har inte någon egen tangent.
+</DL>
+<P>
+<H3><A NAME="SEC19" HREF="elisp-client_toc.html#SEC19">Sluta</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>S</KBD>
+<DD><DT><KBD>q</KBD>
+<DD><A NAME="IDX67"></A>
+<A NAME="IDX68"></A>
+<A NAME="IDX69"></A>
+<DT><CODE>Sluta</CODE>
+<DD>Avslutar LysKOM. Det går lika bra att sluta genom att gå ur Emacs
+eller ta bort LysKOM-bufferten.
+<P>
+Om du har inlägg som du börjat skriva på och sedan varken slängt eller
+skickat in till LysKOM-servern så kommer du att få en extra
+kontrollfråga om du verkligen vill sluta trots att du har oinskickade
+inlägg.
+<P>
+Om du väljer att gå ur lyskom genom att avsluta Emacs och har
+oinskickade buffertar kommer LysKOMs emacslispklient att se till att Emacs
+betraktar LysKOM som en viktig process. Om du däremot har skickat in
+eller slängt alla dina inlägg ser LysKOMs emacslispklientent till att Emacs inte
+betraktar LysKOM som en viktig process. Om du får en kontrollfråga:
+"Active processes exist; kill them and exit anyway? (yes or no)" innebär
+det alltså att du har oinskickade inlägg. <A NAME="FOOT4" HREF="elisp-client_foot.html#FOOT4">(4)</A>
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC20" HREF="elisp-client_toc.html#SEC20">övriga kommandon i LysKOM.</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>M-x kom-recover</KBD>
+<DD><A NAME="IDX70"></A>
+<A NAME="IDX71"></A>
+<DT><CODE>Återstarta kom</CODE>
+<DD>Nollställer diverse interna strukturer i klienten. Används då
+klienten har hängt sig eller då klienten och servern har kommit ur
+fas. Det kan de göra om man trycker <CODE>C-g</CODE> @kindex C-g
+vid olämpliga tillfällen.
+<P>
+Om klienten hänger sig på detta vis beror det egentligen på att det är
+en bugg i klienten. Se till att skapa en buggrapport innan du ger det
+här kommandot. Se även section <A HREF="elisp-client.html#SEC38">Buggrapporter</A>.
+<P>
+<DT><KBD>t</KBD>
+<DD><A NAME="IDX72"></A>
+<A NAME="IDX73"></A>
+<DT><CODE>Se tiden</CODE>
+<DD>Visar vad klockan är.
+<P>
+<DT><KBD>fu</KBD>
+<DD><A NAME="IDX74"></A>
+<A NAME="IDX75"></A>
+<DT><CODE>Få uppmuntran</CODE>
+<DD>Ger den dystre användaren lite ljus i mörkret.
+<P>
+<DT><KBD>fs</KBD>
+<DD><A NAME="IDX76"></A>
+<A NAME="IDX77"></A>
+<DT><CODE>Få skäll</CODE>
+<DD>Tar ner den uppblåste användaren på jorden.
+<P>
+<DT><KBD>V</KBD>
+<DD><A NAME="IDX78"></A>
+<A NAME="IDX79"></A>
+<DT><CODE>Vänta på ett inlägg</CODE>
+<DD>Stoppar LysKOM och väntar på att ett inlägg med prioritet högre än
+nästa möte man kommer till skall skrivas. Vill man bryta av innan
+är det bara att ge ett kommando.
+<P>
+Om du inte vill att inlägg med låg prioritet, men högre än nästa
+möte, ska avbryta väntafunktionen så kan du ange prioriteten som
+måste överskridas med ett prefixargument.
+<P>
+<DT>
+<DD><A NAME="IDX80"></A>
+<DT><CODE>Visa vilkalistan</CODE>
+<DD>LysKOM underhåller en lista över alla personer som är inne
+i LysKOM just nu och den kan man får fram i ett temporärt fönster
+med detta kommando. Höjden på detta fönster regleras med 
+variabeln <CODE>kom-who-buffer-size-when-displaying</CODE>.
+<P>
+Detta fungerar givetvis inte om man har slagit av hanteringen av
+Vilkabufferten. See section <A HREF="elisp-client.html#SEC33">Vilkabufferten</A>
+<P>
+<DT>
+<DD><A NAME="IDX81"></A>
+<DT><CODE>Kasta ut en session</CODE>
+<DD>Du kan slänga ut en session som har hängt sig eller som du
+glömt på någon annan maskin. Du kan bara slänga ut 
+sessioner där personer som du är organisatör för är
+inloggade om du inte är i administratörsmod.
+<P>
+</DL>
+<P>
+<DL COMPACT>
+<DT><KBD>äp</KBD>
+<DD><A NAME="IDX82"></A>
+<A NAME="IDX83"></A>
+<DT><CODE>Ändra presentation</CODE>
+<DD>ändrar presentationen för ett möte eller en person. LysKOM frågar
+efter vilken person/möte som presentationen skall ändras för och
+placerar dig i redigeringsläge. Om du bara trycker <KBD>RET</KBD> så
+ändrar du din egen presentation.
+</DL>
+<P>
+<DL COMPACT>
+<DT><KBD>å <KBD>SPC</KBD></KBD>
+<DD><A NAME="IDX84"></A>
+<A NAME="IDX85"></A>
+<DT><CODE>Återse text</CODE>
+<DD>Återse en eventuellt tidigare läst inlägg. Om du anger ett nummer
+direkt efter <KBD>å</KBD>:et så visar LysKOM dettaa inlägg. Om du ger ett
+mellanslag så frågar LysKOM efter inläggsnummer.
+<P>
+<DT><KBD>åo</KBD>
+<DD><A NAME="IDX86"></A>
+<A NAME="IDX87"></A>
+<DT><CODE>Återse omodifierat</CODE>
+<DD>Återse det senast föregående lästa inlägget utan att konvertera enligt
+konverteringstabellen.
+<P>
+<DT><KBD>åk</KBD>
+<DD><A NAME="IDX88"></A>
+<A NAME="IDX89"></A>
+<DT><CODE>Återse det kommenterade</CODE>
+<DD>Återse det eller de inlägg som det senast lästa inlägget är en
+kommentar till. Om inte det senast lästa är en kommentar utan ett
+originalinlägg så ger LysKOM ett felmeddelande.
+<P>
+<DT><KBD>åak</KBD>
+<DD><A NAME="IDX90"></A>
+<A NAME="IDX91"></A>
+<DT><CODE>Återse alla kommentarer</CODE>
+<DD>Återse alla inlägg som är kommentarer till det senast lästa
+inlägget.
+<P>
+<DT><KBD>åar</KBD>
+<DD><A NAME="IDX92"></A>
+<A NAME="IDX93"></A>
+<DT><CODE>Återse alla kommentarer rekursivt</CODE>
+<DD>Återse alla inlägg som är kommentarer till det senast lästa
+inlägget. Detta sker rekursivt så att även kommentarer till dessa
+kommentarer återses. 
+<P>
+<DT><KBD>år</KBD>
+<DD><A NAME="IDX94"></A>
+<A NAME="IDX95"></A>
+<DT><CODE>Återse urinlägget</CODE>
+<DD>Återser originalinlägget som gav upphov till den kommentarkedja
+som det senast lästa inlägget ingår i.
+<P>
+<DT><KBD>ån</KBD>
+<DD><A NAME="IDX96"></A>
+<A NAME="IDX97"></A>
+<DT><CODE>Återse nästa</CODE>
+<DD>Återser nästa inlägg i återsestacken.
+<P>
+<DT><KBD>ås</KBD>
+<DD><A NAME="IDX98"></A>
+<A NAME="IDX99"></A>
+<DT><CODE>Återse senaste</CODE>
+<DD>Återse de senaste N inläggen av X i mötet M. LysKOM frågar efter
+personen X och mötet M. N är prefixargument. 
+<P>
+Om man inte ger något prefixargument sätts N<CODE>=1</CODE>. Om man anger N<CODE>=0</CODE>
+får man se <EM>alla</EM> inlägg av X till M. Om N är negativt så får du se
+de abs(N) första inläggen av X i mötet M.
+<P>
+Om man inte anger X får man se de senaste N inläggen i mötet M.
+Default för mötet är det möte du är i. Om man inte anger M får man
+se de senaste N inläggen av X. 
+<P>
+M kan vara din egen brevlåda, men du kan inte återse inlägg till
+någon annans brevlåda. Det beror på en bug i server som kommer att
+rättas, förhoppningsvis före sommaren 1991.
+<P>
+<DT><KBD>åi</KBD>
+<DD><A NAME="IDX100"></A>
+<A NAME="IDX101"></A>
+<DT><CODE>Återse igen</CODE>
+<DD>Återse de senaste X normalt lästa inlägg.
+<P>
+<DT><KBD>åh</KBD>
+<DD><A NAME="IDX102"></A>
+<A NAME="IDX103"></A>
+<DT><CODE>Återse hoppa</CODE>
+<DD>Avslutar alla återsekommandon.
+<P>
+<DT><KBD>ål</KBD>
+<DD><A NAME="IDX104"></A>
+<A NAME="IDX105"></A>
+<DT><CODE>Återse lista</CODE>
+<DD>Visar vilka inlägg som kommer att återses, dvs resulatet av alla
+fortfarande aktiva återsekommandon. 
+<P>
+<DT><KBD>åp</KBD>
+<DD><A NAME="IDX106"></A>
+<A NAME="IDX107"></A>
+<DT><CODE>Återse presentation</CODE>
+<DD>Frågar efter namnet på en person eller ett möte och visar
+presentationen för denna person/möte.
+<P>
+<DT><KBD>åt</KBD>
+<DD><A NAME="IDX108"></A>
+<A NAME="IDX109"></A>
+<DT><CODE>Återse träd</CODE>
+<DD>Samma som <CODE>Återse urinlägget</CODE> + <CODE>Återse alla kommentarer rekursivt</CODE>
+för det senast lästa inlägget.
+<P>
+<DT><KBD>B</KBD>
+<DD><A NAME="IDX110"></A>
+<A NAME="IDX111"></A>
+<DT><CODE>(Återse) Baklänges</CODE>
+<DD>Vänder på ordningen som de inlägg man gör återse på presenteras.
+Om man t ex återser de senaste N av någon så vill man kanske
+återse dem bakifrån i stället för framifrån.
+<P>
+</DL>
+<P>
+<DL COMPACT>
+<DT><KBD>sm</KBD>
+<DD><A NAME="IDX112"></A>
+<A NAME="IDX113"></A>
+<DT><CODE>Status (för) möte</CODE>
+<DD>Visar upp en del intressanta data för ett möte. Om mötet har en
+lapp på dörren så visas denna.
+<P>
+Om man vill se en lista på alla medlemmar i mötet och hur många 
+olästa de olika personerna har så skall man svara <KBD>j</KBD> på 
+frågan. Annars skall man svara <KBD>n</KBD>.
+<P>
+<DT><KBD>sp</KBD>
+<DD><A NAME="IDX114"></A>
+<A NAME="IDX115"></A>
+<DT><CODE>Status (för) person</CODE>
+<DD>Visar upp en del intressanta data om en person. Om personen har en
+lapp på dörren så visas denna. 
+<P>
+Efter eventuell lapp så kan man få en lista på vilka möten 
+personen är medlem i och hur många olästa han har i dem.
+Vill man inte ha denna lista skall man svara <KBD>n</KBD> på frågan.
+</DL>
+<P>
+<H3><A NAME="SEC21" HREF="elisp-client_toc.html#SEC21">Spara ett eller flera inlägg</A></H3>
+<P>
+<DL COMPACT>
+<DT><KBD>st</KBD>
+<DD><A NAME="IDX116"></A>
+<A NAME="IDX117"></A>
+<DT><CODE>Spara text (på fil)</CODE>
+<DD>Spara det senast lästa inlägget på fil. Frågar efter filnamn.
+<P>
+Om man anger ett prefixargument sparas de sista <CODE>n</CODE> inläggen.
+</DL>
+<P>
+<DL COMPACT>
+<DT><KBD>M</KBD>
+<DD><A NAME="IDX118"></A>
+<A NAME="IDX119"></A>
+<DT><CODE>Markera (inlägg)</CODE>
+<DD>Frågar efter inläggsnummer och markerar inlägget med ett nummer.
+Det senast lästa inlägget är default att markeras. Alla markerade
+inlägg eller markerade inlägg med en viss markering kan senare
+återses (se nedan).
+<P>
+Om man inte har satt variabeln <CODE>kom-default-mark</CODE> till någonting
+så markeras inlägget med markeringen <CODE>100</CODE>. Om man satt variabeln
+<CODE>kom-default-mark</CODE> till <CODE>nil</CODE> så frågar den även efter vilket
+nummer markeringen skall ha.
+<P>
+<DT><KBD>A</KBD>
+<DD><A NAME="IDX120"></A>
+<A NAME="IDX121"></A>
+<DT><CODE>Avmarkera (inlägg)</CODE>
+<DD>Frågar efter inläggsnummer och tar bort den eventuella markeringen
+från det inlägget. Det senast lästa inlägget är default.
+<P>
+<DT><KBD>åam</KBD>
+<DD><A NAME="IDX122"></A>
+<A NAME="IDX123"></A>
+<DT><CODE>Återse alla markerade</CODE>
+<DD>återser alla inlägg som tidigare markerats med hjälp av <CODE>M</CODE> eller
+<CODE>Markera (inlägg)</CODE>.
+<P>
+<DT><KBD>åm</KBD>
+<DD><A NAME="IDX124"></A>
+<A NAME="IDX125"></A>
+<DT><CODE>Återse markerade</CODE>
+<DD>Frågar efter en markering och visar upp alla markerade inlägg med
+just den markeringen. Normalt markerar LysKOMs emacslispklient med markering 100.
+See section <A HREF="elisp-client.html#SEC35">Variabler</A>.
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC22" HREF="elisp-client_toc.html#SEC22">Kommandon under annat</A></H3>
+Här följer några funktioner som inte ligger på några egna tangenter,
+men som kan hittas under <KBD>a</KBD>
+<P>
+<H3><A NAME="SEC23" HREF="elisp-client_toc.html#SEC23">Skapa</A></H3>
+<P>
+<DL COMPACT>
+<A NAME="IDX126"></A>
+<DT><CODE>Skapa möte</CODE>
+<DD>Skapa ett nytt möte.
+<P>
+<A NAME="IDX127"></A>
+<DT><CODE>Utplåna</CODE>
+<DD>Utplåna en person eller ett möte. Om man inte är organisatör för
+mötet/personen så misslyckas kommandot.
+<P>
+<A NAME="IDX128"></A>
+<DT><CODE>Radera (text)</CODE>
+<DD>Frågar efter inläggsnummer och raderar inlägget. Man kan även ange
+inläggsnumret som prefixargument.
+</DL>
+<P>
+<H3><A NAME="SEC24" HREF="elisp-client_toc.html#SEC24">Kommandon för att addera och subtrahera.</A></H3>
+<P>
+Man kan addera en mottagare eller extra kopiemottagare till ett inlägg, en
+medlem till ett möte eller ett inlägg som kommentar till ett annat inlägg.
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX129"></A>
+<DT><CODE>Addera mottagare</CODE>
+<DD>Frågar efter inläggsnummer och namnet på ett möte eller en person.
+Defaultvärdet för inläggsnumret är senast lästa inlägg och defaultvärdet
+för mötet är det senast adderade mötet.
+<P>
+Du får bara addera möten som du får lov att skriva inlägg i.
+<P>
+<A NAME="IDX130"></A>
+<DT><CODE>Addera extra kopiemottagare</CODE>
+<DD>Samma som Addera mottagare men adderar en mottagare av typen extra
+kopiemottagare istället. Defaultvärdet för inläggsnumret är senast lästa
+inlägg och defaultvärdet för mötet är den senast adderade extra
+kopiemottagaren.
+<P>
+Du får bara addera möten som du får lov att skriva inlägg i.
+<P>
+<A NAME="IDX131"></A>
+<DT><CODE>Subtrahera mottagare</CODE>
+<DD>Frågar efter inläggsnummer och namnet på ett möte eller en person.
+Inlägget får då inte längre angivet möte eller person som mottagare.
+Defaultvärdet för i inläggsnumret är senast lästa inlägg och defaultvärdet
+för mötet/personen är det möte som vi står i just nu.
+<P>
+Du får bara ta bort en mottagare om du är organisatör för mottagaren
+eller författare till inlägget.
+<P>
+<A NAME="IDX132"></A>
+<DT><CODE>Addera kommentar</CODE>
+<DD>Frågar efter två inläggsnummer. Det första inlägget kommer att
+kommenteras av det andra. Default för det kommenterade inlägget
+är senaste refererade inläggen.
+<P>
+<A NAME="IDX133"></A>
+<DT><CODE>Subtrahera kommentar</CODE>
+<DD>Frågar efter två inläggsnummer. Om det första inlägget, som har
+aktuellt inlägg som default, är kommenterad av det andra inlägget
+kommer denna bindning att plockas bort.
+<P>
+<A NAME="IDX134"></A>
+<DT><CODE>Addera medlem</CODE>
+<DD>Frågar efter person som skall adderas samt till vilket möte.
+Detta kommando måste användas för att addera medlemmar till ett
+slutet möte och det är bara organisatören för det mötet som kan
+använda det. Det kan också användas för att addera medlemmar till
+en brevlåda, dvs en person, om man vill att någon annan skall
+kunna läsa dennes post. Ett exempel är om man vill skapa en
+brevgrupp där flera personer kan läsa posten som kommer till
+gruppen. 
+<P>
+<A NAME="IDX135"></A>
+<DT><CODE>Uteslut medlem</CODE>
+<DD>Frågar efter person som skall uteslutas samt vilket möte som
+personen skall uteslutas ifrån. Detta kommando kan t ex användas
+av organisatören för ett möte när han vill utesluta någon från
+mötet.
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC25" HREF="elisp-client_toc.html#SEC25">Ändra personuppgifter</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX136"></A>
+<DT><CODE>Börja med nytt namn</CODE>
+<DD>Logga ut den nuvarande personen ur LysKOM och börja med en ny
+person utan att starta en ny session.
+<P>
+<A NAME="IDX137"></A>
+<DT><CODE>Ändra namn</CODE>
+<DD>Frågar efter vilket möte eller vilken person som skall ändra namn
+samt det nya namnet. Om du inte är organisatör för mötet/personen
+så misslyckas kommandot.
+<P>
+<A NAME="IDX138"></A>
+<DT><CODE>Ändra lösenord</CODE>
+<DD>Frågar efter vem du skall ändra lösenordet för, samt efter
+ditt lösenordet. Därefter skall du mata in det nya lösenordet
+två gånger. Detta för att fånga felstavningar.
+<P>
+Man kan ändra lösenordet för alla som man är organisatör
+för. Om man är administratör kan man ändra lösenordet för
+vem som helst.
+<P>
+<A NAME="IDX139"></A>
+<DT><CODE>Sätt lapp på dörren</CODE>
+<DD>Frågar efter möte eller person som du vill sätta en lapp på för.
+Lapp på dörren betyder att en person som försöker skicka brev till
+personen/mötet får ett meddelande innan brevet sänds iväg. Detta
+kan t ex vara användbart när man reser bort och vill lämna en
+temporär adress. Man får också se lappen när man använder
+kommandot <CODE>Status person</CODE> på personen.
+<P>
+<A NAME="IDX140"></A>
+<DT><CODE>Ta bort lapp på dörren</CODE>
+<DD>Frågar efter möte eller person och tar bort lappen på dörren för
+personen/mötet i fråga.
+</DL>
+<P>
+<H3><A NAME="SEC26" HREF="elisp-client_toc.html#SEC26">Ändra mötesuppgifter</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX141"></A>
+<DT><CODE>Ändra organisatör</CODE>
+<DD>Frågar först efter det möte eller en person som man vill ändra
+organisatör för. Sedan frågar den efter det möte eller den person
+som skall bli den nya organisatören. Om det inte gick bra så skrivs ett
+felmeddelande ut.
+<P>
+<A NAME="IDX142"></A>
+<DT><CODE>Ändra livslängd</CODE>
+<DD>Frågar först efter det möte som du vill ändra inläggens livslängd
+i och sedan efter vilken den nya livslängden skall vara. Om du
+inte är organisatör för mötet så få du inte sätta en ny livslängd
+och då får du ett felmeddelande.
+<P>
+<A NAME="IDX143"></A>
+<DT><CODE>Ändra supermöte</CODE>
+<DD>Frågar efter vilket möte vi skall ändra supermöte för
+samt vilket möte som skall vara det nya supermötet.
+<P>
+Supermöte för ett möte är det möte till vilket inlägg som inte får
+skickas till mötet, skickas. Anledningarna till att inlägg inte får
+skickas till ett visst möte kan vara att det är skrivskyddat och han som
+försöker skicka in det tillhör inte de tillåtna författarna för det
+mötet eller att mötet är kommentarsskyddat och då skickas kommentarerna
+till supermötet.
+<P>
+I nästa version av LysKOM-systemet (Protokoll B) kommer det att vara två
+olika möten beroende på om mötet är skrivskyddat eller kommentarsskyddat.
+</DL>
+<P>
+<H3><A NAME="SEC27" HREF="elisp-client_toc.html#SEC27">Meddelande</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX144"></A>
+<DT><CODE>Sända meddelande</CODE>
+<DD>Frågar efter vem du vill skicka ett meddelande till. Personen
+måste vara inloggad när meddelandet skickas eftersom det inte
+lagras utan skickas direkt. Om du vill skicka till alla som är
+inloggade så tryck bara på <KBD>RET</KBD> utan att mata in något namn.
+<P>
+Därefter frågar LysKOM efter meddelandet som du vill skicka och
+skickar iväg det till mottagarna. 
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC28" HREF="elisp-client_toc.html#SEC28">Prioritera</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX145"></A>
+<DT><CODE>Prioritera möten</CODE>
+<DD>Poppar upp en ny buffert som listar alla möten man är med i i den
+ordning de finns lagrade i servern. I den här bufferten har man
+tillgång till speciella kommandon för att kunna flytta om mötena
+och ändra prioritet på dem. De kommandon som finns är förutom de
+vanliga emacs-kommandona:
+<P>
+<DL COMPACT>
+<P>
+<DT><KBD>u</KBD>
+<DD>Flytta möte uppåt i listan. Med ett prefixargument flyttas
+mötet så många steg.
+<P>
+<DT><KBD>n</KBD>
+<DD>Flytta möte neråt i listan. Med ett prefixargument flyttas
+mötet så många steg.
+<P>
+<DT><KBD>p</KBD>
+<DD>ändra prioritet. Frågar efter ny prioritet på mötet.
+<P>
+<DT><KBD>C-k</KBD>
+<DD><DT><CODE>Kill</CODE>
+<DD>Lägger upp mötet på en kill-stack. Med ett
+prefixargument läggs de nästa X mötena på kill-stacken.
+Att ett möte ligger på kill-stacken markeras genom att
+första tecknet på raden är ett minustecken.
+<P>
+<DT><KBD>C-y</KBD>
+<DD><DT><CODE>Yank</CODE>
+<DD>Tar översta mötet från kill-stacken och stoppar in
+det före den rad du står på. Med ett prefixargument
+stoppas de X översta mötena in.
+<P>
+<DT><KBD>S</KBD>, <KBD>C-c C-c</KBD> eller <KBD>q</KBD>
+<DD>Synonymer för att återgå till LysKOM-bufferten. Du kan
+även gå till den genom att bara byta buffert (det är
+snabbaste sättet att böjra läsa igen) men då kan det hända
+att du får läsa saker och ting i fel ordning i den här
+sessionen.
+<P>
+</DL>
+<P>
+<KBD>C-k</KBD> och <KBD>C-y</KBD> passar bra för att flytta block av möten till olika
+ställen. <KBD>u</KBD> och <KBD>n</KBD> är bra för den sista "finjusteringen".
+<P>
+</DL>
+<P>
+<H3><A NAME="SEC29" HREF="elisp-client_toc.html#SEC29">Ändra inställningarna</A></H3>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX146"></A>
+<DT>Ändra variablerna
+<DD>Poppar upp en ny buffert som listar dina nuvarnade inställningar.
+Denna nya buffert har <CODE>edit-options</CODE> moden och ser dessutom 
+likadan ut förutom det faktum att den bara innehåller de
+variabler som är av intresse för LysKOM.
+(See Info file `emacs', node `Edit Options'.)
+<P>
+Alla kommandon funkar precis som i <CODE>edit-options</CODE> moden och de 
+viktigaste är:
+<DL COMPACT>
+<DT><KBD>0</KBD>
+<DD>Sätt värdet till <CODE>nil</CODE>
+<DT><KBD>1</KBD>
+<DD>Sätt värdet till <CODE>t</CODE>
+<DT><KBD>s</KBD>
+<DD>Fråga efter värdet och sätt variabeln till det.
+<DT><KBD>n</KBD>
+<DD>Gå till nästa variabel.
+<DT><KBD>p</KBD>
+<DD>Gå till föregående variabel.
+</DL>
+<P>
+När du är nöjd med dina inställningar och vill skicka in dem
+till LysKOM så trycker du <KBD>C-c C-c</KBD>.
+<P>
+Om du ångrar dig och inte vill skicka in några värden till
+LysKOM så trycker du <KBD>C-c C-k</KBD>.
+<P>
+Noteras bör att om du ändrar LysKOM-variabler på något annat
+sätt i din emacs än med kommandona beskrivna ovan så kommer det
+aktuella värdet att visas i bufferten och sparas.
+<P>
+Om du däremot ändrar värdena i din emacs utan att efter det skicka
+in värdena (med <KBD>C-c C-c</KBD> i denna bufferten) så kommer
+inställningarna  du gjort inte att sparas i LysKOM utan går förlorade.
+</DL>
+<P>
+<H2><A NAME="SEC30" HREF="elisp-client_toc.html#SEC30">Administratörskommandon</A></H2>
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX147"></A>
+<DT><CODE>Övergå till administratörsmod</CODE>
+<DD>För att kunna utnyttja kommandona på denna sida måste man
+först övergå i administratörsmode som sker med detta
+kommando. Dessutom måste du ha administrativa rättigheter i 
+databasen, för att kommandona skall fungera.
+<P>
+<A NAME="IDX148"></A>
+<DT><CODE>Övergå till normalmod</CODE>
+<DD>När man inte längre vill köra i administratörsmod kan
+man slå av det med detta kommandot. Det hindrar dig att av misstag 
+läsa inlägg som du inte får läsa mm.
+<P>
+<A NAME="IDX149"></A>
+<DT><CODE>Stäng av servern</CODE>
+<DD>Sparar databasen och stänger av servern. Ofta finns det program som
+automatiskt startar om servern igen.
+<P>
+<A NAME="IDX150"></A>
+<DT><CODE>Sätt loginmeddelande</CODE>
+<DD>Ändrar loginmeddelandet.
+<P>
+<A NAME="IDX151"></A>
+<DT><CODE>Ta bort loginmeddelande</CODE>
+<DD>Tar bort loginmeddelandet.
+<P>
+</DL>
+<P>
+<H1><A NAME="SEC31" HREF="elisp-client_toc.html#SEC31">Namn</A></H1>
+<P>
+När du skall ange ett mötes- eller person-namn så räcker det att
+skriva en entydig bit av namnet. Till exempel så räcker det (för
+tillfället) att skriva <SAMP>`ce'</SAMP> för att logga in som <SAMP>`ceder'</SAMP>. Saker inom
+parentes räknas inte, så <SAMP>`Anders Andersson'</SAMP> och <SAMP>`(Hej på dig) Anders
+(och) Andersson (!)'</SAMP> är precis samma sak. Ofta kan man skriva <SAMP>`m 10'</SAMP>
+eller <SAMP>`p 10'</SAMP> i stället för ett möte/en person om man vet att mötet har
+nummer 10.
+<P>
+Om namnet består av mer än ett ord, t ex för- och efternamn, så behöver
+bara entydiga delar av resp. delar skrivas. Antag att två personer
+heter <SAMP>`Lars Aronsson'</SAMP> resp. <SAMP>`Lars Andersson'</SAMP>. <SAMP>`L A'</SAMP> ger ingen entydig
+matchning av namnet, men <SAMP>`L Ar'</SAMP> eller <SAMP>`L An'</SAMP> (eller <SAMP>`l an'</SAMP>) kan bara
+tolkas på ett sätt. Det räcker alltså i det här fallet att ange 4
+tecken för att bestämma vilken person man menar. Detta gäller
+naturligtvis också för mötesnamn.
+<P>
+<H1><A NAME="SEC32" HREF="elisp-client_toc.html#SEC32">Att skriva inlägg</A></H1>
+<P>
+För varje inlägg/kommentar man skriver får man upp en ny buffert. Man
+kan skriva på flera inlägg samtidigt, och det spelar ingen roll i
+vilken ordning man avslutar dem. Så länge som man har förbindelsen
+till servern igång så kan man skicka in inläggen.
+<P>
+Överst i bufferten finns ett antal rader som talar om vem, vad eller
+vilka som blir mottagare, och om det här är en kommentar till en
+(eller flera) inlägg. Man kan ändra i det här fältet, men man ska vara
+försiktig. Det finns fyra olika saker som kan stå här:
+<P>
+<PRE>
+Mottagare: &#60;nr&#62; Namn
+Extra kopia: &#60;nr&#62; Namn
+Kommentar till text nr.
+Fotnot till text nr.
+</PRE>
+<P>
+<CODE>nr</CODE> är ett decimalt tal. <CODE>Namn</CODE> är ett mötesnamn. När man ändrar i de
+här fälten behöver man inte skriva så mycket. Det räcker med den
+första bokstaven i varje rad och numret. I de två första fallen skall
+numret stå inom klamrar. Ett exempel på hur man kan skriva är:
+<P>
+<PRE>
+M&#60;6&#62;
+E&#60;80&#62;
+K118
+K 148
+Fotnot 12.
+</PRE>
+<P>
+Det här inlägget kommer att ha <CODE>möte 6</CODE> som mottagare. <CODE>Möte 80</CODE> får en
+extra kopia. (Den enda skillnaden mellan <CODE>Mottagare</CODE> och <CODE>Extra kopia</CODE>
+är att när någon kommenterar inlägget kommer kommentarerna bara att gå
+till de möten som står som mottagare). Inlägget är en kommentar till
+inlägg 118 och 148 och dessutom en fotnot till inlägg 12. (En fotnot och
+en kommentar är i stort sett samma sak, men det är bara författaren
+till ett visst inlägg som kan skriva en fotnot till den, och fotnoter
+till ett inlägg skrivs ut före alla kommentarer).
+<P>
+Klienten litar blint på det nummer man anger. Ingen kontroll görs att
+det stämmer med det som står efter klamrarna.
+<P>
+Man kan blanda rader av typ <CODE>M</CODE>, <CODE>E</CODE>, <CODE>K</CODE> och <CODE>F</CODE> i vilken ordning som
+helst, men det får inte finnas några andra rader före ärenderaden. (Inte
+ens en blankrad).
+<P>
+Om man vill skicka inlägget till ett annat möte än dem som står så måste
+man alltså veta numret på mötet. Det kan man ta reda på genom att byta
+buffert till LysKOM-bufferten (som normalt heter <CODE>*kom*</CODE> om du är kopplad
+mot lysators LysKOM-server) och där skriva <KBD>lm</KBD> eller <KBD>lp</KBD> (<CODE>Lista möten</CODE>
+resp. <CODE>Lista personer</CODE>). De nummer som skrivs ut är de mötesnummer
+som skall användas.
+<P>
+Efter alla <CODE>M</CODE>, <CODE>E</CODE>, <CODE>K</CODE> och <CODE>F</CODE>-rader skall det komma en ärenderad. Den skall
+se ut så här:
+<P>
+<PRE>
+Ärende: &#60;Här ska du skriva en rubrik&#62;
+</PRE>
+<P>
+När du kommenterar ett inlägg får du dess ärende-rad som default. 
+<P>
+Sen kommer en rad som bara har till uppgift att skilja texten från
+rubriken. Efter den raden skriver du ditt inlägg. Du har tillgång till
+alla vanliga emacs-kommandon. 
+<P>
+Det enda som är speciellt är alla LysKOM-kommandona.
+<P>
+För att sända in inlägget trycker du <KBD>C-c C-c</KBD>. LysKOM frågar då efter
+<CODE>Ärende:</CODE> och du fyller i det. När du trycker <KBD>RET</KBD> så skickas inlägget in
+till servern. Om allt gick bra så tas edit-bufferten bort och du får
+tillbaks LysKOM-bufferten.  Inläggsnumret för det skapade inlägget skrivs ut.
+<P>
+Om du när du skall skriva ärendet ser stavfel i inlägget trycker du <KBD>C-g</KBD> så
+kommer du tillbaka i editerings-mode.
+<P>
+Om man ångrar sig och vill slänga inlägget man håller på att skriva
+trycker man <KBD>C-c C-k</KBD>. Då tas bufferten bort, och man kommer
+tillbaks till LysKOM-bufferten.
+<P>
+Skulle du vilja ha med delar av det inlägg du kommenterar i ditt eget
+inlägg kan du trycka <KBD>C-c i k</KBD> och då kommer hela det kommenterade
+inlägget att läggas in där du var. Vill du i stället plocka in något
+annat inlägg så skall du istället trycka <KBD>C-c i</KBD> följt av inläggsnumret på
+det inlägg du vill ha med.
+<P>
+Om du bara vill titta på det inlägg du kommenterar eller fotnoterar
+(t ex om du inte har satt flaggan <CODE>kom-write-texts-in-window</CODE>, se
+nedan), men inte ha in det i inläggsbufferten så kan du trycka <KBD>C-c
+å k</KBD> så delas skärmen i två fönster och den kommenterade eller
+fotnoterade inlägget visas i det andra fönstret. För att spara plats
+så visas endast inlägget och inte texthuvudet.
+<P>
+Om du vill lägga till någon extra mottagare eller kopiemottagare till
+inlägget trycker du <KBD>C-c a m</KBD> resp. <KBD>C-c a k</KBD> och så får du ange vem eller
+vilket möte du skall lägga till.
+<P>
+<H1><A NAME="SEC33" HREF="elisp-client_toc.html#SEC33">Vilkabufferten</A></H1>
+<P>
+LysKOMs Emacslispklient upprätthåller en lista på vilka som är inloggade och
+vad de sysslar med i den så kallade vilkabufferten. Man kan se vad
+alla gör hela tiden om man har den framme, annars finns den bara i
+bakgrunden.
+<P>
+Denna finess drar ansenliga mängder extra cpu-kraft från maskinen du kör
+klienten på. Därför finns det möjlighet att slå av den. Har man väl
+slagit av den finns de däremot ingen möjlighet att slå på den igen utan
+att starta om LysKOM.
+<P>
+<H1><A NAME="SEC34" HREF="elisp-client_toc.html#SEC34">Flaggor</A></H1>
+<P>
+LysKOMs Emacslispklient har ett antal flaggor för att användaren skall kunna
+anpassa uppförandet till sin smak. Flaggorna sparas med kommandot
+<CODE>Ändra variabler</CODE>.
+<P>
+Här följer en lista över dessa flaggor samt vilka värden de kan
+anta och deras betydelse i programmet.
+<P>
+Flaggorna dokumenteras genom att deras namn skrivs ut följt av deras
+defaultvärde. I inlägget som förklarar flaggan listas möjliga värden. Om
+ett annat värde än defaultvärdet önskas så skall man använda
+funktionen <CODE>Ändra variabler</CODE>. Man kan också använda emacsfunktionen
+<CODE>M-X set-variable</CODE> men då får man se till att spara variabelns
+värde efteråt.
+<P>
+De flaggor som sparas i <CODE>common</CODE>-delen av user-arean är markerade med
+<CODE>common</CODE>, de som per default sparas i <CODE>elisp</CODE>-delen med <CODE>elisp</CODE>.
+<P>
+<DL COMPACT>
+<DT><CODE>kom-created-texts-are-read</CODE>
+<DD><A NAME="IDX152"></A>
+<DT><CODE>t</CODE> (<CODE>common</CODE>)
+<DD>Om icke-<CODE>nil</CODE> så markeras alla inlägg som skapas av användaren som
+lästa. 
+<P>
+<DT><CODE>kom-reading-puts-comments-in-pointers-last</CODE>
+<DD><A NAME="IDX153"></A>
+<DT><CODE>t</CODE> (<CODE>common</CODE>)
+<DD>Om <CODE>nil</CODE> så skrivs rader av typen
+<SAMP>`Kommentar i text N av NN'</SAMP> i inläggshuvudet. Om icke-<CODE>nil</CODE> så skrivs
+dessa rader ut efter själva inlägget.
+<P>
+<DT><CODE>kom-print-number-of-unread-on-entrance</CODE>
+<DD><A NAME="IDX154"></A>
+<DT><CODE>t</CODE> (<CODE>common</CODE>)
+<DD>Om icke-<CODE>nil</CODE> så skrivs antalet olästa i ett möte ut så fort
+användaren går in i ett möte.
+<P>
+<DT><CODE>kom-higher-priority-breaks</CODE>
+<DD><A NAME="IDX155"></A>
+<DT><CODE>nil</CODE> (<CODE>elisp</CODE>)
+<DD>Denna flagga avgör hur ett nytt inlägg i ett möte med högre
+prioritet skall bryta läsningen av inlägg. Brytningen går till så
+att man får upp prompten Läsa nästa prioriterade inlägg - eller
+Gå till nästa prioriterade möte - och sedan läser man det nyss
+inlagda inlägget istället för det som man normals skulle läst i
+mötet. Efter prompten Läsa nästa prioriterade inlägg kommer man
+tillbaka till exakt det ställe där man var.
+<DL COMPACT>
+<DT><CODE>nil</CODE>
+<DD>Bryter inte alls. Vi får vänta tills vi läst ut hela mötet. 
+<DT><CODE>t</CODE>
+<DD>Bryter när vi läst klart ett kommentarsträd, alltså när vi normalt skulle
+fått prompten Läsa nästa text.
+<DT><CODE>express</CODE>
+<DD>Vi bryter mötet direkt, utan hänsyn till var vi är i kommentarkedjan.
+</DL>
+<P>
+<LI><CODE>kom-presence-messages</CODE>
+<A NAME="IDX156"></A>
+<LI><CODE>t</CODE> (<CODE>common</CODE>)
+Om icke-<CODE>nil</CODE> så skriver klienten ut fortlöpande rapporter om vilka
+som går in i och ut ur LysKOM.
+<P>
+<LI><CODE>kom-presence-messages-in-buffer</CODE>
+<A NAME="IDX157"></A>
+<LI><CODE>presence</CODE> (<CODE>elisp</CODE>)
+Denna flagga reglerar vilka av LysKOMs meddelanden som skrivs in i
+själva LysKOM-bufferten. De som inte skrivs in i bufferten fås enbart
+på meddelanderaden och övriga skrivs både i meddelanderaden och i
+bufferten. Denna flagga kan anta tre värden:
+<DL COMPACT>
+<DT><CODE>nil</CODE>
+<DD>Inga närvaromeddelanden skrivs ut.
+<DT><CODE>presence</CODE>
+<DD>Meddelanden om vem som går in i och ut ur skrivs in i bufferten, övriga
+meddelanden skrivs endast ut på meddelanderaden.
+<DT><CODE>t</CODE>
+<DD>Alla meddelanden skrivs in i bufferten. Detta inkluderar, förutom de som
+fås genom att sätta värdet till "presence", även meddelanden om vad
+olika personer som är i samma möte som du gör.
+</DL>
+<P>
+<LI><CODE>kom-show-where-and-what</CODE>
+<A NAME="IDX158"></A>
+<LI><CODE>t</CODE> (<CODE>elisp</CODE>)
+Om icke-<CODE>nil</CODE> så skriver klienten ut vilken maskin varje användare
+kör ifrån samt vad han håller på med när kommandot <CODE>Vilka är
+inloggade</CODE> ges.
+<P>
+<LI><CODE>kom-read-depth-first</CODE>
+<A NAME="IDX159"></A>
+<LI><CODE>t</CODE> (<CODE>common</CODE>)
+Om icke-<CODE>nil</CODE> så läses kommentarer och fotnoter före nya inlägg.
+Detta gör att kommentarsträd söks av djup-först. Om flaggan sätts
+till <CODE>nil</CODE> så görs sökningen bredd-först.
+<P>
+<LI><CODE>kom-dashed-lines</CODE>
+<A NAME="IDX160"></A>
+<LI><CODE>t</CODE> (<CODE>common</CODE>)
+Om denna variabel är icke-<CODE>nil</CODE> så ramar klienten in 
+alla inlägg med långa rader av <CODE>-</CODE>.
+<P>
+<LI><CODE>kom-confirm-multiple-recipients</CODE>
+<A NAME="IDX161"></A>
+<LI><CODE>t</CODE> (<CODE>elisp</CODE>)
+Om icke-<CODE>nil</CODE> så måste man bekräfta att alla mottagare
+skall ha inlägget. Om det bara finns en mottagare frågar den
+aldrig.
+<P>
+<LI><CODE>kom-emacs-knows-iso-8859-1</CODE>
+<A NAME="IDX162"></A>
+<LI><CODE>nil</CODE>
+<P>
+Denna variabel skiljer sig från andra i det avseendet att den inte
+lagras i servern utan bara är lokal för just din emacs.
+<P>
+Om variabeln inte är till<CODE>nil</CODE> så kommer emacsen inte att
+konvertera alla tecken den skriver ut till swascii.
+<P>
+</DL>
+<P>
+<H1><A NAME="SEC35" HREF="elisp-client_toc.html#SEC35">Variabler</A></H1>
+<P>
+Det finns ett antal variabler som man kan styra LysKOMs emacslispklients
+uppförande med. Dessa är inte flaggor i den meningen att de inte bara
+kan anta ett av flera fördefinierade värden, utan kan anta nästan
+vilka värden som helst. Variabler i emacs sätts på samma sätt och
+sparas på samma sätt som flaggor.
+<P>
+De variabler som sparas i <CODE>common</CODE>-delen av user-arean är markerade
+med <CODE>common</CODE>, de som per default sparas i <CODE>elisp</CODE>-delen med <CODE>elisp</CODE>.
+<P>
+<DL COMPACT>
+<P>
+<DT><CODE>kom-mercial</CODE>
+<DD><A NAME="IDX163"></A>
+<DT><CODE>"Väntar.</CODE>" (<CODE>elisp</CODE>)
+<DD>Denna variabel innehåller den sträng som skrivs ut varje gång man
+inte har något nytt att läsa. Användaren uppmuntras att använda
+humor och kvickhet i användandet av den.
+<P>
+<DT><CODE>kom-default-mark</CODE>
+<DD><A NAME="IDX164"></A>
+<DT><CODE>100</CODE> (<CODE>common</CODE>)
+<DD>Om denna flagga är icke-<CODE>nil</CODE> så måste den vara ett nummer mellan 1
+och 255. Det är den markering som klienten sätter. är den <CODE>nil</CODE>
+däremot så frågar klienten efter vilken markering vi skall ha.
+<P>
+<DT><CODE>kom-page-before-command</CODE>
+<DD><A NAME="IDX165"></A>
+<DT><CODE>nil</CODE> (<CODE>elisp</CODE>)
+<DD>Om denna flagga är <CODE>t</CODE> kommer klienten att göra en
+<CODE>(recenter 0)</CODE> före varje kommando börjar utföras.  Om
+flaggan är en lista av symboler kommer klienten att göra
+<CODE>(recenter 0)</CODE> före varje kommando som finns i denna lista.  Detta
+för att utmatningen från alla kommando skall hamna på samma
+ställe på skärmen.
+<P>
+<DT><CODE>kom-write-texts-in-window</CODE>
+<DD><A NAME="IDX166"></A>
+<DT><CODE>nil</CODE> (<CODE>elisp</CODE>)
+<DD>Om <CODE>nil</CODE> så används LysKOM-fönstret även som edit-fönster. Om det är en
+buffert eller en sträng så kommer det fönster som denna buffert
+visades i att användas. Om 'other så kommer emacs att välja ett
+annat fönster eller skapa ett nytt fönster för denna editering.
+<P>
+<DT><CODE>kom-membership-default-priority</CODE>
+<DD><A NAME="IDX167"></A>
+<DT><CODE>100</CODE> (<CODE>elisp</CODE>)
+<DD>Defaultprioritet som används när man blir medlem i ett möte. Om
+denna variabel sätts till <CODE>nil</CODE> så frågar LysKOM efter en
+prioritet varje gång istället.
+<P>
+<DT><CODE>kom-membership-default-placement</CODE>
+<DD><A NAME="IDX168"></A>
+<DT><CODE>last</CODE> (<CODE>elisp</CODE>)
+<DD>Den här variabeln styr var möten som man blir medlem i placeras i
+listan av möten som man är medlem i. Denna lista används för att
+avgöra vilken ordning man får läsa mötena i.
+<P>
+Följande värden kan användas:
+<P>
+<DL COMPACT>
+<DT><CODE>first</CODE>
+<DD>så stoppas nya möten in först.
+<DT><CODE>last</CODE>
+<DD>så stoppas nya möten in sist.
+<DT>ett tal
+<DD>så kommer nya möten att stoppas in på denna position i listan. Värdena
+<CODE>0</CODE> respektive ett <EM>stort</EM> tal kommer att ha samma effekt som
+<CODE>first</CODE> respektive <CODE>last</CODE>.
+</DL>
+<P>
+<A NAME="IDX169"></A>
+<P>
+<LI><CODE>lyskom-header-separator</CODE>
+<LI>(<CODE>elisp</CODE>)
+Detta är den sträng som skiljer texten från huvudet
+när man skriver inlägg.
+Default: 
+<PRE>
+"--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
+</PRE>
+<P>
+<LI><CODE>lyskom-prompt-text</CODE>
+<A NAME="IDX170"></A>
+<LI><CODE>" - "</CODE> (<CODE>elisp</CODE>)
+Prompten slutar med texten i denna variabel när LysKOM är redo att
+ta emot kommandon.
+<P>
+<LI><CODE>lyskom-prompt-executing-default-command-text</CODE>
+<A NAME="IDX171"></A>
+<LI><CODE>"."</CODE> (<CODE>elisp</CODE>)
+När man ger defaultkommandot med <KBD>SPC</KBD>, <KBD>LFP</KBD> eller <KBD>RET</KBD>
+så bytas slutet av prompten till denna text.
+<P>
+<LI><CODE>kom-who-buffer-size-when-displaying</CODE>
+<A NAME="IDX172"></A>
+<LI><CODE>10</CODE> (elisp)
+Antalet rader som Vilkabufferten skall visas med när man ger kommandot
+<CODE>Visa vilkalistan</CODE>. See section <A HREF="elisp-client.html#SEC33">Vilkabufferten</A> och 
+section <A HREF="elisp-client.html#SEC20">övriga kommandon i LysKOM.</A>.
+<P>
+<LI><CODE>kom-do-when-starting</CODE>
+<A NAME="IDX173"></A>
+<LI><CODE>nil</CODE> (<CODE>elisp</CODE>)
+Denna variabel innehåller kommandon som skall utföras automatiskt
+när man loggar in. Variabeln är en lista av kommandon.
+<P>
+Exempel:
+<P>
+Om du stoppar in:
+<PRE>
+(setq kom-do-when-starting '("v" "ln"))
+</PRE>
+i din <TT>`.emacs'</TT> så händer följande när du går in i LysKOM:
+<PRE>
+Gå till nästa möte - Vilka är inloggade
+    &#60;Här får du se vilka som är inloggade&#62;
+Gå till nästa möte - Lista nyheter
+    &#60;Här får du se din lista av nyheter&#62;
+Gå till nästa möte - 
+</PRE>
+<P>
+<LI><CODE>kom-do-when-done</CODE>
+<A NAME="IDX174"></A>
+<LI><CODE>(kom-review-all-marked-texts kom-display-time)</CODE> (<CODE>elisp</CODE>)
+Denna variabel innehåller kommandon som utförs då man har läst
+klart alla inlägg. Varje kommando i listan skriver först ut en
+prompt och där kan du naturligtvis göra alla de vanliga kommandona
+också. 
+<P>
+Om ett element i <CODE>kom-do-when-done</CODE> är en lista, kommer elementen
+i den listan att utföras i tur och ordning. Det sista elementet 
+i <CODE>kom-do-when-done</CODE> kommer att upprepas tills man går ur LysKOM.
+<P>
+Ett exempel klargör nog dess funktion bäst.
+<P>
+Om man har stoppat in
+<PRE>
+(setq kom-do-when-done '("åm" "t" ("q" "fu")))
+</PRE>
+i sin .emacs kommer följande beteende att uppvisas när man
+läst slut:
+@nobreak
+<PRE>
+Läsa nästa text -          ; Detta är det sista inlägget.
+     &#60;Här läser vi inlägget.&#62;
+Återse (alla) markerade - 
+Återse nästa text -        ; Vi har bara ett markerat.
+Se tiden -                 ; Innan vi hinner trycka <KBD>SPC</KBD> här,
+                           ; kommer det ett nytt inlägg, varvid 
+                           ; prompten byts till...
+Läsa nästa text - 
+Se tiden -                 ; Nu har vi läst inlägget.
+Sluta -                    ; Vi svarar no.
+Kommandot:"fu" -           ; Tangentbordsmakro
+                           ; Här får du uppmuntran.
+Sluta -                    ; Här kommer "sluta" tillbaka.  
+                           ; Vi svarar no här också.
+Kommandot:"fu"             ; Och "fu" dyker upp igen.
+Sluta -                    ; Och sluta igen.
+</PRE>
+<P>
+Elementen måste vara kommandon i LysKOM, dvs de måste kunna tolkas
+som tangentbordsmakron eller som emacs-funktioner.
+<P>
+<LI><CODE>lyskom-fetch-map-nos</CODE>
+<A NAME="IDX175"></A>
+<LI><CODE>50</CODE> (<CODE>elisp</CODE>)
+Anger hur stora mappar vi skall hämta i taget.
+<P>
+<LI><CODE>lyskom-prefetch-conf-tresh</CODE>
+<A NAME="IDX176"></A>
+<LI><CODE>50</CODE> (<CODE>elisp</CODE>)
+Avgör om vi skall fråga efter fler möten från servern.
+Om de olästa inläggen i de hittills hämtade mötena 
+är färre än detta värde så hämtar vi en bunt till.
+<P>
+<LI><CODE>lyskom-prefetch-confs</CODE>
+<A NAME="IDX177"></A>
+<LI><CODE>10</CODE> (<CODE>elisp</CODE>)
+Avgör hur många möten vi skall fråga efter i taget.
+<P>
+<LI><CODE>lyskom-prefetch-texts</CODE>
+<A NAME="IDX178"></A>
+<LI><CODE>3</CODE> (<CODE>elisp</CODE>)
+Avgör hur många inlägg som skall hämtas i förväg.
+</DL>
+<P>
+<H1><A NAME="SEC36" HREF="elisp-client_toc.html#SEC36">Hookar</A></H1>
+<P>
+Det finns en del hookar i LysKOMs emacslispklient. En hook är en variabel som
+användaren kan definiera till en funktion. Varje hook hör ihop med en
+speciell företeelse som LysKOMs emacslispklient gör. Om hooken är satt så
+exekveras funktionen som den är satt till när detta händer. För
+närmare information om vad en hook är kan du läsa emacs-
+dokumentationen. (See Info file `elisp', node `Hooks'.)
+<P>
+De hookar som sparas i <CODE>common</CODE>-delen av user-arean är markerade med
+<CODE>common</CODE>, de som per default sparas i <CODE>elisp</CODE>-delen med <CODE>elisp</CODE>.
+<P>
+<DL COMPACT>
+<P>
+<A NAME="IDX179"></A>
+<DT><CODE>lyskom-init-hook</CODE>
+<DD>Denna anropas efter det att hela klienten laddats in. Kan användas
+för att definiera om några LysKOM-funktioner eller ladda egna
+funktioner.
+<P>
+<A NAME="IDX180"></A>
+<DT><CODE>lyskom-mode-hook</CODE>
+<DD>Denna anropas när LysKOM-bufferten skapas. Kan t.ex användas för
+att ställa in sina egna bindningar till tangenter, lokalt i den
+bufferten.
+<P>
+<A NAME="IDX181"></A>
+<DT><CODE>lyskom-new-text-hook</CODE> (<CODE>elisp</CODE>)
+<DD>Denna anropas när klienten får meddelande om att ett nytt inlägg har
+skapats. Först stoppas inlägget in i alla listor och registreras, sedan
+tas prompten bort. Därefter anropas denna hook. Sedan skrivs den nya
+prompten ut. Denna hook kan alltså sortera om inläggen eller fixa till
+andra saker som ger en annan prompt än default.
+<P>
+Om man inte vill att klienten sedan skall skriva ut meddelandet:
+<SAMP>`Text 4711 är skapad'</SAMP> så måste man sätta den lokala variabeln
+<CODE>no-message</CODE> till någonting non-<CODE>nil</CODE> i denna hook. Man kan
+använda sig av att den lokala variabeln <CODE>text-stat</CODE> är bunden
+till text-status för det inlägg som förorsakar att hooken körs.
+<P>
+<A NAME="IDX182"></A>
+<DT><CODE>lyskom-who-info-has-changed-hook</CODE> (<CODE>elisp</CODE>)
+<DD>Denna anropas varje gång någonting i vilkabufferten har ändrats.
+Observera dock att aktuell buffert är LysKOM-bufferten, inte
+vilkabufferten.
+Kan vara bra om man till exempel vill visa vilkabufferten när ens
+kompis loggar in i LysKOM.
+<P>
+<A NAME="IDX183"></A>
+<DT><CODE>lyskom-edit-mode-mode-hook</CODE>
+<DD>Denna anropas när man skall skriva ett inlägg. Om man vill ändra
+vilken mode man skall använda när man skall skriva sitt inlägg skall
+man sätta det i denna hook. LysKOM-systemet binder sedan om ett
+par tangenter till, just för att man skall kunna lägga in inlägget
+mm. men den grundläggande moden kan sättas med denna hook.
+<P>
+Ex: 
+<PRE>
+(setq lyskom-edit-mode-mode-hook 'swedish-mode)
+</PRE>
+Detta exempel förutsätter dock att du har en swedish-mode
+definierad.
+<P>
+Om du binder om tangenter till att generera andra bokstäver i 
+denna mode så kommer de inte bara att gälla i edit-bufferten
+utan även i minibufferten när du ändrar ärendet.
+<P>
+<A NAME="IDX184"></A>
+<DT><CODE>lyskom-edit-mode-hook</CODE>
+<DD>Denna anropas efter det att LysKOM har gjort alla sina
+initieringar men innan du tillåts börja skriva inlägget.
+Här lägger du in saker som du vill göra med edit-bufferten. Kanske
+slå av <CODE>auto-save-mode</CODE> eller sätta <CODE>fill-column</CODE>.
+<P>
+Inte att förväxla med <CODE>lyskom-edit-mode-mode-hook</CODE>.
+<P>
+<A NAME="IDX185"></A>
+<DT><CODE>lyskom-prioritize-mode-hook</CODE>
+<DD>Denna anropas när man skapar prioritize-bufferten. Man kanske vill
+ha lite privata funktioner laddade eller andra tangentbordsbindningar
+i den moden.
+<P>
+<A NAME="IDX186"></A>
+<DT><CODE>kom-quit-hook</CODE>
+<DD>Denna anropas när man har avslutat sin kom-session. T.ex om man vill
+döda sin emacs då.
+<P>
+<A NAME="IDX187"></A>
+<DT><CODE>kom-after-command-hook</CODE>
+<DD>Denna anropas när ett kommando är helt utfört och det är
+dags att ge nästa kommando.
+</DL>
+<P>
+<H1><A NAME="SEC37" HREF="elisp-client_toc.html#SEC37">Environmentvariabler</A></H1>
+<P>
+<A NAME="IDX188"></A>
+<DL COMPACT>
+<DT><CODE>KOMSERVER</CODE>
+<DD>Default komserver. Om <CODE>KOMSERVER</CODE> är satt så slipper användaren
+mata in vilken server som skall användas vid första inloggningen. Annars
+är default <TT>`kom.lysator.liu.se'</TT>.
+<A NAME="IDX189"></A>
+<P>
+<DT><CODE>KOMNAME</CODE>
+<DD>Default användarnamn. Om <CODE>KOMNAME</CODE> är satt så frågar klienten inte
+efter ditt namn vid första inloggningen.
+<A NAME="IDX190"></A>
+<P>
+<DT><CODE>KOMPASSWORD</CODE>
+<DD>Default lösenord. Om <CODE>KOMPASSWORD</CODE> är satt så frågar inte klienten
+efter ditt lösenord vid första inloggningen.  Det är ganska olämpligt
+att ha <CODE>KOMPASSWORD</CODE> satt utan att samtidigt ha <CODE>KOMNAME</CODE>
+satt. Observera att på vissa UNIX-system så kan vem som helst se dina
+environmentvariabler med hjälp av <CODE>ps -axeww</CODE>.
+</DL>
+<P>
+<H1><A NAME="SEC38" HREF="elisp-client_toc.html#SEC38">Buggrapporter</A></H1>
+<P>
+Det finns troligtvis många fel i klienten. Om du stöter på något som
+borde fungera annorlunda, eller som inte fungerar alls, så skriv ett
+mail till <TT>`bug-lyskom@lysator.liu.se'</TT>. Synpunkter på den här texten
+och systemet i övrigt kan också skickas dit.
+<P>
+En buggrapport skall innehålla information om:
+<P>
+<DL COMPACT>
+<DT>Vilken emacs du kör. Namn och versionsnummer.
+<DD><DT>Vilken version av LysKOMs emacslispklient du kör.
+<DD><DT>Vilken LysKOM-server du har kopplat upp dig mot och versionsnummer.
+<DD></DL>
+<A NAME="IDX191"></A>
+<P>
+Det är bra om buggrapporten innehåller all tillgänglig information från
+din körning. Dvs att du har kört funktionen <CODE>kom-bug-report</CODE> och
+skickat med resultatet. Annars måste det till en extremt utförlig
+beskrivning på hur felet uppkom för att vi skall ha någon som helst
+möjlighet att veta vad det handlar om.
+<P>
+Om du skulle råka fixa felet själv så skicka med en context-diff
+så kan vi lätt applicera den.
+<P>
+Om du inte har tillgång till mail så kan du skicka dina buggrapporter
+med vanligt brev till:
+<PRE>
+	Lysator
+	c/o ISY
+	Linköpings University
+	S-581 83 Linkoping
+	SWEDEN
+</PRE>
+<P>
+Observera att det faktum att du skickar in en buggrapport inte på något
+sätt är en garanti för att buggen kommer att fixas till en senare
+version av klienten, eller ens att det någonsin blir en senare version
+av klienten.
+<P>
+Om du däremot undviker att skicka in en buggrapport så finns det en
+möjlighet att ingen någonsin får reda på just din bugg.
+<P>
+Om du tvunget vill ha en viss bugg rättad så finns det företag som åtar
+sig sådant arbete. Skicka brev till <TT>`bug-lyskom@lysator.liu.se'</TT> så kan vi
+förmedla en sådan företagskontakt.
+<P>
+<H1><A NAME="SEC39" HREF="elisp-client_toc.html#SEC39">Filer</A></H1>
+<P>
+<DL COMPACT>
+<DT><TT>`lysator:/usr/local/lib/elisp/lyskom.el'</TT>
+<DD>Senaste versionen av klienten.
+<DT><TT>`lysator:~ftp/pub/lyskom/elisp-client/lyskom-ver.nr.elc'</TT>
+<DD>D:o
+</DL>
+<P>
+<H1><A NAME="SEC40" HREF="elisp-client_toc.html#SEC40">Index</A></H1>
+<DIR>
+<H2>(</H2>
+<LI><A HREF="elisp-client.html#IDX19">(Spring till) början av texten</A>
+<LI><A HREF="elisp-client.html#IDX23">(Spring till) nästa text</A>
+<H2>a</H2>
+<LI><A HREF="elisp-client.html#IDX130">Addera extra kopiemottagare</A>
+<LI><A HREF="elisp-client.html#IDX132">Addera kommentar</A>
+<LI><A HREF="elisp-client.html#IDX134">Addera medlem</A>
+<LI><A HREF="elisp-client.html#IDX129">Addera mottagare</A>
+<LI><A HREF="elisp-client.html#IDX120">Avmarkera (inlägg)</A>
+<H2>b</H2>
+<LI><A HREF="elisp-client.html#IDX110">Baklänges</A>
+<LI><A HREF="elisp-client.html#IDX64">Bli medlem i möte</A>
+<LI><A HREF="elisp-client.html#IDX136">Börja med nytt namn</A>
+<LI><A HREF="elisp-client.html#IDX20">Början av texten</A>
+<H2>e</H2>
+<LI><A HREF="elisp-client.html#IDX16">Endast läsa senaste</A>
+<H2>f</H2>
+<LI><A HREF="elisp-client.html#IDX40">Fotnot till inlägg</A>
+<LI><A HREF="elisp-client.html#IDX76">Få skäll</A>
+<LI><A HREF="elisp-client.html#IDX74">Få uppmuntran</A>
+<LI><A HREF="elisp-client.html#IDX21">Föregående inlägg</A>
+<H2>g</H2>
+<LI><A HREF="elisp-client.html#IDX62">Gå till möte</A>
+<LI><A HREF="elisp-client.html#IDX12">Gå till nästa möte</A>
+<H2>h</H2>
+<LI><A HREF="elisp-client.html#IDX29">Hjälp</A>
+<LI><A HREF="elisp-client.html#IDX14">Hoppa över alla kommentarer</A>
+<H2>k</H2>
+<LI><A HREF="elisp-client.html#IDX81">Kasta ut en session</A>
+<LI><A HREF="elisp-client.html#IDX191">kom-bug-report</A>
+<LI><A HREF="elisp-client.html#IDX38">Kommentera föregående inlägg</A>
+<LI><A HREF="elisp-client.html#IDX35">Kommentera inlägget</A>
+<H2>l</H2>
+<LI><A HREF="elisp-client.html#IDX58">Lista medlemsskap</A>
+<LI><A HREF="elisp-client.html#IDX50">Lista möten</A>
+<LI><A HREF="elisp-client.html#IDX54">Lista nyheter</A>
+<LI><A HREF="elisp-client.html#IDX56">Lista personer</A>
+<LI><A HREF="elisp-client.html#IDX60">Lista ärenden</A>
+<LI><A HREF="elisp-client.html#IDX10">Läsa nästa inlägg</A>
+<H2>m</H2>
+<LI><A HREF="elisp-client.html#IDX118">Markera (inlägg)</A>
+<H2>n</H2>
+<LI><A HREF="elisp-client.html#IDX24">Nästa text</A>
+<H2>p</H2>
+<LI><A HREF="elisp-client.html#IDX43">Personligt svar</A>
+<LI><A HREF="elisp-client.html#IDX46">Personligt svar på föregående inlägg</A>
+<LI><A HREF="elisp-client.html#IDX145">Prioritera möten</A>
+<H2>r</H2>
+<LI><A HREF="elisp-client.html#IDX128">Radera (text)</A>
+<H2>s</H2>
+<LI><A HREF="elisp-client.html#IDX27">scroll-down</A>
+<LI><A HREF="elisp-client.html#IDX26">Scrolla ner</A>
+<LI><A HREF="elisp-client.html#IDX72">Se tiden</A>
+<LI><A HREF="elisp-client.html#IDX126">Skapa möte</A>
+<LI><A HREF="elisp-client.html#IDX31">Skicka brev</A>
+<LI><A HREF="elisp-client.html#IDX33">Skriva ett inlägg</A>
+<LI><A HREF="elisp-client.html#IDX67">Sluta</A>
+<LI><A HREF="elisp-client.html#IDX116">Spara text (på fil)</A>
+<LI><A HREF="elisp-client.html#IDX112">Status (för) möte</A>
+<LI><A HREF="elisp-client.html#IDX114">Status (för) person</A>
+<LI><A HREF="elisp-client.html#IDX149">Stäng av servern</A>
+<LI><A HREF="elisp-client.html#IDX133">Subtrahera kommentar</A>
+<LI><A HREF="elisp-client.html#IDX131">Subtrahera mottagare</A>
+<LI><A HREF="elisp-client.html#IDX144">Sända meddelande</A>
+<LI><A HREF="elisp-client.html#IDX139">Sätt lapp på dörren</A>
+<LI><A HREF="elisp-client.html#IDX150">Sätt loginmeddelande</A>
+<H2>t</H2>
+<LI><A HREF="elisp-client.html#IDX140">Ta bort lapp på dörren</A>
+<LI><A HREF="elisp-client.html#IDX151">Ta bort loginmeddelsde</A>
+<H2>u</H2>
+<LI><A HREF="elisp-client.html#IDX18">Uppskjuta läsning</A>
+<LI><A HREF="elisp-client.html#IDX135">Uteslut medlem</A>
+<LI><A HREF="elisp-client.html#IDX127">Utplåna</A>
+<LI><A HREF="elisp-client.html#IDX66">Utträda ur</A>
+<H2>v</H2>
+<LI><A HREF="elisp-client.html#IDX48">Vilka är inloggade</A>
+<LI><A HREF="elisp-client.html#IDX80">Visa vilkalistan</A>
+<LI><A HREF="elisp-client.html#IDX78">Vänta på ett inlägg</A>
+<H2>Ä</H2>
+<LI><A HREF="elisp-client.html#IDX142">Ändra livslängd</A>
+<LI><A HREF="elisp-client.html#IDX138">Ändra lösenord</A>
+<LI><A HREF="elisp-client.html#IDX137">Ändra namn</A>
+<LI><A HREF="elisp-client.html#IDX141">Ändra organisatör</A>
+<LI><A HREF="elisp-client.html#IDX82">Ändra presentation</A>
+<LI><A HREF="elisp-client.html#IDX143">Ändra supermöte</A>
+<LI><A HREF="elisp-client.html#IDX146">Ändra variablerna</A>
+<H2>Å</H2>
+<LI><A HREF="elisp-client.html#IDX90">Återse alla kommentarer</A>
+<LI><A HREF="elisp-client.html#IDX92">Återse alla kommentarer rekursivt</A>
+<LI><A HREF="elisp-client.html#IDX122">Återse alla markerade</A>
+<LI><A HREF="elisp-client.html#IDX88">Återse det kommenterade</A>
+<LI><A HREF="elisp-client.html#IDX102">Återse hoppa</A>
+<LI><A HREF="elisp-client.html#IDX100">Återse igen</A>
+<LI><A HREF="elisp-client.html#IDX104">Återse lista</A>
+<LI><A HREF="elisp-client.html#IDX124">Återse markerade</A>
+<LI><A HREF="elisp-client.html#IDX96">Återse nästa</A>
+<LI><A HREF="elisp-client.html#IDX86">Återse omodifierat</A>
+<LI><A HREF="elisp-client.html#IDX106">Återse presentation</A>
+<LI><A HREF="elisp-client.html#IDX98">Återse senaste</A>
+<LI><A HREF="elisp-client.html#IDX84">Återse text</A>
+<LI><A HREF="elisp-client.html#IDX108">Återse träd</A>
+<LI><A HREF="elisp-client.html#IDX94">Återse urinlägget</A>
+<LI><A HREF="elisp-client.html#IDX70">Återstarta kom</A>
+<H2>Ö</H2>
+<LI><A HREF="elisp-client.html#IDX147">Övergå till administratörsmod</A>
+<LI><A HREF="elisp-client.html#IDX148">Övergå till normalmod</A>
+</DIR>
+<P>
+<H1><A NAME="SEC41" HREF="elisp-client_toc.html#SEC41">Tangenterna</A></H1>
+<DIR>
+<H2>?</H2>
+<LI><A HREF="elisp-client.html#IDX30">?</A>
+<H2>a</H2>
+<LI><A HREF="elisp-client.html#IDX2">a</A>
+<LI><A HREF="elisp-client.html#IDX121">A</A>
+<H2>b</H2>
+<LI><A HREF="elisp-client.html#IDX32">b</A>
+<LI><A HREF="elisp-client.html#IDX111">B</A>
+<H2>c</H2>
+<LI><A HREF="elisp-client.html#IDX42">C-u F</A>
+<LI><A HREF="elisp-client.html#IDX37">C-u k</A>
+<LI><A HREF="elisp-client.html#IDX45">C-u p</A>
+<H2>d</H2>
+<LI><A HREF="elisp-client.html#IDX28">DEL</A>
+<H2>e</H2>
+<LI><A HREF="elisp-client.html#IDX17">e</A>
+<H2>f</H2>
+<LI><A HREF="elisp-client.html#IDX41">F</A>
+<LI><A HREF="elisp-client.html#IDX77">fs</A>
+<LI><A HREF="elisp-client.html#IDX75">fu</A>
+<H2>g</H2>
+<LI><A HREF="elisp-client.html#IDX63">g</A>
+<H2>h</H2>
+<LI><A HREF="elisp-client.html#IDX15">h</A>
+<H2>i</H2>
+<LI><A HREF="elisp-client.html#IDX34">i</A>
+<H2>k</H2>
+<LI><A HREF="elisp-client.html#IDX36">k</A>
+<LI><A HREF="elisp-client.html#IDX39">K</A>
+<H2>l</H2>
+<LI><A HREF="elisp-client.html#IDX9">LINEFEED</A>
+<LI><A HREF="elisp-client.html#IDX51">lm</A>
+<LI><A HREF="elisp-client.html#IDX53">ln</A>
+<LI><A HREF="elisp-client.html#IDX55">lN</A>
+<LI><A HREF="elisp-client.html#IDX57">lp</A>
+<LI><A HREF="elisp-client.html#IDX59">ls</A>
+<LI><A HREF="elisp-client.html#IDX61">lä</A>
+<H2>m</H2>
+<LI><A HREF="elisp-client.html#IDX119">M</A>
+<LI><A HREF="elisp-client.html#IDX65">m</A>
+<LI><A HREF="elisp-client.html#IDX25">M-n</A>
+<LI><A HREF="elisp-client.html#IDX22">M-p</A>
+<LI><A HREF="elisp-client.html#IDX71">M-x kom-recover</A>
+<LI><A HREF="elisp-client.html#IDX4">mellanslag</A>
+<H2>n</H2>
+<LI><A HREF="elisp-client.html#IDX8">NEWLINE</A>
+<LI><A HREF="elisp-client.html#IDX11">ni</A>
+<LI><A HREF="elisp-client.html#IDX13">nm</A>
+<H2>p</H2>
+<LI><A HREF="elisp-client.html#IDX47">P</A>
+<LI><A HREF="elisp-client.html#IDX44">p</A>
+<H2>q</H2>
+<LI><A HREF="elisp-client.html#IDX69">q</A>
+<H2>r</H2>
+<LI><A HREF="elisp-client.html#IDX7">RETURN</A>
+<LI><A HREF="elisp-client.html#IDX5">rymdkrogen</A>
+<H2>s</H2>
+<LI><A HREF="elisp-client.html#IDX68">S</A>
+<LI><A HREF="elisp-client.html#IDX113">sm</A>
+<LI><A HREF="elisp-client.html#IDX115">sp</A>
+<LI><A HREF="elisp-client.html#IDX6">space</A>
+<LI><A HREF="elisp-client.html#IDX3">SPC</A>
+<LI><A HREF="elisp-client.html#IDX117">st</A>
+<H2>t</H2>
+<LI><A HREF="elisp-client.html#IDX73">t</A>
+<H2>v</H2>
+<LI><A HREF="elisp-client.html#IDX79">V</A>
+<LI><A HREF="elisp-client.html#IDX49">v</A>
+<H2>ä</H2>
+<LI><A HREF="elisp-client.html#IDX83">äp</A>
+<H2>å</H2>
+<LI><A HREF="elisp-client.html#IDX85">å</A>
+<LI><A HREF="elisp-client.html#IDX91">åak</A>
+<LI><A HREF="elisp-client.html#IDX123">åam</A>
+<LI><A HREF="elisp-client.html#IDX93">åar</A>
+<LI><A HREF="elisp-client.html#IDX103">åh</A>
+<LI><A HREF="elisp-client.html#IDX101">åi</A>
+<LI><A HREF="elisp-client.html#IDX89">åk</A>
+<LI><A HREF="elisp-client.html#IDX105">ål</A>
+<LI><A HREF="elisp-client.html#IDX125">åm</A>
+<LI><A HREF="elisp-client.html#IDX97">ån</A>
+<LI><A HREF="elisp-client.html#IDX87">åo</A>
+<LI><A HREF="elisp-client.html#IDX107">åp</A>
+<LI><A HREF="elisp-client.html#IDX95">år</A>
+<LI><A HREF="elisp-client.html#IDX99">ås</A>
+<LI><A HREF="elisp-client.html#IDX109">åt</A>
+</DIR>
+<P>
+<H1><A NAME="SEC42" HREF="elisp-client_toc.html#SEC42">Variabelindex</A></H1>
+<DIR>
+<H2>k</H2>
+<LI><A HREF="elisp-client.html#IDX187">kom-after-command-hook</A>
+<LI><A HREF="elisp-client.html#IDX161">kom-confirm-multiple-recipients</A>
+<LI><A HREF="elisp-client.html#IDX152">kom-created-texts-are-read</A>
+<LI><A HREF="elisp-client.html#IDX160">kom-dashed-lines</A>
+<LI><A HREF="elisp-client.html#IDX164">kom-default-mark</A>
+<LI><A HREF="elisp-client.html#IDX174">kom-do-when-done</A>
+<LI><A HREF="elisp-client.html#IDX173">kom-do-when-starting</A>
+<LI><A HREF="elisp-client.html#IDX162">kom-emacs-knows-iso-8859-1</A>
+<LI><A HREF="elisp-client.html#IDX155">kom-higher-priority-breaks</A>
+<LI><A HREF="elisp-client.html#IDX168">kom-membership-default-placement</A>
+<LI><A HREF="elisp-client.html#IDX167">kom-membership-default-priority</A>
+<LI><A HREF="elisp-client.html#IDX163">kom-mercial</A>
+<LI><A HREF="elisp-client.html#IDX165">kom-page-before-command</A>
+<LI><A HREF="elisp-client.html#IDX156">kom-presence-messages</A>
+<LI><A HREF="elisp-client.html#IDX157">kom-presence-messages-in-buffer</A>
+<LI><A HREF="elisp-client.html#IDX154">kom-print-number-of-unread-on-entrance</A>
+<LI><A HREF="elisp-client.html#IDX186">kom-quit-hook</A>
+<LI><A HREF="elisp-client.html#IDX159">kom-read-depth-first</A>
+<LI><A HREF="elisp-client.html#IDX153">kom-reading-puts-comments-in-pointers-last</A>
+<LI><A HREF="elisp-client.html#IDX158">kom-show-where-and-what</A>
+<LI><A HREF="elisp-client.html#IDX172">kom-who-buffer-size-when-displaying</A>
+<LI><A HREF="elisp-client.html#IDX166">kom-write-texts-in-window</A>
+<LI><A HREF="elisp-client.html#IDX189">KOMNAME</A>
+<LI><A HREF="elisp-client.html#IDX190">KOMPASSWORD</A>
+<LI><A HREF="elisp-client.html#IDX188">KOMSERVER</A>
+<H2>l</H2>
+<LI><A HREF="elisp-client.html#IDX184">lyskom-edit-mode-hook</A>
+<LI><A HREF="elisp-client.html#IDX183">lyskom-edit-mode-mode-hook</A>
+<LI><A HREF="elisp-client.html#IDX175">lyskom-fetch-map-nos</A>
+<LI><A HREF="elisp-client.html#IDX169">lyskom-header-separator</A>
+<LI><A HREF="elisp-client.html#IDX179">lyskom-init-hook</A>
+<LI><A HREF="elisp-client.html#IDX180">lyskom-mode-hook</A>
+<LI><A HREF="elisp-client.html#IDX181">lyskom-new-text-hook</A>
+<LI><A HREF="elisp-client.html#IDX176">lyskom-prefetch-conf-tresh</A>
+<LI><A HREF="elisp-client.html#IDX177">lyskom-prefetch-confs</A>
+<LI><A HREF="elisp-client.html#IDX178">lyskom-prefetch-texts</A>
+<LI><A HREF="elisp-client.html#IDX185">lyskom-prioritize-mode-hook</A>
+<LI><A HREF="elisp-client.html#IDX171">lyskom-prompt-executing-default-command-text</A>
+<LI><A HREF="elisp-client.html#IDX170">lyskom-prompt-text</A>
+<LI><A HREF="elisp-client.html#IDX182">lyskom-who-info-has-changed-hook</A>
+</DIR>
+<P>

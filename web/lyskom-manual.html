@@ -1,0 +1,238 @@
+<html>
+<head>
+<title>LysKOM-manual</title>
+</head>
+<insert file="/lyskom/lyskom-macros">
+<body>
+<insert name="lyskom2"
+	$title="Introduktion till LysKOM"
+	$subtitle="Bettans Introduktion till Lysators konferenssystem"
+	$icon="elispclient">
+	
+
+<h2>Möten</h2>
+
+<p>KOM är uppdelat i ett antal olika möten, som alla behandlar varsitt
+ämne. Vissa kan ibland synas onödiga, men alla har fri rätt att skapa
+ett möte och då kan sådana komma till. Man bör ju fundera litet innan
+man skapar ett nytt möte ändå, på om det finns behov av det.
+
+<p>Vill du se vilka möten som finns trycker du <kbd>l m</kbd> (lista
+möten) och sedan return. Då får du upp en lång lista med mötenas
+nummer och namn. Är det första gången kommer alla möten att ha en
+stjärna framför sig; det betyder att du inte är medlem i det
+mötet. Vill du gå med i ett möte trycker du <kbd>m</kbd> (bli medlem i
+möte) och mötets namn. Här behöver du inte ange hela mötets namn utan
+bara nog mycket av det för att det ska bli unikt, dvs så servern kan
+skilja det från de andra mötena.
+
+<p>Ett lämpligt möte att börja med att gå med i kan vara "Presentation
+(av nya) möten". (För att gå med i det behöver du bara skriva t ex
+"pres möt", då det är nog för att göra namnet unikt. Orden inom
+parentes bortser servern ifrån). I detta möte finns helt enkelt en
+presentation av varje möte i KOM, med en kort beskrivning av vad
+som avhandlas där. Ett lätt sätt att avgöra vilka möten du är
+intresserad av att gå med i.
+
+<p>Ett annat mer eller mindre obligatoriskt möte de flesta brukar vara
+med i är "Presentation (av nya) medlemmar", där den presentation du
+skrev första gången kommer att hamna. Där finns alla andras
+presentationer också. Om du vill se någon speciell persons
+presentation skriver du <kbd>å p</kbd> (återse presentation) och
+personens namn. Om du inte vill läsa igenom alla presentationer första
+gången skriver du <kbd>e</kbd> (endast) 0, dvs du vill inte läsa några
+inlägg i det mötet just nu. Detta kan du göra i alla möten du inte är
+intresserad av att läsa för tillfället.
+
+<p>Mötet "Fritt Forum" kan det också vara bra att vara medlem i redan
+från början. Där hamnar t ex alla kommentarer till presentationer (på
+Lysators LysKOM, andra LysKOM-system kan fungera på annat sätt).
+
+<h2>Att läsa inlägg och kommentarer</h2>
+
+<p>Så fort du blivit medlem i ett möte kan du börja läsa de inlägg som
+finns där. Enklast gör du det genom att trycka <kbd>SPACE</kbd>,
+<kbd>RETURN</kbd>, <kbd>j</kbd> eller <kbd>LINEFEED</kbd>. De två
+förstnämnda skriver bara ut texten längst ner på skärmen medan
+<kbd>j</kbd> och <kbd>LINEFEED</kbd> alltid kommer att skriva texten
+högst upp. Ett kommentarsträd läses igenom så att man alltid får läsa
+kommentarerna till ett inlägg innan man får läsa nästa text
+(läsordningen är alltså enligt principen djupet först, men det går att
+välja bort om man tycker om att läsa texterna i kaosordning
+istället). Om du inte får något sammanhang i kedjan kan du trycka
+<kbd>å k</kbd> (återse det kommenterade) för att se vad inlägget var
+en kommentar till och på det sättet få litet klarhet.
+
+<p>I varje inlägg finns ett huvud som ger information om vilket
+ordningsnummer inlägget har, när det skrevs, hur långt det är, vem som
+skrev det, om det är kommentar till något och i så fall vad, vilket
+möte/vilka personer som är mottagare till inlägget och viket inläggets
+ärende är. Därefter kommer själva inlägget mellan två raka streck och
+sedan eventuellt numren på de texter i vilka det finns kommentarer
+till texten och deras författare.
+
+<p>Om du läser några inlägg i en kommentarsträd som du inte är
+intresserad av att läsa resten av, kan du trycka h (hoppa över alla
+kommentarer). Detta gör att alla inlägg som är kommentarer till det
+aktuella inlägget, eller kommentarer till en sådan kommentar etc,
+kommer att markeras så att du slipper läsa det. Tyvärr så kommer
+eventuella inlägg som skapas senare i samma träd inte att markeras
+eftersom de inte finns än.<p>
+
+<p>Vill du inte läsa alla inlägg utan bara ett antal av de senast
+skrivna, använder du <kbd>e</kbd> (endast)-kommandot. Då får du en
+fråga om hur många inlägg du vill läsa i mötet, räknat från det
+absolut senast skrivna och bakåt. Användbart om du bara vill läsa det
+som skrivits de senaste dagarna eller inget alls (då skriver du
+<kbd>0</kbd>).
+
+<p>Om du istället vill vänta med att läsa inläggen i det mötet kan du
+använda <kbd>n m</kbd> (gå till nästa möte) som gör att du tillfälligt
+lägger undan de inlägg du har kvar i mötet för att läsas senare. Du
+kommer att hamna i det möte du har efter det du stod i i
+prioriteringslistan (oftast efter i vilken ordning du blev medlem i
+mötena) som det finns olästa inlägg i.
+
+<p>Om du har det inlägg du vill kommentera på andra plats nerifrån i
+bufferten, t ex för att du använt <kbd>å k</kbd> för att se vad det
+var en kommentar till, kan det verka onödigt att vara tvungen att
+skriva <kbd>å-SPC</kbd> först för att få fram rätt inlägg att
+kommentera. Det är det också! Därför kan du då istället bara trycka
+<kbd>K</kbd> (kommentera föregående inlägg) så kommer du att slippa
+mycket onödiga tangenttryckningar.
+
+<p>Ibland upptäcker man medan man skriver att man kommenterar fel inlägg
+eller att man helt enkelt inte kan få fram vad man menar. Då kan man
+använda <kbd>C-c C-k</kbd> för att avbryta innan man lägger in
+inlägget. Ditt inlägg/kommentar kommer att försvinna helt.
+
+
+<h2>Brev och personliga svar</h2>
+
+<p>Du kan skicka ett brev till en speciell person på KOM också. För att
+göra det behöver du inte gå till något speciellt möte utan du kan göra
+det varsomhelst ifrån. Skriv bara <kbd>b</kbd> och personens namn.
+Sedan kan du skriva brevet som om det vore vilket inlägg som
+helst. Brevet hamnar i personens egen brevlåda, ett möte som bara
+han/hon har tillgång till. Om personen väljer att kommentera ditt brev
+eller skicka ett helt nytt till dig kommer du att få det i din
+brevlåda. Inlägg där kan du kommentera som alla andra; avsändaren till
+det du vill kommentera kommer då också att få kommentaren - om du inte
+anger annat.
+
+<p>Personligt svar använder du om du vill skriva en kommentar till ett
+inlägg men inte vill att alla ska se den, utan bara författaren. Tryck
+på <kbd>p</kbd> (personligt svar> så kommer din kommentar att hamna i
+hans/hennes brevlåda. På samma sätt som för <kbd>k</kbd> finns ett
+kommando <kbd>P</kbd> (personligt svar på föregående inlägg).
+
+<h2>Garbning av inlägg</h2>
+
+<p>Om alla inlägg skulle få ligga kvar i databasen hur länge som helst
+skulle den snart växa över alla brädder. Därför garbas inlägg bort
+efter en viss tid, som bestäms av vilket möte de ligger i.
+
+<h2>Markering av inlägg</h2>
+
+<p>Ibland vill man ha kvar ett inlägg som man tycker är bra skrivet eller
+som man tycker är roligt. Eller så vill man kanske bara vänta tills
+senare med att kommentera det. Då kan man markera inlägget genom att
+trycka <kbd>M</kbd> och inläggsnumret. Trycker du bara
+<kbd>RETURN</kbd> efter <kbd>M</kbd> kommer inlägget vars nummer står
+inom parentes att markeras. Markeringen har två funktioner: 1)
+Inläggen garbas inte bort, ens då garbningstiden gått ut. Detta gör
+att då du första gången blir medlem i ett möte kan få upp spridda
+inlägg som inte verkar höra någonstans. Dessa är markerade av andra
+personer sedan långt tidigare, men alla andra inlägg i träden är
+bortgarbade. 2) Du får återse dina markerade inlägg då du läst ut alla
+nya inlägg varje gång du är inne på KOMmet. Trycker du
+<kbd>RETURN/SPACE/j/LINEFEED</kbd> då din prompt ändras till "Återse
+alla markerade -" kommer du att få se de inlägg du markerat i tur och
+ordning.  Du kan få se dem även innan du läst ut för den gången genom
+att ge kommandot <kbd>å m</kbd>. Du får då en fråga om vilket av dina
+markerade inlägg du vill se. Vill du inte ha inlägget markerat längre
+använder du <kbd>A</kbd> (avmarkera) och inläggsnumret.
+
+
+<h2>Att flytta inlägg</h2>
+
+<p>Det är inte sällan som man blir irriterad över att någon skrivit i fel
+möte. Upptäcker man att man själv gjort det kan man enkelt flytta det
+genom kommandona <kbd>a addera möte</kbd> och <kbd>a subtrahera
+möte</kbd>, vilka borde vara självförklarande. Ett annat sätt är att
+redan då man skriver inlägget/kommentaren gå upp i huvudet i bufferten
+och ändra. Antingen genom att ta bort den rad som anger ett möte man
+inte tycker kommentaren passar i och lägga till det möte man tycker
+passar istället, då måste man dock känna till mötets eget
+nummer. Istället kan man då använda <kbd>C-c a m</kbd> (addera
+mottagare) som lägger till ett möte eller en person som mottagare till
+den kommentar du skriver.
+
+<h2>Meddelanden</h2>
+
+<p>När du är inne i KOM kan du ibland få upp ett allmännt meddelande på
+skärmen, eller ett personligt om det är någon som vill just dig
+något. Det är ett meddelande som syns på en gång hos alla mottagare
+och därför går mycket snabbare än t ex brev. Du skickar ett meddelande
+med <kbd>a sända meddelande</kbd> och sedan kan du trycka
+<kbd>RETURN</kbd> om du vill skicka det till alla eller först skriva
+namnet på den person som ska ha det. Du behöver inte skriva hela
+namnet, KOM är bra på att komplettera! Därefter kan du skriva ditt
+meddelande, och så fort du trycker <kbd>RETURN</kbd> skickas det
+iväg.
+
+
+<h2>Lapp på dörren</h2>
+
+<p>Om du ska resa bort eller något sådant och vill säga att du inte
+kommer att vara inloggad under ett antal dagar men istället kan nås på
+ett telefonnummer (t ex) kan du sätta upp en lapp på dörren. Helt
+enkelt genom <kbd>a sätt lapp på dörren</kbd>. Din lapp kommer att
+hamna i mötet "Lappar (på) dörrar" och dessutom att visas för alla som
+försöker skicka brev och sådant till dig. När du kommer tillbaka kan
+du lika enkelt bli av med lappen genom kommandot <kbd>a ta bort
+lapp</kbd> på dörren.
+
+<h2>Allmänt uppförande</h2>
+
+<p>En enkel huvudregel på KOM är att man ska vara sig själv, men det
+gäller inte helt utan begränsningar. Framför allt hör det till god ton
+att man kan hålla en seriös debatt seriös och inte gå in och försöka
+skämta bort den eller något sådant. Du bör heller helst inte skriva in
+åsikter du inte står för själv (om du inte debatterar andras), och du
+bör i vilket fall kunna redogöra för grunden till alla åsikter, hur du
+kommit fram till dina slutsatser och så vidare. Att spruta ut allmänna
+meddelanden som inte har något särskilt att säga hör inte heller till
+god ton.
+
+<h3>Goda råd:</h3>
+<ul>
+<li>Håll stilen på mötena. När en debatt har drivit iväg från mötets
+inriktning, flytta den.
+
+<li>Skriv inte en massa struntinlägg i 'seriösa' möten. Det finns möten
+där du kan skriva i stort sett vad som helst.
+
+<li>Använd gärna personliga kommentarer om det du vill säga bara berör en
+person. Det finns en hel del 'lågtrafikmöten' där man inte bör föra
+allt för långa debatter. (exv Lysators interna forum.)
+
+<li>Följ gärna debatten i ett möte genom att t.ex läsa gamla inlägg, så
+slipper du skriva inlägg som inte passar i mötet.
+</ul>
+
+<h2>Mer information</h2>
+
+<ul>
+  <li> <a href="lyskom-quickref.html">Bettans referenskort för LysKOM-kommandona i emacslispklienten.</a>
+  <li> <a href="elisp-client.html">Den fullständiga dokumentationen för emacslispklienten.</a> (körd genom tex2html) (<strong>väldigt föråldrad</strong>)
+  <li> <a href="elisp-faq.html">Ofta ställda frågor
+om emacslispklienten.</a> (<strong>också väldigt föråldrad</strong>)
+</ul>
+
+<hr>
+Originaltext: Elisabeth Söderström &lt;bettan@ludd.luth.se&gt;<br>
+Modifierad och korrigerad av David Kågedal &lt;davidk@lysator.liu.se&gt;<br>
+Modifierad och korrigerad av David Byers &lt;byers@lysator.liu.se&gt;
+</body>
+</html>
