@@ -1,5 +1,11 @@
 2001-04-01  Joel Rosdahl  <joel@rosdahl.net>
 
+	* swedish-strings.el (lyskom-custom-strings): Small cosmetic
+	fixes.
+
+	* option-edit.el (lyskom-customize-buffer-format): Small cosmetic
+	change.
+
 	* view-text.el (lyskom-view-text): Insert symbolic mark type.
 
 	* vars.el.in (kom-symbolic-marks-alist): Added.
