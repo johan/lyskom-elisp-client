@@ -6,14 +6,27 @@ Att göra i elisp-klienten
             Om du fixar någonting som står med på den här
             listan, glöm inte att ta bort det från listan!
 
+initiate-get-membership skulle kunna fylla i positionen för
+medlemskapet automatiskt. Tyvärr går det inte att göra så i
+query-read-texts.
 
-I lyskom-sort-membership måste man ordna om lyskom-to-do-list för att
-matcha den nya medlemskapslistan. Det skulle antagligen vara rätt
-enkelt att skriva en lyskom-sort-to-do-list. Den skulle sortera
-elementen efter mötesprioritet och position för CONF och existerande
-prioritet för REVIEW och REVIEW-TREE (som antas vara först inom sin
-prioritet.) Kanske skulle man behöva gå in och uppdatera alla
-prioriteter innan man sorterar.
+När man får en new-membership async så borde man kolla att
+medlemskapet verkligen har ändrats, och bara då göra något.
+
+lyskom-add-member eller vad den nu heter kan hitta rätt position inom
+en prioritet genom att lägga det nya medlemskapet först eller sist och
+sedan sortera listan. Då kommer det nya medlemskapet att få rätt
+position inom prioriteten. Först därefter behöver man tala om för
+servern.
+
+lyskom-sort-membership skulle kunna hålla servern uppdaterad genom att 
+se efter när man har gett ett medlemskap en ny position, och i så fall 
+tala om det för servern. Om man dessutom kan den gamla positionen så
+borde man kunna räkna fram vilka positioner övriga medlemskap vars
+gamla positioner man känner till har fått för nya positioner. Det kör
+förstås ihop sig helt om man inte vet den gamla positionen för ett
+möte, men det är smällar man får ta, som det heter.
+
 
 Som det ser ut just nu, om man gör hantera medlemskap och sedan loggar 
 in som en ny person i LysKOM-bufferten så blir det fel saatan eftersom 
