@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.55 1999-12-02 22:29:44 byers Exp $
+;;;;; $Id: edit-text.el,v 44.56 2000-01-06 12:47:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.55 1999-12-02 22:29:44 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.56 2000-01-06 12:47:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1212,44 +1212,44 @@ RECPT-TYPE is the type of recipient to add."
      (set-buffer lyskom-buffer)
      ;; +++ The information about msg-of-day might be old. We should
      ;; make sure it is up-to-date.
-     (let ((text-no (conf-stat->msg-of-day conf-stat)))
-       
 
-       (if (zerop text-no)
+     (let ((text-no (conf-stat->msg-of-day conf-stat))
+           (win-config nil)
+           (text nil)
+           (text-stat nil)
+           (collector (make-collector)))
 
-           ;; If we have no notice on the recipient, just go ahead
+       (unless (zerop text-no)
+         (initiate-get-text 'edit 'collector-push text-no collector)
+         (initiate-get-text-stat 'edit 'collector-push text-no collector)
+         (lyskom-wait-queue 'edit)
+         (setq text-stat (elt (collector->value collector) 0))
+         (setq text (elt (collector->value collector) 1)))
 
-           (if what-to-do
-               (funcall what-to-do conf-stat insert-at edit-buffer)
-             (lyskom-edit-do-add-recipient/copy recpt-type
-                                                (conf-stat->conf-no conf-stat)
-                                                edit-buffer))
+       (when (or (null text)
+                 (null text-stat)
+                 (null (get-buffer-window edit-buffer))
+                 (progn (setq win-config (current-window-configuration))
+                        (with-output-to-temp-buffer "*Motd*"
+                          (lyskom-princ
+                           (lyskom-format 'conf-has-motd-no
+                                          (text->text-no text)
+                                          (text->decoded-text-mass text 
+                                                                   text-stat))))
+                        (j-or-n-p (lyskom-get-string 'still-want-to-add))))
 
-         ;; Otherwise, show the notive and keep on going
+         (when (and (eq recpt-type 'recpt)
+                    (not (lyskom-j-or-n-p (lyskom-format
+                                           'really-add-as-recpt-q
+                                           conf-stat) t)))
+           (setq recpt-type 'cc-recpt))
 
-	 (blocking-do-multiple ((text (get-text text-no))
-                                (text-stat (get-text-stat text-no)))
-	   (if (and text (get-buffer-window edit-buffer))
-	       (let ((win-config (current-window-configuration)))
-		 ;;(set-buffer buffer)
-		 (with-output-to-temp-buffer "*Motd*"
-		   (lyskom-princ
-		    (lyskom-format 'conf-has-motd-no
-				   (text->text-no text)
-				   (text->decoded-text-mass text 
-							    text-stat))))
-		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
-                      (if what-to-do
-                          (funcall what-to-do conf-stat insert-at edit-buffer)
-                        (lyskom-edit-do-add-recipient/copy recpt-type
-                                                           (conf-stat->conf-no conf-stat)
-                                                           edit-buffer)))
-		 (set-window-configuration win-config))
-             (if what-to-do
-                 (funcall what-to-do conf-stat insert-at edit-buffer)
-             (lyskom-edit-do-add-recipient/copy recpt-type
-                                                (conf-stat->conf-no conf-stat)
-                                                edit-buffer))))))))))
+         (when what-to-do
+           (funcall what-to-do conf-stat insert-at edit-buffer))
+         (lyskom-edit-do-add-recipient/copy recpt-type
+                                            (conf-stat->conf-no conf-stat)
+                                            edit-buffer))
+       (when win-config (set-window-configuration win-config)))))))
 
 (defun kom-edit-add-cross-reference ()
   (interactive)
