@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.10 1997-09-21 15:55:19 byers Exp $
+;;;;; $Id: command.el,v 44.11 1997-09-22 08:35:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -58,18 +58,23 @@
 ;;;   ...)
 
 (defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
-  (`
-   (defun (, cmd) (, args)
-     (, doc)
-     (, interactive-decl)
-     (lyskom-start-of-command (quote (, cmd)))
-     (unwind-protect
-         (condition-case nil
-             (progn (,@ forms))
-           (quit (ding)
-                 (lyskom-insert-before-prompt
-                  (lyskom-get-string 'interrupted))))
-       (lyskom-end-of-command)))))
+  (let ((bufsym (intern (format "%S-start-buffer" cmd))))
+    (`
+     (defun (, cmd) (, args)
+       (, doc)
+       (, interactive-decl)
+       (lyskom-start-of-command (quote (, cmd)))
+       (let (((, bufsym) (current-buffer)))
+         (unwind-protect
+             (condition-case nil
+                 (progn (,@ forms))
+               (quit (ding)
+                     (lyskom-insert-before-prompt
+                      (lyskom-get-string 'interrupted))))
+           (lyskom-save-excursion
+            (when (buffer-live-p (, bufsym))
+              (set-buffer (, bufsym)))
+             (lyskom-end-of-command))))))))
 
 
 
@@ -104,7 +109,8 @@
 
 (defmacro def-kom-emacs-command (cmd args doc interactive-decl &rest forms)
   (let ((rsym (intern (concat (format "%S-running-as-kom-command"
-                                      cmd)))))
+                                      cmd))))
+        (bufsym (intern (format "%S-start-buffer" cmd))))
     (`
      (defun (, cmd) (, args)
        (, doc)
@@ -114,13 +120,18 @@
              (progn (lyskom-start-of-command (quote (, cmd)))
                     (setq (, rsym) t))
            (error nil))
-         (unwind-protect
-             (condition-case nil
-                 (progn (,@ forms))
-               (quit (ding)
-                     (lyskom-insert-before-prompt
-                      (lyskom-get-string 'interrupted))))
-           (and (, rsym) (lyskom-end-of-command))))))))
+         (let (((, bufsym) (current-buffer)))
+           (unwind-protect
+               (condition-case nil
+                   (progn (,@ forms))
+                 (quit (ding)
+                       (lyskom-insert-before-prompt
+                        (lyskom-get-string 'interrupted))))
+             (and (, rsym)
+                  (lyskom-save-excursion
+                   (when (buffer-live-p (, bufsym))
+                     (set-buffer (, bufsym)))
+                   (lyskom-end-of-command))))))))))
 
 
 
@@ -285,9 +296,6 @@ chosen according to this"
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
   (lyskom-save-excursion
-   (when (and (boundp 'lyskom-buffer)
-              (buffer-live-p lyskom-buffer))
-     (set-buffer lyskom-buffer))
    (message "")
    (while (and lyskom-to-be-printed-before-prompt
                (lyskom-queue->first lyskom-to-be-printed-before-prompt))

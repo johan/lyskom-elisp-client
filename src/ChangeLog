@@ -1,3 +1,22 @@
+1997-09-22  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-next-kom): Ny funktion.
+	(kom-next-unread-kom): Använd lyskom-next-kom.
+	(kom-previous-kom): Använd lyskom-previous-kom.
+	(kom-next-kom): Använd lyskom-next-kom.
+	(lyskom-previous-kom): Ny funktion.
+
+	* command.el (lyskom-end-of-command): Sätt inte buffert här.
+	(def-kom-emacs-command): Kör lyskom-end-of-command i samma buffert
+ 	som lyskom-start-of-command.
+	(def-kom-command): Dito.
+
+	* swedish-strings.el (lyskom-command): Lade till
+ 	kom-next-unread-kom.
+	(lyskom-message): Lade till strängar för kom-next-kom mfl
+
+	* vars.el.in (lyskom-commands): Lade till kom-next-unread-kom.
+
 Sun Sep 21 10:25:51 1997  David Byers  <davby@ida.liu.se>
 
 	* command.el (def-kom-emacs-command): Nytt makro.

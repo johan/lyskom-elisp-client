@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.18 1997-09-21 15:55:21 byers Exp $
+;;;;; $Id: commands2.el,v 44.19 1997-09-22 08:35:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.18 1997-09-21 15:55:21 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.19 1997-09-22 08:35:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1495,11 +1495,8 @@ membership info."
 
 
 
-(def-kom-emacs-command kom-next-kom ()
-  "Pop up the next lyskom-session."
-  (interactive)
-  (if (lyskom-buffer-p (current-buffer))
-      (lyskom-tell-internat 'kom-tell-next-lyskom))
+(defun lyskom-next-kom ()
+  "Internal version of kom-next-kom"
   (if lyskom-buffer-list
       (progn
 	(if (lyskom-buffer-p (car lyskom-buffer-list))
@@ -1527,15 +1524,12 @@ membership info."
 	;; Don't switch to dead sessions.
 	(if (lyskom-buffer-p (car lyskom-buffer-list))
 	    (switch-to-buffer (car lyskom-buffer-list))
-	  (kom-next-kom)))
+	  (lyskom-next-kom)))
     (error "No active LysKOM buffers")))
 
 
-(def-kom-emacs-command kom-previous-kom ()
-  "Pop up the previous lyskom-session."
-  (interactive)
-  (if (lyskom-buffer-p (current-buffer))
-      (lyskom-tell-internat 'kom-tell-next-lyskom))
+(defun lyskom-previous-kom ()
+  "Internal version of kom-previous-kom"
   (if (> (length lyskom-buffer-list) 1)
       (let (lastbuf
 	    (last-but-one lyskom-buffer-list))
@@ -1565,21 +1559,55 @@ membership info."
 	  (rplacd last-but-one nil))
 	(if (lyskom-buffer-p (car last-but-one))
 	    (switch-to-buffer lastbuf)
-	  (kom-previous-kom)))
+	  (lyskom-previous-kom)))
     (if (null lyskom-buffer-list)
-	(error "No active LysKOM buffers"))))
+        (error
+         (lyskom-get-string 'no-lyskom-session)))))
 
 
-(defun kom-next-unread-kom ()
+
+(def-kom-emacs-command kom-next-kom ()
+  "Pop up the next lyskom-session."
+  (interactive)
+  (let ((start-buffer (current-buffer)))
+    (if (lyskom-buffer-p (current-buffer))
+        (lyskom-tell-internat 'kom-tell-next-lyskom))
+    (lyskom-next-kom)
+    (when (eq (current-buffer) start-buffer)
+      (if kom-next-kom-running-as-kom-command
+          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
+        (error (lyskom-get-string 'no-lyskom-session))))))
+
+
+(def-kom-emacs-command kom-previous-kom ()
+  "Pop up the previous lyskom-session."
+  (interactive)
+  (let ((start-buffer (current-buffer)))
+    (if (lyskom-buffer-p (current-buffer))
+        (lyskom-tell-internat 'kom-tell-next-lyskom))
+    (lyskom-previous-kom)
+    (when (eq (current-buffer) start-buffer)
+      (if kom-previous-kom-running-as-kom-command
+          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
+        (error 'no-lyskom-session)))))
+
+
+(def-kom-emacs-command kom-next-unread-kom ()
   "Pop up the next LysKOM session with unread texts in."
   (interactive)
-  (if (not (lyskom-buffer-p (current-buffer)))
-      (kom-next-kom))
-  (let ((thisbuf (current-buffer)))
-    (kom-next-kom)
-    (while (and (not (eq thisbuf (current-buffer)))
-		(not (memq lyskom-buffer lyskom-sessions-with-unread)))
-      (kom-next-kom))))
+  (let ((start-buffer (current-buffer)))
+    (if (not (lyskom-buffer-p (current-buffer)))
+        (lyskom-next-kom))
+    (let ((thisbuf (current-buffer)))
+      (lyskom-next-kom)
+      (while (and (not (eq thisbuf (current-buffer)))
+                  (not (memq lyskom-buffer lyskom-sessions-with-unread)))
+        (lyskom-next-kom)))
+    (when (eq start-buffer (current-buffer))
+        (if kom-next-unread-kom-running-as-kom-command
+            (lyskom-insert-before-prompt 
+             (lyskom-get-string 'no-unread-lyskom-r))
+          (error (lyskom-get-string 'no-unread-lyskom))))))
 
 
 ;;;============================================================

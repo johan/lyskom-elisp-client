@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.30 1997-09-21 11:43:02 byers Exp $
+;;;;; $Id: english-strings.el,v 44.31 1997-09-22 08:35:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.30 1997-09-21 11:43:02 byers Exp $"))
+              "$Id: english-strings.el,v 44.31 1997-09-22 08:35:06 byers Exp $"))
 
 
 ;;; ================================================================
@@ -410,6 +410,12 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-is-active-last-minutes . "Showing all sessions active tha last %#1d minutes.\n")
     (showing-invisibles . "Showing invisible sessions.\n")
     (null-who-info . "No one (active) is logged on.\n")
+
+    (no-other-lyskom-r . "There are not other active LysKOM sessions.\n")
+    (no-lyskom-session . "There are no active LysKOM-sessions.")
+    (no-unread-lyskom-r . "There is no active LysKOM session with unread texts.\n")
+    (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
+
 
     ; From commands2.el:
 
@@ -1163,6 +1169,7 @@ On since %#8s%#9s")
     (kom-status-session . "Status (of a) session")
     (kom-next-kom             . "Next LysKOM")
     (kom-previous-kom         . "Previous LysKOM")
+    (kom-next-unread-kom      . "Next unread LysKOM")
     (kom-customize      . "Customize LysKOM")
     (kom-change-language . "Change language")
     (kom-calculate            . "Calculate")
