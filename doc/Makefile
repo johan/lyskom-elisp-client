@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.31 2000-08-31 12:39:08 byers Exp $
+# $Id: Makefile,v 44.32 2000-08-31 13:15:41 mattias Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -25,7 +25,7 @@
 CLIENTVERSION = 0.46-BETA-Q
 
 SHELL = /bin/sh
-RM = rm -vf
+RM = rm -f
 
 INFODIR = /usr/gnu/info
 FTPDIR = /usr/ftp/pub/lyskom/elisp-client
