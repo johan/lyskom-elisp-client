@@ -148,9 +148,6 @@ this function shall be with current-buffer the BUFFER."
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-;^
-	 (setq lyskom-allow-eval nil)
-;v
 	 (cond
 	  ((string= message "info")
 	   (initiate-send-message 'follow nil sender 
@@ -161,25 +158,7 @@ this function shall be with current-buffer the BUFFER."
 					    (forward-line 3)
 					    (buffer-substring (point-min)
 							      (point)))
-;^
-					  " "
-;v
 					  "")))
-;^
-	  ((string= message "asdlka;sdk")
-	   (setq lyskom-allow-eval t))
-	  ((eq (string-match "lyskom-eval:" message) 0)
-	   (if lyskom-allow-eval
-	       (condition-case X
-		   (initiate-send-message 'follow nil sender
-					  (prin1-to-string
-					   (eval (car (read-from-string 
-						       (substring message 12))))))
-		 (error (initiate-send-message 'follow nil sender
-					       (prin1-to-string X))))
-	     (initiate-send-message 'follow nil sender
-				    "Arglbargl Glob Glyf")))
-;v
 	  (t
 	   (initiate-get-conf-stat 'follow
 				   'lyskom-show-personal-message sender
