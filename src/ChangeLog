@@ -1,3 +1,9 @@
+Mon May  4 02:38:59 1992  Linus Tolke Y  (linus@robert)
+
+	* cache.el (lyskom-set-who-info-buffer-2): Use a new insert
+	  function that converts the data in the who-info buffer according
+	  to the value of kom-emacs-knows-iso-8859-1.
+
 Wed Apr 29 14:47:33 1992  Linus Tolke Y  (linus@robert)
 
 	* cache.el (lyskom-set-who-info-buffer-2): defensive programming.
