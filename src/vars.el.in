@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.5 1996-10-03 00:21:56 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.6 1996-10-06 05:18:42 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.5 1996-10-03 00:21:56 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.6 1996-10-06 05:18:42 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -409,15 +409,7 @@ This variable is not saved in the LysKOM server.")
 
 This variable is stored in the LysKOM server.")
 
-(defvar kom-default-face-scheme
-  (condition-case err
-      (cond ((null window-system) 'default)
-            ((not (x-display-color-p)) 'monochrome)
-            ((eq (cdr (assoc 'background-mode (frame-parameters))) 'dark)
-             'inverse)
-            (t 'default))
-    (error 'default))
-
+(defvar kom-default-face-scheme nil  
   "*Face scheme to use per default for new logins.
 
 This variable is not saved in the LysKOM server.")
@@ -1336,26 +1328,6 @@ the value of  kom-tell-phrases  for fun.")
 (defvar mode-line-conf-name nil
   "Conf name that is present on the mode-line.")
 
-;;; ================================================================
-;;;         Faces
-
-(defmacro lyskom-make-face (name &rest body)
-  (` (if (memq (, name) (face-list))
-	 nil
-       (,@ body))))
-
-(put 'lyskom-make-face 'lisp-indent-function 1)
-
-
-(defmacro when (expr &rest body)
-  "Execute BODY if EXPR evaluates to non-nil"
-  (list 'if expr (cons 'progn body)))
-
-(put 'when lisp-indent-function 1)
-(put 'when 'edebug-form-spec t)
-
-
-
 ;;
 ;; Set up default faces in case no face scheme is selected
 ;;
@@ -1438,67 +1410,3 @@ For instance, (kom-me-face bold \"yellow\" \"red\") will cause kom-me-face
 to be bold with yellow text on a red background."
 )
 
-(defun lyskom-set-face-foreground (face color)
-  (condition-case error
-      (set-face-foreground face color)
-    (error nil)))
-
-(defun lyskom-set-face-background (face color)
-  (condition-case error
-      (set-face-background face color)
-    (error nil)))
-
-
-(defun lyskom-set-face-scheme (scheme &optional)
-  "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
-in lyskom-face-schemes."
-  (let ((tmp (assoc scheme lyskom-face-schemes)))
-    (if (and tmp (or (eq window-system 'x)
-		     (eq window-system 'win32)))
-        (progn
-          (mapcar 
-           (function
-            (lambda (spec)
-	      (copy-face (or (elt spec 1) 'default) (elt spec 0))
-              (if (elt spec 2)
-                  (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-              (if (elt spec 3)
-                  (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
-	   (cdr tmp))))))
-
-
-;;; Look for X resources specifying faces.
-
-(defun lyskom-setup-faces ()
-  "Initalize the faces in the LysKOM client.
-This sets the face scheme according to `kom-default-face-scheme', and
-also reads the proper X resources."
-  (lyskom-set-face-scheme kom-default-face-scheme)
-  (if (eq window-system 'x)
-    (let* ((set-p (function
-		   (lambda (face-name resource)
-		     (x-get-resource (concat face-name ".attribute" resource)
-				     (concat "Face.Attribute" resource)))))
-	   (on-p (function
-		  (lambda (face-name resource)
-		    (let ((set (funcall set-p face-name resource)))
-		      (cond ((null set) nil)
-			    ((member (downcase set) '("on" "true")) 'on)
-			    (t 'off)))))))
-      (mapcar
-       (function
-	(lambda (face)
-	  (let* ((face-name (symbol-name face))
-		 (fg (funcall set-p face-name "Foreground"))
-		 (bg (funcall set-p face-name "Background"))
-		 (bl (funcall on-p face-name "Bold"))
-		 (it (funcall on-p face-name "Italic"))
-		 (ul (funcall on-p face-name "Underline")))
-	    (if fg (set-face-foreground face fg))
-	    (if bg (set-face-background face bg))
-	    (if (eq bl 'on) (make-face-bold face nil t))
-	    (if (eq bl 'off) (make-face-unbold face nil t))
-	    (if (eq it 'on) (make-face-italic face nil t))
-	    (if (eq it 'off) (make-face-unitalic face nil t))
-	    (if ul (set-face-underline-p face (eq ul 'on))))))
-       lyskom-faces))))

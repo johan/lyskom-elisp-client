@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.4 1996-09-30 23:39:09 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.5 1996-10-06 05:18:36 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.4 1996-09-30 23:39:09 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.5 1996-10-06 05:18:36 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1347,6 +1347,10 @@ Cf. paragraph-start.")
 
   (define-key lyskom-mode-map "\C-?" 'scroll-down)
 )
+
+
+
+
 
 ;;;==============================================================
 ;;; Keymap for filter editing

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.1 1996-09-03 16:01:28 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.2 1996-10-06 05:18:20 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -186,8 +186,7 @@ on such functions see the documentation for lyskom-add-button-action."
 lyskom-text-buttons. Returns the modified string."
   (let ((blist lyskom-text-buttons)
         (start 0)
-        (el nil)
-        (props nil))
+        (el nil))
     (while blist
       (setq el (car blist))
       (setq start 0)
@@ -593,22 +592,24 @@ This is a LysKOM button action."
 	(user (if (match-beginning 1)
                   (substring url (match-beginning 1) (1- (match-end 1)))
                 nil))
-        (password nil))
+        ;; (password nil)
+	)
     (if (and user
              (string-match "^\\([^:]*\\):\\(.*\\)" user))
-        (progn (setq password (substring user
-                                         (match-beginning 2)
-                                         (match-end 2)))
-               (setq user (substring user 
-                                     (match-beginning 1)
-                                     (match-end 1)))))
-
+        (progn
+	  ;; (setq password (substring user
+	  ;; 			    (match-beginning 2)
+	  ;; 			    (match-end 2)))
+	  (setq user (substring user 
+				(match-beginning 1)
+				(match-end 1)))))
+    
     (telnet (concat host " " port))
-;;    (message "u:%s  p:%s  h:%s  #:%s" 
-;;             (or user "<u>")
-;;             (or password "<p>")
-;;             (or host "<h>")
-;;             (or port "<#>"))
+    ;;    (message "u:%s  p:%s  h:%s  #:%s" 
+    ;;             (or user "<u>")
+    ;;             (or password "<p>")
+    ;;             (or host "<h>")
+    ;;             (or port "<#>"))
 
     ))
 

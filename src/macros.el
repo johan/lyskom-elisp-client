@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.2 1996-09-29 15:18:39 davidk Exp $
+;;;;; $Id: macros.el,v 44.3 1996-10-06 05:18:25 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.2 1996-09-29 15:18:39 davidk Exp $\n"))
+	      "$Id: macros.el,v 44.3 1996-10-06 05:18:25 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -130,7 +130,7 @@ Value returned is always nil."
   (list 'defun cmd args doc interactive-decl
 	(list 'lyskom-start-of-command (list 'quote cmd))
 	(list 'unwind-protect
-	      (list 'condition-case 'error
+	      (list 'condition-case nil
 		    (cons 'progn
 			  forms)
 		    (list 'quit
@@ -173,6 +173,20 @@ Value returned is always nil."
 (defmacro -- (var)
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
+
+(defmacro when (expr &rest body)
+  "Execute BODY if EXPR evaluates to non-nil"
+  (list 'if expr (cons 'progn body)))
+
+(put 'when lisp-indent-function 1)
+(put 'when 'edebug-form-spec t)
+
+(defmacro unless (expr &rest body)
+  "Execute BODY if EXPR evaluates to non-nil"
+  (append (list 'if expr nil) body))
+
+(put 'unless lisp-indent-function 1)
+(put 'unless 'edebug-form-spec t)
 
 
 ;;; ======================================================================
@@ -327,8 +341,7 @@ STRING should be given if the last search was by `string-match' on STRING."
 ;;;
 
 (lyskom-provide-function map-keymap (fn keymap &optional sort-first)
-  (let ((lis nil)
-        (r 0))
+  (let ((r 0))
     (cond ((vectorp keymap)
            (while (< r (length keymap))
              (if (aref keymap r)
@@ -346,6 +359,20 @@ STRING should be given if the last search was by `string-match' on STRING."
        (setq tail (cdr tail)))
      (if tail
          (setcdr tail new-parent))))
+
+
+;;; ================================================================
+;;;         Faces
+
+(defmacro lyskom-make-face (name &rest body)
+  (` (if (memq (, name) (face-list))
+	 nil
+       (,@ body))))
+
+(put 'lyskom-make-face 'lisp-indent-function 1)
+
+
+
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
