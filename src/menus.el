@@ -40,6 +40,8 @@
 (defun lyskom-build-menus ()
   (define-key lyskom-mode-map [menu-bar]
     lyskom-menu-map)
+  (define-key lyskom-mode-map [menu-bar edit]
+    'undefined)
   (lyskom-define-menu lyskom-menu-map lyskom-menus))
 
 (defun lyskom-define-menu (map menus)
@@ -58,7 +60,7 @@
 	     (lyskom-define-menu submap submenu)))
 	  ((eq 'item (car (car menus)))
 	   (let* ((symbol (car (cdr (car menus))))
-		  (name (car (lyskom-get-string symbol lyskom-commands))))
+		  (name (lyskom-get-string symbol lyskom-commands)))
 	     (define-key map (vector symbol)
 	       (cons name symbol))))
 	  (t (error "Menu description invalid in lyskom-define-menu")))))
