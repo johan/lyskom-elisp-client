@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.281 2004-01-01 22:49:04 byers Exp $
+;;;;; $Id: vars.el.in,v 44.282 2004-01-26 21:51:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.281 2004-01-01 22:49:04 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.282 2004-01-26 21:51:11 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -520,7 +520,9 @@ The format of this variable may change in the future.
                         (nil . lyskom-maybe-get-commented-text)))
     (kom-sub-footnote . ((t . lyskom-maybe-get-footnoted-text)
                          (nil . lyskom-maybe-get-footnoted-text)))
-    (kom-write-footnote . ((t . lyskom-get-last-written-or-read-by-me)
+    (kom-write-footnote . ((t . lyskom-get-text-at-point)
+                           (t . lyskom-get-last-written-or-read-by-me)
+                           (nil . lyskom-get-text-at-point)
                            (nil . lyskom-get-last-written-or-read-by-me)))
     (kom-add-no-comments . ((t . lyskom-get-last-written-or-read-by-me)
                             (nil . lyskom-get-last-written-or-read-by-me)))
@@ -2068,6 +2070,7 @@ fonts. When set to `nil', the client will not use text properties.
 This will disable all font usage and clickable stuff.
 
 Values other than `t' and `nil' are reserved for future use.")
+
 
 (def-kom-var kom-use-button-hints t
   "**Controls use of context sensitive actions on clickable areas.
@@ -4149,11 +4152,10 @@ Values other than those listed are reserved for future use."
     ("enriched"           . lyskom-format-enriched)
     ("text/html"          . lyskom-format-html)
     ("text/enriched"      . lyskom-format-enriched)
-    ("text/plain"         . nil)
-    ("text/x-kom-basic"   . nil)
-    ("x-kom/text"         . nil)  ;Archaic alias for text/x-kom-basic.
-    ("x-kom/basic"        . nil)  ;Archaic alias for text/x-kom-basic.
-    ("x-kom/user-area"     . lyskom-format-x-kom/user-area)
+    ("^text/"             . lyskom-format-plaintext)
+    ("x-kom/text"         . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
+    ("x-kom/basic"        . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
+    ("x-kom/user-area"    . lyskom-format-x-kom/user-area)
     ("x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one

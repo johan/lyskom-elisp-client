@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.359 2004-01-01 22:01:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.360 2004-01-26 21:51:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.359 2004-01-01 22:01:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.360 2004-01-26 21:51:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1247,9 +1247,9 @@ Du bör sätta den till ett bättre värde.\n")
 
     (re-edit-text-prompt . "Redigera texten som inte kunde skapas")
     (go-to-pri-conf-prompt . "Gå till nästa prioriterade möte")
-    (go-to-pri-mailbox-prompt . "Gå till prioriterad brevlåda")
+    (go-to-pri-mailbox-prompt . "Gå till din brevlåda (prioriterad)")
     (read-pri-text-conf . "Läsa nästa prioriterade text")
-    (read-pri-letter-prompt . "Läsa nästa prioriterade brev")
+    (read-pri-letter-prompt . "Läsa nästa brev (prioriterat)")
     (review-next-text-prompt . "Återse nästa text")
     (review-next-comment-prompt . "Återse nästa kommentar")
     (review-next-marked-prompt . "Återse nästa markerade")
@@ -1688,6 +1688,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (Secret-mt-type . "Hemlig")
     (Message-flag-mt-type . "Gruppmeddelanden")
 
+    (not-author . "Du är inte författare till text %#1n.")
     (not-author-try-anyway-p . "Du är inte författare till inlägget. Vill du försöka ändå? ")
     (what-no-comments-no . "Vilken text vill du inte ha kommentarer till: ")
     (adding-no-comments . "Begär att inte få kommentarer till inlägg %#1n...")

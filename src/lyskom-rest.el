@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.225 2004-01-01 22:01:39 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.226 2004-01-26 21:51:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.225 2004-01-01 22:01:39 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.226 2004-01-26 21:51:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2153,52 +2153,38 @@ Deferred insertions are not supported."
   (defun lyskom-format-text-body (text &optional text-stat)
     "Format a text for insertion. Does parsing of special markers in the text."
     (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))
-           (content-type (cond (ct-item (aux-item->data ct-item))
-                               ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
-                                     (match-beginning 1))
-                                (match-string 1 text))
-                               (t nil)))
+           (content-type (or (cond (ct-item (aux-item->data ct-item))
+                                   ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
+                                         (match-beginning 1))
+                                    (match-string 1 text))
+                                   (t nil))
+                             "text/x-kom-basic"))
            (fn (and content-type
-                    (cdr 
-                     (let ((tmp lyskom-format-special)
-                           (result nil)
-                           (case-fold-search t))
-                       (while tmp
-                         (when (eq 0 (string-match 
-                                      (if (stringp (car (car tmp)))
-                                          (car (car tmp))
-                                        (symbol-name (car (car tmp))))
-                                      content-type))
-                           (setq result (car tmp))
-                           (setq tmp nil))
-                         (setq tmp (cdr tmp)))
-                       result))))
+                    (cdr (let ((case-fold-search t))
+                           (lyskom-traverse el lyskom-format-special
+                             (when (eq 0 (string-match 
+                                          (if (stringp (car el))
+                                              (car el)
+                                            (symbol-name (car el)))
+                                          content-type))
+                               (lyskom-traverse-break el)))))))
+           (plaintext (eq fn t))
            (formatted (and fn (funcall fn text text-stat))))
+      (or formatted text)))
 
-      ;;    (when (eq t lyskom-last-text-format-flags)
-      ;;      (lyskom-signal-reformatted-text
-      ;;       (if content-type
-      ;;           (lyskom-format 'reformat-generic content-type)
-      ;;         nil)))
-
-      (cond (formatted formatted)
-            (t (let ((tmp (if kom-text-properties
-                              (lyskom-button-transform-text
-                               (lyskom-fill-message text)
-                               text-stat)
-                            (lyskom-fill-message text))))
-                 (when (and kom-smileys
-                            (fboundp 'smiley-region))
-                   (add-text-properties 0 
-                                        (length tmp) 
-                                        '(special-insert lyskom-postprocess-text)
-                                        tmp))
-                 (when (fboundp 'latin-unity-remap-region)
-                   (add-text-properties 0
-                                        (length tmp)
-                                        '(special-insert lyskom-unity-text)
-                                        tmp))
-                 tmp)))))
+  (defun lyskom-format-plaintext (text text-stat)
+    (let ((tmp (if kom-text-properties
+                   (lyskom-button-transform-text
+                    (lyskom-fill-message text)
+                    text-stat)
+                 (lyskom-fill-message text))))
+      (when (and kom-smileys (fboundp 'smiley-region))
+        (add-text-properties 0 (length tmp) 
+                             '(special-insert lyskom-postprocess-text) tmp))
+      (when (fboundp 'latin-unity-remap-region)
+        (add-text-properties 0 (length tmp)
+                             '(special-insert lyskom-unity-text) tmp))
+      tmp))
 
   (defun lyskom-postprocess-text (start end &rest args)
     (condition-case nil

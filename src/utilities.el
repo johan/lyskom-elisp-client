@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.151 2004-01-01 22:01:39 byers Exp $
+;;;;; $Id: utilities.el,v 44.152 2004-01-26 21:51:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.151 2004-01-01 22:01:39 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.152 2004-01-26 21:51:10 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -663,6 +663,7 @@ non-negative integer and 0 means the given text-no."
   "Return non-nil if the COMMAND should prompt for a text number."
   (let ((check (assq command kom-text-no-prompts)))
     (if check (cdr check) (memq command lyskom-text-no-prompts-defaults))))
+
 
 (defun lyskom-read-text-no-prefix-arg (prompt &optional always-prompt
 				       default constraint)
