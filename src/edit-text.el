@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.13 1997-06-29 14:19:40 byers Exp $
+;;;;; $Id: edit-text.el,v 44.14 1997-07-02 17:46:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.13 1997-06-29 14:19:40 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.14 1997-07-02 17:46:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -340,7 +340,10 @@ Commands:
               ;;
 
 	      (setq message
-                    (lyskom-send-transform-text (lyskom-edit-extract-text)))
+                    (if (fboundp lyskom-send-text-transform-function)
+                        (funcall lyskom-send-text-transform-function
+                                 (lyskom-edit-extract-text))
+                      (lyskom-edit-extract-text)))
 
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
@@ -381,7 +384,7 @@ Commands:
     (lyskom-unknown-header
      (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
 
-
+(eval-when-compile (defvar ispell-dictionary nil))
 
 (defun lyskom-ispell-text ()
   "Check spelling of the text body. 
@@ -396,6 +399,7 @@ kom-ispell-dictionary is the dictionary to use to check spelling."
            (point))))
     (let ((ispell-dictionary kom-ispell-dictionary)
           (new-ispell (not (string= "svenska8" ispell-dictionary))))
+      (ignore ispell-dictionary)
       (if new-ispell
           (ispell-kill-ispell t))
       (prog1
@@ -419,6 +423,7 @@ text is a member of some recipient of this text."
          (me (save-excursion (set-buffer lyskom-buffer)
                              lyskom-pers-no))
          (num-me 0))
+    (ignore text-stat)                  ; Have no idea if its ever used...
 
     ;;
     ;; List all texts this text is a comment to
@@ -568,33 +573,34 @@ text is a member of some recipient of this text."
 
     extra-headers))
     
-(defvar lyskom-send-experimental t)
+(defun lyskom-send-enriched (message)
+  (condition-case err
+      (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
+                                           "lyskom-enriched" 
+                                           t)))
+        (unwind-protect
+            (save-excursion
+              (set-buffer buf)
+              (insert message)
+              (goto-char (point-min))
+              (format-encode-buffer 'text/enriched)
+              (goto-char (point-min))
+              (search-forward "\n\n")
+              (if (and (not (string= (buffer-substring (point)
+                                                       (point-max)) message))
+                       (save-excursion
+                         (set-buffer lyskom-buffer)
+                         (lyskom-j-or-n-p 
+                          (lyskom-get-string 'send-formatted) t)))
+                  (concat "enriched:\n" (buffer-string))
+                message))
+          (kill-buffer buf)))
+    (error (if (lyskom-j-or-n-p
+                (lyskom-format (lyskom-get-string 'transform-error)
+                               (error-message-string err)))
+               message
+             (signal 'lyskom-edit-text-abort nil)))))
 
-(defun lyskom-send-transform-text (message)
-  (if lyskom-send-experimental
-      (condition-case nil
-          (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
-                                               "lyskom-enriched" 
-                                               t)))
-            (unwind-protect
-                (save-excursion
-                  (set-buffer buf)
-                  (insert message)
-                  (goto-char (point-min))
-                  (format-encode-buffer 'text/enriched)
-                  (goto-char (point-min))
-                  (search-forward "\n\n")
-                  (if (and (not (string= (buffer-substring (point)
-						      (point-max)) message))
-                           (save-excursion
-                             (set-buffer lyskom-buffer)
-                             (lyskom-j-or-n-p 
-                              (lyskom-get-string 'send-formatted) t)))
-                      (concat "enriched:\n" (buffer-string))
-                    message))
-              (kill-buffer buf)))
-        (error message))
-    message))
 
 
 (defun kom-edit-quit ()

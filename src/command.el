@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.4 1997-02-07 18:07:12 byers Exp $
+;;;;; $Id: command.el,v 44.5 1997-07-02 17:45:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -86,7 +86,7 @@
 
 (defsubst lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (condition-case arg
+  (condition-case nil
       (lyskom-get-string command 'lyskom-command)
     (error nil)))
 

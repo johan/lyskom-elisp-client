@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.7 1997-06-29 14:20:00 byers Exp $
+;;;;; $Id: option-edit.el,v 44.8 1997-07-02 17:47:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -25,22 +25,23 @@
 ;;;; ================================================================
 ;;;; ================================================================
 ;;;;
-;;;; File: <File name>
+;;;; File: option-edit.el
 ;;;;
-;;;; <Description>
+;;;; Customization for LysKOM
 ;;;;
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.7 1997-06-29 14:20:00 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.8 1997-07-02 17:47:01 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
 ;;;
 
 (require 'widget)
-(require 'wid-edit)
+(autoload 'widget-at "wid-edit")
+
 
 ;;; ======================================================================
 ;;; Global variables
@@ -59,6 +60,8 @@
     section
     (look-and-feel-misc bold centered)
     section
+    "\n"
+    [kom-default-language]
     "\n"
     [kom-idle-hide]
     [kom-show-where-and-what]
@@ -142,9 +145,6 @@
     [kom-url-viewer-preferences]
     [kom-mosaic-command]
     [kom-netscape-command]
-    [kom-lynx-terminal]
-    [kom-lynx-terminal-comand]
-    [kom-lynx-xterm-command]
 
     "\n\n"
     section
@@ -290,6 +290,13 @@ customize buffer but do not save them to the server."
   (interactive)
   (message (lyskom-get-string 'customize-help)))
 
+(defun lyskom-widget-click (event)
+  (interactive "e")
+  (let ((pos (event-point event)))
+    (if (and pos (widget-at pos))
+        (widget-button-click event)
+      (popup-mode-menu))))
+
 (defun kom-customize ()
   "Open the customize buffer"
   (interactive)
@@ -309,7 +316,7 @@ customize buffer but do not save them to the server."
              (let ((inhibit-read-only t))
                (erase-buffer))
              (use-local-map lyskom-customize-map)
-             (condition-case err
+             (condition-case nil
                  (copy-face 'kom-active-face 'widget-button-face))
              (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
              (widget-setup)
@@ -355,7 +362,7 @@ customize buffer but do not save them to the server."
                                     lyskom-widgets)))))
 
 (defun lyskom-custom-insert-bold (s e)
-  (add-text-properties s e (list 'face 'bold)))
+  (add-text-properties s e (list 'face 'bold 'end-closed nil)))
 
 (defun lyskom-custom-insert-centered (s e)
   (save-excursion (goto-char s)
@@ -383,6 +390,7 @@ customize buffer but do not save them to the server."
     (kom-list-membership-in-window (open-window))
     (kom-customize-format (choice ((const (long-format long))
                                    (const (short-format short)))))
+    (kom-default-language (language-choice))
     (kom-user-prompt-format (string))
     (kom-user-prompt-format-executing (string))
     (kom-cite-string (string))
@@ -492,6 +500,7 @@ customize buffer but do not save them to the server."
     (open-window . lyskom-open-window-widget)
     (command . lyskom-command-widget)
     (person . lyskom-person-widget)
+    (language-choice . lyskom-language-widget)
     (file . lyskom-file-widget)
 ))
 
@@ -504,6 +513,7 @@ customize buffer but do not save them to the server."
          (help-sym (intern (concat (symbol-name variable) "-help")))
          (value (save-excursion (set-buffer lyskom-buffer)
                                 (symbol-value variable))))
+    (ignore value help-sym dummy)       ; Are they ever used?
     (setq spec 
           (cons (car spec)
                 (append
@@ -531,7 +541,7 @@ customize buffer but do not save them to the server."
                                        "%s"
                                        ""
                                        "?"))
-                           :format "%[[%T]%]\n%D"))
+                           ':format "%[[%T]%]\n%D"))
         (error (widget-insert "\n")))
         widget)))
 
@@ -571,7 +581,7 @@ customize buffer but do not save them to the server."
 
 
 (defun lyskom-file-widget (type &optional args propl)
-  (list 'file ':format "%[%t%] %v" :size 0))
+  (list 'file ':format "%[%t%] %v" ':size 0))
 
 (defun lyskom-person-widget (type &optional args propl)
   (list 'lyskom-name))
@@ -588,15 +598,29 @@ customize buffer but do not save them to the server."
         ':tag (lyskom-custom-string (elt args 0))
         ':value (elt args 1)))
 
+(defun lyskom-language-widget (type &optional args propl)
+  (list 'menu-choice
+        ':format "%[%t%] %v"
+        ':case-fold t
+        ':args
+        (mapcar
+         (function
+          (lambda (x)
+            (list 'item
+                  ':tag (elt x 1)
+                  ':format "%t"
+                  ':value (elt x 0))))
+         lyskom-languages)))
+
 (defun lyskom-url-viewer-widget (type &optional args propl)
   (list 'menu-choice 
         ':format "%[%v%]\n"
         ':case-fold t
         ':args
         (list (list 'item
-                    :tag (lyskom-custom-string 'no-viewer)
-                    :format "%t"
-                    :value nil)
+                    ':tag (lyskom-custom-string 'no-viewer)
+                    ':format "%t"
+                    ':value nil)
               (list 'item 
                     ':tag (lyskom-custom-string 'default-viewer)
                     ':format "%t"
@@ -1087,12 +1111,12 @@ customize buffer but do not save them to the server."
   (let* ((value (widget-get widget ':value))
          (spec  (assq value (widget-get widget ':args))))
     (cond ((eq escape ?D)
-           (if (widget-get widget :indent)
-               (insert-char ?  (widget-get widget :indent)))
+           (if (widget-get widget ':indent)
+               (insert-char ?  (widget-get widget ':indent)))
            (insert (format (elt spec 1) (elt spec 2))))
           ((eq escape ?T)
-           (if (widget-get widget :indent)
-               (insert-char ?  (widget-get widget :indent)))
+           (if (widget-get widget ':indent)
+               (insert-char ?  (widget-get widget ':indent)))
            (insert (elt spec 3)))
           (t (widget-default-format-handler widget escape)))))
 

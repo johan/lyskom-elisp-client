@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.30 1997-07-02 11:12:28 petli Exp $
+;;;;; $Id: lyskom-rest.el,v 44.31 1997-07-02 17:46:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.30 1997-07-02 11:12:28 petli Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.31 1997-07-02 17:46:50 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1324,44 +1324,47 @@ Note that it is not allowed to use deferred insertions in the text."
 ;;; Author: David K}gedal
 ;;; This should be considered an experiment
 
-(defvar lyskom-format-experimental '(html enriched))
-
 (lyskom-external-function w3-fetch)
 (lyskom-external-function w3-region)
 
 (defun lyskom-format-text-body (text)
   "Format a text for insertion. Does parsing of special markers in the text."
-  ;; This function is probably not written as it should
-  (cond
-   ((and (string-match "\\`html:" text)
-         (memq 'html lyskom-format-experimental)
-         (condition-case e (require 'w3) (error nil)))
-        (let ((tmpbuf (generate-new-buffer "lyskom-html")))
-          (unwind-protect
-              (save-excursion
-                (set-buffer tmpbuf)
-                (insert (substring text 5))
-                (w3-region (point-max) (point-min))
-                (let ((tmp (buffer-string)))
-                  (set-text-properties 0 (length tmp) '(end-closed nil) tmp)
-                  tmp))
-            (kill-buffer tmpbuf))))
-       ((and (fboundp 'format-decode-buffer)
-             (string-match "\\`enriched:" text)
-             (memq 'enriched lyskom-format-experimental))
-        (let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
-          (unwind-protect
-              (save-excursion
-                (set-buffer tmpbuf)
-                (insert (substring text 10))
-                (format-decode-buffer)
-                (lyskom-button-transform-text (buffer-string))
-                ;; (substring (buffer-string) 0 -1) ; Remove the \n
-                )
-            (kill-buffer tmpbuf))))
-       (t (if kom-text-properties
-              (lyskom-button-transform-text text)
-            text))))
+  (string-match "^\\(\\S-+\\):" text)
+  (let* ((sym (and (match-beginning 1)
+                   (intern (match-string 1 text))))
+         (fn (cdr (assq sym lyskom-format-special)))
+         (formatted (and fn (funcall fn text))))
+
+    (cond (formatted formatted)
+          (kom-text-properties (lyskom-button-transform-text text))
+          (t text))))
+
+(defun lyskom-format-html (text)
+  (condition-case e (require 'w3) (error nil))
+  (let ((tmpbuf (generate-new-buffer "lyskom-html")))
+    (unwind-protect
+        (save-excursion
+          (set-buffer tmpbuf)
+          (insert (substring text 5))
+          (w3-region (point-max) (point-min))
+          (let ((tmp (buffer-string)))
+            (set-text-properties 0 (length tmp) '(end-closed nil) tmp)
+            tmp))
+      (kill-buffer tmpbuf))))
+
+(defun lyskom-format-enriched (text)
+  (if (not (fboundp 'format-decode-buffer))
+      nil
+    (let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
+      (unwind-protect
+          (save-excursion
+            (set-buffer tmpbuf)
+            (insert (substring text 10))
+            (format-decode-buffer)
+            (lyskom-button-transform-text (buffer-string))
+            ;; (substring (buffer-string) 0 -1) ; Remove the \n
+            )
+        (kill-buffer tmpbuf)))))
 
 
 ;;; ============================================================
@@ -2135,7 +2138,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 ;  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
 ;  (setq lyskom-apo-timeout-log
 ;        (cons lyskom-apo-timeout lyskom-apo-timeout-log))
-;  (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
+  (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
   (let ((old-match-data (match-data))
 	;; lyskom-filter-old-buffer is also changed when starting to edit
 	;; in function lyskom-edit-text.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.10 1997-06-29 14:19:33 byers Exp $
+;;;;; $Id: commands2.el,v 44.11 1997-07-02 17:46:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.10 1997-06-29 14:19:33 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.11 1997-07-02 17:46:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -46,8 +46,7 @@
 (def-kom-command kom-membership ()
   "Show memberships last visited, priority, unread and name."
   (interactive)
-  (let ((buf (current-buffer))
-	(buffer (lyskom-get-buffer-create 'list-membership
+  (let ((buffer (lyskom-get-buffer-create 'list-membership
                                           (concat (buffer-name 
                                                    (current-buffer))
                                                   "-membership")
@@ -629,6 +628,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 					lyskom-pers-no
 					conf-no))
 	       )
+          (ignore result)
 	  (lyskom-replace-membership membership lyskom-membership)
 	  (if (= conf-no lyskom-current-conf)
 	      (set-read-list-empty lyskom-reading-list))
@@ -1650,3 +1650,20 @@ membership info."
 				       lyskom-errno))))))
 
 
+;;; ============================================================
+;;; Ändra språk
+;;;
+
+(def-kom-command kom-change-language ()
+  "Change the current language in LysKOM"
+  (interactive)
+  (let* ((completion-ignore-case t)
+         (table (mapcar (function (lambda (x) (cons (elt x 1) (elt x 0))))
+                        lyskom-languages))
+         (language (completing-read
+                   (lyskom-get-string 'which-language)
+                   table
+                   nil
+                   t)))
+    (when (lyskom-string-assoc language table)
+      (lyskom-set-language (cdr (lyskom-string-assoc language table))))))

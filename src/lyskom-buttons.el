@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.9 1997-06-29 14:19:52 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.10 1997-07-02 17:46:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -118,7 +118,6 @@ on such functions see the documentation for lyskom-add-button-action."
                    (and parent (widget-get parent 'href)))))
     (cond (href (w3-widget-button-click event))
           (t (lyskom-button-press pos)))))
-
 
 (defun kom-popup-menu (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."

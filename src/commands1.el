@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.20 1997-06-29 14:19:26 byers Exp $
+;;;;; $Id: commands1.el,v 44.21 1997-07-02 17:45:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.20 1997-06-29 14:19:26 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.21 1997-07-02 17:45:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1506,20 +1506,22 @@ If MARK-NO == 0, review all marked texts."
 						 (time->sec  time))))
 		       (error nil))))))
             lyskom-times)
-    (let ((tmp (lyskom-nameday time)))
-      (when tmp
-        (lyskom-insert "\n")
-        (lyskom-insert tmp))))
+;;; +++ FIXME specialhack för svenska. Borde det generaliseras?
+    (when (eq lyskom-language 'sv)
+      (let ((tmp (lyskom-nameday time)))
+        (when tmp
+          (lyskom-insert "\n")
+          (lyskom-insert tmp)))))
   (lyskom-insert "\n"))
 
 
-(def-kom-command kom-display-calendar ()
-  "Nothing yet"
-  (interactive)
-  (let* ((time (blocking-do 'get-time))
-         (nameday (lyskom-nameday time))
-         (special (lyskom-special-date time)))
-    ))
+;(def-kom-command kom-display-calendar ()
+;  "Nothing yet"
+;  (interactive)
+;  (let* ((time (blocking-do 'get-time))
+;         (nameday (lyskom-nameday time))
+;         (special (lyskom-special-date time)))
+;    ))
     
 (defvar lyskom-nameday-alist
   '((1 . ((1 . ())
