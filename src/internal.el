@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 44.2 1998-01-04 00:31:42 davidk Exp $
+;;;;; $Id: internal.el,v 44.3 1998-01-04 14:42:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.2 1998-01-04 00:31:42 davidk Exp $\n"))
+	      "$Id: internal.el,v 44.3 1998-01-04 14:42:14 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -358,8 +358,9 @@ Send calls from queues with higher priority first, and make sure that at
 most lyskom-max-pending-calls are sent to the server at the same time."
   (catch 'done
     (let ((i 9))
-      (while (< lyskom-number-of-pending-calls
-		lyskom-max-pending-calls)
+      (while (and lyskom-ok-to-send-new-calls
+		  (< lyskom-number-of-pending-calls
+		     lyskom-max-pending-calls))
 	(while (lyskom-queue-isempty (aref lyskom-output-queues i))
 	  (-- i)
 	  (if (< i 0) (throw 'done nil)))
