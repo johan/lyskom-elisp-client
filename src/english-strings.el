@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.77 2000-02-16 15:10:44 byers Exp $
+;;;;; $Id: english-strings.el,v 44.78 2000-02-25 23:47:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.77 2000-02-16 15:10:44 byers Exp $"))
+              "$Id: english-strings.el,v 44.78 2000-02-25 23:47:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2143,6 +2143,7 @@ Select whether to execute command or keyboard macro.")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (all)")
     (netscape-viewer . "Netscape Navigator (all)")
+    (windows-viewer       . "Windows default or Netscape (all)")
     (emacs-w3-viewer . "Emacs W3-mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer . "Emacs Dired (FTP)")

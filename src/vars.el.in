@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.92 2000-02-16 14:53:05 byers Exp $
+;;;;; $Id: vars.el.in,v 44.93 2000-02-25 23:47:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.92 2000-02-16 14:53:05 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.93 2000-02-25 23:47:42 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -720,8 +720,8 @@ BUTTON-ARG-MATCH is the number of the expression to used as the button argument.
 FACE is the text face to apply to the button, or nil to use the default face.")
 
 (def-kom-var kom-url-viewer-preferences '("emacs"
-				    "netscape"
-				    "w3")
+                                          "windows"
+                                          "w3")
 
   "*LysKOM will attempt to use URL viewers in the order specified here.
 kom-url-managers is a list of all available viewers. Note that the elements
@@ -746,6 +746,10 @@ to some URL viewers."
 			    "\\(http\\|gopher\\|ftp\\)"
 			    "Emacs W3" 
 			    lyskom-view-url-w3)
+                           ("windows"
+                            ".*"
+                            "Windows web brower"
+                            lyskom-view-url-windows)
 			   ("netscape"
 			    ".*"
 			    "Netscape Navigator"

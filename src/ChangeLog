@@ -1,3 +1,14 @@
+2000-02-26    <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-ispell-dictionary-widget): Protect this
+	agains ispell not being available or failing to load. 
+
+2000-02-21    <davby@ida.liu.se>
+
+	* vars.el.in (kom-url-managers): Added "windows" url manager.
+	(kom-url-viewer-preferences): Use "windows" instead of "netscape"
+	as default url manager.
+
 2000-02-20    <davby@ida.liu.se>
 
 	* lyskom-buttons.el (lyskom-view-url-netscape): Added more
