@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.3 1996-10-24 09:48:07 byers Exp $
+;;;;; $Id: prioritize.el,v 44.4 1996-10-28 18:06:08 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.3 1996-10-24 09:48:07 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.4 1996-10-28 18:06:08 davidk Exp $\n"))
 
 
 
@@ -197,7 +197,7 @@
 
 
 (defun lyskom-prioritize-move-entry (from to &optional dontset forceup)
-  (let ((buffer-read-only nil))
+  (let ((inhibit-read-only t))
     (if (/= from to)
         (let ((entry (lyskom-prioritize-get-entry-from-no from))
               (after nil)
@@ -502,7 +502,7 @@ the same as the entry above it, but to not move it."
                    0 255
                    (lyskom-get-string 'reprioritize-to)
                    t))
-         (buffer-read-only nil)
+         (inhibit-read-only t)
          (where 1)
          (elem nil))
 
@@ -625,7 +625,7 @@ of conferences you are a member of."
                       (lyskom-prioritize-sort-entries)
                       (lyskom-prioritize-redraw-buffer)
                       (goto-char (point-max))
-                      (let ((buffer-read-only nil))
+                      (let ((inhibit-read-only t))
                         (insert "  "))
                       (lyskom-prioritize-goto-entry
                        (lyskom-prioritize-get-entry-from-no 1))))))))
