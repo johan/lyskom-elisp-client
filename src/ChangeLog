@@ -1,3 +1,8 @@
+1999-12-07  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): lyskom-keys was called
+	with at string at a couple of places.
+
 1999-12-05  David Byers  <davby@ida.liu.se>
 
 	* Makefile (SOURCES): Added mship-edit.el.

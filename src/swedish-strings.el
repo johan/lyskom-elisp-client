@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.97 1999-12-05 22:42:07 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.98 1999-12-07 10:29:38 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.97 1999-12-05 22:42:07 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.98 1999-12-07 10:29:38 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1829,8 +1829,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "l p") 'kom-list-persons)
   (define-key lyskom-sv-mode-map (kbd "l r") 'kom-list-re)
   (define-key lyskom-sv-mode-map (kbd "l s") 'kom-membership)
-  (define-key lyskom-sv-list-prefix (lyskom-keys "ä") 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix (lyskom-keys "Ä") 'kom-list-summary)
+  (define-key lyskom-sv-list-prefix (lyskom-keys 'ä) 'kom-list-summary)
+  (define-key lyskom-sv-list-prefix (lyskom-keys 'Ä) 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l {") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
@@ -1851,8 +1851,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "f u") 'kom-get-appreciation)
   (define-key lyskom-sv-mode-map (kbd "f s") 'kom-get-abuse)
   (define-key lyskom-sv-mode-map (kbd "f t") 'kom-move-text)
-  (define-key lyskom-sv-filter-get-prefix (lyskom-keys "ä") 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix (lyskom-keys "Ä") 'kom-filter-subject)
+  (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'ä) 'kom-filter-subject)
+  (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'Ä) 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f {") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
