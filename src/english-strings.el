@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.85 2000-05-26 14:35:16 byers Exp $
+;;;;; $Id: english-strings.el,v 44.86 2000-05-27 15:01:38 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.85 2000-05-26 14:35:16 byers Exp $"))
+              "$Id: english-strings.el,v 44.86 2000-05-27 15:01:38 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -611,6 +611,7 @@ The message you were sending to %#1M was:
     (you-have-read-everything . "No news (is bad news).\n")
     (total-unreads . "\nYou have %#1d unread text%#1?d%[%]%[s%] texts in %#2M.\n")
     (list-unread-with-n-unread . "Listing conferences with at least %#1d unread.\n")
+    (list-unread-with-at-most-n-unread . "Listing conferences with at most %#1d unread.\n")
     (waiting-for-anything .
      "You are waiting for a text in any conference.\n")
     (waiting-higher-than . 

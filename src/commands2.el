@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.66 2000-05-26 10:49:45 byers Exp $
+;;;;; $Id: commands2.el,v 44.67 2000-05-27 15:01:35 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.66 2000-05-26 10:49:45 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.67 2000-05-27 15:01:35 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -736,16 +736,19 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                    (t nil)))
          (sum 0)
          (mship-confs (and (numberp num-arg)
-                           (< num-arg 1)
-                           (delq nil 
+                           (= num-arg 0)
+                           (delq nil
                                  (mapcar (lambda (el)
                                            (when (not (membership-type->passive
                                                        (membership->type el)))
                                              (membership->conf-no el)))
                                          lyskom-membership))))
          (nconfs 0))
-    (when num-arg
+    (cond
+     ((> num-arg 0)
       (lyskom-format-insert 'list-unread-with-n-unread num-arg))
+     ((< num-arg 0)
+      (lyskom-format-insert 'list-unread-with-at-most-n-unread (- num-arg))))
     (mapcar
      (function
       (lambda (info)
@@ -755,9 +758,13 @@ send. If DONTSHOW is non-nil, don't display the sent message."
           (setq mship-confs (delq (conf-stat->conf-no conf-stat) mship-confs))
           (cond
            ((eq (read-info->type info) 'CONF)
-            (if (or (not num-arg)
-                    (>= un num-arg))
-                (lyskom-insert 
+            (if (or (not num-arg)		; no prefix argument
+                    (and (>= num-arg 0)		; positive numeric argument
+			 (>= un num-arg))	;  less than number of unreads
+		    (and (not (= un 0))		; unreads present,
+			 (<= num-arg -1)	;  negative numeric argument,
+			 (<= un (- num-arg))))	;  at most -argument unreads
+                (lyskom-insert
                  (if (and (boundp 'lyskom-special-conf-name)
                           (stringp lyskom-special-conf-name)
                           (string-match lyskom-special-conf-name name))
@@ -767,7 +774,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                   nconfs (1+ nconfs)))))))
      (read-list->all-entries lyskom-to-do-list))
 
-    (mapcar 
+    (mapcar
      (lambda (conf-no)
        (lyskom-format-insert 'you-have-no-unreads conf-no))
        mship-confs)

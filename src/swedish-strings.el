@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.112 2000-05-26 14:35:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.113 2000-05-27 15:01:40 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.112 2000-05-26 14:35:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.113 2000-05-27 15:01:40 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -599,6 +599,7 @@ Meddelandet du försökte sända till %#1M var:
     (you-have-read-everything . "Du har sett alla nyheter.\n")
     (total-unreads . "\nDu har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2d möte%#2?d%[%]%[n%].\n")
     (list-unread-with-n-unread . "Visar endast möten med minst %#1d olästa.\n")
+    (list-unread-with-at-most-n-unread . "Visar endast möten med som mest %#1d olästa.\n")
     (waiting-for-anything .
 			  "Du väntar på ett inlägg i vilket möte som helst.\n")
     (waiting-higher-than . 

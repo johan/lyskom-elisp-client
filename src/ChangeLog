@@ -1,3 +1,13 @@
+2000-05-27  Johan Sundström  <jhs@lysator.liu.se>
+
+	* commands2.el (kom-list-news): Now understands negative numeric
+	arguments as signifying "list conferences with at most |argument|
+	and at least one unread message in them". A prefix argument of
+	zero still lists all conferences.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	the string list-unread-with-at-most-n-unread.
+
 2000-05-26  David Byers  <davby@ida.liu.se>
 
 
