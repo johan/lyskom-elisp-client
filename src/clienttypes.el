@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 35.2 1991-09-15 10:06:34 linus Exp $
+;;;;; $Id: clienttypes.el,v 35.3 1991-09-16 18:43:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 35.2 1991-09-15 10:06:34 linus Exp $\n"))
+	      "$Id: clienttypes.el,v 35.3 1991-09-16 18:43:55 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -233,7 +233,7 @@ RLIST is a list of read-info.
 Entries of the type REVIEW, REVIEW-TREE or REVIEW-MARK are not changed
 except if they were empty in which case they are removed.
 Returns the modified RLIST.
-TEXT-NO may be nil, in which case only read-infos on RLIST are removed."
+TEXT-NO may be nil, in which case only empty read-infos on RLIST are removed."
   (let* ((prev rlist)			;"Previous" cons-celll
 	 (curr (cdr rlist)))		;Current cons-cell
     (while curr

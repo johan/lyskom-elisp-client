@@ -1,5 +1,7 @@
 Mon Sep 16 18:10:59 1991  Linus Tolke Y  (linus at lysator)
 
+	* clienttypes.el (read-list-delete-text): Justerat doc-str{ngen.
+
 	* prioritize.el (lyskom-prioritize-1,lyskom-prioritize-2): Fixat
 	  s} att ledtexterna l{ggs in med lyskom-insert (blir
 	  iso->swascii-konverterade.
