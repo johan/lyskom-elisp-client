@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.0 1994-01-06 01:56:45 linus Exp $
+;;;;; $Id: commands1.el,v 38.0.2.1 1995-01-07 12:27:30 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.0 1994-01-06 01:56:45 linus Exp $\n"))
+	      "$Id: commands1.el,v 38.0.2.1 1995-01-07 12:27:30 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -958,36 +958,31 @@ If optional argument is non-nil then dont ask for confirmation."
   "Change presentation for a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-change-presentation)
-  (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no (lyskom-get-string 'what-to-change-pres-you)
-				  'all t)))
-     (if (zerop no)
-	 (setq no lyskom-pers-no))
-     (blocking-do 'get-conf-stat no))
-   'pres))
+  (condition-case error
+      (lyskom-change-pres-or-motd-2
+       (let ((no (lyskom-read-conf-no 
+		  (lyskom-get-string 'what-to-change-pres-you)
+		  'all t)))
+	 (if (zerop no)
+	     (setq no lyskom-pers-no))
+	 (blocking-do 'get-conf-stat no))
+       'pres)
+    (quit (lyskom-end-of-command))))
 
 
 (defun kom-change-conf-motd ()
   "Change motd for a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-change-conf-motd)
-  (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
-				  'all t)))
-     (if (zerop no)
-	 (setq no lyskom-pers-no))
-     (blocking-do 'get-conf-stat no))
-   'motd))
-
-
-;;; Obsolet
-(defun lyskom-change-presentation-or-motd (conf-no type)
-  "Change the presentation or motd of CONF-NO.
-TYPE is either 'pres or 'motd, depending on what should be changed."
-  (if (zerop conf-no)
-      (setq conf-no lyskom-pers-no))
-  (initiate-get-conf-stat 'main 'lyskom-change-pres-or-motd-2 
-			  conf-no type))
+  (condition-case error
+      (lyskom-change-pres-or-motd-2
+       (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
+				      'all t)))
+	 (if (zerop no)
+	     (setq no lyskom-pers-no))
+	 (blocking-do 'get-conf-stat no))
+       'motd)
+    (quit (lyskom-end-of-command))))
 
 
 (defun lyskom-change-pres-or-motd-2 (conf-stat type)
@@ -995,8 +990,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 TYPE is either 'pres or 'motd, depending on what should be changed."
   (cond
    ((null conf-stat)			;+++ annan felhantering
-    (lyskom-insert-string 'cant-get-conf-stat)
-    (lyskom-end-of-command))
+    (lyskom-insert-string 'cant-get-conf-stat))
    ((or lyskom-is-administrator
 	(lyskom-member-p (conf-stat->supervisor conf-stat))
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
