@@ -5,27 +5,30 @@
 (require 'lyskom)
 
 (defvar lyskom-prof-template "\
-  text:       	       [text]
-  text-stat:  	       [text-stat]
-  conf-stat:  	       [conf-stat]
-  uconf-stat: 	       [uconf-stat]
-  pers-stat:           [pers-stat]
-  static-session-info: [static-session-info]
-  pending calls:       [pending-calls]
 
- Queues  0: [queuelen-0]  [queuenames-0]
-	 1: [queuelen-1]  [queuenames-1]
-         2: [queuelen-2]  [queuenames-2]
-         3: [queuelen-3]  [queuenames-3]
-         4: [queuelen-4]  [queuenames-4]
-         5: [queuelen-5]  [queuenames-5]
-         6: [queuelen-6]  [queuenames-6]
-         7: [queuelen-7]  [queuenames-7]
-         8: [queuelen-8]  [queuenames-8]
-         9: [queuelen-9]  [queuenames-9]
+ Cache performance
 
-  call: [in-call]
-        [apo] [blocking-do]")
+   text:       	       	[text]
+   text-stat:  	       	[text-stat]
+   conf-stat:  	       	[conf-stat]
+   uconf-stat: 	       	[uconf-stat]
+   pers-stat:           [pers-stat]
+   static-session-info: [static-session-info]
+
+ Server calls
+
+   queue 0: [queuelen-0]  [queuenames-0]
+	 3: [queuelen-3]  [queuenames-3]
+	 6: [queuelen-6]  [queuenames-6]
+	 9: [queuelen-9]  [queuenames-9]
+
+   sent:     [sent]    returned: [returned]   pending:  [pending-calls]
+   async:    [async]    errors:   [errors]
+
+ Lisp functions
+
+   call: [in-call]
+	 [apo] [blocking-do]")
 
 (defvar lyskom-prof-buffer nil)
 (defvar lyskom-prof-fields nil)
@@ -96,24 +99,26 @@
     (format "%d hits, %d misses (%d%%)   prefetch: %d/%d"
 	    hits misses hitrate phits pmisses)))
 
-(mapcar (lambda (cache)
-	  (put cache 'cache-hits 0)
-	  (put cache 'cache-misses 0)
-	  (put cache 'cache-prefetch-hits 0)
-	  (put cache 'cache-prefetch-misses 0)
-	  (let ((cache-fun (intern (concat "cache-get-" (symbol-name cache)))))
-	    (eval
-	     `(defadvice ,cache-fun (after stat activate)
-		"Collect statistics about cache hits."
-		(if lyskom-inhibit-prefetch
-		    (if ad-return-value
-			(cache-prefetch-hit ',cache)
-		      (cache-prefetch-miss ',cache))
-		  (if ad-return-value
-		      (cache-hit ',cache)
-		    (cache-miss ',cache)))
-		ad-return-value))))
-	lyskom-caches-stat)
+(defun lyskom-prof-init-cache ()
+  (mapcar
+   (lambda (cache)
+     (put cache 'cache-hits 0)
+     (put cache 'cache-misses 0)
+     (put cache 'cache-prefetch-hits 0)
+     (put cache 'cache-prefetch-misses 0)
+     (let ((cache-fun (intern (concat "cache-get-" (symbol-name cache)))))
+       (eval
+	`(defadvice ,cache-fun (after stat activate)
+	   "Collect statistics about cache hits."
+	   (if lyskom-inhibit-prefetch
+	       (if ad-return-value
+		   (cache-prefetch-hit ',cache)
+		 (cache-prefetch-miss ',cache))
+	     (if ad-return-value
+		 (cache-hit ',cache)
+	       (cache-miss ',cache)))
+	   ad-return-value))))
+   lyskom-caches-stat))
 
 
 ;;; Queue statistics
@@ -121,6 +126,10 @@
 
 (defvar queue-sizes (make-vector 10 0))
 (defvar queue-names (make-vector 10 nil))
+(defvar lyskom-prof-sent 0)
+(defvar lyskom-prof-returned 0)
+(defvar lyskom-prof-async 0)
+(defvar lyskom-prof-errors 0)
 
 (defun lyskom-send-packet (kom-queue string)
   "Send a packet to the server.
@@ -151,8 +160,9 @@ Send calls from queues with higher priority first, and make sure that at
 most lyskom-max-pending-calls are sent to the server at the same time."
   (catch 'done
     (let ((i 9))
-      (while (< lyskom-number-of-pending-calls
-		lyskom-max-pending-calls)
+      (while (and lyskom-ok-to-send-new-calls
+		  (< lyskom-number-of-pending-calls
+		     lyskom-max-pending-calls))
 	(while (lyskom-queue-isempty (aref lyskom-output-queues i))
 	  (-- i)
 	  (if (< i 0) (throw 'done nil)))
@@ -168,7 +178,10 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 			  (int-to-string lyskom-number-of-pending-calls))
 	  (lyskom-process-send-string
 	   lyskom-proc
-	   (concat (car entry) (cdr entry) "\n"))))))
+	   (concat (car entry) (cdr entry) "\n"))
+	  (++ lyskom-prof-sent)
+	  (fields-replace lyskom-prof-fields 'sent
+			  (int-to-string lyskom-prof-sent))))))
   (sit-for 0))
 
 
@@ -204,6 +217,23 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 		  (int-to-string lyskom-number-of-pending-calls))
   (sit-for 0))
 
+
+;; Server responses
+
+(defadvice lyskom-parse-success (after stat activate)
+  (++ lyskom-prof-returned)
+  (fields-replace lyskom-prof-fields 'returned
+		  (int-to-string lyskom-prof-returned)))
+
+(defadvice lyskom-parse-async (after stat activate)
+  (++ lyskom-prof-async)
+  (fields-replace lyskom-prof-fields 'async
+		  (int-to-string lyskom-prof-async)))
+
+(defadvice lyskom-parse-error (after stat activate)
+  (++ lyskom-prof-errors)
+  (fields-replace lyskom-prof-fields 'errors
+		  (int-to-string lyskom-prof-errors)))
 
 ;; Misc
 
@@ -243,6 +273,11 @@ most lyskom-max-pending-calls are sent to the server at the same time."
   (buffer-disable-undo)
   (erase-buffer)
   (setq lyskom-prof-fields (fields-new lyskom-prof-template))
+  (setq lyskom-prof-sent 0
+	lyskom-prof-returned 0
+	lyskom-prof-async 0
+	lyskom-prof-errors 0)
+  (lyskom-prof-init-cache)
   (if window-system
       (progn
 	(when (not (frame-live-p lyskom-prof-frame))
