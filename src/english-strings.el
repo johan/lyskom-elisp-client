@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.17 1997-06-29 14:19:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.18 1997-07-02 17:46:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.17 1997-06-29 14:19:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.18 1997-07-02 17:46:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -650,7 +650,7 @@ Help: \\[describe-mode] ---")
     (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
     (no-get-text . "You were not allowed to retrieve the article.")
     (unknown-header . "Unknown header")
-
+    (transform-error . "Skicka in oformatterat (%#1s)? ")
 
     ; From view-text.el:
     (line . " /1 line/ ")
@@ -751,7 +751,9 @@ Group message to %#3M\nfrom %#2P (%#4s):
     ; From prioritize.el:
 
     (cant-move-nothing-nowhere . "Can't move nothing anywhere.")
-    (priority-prompt . "New priority: ")
+    (goto-priority-prompt . "New priority: ")
+    (priority-prompt . "Ny prioritet för %#1M: ")
+    (priority-prompt-marked . "Ny prioritet på markerade möten: ")
     (beginning-of-list . "Beginning of list")
     (end-of-list . "End of list")
     (reprioritize-from . "Reprioritize from: ")
@@ -816,6 +818,8 @@ You should set it to a better value.\n")
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
 
+    (conference-no . "<möte %#1d>")
+    (person-no . "<person %#1d>")
     (prompt-several-messages . "(%d messages)")
     (prompt-single-message . "(%d message)")
 
@@ -1003,6 +1007,9 @@ On since %#8s%#9s")
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
+
+    (which-language . "Ändra språk till: ")
+    (send-formatted . "Skicka in som formatterad text? ")
     ))
 
 
@@ -1130,6 +1137,8 @@ On since %#8s%#9s")
     (kom-remote-quit          . "Remote control quit")
 
     (kom-status-session . "Status (of a) session")
+    (kom-customize      . "Customize LysKOM")
+    (kom-change-language . "Change language")
     ))
 
 (lyskom-language-strings lyskom-menu en
@@ -1138,6 +1147,7 @@ On since %#8s%#9s")
     (dont-read . "Jump")
     (write     . "Write")
     (conference . "Conference")
+    (other     . "Other")
     (person    . "User")
     (move      . "Go")
     (info      . "About")
@@ -1435,10 +1445,10 @@ On since %#8s%#9s")
 (lyskom-language-keymap lyskom-edit-mode-map en lyskom-en-edit-mode-map)
 
 
-(if lyskom-customize-map
+(if lyskom-en-customize-map
     nil
-  (setq lyskom-customize-map (make-sparse-keymap))
-  (set-keymap-parent lyskom-customize-map global-map)
+  (setq lyskom-en-customize-map (make-sparse-keymap))
+  (set-keymap-parent lyskom-en-customize-map global-map)
   (define-key lyskom-en-customize-map "\t" 'widget-forward)
   (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
   (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)
@@ -1468,43 +1478,57 @@ On since %#8s%#9s")
     ;;
 
     (buffer-name . "%#1s-configure")
-    (other-window . "Some other window")
-    (other-frame . "Some other frame")
-    (new-frame . "In a new frame")
-    (lyskom-window . "The LysKOM buffer's window")
+
+    (other-window .     "Some other window             ")
+    (other-frame .      "Some other frame              ")
+    (new-frame .        "In a new frame                ")
+    (lyskom-window .    "The LysKOM buffer's window    ")
     (window-on-buffer . "A window displaying the buffer")
-    (on . "On")
+
+    (on . "On ")
     (off . "Off")
-    (yes . "Yes ")
-    (no . "No")
-    (turned-off . "Turned off")
+    (yes . "Yes")
+    (no . "No ")
+
+    (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
     (sound-file . "Audio file")
-    (selected-mark . "Mark")
-    (ask . "Ask every time")
+
+    (selected-mark . "Mark          ")
+    (ask .           "Ask every time         ")
+
     (before . "Before the text")
     (after . "After the text")
     (depth-first . "In comment order")
     (time-order . "I time order")
-    (express-break . "Immediately when created")
-    (break . "After the current comment chain")
-    (no-break . "Efter the current conference")
+
+    (express-break . "Immediately upon creation  ")
+    (break .         "After current comment chain")
+    (no-break .      "Efter current conference   ")
+
     (command . "Command")
     (command-list . "Command list")
     (some-persons . "For some persons")
     (name . "Name")
-    (page-none . "Never")
-    (page-all . "Before every command")
+
+    (page-none . "Never                        ")
+    (page-all .  "Before every command         ")
     (page-some . "Before the following commands")
-    (ask-every-time . "Ask every time")
+
+    (ask-every-time . "Ask every time         ")
     (fixed-priority . "Fixed priority")
-    (messages-in-lyskom-buffer . "In the LysKOM buffer")
-    (discard-messages . "Nowhere - discard them!")
-    (in-named-buffer . "In a named buffer")
-    (everybody-rcpt . "Everybody")
-    (group-rcpt . "The recipient of the last group message")
-    (sender-rcpt . "The sender of the most recent message")
+
+    (messages-in-lyskom-buffer . "In the LysKOM buffer   ")
+    (discard-messages .          "Nowhere - discard them!")
+    (in-named-buffer .           "In a named buffer      ")
+
+    (everybody-rcpt . "Everybody                              ")
+    (group-rcpt .     "The recipient of the last group message")
+    (sender-rcpt .    "The sender of the most recent message  ")
+
     (viewer-program . "Web browser")
+    (no-viewer            . "(ingenting valt)")
+    (default-viewer       . "Browse-URL (all)")
     (netscape-viewer . "Netscape Navigator (all)")
     (emacs-w3-viewer . "Emacs W3-mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
@@ -1512,6 +1536,8 @@ On since %#8s%#9s")
     (emacs-mail-viewer . "Emacs Mail-mode (Mail)")
     (emacs-telnet-viewer . "Emacs Telnet-mode (telnet)")
     (mosaic-viewer . "NCSA Mosaic (all)")
+    (lynx-viewer          . "Lynx (alla)")
+
     (dont-check . "Don't ask for confirmation")
     (check-before-open . "Confirm before writing the text")
     (check-before-send . "Confirm before sending the text")
@@ -1521,7 +1547,7 @@ On since %#8s%#9s")
     (kbd-macro . "Keyboard macro")
     (command . "Command")
     (enter-kbd-macro . "Enter a keybard macro. Finish with %#1s")
-    (long-format . "Show help texts")
+    (long-format .  "Show help texts")
     (short-format . "Hide help texts")
 
     ;;
@@ -1530,11 +1556,22 @@ On since %#8s%#9s")
 
     (lyskom . "Configuration of LysKOM")
     (lyskom-doc . "\\[lyskom-customize-save-and-quit] to save and quit,
+\\[lyskom-customize-save-and-quit] to save and quit,
 \\[lyskom-customize-save] to save without quitting,
-\\[lyskom-customize-quit] to quit without saving.")
+\\[lyskom-customize-quit] to quit without saving.
+\\[widget-forward] moves to the next setting
+\\[widget-button-press] changes the value
+
+Documentation:  [?] Show documentation    [!] Hide documentation
+Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
+
+
+
 
     (section . "------------------------------------------------------------------------------\n")
     (look-and-feel-misc . "Look and feel\n")
+    (window-locations   . "Windows\n")
+    (windows-where      . "How are windows created:\n")
     (reading .            "Reading\n")
     (writing .            "Writing\n")
     (urls .               "URL Management\n")
@@ -1543,7 +1580,78 @@ On since %#8s%#9s")
     (hooks .              "Hook functions\n")
 
     (audio-cues .         "Audio cues\n")
+    (audio-cues-when    . "Issue audio cues when:\n")
     (automatic-replies .  "Automatic replies\n")
+
+
+    (audio-cues-doc . "\
+  The following group of settings control how LysKOM issues audio cues in
+  various situations. The following options are available for each setting:
+
+    Off
+        No audio cue is issued
+
+    A Few Times
+        Emacs will beep one or more times. You have to specify how many
+        times Emacs is to beep.
+
+    Audio File
+        Emacs will attempt to play the specified audio file. The program
+        used to play the file is specified by another setting.")
+    
+
+    (sending-doc . "\
+  The following settings turn on or off certain checks that can be performed
+  before sending an article to the server. The checks are designed to keep
+  you from doing something stupid.
+
+    Confirm multiple recipients
+        If an article or comment has more than one recipient, LysKOM 
+        can ask which of the recipients are relevant. This can either
+        be done before you start writing the article, in which case 
+        LysKOM will post a question for each recipient, or before sending
+        the article to the server, in which case you may confirm all the
+        recipients at once. It is also possible to turn this check off
+        entirely.
+
+    Check membership of commented author
+        When on, LysKOM will check that the author of the comment you are
+        writing is a member of at least one of the recipients of your comment.
+        If not, LysKOM will offer to add the commented authos as a recipient
+        to the comment you are writing.
+
+    Check for unread comments
+        When this is on, LysKOM will check that you have read all the other
+        comments to the article you are commenting before sending your
+        comment to the server. This is supposed to help you avoid duplicating
+        someone else's comment.")
+
+    (windows-doc . "\
+  The following settings control how windows are created in LysKOM. The
+  available options are:
+
+
+    Some other window
+        In another window, but in the same frame as LysKOM. If there only
+        is one window in the frame, a new window will be created (and will
+        be removed when you are finished.)
+
+    Some other frame
+        In a different frame than the one LysKOM is in. If there only is one
+        frame, a new one will be created (and removed when you are finished.)
+
+    In a new frame
+        A new frame is created (and removed when you are finished.)
+
+    The LysKOM buffer's window
+        The LysKOM buffer's window will be used. LysKOM will be restored to
+        the window when you're finished.
+
+    A window displaying the buffer
+        If there is a window anywhere displaying the named buffer, that 
+        window will be used. This might be useful if you always have a
+        particular buffer showing, but don't need it when executing some
+        command.")
 
 
     ;;
@@ -1560,31 +1668,23 @@ On since %#8s%#9s")
   buffer is buried.")
 
     (kom-write-texts-in-window-doc . "\
-  Controls which window is used to write new texts. The possible choices are:
-  the LysKOM buffer's window, which means that new texts are written in the
-  same window in which the LysKOM buffer appears; some other window, which
-  means that a window other than the LysKOM buffer's window is selected (a
-  new window may be created); some other frame, which means that new texts
-  are written in some other already existing frame; and in a new frame, which
-  means that a new frame is created in which to write the text.")
+  Controls which window is used to write new texts. ")
 
     (kom-prioritize-in-window-doc . "\
-  Controls which window is used to prioritize conferences. The possible
-  choices are: the LysKOM buffer's window, which means that new texts are 
-  written in the same window in which the LysKOM buffer appears; some other 
-  window, which means that a window other than the LysKOM buffer's window is 
-  selected (a new window may be created); some other frame, which means that 
-  new texts are written in some other already existing frame; and in a new 
-  frame, which means that a new frame is created in which to write the text.")
+  Controls which window is used to prioritize conferences. ")
+
+    (kom-edit-filters-in-window-doc . "\
+  Controls which window is used for editing filters.")
 
     (kom-customize-in-window-doc . "\
-  Controls which window is used to configure LysKOM. The possible choices
-  are: the LysKOM buffer's window, which means that new texts are written
-  in the same window in which the LysKOM buffer appears; some other window,
-  which means that a window other than the LysKOM buffer's window is selected
-  (a new window may be created); some other frame, which means that new texts
-  are written in some other already existing frame; and in a new frame, which
-  means that a new frame is created in which to write the text.")
+  Controls which window is used to configure LysKOM. ")
+
+    (kom-view-commented-in-window-doc . "\
+  Controls which window is used to show the commented text when commenting.")
+
+    (kom-list-membership-in-window-doc . "\
+  Controls in which window your membership list is shown.")
+
 
     (kom-user-prompt-format-doc . "\
   The format of the LysKOM prompt. Certain control sequences cause special
@@ -1649,7 +1749,7 @@ On since %#8s%#9s")
 
   Before:
 
-    398331 1996-09-24  13:22  /2 rader/ George Berkeley
+    398331 1996-09-24  13:22  /2 lines/ George Berkeley
     Recipient: Philosophy <1226>
     Comment in article 398374 by John Locke
     Subject: 
@@ -1659,7 +1759,7 @@ On since %#8s%#9s")
 
   After:
 
-    398331 1996-09-24  13:22  /2 rader/ George Berkeley
+    398331 1996-09-24  13:22  /2 lines/ George Berkeley
     Recipient: Philosophy <1226>
     Subject: 
     ------------------------------------------------------------
@@ -1674,8 +1774,8 @@ On since %#8s%#9s")
 
   On:
 
-    892343 1996-09-24  19:21  /2 rader/ Tycho Brahe
-    Recipien: Presentation (of nya) Members
+    892343 1996-09-24  19:21  /2 lines/ Tycho Brahe
+    Recipien: Presentation (of new) Members
     Subject: Tycho Brahe
     ------------------------------------------------------------
     Astronomer and discoverer of stars resident on the island of Ven.
@@ -1683,8 +1783,8 @@ On since %#8s%#9s")
 
   Off:
 
-    892343 1996-09-24  19:21  /2 rader/ Tycho Brahe
-    Recipien: Presentation (of nya) Members
+    892343 1996-09-24  19:21  /2 lines/ Tycho Brahe
+    Recipien: Presentation (of new) Members
     Subject: Tycho Brahe
 
     Astronomer and discoverer of stars resident on the island of Ven.
@@ -1692,6 +1792,30 @@ On since %#8s%#9s")
 
   Most people have this turned on.")
 
+    (kom-show-author-at-end-doc . "\
+  When this is turned on the name of the author will be shown at the end
+  of the article text. The name is also shown before the text as usual.
+
+  On (with dashed lines on):
+
+    892342 1996-09-24  19:21  /2 lines/ Claude Shannon
+    Mottagare: Presentation (of new) Members
+    Ärende: Claude Shannon
+    ------------------------------------------------------------
+    Information theoretician
+    (892342) /Claude Shannon/------------------------------
+
+  Off:
+
+    892342 1996-09-24  19:21  /2 lines/ Claude Shannon
+    Recipient: Presentation (of new) Members
+    Subject: Claude Shannon
+    ------------------------------------------------------------
+    Information theoretician
+    (892342) -----------------------------------
+
+  If dashed lines are off the author's name will be shown as in this
+  example, but the dashed lines are natually not displayed.")
 
     (kom-print-number-of-unread-on-entrance-doc . "\
   Determines whether the number of unread articles is shown when entering
@@ -1821,222 +1945,208 @@ On since %#8s%#9s")
 
 
     (kom-permissive-completion-doc . "\
-  Om detta är påslaget så kommer TAB bara att fylla ut namn på inloggade
-  personer när kommandot bara kan utföras på inloggade personer (till
-  exempel Status (för) session och Sända messelande.) Om det är avslaget
-  kommer TAB att fylla ut även med namn på personer som inte är inloggade.")
+  When this is on, TAB will only complete to the names of users that are 
+  logged on when the command being invoked is only applicable to people
+  that are logged on. When off, TAB will complete to names of everyone.")
 
 
     (kom-membership-default-priority-doc . "\
-  Detta bestämmer hur prioriteten på möten man går med i sätts. Om det är
-  en siffra mellan 0 och 255 så kommer nya medlemskap att få den prioriteten.
-  I annat fall kommer klienten att fråga för varje nytt medlemskap vilken
-  prioritet det skall ha.")
-
+  This specifies the how the initial priority of a conference is set when
+  you first become a member. If it is a number between 0 and 255, that is
+  the priority assigned. If it is something else, LysKOM will ask for a 
+  priority every time you become a member of a conference.")
 
     (kom-show-personal-messages-in-buffer-doc . "\
-  Denna inställning bestämmer var personliga, gruppmeddelanden och allmänna
-  meddelanden visas. Meddelanden kan antingen visas i LysKOM-bufferten, 
-  kastas bort helt eller visas i en namngiven buffert.")
-
+  This setting specifies how personal, group and public messages are shown.
+  The messages can be displayed in the LysKOM buffer, simply thrown away or
+  be shown in a named buffer.")
 
     (kom-pop-personal-messages-doc . "\
-  Om personliga meddelanden skall visas i en egen buffert och denna inställning
-  också är påslagen så kommer den bufferten att visas så fort ett meddelande
-  anländer.")
-
-
-    (kom-ding-on-new-letter-doc . "\
-  LysKOM kan signalera när det kommer inlägg till ens brevlåda som någon
-  annan har skrivit. Denna inställning bestämmer hur det signaleras.")
-
-    (kom-ding-on-priority-break-doc . "\
-  När det kommer ett inlägg med högre prioritet än det man för tillfället
-  läser, och LysKOM vill bryta läsordningen för att visa detta inlägg så
-  bestämmer denna inställning hur detta signaleras med ljud.")
-
-
-    (kom-ding-on-wait-done-doc . "\
-  När man har gjort Vänta och det kommer ett inlägg bestämmer denna inställning
-  hur händelsen signaleras med ljud.")
-
-
-    (kom-ding-on-common-messages-doc . "\
-  Denna intällning bestämmer hur ljud används för att signalera att det har
-  kommit ett allmänt meddelande.")
-
-
-    (kom-ding-on-group-messages-doc . "\
-  Denna intällning bestämmer hur ljud används för att signalera att det har
-  kommit ett gruppmeddelande.")
-
-
-    (kom-ding-on-personal-messages-doc . "\
-  Denna intällning bestämmer hur ljud används för att signalera att det har
-  kommit ett personligt meddelande.")
-
-
-    (lyskom-ding-on-no-subject-doc . "\
-  Denna inställning bestämmer hur ljud används för att varna att man har
-  glömt att skriva en ärenderad.")
-
+  If messages are shown in a named buffer and this setting is also on, then
+  LysKOM will display that buffer whenever a message arrives.")
 
     (kom-audio-player-doc . "\
-  Om man vill att LysKOM skall spela ljudfiler i stället för att pipa vid 
-  olika tillfällen måste denna inställning peka ut ett program som klarar
-  att spela ljudfilerna. Programmet skall ta ett argument: namnet på filen
-  som skall spelas.")
-
+  If you want LysKOM to play audio files instead of simply beeping, this
+  setting must specify the name of a program that can play the audio files.
+  The program must takea single argument, the name of the file to play.")
 
     (kom-default-message-recipient-doc . "\
-  Denna inställning bestämmer vem som kommer att vara defaultmottagare för
-  personliga meddelande man skickar. Alternativen som finns är att meddelanden
-  per default är almänna, att avsändaren för det senast mottagna meddelandet
-  skall vara default eller att mottagaren för det senaste gruppmeddelandet
-  (eller avsändaren av det senaste personliga eller almänna meddelandet) skall
-  vara mottagare.")
-
+  This setting controls who will be the default recipient of messages. The
+  default recipient may either be everyone, i.e. a public message; the
+  sender of the most recently received message; or the recipient of the most
+  recently received group message or the sender of the most recently
+  received personal message.")
 
     (lyskom-filter-outgoing-messages-doc . "\
-  Om denna inställning är påslagen så kommer meddelanden som skickas 
-  automatiskt, till exempel automatiska svar och svar på fjärkotrollförsök
-  även att visas som om man hade skickat det manuellt.")
+  If this is on, message that are sent automatically, such as automatic
+  replies and replies to remote control commands will be shown as if you
+  had sent them manually.")
 
     (kom-friends-doc . "\
-  Namnen på personerna i denna lista kommer att visas med ett speciellt 
-  utseende i LysKOM-bufferten.")
+  The users named in this list will be displayed using a special face in
+  the LysKOM buffer.")
 
     (kom-url-viewer-preferences-doc . "\
-  Denna inställning bestämmer vilken WWW-läsare som i första hand skall 
-  användas för att öppna URLer som förekommer i LysKOM. Om den första läsaren 
-  i listan inte klarar den typ av URL som man försöker öppna så används nästa
-  läsare och så vidare.")
+  This setting controls which WWW browser that will be used to open URLs
+  found in LysKOM. If the first browser in the list cannor handle the type
+  of URL being opened, then the next browser is tried, and so on.")
 
     (kom-mosaic-command-doc . "\
-  Denna inställning talar om vilket kommando som skall användas för att starta
-  Mosaic.")
+  This setting specifies the command to use to start NCSA Mosaic.")
 
     (kom-netscape-command-doc . "\
-  Denna inställning anger kommandot för att köra Netscape.")
-
-    (kom-confirm-multiple-recipients-doc . "\
-  När man försöker skriva ett inlägg med mer än en mottagare kan LysKOM be om
-  en bekräftelse att alla mottagare skall vara med. Detta för att man skall
-  undvika att skicka inlägg till mottagare som inte längre är relevanta för
-  inläggets innehåll. Kontrollen kan antingen inte ske alls, ske innan man
-  börjar skriva inlägget eller precis när man skall skicka in det.")
-
-    (kom-check-commented-author-membership-doc . "\
-  Om detta är påslaget kommer LysKOM att kontrollera att författaren av
-  inlägg man kommenterar är medlem i någon av kommentarens mottagare. Om
-  så inte är fallet får man frågan om denne skall läggas till som mottagare.")
+  This setting specifies the command to use to start Netscape.")
 
     (kom-inhibit-typeahead-doc . "\
-  Normalt sparas tangenttryckningar som görs medan klienten är upptagen, och
-  utförs när det blir möjligt. Om denna inställning är avslagen så kommer
-  LysKOM enbart att utföra kommandon som ges när klienten inte arbetar.")
+  Key presses are usually buffered while LysKOM is busy, and are executed
+  as soon as possible. With this setting off, LysKOM discard any key presses
+  received while the client was busy.")
 
     (kom-max-buffer-size-doc . "\
-  Det är möjligt att begränsa LysKOM-buffertens storlek genom att ange hur
-  stor den får bli i den här variabeln. Om bufferten blir för stor kommer
-  information från buffertens början att tas bort.")
+  It is possible to limit the size of the LysKOM buffer by specifying a
+  maximum number of characters in this setting. When the buffer grows
+  beyond this limit, text from the beginning of the buffer is removed.")
 
     (kom-ansaphone-record-messages-doc . "\
-  LysKOM kan \"spela in\" meddelanden som kommer när funktionen för automatiskt
-  svar är påslagen. Denna inställning bestämmer om så sker eller inte.")
+  LysKOM can record messages that arrive when the autoreply feature is on.
+  This setting controls whether messages are recorded or not.")
 
     (kom-ansaphone-show-messages-doc . "\
-  Om denna inställning är påslagen kommer LysKOM att visa inkomna personliga
-  meddelanden även om automatiskt svar är påslaget.")
+  When this setting is on, LysKOM will display incoming messages even if
+  the autoreply feature is turned on.")
 
     (kom-ansaphone-default-reply-doc . "\
-  Autmatsvararen skickar detta meddelande om inget annat meddelande har
-  specificerats via någon annan mekanism.")
+  This is the message sent by the autoreply feature unless a different
+  message has been specified using some other means (and other means are
+  only for careful experts.)")
 
     (kom-remote-control-doc . "\
-  Påslagen innebär att det går att fjärrstyra klienten. Fjärrstyrningen är
-  dock begränsad till vissa personer.")
+  When turned on, it is possible to control the session using remote control
+  commands. Only those users listed below may issue the commands.")
 
     (kom-remote-controllers-doc . "\
-  Personerna i denna lista får fjärrstyra klienten.")
+  The users listed here are premitted to issue remove control commands
+  to your LysKOM session.")
 
     (kom-self-control-doc . "\
-  Om detta är påslaget får användaren som är inloggad styra klienten från
-  en annan session. Detta är ett alternativ till att lägga in sig själv i
-  listan över tillåtna fjärrstyrare.")
+  When this is on, the user who is logged on may issue remote control
+  commands. This is an alternative to adding yourself to the list of 
+  permitted controllers.")
 
     (kom-customize-format-doc . "\
-  Dokumentation till inställningarna kan vara på eller avslagen när 
-  inställningsfönstret öppnas. Dokumentationen kan alltid visas eller
-  gömmas för varje enskild inställning genom att använda frågetecknet
-  eller utropstecknet som står till höger om inställningen")
+  The documentation for the various settings can be visible or hidden when
+  you open the settings buffer. No matter if it starts hidden or visible, the
+  documentation for individual settings can be shown and hidden by using the
+  question mark/exclamation mark to the right of the setting.")
 
+    (kom-default-language-doc . "\
+  Default language to use in LysKOM. If you change this setting the new
+  language will not be applied to the current setting. Use the Change
+  language command to do that.")
 
     ;;
     ;; Tags for variables
     ;;
     
-    (kom-emacs-knows-iso-8859-1-tag . "Emacs förstår ISO-8859-1")
-    (kom-bury-buffers-tag . "Begrav buffertar när man byter LysKOM")
-    (kom-write-texts-in-window-tag . "Skriv texter i")
-    (kom-prioritize-in-window-tag . "Prioritera möten i")
-    (kom-customize-in-window-tag . "Ställ in LysKOM i")
-    (kom-user-prompt-format-tag . "Promptformat")
-    (kom-user-prompt-format-executing-tag . "Promptformat vid körning")
-    (kom-cite-string-tag . "Citatmarkering")
-    (kom-created-texts-are-read-tag . "Läsmarkera skapade texter")
-    (kom-default-mark-tag . "Defaultmarkering")
-    (kom-reading-puts-comments-in-pointers-last-tag . "Kommentarslänkar visas")
-    (kom-dashed-lines-tag . "Streckade linjer kring inläggstexten")
-    (kom-print-number-of-unread-on-entrance-tag . 
-       "Visa antalet olästa när man går till ett möte")
-    (kom-presence-messages-tag . "Närvaromeddelanden på eller av")
-    (kom-presence-messages-in-buffer-tag . "Närvaromeddelanden i LysKOM-bufferten")
-    (kom-show-where-and-what-tag . 
-       "Visa varifrån personer är inloggade och vad de gör")
-    (kom-idle-hide-tag . 
-       "Antal minuter en session får vara inaktiv och ändå visas")
-    (kom-show-footnotes-immediately-tag .
-       "Visa fotnoter omedelbart")
-    (kom-follow-comments-outside-membership-tag .
-       "Följ kommentarskedjor utanför medlemskap")
-    (kom-read-depth-first-tag . "Läsordning")
-    (kom-continuous-scrolling-tag . "Omedelbar scrollning")
-    (kom-deferred-printing-tag . "Fördröjda utskrifter")
-    (kom-higher-priority-breaks-tag . "Läs prioriterade texter")
-    (kom-login-hook-tag . "Kommandon som körs vid login")
-    (kom-do-when-done-tag . "Kommandon som körs efter allt är utläst")
-    (kom-page-before-command-tag . "Rensa skärmen")
-    (kom-permissive-completion-tag . "Petig utfyllnad av namn")
-    (kom-membership-default-priority-tag . "Prioritet för nya medlemskap")
-    (kom-show-personal-messages-in-buffer-tag . "Personliga, grupp och allmänna meddelanden visas")
-    (kom-pop-personal-messages-tag . "Ploppa upp en buffert med personliga meddelanden när de kommer")
-    (kom-ding-on-new-letter-tag . "Pip när det kommer brev")
-    (kom-ding-on-priority-break-tag . "Pip när det kommer prioriterade inlägg")
-    (kom-ding-on-wait-done-tag . "Pip när man har väntat klart")
-    (kom-ding-on-common-messages-tag . "Pip när det kommer allmänna meddelanden")
-    (kom-ding-on-group-messages-tag . "Pip när det kommer gruppmeddelanden")
-    (kom-ding-on-personal-messages-tag . "Pip när det kommer personliga meddelanden")
-    (lyskom-ding-on-no-subject-tag . "Pip när man glömmer att skriva en ärenderad")
-    (kom-audio-player-tag . "Ljudspelarprogram")
-    (kom-default-message-recipient-tag . "Defaultmottagare för meddelanden")
-    (lyskom-filter-outgoing-messages-tag . "Visa automatiska meddelanden")
-    (kom-friends-tag . "Vänner och bekanta")
-    (kom-url-viewer-preferences-tag . "Öppna URLer med följande program")
-    (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic")
-    (kom-netscape-command-tag . "Kommando för att starta Netscape Navigator")
-    (kom-confirm-multiple-recipients-tag . "Bekräfta multipla mottagare")
-    (kom-check-commented-author-membership-tag . "Kontrollerade den kommenterade författarens medlemskap")
-    (kom-inhibit-typeahead-tag . "Buffra tangenttryckningar")
-    (kom-max-buffer-size-tag . "Maximal buffertstorlek")
-    (kom-ansaphone-record-messages-tag . "Spela in meddelanden i automatsvareren")
-    (kom-ansaphone-show-messages-tag . "Visa meddelanden medan automatsvararen är påslagen")
-    (kom-ansaphone-default-reply-tag . "Svarsmeddelande")
-    (kom-remote-control-tag . "Fjärrstyrning")
-    (kom-remote-controllers-tag . "Tillåtna fjärrstyrare")
-    (kom-self-control-tag . "Tillät fjärrstyrning av mig själv")
-    (kom-customize-format-tag . "Visa hjälptextern för inställningar")
+    (kom-emacs-knows-iso-8859-1-tag . "Emacs can display ISO-8859-1:")
+    (kom-bury-buffers-tag . "Bury buffers when changing LysKOM:")
 
+    (kom-customize-in-window-tag       . "LysKOM customization:  ")
+    (kom-write-texts-in-window-tag     . "Author new articles:   ")
+    (kom-prioritize-in-window-tag      . "Prioritize conferences:")
+    (kom-edit-filters-in-window-tag    . "Modify filters:        ")
+    (kom-view-commented-in-window-tag  . "Review comments:       ")
+    (kom-list-membership-in-window-tag . "List membership:       ")
+
+    (kom-user-prompt-format-tag . "Prompt format:")
+    (kom-user-prompt-format-executing-tag . "Prompt format when executing:")
+
+    (kom-higher-priority-breaks-tag . 
+"Read prioritized articles:                       ")
+    (kom-created-texts-are-read-tag . 
+"Automatically read created texts:                ")
+    (kom-default-mark-tag           . 
+"Default mark:                                    ")
+    (kom-print-number-of-unread-on-entrance-tag . 
+"Show number of unread when entering a conference:")
+    (kom-follow-comments-outside-membership-tag .
+"Follow comment chais outside membership:         ")
+    (kom-show-footnotes-immediately-tag .
+"Show footnotes immediately:                      ")
+    (kom-membership-default-priority-tag . 
+"Default priority for new memberships:            ")
+    (kom-dashed-lines-tag . 
+"Dashed lines around the article body:            ")
+    (kom-show-author-at-end-tag .
+"Show the name of the author after the body:      ")
+
+    (kom-reading-puts-comments-in-pointers-last-tag . "Comment links are shown:")
+    (kom-read-depth-first-tag . "Read order:")
+    (kom-deferred-printing-tag . "Delayed display:")
+    (kom-continuous-scrolling-tag . "Continuous scrolling:")
+
+    (kom-presence-messages-tag . 
+"Presence messages on or off:           ")
+    (kom-presence-messages-in-buffer-tag .
+"Presence messages in the LysKOM buffer:")
+    (kom-page-before-command-tag . "Clear the screen:")
+
+    (kom-idle-hide-tag . 
+"Number of minutes of inactivity before session is hidden:      ")
+    (kom-show-where-and-what-tag . 
+"Show where sessions are logged on from and what they are doing:    ")
+
+
+
+    (kom-login-hook-tag . "Commands executed after logging on:")
+    (kom-do-when-done-tag . "Commands to execute after reading everything:")
+    (kom-permissive-completion-tag . "Fussy name completion:")
+    (kom-show-personal-messages-in-buffer-tag . 
+"Where are messages shown: ")
+    (kom-pop-personal-messages-tag . 
+"Pop up message buffer:    ")
+    (kom-default-message-recipient-tag . 
+"Default message recipient:")
+
+    (kom-audio-player-tag . "Audio player program:")
+    (kom-ding-on-new-letter-tag        . "When a letter arrives:             ")
+    (kom-ding-on-priority-break-tag    . "When a prioritized article arrives:")
+    (kom-ding-on-wait-done-tag         . "When done waiting:                 ")
+    (kom-ding-on-common-messages-tag   . "When a public message arrives:     ")
+    (kom-ding-on-group-messages-tag    . "When a group message arrives:      ")
+    (kom-ding-on-personal-messages-tag . "When a personal message arrives:   ")
+    (kom-ding-on-no-subject-tag     .    "When you forget the subject line:  ")
+
+    (lyskom-filter-outgoing-messages-tag . "Show automatic messages:")
+    (kom-friends-tag . "Friends and other special people:")
+    (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
+    (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
+    (kom-netscape-command-tag . "Command to start Netscape Navigator:")
+
+    (kom-cite-string-tag . "Quotation indicator: ")
+    (kom-confirm-multiple-recipients-tag . 
+"Confirm multiple recipients:         ")
+    (kom-check-commented-author-membership-tag . 
+"Check membership of commented author:")
+    (kom-check-for-new-comments-tag . 
+"Check for unread comments:           ")
+
+    (kom-ansaphone-record-messages-tag . 
+"Save messages when auto reply is on:   ")
+    (kom-ansaphone-show-messages-tag . 
+"Display messages when auto reply is on:")
+    (kom-ansaphone-default-reply-tag . "Auto reply message:")
+
+
+    (kom-inhibit-typeahead-tag . "Buffer keypresses:")
+    (kom-max-buffer-size-tag . "Maximum buffer size:")
+
+    (kom-remote-control-tag .     "Remote commands on or off:            ")
+    (kom-self-control-tag .       "Allow me to use remote commands:      ")
+    (kom-remote-controllers-tag . "People allowed to use remove commands:")
+
+    (kom-customize-format-tag . "Show documentation for all settings:")
+    (kom-default-language-tag . "Default language:")
     )
 )
 

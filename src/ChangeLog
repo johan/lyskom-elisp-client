@@ -1,3 +1,35 @@
+Wed Jul  2 15:35:16 1997  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el,english-strings.el: Synkade alla strängar.
+
+	* vars.el.in (lyskom-commands): Lade till kom-change-language. 
+	Varför har vi egentligen den här variabeln?
+
+	* startup.el (kom-start-anew): Sätt språk enligt 
+	kom-default-language i slutet av inloggningen.
+
+	* services.el (lyskom-blocking-do-multiple-1): Flyttade från 
+	macros.el.
+	(lyskom-blocking-do-multiple): Dito.
+	(lyskom-multiple-blocking-return): Dito.
+
+	* vars.el.in (kom-default-language): Ny variabel.
+
+	* option-edit.el: Lade till kom-default-language
+
+	* commands2.el (kom-change-language): Ny funktion
+
+	* services.el (blocking-do): Återställde.
+	(lyskom-wait-queue): Återställde.
+
+	* macros.el (lyskom-blocking-do-multiple): Återställde.
+
+	* filter.el (lyskom-filter-text-p): Återställde.
+
+	* utilities.el: Återställde.
+
+	* lyskom-rest.el (lyskom-filter): Återställde.
+
 Wed Jul  2 13:07:38 1997  Peter Liljenberg  <petli@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-filter): Tog bort
@@ -10,10 +42,40 @@ Wed Jul  2 13:07:38 1997  Peter Liljenberg  <petli@lysator.liu.se>
 	macros.el (lyskom-blocking-do-multiple),
 	services.el (blocking-do): Fixade accept-process-output.
 
+Wed Jul  2 10:44:38 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-send-text-transform-function): Ny variabel.
+
+	* defvar.el (def-kom-var): Gör variabler i common-arean 
+	lokala också.
+
+	* edit-text.el (lyskom-send-transform-text): Hantera att det 
+	blir fel när man försöker skicka in.
+
+	* lyskom-rest.el (lyskom-format-special): Bytt namn från 
+	lyskom-format-experimental. Flyttad till vars.el.in
+	(lyskom-format-html): Ny funktion.
+	(lyskom-format-enriched): Ny funktion.
+	(lyskom-format-text-body): Använd dem.
+
 Tue Jul  1 18:26:42 1997  Peter Liljenberg  <petli@lysator.liu.se>
 
 	* check-strings.el: Helt omskriven för att klara det nya
 	strängsystemet. 
+
+Mon Jun 30 14:01:31 1997  David Byers  <davby@ida.liu.se>
+
+	* review.el (kom-review-noconversion): Ignorera dynamiskt 
+	bunden variabel. 
+
+	* commands2.el (kom-membership): Tog bort onödig variabel.
+	(kom-set-unread): Ignorera tempvariabel
+
+	* utilities.el (lyskom-modify-face): Tog bort onödig variabel.
+
+	* compatibility.el (map-keymap): Tog bort onödig variabel.
+
+	* option-edit.el (lyskom-widget-click): Nu funktion.
 
 Sun Jun 29 12:41:14 1997  David Byers  <davby@ida.liu.se>
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.8 1997-02-07 18:07:44 byers Exp $
+;;;;; $Id: language.el,v 44.9 1997-07-02 17:46:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -138,7 +138,7 @@ create. ALIST is a mapping from symbols to strings."
   (or (memq category lyskom-language-categories)
       (setq lyskom-language-categories
 	    (cons category lyskom-language-categories)))
-  (let ((record (get category 'lyskom-langauge-symbols)))
+  (let ((record (get category 'lyskom-language-symbols)))
     (mapcar (function (lambda (pair)
 			(let* ((symbol (car pair))
 			       (string (cdr pair))

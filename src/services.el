@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.6 1997-07-02 11:12:35 petli Exp $
+;;;;; $Id: services.el,v 44.7 1997-07-02 17:47:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.6 1997-07-02 11:12:35 petli Exp $\n"))
+	      "$Id: services.el,v 44.7 1997-07-02 17:47:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -891,7 +891,7 @@ or get-text-stat."
 		  (memq (process-status lyskom-proc) '(open run))
 		  ;; The following test should probably be removed
 		  (not lyskom-quit-flag))
-        (accept-process-output lyskom-proc 1))
+        (lyskom-accept-process-output))
       (if (or lyskom-quit-flag quit-flag)
           (signal 'quit nil))
       (setq lyskom-quit-flag nil)
@@ -908,13 +908,49 @@ or get-text-stat."
       (lyskom-run queue 'blocking-return (list t))
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (not lyskom-quit-flag))
-	(accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
+	(lyskom-accept-process-output))
       (if (or lyskom-quit-flag quit-flag)
 	  (progn
 	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
 	    (signal 'quit nil)))
       (setq lyskom-quit-flag nil)
       lyskom-blocking-return)))
+
+
+(defvar lyskom-multiple-blocking-return nil
+  "Return from blocking-do-multiple")
+
+(defun lyskom-blocking-do-multiple (call-list)
+  (save-excursion
+    (set-buffer (or lyskom-buffer
+                    (process-buffer lyskom-proc)))
+    ;; If this happens, we're in trouble
+    (if lyskom-is-parsing
+	(lyskom-really-serious-bug))
+    
+    (let ((lyskom-multiple-blocking-return 'not-yet-gotten))
+      (lyskom-collect 'blocking)
+      (while call-list
+	(apply (intern-soft (concat "initiate-"
+				    (symbol-name (car (car call-list)))))
+	       'blocking nil
+	       (cdr (car call-list)))
+	(setq call-list (cdr call-list)))
+      (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
+      (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+		  (memq (process-status lyskom-proc) '(open run))
+		  (not lyskom-quit-flag))
+	(lyskom-accept-process-output))
+      (if lyskom-quit-flag
+	  (progn
+	    (setq lyskom-quit-flag nil)
+	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
+	    (signal 'quit nil)))
+      lyskom-multiple-blocking-return)))
+
+(defun lyskom-blocking-do-multiple-1 (&rest data)
+  (setq lyskom-multiple-blocking-return data))
+
 
 
 (provide 'lyskom-services)
