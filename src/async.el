@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.14 1992-04-29 12:52:35 linus Exp $
+;;;;; $Id: async.el,v 35.15 1992-06-13 21:15:54 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.14 1992-04-29 12:52:35 linus Exp $\n"))
+	      "$Id: async.el,v 35.15 1992-06-13 21:15:54 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -169,7 +169,7 @@ this function shall be with current-buffer the BUFFER."
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	 (initiate-get-conf-stat 'follow
+	 (initiate-get-conf-stat 'async
 				 'lyskom-show-personal-message sender
 				 recipient
 				 message))))
@@ -270,7 +270,7 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
 (defun lyskom-insert-personal-message (sender recipient message)
   "Insert a personal message in the current buffer.
 Arguments: SENDER RECIPIENT MESSAGE.
-SENDER is a pers-stat (possibly nil) or a string.
+SENDER is a conf-stat (possibly nil) or a string.
 RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
 MESSAGE is a string containing the message.
 INSERT-FUNCTION is a function that given a string inserts it into the
@@ -290,11 +290,12 @@ current buffer."
 		     (sender (conf-stat->name sender))
 		     (t (lyskom-get-string 'unknown)))
 		    message
-		    (substring (current-time-string) 11 19)))))
+		    (substring (current-time-string) 11 19)))
+   (conf-stat->conf-no sender)))
 
   
-(defun lyskom-handle-as-personal-message (string)
-  "Insert STRING as a personal message.
+(defun lyskom-handle-as-personal-message (string from)
+  "Insert STRING as a personal message and beep if not from me and supposed to.
 The buffer, is chosen according to the kom-show-personal-messages-in-buffer
 variable value.
 The text is converted, before insertion."
@@ -311,7 +312,8 @@ The text is converted, before insertion."
 	       (iso-8859-1-to-swascii string)))))
    (if kom-pop-personal-messages
        (display-buffer (current-buffer))))
-  (if kom-ding-on-personal-messages
+  (if (and kom-ding-on-personal-messages
+	   (/= lyskom-pers-no from))
       (beep)))
   
 
