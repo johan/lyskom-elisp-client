@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.8 1996-07-29 08:44:00 davidk Exp $
+;;;;; $Id: completing-read.el,v 41.9 1996-07-29 08:53:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.8 1996-07-29 08:44:00 davidk Exp $\n"))
+       "$Id: completing-read.el,v 41.9 1996-07-29 08:53:09 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -140,8 +140,8 @@ See lyskom-read-conf for a description of the parameters."
   (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
     (cond ((null conf-z-info) "")
           ((stringp conf-z-info) conf-z-info)
-	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->name conf-z-info)
-          (t (conf-z-info->name conf-z-info)))))
+	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->name conf-z-info))n
+	  (t (conf-z-info->name conf-z-info)))))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
