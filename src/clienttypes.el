@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.13 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: clienttypes.el,v 44.14 2002-04-13 21:07:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.13 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: clienttypes.el,v 44.14 2002-04-13 21:07:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -54,6 +54,7 @@
 ;;;   REVIEW-TREE - List of texts created by one of the tree-reading 
 ;;;		    commands: kom-find-root-review, kom-review-tree
 ;;;   REVIEW-MARK - List of texts created by the review-mark command
+;;;   REVIEW-FAQ  - List of texts created by kom-review-faq or similar
 ;;;   COMM-IN     - Type containing the list of comments to a text
 ;;;   FOOTN-IN    - Type containing the list of footnotes to a text
 ;;;   CONF        - Basic type of unread in a conf.
@@ -63,8 +64,9 @@
 ;;;   The types REVIEW-TREE, COMM-IN and FOOTN-IN are created for new for
 ;;;   every text read (recursively) when appropriate.
 ;;;
-;;;   The difference between REVIEW and REVIEW-MARK is just that there
-;;;   generate different prompts and different text from kom-review-stack.
+;;;   The difference between REVIEW, REVIEW-MARK and REVIEW-FAQ is just
+;;;   that there generate different prompts and different text from
+;;;   kom-review-stack.
 ;;;
 
 
@@ -243,8 +245,8 @@ Returns t if there was a conference to insert this text into."
 (defun read-list-delete-text (text-no rlist)
   "Destructively delete all occurances of TEXT-NO from RLIST.
 RLIST is a list of read-info.
-Entries of the type REVIEW, REVIEW-TREE or REVIEW-MARK are not changed
-except if they were empty in which case they are removed.
+Entries of the type REVIEW, REVIEW-FAQ, REVIEW-TREE or REVIEW-MARK are
+not changed except if they were empty in which case they are removed.
 Returns the modified RLIST.
 TEXT-NO may be nil, in which case only empty read-infos on RLIST are removed."
   (let* ((prev rlist)			;"Previous" cons-celll

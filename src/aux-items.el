@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.28 2002-04-11 21:57:29 byers Exp $
+;;;;; $Id: aux-items.el,v 44.29 2002-04-13 21:07:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.28 2002-04-11 21:57:29 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.29 2002-04-13 21:07:58 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -274,7 +274,9 @@ return non-nil if the item is to be included in the list."
 (def-aux-item faq-for-conf 28
   (text-print . lyskom-print-faq-for-conf)
   (text-print-when . header)
-  (info . lyskom-aux-item-info))
+  (info . lyskom-aux-item-info)
+  (read-action . lyskom-faq-for-conf-action))
+
 
 (def-aux-item recommended-conf 29
   (status-print . lyskom-print-recommended-conf)
@@ -301,7 +303,9 @@ return non-nil if the item is to be included in the list."
   (edit-insert . lyskom-edit-insert-world-readable)
   (text-print-when . header))
 
-
+(def-aux-item elisp-client-read-faq 10000
+  (info . lyskom-aux-item-info)
+  (status-print . lyskom-print-elisp-client-read-faq))
 
 
 ;;; ================================================================
@@ -480,6 +484,12 @@ return non-nil if the item is to be included in the list."
    (lyskom-format 'request-confirmation-edit-aux)
    (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
 
+(defun lyskom-faq-for-conf-action (text-stat)
+  (let ((faqs (text-stat-find-aux text-stat 28)))
+    (lyskom-traverse aux faqs
+      (lyskom-register-read-faq (string-to-int (aux-item->data aux))
+                                (text-stat->text-no text-stat)))))
+
 (defun lyskom-request-confirmation-action (text-stat)
   (let ((confirmations (text-stat-find-aux text-stat 7))
         (have-confirmation nil))
@@ -640,10 +650,19 @@ return non-nil if the item is to be included in the list."
                         (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-print-recommended-conf (item &optional obj)
-  
   (let ((conf-no (string-to-int (if (string-match " " (aux-item->data item))
                                     (substring (aux-item->data item) 0 (match-beginning 0))
                                   (aux-item->data item)))))
-    (lyskom-format-insert 'recommended-conf-aux conf-no)))
+    (lyskom-format-insert 'recommended-conf-aux conf-no)
+    (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-print-elisp-client-read-faq (item &optional obj)
+  (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
+    (let ((conf-no (string-to-int (match-string 1 (aux-item->data item))))
+          (text-no (string-to-int (match-string 2 (aux-item->data item)))))
+      (lyskom-format-insert 'status-read-aux-item 
+                            conf-no 
+                            text-no
+                            (lyskom-aux-item-terminating-button item obj)))))
 
 (provide 'lyskom-aux-items)

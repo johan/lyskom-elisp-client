@@ -173,6 +173,11 @@ b - Boolean. The first subformat is chosen if the argument is non-nil
     variable "answer" as "yes" or "no" for t and nil using
     (lyskom-format "%#1?b%[yes%]%[no%]" answer).
 
+z - Zero. The first subformat is chosen if the argument is zero and
+    the second if the argument is nonzero. You could format a conf-no
+    variable as a "does not exist" or the conference name using
+    (lyskom-format "%#1?z%[does not exist%]%[%#1M%]")
+
 
 
 3. FORMATTING FUNCTIONS

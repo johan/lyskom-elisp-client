@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.147 2002-04-12 22:54:36 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.148 2002-04-13 21:08:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.147 2002-04-12 22:54:36 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.148 2002-04-13 21:08:00 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -409,7 +409,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 		 (priority (read-info->priority
 			    (read-list->first lyskom-reading-list)))
 		 (is-review-tree (eq type 'REVIEW-TREE))
-		 (is-review (or (memq type '(REVIEW REVIEW-MARK))
+		 (is-review (or (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))
 				is-review-tree))
 		 (mark-as-read (not is-review)))
 	    (when is-review
@@ -426,7 +426,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				    priority
 				    is-review-tree
 				    (not is-review)
-				    (memq type '(REVIEW REVIEW-MARK))))
+				    (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))))
 	    (if mark-as-read
 		(lyskom-is-read text-no)
 	      (read-list-delete-text nil lyskom-reading-list)
@@ -642,7 +642,8 @@ Args: CONF-STAT READ-INFO"
                             num-unread)
       (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
                                  from-conf
-                                 to-conf))))
+                                 to-conf)))
+  (lyskom-change-conf-check-faqs conf-stat))
 
 (defun lyskom-leave-current-conf ()
   "Leave the current conference without going to another one."
@@ -1309,7 +1310,7 @@ Note that it is not allowed to use deferred insertions in the text."
      ;; accordingly
 
      ((= format-letter ?\?)
-      (unless (string-match "[db]" 
+      (unless (string-match "[dbz]" 
                             (format-state->format-string format-state)
                             (format-state->start format-state))
         (lyskom-error "Unknown predicate in format string %s (%d)"
@@ -1335,6 +1336,14 @@ Note that it is not allowed to use deferred insertions in the text."
          ((= predicate-type ?b)
           (setq format-state
                 (lyskom-format-do-binary-predicate arg
+                                                   format-state
+                                                   allow-defer)
+                result nil))
+
+         ;; Zero/nonzero predicate
+         ((= predicate-type ?z)
+          (setq format-state
+                (lyskom-format-do-binary-predicate (not (zerop arg))
                                                    format-state
                                                    allow-defer)
                 result nil))
@@ -2464,6 +2473,8 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                     'review-next-comment-prompt)
                    ((eq 'REVIEW-MARK (read-info->type read-info))
                     'review-next-marked-prompt)
+                   ((eq 'REVIEW-FAQ (read-info->type read-info))
+                    'review-next-faq-prompt)
                    ;; The following is not really correct. The text to be
                    ;; read might be in another conference.
                    ((= lyskom-current-conf lyskom-pers-no)
@@ -2492,6 +2503,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                  ((eq 'REVIEW
                       (read-info->type (read-list->first lyskom-to-do-list)))
                   'go-to-conf-of-review-prompt)
+                 ((eq 'REVIEW-FAQ
+                      (read-info->type (read-list->first lyskom-to-do-list)))
+                  'go-to-conf-of-review-faq-prompt)
                  ((eq 'REVIEW-TREE 
                       (read-info->type (read-list->first lyskom-to-do-list)))
                   'go-to-conf-of-review-tree-prompt)
@@ -2745,6 +2759,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                     (or (null type)
                         (eq type 'CONF)
                         (eq type 'REVIEW)
+                        (eq type 'REVIEW-FAQ)
                         (eq type 'REVIEW-MARK))
                     (or (null pri) (> pri-session-pri pri)))
                (and (memq kom-server-priority-breaks
@@ -2760,7 +2775,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	 (not (read-list-isempty lyskom-to-do-list))
 	 (let ((type (read-info->type (read-list->first lyskom-reading-list))))
 	   (or (eq kom-higher-priority-breaks 'express)
-	       (memq type '(CONF REVIEW REVIEW-MARK))))
+	       (memq type '(CONF REVIEW REVIEW-MARK REVIEW-FAQ))))
 	 (> (read-info->priority (read-list->first lyskom-to-do-list))
 	    (read-info->priority (read-list->first lyskom-reading-list))))
     (if (> (text-list->length (read-info->text-list
@@ -3024,16 +3039,17 @@ If NILDEFAULT is non-nil, return nil if the user enters an empty string"
                           (null number)))
                 (or (< number low)
                     (> number high)))
-      (setq number (lyskom-read-number 
-		    (concat (if prompt
-				prompt
-			      (lyskom-get-string 'give-a-number))
-			    (if show-range
-				(format "(%d-%d) " low high)
-			      ""))
-		    default
-                    history
-                    nildefault)))
+      (setq number 
+            (lyskom-read-number 
+             (concat (cond ((null prompt) (lyskom-get-string 'give-a-number))
+                           ((symbolp prompt) (lyskom-get-string prompt))
+                           (t prompt))
+                     (if show-range
+                         (format "(%d-%d) " low high)
+                       ""))
+             default
+             history
+             nildefault)))
     number))
 
 

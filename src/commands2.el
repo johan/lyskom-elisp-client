@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.114 2002-04-13 15:01:28 byers Exp $
+;;;;; $Id: commands2.el,v 44.115 2002-04-13 21:07:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.114 2002-04-13 15:01:28 byers Exp $\n"))
+              "$Id: commands2.el,v 44.115 2002-04-13 21:07:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -972,7 +972,7 @@ the text on one line."
                                  (read-list->nth read-list r)))))
               (and (null conf-no)
                    (memq (read-info->type (read-list->nth read-list r))
-                         '(CONF REVIEW-MARK REVIEW))))
+                         '(CONF REVIEW-MARK REVIEW REVIEW-FAQ))))
           (setq len 0)
         (setq r (1+ r))))
     (setq read-info (read-list->nth read-list r))
@@ -2200,148 +2200,6 @@ Return-value: 'no-session if there is no suitable session to switch to
                                               0 message)))))
 
 
-;;; ======================================================================
-;;; FAQ Management
-;;;
-
-(def-kom-command kom-add-faq (&optional conf-no text-no)
-  "Add a FAQ to a conference"
-  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf pers) nil nil t)
-                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
-  (lyskom-add-faq conf-no text-no))
-
-(def-kom-command kom-add-server-faq (&optional text-no)
-  "Add a FAQ to the server"
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
-  (lyskom-add-faq nil text-no))
-
-
-(defun lyskom-add-faq (conf-no text-no)
-  "Add a FAQ to a conference or the server.
-Add to the server if CONF-NO is nil, otherwise add to conference CONF-NO.
-The text to add is passed in TEXT-NO"
-  (let ((text (blocking-do 'get-text-stat text-no)))
-    (if (null text)
-        (lyskom-format-insert 'no-such-text-no text-no)
-      (lyskom-format-insert 'adding-faq text-no conf-no)
-      (cache-del-text-stat text-no)
-      (when conf-no
-        (cache-del-conf-stat conf-no))
-      (let ((aux-item (lyskom-create-aux-item 
-                       0 14 0 0 
-                       (lyskom-create-aux-item-flags nil nil nil nil
-                                                     nil nil nil nil)
-                       0
-                       (int-to-string text-no))))
-        (lyskom-report-command-answer
-         (if conf-no
-             (blocking-do 'modify-conf-info
-                          conf-no
-                          nil
-                          (list aux-item))
-           (blocking-do 'modify-server-info
-                        nil
-                        (list aux-item))))))))
-
-(def-kom-command kom-del-server-faq ()
-  "Remove a FAQ from the server"
-  (interactive)
-  (lyskom-del-faq nil))
-
-
-(def-kom-command kom-del-faq ()
-  "Remove a FAQ from a conference"
-  (interactive)
-  (let* ((conf-stat (lyskom-read-conf-stat 'conf-to-del-faq
-                                           '(conf pers) nil nil t)))
-    (lyskom-del-faq conf-stat)))
-
-(defun lyskom-del-faq (conf-stat)
-  (let ((faq-list 
-         (mapcar (lambda (aux)
-                   (cons (aux-item->data aux)
-                         (aux-item->aux-no aux)))
-                 (lyskom-get-aux-item
-                  (if (null conf-stat)
-                      (server-info->aux-item-list
-                       (blocking-do 'get-server-info))
-                    (conf-stat->aux-items conf-stat))
-                  14)))
-        (text-no nil))
-
-    (cond
-     ((null faq-list) 
-      (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     (t (setq text-no
-              (if (eq 1 (length faq-list))
-                  (car (car faq-list))
-                (lyskom-completing-read (lyskom-get-string 'text-to-del-as-faq)
-                                        (lyskom-maybe-frob-completion-table 
-                                         faq-list)
-                                        nil t)))
-        (when text-no
-          (lyskom-format-insert 'deleting-faq 
-                                (string-to-int text-no)
-                                conf-stat)
-          (cache-del-text-stat (string-to-int text-no))
-          (when conf-stat
-            (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
-          (lyskom-report-command-answer
-           (if conf-stat
-               (blocking-do 'modify-conf-info
-                            (conf-stat->conf-no conf-stat)
-                            (list (cdr (lyskom-string-assoc text-no faq-list)))
-                            nil)
-             (blocking-do 'modify-server-info
-                          (list (cdr (lyskom-string-assoc text-no faq-list)))
-                          nil))))))))
-
-(def-kom-command kom-review-server-faq ()
-  "View the FAQs for the server"
-  (interactive)
-  (lyskom-review-faq nil (server-info->aux-item-list
-                          (blocking-do 'get-server-info))))
-
-(def-kom-command kom-review-faq (&optional conf-no)
-  "View the FAQs for a conference"
-  (interactive (list (lyskom-read-conf-no 'view-which-faq '(conf pers) t nil t)))
-  (if (zerop conf-no)
-      (lyskom-review-faq nil (server-info->aux-item-list
-                              (blocking-do 'get-server-info)))
-    (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
-      (if conf-stat
-          (lyskom-review-faq conf-stat (conf-stat->aux-items conf-stat))
-        (lyskom-format-insert 'conf-no-does-not-exist-r conf-no)))))
-
-
-(defun lyskom-review-faq (conf-stat aux-list)
-  (let ((faq-list (mapcar (lambda (aux)
-                            (string-to-int (aux-item->data aux)))
-                          (lyskom-get-aux-item aux-list 14))))
-    (cond 
-     ((null faq-list) 
-      (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     ((eq 1 (length faq-list))
-      (lyskom-format-insert 'review-faq-for-r conf-stat)
-      (lyskom-view-text (car faq-list) 
-                        nil             ;mark-as-read
-                        nil             ;follow-comments
-                        nil             ;conf-stat
-                        nil             ;priority
-                        nil             ;build-review-tree
-                        t               ;flat-review
-                        ))
-     (t 
-      (lyskom-format-insert 'review-faq-for-r conf-stat)
-      (read-list-enter-read-info
-       (lyskom-create-read-info 'REVIEW
-                                nil
-                                (lyskom-review-get-priority)
-                                (lyskom-create-text-list faq-list)
-                                nil t)
-       lyskom-reading-list t)))))
-
-
 ;;; ============================================================
 ;;; Various aux-item stuff
 
@@ -2852,3 +2710,48 @@ to the first text that NEW is a comment or footnote to."
         (lyskom-view-text (server-info->motd-of-lyskom server-info)))
 
 )))
+
+
+;;; ================================================================
+;;; Rekommendera möte
+
+(def-kom-command kom-recommend-conference ()
+  "Recommend a conference to new LysKOM users"
+  (interactive)
+  (let* ((conf-stat (lyskom-read-conf-stat 'recommend-which-conf
+                                           '(conf)
+                                           nil
+                                           nil
+                                           t))
+         (priority (and (lyskom-j-or-n-p 'recommend-set-priority-q)
+                        (lyskom-read-num-range 0 255 'priority-q)))
+         (mship-type (and priority
+                          (lyskom-j-or-n-p 'recommend-set-mship-type-q)
+                          (lyskom-read-membership-type)))
+
+         (aux-item (lyskom-create-aux-item 
+                    0
+                    29
+                    nil
+                    nil
+                    (lyskom-create-aux-item-flags nil
+                                                  nil
+                                                  nil
+                                                  nil
+                                                  nil
+                                                  nil
+                                                  nil
+                                                  nil)
+                    0
+                    (mapconcat 'lyskom-format-object
+                               (list (conf-stat->conf-no conf-stat)
+                                     priority
+                                     mship-type)
+                               " "))))
+    (lyskom-format-insert 'recommending-conf
+                          conf-stat
+                          priority
+                          (lyskom-return-membership-type mship-type))
+    (lyskom-report-command-answer (blocking-do 'modify-server-info
+                                               nil
+                                               (list aux-item)))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.62 2002-04-13 16:15:13 byers Exp $
+;;;;; $Id: startup.el,v 44.63 2002-04-13 21:08:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.62 2002-04-13 16:15:13 byers Exp $\n"))
+	      "$Id: startup.el,v 44.63 2002-04-13 21:08:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -480,7 +480,7 @@ shown to other users."
 		    ;; problem with asynchrounous code trying to
 		    ;; access it.
 		    (setq lyskom-pers-no new-me)
-		  
+
 		    ;; DEBUG
 		    (if (null conf-stat)
 			(lyskom-insert "You don't exist. Go away.\n"))
@@ -525,10 +525,10 @@ shown to other users."
                                 ))
 		      (setq new-me nil))
 		    (setq lyskom-is-new-user nil))))
-	    
+
 	    ;; Now we are logged in.
 	    (lyskom-insert-string 'are-logged-in)
-	    
+
             (unless lyskom-is-running-compiled
               (lyskom-insert-string 'warning-about-uncompiled-client))
 
@@ -576,8 +576,9 @@ shown to other users."
 
       (setq lyskom-is-new-user nil)
 
-      ;; Check FAQs (and don't croak if there is a bug!)
+      ;; Do some FAQ handling
       (unwind-protect
+          (lyskom-update-read-faqs)
           (lyskom-startup-check-faqs)
         nil)
 
@@ -878,54 +879,3 @@ to see, set of call."
     (setq lyskom-pending-calls nil)
     (lyskom-set-mode-line
      (lyskom-get-string 'not-present-anywhere)))
-
-;;; ================================================================
-;;; Special login stuff
-;;;
-
-(defun lyskom-startup-check-faqs ()
-  (let ((faq-list (mapcar (lambda (aux)
-                            (string-to-int (aux-item->data aux)))
-                          (lyskom-get-aux-item 
-                           (server-info->aux-item-list lyskom-server-info) 
-                           14))))
-    (when faq-list
-      (let ((collector (make-collector))
-            (mship-list nil))
-        ;; Get all text-stats
-        (lyskom-traverse faq faq-list
-          (initiate-get-text-stat 'main
-                                  'collector-push
-                                  faq
-                                  collector))
-        (lyskom-wait-queue 'main)
-
-        ;; Get the memberships that we need
-        (lyskom-traverse text-stat (collector->value collector)
-          (setq mship-list (lyskom-union (lyskom-text-recipients text-stat)
-                                         mship-list)))
-        (lyskom-traverse conf-no mship-list
-          (lyskom-get-membership conf-no t))
-
-        ;; Now we are ready
-        (let ((texts-to-view
-               (filter-list (lambda (text-stat)
-                              (not (lyskom-text-read-at-least-once-p
-                                    text-stat)))
-                            (collector->value collector))))
-          (lyskom-format-insert 'there-are-server-faqs 
-                                (length faq-list)
-                                (length texts-to-view))
-          (lyskom-do-list-summary faq-list)
-
-          (when (and texts-to-view kom-auto-review-faqs)
-            (lyskom-review-enter-read-info 
-             (lyskom-create-read-info 'REVIEW
-                                      nil
-                                      256
-                                      (lyskom-create-text-list 
-                                       (mapcar 'text-stat->text-no
-                                               texts-to-view))
-                                      nil t)
-             nil)
-            ))))))

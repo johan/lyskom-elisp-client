@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.176 2002-04-13 16:15:13 byers Exp $
+;;;;; $Id: vars.el.in,v 44.177 2002-04-13 21:08:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.176 2002-04-13 16:15:13 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.177 2002-04-13 21:08:01 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -101,9 +101,15 @@ are in the list.")
 
 ;;; User flags
 
+(def-kom-var kom-auto-list-faqs t
+  "*If non-nil, list unread FAQs when entering a conference or logging
+on to the server."
+  server
+)
+
 (def-kom-var kom-auto-review-faqs t
-  "*If non-nil, automatically review all server FAQs not marked as
-read when logging on."
+  "*If non-nil, automatically review unread FAQs when entering a
+conference or logging on to the server."
   server
 )
 
@@ -1813,6 +1819,7 @@ is a list of vectors, where each vector specifies an item.
     kom-del-server-faq
     kom-change-server-faq
     kom-review-server-faq
+    kom-recommend-conference
     ))
 
 ;;; ================================================================
@@ -2574,6 +2581,10 @@ texts that is to be sent to the server.")
   "List of flags specifying how the last text was reformatted. This variable
 should be dynamically bound whenever it needs to be used.")
 
+(def-kom-var lyskom-read-faqs nil
+  "List of FAQs that have been read."
+  inherited)
+
 (defvar lyskom-xface-cache (make-vector 29 0))
 
 
@@ -2660,7 +2671,8 @@ the value of  kom-tell-phrases for fun.")
     kom-sync-database
     kom-add-server-faq 
     kom-del-server-faq
-    kom-change-server-faq))
+    kom-change-server-faq
+    kom-recommend-conference))
 
 
 ;;; ================================================================
@@ -2802,7 +2814,8 @@ to be bold with yellow text on a red background."
 
 (defconst lyskom-comment-types-list '(COMM-IN FOOTN-IN))
 (defconst lyskom-recpt-types-list '(RECPT CC-RECPT BCC-RECPT))
-(defconst lyskom-review-types-list '(REVIEW REVIEW-TREE REVIEW-MARK))
+(defconst lyskom-review-types-list '(REVIEW REVIEW-TREE
+                                            REVIEW-MARK REVIEW-FAQ))
 
 (eval-and-compile (provide 'lyskom-vars))
 
