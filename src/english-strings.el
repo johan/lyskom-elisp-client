@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.337 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.338 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.337 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.338 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1254,6 +1254,7 @@ You should set it to a better value.\n")
 
     (process-signal . "Signal from the process.")
     (dead-session . "No active LysKOM session.")
+    (resurrect-session . "The LysKOM session is not active. Do you want to reconnect? ")
     (not-lyskom-buffer . "This is not an active LysKOM session.")
     (closed-connection . "
 **************************************************
@@ -3872,6 +3873,11 @@ up menus.")
     (kom-show-week-number-doc . "\
   The Time command shows week numbers if this is on.")
 
+    (kom-relogin-behaviour-doc . "\
+  This controls if the client will try to reattach when a command is given 
+  in a disconnected session. On means the client tries to reattach
+  automatically, Off that it doesn't even ask.")
+
     (kom-membership-default-placement-doc . "\
   This controls where new memberships are placed. First means before
   all existing memberships of the same priority. Last means after all
@@ -4384,6 +4390,7 @@ up menus.")
     (kom-ispell-dictionary-tag . "Spelling dictionary:")
 
     (kom-show-week-number-tag . "Show week number:")
+    (kom-relogin-behaviour-tag . "Reattach automatically:")
     (kom-membership-default-placement-tag . "Placement of new memberships:")
     (kom-show-imported-importer-tag . "Show importer of imported messages:")
     (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")

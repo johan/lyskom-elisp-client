@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.380 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.381 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.380 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.381 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1293,6 +1293,7 @@ Du bör sätta den till ett bättre värde.\n")
 LysKOM-sessionen onormalt stängd.
 Felmeddelande: %#1s**************************************************")
     (dead-session . "LysKOM-sessionen är inte aktiv.")
+    (resurrect-session . "LysKOM-sessionen har kopplats ner, vill du ansluta igen? ")
     (not-lyskom-buffer . "Detta är inte en aktiv LysKOM-session.")
     (error-not-found . "Fel nummer %#1d. Ingen klartextförklaring finns.")
 
@@ -3987,6 +3988,11 @@ ta fram menyer.")
   Se tiden visar veckonummer om detta är påslaget. Annars visas inte 
   veckonummer.")
 
+    (kom-relogin-behaviour-doc . "\
+  Denna inställning styr om klienten ska försöka återansluta om ett 
+  kommando ges i en nedkopplad session. På betyder att det sker 
+  automatiskt, av att klienten inte frågar om man vill återansluta.")
+
     (kom-membership-default-placement-doc . "\
   Denna inställning styr var nya medlemskap hamnar. Först betyder att nya
   medlemskap hamnar före gamla med samma prioritet. Sist betyder att nya 
@@ -4495,8 +4501,9 @@ ta fram menyer.")
     (kom-default-language-tag . "Språklista:")
     (kom-ispell-dictionary-tag . "Ordlista:")
     (kom-show-namedays-tag .    "Visa dagens namn:")
-
     (kom-show-week-number-tag . "Visa veckonummer:")
+
+    (kom-relogin-behaviour-tag . "Återanslut automatiskt:")
     (kom-membership-default-placement-tag . "Placering av nya medlemskap:")
     (kom-show-imported-importer-tag . "Visa importör av importerade inlägg:")
     (kom-show-imported-envelope-sender-tag . "Visa avsändare av importerade inlägg:")

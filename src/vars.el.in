@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.301 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.302 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.301 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.302 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1718,6 +1718,14 @@ command is accepted from the keyboard. It is called immediately before
 This hook is called after the session is logged in but before any
 command is accepted from the keyboard. Unlike `lyskom-login-hook' it
 can be stored in the server."
+  server)
+
+(def-kom-var kom-relogin-behaviour 'ask
+  "**Controls how to behave when commands are issued in dead sessions.
+
+When this is set to `t', the client will try to login automatically. 
+When set to 'ask, the client will ask whatever the user wants to reattach.
+When set to nil, the client will not attempt to reattach." 
   server)
 
 (def-kom-var kom-remember-password nil
@@ -4474,8 +4482,10 @@ setting this variable you may set the environment variable `KOMSERVER'.")
 (def-kom-var lyskom-default-user-name nil
   "**Default LysKOM user name.
 
-The value of this variable must be a string or `nil'. Instead of
-setting this variable you may set the environment variable `KOMNAME'." 
+The value of this variable must be a string, integer or `nil'. If it's an
+integer, it must be the conference number of the user to login as. Instead of
+setting this variable you may set the environment variable `KOMNAME' to the
+username to login as." 
   local)
 
 (defvar kom-default-password nil

@@ -1,5 +1,24 @@
 2004-10-19  Pontus Freyhult  <pont@soua.net>
 
+	Allow for easy relogin from dead sessions (bug 1278):
+	* command.el (lyskom-start-of-command): Possibly rerun 
+	lyskom according to kom-relogin-behaviour.
+
+	* startup.el (kom-start-anew): Handle the case of 
+	lyskom-default-user-name being an integer.
+
+	*vars.el.in (kom-relogin-behaviour): New variable.
+	(lyskom-default-user-name): Changed documentation.
+
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-message): Added resurrect-session.
+	(lyskom-custom-strings): Added kom-relogin-behaviour-doc 
+	and kom-relogin-behaviour-tag.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-relogin-behaviour.
+	(lyskom-custom-variables): Dito.	
+	
 	Clean up lyskom-default-password, enable password storing:
 	* english-strings.el, swedish-strings.el: 
 	(lyskom-custom-strings): Added kom-remember-password-tag

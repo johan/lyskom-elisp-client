@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.108 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.109 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.108 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.109 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -74,6 +74,7 @@
     [kom-auto-confirm-new-conferences]
     "\n"
     [kom-idle-hide]
+    [kom-relogin-behaviour]
     [kom-remember-password]
     [kom-show-where-and-what]
     [kom-show-since-and-when]
@@ -795,6 +796,11 @@ All key bindings:
                                 (nameday nil :tag specific-namedays))))
 
     (kom-show-week-number (toggle (on off)))
+
+    (kom-relogin-behaviour (choice ((const (off nil))
+				    (const (ask ask))
+				    (const (on t)))))
+
     (kom-membership-default-placement (choice ((const (last last))
                                                (const (first first))
                                                (number nil
