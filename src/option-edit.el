@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.8 1997-07-02 17:47:01 byers Exp $
+;;;;; $Id: option-edit.el,v 44.9 1997-07-06 14:27:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.8 1997-07-02 17:47:01 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.9 1997-07-06 14:27:39 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -607,7 +607,7 @@ customize buffer but do not save them to the server."
          (function
           (lambda (x)
             (list 'item
-                  ':tag (elt x 1)
+                  ':tag (lyskom-language-name (car x))
                   ':format "%t"
                   ':value (elt x 0))))
          lyskom-languages)))
