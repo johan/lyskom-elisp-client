@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.145 2003-08-24 18:41:36 byers Exp $
+;;;;; $Id: utilities.el,v 44.146 2003-08-26 18:19:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.145 2003-08-24 18:41:36 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.146 2003-08-26 18:19:41 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2071,11 +2071,11 @@ suitable for use as initial input in a magic minibuffer."
   (cond ((null initial) nil)
         ((stringp initial)
          (let ((tmp (copy-sequence initial)))
-           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t) tmp)
+           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t start-open t front-sticky nil) tmp)
            tmp))
         ((consp initial)
          (let ((tmp (copy-sequence (car initial))))
-           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t) tmp)
+           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t start-open t front-sticky nil) tmp)
            (cons tmp (cdr initial))))
 
         (t initial)))
@@ -2092,6 +2092,10 @@ suitable for use as initial input in a magic minibuffer."
 	 (initial (and (boundp 'initial) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial))))
 	 (init (and (boundp 'init) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'init))))
 	 (result ad-do-it))
+    (lyskom-ignore initial-input)
+    (lyskom-ignore initial-contents)
+    (lyskom-ignore initial)
+    (lyskom-ignore init)
     (when (stringp result)
       (remove-text-properties 0 (length result) '(end-open nil rear-nonsticky nil lyskom-initial-mbc nil) result)
       (unless (or (text-properties-at 0 result)
@@ -2105,6 +2109,10 @@ suitable for use as initial input in a magic minibuffer."
 	 (initial (and (boundp 'initial) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial))))
 	 (init (and (boundp 'init) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'init))))
 	 (result ad-do-it))
+    (lyskom-ignore initial-input)
+    (lyskom-ignore initial-contents)
+    (lyskom-ignore initial)
+    (lyskom-ignore init)
     (when (stringp result)
       (remove-text-properties 0 (length result) '(end-open nil rear-nonsticky nil lyskom-initial-mbc nil) result)
       (unless (or (text-properties-at 0 result)

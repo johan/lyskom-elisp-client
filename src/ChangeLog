@@ -1,3 +1,14 @@
+2003-08-26  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-magic-minibuffer-mangle-initial):
+	Explicitly make properties at the front of the initial value
+	nonsticky (mainly for XEmacs where they are sticky by default).
+	(completing-read): Add explicity uses for all variables to avoid
+	compiler warnings in XEmacs at run time.
+	(read-from-minibuffer): Same.
+
+	* commands2.el (kom-send-message): Remoed unused variables.
+
 2003-08-25  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (lyskom-error-codes): Added error codes 55-61.

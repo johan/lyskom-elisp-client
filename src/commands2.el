@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.188 2003-08-25 09:10:57 byers Exp $
+;;;;; $Id: commands2.el,v 44.189 2003-08-26 18:19:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.188 2003-08-25 09:10:57 byers Exp $\n"))
+              "$Id: commands2.el,v 44.189 2003-08-26 18:19:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -625,8 +625,7 @@ Runs `kom-send-message-setup-hook' when entering the minibuffer.
 
 See `kom-default-message-recipient'."
   (interactive)
-  (let* ((tmp nil)
-         (target (or who
+  (let* ((target (or who
                      (lyskom-read-conf-no
                       `(who-to-send-message-to ,(lyskom-get-string 'nobody))
                       (if kom-permissive-completion '(all) '(login conf))
