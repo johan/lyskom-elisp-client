@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.9 1997-07-02 17:46:56 byers Exp $
+;;;;; $Id: macros.el,v 44.10 1997-07-11 08:53:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.9 1997-07-02 17:46:56 byers Exp $\n"))
+	      "$Id: macros.el,v 44.10 1997-07-11 08:53:59 byers Exp $\n"))
 
 
 
@@ -207,6 +207,33 @@ the current buffer, and its value is copied from the LysKOM buffer."
             (setq (, keymap)
                   (lyskom-default-value (quote (, keymap))))
             (use-local-map (, keymap)))))
+
+
+;;; ============================================================
+;;; Widget gunk
+;;;
+
+(defmacro lyskom-widget-wrapper (fn)
+  (` (if (not (fboundp (quote (, fn))))
+         (defun (, fn) (&rest args)
+           (require 'custom)            ; lww
+           (require 'widget)            ; lww
+           (require 'wid-edit)          ; lww
+           (require 'wid-browse)        ; lww
+           (require 'cus-edit)          ; lww
+           (require 'cus-face)          ; lww
+           (apply (quote (, fn)) args)))))
+
+(lyskom-widget-wrapper widget-at)
+(lyskom-widget-wrapper widget-value)
+(lyskom-widget-wrapper widget-button-click)
+(lyskom-widget-wrapper widget-setup)
+(lyskom-widget-wrapper widget-value-set)
+(lyskom-widget-wrapper widget-insert)
+(lyskom-widget-wrapper widget-create)
+(lyskom-widget-wrapper widget-get)
+(lyskom-widget-wrapper widget-put)
+
 
 ;;; ============================================================
 ;;; Local variables

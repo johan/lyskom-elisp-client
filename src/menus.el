@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.9 1997-07-02 17:46:59 byers Exp $
+;;;;; $Id: menus.el,v 44.10 1997-07-11 08:54:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -90,7 +90,8 @@
 
 (defvar lyskom-edit-menu-template
   '((menu lyskom
-	  ((item kom-edit-send)
+	  ((item kom-ispell-message)
+           (item kom-edit-send)
 ;	   (item kom-edit-send-anonymous)
 	   (hline reciever-separator)
 	   (item kom-edit-add-recipient)
