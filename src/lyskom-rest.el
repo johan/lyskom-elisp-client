@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.14 1995-11-16 23:46:28 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.15 1996-01-08 08:18:42 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.14 1995-11-16 23:46:28 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.15 1996-01-08 08:18:42 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1544,20 +1544,31 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 ;;
 ;; Called from among others kom-list-news.
 ;;
-(defun lyskom-prefetch-all-confs (num-arg continuation)
-  "Gets all conferences using prefetch. Calls itself recursively.
-When all confs are fetched then the function in the argument
-CONTINUATION is called."
-  ;; If all conf-stats are fetched, run the continuation function
+
+;;(defun lyskom-prefetch-all-confs (num-arg continuation)
+;;  "Gets all conferences using prefetch. Calls itself recursively.
+;;When all confs are fetched then the function in the argument
+;;CONTINUATION is called."
+;;  ;; If all conf-stats are fetched, run the continuation function
+;;  (if (>= lyskom-last-conf-fetched
+;;	  (1- (length lyskom-membership)))
+;;      (lyskom-run 'main 'lyskom-run 'prefetch continuation num-arg)
+
+;;    ;; ...otherwise fetch next conf-stat.
+;;    (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
+;;	  (lyskom-prefetch-confs lyskom-max-int))
+;;      (lyskom-prefetch-conf))
+;;    (lyskom-run 'main 'lyskom-prefetch-all-confs num-arg continuation)))
+
+(defun lyskom-prefetch-all-confs ()
+  "Gets all conferences using prefetch."
   (if (>= lyskom-last-conf-fetched
 	  (1- (length lyskom-membership)))
-      (lyskom-run 'main 'lyskom-run 'prefetch continuation num-arg)
-
-    ;; ...otherwise fetch next conf-stat.
+      nil				; done
     (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
 	  (lyskom-prefetch-confs lyskom-max-int))
       (lyskom-prefetch-conf))
-    (lyskom-run 'main 'lyskom-prefetch-all-confs num-arg continuation)))
+    (lyskom-prefetch-all-confs)))
 
 
 ;; ---------------------------------------------------------

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.5 1995-11-16 23:46:20 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.6 1996-01-08 08:18:30 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.5 1995-11-16 23:46:20 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.6 1996-01-08 08:18:30 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -251,7 +251,7 @@ and you have finished reading. Please come back later.
 
     (who-to-remove-motd-for . "Remove note from the door of who/what: ")
 
-    (conf-all-read . "%#1s - no unread articles.\n")
+    (conf-all-read . "%#1M - no unread articles.\n")
     (no-in-conf . "You are not present in any conference.\n")
 
     (search-for-pers . "Enter search key (RETURN for all users) ")
@@ -301,7 +301,7 @@ and you have finished reading. Please come back later.
 
     (not-supervisor-for . "You are not the supervisor of %#1s.\n")
     (not-supervisor-for . "You are not the supervisor of %#1s.\n")
-    (go-to-conf . "Go to conference %#1s.\n")
+    (go-to-conf . "Go to conference %#1M.\n")
     (cant-go-to-his-mailbox . "You are not allowed to go to %#1s's mailbox.\n")
     (not-member-of-conf . "You are not subscribed to %#1s.\n")
     (about-to-change-name-from . "%#1s\n")
@@ -321,10 +321,10 @@ and you have finished reading. Please come back later.
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
     (who-to-sub-q . "Remove who/what as a recipient: ")
 
-    (adding-name-as-recipient . "Adding %#1s as recipient of article %#2d...")
-    (adding-name-as-copy . "%#1s will receive a carbon copy of article %#2d...")
+    (adding-name-as-recipient . "Adding %#1M as recipient of article %#2n...")
+    (adding-name-as-copy . "%#1M will receive a carbon copy of article %#2n...")
     (remove-name-as-recipient .
-     "Removing %#1s as recipient of article %#2d...")
+     "Removing %#1M as recipient of article %#2n...")
     (text-to-add-q . "Add which article as a comment: ")
     (text-to-remove-q . "Remove which article as a comment: ")
     (add-comment-to . "Adding article %#1d as a comment to text %#2d...")
@@ -393,29 +393,29 @@ and you have finished reading. Please come back later.
     (message-prompt . "Message: ")
     (message-sent-to-user .
      "================================================================
-Your message for %#2s:
+Your message for %#2M:
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")
     (message-sent-to-all . 
      "================================================================
 Your public message:
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.
 The message you were sending to %#1s was:
 %#2s\n")
-    (only-last . "Last (0 - %#1d) articles by %#2s: ")
+    (only-last . "Last (0 - %#1d) articles in %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
-    (you-have-unreads . "You have %#1d unread articles in %#2s\n")
-    (you-have-an-unread . "You have 1 unread article in %#1s\n")
-    (you-have-unreads-special . "You have %#1d uncommented articles in %#2s\n")
-    (you-have-an-unread-special . "You have 1 uncommented article in %#1s\n")
+    (you-have-unreads . "You have %#1d unread articles in %#2M\n")
+    (you-have-an-unread . "You have 1 unread article in %#1M\n")
+    (you-have-unreads-special . "You have %#1d uncommented articles in %#2M\n")
+    (you-have-an-unread-special . "You have 1 uncommented article in %#1M\n")
     (you-have-read-everything . "No news (is bad news).\n")
     (total-unreads . "\nYou have %#1d unread articles.\n")
     (total-unread . "\nYou have 1 unread article.\n")
@@ -560,9 +560,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (recieved-at . "    Received: %#1s\n")
     (written-by . "by %#1s")
     (comment-to-text-by . "Comment to article %#1n by %#2P\n")
-    (footnote-to-text-by . "Footnote to article %#1d %#2s\n")
+    (footnote-to-text-by . "Footnote to article %#1d %#2P\n")
     (comment-in-text-by . "Comment in article %#1n by %#2P\n")
-    (footnote-in-text-by . "Footnote in article %#1d %#2s\n")
+    (footnote-in-text-by . "Footnote in article %#1d %#2P\n")
 
     ; From async.el:
 
@@ -581,7 +581,7 @@ for an article.
     (has-entered . "%#1:P has entered LysKOM.")
     (has-entered-r . "%#1P has entered LysKOM.\n")
     (has-left . "%#1:P has left LysKOM.")
-    (has-left-r . "%#1:P has left LysKOM.\n")
+    (has-left-r . "%#1P has left LysKOM.\n")
     (unknown . "unknown")
 
     (message-broadcast .
@@ -953,7 +953,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "U"  'kom-unmark-text)
   (define-key lyskom-mode-map "na" 'kom-view-next-new-text)
   (define-key lyskom-mode-map "nc" 'kom-go-to-next-conf)
-  (define-key lyskom-mode-map "nl" 'kom-bext-kom)
+  (define-key lyskom-mode-map "nl" 'kom-next-kom)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
   (define-key lyskom-mode-map "R"  'kom-recover)
