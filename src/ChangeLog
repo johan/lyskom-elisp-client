@@ -1,3 +1,27 @@
+2003-07-28  David Byers  <byers@lysator.liu.se>
+
+	Better support for message-flag and no-of unread when joining:
+	* commands1.el (lyskom-go-to-conf): Ask for number of unread when
+	joining.
+	(kom-add-self): Ask for message-flag when de-passivating.
+	(lyskom-add-member-answer): Ask for message-flag when adding self.
+
+	* lyskom-rest.el (lyskom-check-go-to-conf): Ask for message-flag
+	when de-passivating a membership.
+
+	Some more work for kom-handle-membership: 
+	* mship-edit.el (lp--create-buffer): Made the header and footer
+	adapt to the window width like the contents do.
+	(lp--toggle-passive): New command. Also added binding.
+
+	* check-strings.el (lcs-split-format-string): Reflect changes to
+	lyskom-format-format here.
+
+	* lyskom-rest.el (lyskom-list-unread-mapping): Removed unused
+	variable.
+	(lyskom-format-aux-help): Added format directie l.
+	(lyskom-format-aux): Support arbitrary pad characters.
+
 2003-07-27  David Byers  <byers@lysator.liu.se>
 
 	Like bug 755 but for footnotes:

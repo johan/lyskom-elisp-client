@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.185 2003-07-27 22:31:56 byers Exp $
+;;;;; $Id: commands1.el,v 44.186 2003-07-28 20:02:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.185 2003-07-27 22:31:56 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.186 2003-07-28 20:02:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -559,6 +559,9 @@ See `kom-membership-default-priority' and
     (cond ((and mship (membership-type->passive
                        (membership->type mship)))
               (set-membership-type->passive (membership->type mship) nil)
+              (set-membership-type->message-flag (membership->type mship)
+                                                 (lyskom-j-or-n-p
+                                                  (lyskom-format 'set-message-flag-q whereto)))
               (blocking-do 'set-membership-type
                            lyskom-pers-no
                            (conf-stat->conf-no whereto)
@@ -598,7 +601,8 @@ See `kom-membership-default-priority' and
                                                               nil
                                                               no-of-unread)
                                        whereto who
-                                       no-of-unread))))))
+                                       no-of-unread
+                                       ))))))
 
 
 (def-kom-command kom-change-priority (&optional conf)
@@ -801,9 +805,17 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
 
                   (t (lyskom-insert-error errno err-stat)))))
 
-      ;;+++Borde {ndra i cachen i st{llet.
+      (when (and (eq (conf-stat->conf-no pers-conf-stat)
+                     lyskom-pers-no)
+                 (lyskom-j-or-n-p
+                  (lyskom-format 'set-message-flag-q conf-conf-stat)))
+        (blocking-do 'set-membership-type
+                     (conf-stat->conf-no pers-conf-stat)
+                     (conf-stat->conf-no conf-conf-stat)
+                     (lyskom-create-membership-type nil nil nil t
+                                                    nil nil nil nil)))
+
       (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
-      ;;+++Borde {ndra i cachen i st{llet.
       (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat))
       (when (= (conf-stat->conf-no pers-conf-stat)
              lyskom-pers-no)
@@ -920,6 +932,7 @@ See `kom-unsubscribe-makes-passive'."
            (unless have-message
              (lyskom-format-insert 'unsubscribe-to conf))
            (set-membership-type->passive (membership->type mship) t)
+           (set-membership-type->message-flag (membership->type mship) nil)
            (setq reply (blocking-do 'set-membership-type
                                     (conf-stat->conf-no pers)
                                     (conf-stat->conf-no conf)
@@ -1731,12 +1744,20 @@ If NO-PROMPT is non-nil, don't print message that we have gone to conf."
 				conf)
 	  (lyskom-scroll)
 	  (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
-	      (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
-					   lyskom-pers-no)
-		  (lyskom-do-go-to-conf conf
-					(lyskom-get-membership
-					 (conf-stat->conf-no conf) t))
-		(lyskom-report-command-answer nil))
+              (let ((no-of-unread
+                     (lyskom-read-num-range-or-date 
+                      0 
+                      (conf-stat->no-of-texts conf)
+                      (lyskom-format 'initial-unread)
+                      nil
+                      t
+                      nil)))
+                (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
+                                             lyskom-pers-no no-of-unread)
+                    (lyskom-do-go-to-conf conf
+                                          (lyskom-get-membership
+                                           (conf-stat->conf-no conf) t))
+                  (lyskom-report-command-answer nil)))
 	    (lyskom-insert-string 'no-ok))))))
 
     ;; DEBUG+++
