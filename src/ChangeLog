@@ -3,7 +3,9 @@
 	* menus.el (lyskom-define-menu-xemacs): Try to use swedish
 	characters rather than brackets and braces for bindings that have
 	both.
-	(lyskom-define-menu-gnu): Same here.
+	(lyskom-define-menu-gnu): Same here. In W32, encode the keyboard
+	shortcut using latin-1. Hopefully that will get rid of the little
+	boxes in the menus.
 
 	* utilities.el (lyskom-traverse-keymap): New function.
 

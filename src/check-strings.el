@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.24 2003-12-05 00:04:20 byers Exp $
+;;;;; $Id: check-strings.el,v 44.25 2004-01-01 22:18:51 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -52,8 +52,30 @@
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
 
+  (lcs-message t "Checking menus")
+  (lcs-check-menu-contents)
+
   (or noninteractive
       (display-buffer lcs-message-buffer)))
+
+(defun lcs-check-menu-contents ()
+  "Check that all commands are in the LysKOM menus."
+  (let ((commands (lcs-extract-commands-from-menu-template lyskom-menu-template)))
+    
+    ))
+
+(defun lcs-extract-commands-from-menu-template (template)
+  (let ((result nil) (el nil))
+    (while template
+      (setq el (car template) template (cdr template))
+      (cond ((eq (car el) 'menu)
+             (setq result
+                   (nconc result 
+                           (lcs-extract-commands-from-menu-template
+                            (cdr (cdr el))))))
+
+            ((eq (car el) 'item)
+             (setq result (cons (car (cdr el)) result)))))))
 
 (defun lcs-check-language-vars ()
   "Check that all language-specific variables exist in all languages"
