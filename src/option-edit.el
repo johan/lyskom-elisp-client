@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.98 2003-08-14 12:01:28 byers Exp $
+;;;;; $Id: option-edit.el,v 44.99 2003-08-14 14:16:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.98 2003-08-14 12:01:28 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.99 2003-08-14 14:16:55 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -556,7 +556,10 @@ All key bindings:
 
 
 (defvar lyskom-custom-variables-missing '(kom-permanent-filter-list
-                                          kom-quit-hook)
+                                          kom-quit-hook lyskom-last-known-conf-no
+                                          lyskom-last-known-pers-no
+                                          kom-presence-messages
+                                          kom-dont-complain-about-missing-presentation)
   "List of user variables not in lyskom-custom-variables.")
 
 (defvar lyskom-custom-variables

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.177 2003-08-14 12:01:27 byers Exp $
+;;;;; $Id: commands2.el,v 44.178 2003-08-14 14:16:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.177 2003-08-14 12:01:27 byers Exp $\n"))
+              "$Id: commands2.el,v 44.178 2003-08-14 14:16:54 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2269,9 +2269,9 @@ really only a simple interface to the basic functionality of calc."
   "This command is obsolete, broken and doesn't work. Don't use it.
 Sets a personal label on an object of some kind."
   (interactive)
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
+  (let* ((completions (list (cons (lyskom-get-string 'Conference) 'conf)
+                            (cons (lyskom-get-string 'Person) 'pers)
+                            (cons (lyskom-get-string 'Text) 'text)))
          (completion-ignore-case t)
          (type (cdr (lyskom-string-assoc
                      (completing-read (lyskom-get-string 'label-what-kind)
@@ -3540,6 +3540,71 @@ are advisory; clients may ignore them."
                       (uconf-stat->conf-no uconf-stat)
                       (membership->type mship)))
         (lp--update-buffer (uconf-stat->conf-no uconf-stat))))))
+
+(def-kom-command kom-list-new-conferences ()
+  "List conferences created since the last time this command
+was given."
+  (interactive)
+  (lyskom-list-new-conferences 'lyskom-last-known-conf-no
+                               'conferences
+                               (lambda (el)
+                                 (not (conf-type->letterbox
+                                       (uconf-stat->conf-type el))))))
+
+(def-kom-command kom-list-new-persons ()
+  "List persons created since the last time this command
+was given."
+  (interactive)
+  (lyskom-list-new-conferences 'lyskom-last-known-pers-no
+                               'persons
+                               (lambda (el)
+                                 (conf-type->letterbox
+                                  (uconf-stat->conf-type el)))))
+
+(defun lyskom-list-new-conferences (varsym obj filter)
+  "List conferences created since the last time this command
+was given."
+  (interactive)
+  (let* ((result (make-collector))
+         (var (symbol-value varsym))
+         (count 0)
+         (conf-no (or (car var) 1))
+         (last-conf-no (blocking-do 'first-unused-conf-no))
+         (time-string (condition-case nil
+                          (and var (lyskom-format-time
+                                    'date-and-time (cdr var)))
+                        (error nil))))
+
+    (cond ((null last-conf-no)
+           (lyskom-format-insert 'no-support-in-server))
+          ((>= conf-no last-conf-no)
+           (lyskom-format-insert 'no-new-conferences 
+                                 time-string (lyskom-get-string obj)))
+          (t
+           (lyskom-format-insert 'new-conferences-since 
+                                 time-string (lyskom-get-string obj))
+           (while (< conf-no last-conf-no)
+             (initiate-get-uconf-stat 'main
+                                      (lambda (val result)
+                                        (and val (collector-push val result))) 
+                                      conf-no result)
+             (setq conf-no (1+ conf-no)))
+           (lyskom-wait-queue 'main)
+           (lyskom-traverse conf (nreverse (collector->value result))
+             (when (funcall filter conf)
+               (setq count (1+ count))
+               (lyskom-format-insert "%5#1m %#2c %#1M\n"
+                                     conf
+                                     (lyskom-list-conf-membership-char
+                                      (uconf-stat->conf-no conf)))))
+           (when (lyskom-j-or-n-p (lyskom-format 'mark-confs-as-known
+                                                 (lyskom-get-string obj)
+                                                 count))
+             (set varsym (cons conf-no (lyskom-current-client-time)))
+             (lyskom-save-options lyskom-buffer
+                                  nil
+                                  nil
+                                  nil))))))
 
 
 

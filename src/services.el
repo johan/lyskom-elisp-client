@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.40 2003-08-14 12:01:28 byers Exp $
+;;;;; $Id: services.el,v 44.41 2003-08-14 14:16:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.40 2003-08-14 12:01:28 byers Exp $\n"))
+	      "$Id: services.el,v 44.41 2003-08-14 14:16:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1325,6 +1325,26 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
           (lyskom-check-call kom-queue))
       (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-static-server-info)
       (lyskom-send-packet kom-queue (lyskom-format-objects 113)))))
+
+(defun initiate-first-unused-conf-no (kom-queue handler &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 114))))
+
+(defun initiate-first-unused-text-no (kom-queue handler &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 115))))
+
+(defun initiate-find-next-conf-no (kom-queue handler conf-no &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 116 conf-no))))
+
+(defun initiate-find-previous-conf-no (kom-queue handler conf-no &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 117 conf-no))))
 
 
 ;;; ================================================================

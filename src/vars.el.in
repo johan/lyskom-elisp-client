@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.257 2003-08-14 12:01:29 byers Exp $
+;;;;; $Id: vars.el.in,v 44.258 2003-08-14 14:16:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.257 2003-08-14 12:01:29 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.258 2003-08-14 14:16:56 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3013,6 +3013,8 @@ Users are encouraged to use their best sense of humor."
     kom-change-message-flag
     kom-list-faqs
     kom-list-server-faqs
+    kom-list-new-conferences
+    kom-list-new-persons
     ))
 
 ;;; ================================================================
@@ -3857,6 +3859,14 @@ should be dynamically bound whenever it needs to be used.")
 (def-kom-var lyskom-rejected-recommendations nil
   "List of invitations that have been rejected."
   inherited)
+
+(def-kom-var lyskom-last-known-conf-no nil
+  "Last known conference number."
+  server)
+
+(def-kom-var lyskom-last-known-pers-no nil
+  "Last known conference number."
+  server)
 
 (defvar lyskom-xface-cache (make-vector 29 0))
 
