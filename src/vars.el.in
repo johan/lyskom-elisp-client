@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.45 1997-11-30 17:19:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.46 1997-12-04 20:39:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.45 1997-11-30 17:19:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.46 1997-12-04 20:39:43 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -730,7 +730,8 @@ part is optional. If it is not specified, port 80 is assumed.")
     ("kom.csd.uu.se" . "CSD-KOM")
     ("striterax.medio.mh.se" . "MedioKOM")
     ("kom.mds.mdh.se" . "MdS-KOM")
-    ("kom.stacken.kth.se" . "TokKOM"))
+    ("kom.stacken.kth.se" . "TokKOM")
+    ("com.helsinki.fi" . "HelKOM"))
   "*An alist mapping server names to shorter identification strings")
 
 (def-kom-var kom-ansaphone-on nil
