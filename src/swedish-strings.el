@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.10 1996-08-14 11:45:53 byers Exp $
+;;;;; $Id: swedish-strings.el,v 43.11 1996-08-14 14:10:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.10 1996-08-14 11:45:53 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.11 1996-08-14 14:10:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -458,6 +458,7 @@ i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#1s%#2s%#3M\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
+    (send-empty-message-p . "Meddelandet \344r tomt. Vill du \344nd\345 skicka det? ")
     (his-total-unread . "\n%#1M har totalt %#2d ol\344sta.\n")
     (message-prompt . "Meddelande: ")
     (message-sent-to-user . 
