@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.47 1999-10-18 18:54:35 byers Exp $
+;;;;; $Id: edit-text.el,v 44.48 1999-10-19 13:11:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.47 1999-10-18 18:54:35 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.48 1999-10-19 13:11:43 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -260,7 +260,7 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
        
 
         (lyskom-edit-insert-commented-author 
-         (if mx-from
+         (if (or mx-from mx-author)
              (lyskom-format-mx-author mx-from mx-author)
            (blocking-do 'get-conf-stat (text-stat->author text-stat)))
          string stream number))

@@ -1,3 +1,11 @@
+1999-10-19  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-print-summary-line): Test mx-author
+	and mx-from to see if we should print the mx-author name.
+
+	* edit-text.el (lyskom-edit-get-commented-author): Test mx-author
+	and mx-from to see if we should print the mx-author name.
+
 1999-10-18  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-client-date): Off-by-one error in
