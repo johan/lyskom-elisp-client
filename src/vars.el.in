@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.48 1997-12-28 19:16:46 byers Exp $
+;;;;; $Id: vars.el.in,v 44.49 1998-02-11 14:41:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.48 1997-12-28 19:16:46 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.49 1998-02-11 14:41:40 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -253,6 +253,10 @@ entering a conference."
   "*If non-nil, lyskom prints continuous info about what other people are doing.
 Info is printed on the message line and never in the buffer. If minibuffer is
 used then no message is printed.
+
+A list of integers means show messages for those users.
+
+The value 'friends means show messages for the users in kom-friends.
 
 If you want the messages in the buffer you could set the variable 
 kom-presence-messages-in-buffer."
@@ -487,7 +491,8 @@ to call."
 
 
 (def-kom-var kom-audio-player "audioplay"
-  "*Program to play audio files.")
+  "*Program to play audio files."
+  server)
 
 
 (def-kom-var kom-default-message-recipient 'group
@@ -597,7 +602,8 @@ first manager found that matches is used to display the URL.
 
 See kom-url-managers for a list of all available URL viewers. See
 kom-netscape-command and kom-mosaic-command for information specific 
-to some URL viewers.")
+to some URL viewers."
+  server)
 
 
 (def-kom-var kom-url-managers '(("default"
@@ -642,7 +648,8 @@ the selected URL is used to view the URL by calling its VIEW-FUNCTION
 with the URL and the manager entry as arguments.")
 
 (def-kom-var kom-mosaic-command "/usr/local/bin/mosaic"
-  "*Command to run to start Mosaic")
+  "*Command to run to start Mosaic"
+  server)
 
 (def-kom-var kom-netscape-command "netscape"
   "*Command to run to start Netscape.
@@ -652,7 +659,8 @@ arguments. If a list, the first element must be a command that starts
 Netscape. The remaining elements are used as arguments to Netscape.
 
 For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
-is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)")
+is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)"
+  server)
 
 (def-kom-var kom-lynx-terminal 'xterm
   "*Where to start Lynx.
@@ -1362,6 +1370,10 @@ will be shown."
 (def-kom-var lyskom-server-name ""
   "The name of the server"
   inherited)
+
+(def-kom-var lyskom-server-port nil
+  "The port we are connected to."
+  local)
 
 (def-kom-var lyskom-buffer-list nil
   "List of all LysKOM buffers.")
