@@ -8,7 +8,7 @@ CONTENTS
 
 	1 .................................... The Format String
 	2 .................................... Format Directives
-	  2.1 ................................ Format nLetters
+	  2.1 ................................ Format Letters
 	  2.2 ................................ Format Arguments
 	  2.3 ................................ Format Flags
         3 .................................... Formatting Functions
@@ -69,7 +69,14 @@ c - Interpret and insert an integer as a single character.
     one of the lyskom-format-insert functions was called. The extent
     of the format in the buffer is to the end of the current subformat
     string or the entire format string if processing is at the top
-    level. 
+    level.
+
+$ - Start an overlay. The argument is a property list containing the
+    properties to set on the overlay. Overlays are only available when
+    calling lyskom-format-insert and lyskom-format-insert-at-point.
+    The extent of the overlay in the buffer is to the end of the
+    current subformat string or the entire format string if processing
+    is at the top level.
 
 [ - Begin subformat. This directive does not use an argument.
 

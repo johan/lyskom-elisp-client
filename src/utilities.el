@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.96 2002-04-13 21:08:01 byers Exp $
+;;;;; $Id: utilities.el,v 44.97 2002-04-22 22:18:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.96 2002-04-13 21:08:01 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.97 2002-04-22 22:18:05 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -883,13 +883,14 @@ in lyskom-face-schemes."
                (fboundp 'lyskom-set-face-foreground)
                (fboundp 'lyskom-set-face-background))
       (mapcar 
-       (function
-        (lambda (spec)
-          (lyskom-copy-face (or (elt spec 1) 'default) (elt spec 0))
-          (if (elt spec 2)
-              (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-          (if (elt spec 3)
-              (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
+       (lambda (spec)
+         (if (elt spec 1)
+             (lyskom-copy-face (elt spec 1) (elt spec 0))
+           (make-face (elt spec 0)))
+         (when (elt spec 2)
+           (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
+         (when (elt spec 3)
+           (lyskom-set-face-background (elt spec 0) (elt spec 3))))
        (cdr tmp)))))
 
 

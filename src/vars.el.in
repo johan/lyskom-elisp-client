@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.183 2002-04-21 21:32:17 byers Exp $
+;;;;; $Id: vars.el.in,v 44.184 2002-04-22 22:18:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.183 2002-04-21 21:32:17 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.184 2002-04-22 22:18:06 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -100,6 +100,13 @@ are in the list.")
 
 
 ;;; User flags
+
+(def-kom-var kom-color-text-background t
+  "*If t, use an alternate background color for texts in LysKOM.
+If nil, do not use an alternate background. Other values are reserved
+for future use."
+  server
+)
 
 (def-kom-var kom-extended-status-information t
   "*If t, list extended status information for all objects in LysKOM.
@@ -2785,6 +2792,7 @@ the value of  kom-tell-phrases for fun.")
 
 (def-kom-var lyskom-face-schemes
   '((default
+     (kom-text-background-face nil nil "#f8f8ff")
      (kom-active-face default "blue4" nil)
      (kom-url-face default "BlueViolet" nil)
      (kom-me-face bold "blue3" "lavender")
@@ -2800,6 +2808,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face default nil nil)
      (kom-dim-face default "gray" nil))
     (inverse
+     (kom-text-background-face nil nil "#080808")
      (kom-active-face default "lightblue" nil)
      (kom-url-face default "Moccasin" nil)
      (kom-me-face bold "gold" "black")
@@ -2815,6 +2824,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face default nil nil)
      (kom-dim-face default "gray" nil))
     (monochrome
+     (kom-text-background-face nil nil nil)
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
      (kom-me-face bold nil nil)
@@ -2830,6 +2840,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face default nil nil)
      (kom-dim-face default nil nil))
     (minimal
+     (kom-text-background-face nil nil nil)
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
      (kom-me-face default nil "lavender")
@@ -2845,6 +2856,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face default nil nil)
      (kom-dim-face default nil nil))
     (highlight
+     (kom-text-background-face nil nil "#f8f8ff")
      (kom-active-face    default   nil          "aliceblue")
      (kom-url-face       default   nil          "yellow")
      (kom-me-face        bold      "darkblue"   "thistle")
