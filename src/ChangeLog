@@ -1,3 +1,7 @@
+Tue Oct  8 02:10:10 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* menus.el : Ny fil. Menyer i lyskom-mode. 
+
 Sun Oct  6 10:11:25 1996  David Kågedal  <kg@infovav.se>
 
 	* utilities.el (lyskom-setup-faces): Använd device-class istället
