@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.95 2003-08-16 16:58:45 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.96 2003-08-17 17:28:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.95 2003-08-16 16:58:45 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.96 2003-08-17 17:28:49 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -977,7 +977,7 @@ after formating it as time. This is a LysKOM button action."
 
 (lyskom-with-external-functions (w3-fetch)
   (defun lyskom-view-url-w3 (url manager)
-    "View the URL URL using W3. Second argument MANAGER is ignored."
+    "View the URL using W3. Second argument MANAGER is ignored."
     (w3-fetch url)))
 
 (defun lyskom-view-url-dired (url manager)
@@ -1053,7 +1053,12 @@ after formating it as time. This is a LysKOM button action."
 
 (defun lyskom-view-url-windows (url manager)
   "View the URL URL in Microsoft Windows. MANGER is the URL manager.
-Fall back on Netscape if not running in Microsoft Windows."
+Fall back on Netscape if not running in Microsoft Windows.
+
+In theory, opening an URL on Windows should be a matter of doing
+\(w32-shell-execute \"open\" URL\), but this sometimes fails, so
+we protect ourselves by also trying to start some common defaults
+using start-process."
   (cond
    ((memq window-system '(win32 mswindows w32))
     (cond
@@ -1078,18 +1083,22 @@ Fall back on Netscape if not running in Microsoft Windows."
                               " kom-windows-browser-command"
                               " (%s)")
                       kom-windows-browser-command))))
-     ((not (memq 'w32-shell-execute lyskom-compatibility-definitions))
-      (w32-shell-execute "open" url)
+     ((and (not (memq 'w32-shell-execute lyskom-compatibility-definitions))
+           (condition-case nil
+               (progn (w32-shell-execute "open" url) t)
+             (error nil)))
       (lyskom-url-manager-starting manager))
-      ;;(lyskom-message "Webb via [%s \"%s\" \"%s\"] ..."
-      ;;                "w32-shell-execute" "open" url))
-     (t (let ((programs (list
-                         "start"
-                         "explorer"
-                         (concat "C:\\Program Files\\Netscape"
-                           "\\Communicator\\Program\\netscape.exe")
-                         (concat "C:\\Program Files\\Netscape"
-                                 "\\Navigator\\Program\\netscape.exe"))))
+     ;;(lyskom-message "Webb via [%s \"%s\" \"%s\"] ..."
+     ;;                "w32-shell-execute" "open" url))
+     (t (let ((programs
+               '("c:\\Program\\Internet Explorer\\iexplore.exe"
+                 "c:\\Programs\\Internet Explorer\\iexplore.exe"
+                 "c:\\Program Files\\Internet Explorer\\iexplore.exe"
+                 "start"
+                 "explorer"
+                 "C:\\Program Files\\Netscape\\Communicator\\Program\\netscape.exe"
+                 "C:\\Program Files\\Netscape\\Navigator\\Program\\netscape.exe"
+                 )))
           (while programs
             (condition-case nil
                 (progn

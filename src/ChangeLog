@@ -1,5 +1,10 @@
 2003-08-17  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1044:
+	* lyskom-buttons.el (lyskom-view-url-windows): Protect execution
+	of w32-shell-execute from errors (e.g. caused by bad settings).
+	(lyskom-view-url-windows): Added a bunch of paths to iexplore.exe.
+
 	Support UTC time in the server:
 	* startup.el (lyskom): Select UTC time format if the server
 	supports it.
