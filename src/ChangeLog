@@ -1,5 +1,8 @@
 2002-04-24  David Byers  <david.byers@swipnet.se>
 
+	* header.el: Added a check for obsolete read-kbd-macro (found in
+	macedit.el which is installed with the calc package in XEmacs).
+
 	* compatibility.el (make-temp-file): Maybe compatibility with
 	XEmacs. At least the warnings are gone...
 

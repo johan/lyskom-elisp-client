@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: header.el,v 44.2 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: header.el,v 44.3 2002-04-24 21:36:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,3 +61,10 @@
       ((and (eq (eval-when-compile emacs-major-version) 19)
             (> emacs-major-version 19))
        (error "A LysKOM client compiled for Emacs 19 will not run in newer versions of Emacs.")))
+
+;;; Check some basic misfeatures that are still all too common
+
+(eval-and-compile
+  (if (and (stringp (read-kbd-macro "<SPC>"))
+           (string-equal (read-kbd-macro "<SPC>") "<SPC>"))
+      (error "You probably have a file named macedit.elc in Emacs' load path.\nIt is obsolete and must be removed in order for LysKOM to work.")))
