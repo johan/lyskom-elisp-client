@@ -1,5 +1,15 @@
 2004-11-03  Pontus Freyhult  <pont@soua.net>
 
+	Use kom-default-* as user variables, not lyskom-default-*:
+	* vars.el.in (kom-default-server): Updated documentation and value.
+	(lyskom-default-server): Dito.
+	(kom-default-password): Dito.	
+	(lyskom-default-password): Dito.
+	(kom-default-user-name): Dito.
+	(lyskom-default-user-name): Dito.
+	* startup.el (lyskom): Use kom-default-server, kom-default-user-name
+	and kom-default-password.
+	
 	* commands1.el (kom-view-commented-text): Cleanup (progn removal),
 	inhibit immediate display of footnotes.
 

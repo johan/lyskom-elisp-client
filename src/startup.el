@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.107 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.108 2004-11-03 12:48:04 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.107 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.108 2004-11-03 12:48:04 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -82,7 +82,8 @@ clients of the event. See lyskom-mode for details on lyskom."
   (interactive (list (lyskom-read-server-name
 		      (lyskom-format 'server-q
 				     (or (getenv "KOMSERVER")
-					 lyskom-default-server)))
+					 lyskom-default-server
+					 kom-default-server)))
 		     nil
 		     nil
 		     (if current-prefix-arg
@@ -92,10 +93,14 @@ clients of the event. See lyskom-mode for details on lyskom."
 
   (run-hooks 'lyskom-init-hook)
   (setq username
-	(or username lyskom-default-user-name
+	(or username 
+	    lyskom-default-user-name
+	    kom-default-user-name
 	    (getenv "KOMNAME")))
   (setq password
-	(or password lyskom-default-password
+	(or password 
+	    lyskom-default-password
+	    kom-default-password
 	    (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (let* ((env-kom (getenv "KOMSERVER"))
@@ -103,7 +108,8 @@ clients of the event. See lyskom-mode for details on lyskom."
                         (lyskom-string-rassoc env-kom kom-builtin-server-aliases))))
 	(setq host (or (car canon)
 		       env-kom
-		       lyskom-default-server))))
+		       lyskom-default-server
+		       kom-default-server))))
   (let ((port 4894)
 	(init-done nil))
     (cond				;Allow "nanny:4892" to use port 4892.
@@ -111,7 +117,7 @@ clients of the event. See lyskom-mode for details on lyskom."
       (setq port (string-to-int (substring host (match-end 0))))
       (cond
        ((zerop (match-beginning 0))
-	(setq host lyskom-default-server))
+	(setq host (or lyskom-default-server kom-default-server)))
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
