@@ -1,5 +1,7 @@
 Sun Jan 21 18:38:26 1996  David K}gedal  <davidk@lysator.liu.se>
 
+	* lyskom-rest.el (lyskom-format-text-body): Lätt justering.
+
 	* async.el (lyskom-show-personal-message): Sätt bara
  	group-recipient om det var ett gruppmeddelande.
 
