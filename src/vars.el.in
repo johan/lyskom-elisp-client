@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.54 1998-12-15 12:35:45 byers Exp $
+;;;;; $Id: vars.el.in,v 44.55 1999-02-11 16:27:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.54 1998-12-15 12:35:45 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.55 1999-02-11 16:27:33 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1113,6 +1113,8 @@ ordinary LysKOM texts."
     kom-change-language
     kom-calculate
 
+    kom-where-is
+
     kom-next-kom
     kom-previous-kom
     kom-next-unread-kom
@@ -1786,6 +1788,9 @@ an unknown person.")
 
 (def-kom-var kom-no-comments-to-motd nil
   "This should always be set to nil unless you are Klaus Zeuge.") ;+++SOJGE
+
+(def-kom-var kom-w3-simplify-body t
+  "Strip color information from body tag.")
 
 (def-kom-var lyskom-format-special 
   '(("html"               . lyskom-format-html)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.61 1998-12-15 12:35:34 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.62 1999-02-11 16:27:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.61 1998-12-15 12:35:34 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.62 1999-02-11 16:27:27 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -747,7 +747,7 @@ The position lyskom-last-viewed will always remain visible."
                                 '(special-insert))
         (condition-case val
             (funcall fn (car bounds) (cdr bounds))
-          (error (apply 'message (cdr val))))
+          (error (apply 'message "%S" val)))
         (setq start next)
         (setq bounds (next-text-property-bounds 1 start
                                                 'special-insert))))
@@ -1485,7 +1485,14 @@ in lyskom-messages."
 
 
 (defun lyskom-w3-region (start end)
-  (w3-region start end)
+  (when kom-w3-simplify-body
+    (save-excursion
+      (let ((case-fold-search t))
+        (goto-char start)
+        (while (re-search-forward "<body[^>]*>" end t)
+          (replace-match "<body>")))))
+  
+    (w3-region start end)
   (w3-finish-drawing)
   (add-text-properties start (min (point-max) end) '(end-closed nil)))
 
