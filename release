@@ -168,7 +168,7 @@ if [ "$revision" ] ; then
 fi
 
 echo "Revisionens symboliska tag: [$tag] \c"
-reas ans
+read ans
 case $ans in
     "") ;;
     *) tag="$ans" ;;
@@ -176,7 +176,7 @@ esac
 
 echo "Sätter symbolisk tag..."
 if ( set -x ; cvs tag "$tag" ) ; then
-    ;
+    echo "Releasen är symboliskt taggad"
 else
     ask "Forstsätt trots att taggningen inte gick bra" nej
     if [ "$no" ] ; then
@@ -185,9 +185,9 @@ else
 fi
 
 echo "Bygger release i src/"
-if ( cr src; set -x; make release) ; then
-    echo "Det gick inte att göra release. Någonting är galet."
-    echo "Se till att göra make release manuellt istället."
+if ( cd src; set -x; make release) ; then
+    echo "Det gick kanske inte att göra release. Någonting kan vara galet."
+    echo "Eventuellt måste du göra det manuellt istället."
 fi
 
 cat <<EOF
