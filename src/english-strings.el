@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.1 1996-09-08 20:14:54 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.2 1996-09-24 22:04:10 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.1 1996-09-08 20:14:54 davidk Exp $"))
+              "$Id: english-strings.el,v 44.2 1996-09-24 22:04:10 davidk Exp $"))
 
 
 
@@ -209,7 +209,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (presentation-for-whom . "Which conference/user: ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
     (review-presentation-of . "Review presentation of %#1M.\n")
-    (has-no-presentation . "%#1M has no presentation.\n")
+    (has-no-presentation . "%#1:M has no presentation.\n")
 
     (have-to-read . "You must read an article first.\n")
 
@@ -331,9 +331,9 @@ and you have finished reading. Please come back later.
     (go-to-conf . "Go to conference %#1M.\n")
     (cant-go-to-his-mailbox . "You are not allowed to go to %#1M's mailbox.\n")
     (not-member-of-conf . "You are not a member of %#1M.\n")
-    (about-to-change-name-from . "%#1P\n")
+    (about-to-change-name-from . "%#1M\n")
     (change-name-done . "Done. New name: %[%#2@%#1:M%].\n")
-    (change-name-nope . "Didn't work. Error code %#3d. %#2s.\n")
+    (change-name-nope . "You could't change the name to %#1s.\nError code %#3d. %#2s.\n")
     (change-supervisor-from-to . "Change supervisor of %#1M to %#2P...")
     (change-supervisor-nope . 
      "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1M?\n")
@@ -473,7 +473,7 @@ Your public message:
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.
 The message you were sending to %#1M was:
-%#2s\n")
+%#2t\n")
     (only-last . "Last (0 - %#1d) articles in %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
@@ -499,8 +499,8 @@ The message you were sending to %#1M was:
     (multiple-choice . "There are several alternatives.")
 
     (what-mark-to-list . "List which mark: ")
-    (you-have-marks . "You have %#1s texts marked with %#2s.\n")
-    (you-have-marks-all . "You have %#1s marked texts.\n")
+    (you-have-marks . "You have %#1d texts marked with %#2d.\n")
+    (you-have-marks-all . "You have %#1d marked texts.\n")
 
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
@@ -575,7 +575,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (first-n . "first %#1d")
     (info-by-whom . "%#1s by whom: ")
     (info-to-conf . "%#1s to conference: ")
-    (info-by-to . "%#1s by %#2s to %#3s forward.")
+    (info-by-to . "%#1s by %#2P to %#3M forward.")
     (all-confs . "all conferences")
     (no-get-conf . "You are not allowed to access that conferene.\n")
     (no-get-pers . "You are not allowed to access that user.\n")
@@ -587,7 +587,6 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (cannot-read-last-text . "You cannot review the last read article.\n")
     (review-n-texts . "Review %#1d articles.\n")
     (review-marked . "Review %#1d marked articles.\n")
-    (review-text-no . "Review article %#1n")
     (review-one-comment . "Review one comment to article %#1n.\n")
     (review-many-comments . "Review %#2d comments to article %#1n.\n")
     (read-normally-read . "How many articles to you want to review: ")
@@ -636,7 +635,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
 
 ; used by lyskom-print-time
-    (time-y-m-d-h-m . "%4#1d %02#3d/%02#1d  %02#4d:%02#5d ")
+    (time-y-m-d-h-m . "%4#1d %02#3d/%02#2d  %02#4d:%02#5d ")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "today")
@@ -736,7 +735,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
 ")
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
-    (prio-row . " %5#1d%5#2d  %#3M\n")
+    (prio-row . " %5#1d%5#2m  %#3M\n")
     (too-high-goto-2 . "You are too high up, move down to line two.")
     (too-low-go-up . "You can't push the last line. Move up one line.")
     (all-confs-popped .  "All conferences have been popped.")
@@ -771,7 +770,6 @@ You should set it to a better value.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM is waiting for a response from the server. Wait for the prompt.\n")
     (review-text-q . "Review article: ")
-    (review-text-no . "Review article %#1n.\n")
 
     (completely-read-conf . "You have seen all the articles in this conference.\n")
     (not-in-any-conf . "You are not in a conference now.\n")
@@ -852,8 +850,9 @@ Error message: %#1s**************************************************")
     (filter-error-bad-not . "Error in the filter specification after 'not'")
     (filter-error-unknown-key . "The filter key '%S' is unknown.")
     (filter-error-key-arg . "Bad filter data (%S %S)")
-    (filter-tree . "Skipping article %n \"%s\" by %P and all its comments.\n")
-    (filter-text . "Skipping article %n \"%s\" by %P.\n")
+    (filter-tree
+     . "Skipping article %#1n \"%#2r\" by %#3P and all its comments.\n")
+    (filter-text . "Skipping article %#1n \"%#2r\" by %#3P.\n")
     (filter-permanent . "Permanent? ")
     (filter-action . "Filter how: ")
     (filter-in-conf . "In which conference (all): ")
@@ -950,7 +949,7 @@ Using %#6D from %#3s\n")
 %#5s %#7s %#4M
 Using %#6D from %#3s
 On since %#8s%#9s")
-    (session-status-inactive . "\nHas been inactive for %#1d minutes\n")
+    (session-status-inactive . "\nHas been inactive for %#1s\n")
     (one-day . "one day")
     (one-hour . "one hour")
     (one-minute . "one minute")

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.1 1996-09-08 20:14:58 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.2 1996-09-24 22:04:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.1 1996-09-08 20:14:58 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.2 1996-09-24 22:04:14 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -340,8 +340,8 @@ du har l\344st klart allting. Kom tillbaks senare.
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
 
 ;;; For later
-    (norhtward . "norrut")
-    (soutward . "söderut")
+    (northward . "norrut")
+    (southward . "söderut")
     (permanent-sundown . "Solen kommer inte att gå upp. Flytta %#1s!")
     (permanent-sunup . "Solen kommer inte att gå ned. Fytta %#1s!")
     (sunup-soon . "Solen går snart upp")
@@ -611,7 +611,6 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (cannot-read-last-text . "Du kan inte l\344sa den senast l\344sta texten.\n")
     (review-n-texts . "\305terse %#1d inl\344gg.\n")
     (review-marked . "\305terse %#1d markerade.\n")
-    (review-text-no . "\305terse text nummer %#1n")
     (review-one-comment . "\305terse en kommentar till inl\344gg %#1n.\n")
     (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1n.\n")
     (read-normally-read . "Hur m\345nga vill du se igen?")
@@ -796,7 +795,6 @@ Du b\366r s\344tta den till ett b\344ttre v\344rde.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM v\344ntar p\345 svar fr\345n servern. V\344nta tills du f\345r en prompt.\n")
     (review-text-q . "\305terse text nummer: ")
-    (review-text-no . "\305terse text nummer %#1d.\n")
 
     (completely-read-conf . "Du har sett alla texter i detta m\366te.\n")
     (not-in-any-conf . "Du l\344ser inte n\345got m\366te just nu.\n")
