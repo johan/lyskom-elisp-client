@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.5 1995-10-28 11:07:19 byers Exp $
+;;;;; $Id: commands1.el,v 38.6 1995-10-29 06:41:35 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.5 1995-10-28 11:07:19 byers Exp $\n"))
+	      "$Id: commands1.el,v 38.6 1995-10-29 06:41:35 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -259,6 +259,7 @@ as TYPE. If no such misc-info, return NIL"
 ;;;             Addera medlem - Add somebody else as a member
 
 ;;; Author: ???
+;;; Rewritten by: David K}gedal
 
 
 ;; Add another person
@@ -274,7 +275,7 @@ Ask for the name of the person, the conference to add him/her to."
 	     (whereto (lyskom-read-conf-stat (lyskom-get-string 'where-to-add)
 					     'all))
 	     (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
-	(lyskom-add-member-answer (lyskom-add-member-3 whereto who pers-stat)
+	(lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
 				  whereto who))
     (lyskom-end-of-command)))
 
@@ -292,7 +293,7 @@ Ask for the name of the person, the conference to add him/her to."
 		      'all))
 	    (who (blocking-do 'get-conf-stat lyskom-pers-no))
 	    (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
-	(lyskom-add-member-answer (lyskom-add-member-3 whereto who pers-stat)
+	(lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
 				  whereto who))
     (lyskom-end-of-command)))
 
@@ -301,22 +302,20 @@ Ask for the name of the person, the conference to add him/her to."
 ;;; NOTE: This function is also called from lyskom-go-to-conf-handler
 ;;;       and from lyskom-create-conf-handler.
 
-(defun lyskom-add-member-2 (conf-no pers-no &optional thendo &rest data)
+(defun lyskom-add-member-by-no (conf-no pers-no &optional thendo &rest data)
   "Fetch info to be able to add a person to a conf.
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
-for person PERS-NO and send them into lyskom-add-member-3.
-Let lyskom-add-member-3 call the optional function THENDO with the arguments
-DATA."
+for person PERS-NO and send them into lyskom-try-add-member."
   ;; This could be optimized with David Byers multi-hack.
-  (let ((result (lyskom-add-member-3 (blocking-do 'get-conf-stat conf-no)
-				     (blocking-do 'get-conf-stat pers-no)
-				     (blocking-do 'get-pers-stat pers-no))))
+  (let ((result (lyskom-try-add-member (blocking-do 'get-conf-stat conf-no)
+				       (blocking-do 'get-conf-stat pers-no)
+				       (blocking-do 'get-pers-stat pers-no))))
     (if thendo
 	(apply thendo data))
     result))
 
 
-(defun lyskom-add-member-3 (conf-conf-stat pers-conf-stat pers-stat)
+(defun lyskom-try-add-member (conf-conf-stat pers-conf-stat pers-stat)
   "Add a member to a conference.
 Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
 CONF-CONF-STAT: the conf-stat of the conference the person is being added to
@@ -326,7 +325,7 @@ PERS-STAT: the pers-stat of the person being added.
 Returns t if it was possible, otherwise nil."
   (if (or (null conf-conf-stat)
 	  (null pers-conf-stat))
-      nil ; We have some problem here.
+      nil				; We have some problem here.
     (let ((priority
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       100			; When adding someone else
@@ -372,73 +371,69 @@ Returns t if it was possible, otherwise nil."
       (progn
 	(lyskom-insert-string 'nope)
 	(if (conf-type->rd_prot conf-conf-stat)
-	    (initiate-get-conf-stat 'main 'lyskom-add-member-answer-rd_prot
-				    (conf-stat->supervisor conf-conf-stat)
-				    conf-conf-stat)
+	    ;; The conference is protected. Tell the user to contact
+	    (let ((supervisorconf (blocking-do
+				   'get-conf-stat
+				   (conf-stat->supervisor conf-conf-stat)
+				   conf-conf-stat)))
+	      (if supervisorconf
+		  (lyskom-format-insert 'is-read-protected-contact-supervisor
+					conf-conf-stat
+					supervisorconf)
+		(lyskom-format-insert 'cant-find-supervisor
+				      conf-conf-stat)))
 	  (lyskom-format-insert 'error-code
 				(lyskom-get-error-text lyskom-errno)
 				lyskom-errno)))
 
     (lyskom-insert-string 'done)
-    (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat)) ;+++Borde {ndra i cachen i st{llet.
-    (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat)) ;+++Borde {ndra i cachen i st{llet.
+    ;;+++Borde {ndra i cachen i st{llet.
+    (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
+    ;;+++Borde {ndra i cachen i st{llet.
+    (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat))
     (if (= (conf-stat->conf-no pers-conf-stat)
 	   lyskom-pers-no)
-	(initiate-query-read-texts 'main 'lyskom-add-membership
-				   lyskom-pers-no 
-				   (conf-stat->conf-no conf-conf-stat)
-				   conf-conf-stat))))
-
-
-(defun lyskom-add-member-answer-rd_prot (supervisorconf conf-conf-stat)
-  "Suggests that we contact the supervisor to become a member."
-  (if (not supervisorconf)
-      (lyskom-format-insert 'cant-find-supervisor
-			    conf-conf-stat)
-    (lyskom-format-insert 'is-read-protected-contact-supervisor
-			  conf-conf-stat
-			  supervisorconf)))
+	(progn				; Adding myself
+	  (setq lyskom-last-conf-received
+		(1+ lyskom-last-conf-received))
+	  (lyskom-add-membership
+	   (blocking-do 'query-read-texts
+			lyskom-pers-no 
+			(conf-stat->conf-no conf-conf-stat))
+	   conf-conf-stat)))))
 
 
 
-(defun lyskom-add-membership (membership conf-stat &optional thendo data)
+(defun lyskom-add-membership (membership conf-stat)
   "Adds MEMBERSHIP to the sorted list of memberships.
 Args: MEMBERSHIP CONF-STAT THENDO DATA
-Then if non-nil do THENDO with arguments DATA.
 Also adds to lyskom-to-do-list."
   (if membership
       (progn
 	(setq lyskom-membership (sort (cons membership lyskom-membership)
 				      'lyskom-membership-<))
-	(initiate-get-map 'main 'lyskom-add-membership-2
-			  (conf-stat->conf-no conf-stat)
-			  (max (1+ (membership->last-text-read membership))
-			       (conf-stat->first-local-no conf-stat))
-			  (conf-stat->no-of-texts conf-stat)
-			  membership
-			  conf-stat
-			  thendo data))
-    (lyskom-insert-string 'conf-does-not-exist)
-    (if thendo
-	(apply 'lyskom-run 'main thendo data))))
-
-
-(defun lyskom-add-membership-2 (map membership conf-stat thendo data)
-  "Adds info to lyskom-to-do-list."
-  (if map
-      (let ((texts (skip-first-zeros
-		    (sort (append (map->text-nos map) nil)
-			  '<))))
-	(if texts
-	    (read-list-enter-read-info (lyskom-create-read-info
-					'CONF conf-stat
-					(membership->priority membership)
-					(lyskom-create-text-list
-					 texts)
-					nil nil)
-					lyskom-to-do-list))))
-  (if thendo
-      (apply 'lyskom-run 'main thendo data)))
+	(let ((map (blocking-do
+		    'get-map
+		    (conf-stat->conf-no conf-stat)
+		    (max (1+ (membership->last-text-read membership))
+			 (conf-stat->first-local-no conf-stat))
+		    (conf-stat->no-of-texts conf-stat))))
+	  (if map
+	      (let ((texts (skip-first-zeros
+			    (sort (append (map->text-nos map) nil)
+				  '<))))
+		(if texts
+		    (read-list-enter-read-info
+		     (lyskom-create-read-info
+		      'CONF conf-stat
+		      (membership->priority membership)
+		      (lyskom-create-text-list
+		       texts)
+		      nil nil)
+		     lyskom-to-do-list))))	  
+	  ))
+    (lyskom-insert-string 'conf-does-not-exist))
+  )
 
 
 
@@ -457,27 +452,31 @@ Also adds to lyskom-to-do-list."
 of the person."
   (interactive)
   (lyskom-start-of-command 'kom-sub-member)
-  (lyskom-sub-member
-   (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude) 'pers nil "")
-   (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
-'all nil "")))
+  (unwind-protect
+      (lyskom-sub-member
+       (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude) 'pers nil "")
+       (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
+			      'all nil ""))
+    (lyskom-end-of-command)))
 
 
 (defun kom-sub-self ()
   "Subtract this person as a member from a conference."
   (interactive)
   (lyskom-start-of-command 'kom-sub-self)
-  (lyskom-sub-member 
-   (blocking-do 'get-conf-stat lyskom-pers-no)
-   (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
-			  'all nil 
-			   (let ((ccn 
-				  (if (or (zerop lyskom-current-conf))
-				      ""
-				    (conf-stat->name
-				     (blocking-do 'get-conf-stat
-						  lyskom-current-conf)))))
-			     (or ccn "")))))
+  (unwind-protect
+      (lyskom-sub-member 
+       (blocking-do 'get-conf-stat lyskom-pers-no)
+       (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
+			      'all nil 
+			      (let ((ccn 
+				     (if (or (zerop lyskom-current-conf))
+					 ""
+				       (conf-stat->name
+					(blocking-do 'get-conf-stat
+						     lyskom-current-conf)))))
+				(or ccn ""))))
+    (lyskom-end-of-command)))
 
 (defun lyskom-sub-member (pers conf)
   "Remove the person indicated by PERS as a member of CONF."
@@ -513,8 +512,7 @@ of the person."
 		 (setq lyskom-last-conf-received 
 		       (1- lyskom-last-conf-received)))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
-					 lyskom-to-do-list)))))
-  (lyskom-end-of-command))
+					 lyskom-to-do-list))))))
 	   
 
 	 
@@ -550,7 +548,7 @@ of the person."
 Add the person creating and execute lyskom-end-of-command."
   (if (null conf-no)
       (lyskom-format-insert 'could-not-create-conf
-			     conf-name
+			    conf-name
 			    lyskom-errno)
     (progn
       (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
@@ -561,8 +559,9 @@ Add the person creating and execute lyskom-end-of-command."
 				  (lyskom-default-button 'conf conf-stat)
 				nil)))
       (lyskom-scroll)
-      (lyskom-add-member-2 conf-no lyskom-pers-no
-			   'lyskom-create-conf-handler-2 conf-no conf-name))))
+      (lyskom-add-member-by-no conf-no lyskom-pers-no
+			       'lyskom-create-conf-handler-2
+			       conf-no conf-name))))
 
 
 (defun lyskom-create-conf-handler-2 (conf-no conf-name)
@@ -580,7 +579,7 @@ This does lyskom-end-of-command"
 (defun lyskom-set-presentation (text-no conf-no)
   "Set presentation of a conference. Args: text-no conf-no."
   (initiate-set-presentation 'background nil conf-no text-no)
-  (cache-del-conf-stat conf-no)) ;+++Borde {ndra i cachen i st{llet.
+  (cache-del-conf-stat conf-no))	;+++Borde {ndra i cachen i st{llet.
 					;+++ Kan tas bort n{r det existerar 
 					;asynkrona meddelanden som talar om att
 					;n}got {r {ndrat.
@@ -589,7 +588,7 @@ This does lyskom-end-of-command"
 (defun lyskom-set-conf-motd (text-no conf-no)
   "Set motd of a conference. Args: text-no conf-no."
   (initiate-set-conf-motd 'background nil conf-no text-no)
-  (cache-del-conf-stat conf-no)) ;+++Borde {ndra i cachen i st{llet.
+  (cache-del-conf-stat conf-no))	;+++Borde {ndra i cachen i st{llet.
 					;+++ Kan tas bort n{r det existerar 
 					;asynkrona meddelanden som talar om att
 					;n}got {r {ndrat.
@@ -1055,8 +1054,8 @@ back on lyskom-to-do-list."
 				    conf)
 	      (lyskom-scroll)
 	      (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
-		  (if (lyskom-add-member-2 (conf-stat->conf-no conf)
-					   lyskom-pers-no)
+		  (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
+					       lyskom-pers-no)
 		      (lyskom-fixup-and-go-to-conf (conf-stat->conf-no conf))
 		    (lyskom-insert-string 'nope))
 		(lyskom-insert-string 'no-ok)))))))
@@ -1327,7 +1326,7 @@ MARK:   A number that is used as the mark."
 	(lyskom-format-insert 'unmarking-textno 
 			      text-no)
       (lyskom-format-insert 'marking-textno 
-			      text-no))
+			    text-no))
     
     (if (blocking-do 'mark-text text-no mark)
 	(progn
@@ -1808,13 +1807,13 @@ PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a comment should be subtracted.
         Otherwise a comment is added"
   (let* ((text-no (lyskom-read-number prompt
-				     (or text-no-arg lyskom-current-text)))
-	(comment-text-no  (lyskom-read-number
-			   (lyskom-get-string
-			    (if do-add 'text-to-add-q 'text-to-remove-q))
-			   (if (eq text-no lyskom-current-text)
-			       nil
-			     lyskom-current-text))))
+				      (or text-no-arg lyskom-current-text)))
+	 (comment-text-no  (lyskom-read-number
+			    (lyskom-get-string
+			     (if do-add 'text-to-add-q 'text-to-remove-q))
+			    (if (eq text-no lyskom-current-text)
+				nil
+			      lyskom-current-text))))
     (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
 			  comment-text-no
 			  text-no)
