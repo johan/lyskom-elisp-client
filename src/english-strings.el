@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.13 1996-11-12 22:44:21 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.14 1997-01-31 21:36:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,8 +40,13 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.13 1996-11-12 22:44:21 davidk Exp $"))
+              "$Id: english-strings.el,v 44.14 1997-01-31 21:36:44 davidk Exp $"))
 
+
+;;; ================================================================
+;;; The language definition
+
+(lyskom-define-language 'en "English" "Engelska")
 
 
 ;;; ================================================================
@@ -64,10 +69,10 @@
   (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-en-edit-mode-map "\C-cr"	'lyskom-edit-review-prefix)
   (define-key lyskom-en-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
-  (define-key lyskom-sv-edit-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-sv-edit-mode-map [down-mouse-3] 'kom-mouse-3)
-  (define-key lyskom-sv-edit-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-sv-edit-mode-map "\C-c*" 'kom-key-mouse-2)
+  (define-key lyskom-en-edit-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-en-edit-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-key-mouse-2)
   (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
   (define-key lyskom-en-edit-mode-map "\C-ck"	'kom-edit-quit)
   (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
