@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.98 2004-05-25 18:01:00 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.99 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.98 2004-05-25 18:01:00 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.99 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -709,6 +709,14 @@ Last argument TEXT is ignored. This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (goto-char (point-max))
            (kom-review-converted arg))))
+
+(defun lyskom-button-review-rot13 (buf arg text)
+  "In the LysKOM buffer BUF, view the text ARG rot13:ed. 
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (goto-char (point-max))
+           (kom-review-rot13 arg))))
 
 (defun lyskom-button-find-root-review (buf arg text)
   "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
