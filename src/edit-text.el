@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.59 2000-04-29 07:41:11 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.60 2000-05-01 21:15:55 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.59 2000-04-29 07:41:11 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.60 2000-05-01 21:15:55 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1739,14 +1739,14 @@ The text is inserted in the buffer with '>' first on each line."
 
 ;;; ========================================================================
 ;;;   Treat the commented text as a Roxen Internet Software-style buglist,
-;;;   handling the removal of finished subjects, last-message changes et c
+;;;   handling the removal of closed subjects, last-message changes et c
 
 ;;; Author: Johan Sundström
 
 (defun lyskom-edit-insert-buglist (text text-stat editing-buffer window)
   "Handles the TEXT and TEXT-STAT from the return of the call of the text.
 The commented text is inserted in the buffer in the Roxen Internet Software
-buglist style, automating the removal of finished subjects and change-marks."
+buglist style, automating the removal of closed subjects and change-marks."
   (if (and text text-stat)
       (let ((str (text->decoded-text-mass text text-stat)))
         (set-buffer editing-buffer)
@@ -1757,25 +1757,48 @@ buglist style, automating the removal of finished subjects and change-marks."
         (let* ((pb (point))
                (as (string-match "\n" str))
                (te (substring str (1+ as))))
+	  ;; insert the body of the commented text at point (pb)
           (insert te)
-          (while (re-search-backward "^[ \t]*[!*X][ \t(]*\\[" nil t)
-            (replace-regexp "^\\([ \t]*\\)[!*X]\\([ \t(]*\\[\\)" "\\1 \\2"))
+	  ;; traverse the inserted text, replacing a leading !
+	  ;; with a space wherever some form of "[ ]" follows
+	  ;; (and X:s, since some morons were too inept to
+	  ;;  handle these highly advanced syntactic rules)
+          (while (re-search-backward "^\\s-*[!X][ \t(]*\\[" nil t)
+            (replace-regexp "^\\(\\s-*\\)[!X]\\([ \t(]*\\[\\)" "\\1 \\2"))
 	  (goto-char pb)
-          (while (re-search-forward "^[ \t([]*\\[[^\\/ ]\\]" nil t)
+	  ;; new pass; leave all [ ], [/] and [\] subjects untouched,
+	  ;; but remove the rest, except for category headers, who remain.
+          (while
+	      ;; Find a closed subject (that does not match any of the above)
+	      (re-search-forward "^[ \t*([]*\\[[^\\/ ]\\]" nil t)
 	    (beginning-of-line)
-	    (let* ((df (point))
-		   (dt (re-search-forward "^\\([^ \t][^ \t]\\|[ \t([]*\\[[\\/ ]\\]\\)" 
-					  nil t)))
-	      (if dt
+	    ;; Delete from here to the next open subject or the
+	    ;; next category header, whichever comes first.
+	    (let* ((delete-from (point))
+		   (delete-to
+		    ;; First part matches an open subject, second part finds
+		    ;; new headline. A headline is here defined as something
+		    ;; with no more than two leading ws characters followed by
+		    ;; a non-whitespace, non-[(*! character. The advantage of
+		    ;; this over matching against ^\s-*$ is that long subjects
+		    ;; may be split into separate paragraphs and still work here.
+		    (re-search-forward "^[ \t*(]*\\[[\\/ ]\\]\\|^\\s-\\{0,2\\}[^ \t(*![]" nil t)))
+	      (if delete-to
+		  ;; There was at least one more subject later on
 		  (progn
-		    (goto-char dt)
+		    (goto-char delete-to)
 		    (beginning-of-line)
-		    (if (thing-at-point-looking-at "^[^ \t]")
+		    ;; Are we looking at a headline?
+		    (if (thing-at-point-looking-at "^\\s-\\{0,2\\}[^ \t(*![]")
+			;; yes -- hence we need to move point somewhat
 			(progn
 			  (beginning-of-line)
+			  ;; leave the newline before the headline intact
 			  (forward-char -1))))
+		;; This was the last subject; kill the rest of the buffer
 		(goto-char (point-max)))
-	      (delete-region df (point))))))
+	      ;; Drain the closed subject.
+	      (delete-region delete-from (point))))))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 
