@@ -920,3 +920,94 @@ Oavsett v{rdet p} variabeln kan du ocks} n{r som helst i
 *kom*-edit bufferten trycka C-c } k f|r att }terse den text
 du kommenterar eller fotnoterar.
 (139946) -----------------------------------
+
+146772 1991-11-22  15:53  /77 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 146667 av Mats \hrman
+Mottagare: (Alla) KOM(-system) (-) erfarenhetsutbyte <1989>
+Mottagare: LysKOM Elispklient; diskussion och id`er <4545>
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <223>
+    S{nt:     1991-11-22 16:18
+    S{nt av Linus Tolke Y
+Markerad av 2 personer.
+[rende: En sl| implementat|rs bek{nnelser.
+------------------------------------------------------------
+En g}ng i tidernas begynnelse (f|r lite drygt ett }r sen) beh|vde jag
+testa LysKOM-servern. Jag hade k|rt r}tt med telnet direkt mot porten,
+men det blev jobbigt efter ett tag. Jag best{mde mig f|r att skriva
+ett litet elispprogram f|r att kunna testa servern.
+
+Mitt m}l var fr}n b|rjan att testa servern (och att programmera n}got
+annat {n servern - det hade blivit m}nga rader C-kod under v}ren och
+sommaren, och n{stan alla h|rde till servern). Jag skrev elispkoden
+med m}let att f} det att fungera hj{lpligt s} fort som m|jligt, inte
+att g|ra den korrekt och komplett.
+
+Ganska snart ins}g jag att jag beh|vde en datatyp, l}t oss kalla den
+UNREAD_SET, d{r jag skulle lagra alla ol{sta texter jag hade i ett
+m|te. Jag funderade lite (v{ldigt lite) och kom fram till att de
+metoder jag beh|vde var:
+
+	SET(set, list_of_text_nos)	S{tt m{ngden till en lista.
+	INSERT(set, text_no)		Addera en text.
+	DELETE(set, text_no)		Ta bort en text.
+
+SET anv{nds vid uppstart, n{r man l{ser in information om vilka texter
+som man inte har l{st {n.
+
+INSERT anv{nds f|r att stoppa in nya texter som tillkommer medan man
+l{ser.
+
+DELETE tar bort texterna ur UNREAD_SET allt eftersom man l{ser
+texterna.
+
+Dessutom ans}g jag mig beh|va datatypen UNREAD_CONFS ("confs" {r slang
+f|r conferences) som {r en lista av UNREAD_SET, d{r varje UNREAD_SET
+dessutom har f|rsetts med ett m|tesnummer (s} att man vet vilket m|te
+det {r).
+
+Vid uppstart l{ser man inte in all information riktigt direkt. Det {r
+i alla fall t{nkt att klienten bara ska h{mta s} mycket den beh|ver
+f|r att kunna visa f|rsta texten, och att resten ska h{mtas senare.
+(Den version som finns nu {r inte alls duktig p} det. Denna s} kallade
+"pre-fetchning" fungerade bara innan LysKOM-klienten l{rde sig att
+l{sa i kommentarsordning...)
+
+
+N}v{l. Antag att du just loggat in. Fritt Forum ligger en bit ner p}
+din lista |ver de m|ten du {r med i. Information om vad du har ol{st i
+Fritt Forum kommer allts} inte att h{mtas direkt. Innan du hinner
+h{mta informationen skriver n}gon ett inl{gg i det m|tet. Klienten
+letar igenom UNREAD_CONFS efter Fritt Forum.
+
+_Om_ Fritt Forum hade funnits p} listan hade klienten gjort en
+INSERT(set, text_no).
+
+Nu g|r den inte det. Klienten g|r i st{llet en SET((create-empty-set),
+text_no) och l{gger in det nya settet i listan. [n s} l{nge {r allt
+frid och fr|jd.
+
+_Men_ s} sm}ningom best{mmer sig klienten f|r att h{mta information om
+vad du har ol{st i Fritt Forum. Den f}r d} tillbaks en l}ng lista p}
+texter. Det r{tta vore att g|ra n}gon sorts merge p} den listan och
+det UNREAD_SET med en text(*) som redan finns. Tyv{rr finns det ingen
+operation p} ett UNREAD_SET som kan g|ra merge med en textlista. Jag
+valde att ignorera problemet eftersom jag ans}g att det inte var s}
+v{rst sannolikt att n}gon text skulle skrivas i det lilla glappet fr}n
+det att man loggade in tills klienten hade h{mtat all text.
+
+Detta {r anledningen till att det kan dyka upp tv} Fritt Forum, Inl{gg
+}t Mig, eller i princip vilket m|te som helst under vissa betingelser.
+Buggen {r v{l k{nd, och om jag n}gonsin skriver en ny klient ska jag
+se till att inte upprepa misstaget. Jag har dock ingen lust att r{tta
+felet. (Men med hj{lp av den h{r texten {r det kanske n}gon annan som
+kan hitta detaljerna och r{tta det? En varning dock: det {r inte s}
+rent och snyggt skrivet som det borde vara).
+
+Jag undrar hur m}nga g}nger till som denna sedan ett }r tillbaka
+v{lk{nda men harml|sa bugg kommer att rapporteras...
+----
+(*) Om det skapas mer {n en text innan man l{ser info f|r m|tet kan
+det vara mer {n en text i listan.
+(146772) -----------------------------------
+Kommentar i text 146786 av Mats \hrman
+Kommentar i text 146946 av Chrisp
