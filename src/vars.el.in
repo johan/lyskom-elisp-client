@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.308 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.309 2005-01-09 01:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,11 +32,14 @@
 
 ;;;; Note: put "**" at the front of docstrings that are ready
 ;;;; for use in DocBook autogeneration.
+;;;;
+;;;; Rules for documentation that can be translated to DocBook
+;;;; is in interndoc/vardoc
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.308 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.309 2005-01-09 01:16:03 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -134,7 +137,7 @@ Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-dont-complain-about-missing-presentation nil
-  "*Controls whether the client complains when you don't have
+  "**Controls whether the client complains when you don't have
 a presentation. When set to non-nil, the client will never
 complain.
 
@@ -175,18 +178,22 @@ as a URL and `IGNORE-CASE' specifies whether matching is
 case-sensitive or not.
 
 Each text is examined for each `PATTERN'. If a match is found, a URL
-is created from `REPLACEMENT'. All characters except \ are copied
-verbatim. The backslash character starts one of the following
+is created from `REPLACEMENT'. All characters except backslash are
+copied verbatim. The backslash character starts one of the following
 sequences:
 
     Sequence    Meaning
-    \&          Substitute the matched text
-    \N          Substitute match for text matching the Nth (...)
+    -----------------------------------------------------------------
+    `\\&'          Substitute the matched text
+
+    `\\N'          Substitute match for text matching the Nth (...)
                 group in `PATTERN'
-    \\          Insert one backslash.
+
+    `\\\\'          Insert one backslash.
+    -----------------------------------------------------------------
 
 The `HIGHLIGHT' parameter specifies which (...) group in `PATTERN'
-to highlight as an URL. Use `0' to highlight the entire match.
+to highlight as an URL. Use 0 to highlight the entire match.
 
 Finally, if `IGNORE-CASE' is `t', then ignore character case while
 looking for `PATTERN'. Values other than `t' and `nil' are reserved
@@ -555,67 +562,72 @@ The format of this variable may change in the future.
 
 The format of this list is as follows:
 
+<
 \((FN-KEY . ((PFX-KEY-1 . (FN1 FN2 ... PROP1 VAL1 PROP2 VAL2 ...)) 
             (PFX-KEY-2 . (FN1 FN2 ... PROP1 VAL1 PROP2 VAL2 ...))
             GPROP1 GVAL1
             GPROP2 GVAL2
             ...))
  ...)
+>
 
-FN-KEY is the name of a command, `t' or a symbol that does not
+`FN-KEY' is the name of a command, `t' or a symbol that does not
 correspond to any function. Keys corresponding to commands indicate
 configuration for that command. The `t' key indicates fallback
 condiguration that applies to all commands, unless overridden by a
 command-specific configuration. Other keys can be referenced from
 command-specific configurations.
 
-PFX-KEY is a key that indicates a prefix. If it is an atom not bound
+`PFX-KEY' is a key that indicates a prefix. If it is an atom not bound
 to a function, it indicates configuration for prefix arguments eq to
-the atom \(e.g. 0, - or nil). The special key `t' indicates fallback
+the atom \(e.g. 0, - or `nil'). The special key `t' indicates fallback
 configuration, used when all prefix-specific configurationas failed to
 generate valid values.
 
-FN is a function or variable used to generate lists of text numbers.
+`FN' is a function or variable used to generate lists of text numbers.
 If a variable name, the value of the variable is used to generate a
 list of text numbers. If a function, the function is called with no
 arguments, and is expected to return a list of text numbers.
 
-PROP is a property name \(see below) and VAL is the corresponding
+`PROP' is a property name \(see below) and VAL is the corresponding
 value. Properties defined at the inner level apply only to results
 generated for that prefix. Properties defined at the outer level apply
 irrespective of prefix arguments. Properties defined in the default
-element \(with FN-KEY set to `t'\) always apply, unless overridden by
+element \(with `FN-KEY' set to `t'\) always apply, unless overridden by
 non-nil properties in command-specific elements.
 
 The following properties are available:
 
-Key             Value
-----------------------------------------------------------------------
-:filter         A function that is called on all text numbers. The filter
-                function is expected to return a new or modified text 
-                number. This can be used to indicate that the command 
-                should prompt or bypass the constraint.
-
-:constraint    A function that is called on all text numbers. It should
-               return non-nil for text numbers that are valid for the 
-               command.
-
-:refer         A symbol indicating a configuration to use. Useful when 
-               several commands share the same (complex) configuration.
-               May not be used in the default element.
+    Key             Value
+    ------------------------------------------------------------------
+    `:filter'       A function that is called on all text numbers. The
+                    filter function is expected to return a new or 
+                    modified text number. This can be used to indicate 
+                    that the command should prompt or bypass the 
+                    constraint.
+    
+    `:constraint'  A function that is called on all text numbers. It 
+                   should return non-nil for text numbers that are 
+                   valid for the command.
+    
+    `:refer'       A symbol indicating a configuration to use. Useful 
+                   when several commands share the same (complex)
+                   configuration. May not be used in the default 
+                   element.
+    ------------------------------------------------------------------
 
 
 The following filter functions may be useful:
 
-Name                    What it does
-----------------------------------------------------------------------
-lyskom-tnpa-prompt      Prompt the user for the text number. The 
-                        number used as the argument will be the 
-                        default. 
-
-lyskom-tnpa-valid       Declare that the text number is valid, 
-                        regardless of any constraint functions.
-
+    Name                    What it does
+    ------------------------------------------------------------------
+    `lyskom-tnpa-prompt'    Prompt the user for the text number. The 
+                            number used as the argument will be the 
+                            default. 
+    
+    `lyskom-tnpa-valid'     Declare that the text number is valid, 
+                            regardless of any constraint functions.
+    ------------------------------------------------------------------
 
 When `lyskom-read-text-no-prefix-arg' is called, this list is searched
 both for a command-specific element and for the default element. Any
@@ -633,19 +645,23 @@ argument for the command."
     )
   "**An alist specifying transformations to be applied to URLs.
 
-Elements in this list are of the form `(PATTERN . REPLACEMENT)'.
+Elements in this list are of the form \(`PATTERN' . `REPLACEMENT').
 Before an URL is opened, it is transformed by matching the URL against
 each `PATTERN' in turn, and when a match is found, generating a new
 URL according to `REPLACEMENT'.
 
-All characters in `REPLACEMENT' except \ are copied verbatim. The
+All characters in `REPLACEMENT' except \\ are copied verbatim. The
 backslash character starts one of the following sequences:
 
     Sequence    Meaning
-    \&          Substitute the matched text
-    \N          Substitute match for text matching the Nth (...)
+    ---------------------------------------------------------------
+    `\\&'        Substitute the matched text
+
+    `\\N'        Substitute match for text matching the Nth (...)
                 group in `PATTERN'
-    \\          Insert one backslash.
+
+    `\\\\'        Insert one backslash.
+    ---------------------------------------------------------------
 "
   server
   )
@@ -685,6 +701,7 @@ Values other tha `t' and `nil' are reserved for future use."
 
 When set to `t', hide the add button shown after the headers when
 editing a text. When set to `nil' (the default), show the button.
+
 Values other than `t' and `nil' are reserved for future use."
   server
 )
@@ -694,7 +711,7 @@ Values other than `t' and `nil' are reserved for future use."
 
 When a text is displayed with its own background color (see
 `kom-highlight-text-body', `kom-highlight-first-line',
-`kom-highligh-dashed-linse', `kom-async-highlight-text-body' and
+`kom-highlight-dashed-lines', `kom-async-highlight-text-body' and
 `kom-async-highlight-dashed-lines') one or more overlays are created.
 Since a large number of overlays has a serious impact on performance,
 the total number of overlays in the buffer can be limited using this
@@ -783,14 +800,22 @@ corresponding value is `nil', the information is not shown.
 
 Valid tags are:
 
-    Tag                 Meaning
-    conf                Show all extended information for conferences
-    pers                Show all extended information for persons
-    server              Show all extended information for the server
-    read-faq            Show read FAQs
-    raw-server-stats    Show raw server statistics
-    raw-boottime-info   Show raw boot-time server information
-    t                   Any information not explicitly listed
+    Tag                   Meaning
+    ------------------------------------------------------------------
+    `conf'                Show all extended information for conferences
+
+    `pers'                Show all extended information for persons
+
+    `server'              Show all extended information for the server
+
+    `read-faq'            Show read FAQs
+
+    `raw-server-stats'    Show raw server statistics
+
+    `raw-boottime-info'   Show raw boot-time server information
+
+    `t'                   Any information not explicitly listed
+    ------------------------------------------------------------------
 
 The information controlled by this variable is the kind of data that
 most users are not interested in, and, if displayed, would make more
@@ -908,25 +933,43 @@ The value of this variable must be a string, which is displayed as the
 LysKOM prompt, while waiting for a command. The string may contain the
 following special sequences:
 
-    Sequence    Meaning
-    %c          Inserts the current default command.
-    %[          Inserts `[' if the ansaphone is on.
-    %]          Inserts `]' is the ansaphone is on.
-    %m          Inserts information about recorded messages.
-    %s          Inserts the name of the LysKOM system
-    %S          Inserts the server name.
-    %p          Inserts the name of the user currently logged on.
-    %w          Inserts the name of the current conference.
-    %a          Inserts `anonymous' in the current language.
-    %A          Inserts `Anonymous' in the current language.
-    %#          Inserts the current session number.
-    %           Inserts a space if it seems necessary (percent SPC).
-    %%          Inserts a percent sign.
+    Sequence      Meaning
+    -----------------------------------------------------------------
+    `%c'          Inserts the current default command.
+
+    `%['          Inserts `[' if the ansaphone is on.
+
+    `%]'          Inserts `]' is the ansaphone is on.
+
+    `%m'          Inserts information about recorded messages.
+
+    `%s'          Inserts the name of the LysKOM system
+
+    `%S'          Inserts the server name.
+
+    `%p'          Inserts the name of the user currently logged on.
+
+    `%w'          Inserts the name of the current conference.
+
+    `%a'          Inserts `anonymous' in the current language.
+
+    `%A'          Inserts `Anonymous' in the current language.
+
+    `%#'          Inserts the current session number.
+
+    `% '          Inserts a space if it seems necessary (percent SPC).
+
+    `%%'          Inserts a percent sign.
+    -----------------------------------------------------------------
 
 Here are a few examples:
 
-    \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"
+    Format string                 What it does
+    -----------------------------------------------------------------
+    `\"%[%c% %m%] - \"'           The default prompt
+
+    `\"%[%s: %c% %m%] - \"'       Could display \"LysKOM: Time - \"
+    -----------------------------------------------------------------
 
 Note that multiline prompts are not supported."
   server)
@@ -993,7 +1036,7 @@ LysKOM, there is occasionally reason to cite a commented text."
   server)
 
 (def-kom-var kom-created-texts-are-saved nil
-  "**If non-`nil', save all created texts to a file. 
+  "**If non-nil, save all created texts to a file. 
 
 The value of this variable is the file name on which to save new
 texts. Each time a text is created, it is appended to this file.
@@ -1003,7 +1046,7 @@ reserved for future extensions."
   inherited)
 
 (def-kom-var kom-created-texts-are-read nil
-  "**Non-`nil' means automatically mark texts that you create as read.
+  "**non-nil means automatically mark texts that you create as read.
 
 When set to `t', all text you write are automatically marked as read,
 except when running in anonymous mode. When set to `nil', your texts
@@ -1065,6 +1108,7 @@ When set to `nil', comment references are shwon in the headers.
 
 `kom-reading-puts-comments-in-pointers-last' set to `nil'
 
+<
     398331 1996-09-24  13:22  /2 lines/ George Berkeley
     Recipient: Philosophy <1226>
     Comment in text 398374 by John Locke
@@ -1072,9 +1116,11 @@ When set to `nil', comment references are shwon in the headers.
     ------------------------------------------------------------
     An abstract idea is a contradiction in terms.
     (398331) -----------------------------------
+>
 
 `kom-reading-puts-comments-in-pointers-last' set to `t'
 
+<
     398331 1996-09-24  13:22  /2 lines/ George Berkeley
     Recipient: Philosophy <1226>
     Subject: 
@@ -1082,6 +1128,7 @@ When set to `nil', comment references are shwon in the headers.
     An abstract idea is a contradiction in terms.
     (398331) -----------------------------------
     Comment in text 398374 by John Locke
+>
 "
   common reading-puts-comments-in-pointers-last boolean
   inherited)
@@ -1130,21 +1177,25 @@ dashed lines.
 
 `kom-dashed-lines' set to `t'
 
+<
     892343 1996-09-24  19:21  /2 lines/ Tycho Brahe
     Recipien: Presentation (of new) Members
     Subject: Tycho Brahe
     ------------------------------------------------------------
     Astronomer and discoverer of stars resident on the island of Ven.
     (892343) -----------------------------------
+>
 
 `kom-dashed-lines' set to `nil'
 
+<
     892343 1996-09-24  19:21  /2 lines/ Tycho Brahe
     Recipien: Presentation (of new) Members
     Subject: Tycho Brahe
 
     Astronomer and discoverer of stars resident on the island of Ven.
     (892343)
+>
 
 Values other than `t' and `nil' are reserved for future use. 
 
@@ -1155,13 +1206,13 @@ these lines."
   inherited)
 
 (def-kom-var kom-long-lines nil
-  "**If non-`nil', some lines and borders will be made longer.
+  "**If non-nil, some lines and borders will be made longer.
 
 When set to `t', most dashed lines will be longer than the default.
 When set to `nil',  use the standard length.
 
 See `kom-text-footer-dash-length', `kom-text-header-dash-length' and
-`kom-footer-format' for other related settings."
+`kom-text-footer-format' for other related settings."
   server
   inherited)
 
@@ -1200,12 +1251,18 @@ When set to a string, use that string as the text footer, overriding
 all other settings that affect the text footer. The string may contain
 the following special sequences:
 
-    Directive   Meaning
-    %n          Insert the text number
-    %p          Insert the number of the author
-    %P          Insert the name of the author
-    %-          Insert a bunch of dashes
-    %f          Insert special formatting information
+    Directive     Meaning
+    -------------------------------------------------------------
+    `%n'          Insert the text number
+
+    `%p'          Insert the number of the author
+
+    `%P'          Insert the name of the author
+
+    `%-'          Insert a bunch of dashes
+
+    `%f'          Insert special formatting information
+    -------------------------------------------------------------
 
 Format directives can be prefixed with a number specifying the minimum
 field width (e.g. `%20-'. The field width can be prefixed with an
@@ -1223,11 +1280,16 @@ When set, this variable overrides `kom-dashed-lines' and
 The default format is equivalent to the following strings, depending on 
 the settings of kom-dashed-lines and kom-show-author-at-end.
 
-`kom-dashed-lines'  `kom-show-author-at-end'    Format
-       t                    t                   \"(%n) /%P/%42-%f\"
-       t                   nil                  \"(%n) %42-%f\"
-      nil                   t                   \"(%n) /%P/ %f\"
-      nil                  nil                  \"(%n) %f\"
+    `kom-dashed-lines'  `kom-show-author-at-end'   Format
+    --------------------------------------------------------------------
+    `t'                  `t'                       `\"(%n) /%P/%42-%f\"'
+
+    `t'                  `nil'                     `\"(%n) %42-%f\"'
+
+    `nil'                `t'                       `\"(%n) /%P/ %f\"'
+
+    `nil'                `nil'                     `\"(%n) %f\"'
+    --------------------------------------------------------------------
 "
   server
   inherited)
@@ -1257,21 +1319,25 @@ after the text. When set to `nil', the author is not displayed.
 
 `kom-show-author-at-end' set to `t' (with dashed lines on):
 
+<
   892342 1996-09-24  19:21  /2 lines/ Claude Shannon
   Mottagare: Presentation (of new) Members
   Ärende: Claude Shannon
   ------------------------------------------------------------
   Information theoretician
   (892342) /Claude Shannon/------------------------------
+>
 
 `kom-show-author-at-end' set to `nil':
 
+<
   892342 1996-09-24  19:21  /2 lines/ Claude Shannon
   Recipient: Presentation (of new) Members
   Subject: Claude Shannon
   ------------------------------------------------------------
   Information theoretician
   (892342) -----------------------------------
+>
 
 If `kom-text-footer-format' is set, the value of this variable is
 ignored. Values other than `t' and `nil' are reserved for future use."
@@ -1337,7 +1403,7 @@ Values other than `t' and `nil' are reserved for future extensions."
 ;; users converting from another client, but that isn't done.)
 
 (def-kom-var kom-presence-messages t
-  "Equivalent of the variable `presence-messages' in the user-area.
+  "Equivalent to the variable `presence-messages' in the user-area.
 This is a boolean where other clients may store whether the user wants
 messages about people logging in and out of LysKOM.  Here this is instead
 controlled by `kom-presence-messages-in-echo-area' and
@@ -1348,7 +1414,7 @@ influence what this client stores in the common block of the user-area."
 (def-kom-var kom-presence-messages-in-echo-area t
   "**Controls display of presence messages in the echo area.
 
-If non-`nil', LysKOM prints continuous info about what other people
+If non-nil, LysKOM prints continuous info about what other people
 are doing. Info is printed on the echo area and never in the buffer.
 If minibuffer is used, no message is printed.
 
@@ -1368,15 +1434,15 @@ Values other than those listed are reserved for future use."
   server)
 
 (def-kom-var kom-unread-mode-line-type nil
-  "**Controls how information about unread sessions is given in the mode line.
+  "**Controls how information about unread sessions is shown in the mode line.
 
-If this variable is `nil', there will be a single field of information 
-stating whatever you have unread texts or letters in any active session.
+If this variable is `nil', there will be a single prompt indicating
+whether you have unread texts or letters in any active session.
 
-If this variable is `t', the mode line will instead include all sessions with
-unread texts. Unread letters will be demonstrated by upper casing the session 
-name or (if the session name is in upper case already) surrounding it with
-asterisks.
+If this variable is `t', the mode line will indicate each session with
+unread texts. Unread letters are indicated by upper-casing the session
+name or (if the session name is in upper case already) surrounding it
+with asterisks.
 
 All other values are reserved for future use."
   )
@@ -1386,7 +1452,7 @@ All other values are reserved for future use."
 (def-kom-var kom-presence-messages-in-buffer nil
   "**Controls display of presence messages in the LysKOM buffer.
 
-If non-`nil', LysKOM prints information about what other people are
+If non-nil, LysKOM prints information about what other people are
 doing in the LysKOM buffer. All printing is done just before the
 prompt.
 
@@ -1405,6 +1471,7 @@ doing. When set to `nil', this information will not be shwon.
 
 Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `t':
 
+<
       User                                   Is in conference             
       At                                     Activity                        
   --------------------------------------------------------------------------
@@ -1413,14 +1480,17 @@ Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `t':
    7571 John Locke                           Philosophy                     
         eridy@cc.ox.ac.uk                    (Waiting.)                     
   --------------------------------------------------------------------------
+>
 
 Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `nil':
 
+<
       User                                   Is in conference             
   --------------------------------------------------------------------------
    6810 George Berkeley                      Philosophy                     
    7571 John Locke                           Philosophy
   --------------------------------------------------------------------------
+>
 
 Values other than `t' and `nil' are reserved for future use."
   server)
@@ -1434,6 +1504,7 @@ last indicated activity.
 
 Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `t':
 
+<
         User                                 Is in conference             
         Connected                            Active last                  
   --------------------------------------------------------------------------
@@ -1442,15 +1513,17 @@ Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `t':
    7571 John Locke                           Philosophy                     
         Saturday 2003-01-11 14:02:47         12 minutes                     
   --------------------------------------------------------------------------
-
+>
 
 Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `nil':
 
+<
         User                                 Is in conference             
   --------------------------------------------------------------------------
    6810 George Berkeley                      Philosophy                     
    7571 John Locke                           Philosophy
   --------------------------------------------------------------------------
+>
 
 Values other than `t' and `nil' are reserved for future use."
   server)
@@ -1583,7 +1656,7 @@ use."
 (def-kom-var kom-server-priority-breaks nil
   "**Controls how server priorities are handled.
 
-A non-`nil' value allows servers with a higher priority than the
+A non-nil value allows servers with a higher priority than the
 current server to break in when new texts arrive. This can be used to
 give a work-related server a higher priority than a server used for
 frivolous purposes (or, indeed, the other way around).
@@ -1591,22 +1664,30 @@ frivolous purposes (or, indeed, the other way around).
 The following settings are available:
 
   Value                 Meaning
+  --------------------------------------------------------------------
   `express'             Break in immediately when there are unread
                         texts.
+
   `express-letters'     Break in immediately when there are unread
                         letters.
+
   `t'                   Break in after the current comment chain when
                         there are unread texts.
+
   `letters'             Break in after the current comment-chain when
                         there are unread letters.
+
   `after-conf'          Break in after the current conference when
                         there are unread texts.
+
   `after-conf-letters'  Break in after the current conference when
                         there are unread letters.
+
   `when-done'           Prompt the user to go to the next session with
                         unreads after everything has been read. This
                         overrides `kom-do-when-done' as long as there
                         are sessions with unread texts. 
+  --------------------------------------------------------------------
 
 Values other than those listed above are reserved for future use and
 may result in unpredictible behavior.
@@ -1878,7 +1959,7 @@ These are arguments used to format the current prompt."
 
 (def-kom-var lyskom-current-prompt-timestamp nil
   "The creationtime of the current prompt.
-This is used when updating the prompt and on lyskom-start-of-command."
+This is used when updating the prompt and on `lyskom-start-of-command'."
   local)
 
 (def-kom-var lyskom-need-prompt-update nil
@@ -1921,7 +2002,7 @@ the amount of time (in seconds) to wait between successive beeps. The
 value must be a positive number (it may be a floating point number).")
 
 (def-kom-var kom-ding-on-priority-break 1
-  "**Non-`nil' means ding if a higher priority text or conference breaks in.
+  "**Non-nil means ding if a higher priority text or conference breaks in.
 
 This variable must be set to a `t', `nil', a positive integer, a
 string or a function. When set to `t' use the default beep. When set
@@ -1932,38 +2013,38 @@ indicated by `kom-audio-player' with the string as its sole argument."
   server)
 
 (def-kom-var kom-ding-on-new-letter nil
-  "**Non-`nil' means ding if a message arrives in the letter box. 
+  "**Non-nil means ding if a message arrives in the letter box. 
 
 See `kom-ding-on-priority-break' for valid values."
   server)
 
 
 (def-kom-var kom-ding-on-wait-done 1
-  "**Non-`nil' means ding when `kom-busy-wait' terminates.
+  "**Non-nil means ding when `kom-busy-wait' terminates.
 
 See `kom-ding-on-priority-break' for valid values."
   server)
 
 (def-kom-var kom-ding-on-common-messages 0
-  "**Non-`nil' means ding when an alarm message arrives. 
+  "**Non-nil means ding when an alarm message arrives. 
 
 See `kom-ding-no-priority-break' for valid values. In addition to
 those listed there, the value of this variable may be a list of
-elements like `(KEY . VALUE)'. If the sender (a conference number) is
+elements like \(`KEY' . `VALUE'). If the sender (a conference number) is
 found as the key of any element, the value of that element will be
 used to generate the ding (valid values are those listed for
-kom-ding-on-priority-break). The special key `t' is used when no other
+`kom-ding-on-priority-break'). The special key `t' is used when no other
 key matches the sender."
   server)
 
 (def-kom-var kom-ding-on-group-messages 1
-  "**Non-`nil' means ding when a group messages arrives.
+  "**non-nil means ding when a group messages arrives.
 
 See `kom-ding-on-common-messages' for valid values."
   server)
 
 (def-kom-var kom-ding-on-personal-messages 2
-  "**Non-`nil' means ding when a personal message arrives.
+  "**non-nil means ding when a personal message arrives.
 
 See `kom-ding-on-common-messages' for valid values."
 server)
@@ -2018,21 +2099,25 @@ alarm messages arrived. When set to `nil', only display the time.
 
 `kom-show-personal-message-date' set to `t'>:
 
+<
   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   Alarm message from Claude Chappe (1805-01-23 17:34):
   
   Je me donne la mort our éviter l'ennui de la vie qui m'accable; je
   n'ai point de reproches à me faire.
   ----------------------------------------------------------------
+>
 
 `kom-show-personal-message-date' set to `nil':
 
+<
   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   Alarm message from Claude Chappe (17:34):
   
   Je me donne la mort our éviter l'ennui de la vie qui m'accable; je
   n'ai point de reproches à me faire.
   ----------------------------------------------------------------
+>
 
 See Bulletin of Les Amis de Paris Central Télégraphe, no. 20, July
 1993 for information on the quote above.
@@ -2084,11 +2169,15 @@ matching conferences.
 The following values are legal for keys:
 
     Value       Meaning
+    -----------------------------------------------------------------
     Symbol      If the value is a list, matches if the conference
                 number is in the list. If the value is an integer,
                 matches if the conference number matches the integer.
+
     List        Matches if the conference number is in the list.
+
     Function    Matches if the function returns non-nil (see below).
+    -----------------------------------------------------------------
 
 When using a function as the key, the function will be called with a
 single argument, the object to be printed. The type of the argument
@@ -2104,7 +2193,7 @@ All other values are reserved for future use."
 The value of this variable is a list of person numbers. People listed
 here will be displayed using the face in `kom-friends-face'. They can
 also receive special treatment in other cases (see
-`kom-presence-message').
+`kom-presence-messages').
 
 See `kom-morons' for a related variable.
 
@@ -2301,18 +2390,30 @@ first handler in the list that is associated with the URLs protocol.
 
 Value values for elements in the list are:
 
-  Handler           What it does                      Handles protocols
-  \"default\"       Use `browse-url' to open URLs     All
-  \"windows\"       Microsoft Windows default         All
-  \"netscape\"      Opens URLs in Netscape/Mozilla    All
-  \"mosaic\"        Opens URLs in NCSA Mosaic         All common
-  \"lynx\"          Opens URLs in Lynx                All common
-  \"galeon\"        Opens URLs in Galeon              All common
-  \"w3\"            Opens URLs in Emacs W3            http,gopher,ftp
-  \"emacs\"         Opens URLs in Emacs               ftp,telnet,file,mailto
-  \"dired\"         Opens URLs in Emacs               ftp,file
-  \"telnet-mode\"   Opens URLs in Emacs               telnet
-  \"mail-mode\"     Opens URLs in Emacs               mailto
+    Handler          What it does                     Handles protocols
+    ------------------------------------------------------------------------
+    \"default\"      Use `browse-url' to open URLs    All
+
+    \"windows\"      Microsoft Windows default        All
+
+    \"netscape\"     Opens URLs in Netscape/Mozilla   All
+
+    \"mosaic\"       Opens URLs in NCSA Mosaic        All common
+
+    \"lynx\"         Opens URLs in Lynx               All common
+
+    \"galeon\"       Opens URLs in Galeon             All common
+
+    \"w3\"           Opens URLs in Emacs W3           http,gopher,ftp
+
+    \"emacs\"        Opens URLs in Emacs              ftp,telnet,file,mailto
+
+    \"dired\"        Opens URLs in Emacs              ftp,file
+
+    \"telnet-mode\"  Opens URLs in Emacs              telnet
+
+    \"mail-mode\"    Opens URLs in Emacs              mailto
+    ------------------------------------------------------------------------
 
 The variable `kom-url-managers' contains a list of all handlers. 
 
@@ -2394,9 +2495,9 @@ Mozilla with no arguments. If a list, the first element must be a
 command that starts Netscape. The remaining elements are used as
 arguments to Netscape.
 
-For instance, a value of `\"netscape\"' is valid, but `\"netscape -d
-host:0\"' is not. Instead, the latter should be `\(\"netscape\" \"-d\"
-\"host:0\"\)'"
+For instance, a value of \"netscape\" is valid, but \"netscape -d
+host:0\" is not. Instead, the latter should be \(\"netscape\" \"-d\"
+\"host:0\"\)"
   server)
 
 (def-kom-var kom-netscape-variant nil
@@ -2419,9 +2520,9 @@ If a string, it should be a command that starts Galeon with no
 arguments. If a list, the first element must be a command that starts
 Galeon. The remaining elements are used as arguments to Galeon.
 
-For instance, a value of `\"galeon\"' is valid, but `\"galeon
---display host:0\"' is not. Instead, the latter should be
-`\(\"galeon\" \"--display\" \"host:0\"\)'"
+For instance, a value of \"galeon\" is valid, but \"galeon
+--display host:0\" is not. Instead, the latter should be
+\(\"galeon\" \"--display\" \"host:0\"\)"
   server)
 
 (def-kom-var kom-lynx-terminal 'xterm
@@ -2450,7 +2551,7 @@ are arguments to Lynx."
   server)
 
 (def-kom-var kom-confirm-multiple-recipients 'after
-  "**Non-`nil' means ask the user for confirmation about recipients.
+  "**Non-nil means ask the user for confirmation about recipients.
 
 When the user writes a comment to a text with more than one recipient,
 ask for confirmation that all recipients are relevant, or one question
@@ -2463,7 +2564,7 @@ If this variable is set to `after', ask once for all recipients after
 editing the text. This is the preferred value since it is difficult to
 judge the relevance of a recipient until the text has been written.
 
-Values other than `t' and `nil' are reserved for future use."
+Values other than those listed are reserved for future use."
   common confirm-multiple-recipients boolean)
 
 (def-kom-var kom-check-for-new-comments t
@@ -2482,7 +2583,7 @@ If this variable is `nil', dont' check.
 If this variable is set to a function name, call the function to see
 if check should be performed. The function is called with the
 commented text's text-stat as its sole argument. If it returns
-non-`nil', the check is performed.
+non-nil, the check is performed.
 
 A list of conference numbers means perform the check for all
 conferences other than those listed.
@@ -2571,13 +2672,14 @@ Values other than `t' and `nil' are reserved for future use."
 (def-kom-var kom-show-namedays nil
   "**Controls display of namedays.
 
-When this variable is set to a non-`nil' value,`kom-display-time' can
+When this variable is set to a non-nil value,`kom-display-time' can
 display names of the day.
 
 If set to `t', show the namedays for the currently selected languag
 \(if there are any). If set to a symbol, that symbol should indicate a
 list of names (use `kom-list-nameday-lists' to see a list of all
-possible lists).
+possible lists). If set to a list, each element should be a symbol
+indicating a list of names; display namedays from all indicated lists.
 
 All values other than those listed are reserved for future use."
   server)
@@ -2621,12 +2723,12 @@ When this variable is set to a string, it should be the host name of
 an HTTP proxy that supports the CONNECT method. All LysKOM sessions
 will be transparently tunneled through this proxy.
 
-When set to a list, each element must be a pair `(SERVER . PROXY)',
+When set to a list, each element must be a pair \(`SERVER' . `PROXY'),
 where `SERVER' is a LysKOM server and `PROXY' is the proxy to use for
 that server (or `nil' to not use a proxy). The special value `t' for
 `SERVER' indicates the proxy to use for unlisted servers.
 
-The proxy string has the form `\"HOST:PORT\"', where `HOST' is the
+The proxy string has the form \"`HOST':`PORT'\", where `HOST' is the
 proxy host and `POSRT' is the port on which the proxy is running. The
 port part is optional. If it is not specified, port 80 is assumed.
 
@@ -2638,9 +2740,9 @@ Values other than those described are reserved for future use.")
 
 The value of this variable should either be a single string, which is
 sent verbatim to the proxy, or a list of strings which will be sent to
-the proxy separated by CRLF, or a list of elements like `(NAME H1 H2 ... Hn)'
-where `NAME' is the name of a proxy and the remaining elements are
-headers to send when connecting through that proxy.
+the proxy separated by CRLF, or a list of elements like \(`NAME' `H1'
+`H2' ... `Hn') where `NAME' is the name of a proxy and the remaining
+elements are headers to send when connecting through that proxy.
 
 Do not use this variable for proxy authentication.
 
@@ -2650,7 +2752,7 @@ Values other than those listed are reserved for future use.")
 (def-kom-var kom-server-aliases nil
   "**An alist mapping server names to shorter identification strings.
 
-Each value in this string should be of the form `(SERVER . NICKNAME)',
+Each value in this string should be of the form \(`SERVER' . `NICKNAME'),
 where `NICKNAME' is the short name for the server `SERVER'. You can
 set this in init files before loading LysKOM.
 
@@ -2674,7 +2776,7 @@ Values other than those described are reserved for future use.")
     ("myskom.kfib.org" . "MysKOM"))
   "**An alist mapping server names to shorter identification strings.
 
-Each value in this string should be of the form `(SERVER . NICKNAME)',
+Each value in this string should be of the form (`SERVER' . `NICKNAME'),
 where `NICKNAME' is the short name for the server `SERVER'. Avoid
 setting this variable since that will override the list compiled into
 the client. Use `kom-server-aliases' instead.
@@ -2790,26 +2892,26 @@ set to `t'.
 The value of this variable is a list of rules. Each rule is a list
 with five elements: `MESSAGE-TYPE', `SENDER', `RECIPIENT', `TEXT', and
 `REPLY'. Incoming messages are compared against these rules in order.
-A message matches a rule if it matches all non-`nil' elements of the
+A message matches a rule if it matches all non-nil elements of the
 rule.
 
-If `MESSAGE-TYPE' is non-`nil', match against the message type. Valid
+If `MESSAGE-TYPE' is non-nil, match against the message type. Valid
 values are `personal', `group' and `common' (for alarm messages).
 
-If `SENDER' is non-`nil', match against the message sender. The value
+If `SENDER' is non-nil, match against the message sender. The value
 is either an integer (a person number) or a list of person numbers. A
 message matches if its sender is any of the listed persons.
 
-If `RECIPIENT' is non-`nil', match against the message recipient. The
+If `RECIPIENT' is non-nil, match against the message recipient. The
 value is either an integer (a conference number) or a list of
 conference numbers. A message matches if its recipient is any of the
 listed conferences.
 
-If `TEXT' is non-`nil', match against the message text. The value is
+If `TEXT' is non-nil, match against the message text. The value is
 a regular expression. A message matches if it contains a match for the
 regular expression.
 
-If all non-`nil' components of a rule match, rule processing is
+If all non-nil components of a rule match, rule processing is
 terminated. If `REPLY' is a string, send that string as the reply. If
 `REPLY' is `nil', don't send a reply.
 
@@ -2823,7 +2925,7 @@ group and alarm messages."
 (def-kom-var kom-agree-text nil
   "**Determines the text used in `kom-agree'.
 
-When non-`nil', this is the default text for `kom-agree'. The value
+When non-nil, this is the default text for `kom-agree'. The value
 may be a string, which is used verbatim as the default text; a
 function, which is called and should return a text to use; or a list
 whose elements must be strings, functions or lists, and from which an
@@ -2836,7 +2938,7 @@ Values other than those described are reserved for future use."
 (def-kom-var kom-default-language nil
   "**The default language for LysKOM.
 
-When set to non-`nil', this variable should be set to a list of
+When set to non-nil, this variable should be set to a list of
 symbols or a symbol indicating the prefered language(s) for LysKOM.
 Each symbol name must be the ISO 630 code for a desired language (e.g.
 `sv' for Swedish and `en' for English). Available languages depend on
@@ -3145,16 +3247,20 @@ the importer has recorded such information).
 
 `kom-show-imported-envelope-sender' set to `t':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Sent by: root@meat.spareribs.com
   Imported: today 00:07 by Mailman
   External recipient: BBQ <531@kom.meat.com>
+>
 
 `kom-show-imported-envelope-sender' set to `nil':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Imported: today 00:07 by Mailman
   External recipient: BBQ <531@kom.meat.com>
+>
 
 Other variables that control display of imported e-mail include
 `kom-show-imported-importer' and
@@ -3172,14 +3278,18 @@ don't.
 
 `kom-show-imported-importer' set to `t':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Imported: today 00:07 by Mailman
   External recipient: BBQ <531@kom.meat.com>
+>
 
 `kom-show-imported-importer' set to `nil':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   External recipient: BBQ <531@kom.meat.com>
+>
 
 Other variables that control display of imported e-mail include
 `kom-show-imported-importer' and
@@ -3196,14 +3306,18 @@ set to `nil', don't.
 
 `kom-show-imported-message-id' set to `t':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Message-ID: <D1696C471C6CD511A0BE00D0B7A932DE01BBB4FA@spareribs.meat.com>
   External recipient: BBQ <531@kom.meat.com>
+>
 
 `kom-show-imported-message-id' set to `nil':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   External recipient: BBQ <531@kom.meat.com>
+>
 
 Other variables that control display of imported e-mail include
 `kom-show-imported-envelope-sender', `kom-show-imported-importer' and
@@ -3221,15 +3335,19 @@ headers.
 
 `kom-show-imported-external-recipients' set to `t':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Imported: today 00:07 by Mailman
   External recipient: BBQ <531@kom.meat.com>
   External recipient: \"Mac the Hack\" <mac.hack@steak.meat.com>
+>
 
 `kom-show-imported-external-recipients' set to `nil':
 
+<
   2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
   Imported: today 00:07 by Mailman
+>
 
 Other variables that control display of imported e-mail include
 `kom-show-imported-envelope-sender', `kom-show-imported-importer' and
@@ -3735,7 +3853,7 @@ Non-integer values are reserved for future use."
 
 The value of this variable must be an integer.
 
-When `kom-server-priority-breaks' is set to a non-`nil' value, this
+When `kom-server-priority-breaks' is set to a non-nil value, this
 priority is used to decide when to go to a prioritized session. For a
 session to be prioritized its priority must be higher than the current
 session's `kom-server-priority' and higher than the priority of
@@ -4044,7 +4162,7 @@ This is currently not implemented.")
   "**Determines which commands ask for text numbers.
 
 The value of this variable must be a list containing pairs of 
-`(COMMAND . VALUE)'. If `VALUE' is `t', `COMMAND' will prompt for text
+(`COMMAND' . `VALUE'). If `VALUE' is `t', `COMMAND' will prompt for text
 numbers. If `VALUE' is nil, `COMMAND' will use a suitable default value."
   server
   inherited)
@@ -4061,11 +4179,17 @@ This hook is run just before the server call to create the text is made.
 The hook is currently called with the following arguments:
 
   Argument          Contents
+  ----------------------------------------------------------------
   `MESSAGE'         The message text
+
   `MISC-LIST'       The misc-info list
+
   `AUX-LIST'        The aux-item list
+
   `BUFFER'          The edit buffer
+
   `IS-ANONYMOUS'    Non-nil if the user is currently anonymous.
+  ----------------------------------------------------------------
 
 Additional arguments may be added in the future, so include 
 `&rest reserved' as the last element of the parameter list.
@@ -4288,7 +4412,7 @@ Values other than `t' and `nil' are reserved for future use."
 (def-kom-var kom-format-html-authors '((t . t))
   "**Determines from which authors we accept HTML.
 
-Each element of this list is a pair `(PERS . VAL)', where `PERS' is a
+Each element of this list is a pair \(`PERS' . `VAL'), where `PERS' is a
 person number and `VAL' is `t' or `nil'. If `VAL' is `t', then format
 HTML written by `PERS'. If `VAL' is `nil', don't. The special value
 `t' for `PERS' determines the default.
@@ -4400,7 +4524,7 @@ should be dynamically bound whenever it needs to be used.")
 (defvar kom-tell-phrases nil
   "**A list of phrases describing what the client is doing. 
 
-Each element in the list is a pair `\(KEY . PHRASE\)' where KEY is one
+Each element in the list is a pair \(`KEY' . `PHRASE') where KEY is one
 of the keywords in `lykom-tell-phrases-validation-keyword-list' and
 `PHRASE' is the phrase to sent to the server then the client is doing
 what `KEY' describes.

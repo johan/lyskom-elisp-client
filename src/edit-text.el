@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.118 2004-02-29 15:12:48 byers Exp $
+;;;;; $Id: edit-text.el,v 44.119 2005-01-09 01:16:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.118 2004-02-29 15:12:48 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.119 2005-01-09 01:16:01 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -436,12 +436,16 @@ so it's not as clean as it ought to be."
 ;;;
 
 (defun kom-edit-send-anonymous ()
-  "Send the text anonymously to the server."
+  "Send the text anonymously to the server. Be aware that although the text 
+will be truly anonymous, it is easy to slip up in such a way that the author
+is evident anyway."
   (interactive)
   (lyskom-edit-send 'initiate-create-anonymous-text t))
 
 (defun kom-edit-send ()
-  "Send the text to the server."
+  "Send the text to the server. This command will attempt to send the text
+to the server. If something goes wrong, a prompt will be shown allowing you
+to edit the message and try to send it again."
   (interactive)
    (if (and (lyskom-default-value 'lyskom-is-anonymous)
             (lyskom-j-or-n-p 'do-send-anonymous))
@@ -658,7 +662,7 @@ anonymously and take actions to avoid revealing the sender."
 (defun lyskom-ispell-text ()
   "Check spelling of the text body.
 Put this in kom-send-text-hook"
-  (kom-ispell-message)
+  (kom-edit-ispell-message)
   t)
 
 
@@ -668,10 +672,13 @@ Put this in kom-send-text-hook"
   (defvar ispell-message-start-skip nil)
   (defvar ispell-message-end-skip nil))
 
-(defun kom-ispell-message ()
-  "Check spelling of the text.
-kom-ispell-dictionary is the dictionary to use to check spelling.
-Based on ispell-message."
+(defalias 'kom-ispell-message 'kom-edit-ispell-message)
+(defun kom-edit-ispell-message ()
+  "Check spelling of the text. Spelling is checked using ispell
+and the dictionary indicated by `kom-ispell-dictionary'. If you
+want to check the spelling of every message before sending it,
+read the documentation for `lyskom-ispell-text' and 
+`kom-send-text-hook'"
   (interactive)
   (require 'ispell)
   (let ((ispell-dictionary (or kom-ispell-dictionary ispell-dictionary))
@@ -1058,7 +1065,7 @@ Cannot be called from a callback."
 
 
 (defun kom-edit-quit ()
-  "Kill the text (if any) written so far and continue reading."
+  "Cancel editing the text being written and return to reading LysKOM."
   (interactive)
   (let ((edit-buffer (current-buffer)))
     (goto-char (point-max))
@@ -1078,8 +1085,11 @@ Cannot be called from a callback."
 
 
 (defun kom-edit-insert-commented (arg)
-  "Insert the commented text. Unless an empty prefix argument is
-given, prepend each line with your commenting prefix (or '>')."
+  "Insert the commented text, prepending each line with the
+text in `kom-cite-string' (defaults to \"> \"). Note that citing
+the commented text is not common practise in LysKOM (unlike
+e-mail and news) since there is a strong link to the commented
+text anyway. Use this command sparingly."
   (interactive "P")
   (lyskom-edit-get-commented
    'lyskom-edit-insert-commented
@@ -1088,19 +1098,24 @@ given, prepend each line with your commenting prefix (or '>')."
 
 
 (defun kom-edit-insert-buglist ()
-  "Insert the commented buglist, Roxen Internet Software style."
+  "Insert the commented buglist, Roxen Internet Software style. Excluded from manual."
   (interactive)
   (lyskom-edit-get-commented 'lyskom-edit-insert-buglist))
 
 
 (defun kom-edit-insert-digit-text ()
+  "Prompt for a text to insert. Excluded from manual."
   (interactive)
   (setq unread-command-events (cons last-command-event unread-command-events))
   (call-interactively 'kom-edit-insert-text nil))
 
 
 (defun kom-edit-insert-text (no)
-  "Insert the text number NO with '>' first on each line."
+  "Prompt for a text to insert, prefixing each line with the contents
+of `kom-cite-string' (defaults to \"> \"). Note that citing texts is not
+commonplace in LysKOM (unlike e-mail and news) since it is easy to
+refer to specific texts (see `kom-edit-insert-link' and
+`kom-edit-add-cross-reference'). Use this command sparingly."
   (interactive (list
 		(cond
 		 ((null current-prefix-arg)
@@ -1154,8 +1169,12 @@ WINDOW plus any optional arguments given in ARG-LIST."
 (defvar Info-current-file)
 
 ;; NOTUSED: kom-yank-info-nodename
-(defun kom-yank-info-nodename ()
-  "Put the current Info-node on the kill-ring."
+(defalias 'kom-yank-info-nodename 'kom-edit-yank-info-nodename)
+(defun kom-edit-yank-info-nodename ()
+  "When browsing info files, this command will place a reference to the
+current info node in the kill ring, from where it can be pasted into
+another buffer. This command is useful when you want to refer to an 
+info node in a LysKOM text."
   (interactive)
   (kill-new (format "*Note %s: (%s)%s,"
 		    Info-current-node
@@ -1164,7 +1183,8 @@ WINDOW plus any optional arguments given in ARG-LIST."
 
 
 ;; NOTUSED: kom-insert-last-info-nodename
-(defun kom-insert-last-info-nodename ()
+(defalias 'kom-insert-last-info-nodename 'kom-edit-insert-last-info-nodename)
+(defun kom-edit-insert-last-info-nodename ()
   "Insert a reference to the most recently visited info node."
   (interactive)
   (condition-case nil
@@ -1185,7 +1205,10 @@ WINDOW plus any optional arguments given in ARG-LIST."
 ;;;  Changed by: Linus Tolke
 
 (defun kom-edit-add-comment ()
-  "Adds a text as commented to the text being edited."
+  "Makes this text a comment to another text. Using this command it is
+possible to make the text a comment to multiple texts. To remove a 
+comment link, simply remove the corresponding line from the headers
+in the edit buffer."
   (interactive)
   (let* ((edit-buffer (current-buffer))
          (insert-at (point-min-marker))
@@ -1202,25 +1225,38 @@ WINDOW plus any optional arguments given in ARG-LIST."
 
 
 (defun kom-edit-add-recipient ()
-  "Adds a conference as recipient to the text being edited."
+  "Adds a regular recipient to the text or converts an existing
+recipient to a regular recipient. Using this command it is possible to
+add any number of regular recipients. To remove a recipient, simply
+delete the corresponding header line in the edit buffer."
   (interactive)
   (lyskom-edit-add-recipient/copy 'added-recipient nil 'RECPT))
 
 
 (defun kom-edit-add-bcc ()
-  "Adds a conference as bcc recipient to the text being edited."
+  "Adds a blind carbon copy recipient to the text, or converts an
+existing recipient to blind carbon copy. Using this command it is
+possible to add any number of regular recipients. To remove a
+recipient, simply delete the corresponding header line in the edit
+buffer."
   (interactive)
   (lyskom-edit-add-recipient/copy 'added-blank-carbon-copy nil 'BCC-RECPT))
 
 
 (defun kom-edit-add-copy ()
-  "Adds a conference to which a copy of the edited text will be sent."
+  "Adds a carbon copy recipient to the text, or converts an existing
+recipient to blind carbon copy. Using this command it is possible to
+add any number of regular recipients. To remove a recipient, simply
+delete the corresponding header line in the edit buffer."
   (interactive)
   (lyskom-edit-add-recipient/copy 'added-carbon-copy nil 'CC-RECPT))
 
 (defun kom-edit-move-text ()
-  "Adds a conference as a recipient, and changes all other recipients to
-CC recipients."
+  "Adds a regular recipient to the text, or converts an existing
+recipient to blind carbon copy, and converts all other recipients to
+carbonn copy recipients. This command is intended for situations where
+a commend is being sent to a different recipient than the commented
+text was."
   (interactive)
   (lyskom-edit-add-recipient/copy 'who-to-move-to-q
                                   'lyskom-edit-move-recipients))
@@ -1342,12 +1378,21 @@ RECPT-TYPE is the type of recipient to add."
     
 
 (defun kom-edit-add-cross-reference ()
+  "Add a cross reference to this text. This command prompts for the
+type and target of the cross reference. Cross references are used
+to systematically refer from a text to another text, conference or
+person without altering the contents of the text."
   (interactive)
   (let ((item (lyskom-read-cross-reference-and-get-aux-item)))
     (when item
       (lyskom-edit-insert-aux-item item))))
 
 (defun kom-edit-add-read-confirm-request ()
+  "Request that others confirm reading this text. Conforming clients
+will ask each reader of this text to confirm reading the text. Note
+that not all clients understand this request, and that confirmation is
+neither automatic nor mandatory. Use very sparingly as this interrupts
+the normal flow of reading for many users."
   (interactive)
   (lyskom-edit-insert-aux-item
    (lyskom-create-aux-item 0 6 0 0
@@ -1356,6 +1401,10 @@ RECPT-TYPE is the type of recipient to add."
                            0 "")))
 
 (defun kom-edit-add-no-comments ()
+  "Request that nobody comments this text. Conforming clients will
+either prevent users from commenting the text or ask for confirmation
+before commenting the text. Note that not all clients understand this
+request and that it is advisory only."
   (interactive)
   (lyskom-edit-insert-aux-item
    (lyskom-create-aux-item 0 4 0 0
@@ -1364,6 +1413,10 @@ RECPT-TYPE is the type of recipient to add."
                            0 "")))
 
 (defun kom-edit-add-personal-comments ()
+  "Request that all replies to this text are in the form of personal
+replies. Conforming clients will treat a request to comment this text
+as a request to answer privately. Note that not all clients understand
+this request and that it is advisory only."
   (interactive)
   (lyskom-edit-insert-aux-item
    (lyskom-create-aux-item 0 5 0 0
@@ -1372,6 +1425,10 @@ RECPT-TYPE is the type of recipient to add."
                            0 "")))
 
 (defun kom-edit-add-world-readable ()
+  "Make this text readable to all users, even if they are not logged
+in. World readable texts can be read by anyone, regardless of what
+recipients the text has. World readable texts can even be read without
+logging in to LysKOM."
   (interactive)
   (lyskom-edit-insert-aux-item
    (lyskom-create-aux-item 0 34 0 0
@@ -1380,6 +1437,9 @@ RECPT-TYPE is the type of recipient to add."
                            0 "")))
 
 (defun kom-edit-insert-link ()
+  "Insert an in-line link to another text, a conference or a person.
+This command prompts for the target of the link and inserts text that
+most clients will interpret as a link."
   (interactive)
   (let ((item (lyskom-read-link)))
     (when item
@@ -1951,6 +2011,7 @@ buglist style, automating the removal of closed subjects and change-marks."
 ;;; Tab between buttons in the header
 
 (defun kom-edit-next-button-or-self-insert (num)
+  "Move to the next link or insert a TAB, depending on context. Excluded from manual."
   (interactive "p")
   (let ((header-end (lyskom-edit-find-separator))
         (start (point))
@@ -1988,6 +2049,7 @@ buglist style, automating the removal of closed subjects and change-marks."
         (setq num (1- num) start (point))))))
 
 (defun kom-edit-prev-button (num)
+  "Move to the previous link. Excluded from manual."
   (interactive "p")
   (let ((header-end (lyskom-edit-find-separator)))
     (while (> num 0)

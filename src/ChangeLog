@@ -1,3 +1,40 @@
+2005-01-08  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in: Documentation updates in preparation for generating
+	DocBook from the documentation strings.
+
+	* startup.el (lyskom-refetch): We were prefetching unread confs in
+	the reverse order, which was stupid as it slows down starting to
+	read and may cause us to read texts in the wrong order.
+
+2005-01-07  David Byers  <byers@lysator.liu.se>
+
+	* mship-edit.el (lyskom-change-membership-position): Removed
+	binding of old-position (it was never used).
+
+	* english-strings.el (lyskom-en-edit-mode-map): Changed key
+	bindings to explicitly use prefixes. 
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Changed key
+	bindings to explicitly use prefixes. Better variants of the
+	swedish key binding. Use lyskom-try-define-key for swedish
+	bindings.
+
+	* edit-text.el: Updated documentation for most commands so that it
+	can be extracted into the user manual in the future. All commands
+	with the prefix `kom-edit-' are expected to be documented unless
+	the documentation string ends in "Excluded from manual."
+	(kom-ispell-message): Renamed to
+	kom-edit-ispell-message.
+	(kom-yank-info-nodename): Renamed to kom-edit-yank-info-nodename.
+
+	* filter-edit.el (kom-filter-edit): Wrote docstring.
+
+	* review.el: Various docstring updates (changed "text" to article
+	in several places).
+
+	* vars.el.in (kom-unread-mode-line-type): Updated docstring.
+
 2005-01-04  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-sv-mode-map): Added keybindings for
