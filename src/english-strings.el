@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.6 1996-10-10 13:59:34 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.7 1996-10-11 01:05:57 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.6 1996-10-10 13:59:34 davidk Exp $"))
+              "$Id: english-strings.el,v 44.7 1996-10-11 01:05:57 davidk Exp $"))
 
 
 
@@ -972,7 +972,7 @@ On since %#8s%#9s")
     (unknown-doing-what . "Exists")
     (doing-where-conn . "in")
     (doing-nowhere-conn . "but is")
-    (waiting-for-membership . "Waiting for the membership list to be fetched...%d")
+    (waiting-for-membership . "Waiting for the membership list to be fetched...%d/%d")
 
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
