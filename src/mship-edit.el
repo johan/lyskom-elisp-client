@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.45 2004-07-21 11:14:39 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.46 2004-10-17 14:24:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.45 2004-07-21 11:14:39 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.46 2004-10-17 14:24:14 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -1582,9 +1582,35 @@ See `kom-priotitize-in-window'."
 (defun lp--mode ()
   "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
 
+\[lp--move-up] moves a single conference up in the list.
+\[lp--mode-down] moves a single conference down in the list.
+
+SPC toggles the selection of a single membership.
+\[lp--select-region] selects all conferences between point and mark.
+\[lp--select-priority] selects all conferences with a certain priority.
+\[lp--deselect-region] clears the selection.
+
+\[lp--yank] moves all selected conferences to where point is in the list.
+\[lp--set-priority] changes the priority of all selected conferences.
+
+\[lp--toggle-passive] makes passive memberships active and vice versa.
+\[lp--toggle-invitation] toggles the invitation flag of a membership.
+\[lp--toggle-secret] makes secret memberships non-secret and vice versa.
+\[lp--toggle-message-flag] toggles reception of group messages for that conference.
+
+Changes take effect immediately.
+
+This mode is still under development and is subject to problems. In
+particular, it is unlikely to handle all error conditions gracefully,
+which may lead to inconsistencies between the buffer and reality.
+Should a problem occur, killing the buffer and reopening it usually
+clears the problem.
+
 All bindings:
 \\{lyskom-prioritize-mode-map}
-Entry to this mode runs lp--mode-hook."
+
+Entry to this mode runs lp--mode-hook, but since the name of this hook
+is subject to change, be careful when using it."
   (interactive)
   (setq major-mode 'lp--mode)
   (setq mode-name (lyskom-get-string 'lp-mode-name))
@@ -1600,6 +1626,8 @@ Entry to this mode runs lp--mode-hook."
 
   (setq lp--hidden-entries nil)
   (setq lp--entry-filter nil)
+
+  (lyskom-set-menus 'lp--mode lyskom-prioritize-mode-map)
 
   (setq lp--mode-line-selected "")
   (setq mode-line-format lp--mode-line)

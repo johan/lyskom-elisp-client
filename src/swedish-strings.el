@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.377 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.378 2004-10-17 14:24:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.377 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.378 2004-10-17 14:24:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2544,6 +2544,35 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-edit-add-personal-comments . "Begär personliga svar")
     (kom-edit-add-read-confirm-request . "Begär läsbekräftelse")
     (kom-edit-move-text . "Flytta till en ny mottagare")
+
+    (lp--toggle-membership-selection . "Växla markering på medlemskap")
+    (lp--select-region . "Markera område")
+    (lp--select-priority . "Markera prioritet")
+    (lp--deselect-priority . "Avmarkera prioritet")
+    (lp--deselect-all . "Avmarkera alla")
+    (lp--membership-expansion . "Expandera medlemskap")
+    (lp--toggle-entry-expansion . "Växla expansion")
+    (lp--expand-entry . "Expandera medlemskap")
+    (lp--contract-entry . "Avexpandera medlemskap")
+    (lp--membership-priority . "Prioritet")
+    (lp--set-priority . "Ändra prioritet")
+    (lp--move-up . "Flytta uppåt")
+    (lp--move-down . "Flytta nedåt")
+    (lp--increase-priority . "Öka prioritet")
+    (lp--decrease-priority . "Minska prioritet")
+    (lp--yank . "Flytta markerade")
+    (lp--filter . "Urval")
+    (lp--show-hide-memberships-read-before . "Växla visning av medlemskap lästa före...")
+    (lp--show-hide-memberships-read-after . "Växla visning av medlemskap lästa efter...")
+    (lp--show-hide-read-memberships . "Växla visning av medlemskap utan olästa")
+    (lp--show-hide-passive-memberships . "Växla visning av passiva medlemskap")
+    (lp--show-all . "Visa alla medlemskap")
+    (lp--membership-type . "Medlemskapstyp")
+    (lp--toggle-invitation . "Växla inbjudan")
+    (lp--toggle-passive . "Växla passiv")
+    (lp--toggle-message-flag . "Växla meddelanden")
+    (lp--toggle-secret . "Växla hemlig")
+    (lp--quit . "Avsluta")
 ))
 
 (lyskom-language-var local lyskom-move-tree-actions sv
