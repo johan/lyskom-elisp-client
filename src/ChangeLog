@@ -1,3 +1,11 @@
+2000-09-05  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* english-strings.el: Proof-read (to the best of my ability...).
+	Removed misspelled key.
+
+	* swedish-strings.el: Corrected spelling.  Fixed inconsistency.
+	Removed misspelled key.
+
 2000-09-03  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* buffers.el (kill-buffer-hook): Moved the adding to kill-buffer-hook

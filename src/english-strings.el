@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.111 2000-09-03 02:56:32 qha Exp $
+;;;;; $Id: english-strings.el,v 44.112 2000-09-04 22:03:23 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.111 2000-09-03 02:56:32 qha Exp $"))
+              "$Id: english-strings.el,v 44.112 2000-09-04 22:03:23 joel Exp $"))
 
 
 ;;; ================================================================
@@ -146,11 +146,10 @@
     ; From startup.el:
     (server-q . "LysKOM server? (%#1s) ")
     (try-connect . "LysKOM elisp client version %#1s.\nAttempting to connect to %#2s.\n")
-    (protocoll-error . "Protocol error. Servers says: %#1s")
     (too-old-server . "The server is too old for this version of the client.")
     (connection-done . "Connection established. Server version is %#1s.\n\n")
     (what-is-your-name . "What is your name? ")
-    (password . "Your Password? ")
+    (password . "Your password? ")
     (wrong-password . "Incorrect password.\n")
     (wrong-password-help . "
 If you have forgotten your password you may be able to get a new one
@@ -175,7 +174,7 @@ incorrectly, or you wish to change it, answer 'no' to the question below.
 At present the LysKOM server stores most of the information so that
 anybody can read it. Only passwords are encrypted.
 
-If you ar uncertain about how to use LysKOM, you can retrieve a manual by
+If you are uncertain about how to use LysKOM, you can retrieve a manual by
 anonymous ftp to ftp.lysator.liu.se. Ask your system administrator for help
 on how to do this.
 ")
@@ -188,7 +187,7 @@ on how to do this.
     (could-not-create-you .  "LysKOM couldn't create that user.\n")
     (presentation-subject . "%#1s")
     (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:\t
-Email-address:\t\nWWW:\t\n\nOther:\t")
+Email address:\t\nWWW:\t\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
     (unknown-person . "Unknown user")
@@ -281,8 +280,8 @@ Send a letter to  %#2P to apply for membership.\n")
 
     (leave-what-conf . "Leave which conference? ")
 
-    (error-fetching-person . "Error retreiving user.\n")
-    (error-fetching-conf . "Error retreiving conference.\n")
+    (error-fetching-person . "Error retrieving user.\n")
+    (error-fetching-conf . "Error retrieving conference.\n")
 
     (name-of-conf . "Conference name? ")
     (anyone-member . "May anyone join? ")
@@ -319,16 +318,16 @@ Disconnecting from LysKOM since all connections are in use
 and you have finished reading. Please come back later.
 ===============================================================================
 \n")
-    (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
+    (what-to-change-pres-you . "Change presentation of whom/what (yourself): ")
     (what-to-change-faq-you . "Change FAQ for which conference: ")
-    (who-to-put-motd-for . "Post notice on who/what (yourself): ")
+    (who-to-put-motd-for . "Post notice on whom/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
     (go-to-conf-p . "Go to conference: ")
     (want-become-member . "Do you want to join? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
-    (who-to-remove-motd-for . "Remove notice from who/what: ")
+    (who-to-remove-motd-for . "Remove notice from whom/what: ")
 
     (conf-all-read . "%#1M - no unread texts.\n")
     (no-in-conf . "You are not present in any conference.\n")
@@ -350,8 +349,8 @@ and you have finished reading. Please come back later.
     (getting-all-pers-confs . "Retrieving a list of all persons and conferences from the server...")
     (getting-all-confs-done . "Retrieving a list of all conferences from the server...done")
     (getting-all-pers-confs-done . "Retrieving a list of all persons and conferences from the server...done")
-    (finding-created-confs . "Finding owned conferences (%#1d av %#2d done)")
-    (finding-created-pers-confs . "Finding owned persons and conferences (%#1d av %#2d done)")
+    (finding-created-confs . "Finding owned conferences (%#1d of %#2d done)")
+    (finding-created-pers-confs . "Finding owned persons and conferences (%#1d of %#2d done)")
     (no-created-confs . "%#1P is not creator, supervisor or super conference for any conference.\n")
 
     (name-to-be-changed . "Name to change: ")
@@ -359,7 +358,7 @@ and you have finished reading. Please come back later.
     (new-name . "New name: ")
     (new-paren . "New parenthesis: ")
     (no-paren-in-name . "The name doesn't contain a parenthesis.\n")
-    (who-to-change-supervisor-for . "Change supervisor of who/what? ")
+    (who-to-change-supervisor-for . "Change supervisor of whom/what? ")
     (new-supervisor . "New supervisor: ")
     (text-to-mark . "Mark which text? ")
     (text-to-unmark . "Unmark which text? ")
@@ -385,8 +384,8 @@ and you have finished reading. Please come back later.
     (active . "Active")
     (lyskom-client . "Client")
     (text-to-add-recipient . "Add recipient to which text:")
-    (text-to-add-copy . "Add recipient of carbon copy of which text:")
-    (text-to-add-bcc . "Add recipient of blind carbon copy of which text:")
+    (text-to-add-copy . "Add recipient of carbon copy to which text:")
+    (text-to-add-bcc . "Add recipient of blind carbon copy to which text:")
     (text-to-delete-recipient . "Remove recipient from which text:")
     (text-to-move . "Which text do you want to move:")
     (text-to-add-comment-to . "Add comment to which text:")
@@ -430,7 +429,7 @@ and you have finished reading. Please come back later.
     (weekdays . ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday"
 		 "Friday" "Saturday" "Sunday"])
     (weekdays-short . ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"])
-    (time-is . "The time is %#1s%#2s, (according to the server).")
+    (time-is . "The time is %#1s%#2s (according to the server).")
     (time-is-week . "The time is %#1s%#2s, week %#3d (according to the server).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
@@ -452,11 +451,11 @@ Read all about it at http://www.lysator.liu.se/history/")
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
     (client-statistics . "    Distribution of clients:\n")
     (client-statistics-line . "    %=-35#1s: %3#2d")
-    (who-to-add-q . "Add who/what as a recipient? ")
+    (who-to-add-q . "Add whom/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
-    (really-add-as-recpt-q . "Send future comments to the test to %#1M too? ") 
-    (who-to-sub-q . "Remove who/what as a recipient? ")
+    (really-add-as-recpt-q . "Send future comments to the text to %#1M too? ") 
+    (who-to-sub-q . "Remove whom/what as a recipient? ")
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
 
@@ -497,13 +496,13 @@ Read all about it at http://www.lysator.liu.se/history/")
     (matching-regexp . "Conferences/users matching `%#1s'\n")
 
     (who-is-active-all . "Showing all sessions.\n")
-    (who-is-active-last-minutes . "Showing all sessions active tha last %#1d minutes.\n")
+    (who-is-active-last-minutes . "Showing all sessions active the last %#1d minutes.\n")
     (showing-invisibles . "Showing invisible sessions.\n")
     (null-who-info . "No one (active) is logged on.\n")
 
-    (no-other-lyskom-r . "There are not other active LysKOM sessions.\n")
-    (no-lyskom-session . "There are no active LysKOM-sessions.")
-    (no-other-unread-lyskom-r . "There is no another LysKOM-session with unread texts.\n")
+    (no-other-lyskom-r . "There are no other active LysKOM sessions.\n")
+    (no-lyskom-session . "There are no active LysKOM sessions.")
+    (no-other-unread-lyskom-r . "There is no another LysKOM session with unread texts.\n")
     (no-unread-lyskom-r . "There is no active LysKOM session with unread texts.\n")
     (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
 
@@ -511,7 +510,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
 
     ;; Used for kom-is-person-member-of-conference:
-    (pers-to-check-mship-for . "Whom whose membership do you want to check? ") ;-)
+    (pers-to-check-mship-for . "Whose membership do you want to check? ") ;-)
     (conf-to-check-mship-of . "...for what conference? ")
     (conf-is-empty . "The conference %#1M is empty.\n")
     (pers-is-member-of-conf . "Yes, %#1P is a member of the conference %#2M.\n")
@@ -547,7 +546,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (lowest-local-no . "Lowest local number: %21#1d\n")
     (highest-local-no . "Highest local number: %20#1d\n")
     (last-text-time . 
-     "Time of last text:    %20#1s (accordning to your cache)\n")
+     "Time of last text:    %20#1s (according to your cache)\n")
     (no-of-motd . "Notice in text:    %13#1n\n")
     (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
@@ -582,13 +581,13 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (read-texts . "Texts read:%31#1d\n")
     (marked-texts . "Texts marked:%29#1d\n")
-    (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
+    (time-for-last-letter . "Time of last letter:%22#1s (according to your cache)\n")
     (superconf . "Superconference: %25#1m %#3s(%#2M)\n")
     (supervisor . "Supervisor: %30#1p %#3s(%#2P)\n")
     (member-of-confs . "Member of (conferences):%18#1d\n")
     (presentation . "Presentation:    %25#1n\n")
     (show-membership-list-also-q . "List memberships? ")
-    (not-allowed-see-confs . "You are not premitted to see which conferences %#1P is a member of.\n")
+    (not-allowed-see-confs . "You are not permitted to see which conferences %#1P is a member of.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
     (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
@@ -666,10 +665,10 @@ The message you were sending to %#1M was:
     (you-have-marks . "You have %#1d texts marked with %#2d.\n")
     (you-have-marks-all . "You have %#1d marked texts.\n")
 
-    (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
+    (does-not-exist . "Unknown command.") ; Only people fixing bugs or receiving bug reports should change these:
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
-    ; Only people fixing bugs or recieving bugg-reports should change these:
+    ; Only people fixing bugs or receiving bug reports should change these:
     (buggreport-compilestart . "Creating bug report...")
     (buggreport-compileend . "Creating bug report...done")
     (buggreport-description . "This is what I was doing:
@@ -706,7 +705,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
     (conf-to-set-permitted-submitters-q . "For which conference do you want to set the allowed authors? ")
     (conf-to-set-super-conf-q . "Set superconference of which conference? ")
-    (new-super-conf-q . "Which conferece do you want as superconference? ")
+    (new-super-conf-q . "Which conference do you want as superconference? ")
     (new-permitted-submitters-q . "Allow members of which conference as authors in %#1s? (all) ")
     (super-conf-for-is . "Changing superconference of %#1M to %#2M...")
     (permitted-submitters-removed-for-conf . "Allowing all authors to conference %#1M...")
@@ -744,7 +743,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (info-to-conf . "%#1s to conference: ")
     (info-by-to . "%#1s by %#2P to %#3M forward.")
     (all-confs . "all conferences")
-    (no-get-conf . "You are not allowed to access that conferene.\n")
+    (no-get-conf . "You are not allowed to access that conference.\n")
     (no-get-pers . "You are not allowed to access that user.\n")
     (no-review-info . "You are not allowed to review %#1s\n")
     (review-info . "Review %#1s")
@@ -770,7 +769,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-cant-read-conf . "You can't review texts to a closed conference you are not a member of.\n")
     (review-cant-read-letterbox . "You can't review texts to somebody else's mailbox.\n")
     (review-cant-read-empty . "The conference is empty.\n")
-    (cant-review-everything . "You cannot review every artible in LysKOM.\n")
+    (cant-review-everything . "You cannot review every article in LysKOM.\n")
 
     (more-than-one-root . "Text %#1n has more than one root.\n")
     (more-than-one-root-review . "\
@@ -810,13 +809,13 @@ Help: \\[describe-mode] ---")
     (added-recipient . "Recipient: ")
     (added-carbon-copy . "Carbon copy to conference: ")
     (added-blank-carbon-copy . "Blind carbon copy to conference: ")
-    (text-to-comment-q . "Which text to you want to comment? ")
+    (text-to-comment-q . "Which text do you want to comment? ")
     (conf-has-motd-no . "The conference has a notice. (%#1d)\n\n%#2s")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
     (could-not-create-text . "\nCouldn't create the text. Error: %#2s.\n")
     (no-get-text . "You were not allowed to retrieve the text.")
     (unknown-header . "Unknown header")
-    (transform-error . "Skicka in oformatterat (%#1s)? ")
+    (transform-error . "Send unformatted (%#1s)? ")
     (cant-find-info-node . "Can't find the info buffer")
 
     ; From view-text.el:
@@ -881,14 +880,14 @@ Help: \\[describe-mode] ---")
 
     (lyskom-is-full . "\
 ===========================================================
-Message from the LysKOM-system: Somebody tried to connect,
+Message from the LysKOM system: Somebody tried to connect,
 but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
 for a text.
 ===========================================================\n")
     (lyskom-is-full-long . "\
 ===============================================================================
-Message from the LysKOM-system: Somebody tried to connect,
+Message from the LysKOM system: Somebody tried to connect,
 but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
 for a text.
@@ -966,7 +965,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     ; From prioritize.el:
 
     (cant-move-nothing-nowhere . "Can't move nothing anywhere.")
-    (goto-priority-prompt . "Got to priority: ")
+    (goto-priority-prompt . "Go to priority: ")
     (priority-prompt . "New priority for %#1M: ")
     (priority-prompt-marked . "New priority for selected conferences: ")
     (beginning-of-list . "Beginning of list")
@@ -986,7 +985,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
     (prio-row . " %5#1d%5#2m  %#3M\n")
-    (too-high-goto-2 . "You are too high up, move down to line two.")
+    (too-high-goto-2 . "You are too high up. Move down to line two.")
     (too-low-go-up . "You can't push the last line. Move up one line.")
     (all-confs-popped .  "All conferences have been popped.")
     (prio-died . "Couldn't complete the move. Sorry. Kill the buffer.")
@@ -1000,7 +999,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (no-changes . "Nothing was saved since no options had been changed.\n")
     (could-not-save-options . "Couldn't save options.\n")
     (could-not-create-area . "Couldn't create the text.\n")
-    (could-not-set-user-area . "Couldn't alter the user-area. The server says error: %#1d\n")
+    (could-not-set-user-area . "Couldn't alter the user area. The server says error: %#1d\n")
     (you-dont-exist . "You don't exist. Go away.\n")
     (error-in-options . "There was an error in one of your variables (%#1s)
 It was set to \"%#2s\" in the user area. It is set to nil instead.
@@ -1046,7 +1045,7 @@ You should set it to a better value.\n")
     (what-save-no . "Which text do you want to save? ")
     (wait-for-prompt . "Wait for the prompt.")
 
-    (conference-no . "<möte %#1d>")
+    (conference-no . "<conference %#1d>")
     (person-no . "<person %#1d>")
     (prompt-several-messages . "(%d messages)")
     (prompt-single-message . "(%d message)")
@@ -1102,7 +1101,7 @@ LysKOM session killed abnormally
 Error message: %#1s**************************************************")
     (error-not-found . "Error code %#1d. No explanation available.")
 
-    ; Useful in more place than one:
+    ; Useful in more places than one:
     (illegal-command . "Illegal command.\n")
     (no-such-text . "The text doesn't exist.\n")
     (no-such-text-m . "The text doesn't exist.")
@@ -1229,7 +1228,7 @@ Text:
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
     (who-i-am-present . "%#1P is present in %#2M\n")
-    (who-i-am-client . "The programs is lyskom.el, version %#1s%#2?b%[ (MULE)%]%[%].\n")
+    (who-i-am-client . "The program is lyskom.el, version %#1s%#2?b%[ (MULE)%]%[%].\n")
     (who-i-am-server . "This is %#1s, version %#2s.\n")
     (who-i-am-emacs . "Running under %#1s%#2?b%[ (MULE)%]%[%].\n")
 
@@ -1309,13 +1308,13 @@ On since %#8s%#9s")
     
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
     (faq-in-text-aux . "FAQ in text:                 %10#1n")
-    (conf-to-add-faq . "Which conference to you want to add a FAQ for? ")
+    (conf-to-add-faq . "Which conference do you want to add an FAQ for? ")
     (text-to-add-as-faq . "Which text is the new FAQ? ")
     (text-to-change-as-faq . "Which FAQ do you want to change? ")
-    (adding-faq . "Adding text %#1n as a FAQ for %#2M...")
-    (conf-to-del-faq . "Which conference do you want to remove a FAQ from? ")
+    (adding-faq . "Adding text %#1n as an FAQ for %#2M...")
+    (conf-to-del-faq . "Which conference do you want to remove an FAQ from? ")
     (text-to-del-as-faq . "Which text do you want to remove as FAQ? ")
-    (deleting-faq . "Removinb text %#1n as FAQ for %#2M...")
+    (deleting-faq . "Removing text %#1n as FAQ for %#2M...")
     (conf-has-no-faq . "%#1M has no FAQ\n")
     (view-which-faq . "View FAQ for which conference? ")
     (review-faq-for-r . "View FAQ for %#1M.\n")
@@ -1343,11 +1342,11 @@ On since %#8s%#9s")
     (no-comments-edit-aux . "Request that others do not comment")
     (no-comments-regexp . "Request that others do not comment")
     
-    (personal-comment-aux . "The author requests private replies only")
+    (personal-comment-aux . "The author has requested private replies only")
     (personal-comment-edit-aux . "Request private replies only")
     (personal-comment-regexp . "Request private replies only")
     
-    (request-confirmation-aux . "%#1P requests confirmation of reading")
+    (request-confirmation-aux . "%#1P has requested confirmation of reading")
     (request-confirmation-edit-aux . "Request confirmation of reading")
     (request-confirmation-regexp . "Request confirmation of reading")
     (confirm-read-q . "Confirm reading text %#1n? ")
@@ -1409,8 +1408,8 @@ Contents:     \"%#9s\"
     (which-pers-to-xref . "Add reference to user: ")
     (which-conf-to-xref . "Add reference to conference: ")
 
-    (no-comments-q . "Author requestes no comments. Comment anyway? ")
-    (private-answer-q . "Author requests private replies. Write private reply? ")
+    (no-comments-q . "The author doesn't want comments. Comment anyway? ")
+    (private-answer-q . "The author wants private replies. Write private reply? ")
 
     (your-invited . "You have been invited to %#1M by %#2P.
 By accepting the invitation you will continue to be a member of %#1M.
@@ -1432,16 +1431,16 @@ You must become an active member of the conference to enter it.\n")
 
     (not-author-try-anyway-p . "You are not the author of the text. Try anyway? ")
     (what-no-comments-no . "Which text do you want to prevent comments to: ")
-    (adding-no-comments . "Preventing commens to text %#1n...")
-    (already-no-comments . "Text %#1n already prevents comment.\n")
+    (adding-no-comments . "Preventing comments to text %#1n...")
+    (already-no-comments . "Text %#1n already prevents comments.\n")
 
     (what-private-answer-no . "Which text do you want private replies to: ")
     (adding-private-answer . "Requesting only private replies to text %#1n...")
     (already-private-answer . "Text %#1n already has a request for private replies only.\n")
 
     (what-request-confirm-no . "Which text do you want read confirmations for: ")
-    (adding-request-confirm . "Requesting read confirmation for text %#1n...")
-    (already-request-confirm . "Text %#1n already has a request for read confirmation.\n")
+    (adding-request-confirm . "Requesting read confirmations for text %#1n...")
+    (already-request-confirm . "Text %#1n already has a request for read confirmations.\n")
 
     (review-mail-headers-to-what . "Which text's mail headers do you want to see? ")
     (no-mail-headers . "Text %#1n has no mail headers\n")
@@ -1452,7 +1451,7 @@ You must become an active member of the conference to enter it.\n")
     (you-are-anonymous . "You are now somewhat anonymous.\n")
     (you-are-nonanonymous . "You are no longer anonymous.\n")
     (you-are-already-anonymous . "You are already somewhat anonymous.\n")
-    (you-are-already-nonanonymous . "You are alreay non-anonymous.\n")
+    (you-are-already-nonanonymous . "You are already non-anonymous.\n")
 
     (start-keep-alive . "Sending data at %#1d second intervals to keep the connection active.")
     (stop-keep-alive . "No longer keeping connection active by sending extra data.")
@@ -1479,7 +1478,7 @@ You must become an active member of the conference to enter it.\n")
     (confusion-what-to-add-sub-recipient . "I can't figure out which text you want to %#1s.\n")
     (add-rcpt-action-name . "add a recipient to")
     (add-copy-action-name . "add a carbon copy recipient to")
-    (add-bcc-action-name . "add a blid carbon copy recipient to")
+    (add-bcc-action-name . "add a blind carbon copy recipient to")
     (sub-action-name . "remove a recipient from")
     (move-action-name . "move")
 
@@ -1608,7 +1607,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-private-answer-previous
    . "(Write) personal (reply to) previous text (by letter)")
     (kom-set-unread     	      . "Only (the) last")
-    (kom-write-text           . "Write (an) text")
+    (kom-write-text           . "Write (a) text")
     (kom-send-letter          . "Write (a) letter")
     (kom-change-name          . "Change name")
     (kom-change-parenthesis   . "Change parenthesis")
@@ -1630,7 +1629,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-sub-comment          . "Remove comment")
     (kom-add-member           . "Add (a) member")
     (kom-sub-member           . "Remove (a) member")
-    (kom-change-conf-motd     . "(Post) notice (on the)")
+    (kom-change-conf-motd     . "(Post) notice (on the) conference")
     (kom-set-garb-nice        . "Change expiration")
     (kom-set-super-conf       . "Change superconference")
     (kom-set-permitted-submitters . "Change allowed authors")
@@ -1852,7 +1851,7 @@ You must become an active member of the conference to enter it.\n")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
-    (recievers . "Recievers")
+    (recievers . "Receivers")
     (commented . "Commented")
     (kom-edit-send . "Send")
     (kom-edit-send-anonymous . "Send anonymously")
@@ -2204,7 +2203,7 @@ You must become an active member of the conference to enter it.\n")
     ;; Help messages
     ;;
 
-    (variable-type-help . "Select to save setting in the server.")
+    (variable-type-help . "Select to save the setting in the server.")
     (default-help-echo . "Change the value of  %#1s.")
     (change-this-name . "Change the name in this entry.")
     (show-doc . "Show documentation.")
@@ -2242,12 +2241,12 @@ Select whether to execute command or keyboard macro.")
 
     (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
-    (specific-spec . "Per mottager/avsändare")
+    (specific-spec . "Per recipient/sender")
     (sound-file . "Audio file")
     (other-persons . "All others")
 
     (selected-mark . "Mark          ")
-    (conf-or-person . "Person eller möte")
+    (conf-or-person . "Person or conference")
     (ask .           "Ask every time         ")
 
     (before . "Before the text")
@@ -2277,7 +2276,7 @@ Select whether to execute command or keyboard macro.")
 
     (express-break . "Immediately upon creation  ")
     (break .         "After current comment chain")
-    (no-break .      "Efter current conference   ")
+    (no-break .      "After current conference   ")
 
     (express-server-break . "Immediately")
     (express-server-letters-break . "Immediately if letters arrive")
@@ -2307,20 +2306,20 @@ Select whether to execute command or keyboard macro.")
     (everybody-rcpt . "Everybody                                ")
     (group-rcpt .     "The recipient of the last group message  ")
     (sender-rcpt .    "The sender of the most recent message    ")
-    (last-recipient-recpt . "The last person I send a message to")
+    (last-recipient-recpt . "The last person I sent a message to")
 
     (viewer-program . "Web browser")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (all)")
     (netscape-viewer . "Netscape Navigator (all)")
     (windows-viewer       . "Windows default or Netscape (all)")
-    (emacs-w3-viewer . "Emacs W3-mode (HTTP, Goper, FTP)")
+    (emacs-w3-viewer . "Emacs W3 mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer . "Emacs Dired (FTP)")
-    (emacs-mail-viewer . "Emacs Mail-mode (Mail)")
-    (emacs-telnet-viewer . "Emacs Telnet-mode (telnet)")
+    (emacs-mail-viewer . "Emacs Mail mode (Mail)")
+    (emacs-telnet-viewer . "Emacs Telnet mode (telnet)")
     (mosaic-viewer . "NCSA Mosaic (all)")
-    (lynx-viewer          . "Lynx (alla)")
+    (lynx-viewer          . "Lynx (all)")
 
     (dont-check . "Don't ask for confirmation")
     (check-before-open . "Confirm before writing the text")
@@ -2374,7 +2373,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (windows-where      . "How are windows created:\n")
     (reading .            "Reading\n")
     (writing .            "Writing\n")
-    (urls .               "URL Management\n")
+    (urls .               "URL management\n")
     (personal-messages .  "Personal messages\n")
     (remote-control .     "Remote control of LysKOM\n")
     (hooks .              "Hook functions\n")
@@ -2385,7 +2384,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (audio-cues-doc . "\
-  The following group of settings control how LysKOM issues audio cues in
+  The following group of settings controls how LysKOM issues audio cues in
   various situations. The following options are available for each setting:
 
     Off
@@ -2417,7 +2416,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     Check membership of commented author
         When on, LysKOM will check that the author of the comment you are
         writing is a member of at least one of the recipients of your comment.
-        If not, LysKOM will offer to add the commented authos as a recipient
+        If not, LysKOM will offer to add the commented author as a recipient
         to the comment you are writing.
 
     Authors not to check
@@ -2438,14 +2437,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     Some other window
         In another window, but in the same frame as LysKOM. If there only
         is one window in the frame, a new window will be created (and will
-        be removed when you are finished.)
+        be removed when you are finished).
 
     Some other frame
         In a different frame than the one LysKOM is in. If there only is one
-        frame, a new one will be created (and removed when you are finished.)
+        frame, a new one will be created (and will be removed when you are
+        finished).
 
     In a new frame
-        A new frame is created (and removed when you are finished.)
+        A new frame is created (and will be removed when you are finished).
 
     The LysKOM buffer's window
         The LysKOM buffer's window will be used. LysKOM will be restored to
@@ -2526,7 +2526,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
 
     (kom-user-prompt-format-executing-doc . "\
   The format of the LysKOM prompt when the default command is executing.
@@ -2549,7 +2549,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
 
     (kom-anonymous-prompt-format-doc . "\
   The format of the LysKOM prompt used when anonymous. Certain control
@@ -2572,7 +2572,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
 
     (kom-anonymous-prompt-format-executing-doc . "\
   The format of the LysKOM prompt when the default command is executing
@@ -2596,7 +2596,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
 
     (kom-enabled-prompt-format-doc . "\
   The format of the LysKOM prompt when in administrator mode. Certain
@@ -2619,7 +2619,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
 
     (kom-enabled-prompt-format-executing-doc . "\
   The format of the LysKOM prompt when the default command is executing
@@ -2643,7 +2643,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Here are a few examples:
 
     \"%[%c% %m%] - \"             The default prompt
-    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Time - \"")
     
     (kom-cite-string-doc . "\
   A string that is inserted before each line in a cited text. Normally this
@@ -2653,12 +2653,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (kom-created-texts-are-read-doc . "\
-  When this is on, self-created texts are autmatically marked as read. Turned
+  When this is on, self-created texts are automatically marked as read. Turned
   off, those texts are presented as any other texts.")
 
     (kom-default-mark-doc . "\
   The default value used for marking texts. If no value is selected, LysKOM
-  asks for a mark value every time. Values are between 1 and 255 are allowed.")
+  asks for a mark value every time. Values between 1 and 255 are allowed.")
 
     (kom-reading-puts-comments-in-pointers-last-doc . "\
   Controls if comment links are listed before or after the body of a text.
@@ -2712,11 +2712,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-autowrap-doc . "\
   With this setting turned on, LysKOM will attempt to fill any paragraphs
   containing lines that are wider than the screen. Paragraphs that appear
-  to have been preformatted by the author are exempt from this treatment.")
+  to have been preformatted by the author are exempted from this treatment.")
 
     (kom-show-author-at-end-doc . "\
-  When this is turned on the name of the author will be shown at the end
-  of the text text. The name is also shown before the text as usual.
+  When this is turned on, the name of the author will be shown at the end
+  of the text. The name is also shown before the text as usual.
 
   On (with dashed lines on):
 
@@ -2736,11 +2736,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     Information theoretician
     (892342) -----------------------------------
 
-  If dashed lines are off the author's name will be shown as in this
-  example, but the dashed lines are natually not displayed.")
+  If dashed lines are off, the author's name will be shown as in this
+  example, but the dashed lines are naturally not displayed.")
 
     (kom-truncate-threshold-doc . "\
-  If this is activated texts longer than the maximum number of lines will
+  If this is activated, texts longer than the maximum number of lines will
   be truncated when you review comments, review marked texts or review the
   first or last texts in a conference.  Texts will not be truncated when
   you review a text, review a tree or read the next text.")
@@ -2755,13 +2755,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   On:
 
     Go to next conference...
-    Presentation (of nya) Members - 3 unread
+    Presentation (of new) Members - 3 unread
     Read next text - 
 
   Off:
 
     Go to next conference...
-    Presentation (of nya) Members
+    Presentation (of new) Members
     Read next text - ")
 
 
@@ -2773,7 +2773,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   To not get any messages at all, just specify an empty list.")
 
     (kom-presence-messages-in-buffer-doc . "\
-  If you want messages in the  LysKOM buffer when somebody logs in, logs out
+  If you want messages in the LysKOM buffer when somebody logs in, logs out
   or changes name, turn this setting on. Messages are shown in the LysKOM
   buffer. If you want messages about a limited number of users, specify which 
   ones. To not get any messages at all, just specify an empty list.")
@@ -2816,7 +2816,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (kom-follow-comments-outside-membership-doc . "\
-  LysKOM will normally not follow chains of comments into conference you are
+  LysKOM will normally not follow chains of comments into conferences you are
   not a member of. If you do want to follow comment chains into other
   conferences, turn this setting on.")
 
@@ -2836,7 +2836,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
   Reading in order of creation will cause the texts to be displayed
   in numerical order: 1002, 1003, 1004, 1005, 1006 and finally 1007.
-   Reading in comment order will give the order 1002, 1003, 1006, 1004,
+  Reading in comment order will give the order 1002, 1003, 1006, 1004,
   1005 and finally 1007.")
 
 
@@ -2849,7 +2849,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-deferred-printing-doc . "\
   In order to improve speed, LysKOM will not print certain things, such as
-  the names of users and conferences immeduately, but will delay printing
+  the names of users and conferences immediately, but will delay printing
   to make time for other tasks. This improves response time in the client
   considerably, and should only be turned off if it causes problems.")
 
@@ -2902,18 +2902,18 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-audio-player-doc . "\
   If you want LysKOM to play audio files instead of simply beeping, this
   setting must specify the name of a program that can play the audio files.
-  The program must takea single argument, the name of the file to play.")
+  The program must take a single argument, the name of the file to play.")
 
     (kom-default-message-recipient-doc . "\
   This setting controls who will be the default recipient of messages. The
   default recipient may either be everyone, i.e. a public message; the
-  sender of the most recently received message; or the recipient of the most
-  recently received group message or the sender of the most recently
+  sender of the most recently received message; the recipient of the most
+  recently received group message; or the sender of the most recently
   received personal message.")
 
     (lyskom-filter-outgoing-messages-doc . "\
-  If this is on, message that are sent automatically, such as automatic
-  replies and replies to remote control commands will be shown as if you
+  If this is on, messages that are sent automatically, such as automatic
+  replies and replies to remote control commands, will be shown as if you
   had sent them manually.")
 
     (kom-friends-doc . "\
@@ -2926,7 +2926,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-url-viewer-preferences-doc . "\
   This setting controls which WWW browser that will be used to open URLs
-  found in LysKOM. If the first browser in the list cannor handle the type
+  found in LysKOM. If the first browser in the list cannot handle the type
   of URL being opened, then the next browser is tried, and so on.")
 
     (kom-mosaic-command-doc . "\
@@ -2937,7 +2937,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-inhibit-typeahead-doc . "\
   Key presses are usually buffered while LysKOM is busy, and are executed
-  as soon as possible. With this setting off, LysKOM discard any key presses
+  as soon as possible. With this setting off, LysKOM discards any key presses
   received while the client was busy.")
 
     (kom-max-buffer-size-doc . "\
@@ -2956,14 +2956,14 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-ansaphone-default-reply-doc . "\
   This is the message sent by the autoreply feature unless a different
   message has been specified using some other means (and other means are
-  only for careful experts.)")
+  only for careful experts).")
 
     (kom-remote-control-doc . "\
   When turned on, it is possible to control the session using remote control
   commands. Only those users listed below may issue the commands.")
 
     (kom-remote-controllers-doc . "\
-  The users listed here are premitted to issue remove control commands
+  The users listed here are permitted to issue remove control commands
   to your LysKOM session.")
 
     (kom-self-control-doc . "\
@@ -2999,7 +2999,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   all existing memberships of the same priority. Last means after all
   existing memberships of the same priority. A number indicates a
   fixed placement (although the client will eventually sort the membership
-  list in order of priority.)")
+  list in order of priority).")
 
     (kom-show-imported-importer-doc . "\
   The importer of an imported e-mail message is shown if this is on.
@@ -3014,11 +3014,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   is on. This only works with compilant e-mail importers.")
 
     (kom-agree-text-doc . "\
-  Default text for the Agree command. It can either be a text of a list
+  Default text for the Agree command. It can either be a text or a list
   of texts. If it is a list, one of the texts will be chosen at random.")
 
     (kom-silent-ansaphone-doc . "\
-  If this is off, the client will not beep when a personal, group, or
+  If this is off, the client will not beep when a personal, group or
   public message is received when the auto reply feature is on.")
 
     (kom-default-session-priority-doc . "\
@@ -3027,7 +3027,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-unsubscribe-makes-passive-doc . "\
   When this is on, the first time you leave a conference you become a
-  passive member. Leaving the conference again ubsubscribes you completely.
+  passive member. Leaving the conference again unsubscribes you completely.
   When this is off, leaving a conference unsubscribes you immediately.")
 
     (kom-review-priority-doc . "\
@@ -3042,7 +3042,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-text-footer-format-doc . "\
   Format for the text footer. In the format string, %n is replaced by the
-  text number, %P with the author's name, %p with the authods number, %f
+  text number, %P with the author's name, %p with the author's number, %f
   with information about the text (HTML, filled, etc), and %- with a
   suitable dashed line. A number after the percent sign is the minimum
   number of characters to use. A minus sign before the number causes text
@@ -3059,12 +3059,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   When this is on, the client will not wait for information about all
   unread texts, even if it is needed. The result is that List news and
   some other commands do not yield accurate results shortly after logging
-  in. When this is off, the client will wait for informationn on all
+  in. When this is off, the client will wait for information on all
   unread texts when it is needed.")
 
     (kom-smileys-doc . "\
   When this is on, Emacs supports it, and the appropriate package 
-  (smiley.el, which is part of gnus) is installed, smileys will be
+  (smiley.el, which is part of Gnus) is installed, smileys will be
   shown graphically.")
   
     (kom-ignore-message-senders-doc . "\
@@ -3094,7 +3094,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   everything.")
 
     (kom-server-priority-doc . "\
-  Priority of this LysKOM session. The client can prompt you do go to
+  Priority of this LysKOM session. The client can prompt you to go to
   a session with unread texts when a text arrives in a session with a
   higher priority than the one currently being read.")
 
@@ -3167,7 +3167,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Specifies the default file to archive texts in. The client will always
   prompt for the file name, using this as the default.")
     (kom-follow-attachments-doc . "\
-  Specifiec whether to read imported e-mail attachments as regular
+  Specifies whether to read imported e-mail attachments as regular
   comments. When off, imported attachments are marked as read when the
   e-mail they are attached to is read.")
     (kom-show-unread-in-frame-title-doc . "\
@@ -3224,7 +3224,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-print-number-of-unread-on-entrance-tag . 
 "Show number of unread when entering a conference: ")
     (kom-follow-comments-outside-membership-tag .
-"Follow comment chais outside membership:          ")
+"Follow comment chains outside membership:         ")
     (kom-show-footnotes-immediately-tag .
 "Show footnotes immediately:                       ")
     (kom-membership-default-priority-tag . 
@@ -3318,7 +3318,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-membership-default-placement-tag . "Placement of new memberships:")
     (kom-show-imported-importer-tag . "Show importer of imported messages:")
     (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")
-    (kom-show-imported-external-recipients-tag . "Show external recipients of impoted messages:")
+    (kom-show-imported-external-recipients-tag . "Show external recipients of imported messages:")
     (kom-agree-text-tag . "Default text for Agree:")
     (kom-silent-ansaphone-tag . "Beep when auto reply is on:")
     (kom-default-session-priority-tag . "Default session priority:")
@@ -3336,7 +3336,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-text-header-dash-length-tag . "Length of dashed line before text:")
     (kom-show-personal-message-date-tag . "Show date and time of messages:")
     (kom-w3-simplify-body-tag . "Display HTML without document colors:")
-    (kom-mercial-tag . "Text do display when all is read:")
+    (kom-mercial-tag . "Text to display when all is read:")
     (kom-server-priority-tag . "Session priority:")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM:")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names:")
@@ -3364,7 +3364,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 ;;;; right.
 
 (lyskom-language-var kom-ansaphone-default-reply en 
-  "I am not reading LysKOM right not. Please write a letter instead.")
+  "I am not reading LysKOM right now. Please write a letter instead.")
         
 ;;;; ============================================================
 ;;;; Other language-dependent variables
@@ -3378,7 +3378,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 ;;;; ================================================================
 ;;;; Tell phrases should be configured with the default language used
 ;;;; at the server and not for person reading if they happens to
-;;;; differ. This is of coarse because they are sent to the server for
+;;;; differ. This is of course because they are sent to the server for
 ;;;; everybody else to see.
 
 ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
@@ -3454,13 +3454,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-15 . "You cannot use global text number 0")
     (error-16 . "There is no text with that local number")
     (error-17 . "You cannot use local text number 0")
-    (error-18 . "Name too short, to long or containing illegal characters")
+    (error-18 . "Name too short, too long or containing illegal characters")
     (error-19 . "Index out of bounds")
     (error-20 . "The conference already exists")
     (error-21 . "The user already exists")
     (error-22 . "Secret but not read-protected")
-    (error-23 . "You are not allowed to change the erson/conference flag")
-    (error-24 . "Error in the dtabase. Tough luck.")
+    (error-23 . "You are not allowed to change the person/conference flag")
+    (error-24 . "Error in the database. Tough luck.")
     (error-25 . "Invalid recipient or comment type")
     (error-26 . "Illegal info type. (Bug in the client)")
     (error-27 . "Already recipient of this text")
