@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.11 1998-06-02 12:14:46 byers Exp $
+;;;;; $Id: flags.el,v 44.12 1999-01-01 19:50:26 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.11 1998-06-02 12:14:46 byers Exp $\n"))
+	      "$Id: flags.el,v 44.12 1999-01-01 19:50:26 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -333,6 +333,8 @@ If successful then set the buffer not-modified. Else print a warning."
 	     ((string= word "elisp")
 	      (setq elisp-no r))
 	     (t
+	      ;; Build up lyskom-other-clients-user-areas so that it
+	      ;; contains a list of pairs: (name . number). (string, int).
 	      (setq lyskom-other-clients-user-areas
 		    (cons (cons word r) lyskom-other-clients-user-areas))))
 	    (++ r)))
@@ -374,10 +376,14 @@ If successful then set the buffer not-modified. Else print a warning."
 	   (t
 	    (let ((pos lyskom-other-clients-user-areas))
 	      (while (and pos
-			  (not (= (cdr (car pos)) r)))
+			  (not (equal
+				(cdr (car pos))	;The position or the string.
+				r)))
 		(setq pos (cdr pos)))
 	      (if pos
-		  (setcdr (car pos) working)))))
+		  (setcdr (car pos) working))))) ;Insert the string
+						 ;where the position
+						 ;was stored.
 	  (++ r))
 
 	(setq lyskom-filter-list (append kom-permanent-filter-list
