@@ -1,6 +1,19 @@
 2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
 
-	* utilities.el (lyskom-format-time): Spelling.
+	* swedish-strings.el (lyskom-custom-strings): Spelling.
+	(lyskom-message): Ditto.
+	(lyskom-menu): Ditto.
+
+	* view-text.el (lyskom-print-header-recpt): Ditto.
+
+	* english-strings.el (lyskom-message): Ditto.
+	(lyskom-menu): Ditto.
+
+	* utilities.el (lyskom-format-time): Ditto.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Ditto.
+
+	* review.el: Ditto.
 
 	* mship-edit.el (lyskom-read-time): Don't subtract 1900 from year.
 

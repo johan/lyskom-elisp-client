@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.52 2001-04-25 12:31:41 byers Exp $
+;;;;; $Id: view-text.el,v 44.53 2001-04-25 19:51:42 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.52 2001-04-25 12:31:41 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.53 2001-04-25 19:51:42 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -976,7 +976,7 @@ the client. That is done by lyskom-is-read."
       (lyskom-format-insert 'sent-by (misc-info->sender misc)))
   (if (misc-info->rec-time misc)
       (lyskom-format-insert
-       'recieved-at
+       'received-at
        (lyskom-format-time 'date-and-time (misc-info->rec-time misc)))))
 
 

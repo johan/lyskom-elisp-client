@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.133 2001-04-25 12:31:38 byers Exp $
+;;;;; $Id: english-strings.el,v 44.134 2001-04-25 19:51:37 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.133 2001-04-25 12:31:38 byers Exp $"))
+              "$Id: english-strings.el,v 44.134 2001-04-25 19:51:37 joel Exp $"))
 
 
 ;;; ================================================================
@@ -857,7 +857,7 @@ Help: \\[describe-mode] ---")
     (Strange-recipient . "Also to")
     (send-at . "   Posted:     %#1s\n")
     (sent-by . "   Posted by %#1P\n")
-    (recieved-at . "    Received: %#1s\n")
+    (received-at . "    Received: %#1s\n")
 
     (comment-to-text . "Comment to text %#1n")
     (footnote-to-text . "Footnote to text %#1n")
@@ -1864,7 +1864,7 @@ You must become an active member of the conference to enter it.\n")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
-    (recievers . "Receivers")
+    (receivers . "Receivers")
     (commented . "Commented")
     (kom-edit-send . "Send")
     (kom-edit-send-anonymous . "Send anonymously")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.34 2001-01-03 22:03:02 qha Exp $
+;;;;; $Id: review.el,v 44.35 2001-04-25 19:51:40 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.34 2001-01-03 22:03:02 qha Exp $\n"))
+	      "$Id: review.el,v 44.35 2001-04-25 19:51:40 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -499,7 +499,7 @@ Cannot be called from a callback."
 ;;;         r_i \larrow r_i * (by_n \cap to_i) ; 0<i<n
 ;;; At this point, the concatenation of all r_n, \prod r_n, is the
 ;;; result of the intersection between the segments of the by-list and
-;;; to-list we have retreived so far.
+;;; to-list we have retrieved so far.
 ;;;
 ;;; If the total size of the result equals or exceeds the size we
 ;;; requested, finish the loop and return the results.
