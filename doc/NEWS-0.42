@@ -102,9 +102,17 @@ nu finns under namnet NEWS-0.42.
 ** Text tolkas inte som inläggsnummer om det är fler än sju siffror i
    följd. 
 
-** Kommandot kom-next-kom (bundet till n l) har ändrat sitt beteende.
-   +++ Hur? +++ och kommando kom-previous-kom (bundet till f l) är
-   nytt.
+** Indikeringen "Olästa" i mode-raden visas när man har olästa i något
+   KOM. Om man dessutom har olästa brev visas "Olästa brev".
+
+** Kommandona kom-previous-kom (bundet till f l) och
+   kom-next-unread-kom (bundet till n o) har införts. De gör vad man
+   tror.
+
+** Kommandona kom-next-kom, kom-previous-kom och kom-next-unread
+   lägger normalt sett den nuvarande KOM-bufferten sist i
+   buffertlistan, men det beteendet går att styra med variabeln
+   kom-bury-buffers.
 
 ** När man gör "Status möte" kan man lista medlemslistan på ett mycket
    snabbare sätt, utan att se hur många olästa medlemmarna har.
@@ -117,11 +125,9 @@ nu finns under namnet NEWS-0.42.
    skickas innan man får skriva meddelandet.
 
 
-
-
 * Bugfixar
 
-** Klienten scrollar in ner till slutet på bufferten i tid och otid.
+** Klienten scrollar inte ner till slutet på bufferten i tid och otid.
 
 ** Variabeln kom-text-properties respekteras bättre (om nu någon
    skulle vilja sätta den till nil).
@@ -148,6 +154,9 @@ nu finns under namnet NEWS-0.42.
 ** Några buggar i fjärrstyrningen som gjorde att en fjärrstyrd LysKOM
    hängde är borta. Eftersom ingen använder fjärrstyrning var det nog
    ingen som märkte av dem.
+
+** Om kom-show-footnotes-immediately är nil så kommer ändå fotnoterna
+   att läsas först.
 
 ** Vi har säkert infört några nya, ännu skojigare buggar.
 
