@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.4 1993-05-25 15:51:15 linus Exp $
+;;;;; $Id: edit-text.el,v 36.5 1993-05-26 17:58:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.4 1993-05-25 15:51:15 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.5 1993-05-26 17:58:38 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -751,7 +751,17 @@ BUG: does not descend in the maps."
 	(while (< r (length (car (cdr newmap))))
 	  (if (aref (car (cdr newmap)) r)
 	      (define-key map (char-to-string r) (aref (car (cdr newmap)) r)))
-	  (setq r (1+ r))))
+	  (setq r (1+ r)))
+	(mapcar
+	 (function
+	  (lambda (ele)
+	    (define-key map 
+	      (cond
+	       ((integerp (car ele))
+		(char-to-string (car ele)))
+	       ((vector (car ele))))
+	      (cdr ele))))
+	 (cdr (cdr newmap))))
        ((arrayp newmap)
 	(while (< r (length newmap))
 	  (if (aref newmap r)
