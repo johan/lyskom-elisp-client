@@ -9,6 +9,9 @@
 	lyskom-complete-command.
 	(lyskom-ok-command): Support vectors from
 	lyskom-read-extended-command as inputs.
+	(lyskom-command-minibuffer-local-completion-map): Wired in
+	lyskom-complete-command-word.
+	(lyskom-command-minibuffer-local-must-match-map): Same here.
 
 2002-06-22  David Byers  <david.byers@swipnet.se>
 
