@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.363 2004-02-21 23:12:41 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.364 2004-02-22 09:43:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.363 2004-02-21 23:12:41 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.364 2004-02-22 09:43:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -572,6 +572,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (error-not-recipient . "%#2M är inte mottagare till inlägg %#1n.\n")
 
     (moving-tree-what-action-q . "Vad vill du göra? (flytta) ")
+    (moving-cant-read . "Det gick inte att inte flytta text %#1n (kan inte läsa texten).\n")
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
     (moving-already-moved . "Inlägg %#1n har inte %#2M som mottagare.\nFlyttar inte inlägget eller dess kommentarsträd.\n")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar till %#1n? ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.322 2004-02-21 23:12:40 byers Exp $
+;;;;; $Id: english-strings.el,v 44.323 2004-02-22 09:43:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.322 2004-02-21 23:12:40 byers Exp $"))
+              "$Id: english-strings.el,v 44.323 2004-02-22 09:43:58 byers Exp $"))
 
 
 ;;; ================================================================
@@ -558,6 +558,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
 
     (moving-tree-what-action-q . "What do you want to do? (move) ")
+    (moving-cant-read . "Can't move text %#1n (unable to read text).\n")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
     (moving-already-moved . "Text %#1n does not have %#2M as a recipient.\nSkipping this text and its comments.\n")
     (text-to-add-q . "Add which text as a comment to %#1n? ")

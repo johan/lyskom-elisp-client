@@ -1,5 +1,9 @@
 2004-02-22  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1251:
+	* commands1.el (kom-move-text): Don't try to move footnotes and
+	attachments that we can't read.
+
 	* option-edit.el: Added kom-auto-confirm-new-conferences to the
 	settings buffer.
 
