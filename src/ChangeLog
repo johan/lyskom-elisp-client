@@ -1,3 +1,12 @@
+2001-11-19  David Byers  <davby@ida.liu.se>
+
+	Make it possible to remove recipients by removing their name and
+	number but not the header line itself
+	* edit-text.el (lyskom-looking-at-header): Implement 'empty for
+	second argument. Limit angled headers to one line of text.
+	(lyskom-edit-parse-headers): Skip empty recipient headers without
+	warning.
+
 2001-11-19  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (lyskom-button-actions): added "remove" option to the

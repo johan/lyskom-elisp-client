@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.85 2001-11-18 23:27:24 qha Exp $
+;;;;; $Id: edit-text.el,v 44.86 2001-11-19 11:31:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.85 2001-11-18 23:27:24 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.86 2001-11-19 11:31:25 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1493,7 +1493,9 @@ non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
   (if (lyskom-looking-at
        (concat (lyskom-get-string header)
 	       (cond ((eq match-number 'angled)
-		      "[^0-9]*<\\([0-9]+\\)>")
+		      "[^0-9\n\r]*<\\([0-9]+\\)>")
+                     ((eq match-number 'empty)
+                      "[^:]*:\\(\\s-*\\)$")
 		     (match-number
 		      "[^0-9]*\\([0-9]+\\)")
 		     (nil
@@ -1551,6 +1553,11 @@ easy to use the result in a call to `lyskom-create-misc-list'."
                         (list 'unknown-header (point))))))
 
            ((lyskom-looking-at (lyskom-get-string 'comment-item-prefix))
+            nil)
+
+           ((or (lyskom-looking-at-header 'blank-carbon-copy-prefix 'empty)
+                (lyskom-looking-at-header 'carbon-copy-prefix 'empty)
+                (lyskom-looking-at-header 'recipient-prefix 'empty))
             nil)
 
 	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
