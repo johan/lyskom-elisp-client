@@ -1,0 +1,53 @@
+#!/bin/sh
+
+template=$1
+items=$2
+
+en_inverse="\([^e]\|e[^n]\)*"
+sv_inverse="\([^s]\|s[^v]\)*"
+
+lang_inverse="\([^<]\|<[^/]\|</[^l]\|</l[^a]\|</la[^n]\|</lan[^g]\|</lang[^>]\)*"
+
+# Make a swedish version without content
+
+function extract_language () {
+  lang="$1"
+  inverse="$2"
+  cat $template | \
+      sed "s,<lang id=\"$inverse\">$lang_inverse</lang>,,g" |\
+      sed "s,<lang id=\"$lang\">,,g" |\
+      sed "s,</lang>,,g" |\
+      sed "/<!-- CONTENT -->/ r /tmp/elisp-client-items.sv" \
+      > index.$lang.html
+}
+
+
+function get_lines () {
+    file=$1
+    key=$2
+    grep -i "^$key=" $file | cut -d= -f2-
+}
+
+function get_items() {
+    lang=$1
+    output="/tmp/elisp-client-items.$lang"
+
+    echo > $output
+    for file in `grep "^SORT" $items/* | sort -n -t= -r -k 2 | cut -d: -f1` ; do
+        if [ -r "$file" -a -z "`grep '^OLD' $file`" ] ; then
+           title=`get_lines $file "$lang.TITLE"`
+           text=`get_lines $file "$lang.TEXT"`
+        fi
+        echo '<div class="item">' >> $output
+        echo "<h2>$title</h2>" >> $output
+        echo "$text" >> $output
+        echo "</div>" >> $output
+    done
+}
+
+get_items sv
+get_items en
+
+extract_language sv "$sv_inverse"
+extract_language en "$en_inverse"
+
