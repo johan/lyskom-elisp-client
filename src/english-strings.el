@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.51 1999-06-26 21:11:55 byers Exp $
+;;;;; $Id: english-strings.el,v 44.52 1999-06-28 10:41:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.51 1999-06-26 21:11:55 byers Exp $"))
+              "$Id: english-strings.el,v 44.52 1999-06-28 10:41:03 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2771,9 +2771,28 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (email
      email-text
      lyskom-button-open-email
-     (("Skicka mail" . lyskom-button-open-email)
-      ("Kopiera" . lyskom-button-copy-email))
-     nil)))
+     (("Send mail" . lyskom-button-open-email)
+      ("Copy" . lyskom-button-copy-email))
+     nil)
+    (aux
+     aux-text
+     lyskom-button-info-aux
+     (("Information" . lyskom-button-info-aux)
+      ("Delete" . lyskom-button-delete-aux)))
+    (aux-edit-menu
+     nil
+     nil
+     (("Toggle \"secret\"" . lyskom-edit-toggle-secret-aux)
+      ("Toggle \"anonymous\"" . lyskom-edit-toggle-anonymous-aux)
+      ("Toggle \"inherited\""   . lyskom-edit-toggle-inherit-aux)
+      ("Delete"          . lyskom-edit-delete-aux)))
+    (prioritize-flag-menu
+     nil
+     lyskom-prioritize-flag-toggle
+     (("Toggle" . lyskom-prioritize-flag-toggle)
+      ("Set"    . lyskom-prioritize-flag-set)
+      ("Clear"  . lyskom-prioritize-flag-clear)))
+))
 
 
 ;;;; ================================================================

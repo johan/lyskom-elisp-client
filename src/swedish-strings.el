@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.63 1999-06-26 21:11:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.64 1999-06-28 10:41:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.63 1999-06-26 21:11:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.64 1999-06-28 10:41:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -82,7 +82,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-Å")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-å")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
-  (define-key lyskom-sv-edit-prefix (kbd "+")       'kom-menu-button-press)
+  (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "C-i")     'lyskom-sv-edit-insert-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-c")     'kom-edit-send)
   (define-key lyskom-sv-edit-prefix (kbd "C-s")     'kom-ispell-message)
@@ -1704,7 +1704,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd "*")     'kom-button-press)
-  (define-key lyskom-sv-mode-map (kbd "+")     'kom-menu-button-press)
+  (define-key lyskom-sv-mode-map (kbd "=")     'kom-menu-button-press)
   (define-key lyskom-sv-mode-map (kbd "TAB")   'kom-next-link)
   (define-key lyskom-sv-mode-map (kbd "M-TAB") 'kom-previous-link)
   (define-key lyskom-sv-mode-map (kbd "C-i")   'kom-next-link)
@@ -1902,7 +1902,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map (kbd "*") 'kom-button-press)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "+") 'kom-menu-button-press)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "=") 'kom-menu-button-press)
   (define-key lyskom-sv-prioritize-mode-map (kbd "?") 'kom-prioritize-help)
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-k") 'kom-prioritize-select)
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-y") 'kom-prioritize-yank)
@@ -2838,6 +2838,12 @@ i servern. Annars sparas det i din .emacs.")
       ("Växla \"anonym\"" . lyskom-edit-toggle-anonymous-aux)
       ("Växla \"ärvd\""   . lyskom-edit-toggle-inherit-aux)
       ("Ta bort"          . lyskom-edit-delete-aux)))
+    (prioritize-flag-menu
+     nil
+     lyskom-prioritize-flag-toggle
+     (("Växla" . lyskom-prioritize-flag-toggle)
+      ("Sätt på" . lyskom-prioritize-flag-set)
+      ("Stäng av" . lyskom-prioritize-flag-clear)))
 ))
         
 

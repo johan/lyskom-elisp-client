@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.13 1999-06-26 20:48:15 byers Exp $
+;;;;; $Id: prioritize.el,v 44.14 1999-06-28 10:41:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.13 1999-06-26 20:48:15 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.14 1999-06-28 10:41:07 byers Exp $\n"))
 
 
 
@@ -864,7 +864,7 @@ only tell server about that entry."
                (set-membership->priority 
                 (lyskom-get-membership conf-no t)
                 (prioritize-entry->priority entry))
-               (lyskom-ignoring-async (18)
+               (lyskom-ignoring-async (18 lyskom-pers-no conf-no)
                  (initiate-add-member 'priority
                                       'lyskom-prioritize-handler
                                       conf-no

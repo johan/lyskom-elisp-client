@@ -7,6 +7,50 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+PRIORITERA
+
+Funktioner:
+Endast läsa senaste i alla markerade möten.
+Läs från ett visst datum i alla markerade.
+Samma som i förra prioritera.
+Uppdatera all information.
+Ändra namn på möte.
+
+
+
+VIKTIGT!!!!
+
+Medlemskapen kan komma från servern i godtycklig ordning. Det vore
+trevligt att sortera om dem när de kommer, men det blir för svårt. Det 
+finns för många sätt för medlemskapen att hamna fel.
+
+Prioritera möten måste sortera om mötena.
+
+När man går med i ett möte borde det läggas in i någorlunda sorterad
+ordning.
+
+Klienten borde kunna upptäcka att medlemskapslistan är osorterad och
+sortera den automatiskt, till exempel vis inloggning (efter prefetchen 
+är klar.)
+
+
+
+När man accepterar en inbjudan borde man automatiskt prioritera om den 
+enligt ens defaultprioritet och defaultposition.
+
+
+
+Addera medlem måste se till att ens membership-cache inte blir
+felordnad.
+
+
+
+Addera medlems defaultposition (first/last) måste se till att det är
+inom en prioritet.
+
+
+
+
 
 Kommandon: begär bekräftelse, endast personliga kommentarer, inga
 kommentarer. Se inlägg 4089678.
