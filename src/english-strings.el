@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.8 1996-01-13 06:50:34 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.9 1996-01-17 11:50:54 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.8 1996-01-13 06:50:34 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.9 1996-01-17 11:50:54 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -160,7 +160,7 @@ Email-address:\n\nOther:\t")
     ; No entries.
 
     ; From services.el:
-    ; No entries.
+    (interrupted . "Interrupted")
 
     ; From cache.el:
     ; No entries.
@@ -304,7 +304,7 @@ and you have finished reading. Please come back later.
     (go-to-conf . "Go to conference %#1M.\n")
     (cant-go-to-his-mailbox . "You are not allowed to go to %#1s's mailbox.\n")
     (not-member-of-conf . "You are not subscribed to %#1s.\n")
-    (about-to-change-name-from . "%#1s\n")
+    (about-to-change-name-from . "%#1P\n")
     (change-name-done . "Done. New name: %#1s.\n")
     (change-name-nope . "Didn't work. Error code %#3d. %#2s.\n")
     (change-supervisor-from-to . "Change supervisor of %#1s to %#2s...")

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.3 1995-10-30 15:42:07 davidk Exp $
+;;;;; $Id: parse.el,v 38.4 1996-01-17 11:51:08 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.3 1995-10-30 15:42:07 davidk Exp $\n"))
+	      "$Id: parse.el,v 38.4 1996-01-17 11:51:08 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -810,13 +810,14 @@ functions and variables that are connected with the lyskom-buffer."
 		 (normal-exit nil))
 	    (unwind-protect
 		(progn
-		  (cond
-		   ((eq key ?=)		;The call succeeded.
-		    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		   ((eq key ?%)		;The call was not successful.
-		    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-		   ((eq key ?:)		;An asynchronous message.
-		    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
+		  (let ((inhibit-quit nil))
+		    (cond
+		     ((eq key ?=)	;The call succeeded.
+		      (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+		     ((eq key ?%)	;The call was not successful.
+		      (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+		     ((eq key ?:)	;An asynchronous message.
+		      (lyskom-parse-async (lyskom-parse-num) lyskom-buffer))))
 		  (setq normal-exit t))
 	    ;; In case the command changes buffer.
 	    ;; One reply is now parsed. Check if there is yet
@@ -826,7 +827,6 @@ functions and variables that are connected with the lyskom-buffer."
 	    (goto-char (point-min))
 	    (while (looking-at "[ \t\n\r]")
 	      (delete-char 1))
-	    (setq inhibit-quit nil)	;We are allowed to break here.
 	    ))))
     (store-match-data match-data)))
 

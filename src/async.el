@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.5 1995-10-28 11:07:13 byers Exp $
+;;;;; $Id: async.el,v 38.6 1996-01-17 11:50:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.5 1995-10-28 11:07:13 byers Exp $\n"))
+	      "$Id: async.el,v 38.6 1996-01-17 11:50:39 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -274,6 +274,9 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
   (lyskom-insert-personal-message sender recipient message)
   (setq lyskom-last-personal-message-sender (if (stringp sender) sender
 					      (conf-stat->name sender)))
+  (setq lyskom-last-group-message-recipient (if recipient
+						(conf-stat->name recipient)
+					      nil))
   (run-hooks 'lyskom-personal-message-hook))
 
 
@@ -286,7 +289,7 @@ MESSAGE is a string containing the message.
 INSERT-FUNCTION is a function that given a string inserts it into the
 current buffer."
   (lyskom-handle-as-personal-message
-   (cond ((eq recipient 0)
+   (cond ((eq recipient 0)		; Public message
 	  (if (eq t kom-ding-on-personal-messages) (beep))
 	  (lyskom-format 'message-broadcast
 			 (cond
@@ -295,7 +298,7 @@ current buffer."
 			  (t (lyskom-get-string 'unknown)))
 			 message
 			 (substring (current-time-string) 11 19)))
-	 ((= (conf-stat->conf-no recipient) lyskom-pers-no)
+	 ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
 	  (if (memq kom-ding-on-personal-messages '(t personal)) (beep))
 	  (lyskom-format 'message-from
 			 (cond
@@ -304,7 +307,7 @@ current buffer."
 			  (t (lyskom-get-string 'unknown)))
 			 message
 			 (substring (current-time-string) 11 19)))
-       (t
+       (t				; Group message
 	(if (memq kom-ding-on-personal-messages '(t group)) (beep))
 	(lyskom-format 'message-from-to
 		       message

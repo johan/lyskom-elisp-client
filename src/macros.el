@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.1 1995-03-04 14:16:10 byers Exp $
+;;;;; $Id: macros.el,v 38.2 1996-01-17 11:51:05 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.1 1995-03-04 14:16:10 byers Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 38.2 1996-01-17 11:51:05 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -65,6 +65,51 @@ Value returned is always nil."
 	      (cons 'progn
 		    forms)
 	      '(set-buffer __buffer__))))
+
+;; The following is equal to this:
+;; (eval-when-compile (require 'edebug))
+;; (def-edebug-spec lyskom-save-excursion t)
+(put 'lyskom-save-excursion 'edebug-form-spec t)
+
+;;;; LysKOM user commands
+
+;; The new, blocking commands have a very similar structure
+;;
+;;  (defun kom-cmd (args)
+;;    "Documentation"
+;;    (interactive "...")
+;;    (lyskom-start-of-command 'kom-cmd)
+;;    (unwind-protect
+;;        (progn ...)
+;;      (lyskom-end-of-command)))
+;;
+;; This can now be written as
+;;
+;; (def-kom-command kom-cmd (args)
+;;   "Documentation"
+;;   (interactive "...")
+;;   ...)
+
+
+(defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
+  (list 'defun cmd args doc interactive-decl
+	(list 'lyskom-start-of-command (list 'quote cmd))
+	(list 'unwind-protect
+	      (cons 'progn
+		    forms)
+	      (list 'lyskom-end-of-command))))
+
+
+;;(def-edebug-spec def-kom-command
+;;  (&define name lambda-list
+;;                [&optional stringp]   ; Match the doc string, if present.
+;;                ("interactive" interactive)
+;;                def-body))
+(put 'def-kom-command 'edebug-form-spec
+     '(&define name lambda-list
+	       [&optional stringp]	; Match the doc string, if present.
+	       ("interactive" interactive)
+	       def-body))
 
 
 ;;;; Some useful macros to make the code more readable.
