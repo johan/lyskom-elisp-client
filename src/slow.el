@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.14 2001-04-25 11:48:37 byers Exp $
+;;;;; $Id: slow.el,v 44.15 2001-08-22 20:13:42 qha Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -61,7 +61,7 @@
   (goto-char (point-max))
   (save-restriction
     (when (> lyskom-last-viewed (point-max))
-      (setq lyskom-last-viewed (point-max)))
+      (setq lyskom-last-viewed (point-max-marker)))
     (narrow-to-region lyskom-last-viewed (point-max))
     (if (search-backward lyskom-current-prompt-text nil t)
         (forward-char (length lyskom-current-prompt-text))

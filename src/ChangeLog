@@ -1,3 +1,12 @@
+2001-08-22  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-set-last-viewed): set lyskom-last-viewed
+	to a marker in stead of an integer.
+	(lyskom-trim-buffer): don't update
+	lyskom-last-viewed since it's a marker now.
+
+	* slow.el (lyskom-slow-start-of-line): see above.
+
 2001-08-21  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (lyskom-text-buttons): understands links broken
