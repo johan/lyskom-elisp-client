@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.76 2000-01-10 23:35:44 byers Exp $
+;;;;; $Id: english-strings.el,v 44.77 2000-02-16 15:10:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.76 2000-01-10 23:35:44 byers Exp $"))
+              "$Id: english-strings.el,v 44.77 2000-02-16 15:10:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2969,6 +2969,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-check-commented-author-membership . "")
     (kom-confirm-multiple-recipients-doc . "")
     (kom-check-commented-author-membership-doc . "")
+    (kom-complete-numbers-before-names-doc . "\
+   When this is on and you enter a text that can be either a conference
+   number or a conference name, the client will accept it as a conference 
+   number, if possible. When this is off, the text will be accepted as
+   a conference name first and number second.")
 
     ;;
     ;; Tags for variables
@@ -3115,6 +3120,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-mercial-tag . "Text do display when all is read")
     (kom-server-priority-tag . "Session priority")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM")
+    (kom-complete-numbers-before-names-tag . "Read conference numbers before names")
     )
 )
 

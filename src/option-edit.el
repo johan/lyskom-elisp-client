@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.36 2000-01-10 23:26:56 byers Exp $
+;;;;; $Id: option-edit.el,v 44.37 2000-02-16 15:10:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.36 2000-01-10 23:26:56 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.37 2000-02-16 15:10:48 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -133,6 +133,7 @@
     [kom-print-number-of-unread-on-entrance]
     [kom-allow-incompleteness]
     [kom-permissive-completion]
+    [kom-complete-numbers-before-names]
     [kom-continuous-scrolling]
     [kom-inhibit-typeahead]
     "\n"
@@ -640,6 +641,7 @@ customize buffer but do not save them to the server."
     (kom-w3-simplify-body (toggle (on off)))
     (kom-bury-buffers (toggle (on off)))
     (kom-ansaphone-replies (ansaphone))
+    (kom-complete-numbers-before-names (toggle (on off)))
 ))
 
 (defvar lyskom-widget-functions 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.48 1999-12-03 15:33:25 byers Exp $
+;;;;; $Id: utilities.el,v 44.49 2000-02-16 15:10:58 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.48 1999-12-03 15:33:25 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.49 2000-02-16 15:10:58 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -725,11 +725,11 @@ name of the day of week."
 ;;; Keymap utilities
 
 (defun lyskom-lookup-key (keymap event &optional accept-default)
+  (if (not (arrayp event))
+      (setq event (vector event)))
   (if (null keymap)
       (and accept-default 
            (lookup-key global-map event))
-    (if (not (arrayp event))
-	(setq event (vector event)))
     (or (lookup-key keymap event)
         (lyskom-lookup-key (keymap-parent keymap) event accept-default))))
 
