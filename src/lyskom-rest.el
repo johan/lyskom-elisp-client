@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.125 2000-10-10 13:04:44 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.126 2000-12-12 11:12:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.125 2000-10-10 13:04:44 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.126 2000-12-12 11:12:52 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3546,8 +3546,11 @@ One parameter - the prompt string."
 (if lyskom-modeline-keymap
     nil
   (setq lyskom-modeline-keymap (make-sparse-keymap))
-  (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button2up)) 'kom-modeline-next-unread-kom)
-  (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button3)) 'kom-modeline-select-unread-kom))
+  (lyskom-xemacs-or-gnu
+   (progn (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button2up)) 'kom-modeline-next-unread-kom)
+          (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button3)) 'kom-modeline-select-unread-kom))
+  (progn (define-key lyskom-modeline-keymap [mode-line mouse-2] 'kom-modeline-next-unread-kom)
+         (define-key lyskom-modeline-keymap [mode-line mouse-3] 'kom-modeline-select-unread-kom))))
 
 
 (defvar frame-icon-title-format)
@@ -3582,12 +3585,24 @@ One parameter - the prompt string."
                                           frame-icon-title-format
                                           'lyskom-unread-title-format)))
 
-  (setq lyskom-unread-mode-line
-        (list (list 'lyskom-sessions-with-unread 
-                    (lyskom-get-string 'mode-line-unread))
-              (list 'lyskom-sessions-with-unread-letters
-                    (lyskom-get-string 'mode-line-letters))
-              " "))
+  (lyskom-xemacs-or-gnu
+   (setq lyskom-unread-mode-line
+         (list (list 'lyskom-sessions-with-unread 
+                     (lyskom-get-string 'mode-line-unread))
+               (list 'lyskom-sessions-with-unread-letters
+                     (lyskom-get-string 'mode-line-letters))
+               " "))
+   (setq lyskom-unread-mode-line
+         (list (list 'lyskom-sessions-with-unread 
+                     (let ((tmp (lyskom-get-string 'mode-line-unread)))
+                       (add-text-properties 0 (length tmp) (list 'local-map lyskom-modeline-keymap) tmp)
+                       tmp))
+               (list 'lyskom-sessions-with-unread-letters
+                     (let ((tmp (lyskom-get-string 'mode-line-letters)))
+                       (add-text-properties 0 (length tmp) (list 'local-map lyskom-modeline-keymap) tmp)
+                       tmp))
+               " ")))
+
   (setq lyskom-unread-title-format
         `(kom-show-unread-in-frame-title
           (lyskom-session-has-unreads 

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.37 2000-11-29 14:47:59 byers Exp $
+# $Id: Makefile,v 44.38 2000-12-12 11:12:42 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 
-CLIENTVERSION = 0.46.1-BETA-3
+CLIENTVERSION = 0.46.1-BETA-4
 
 SHELL = /bin/sh
 RM = rm -f
