@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.18 1996-02-05 11:46:53 byers Exp $
+;;;;; $Id: vars.el.in,v 38.19 1996-02-17 05:42:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.18 1996-02-05 11:46:53 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.19 1996-02-17 05:42:29 davidk Exp $\n"))
 
 
 
@@ -355,7 +355,9 @@ he gets a y-or-n-p question for all recipients.")
   '(("kom.lysator.liu.se" . "LysKOM")
     ("kom.ludd.luth.se" . "LuddKOM")
     ("rydkom.rydnet.lysator.liu.se" . "RydKOM")
-    ("kom.csd.uu.se" . "CSD-KOM"))
+    ("kom.csd.uu.se" . "CSD-KOM")
+    ("striterax.medio.mh.se" . "MedioKOM")
+    ("kom.mds.mdh.se" . "MdS-KOM"))
   "An alist mapping server names to shorter identification strings")
 
 (defconst lyskom-elisp-variables
@@ -593,6 +595,10 @@ The first element is a dummy.")
   "A flag indicating if the filter was interrupted by C-g.
  It is set to the same value as quit-flag on filter exit.")
 
+(defvar lyskom-inhibit-minibuffer-messages nil
+  "A flag indicating whether asynchronous minibuffer messages are allowed.
+If this variable is non-nil, no asynchronous messages will appear.")
+
 ;;; These variables control prefetch of conf-stats, text-stats and texts:
 
 (defvar lyskom-prefetch-texts 3
@@ -623,6 +629,10 @@ article in one of the first lyskom-fetch-membership-length conferences.")
 (defvar lyskom-last-conf-received -1
   "Last conf known about. See lyskom-last-conf-fetched.")
 
+(defvar lyskom-last-conf-done -1
+  "This variable has obscure uses. I'm not even sure it is necessary.")
+;; See lyskom-rest.el for its use. I believe it almost duplicates
+;; lyskom-last-conf-received in practical use.
 
 
 (defvar lyskom-membership nil
@@ -769,6 +779,9 @@ unread texts in list-unread.")
 (defvar lyskom-last-group-message-recipient ""
   "Name of target for last group message received")
 
+(defvar lyskom-is-new-user nil
+  "An internal variable used in kom-start-anew")
+
 
 ;;;; lyskom-tell-phrases-validation-keyword-list
 ;;; This is a list of keywords for kom-tell-phrases.
@@ -833,3 +846,67 @@ the value of  kom-tell-phrases  for fun.")
 
 (defvar mode-line-conf-name nil
   "Conf name that is present on the mode-line.")
+
+;;; ================================================================
+;;;         Faces
+
+(defmacro lyskom-make-face (name &rest body)
+  (` (if (memq (, name) (face-list))
+	 nil
+       (,@ body))))
+
+;;; +++ Should handle dark backgrounds better
+
+(when (eq window-system 'x)
+  (if (x-display-color-p)
+      (let ((bgmode (cdr (assq 'background-mode (frame-parameters)))))
+	(lyskom-make-face 'kom-active-face
+			  (copy-face 'default 'kom-active-face)
+			  (set-face-foreground 'kom-active-face "blue4"))
+	(lyskom-make-face 'kom-url-face
+			  (copy-face 'default 'kom-url-face)
+			  (set-face-foreground 'kom-url-face "BlueViolet"))
+	(lyskom-make-face 'kom-me-face
+			  (copy-face 'bold 'kom-me-face)
+			  (set-face-foreground 'kom-me-face "yellow")
+			  (set-face-background 'kom-me-face "black"))
+	(lyskom-make-face 'kom-highlight-face
+			  (copy-face 'highlight 'kom-highlight-face)
+			  (set-face-foreground 'kom-highlight-face 
+					       "midnight blue"))
+	(lyskom-make-face 'kom-text-face
+			  (copy-face 'default 'kom-text-face))
+	(lyskom-make-face 'kom-subject-face
+			  (copy-face 'kom-text-face 'kom-subject-face)
+			  (set-face-foreground 'kom-subject-face
+					       "dark green"))
+	(lyskom-make-face 'kom-text-no-face
+			  (copy-face 'kom-text-face 'kom-text-no-face))
+	(lyskom-make-face 'kom-presence-face
+			  (make-face 'kom-presence-face)
+			  (make-face-italic 'kom-presence-face)
+			  (cond ((eq bgmode 'dark)
+				 (set-face-foreground '
+				  kom-presence-face "DarkGray"))
+				((eq bgmode 'light)
+				 (set-face-foreground
+				  'kom-presence-face "LightGray")))))
+    (progn
+      (lyskom-make-face 'kom-active-face
+			(copy-face 'underline 'kom-active-face))
+      (lyskom-make-face 'kom-url-face
+			(copy-face 'kom-active-face 'kom-url-face))
+      (lyskom-make-face 'kom-me-face
+			(copy-face 'highlight 'kom-me-face))
+      (lyskom-make-face 'kom-highlight-face
+			(copy-face 'highlight 'kom-highlight-face))
+      (lyskom-make-face 'kom-subject-face
+			(copy-face 'default 'kom-subject-face))
+      (lyskom-make-face 'kom-text-face
+			(copy-face 'default 'kom-subject-face))
+      (lyskom-make-face 'kom-text-no-face
+			(copy-face 'default 'kom-subject-face))
+      (lyskom-make-face 'kom-presence-face
+			(make-face 'kom-presence-face)
+			(make-face-italic 'kom-presence-face)))))
+

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.16 1996-02-02 05:00:06 davidk Exp $
+;;;;; $Id: commands1.el,v 38.17 1996-02-17 05:41:34 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.16 1996-02-02 05:00:06 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.17 1996-02-17 05:41:34 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -296,9 +296,11 @@ Ask for the name of the person, the conference to add him/her to."
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
 for person PERS-NO and send them into lyskom-try-add-member."
   ;; This could be optimized with David Byers multi-hack.
-  (let ((result (lyskom-try-add-member (blocking-do 'get-conf-stat conf-no)
-				       (blocking-do 'get-conf-stat pers-no)
-				       (blocking-do 'get-pers-stat pers-no))))
+  (let* ((whereto (blocking-do 'get-conf-stat conf-no))
+	 (who (blocking-do 'get-conf-stat pers-no))
+	 (pers-stat (blocking-do 'get-pers-stat pers-no))
+	 (result (lyskom-try-add-member whereto who pers-stat)))
+    (lyskom-add-member-answer result whereto who)
     (if thendo
 	(apply thendo data))
     result))
@@ -1042,16 +1044,17 @@ member of."
 	(if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
 	    (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
 					 lyskom-pers-no)
-		(lyskom-fixup-and-go-to-conf (conf-stat->conf-no conf))
+		(lyskom-do-go-to-conf conf
+				      (lyskom-member-p (conf-stat->conf-no conf)))
 	      (lyskom-insert-string 'nope))
 	  (lyskom-insert-string 'no-ok)))))))
   
 
-
-(defun lyskom-fixup-and-go-to-conf (conf-no)
-  "Prefetches and after lyskom-member-in-conf and then goes to CONF-NO."
-  (lyskom-do-go-to-conf (blocking-do 'get-conf-stat conf-no)
-			(lyskom-member-p conf-no)))
+;; Dead function /davidk 960217
+;;(defun lyskom-fixup-and-go-to-conf (conf-no)
+;;  "Prefetches and after lyskom-member-in-conf and then goes to CONF-NO."
+;;  (lyskom-do-go-to-conf (blocking-do 'get-conf-stat conf-no)
+;;			(lyskom-member-p conf-no)))
 
  
 (defun lyskom-do-go-to-conf (conf-stat membership)

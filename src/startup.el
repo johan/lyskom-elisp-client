@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.14 1996-02-02 05:00:49 davidk Exp $
+;;;;; $Id: startup.el,v 38.15 1996-02-17 05:42:18 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.14 1996-02-02 05:00:49 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.15 1996-02-17 05:42:18 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -173,26 +173,38 @@ See lyskom-mode for details."
 						      'pers 'conf-no)))
 	    (if lyskom-pers-no
 		nil
-	      (setq lyskom-pers-no
-		    (lyskom-read-conf-no (lyskom-get-string 'what-is-your-name)
-					 'pers nil "")))
+	      (let ((name (lyskom-read-conf-name (lyskom-get-string 'what-is-your-name)
+						 'pers nil "")))
+		(setq lyskom-pers-no
+		      (or (lyskom-read-conf-name-internal name 'pers 'conf-no)
+			  (lyskom-create-new-person name)))))
 	    ;; Now lyskom-pers-no contains a number of a person.
 	    ;; Lets log him in.
-	    (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-	      (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
-	      (setq first-time-around nil)
-	      (if (blocking-do 'login lyskom-pers-no
-			       (if lyskom-default-password
-				   (prog1
-				       lyskom-default-password
-				     (setq lyskom-default-password nil)
-				     (set-default 'lyskom-default-password
-						  nil))
-				 (silent-read (lyskom-get-string 'password))))
-		  nil
-		(lyskom-insert-string 'wrong-password)
-		(setq lyskom-pers-no nil))))
-
+	    (if lyskom-pers-no
+		(let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no))
+		      (lyskom-inhibit-minibuffer-messages t))
+		  (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
+		  (setq first-time-around nil)
+		  (if (blocking-do 'login lyskom-pers-no
+				   (if lyskom-default-password
+				       (prog1
+					   lyskom-default-password
+					 (setq lyskom-default-password nil)
+					 (set-default 'lyskom-default-password
+						      nil))
+				     ;; Use password read when creating
+				     ;; the person when loggin in new
+				     ;; users
+				     (or lyskom-is-new-user
+					 (silent-read (lyskom-get-string 'password)))))
+		      (if lyskom-is-new-user
+			  (blocking-do 'add-member
+				       (server-info->conf-pres-conf lyskom-server-info)
+				       lyskom-pers-no 100 1))
+		    (lyskom-insert-string 'wrong-password)
+		    (setq lyskom-pers-no nil))
+		  (setq lyskom-is-new-user nil))))
+	  
 	  ;; Now we are logged in.
 	  (lyskom-insert-string 'are-logged-in)
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
@@ -212,17 +224,18 @@ See lyskom-mode for details."
 	  ;; What is this variable? It is never used. It is ust to
 	  ;; fill the cache?
 	  (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
-        (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i)))
-
+	    (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
+	  
       ;; If something failed, make sure we are someone
       (if (null lyskom-pers-no) (setq lyskom-pers-no old-me))
+      (setq lyskom-is-new-user nil)
       (lyskom-end-of-command)))
   ;; Run the hook kom-login-hook. We don't want to hang the
   ;; login, just because something crashed here.
   (condition-case err
       (run-hooks 'kom-login-hook)
     (error (lyskom-format-insert-before-prompt
-	    'error-in-login-hook (format "%s" err))))))
+	    'error-in-login-hook (format "%s" err)))))
 
 
 (defun lyskom-refetch ()
@@ -284,7 +297,7 @@ WANT-PERSONS is t for persons, nil for confs."
     (nreverse result)))
 
 
-(defun lyskom-start-anew-new-person (name)
+(defun lyskom-create-new-person (name)
   "A new user named NAME (or an old that mis-spelled his name)."
   (lyskom-insert
    (lyskom-format 'first-greeting name))
@@ -295,37 +308,41 @@ WANT-PERSONS is t for persons, nil for confs."
       (cond
        ((not (equal password 
 		    (silent-read (lyskom-get-string 'repeat-password))))
+	;; Failed to enter the same password twice
 	(lyskom-insert-string 'repeat-failure)
-	(setq lyskom-executing-command nil)
-	(kom-start-anew))
+	nil)
        (t
-	(setq lyskom-pers-no 0)
-	(initiate-create-person 'main 'lyskom-start-anew-create-handler
-				name password
-				name password)))))
+	;; Entered the same password twice
+	(let ((new-person (blocking-do 'create-person name password)))
+	  (if (null new-person)
+	      (lyskom-insert-string 'could-not-create-you)
+	    ;; Raise a flag so the user will be added to the
+	    ;; presentation conference after login
+	    (setq lyskom-is-new-user password))
+	  new-person)))))
    (t
-    (setq lyskom-executing-command nil)
-    (kom-start-anew))))
+    ;; Do not create a new person
+    nil)))
 
 
-(defun lyskom-start-anew-create-handler (pers-no name password)
-  "A new person has been created. Log in as him."
-  (cond
-   ((null pers-no)
-    (lyskom-insert-string 'could-not-create-you)
-    (setq lyskom-executing-command nil)
-    (kom-start-anew))
-   (t
-    (initiate-login 'main 'lyskom-add-for-new-person
-		    pers-no password pers-no lyskom-pers-no)
-    )))
+;;(defun lyskom-start-anew-create-handler (pers-no name password)
+;;  "A new person has been created. Log in as him."
+;;  (cond
+;;   ((null pers-no)
+;;    (lyskom-insert-string 'could-not-create-you)
+;;    (setq lyskom-executing-command nil)
+;;    (kom-start-anew))
+;;   (t
+;;    (initiate-login 'main 'lyskom-add-for-new-person
+;;		    pers-no password pers-no lyskom-pers-no)
+;;    )))
 
-(defun lyskom-add-for-new-person (reply pers-no lyskom-pers-no)
-  "Add a news person as member in the default presentation conference."
-  (initiate-add-member 'main 'lyskom-start-anew-login-2
-		       (server-info->conf-pres-conf lyskom-server-info)
-		       pers-no 100 1
-		       pers-no lyskom-pers-no))
+;;(defun lyskom-add-for-new-person (reply pers-no lyskom-pers-no)
+;;  "Add a news person as member in the default presentation conference."
+;;  (initiate-add-member 'main 'lyskom-start-anew-login-2
+;;		       (server-info->conf-pres-conf lyskom-server-info)
+;;		       pers-no 100 1
+;;		       pers-no lyskom-pers-no))
 
 
 (defun lyskom-read-server-name (prompt)

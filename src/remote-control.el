@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: remote-control.el,v 38.1 1996-02-01 09:37:10 byers Exp $
+;;;;; $Id: remote-control.el,v 38.2 1996-02-17 05:42:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 38.1 1996-02-01 09:37:10 byers Exp $\n"))
+	      "$Id: remote-control.el,v 38.2 1996-02-17 05:42:15 davidk Exp $\n"))
 
 
 ;;;============================================================
@@ -291,9 +291,9 @@ Handler to implement remote control of the ansaphone."
     (setq tmp (cdr tmp)))
   (lyskom-ansaphone-send-message sender message)
   (lyskom-insert-before-prompt
-   (lyskom-format (lyskom-get-string 'remote-list-messages
-                                     (current-time-string)
-                                     sender)))))
+   (lyskom-format (lyskom-get-string 'remote-list-messages)
+		  (current-time-string)
+		  sender))))
 
 
 

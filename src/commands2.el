@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.15 1996-02-05 11:46:41 byers Exp $
+;;;;; $Id: commands2.el,v 38.16 1996-02-17 05:41:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.15 1996-02-05 11:46:41 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.16 1996-02-17 05:41:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -663,24 +663,49 @@ on one line."
   (if (read-list-isempty lyskom-reading-list)
       (lyskom-insert-string 'have-to-be-in-conf-with-unread)
 	
-    (let ((time (blocking-do 'get-time))
-	  (texts (text-list->texts 
-		  (read-info->text-list 
-		   (let ((list (read-list->all-entries lyskom-reading-list))
-			 (len (read-list-length lyskom-reading-list))
-			 (r 0))
-		     (while (< r len)
-		       (let ((type (read-info->type 
-				    (read-list->nth lyskom-reading-list
-						    r))))
-			 (if (or (eq type 'CONF)
-				 (eq type 'REVIEW-MARK)
-				 (eq type 'REVIEW))
-			     (setq len 0)
-			   (++ r))))
-		     (read-list->nth lyskom-reading-list r))))))
+    (lyskom-list-summary
+      (text-list->texts 
+       (read-info->text-list 
+	(let ((list (read-list->all-entries lyskom-reading-list))
+	      (len (read-list-length lyskom-reading-list))
+	      (r 0))
+	  (while (< r len)
+	    (let ((type (read-info->type 
+			 (read-list->nth lyskom-reading-list
+					 r))))
+	      (if (or (eq type 'CONF)
+		      (eq type 'REVIEW-MARK)
+		      (eq type 'REVIEW))
+		  (setq len 0)
+		(++ r))))
+	  (read-list->nth lyskom-reading-list r)))))))
 
-      ;; Then starts fetching all text-stats and text to list them.
+;; This function is commented out untile we might implement marks in a
+;; new way. But it works as it is.
+
+;;(def-kom-command kom-list-marks (&optional mark)
+;;  "List a summary of marked texts with mark MARK."
+;;  (interactive (list (or (and current-prefix-arg
+;;			      (prefix-numeric-value current-prefix-arg))
+;;			 (lyskom-read-num-range
+;;			  1 255
+;;			  (lyskom-get-string 'what-mark-to-list)))))
+;;  (let ((texts (delq nil
+;;		     (mapcar (function
+;;			      (lambda (x) (and (= (elt (cdr x) 1) mark)
+;;					       (elt (cdr x) 0))))
+;;			     (blocking-do 'get-marks)))))
+;;    (lyskom-list-summary texts)
+;;    (lyskom-format-insert 'you-have-marks (length texts) mark)))
+
+
+(defun lyskom-list-summary (texts)
+  "List a summary of the texts in TEXTS.
+The summary contains the date, number of lines, author and subject of the text
+on one line."
+  (let ((time (blocking-do 'get-time)))
+
+      ;; Start fetching all text-stats and text to list them.
       (lyskom-insert (format "%-8s%-6s%5s%s%s\n"
 			     (lyskom-get-string 'Texts)
 			     (lyskom-get-string 'Date)
@@ -696,11 +721,11 @@ on one line."
 	      ;; We could do som optimization here. 
 	      ;; We really don't need the whole text.
 	      )
-	  (lyskom-list-summary text-stat text text-no 
-			       (time->year time) (time->yday time)))))))
+	  (lyskom-print-summary-line text-stat text text-no 
+				     (time->year time) (time->yday time))))))
 
 
-(defun lyskom-list-summary (text-stat text text-no year day)
+(defun lyskom-print-summary-line (text-stat text text-no year day)
   "Handle the info, fetch the author and print it.
 Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
 The year and day is there to be able to choose format on the day.
@@ -1071,16 +1096,17 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 (def-kom-command kom-enable-adm-caps ()
   "Enable the LysKOM adminstrator commands for the current user."
   (interactive)
-  (lyskom-enable-adm-caps (blocking-do 'enable
-			    255 (lyskom-get-string 'administrator) t)))
+  (lyskom-enable-adm-caps (blocking-do 'enable 255)
+			  (lyskom-get-string 'administrator)
+			  t))
   
 
 (def-kom-command kom-disable-adm-caps ()
   "Disable the LysKOM adminstrator commands for the current user."
   (interactive)
-  (lyskom-enable-adm-caps (blocking-do 'enable
-			    0 (lyskom-get-string 'no-longer-administrator)
-			    nil)))
+  (lyskom-enable-adm-caps (blocking-do 'enable 0)
+			  (lyskom-get-string 'no-longer-administrator)
+			  nil))
 
 (defun lyskom-enable-adm-caps (answer string is-administrator)
   "Tell the user if the call succeded."

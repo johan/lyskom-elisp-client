@@ -1,3 +1,63 @@
+Sat Feb 17 00:24:23 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-fixup-and-go-to-conf): Tog bort.
+	(lyskom-add-member-by-no): Anropa lyskom-add-member-answer för att
+	uppdatera cache mm.
+
+Fri Feb 16 05:41:31 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom-start-anew-new-person)
+	(lyskom-start-anew-create-handler)
+	(lyskom-add-for-new-person): Tog bort.
+	(lyskom-create-new-person): Ny funktion.
+
+	* completing-read.el (lyskom-read-conf-no): Anropade
+	lyskom-read-conf-name med fel MUSTMATCH.
+
+	* startup.el (kom-start-anew): Kunde inte skapa nya personer.
+
+	* remote-control.el (lyskom-remote-list-messages-1): Skrivfel.
+
+	* messages.el (lyskom-add-personal-message-handler): Skrivfel.
+
+	* commands2.el (kom-enable-adm-caps,kom-disable-adm-caps):
+	Anropade lyskom-enable-adm-caps fel.
+
+	* lyskom-rest.el(listify-vector,reverse-assoc,skip-first-zeros):
+	Flyttade till macros.el.
+
+	* Flyttade face-definitionerna till vars.el.in.
+
+Wed Feb 14 00:45:52 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* flags.el (kom-edit-options-send): Kunde inte avsluta utan
+ 	ändring.
+
+	* ansaphone.el (kom-list-messages): Lista äldsta meddelandet
+	först.
+
+Mon Feb 12 00:06:58 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Återställde inte vid fel.
+
+Sun Feb 11 23:08:01 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (lyskom-inhibit-minibuffer-messages): Ny variabel.
+
+	* async.el (lyskom-is-in-minibuffer): Använd den.
+
+	* startup.el (kom-start-anew): Förhindra minibuffertmeddelanden
+	under lösenordsinmatning.
+
+Tue Feb  6 17:52:34 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el : Lade till kom-presence-face.
+
+	* macros.el (when): Gav upp och skrev detta makro.
+
+	* async.el (lyskom-show-logged-in-person)
+	(lyskom-show-logged-out-person): Använd kom-presence-face.
+
 Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Lade till kom-print-complex-dates, fixade fel som
@@ -9,6 +69,23 @@ Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 	* english-strings.el, swedish-strings.el: Lade till idag och igår.
 
 	* commands2.el: Lade till argument till några funktioner.
+
+Sun Feb  4 03:02:40 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* async.el (lyskom-format-as-personal-message): Klara av
+ 	recipient=nil
+
+	* parse.el (lyskom-parse-unparsed): Skrev om felhanteringen.
+
+	* commands2.el (lyskom-list-summary): Ny funktion.
+	(kom-list-summary): Faktoriserade, och flyttade kod till
+ 	lyskom-list-summary.
+	(lyskom-print-summary-line): Hette förut lyskom-list-summary.
+	(kom-list-marks): Nytt kommando (tas bort och sparas till senare)
+
+Fri Feb  2 06:41:29 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* prioritize.el (kom-prioritize-quit): Gör lyskom-end-of-command.
 
 Thu Feb  1 10:30:54 1996  David Byers  <byers@lysator.liu.se>
 
