@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.12 1992-01-06 18:50:30 linus Exp $
+;;;;; $Id: commands1.el,v 35.13 1992-01-13 20:44:57 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.12 1992-01-06 18:50:30 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.13 1992-01-13 20:44:57 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -743,48 +743,58 @@ DATA is a list of all the recipients that should receive this text.
 If DATA contains more than one conference the user is asked (using y-or-n-p)
 if all conferences really should receive the text.
 The call is continued to the lyskom-edit-text."
-  ;; Filter multiple recipients through y-or-n-p.
-  (if (and kom-confirm-multiple-recipients (> (length data) 1)
-	   (not (and (= (length data) 2)
-		     (or (= lyskom-pers-no (conf-stat->conf-no (car data)))
-			 (= lyskom-pers-no (conf-stat->conf-no
-					    (car (cdr data))))))))
-      (let ((new-data nil))
-	(while data
-	  (if (j-or-n-p (lyskom-format 'comment-keep-recpt-p
-				       (conf-stat->name (car data))))
-	      (setq new-data (cons (car data) new-data)))
-	  (setq data (cdr data)))
-	(setq data (nreverse new-data))))	    
 
-  (let* ((member nil)
-	 (recver (lyskom-create-misc-list
-		  (cond 
-		   ((eq type 'comment) 'comm-to)
-		   ((eq type 'footnote) 'footn-to)
-		   (t (signal 'lyskom-internal-error
-			      (list "Unknown comment type" type))))
-		  (text-stat->text-no text-stat)))
-	 (recpts nil))
-    (while data
-      (let ((conf-stat (car data)))
-	(if (memq (conf-stat->comm-conf conf-stat) recpts)
-	    nil
-	  (setq recver (append recver
-			       (list
-				(cons 'recpt
-				      (conf-stat->comm-conf conf-stat)))))
-	  (if (lyskom-member-p (conf-stat->conf-no conf-stat))
-	      (setq member t))
-	  (setq recpts (cons (conf-stat->comm-conf conf-stat) recpts))))
-      (setq data (cdr data)))
-    ;; Add the user to the list of recipients if he isn't a member in
-    ;; any of the recipients.
-    (if (not member)
-	(setq recver (append recver (list (cons 'recpt lyskom-pers-no)))))
-    (lyskom-edit-text lyskom-proc 
-		      recver
-		      subject "")))
+  (condition-case x
+      ;; Catch any quits and run lyskom-end-of-command.
+      (progn
+	;; Filter multiple recipients through y-or-n-p.
+	(if (and kom-confirm-multiple-recipients (> (length data) 1)
+		 (not (and (= (length data) 2)
+			   (or (= lyskom-pers-no (conf-stat->conf-no
+						  (car data)))
+			       (= lyskom-pers-no (conf-stat->conf-no
+						  (car (cdr data))))))))
+	    (let ((new-data nil))
+	      (while data
+		(if (j-or-n-p (lyskom-format 'comment-keep-recpt-p
+					     (conf-stat->name (car data))))
+		    (setq new-data (cons (car data) new-data)))
+		(setq data (cdr data)))
+	      (setq data (nreverse new-data))))	    
+
+	(let* ((member nil)
+	       (recver (lyskom-create-misc-list
+			(cond 
+			 ((eq type 'comment) 'comm-to)
+			 ((eq type 'footnote) 'footn-to)
+			 (t (signal 'lyskom-internal-error
+				    (list "Unknown comment type" type))))
+			(text-stat->text-no text-stat)))
+	       (recpts nil))
+	  (while data
+	    (let ((conf-stat (car data)))
+	      (if (memq (conf-stat->comm-conf conf-stat) recpts)
+		  nil
+		(setq recver
+		      (append recver
+			      (list
+			       (cons 'recpt
+				     (conf-stat->comm-conf conf-stat)))))
+		(if (lyskom-member-p (conf-stat->conf-no conf-stat))
+		    (setq member t))
+		(setq recpts (cons (conf-stat->comm-conf conf-stat) recpts))))
+	    (setq data (cdr data)))
+	  ;; Add the user to the list of recipients if he isn't a member in
+	  ;; any of the recipients.
+	  (if (not member)
+	      (setq recver (append recver
+				   (list (cons 'recpt lyskom-pers-no)))))
+	  (lyskom-edit-text lyskom-proc 
+			    recver
+			    subject "")))
+
+    (quit (lyskom-end-of-command)
+	  (ding))))
 
 
 ;;; ================================================================

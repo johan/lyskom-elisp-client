@@ -1,3 +1,8 @@
+Mon Jan 13 21:35:29 1992  Per Cederqvist  (ceder at robin)
+
+	* commands1.el (lyskom-comment-recipients): Catch quits via a
+	  condition-case.
+
 Sun Jan 12 06:00:17 1992  Inge Wallin  (inge at lysator)
 
 	* lyskom-rest.el(lyskom-filter),
