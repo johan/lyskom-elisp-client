@@ -1,5 +1,9 @@
 2001-05-30  David Byers  <davby@ida.liu.se>
 
+	* view-text.el (lyskom-insert-header-comm): Correct content type
+	display for comm-to and footn-to links (for imported e-mails).
+	(lyskom-insert-deferred-header-comm): Same here.
+
 	* option-edit.el (lyskom-customize-buffer-format): Add
 	kom-text-no-prompts.
 	(lyskom-custom-variables): Add kom-text-no-prompts.
