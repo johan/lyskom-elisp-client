@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.155 2002-04-22 22:18:03 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.156 2002-04-24 21:20:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.155 2002-04-22 22:18:03 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.156 2002-04-24 21:20:38 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1118,12 +1118,19 @@ Args: FORMAT-STRING &rest ARGS"
 (defun lyskom-format-insert-overlays (start format-state)
   "Insert delayed overlays according to FORMAT-STATE."
   (lyskom-traverse overlay (format-state->delayed-overlays format-state)
-      (let ((overlay (make-overlay (+ start (aref overlay 0))
-                                   (+ start (aref overlay 1))))
-            (args (aref overlay 2)))
-        (while args
-          (overlay-put overlay (car args) (car (cdr args)))
-          (setq args (nthcdr 2 args))))))
+    (lyskom-xemacs-or-gnu
+     (let ((overlay (make-extent (+ start (aref overlay 0))
+                                 (+ start (aref overlay 1))))
+           (args (aref overlay 2)))
+       (while args
+         (set-extent-property overlay (car args) (car (cdr args)))
+         (setq args (nthcdr 2 args))))
+     (let ((overlay (make-overlay (+ start (aref overlay 0))
+                                  (+ start (aref overlay 1))))
+           (args (aref overlay 2)))
+       (while args
+         (overlay-put overlay (car args) (car (cdr args)))
+         (setq args (nthcdr 2 args)))))))
 
 (defun lyskom-format-insert (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
@@ -1420,13 +1427,12 @@ Deferred insertions and overlays are not supported."
      ;;
      ((= format-letter ?$)
       (when arg
-        (let ((overlay (make-overlay 0 0)))
-          (set-format-state->delayed-overlays
-           format-state
-           (cons (vector (length (format-state->result format-state))
-                         nil
-                         arg)
-                 (format-state->delayed-overlays format-state))))))
+        (set-format-state->delayed-overlays
+         format-state
+         (cons (vector (length (format-state->result format-state))
+                       nil
+                       arg)
+               (format-state->delayed-overlays format-state)))))
      ;;
      ;;  Format a subformat list by recursively formatting the contents
      ;;  of the list, augmenting the result and format state

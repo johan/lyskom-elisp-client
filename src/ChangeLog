@@ -1,3 +1,28 @@
+2002-04-24  David Byers  <david.byers@swipnet.se>
+
+	* compatibility.el (make-temp-file): Maybe compatibility with
+	XEmacs. At least the warnings are gone...
+
+	* commands2.el (kom-diff-texts): Survive even if diff-command is
+	not bound (assume that the command is called "diff").
+
+	* lyskom-rest.el (lyskom-format-insert-overlays): Made XEmacs
+	compatible.
+	(lyskom-format-aux-help): Removed unused variables.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Removed unused
+	variables.
+
+	* commands2.el (kom-status-server): Removed unused variables.
+
+	* startup.el (kom-start-anew): Removed unused variable err.
+
+	* aux-items.el (lyskom-print-faq-format-subject): Removed unused
+	variable "subject".
+
+	Fix bug 473:
+	* vars.el.in (lyskom-max-int): Define as variable, not constant.
+
 2002-04-24  David Kågedal  <david@virtutech.se>
 
 	* commands2.el (kom-change-language): Added prefix parameter to

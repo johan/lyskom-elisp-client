@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.94 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: edit-text.el,v 44.95 2002-04-24 21:20:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.94 2002-04-21 21:32:16 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.95 2002-04-24 21:20:37 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -912,7 +912,6 @@ Cannot be called from a callback."
       (let ((raw-author-list (make-collector))
             (author-list nil)
             (authors-to-ask-about nil)
-            (authors-to-add nil)
             (recipient-list (let ((result nil))
                               (lyskom-traverse misc (cdr misc-list)
                                 (when (memq (car misc) 
