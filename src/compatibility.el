@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.29 1999-11-20 21:55:19 byers Exp $
+;;;;; $Id: compatibility.el,v 44.30 1999-11-25 15:57:08 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.29 1999-11-20 21:55:19 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.30 1999-11-25 15:57:08 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -208,7 +208,16 @@ KEYS should be a string in the format used for saving keyboard macros
     (button3   . "<down-mouse-3>")
     (button1up . "<mouse-1>")
     (button2up . "<mouse-2>")
-    (button3up . "<mouse-3>")))
+    (button3up . "<mouse-3>")
+    (å	       . [229])
+    (Å	       . [197])
+    (C-å       . [(control 229)])
+    (C-Å       . [(control 197)])
+    (ä	       . [228])
+    (Ä	       . [196])
+    (ö	       . [246])
+    (Ö	       . [214])
+))
 
 (defconst lyskom-xemacs-keysym
   '((button1   . "<button1>")
@@ -216,7 +225,16 @@ KEYS should be a string in the format used for saving keyboard macros
     (button3   . "<button3>")
     (button1up . "<button1up>")
     (button2up . "<button2up>")
-    (button3up . "<button3up>")))
+    (button3up . "<button3up>")
+    (å	       . [(control aring)])
+    (Å	       . [(control Aring)])
+    (å	       . [aring])
+    (Å	       . [Aring])
+    (ä	       . [adiaeresis])
+    (Ä	       . [Adiaeresis])
+    (ö	       . [odiaeresis])
+    (Ö	       . [Odiaeresis])
+))
 
 
 (defun lyskom-keys (sym)

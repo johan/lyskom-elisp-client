@@ -1,5 +1,11 @@
 1999-11-25  David Byers  <davby@ida.liu.se>
 
+	* swedish-strings.el: Use lyskom-keys for all swedish chars in the
+	keymaps.
+	
+	* compatibility.el (lyskom-gnu-keysym): Added swedish chars to the
+	list.
+	
 	* commands1.el (lyskom-change-pres-or-motd-2): Fixed nesting bug
 	that caused the callback not to be called.
 
