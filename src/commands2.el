@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.194 2003-11-17 22:25:33 byers Exp $
+;;;;; $Id: commands2.el,v 44.195 2003-11-17 22:56:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.194 2003-11-17 22:25:33 byers Exp $\n"))
+              "$Id: commands2.el,v 44.195 2003-11-17 22:56:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1346,10 +1346,12 @@ YYYY-MM-DD."
                             subject
                             (mark->symbolic-mark-type mark)))))
 
-(defun lyskom-symbolic-mark-type-string (mark-no)
-  "Return a symbolic name string for the mark-type of MARK."
+(defun lyskom-symbolic-mark-type-string (mark-no &optional strict)
+  "Return a symbolic name string for the mark-type of MARK.
+If optional argument STRICT is non-nil, return nil if there is no symbolic
+ name for the mark type."
   (or (car-safe (rassoc mark-no kom-symbolic-marks-alist))
-      (int-to-string mark-no)))
+      (and (not strict) (int-to-string mark-no))))
 
 (defun lyskom-max-mark-width ()
   "Return the maximum width of the user's symbolic mark strings."
