@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.20 1996-03-04 15:22:44 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.21 1996-03-12 02:18:12 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.20 1996-03-04 15:22:44 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.21 1996-03-12 02:18:12 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -127,6 +127,9 @@ Annat se \\[describe-mode] ---")
     (wrong-password . "Fel l\366sen.\n")
     (are-logged-in . "Du \344r nu inloggad. V\344nta ett tag.\n")
     (you-have-motd . "\nDu har en lapp p\345 d\366rren:\n\n")
+    (lyskom-motd-was-garbed . "\nLoginmeddelandet finns inte!
+Det meddelande som ska visas efter inloggning har f\366rsvunnit.
+Kontakta systemadministratera.\n")
     (presentation-encouragement . 
      "Du har ingen presentation. Det skulle vara trevligt om du skrev en.
 Anv\344nd kommandot \304p. Om du inte vill skriva n\345gon presentation tryck fs.\n")
@@ -206,7 +209,7 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
     (no-comment-to . "Det finns inget kommenterat inl\344gg att titta p\345.\n")
 
     (who-letter-to . "Vem vill du skicka brev till? ")
-    (has-motd . "%#1M har en lapp p\345 d\366rren:\n\n")
+    (has-motd . "%#1P har en lapp p\345 d\366rren:\n\n")
     (motd-persist-q . "Vill du fortfarande skicka brevet? ")
 
     (who-to-add . "Vem vill du addera? ")
@@ -878,7 +881,7 @@ Text:
     (kom-list-persons		"Lista personer")
     (kom-list-news              "Lista nyheter")
     (kom-membership		"Lista medlemsskap")
-    (kom-list-marks		"Lista markeringar") 
+    ;; (kom-list-marks		"Lista markeringar") 
     (kom-postpone		"Uppskjuta l\344sning")
     (kom-set-session-priority	"S\344tt l\344sniv\345")
     (kom-prioritize		"Prioritera m\366ten")

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.20 1996-03-04 15:22:39 byers Exp $
+;;;;; $Id: english-strings.el,v 38.21 1996-03-12 02:17:59 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.20 1996-03-04 15:22:39 byers Exp $"))
+	      "$Id: english-strings.el,v 38.21 1996-03-12 02:17:59 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -121,6 +121,9 @@ Help: \\[describe-mode] ---")
     (wrong-password . "Incorrect password\n")
     (are-logged-in . "You have entered LysKOM. Please wait...\n")
     (you-have-motd . "\nYou have a note on your door:\n\n")
+    (lyskom-motd-was-garbed . "\nThe login message does not exist!
+The message that was supposed to be shown after login has disappeared.
+Please contact the system administrator.\n")
     (presentation-encouragement .
 "You have not written a presentation. Please write a presentation by using
 the command Ap. If you do not want to write a presentations, please type fk.\n")
@@ -185,12 +188,12 @@ Email-address:\n\nOther:\t")
 
     (presentation-for-whom . "Which conference/user: ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
-    (review-presentation-of . "Review presentation of %#1s.\n")
-    (has-no-presentation . "%#1s has no presentation.\n")
+    (review-presentation-of . "Review presentation of %#1M.\n")
+    (has-no-presentation . "%#1M has no presentation.\n")
 
     (have-to-read . "You must read an article first.\n")
 
-    (review-text-no . "Review article %#1d.\n")
+    (review-text-no . "Review article %#1n.\n")
     (no-comment-to . "There is no commented article.\n")
 
     (who-letter-to . "Send a letter to whom: ")
@@ -199,7 +202,7 @@ Email-address:\n\nOther:\t")
 
     (who-to-add . "Whom do you want to add: ")
     (where-to-add . "To which conference: ")
-    (where-to-add-self . "Subscribe to which conference: ")
+    (where-to-add-self . "Join which conference: ")
     (priority-q . "Conference priority? (0 (low) - 255 (high)) ")
     (done . "done.\n")
     (nope . "didn't work.\n")
@@ -210,16 +213,16 @@ Send a letter to  %#2s to apply for membership.")
 
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
 
-    (who-to-exclude . "Whom do you want to unsubscribe: ")
+    (who-to-exclude . "Who do you want to remove: ")
     (where-from-exclude . "From which conference: ")
 
-    (leave-what-conf . "Unsubscribe to which conference: ")
+    (leave-what-conf . "Leave which conference: ")
 
     (error-fetching-person . "Error retreiving user.\n")
     (error-fetching-conf . "Error retreiving conference.\n")
 
     (name-of-conf . "Conference name: ")
-    (anyone-member . "May anyone subscribe? ")
+    (anyone-member . "May anyone join? ")
     (secret-conf . "Secret conference? ")
     (comments-allowed . "Are comments allowed? ")
     (what-comment-no . "Comment article number: ")
@@ -246,7 +249,7 @@ and you have finished reading. Please come back later.
 
     (cant-get-conf-stat . "Cannot get the status of that conference.")
     (go-to-conf-p . "Go to conference: ")
-    (want-become-member . "Do you want to subscribe? ")
+    (want-become-member . "Do you want to join? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
     (who-to-remove-motd-for . "Remove note from the door of who/what: ")
@@ -286,13 +289,13 @@ and you have finished reading. Please come back later.
     (text-to-delete-comment-from . "Remove comment from which article: ")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
-    (member-in-conf . "Subscribing to %#1M...")
-    (add-member-in . "Adding %#1s as a subscriber to %#2s...")
-    (unsubscribe-to . "Unsubscribing from %#1s...")
+    (member-in-conf . "Joining to %#1M...")
+    (add-member-in . "Adding %#1s as a member of %#2s...")
+    (unsubscribe-to . "Leaving from %#1s...")
 
-    (exclude-from . "Unsubscribing %#1s from %#2s...")
+    (exclude-from . "Removing %#1s from %#2s...")
 
-    (unsubscribe-failed . "\nDidn't work. Perhaps %#1s doesn't subscribe to %#2s?\n")
+    (unsubscribe-failed . "\nDidn't work. Perhaps %#1s isn't a member of %#2s?\n")
 
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\nError: %#2d.\n")
@@ -303,7 +306,7 @@ and you have finished reading. Please come back later.
     (not-supervisor-for . "You are not the supervisor of %#1s.\n")
     (go-to-conf . "Go to conference %#1M.\n")
     (cant-go-to-his-mailbox . "You are not allowed to go to %#1s's mailbox.\n")
-    (not-member-of-conf . "You are not subscribed to %#1s.\n")
+    (not-member-of-conf . "You are not a member of %#1s.\n")
     (about-to-change-name-from . "%#1P\n")
     (change-name-done . "Done. New name: %#1s.\n")
     (change-name-nope . "Didn't work. Error code %#3d. %#2s.\n")
@@ -333,7 +336,7 @@ and you have finished reading. Please come back later.
 
     ; From commands2.el:
 
-    (your-memberships . "Your LysKOM conference subscriptions:\n")
+    (your-memberships . "Your LysKOM conference memberships:\n")
     (memberships-header . "Last access	   Prio	Unread	Conference\n")
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     
@@ -347,7 +350,7 @@ and you have finished reading. Please come back later.
                    
     (created-by . "%[%#3@Created by person %24#1:p%] %#4s(%#2P)\n")
     (created-at . "Created:%34#1s\n")
-    (members .    "Number of subscribers: %19#1d\n")
+    (members .    "Number of members: %19#1d\n")
     (garb-nice . "Expiration time (in days):%16#1d\n")
     (lowest-local-no . "Lowest local number: %21#1d\n")
     (highest-local-no . "Highest local number: %20#1d\n")
@@ -361,8 +364,8 @@ and you have finished reading. Please come back later.
     (conf-has-motd . "\n%#1M has a note on the door:\n")
 
     (Everybody . "Everyone")
-    (show-members-list-also-q . "List subscribers? ")
-    (conf-has-these-members . "\n%#1M has the following subscribers:\n")
+    (show-members-list-also-q . "List members? ")
+    (conf-has-these-members . "\n%#1M has the following members:\n")
     (member-list-header . "Last entered       Unread  Name\n\n")
     (secret-membership . "--- Secret line ---\n")
     (conf-membership-line . "%#1s%#2M\n")
@@ -385,11 +388,11 @@ and you have finished reading. Please come back later.
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
     (superconf . "%[%#3@Superconference:%31#1:m%] %#4s(%#2M)\n")
     (supervisor . "%[%#3@Supervisor:%29#1:p%] %#4s(%#2P)\n")
-    (member-of-confs . "Subscribed to (conferences):%14#1d\n")
+    (member-of-confs . "Member of (conferences):%18#1d\n")
     (presentation . "Presentation:    %25#1d\n")
-    (show-membership-list-also-q . "List subscriptions? ")
-    (not-allowed-see-confs . "You are not premitted to see which conferences %#1s subscribes to.\n")
-    (is-member-of . "\n%#1P subscribes to the following conferences:\n")
+    (show-membership-list-also-q . "List memberships? ")
+    (not-allowed-see-confs . "You are not premitted to see which conferences %#1s is a member of.\n")
+    (is-member-of . "\n%#1P is a member of the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
     (pers-membership-line . "%#1s%#2s%#3M\n")
     (is-supervisor-mark . "O ")
@@ -443,6 +446,7 @@ The message you were sending to %#1s was:
     (you-have-marks-all . "You have %#1s marked texts.\n")
 
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
+    (summary-line . "%=-7#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
     (buggrepport-compilestart . "Creating bug report...")
@@ -632,9 +636,9 @@ Group message to %#3M from %#2P (%#4s):
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
 
     ; From prioritize.el:
-    (cannot-get-membership . "Cannot retrieve your subscription list.")
+    (cannot-get-membership . "Cannot retrieve your membership list.")
     (cannot-get-pers-stat . "Cannot retrieve your personal status.")
-    (your-membship . "Your subscriptions:
+    (your-membship . "Your memberships:
   Prio Conf# Conference\n")
     (prio-row . " %5#1d%5#2d  %#3s\n")
     (too-high-goto-2 . "You are too high up, move down to line two.")
@@ -728,6 +732,8 @@ Error message: %#1s**************************************************")
     (footnote . "Footnote")
     (by . " by %#1s")
     (text-created .  "Article %#1d has been created.\n")
+
+    (resolve-session . "Which session: ")
 
     (starting-program . "Starting %#1s...")
     (super-jump . "Filtering subject \"%#1s\" in conference \"%#2s\"\n")
@@ -843,16 +849,16 @@ Text:
     (kom-list-conferences       "List conferences") 
     (kom-list-persons           "List users")
     (kom-list-news              "List news")
-    (kom-membership             "List subscriptions")
-    (kom-list-marks		"List marks")
+    (kom-membership             "List memberships")
+    ;; (kom-list-marks		"List marks")
     (kom-postpone               "Postpone reading")
     (kom-set-session-priority	"Set reading level")
     (kom-prioritize             "Prioritize conferences")
     (kom-status-person          "Status (of) user")
     (kom-status-conf            "Status (of) conference")
-    (kom-add-self               "Subscribe (to) conference")
+    (kom-add-self               "Join (a) conference")
     (kom-list-summary           "List article (subjects)")
-    (kom-sub-self               "Unsubscribe (to) conference")
+    (kom-sub-self               "Leave (a) conference")
     (kom-quit                   "Quit")
     (kom-recover                "Recover") 
     (kom-start-anew             "New User")
@@ -899,8 +905,8 @@ Text:
     (kom-sub-recipient          "Remove recipient")
     (kom-add-comment            "Add comment")
     (kom-sub-comment            "Remove comment")
-    (kom-add-member             "Add subscriber")
-    (kom-sub-member             "Remove subscriber")
+    (kom-add-member             "Add (a) member")
+    (kom-sub-member             "Remove (a) member")
     (kom-change-conf-motd       "(Post) note (on the) door")
     (kom-set-garb-nice          "Change expiration")
     (kom-set-super-conf         "Change superconference")
@@ -1234,7 +1240,7 @@ Users are encouraged to use their best sense of humor.")
     (10 . "Undefined or secret user")
     (11 . "No read or write permission")
     (12 . "Illegal operation")
-    (13 . "You do not subscribe to that conference")
+    (13 . "You are not a member of that conference")
     (14 . "There is no article with that number")
     (15 . "You cannot use global article number 0")
     (16 . "There is no article with that local number")
