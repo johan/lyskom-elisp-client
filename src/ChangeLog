@@ -1,3 +1,9 @@
+Tue Sep 17 18:44:08 1991  Linus Tolke Y  (linus at lysator)
+
+	* lyskom-rest.el, prioritize.el (lyskom-start-of-command): Nu
+	  konverterar vi {ven error-meddelandet v{nta p} prompten.
+	  Ny funktion: lyskom-error.		     
+
 Mon Sep 16 18:10:59 1991  Linus Tolke Y  (linus at lysator)
 
 	* Distribuerat version 0.34.1		22:00
