@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.43 1997-08-12 12:58:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.44 1997-08-18 12:27:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,9 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.43 1997-08-12 12:58:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.44 1997-08-18 12:27:18 byers Exp $\n"))
+
+(lyskom-external-function find-face)
 
 
 ;;;; ================================================================

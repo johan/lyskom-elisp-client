@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.2 1997-07-15 10:23:45 byers Exp $
+;;;;; $Id: view-mode.el,v 44.3 1997-08-18 12:28:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,12 +33,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.2 1997-07-15 10:23:45 byers Exp $\n"))
+	      "$Id: view-mode.el,v 44.3 1997-08-18 12:28:19 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")
 
 (eval-when-compile (defvar view-mode-map nil))
+
+(lyskom-external-function view-major-mode)
 
 (defun lyskom-view-base-mode ()
   (cond ((fboundp 'view-major-mode) (view-major-mode))

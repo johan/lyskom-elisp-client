@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.14 1997-07-29 14:53:28 byers Exp $
+;;;;; $Id: option-edit.el,v 44.15 1997-08-18 12:27:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.14 1997-07-29 14:53:28 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.15 1997-08-18 12:27:44 byers Exp $\n"))
+
+(lyskom-external-function widget-default-format-handler)
+(lyskom-external-function popup-mode-menu)
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
