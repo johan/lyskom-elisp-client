@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.23 1999-10-11 13:01:18 byers Exp $
+;;;;; $Id: option-edit.el,v 44.24 1999-10-11 15:43:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.23 1999-10-11 13:01:18 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.24 1999-10-11 15:43:58 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -51,59 +51,59 @@
 
 (defvar lyskom-customize-buffer-format
   '("\n"
-    (lyskom bold centered)
-    "\n\n"
-    lyskom-doc
-    "\n\n"
-    [kom-customize-format]
-    "\n\n"
-    section
-    (look-and-feel-misc bold centered)
-    section
-    "\n"
-    [kom-default-language]
-    [kom-show-namedays]
-    [kom-show-week-number]
-    "\n"
-    [kom-idle-hide]
-    [kom-show-where-and-what]
-    [kom-show-since-and-when]
-    "\n"
-    [kom-friends]
-    "\n"
-    [kom-presence-messages]
-    [kom-presence-messages-in-buffer]
-    "\n"
-    [kom-page-before-command]
-    [kom-agree-text]
-    "\n\n"
-    section
-    (window-locations bold centered)
-    section
-    "\n"
-    (windows-where bold centered)
-    "\n"
-    windows-doc
-    "\n\n"
-    [kom-customize-in-window]
-    [kom-edit-filters-in-window]
-    [kom-prioritize-in-window]
-    [kom-list-membership-in-window]
-    [kom-write-texts-in-window]
-    [kom-view-commented-in-window]
-    [kom-personal-messages-in-window]
-    
-    "\n\n"
-    section
-    (audio-cues bold centered)
-    section
-    "\n"
-    [kom-audio-player]
-    "\n"
-    (audio-cues-when bold centered)
-    "\n"
-    audio-cues-doc
-    "\n\n"
+;    (lyskom bold centered)
+;    "\n\n"
+;    lyskom-doc
+;    "\n\n"
+;    [kom-customize-format]
+;    "\n\n"
+;    section
+;    (look-and-feel-misc bold centered)
+;    section
+;    "\n"
+;    [kom-default-language]
+;    [kom-show-namedays]
+;    [kom-show-week-number]
+;    "\n"
+;    [kom-idle-hide]
+;    [kom-show-where-and-what]
+;    [kom-show-since-and-when]
+;    "\n"
+;    [kom-friends]
+;    "\n"
+;    [kom-presence-messages]
+;    [kom-presence-messages-in-buffer]
+;    "\n"
+;    [kom-page-before-command]
+;    [kom-agree-text]
+;    "\n\n"
+;    section
+;    (window-locations bold centered)
+;    section
+;    "\n"
+;    (windows-where bold centered)
+;    "\n"
+;    windows-doc
+;    "\n\n"
+;    [kom-customize-in-window]
+;    [kom-edit-filters-in-window]
+;    [kom-prioritize-in-window]
+;    [kom-list-membership-in-window]
+;    [kom-write-texts-in-window]
+;    [kom-view-commented-in-window]
+;    [kom-personal-messages-in-window]
+;    
+;    "\n\n"
+;    section
+;    (audio-cues bold centered)
+;    section
+;    "\n"
+;    [kom-audio-player]
+;    "\n"
+;    (audio-cues-when bold centered)
+;    "\n"
+;    audio-cues-doc
+;    "\n\n"
     [kom-ding-on-priority-break]
     [kom-ding-on-new-letter]
     [kom-ding-on-wait-done]
@@ -111,102 +111,102 @@
     [kom-ding-on-common-messages]
     [kom-ding-on-group-messages]
     [kom-ding-on-personal-messages]
-    [kom-silent-ansaphone]
-    "\n\n"
-    section
-    (reading bold centered)
-    section
-    "\n"
-    [kom-default-session-priority]
-    [kom-print-number-of-unread-on-entrance]
-    [kom-allow-incompleteness]
-    [kom-created-texts-are-read]
-    [kom-higher-priority-breaks]
-    [kom-review-priority]
-    [kom-show-footnotes-immediately]
-    [kom-follow-comments-outside-membership]
-    "\n"
-    [kom-default-mark]
-    [kom-membership-default-priority]
-    [kom-membership-default-placement]
-    [kom-unsubscribe-makes-passive]
-    [kom-postpone-default]
-    "\n"
-    [kom-autowrap]
-    [kom-show-author-at-end]
-    [kom-show-creating-software]
-    [kom-show-imported-importer]
-    [kom-show-imported-external-recipients]
-    [kom-show-imported-envelope-sender]
-    [kom-smileys]
-    "\n"
-    [kom-dashed-lines]
-    [kom-long-lines]
-    [kom-text-footer-format]
-    [kom-text-header-dash-length]
-    [kom-text-footer-dash-length]
-    "\n"
-    [kom-truncate-threshold]
-    [kom-truncate-show-lines]
-    "\n"
-    [kom-ignore-message-senders]
-    [kom-ignore-message-recipients]
-    [kom-show-personal-message-date]
-    "\n\n"
-    section
-    (writing bold centered)
-    section
-    "\n"
-    [kom-cite-string]
-    [kom-ispell-dictionary]
-    "\n"
-    sending-doc
-    "\n\n"
-    [kom-confirm-multiple-recipients]
-    [kom-check-commented-author-membership]
-    [kom-check-for-new-comments]
-
-    "\n\n"
-    section
-    (urls bold centered)
-    section
-    "\n"
-    [kom-url-viewer-preferences]
-    [kom-mosaic-command]
-    [kom-netscape-command]
-
-    "\n\n"
-    section
-    (personal-messages bold centered)
-    section
-    "\n"
-    [kom-show-personal-messages-in-buffer]
-    [kom-pop-personal-messages]
-    [kom-default-message-recipient]
-    "\n"
-    (automatic-replies bold centered)
-    "\n"
-    [kom-ansaphone-record-messages]
-    [kom-ansaphone-show-messages]
-    "\n"
-    [kom-ansaphone-default-reply]
-
-    "\n\n"
-    section
-    (remote-control bold centered)
-    section
-    "\n"
-    [kom-remote-control]
-    [kom-self-control]
-    "\n"
-    [kom-remote-controllers]
-    "\n\n"
-    section
-    (hooks bold centered)
-    section
-    "\n"
-    [kom-login-hook]
-    [kom-do-when-done]
+;    [kom-silent-ansaphone]
+;    "\n\n"
+;    section
+;    (reading bold centered)
+;    section
+;    "\n"
+;    [kom-default-session-priority]
+;    [kom-print-number-of-unread-on-entrance]
+;    [kom-allow-incompleteness]
+;    [kom-created-texts-are-read]
+;    [kom-higher-priority-breaks]
+;    [kom-review-priority]
+;    [kom-show-footnotes-immediately]
+;    [kom-follow-comments-outside-membership]
+;    "\n"
+;    [kom-default-mark]
+;    [kom-membership-default-priority]
+;    [kom-membership-default-placement]
+;    [kom-unsubscribe-makes-passive]
+;    [kom-postpone-default]
+;    "\n"
+;    [kom-autowrap]
+;    [kom-show-author-at-end]
+;    [kom-show-creating-software]
+;    [kom-show-imported-importer]
+;    [kom-show-imported-external-recipients]
+;    [kom-show-imported-envelope-sender]
+;    [kom-smileys]
+;    "\n"
+;    [kom-dashed-lines]
+;    [kom-long-lines]
+;    [kom-text-footer-format]
+;    [kom-text-header-dash-length]
+;    [kom-text-footer-dash-length]
+;    "\n"
+;    [kom-truncate-threshold]
+;    [kom-truncate-show-lines]
+;    "\n"
+;    [kom-ignore-message-senders]
+;    [kom-ignore-message-recipients]
+;    [kom-show-personal-message-date]
+;    "\n\n"
+;    section
+;    (writing bold centered)
+;    section
+;    "\n"
+;    [kom-cite-string]
+;    [kom-ispell-dictionary]
+;    "\n"
+;    sending-doc
+;    "\n\n"
+;    [kom-confirm-multiple-recipients]
+;    [kom-check-commented-author-membership]
+;    [kom-check-for-new-comments]
+;
+;    "\n\n"
+;    section
+;    (urls bold centered)
+;    section
+;    "\n"
+;    [kom-url-viewer-preferences]
+;    [kom-mosaic-command]
+;    [kom-netscape-command]
+;
+;    "\n\n"
+;    section
+;    (personal-messages bold centered)
+;    section
+;    "\n"
+;    [kom-show-personal-messages-in-buffer]
+;    [kom-pop-personal-messages]
+;    [kom-default-message-recipient]
+;    "\n"
+;    (automatic-replies bold centered)
+;    "\n"
+;    [kom-ansaphone-record-messages]
+;    [kom-ansaphone-show-messages]
+;    "\n"
+;    [kom-ansaphone-default-reply]
+;
+;    "\n\n"
+;    section
+;    (remote-control bold centered)
+;    section
+;    "\n"
+;    [kom-remote-control]
+;    [kom-self-control]
+;    "\n"
+;    [kom-remote-controllers]
+;    "\n\n"
+;    section
+;    (hooks bold centered)
+;    section
+;    "\n"
+;    [kom-login-hook]
+;    [kom-do-when-done]
     ))
 
 ;;; ======================================================================
@@ -877,7 +877,36 @@ customize buffer but do not save them to the server."
               (list 'lyskom-string
                     ':tag (lyskom-custom-string 'sound-file)
                     ':help-echo (lyskom-custom-string 'select-audio-file)
-                    ':size 0))))
+                    ':size 0)
+              (list 'editable-list
+                    ':format "%[%t%]\n%v%i"
+                    ':indent 4
+                    ':tag (lyskom-custom-string 'specific-spec)
+                    ':menu-tag (lyskom-custom-string 'specific-spec)
+                    ':args
+                    `((cons number number))
+;                       :value (1 . 1)
+;                       `(lyskom-name :tag ,(lyskom-custom-string 'conf-of-person))
+;                       `(menu-choice
+;                         :case-fold t
+;                         :format "%[%t%] %v"
+;                         :args
+;                         `((item :tag ,(lyskom-custom-string 'turned-off)
+;                                 :value nil
+;                                 :format "%t"
+;                                 :match (lambda (w v) (or (null v) (eq v 0))))
+;                           (lyskom-number :tag ,(lyskom-custom-string 'number-of-times)
+;                                          :help-echo ,(lyskom-custom-string 'select-number)
+;                                          :value "1"
+;                                          :format "%[%t%]: (%v)"
+;                                          :size 0
+;                                          :min-value 1
+;                                          :max-value 255)
+;                           (lyskom-string :tag ,(lyskom-custom-string 'sound-file)
+;                                          :help-echo ,(lyskom-custom-string 'select-audio-file)
+;                                          :size 0)))))
+)
+              )))
 
 (defun lyskom-toggle-widget-inverse (type &optional args propl)
   (list 'menu-choice

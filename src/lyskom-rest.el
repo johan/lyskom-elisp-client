@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.79 1999-10-11 13:01:16 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.80 1999-10-11 15:43:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.79 1999-10-11 13:01:16 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.80 1999-10-11 15:43:56 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3035,7 +3035,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(delq proc lyskom-sessions-with-unread))
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
-  (lyskom-format-insert 'closed-connection sentinel (current-time-string))
+  (lyskom-format-insert 'closed-connection sentinel 
+                        (lyskom-client-date-string 'time-format-exact))
   (setq mode-line-process (lyskom-get-string 'mode-line-down))
   (beep)
   (lyskom-scroll))
