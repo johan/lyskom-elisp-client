@@ -3,6 +3,8 @@ Att göra i elisp-klienten
 
 Buggar
 
+Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+
 Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
 endast i ett möte (säg IÅM) innan det prefetchas får man två
 parallella prefetcher på samma möte.
