@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.95 2003-06-01 18:10:34 byers Exp $
+;;;;; $Id: option-edit.el,v 44.96 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.95 2003-06-01 18:10:34 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.96 2003-07-20 22:12:26 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -326,8 +326,7 @@ customize buffer but do not save them to the server."
           (set-default (car (car tmp)) (widget-value (cdr (car tmp))))
           (when (and (listp kom-dont-read-saved-variables)
                      (or (memq (car (car tmp)) lyskom-elisp-variables)
-                         (memq (car (car tmp)) lyskom-global-boolean-variables)
-                         (memq (car (car tmp)) lyskom-global-non-boolean-variables)))
+                         (lyskom-flag-global-variable-from-elisp (car (car tmp)))))
             (setq kom-dont-read-saved-variables 
                   (cons (car (car tmp)) kom-dont-read-saved-variables))))
         (setq tmp (cdr tmp))))))
@@ -350,8 +349,7 @@ customize buffer but do not save them to the server."
                      (symbolp (elt e 0))
                      (or 
                       (and (not (memq (elt e 0) lyskom-elisp-variables))
-                           (not (memq (elt e 0) lyskom-global-boolean-variables))
-                           (not (memq (elt e 0) lyskom-global-non-boolean-variables)))
+                           (not (lyskom-flag-global-variable-from-elisp (elt e 0))))
                       (memq (elt e 0) kom-dont-read-saved-variables))
                      (boundp (elt e 0)))
             (setq var-list (cons (cons (elt e 0)
@@ -583,7 +581,7 @@ All key bindings:
     (kom-list-membership-in-window (open-window))
     (kom-customize-format (choice ((const (long-format long))
                                    (const (short-format short)))))
-    (kom-default-language (language-choice))
+    (kom-default-language (repeat (language-choice nil :format "%[%t%] %v\n")))
     (kom-user-prompt-format (string))
     (kom-user-prompt-format-executing (string))
     (kom-anonymous-prompt-format (string))
@@ -934,8 +932,7 @@ All key bindings:
                 (widget-create 'checkbox
                                ':value (and (not (memq variable kom-dont-read-saved-variables))
                                             (or (memq variable lyskom-elisp-variables)
-                                                (memq variable lyskom-global-boolean-variables)
-                                                (memq variable lyskom-global-non-boolean-variables)))
+                                                (lyskom-flag-global-variable-from-elisp variable)))
                                ':args variable
                                ':format "%[%v%]"
                                ':help-echo (lyskom-custom-string 'variable-type-help))
@@ -1070,6 +1067,7 @@ All key bindings:
    'menu-choice
    (list ':format "%[%t%] %v"
          ':case-fold t
+         ':tag (lyskom-custom-string 'language)
          ':args
          (mapcar
           (function

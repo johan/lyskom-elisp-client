@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.324 2003-07-02 19:10:02 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.325 2003-07-20 22:12:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.324 2003-07-02 19:10:02 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.325 2003-07-20 22:12:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -468,6 +468,7 @@ du har läst klart allting. Kom tillbaks senare.
     (exclude-from . "Utesluta %#1P från %#2M...")
 
     (unsubscribe-failed . "\nDet gick inte. %#1P var kanske aldrig medlem i %#2M?\n")
+    (activate-mship-done . "Du är nu åter aktiv medlem i %#1M.\n")
     (passivate-done . "Du är nu passiv medlem i %#1M.
 Utträd ur mötet en gång till för gå ur helt.\n")
 
@@ -3047,6 +3048,7 @@ teckenkodning.
     (highlight-conflist . "Möteslista")
 
     (yes-dont-pop . "Ja, men avikonifiera inte fönstret")
+    (language . "Språk")
 
     ;;
     ;; Misc doc strings
@@ -3717,7 +3719,8 @@ ta fram menyer.")
     (kom-default-language-doc . "\
   Språk som skall användas i LysKOM. Om du ändrar inställningen här så kommer
   inte inställningen ändras för aktuell session, utan du måste ge kommandot
-  Ändra språk också.")
+  Ändra språk också. Det första språk på listan som är tillgängligt kommer
+  att väljas av alla klienter med stöd för funktionen.")
 
     (kom-ispell-dictionary-doc . "\
   Ordlista som skall användas av stavningskontrollen i LysKOM. Om detta
@@ -4220,7 +4223,7 @@ ta fram menyer.")
     (kom-remote-controllers-tag . "Tillåtna fjärrstyrare:")
 
     (kom-customize-format-tag . "Visa hjälptexterna för inställningar:")
-    (kom-default-language-tag . "Språk:")
+    (kom-default-language-tag . "Språklista:")
     (kom-ispell-dictionary-tag . "Ordlista:")
     (kom-show-namedays-tag .    "Visa dagens namn:")
 

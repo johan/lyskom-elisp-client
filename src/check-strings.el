@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.21 2003-01-01 23:32:43 byers Exp $
+;;;;; $Id: check-strings.el,v 44.22 2003-07-20 22:12:25 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -264,8 +264,8 @@ Check that all server-stored variables are customizeable."
                            lyskom-customize-buffer-format)))
         (cust-vars-widgets (mapcar 'car lyskom-custom-variables))
         (cust-vars-all (append lyskom-elisp-variables 
-                               lyskom-global-boolean-variables 
-                               lyskom-global-non-boolean-variables)))
+                               (mapcar (lambda (x) (elt x 1))
+                                       lyskom-global-variables))))
 
     ;; Check that variables have widget definitions and are in the
     ;; customize buffer, or are declared missing and really *are*

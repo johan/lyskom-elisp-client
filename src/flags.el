@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.35 2003-06-01 19:01:46 byers Exp $
+;;;;; $Id: flags.el,v 44.36 2003-07-20 22:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.35 2003-06-01 19:01:46 byers Exp $\n"))
+	      "$Id: flags.el,v 44.36 2003-07-20 22:12:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -117,20 +117,18 @@ settings and save them to your emacs init file."
   (let* ((print-readably t)
          (common-block 
           (concat
-           (mapconcat (function
-                       (lambda (var)
-                         (lyskom-format-objects
-                          (substring (symbol-name var) 4) 
-                          (if (symbol-value var) "1" "0"))))
-                      lyskom-global-boolean-variables
-                      "\n")
-           "\n"
-           (mapconcat (function
-                       (lambda (var)
-                         (lyskom-format-objects
-                          (substring (symbol-name var) 4)
-                          (lyskom-flag-value-to-string var))))
-                      lyskom-global-non-boolean-variables
+           (mapconcat (lambda (var)
+                        (let ((common-name (elt var 0))
+                              (elisp-name (elt var 1))
+                              (type (elt var 2)))
+                          (lyskom-format-objects
+                           (symbol-name common-name)
+                           (funcall 
+                            (cdr (assq 'write
+                                       (cdr (assq (or type t)
+                                                  lyskom-global-variable-types))))
+                            (symbol-value elisp-name)))))
+                      lyskom-global-variables
                       "\n")
            ))
          (elisp-block
@@ -281,35 +279,36 @@ Returns a list of variables that were ignored."
                  ;; cannot be performed with '=.
                  ((equal r common-no)
                   (let ((lyskom-options-text working)
-                        name gname value)
+                        spec name value)
                     (while (> (length lyskom-options-text) 2)
-                      (setq gname (lyskom-read-options-eval-get-holerith))
+                      (setq name (intern (lyskom-read-options-eval-get-holerith)))
                       (setq value (lyskom-read-options-eval-get-holerith))
-                      (setq name (concat "kom-" gname))
-                      (if (memq (intern-soft name) lyskom-global-boolean-variables)
-                          (if (string= value "1")
-                              (setq value "t")
-                            (setq value "nil"))
-                        (if (memq (intern-soft name) 
-                                  lyskom-global-non-boolean-variables)
-                            nil
-                          (setq name (concat "UNK-" gname))
-                          (setq lyskom-global-non-boolean-variables
-                                (cons name lyskom-global-non-boolean-variables))))
-                      (unless (lyskom-maybe-set-var-from-string name value)
+                      (setq spec
+                            (cond ((lyskom-flag-global-variable-from-common name))
+                                  (t (let ((tmp (vector name
+                                                        (intern (format "lyskom-UNK-%S" name))
+                                                        nil)))
+                                       (setq lyskom-global-variables
+                                             (cons tmp lyskom-global-variables))
+                                       tmp))))
+
+                      (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2))
                         (setq ignored-user-area-vars
-                              (cons (intern gname) ignored-user-area-vars))))))
+                              (cons (elt spec 1) ignored-user-area-vars))))))
                  ;; Note that elisp-no may be nil here, so the comparison
                  ;; cannot be performed with '=.
                  ((equal r elisp-no)
                   (let ((lyskom-options-text working)
                         name value)
                     (while (> (length lyskom-options-text) 2)
-                      (setq name (lyskom-read-options-eval-get-holerith))
+                      (setq name (intern (lyskom-read-options-eval-get-holerith)))
                       (setq value (lyskom-read-options-eval-get-holerith))
-                      (unless (lyskom-maybe-set-var-from-string name value)
+                      (if (lyskom-maybe-set-var-from-string name value)
+                          (when (functionp (cdr (assq name lyskom-transition-variables)))
+                            (set name (funcall (cdr (assq name lyskom-transition-variables))
+                                               (symbol-value name))))
                         (setq ignored-user-area-vars
-                              (cons (intern name) ignored-user-area-vars))))))
+                              (cons name ignored-user-area-vars))))))
                  (t
                   (let ((pos lyskom-other-clients-user-areas))
                     (while (and pos
@@ -401,29 +400,31 @@ If optional NO-CODING is set, assume the string has internal coding."
             (cons (decode-coding-string name coding) string)
           (error (cons name string)))))))
 
-(defun lyskom-maybe-set-var-from-string (var string)
+(defun lyskom-maybe-set-var-from-string (var string &optional type)
   "This is a wrapper around lyskom-set-var-from-string that does nothing
 if the variable is in kom-dont-read-saved-variables.
 
 Return non-nil if the variable shouldn't have been set in the first place."
   (cond ((eq kom-dont-read-saved-variables t) t)
-        ((memq (intern var) kom-dont-read-saved-variables) t)
-        ((not (or (memq (intern var) lyskom-elisp-variables)
-                  (memq (intern var) lyskom-global-non-boolean-variables)
-                  (memq (intern var) lyskom-global-boolean-variables))) nil)
-        (t (lyskom-set-var-from-string var string) t)))
+        ((memq var kom-dont-read-saved-variables) t)
+        ((not (or (memq var lyskom-elisp-variables)
+                  (assq var lyskom-transition-variables)
+                  (lyskom-flag-global-variable-from-elisp var))) nil)
+        (t (lyskom-set-var-from-string var string type) t)))
 
-(defun lyskom-set-var-from-string (var string)
+(defun lyskom-set-var-from-string (var string &optional type)
   "This is a wrapper aroud read-from-string.
 It returns nil, and writes a message when an error occurs."
-  (set (intern var)
-       (car
-	(condition-case nil
-	    (read-from-string string)
-	  (invalid-read-syntax
-	   (lyskom-format-insert (lyskom-get-string 'error-in-options)
-				 var string)
-	   nil)))))
+  (set var (condition-case nil
+               (funcall 
+                (cdr (assq 'read
+                           (cdr (assq (or type t)
+                                      lyskom-global-variable-types))))
+                string)
+             (error
+              (lyskom-format-insert (lyskom-get-string 'error-in-options)
+                                    var string)
+              nil))))
 
 
 (defun lyskom-flag-value-to-string (symbol)
@@ -436,3 +437,34 @@ It returns nil, and writes a message when an error occurs."
                                           nil))
                   kom-permanent-filter-list)))
         (t (prin1-to-string (symbol-value symbol)))))
+
+
+(defun lyskom-flag-global-variable-from-common (var)
+  "Return the element from lyskom-global-variables corresponding to VAR."
+  (lyskom-traverse el lyskom-global-variables
+    (when (eq (aref el 0) var)
+      (lyskom-traverse-break el))))
+
+(defun lyskom-flag-global-variable-from-elisp (var)
+  "Return the element from lyskom-global-variables corresponding to
+elisp variable VAR."
+  (lyskom-traverse el lyskom-global-variables
+    (when (eq (aref el 1) var)
+      (lyskom-traverse-break el))))
+
+(defun lyskom-flag-write-boolean (val)
+  (if val "1" "0"))
+
+(defun lyskom-flag-read-boolean (str)
+  (string= "1" str))
+
+(defun lyskom-flag-write-symbol-list (val)
+  (cond ((symbolp val)
+         (lyskom-format-objects (symbol-name val)))
+        (t (mapcar (lambda (x) (lyskom-format-objects (symbol-name x))) val))))
+
+(defun lyskom-flag-read-symbol-list (str)
+  (mapcar 'intern (lyskom-get-holerith-list str)))
+
+(defun lyskom-flag-read-from-string (str)
+  (car (read-from-string str)))
