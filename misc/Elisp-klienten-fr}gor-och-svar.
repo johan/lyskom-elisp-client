@@ -2447,3 +2447,33 @@ a [ndra variabler
 
 ? ger sedan hj{lp (har jag f|r mig)
 (109444) -----------------------------------
+
+111099 1991-09-21  22:51  /9 rader/ Stig R. Kristoffersen, SRK
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <116>
+Ärende: Ant uleste (sp) <> ant uleste (ln)
+------------------------------------------------------------
+Hvorfor er ikke antall uleste når man tar 'sp Stig R ...' og lister
+alle gruppene, og n}r man tar 'Lista nyheter' likt ?
+
+'sp sier : Stig R. Kristoffersen, SRK har totalt 13658 olästa.
+mens 'ln' sier : Du har 5555 olästa inlägg.
+
+Er det pga av at jeg ikke har vært inne en stund slik at endel av
+inleggene er 'expired', og det forstår 'ln' mens 'sp' ikke forstår
+at en del av innleggene er 'expired' ??
+(111099) -----------------------------------
+Kommentar i text 111635 av ceder (Per Cederqvist  Lysator)
+Läsa nästa kommentar. 
+111635 1991-09-22  10:17  /7 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 111099 av Stig R. Kristoffersen, SRK
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <117>
+Ärende: Ant uleste (sp) <> ant uleste (ln)
+------------------------------------------------------------
+Ja, att inl{gg har 'expirerat' {r nog en del av svaret. Det man f}r
+n{r man g|r "sp" {r bara en uppskattning. Att r{kna ut det exakta
+v{rdet tar f|r l}ng tid (_b}de_ att implementera och exekvera! :-)
+"sp" kan g|ra fel p} andra s{tt ocks}: klienten har en cache d{r den
+h}ller en del information. En del av den kan vara gammal. Det spelar
+ingen roll utom just i fallet "sp", d{r det kan resultera i att n}gon
+har ett negativt antal l{sta i ett m|te...
+(111635) -----------------------------------
