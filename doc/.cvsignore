@@ -1,6 +1,13 @@
 elisp-client
 elisp-client-1
 elisp-client-2
+elisp-client-3
+elisp-client-4
+elisp-client-5
+elisp-client-6
+elisp-client-7
+elisp-client-8
+elisp-client-9
 elisp-client.aux
 elisp-client.cp
 elisp-client.cps
@@ -19,3 +26,4 @@ elisp-client.txt
 elisp-client.vr
 elisp-client.vrs
 indexes
+info.index
