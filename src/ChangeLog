@@ -1,5 +1,7 @@
 Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
 
+	* lyskom-rest.el (kom-view): Tommys patch once more.
+
 	* swedish-string.el, prioritize.el (lyskom-prioritize-mode-map):
 	  Moved the map to swedish-strings.el.
 
