@@ -1,3 +1,8 @@
+2002-09-10  David Byers  <david.byers@swipnet.se>
+
+	* mime.el (lyskom-mime-string-charset): Deal with not having any
+	coding systems at all (happens in non-multibyte emacsen).
+
 2002-09-10  Joel Rosdahl  <joel@rosdahl.net>
 
 	* swedish-strings.el, english-strings.el: Fixed typos and
