@@ -1,5 +1,19 @@
 2002-12-09  David Byers  <david.byers@swipnet.se>
 
+	Work on bug 924:
+	* vars.el.in (kom-show-namedays): Updated documentation.
+
+	* commands1.el (kom-display-time): Display namedays in all
+	languages.
+
+	* names.el: New file.
+	Added namedays for swedish, pre-1901 swedish, finnish,
+	finlandssvenska and finnish orthodox. Thanks to Linus Sjöberg and
+	Hans Persson for the data.
+	(lyskom-nameday): Moved here from commands1.el. Made
+	language-independent (the code had hard-coded swedish strings).
+	(lyskom-define-namedays): New function.
+
 	Bug 923:
 	* vars.el.in (kom-url-transformation-rules): New variable.
 

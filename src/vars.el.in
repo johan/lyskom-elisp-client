@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.213 2002-12-09 20:36:36 byers Exp $
+;;;;; $Id: vars.el.in,v 44.214 2002-12-09 21:44:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.213 2002-12-09 20:36:36 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.214 2002-12-09 21:44:21 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1225,8 +1225,10 @@ time in some places. If nil, only include minutes and hours."
   server)
 
 (def-kom-var kom-show-namedays nil
-  "*Non-nil means display namedays when running in Swedish.
-This variable will eventually be replaced with something else."
+  "*Non-nil means display namedays.
+If set to t, display namedays for the selected language (if there
+are any defined). If set to a symbol, display namedays from that
+list (list available lists with M-x lyskom-list-nameday-lists)."
   server)
 
 (def-kom-var kom-ssh-relay-host nil
