@@ -1,5 +1,11 @@
 2000-11-18  Joel Rosdahl  <joel@rosdahl.net>
 
+	* commands1.el (kom-change-parenthesis): Handle multiple
+	parentheses and paranthesis not located at the end.
+
+	* vars.el.in (kom-server-aliases): kom.hem.liu.se instead of
+	rydkom.rydnet.lysator.liu.se.
+
 	* command.el (lyskom-read-extended-command): Revived the
 	minibuffer completion code from 0.46-BETA-P.
 	(lyskom-ok-command): Ditto.
