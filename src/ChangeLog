@@ -1,4 +1,18 @@
+2002-04-14  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
+	New function.
+
 2002-04-13  David Byers  <david.byers@swipnet.se>
+
+	Handle conference recommendations:
+	* lyskom-rest.el (lyskom-check-go-to-conf): Don't do stuff for
+	secret and passive memberships if we just rejected an invitation
+	(this was a bug). Record rejected invitations.
+	(lyskom-reject-invitation): New function.
+	(lyskom-invitation-already-rejected): New function.
+
+	* vars.el.in (lyskom-rejected-invitations): New variable.
 
 	New FAQ support:
 	* faqs.el: New file contains all FAQ-related stuff.

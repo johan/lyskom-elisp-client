@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.115 2002-04-13 21:07:59 byers Exp $
+;;;;; $Id: commands2.el,v 44.116 2002-04-13 22:38:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.115 2002-04-13 21:07:59 byers Exp $\n"))
+              "$Id: commands2.el,v 44.116 2002-04-13 22:38:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2744,14 +2744,16 @@ to the first text that NEW is a comment or footnote to."
                                                   nil)
                     0
                     (mapconcat 'lyskom-format-object
-                               (list (conf-stat->conf-no conf-stat)
-                                     priority
-                                     mship-type)
+                               (delq nil
+                                     (list (conf-stat->conf-no conf-stat)
+                                           priority
+                                           mship-type))
                                " "))))
     (lyskom-format-insert 'recommending-conf
                           conf-stat
                           priority
-                          (lyskom-return-membership-type mship-type))
+                          (and mship-type
+                               (lyskom-return-membership-type mship-type)))
     (lyskom-report-command-answer (blocking-do 'modify-server-info
                                                nil
                                                (list aux-item)))))
