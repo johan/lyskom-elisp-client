@@ -5,8 +5,8 @@
     This procedure should work on any system, including Windows.
 
     1. In Emacs, type `M-x b y t e - c o m p i l e - f i l e RET' and
-       give the path to the lyskom-elisp-client-@@FLAVOUR@@-@@CLIENTVERSION@@.el
-       contained in the archive in which you found this README file.
+       give the path to the lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el contained
+       in the archive in which you found this README file.
 
        You may see some warnings when you compile. These can usually be
        ignored. When compilation is done you should have a new file named

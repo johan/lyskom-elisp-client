@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.72 2002-08-06 19:43:33 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.73 2002-09-11 19:05:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.72 2002-08-06 19:43:33 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.73 2002-09-11 19:05:45 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -959,11 +959,11 @@ Fall back on Netscape if not running in Microsoft Windows."
 
       (condition-case nil
           (progn
+            (lyskom-url-manager-starting manager)
             (start-process "Browser"
                            nil
                            kom-windows-browser-command
-                           url)
-            (lyskom-url-manager-starting manager))
+                           url))
         (error (error (concat "Failed starting browser using"
                               " kom-windows-browser-command"
                               " (%s)")
@@ -983,11 +983,11 @@ Fall back on Netscape if not running in Microsoft Windows."
           (while programs
             (condition-case nil
                 (progn
+                  (lyskom-url-manager-starting manager)
                   (start-process (car programs)
                                  nil
                                  (car programs)
                                  url)
-                  (lyskom-url-manager-starting manager)
                   (setq programs nil))
               (error (setq programs (cdr programs)))))))))
    (t (lyskom-view-url-netscape url manager))))
