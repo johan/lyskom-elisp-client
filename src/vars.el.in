@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $
+;;;;; $Id: vars.el.in,v 38.3 1995-02-23 20:42:41 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $\n"))
+	      "$Id: vars.el.in,v 38.3 1995-02-23 20:42:41 linus Exp $\n"))
 
 
 
@@ -98,6 +98,9 @@ changing name is printed.")
 (defvar kom-show-where-and-what t
   "*Non-nil means kom-who-is-on shows from which machine the user is running
 and what he is doing.")
+
+(defvar kom-show-footnotes-immediately t
+  "*Non-nil means show footnotes immediately following the text.")
 
 (defvar kom-who-buffer-size-when-displaying 10
   "*Size of window to display the who-buffer.
@@ -257,8 +260,9 @@ if any problems are detected.")
   "List of lyskom-sessions with unread texts.
 This is not buffer-local.")
 
-(defvar lyskom-time-last-command nil
-  "Keeps the time of the last lyskom-command in this session.")
+(defvar lyskom-sessions-with-unread-letters nil
+  "List of lyskom-sessions with unread letters.
+This is not buffer-local.")
 
 (defvar lyskom-buffer nil
   "What is the lyskom-buffer we are connected to.")
@@ -571,8 +575,6 @@ unread texts in list-unread.")
     (kom-tell-change-name)
     (kom-tell-change-supervisor)
     (kom-tell-next-lyskom)
-    (kom-tell-is-back)
-    (kom-tell-is-idle)
     )
   "Users must not change this constant, but are encouraged to change
 the value of  kom-tell-phrases  for fun.")
