@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.9 1996-05-02 16:20:27 byers Exp $
+;;;;; $Id: commands1.el,v 40.10 1996-05-02 17:12:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.9 1996-05-02 16:20:27 byers Exp $\n"))
+	      "$Id: commands1.el,v 40.10 1996-05-02 17:12:00 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1391,19 +1391,26 @@ If MARK-NO == 0, review all marked texts."
 ))
 
 
+(defun lyskom-format-time (time)
+  "Return TIME as a formatted string."
+  (lyskom-format 'time-format-exact
+		 (+ (time->year time) 1900)
+		 (1+ (time->mon  time))
+		 (time->mday time)
+		 (time->hour time)
+		 (time->min  time)
+		 (time->sec  time)
+		 (elt (lyskom-get-string 'weekdays)
+		      (time->wday time))))
+
 
 (def-kom-command kom-display-time ()
   "Ask server about time and date."
   (interactive)
   (let ((time (blocking-do 'get-time)))
     (lyskom-format-insert 'time-is
-			  (+ (time->year time) 1900)
-			  (1+ (time->mon  time))
-			  (time->mday time)
-			  (time->hour time)
-			  (time->min  time)
-			  (time->sec  time)
-              ;; Kult:
+			  (lyskom-format-time time)
+			  ;; Kult:
 			  (if (and (= (time->hour time)
 				      (+ (/ (time->sec time) 10)
 					 (* (% (time->sec time) 10) 10)))
@@ -1411,7 +1418,7 @@ If MARK-NO == 0, review all marked texts."
 				      (% (time->min time) 10)))
 			      (lyskom-get-string 'palindrome)
 			    ""))
-              ;; Mera kult
+    ;; Mera kult
     (mapcar (function 
              (lambda (el)
                (let ((x (car el))
@@ -1428,17 +1435,20 @@ If MARK-NO == 0, review all marked texts."
                               (= (time->min time) (elt x 4)))
                           (or (null (elt x 5))
                               (= (time->sec time) (elt x 5))))
-                     (progn
-                       (lyskom-insert " ")
-                       (lyskom-format-insert (cdr el)
-                                             (+ (time->year time) 1900)
-                                             (1+ (time->mon  time))
-                                             (time->mday time)
-                                             (time->hour time)
-                                             (time->min  time)
-                                             (time->sec  time)))))))
+                     (condition-case err
+			 (progn
+			   (lyskom-insert " ")
+			   (lyskom-format-insert (cdr el)
+						 (+ (time->year time) 1900)
+						 (1+ (time->mon  time))
+						 (time->mday time)
+						 (time->hour time)
+						 (time->min  time)
+						 (time->sec  time)))
+		       (error nil))))))
             lyskom-times))
   (lyskom-insert "\n"))
+
 
 
 ;;; ================================================================

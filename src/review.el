@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.6 1996-05-02 16:20:44 byers Exp $
+;;;;; $Id: review.el,v 40.7 1996-05-02 17:12:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.6 1996-05-02 16:20:44 byers Exp $\n"))
+	      "$Id: review.el,v 40.7 1996-05-02 17:12:26 davidk Exp $\n"))
 
 
 
@@ -231,7 +231,7 @@ Args: BY TO NUM"
 ;;; written a long time ago, we'll be scanning the user's map
 ;;; uselessly for a long time. The same is true if the user's map is
 ;;; small and the conference gets lots of traffic. In some cases it
-;;; maight actually be faster to look at and filter the text-stats in
+;;; might actually be faster to look at and filter the text-stats in
 ;;; the smaller map. The fact that the user's map _is_ sorted in
 ;;; ascending order might also be a source for some sort of
 ;;; optimization.

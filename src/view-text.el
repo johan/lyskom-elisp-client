@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.7 1996-05-02 13:27:45 davidk Exp $
+;;;;; $Id: view-text.el,v 40.8 1996-05-02 17:12:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.7 1996-05-02 13:27:45 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.8 1996-05-02 17:12:39 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -457,39 +457,35 @@ Args: TEXT-STAT of the text being read."
   ;;+++ error kommer att se annorlunda ut.
   (save-excursion
     (goto-char marker)
-    (if text-stat
-	(let ((author (text-stat->author text-stat))
-	      (type (misc-info->type misc)))
-	
-	  (cond
-	   ((eq type 'COMM-TO)
-	    (lyskom-format-insert-at-point 'comment-to-text-by 
-					   (misc-info->comm-to misc)
-					   author))
-	   ((eq type 'FOOTN-TO)
-	    (lyskom-format-insert-at-point 'footnote-to-text-by
-					   (misc-info->footn-to misc)
-					   author))
-	   ((eq type 'COMM-IN)
-	    (lyskom-format-insert-at-point 'comment-in-text-by
-					   (misc-info->comm-in misc)
-					   author))
-	   ((eq type 'FOOTN-IN)
-	    (lyskom-format-insert-at-point 'footnote-in-text-by
-					   (misc-info->footn-in misc)
-					   author)))
-	  ;; Print information about who added the link
-	  (if (misc-info->sent-at misc)
-	      (lyskom-format-insert-at-point 'send-at
-					     (lyskom-return-date-and-time 
-					      (misc-info->sent-at misc))))
-	  (if (misc-info->sender misc)
-	      (lyskom-format-insert-at-point 'sent-by
-					     (misc-info->sender misc))))
-      ;; Client tolerance agains buggy servers...
-      ;; We are writing the line about what comments exists and
-      ;; the reference text does not exist anymore. Strange.
-      nil)
+    (let ((author (if text-stat
+		      (text-stat->author text-stat)
+		    nil))
+	  (type (misc-info->type misc)))
+      (cond
+       ((eq type 'COMM-TO)
+	(lyskom-format-insert-at-point 'comment-to-text
+				       (misc-info->comm-to misc)))
+       ((eq type 'FOOTN-TO)
+	(lyskom-format-insert-at-point 'footnote-to-text
+				       (misc-info->footn-to misc)))
+       ((eq type 'COMM-IN)
+	(lyskom-format-insert-at-point 'comment-in-text
+				       (misc-info->comm-in misc)))
+       ((eq type 'FOOTN-IN)
+	(lyskom-format-insert-at-point 'footnote-in-text
+				       (misc-info->footn-in misc))))
+      (if author
+	  (lyskom-format-insert-at-point 'written-by author)
+	(lyskom-insert-at-point "\n"))
+      
+      ;; Print information about who added the link
+      (if (misc-info->sent-at misc)
+	  (lyskom-format-insert-at-point 'send-at
+					 (lyskom-return-date-and-time 
+					  (misc-info->sent-at misc))))
+      (if (misc-info->sender misc)
+	  (lyskom-format-insert-at-point 'sent-by
+					 (misc-info->sender misc))))
     ;; (goto-char marker)
     (let ((inhibit-read-only t))
       (delete-char chars-to-delete))

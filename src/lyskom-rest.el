@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.15 1996-05-02 13:27:38 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.16 1996-05-02 17:12:19 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.15 1996-05-02 13:27:38 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.16 1996-05-02 17:12:19 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1564,6 +1564,7 @@ chosen according to this"
         (beginning-of-line 0)           ;about to happen.
         (sit-for 0)))
                                         ;  (lyskom-scroll)
+  (run-hooks 'lyskom-before-command-hook)
   (if kom-page-before-command           ;Nice with dumb terminals.
       (if (or (not (listp kom-page-before-command))
               (memq function kom-page-before-command))

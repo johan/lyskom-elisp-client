@@ -1,3 +1,11 @@
+Thu May  2 18:47:18 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): Nytt
+	format på de strängar som används i
+	lyskom-print-delayed-header-comm.
+
+	* english-strings.el (lyskom-strings): 
+
 Thu May  2 16:37:53 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * swedish-strings.el,english-strings.el (lyskom-commands): Lade in
@@ -17,6 +25,24 @@ Thu May  2 16:37:53 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * review.el (kom-review-first): Hantera prefixargument.
     
+Thu May  2 15:20:19 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-display-time): Skydda med condition-case.
+
+	* view-text.el (lyskom-print-delayed-header-comm): Skriver ut
+	kommentarlänkar till oläsliga texter igen.
+
+	* commands1.el (lyskom-format-time): Ny funktion.
+	(kom-display-time): Omskriven av Bellman.
+
+	* swedish-strings.el (lyskom-strings): Nya strängar för
+ 	kom-display-time.
+
+	* english-strings.el (lyskom-strings): Dito.
+
+	* lyskom-rest.el (lyskom-start-of-command): Kör
+ 	lyskom-before-command-hook.
+
 Thu May  2 15:20:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-delayed-header-comm): Klarade inte av

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.6 1996-05-02 16:20:34 byers Exp $
+;;;;; $Id: english-strings.el,v 40.7 1996-05-02 17:12:08 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 40.6 1996-05-02 16:20:34 byers Exp $"))
+              "$Id: english-strings.el,v 40.7 1996-05-02 17:12:08 davidk Exp $"))
 
 
 
@@ -330,7 +330,11 @@ and you have finished reading. Please come back later.
     (no-marked-texts . "You have not marked any articles.\n")
     (no-marked-texts-mark . 
      "You have not marked any articles with mark %#1d.\n")
-    (time-is . "The time is %4#1d %02#3d/%02#2d %02#4d:%02#5d:%02#6d %#7s(according to the server).")
+
+    (weekdays . ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday"
+		 "Friday" "Saturday" "Sunday"])
+    (time-is . "The time is %#1s %#2s(according to the server).")
+    (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "Christmas eve!")
     (xmasday . "Christmas day.\nDid you get any nice gifts this year?")
@@ -601,11 +605,12 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (send-at . "   Posted:     %#1s\n")
     (sent-by . "   Posted by %#1P\n")
     (recieved-at . "    Received: %#1s\n")
-    (written-by . "by %#1P")
-    (comment-to-text-by . "Comment to article %#1n by %#2P\n")
-    (footnote-to-text-by . "Footnote to article %#1n %#2P\n")
-    (comment-in-text-by . "Comment in article %#1n by %#2P\n")
-    (footnote-in-text-by . "Footnote in article %#1n %#2P\n")
+
+    (comment-to-text . "Comment to article %#1n")
+    (footnote-to-text . "Footnote to article %#1n")
+    (comment-in-text . "Comment in article %#1n")
+    (footnote-in-text . "Footnote in article %#1n")
+    (written-by . " by %#1P\n")
 
     ; From async.el:
 

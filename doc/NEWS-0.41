@@ -58,10 +58,17 @@ slinker med.
 
 ** Återse senaste frågar hur många inlägg man vill se.
 
+** Det finns en lyskom-before-command-hook som körs före varje
+   kommando.
+
+** Man får återigen se att det finns kommentarer man inte får läsa
+   till inlägg. Detta beteende försvann av någon anledning i någon
+   tidigare version.
+
 * Bugfixar
 
 ** Återse senaste fungerar! De problem som rapporterats om detta
-   kommando borde vara lösta i denna version. 
+   kommando borde vara lösta i denna version.
 
 ** lyskom.el går nu igenom bytekompileringen nästan helt utan
    varningar. De återstående varningarna om odefinierade funktioner
@@ -79,10 +86,10 @@ slinker med.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
-** Elispklienten hänger fortfarande ibland men vi vet inte varför. Det
-   är numera lite enklare att avbryta och några hängningar har
-   eliminerats, men problemet är inte löst. Problemet är att emacs gör
-   poll() upprepat, trots att det rimligen borde finnas data
+** Elispklienten hänger troligen fortfarande ibland men vi vet inte
+   varför. Det är numera lite enklare att avbryta och några hängningar
+   har eliminerats, men problemet är inte löst. Problemet är att emacs
+   gör poll() upprepat, trots att det rimligen borde finnas data
    tillgängligt. Det kan vara ett kodningsfel, det kan vara en bug i
    Emacs och det kan kanske vara så att svaret helt enkelt dröjer. Vi
    har numera en explicit timeout som per default är satt till en
@@ -106,6 +113,9 @@ slinker med.
 ** Om man går ur ett möte medan man prioriterar möten kan man inte
    spara den nya prioriteringen. Denna bug kommer nog att fixas på
    något vis såsmåningom. 
+
+** Att försöka återse sina inlägg i någon annans brevlåda fungerar
+   inte så bra. Det tar lång tid och resultatet blir noll och intet.
 
 
 Migrering från 0.38 till nyare versioner
