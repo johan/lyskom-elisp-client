@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.6 1999-06-10 13:36:11 byers Exp $
+;;;;; $Id: komtypes.el,v 44.7 1999-06-20 06:32:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.6 1999-06-10 13:36:11 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.7 1999-06-20 06:32:49 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -2012,12 +2012,12 @@ Args: TEXT-STAT TAG PERSON"
       (setq items (cdr items)))
     (nreverse result)))
 
-(defun conf-stat-find-aux (text-stat tag &optional person)
+(defun conf-stat-find-aux (conf-stat tag &optional person)
   "Return a list containing the aux items in CONF-STAT with tag TAG.
 If PERSON is non-nil return only those items created by person.
-Args: TEXT-STAT TAG PERSON"
+Args: CONF-STAT TAG PERSON"
   (let ((result nil)
-        (items (conf-stat->aux-items text-stat)))
+        (items (conf-stat->aux-items conf-stat)))
     (while items
       (when (and (eq tag (aux-item->tag (car items)))
                  (not (aux-item-flags->deleted
