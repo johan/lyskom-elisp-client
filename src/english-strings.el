@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.268 2003-03-16 15:57:28 byers Exp $
+;;;;; $Id: english-strings.el,v 44.269 2003-03-16 17:34:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.268 2003-03-16 15:57:28 byers Exp $"))
+              "$Id: english-strings.el,v 44.269 2003-03-16 17:34:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -446,7 +446,9 @@ and you have finished reading. Please come back later.
     (text-has-no-recipients-r . "Text %#1n has no recipients\n")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
-    (member-in-conf . "Joining to %#1M...")
+    (member-in-conf . "Joining to %#1M%#2?b%[ %#2s%]%[%]...")
+    (member-in-conf-with-unread-date . "with unread from %#2s %#3d, %#1d")
+    (member-in-conf-with-unread . "unread %#1d unread")
     (add-member-in . "Adding %#1P as a member of %#2M...")
     (change-priority-for-q . "Change priority of conference: ")
     (change-priority-for . "Changing priority of %#2M...")
@@ -708,6 +710,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 The message you were sending to %#1M was:
 %#2t\n")
     (only-last . "Last texts in %#1s: ")
+    (initial-unread . "Initial number of unread (empty for all texts): ")
     (only-error . "Something went wrong. Sorry.\n")
     
     (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")
@@ -1857,7 +1860,7 @@ environment to one that uses \"%#2s\" to encode text.
     (or-date . "or date")
 
     (set-unread-n . "Only read the most recent %#1?d%[text%]%[%#1d texts%].\n")
-    (set-unread-date . "Only read texts sinse %#2s %#3d, %#1d.\n")
+    (set-unread-date . "Only read texts since %#2s %#3d, %#1d.\n")
 
     (jump-from-text . "Skip comments to which text? ")
     (jumping-from-text . "Skipping comments to text %#1n.\n")

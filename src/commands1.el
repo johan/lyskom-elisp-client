@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.172 2003-03-16 15:57:26 byers Exp $
+;;;;; $Id: commands1.el,v 44.173 2003-03-16 17:34:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.172 2003-03-16 15:57:26 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.173 2003-03-16 17:34:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -555,7 +555,10 @@ for confirmation."
 					 '(all) nil nil t))
 	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who 
-                                                     pers-stat nil nil t)
+                                                     pers-stat 
+                                                     nil
+                                                     nil
+                                                     t)
 			      whereto who)))
 
 
@@ -578,8 +581,18 @@ See `kom-membership-default-priority' and
                      '(all) nil "" t)))
          (who (blocking-do 'get-conf-stat lyskom-pers-no))
          (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
-         (mship (lyskom-get-membership (conf-stat->conf-no whereto) t)))
-  
+         (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
+         (no-of-unread
+          (unless (and mship (not (membership-type->passive
+                                   (membership->type mship))))
+            (lyskom-read-num-range-or-date 
+             0 
+             (conf-stat->no-of-texts whereto)
+             (lyskom-format 'initial-unread)
+             nil
+             t
+             nil))))
+
     ;; Fake kom-membership-default-priority if this is a passive membership
     ;; This will suppress the normal "which priority" question. Ugly hack.
 
@@ -587,8 +600,17 @@ See `kom-membership-default-priority' and
            (if (and mship (membership-type->passive (membership->type mship)))
                (membership->priority mship)
              kom-membership-default-priority)))
-      (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat nil nil t)
-                                whereto who))))
+
+      (lyskom-add-member-answer (lyskom-try-add-member whereto
+                                                       who
+                                                       pers-stat
+                                                       nil
+                                                       nil
+                                                       t
+                                                       nil
+                                                       no-of-unread)
+                                whereto who
+                                no-of-unread))))
 
 
 (def-kom-command kom-change-priority (&optional conf)
@@ -639,7 +661,8 @@ for person PERS-NO and send them into lyskom-try-add-member."
                               membership-type
                               &optional message-string
                               need-extra-information
-                              default-priority)
+                              default-priority
+                              no-of-unread)
   "Add a member to a conference.
 Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
 CONF-CONF-STAT: the conf-stat of the conference the person is being added to
@@ -655,6 +678,19 @@ is the position where the membership was placed.
 
 If optional USE-PRIORITY is non-nil then use that as the priority.
 "
+  (cond ((null no-of-unread))
+
+        ((numberp no-of-unread)
+         (setq no-of-unread (lyskom-format 'member-in-conf-with-unread
+                                           no-of-unread)))
+        ((listp no-of-unread)
+                 (setq no-of-unread
+                       (lyskom-format 'member-in-conf-with-unread-date
+                                      (elt no-of-unread 0)
+                                      (car (rassq (elt no-of-unread 1)
+                                                  lyskom-month-names))
+                                      (elt no-of-unread 2)))))
+
   (if (or (null conf-conf-stat)
 	  (null pers-conf-stat))
       nil				; We have some problem here.
@@ -724,7 +760,8 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
         (if (= (conf-stat->conf-no pers-conf-stat)
                lyskom-pers-no)
             (lyskom-format-insert 'member-in-conf
-                                  conf-conf-stat)
+                                  conf-conf-stat
+                                  no-of-unread)
           (lyskom-format-insert 'add-member-in
                                 pers-conf-stat
                                 conf-conf-stat)))
@@ -740,8 +777,10 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
             res))))))
 
 
-(defun lyskom-add-member-answer (answer conf-conf-stat
-                                        pers-conf-stat)
+(defun lyskom-add-member-answer (answer 
+                                 conf-conf-stat
+                                 pers-conf-stat
+                                 &optional no-of-unread)
   "Handle the result from an attempt to add a member to a conference."
   (let ((pos (if (consp answer) (elt answer 1) nil))
         (answer (if (consp answer) (elt answer 0) answer)))
@@ -780,17 +819,31 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
       (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
       ;;+++Borde {ndra i cachen i st{llet.
       (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat))
-      (if (= (conf-stat->conf-no pers-conf-stat)
+      (when (= (conf-stat->conf-no pers-conf-stat)
              lyskom-pers-no)
-          (let ((mship (blocking-do 'query-read-texts
-                                    lyskom-pers-no 
-                                    (conf-stat->conf-no conf-conf-stat)
-                                    t 0)))
-            (unless (membership->position mship)
-              (set-membership->position mship pos))
+        (when no-of-unread
+          (cond ((listp no-of-unread)
+                 (let* ((target-date (lyskom-create-time 0 0 0 (elt no-of-unread 2) (elt no-of-unread 1) (elt no-of-unread 0) 0 0 nil))
+                        (text (lyskom-find-text-by-date conf-conf-stat target-date)))
+                   (when text
+                     (blocking-do 'set-last-read 
+                                  (conf-stat->conf-no conf-conf-stat)
+                                  (car text)))))
+                ((numberp no-of-unread) 
+                 (blocking-do 'set-unread (conf-stat->conf-no conf-conf-stat)
+                              no-of-unread))))
+        (let ((mship (blocking-do 'query-read-texts
+                                  lyskom-pers-no 
+                                  (conf-stat->conf-no conf-conf-stat)
+                                  t 0)))
+          (unless (membership->position mship)
+            (set-membership->position mship pos))
+          (if (lyskom-try-get-membership (conf-stat->conf-no conf-conf-stat) t)
+              (progn (lyskom-replace-membership mship)
+                     (lyskom-fetch-start-of-map conf-conf-stat mship))
             (lyskom-add-membership mship
                                    conf-conf-stat
-                                   t)))
+                                   t))))
       (lyskom-insert-string 'done))))
 
 

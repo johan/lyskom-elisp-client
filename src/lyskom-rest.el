@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.195 2003-03-16 15:57:29 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.196 2003-03-16 17:34:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.195 2003-03-16 15:57:29 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.196 2003-03-16 17:34:44 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3292,33 +3292,40 @@ message."
      (lyskom-read-from-minibuffer prompt initial lyskom-verified-read-map))))
 
 
-(defun lyskom-read-num-range-or-date (low high prompt)
+(defun lyskom-read-num-range-or-date (low high prompt &optional initial empty default)
   "Read a number or a date from the minibuffer.
 Args: LOW HIGH PROMPT.
 The result will be a number or a list of (YEAR MONTH DATE)."
   (let ((result nil)
-        (val nil)
+        (break nil)
+        (val (and initial (number-to-string initial)))
         (prompt (concat (if (symbolp prompt) (lyskom-get-string prompt) prompt)
                         (format "(%d-%d %s) " low high (lyskom-get-string 'or-date)))))
-    (while (null result)
+    (while (and (null result) (null break))
       (setq val (lyskom-verified-read-from-minibuffer 
-                   prompt 
-                   val
-                   (lambda (val)
-                     (if (string-match "^\\s-*[0-9]+\\s-*$" val)
-                         (let ((num (string-to-int val)))
-                           (unless (and (>= num low) (<= num high))
-                             (lyskom-get-string 'number-out-of-range)))
-                       (condition-case nil
-                           (progn (lyskom-parse-date val) nil)
-                         (lyskom-error (lyskom-get-string 'invalid-date-entry)))))))
-      (if (string-match "^\\s-*[0-9]+\\s-*$" val)
-          (let ((num (string-to-int val)))
-            (when (and (>= num low) (<= num high))
-              (setq result num)))
-        (condition-case nil
-            (setq result (lyskom-parse-date val) )
-          (lyskom-error nil))))
+                 prompt 
+                 (and val (cons val 0))
+                 (lambda (val)
+                   (cond 
+                    ((string-match "^\\s-*[0-9]+\\s-*$" val)
+                     (let ((num (string-to-int val)))
+                       (unless (and (>= num low) (<= num high))
+                         (lyskom-get-string 'number-out-of-range))))
+                    ((and empty (string-match "^\\s-*$" val)) nil)
+                    (t
+                     (condition-case nil
+                         (progn (lyskom-parse-date val) nil)
+                       (lyskom-error (lyskom-get-string 'invalid-date-entry))))))))
+      (cond ((string-match "^\\s-*[0-9]+\\s-*$" val)
+             (let ((num (string-to-int val)))
+               (when (and (>= num low) (<= num high))
+                 (setq result num))))
+            ((and empty (string-match "^\\s-*$" val))
+             (setq break t
+                   result default))
+            (t (condition-case nil
+                   (setq result (lyskom-parse-date val) )
+                 (lyskom-error nil)))))
     result))
 
 

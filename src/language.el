@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.27 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: language.el,v 44.28 2003-03-16 17:34:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -82,7 +82,11 @@ sessions."
    (lambda (spec)
      (let ((var (car spec))
            (var-scope (cdr spec)))
-       (when (or (eq scope 'global) (eq var-scope 'local))
+       (when (or (eq scope 'global)
+                 (eq var-scope 'local))
+         (when (eq scope 'global)
+           (set-default var (eval (cdr (assq language
+                                     (get var 'lyskom-language-var))))))
          (when (or (not (symbol-value var))
                    (get var 'lyskom-language-force))
            (set var (eval (cdr (assq language
