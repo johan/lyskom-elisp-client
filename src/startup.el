@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.99 2003-08-25 17:36:39 byers Exp $
+;;;;; $Id: startup.el,v 44.100 2003-12-10 22:26:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.99 2003-08-25 17:36:39 byers Exp $\n"))
+	      "$Id: startup.el,v 44.100 2003-12-10 22:26:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -649,7 +649,19 @@ shown to other users."
                 (setq-default lyskom-language lyskom-language)
                 (setq-default kom-default-language (list lyskom-language)))
               (lyskom-format-insert-before-prompt
-               'language-set-to (lyskom-language-name (lyskom-default-language))))
+               'language-set-to
+               (lyskom-language-name (lyskom-default-language))
+               "Help on changing languages" 
+                `(face underline
+                       mouse-face highlight
+                       lyskom-button t
+                       lyskom-button-text ""
+                       lyskom-button-type func
+                       lyskom-buffer ,(current-buffer)
+                       lyskom-button-arg 
+                       (kom-help ("Changing Languages" . language-help))))
+
+              )
             (setq lyskom-have-one-login t))
 
           (when ignored-user-area-vars

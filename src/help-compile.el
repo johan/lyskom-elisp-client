@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help-compile.el,v 44.4 2002-06-12 22:27:38 byers Exp $
+;;;;; $Id: help-compile.el,v 44.5 2003-12-10 22:26:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,6 +32,8 @@
 ;;;; compilation and is currently not linked into the runtime.
 ;;;;
 
+
+(defvar lyskom-help-parse-debugging (getenv "LYSKOM_HELP_DEBUG"))
 
 ;;; Note that these are duplicated in help.el. Change one and change both!
 
@@ -77,7 +79,7 @@ Value returned is always nil."
     (h1 nil nil (cref TEXT) nil)
     (h2 nil nil (cref TEXT) nil)
     (h3 nil nil (cref TEXT) nil)
-    (p nil nil (b i cref list TEXT) nil)
+    (p nil nil (b i cref list refer TEXT) nil)
     (b nil nil (cref TEXT) nil)
     (i nil nil (cref TEXT) nil)
     (list nil (header) (item) nil)
@@ -112,20 +114,24 @@ TAG ATTRS CONTENTS")
 (defvar lyskom-help-parse-command-ref-list nil)
 (defvar lyskom-help-parse-unresolved-section-references nil)
 
+
 (defun lyskom-help-parse-process-section (parse)
   (setq lyskom-help-parse-section-list
         (cons (intern (lyskom-help-data-get-attr 'id parse))
-              lyskom-help-parse-section-list)))
+              lyskom-help-parse-section-list))
+  )
 
 (defun lyskom-help-parse-process-section-ref (parse)
   (setq lyskom-help-parse-section-ref-list
         (cons (intern (lyskom-help-data-get-attr 'id parse))
-              lyskom-help-parse-section-ref-list)))
+              lyskom-help-parse-section-ref-list))
+  )
 
 (defun lyskom-help-parse-process-command-ref (parse)
   (setq lyskom-help-parse-command-ref-list
         (cons (intern (lyskom-help-data-get-attr 'id parse))
-              lyskom-help-parse-command-ref-list)))
+              lyskom-help-parse-command-ref-list))
+  )
 
 (defun lyskom-help-parse-process-finish (parse)
   (lyskom-help-traverse id lyskom-help-parse-section-list
@@ -135,7 +141,8 @@ TAG ATTRS CONTENTS")
     (setq lyskom-help-parse-unresolved-section-references
           lyskom-help-parse-section-ref-list)
     (error "Unresolved help section references: %s"
-           lyskom-help-parse-section-ref-list)))
+           lyskom-help-parse-section-ref-list))
+  )
 
 
 
@@ -168,6 +175,10 @@ TAG ATTRS CONTENTS")
               start (match-end 0)))
       (nreverse result))))
 
+(defun lyskom-help-debug (fmt &rest args)
+  (and lyskom-help-parse-debugging
+       (apply 'message fmt args)))
+
 (defun lyskom-help-parse-string (string &optional containing-syntax)
   "Convert a help string STRING to a tree, checking it as we go.
 CONTAINING-SYNTAX is the syntax specification for the containing tag."
@@ -189,6 +200,8 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
              (end (string= "/" (match-string 4 string)))
              (syntax (assq tag-symbol lyskom-help-syntax))
              (contents nil))
+
+        (lyskom-help-debug "%s %S" tag attrs)
 
         ;; Check that the tag is known
 
@@ -238,7 +251,7 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
               (if (string-match (concat "</" tag ">") string tag-end)
                   (setq end-tag-start (match-beginning 0)
                         end-tag-end (match-end 0))
-                (error "Unterminated tag: %s %s" tag string))))
+                (error "Unterminated tag: %s" tag tag-start))))
 
           ;; Have the position of the end tag
           ;; Put the element we found into result
@@ -257,7 +270,10 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
 
           ;; Postprocess the parsed element
           (when (lyskom-help-syntax-postprocess syntax)
-            (funcall (lyskom-help-syntax-postprocess syntax) (car result))))))
+            (lyskom-help-debug "  > postprocess")
+            (funcall (lyskom-help-syntax-postprocess syntax) (car result))
+            (lyskom-help-debug "  < postprocess")
+            ))))
 
     ;; No more tags
     ;; There's just text left. Record it.

@@ -1,5 +1,93 @@
 <!-- -*-mode: xml-*- -->
 <help language="en">
+  <section id="language-help" prompt="">
+    <h2>Language Settings</h2>
+
+    <p>
+      You can switch the language in this session by using the command
+      <cref id="kom-change-language" /> or the Emacs command <i>M-x
+      kom-change-language</i>. To also change the key bindings (this
+      will affect all sessions), type C-u before the command (e.g. C-u
+      x<cref id="kom-change-language" />).
+    </p>
+
+    <p>
+      For full information, including how to change the default
+      language, see <refer id="language" /> (this information will be
+      presented using the current language selection).
+    </p>
+  </section>
+
+  <section id="language" prompt="Language">
+    <h1>Multiple language support</h1>
+
+    <p>
+      The elisp client can be built to support multiple languages. The
+      default is to build with support for english and swedish, with
+      english as the default language selection.
+    </p>
+
+    <h2>Temporary Language Change</h2>
+
+    <p>
+      Use <cref id="kom-change-language" /> to temporarily switch
+      languages. Please note that you must give a prefix argument to
+      <cref id="kom-change-language" /> to change the key binding.
+      Key bindings are changed in <i>all</i> sessions, not just the
+      one where the command is given.
+    </p>
+
+    <h2>Permanent Language Change</h2>
+
+    <p>
+      Use <cref id="kom-customize" /> to change languages permanently.
+      By saving the language selection in .emacs, that language will
+      be the default the next time you start Emacs and load the elisp
+      client.
+    </p>
+
+    <h2>Changing the default language</h2>
+
+    <p>
+      There are a number of ways to change the default language in the
+      elisp client. The client looks at the following, in order, until
+      it finds a useful setting:
+    </p>
+
+    <list>
+      <item>The variable kom-default-language (change it with <cref
+      id="kom-customize" />)</item>
+
+      <item>The environment variable KOMLANGUAGE</item>
+
+      <item>The environment variable LC_ALL</item>
+
+      <item>The environment variable LC_MESSAGES</item>
+
+      <item>The environment variable LANG</item>
+    </list>
+
+    <p>
+      The variable kom-default-language can be set to a list of
+      symbols, where each symbol corresponds to a language. Se the
+      list below for available languages. The first language on the
+      list that is supported by the client will be used.
+    </p>
+
+    <p>
+      The environment variables should be set to a language code. For
+      example, the value "sv" will cause the client to use Swedish.
+    </p>
+
+    <h2>Known languages</h2>
+
+    <list>
+      <item>sv - Swedish</item>
+      <item>en - English</item>
+    </list>
+
+  </section>
+
   <section id="conferences" prompt="Conferences">
 
     <h1>Conferences</h1>
