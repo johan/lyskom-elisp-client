@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.7 2002-07-23 18:28:41 byers Exp $
+;;;;; $Id: mime.el,v 44.8 2002-09-10 22:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.7 2002-07-23 18:28:41 byers Exp $\n"))
+	      "$Id: mime.el,v 44.8 2002-09-10 22:04:53 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -79,9 +79,11 @@
      (lyskom-xemacs-or-gnu
       lyskom-server-coding-system
       (let ((coding (find-coding-systems-for-charsets cs)))
-        (while (null (coding-system-get (car coding) 'mime-charset))
+        (while (and (car coding)
+                    (null (coding-system-get (car coding) 'mime-charset)))
           (setq coding (cdr coding)))
-        (coding-system-get (car coding) 'mime-charset)))
+        (and (car coding)
+             (coding-system-get (car coding) 'mime-charset))))
     lyskom-server-coding-system)))
 
 (defun lyskom-mime-charset-coding-system (charset)
