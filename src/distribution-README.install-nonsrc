@@ -8,9 +8,9 @@
        give the path to the lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el contained
        in the archive in which you found this README file.
 
-       You may see some warnings when you compile. Most of these can
-       be ignored. When compilation is done you should have a new file
-       named lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc located in the same
+       You may see some warnings when you compile. These can usually be
+       ignored. When compilation is done you should have a new file named
+       lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc located in the same
        directory as lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el.
 
     2. Copy lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc to where you want to
@@ -20,10 +20,5 @@
        If possible, you should place it in your site-lisp directory.
        Check the value of load-path (C-h v l o a d - p a t h RET) to
        see possible locations.
-
-    More thorough instructions (written in Swedish) for installation
-    on Windows is available here:
-
-        http://www.lysator.liu.se/lyskom/klienter/emacslisp/win2k.html
 
 
