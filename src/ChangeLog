@@ -1,3 +1,13 @@
+Fri Aug  9 01:18:34 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-parse-command-and-execute): Bort med
+ 	swascii och lite kosmetiska fixar.
+	(kom-expand-slow-command): Ny funktion.
+	(kom-parse-command-and-execute): Bytte namn från
+ 	lyskom-parse-command-and-execute.
+	(lyskom-get-entered-slow-command): Ny funktion.
+	(kom-expand-slow-or-next-command): Ny funktion.
+
 Thu Aug  8 12:33:03 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
