@@ -27,8 +27,6 @@ Linus: Fixat p} ett litet annorlunda s{tt. Sojge-s{ttet.
 * Lappar p} d|rrar f|r m|ten.
 Linus: Hmm, hur skall de hanteras egentligen?
 
-* flags.el: string-to-int sm{ller.
-
 * Trunkera detta m|te ur kommentarskedjan. (Tommy)
 
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
@@ -107,16 +105,10 @@ Linus: R{cker inte ceders uppdelning av anropen?
   edit-bufferten. (save-excursion (set-buffer ) (save-excursion ...))
 Inge: Linus p}st}r att det h{r beror p} en emacsbug.
 
-* Om man i editbuffern trycker C-c a m (eller C-c a k), och sedan
-  trycker C-g f|r att avbryta adderandet av mottagare, skrivs en extra
-  prompt ut i LysKOM-buffern.
-
 * Byt ut alla ...session-info... mot ...connection-info...
 
 * N{r man g|r endast borde man inte f} Se tiden.
   Detta {r samma bugg som att man f}r Se tiden n{r man loggar in.
-
-* str{ngar f|r att tala om vilket tecken prompten slutar med.
 
 * n{r man inte f}r l{sa texter (kommentarer) till ett inl{gg borde
   de inte komma med n{r man g|r }terse alla kommentarer.
@@ -124,10 +116,6 @@ Inge: Linus p}st}r att det h{r beror p} en emacsbug.
 
 * m|jlighet att f} fram presentationen och g} med i m|ten fr}n
   prioritize-bufferten
-
-* addera mottagare, addera kopiemottagare skall kolla om vi har
-  lapp p} d|rren och i s} fall komma med en extra fr}ga.
-klart?
 
 * fixa s} att \file{} genererar citationstecken ist{llet f|r `'
 inge: nja, varf|r det? det {r v{l bra som det {r.
@@ -138,9 +126,6 @@ linus: snyggare, framf|r allt svenskare.
 
 * skriva om parsningen av header-rader. jag vill ha klarare kod och
   s{krare. 
-
-* se till att vi alltid stoppar in mottagare: och extra kopia: p}
-  r{tt st{lle s} att vi kan klara b{ttre typeahead.
 
 * lyskom-pending-calls borde bli en lyskom-queue i st. f en vanlig
   lista. detta skulle vara effektivare.
@@ -157,9 +142,6 @@ linus: snyggare, framf|r allt svenskare.
   p} div. f{lt. 
   detta {ven om den m}ste h{mta f{lten fr}n servern.
   de borde h{mta all info ny.
-
-* annan hantering av prioriterade texter och m|ten.
-linus: hur skall det fungera. jo enligt senaste m|tet (april?)
 
 
 ================================================================
@@ -192,18 +174,6 @@ linus: jo pga en restriktion i servern s} skickas alla inl{gg som en
        }terse till mig i den och dens brevl}da.
 ceder: restriktionen kommer att vara lyft i protokoll b.
 linus: jag tycker vi v{ntar tills dess.
-
-* Fixa unwind-protect runt alla inmatningar fr}n tangentbordet s} att
-  man kan trycka quit lite oftare och f} en ny prompt. Jag vill ha ett
-  macro: lyskom-protect-with som evaluerar ARG1 och evaluerar ARG2 om
-  det blev n}got error under det att ARG1 evaluerades. Typiskt:
-    (lyskom-protect-with
-      (setq inlegg (completing-read "]terse nummer: "
-				    lista
-				    nil
-				    t
-				    (car lista)))
-      (lyskom-end-of-command))	;Quit vi skall tillbaka
 
 * Hoppa borde fungera p} }terse-strukturer.
   ]terse senaste + hoppa borde g|ra att hoppa plocka bort alla
@@ -251,10 +221,3 @@ linus: jag tycker vi v{ntar tills dess.
   servern eller {r p} v{g till servern. Det borde vara samma
   representation. Dessutom borde man kunna editera misc-infona snyggt
   i -edit-bufferten.
-
-
-
-Local Variables:
-mode:indented-swedish
-eval:(auto-fill-mode 1)
-End:
