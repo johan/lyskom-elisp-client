@@ -1,3 +1,11 @@
+Fri Aug 30 05:52:09 1996  David Kågedal  <kg@infovav.se>
+
+	* slow.el: Ny fil.
+	(kom-expand-slow-command): Använd lyskom-strings.
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): La till
+ 	no-such-command och command-completions.
+
 Thu Aug 29 22:31:04 1996  David Kågedal  <kg@infovav.se>
 
 	* deferred-insert.el (lyskom-replace-deferred): Försök inte

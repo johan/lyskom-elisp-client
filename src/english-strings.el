@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.12 1996-08-27 15:15:26 byers Exp $
+;;;;; $Id: english-strings.el,v 43.13 1996-08-30 03:57:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.12 1996-08-27 15:15:26 byers Exp $"))
+              "$Id: english-strings.el,v 43.13 1996-08-30 03:57:01 davidk Exp $"))
 
 
 
@@ -963,6 +963,10 @@ On since %#8s%#9s")
     (unknown-doing-what . "Exists")
     (doing-where-conn . "in")
     (doing-nowhere-conn . "but is")
+
+    ;; From slow.el
+    (no-such-command . "There is no such command.\n")
+    (command-completions . "You may mean one of the following:\n %#1s\n")
     )
   "Assoc list containing pairs of atoms and strings")
 
