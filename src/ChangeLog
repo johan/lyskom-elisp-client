@@ -1,3 +1,11 @@
+2000-12-02  Per Cederqvist  <ceder@moria>
+
+	Enable colors on tty devices under Emacs 21.
+	* utilities.el (device-class): Provide a better version if 
+	display-color-p exists.
+
+	* compatibility.el (window-list): Removed. This was no longer used.
+
 2000-11-30  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (lyskom-make-re-case-insensitive): Eliminate use of
