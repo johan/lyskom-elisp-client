@@ -1,6 +1,6 @@
-;;;;; -*-coding: iso-8859-1;-*-
+;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.366 2004-02-22 16:31:02 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.367 2004-02-23 19:37:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.366 2004-02-22 16:31:02 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.367 2004-02-23 19:37:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -715,7 +715,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%#1s) ")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
     (his-total-unread . "\n%#1M har totalt %#2d olästa (plus %#3d i passiva medlemskap).\n")
-    (message-prompt . "Meddelande: ")
+    (message-prompt . "Meddelande%#1?z%[%]%[ (till alla inloggade)%]: ")
     (message-sent-to-user . "\
 %[%#3$\
 ================================================================
@@ -757,7 +757,12 @@ Ditt alarmmeddelande löd:
 -------------------------------------------------------------------------------
 %]")
     (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
-    (message-all-info . "Sänd alarmmeddelande\n")
+    (message-all-info . "\
+%#1@Sänd alarmmeddelande till alla inloggade.
+
+%[%#3FÖverväg att använda \"%#2C\" för att skicka meddelandet till ett
+specifikt möte eller en enskild användare.%]
+")
     (message-recipient-info . "Sänd meddelande till %#1M\n")
     (message-nope
      . "Det gick inte. %#3s\

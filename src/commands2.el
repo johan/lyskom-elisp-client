@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.202 2004-02-22 15:48:26 byers Exp $
+;;;;; $Id: commands2.el,v 44.203 2004-02-23 19:37:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.202 2004-02-22 15:48:26 byers Exp $\n"))
+              "$Id: commands2.el,v 44.203 2004-02-23 19:37:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -633,17 +633,7 @@ Runs `kom-send-message-setup-hook' when entering the minibuffer.
 
 See `kom-default-message-recipient'."
   (interactive)
-  (let* ((target (or who
-                     (lyskom-read-conf-no
-                      `(who-to-send-message-to ,(lyskom-get-string 'nobody))
-                      (if kom-permissive-completion '(all) '(login conf))
-                      t nil t))))
-    (if (zerop target)
-        (lyskom-format-insert 'message-use-alarm-instead
-                              (lyskom-command-name 'kom-send-alarm))
-      (setq lyskom-last-message-recipient target)
-      (lyskom-format-insert 'message-recipient-info target)
-      (lyskom-send-message target message))))
+  (lyskom-interactive-send-message who message nil))
 
 
 (def-kom-command kom-send-alarm (&optional message) 
@@ -653,8 +643,32 @@ everyone who is logged on.
 
 Runs `kom-send-message-setup-hook' when entering the minibuffer."
   (interactive)
-  (lyskom-insert (lyskom-get-string 'message-all-info))
-  (lyskom-send-message 0 message))
+  (lyskom-interactive-send-message nil message t))
+
+
+(defun lyskom-interactive-send-message (who message alarm-ok)
+  "Implementation of kom-send-message and kom-send-alarm."
+  (let* ((target (or who
+                     (lyskom-read-conf-no
+                      (list 'who-to-send-message-to
+                            (lyskom-get-string (if alarm-ok 'everybody 'nobody)))
+                      (if kom-permissive-completion '(all) '(login conf))
+                      t nil t))))
+    (cond ((and (zerop target)
+                (not alarm-ok))
+           (lyskom-format-insert 'message-use-alarm-instead
+                                 (lyskom-command-name 'kom-send-alarm)))
+          ((not (zerop target))
+           (setq lyskom-last-message-recipient target)
+           (lyskom-format-insert 'message-recipient-info target)
+           (lyskom-send-message target message))
+
+          (t (lyskom-format-insert 'message-all-info 
+                                   `(face ,kom-warning-face)
+                                   'kom-send-message
+                                   (max 20 (- (window-width) 8)))
+             (lyskom-beep t)
+             (lyskom-send-message target message)))))
 
 
 (defvar lyskom-message-recipient)
@@ -693,7 +707,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
               'lyskom-send-message-minibuffer-exit-hook)
     (setq lyskom-message-string 
           (or message
-              (lyskom-read-string (lyskom-get-string 'message-prompt)
+              (lyskom-read-string (lyskom-format 'message-prompt pers-no)
                                   nil
                                   'lyskom-message-history)))
     (setq lyskom-message-recipient (if (zerop pers-no)
