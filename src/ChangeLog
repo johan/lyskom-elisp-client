@@ -1,3 +1,16 @@
+Sat Aug  1 17:45:37 1992  Linus Tolke Y  (linus@robin)
+
+	* prefetch.el (lyskom-prefetch-membership-handler,
+	  lyskom-prefetch-one-item): lyskom-membership-is-read is set to
+	  t when all the membership is read.
+
+	* lyskom-rest.el (lyskom-end-of-command): 
+	  startup.el (lyskom-start-anew-login-2): prefetched started after
+	  first prompt is written.
+
+	* lyskom-rest.el (lyskom-what-to-do): The decision of when we are
+	  done now use an updated algoritm (lyskom-membership-is-read == t)
+
 Thu Jul 30 03:54:50 1992  Linus Tolke Y  (linus@lysator)
 
 	* prefetch.el (lyskom-prefetch-membership-handler): Wrong call to map.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.11 1992-07-30 19:49:28 linus Exp $
+;;;;; $Id: startup.el,v 35.12 1992-08-01 15:53:12 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.11 1992-07-30 19:49:28 linus Exp $\n"))
+	      "$Id: startup.el,v 35.12 1992-08-01 15:53:12 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -274,7 +274,8 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
     (lyskom-prefetch-marks)
     (lyskom-prefetch-who-is-on)
     (lyskom-prefetch-membership pers-no)
-    (lyskom-start-prefetch))))
+    ;; Don't start prefetching until we have the first prompt.
+    )))
 
 
 (defun lyskom-register-unread-confs (unread-confs)
