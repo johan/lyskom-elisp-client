@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.20 1992-07-05 03:28:37 linus Exp $
+;;;;; $Id: commands1.el,v 35.21 1992-07-05 03:38:32 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.20 1992-07-05 03:28:37 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.21 1992-07-05 03:38:32 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1655,14 +1655,16 @@ MY-SESSION-NO is the session number of the running session.
 
 (defun lyskom-return-who-info-line (prefix string1 string2)
   "Return a formatted line (with reference to the current window width."
-  (concat
-   prefix
-   (lyskom-fix-str (/ (* 37 (- (lyskom-window-width) 7)) 73)
-		   string1)
-   " "
-   (lyskom-fix-str (/ (* 36 (- (lyskom-window-width) 7)) 73)
-		   string2)
-   "\n"))
+  (let ((line (concat
+	       prefix
+	       (lyskom-fix-str (/ (* 37 (- (lyskom-window-width) 7)) 73)
+			       string1)
+	       " "
+	       (lyskom-fix-str (/ (* 36 (- (lyskom-window-width) 7)) 73)
+			       string2))))
+    (while (string= (substring line -1) " ")
+      (setq line (substring line 0 -2)))
+    (concat line "\n")))
 
     
 (defun lyskom-window-width ()
