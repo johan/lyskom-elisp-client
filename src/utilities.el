@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.107 2002-07-13 00:33:37 jhs Exp $
+;;;;; $Id: utilities.el,v 44.108 2002-07-13 14:30:38 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.107 2002-07-13 00:33:37 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.108 2002-07-13 14:30:38 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -673,8 +673,8 @@ non-negative integer and 0 means the given text-no."
 	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix) arg)))))))
 
 (defconst lyskom-old-farts-text-prompt-strategy
-  '((t . ((nil . lyskom-get-last-read-text)
-	  (t   . lyskom-get-last-read-text)
+  '((t . ((t   . lyskom-get-last-read-text)
+	  (nil . lyskom-get-last-read-text)
 	  (0   . lyskom-get-text-at-point)
 	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
 	  (listp . lyskom-prompt-for-text-no)
@@ -811,7 +811,8 @@ its first argument and remaining list items appended to the argument list."
 		  (setq default (or default new-default)))))
 
 	     ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
-		  (funcall strategy-pred current-prefix-arg))
+		  (and (functionp strategy-pred)
+		       (funcall strategy-pred current-prefix-arg)))
 	      (setq text-no (lyskom-evaluate-text-no-strategy
 			     what-text prompt default constraint))
 ;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
