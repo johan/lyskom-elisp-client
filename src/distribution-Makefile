@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.4 1997-09-16 10:19:18 byers Exp $
+# $Id: distribution-Makefile,v 44.5 1999-06-20 12:48:02 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -52,13 +52,14 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		clienttypes.el \
 		deferred-insert.el \
 		utilities.el \
+		command.el \
 		buffers.el \
+		aux-items.el \
 		prefetch.el \
 		startup.el \
 		reading.el \
 		internal.el \
 		services.el \
-		command.el \
 		parse.el \
 		cache.el \
 		view-mode.el \
