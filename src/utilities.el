@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.109 2002-07-13 14:43:31 jhs Exp $
+;;;;; $Id: utilities.el,v 44.110 2002-07-15 08:14:46 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.109 2002-07-13 14:43:31 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.110 2002-07-15 08:14:46 ceder Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -850,9 +850,9 @@ its first argument and remaining list items appended to the argument list."
 	(strategy-args '()))
     (cond
      ((listp strategy)
-      (setq strategy-func (first strategy))
-      (setq prefix (funcall (second strategy) prefix))
-      (setq strategy-args (cddr strategy))
+      (setq strategy-func (car strategy))
+      (setq prefix (funcall (car (cdr strategy)) prefix))
+      (setq strategy-args (cdr (cdr strategy)))
       (apply strategy-func prefix prompt default constraint
 	     strategy-args))
      ((functionp strategy)
