@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.23 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: buffers.el,v 44.24 2003-04-05 20:41:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.23 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: buffers.el,v 44.24 2003-04-05 20:41:24 byers Exp $\n"))
 
 
 ;;;;
@@ -426,12 +426,15 @@ to all children"
 
 
 
-(defun lyskom-display-buffer (buffer)
+(defun lyskom-display-buffer (buffer &optional keep-frame-iconified)
   "Display the buffer BUFFER and select the window displaying it.
 
 If BUFFER is already visible in some window in any frame, iconified or
 otherwise, make that window visible. Otherwise display buffer as per 
 which category it is in. Selects the window.
+
+If optional argument KEEP-FRAME-ICONIFIED is non-nil, then don't
+deiconify any frames.
 
 Returns the window displaying BUFFER."
 
@@ -461,7 +464,8 @@ Returns the window displaying BUFFER."
     (cond
      (visible-frame (select-window visible-frame)
                     visible-frame)
-     (iconified-frame (make-frame-visible (window-frame iconified-frame))
+     (iconified-frame (unless keep-frame-iconified 
+                        (make-frame-visible (window-frame iconified-frame)))
                       (select-window iconified-frame)
                       iconified-frame)
 
