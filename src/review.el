@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.5 1995-10-30 15:42:10 davidk Exp $
+;;;;; $Id: review.el,v 38.6 1996-01-17 11:51:11 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.5 1995-10-30 15:42:10 davidk Exp $\n"))
+	      "$Id: review.el,v 38.6 1996-01-17 11:51:11 davidk Exp $\n"))
 
 
 
@@ -214,7 +214,7 @@ Descends recursively in the comment-tree without marking the texts as read.
 The tree is forgotten when a kom-go-to-next-conf command is issued.
 If optional prefix argument TEXT-NO is present view tree from that text 
 instead. In this case the text TEXT-NO is first shown." 
-   (interactive (list
+  (interactive (list
 		(cond
 		 ((null current-prefix-arg)
 		  lyskom-current-text)
@@ -223,15 +223,16 @@ instead. In this case the text TEXT-NO is first shown."
 		 (t
 		  (signal 'lyskom-internat-error '(kom-review-tree))))))
   (lyskom-start-of-command 'kom-review-tree)
-  (lyskom-tell-internat 'kom-tell-review)
-  (if text-no
+  (unwind-protect
       (progn
-	(initiate-get-text-stat 'main 'lyskom-follow-comments text-no
-				nil 'review
-				(lyskom-get-current-priority)
-				t)
-	(lyskom-run 'mail 'lyskom-end-of-command))
-    (lyskom-insert-string 'read-text-first)
+	(lyskom-tell-internat 'kom-tell-review)
+	(if text-no
+	    (let ((ts (blocking-do 'get-text-stat text-no)))
+	      (lyskom-follow-comments ts
+				      nil 'review
+				      (lyskom-get-current-priority)
+				      t))
+	  (lyskom-insert-string 'read-text-first)))
     (lyskom-end-of-command)))
 
 
@@ -239,23 +240,21 @@ instead. In this case the text TEXT-NO is first shown."
   "Finds the root text of the tree containing the text in lyskom-current-text."
   (interactive)
   (lyskom-start-of-command 'kom-find-root)
-  (lyskom-tell-internat 'kom-tell-review)
-  (cond
-   (lyskom-current-text 
-    (lyskom-collect 'review)
-    (initiate-get-text-stat 'review nil lyskom-current-text)
-    (initiate-get-text-stat 'review nil lyskom-current-text)
-    (lyskom-use 'review 'lyskom-find-root 'kom-find-root-2))
-   (t
-    (lyskom-insert-string 'read-text-first)
-    (lyskom-end-of-command))))
-
-
-(defun kom-find-root-2 (text-no)
-  "Runs lyskom-view-text with the text-no that lyskom-find-root produced
-and then runs lyskom-end-of-command."
-  (lyskom-view-text text-no)
-  (lyskom-end-of-command))
+  (unwind-protect
+      (progn
+	(lyskom-tell-internat 'kom-tell-review)
+	(cond
+	 (lyskom-current-text 
+	  (let* ((ts (blocking-do 'get-text-stat lyskom-current-text))
+		 (r (lyskom-find-root ts ts)))
+	    (if r
+		(lyskom-view-text r)
+	      (signal 'lyskom-internal-error "Could not find root"))
+	    )
+	  )
+	 (t
+	  (lyskom-insert-string 'read-text-first))))
+    (lyskom-end-of-command)))
 
 
 (defun kom-find-root-review ()
@@ -275,7 +274,7 @@ reviews the whole tree in deep-first order."
     (lyskom-end-of-command))))
 
 
-(defun lyskom-find-root (text-stat old-text-stat thendo)
+(defun lyskom-find-root (text-stat old-text-stat)
   "Finds the root text of the tree containing the text TEXT-STAT.
 Args: TEXT-STAT OLD-TEXT-STAT THENDO
 If TEXT-STAT is nil and OLD-TEXT-STAT contains a text-stat
@@ -283,14 +282,13 @@ then this means that the parent of the text in OLD-TEXT-STAT is not readable
 and the text in OLD-TEXT-STAT is to be used instead.
 If both TEXT-STAT and OLD-TEXT-STAT is nil then this means we are not allowed
 to read the text we are trying to find the root of. This just returns with a
-message.
-If the third argument THENDO is non-nil then call the function with the text-no
-of the root text as argument."
+message."
   (let* ((ts text-stat)
 	 (misclist (and ts (text-stat->misc-info-list ts)))
-	 (todo t))
+	 (res nil))
     (cond
      (ts				;+++ Smartare errorhantering hit.
+      (setq res 'noparents)
       (while misclist
 	(let* ((type (misc-info->type (car misclist)))
 	       (comm (eq type 'COMM-TO))
@@ -301,17 +299,16 @@ of the root text as argument."
 			    (misc-info->footn-to (car misclist)))))
 	  (cond
 	   (yes
-	    (initiate-get-text-stat 'main 'lyskom-find-root
-				    parent-no ts thendo)
-	    (setq todo nil)
-	    (setq misclist nil))))
-	(setq misclist (cdr misclist)))
-      (if todo (apply thendo (list (text-stat->text-no ts)))))
+	    (let* ((pts (blocking-do 'get-text-stat parent-no)))
+	      (if (setq res (lyskom-find-root pts ts))
+		  (setq misclist nil))))
+	   (t
+	    (setq misclist (cdr misclist))))))
+      (if (eq res 'noparents) (text-stat->text-no ts) res))
      (old-text-stat
-      (apply thendo (list (text-stat->text-no old-text-stat))))
+      (text-stat->text-no old-text-stat))
      (t
-      (lyskom-insert-string 'cannot-get-last-text)
-      (lyskom-end-of-command)))))
+      nil))))
 
 
 (defun lyskom-review-tree (text)

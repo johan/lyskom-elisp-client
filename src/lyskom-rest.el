@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.16 1996-01-13 06:50:44 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.17 1996-01-17 11:51:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.16 1996-01-13 06:50:44 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.17 1996-01-17 11:51:00 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1979,7 +1979,7 @@ then a newline is printed after the name instead."
 
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
-  (sit-for 0)
+  (sit-for 0)				; Why?
   (let (; (inhibit-quit t)		;inhibit-quit is automatically set
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
@@ -1988,39 +1988,41 @@ then a newline is printed after the name instead."
 	;; in function lyskom-edit-text.
 	(lyskom-filter-old-buffer (current-buffer)))
     (unwind-protect
-	(progn
+	(condition-case error
+	    (progn
+	      (setq lyskom-quit-flag nil)
 
-	  (cond
-	   (lyskom-debug-communications-to-buffer
-	    (set-buffer (get-buffer-create
-			 lyskom-debug-communications-to-buffer-buffer))
-	    (save-excursion
-	      (goto-char (point-max))
-	      (insert "\n"
-		      (format "%s" proc)
-		      "-----> "  output))))
+	      (cond
+	       (lyskom-debug-communications-to-buffer
+		(set-buffer (get-buffer-create
+			     lyskom-debug-communications-to-buffer-buffer))
+		(save-excursion
+		  (goto-char (point-max))
+		  (insert "\n"
+			  (format "%s" proc)
+			  "-----> "  output))))
 
-	  (set-buffer (process-buffer proc))
-	  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
-	  (setq inhibit-quit nil)	;We are allowed to break here.
-	  (cond
-	   ((not (string-match "\n" output)))
-	   ((null lyskom-is-parsing)	;Parse one reply at a time.
-	    (setq lyskom-is-parsing t)
-	    (unwind-protect
-		(condition-case
-		    error-type
-		    (lyskom-parse-unparsed)
-		  (lyskom-parse-incomplete)) ;Incomplete answers are normal.
-	      (set-buffer (process-buffer proc)) ;In case it was changed by
+	      (set-buffer (process-buffer proc))
+	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
+	      (if quit-flag		; We are allowed to break here.
+		  (setq inhibit-quit nil)) ; This will break instantly.
+	      ;; Keep inhibit-quit set to t
+	      (cond
+	       ((not (string-match "\n" output)))
+	       ((null lyskom-is-parsing) ;Parse one reply at a time.
+		(setq lyskom-is-parsing t)
+		(unwind-protect
+		    (condition-case error-type
+			(lyskom-parse-unparsed)
+		      (lyskom-parse-incomplete)) ;Incomplete answers are normal.
+		  (set-buffer (process-buffer proc)) ;In case it was changed by
 					;        ;the handler.
-	      (setq lyskom-is-parsing nil))))
-	  )
+		  (setq lyskom-is-parsing nil)))))
+	  ;; condition-case handler
+	  (quit (setq lyskom-quit-flag t)))
 
       ; Restore selected buffer and match data.
-
       (store-match-data old-match-data)
-      (setq inhibit-quit nil)	;We are allowed to break here.
       (set-buffer lyskom-filter-old-buffer))))
       
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.4 1996-01-13 06:50:25 davidk Exp $
+;;;;; $Id: completing-read.el,v 38.5 1996-01-17 11:50:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.4 1996-01-13 06:50:25 davidk Exp $\n"))
+	      "$Id: completing-read.el,v 38.5 1996-01-17 11:50:51 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -298,9 +298,10 @@ to conf-no translator."
 				(list (conf-stat->name 
 				       (blocking-do 'get-conf-stat no)))))
 			     mappedlist)))
-	(if (and (= (length strings) 1)
-		 (string= string (car (car strings))))
-	    t				; Exact
+	(if (= (length strings) 1)
+	    (if (string= string (car (car strings)))
+		t				; Exact
+	      (car (car strings)))
 	(lyskom-try-complete-partials string strings)))))))
 
 
