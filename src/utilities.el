@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.22 1997-11-30 17:19:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.23 1998-01-04 03:13:12 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.22 1997-11-30 17:19:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.23 1998-01-04 03:13:12 davidk Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -181,18 +181,18 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
 (defconst lyskom-apo-timeout-vector-max (1- (length lyskom-apo-timeout-vector))
   "Maximum index in lyskom-apo-timeout-vector")
 
-(defsubst lyskom-next-apo-timeout ()
+(defun lyskom-next-apo-timeout ()
   (if (< lyskom-apo-timeout-index lyskom-apo-timeout-vector-max)
       (setq lyskom-apo-timeout
             (aref lyskom-apo-timeout-vector
                   (setq lyskom-apo-timeout-index
                         (1+ lyskom-apo-timeout-index))))))
 
-(defsubst lyskom-reset-apo-timeout ()
+(defun lyskom-reset-apo-timeout ()
   (setq lyskom-apo-timeout-index -1)
   (setq lyskom-apo-timeout 0))
 
-(defsubst lyskom-accept-process-output ()
+(defun lyskom-accept-process-output ()
   "Call accept-process-output with the correct timeout values."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
