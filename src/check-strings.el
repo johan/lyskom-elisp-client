@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.11 2000-08-29 16:15:02 byers Exp $
+;;;;; $Id: check-strings.el,v 44.12 2001-05-07 15:20:30 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -48,6 +48,9 @@
 
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
+  
+  (lcs-message t "Checking help strings")
+  (lcs-check-help-strings)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
@@ -227,7 +230,7 @@ Check that all server-stored variables are customizeable."
                   (lcs-message nil "(%s:%s) Variable declared as missing in custom buffer."
                                'lyskom-custom-variables var))
               (if (lyskom-get-string-internal (intern (format "%s-tag" var))
-                                              'lyskom-custom-strings)
+                                              'Lyskom-custom-strings)
                   (lcs-message nil "(%s:%s) Tag string for variable declared as missing."
                                'lyskom-custom-strings var))
               (if (lyskom-get-string-internal (intern (format "%s-doc" var))
@@ -263,6 +266,60 @@ Check that all server-stored variables are customizeable."
               (lcs-message nil "(%s:%s) Not a server-stored variable."
                            'lyskom-custom-variables var))
             cust-vars-in-buffer)))
+
+(defun lcs-check-help-strings ()
+  "Check help strings"
+  (let ((commands (mapcar 'car
+                          (lcs-all-category-string
+                           'lyskom-command)))
+        (help-strings (mapcar 'car
+                              (lcs-all-category-string 'lyskom-help-strings)))
+        (help-symbols nil)
+        (tmp (apply 'append (mapcar 'cdr lyskom-help-categories))))
+
+    ;; Extract information from the help categories into a plist
+    ;; where keys are item types and values are list of symbols
+    ;; that appear in the items.
+
+    (while tmp
+      (setq help-symbols
+            (plist-put help-symbols
+                       (elt (car tmp) 0)
+                       (cons (elt (car tmp) 1)
+                             (plist-get help-symbols (elt (car tmp) 0)))))
+      (setq tmp (cdr tmp)))
+
+   ;; Ensure that all commands are listed in the help strings variable
+    (lcs-check-help-strings-2 "command" commands)
+    (lcs-check-help-strings-2 "help category" 
+                              (mapcar 'car lyskom-help-categories))
+
+    ;; Ensure that all commands are in some command category
+    (setq tmp commands)
+    (while tmp
+      (unless (memq (car tmp) (plist-get help-symbols 'command))
+        (lcs-message nil "(%s:%s) Command not categorized."
+                     'lyskom-help-categories (car tmp)))
+      (setq tmp (cdr tmp)))
+
+    ;; Ensure that all referenced categories exist 
+    (setq tmp (plist-get help-symbols 'category))
+    (while tmp
+      (unless (assq (car tmp) lyskom-help-categories)
+        (lcs-message nil "(%s:%s) Reference to help missing category."
+                     'lyskom-help-categories (car tmp)))
+      (setq tmp (cdr tmp)))
+    )) 
+
+(defun lcs-check-help-strings-2 (wot syms)
+  (while syms
+    (unless (memq (car syms) help-strings)
+      (lcs-message nil "(%s:%s) Help string missing for %s."
+                   'lyskom-help-strings
+                   (car syms)
+                   wot))
+      (setq syms (cdr syms))))
+                   
              
              
 (defun lcs-setup-message-buffer ()

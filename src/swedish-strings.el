@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.165 2001-04-25 19:54:02 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.166 2001-05-07 15:20:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.165 2001-04-25 19:54:02 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.166 2001-05-07 15:20:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1505,6 +1505,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-find-root-review . "Jag förstår inte vilket inläggsträd du vill återse.\n")
 
 
+    ;; Help
+
+    (help-with-what . "Vad vill du ha hjälp med? ")
+
     ;; Button actions
 
     (lyskom-button-view-text-action . "Återse texten")
@@ -1552,7 +1556,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 ;;; The Alist formerly known as lyskom-commands
 (lyskom-language-strings lyskom-command sv
   '(
-    (describe-mode            . "Hjälp")
+    (kom-help                 . "Hjälp")
     (kom-slow-mode            . "Långsamma kommandon")
     (kom-quick-mode           . "Snabba kommandon")
     (kom-send-message         . "Sända meddelande")
@@ -1706,6 +1710,401 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (kom-is-person-member-of-conference . "Kontrollera (om person är) medlem (i möte)")
     (kom-change-conf-faq      . "Ändra FAQ")
+    ))
+
+(lyskom-language-strings lyskom-help-strings sv
+  '(
+    (reading-commands         . "Kommandon för läsning")
+    (marking-commands         . "Kommandon för markering av inlägg")
+    (writing-commands         . "Kommandon för att skriva inlägg")
+    (review-commands          . "Kommandon för att hitta gamla inlägg")
+    (filter-commands          . "Kommandon för filtrering av inlägg")
+    (conf-admin-commands      . "Kommandon för mötesadministratörer")
+    (pers-admin-commands      . "Kommandon för administration av personer")
+    (admin-commands           . "Administrativa kommandon")
+    (conf-commands            . "Kommandon för möten")
+    (pers-commands            . "Kommandon för personer")
+    (text-commands            . "Kommandon för hantering av inlägg")
+    (other-commands           . "Övriga kommandon")
+    (auto-reply-commands      . "Kommandon för automatiska svar")
+    (remote-control-commands  . "Kommandon för fjärrstyrning")
+
+    (kom-help                 . "Visa hjälp")
+    (kom-slow-mode            . "\
+Stäng av snabbkommandon och mata in kommandon direkt vid prompten.")
+    (kom-quick-mode           . "\
+Slå på snabbkommandon.")
+    (kom-send-message         . "\
+Skicka ett meddelande till en användare eller ett möte. Meddelandet
+visas omedelbart och sparas inte i systemet. Det går inte att
+kommentera meddelandet. Skriv inlägg om du är osäker.")
+    (kom-send-alarm           . "\
+Skicka ett meddelande till alla användare i LysKOM. Meddelandet visas
+omedelbart och sparas inte i systemet. Det går inte att kommentera
+meddelandet. Använd inte det här kommandot om det du vill säga inte är
+jätteviktigt (för mottagarna, inte för dig) och jättebråttom.")
+    (kom-create-conf	      . "\
+Skapa ett nytt möte. Kontrollera först att det inte finns ett möte som
+handlar om samma sak och att det finns intresse av ett nytt möte. I
+lite större KOM-system så finns det ofta ett möte med diskussioner om
+skapandet av nya möten. Använd Lista möten eller Lista (med) regexpar
+för att hitta möten som handlar om möten.")
+    (kom-delete-conf          . "\
+Radera en person eller ett möte. Du måste vara organisatör för
+personen eller mötet för att utföra detta.")
+    (kom-delete-text          . "\
+Radera ett inlägg. Du måste vara författare (eller organisatör för
+författaren) för att få göra detta.")
+    (kom-display-time	      . "\
+Visar vad servern tycker att klockan är.")
+    (kom-go-to-conf	      . "\
+Gå till ett annat möte än det du är i. Se även Uppskjuta läsning om du
+vill läsa vidare vid ett annat tillfälle.")
+    (kom-go-to-next-conf      . "\
+Gå till nästa möte i läsordningen. Om du har olästa inlägg kvar så
+kommer du att få läsa dem senare.")
+    (kom-jump		      . "\
+Låtsas som om du har läst alla kommentarerna till det senaste
+inlägget. Användbart om man inte är intresserad av en viss diskussion.")
+    (kom-list-created-conferences . "\
+Lista de möten som en viss person organisatör för.")
+    (kom-list-conferences     . "\
+Lista alla möten vars namn börjar med en viss text.") 
+    (kom-list-persons	      . "\
+Lista alla personer vars användarnamn börjar med en viss text.")
+    (kom-list-news            . "\
+Visa alla möten som du har olästa inlägg i, och hur många inlägg som
+du inte har läst.")
+    (kom-list-re              . "\
+Lista alla namn (möten och personer) som matchar ett reguljärt uttryck.")
+    (kom-membership	      . "\
+Visa alla möten som du är medlem i. Detta kommando kommer att
+försvinna i en senare version av LysKOM.")
+    (kom-postpone	      . "\
+Läs ett visst antal inlägg i det aktuella mötet senare. Användbart om
+du har många olästa inlägg men bara har tid med några få nu.")
+    (kom-set-session-priority . "\
+Ändra läsnivå. Du kommer enbart att läsa inlägg möten vars prioritet
+är minst lika hög som aktuell läsnivå.")
+    (kom-prioritize	      . "\
+Ändra prioritet och ordning på dina medlemskap. Detta kommando kommer
+att försvinna i en senare version av LysKOM.")
+    (kom-status-person	      . "\
+Visa information om en viss person.")
+    (kom-status-conf	      . "\
+Visa information om ett visst möte.")
+    (kom-add-self	      . "\
+Gör dig själv till medlem i ett nytt möte.")
+    (kom-change-priority      . "\
+Ändra prioritet på ett extsterande medlemskap.")
+    (kom-list-summary	      . "\
+Visa ärenderaden för olästa inlägg i det möte du är i.")
+    (kom-sub-self             . "\
+Sluta vara medlem i ett möte. Första gången du utträder blir du passiv
+medlem. För att utträda helt ger du detta kommando ytterligare en
+gång.")
+    (kom-quit		      . "\
+Avsluta LysKOM-sessionen.")
+    (kom-recover	      . "\
+Läs om information om olästa och kasta bort viss intern information.
+Praktiskt om man har läst inlägg i en annan klient eller från en annan
+dator och vill att ens klient skall upptäcka detta.") 
+    (kom-start-anew	      . "\
+Logga in igen, eventuellt under ett annat namn. Använd detta om du
+vill skapa en ny person.")
+    (kom-view		      . "\
+Återse ett visst inlägg.")
+    (kom-find-root-review     . "\
+Återse hela det diskussionsträd som ett visst inlägg är del av.")
+    (kom-review-comments      . "\
+Återse alla kommentarer till ett visst inlägg (men inte kommentarer
+till kommentarerna).")
+    (kom-review-tree	      . "\
+Återse alla kommentarer till ett visst inlägg, inklusive kommentarer
+till kommentarerna.")
+    (kom-review-clear         . "\
+Sluta återse inlägg. Använd detta om klienten vill att du skall återse
+fler inlägg, men du inte håller med.")
+    (kom-review-last-normally-read . "\
+Återse det senaste inlägg du läste på normalt vis. Kan vara bra om du
+har återsett ett antal inlägg och vill se vad det var du höll på med
+innan.")
+    (kom-review-noconversion  . "\
+Återse ett inlägg utan radbrytning och andra finesser.")
+    (kom-review-next          . "\
+Återse nästa inlägg när du håller på att återse en massa inlägg.")
+    (kom-find-root	      . "\
+Visa de inlägg som startade kommentarskedjan det senast lästa inlägget
+är en del av.")
+    (kom-review-by-to         . "\
+Visa de senaste N inläggen av en viss författare till ett visst möte
+\(eller senaste N till ett visst möte, eller senaste N av en viss
+författare).")
+    (kom-review-more          . "\
+Efter återse senaste, återse fler inlägg enligt samma kriterier. Bra
+om första kommandot inte hittade det du var intresserad av.")
+    (kom-review-first         . "\
+Visa de första N inläggen av en viss författare till ett visst möte
+\(eller första N till ett visst möte, eller första N av en viss 
+författare).")
+    (kom-review-all           . "\
+Visa alla inlägg som en viss författare har skrivit i ett visst möte
+\(eller alla av en viss författare, eller alla till ett visst möte).")
+    (kom-view-commented-text  . "\
+Återse det inlägg som det senaste inlägget är en kommentar till.")
+    (kom-view-previous-commented-text . "\
+Återse det inlägg som det näst senast lästa inlägget är en kommentar
+till.")
+    (kom-review-stack         . "\
+Visa en lista över vad som håller på att återses.")
+    (kom-review-presentation  . "\
+Visa presentationen för en viss person eller ett visst möte.")
+    (kom-review-backward      . "\
+Vänd på ordningen i vilken inlägg du återser visas.")
+    (kom-view-next-text	      . "\
+Läs nästa inlägg i den normala läsordningen.")
+    (kom-who-is-on	      . "\
+Visa vilka personer som är inloggade i LysKOM-systemet.") 
+    (kom-who-is-on-in-conference . "\
+Visa vilka personer som är inloggade i LysKOM-systemet och som är
+medlemmar i ett visst möte.") 
+    (kom-who-am-i             . "\
+Visa information om din egen session.")
+    (kom-list-clients	      . "\
+Visa en lista över alla klienter som är anslutna till LysKOM-systemet.")
+    (kom-busy-wait	      . "\
+Lås LysKOM-klienten tills det kommet ett nytt inlägg.")
+    (kom-write-comment	      . "\
+Skriv en kommentar till det senast lästa inlägget.")
+    (kom-comment-previous     . "\
+Skriv en kommentar till det näst senast lästa inlägget.")
+    (kom-write-footnote       . "\
+Skriv en fotnot till det senast lästa inlägget. Enbart författaren
+till ett inlägg kan skriva fotnoter till inlägget.")
+    (kom-private-answer       . "\
+Skriv ett personligt svar till det senast lästa inlägget. Svaret går
+till författarens brevlåda, inte till mötet.")
+    (kom-private-answer-previous . "\
+Skriv ett personligt svar till det näst senast lästa inlägget. Svaret
+går till författarens brevlåda, inte till mötet.")
+    (kom-set-unread	      . "\
+Sätt antal olästa i aktuellt möte.")
+    (kom-write-text	      . "\
+Skriv ett nytt inlägg som inte är kommentar till ett existerande
+inlägg.")
+    (kom-send-letter	      . "\
+Skriv ett personligt brev till en viss person i LysKOM.")
+    (kom-change-name	      . "\
+Ändra namn på din användare.")
+    (kom-change-parenthesis   . "\
+Om du har en parentes i slutet av ditt användanamn så kan du använda
+detta kommando för att ändra parentesen.")
+    (kom-change-password      . "\
+Ändra ditt lösenord. Glöm inte bort vad du ändrade till!")
+    (kom-change-supervisor    . "\
+Sätt organisatör för ett visst möte. Organisatören ansvarar för att
+diskussioner håller sig till ämnet.")
+    (kom-change-presentation  . "\
+Ändra presentation för ett möte eller person. Använd detta kommando
+istället för att skriva presentationerna direkt i
+presentationsmötet.")
+    (kom-get-appreciation     . "\
+Visa en uppmundrande text.")
+    (kom-get-abuse            . "\
+Visa en spydig text.")
+    (kom-mark-text            . "\
+Markera ett inlägg så att du kan hitta det igen, och så att det inte
+raderas automatiskt efter ett antal dagar. Glöm inte att ta bort
+markeringar du inte använder längre.")
+    (kom-unmark-text          . "\
+Ta bort markering från ett inlägg. Inlägget kan då raderas
+automatiskt, och det blir svårare att hitta igen.")
+    (kom-review-marked-texts  . "\
+Visa alla inlägg som du har markerat med en viss markering.")
+    (kom-review-all-marked-texts . "\
+Visa alla inlägg som du har markerat.")
+    (kom-add-recipient        . "\
+Lägg till en mottagare till ett inlägg i efterhand.  Används även för
+att ändra typ på en existerande mottagare.")
+    (kom-add-copy	      . "\
+Lägg till en kopiemottagare till ett inlägg i efterhand.  Används även för
+att ändra typ på en existerande mottagare.")
+    (kom-add-bcc	      . "\
+Lägg till en för-kännedom-mottagare till ett inlägg. Används även för
+att ändra typ på en existerande mottagare.")
+    (kom-sub-recipient        . "\
+Ta bort en existerande mottagare. Enbart organisatören för mottagaren
+och författaren till inlägget kan göra detta.")
+    (kom-move-text            . "\
+Flytta ett inlägg från ett möte till ett annat. Det gamla mötet
+förblir en kopiemottagare.")
+    (kom-add-comment	      . "\
+Gör en existerande text till kommentar för ett inlägg.")
+    (kom-sub-comment	      . "\
+Ta bort en kommentar från ett visst inlägg. Enbart inläggets och
+kommentarens författare kan göra detta.")
+    (kom-add-cross-reference  . "\
+Lägg till en korsreferens från aktuellt inlägg.")
+    (kom-add-member	      . "\
+Addera en medlem till ett möte. Ungefär som att gå med i möte, men
+detta kommando lägger till andra i mötet.")
+    (kom-sub-member           . "\
+Ta bort en medlem från ett möte. Ungefär som att utträda, men detta
+kommando tar bort andra ur mötet.")
+    (kom-change-conf-motd     . "\
+Sätt en lapp på dörren till din brevlåda. Meddelandet kommer att visas
+då någon försöker skriva inlägg till dig.")
+    (kom-set-garb-nice        . "\
+Ställ in antal dagar ett inlägg ligger kvar i ett möte innan inlägget
+tas bort.")
+    (kom-set-super-conf       . "\
+Ändra det möte som tar emot kommentarer för ett möte där kommentarer
+inte är tillåtna.")
+    (kom-set-permitted-submitters . "\
+Ställ in vilka som får skriva inlägg i ett möte.")
+    (kom-unset-conf-motd      . "\
+Visa inte lapp på dörren för ett visst möte eller person.")
+    (kom-save-text	      . "\
+Spara ett inlägg, inklusive information om författare och så vidare på
+slutet av en fil.")
+    (kom-save-text-body	      . "\
+Spara innehållet av ett inlägg i en fil. Det gamla innehållet i filen
+raderas.")
+    (kom-save-options         . "\
+Spara dina inställningar i servern. Det görs automatiskt när du gör
+Inställningar (för) LysKOM, men inte när du ändrar en variabel
+manuellt.")
+    (kom-shutdown-server      . "\
+Om du inte vet vad det här gör så ska du inte använda det.")
+    (kom-sync-database        . "\
+Om du inte vet vad det här gör så ska du inte använda det.")
+    (kom-enable-adm-caps      . "\
+Slå på administratörskommandon i klienten och slå på alla dina
+privilegier i servern.")
+    (kom-disable-adm-caps     . "\
+Stäng av administratörskommandon i klienten och stäng av alla dina
+privilegier i servern.")
+    (kom-set-motd             . "\
+Ändra det meddelande som visas när man loggar in i LysKOM. Kräver
+administratörsrättigheter.")
+    (kom-remove-motd          . "\
+Ta bort inloggningsmeddelanded från LysKOM. Kräver
+administratörsrättigheter.")
+    (kom-force-logout         . "\
+Tvinga en annan session att logga ut och koppla ned förbindelsen med
+LysKOM-servern. Du måste vara organisatör för den användare som är
+inloggad i sessionen för att kunna göra detta.") 
+    (kom-filter-author        . "\
+Skapa ett filter som eliminerar inlägg skrivna av en viss person.")
+    (kom-filter-subject       . "\
+Skapa ett filter som eliminerar inlägg med ett visst ärende.")
+    (kom-filter-text          . "\
+Skapa ett filter som eliminerar inlägg med ett visst innehåll.")
+    (kom-super-jump           . "\
+Skapa ett tillfälligt filter som hoppar över alla inlägg med samma
+ärende och mottagare som det senast lästa inlägget.")
+    (kom-filter-edit          . "\
+Redigera dina filter.")
+    (kom-list-filters         . "\
+Visa vilka filter som är aktiva för tillfället.")
+    (kom-show-user-area       . "\
+Visa inlägget som innehåller alla dina inställningar.")
+    (kom-change-conf-type     . "\
+Ändra parametrar, som slutet, hemligt och tillåter anonyma inlägg för
+ett möte du är organisatör för.")
+
+    (kom-change-auto-reply    . "\
+Ändra det svarsmeddelande som sänds när automatsvar är påslaget. ")
+    (kom-toggle-auto-reply    . "\
+Slå på eller stäng av automatiska svar på meddelanden som skickas till
+dig. Automatiska svar sänds enbart för personliga meddelanden.
+Dessutom spelas alla meddelanden in.")
+    (kom-list-messages        . "\
+Visa alla meddelanden som har spelats in medan automatsvar var
+påslaget.")
+    (kom-erase-messages       . "\
+Radera alla meddelanden som har spelats in medan automatsvar var
+påslaget.")
+
+    (kom-remote-autoreply     . "\
+Kör kommandot \"Automatsvar\" i en annan LysKOM-session.")
+    (kom-remote-set-message   . "\
+Kör kommandot \"Ändra svarsmeddelande\" i en annan LysKOM-session.")
+    (kom-remote-list-messages . "\
+Kör kommandot \"Lista meddelanden\" i en annan LysKOM-session (men
+visa meddelandena i den session du kör i).")
+    (kom-remote-erase-messages . "\
+Kör kommandot \"Radera meddelanden\" i en annan LysKOM-session.")
+    (kom-remote-quit          . "\
+Kör kommandot \"Avsluta\" i en annan LysKOM-session.")
+
+    (kom-status-session       . "\
+Visa information om en annan LysKOM-session.")
+    (kom-customize            . "\
+Ändra inställningar för det mesta i LysKOM på ett enkelt sätt.")
+    (kom-next-kom             . "\
+Byt buffert till nästa LysKOM-session, om du har flera igång.")
+    (kom-previous-kom         . "\
+Byt buffert till föregående LysKOM-session, om du har flera igång.")
+    (kom-next-unread-kom      . "\
+Byt buffert till nästa LysKOM-session där det finns inlägg att visa,
+om det finns någon sådan.")
+    (kom-change-language      . "\
+Ändra det språk som används i klienten.")
+    (kom-calculate            . "\
+Beräkna ett matematiskt uttryck (förutsätter att Emacs-paketet calc är
+installerat).")
+    (kom-list-marks           . "\
+Lista vilka inlägg du har markerat med en viss markering.")
+    (kom-where-is             . "\
+Visa vilken tangent ett visst kommando finns på.")
+    (kom-fast-reply           . "\
+Skriv en anmärkning, dvs en kort kommentar till ett inlägg.")
+    (kom-agree                . "\
+Skriv en anmärkning om att du håller med om ett inlägg.")
+    (kom-add-faq              . "\
+Addera ett inlägg till listan av ofta ställda frågor som hör till ett
+visst möte.")
+    (kom-del-faq              . "\
+Ta bort ett inlägg från listan av ofta ställda frågor som hör till ett
+visst möte.")
+    (kom-review-faq           . "\
+Återse alla inlägg som innehåller ota ställda frågor som rör ett visst
+möte.")
+
+    (kom-add-footnote	      . "\
+Addera ett befintligt inlägg som fotnot till ett annat befintligt inlägg.")
+    (kom-sub-footnote	      . "\
+Ta bort en befintlig fotnot från ett inlägg.")
+
+    (kom-add-no-comments      . "\
+Förhindra att andra kommenterar ett visst inlägg.")
+    (kom-add-private-answer   . "\
+Begär att alla kommentarer som skrivs till ett visst inlägg blir
+personliga meddelanden.")
+    (kom-add-request-confirm  . "\
+Begär att alla som läser ett visst inlägg bekräftar läsningen.")
+
+    (kom-review-mail-headers  . "\
+Återse brevhuvudet för ett importerat sladdpostmeddelande.")
+    (kom-become-anonymous     . "\
+Ändra klientens beteende så att du blir lite mer anonym. Det blir även
+enklare att skriva anonyma inlägg.")
+    (kom-become-nonanonymous  . "\
+Återställ klientens beteende till det normala efter du har gjort Bli
+anonym.")
+
+    (kom-keep-alive           . "\
+Skicka data till servern då och då för att hålla förbindelsen aktiv i
+miljöer där inaktiva förbindelser kopplas ner automatiskt.")
+    (kom-stop-keep-alive      . "\
+Stäng av de åtgärder som gör att förbindelsen med servern hålls aktiv.")
+
+    (kom-is-person-member-of-conference . "\
+Tar reda på om en given person är medlem i ett visst möte.")
+    (kom-change-conf-faq      . "\
+Ändra ett befintligt inlägg som innehåller ofta ställda frågor som hör
+till ett visst möte.")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
@@ -1983,7 +2382,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "j")   'kom-page-next-command)
   (define-key lyskom-sv-mode-map (kbd "C-m") 'kom-line-next-command)
 
-  (define-key lyskom-sv-mode-map (kbd "?")   'describe-mode)
+  (define-key lyskom-sv-mode-map (kbd "?")   'kom-help)
   (define-key lyskom-sv-mode-map (kbd "b")   'kom-send-letter)
   (define-key lyskom-sv-mode-map (kbd "g")   'kom-go-to-conf)
   (define-key lyskom-sv-mode-map (kbd "i")   'kom-write-text)
