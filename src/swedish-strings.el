@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.94 1999-12-02 22:29:56 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.95 1999-12-02 23:44:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.94 1999-12-02 22:29:56 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.95 1999-12-02 23:44:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2318,7 +2318,6 @@ i servern. Annars sparas det i din .emacs.")
         användbart om man hela tiden har ett fönster öppet, men inte beöver
         det just medan man utför något visst kommando.")
 
-
     ;;
     ;; Doc strings for variables
     ;;
@@ -2964,6 +2963,48 @@ i servern. Annars sparas det i din .emacs.")
     (kom-mercial-doc . "\
   Denna text visas i vilkalistan då du har läst färdigt alla möten.")
 
+    (kom-server-priority-doc . "\
+  Prioritet för sessionen. Sessioner med hög prioritet kan avbryta andra
+  sessioner, beroende på inställningen av YYY.")
+
+    (kom-server-priority-breaks-doc . "\
+  Denna inställning styr hur prioriterade sessioner avbryter andra
+  sessioner. En session är högre prioriterad än en annan om dess
+  sessionsprioritet är högre än den andra sessionens.
+
+  Omedelbart            Så fort der kommer ett inlägg i en prioriterad 
+                        session så får man prompt om att gå till den
+                        sessionen.
+
+  Omedelbart om det kommer brev     Så fort det kommer ett personligt
+                        brev i en prioriterad session så får man prompt 
+                        om att gå till den sessionen.
+
+  Efter aktuell kommentarskedja     Om det kommer inlägg i en 
+                        prioriterad session så får man prompt om att
+                        gå till sessionen när man har läst klart den
+                        aktuella kommentarskedjan.
+
+  Efter aktuell kommentarskedja om det kommer brev      Om det kommer
+                        personliga brev i en prioriterad session så 
+                        får man prompt om att gå till sessionen när
+                        man har läst klart den aktuella kommentarskedjan.
+
+  Efter aktuellt möte   Om det kommer inlägg i en prioriterad session 
+                        så får man prompt om att gå till sessionen när
+                        man har läst klart det aktuella mötet.
+
+  Efter aktuellt möte när det kommer brev       Om det kommer brev i en
+                        prioriterad session så får man prompt om att gå
+                        till sessionen när man har läst klart det 
+                        aktuella mötet.
+
+  När allt är utläst    Ge prompt om att byta till nästa LysKOM med 
+                        olästa inlägg när allt är klart, oberoende av
+                        sessionernas prioritet.
+
+  Aldrig                Ge aldrig prompt om att byta session.")
+
     (kom-ding-on-no-subject-doc . "")
     (kom-ding-on-personal-messages-doc . "")
     (kom-ding-on-group-messages-doc . "")
@@ -3121,6 +3162,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden")
     (kom-w3-simplify-body-tag . "Visa HTML utan standardfärger")
     (kom-mercial-tag . "Text när allt är utläst")
+    (kom-server-priority-tag . "Sessionsprioritet")
+    (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa")
     )
 )
 

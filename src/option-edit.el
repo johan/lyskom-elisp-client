@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.34 1999-12-02 22:29:52 byers Exp $
+;;;;; $Id: option-edit.el,v 44.35 1999-12-02 23:44:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.34 1999-12-02 22:29:52 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.35 1999-12-02 23:44:29 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -135,13 +135,17 @@
     [kom-permissive-completion]
     [kom-continuous-scrolling]
     [kom-inhibit-typeahead]
-    [kom-created-texts-are-read]
+    "\n"
     [kom-higher-priority-breaks]
     [kom-review-priority]
+    [kom-server-priority]
+    [kom-server-priority-breaks]
+    "\n"
     [kom-read-depth-first]
     [kom-reading-puts-comments-in-pointers-last]
     [kom-show-footnotes-immediately]
     [kom-follow-comments-outside-membership]
+    [kom-created-texts-are-read]
     "\n"
     [kom-default-mark]
     [kom-membership-default-priority]
@@ -509,6 +513,7 @@ customize buffer but do not save them to the server."
     (kom-higher-priority-breaks (choice ((const (express-break express))
                                          (const (break t))
                                          (const (no-break nil)))))
+    (kom-server-priority (number))
     (kom-server-priority-breaks (choice ((const (express-server-break express))
                                          (const (express-server-letters-break express-letters))
                                          (const (server-break t))
