@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.311 2003-03-16 21:50:04 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.312 2003-03-16 22:21:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.311 2003-03-16 21:50:04 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.312 2003-03-16 22:21:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -739,7 +739,7 @@ Ditt alarmmeddelande löd:
     (message-all-info . "Sänd alarmmeddelande\n")
     (message-recipient-info . "Sänd meddelande till %#1M\n")
     (message-nope
-     . "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
+     . "Det gick inte. %#3s\
 Meddelandet du försökte sända till %#1M var:
 %#2t\n")
     (only-last . "Endast läsa senaste i %#1s: ")
@@ -4401,7 +4401,7 @@ i servern. Annars sparas det i din .emacs.")
     (error-50 . "Okänt asynkront meddelande")
     (error-51 . "Internt fel i servern")
     (error-52 . "Funktionen avstängd i servern")
-    (error-53 . "Meddelandet kunde inte sändas")
+    (error-53 . "Mottagaren var kanske inte inloggad")
     (error-54 . "Otillåten typ på medlemskap")
 
     (error--1 . "Du är inte medlem i något mottagarmöte")

@@ -1,5 +1,9 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 815:
+	* commands2.el (lyskom-send-message): Print the correct error code
+	on failure.
+
 	Fix bug 975:
 	* commands1.el (lyskom-write-text): New function.
 	(kom-write-text): Use it. Now letters and texts are the same.
