@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.8 1991-10-05 17:31:56 linus Exp $
+;;;;; $Id: vars.el,v 35.9 1991-10-06 09:52:56 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.8 1991-10-05 17:31:56 linus Exp $\n"))
+	      "$Id: vars.el,v 35.9 1991-10-06 09:52:56 linus Exp $\n"))
 
 
 
@@ -114,7 +114,7 @@ The syntax is the same as for the kom-do-when-starting variable except that the
 last element is not remembered forever. These are executed as soon as we get a
 new prompt i.e. non-stop at login.")
 
-(defvar kom-do-when-done '("}am" "t")
+(defvar kom-do-when-done '(kom-review-all-marked-texts kom-display-time)
   "*What to do when all texts are read.
 This is a list of commands and lists of commands that are prompted for
 and executed when there are no more new texts.  The last element in
