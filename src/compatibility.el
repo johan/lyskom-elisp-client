@@ -1,7 +1,8 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.49 2002-03-02 20:35:20 joel Exp $
+;;;;; $Id: compatibility.el,v 44.50 2002-04-20 17:47:00 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
+;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
@@ -35,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.49 2002-03-02 20:35:20 joel Exp $\n"))
+	      "$Id: compatibility.el,v 44.50 2002-04-20 17:47:00 ceder Exp $\n"))
 
 
 ;;; ======================================================================
@@ -449,6 +450,31 @@ property and a property with the value nil."
       (while (and plist (not (eq (car plist) prop)))
         (setq plist (cdr (cdr plist))))
       (and plist t))
+
+;; The make-temp-file function below is taken verbatim from Emacs 21.2.
+(lyskom-provide-function make-temp-file (prefix &optional dir-flag)
+  "Create a temporary file.  The returned file name (created by
+appending some random characters at the end of PREFIX, and expanding
+against `temporary-file-directory' if necessary, is guaranteed to
+point to a newly created empty file.  You can then use `write-region'
+to write new data into the file.
+
+If DIR-FLAG is non-nil, create a new empty directory instead of a file."
+  (let (file)
+    (while (condition-case ()
+	       (progn
+		 (setq file
+		       (make-temp-name
+			(expand-file-name prefix temporary-file-directory)))
+		 (if dir-flag
+		     (make-directory file)
+		   (write-region "" nil file nil 'silent nil 'excl))
+		 nil)
+	    (file-already-exists t))
+      ;; the file was somehow created by someone else between
+      ;; `make-temp-name' and `write-region', let's try again.
+      nil)
+    file))
 
 
 ;;; ================================================================

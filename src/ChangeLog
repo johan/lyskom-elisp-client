@@ -11,6 +11,8 @@
 	
 	* english-strings.el (lyskom-command): Added kom-diff-texts.
 
+	* compatibility.el (make-temp-file): Provide it if it is missing.
+
 2002-04-20  David Byers  <david.byers@swipnet.se>
 
 	Move binding of 'a' to 'x' in the swedish keymaps:
