@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.137 2002-04-14 21:39:53 byers Exp $
+;;;;; $Id: commands1.el,v 44.138 2002-04-20 14:10:13 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.137 2002-04-14 21:39:53 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.138 2002-04-20 14:10:13 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1044,7 +1044,7 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 		 (not (and (= (length data) 2)
 			   (or (= lyskom-pers-no (conf-stat->conf-no
 						  (car data)))
-x			       (= lyskom-pers-no (conf-stat->conf-no
+			       (= lyskom-pers-no (conf-stat->conf-no
 						  (car (cdr data))))))))
 	    (let ((new-data nil))
 	      (while data

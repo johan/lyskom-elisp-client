@@ -1,3 +1,8 @@
+2002-04-20  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* commands1.el (lyskom-comment-recipients): Removed a stray "x"
+	accidentally inserted in the last commit.
+
 2002-04-18  Jonas Frid  <jonas.frid@softlab.ericsson.se>
 
 	* swedish-strings.el (lyskom-custom-strings): Bugfix in
