@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.64 2000-05-31 15:35:29 byers Exp $
+;;;;; $Id: edit-text.el,v 44.65 2000-06-04 20:41:48 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.64 2000-05-31 15:35:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.65 2000-06-04 20:41:48 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -856,8 +856,6 @@ Cannot be called from a callback."
     ;;
     
 
-    (set-collector->value collector nil)
-
     (if (and (lyskom-default-value 'kom-confirm-multiple-recipients)
              (not (eq (lyskom-default-value 'kom-confirm-multiple-recipients)
                       'before))
@@ -872,6 +870,10 @@ Cannot be called from a callback."
                       (list "%s" 
                             (lyskom-get-string 
                              'please-edit-recipients))))))
+
+    ;;
+    ;; Check that the authors of all commented texts get to see the new text
+    ;;
 
     (if (and (lyskom-default-value 'kom-check-commented-author-membership)
              (assq 'comm-to (cdr misc-list)))
@@ -913,6 +915,8 @@ Cannot be called from a callback."
             (set-buffer lyskom-buffer)
             (mapcar (function
                      (lambda (author-number)
+		       (setq author-is-member nil)
+		       (set-collector->value collector nil)
                        (mapcar
                         (function
                          (lambda (conference-number)

@@ -1,3 +1,10 @@
+2000-06-04  Per Cederqvist  <ceder@moria>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): The code that
+	checks if all the authors of all the commented texts are a member
+	in at least one of the recipients only worked if there was at most
+	one author.  Fix.
+
 2000-06-02  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (kom-save-text): Use lyskom-saved-file to save
