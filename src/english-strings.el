@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.352 2005-01-12 19:32:05 qha Exp $
+;;;;; $Id: english-strings.el,v 44.353 2005-01-26 10:34:01 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.352 2005-01-12 19:32:05 qha Exp $"))
+              "$Id: english-strings.el,v 44.353 2005-01-26 10:34:01 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1485,6 +1485,8 @@ On since %#8s%#9s")
     (reformat-signature . "designed")
 
     (reformat-deswascii . "was swascii")
+
+    (reformat-utf-8 . "was UTF-8")
 
     (reformat-rot13 . "rot13")
 

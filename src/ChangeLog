@@ -1,3 +1,13 @@
+2005-01-26  Johan Sundström  <jhs@lysator.liu.se>
+
+	* view-text.el
+	(lyskom-view-text-convert-UTF-8-to-ISO-8859-1): New function
+	that, when put in `kom-view-text-hook', translates basic UTF-8
+	characters available in ISO-8859-1 to their such counterparts.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	the string `reformat-utf-8'.
+
 2005-01-23  David Byers  <byers@lysator.liu.se>
 
 	* Release of 0.48.

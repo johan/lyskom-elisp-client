@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.396 2005-01-18 07:46:51 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.397 2005-01-26 10:34:01 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.396 2005-01-18 07:46:51 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.397 2005-01-26 10:34:01 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1535,6 +1535,8 @@ Uppkopplad sedan %#8s%#9s")
     (reformat-deswascii . "var swascii")
 
     (reformat-rot13 . "rot13")
+
+    (reformat-utf-8 . "var UTF-8")
 
     (need-library . "Paketet \"%#1s\" behövs för att utföra detta kommando.\n")
     (calc-expression . "Uttryck: ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.82 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: view-text.el,v 44.83 2005-01-26 10:34:01 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.82 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: view-text.el,v 44.83 2005-01-26 10:34:01 jhs Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -439,6 +439,40 @@ when put in your `kom-view-text-hook'."
 		       (lyskom-rot13-string 
 			(text->text-mass lyskom-view-text-text)))
   (lyskom-signal-reformatted-text 'reformat-rot13))
+
+
+(defun lyskom-view-text-convert-UTF-8-to-ISO-8859-1 ()
+  "Display rÃ¤ksmÃ¶rgÃ¥s as räksmörgås if the text has charset=utf-8,
+unless we are reviewing without conversion. More precisely, the latin
+1 characters are converted from their utf-8 normal form. Yet another
+useful function to put in your `kom-view-text-hook'."
+  (let* ((cti (lyskom-get-aux-item
+	       (text-stat->aux-items lyskom-view-text-text-stat) 1))
+         (content-type (and cti (aux-item->data (car cti)))))
+    (when (and (string-match "charset\\s-*=\\s-*utf-?8" content-type)
+	       (not (lyskom-viewing-noconversion)))
+      (let* ((was (aref (cdr lyskom-view-text-text) 1)) ; original text version
+	     (txt nil)					; converted-text-to-be
+	     (get "Ã.") ; "[ÂÃ][\200-\277]", if emacsen would grok 8-bit ranges
+	     (old 0)
+	     (got (string-match get was))
+	     ; (set nil)
+	     (chr nil))
+	(when got
+	  (lyskom-signal-reformatted-text 'reformat-utf-8)
+	  (while got
+	    (setq ; set (aref was got)
+		  chr (aref was (1+ got))
+		  txt (nconc txt (list (substring was old got)
+				       (char-to-string ;(if (eq set ?Â) chr 
+					(+ chr 64))))
+		  old (+ 2 got)
+		  got (string-match get was old)))
+	  (setq txt (apply 'concat (nconc txt (list (substring was old)))))
+	  (setq txt (replace-in-string txt "Â" "")) ; sigh
+	  (aset (cdr lyskom-view-text-text) 1 txt))))))
+
+;(add-hook 'kom-view-text-hook 'lyskom-view-text-convert-UTF-8-to-ISO-8859-1)
 
 
 (defun lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1 ()
