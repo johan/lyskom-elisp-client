@@ -1,3 +1,5 @@
+* Titta igenom och komplettera den engelska dokumentationen.
+
 * I docen: Att Ändra inställningarna heter Ändra variabler
   {r en bugg. 
 Linus: Jag har f|r mig jag fixade det. Det {r bara som funktion [ndra
@@ -6,10 +8,6 @@ Linus: Jag har f|r mig jag fixade det. Det {r bara som funktion [ndra
 * M kan vara din egen brevl\aa{}da, men du kan inte Review texter till
 n\aa{}gon annans brevl\aa{}da. Det beror p\aa{} en bug i server som kommer att
 r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
-
-* p-P som k-K
-
-* Dokumentera ]terse igen.
 
 * Svara p} personligt meddelande kanske {r en kul finess.
 
@@ -116,7 +114,7 @@ Linus: R{cker inte ceders uppdelning av anropen?
   Ge adm.r{ttigheter }t n}gon annan.
   Kasta ut en session	  		- klart.*
   S{tt till}tna f|rfattare.
-  [ndra superm|te.			- klart.
+  [ndra superm|te.			- klart.*
   [ndra m|tesstatus.
 
   (* = dokumenterat (tror jag))
