@@ -1,3 +1,27 @@
+Sat Jun 13 18:50:21 1992  Linus Tolke Y  (linus@robert)
+
+	* swedish-string.el (*-mode-map): replaced 
+	  (fset 'name-of-map (make-keymap)) with 
+	  (define-prefix-command 'name-of-map)
+
+	* startup.el, swedish-strings.el (lyskom-start-anew-login-2): A
+	  text encouraging people that login to write presentations if
+	  they don't have any and have written a text.
+
+	* swedish-strings.el (kom-review-noconversion): Show last or given
+	  text without the iso-to-swascii conversion. ]terse omodifierat
+
+	* commands2.el, async.el (lyskom-handle-as-personal-message,
+	  lyskom-insert-personal-message, lyskom-send-message-2): No beep
+	  when I sent the message.
+
+	* async.el (lyskom-parse-async): Broadcasts should not use the
+	  follow queue.
+
+	* commands1.el (lyskom-private-answer-soon,
+	  lyskom-private-answer): If a number of a non-existant text is
+	  supplied to the private-answer this is caught.
+
 Mon May 11 03:50:07 1992  Linus Tolke Y  (linus@robin)
 
 	* swedish-strings.el (kom-slow-mode, kom-quick-mode,
