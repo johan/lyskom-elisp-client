@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.11 1997-02-07 18:07:04 byers Exp $
+# $Id: Makefile,v 44.12 1997-07-02 17:45:49 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.11 1997-02-07 18:07:04 byers Exp $
+# $Id: Makefile,v 44.12 1997-07-02 17:45:49 byers Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -106,8 +106,8 @@ lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
 
 .PHONY: check
-check: 
-	$(EMACS-BATCH) -l check-strings.el -f run
+check: lyskom.el
+	$(EMACS-BATCH) -l ./lyskom.el  -l ./check-strings.el -f lyskom-check-strings
 
 # Do "make verbose" to see where things go wrong
 .PHONY: verbose

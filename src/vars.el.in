@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.20 1997-06-29 14:20:15 byers Exp $
+;;;;; $Id: vars.el.in,v 44.21 1997-07-02 17:47:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.20 1997-06-29 14:20:15 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.21 1997-07-02 17:47:31 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -707,13 +707,15 @@ don't send a reply.
 If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent."
   server)
 
+(def-kom-var kom-default-language 'sv
+  "*Which lagnuage to use for new sessions."
+  server inherited protected)
+
 (def-kom-var lyskom-language 'sv
   ;; One might extend this into a list of languages, sorted in
   ;; preference order.
-  "*Which language to use.
-
-Supported languages are 'sv and 'en"
-  server
+  "The language currently in use."
+  local
   inherited
   protected)
 
@@ -971,6 +973,7 @@ Users are encouraged to use their best sense of humor."
 
     kom-status-session
     kom-customize
+    kom-change-language
     ))
 
 ;(defconst lyskom-elisp-variables
@@ -1590,6 +1593,17 @@ an unknown person.")
 
 (def-kom-var kom-no-comments-to-motd nil
   "This should always be set to nil unless you are Klaus Zeuge.") ;+++SOJGE
+
+(defvar lyskom-format-special '((html . lyskom-format-html)
+                                (enriched . lyskom-format-enriched))
+  "AList of (FORMAT . FUNCTION) specifying functions that format texts
+of that type. FORMAT is a symbol and FUNCTION is a function taking one
+argument and returning a formatted string.")
+
+(defvar lyskom-send-text-transform-function nil
+  "Function to call to transform text before sending it to the server.
+The function should accept a single argument and return the transformed
+texts that is to be sent to the server.")
 
 ;;; ======================================================================
 ;;; Event hooks

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.4 1997-06-29 14:19:38 byers Exp $
+;;;;; $Id: compatibility.el,v 44.5 1997-07-02 17:46:07 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.4 1997-06-29 14:19:38 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.5 1997-07-02 17:46:07 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -153,8 +153,7 @@ of the lyskom-provide-* functions instead."
 ;;;
 
 (lyskom-provide-function map-keymap (fn keymap &optional sort-first)
-  (let ((lis nil)
-        (r 0))
+  (let ((r 0))
     (cond ((vectorp keymap)
            (while (< r (length keymap))
              (if (aref keymap r)

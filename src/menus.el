@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.8 1997-02-07 18:07:56 byers Exp $
+;;;;; $Id: menus.el,v 44.9 1997-07-02 17:46:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -78,7 +78,9 @@
 	   (item kom-review-presentation)
 	   (hline change-separator)
 	   (item kom-change-name)
-	   (item kom-change-password))))
+	   (item kom-change-password)))
+    (menu other
+          ((item kom-customize))))
   "The menus used in LysKOM.")
 
 (defvar lyskom-popup-menu-template
@@ -149,6 +151,7 @@
 (defun lyskom-define-menu-xemacs (menus)
   (let ((type nil)
         (parameters nil))
+    (ignore type parameters)            ; Are they ever used?
     (cond ((null (car menus)))
           ((listp (car menus))          ; Menu bar
            (mapcar 'lyskom-define-menu-xemacs

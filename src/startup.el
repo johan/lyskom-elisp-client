@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.17 1997-06-29 14:20:05 byers Exp $
+;;;;; $Id: startup.el,v 44.18 1997-07-02 17:47:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.17 1997-06-29 14:20:05 byers Exp $\n"))
+	      "$Id: startup.el,v 44.18 1997-07-02 17:47:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -367,7 +367,9 @@ variable documentation for lyskom-server-feautres"
         (run-hooks 'lyskom-login-hook)
         (run-hooks 'kom-login-hook))
     (error (lyskom-format-insert-before-prompt
-            'error-in-login-hook (format "%s" err)))))
+            'error-in-login-hook (format "%s" err))))
+  (unless (eq lyskom-language kom-default-language)
+    (lyskom-set-language kom-default-language)))
 
 
 (defun lyskom-refetch ()
