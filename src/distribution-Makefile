@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.5 1999-06-20 12:48:02 byers Exp $
+# $Id: distribution-Makefile,v 44.6 1999-06-22 13:36:58 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -84,6 +84,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		lyskom-rest.el
 
 HEADER = 	defvar.el \
+		feature.el \
 		vars.el \
 		macros.el \
 		compatibility.el \

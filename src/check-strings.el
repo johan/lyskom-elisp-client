@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.7 1999-06-20 11:26:27 byers Exp $
+;;;;; $Id: check-strings.el,v 44.8 1999-06-22 13:36:55 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -11,11 +11,6 @@
 ;;;;
 ;;;;  or by M-x lyskom-check-strings
 ;;;;
-;;;; TODO:
-;;;; Check that all -tag and -doc strings correspond to an existing variable
-;;;; Check that all server-local variables have -tag and -doc strings.
-;;;; Check that all server-local variables are in the settings buffer
-;;;; Check that all server-local variables have a widget definition
 ;;;;
 
 (require 'lyskom)
@@ -42,6 +37,9 @@
                                         'lyskom-command))
                           'lyskom-mode-map)
   (mapcar 'lcs-check-category lyskom-language-categories)
+
+  (lcs-message t "Checking customizeable variables")
+  (lcs-check-customize-variables)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
@@ -187,6 +185,50 @@ STRING is the string."
 	(setq flist (delete (car flist) flist))))
     (and result (null template))))
 
+(defun lcs-check-customize-variables ()
+  "Check customize variables.
+Check that all customizeable variables are server-stored.
+Check that all server-stored variables are customizeable."
+  (let ((cust-vars-in-buffer
+         (delq nil (mapcar (lambda (el) (when (vectorp el) (elt el 0))) 
+                           lyskom-customize-buffer-format)))
+        (cust-vars-widgets (mapcar 'car lyskom-custom-variables))
+        (cust-vars-all (append lyskom-elisp-variables 
+                               lyskom-global-boolean-variables 
+                               lyskom-global-non-boolean-variables)))
+    (mapcar 
+     (lambda (var)
+       (cond ((not (memq var cust-vars-widgets))
+              (lcs-message nil "(%s:%s) No widget definition for variable."
+                           'lyskom-custom-variables var))
+             ((not (memq var cust-vars-in-buffer))
+              (lcs-message nil "(%s:%s) Variable not in customize buffer."
+                           'lyskom-customize-buffer-format var))
+             (t (unless (lyskom-get-string-internal 
+                         (intern (format "%s-tag" var))
+                         'lyskom-custom-strings)
+                  (lcs-message nil "(%s:%s) No tag string"
+                               'lyskom-custom-strings var))
+                (unless (lyskom-get-string-internal 
+                         (intern (format "%s-doc" var))
+                         'lyskom-custom-strings)
+                  (lcs-message nil "(%s:%s) No doc string"
+                               'lyskom-custom-strings var))))
+       (setq cust-vars-in-buffer (delq var cust-vars-in-buffer))
+       (setq cust-vars-widgets (delq var cust-vars-widgets))
+       nil)
+     cust-vars-all)
+
+    (mapcar (lambda (var)
+              (lcs-message nil "(%s:%s) Not a server-stored variable."
+                           'lyskom-custom-variables var))
+            cust-vars-widgets)
+    (mapcar (lambda (var)
+              (lcs-message nil "(%s:%s) Not a server-stored variable."
+                           'lyskom-custom-variables var))
+            cust-vars-in-buffer)))
+             
+             
 (defun lcs-setup-message-buffer ()
   "Inititalize the message buffer for string checking."
   (save-excursion
