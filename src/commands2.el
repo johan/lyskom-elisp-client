@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.11 1997-07-02 17:46:01 byers Exp $
+;;;;; $Id: commands2.el,v 44.12 1997-07-06 14:27:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.11 1997-07-02 17:46:01 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.12 1997-07-06 14:27:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1658,8 +1658,7 @@ membership info."
   "Change the current language in LysKOM"
   (interactive)
   (let* ((completion-ignore-case t)
-         (table (mapcar (function (lambda (x) (cons (elt x 1) (elt x 0))))
-                        lyskom-languages))
+         (table (lyskom-available-language-list))
          (language (completing-read
                    (lyskom-get-string 'which-language)
                    table
@@ -1667,3 +1666,29 @@ membership info."
                    t)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table))))))
+
+
+
+(defun lyskom-available-language-list ()
+  "Return an alist suitable for completing read of available language names."
+  (let ((tmp 
+         (mapcar
+          (function
+           (lambda (el)
+             (cons (car el) (eval (cdr el)))))
+          (get 'lyskom-language-codes 'lyskom-language-var)))
+        (codes (mapcar 'car lyskom-languages))
+        (result nil))
+    (mapcar 
+     (function
+      (lambda (code)
+        (mapcar 
+         (function
+          (lambda (codelist)
+            (when (assq code codelist)
+              (setq result
+                    (cons (cons (cdr (assq code codelist)) code)
+                          result)))))
+         tmp)))
+     codes)
+    result))

@@ -1,4 +1,37 @@
+Sun Jul  6 14:41:16 1997  David Byers  <davby@ida.liu.se>
+
+	* language.el (lyskom-set-language): Byt bara om språket finns.
+
+	* option-edit.el (lyskom-language-widget): Använd 
+	lyskom-language-name
+
+	* english-strings.el (lyskom-language-codes): Ny variabel.
+
+	* vars.el.in (lyskom-language-codes): Ny variabel.
+
+	* startup.el (kom-start-anew): Skriv ut språkbyte.
+
+	* swedish-strings.el (lyskom-message): Lade till 
+	changing-language-to
+
+	* english-strings.el (lyskom-en-edit-mode-map): Rättade några
+	referenser till lyskom-sv-edit-mode-map
+	(kom-mercial): Sätt på ett vettigt sätt.
+	(lyskom-message): Lade till changing-language-to
+
+	* vars.el.in (kom-default-language): Default är nil
+	(lyskom-language): Dito
+
+	* language.el (lyskom-define-language): Sätt kom-default-language 
+	och lyskom-language om de inte är satta. 
+
 Thu Jul  3 11:13:03 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): Bytte ut NUL mot \000 och ^L 
+	mot \014
+
+	* english-strings.el (lyskom-customize-map): Definierad en
+	engelsk version.
 
 	* compatibility.el: Inga meddelanden.
 	(lyskom-compatibility-definition): Dito. Fixade en bug.

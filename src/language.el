@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.9 1997-07-02 17:46:42 byers Exp $
+;;;;; $Id: language.el,v 44.10 1997-07-06 14:27:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -209,15 +209,32 @@ if 'lyskom-menu is not found."
   (let ((match (assq language lyskom-languages)))
     (if match
 	(setcdr match names)
-      (setq lyskom-languages (cons (cons language names) lyskom-languages)))))
+      (setq lyskom-languages (cons (cons language names) lyskom-languages))))
+  (unless (and lyskom-language
+               kom-default-language)
+    (setq lyskom-language language)
+    (setq kom-default-language language)))
+
+(defun lyskom-language-name (language)
+  "Return the name of language code LANGUAGE in the current language."
+  (save-excursion
+    (when lyskom-buffer (set-buffer lyskom-buffer))
+    (or (cdr (assq language lyskom-language-codes))
+        (lyskom-format (cdr (assq '-- lyskom-language-codes))
+                       (symbol-name language)))))
 
 (defun lyskom-set-language (language)
   "Set the current language to LANGUAGE."
-  (setq lyskom-language language)
-  (lyskom-set-language-vars language)
-  (lyskom-set-language-keymaps language)
-  (lyskom-update-menus)
-  (lyskom-update-prompt t)) 
+  (cond ((not (assq language lyskom-languages))
+         (lyskom-format-insert-before-prompt 'language-not-loaded
+                                             (lyskom-language-name language))
+         nil)
+        (t (setq lyskom-language language)
+           (lyskom-set-language-vars language)
+           (lyskom-set-language-keymaps language)
+           (lyskom-update-menus)
+           (lyskom-update-prompt t)
+           t)))
 
 			      
 (provide 'lyskom-language)
