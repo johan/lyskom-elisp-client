@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.364 2004-02-22 09:43:59 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.365 2004-02-22 15:48:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.364 2004-02-22 09:43:59 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.365 2004-02-22 15:48:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -286,7 +286,7 @@ för att radera det.")
     (done . "klart.\n")
     (cancelled . "avbrutet.\n")
     (nope . "det gick inte.\n")
-    (add-already-member . "%#1P är redan medlem i %#2M.\n")
+    (add-already-member . "%#2P är redan medlem i %#1M.\n")
     (you-already-member . "Du är redan medlem i %#1M.\n")
 
     (cant-find-supervisor . "Hittar inte organisatören för %#1M.\n")
@@ -436,12 +436,14 @@ du har läst klart allting. Kom tillbaks senare.
     (cant-move-from-to-same . "Mötet du flyttar till kan inte vara samma som du flyttar från.\n")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
-    (member-in-conf . "Bli medlem i %#1M%#2?b%[ %#2s%]%[%]...")
+    (accepting-invitation . "Accepterar inbjudan till %#2M%#3?b%[ %#3s%]%[%]...")
+    (member-in-conf . "Bli medlem i %#2M%#3?b%[ %#3s%]%[%]...")
     (member-in-conf-with-low-priority . "%#1M har lägre prioritet än din läsnivå och kommer därför inte att visas.\n")
     (member-in-conf-with-unread-date . "med olästa från %#3d %#2s %#1d")
     (member-in-conf-with-unread . "med %#1d olästa")
     (add-member-in . "Addera %#1P som medlem i %#2M...")
     (change-priority-for-q . "Ändra prioritet för möte: ")
+    (cant-change-priority-of-passive . "Kan inte ändra prioritet på passiva medlemskap.\n")
     (change-priority-for . "Ändra prioritet på %#2M...")
     (unsubscribe-to . "Utträda ur %#1M...")
     (unsubscribe-to-2 . "Utträda ur %#1M%#2s...")
@@ -467,6 +469,7 @@ du har läst klart allting. Kom tillbaks senare.
     (exclude-from . "Utesluta %#1P från %#2M...")
 
     (unsubscribe-failed . "\nDet gick inte. %#1P var kanske aldrig medlem i %#2M?\n")
+    (activate-mship . "Bli aktiv medlem i %#1M...")
     (activate-mship-done . "Du är nu åter aktiv medlem i %#1M.\n")
     (passivate-done . "Du är nu passiv medlem i %#1M.
 Utträd ur mötet en gång till för gå ur helt.\n")

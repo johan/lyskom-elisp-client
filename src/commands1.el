@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.210 2004-02-22 09:43:58 byers Exp $
+;;;;; $Id: commands1.el,v 44.211 2004-02-22 15:48:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.210 2004-02-22 09:43:58 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.211 2004-02-22 15:48:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -507,11 +507,7 @@ recipients are handled."
 ;;;           Bli medlem i m|te - Become a member of a conference
 ;;;             Addera medlem - Add somebody else as a member
 
-;;; Author: ???
-;;; Rewritten by: David K}gedal
-
-
-;; Add another person
+;;; Author: David Byers, David Kågedal
 
 (def-kom-command kom-add-member ()
   "Invite a person as a member of a conference. Depending on the
@@ -519,19 +515,7 @@ server configuration this command may either create an invitation or
 simply make the person a member of the conference without asking them
 for confirmation."
   (interactive)
-  (let* ((who (lyskom-read-conf-stat 'who-to-add '(pers) nil nil t))
-	 (whereto (lyskom-read-conf-stat 'where-to-add '(all) nil nil t))
-	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
-    (lyskom-add-member-answer (lyskom-try-add-member whereto who 
-                                                     pers-stat 
-                                                     nil
-                                                     nil
-                                                     t)
-			      whereto who)))
-
-
-
-;; Add self
+  (lyskom-add-member))
 
 (def-kom-command kom-add-self (&optional conf)
   "Become a member of a conference. The default priority of the
@@ -543,312 +527,294 @@ re-join a conference of which you are a passive member.
 See `kom-membership-default-priority' and 
 `kom-membership-default-placement'"
   (interactive)
-  (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
-                    (lyskom-read-conf-stat 'where-to-add-self
-                                           '(all) nil nil t)))
-         (mship (lyskom-is-member (conf-stat->conf-no whereto)
-                                  lyskom-pers-no)))
-
-    (cond ((and mship (membership-type->passive
-                       (membership->type mship)))
-              (set-membership-type->passive (membership->type mship) nil)
-              (set-membership-type->message-flag (membership->type mship)
-                                                 (lyskom-j-or-n-p
-                                                  (lyskom-format 'set-message-flag-q whereto)))
-              (blocking-do 'set-membership-type
-                           lyskom-pers-no
-                           (conf-stat->conf-no whereto)
-                           (membership->type mship))
-              (lyskom-format-insert 'activate-mship-done whereto)
-              (lp--update-buffer (membership->conf-no mship))
-              (lyskom-fetch-start-of-map whereto mship))
-
-          ((and mship (not (membership-type->invitation
-                            (membership->type mship))))
-           (lyskom-format-insert 'you-already-member whereto))
-
-          (t 
-           (let* ((who (blocking-do 'get-conf-stat lyskom-pers-no))
-                  (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
-                  (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
-                  (no-of-unread
-                   (unless (and mship (not (membership-type->passive
-                                            (membership->type mship))))
-                     (lyskom-read-num-range-or-date 
-                      0 
-                      (conf-stat->no-of-texts whereto)
-                      (lyskom-format 'initial-unread)
-                      nil
-                      t
-                      nil)))
-                  (kom-membership-default-priority
-                   (if (and mship (membership-type->passive (membership->type mship)))
-                       (membership->priority mship)
-                     kom-membership-default-priority)))
-
-             (lyskom-add-member-answer (lyskom-try-add-member whereto
-                                                              who
-                                                              pers-stat
-                                                              nil
-                                                              nil
-                                                              t
-                                                              nil
-                                                              no-of-unread)
-                                       whereto who
-                                       no-of-unread
-                                       ))))))
+  (lyskom-add-member (blocking-do 'get-conf-stat lyskom-pers-no)
+                     conf))
 
 
 (def-kom-command kom-change-priority (&optional conf)
   "Changes the priority of a single membership. If you want to change
 the priority of several memberships, use `kom-prioritize' instead."
   (interactive)
-  (let* ((conf-stat (if conf (blocking-do 'get-conf-stat conf)
+  (let* ((conf-stat (if conf 
+                        (blocking-do 'get-conf-stat conf)
                       (lyskom-read-conf-stat  'change-priority-for-q
                                               '(all) nil nil t)))
-         (mship (lyskom-get-membership (conf-stat->conf-no conf-stat) t))
-	 (kom-membership-default-priority nil))
-    (blocking-do-multiple ((who (get-conf-stat lyskom-pers-no))
-                           (pers-stat (get-pers-stat lyskom-pers-no)))
-      (cond ((and (null mship) conf-stat)
-             (lyskom-format-insert 'not-member-of-conf conf-stat))
-	    ((null conf-stat)
-	     (lyskom-format-insert 'no-such-conf))
-            (t (lyskom-add-member-answer
-                (lyskom-try-add-member conf-stat who pers-stat nil
-                                       'change-priority-for t)
-                conf-stat who nil (membership->type mship)))))))
+         (mship (and conf-stat (lyskom-get-membership (conf-stat->conf-no conf-stat) t))))
+    (cond 
+     ((null conf-stat) (lyskom-format-insert 'no-such-conf))
+     ((null mship) (lyskom-format-insert 'not-member-of-conf conf-stat))
+     ((membership-type->passive (membership->type mship))
+      (lyskom-format-insert 'cant-change-priority-of-passive))
+     (t (lyskom-add-member (blocking-do 'get-conf-stat lyskom-pers-no)
+                           conf-stat
+                           t
+                           t
+                           (list (membership->priority mship))
+                           nil
+                           t
+                           'change-priority-for)))))
 
-
-;;; NOTE: This function is also called from lyskom-go-to-conf-handler
-;;;       and from lyskom-create-conf-handler.
 
 (defun lyskom-add-member-by-no (conf-no pers-no &optional no-of-unread mship-type thendo &rest data)
   "Fetch info to be able to add a person to a conf.
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
-for person PERS-NO and send them into lyskom-try-add-member."
+for person PERS-NO and send them into lyskom-add-member."
   (blocking-do-multiple ((whereto (get-conf-stat conf-no))
-                         (who (get-conf-stat pers-no))
-                         (pers-stat (get-pers-stat pers-no)))
-    (let ((result (lyskom-try-add-member whereto who pers-stat 
-                                         nil nil t nil no-of-unread)))
-      (lyskom-add-member-answer result whereto who no-of-unread mship-type)
-      (if thendo
-          (apply thendo data))
-      (car result))))
+                         (who (get-conf-stat pers-no)))
+    (prog1 
+        (lyskom-add-member who whereto mship-type no-of-unread)
+      (and thendo (apply thendo data)))))
 
 
-(defun lyskom-try-add-member (conf-conf-stat 
-                              pers-conf-stat 
-                              pers-stat
-                              membership-type
-                              &optional message-string
-                              need-extra-information
-                              default-priority
-                              no-of-unread)
-  "Add a member to a conference.
-Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
-CONF-CONF-STAT: the conf-stat of the conference the person is being added to
-PERS-CONF-STAT: the conf-stat of the person being added.
-PERS-STAT: the pers-stat of the person being added.
+(defun lyskom-add-member (&optional pers-conf-stat conf-conf-stat
+                                    mship-type no-of-unread priority 
+                                    position force message-string)
+  "Add PERS-CONF-STAT to CONF-CONF-STAT. 
+Returns non-nil if person if person is a member of the conference
+after this call has comleted.
 
-Optional MESSAGE-STRING is the message to print before making server call.
-Returns t if it was possible, otherwise nil.
+Optional MSHIP-TYPE is the membership type to use. If it is t, keep
+the old membership type (if one exists).
 
-If optional NEED-EXTRA-INFORMATION is non-nil, the return value will be
-a list where the first element is the result of add-member and the second
-is the position where the membership was placed.
+Optional NO-OF-UNREAD specifies how many unread texts to leave in 
+the conference. If set to t, don't change the number of unread.
 
-If optional USE-PRIORITY is non-nil then use that as the priority.
-"
-  (cond ((null no-of-unread))
+Optional PRIORITY is the priority of the membership. If it is a list,
+this function will prompt with the car of the list as the default
+priority.
 
-        ((numberp no-of-unread)
-         (setq no-of-unread (lyskom-format 'member-in-conf-with-unread
-                                           no-of-unread)))
-        ((listp no-of-unread)
-                 (setq no-of-unread
-                       (lyskom-format 'member-in-conf-with-unread-date
-                                      (elt no-of-unread 0)
-                                      (car (rassq (elt no-of-unread 1)
-                                                  lyskom-month-names))
-                                      (elt no-of-unread 2)))))
+Optional POSITION is the position of the new membership.
 
-  (if (or (null conf-conf-stat)
-	  (null pers-conf-stat))
-      nil				; We have some problem here.
-    (let ((priority
-           (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
-               (lyskom-read-num-range 0 255
-                                      (lyskom-get-string 'other-priority-q)
-                                      nil 100)
-             (if (and (numberp kom-membership-default-priority)
-                      (< kom-membership-default-priority 256)
-                      (>= kom-membership-default-priority 0))
-                 kom-membership-default-priority
-               (lyskom-read-num-range 0 255 (lyskom-get-string 'priority-q) nil default-priority))))
-	  (where
-	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
-	       1			; When adding someone else
-	     (cond
-	      ((and (numberp kom-membership-default-placement)
-		    (>= kom-membership-default-placement 0))
-	       kom-membership-default-placement)
-	      ((eq kom-membership-default-placement 'first)
-	       0)
-	      ((eq kom-membership-default-placement 'last)
-	       (length lyskom-membership))
-	      (t
-	       (lyskom-read-num-range
-		0 (pers-stat->no-of-confs pers-stat)
-		(lyskom-format 'where-on-list-q
-			       (length lyskom-membership))))))))
+If optional FORCE is non-nil, add even if the user is already a
+member of the conference.
 
-      ;;
-      ;; Adding ourselves. Adjust where so the membership
-      ;; list remains sorted. Find the closest position to
-      ;; where at which we can put the membership and keep
-      ;; the membership lsit sorted.
-      ;;
+If optional MESSAGE-STRING is non-nil, use it as the prompt
+when adding the membership.
 
-      (when (eq lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
-        (let ((mship-list lyskom-membership)
-              (mship nil)
-              (index 0)
-              (found nil))
-          (while mship-list
-            (setq mship (car mship-list)
-                  mship-list (cdr mship-list))
-            (cond ((> (membership->priority mship) priority))
-                  ((< (membership->priority mship) priority) 
-                   (setq where index mship-list nil found t))
-                  ((and (= (membership->priority mship) priority)
-                        (= index where))
-                   (setq mship-list nil found t))
-                  ((and (= (membership->priority mship) priority)
-                        (> index where))
-                   (setq where index mship-list nil found t)))
-            (setq index (1+ index))
-            (unless found (setq where (1+ index))))))
+This function will prompt interactively for any information not
+specified when calling it. This function blocks, so it may not
+be called from a callback."
+  (let* ((who (or pers-conf-stat (lyskom-read-conf-stat 'who-to-add '(pers) nil nil t)))
+         (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who)))
+         (self (eq (conf-stat->conf-no who) lyskom-pers-no))
+         (whereto (or conf-conf-stat (lyskom-read-conf-stat (if self 
+                                                                'where-to-add-self
+                                                              'where-to-add) '(all) nil nil t)))
+         (mship (lyskom-is-member (conf-stat->conf-no whereto) (conf-stat->conf-no who)))
+         (mship-type (if (and (eq mship-type t) mship)
+                         (membership->type mship)
+                       mship-type))
+         (became-member nil))
 
-      (when (null membership-type)
-        (setq membership-type 
-              (lyskom-create-membership-type nil nil nil nil
-                                             nil nil nil nil)))
+    (cond
 
-      (if message-string
-          (lyskom-format-insert message-string
-                                pers-conf-stat
-                                conf-conf-stat)
-        (if (= (conf-stat->conf-no pers-conf-stat)
-               lyskom-pers-no)
-            (lyskom-format-insert 'member-in-conf
-                                  conf-conf-stat
-                                  no-of-unread)
-          (lyskom-format-insert 'add-member-in
-                                pers-conf-stat
-                                conf-conf-stat)))
-      (lyskom-ignoring-async (18 lyskom-pers-no
-                                 (conf-stat->conf-no conf-conf-stat))
-        (let ((res (blocking-do 'add-member 
-                                (conf-stat->conf-no conf-conf-stat)
-                                (conf-stat->conf-no pers-conf-stat)
-                                priority where
-                                membership-type)))
-          (if need-extra-information
-              (list res where)
-            res))))))
+     ;; Already a member
+     ((and mship 
+           (not (and self
+                     (or force
+                         (membership-type->passive (membership->type mship))
+                         (membership-type->invitation (membership->type mship))))))
+      (lyskom-format-insert (if self 'you-already-member 'add-already-member)
+                            whereto who)
+      (setq became-member t))
 
 
-(defun lyskom-add-member-answer (answer 
-                                 conf-conf-stat
-                                 pers-conf-stat
-                                 &optional 
-                                 no-of-unread
-                                 mship-type)
-  "Handle the result from an attempt to add a member to a conference."
-  (let ((pos (if (consp answer) (elt answer 1) nil))
-        (answer (if (consp answer) (elt answer 0) answer)))
-    (if (null answer)
-        (progn
-          (lyskom-insert-string 'nope)
-          (let* ((errno lyskom-errno)
-                 (err-stat lyskom-err-stat)
-                 (is-supervisor (lyskom-is-supervisor (conf-stat->conf-no conf-conf-stat)
-                                                      lyskom-pers-no))
-                 (is-member (lyskom-is-member (conf-stat->conf-no conf-conf-stat)
-                                              (conf-stat->conf-no pers-conf-stat)))
-                 (rd-prot (conf-type->rd_prot (conf-stat->conf-type conf-conf-stat))))
+     ;; We're already passive members, so depassivate
+     ((and mship self
+           (membership-type->passive (membership->type mship)))
+      (set-membership-type->passive (membership->type mship) nil)
+      (set-membership-type->message-flag (membership->type mship) t)
+      (lyskom-format-insert 'activate-mship whereto)
+      (let ((res (blocking-do 'set-membership-type
+                              lyskom-pers-no
+                              (conf-stat->conf-no whereto)
+                              (membership->type mship))))
+        (lyskom-report-command-answer res)
+        (when res
+          (setq became-member t)
+          (lyskom-format-insert 'activate-mship-done whereto)
+          (lp--update-buffer (membership->conf-no mship))
+          (lyskom-fetch-start-of-map whereto mship))))
 
 
-            (cond (is-member
-                   (lyskom-format-insert 'add-already-member 
-                                         pers-conf-stat
-                                         conf-conf-stat))
-                  ((and rd-prot is-supervisor)
-                   (lyskom-insert-error errno err-stat))
+     ;; We be adding someone for real
+     (t (let* ((no-of-unread (cond ((eq no-of-unread t) nil)
+                                   (no-of-unread)
+                                   (t (when (and self
+                                                 (not (membership-type->passive
+                                                       (membership->type mship))))
+                                        (lyskom-read-num-range-or-date 
+                                         0 
+                                         (conf-stat->no-of-texts whereto)
+                                         (lyskom-format 'initial-unread)
+                                         nil
+                                         t
+                                         nil)))))
+               (priority (cond ((numberp priority) priority)
+                               ((not self)
+                                (lyskom-read-num-range 0 255 (lyskom-get-string 'other-priority-q) nil 100))
+                               ((and (null priority)
+                                     (numberp kom-membership-default-priority)
+                                     (< kom-membership-default-priority 256)
+                                     (>= kom-membership-default-priority 0))
+                                kom-membership-default-priority)
+                               (t (lyskom-read-num-range 0 255
+                                                         (lyskom-get-string 'priority-q)
+                                                         nil 
+                                                         (cond (mship (membership->priority mship))
+                                                               ((listp priority) (car priority)))))))
+               (position (or position 
+                             (cond ((not self) 1)
+                                   ((and (numberp kom-membership-default-placement)
+                                         (>= kom-membership-default-placement 0))
+                                    kom-membership-default-placement)
+                                   ((eq kom-membership-default-placement 'first) 0)
+                                   ((eq kom-membership-default-placement 'last) (length lyskom-membership))
+                                   (t (lyskom-read-num-range
+                                       0 (pers-stat->no-of-confs pers-stat)
+                                       (lyskom-format 'where-on-list-q
+                                                      (length lyskom-membership)))))))
+               (message-flag (if mship-type
+                                 (membership-type->message-flag mship-type)
+                               (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q whereto))))
 
-                  (rd-prot (let ((supervisorconf (blocking-do
-                                                  'get-conf-stat
-                                                  (conf-stat->supervisor conf-conf-stat))))
-                             (if supervisorconf
-                                 (lyskom-format-insert 'is-read-protected-contact-supervisor
-                                                       conf-conf-stat
-                                                       supervisorconf)
-                               (lyskom-format-insert 'cant-find-supervisor
-                                                     conf-conf-stat))))
+               (mship-type (or mship-type
+                               (lyskom-create-membership-type (not self) nil nil message-flag
+                                                              nil nil nil nil)))
 
-                  (t (lyskom-insert-error errno err-stat)))))
+               (no-of-unread-string (cond ((null no-of-unread) nil)
+                                          ((numberp no-of-unread)
+                                           (lyskom-format 'member-in-conf-with-unread no-of-unread))
+                                          ((listp no-of-unread)
+                                           (lyskom-format 'member-in-conf-with-unread-date
+                                                          (elt no-of-unread 0)
+                                                          (car (rassq (elt no-of-unread 1)
+                                                                      lyskom-month-names))
+                                                          (elt no-of-unread 2)))))
+               )
 
-      (cond (mship-type
-             (blocking-do 'set-membership-type
-                          (conf-stat->conf-no pers-conf-stat)
-                          (conf-stat->conf-no conf-conf-stat)
-                          mship-type))
+          ;; Now add the member; we've got all the information we need
 
-            ((and (eq (conf-stat->conf-no pers-conf-stat)
-                      lyskom-pers-no)
-                  (lyskom-j-or-n-p
-                   (lyskom-format 'set-message-flag-q conf-conf-stat)))
-             (blocking-do 'set-membership-type
-                          (conf-stat->conf-no pers-conf-stat)
-                          (conf-stat->conf-no conf-conf-stat)
-                          (lyskom-create-membership-type nil nil nil t
-                                                         nil nil nil nil))))
+          ;; Adding ourselves. Adjust where so the membership
+          ;; list remains sorted. Find the closest position to
+          ;; where at which we can put the membership and keep
+          ;; the membership lsit sorted.
 
-      (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
-      (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat))
-      (when (= (conf-stat->conf-no pers-conf-stat)
-             lyskom-pers-no)
-        (when no-of-unread
-          (cond ((listp no-of-unread)
-                 (let* ((target-date (lyskom-create-time 0 0 0 (elt no-of-unread 2) (elt no-of-unread 1) (elt no-of-unread 0) 0 0 nil))
-                        (text (lyskom-find-text-by-date conf-conf-stat target-date)))
-                   (when text
-                     (blocking-do 'set-last-read 
-                                  (conf-stat->conf-no conf-conf-stat)
-                                  (car text)))))
-                ((numberp no-of-unread) 
-                 (blocking-do 'set-unread (conf-stat->conf-no conf-conf-stat)
-                              no-of-unread))))
-        (let ((mship (blocking-do 'query-read-texts
-                                  lyskom-pers-no 
-                                  (conf-stat->conf-no conf-conf-stat)
-                                  t 0)))
-          (if (< (membership->priority mship) lyskom-session-priority)
-              (lyskom-format-insert-before-prompt
-               'member-in-conf-with-low-priority
-               conf-conf-stat)
-            (unless (membership->position mship)
-              (set-membership->position mship pos))
-            (if (lyskom-try-get-membership (conf-stat->conf-no conf-conf-stat) t)
-                (progn (lyskom-replace-membership mship)
-                       (lyskom-fetch-start-of-map conf-conf-stat mship))
-              (lyskom-add-membership mship
-                                     conf-conf-stat
-                                     t)))))
-      (lyskom-insert-string 'done))))
+          (when (eq lyskom-pers-no (conf-stat->conf-no who))
+            (let ((mship-list lyskom-membership)
+                  (mship nil)
+                  (index 0)
+                  (found nil))
+              (while mship-list
+                (setq mship (car mship-list)
+                      mship-list (cdr mship-list))
+                (cond ((> (membership->priority mship) priority))
+                      ((< (membership->priority mship) priority) 
+                       (setq position index mship-list nil found t))
+                      ((and (= (membership->priority mship) priority)
+                            (= index position))
+                       (setq mship-list nil found t))
+                      ((and (= (membership->priority mship) priority)
+                            (> index position))
+                       (setq position index mship-list nil found t)))
+                (setq index (1+ index))
+                (unless found (setq position (1+ index))))))
 
+          ;; Print the prompt
+
+          (lyskom-format-insert (cond (message-string)
+                                      ((and self mship
+                                            (membership-type->invitation
+                                             (membership->type mship)))
+                                       'accepting-invitation)
+                                      (self 'member-in-conf)
+                                      (t 'add-member-in))
+                                who whereto no-of-unread-string)
+
+          ;; Do the add thing
+
+          (lyskom-ignoring-async (18 lyskom-pers-no (conf-stat->conf-no whereto))
+            (let ((res (blocking-do 'add-member
+                                    (conf-stat->conf-no whereto)
+                                    (conf-stat->conf-no who)
+                                    priority position mship-type)))
+
+              (cond 
+
+               ;; Failure 
+
+               ((null res) 
+                (lyskom-insert-string 'nope)
+                (let* ((errno lyskom-errno)
+                       (err-stat lyskom-err-stat)
+                       (is-supervisor (lyskom-is-supervisor (conf-stat->conf-no whereto)
+                                                            lyskom-pers-no))
+                       (is-member (lyskom-is-member (conf-stat->conf-no whereto)
+                                                    (conf-stat->conf-no who)))
+                       (rd-prot (conf-type->rd_prot (conf-stat->conf-type whereto))))
+
+
+                  (cond (is-member
+                         (lyskom-format-insert 'add-already-member who whereto))
+                        ((and rd-prot is-supervisor)
+                         (lyskom-insert-error errno err-stat))
+                        (rd-prot (let ((supervisorconf (blocking-do
+                                                        'get-conf-stat
+                                                        (conf-stat->supervisor whereto))))
+                                   (if supervisorconf
+                                       (lyskom-format-insert 'is-read-protected-contact-supervisor
+                                                             whereto
+                                                             supervisorconf)
+                                     (lyskom-format-insert 'cant-find-supervisor
+                                                           whereto))))
+                        (t (lyskom-insert-error errno err-stat)))))
+
+               (t
+                (setq became-member t)
+
+                ;; If we're re-adding a membership, then we need to set the
+                ;; membership type explicity since add-member won't
+
+                (when (and self mship)
+                  (blocking-do 'set-membership-type
+                               (conf-stat->conf-no who)
+                               (conf-stat->conf-no whereto)
+                               mship-type))
+
+                (cache-del-pers-stat (conf-stat->conf-no who))
+                (cache-del-conf-stat (conf-stat->conf-no whereto))
+
+                (when self
+                  (when no-of-unread
+                    (cond ((listp no-of-unread)
+                           (let* ((target-date (lyskom-create-time 0 0 0 (elt no-of-unread 2) (elt no-of-unread 1) (elt no-of-unread 0) 0 0 nil))
+                                  (text (lyskom-find-text-by-date whereto target-date)))
+                             (when text
+                               (blocking-do 'set-last-read 
+                                            (conf-stat->conf-no whereto)
+                                            (car text)))))
+                          ((numberp no-of-unread) 
+                           (blocking-do 'set-unread (conf-stat->conf-no whereto)
+                                        no-of-unread))))
+                  (let ((mship (blocking-do 'query-read-texts
+                                            lyskom-pers-no 
+                                            (conf-stat->conf-no whereto)
+                                            t 0)))
+                    (if (< (membership->priority mship) lyskom-session-priority)
+                        (lyskom-format-insert-before-prompt
+                         'member-in-conf-with-low-priority
+                         whereto)
+                      (unless (membership->position mship)
+                        (set-membership->position mship position))
+                      (if (lyskom-try-get-membership (conf-stat->conf-no whereto) t)
+                          (progn (lyskom-replace-membership mship)
+                                 (lyskom-fetch-start-of-map whereto mship))
+                        (lyskom-add-membership mship
+                                               whereto
+                                               t))))
+                  (lp--update-buffer (conf-stat->conf-no whereto)))
+                (lyskom-insert-string 'done))))))))
+    became-member))
 
 
 (defun lyskom-add-membership (membership conf-no-or-stat &optional blocking)
@@ -1716,20 +1682,11 @@ If NO-PROMPT is non-nil, don't print message that we have gone to conf."
 				conf)
 	  (lyskom-scroll)
 	  (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
-              (let ((no-of-unread
-                     (lyskom-read-num-range-or-date 
-                      0 
-                      (conf-stat->no-of-texts conf)
-                      (lyskom-format 'initial-unread)
-                      nil
-                      t
-                      nil)))
-                (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
-                                             lyskom-pers-no no-of-unread)
-                    (lyskom-do-go-to-conf conf
-                                          (lyskom-get-membership
-                                           (conf-stat->conf-no conf) t))
-                  (lyskom-report-command-answer nil)))
+              (if (lyskom-add-member-by-no (conf-stat->conf-no conf) lyskom-pers-no)
+                  (lyskom-do-go-to-conf conf
+                                        (lyskom-get-membership
+                                         (conf-stat->conf-no conf) t))
+                (lyskom-report-command-answer nil))
 	    (lyskom-insert-string 'no-ok))))))
 
     ;; DEBUG+++

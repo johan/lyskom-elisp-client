@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.323 2004-02-22 09:43:58 byers Exp $
+;;;;; $Id: english-strings.el,v 44.324 2004-02-22 15:48:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.323 2004-02-22 09:43:58 byers Exp $"))
+              "$Id: english-strings.el,v 44.324 2004-02-22 15:48:26 byers Exp $"))
 
 
 ;;; ================================================================
@@ -446,12 +446,14 @@ and you have finished reading. Please come back later.
     (cant-move-from-to-same . "Source and target conferences must be different.\n")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
-    (member-in-conf . "Joining to %#1M%#2?b%[ %#2s%]%[%]...")
+    (accepting-invitation . "Accepting invitation to %#2M%#3?b%[ %#3s%]%[%]...")
+    (member-in-conf . "Joining %#2M%#3?b%[ %#3s%]%[%]...")
     (member-in-conf-with-low-priority . "%#1M has lower priority than your session priority, and will not be shown.\n")
     (member-in-conf-with-unread-date . "with unread from %#2s %#3d, %#1d")
     (member-in-conf-with-unread . "unread %#1d unread")
     (add-member-in . "Adding %#1P as a member of %#2M...")
     (change-priority-for-q . "Change priority of conference: ")
+    (cant-change-priority-of-passive . "Can't change priority of passive memberships.\n")
     (change-priority-for . "Changing priority of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
     (unsubscribe-to-2 . "Leaving %#1M%#2s...")
@@ -477,6 +479,7 @@ and you have finished reading. Please come back later.
     (exclude-from . "Removing %#1P from %#2M...")
 
     (unsubscribe-failed . "\nDidn't work. Perhaps %#1P isn't a member of %#2M?\n")
+    (activate-mship . "Become active member of %#1M...")
     (activate-mship-done . "Activated passive membership of %#1M.\n")
     (passivate-done . "You are now a passive member of %#1M.
 Leave the conference again to unsubscribe completely.\n")

@@ -1,5 +1,29 @@
 2004-02-22  David Byers  <byers@lysator.liu.se>
 
+	Fix new bug in kom-is-person-member-of-conference:
+	* lyskom-rest.el (lyskom-get-read-texts-for-membership): Removed
+	this function again. It isn't used anywhere any more.
+
+	* commands2.el (kom-is-person-member-of-conference): Don't use
+	lyskom-get-read-texts-for-membership. Don't need it.
+
+	Refactoring of adding members to simplify all callers:
+	* lyskom-rest.el (lyskom-check-go-to-conf): Use lyskom-add-member
+	to add self when going to a conference we have been invited to or
+	need to depassivate.
+	(lyskom-startup-check-recommended-memberships): Use
+	lyskom-add-member to accept recommendations.
+
+	* commands1.el (lyskom-add-member): New function.
+	(kom-add-self): Use lyskom-add-member.
+	(kom-add-member): Use lyskom-add-member.
+	(lyskom-add-member-by-no): Use lyskom-add-member.
+	(lyskom-go-to-conf): Don't ask for number of unread here.
+	(lyskom-add-member-answer): Removed this junk.
+	(lyskom-try-add-member): Removed this junk too.
+	(kom-change-priority): Use lyskom-add-member. Refuse to change
+	priority of passive memberships.
+
 	Fix bug 1251:
 	* commands1.el (kom-move-text): Don't try to move footnotes and
 	attachments that we can't read.
