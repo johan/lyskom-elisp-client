@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.175 2002-03-16 10:51:37 joel Exp $
+;;;;; $Id: english-strings.el,v 44.176 2002-03-21 19:44:51 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.175 2002-03-16 10:51:37 joel Exp $"))
+              "$Id: english-strings.el,v 44.176 2002-03-21 19:44:51 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1591,6 +1591,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-sub-self-action . "Leave conference")
     (lyskom-button-view-pers-presentation-action . "View presentation")
     (lyskom-button-view-pers-status-action . "View user status")
+    (lyskom-button-view-session-status-action . "View session status")
     (lyskom-button-mail-action . "Send letter")
     (lyskom-button-send-message-action . "Send personal message")
     (lyskom-button-open-url-action . "Open")

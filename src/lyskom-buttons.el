@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.63 2002-03-02 20:35:20 joel Exp $
+;;;; $Id: lyskom-buttons.el,v 44.64 2002-03-21 19:44:51 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.63 2002-03-02 20:35:20 joel Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.64 2002-03-21 19:44:51 joel Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -748,6 +748,12 @@ This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
            (kom-send-message arg nil))))
+
+(defun lyskom-button-view-session-status (buf arg text)
+  "In the LysKOM buffer BUF, show session status for person ARG."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-status-session (lyskom-session-from-conf arg)))))
 
 (defun lyskom-button-copy-email (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
