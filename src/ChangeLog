@@ -1,3 +1,7 @@
+2003-02-05  Hans Persson  <hans@localhost.localdomain>
+
+	* swedish-strings.el (local): Spelling fix.
+
 2003-01-15  David Byers  <david.byers@swipnet.se>
 
 	* vars.el.in: Minor fixes to documentation.
