@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.11 1999-11-19 13:37:43 byers Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: defvar.el,v 44.12 2002-02-24 20:23:26 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.11 1999-11-19 13:37:43 byers Exp $\n"
+  "$Id: defvar.el,v 44.12 2002-02-24 20:23:26 joel Exp $\n"
   "Version for every file in the client.")
 
 

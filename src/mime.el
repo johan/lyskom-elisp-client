@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.4 1999-11-21 15:39:56 byers Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: mime.el,v 44.5 2002-02-24 20:23:27 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.4 1999-11-21 15:39:56 byers Exp $\n"))
+	      "$Id: mime.el,v 44.5 2002-02-24 20:23:27 joel Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)

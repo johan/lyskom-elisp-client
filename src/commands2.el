@@ -1,9 +1,9 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.104 2002-02-18 21:40:50 ceder Exp $
- ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+ ;;;;; $Id: commands2.el,v 44.105 2002-02-24 20:23:26 joel Exp $
+ ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
  ;;;;;
- ;;;;; This file is part of the LysKOM server.
+ ;;;;; This file is part of the LysKOM Emacs LISP client.
  ;;;;; 
  ;;;;; LysKOM is free software; you can redistribute it and/or modify it
  ;;;;; under the terms of the GNU General Public License as published by 
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.104 2002-02-18 21:40:50 ceder Exp $\n"))
+               "$Id: commands2.el,v 44.105 2002-02-24 20:23:26 joel Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))

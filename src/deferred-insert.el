@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.3 1999-12-05 22:42:04 byers Exp $
-;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
+;;;;; $Id: deferred-insert.el,v 44.4 2002-02-24 20:23:26 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 

@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.19 2001-01-03 22:02:55 qha Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: filter.el,v 44.20 2002-02-24 20:23:27 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.19 2001-01-03 22:02:55 qha Exp $\n"))
+	      "$Id: filter.el,v 44.20 2002-02-24 20:23:27 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
