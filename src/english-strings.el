@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.16 1996-02-18 05:51:23 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.17 1996-02-21 19:48:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.16 1996-02-18 05:51:23 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.17 1996-02-21 19:48:00 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -593,9 +593,9 @@ use. Please leave and return later if you are just waiting
 for an article.
 ===========================================================\n")
     (has-entered . "%#1:P has entered LysKOM.")
-    (has-entered-r . "%#1P has entered LysKOM.\n")
+    (has-entered-r . "%#2@%#1P has entered LysKOM.\n")
     (has-left . "%#1:P has left LysKOM.")
-    (has-left-r . "%#1P has left LysKOM.\n")
+    (has-left-r . "%#2@%#1P has left LysKOM.\n")
     (unknown . "unknown")
 
     (message-broadcast .
