@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.227 2004-02-21 22:34:13 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.228 2004-02-22 15:48:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.227 2004-02-21 22:34:13 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.228 2004-02-22 15:48:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -682,29 +682,12 @@ If CONF is nil, check the first conf on the to-do list."
                               conf-stat
                               (membership->created-by mship))
         (if (lyskom-j-or-n-p (lyskom-get-string 'accept-invitation))
-            (progn
-              (set-membership-type->invitation type nil)
-              (initiate-set-membership-type 'main
-                                            nil
-                                            lyskom-pers-no
-                                            (conf-stat->conf-no conf-stat)
-                                            (membership->type mship))
-              (lyskom-add-member-answer
-               (lyskom-try-add-member conf-stat
-                                      (blocking-do 'get-conf-stat lyskom-pers-no)
-                                      (blocking-do 'get-pers-stat lyskom-pers-no)
-                                      nil
-                                      'change-priority-for 
-                                      t)
-               conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)
-               (setq continue t))
-              (lp--update-buffer (conf-stat->conf-no conf-stat)))
-          (progn
-            (let ((kom-unsubscribe-makes-passive nil))
-              (lyskom-sub-member (blocking-do 'get-conf-stat lyskom-pers-no)
-                                 conf-stat))
-            (setq continue nil)
-            )))
+
+            (setq continue (lyskom-add-member (blocking-do 'get-conf-stat lyskom-pers-no) conf-stat))
+          (let ((kom-unsubscribe-makes-passive nil))
+            (lyskom-sub-member (blocking-do 'get-conf-stat lyskom-pers-no)
+                               conf-stat)
+            (setq continue nil))))
 
       (when (and continue (membership-type->secret type))
         (lyskom-format-insert-before-prompt 'bug-secret-mship conf-stat))
@@ -715,21 +698,9 @@ If CONF is nil, check the first conf on the to-do list."
         (lyskom-format-insert 'enter-passive conf-stat)
         (setq continue nil)
         (if (lyskom-j-or-n-p (lyskom-format 'convert-passive conf-stat))
-            (progn
-              (set-membership-type->passive type nil)
-              (set-membership-type->message-flag
-               type
-               (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q
-                                               conf-stat)))
-              (blocking-do 'set-membership-type
-                           lyskom-pers-no
-                           (conf-stat->conf-no conf-stat)
-                           (membership->type mship))
-              (lyskom-fetch-start-of-map conf-stat mship)
-              (lp--update-buffer (conf-stat->conf-no conf-stat))
-              (setq continue t))
-          (progn
-            (setq continue nil))))
+            (setq continue 
+                  (lyskom-add-member (blocking-do 'get-conf-stat lyskom-pers-no) conf-stat))
+          (setq continue nil)))
       )
 
     ;;; Return the result
@@ -817,21 +788,9 @@ by PERS-NO"
             (lyskom-format-insert 'has-recommended-conf
                                   (elt rec 3)
                                   (elt rec 0))
-            (if (lyskom-j-or-n-p
-                 (lyskom-format 'accept-recommendation (elt rec 0)))
-                (let ((kom-membership-default-priority
-                       (if (elt rec 1) 'ask kom-membership-default-priority)))
-                  (lyskom-add-member-answer
-                   (lyskom-try-add-member conf-stat
-                                          pers-conf-stat
-                                          pers-stat
-                                          (lyskom-create-membership-type
-                                           nil nil nil nil nil nil nil nil)
-                                          'accepting-recommendation
-                                          t
-                                          (elt rec 1))
-                   conf-stat
-                   pers-conf-stat))
+            (if (lyskom-j-or-n-p (lyskom-format 'accept-recommendation (elt rec 0)))
+                (lyskom-add-member pers-conf-stat conf-stat nil nil 
+                                   (and (elt rec 1) (list (elt rec 1))) nil)
               (lyskom-reject-recommendation (elt rec 0)))))))))
 
 (defun lyskom-clean-read-faqs (pers-no)
@@ -1043,24 +1002,6 @@ found in lyskom-membership, a blocking call to the server is made."
                    membership
                  nil))))))
 
-
-(defun lyskom-get-read-texts-for-membership (pers-no mship)
-  "Get read-texts for membership MSHIP"
-  (when (and  mship (null (membership->read-texts mship)))
-    (let ((result (make-collector)))
-      (initiate-query-read-texts 'read-texts
-                                 'collector-push
-                                 pers-no
-                                 (membership->conf-no mship)
-                                 t
-                                 lyskom-max-int
-                                 result)
-      (lyskom-wait-queue 'read-texts)
-      (when (car (collector->value result))
-        (set-membership->read-texts 
-         mship
-         (or (membership->read-texts (car (collector->value result)))
-             (make-vector 0 nil)))))))
 
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
