@@ -1,3 +1,17 @@
+Sat Oct 11 13:05:26 1997  David Byers  <davby@ida.liu.se>
+
+	* defvar.el (def-kom-var): Om variabeln redan är definierad så
+ 	skall den inte läsas från user-arean.
+
+	* review.el (lyskom-get-texts-by-generic): Flyttade innehållet i
+ 	lyskom-get-texts-by hit.
+	(lyskom-get-texts-by): Använd lyskom-get-texts-by-generic.
+	(lyskom-get-texts-by-to): Vi kan återse brev till någon annan.
+
+Fri Oct 10 15:47:22 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* Kanske release av 0.45.1
+
 Tue Oct  7 12:30:30 1997  David Byers  <davby@ida.liu.se>
 
 	* parse.el (lyskom-parse-vector): Klara att parsea 0 { }. 
