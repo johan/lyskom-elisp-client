@@ -1,3 +1,9 @@
+2005-02-24  Pontus Freyhult  <pont@soua.net>
+
+	Fix bug 1536:
+	* command.el (lyskom-start-of-command): Pass port if non-standard.
+	Also explicitly send current password (if available).
+
 2005-02-15  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1512:
