@@ -1,3 +1,11 @@
+2001-05-08  Per Cederqvist  <ceder@moria>
+
+	* TODO: Change all occurances of "x-kom/basic" to
+	"text/x-kom-basic".
+	* vars.el.in (lyskom-format-special): The content type
+	"x-kom/basic" is being renamed to "text/x-kom-basic".  Keep the
+	old name as well.
+
 2001-05-07  David Byers  <davby@ida.liu.se>
 
 	* check-strings.el (lyskom-check-strings): Check help strings and
