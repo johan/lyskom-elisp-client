@@ -7,8 +7,6 @@
      nummer medlemmar inl{gg senaste-inl{gg namn
   sorterat p} senaste inl{gg {r ett alternativ.
 
-* Kommando: addera  extra mottagare i efterhand.
-
 * Det borde finnas m|jlighet att sl} av visa alla mottagare.
 
 * N{r man skickat in en text s} borde den v{nta tills det {r klart
@@ -37,7 +35,6 @@
   skall bli obsolete!
 
 * who-bufferten skall ha antalet inloggade i sin statusrad.
-* Kunna st{nga av who-bufferten (uppsnabbning).
 
 * N{r n}gon g|r "aB|rja med nytt namn" s} hamnar hans session sist i
   who-bufferten hos alla andra som {r med i LysKOM.
@@ -119,12 +116,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
 * Dokumentera alla {ndringar.
 
-* Stoppa in Tommys b|rja p} ny sida vid vissa funktioner-funktion.
-
-* N{r man skriver inl{gg och har kom-emacs-knows-iso-8859-1 nil s}
-  borde den st{lla om lyskom-header-separator och [rende: till att
-  anv{nda swascii.
-
 * lyskom-end-of-command-hook.
 
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
@@ -158,7 +149,7 @@ Inge: klart?
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
     cookie-moden)
   - prioritera m|ten
-  - editera flaggor. En helt ny och f|rb{ttrad options.el
+  - editera flaggor. En helt ny och f|rb{ttrad options.el kanske
   - ge privilegier (nytt kommando)
 
 
