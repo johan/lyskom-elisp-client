@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.8 1993-06-23 23:50:50 linus Exp $
+;;;;; $Id: edit-text.el,v 36.9 1993-07-26 19:08:08 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.8 1993-06-23 23:50:50 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.9 1993-07-26 19:08:08 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -88,7 +88,8 @@ Does lyskom-end-of-command."
     (setq lyskom-edit-return-to-configuration config)
     (lyskom-edit-insert-miscs misc-list subject body)
     (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
-  (set-buffer (process-buffer lyskom-proc)))
+  (set-buffer (process-buffer lyskom-proc))
+  )
 
 
 (defun lyskom-edit-insert-miscs (misc-list subject body)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.9 1993-07-14 15:52:42 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.10 1993-07-26 19:08:27 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.9 1993-07-14 15:52:42 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.10 1993-07-26 19:08:27 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -425,17 +425,27 @@ Ditt allm\344nna meddelande l\366d:
     (does-not-exist . "Detta kommando finns inte.")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
-    (buggreport-compilestart . "Compiling...")
-    (buggreport-compileend . "Compiling...done")
+    (buggreport-compilestart . "Skapar buggrapporten...")
+    (buggreport-compileend . "Skapar buggrapporten...klart")
     (buggreport-description . "Detta gjorde jag:
 (Fyll i dina kommentarer)\n\n\n
-N\344r du skrivit klart skall du skicka in din buggrapport till
-LysKOM-utvecklarna. Det sker antingen med email till 
-bug-lyskom@lysator.liu.se eller i Lysators LysKOM till m\366tet
-\"LysKOM; Elispklientens buggrapporter\" eller om inget annat
-fungerar med vanligt brev till:
-Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN.
-M\344rk kuvertet LysKOM buggrapport.\n\n")
+Bland informationen nedan finns ocks\345 en lista p\345 de 100 sist tryckta
+tangenterna i din emacs. Om du nyligen loggat in kan den inneh\345lla ditt
+lyskoml\366senord. Titta igenom den och \344ndra det som \344r ditt l\366senord
+till * * * eller m i t t l \366 s e n eller n\345got annat l\344mpligt.
+
+N\344r du skrivit klart skall du skicka in din buggrapport till LysKOMs
+elispklientutvecklare. Det sker antingen:
+* med email till bug-lyskom@lysator.liu.se
+* i Lysators LysKOM till m\366tet \"LysKOM; Elispklientens buggrapporter\" 
+* med vanligt brev till:
+\tLysator
+\tc/o ISY
+\tLink\366ping University
+\tS-581 83 Linkoping
+\tSWEDEN.
+
+M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (buggreport-internals . "LysKOMs interna information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-emacs-version . "emacs-version:")

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.3 1993-05-27 15:22:43 linus Exp $
+# $Id: Makefile,v 36.4 1993-07-26 19:07:12 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.3 1993-05-27 15:22:43 linus Exp $
+# $Id: Makefile,v 36.4 1993-07-26 19:07:12 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.3  1993-05-27 15:22:43  linus
+# Revision 36.4  1993-07-26 19:07:12  linus
+# Buggfixes, bug-report, quit-ding
+#
+# Revision 36.3  1993/05/27  15:22:43  linus
 # install in local/var/elisp
 #
 # Revision 36.2  1993/05/27  13:21:12  linus
@@ -109,6 +112,8 @@ MKDIR = /bin/mkdir
 
 RM = /usr/gnu/bin/rm -vf
 EMACS-BATCH = emacs -batch -l /usr/local/var/elisp/bytecomp
+# for compiling using emacs 19!
+EMACS-BATCH = emacs -batch -l ./compatibility.el
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el startup.el \

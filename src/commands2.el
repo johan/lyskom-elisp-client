@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.6 1993-06-23 15:59:20 linus Exp $
+;;;;; $Id: commands2.el,v 36.7 1993-07-26 19:07:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.6 1993-06-23 15:59:20 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.7 1993-07-26 19:07:49 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -936,7 +936,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;;; Author: Linus Tolke
 
 
-(defun kom-compile-bug-report ()
+(defun kom-bug-report ()
   "This command should make it easier to include the correct info in a buggreport"
   (interactive)
   (let* ((curbuf (current-buffer))
@@ -959,6 +959,10 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
     (with-output-to-temp-buffer repname
       (princ (lyskom-get-string 'buggreport-description))
       (princ (lyskom-get-string 'buggreport-internals))
+      (princ (lyskom-get-string 'buggreport-command-keys))
+      (terpri)
+      (princ (key-description (recent-keys)))
+      (terpri)
       (princ (lyskom-get-string 'buggreport-version))
       (print lyskom-clientversion)
       (princ (lyskom-get-string 'buggreport-emacs-version))
@@ -976,9 +980,6 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	       (goto-char (point-min))
 	       (forward-line 10)
 	       (buffer-substring (point-min) (point))))
-      (princ (lyskom-get-string 'buggreport-command-keys))
-      (terpri)
-      (princ (key-description (recent-keys)))
       (if (condition-case ()
 	      debugger-old-buffer
 	    (void-variable nil))
@@ -1014,6 +1015,8 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (replace-regexp "byte-code(\".*\""
 		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compileend))))
+
+(fset 'kom-compile-bug-report (symbol-function 'kom-bug-report))
 
 
 ; ;;; ================================================================
