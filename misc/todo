@@ -31,8 +31,6 @@ r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
 * Lappar p} d|rrar f|r m|ten.
 Linus: Hmm, hur skall de hanteras egentligen?
 
-* Fotnot skall {ven hamna i extrakopiemottagarem|ten.
-
 * klienten skall fr}ga efter en presentation.
 Linus: en sn{ll uppmaning inlagt. R{cker det?
 
@@ -44,9 +42,6 @@ Linus: en sn{ll uppmaning inlagt. R{cker det?
 
 * N{r n}gon g|r "aB|rja med nytt namn" s} hamnar hans session sist i
   who-bufferten hos alla andra som {r med i LysKOM.
-
-* ]terse senaste verkar missa ett inl{gg n{r vi g|r }terse fr}n b|rjan
-  p} m|tet.
 
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
@@ -110,7 +105,7 @@ Linus: R{cker inte ceders uppdelning av anropen?
   Ta bort lyskom-message-of-the-day	- klart.*
   Ge adm.r{ttigheter }t n}gon annan.
   Kasta ut en session	  		- klart.*
-  S{tt till}tna f|rfattare.
+  S{tt till}tna f|rfattare.             - klart.
   [ndra superm|te.			- klart.*
   [ndra m|tesstatus.
 
@@ -124,8 +119,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
 * lyskom-insert-before-prompt borde fixa till variabeln som avg|r hur
   l}ngt vi f}r skrolla.
-
-* who-bufferten har f|r m}nga mellanslag i slutet av raderna.
 
 * Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
 
