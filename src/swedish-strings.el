@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.350 2003-09-15 08:14:58 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.351 2003-11-17 22:25:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.350 2003-09-15 08:14:58 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.351 2003-11-17 22:25:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -444,7 +444,9 @@ du har läst klart allting. Kom tillbaks senare.
     (change-priority-for . "Ändra prioritet på %#2M...")
     (unsubscribe-to . "Utträda ur %#1M...")
     (unsubscribe-to-2 . "Utträda ur %#1M%#2s...")
-    (confirm-each-join . "Vill du bekräfta medlemskap i varje enskilt möte? ")
+    (confirm-each-join . "Vill du bekräfta medlemskap i enskila möten? ")
+    (confirm-each-msg . "Vill du bekräfta mottagande av gruppmeddelande i enskila möten? ")
+    (receive-each-msg . "Vill du ta emot gruppmeddelande i alla möten? ")
     (no-confirm-each-sure . "Är du helt säker på att du vill gå med i %#1d möten automatiskt? ")
     (confirm-join . "Gå med i %#1M? ")
     (getting-all-confs . "Hämtar en lista med alla möten...")

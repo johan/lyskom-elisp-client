@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.193 2003-11-17 21:03:49 byers Exp $
+;;;;; $Id: commands2.el,v 44.194 2003-11-17 22:25:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.193 2003-11-17 21:03:49 byers Exp $\n"))
+              "$Id: commands2.el,v 44.194 2003-11-17 22:25:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2635,7 +2635,7 @@ See `kom-keep-alive' for more information."
   (let* ((pers-no
           (or pers-no
               (lyskom-read-conf-no 'pers-to-check-mship-for
-                                   '(all) nil nil t)))
+                                   '(pers) nil nil t)))
          (conf-stat
           (if conf-no 
               (blocking-do 'get-conf-stat conf-no)
@@ -3336,6 +3336,11 @@ is probably not what you really want to do."
                            (not (lyskom-j-or-n-p 
                                  (lyskom-format 'no-confirm-each-sure
                                                 (length conf-nos))))))
+         (mship-type (unless (lyskom-j-or-n-p 'confirm-each-msg)
+                       (lyskom-create-membership-type
+                        nil nil nil (lyskom-j-or-n-p 'receive-each-msg)
+                        nil nil nil nil)))
+
          (no-of-unread (lyskom-read-num-range-or-date 
                         0 
                         lyskom-max-int
@@ -3352,7 +3357,8 @@ is probably not what you really want to do."
                   (and confirm-each
                        (not (lyskom-j-or-n-p (lyskom-format 'confirm-join 
                                                             (car conf-nos))))))
-        (lyskom-add-member-by-no (car conf-nos) lyskom-pers-no no-of-unread))
+        (lyskom-add-member-by-no (car conf-nos) lyskom-pers-no 
+                                 no-of-unread mship-type))
       (setq conf-nos (cdr conf-nos)))))
 
 

@@ -1,5 +1,27 @@
 2003-11-17  David Byers  <byers@lysator.liu.se>
 
+	Minor bug fixes:
+	* commands2.el (kom-is-person-member-of-conference): When reading
+	pers-to-check-mship-for, only read persons.
+
+	* vars.el.in (lyskom-default-conference-strategy): Fixed typo in
+	kom-move-text-tree.
+
+	Fix bug 1174:
+	* commands2.el (kom-join-all-conferences): Ask about receiving
+	group messages in all conferences.
+
+	* commands1.el (lyskom-add-member-answer): Added mship-type
+	parameter.
+	(lyskom-add-member-by-no): Added mship-type parameter.
+	(kom-create-conf): Added mship-type parameter in call to
+	lyskom-add-member-by-no 
+
+	Fix bug 1213:
+	* commands1.el (lyskom-write-text): Handle argument correctly so
+	both prefix arguments and menus work properly.
+	(lyskom-add-member-answer): Added mship-type parameter
+
 	Fix bug 1132:
 	* commands2.el (lyskom-list-new-conferences): Made this function
 	asynchronous. Use lyskom-get-conf-stat since there's a good
