@@ -10,7 +10,7 @@ lang_inverse="\([^<]\|<[^/]\|</[^l]\|</l[^a]\|</la[^n]\|</lan[^g]\|</lang[^>]\)*
 
 # Make a swedish version without content
 
-function extract_language () {
+extract_language() {
   lang="$1"
   inverse="$2"
   cat $template | \
@@ -22,13 +22,13 @@ function extract_language () {
 }
 
 
-function get_lines () {
+get_lines() {
     file=$1
     key=$2
     grep -i "^$key=" $file | cut -d= -f2-
 }
 
-function get_items() {
+get_items() {
     lang=$1
     output="elisp-client-items.$lang"
 
@@ -44,6 +44,12 @@ function get_items() {
         echo "</div>" >> $output
     done
 }
+
+TEST=`echo A | sed 's/\(A\|B\)/C/g'`
+if [ "$TEST" = "A" ] ; then
+    echo "The version of sed on this computer is brain-damaged. Aborting."
+    exit 1
+fi
 
 get_items sv
 get_items en
