@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.109 2003-04-05 21:35:12 byers Exp $
+# $Id: Makefile,v 44.110 2003-08-24 18:41:35 byers Exp $
 
 # Useful targets:
 #
@@ -181,7 +181,7 @@ verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
 	$(EMACS-BATCH) -l lpath.el -l _header.el -f batch-byte-compile $<
 
 $(TARGET): $(TARGET-EL)
-	$(EMACS-BATCH) -l lpath.el -f batch-byte-compile $<
+	LYSKOM_DEBUG_COMPILE=yes $(EMACS-BATCH) -l lpath.el -f batch-byte-compile $<
 
 HEADER-ELC = $(HEADER:%.el=%.elc)
 LANGUAGE-ELC = $(LANGUAGE-EL:.el%.elc)

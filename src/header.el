@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: header.el,v 44.6 2003-04-21 16:15:17 byers Exp $
+;;;;; $Id: header.el,v 44.7 2003-08-24 18:41:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -122,4 +122,4 @@ run with your version of read-kbd-macro.
 
 
 (eval-and-compile 
-  (defvar lyskom-debug-compile (getenv "LYSKOM_DEBUG_COMPILE")))
+  (defvar lyskom-debug-compile (eval-when-compile (getenv "LYSKOM_DEBUG_COMPILE"))))

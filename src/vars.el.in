@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.265 2003-08-24 14:34:21 byers Exp $
+;;;;; $Id: vars.el.in,v 44.266 2003-08-24 18:41:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.265 2003-08-24 14:34:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.266 2003-08-24 18:41:36 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -305,17 +305,53 @@ the priority among links that match the same text is undefined."
              (default . (lyskom-default-conference-empty))))
 
 
-    ;; Things I suspect to magical stuff
-    ;; -- lyskom-add-helper
+    (kom-add-recipient (who-to-add-q 
+                        (default . ((lyskom-default-conference-saved last-added-rcpt)))
+                        (save last-added-rcpt)))
 
-    (kom-add-recipient (who-to-add-q))
-    (kom-add-copy (who-to-add-copy-q))
-    (kom-add-bcc (who-to-add-bcc-q))
-    (kom-sub-recipient (who-to-sub-q))
-    (kom-send-message (who-to-send-message-to))
-    (kom-move-text (who-to-move-from-q) (who-to-move-to-q))
-    (kom-move-text-tree (who-to-move-from-q) (who-to-move-to-q)
-                        (who-to-move-to-or-sub-q))
+    (kom-add-copy (who-to-add-copy-q 
+                   (default . ((lyskom-default-conference-saved last-added-cc)))
+                   (save last-added-cc)))
+
+    (kom-add-bcc (who-to-add-bcc-q 
+                  (default . ((lyskom-default-conference-saved last-added-bcc)))
+                  (save last-added-bcc)))
+
+    (kom-sub-recipient (who-to-sub-q
+                        (default . (lyskom-default-conference-at-point
+                                    (lyskom-default-conference-saved last-sub-recipient)
+                                    lyskom-default-conference-current
+                                    lyskom-default-conference-restriction))
+                        (save last-sub-recipient)))
+
+    (kom-move-text (who-to-move-from-q
+                    (default . (lyskom-default-conference-at-point
+                                (lyskom-default-conference-saved last-sub-recipient)
+                                lyskom-default-conference-current
+                                lyskom-default-conference-restriction))
+                    (save last-sub-recipient))
+                   (who-to-move-to-q
+                    (default . ((lyskom-default-conference-saved last-added-rcpt)
+                                lyskom-default-conference-current))
+                    (save last-added-rcpt)))
+
+    (kom-move-text-tree (who-to-move-from-q
+                         (default . (lyskom-default-conference-at-point
+                                     (lyskom-default-conference-saved last-sub-recipient)
+                                     lyskom-default-conference-current
+                                     lyskom-default-conference-restriction))
+                         (save last-sub-recipient))
+                        (who-to-move-to-or-sub-q
+                         (default . ((lyskom-default-conference-saved last-added-rcpt)
+                                     lyskom-default-conference-current))
+                         (save last added-rcpt))
+                        (who-to-move-to-q
+                         (default . ((lyskom-default-conference-saved last-added-rcpt)
+                                     lyskom-default-conference-current))
+                         (save last-added-rcpt)))
+
+    (kom-send-message (who-to-send-message-to
+                       (default . (lyskom-default-conference-for-send-message))))
 
 
     ;; Defaults and commands that use the defaults
@@ -336,6 +372,7 @@ the priority among links that match the same text is undefined."
     (kom-edit-insert-link (which-conf-to-link) (which-pers-to-link))
     (kom-status-conf (conf-for-status))
     (kom-status-person (pers-for-status))
+    (kom-set-keep-commented (conf-to-set-keep-commented-q))
     (kom-set-garb-nice (conf-to-set-garb-nice-q))
     (kom-set-super-conf (conf-to-set-super-conf-q) (new-super-conf-q))
     (kom-set-personal-label (label-what-pers) (label-what-conf))
@@ -3734,22 +3771,6 @@ set to that text."
   "Current subject."
   local)
 
-(def-kom-var lyskom-last-added-rcpt 0
-  "The default conference when adding a recipient or moving a text."
-  local)
-
-(def-kom-var lyskom-last-added-ccrcpt 0
-  "The default conference when adding a ccrecipient."
-  local)
-
-(def-kom-var lyskom-last-added-bccrcpt 0
-  "The default conference when adding a bccrecipient."
-  local)
-
-(def-kom-var lyskom-last-sub-rcpt 0
-  "The default conference when removing a recipient."
-  local)
-
 (def-kom-var kom-saved-file-name (concat default-directory "kom-text")
   "**The default filename when saving a LysKOM text.
 
@@ -4323,7 +4344,12 @@ environment variable for this, but it shouldn't be used if there is."
 ;;; ============================================================
 
 (defconst lyskom-comment-types-list '(COMM-IN FOOTN-IN))
-(defconst lyskom-recpt-types-list '(RECPT CC-RECPT BCC-RECPT))
+(defconst lyskom-recpt-types-list '(RECPT CC-RECPT BCC-RECPT)
+  "Types of recipients in LysKOM.
+This variable must be sorted in order of importance, with full recipients
+first, followed by successively more and more minor recipients. The reason
+for this is in kom-sub-recipient, which sorts the recipient list using
+the order of this list.")
 (defconst lyskom-review-types-list '(REVIEW REVIEW-TREE
                                             REVIEW-MARK REVIEW-FAQ
                                             REVIEW-FAQ-TREE))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.48 2003-08-20 20:20:04 byers Exp $
+;;;;; $Id: completing-read.el,v 44.49 2003-08-24 18:41:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.48 2003-08-20 20:20:04 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.49 2003-08-24 18:41:36 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 (defvar lyskom-read-conf-saved-inputs nil)
@@ -188,31 +188,38 @@ See lyskom-read-conf for a description of the parameters."
 ;;; Code to guess defaults for initial input
 ;;;
 
-(defun lyskom-default-conference-at-point ()
+(defun lyskom-default-conference-at-point (&rest args)
   (let* ((pos (or lyskom-command-point (point)))
          (type (and pos (get-text-property pos 'lyskom-button-type))))
     (and (memq type '(conf pers))
          (list (get-text-property pos 'lyskom-button-arg)))))
 
-(defun lyskom-default-conference-current ()
+(defun lyskom-default-conference-current (&rest args)
   (list lyskom-current-conf))
 
-(defun lyskom-default-conference-self ()
+(defun lyskom-default-conference-self (&rest args)
   (list lyskom-pers-no))
 
-(defun lyskom-default-conference-not-self (uc)
-  (not (eq (uconf-stat->conf-no uc) lyskom-pers-no)))
-
-(defun lyskom-default-conference-not-current (uc)
-  (not (eq (uconf-stat->conf-no uc) lyskom-current-conf)))
-
-(defun lyskom-default-conference-last-author ()
+(defun lyskom-default-conference-last-author (&rest args)
   (and (lyskom-get-last-read-text)
        (list (text-stat->author
               (blocking-do 'get-text-stat (lyskom-get-last-read-text))))))
 
-(defun lyskom-default-conference-saved (sym)
-  (list (conf-z-info->conf-no (cdr (assq sym lyskom-read-conf-saved-inputs)))))
+(defun lyskom-default-conference-restriction (predicate &rest args)
+  (and (assq 'restrict predicate)
+       (cdr (assq 'restrict predicate))))
+
+
+(defun lyskom-default-conference-saved (sym &rest args)
+  (and (cdr (assq (car sym) lyskom-read-conf-saved-inputs))
+       (list (conf-z-info->conf-no (cdr (assq (car sym) lyskom-read-conf-saved-inputs))))))
+
+(defun lyskom-default-conference-not-self (uc &rest args)
+  (not (eq (uconf-stat->conf-no uc) lyskom-pers-no)))
+
+(defun lyskom-default-conference-not-current (uc &rest args)
+  (not (eq (uconf-stat->conf-no uc) lyskom-current-conf)))
+
 
 
 (defun lyskom-get-initial-conf-strategy (prompt)
@@ -223,6 +230,13 @@ See lyskom-read-conf for a description of the parameters."
            (cdr (assq t (assq t lyskom-default-conference-strategy))))
          (prompt-spec (cdr (assq prompt spec-1)))
          (cmd-spec (cdr (assq t spec-1))))
+    (lyskom-debug-forms
+     (unless spec-1 (lyskom-format-insert-before-prompt 
+                     "%[%#2@%#1s%]\n"
+                     (format "Warning: no strategy for %S/%S"
+                             (or lyskom-current-command this-command)
+                             prompt)
+                     `(face ,kom-warning-face))))
     (list (or (assq 'default prompt-spec)
               (assq 'default cmd-spec)
               (assq 'default default-spec))
@@ -257,16 +271,15 @@ See lyskom-read-conf for a description of the parameters."
                (apply 'append 
                       (delq nil (mapcar (lambda (fn)
                                           (if (listp fn)
-                                              (apply (car fn) (cdr fn))
-                                            (funcall fn)))
+                                              (funcall (car fn) (cdr fn) predicate)
+                                            (funcall fn predicate)))
                                         default)))))))))
 
 
 
 (defun lyskom-read-conf-save-input (prompt input)
   "Save INPUT as input for the current completing read command."
-  (lyskom-traverse sym (cdr (assq 'save 
-                                  (lyskom-get-initial-conf-strategy prompt)))
+  (lyskom-traverse sym (cdr (assq 'save (lyskom-get-initial-conf-strategy prompt)))
     (if (assq sym lyskom-read-conf-saved-inputs)
         (setcdr (assq sym lyskom-read-conf-saved-inputs) input)
       (setq lyskom-read-conf-saved-inputs 

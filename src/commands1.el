@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.197 2003-08-24 14:36:52 byers Exp $
+;;;;; $Id: commands1.el,v 44.198 2003-08-24 18:41:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.197 2003-08-24 14:36:52 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.198 2003-08-24 18:41:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3539,7 +3539,6 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-recipient)))
   (lyskom-add-helper text-no 
-                     'lyskom-last-added-rcpt 
                      'who-to-add-q
                      'adding-name-as-recipient
                      'RECPT))
@@ -3555,7 +3554,6 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-copy)))
   (lyskom-add-helper text-no 
-                     'lyskom-last-added-ccrcpt 
                      'who-to-add-copy-q
                      'adding-name-as-copy
                      'CC-RECPT))
@@ -3571,24 +3569,17 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-bcc)))
   (lyskom-add-helper text-no 
-                     'lyskom-last-added-bccrcpt
                      'who-to-add-bcc-q
                      'adding-name-as-copy
                      'BCC-RECPT))
 
-(defun lyskom-add-helper (text-no last-variable who-prompt 
-                                  doing-prompt type)
+(defun lyskom-add-helper (text-no who-prompt doing-prompt type)
   (let* ((text-stat (blocking-do 'get-text-stat text-no))
          (attachments (lyskom-attachments-for-sub text-no))
          (footnotes (lyskom-footnotes-for-sub text-no))
          (move-footnotes nil)
          (move-attachments nil)
-         (conf (blocking-do 'get-conf-stat
-                            (lyskom-default-value last-variable)))
-         (target (lyskom-read-conf-stat who-prompt '(all) 
-                                        nil 
-                                        (and conf (conf-stat->name conf))
-                                        t)))
+         (target (lyskom-read-conf-stat who-prompt '(all) nil nil t)))
 
     (when (and target text-no)
 
@@ -3598,8 +3589,6 @@ This command accepts text number prefix arguments (see
                        (lyskom-format 'really-add-as-recpt-q target))))
         (setq type 'CC-RECPT doing-prompt 'adding-name-as-copy))
 
-      (lyskom-set-default last-variable (conf-stat->conf-no target))
-
       (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'add-footnotes-too-q)))
       (setq move-attachments (and attachments (lyskom-j-or-n-p 'add-attachments-too-q)))
       (lyskom-traverse text (append (list (cons text-no text-stat))
@@ -3607,21 +3596,6 @@ This command accepts text number prefix arguments (see
                                     (and move-attachments attachments))
         (lyskom-format-insert doing-prompt target (car text))
         (lyskom-move-recipient (car text) nil target type)))))
-
-(defun lyskom-default-recpt-for-sub (recipients)
-  "Select the default recipient for removal from RECIPIENTS.
-The value of RECIPIENTS should be the result of a call to 
-\(lyskom-text-recipients text-no t\)."
-  (let ((last-sub (lyskom-default-value 'lyskom-last-sub-rcpt)))
-    (cond ((and (assq last-sub recipients)
-                (blocking-do 'get-conf-stat last-sub)))
-          ((and (assq lyskom-current-conf recipients)
-                (blocking-do 'get-conf-stat lyskom-current-conf)))
-          ((and (rassq 'RECPT recipients)
-                (blocking-do 'get-conf-stat (car (rassq 'RECPT recipients)))))
-          ((and (car recipients)
-                (blocking-do 'get-conf-stat (car (car recipients))))))))
-
 
 (defun lyskom-footnotes-for-sub (text-no)
   "Return the list of footnotes to remove recipient from."
@@ -3669,19 +3643,21 @@ This command accepts text number prefix arguments (see
          (move-footnotes nil)
          (move-attachments nil))
     (if text-stat
-        (let ((recipients (lyskom-text-recipients text-stat t)))
+        (let ((recipients
+               (sort (lyskom-text-recipients text-stat t)
+                     (lambda (a b)
+                       (> (length (memq (cdr a) lyskom-recpt-types-list))
+                          (length (memq (cdr b) lyskom-recpt-types-list)))))))
           (if recipients
-              (let* ((conf (lyskom-default-recpt-for-sub recipients))
-                     (source (lyskom-read-conf-stat
+              (let* ((source (lyskom-read-conf-stat
                               'who-to-sub-q
                               (list (cons 'restrict (mapcar 'car recipients)))
                               nil
-                              (and conf (conf-stat->name conf))
+                              nil
                               t)))
                 (when source
                   (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'sub-footnotes-too-q)))
                   (setq move-attachments (and attachments (lyskom-j-or-n-p 'sub-attachments-too-q)))
-                  (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
 
                   (lyskom-traverse text (append (list (cons text-no text-stat))
                                                 (and move-footnotes footnotes)
@@ -3714,32 +3690,22 @@ recipient to remove and target the recipient to add to text-stat."
          (move-attachments nil))
     (if (null text-stat)
         (lyskom-format-insert 'no-such-text-no text-no)
-      (let* ((recipients (lyskom-text-recipients text-stat t))
-             (default-from (lyskom-default-recpt-for-sub recipients))
-             (default-to (blocking-do 'get-conf-stat
-                                      (or (lyskom-default-value 'lyskom-last-added-rcpt)
-                                          lyskom-current-conf))))
-        (if (null default-from)
+      (let* ((recipients (sort (lyskom-text-recipients text-stat t)
+                               (lambda (a b)
+                                 (> (length (memq (cdr a) lyskom-recpt-types-list))
+                                    (length (memq (cdr b) lyskom-recpt-types-list)))))))
+        (if (null recipients)
             (lyskom-format-insert 'text-has-no-recipients-r text-no)
           (let ((source (lyskom-read-conf-stat 
                          'who-to-move-from-q
-                         (list (cons 'restrict
-                                     (mapcar 'car
-                                             recipients)))
-                         nil
-                         (and default-from (conf-stat->name default-from))
-                         t))
-                (target (lyskom-read-conf-stat
-                         'who-to-move-to-q '(all)
-                         nil
-                         (and default-to (conf-stat->name default-to))
-                         t)))
+                         (list (cons 'restrict (mapcar 'car recipients)))
+                         nil nil t))
+                (target (lyskom-read-conf-stat 'who-to-move-to-q '(all)
+                                               nil nil t)))
             (when (and source target)
               (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'move-footnotes-too-q)))
               (setq move-attachments (and attachments (lyskom-j-or-n-p 'move-attachments-too-q)))
 
-              (lyskom-set-default 'lyskom-last-added-rcpt (conf-stat->conf-no target))
-              (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
               (lyskom-traverse text (append (list (cons text-no text-stat))
                                             (and move-footnotes footnotes)
                                             (and move-attachments attachments))
@@ -3763,16 +3729,14 @@ This command accepts text number prefix arguments (see
 
         ;; Set up default recipients for from and to.
 
-        (let* ((recipients (lyskom-text-recipients root-text-stat t))
-               (default-from (lyskom-default-recpt-for-sub recipients))
-               (default-to (blocking-do
-                            'get-conf-stat
-                            (or (lyskom-default-value 'lyskom-last-added-rcpt)
-                                lyskom-current-conf))))
+        (let* ((recipients (sort (lyskom-text-recipients root-text-stat t)
+                               (lambda (a b)
+                                 (> (length (memq (cdr a) lyskom-recpt-types-list))
+                                    (length (memq (cdr b) lyskom-recpt-types-list)))))))
 
           ;; Check that the text has recipients at all.
 
-          (if (null default-from)
+          (if (null recipients)
               (lyskom-format-insert 'text-has-no-recipients-r text-no)
 
             ;; Read the conference we are moving the tree away from.
@@ -3780,9 +3744,7 @@ This command accepts text number prefix arguments (see
             (let ((source (lyskom-read-conf-stat 
                            'who-to-move-from-q
                            (list (cons 'restrict (mapcar 'car recipients)))
-                           nil
-                           (and default-from (conf-stat->name default-from))
-                           t))
+                           nil nil t))
                   (to-do (list (text-stat->text-no root-text-stat)))
                   (done nil))
 
@@ -3860,19 +3822,12 @@ This command accepts text number prefix arguments (see
                                       'who-to-move-to-q)
                                     '(all)
                                     (> (length text-to-move-recipients) 1)
-                                    (and default-to 
-                                         (conf-stat->name default-to))
-                                    t)))
+                                    nil t)))
                               (if target
-                                  (progn
-                                    (setq default-to target)
-                                    (lyskom-format-insert 'moving-name source target text-stat)
-                                    (lyskom-set-default 'lyskom-last-added-rcpt (conf-stat->conf-no target))
-                                    (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source)))
+                                  (lyskom-format-insert 'moving-name source target text-stat)
                                 (lyskom-format-insert 'remove-name-as-recipient
                                                       source
-                                                      (text-stat->text-no text-stat))
-                                (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source)))
+                                                      (text-stat->text-no text-stat)))
                               (lyskom-move-recipient text-to-move source target 'RECPT)
                               (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
                               )

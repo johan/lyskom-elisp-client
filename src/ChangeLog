@@ -1,7 +1,59 @@
 2003-08-24  David Byers  <byers@lysator.liu.se>
 
+	* Makefile (TARGET): Default to debug compile.
+
+	Fix bug 459:
+	* commands2.el (kom-send-message): Use standard strategy for
+	initial value when reading conf.
+	(lyskom-default-conference-for-send-message): New function.
+
+	* async.el (lyskom-show-personal-message): Save conf-no, not name
+	in lyskom-last-personal-message-sender.
+	(lyskom-show-personal-message): Same here.
+
+	* vars.el.in (lyskom-default-conference-strategy): Added
+	strategy for set-keep-commented and kom-send-message.
+
+	* completing-read.el (lyskom-get-initial-conf-strategy): Display a
+	warning if there is no prompt-specific strategy (there should be).
+	This only happens if compiled with debugging.
+
+	* macros.el (lyskom-debug-forms): New macro.
+
+	* utilities.el (lyskom-completing-read): Fix handling of default
+	argument (twas broken before).
+
+	* commands1.el (kom-move-text-tree): Handle initial values for
+	reading conference names through standard strategy configuration.
+
+	* vars.el.in (lyskom-default-conference-strategy): Added
+	strategies for kom-move-text and kom-sub-recipient.
+
+	* commands1.el (lyskom-default-recpt-for-sub): Removed this
+	function. It is implemented through the standard strategy
+	configuration instead.
+	(kom-move-text): Handle initial values for reading conference
+	names through standard strategy configuration.
+
+	* vars.el.in (lyskom-last-added-rcpt): Removed this variable.
+	(lyskom-last-added-ccrcpt): Same.
+	(lyskom-last-added-bccrcpt): Same.
+	(lyskom-last-sub-rcpt): Same.
+
+	* commands1.el (kom-sub-recipient): Don't save answer reading
+	conference. Rely on standard strategy for default initial value.
+	Sort the recipient list so RECPT is first.
+
+	* vars.el.in (lyskom-default-conference-strategy): Handle initials
+	formerly set in lyskom-add-helper through save strategy.
+
 	* commands1.el (kom-create-conf): Ask about keep-commented when
 	creating conference.
+	(lyskom-add-helper): Don't explicitly save last-added stuff.
+	Removed last-added variable parameter.
+	(kom-add-copy): Updated parameter list to lyskom-add-helper.
+	(kom-add-bcc): Same here.
+	(kom-add-recipient): Same here.
 
 	* NEWS-0.48: Updated to here.
 
