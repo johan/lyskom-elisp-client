@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.6 1996-02-01 09:36:49 byers Exp $
+;;;;; $Id: completing-read.el,v 38.7 1996-02-02 05:00:18 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.6 1996-02-01 09:36:49 byers Exp $\n"))
+	      "$Id: completing-read.el,v 38.7 1996-02-02 05:00:18 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -150,11 +150,6 @@ Logins is a list of conf-nos (only significant when PREDICATE is logins)."
       (and (eq predicate 'logins)
 	   (memq (conf-stat->conf-no cs) logins))))
 
-
-;; +++ Where should this be put?
-(defsubst listify-vector (vector)
-  "Turn VECTOR into a list"
-  (append vector nil))
 
 (defun lyskom-read-conf-name-internal (string predicate all)
   "The \"try-completion\" for the lyskom-read name.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.11 1996-02-01 09:36:56 byers Exp $
+;;;;; $Id: english-strings.el,v 38.12 1996-02-02 05:00:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.11 1996-02-01 09:36:56 byers Exp $"))
+	      "$Id: english-strings.el,v 38.12 1996-02-02 05:00:26 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -497,6 +497,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (who-to-throw-out . "Which session do you want to kill: ")
     (throwing-out . "Killing session %#1d... ")
     (postpone-prompt . "How much do you want to read now: ")
+    (set-session-priority . "Set reading level:")
 
     ; From review.el:
     (latest-n . "last %#1d")
@@ -828,6 +829,7 @@ Text:
     (kom-list-news              "List news")
     (kom-membership             "List subscriptions")
     (kom-postpone               "Postpone reading")
+    (kom-set-session-priority	"Set reading level")
     (kom-prioritize             "Prioritize conferences")
     (kom-status-person          "Status (of) user")
     (kom-status-conf            "Status (of) conference")
