@@ -1,3 +1,10 @@
+Mon Jan 10 19:04:48 1994  Linus Tolke Y  (linus@bodil)
+
+	* vars.el.in: new file
+	  vars.el: is now generated from Makefile and vars.el.in because
+	  Makefile has the clientversion.
+	  Makefile: Installation rewritten.
+
 Sat Jan  8 20:15:31 1994  Linus Tolke Y  (linus@astrid)
 
 	* lyskom-rest.el, edit-text.el, startup.el 
