@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.224 2003-12-11 22:39:01 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.225 2004-01-01 22:01:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.224 2003-12-11 22:39:01 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.225 2004-01-01 22:01:39 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3080,9 +3080,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
           (setq prompt
                 (let ((command (lyskom-what-to-do-when-done t)))
                   (cond			    
-                   ((lyskom-command-name command))
+                   ((lyskom-command-name command lyskom-language))
                    ((and (stringp command)
-                         (lyskom-command-name (key-binding command))))
+                         (lyskom-command-name (key-binding command) lyskom-language)))
                    (t (lyskom-format 'the-command command))))))
      
          ((eq to-do 'unknown)		;Pending replies from server.

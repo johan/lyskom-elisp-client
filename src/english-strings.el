@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.317 2003-12-17 22:34:15 byers Exp $
+;;;;; $Id: english-strings.el,v 44.318 2004-01-01 22:01:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.317 2003-12-17 22:34:15 byers Exp $"))
+              "$Id: english-strings.el,v 44.318 2004-01-01 22:01:38 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2422,6 +2422,9 @@ Change privileges for %#1P (%#1p)...")
     (zu . "Zulu")
     (-- . "Unknown language (%#1s)")))
 
+(lyskom-language-missing-string lyskom-menu kom-help en)
+(lyskom-language-missing-string lyskom-menu kom-change-language en)
+
 (lyskom-language-strings global lyskom-menu en
   '((lyskom    . "LysKOM")
     (read      . "Read")
@@ -2447,7 +2450,9 @@ Change privileges for %#1P (%#1p)...")
     (pers-admin . "User admin")
     (autoreply . "Auto-reply")
     (remote-control . "Remote control")
-
+    (language . "Change language")
+    (kom-change-global-language . "Display and commands")
+    (kom-change-local-language . "Display language only")
     (kom-edit-send . "Send")
     (kom-edit-send-anonymous . "Send anonymously")
     (kom-edit-quit . "Throw away") 

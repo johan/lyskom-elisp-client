@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.150 2003-12-17 22:34:16 byers Exp $
+;;;;; $Id: utilities.el,v 44.151 2004-01-01 22:01:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.150 2003-12-17 22:34:16 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.151 2004-01-01 22:01:39 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1099,6 +1099,12 @@ TIME defaults to the current client time."
 
          ((and binding
                (null base-binding)) (define-key keymap keys binding)))))
+
+(defun lyskom-traverse-keymap (fn keymap)
+  "Like lyskom-map-keymap, but traverses parent links too."
+  (let ((parent (keymap-parent keymap)))
+    (lyskom-map-keymap fn keymap)
+    (when (keymapp parent) (lyskom-traverse-keymap fn parent))))
 
 
 ;;;

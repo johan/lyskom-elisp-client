@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.358 2003-12-17 22:34:15 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.359 2004-01-01 22:01:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.358 2003-12-17 22:34:15 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.359 2004-01-01 22:01:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1473,7 +1473,7 @@ Uppkopplad sedan %#8s%#9s")
     ;; From slow.el
     (no-such-command . "Det finns inget sådant kommando.\n")
     (command-completions . "Du kan mena någon av följande:\n %#1s\n")
-    (which-language . "Ändra språk till: ")
+    (which-language . "Ändra språk till (change language to): ")
     (send-formatted . "Skicka in som formatterad text? ")
     (changing-language-to . "Byter till %#1_s.\n")
     (language-set-to . "Språket är %#1_s%#2?b%[ %#3@[%#2s]%]%[%].\n")
@@ -2451,6 +2451,11 @@ Nuvarande rättigheter för %#1P (%#1p):
     (-- . "Okänt språk (%#1s)")))
 
 
+(lyskom-language-ending-mismatch lyskom-menu language sv en)
+(lyskom-language-ending-mismatch lyskom-menu kom-change-language sv en)
+(lyskom-language-ending-mismatch lyskom-menu kom-change-global-language sv en)
+(lyskom-language-ending-mismatch lyskom-menu kom-change-local-language sv en)
+
 (lyskom-language-strings global lyskom-menu sv
   '((lyskom    . "LysKOM")
     (read      . "Läs")
@@ -2476,6 +2481,11 @@ Nuvarande rättigheter för %#1P (%#1p):
     (pers-admin . "Personadministration")
     (autoreply . "Automatsvar")
     (remote-control . "Fjärrstyrning")
+    (language . "Ändra språk (Change Language)")
+    (kom-help . "Hjälp (Help)")
+    (kom-change-language . "Ändra språk (Change language)")
+    (kom-change-global-language . "Visning och kommandon (display and commands)")
+    (kom-change-local-language . "Endast visning (display language only)")
     (kom-edit-send . "Skicka in")
     (kom-edit-send-anonymous . "Skicka anonymt")
     (kom-edit-quit . "Kasta bort") 
@@ -2666,7 +2676,6 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-list-prefix (kbd "f") 'kom-list-filters)
   (define-key lyskom-sv-list-prefix (kbd "q") 'kom-list-faqs)
   (define-key lyskom-sv-list-prefix (kbd "Q") 'kom-list-server-faqs)
-  
 
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "ä") 'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "{") 'kom-list-summary)
@@ -2690,6 +2699,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-filter-get-prefix (kbd "i") 'kom-filter-text)
   (define-key lyskom-sv-filter-get-prefix (kbd "m") 'kom-filter-recipient)
   (define-key lyskom-sv-filter-get-prefix (kbd "l") 'kom-previous-kom)
+
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "ä")    'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "{")    'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "[")    'kom-filter-subject)
@@ -2793,6 +2803,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-S-prefix (kbd "u q") 'kom-del-faq)
   (define-key lyskom-sv-S-prefix (kbd "u f") 'kom-sub-footnote)
   (define-key lyskom-sv-S-prefix (kbd "t") 'kom-save-text)
+
   (lyskom-try-define-key lyskom-sv-S-prefix (kbd "ä")    'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix (kbd "{")    'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix (kbd "[")    'kom-send-message)

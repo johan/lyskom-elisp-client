@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.67 2003-08-27 15:16:30 byers Exp $
+;;;;; $Id: compatibility.el,v 44.68 2004-01-01 22:01:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.67 2003-08-27 15:16:30 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.68 2004-01-01 22:01:38 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -150,15 +150,21 @@ KEYS should be a string in the format used for saving keyboard macros
 
 (lyskom-function-alias map-keymap (fn keymap &optional sort-first)
   (let ((r 0))
-    (cond ((vectorp keymap)
-           (while (< r (length keymap))
-             (if (aref keymap r)
-                 (funcall fn r (aref keymap r)))
-             (setq r (1+ r))))
-          (t (mapcar (function 
-                      (lambda (x)
-                        (funcall fn (car x) (cdr x))))
-                     (cdr keymap))))))
+    (when (keymapp keymap)
+      (when (symbolp keymap) (setq keymap (symbol-value keymap)))
+      (let ((keymap (cdr keymap))
+            (el nil))
+        (while (and keymap (not (keymapp keymap)))
+          (setq el (car keymap)
+                keymap (cdr keymap))
+          (cond ((vectorp keymap)
+                 (while (< r (length el))
+                   (if (aref el r)
+                       (funcall fn r (aref el r)))
+                   (setq r (1+ r))))
+                ((char-table-p el)
+                 (map-char-table fn el))
+                (t (funcall fn (car el) (cdr el)))))))))
 
 
 ;; set-keymap-parent also comes from XEmacs

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.50 2003-08-16 16:58:44 byers Exp $
+;;;;; $Id: command.el,v 44.51 2004-01-01 22:01:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.50 2003-08-16 16:58:44 byers Exp $\n"))
+	      "$Id: command.el,v 44.51 2004-01-01 22:01:38 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -176,10 +176,10 @@
 ;;;;                User-level commands and functions.
 
 
-(defsubst lyskom-command-name (command)
+(defsubst lyskom-command-name (command &optional language)
   "Get the command name for the command COMMAND"
   (condition-case nil
-      (lyskom-get-string command 'lyskom-command)
+      (lyskom-get-string command 'lyskom-command language)
     (error nil)))
 
 (defun lyskom-ok-command (alternative administrator)
