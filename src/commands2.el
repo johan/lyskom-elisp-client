@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.172 2003-08-02 20:21:45 byers Exp $
+;;;;; $Id: commands2.el,v 44.173 2003-08-04 07:49:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.172 2003-08-02 20:21:45 byers Exp $\n"))
+              "$Id: commands2.el,v 44.173 2003-08-04 07:49:30 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3095,6 +3095,34 @@ properly in the client."
                                 (aux-item->creator item)
                                 (lyskom-aux-item-terminating-button item 'server))
           ))
+
+      ;; ----------------------------------------
+      ;; Print statistics
+
+      (let* ((stats (lyskom-get-server-stats))
+             (what (server-stats->what stats))
+             (maxlen (and stats (apply 'max (mapcar 'length what))))
+             (fmt (and maxlen (format "%%=%d#1s " maxlen))))
+        (when stats
+          (lyskom-format-insert 'status-server-stats)
+          (lyskom-insert (lyskom-format fmt ""))
+          (lyskom-traverse period (server-stats->when stats)
+            (lyskom-format-insert "  %=8#1s" 
+                                  (if (eq 0 period)
+                                      (lyskom-get-string 'current-average)
+                                    (lyskom-format-units period 
+                                                         '((604800 . "w")
+                                                           (86400 . "d")
+                                                           (3600 . "h")
+                                                           (60 . "m"))
+                                                         "s"))))
+          (lyskom-insert "\n")
+          (lyskom-traverse item (server-stats->values stats)
+            (lyskom-format-insert fmt (car item))
+            (lyskom-traverse val (cdr item)
+              (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
+            (lyskom-format-insert "\n"))))
+
 
       ;; ----------------------------------------
       ;; Print MOTD (if there is one)

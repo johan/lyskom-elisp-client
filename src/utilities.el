@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.138 2003-08-03 09:18:19 byers Exp $
+;;;;; $Id: utilities.el,v 44.139 2003-08-04 07:49:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.138 2003-08-03 09:18:19 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.139 2003-08-04 07:49:32 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2009,3 +2009,29 @@ Any whitespace and newlines in TEXT will be ignored."
       (set-server-stats->values result
                                 (nreverse (collector->value collector)))
       result))))
+
+(defun lyskom-format-units (val units base-unit)
+  "Format VAL using units. UNITS is an alist (COUNT . NAME), where
+NAME is the name of a unit and COUNT is the number of base units for
+that name. For example, if the base unit is seconds, then minutes
+could be defined with \(60 . \"min\"). BASE-UNIT is the name of the
+base unit \(which implicitly has a count of 1)."
+  (mapconcat
+   (lambda (el)
+     (format "%d%s"
+             (car el)
+             (cond ((stringp (cdr el)) (cdr el))
+                   ((symbolp (cdr el)) (lyskom-get-string (cdr el))))))
+   (nreverse
+    (let ((result nil))
+      (lyskom-traverse unit units
+        (when (>= val (car unit))
+          (let ((a (/ val (car unit))))
+            (when (> a 0) (setq result (cons (cons a (cdr unit)) result)))
+            (setq val (% val (car unit))))))
+      (if (> val 0)
+          (cons (cons val base-unit) result)
+        result)))
+   ""))
+
+
