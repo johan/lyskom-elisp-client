@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.226 2002-07-29 18:00:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.227 2002-07-30 20:11:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.226 2002-07-29 18:00:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.227 2002-07-30 20:11:41 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1739,9 +1739,8 @@ Ignoring the following variables in your settings:
     %#1s
 
 These variables are not registered as LysKOM variables and cannot be
-read from the server. If the variables corresponds to settings that
-have been removed, you can fix the problem by giving the command
-\"Save options\".\n\n")
+read from the server. You can remove the variables from the server by
+giving the command \"Save options\".\n\n")
 
 
     (unknown-aux-item . "Okänd tilläggsinformation")
@@ -2256,6 +2255,8 @@ Using the default face in place of these faces.
   (define-key lyskom-en-mode-map (kbd "n ?") 'lyskom-help)
   (define-key lyskom-en-mode-map (kbd "l ?") 'lyskom-help)
   (define-key lyskom-en-mode-map (kbd "s ?") 'lyskom-help)
+  (define-key lyskom-en-mode-map (kbd "b ?") 'lyskom-help)
+  (define-key lyskom-en-mode-map (kbd "w ?") 'lyskom-help)
   
 
   (define-key lyskom-en-mode-map (kbd "o")     'kom-set-unread)

@@ -67,14 +67,27 @@
 
     * You should NOT HAVE macedit.el
 
-      Make sure you do not have a file called macedit.el early in your
-      load path. This file redefines a function that the client relies
-      heavily on. The redefinition is buggy. The client will attempt
-      to detect this situation and fix it by loading edmacro. If you
-      have macedit but not edmacro, you will experience problems. You
-      can recognize this situation if your Emacs says something like
-      this: "Key sequence < m o u s e - 2 > uses invalid prefix
+      Make sure you do not have a file called macedit.el (or
+      macedit.elc or macedit.el.gz) early in your load path. This file
+      redefines a function that the client relies heavily on and the
+      redefinition is obsolete (and has been for several years). The
+      client will attempt to detect this situation and fix it by
+      loading a library called edmacro. If you have macedit but not
+      edmacro, you will experience problems. If you have both, there
+      may be situations in which you will experience problems. You'll
+      have to try and see.
+
+      You can recognize this situation if your Emacs says something
+      like this: "Key sequence < m o u s e - 2 > uses invalid prefix
       characters" when you load or compile the elisp client.
+
+      If you encounter problems with macedit, remove it (macedit.el,
+      macedit.elc and macedit.el.gz) and any references to macedit
+      (you will have to search all Emacs-related files). This may
+      cause some minor problems with the calc package, but those
+      problems are not as serious as the havoc macedit can wreck on
+      other Emacs packages. It seems that most of calc works fine
+      without macedit.
 
     * custom (mainly affects users of Gnu Emacs 19.34)
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.76 2002-07-29 18:00:39 byers Exp $
+;;;;; $Id: startup.el,v 44.77 2002-07-30 20:11:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.76 2002-07-29 18:00:39 byers Exp $\n"))
+	      "$Id: startup.el,v 44.77 2002-07-30 20:11:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -388,13 +388,18 @@ clients of the event. See lyskom-mode for details on lyskom."
                               kom-ssh-relay-host))
               (goto-char (point-max))
               (insert "\n--- new connection ---\n")
-              (setq proc (start-process
-                          procname
-                          bufname
-                          "ssh" "-n" "-x"
-                          "-L" (format "%d:%s:%d" relay-port server port)
-                          kom-ssh-relay-host
-                          "sh -c \"while :; do echo ok; sleep 600; done\""))
+              (let ((old-lc-all (getenv "LC_ALL")))
+                (unwind-protect
+                    (progn
+                      (setenv "LC_ALL" "C")
+                      (setq proc (start-process
+                                  procname
+                                  bufname
+                                  "ssh" "-n" "-x"
+                                  "-L" (format "%d:%s:%d" relay-port server port)
+                                  kom-ssh-relay-host
+                                  "sh -c \"while :; do echo ok; sleep 600; done\"")))
+                  (setenv "LC_ALL" old-lc-all)))
               (process-kill-without-query proc))
             (while (progn
                      (goto-char (point-max))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.261 2002-07-29 18:00:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.262 2002-07-30 20:11:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.261 2002-07-29 18:00:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.262 2002-07-30 20:11:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1751,10 +1751,9 @@ Ignorerar följande variabeler i dina inställningar:
 
     %#1s
 
-Variablerna är inte registrerade LysKOM-variabeler och kan därför
-inte läsas från servern. Om någon av variablerna motsvarar en
-inställning som har tagits bort så kan du åtgärda genom att ge
-kommandot \"Spara variabler\".\n\n")
+Variablerna är inte registrerade LysKOM-variabeler och kan därför inte
+läsas från servern. Du kan ta bort variablerna från servern genom att
+ge kommandot \"Spara variabler\".\n\n")
 
     (unknown-aux-item . "Okänd tilläggsinformation")
     (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
@@ -2292,6 +2291,7 @@ Använder standardteckensnittet för dessa inställningar.
   (define-key lyskom-sv-mode-map (kbd "n ?") 'lyskom-help)
   (define-key lyskom-sv-mode-map (kbd "l ?") 'lyskom-help)
   (define-key lyskom-sv-mode-map (kbd "s ?") 'lyskom-help)
+  (define-key lyskom-sv-mode-map (kbd "v ?") 'lyskom-help)
   
 
   (define-key lyskom-sv-mode-map (kbd "e")   'kom-set-unread)
