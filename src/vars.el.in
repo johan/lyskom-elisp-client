@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.13 1996-07-23 13:17:32 byers Exp $
+;;;;; $Id: vars.el.in,v 41.14 1996-07-25 03:12:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.13 1996-07-23 13:17:32 byers Exp $\n"
+  "$Id: vars.el.in,v 41.14 1996-07-25 03:12:51 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -55,6 +55,14 @@ This variable is not saved in the LysKOM server.")
 
 
 ;;; User flags
+
+(defvar kom-bury-buffers t
+  "*Controls the behaviour of kom-next-kom and its cousins.
+If this variable is non-nil the current buffer is sent to the back
+of the buffer list when one of the commands `kom-next-kom',
+`kom-previous-kom' or `kom-next-unread-kom' is invoked.
+
+This variable is stored in the LysKOM server.")
 
 (defvar kom-write-texts-in-window nil
   "*Nil means edit texts in the same window that is used for reading texts.
@@ -595,7 +603,8 @@ This variable is not saved in the LysKOM server.")
 
 
 (defconst lyskom-elisp-variables
-  '(kom-ding-on-personal-messages
+  '(kom-bury-buffers
+    kom-ding-on-personal-messages
     kom-ding-on-group-messages
     kom-ding-on-common-messages
     kom-ding-on-priority-break
