@@ -10,7 +10,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.1 1991-08-21 15:44:59 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.2 1991-08-28 21:05:19 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -256,7 +256,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (setq paragraph-start (concat "^" (regexp-quote lyskom-header-separator)
 				"$\\|" paragraph-start))
   (setq paragraph-separate (concat "^" (regexp-quote lyskom-header-separator)
-				   "$\\|" paragraph-start))
+				   "$\\|" paragraph-separate))
   (run-hooks 'lyskom-edit-mode-hook))
 
 
