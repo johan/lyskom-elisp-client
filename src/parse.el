@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.26 1999-10-25 11:57:16 byers Exp $
+;;;;; $Id: parse.el,v 44.27 1999-10-25 13:30:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.26 1999-10-25 11:57:16 byers Exp $\n"))
+	      "$Id: parse.el,v 44.27 1999-10-25 13:30:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1153,7 +1153,9 @@ functions and variables that are connected with the lyskom-buffer."
                                           (let* ((buffer (generate-new-buffer " *Backtrace*"))
                                                  (standard-output buffer))
                                             (backtrace)
-                                            (prog1 (buffer-string nil nil buffer)
+                                            (prog1 (save-excursion
+                                                     (set-buffer buffer)
+                                                     (buffer-string))
                                               (kill-buffer buffer)))
                                           (lyskom-string-to-parse))
                                     lyskom-backtrace-list))
