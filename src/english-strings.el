@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.44 1999-06-10 13:49:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.45 1999-06-11 12:21:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.44 1999-06-10 13:49:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.45 1999-06-11 12:21:30 byers Exp $"))
 
 
 ;;; ================================================================
@@ -69,7 +69,7 @@
   (define-prefix-command 'lyskom-en-edit-aux-prefix)
   (define-prefix-command 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-en-edit-prefix)
-  (define-key lyskom-sv-edit-mode-map "\C-c\C-x" 'lyskom-en-edit-aux-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-x" 'lyskom-en-edit-aux-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-en-edit-mode-map "\C-c\C-r" 'lyskom-en-edit-review-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c\C-i" 'lyskom-en-edit-insert-prefix)
