@@ -1,5 +1,9 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 1003:
+	* lyskom-rest.el (lyskom-beep): Handle conf-stat and uconf-stat
+	type optargs, or kom-ding-on-group-messages and stuff won't work.
+
 	Fix bug 1002:
 	* vars.el.in (kom-pick-text-no-strategy-alist): Set correct
 	default for kom-view-previous-commented-text.

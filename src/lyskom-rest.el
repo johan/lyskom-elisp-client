@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.197 2003-03-16 21:13:58 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.198 2003-04-05 18:49:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.197 2003-03-16 21:13:58 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.198 2003-04-05 18:49:38 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2568,6 +2568,11 @@ A string means start the command kom-audio-player with the string as argument.
 A symbol other than t means call it as a function.
 A list of pairs means OPTARG will be used as a key to look up the real
   value of ARG. The special key t is used when OPTARG is not found."
+  (setq optarg
+	(cond ((lyskom-conf-stat-p optarg) (conf-stat->conf-no optarg))
+	      ((lyskom-uconf-stat-p optarg) (uconf-stat->conf-no optarg))
+	      (t optarg)))
+
   (cond ((null arg))
         ((eq t arg) (ding t))
         ((numberp arg) (while (> arg 0)
