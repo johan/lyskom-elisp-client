@@ -1,3 +1,13 @@
+Sat May  4 00:07:06 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-format-aux-help): Inga knappar på möte
+	0.
+
+	* vars.el.in (lyskom-default-conf-string): Ny variabel.
+
+	* commands1.el (kom-who-is-on): Sätt lyskom-default-conf-string
+	lokalt.
+
 Fri May  3 10:13:12 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * english-strings.el,swedish-strings.el (lyskom-prioritize-mode-map):
@@ -22,6 +32,54 @@ Fri May  3 10:13:12 1996  David Byers  <davby@sen2.ida.liu.se>
     (lyskom-get-texts-by-and-to): Startinkrement satt till
     lyskom-fetch-map-nos, kontrollera att man verkligen får läsa
     conf-mappen. (lyskom-check-review-access): Ny funktion.
+
+Fri May  3 03:24:38 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-print-header-comm): Ny defer-hantering.
+	(lyskom-insert-deferred-header-comm): Ny funktion.
+	(lyskom-insert-header-comm): Detta är
+	lyskom-print-delayed-header-comm i ny skepnad.
+
+	* vars.el.in (kom-deferred-printing): Bytte namn från
+ 	kom-delayed-printing.
+
+	* lyskom-rest.el (lyskom-format-insert): Ny defer-kod
+	(lyskom-format-insert-at-point): Dito.
+	(lyskom-format-aux-help): Dito.
+
+	* swedish-strings.el (lyskom-button-actions): Bytte å -> ö.
+
+	* lyskom-rest.el (lyskom-delayed-print-conf): Tog bort.
+
+	* deferred-insert.el: Ny fil.
+	(lyskom-deferred-insert-conf): Ny funktion, eller snarare
+	lyskom-delayed-print-conf under nytt namn.
+
+	* lyskom-rest.el (lyskom-format-aux-help): 
+
+	* commands2.el (lyskom-list-summary): Justerade formatering.
+	(lyskom-print-summary-line): Använd lyskom-format-insert.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity):
+ 	Skrev om.
+
+	* lyskom-rest.el (lyskom-queue-print-name): Tog bort.
+	(lyskom-queue-print-name-2): Tog bort.
+
+	* swedish-strings.el (lyskom-commands): La till kommandot "Lista
+ 	klienter".
+
+	* english-strings.el (lyskom-commands): Dito.
+
+	* cache.el (lyskom-set-who-info-buffer-2): Kommenterade bort
+ 	innehållet..
+	(lyskom-set-session-info): Dito.
+
+	* commands1.el (lyskom-info-line-format-string): Ny funktion.
+	(kom-who-is-on): Skrev om med hjälp av den.
+	(lyskom-return-who-info-line): Tog bort.
+	(lyskom-fix-str): Tog bort.
+	(lyskom-return-who-info-line-as-state): Tog bort.
 
 Thu May  2 18:47:18 1996  David Kågedal  <davidk@lysator.liu.se>
 

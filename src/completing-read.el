@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.0 1996-05-02 19:26:07 davidk Exp $
+;;;;; $Id: completing-read.el,v 41.1 1996-05-03 22:41:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.0 1996-05-02 19:26:07 davidk Exp $\n"))
+       "$Id: completing-read.el,v 41.1 1996-05-03 22:41:20 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -462,64 +462,66 @@ If ONLY-ONE is non-nil only one session number will be returned."
 
 (defun lyskom-read-session-resolve-ambiguity (sessions)
   (lyskom-insert "\n")
-  (lyskom-insert
-   (lyskom-return-who-info-line
-    "    "
-    (lyskom-get-string 'lyskom-name)
-    (lyskom-get-string 'is-in-conf)))
-  (lyskom-insert
-   (lyskom-return-who-info-line
-    "    "
-    (lyskom-get-string 'from-machine)
-    (lyskom-get-string 'is-doing)))
-  (lyskom-insert
-   (concat (make-string (- (lyskom-window-width) 2) ?-)
-           "\n"))
-  (let ((result nil)
-        (who-info
-         (mapcar (function
-                  (lambda (el)
-                    (let* ((info (blocking-do 'get-session-info el))
-                           (persconfstat
-                            (blocking-do 'get-conf-stat
-                                         (session-info->pers-no info)))
-                           (confconfstat
-                            (blocking-do 'get-conf-stat
-                                         (session-info->working-conf info))))
-                      (lyskom-insert
-                       (lyskom-return-who-info-line-as-state
-                        (format "%4d%s"
-                                (session-info->connection info)
-                                (if (eq (session-info->connection info)
-                                        lyskom-session-no)
-                                    "*" " "))
-                        (blocking-do 'get-conf-stat
-                                     (session-info->pers-no info))
-                        (if (conf-stat->name confconfstat)
-                            confconfstat
-                          (lyskom-get-string 'not-present-anywhere))))
-                      (lyskom-insert
-                       (lyskom-return-who-info-line-as-state
-                        "     "
-                        (lyskom-return-username info)
-                        (concat "("
-                                (session-info->doing info)
-                                ")")))
-                      (cons (number-to-string (session-info->connection info))
-                            info))))
-                 (sort sessions '<))))
-    (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
-    (lyskom-insert (lyskom-format 'total-users (length who-info)))
-    (lyskom-scroll)
-    (while (string= ""
-                    (setq result (completing-read
-                                  (lyskom-get-string 'resolve-session)
-                                  who-info
-                                  nil
-                                  t
-                                  (car (car who-info))
-                                  nil))))
-    (list (session-info->connection (cdr (assoc result who-info))))))
+  (let ((format-string-s (lyskom-info-line-format-string 7 "s" "s"))
+	(format-string-p (lyskom-info-line-format-string 7 "P" "M")))
+    (lyskom-format-insert format-string-s
+			  "       "
+			  (lyskom-get-string 'lyskom-name)
+			  (lyskom-get-string 'is-in-conf))
+    (lyskom-format-insert format-string-s
+			  "       "
+			  (lyskom-get-string 'from-machine)
+			  (lyskom-get-string 'is-doing))
+    (lyskom-insert
+     (concat (make-string (- (lyskom-window-width) 2) ?-)
+	     "\n"))
+    (let ((result nil)
+	  (who-info
+	   (mapcar (function
+		    (lambda (el)
+		      (let* ((info (blocking-do 'get-session-info el))
+			     (persconfstat
+			      (blocking-do 'get-conf-stat
+					   (session-info->pers-no info)))
+			     (confconfstat
+			      (blocking-do 'get-conf-stat
+					   (session-info->working-conf info))))
+			(lyskom-format-insert
+			 format-string-p
+			 (format "%4d%s"
+				  (session-info->connection info)
+				  (if (eq (session-info->connection info)
+					  lyskom-session-no)
+				      "*" " "))
+			 (blocking-do 'get-conf-stat
+				      (session-info->pers-no info))
+			  (if (conf-stat->name confconfstat)
+			      confconfstat
+			    (lyskom-get-string 'not-present-anywhere)))
+			(lyskom-format-insert
+			 format-string-p
+			 "     "
+			 (lyskom-return-username info)
+			 (concat "("
+				 (session-info->doing info)
+				 ")"))
+			(cons (number-to-string
+			       (session-info->connection info))
+			      info))))
+		   (sort sessions '<))))
+      (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+			     "\n"))
+      (lyskom-insert (lyskom-format 'total-users (length who-info)))
+      (lyskom-scroll)
+      (while (string= ""
+		      (setq result (completing-read
+				    (lyskom-get-string 'resolve-session)
+				    who-info
+				    nil
+				    t
+				    (car (car who-info))
+				    nil))))
+      (list (session-info->connection (cdr (assoc result who-info)))))))
     
 
 
