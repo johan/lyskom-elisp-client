@@ -498,7 +498,8 @@ Normally there should only be one buffer, but who knows..."
                   (delete-region (car bounds) (cdr bounds))
                   (goto-char (car bounds))
                   (insert (lyskom-format "%#2@%=5#1s"
-                                         (if unread (int-to-string unread) "")
+                                         (if (and unread (> unread 0))
+                                             (int-to-string unread) "")
                                          '(lp--unread t))))))))))
      conf-no (lyskom-find-unread conf-no)))
 

@@ -1,5 +1,21 @@
 2004-07-18  David Byers  <byers@lysator.liu.se>
 
+	* mship-edit.el (lp--maybe-update-unreads): Zero unreads are
+	formatted as "", even if there is a read-info on the to-do list.
+
+	* clienttypes.el (read-list-enter-read-info): Update unreads when
+	appending unread texts to old read-infos and adding new
+	read-infos.
+
+	* view-text.el (lyskom-mark-as-read): Removed the callback. We
+	update the membership buffer elsewhere.
+
+	* clienttypes.el (read-list-enter-text): Update unreads in the
+	membership buffer.
+	(read-list-delete-text): Update unreads in the membership buffer.
+
+	* komtypes.el (text-list->memq): New subst.
+
 	* reading.el (lyskom-membership-list-move): Return non-nil if
 	moved.
 	(lyskom-replace-membership): Sort the to-do list if the membership
