@@ -1,3 +1,8 @@
+Tue Jun 30 00:25:13 1992  Linus Tolke Y  (linus@robin)
+
+	* swedish-strings.el (lyskom-mode-map): kom-review-noconversion
+	  put on }o.
+
 Wed Jun 17 21:33:24 1992  Linus Tolke Y  (linus at lysator)
 
 	* vars.el (lyskom-global-boolean-variables): added 
