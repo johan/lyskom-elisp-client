@@ -1,1 +1,8 @@
+2002-03-26  Hans Persson  <hans@localhost.localdomain>
 
+	En första checkin för DocBook-baserad dokumentation. Det är långt
+	kvar. 
+	* Makefile: Lagt till några targets för att lättare jobba med
+	dokumentationen. De är på intet sätt generella. 
+	* ChangeLog: Nygammal fil.
+	* elisp-client.sgml: Ny fil.
