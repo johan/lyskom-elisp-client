@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.62 1999-02-11 16:27:27 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.63 1999-02-18 16:29:42 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.62 1999-02-11 16:27:27 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.63 1999-02-18 16:29:42 petli Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -367,7 +367,9 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				      lyskom-reading-list))
 				    priority
 				    is-review-tree
-				    (not is-review)))
+				    (not is-review)
+				    (or (eq type 'REVIEW)
+					(eq type 'REVIEW-MARK))))
 	    (if mark-as-read
 		(lyskom-is-read text-no)
 	      (read-list-delete-text nil lyskom-reading-list)
@@ -1466,11 +1468,11 @@ Note that it is not allowed to use deferred insertions in the text."
                      result))))
          (formatted (and fn (funcall fn text))))
 
-    (when (eq t lyskom-last-text-format-flags)
-      (lyskom-signal-reformatted-text
-       (if content-type
-           (lyskom-format 'reformat-generic content-type)
-         nil)))
+;;    (when (eq t lyskom-last-text-format-flags)
+;;      (lyskom-signal-reformatted-text
+;;       (if content-type
+;;           (lyskom-format 'reformat-generic content-type)
+;;         nil)))
 
     (cond (formatted formatted)
           (kom-text-properties 
@@ -1481,7 +1483,8 @@ Note that it is not allowed to use deferred insertions in the text."
 (defun lyskom-signal-reformatted-text (how)
   "Signal that the last text was reformatted HOW, which should be a string
 in lyskom-messages."
-  (setq lyskom-last-text-format-flags how))
+  (or (memq how lyskom-last-text-format-flags)
+      (setq lyskom-last-text-format-flags (cons how lyskom-last-text-format-flags))))
 
 
 (defun lyskom-w3-region (start end)
@@ -1559,7 +1562,7 @@ in lyskom-messages."
                (lyskom-fill-region (point-min) (point-max))
                (goto-char (point-max)))
              (forward-line 1))
-           (lyskom-signal-reformatted-text t)
+           (lyskom-signal-reformatted-text 'reformat-filled)
            (if kom-text-properties
                (lyskom-button-transform-text (buffer-string))
              (buffer-substring (point-min) (1- (point-max))))))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.20 1998-06-02 12:15:02 byers Exp $
+;;;;; $Id: option-edit.el,v 44.21 1999-02-18 16:29:45 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.20 1998-06-02 12:15:02 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.21 1999-02-18 16:29:45 petli Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -66,6 +66,7 @@
     "\n"
     [kom-idle-hide]
     [kom-show-where-and-what]
+    [kom-show-since-and-when]
     "\n"
     [kom-friends]
     "\n"
@@ -126,7 +127,9 @@
     [kom-autowrap]
     [kom-dashed-lines]
     [kom-show-author-at-end]
-
+    "\n"
+    [kom-truncate-threshold]
+    [kom-truncate-show-lines]
     "\n\n"
     section
     (writing bold centered)
@@ -431,6 +434,11 @@ customize buffer but do not save them to the server."
                            (number nil :tag max-text-length))))
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
+
+    (kom-truncate-threshold (choice ((const (off nil))
+				     (number nil :tag truncate-threshold-lines))))
+    (kom-truncate-show-lines (number nil))
+
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
     (kom-presence-messages (choice ((const (on t))
                                     (const (friends friends))
@@ -446,6 +454,7 @@ customize buffer but do not save them to the server."
                       :tag some-persons
                       :menu-tag some-persons))))
     (kom-show-where-and-what (toggle (yes no)))
+    (kom-show-since-and-when (toggle (yes no)))
     (kom-idle-hide (number))
     (kom-show-footnotes-immediately (toggle (yes no)))
     (kom-follow-comments-outside-membership (toggle (yes no)))
