@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.157 2004-07-15 17:13:03 byers Exp $
+;;;;; $Id: utilities.el,v 44.158 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.157 2004-07-15 17:13:03 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.158 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1888,6 +1888,11 @@ has the bug in that algorithm fixed)."
 ;;;                              '(face test-2)
 ;;;                              '(face test-default))))))
 ;;;
+
+(defun lyskom-safe-color-name (c)
+  "Return a color name as a string or nil." 
+  (cond ((stringp c) c)
+	((lyskom-color-specifier-p c) (lyskom-color-name c))))
 
 
 (defun lyskom-is-url (text)
