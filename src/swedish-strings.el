@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.10 1991-10-03 16:33:34 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.11 1991-10-07 15:34:26 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.10 1991-10-03 16:33:34 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.11 1991-10-07 15:34:26 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
@@ -181,7 +181,7 @@ Lyskom-sessionen är avslutad.
 
     (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för: ")
 
-    (conf-all-read . "Du har sett alla texter i detta möte.\n")
+    (conf-all-read . "%#1s - inga ol{sta.\n")
     (no-in-conf . "Du är inte närvarande i något möte.\n")
 
     (search-for-pers . "Ange sökvillkor (RETURN för alla personer) ")

@@ -1,3 +1,11 @@
+Mon Oct  7 16:29:42 1991  Linus Tolke Y  (linus at lysator)
+
+	* commands1.el, swedish-string.el (lyskom-go-to-empty-conf): when
+	  going to an empty conf the conf-name will be shown.
+
+	* commands1.el (lyskom-do-go-to-conf): The map of texts i the
+	  conferences will no be refetched if we go to an empty one.
+
 Sun Oct  6 10:37:07 1991  Linus Tolke Y  (linus at robert)
 
 	* vars.el (kom-do-when-done): Changed the default to a language
