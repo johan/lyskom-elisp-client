@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.2 1996-04-14 23:39:24 davidk Exp $
+;;;;; $Id: view-text.el,v 40.3 1996-04-23 16:53:25 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.2 1996-04-14 23:39:24 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.3 1996-04-23 16:53:25 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -181,29 +181,6 @@ Note that this function must not be called asynchronously."
     todo))
 	  
 	  
-(defun lyskom-insert-person-name (conf-no)
-	    "Inserts the name the conf CONF-NO. If CONF-NO is 0 this person does not exist."
-  (let ((cs nil))
-    (if (zerop conf-no)
-	nil
-      (setq cs (blocking-do 'get-conf-stat conf-no)))
-    (if cs
-	(lyskom-insert (conf-stat->name cs))
-      (if (eq conf-no 0)
-	  (lyskom-format-insert 'person-is-anonymous)
-	(lyskom-format-insert 'person-does-not-exist conf-no)))))
-
-
-(defun lyskom-insert-conf-name (conf-no)
-  "Inserts the name the conf CONF-NO. If CONF-NO is 0 this person does not exist."
-  (let ((cs nil))
-    (if (zerop conf-no)
-	nil
-      (setq cs (blocking-do 'get-conf-stat conf-no)))
-    (if cs
-	(lyskom-insert (conf-stat->name cs))
-      (lyskom-format-insert 'conf-does-not-exist conf-no))))
-
 
 
 (defun lyskom-follow-comments (text-stat conf-stat 
@@ -461,33 +438,26 @@ Args: TEXT-STAT of the text being read."
   (let ((text-stat (blocking-do 'get-text-stat text)))
     ;;+++ error kommer att se annorlunda ut.
     (if text-stat
-	(let* ((author (blocking-do 'get-conf-stat
-				    (text-stat->author text-stat)))
-	       (type (misc-info->type misc))
-	       (tyname (cond ((eq 0 (text-stat->author text-stat))
-                          (lyskom-get-string 'person-is-anonymous))
-                         ((null author)
-                          (lyskom-format 'person-does-not-exist
-                                         (text-stat->author text-stat)))
-                         (t author))))
+	(let ((author (text-stat->author text-stat))
+	      (type (misc-info->type misc)))
 
 	  (cond
 	   ((eq type 'COMM-TO)
 	    (lyskom-format-insert 'comment-to-text-by 
 				  (misc-info->comm-to misc)
-				  tyname))
+				  author))
 	   ((eq type 'FOOTN-TO)
 	    (lyskom-format-insert 'footnote-to-text-by
 				  (misc-info->footn-to misc)
-				  tyname))
+				  author))
 	   ((eq type 'COMM-IN)
 	    (lyskom-format-insert 'comment-in-text-by
 				  (misc-info->comm-in misc)
-				  tyname))
+				  author))
 	   ((eq type 'FOOTN-IN)
 	    (lyskom-format-insert 'footnote-in-text-by
 				  (misc-info->footn-in misc)
-				  tyname)))
+				  author)))
 	  ;; Print information about who added the link
 	  (if (misc-info->sent-at misc)
 	      (lyskom-format-insert 'send-at
@@ -495,7 +465,7 @@ Args: TEXT-STAT of the text being read."
 				     (misc-info->sent-at misc))))
 	  (if (misc-info->sender misc)
 	      (lyskom-insert (lyskom-format 'sent-by (misc-info->sender misc)))))
-      ;; Client tolerans agains buggy servers...
+      ;; Client tolerance agains buggy servers...
       ;; We are writing the line about what comments exists and
       ;; the reference text does not exist anymore. Strange.
       nil)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 40.2 1996-04-02 16:20:30 byers Exp $
+;;;;; $Id: startup.el,v 40.3 1996-04-23 16:53:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 40.2 1996-04-02 16:20:30 byers Exp $\n"))
+	      "$Id: startup.el,v 40.3 1996-04-23 16:53:21 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -166,13 +166,14 @@ See lyskom-mode for details."
             (lyskom-tell-internat 'kom-tell-login))
           (setq lyskom-pers-no nil)
           (while (not lyskom-pers-no)
+
             (if (and lyskom-first-time-around
                      lyskom-default-user-name)
                 ;; This is nil if we can't find a unique match.
                 (setq lyskom-pers-no
                       (lyskom-read-conf-name-internal lyskom-default-user-name
                                                       'pers 'conf-no)))
-            (if lyskom-pers-no
+	    (if lyskom-pers-no
                 nil
               (let ((name (lyskom-read-conf-name
                            (lyskom-get-string 'what-is-your-name)
@@ -185,6 +186,11 @@ See lyskom-mode for details."
             (if lyskom-pers-no
                 (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no))
                       (lyskom-inhibit-minibuffer-messages t))
+
+		  ;; DEBUG
+		  (if (null conf-stat)
+		      (lyskom-insert "+++ You don't exist. Go away!\n"))
+
                   (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
                   (setq lyskom-first-time-around nil)
                   (if (blocking-do 'login lyskom-pers-no

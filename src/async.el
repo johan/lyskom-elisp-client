@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 40.2 1996-04-02 16:18:57 byers Exp $
+;;;;; $Id: async.el,v 40.3 1996-04-23 16:53:07 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 40.2 1996-04-02 16:18:57 byers Exp $\n"))
+	      "$Id: async.el,v 40.3 1996-04-23 16:53:07 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -188,10 +188,9 @@ this function shall be with current-buffer the BUFFER."
 		   (/= lyskom-pers-no pers-no)
 		   (or kom-presence-messages
 		       kom-presence-messages-in-buffer))
-	      (initiate-get-conf-stat 'follow 
+	      (initiate-get-conf-stat 'follow
 				      'lyskom-show-logged-out-person
-				      pers-no
-				      session-no))
+				      pers-no session-no))
 	  (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
 	      (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
 
@@ -204,8 +203,7 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message "%s" (lyskom-format 'has-entered
-					(conf-stat->name conf-stat)))))
+    (lyskom-message "%s" (lyskom-format 'has-entered conf-stat))))
   (cond
    (kom-presence-messages-in-buffer
     (lyskom-format-insert-before-prompt 'has-entered-r conf-stat
@@ -217,8 +215,7 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message "%s" (lyskom-format 'has-left
-					(conf-stat->name conf-stat)))))
+    (lyskom-message "%s" (lyskom-format 'has-left conf-stat))))
   (cond
    (kom-presence-messages-in-buffer
     (lyskom-format-insert-before-prompt 'has-left-r conf-stat
