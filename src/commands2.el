@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.138 2002-06-03 21:48:19 byers Exp $
+;;;;; $Id: commands2.el,v 44.139 2002-06-06 22:39:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.138 2002-06-03 21:48:19 byers Exp $\n"))
+              "$Id: commands2.el,v 44.139 2002-06-06 22:39:13 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2451,7 +2451,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no))
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
-(def-kom-command kom-help ()
+(def-kom-command kom-help (&optional section)
   "Get some help with LysKOM."
   (interactive)
   (let* ((alternatives (delq nil
@@ -2461,7 +2461,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
                                                (elt section 0))))
                                      lyskom-help-data)))
          (completion-ignore-case t)
-         (section nil))
+         (section section))
     (while (null section)
       (setq section
             (lyskom-string-assoc
@@ -2473,7 +2473,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
                                      'lyskom-help-history)
              alternatives)))
     (lyskom-format-insert 'help-for (car section))
-    (lyskom-help-format-section (cdr section))))
+    (lyskom-help-show-section (cdr section))))
 
 
 (def-kom-command kom-make-review-mark-as-read ()

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.212 2002-06-03 21:48:19 byers Exp $
+;;;;; $Id: english-strings.el,v 44.213 2002-06-06 22:39:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.212 2002-06-03 21:48:19 byers Exp $"))
+              "$Id: english-strings.el,v 44.213 2002-06-06 22:39:13 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1731,6 +1731,13 @@ Number of sessions:  %21#1d (total)
     (kom-redirect-comments-e48 . "Comment redirection is not supported by the server")
 
     (external-program-missing . "Can't find the external program \"%#1s\", that was required for this command.")
+    (ignored-user-area-var . "\
+
+Ignoring variable %#1s i in your settings.
+The variable is not a registered LysKOM variable and cannot be read
+from the server. If the variable corresponds to a setting that has
+been removed, you can fix the problem by giving the command \"Save
+variables\".\n\n")
     ))
 
 

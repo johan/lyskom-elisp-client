@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help-compile.el,v 44.2 2002-05-28 20:56:45 byers Exp $
+;;;;; $Id: help-compile.el,v 44.3 2002-06-06 22:39:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -72,35 +72,39 @@ Value returned is always nil."
      __result__))
 
 (defvar lyskom-help-syntax
-  '((help (language) (section) lyskom-help-parse-process-finish)
-    (section (id prompt) (p list h1 h2 h3 inline refer) lyskom-help-parse-process-section)
-    (h1 nil (cref TEXT) nil)
-    (h2 nil (cref TEXT) nil)
-    (h3 nil (cref TEXT) nil)
-    (p nil (b i cref TEXT) nil)
-    (b nil (cref TEXT) nil)
-    (i nil (cref TEXT) nil)
-    (list nil (item) nil)
-    (item nil (b i cref TEXT) nil)
-    (inline (id) nil lyskom-help-parse-process-section-ref)
-    (refer (id) nil lyskom-help-parse-process-section-ref)
-    (cref (id) nil lyskom-help-parse-process-command-ref)
+  '((help (language) nil (section) lyskom-help-parse-process-finish)
+    (section (id prompt) nil (p list h1 h2 h3 inline refer) lyskom-help-parse-process-section)
+    (h1 nil nil (cref TEXT) nil)
+    (h2 nil nil (cref TEXT) nil)
+    (h3 nil nil (cref TEXT) nil)
+    (p nil nil (b i cref list TEXT) nil)
+    (b nil nil (cref TEXT) nil)
+    (i nil nil (cref TEXT) nil)
+    (list nil (header) (item) nil)
+    (item nil nil (refer b i cref TEXT) nil)
+    (inline (id) nil nil lyskom-help-parse-process-section-ref)
+    (refer (id) nil nil lyskom-help-parse-process-section-ref)
+    (cref (id) nil nil lyskom-help-parse-process-command-ref)
     )
   "Syntax of the help language.
 Each element is the syntax for a single tag. Each list consists of
 TAG ATTRS CONTENTS")
 
-(defun lyskom-help-syntax-attrs (syntax)
+(defun lyskom-help-syntax-required-attrs (syntax)
   "Return the required attributes of a syntax element"
   (elt syntax 1))
 
+(defun lyskom-help-syntax-optional-attrs (syntax)
+  "Return the required attributes of a syntax element"
+  (elt syntax 2))
+
 (defun lyskom-help-syntax-contents (syntax)
   "Return the allowed content types of a syntax element"
-  (elt syntax 2))
+  (elt syntax 3))
 
 (defun lyskom-help-syntax-postprocess (syntax)
   "Return the allowed content types of a syntax element"
-  (elt syntax 3))
+  (elt syntax 4))
 
 
 (defvar lyskom-help-parse-section-list nil)
@@ -196,12 +200,20 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
                       (lyskom-help-syntax-contents containing-syntax))
           (error "Tag %s not permitted in %s" tag (car containing-syntax)))
 
-        ;; Check that the attributes are OK
+        ;; Check that all required attributes are present
 
-        (unless (equal (mapcar 'car attrs)
-                       (lyskom-help-syntax-attrs syntax))
-          (error "Invalid attribute list %s to tag %s"
-                 (mapcar 'car attrs) tag))
+        (lyskom-help-traverse required-attribute 
+                              (lyskom-help-syntax-required-attrs syntax)
+          (unless (assq required-attribute attrs)
+            (error "Missing required attribute %s to tag %s" 
+                   required-attribute tag)))
+
+        ;; Check that all attributes are either required or optional
+
+        (lyskom-help-traverse attribute attrs
+           (unless (or (memq (car attribute) (lyskom-help-syntax-required-attrs syntax))
+                       (memq (car attribute) (lyskom-help-syntax-optional-attrs syntax)))
+             (error "Invalid attribute %s to tag %s" (car attribute) tag)))
 
         ;; Found a tag, but there is intervening text
         ;; If we were called with instructions to save this data,
@@ -279,7 +291,7 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
       (lyskom-help-replace-regexp "<!--[^>]*-->" "")
       (lyskom-help-replace-regexp "\\s-+" " ")
       (let ((parse (lyskom-help-parse-string (buffer-string)
-                                             '(nil nil (help)))))
+                                             '(toplevel nil nil (help)))))
         parse))))
 
 (defun lyskom-help-parse-extract (parse tag)
@@ -289,13 +301,13 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
         (setq result
               (cons (list (intern (lyskom-help-data-get-attr 'id toplevel))
                           (lyskom-help-data-get-attr 'prompt toplevel)
-                          (lyskom-help-data-get-data toplevel))
+                          toplevel)
                     result))))
     (nreverse result)))
 
 (defmacro lyskom-help-compile (language)
   `(quote ,(lyskom-help-parse-extract
             (lyskom-help-data-get-data
-             (car (lyskom-help-parse-help-file (format "help.%s" language))))
+             (car (lyskom-help-parse-help-file (format "help-%s.xml" language))))
             'section)))
 

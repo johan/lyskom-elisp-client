@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.4 2002-06-02 15:12:51 byers Exp $
+;;;;; $Id: help.el,v 44.5 2002-06-06 22:39:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.4 2002-06-02 15:12:51 byers Exp $\n"))
+	      "$Id: help.el,v 44.5 2002-06-06 22:39:14 byers Exp $\n"))
 
 
 
@@ -88,13 +88,14 @@
     (inline . lyskom-help-format-inline)
     (refer . lyskom-help-format-refer)
     (cref . lyskom-help-format-cref)
+    (section . lyskom-help-format-section)
     (TEXT . lyskom-help-format-TEXT))
   )
 
 (defun lyskom-help-get-section (section)
   (elt (assq section lyskom-help-data) 2))
 
-(defun lyskom-help-format-section (section)
+(defun lyskom-help-show-section (section)
   "Format and insert section SECTION."
   (lyskom-do-help-format (lyskom-help-get-section section)))
 
@@ -113,8 +114,12 @@
   (let ((start (point-marker)))
     (lyskom-traverse el (lyskom-help-data-get-data data)
       (lyskom-do-help-format el))
-    (add-text-properties start (point) props)
+    (add-text-properties start (point-max) props)
     (set-marker start nil)))
+
+(defun lyskom-help-format-section (section)
+  "Format and insert section SECTION."
+  (lyskom-do-help-format (lyskom-help-data-get-data section)))
 
 (defun lyskom-help-format-h1 (data)
   (lyskom-insert "\n\n")
@@ -141,20 +146,35 @@
 
 (defun lyskom-help-format-list (data)
   (lyskom-insert "\n")
-  (lyskom-traverse el data (lyskom-do-help-format el))
+  (when (lyskom-help-data-get-attr 'header data)
+    (lyskom-insert (lyskom-help-data-get-attr 'header data))
+    (lyskom-insert "\n"))
+  (lyskom-do-help-format (lyskom-help-data-get-data data))
   (lyskom-insert "\n"))
 
 (defun lyskom-help-format-item (data)
   (lyskom-insert "  * ")
-  (lyskom-traverse el data (lyskom-do-help-format el))
+  (lyskom-do-help-format (lyskom-help-data-get-data data))
   (lyskom-insert "\n"))
 
 (defun lyskom-help-format-refer (data)
   (let* ((id (intern (lyskom-help-data-get-attr 'id data)))
-         (section (lyskom-help-get-section id)))
-    (cond (section (lyskom-insert 
-                    (lyskom-help-data-get-attr 'prompt section)))
-          (t (lyskom-insert (format "%s" id))))))
+         (section (lyskom-help-get-section id))
+         (string (or (lyskom-help-data-get-attr 'prompt section)
+                     (format "%s" id))))
+    (lyskom-format-insert 
+     "%#2@%#1s"
+     string
+     `(face underline
+            mouse-face highlight
+            lyskom-button t
+            lyskom-button-text ""
+            lyskom-button-type func
+            lyskom-buffer ,(current-buffer)
+            lyskom-button-arg (kom-help (,string . ,id)))))
+
+)
+
 
 (defun lyskom-help-format-cref (data)
   (let* ((command (intern (lyskom-help-data-get-attr 'id data)))
@@ -187,7 +207,7 @@
       (lyskom-do-help-format el))
       (save-excursion
         (save-restriction
-          (narrow-to-region start (point))
+          (narrow-to-region start (point-max))
           (goto-char (point-min))
           (while (re-search-forward "^\\s-+" nil t)
             (replace-match "" nil nil))
