@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.68 2002-04-22 22:18:04 byers Exp $
+;;;;; $Id: option-edit.el,v 44.69 2002-04-25 20:56:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.68 2002-04-22 22:18:04 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.69 2002-04-25 20:56:35 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -182,7 +182,10 @@
     [kom-smileys]
     [kom-w3-simplify-body]
     "\n"
-    [kom-color-text-background]
+    [kom-highlight-first-line]
+    [kom-highlight-dashed-lines]
+    [kom-highlight-text-body]
+    "\n"
     [kom-dashed-lines]
     [kom-long-lines]
     [kom-text-footer-format]
@@ -481,7 +484,10 @@ customize buffer but do not save them to the server."
   "List of user variables not in lyskom-custom-variables.")
 
 (defvar lyskom-custom-variables
-  '((kom-color-text-background (toggle (on off)))
+  '(
+    (kom-highlight-first-line (toggle (on off)))
+    (kom-highlight-dashed-lines (toggle (on off)))
+    (kom-highlight-text-body (toggle (on off)))
     (kom-personal-messages-in-window (open-window))
     (kom-write-texts-in-window (open-window))
     (kom-list-membership-in-window (open-window))
