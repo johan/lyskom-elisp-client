@@ -1,0 +1,75 @@
+Content-Type: text/enriched
+Text-Width: 70
+
+<center>
+
+<bold>Att göra i elisp-klienten
+
+=========================
+
+</bold>
+
+
+</center><bold><x-color><param>white</param><x-bg-color><param>DarkSlateGray</param>Dessa behöver en mer intelligent implementation</x-bg-color></x-color></bold>
+
+<indent>Återse senaste
+
+
+</indent><bold><x-color><param>white</param><x-bg-color><param>DarkSlateGray</param>Buggar</x-bg-color></x-color></bold>
+
+    Å<indent>terse urinl</indent>ä<indent>gget h</indent>ä<indent>nger ibland. Fixat?
+
+
+åm -> lä -> åh --- Sen får man läsa markerade iaf.
+
+
+sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
+ut en session i ett ikonifierat f</indent>ö<indent>nster. Eller kanske till och med
+bara i en g</indent>ö<indent>md buffert.
+
+
+Review tree buggar. I den engelska varianten </indent>å<indent>tminstone.
+
+</indent>
+<bold><x-color><param>white</param><x-bg-color><param>DarkSlateGray</param>Allmänna förbättringar</x-bg-color></x-color></bold>
+
+<indent>Det verkar behövas dynamisk anpassning av sessionsfältsbredden i
+vilkalistan, vid sessionsnummer över 9999 ser det inte så snyggt
+ut.
+
+
+Presentationer ska ha samma mottagare som tidigare
+presentationer. Kommandot kom-review-comments visar fotnoter sist,
+inte först.
+
+
+Det skulle vara bra om skönsvärde för att skriva fotnot vore den
+senaste text man själv skrev, inte den senaste man läste.
+
+
+Å K - Återse den text som den föregående texten kommenterade
+
+
+Kan du fixa så formatteringen av enriched inte kollapsar om den
+inte kan bygga en font? Jag har ingen version av italic till den
+font jag kör (6x10s, egenhackad), och då visas inlägg 1230804 inte
+så vackert.  Inte alls faktist. Inte första gången i alla
+fall. Andra gången verkar det gå bra...
+
+
+Varför står det "anonym person" på ett ställe, men "Person 0" på
+ett annat? Och vad menar Rickard?
+
+
+</indent>1234928 1996-01-31 03:29 /1 rad/ Anonym person Mottagare: Plötsliga
+plötsligheter <<6238> Ärende: Exempel på anonym text.
+------------------------------------------------------------ Apropå
+debatten om anonyma inlägg . . .  (1234928)
+----------------------------------- Kommentar i text 1234929 av
+Rickard Westman (tror på det onaturliga) Läsa nästa kommentar.
+1234929 1996-01-31 03:34 /1 rad/ Rickard Westman (tror på det
+onaturliga) Kommentar till text 1234928 av Person 0 (finns inte).
+Mottagare: Plötsliga plötsligheter <<6239> Ärende: Exempel på anonym
+text.  ------------------------------------------------------------
+Jaså, du säger det, Anders.  (1234929)
+-----------------------------------
