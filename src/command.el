@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.11.2.1 1999-10-13 09:55:46 byers Exp $
+;;;;; $Id: command.el,v 44.11.2.2 1999-10-13 12:12:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

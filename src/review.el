@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.9.2.1 1999-10-13 09:56:13 byers Exp $
+;;;;; $Id: review.el,v 44.9.2.2 1999-10-13 12:13:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.9.2.1 1999-10-13 09:56:13 byers Exp $\n"))
+	      "$Id: review.el,v 44.9.2.2 1999-10-13 12:13:27 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions

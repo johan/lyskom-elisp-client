@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.26.2.1 1999-10-13 09:55:53 byers Exp $
+;;;;; $Id: edit-text.el,v 44.26.2.2 1999-10-13 12:13:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.26.2.1 1999-10-13 09:55:53 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.26.2.2 1999-10-13 12:13:02 byers Exp $\n"))
 
 
 ;;;; ================================================================

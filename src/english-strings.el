@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.32.2.1 1999-10-13 09:55:55 byers Exp $
+;;;;; $Id: english-strings.el,v 44.32.2.2 1999-10-13 12:13:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.32.2.1 1999-10-13 09:55:55 byers Exp $"))
+              "$Id: english-strings.el,v 44.32.2.2 1999-10-13 12:13:05 byers Exp $"))
 
 
 ;;; ================================================================

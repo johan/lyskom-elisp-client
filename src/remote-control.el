@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.1.2.1 1999-10-13 09:56:12 byers Exp $
+;;;;; $Id: remote-control.el,v 44.1.2.2 1999-10-13 12:13:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.1.2.1 1999-10-13 09:56:12 byers Exp $\n"))
+	      "$Id: remote-control.el,v 44.1.2.2 1999-10-13 12:13:25 byers Exp $\n"))
 
 
 ;;;============================================================

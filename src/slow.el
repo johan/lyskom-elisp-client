@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.5.4.1 1999-10-13 09:56:15 byers Exp $
+;;;;; $Id: slow.el,v 44.5.4.2 1999-10-13 12:13:29 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

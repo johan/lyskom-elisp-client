@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.1.2.1 1999-10-13 09:56:00 byers Exp $
+;;;;; $Id: internal.el,v 44.1.2.2 1999-10-13 12:13:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.1.2.1 1999-10-13 09:56:00 byers Exp $\n"))
+	      "$Id: internal.el,v 44.1.2.2 1999-10-13 12:13:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -369,7 +369,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 	  (++ lyskom-number-of-pending-calls)
 	  (lyskom-process-send-string
 	   lyskom-proc
-	   (concat (car entry) (cdr entry) "\n")))))))
+	   (concat (number-to-string (car entry)) (cdr entry) "\n")))))))
 
 (defun lyskom-decrease-pending-calls ()
   "A reply has come.

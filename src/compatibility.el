@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
-;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.13.4.1 1999-10-13 09:55:50 byers Exp $
+;;;;; -*-coding: raw-text; unibyte: t;-*-
+;;;;;
+;;;;; $Id: compatibility.el,v 44.13.4.2 1999-10-13 12:12:57 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.13.4.1 1999-10-13 09:55:50 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.13.4.2 1999-10-13 12:12:57 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -261,9 +261,18 @@ string to search in."
 
 
 ;;; ============================================================
-;;; Character stuff
+;;; Basic stuff
 
 (lyskom-provide-function char-to-int (c) c)
+
+(defvar enable-multibyte-characters nil)
+(lyskom-provide-function set-buffer-multibyte (arg)
+  (put 'enable-multibyte-characters 'permanent-local t)
+  (make-local-variable 'enable-multibyte-characters)
+  (setq enable-multibyte-characters arg))
+
+(lyskom-provide-function set-process-coding-system (proc &optional encoding decoding))
+
 
 ;;; ======================================================================
 ;;; Event stuff

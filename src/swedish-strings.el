@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.33.2.1 1999-10-13 09:56:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.33.2.2 1999-10-13 12:13:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.33.2.1 1999-10-13 09:56:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.33.2.2 1999-10-13 12:13:33 byers Exp $\n"))
 
 
 ;;; ================================================================

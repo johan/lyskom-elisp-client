@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t; -*-
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.3.4.1 1999-10-13 09:56:22 byers Exp $
+;;;;; $Id: view-mode.el,v 44.3.4.2 1999-10-13 12:13:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.3.4.1 1999-10-13 09:56:22 byers Exp $\n"))
+	      "$Id: view-mode.el,v 44.3.4.2 1999-10-13 12:13:39 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")

@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.11.2.1 1999-10-13 09:55:51 byers Exp $
+;;;;; $Id: completing-read.el,v 44.11.2.2 1999-10-13 12:12:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.11.2.1 1999-10-13 09:55:51 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.11.2.2 1999-10-13 12:12:58 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -483,13 +483,25 @@ function work as a name-to-conf-stat translator."
 
 
 (defun lyskom-completing-member (string list)
-  "Check case-insensitively if STRING is a member of LIST"
-  (let (result)
-  (while (and list (not result))
-    (if (string= (lyskom-unicase string) (lyskom-unicase (car list)))
-        (setq result list)
-      (setq list (cdr list))))
-  result))
+  (let ((string (lyskom-unicase (lyskom-completing-strip-name string)))
+        (result nil))
+    (while (and list (not result))
+      (if (string= string (lyskom-unicase 
+                           (lyskom-completing-strip-name (car list))))
+          (setq result list)
+        (setq list (cdr list))))
+    result))
+
+
+(defun lyskom-completing-strip-name (string)
+  "Strip parens and crap from a name"
+  (while (string-match "([^()]*)" string)
+    (setq string (replace-match " " t t string)))
+  (while (string-match "\\s-\\s-+" string)
+    (setq string (replace-match " " t t string)))
+  (if (string-match "^\\s-*\\(.*\\S-\\)\\s-*$" string)
+      (match-string 1 string)
+    string))
 
 
 (defun lyskom-read-conf-internal-verify-type (conf-no
@@ -733,7 +745,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-advance (data-list)
   (lyskom-traverse 
    el data-list
-   (string-match "\\(\\s-+\\|\\S-\\|$\\)"
+   (string-match "\\([ \t]+\\|[^ \t]\\|$\\)"
                  (aref el 2)
                  (aref el 0))
    (aset el 0 (match-end 0))))
@@ -741,7 +753,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-skip-whitespace (data-list)
   (lyskom-traverse
    el data-list
-   (string-match "\\s-*" (aref el 2) (aref el 0))
+   (string-match "[ \t]*" (aref el 2) (aref el 0))
    (aset el 0 (match-end 0))))
 
 ;;;
@@ -751,7 +763,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-advance-to-end-of-word (data-list)
   (lyskom-traverse
    el data-list
-   (aset el 0 (string-match "\\(\\s-\\|$\\)" 
+   (aset el 0 (string-match "\\([ \t]\\|$\\)" 
                             (aref el 2)
                             (aref el 0)))))
 

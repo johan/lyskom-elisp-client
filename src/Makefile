@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.22.2.1 1999-10-13 09:55:41 byers Exp $
+# $Id: Makefile,v 44.22.2.2 1999-10-13 12:12:46 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.22.2.1 1999-10-13 09:55:41 byers Exp $
+# $Id: Makefile,v 44.22.2.2 1999-10-13 12:12:46 byers Exp $
 #
 
 
@@ -36,8 +36,8 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.45.1-P1
-DOCFILES=NEWS-0.45.1 MIGRATION-0.44-0.45
+CLIENTVERSION = 0.45.2
+DOCFILES=NEWS-0.45.2 NEWS-0.45.1 NEWS-0.45 MIGRATION-0.44-0.45
 
 FTPDIR=/home/davby/www-pub
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
@@ -118,6 +118,15 @@ lyskom.el: $(HEADER) $(SOURCES)
 
 lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
+
+header.el: $(HEADER)
+	cat $(HEADER) > header.el
+
+%.elc: %.el header.el
+	$(EMACS-BATCH) -l ./lpath.el -l ./header.el -f batch-byte-compile $<
+
+fast: $(HEADER-ELC) $(SOURCES-ELC)
+	cat $(HEADER-ELC) $(SOURCES-ELC) > lyskom.elc
 
 check: lyskom.el
 	$(EMACS-BATCH) -l ./lpath.el -l ./lyskom.el  -l ./check-strings.el \

@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: messages.el,v 44.1.2.1 1999-10-13 09:56:07 byers Exp $
+;;;;; $Id: messages.el,v 44.1.2.2 1999-10-13 12:13:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 44.1.2.1 1999-10-13 09:56:07 byers Exp $\n"))
+	      "$Id: messages.el,v 44.1.2.2 1999-10-13 12:13:19 byers Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
   "A list of personal message handlers.

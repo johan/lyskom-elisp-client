@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.14.2.1 1999-10-13 09:56:06 byers Exp $
+;;;;; $Id: macros.el,v 44.14.2.2 1999-10-13 12:13:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.14.2.1 1999-10-13 09:56:06 byers Exp $\n"))
+	      "$Id: macros.el,v 44.14.2.2 1999-10-13 12:13:18 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating

@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
-;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.21.2.1 1999-10-13 09:56:20 byers Exp $
+;;;;; -*-coding: raw-text; unibyte: t;-*-
+;;;;;
+;;;;; $Id: utilities.el,v 44.21.2.2 1999-10-13 12:13:35 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.21.2.1 1999-10-13 09:56:20 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.21.2.2 1999-10-13 12:13:35 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a

@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.16.2.1 1999-10-13 09:56:08 byers Exp $
+;;;;; $Id: option-edit.el,v 44.16.2.2 1999-10-13 12:13:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.16.2.1 1999-10-13 09:56:08 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.16.2.2 1999-10-13 12:13:20 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)

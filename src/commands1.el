@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.28.2.1 1999-10-13 09:55:47 byers Exp $
+;;;;; $Id: commands1.el,v 44.28.2.2 1999-10-13 12:12:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.28.2.1 1999-10-13 09:55:47 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.28.2.2 1999-10-13 12:12:54 byers Exp $\n"))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.16.2.1 1999-10-13 09:56:03 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.16.2.2 1999-10-13 12:13:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.16.2.1 1999-10-13 09:56:03 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.16.2.2 1999-10-13 12:13:14 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)

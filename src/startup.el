@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.23.2.1 1999-10-13 09:56:16 byers Exp $
+;;;;; $Id: startup.el,v 44.23.2.2 1999-10-13 12:13:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.23.2.1 1999-10-13 09:56:16 byers Exp $\n"))
+	      "$Id: startup.el,v 44.23.2.2 1999-10-13 12:13:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -137,6 +137,7 @@ See lyskom-mode for details."
                        (setq proc (open-network-stream name buffer
                                                        proxy-host
                                                        proxy-port))
+                       (set-process-coding-system proc 'no-conversion 'iso-8859-1)
                        (lyskom-process-send-string 
                         proc
                         (format "\
@@ -144,7 +145,8 @@ connect %s:%d HTTP/1.0\r\n\
 \r\n"
                                 host port)))
                       (t (setq proc (open-network-stream name buffer
-                                                         host port)))))
+                                                         host port))
+                         (set-process-coding-system proc 'no-conversion 'iso-8859-1))))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
 	      (if session-priority

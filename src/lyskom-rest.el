@@ -1,6 +1,6 @@
-;;;;; -*-unibyte: t;-*-
+;;;;; -*-coding: raw-text; unibyte: t;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.50.2.1 1999-10-13 09:56:04 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.50.2.2 1999-10-13 12:13:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -80,7 +80,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.50.2.1 1999-10-13 09:56:04 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.50.2.2 1999-10-13 12:13:16 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1392,14 +1392,25 @@ in lyskom-messages."
 
 
 (defun lyskom-w3-region (start end)
-  (w3-region start end)
-  (add-text-properties start (min (point-max) end) '(end-closed nil)))
+  (unwind-protect
+    (condition-case nil
+      (progn
+        (narrow-to-region start end)
+        (save-excursion
+          (let ((case-fold-search t))
+            (goto-char start)
+            (while (re-search-forward "<body[^>]*>" end t)
+              (replace-match "<body>"))))
+        (w3-region start end)
+        (w3-finish-drawing)
+        (add-text-properties (point-min) (point-max) '(end-closed nil)))
+      (error nil))))
 
 (defun lyskom-format-html (text)
-  (condition-case e (require 'w3) (error nil))
-  (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
-  (lyskom-signal-reformatted-text 'reformat-html)
-  (substring text 5))
+  (when (condition-case e (progn (require 'w3) t) (error nil))
+    (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+    (lyskom-signal-reformatted-text 'reformat-html)
+    (substring text 5)))
 
 ;;;(defun lyskom-format-html (text)
 ;;;  (condition-case e (require 'w3) (error nil))
@@ -2830,9 +2841,7 @@ One parameter - the prompt string."
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
-	;;(enable-multibyte-characters nil))
-    (if (fboundp 'toggle-enable-multibyte-characters)
-	(toggle-enable-multibyte-characters -1))
+    (set-buffer-multibyte nil)
     (while (not (or (eq (setq input-char 
 			      (condition-case err
 				  (read-char)
@@ -2875,21 +2884,23 @@ One parameter - the prompt string."
 
 
 ;;
-(lyskom-set-language lyskom-language)
+(if lyskom-is-loaded
+    nil
+  (lyskom-set-language lyskom-language)
 
-;; Build the menus
-;; (lyskom-build-menus)
+  ;; Build the menus
+  ;; (lyskom-build-menus)
 
 
-(or (memq 'lyskom-unread-mode-line global-mode-string)
-    (setq global-mode-string
-	  (append '("" lyskom-unread-mode-line) global-mode-string)))
-(setq lyskom-unread-mode-line
-      (list (list 'lyskom-sessions-with-unread 
-		  (lyskom-get-string 'mode-line-unread))
-	    (list 'lyskom-sessions-with-unread-letters
-		  (lyskom-get-string 'mode-line-letters))
-	    " "))
+  (or (memq 'lyskom-unread-mode-line global-mode-string)
+      (setq global-mode-string
+            (append '("" lyskom-unread-mode-line) global-mode-string)))
+  (setq lyskom-unread-mode-line
+        (list (list 'lyskom-sessions-with-unread 
+                    (lyskom-get-string 'mode-line-unread))
+              (list 'lyskom-sessions-with-unread-letters
+                    (lyskom-get-string 'mode-line-letters))
+              " "))
 
 ;;;
 ;;; Set up lyskom-line-start-chars. The reason we do it here is that
@@ -2899,69 +2910,70 @@ One parameter - the prompt string."
 
 ;;; Should work for emacs-20.3. Doesn't seem to.
 ;;; string-to-vector is a 20-ism. /mr
-;;(setq lyskom-line-start-chars
-;;      (string-to-vector lyskom-line-start-chars-string))
+  ;;(setq lyskom-line-start-chars
+  ;;      (string-to-vector lyskom-line-start-chars-string))
 
-(if (fboundp 'multibyte-char-to-unibyte)
+  (if (fboundp 'multibyte-char-to-unibyte)
+      (setq lyskom-line-start-chars
+            (let ((tmp (make-vector 256 nil)))
+              (mapcar 
+               (function
+                (lambda (x)
+                  (aset tmp (multibyte-char-to-unibyte x) t)))
+               lyskom-line-start-chars-string)
+              tmp))
     (setq lyskom-line-start-chars
-	  (let ((tmp (make-vector 256 nil)))
-	    (mapcar 
-	     (function
-	      (lambda (x)
-		(aset tmp (multibyte-char-to-unibyte x) t)))
-	     lyskom-line-start-chars-string)
-	    tmp))
-  (setq lyskom-line-start-chars
-	(let ((tmp (make-vector 256 nil)))
-	  (mapcar 
-	   (function
-	    (lambda (x)
-	      (aset tmp (char-to-int x) t)))
-	   lyskom-line-start-chars-string)
-	  tmp)))
+          (let ((tmp (make-vector 256 nil)))
+            (mapcar 
+             (function
+              (lambda (x)
+                (aset tmp (char-to-int x) t)))
+             lyskom-line-start-chars-string)
+            tmp)))
 		 
 
 
 ;;; Formely lyskom-swascii-commands
-;;(lyskom-define-language 'lyskom-command 'swascii
-;;  (mapcar 
-;;   (function (lambda (pair)
-;;		 (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;   (lyskom-get-strings lyskom-commands 'lyskom-command)))
+  ;;(lyskom-define-language 'lyskom-command 'swascii
+  ;;  (mapcar 
+  ;;   (function (lambda (pair)
+  ;;		 (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+  ;;   (lyskom-get-strings lyskom-commands 'lyskom-command)))
 
-;;(setq lyskom-swascii-header-separator 
-;;	(iso-8859-1-to-swascii lyskom-header-separator))
-;;(setq lyskom-swascii-header-subject
-;;	(iso-8859-1-to-swascii lyskom-header-subject))
+  ;;(setq lyskom-swascii-header-separator 
+  ;;	(iso-8859-1-to-swascii lyskom-header-separator))
+  ;;(setq lyskom-swascii-header-subject
+  ;;	(iso-8859-1-to-swascii lyskom-header-subject))
 
-;;(setq lyskom-swascii-filter-actions
-;;	(mapcar 
-;;	 (function (lambda (pair)
-;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;	 lyskom-filter-actions))
-;;(setq lyskom-swascii-filter-what
-;;	(mapcar 
-;;	 (function (lambda (pair)
-;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;	 lyskom-filter-what))
+  ;;(setq lyskom-swascii-filter-actions
+  ;;	(mapcar 
+  ;;	 (function (lambda (pair)
+  ;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+  ;;	 lyskom-filter-actions))
+  ;;(setq lyskom-swascii-filter-what
+  ;;	(mapcar 
+  ;;	 (function (lambda (pair)
+  ;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+  ;;	 lyskom-filter-what))
 
 
-;; Setup the queue priorities
-(lyskom-set-queue-priority 'blocking 9)
-(lyskom-set-queue-priority 'main 9)
-(lyskom-set-queue-priority 'sending 9)
-(lyskom-set-queue-priority 'follow 9)
-(lyskom-set-queue-priority 'deferred 6)
-(lyskom-set-queue-priority 'background 6)
-(lyskom-set-queue-priority 'modeline 6)
-(lyskom-set-queue-priority 'async 3)
-(lyskom-set-queue-priority 'prefetch 0)
+  ;; Setup the queue priorities
+  (lyskom-set-queue-priority 'blocking 9)
+  (lyskom-set-queue-priority 'main 9)
+  (lyskom-set-queue-priority 'sending 9)
+  (lyskom-set-queue-priority 'follow 9)
+  (lyskom-set-queue-priority 'deferred 6)
+  (lyskom-set-queue-priority 'background 6)
+  (lyskom-set-queue-priority 'modeline 6)
+  (lyskom-set-queue-priority 'async 3)
+  (lyskom-set-queue-priority 'prefetch 0)
 
 
 ;;; This should be the very last lines of lyskom.el Everything should
 ;;; be loaded now, so it's time to run the lyskom-after-load-hook.
 
-(run-hooks 'lyskom-after-load-hook)
+  (run-hooks 'lyskom-after-load-hook)
+  (setq lyskom-is-loaded t))
 
 (lyskom-end-of-compilation)
 
