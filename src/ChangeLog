@@ -1,3 +1,9 @@
+2002-07-16  Johan Sundström  <jhs@lysator.liu.se>
+
+	* lyskom-rest.el (kom-go-to-next-conf): Treat prefix arguments as
+	kom-list-news does, giving upper/lower bounds for the number of
+	unread messages you want in the conference you go to.
+
 2002-07-15  Per Cederqvist  <ceder@ingate.com>
 
 	* utilities.el (lyskom-evaluate-text-no-strategy): first, second
