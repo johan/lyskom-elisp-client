@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.100 2000-01-06 12:47:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.101 2000-02-16 15:10:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.100 2000-01-06 12:47:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.101 2000-02-16 15:10:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3020,6 +3020,11 @@ i servern. Annars sparas det i din .emacs.")
     (kom-check-commented-author-membership . "")
     (kom-confirm-multiple-recipients-doc . "")
     (kom-check-commented-author-membership-doc . "")
+    (kom-complete-numbers-before-names-doc . "\
+  När detta är påslaget och man matar in en text som kan tolkas både som
+  ett mötesnamn eller ett mötesnummer vid inläsning av mötesnamn, så
+  tolkar klienten det i första hand som ett nummer. När detta är avslaget
+  så tolkas det i första hand som ett mötesnamn.")
 
 
     ;;
@@ -3167,6 +3172,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-mercial-tag . "Text när allt är utläst")
     (kom-server-priority-tag . "Sessionsprioritet")
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa")
+    (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn")
     )
 )
 
