@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.237 2004-05-25 18:01:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.238 2004-05-30 16:59:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.237 2004-05-25 18:01:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.238 2004-05-30 16:59:54 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2253,7 +2253,7 @@ in lyskom-messages."
 
 
 (defun lyskom-format-html-plaintext (text text-stat)
-  (lyskom-button-transform-text text-stat))
+  (lyskom-button-transform-text text text-stat))
 
 (defun lyskom-format-html (text text-stat package function)
   ;; Find settings for this author
