@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 44.1 1996-09-29 15:18:28 davidk Exp $
+;;;;; $Id: internal.el,v 44.2 1998-01-04 00:31:42 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.1 1996-09-29 15:18:28 davidk Exp $\n"))
+	      "$Id: internal.el,v 44.2 1998-01-04 00:31:42 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -229,7 +229,7 @@ all previous calls to the server via KOM-QUEUE have been handled."
 (defun lyskom-halt (queue-name)
   "Prohibit execution of handlers on QUEUE-NAME.
 The execution will resume when (lyskom-resume KOM-QUEUE) is called."
-  (let ((queue-pair (assoc queue-name lyskom-call-data)))
+  (let ((queue-pair (assq queue-name lyskom-call-data)))
     (if (null queue-pair)
 	(setq queue-pair (lyskom-add-new-queue queue-name)))
     (kom-queue-halt (cdr queue-pair))))
@@ -238,7 +238,7 @@ The execution will resume when (lyskom-resume KOM-QUEUE) is called."
 (defun lyskom-resume (kom-queue)
   "Resume execution of waiting handlers on KOM-QUEUE.
 See documentation for lyskom-halt."
-  (let ((queue (assoc kom-queue lyskom-call-data)))
+  (let ((queue (assq kom-queue lyskom-call-data)))
     (cond
      ((null queue)			;A new kom-queue?
       (signal 'lyskom-internal-error
