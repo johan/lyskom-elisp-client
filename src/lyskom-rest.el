@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.247 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.248 2004-11-12 10:54:57 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.247 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.248 2004-11-12 10:54:57 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3188,11 +3188,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                              lyskom-current-conf)))
                          ((eq format-letter ?S) lyskom-server-name)
                          ((eq format-letter ?s)
-                          (or (cdr (assoc
-                                    lyskom-server-name
-                                    (append kom-server-aliases
-                                            kom-builtin-server-aliases)))
-                              lyskom-server-name))
+			  (lyskom-session-nickname))
                          ((eq format-letter ?p)
                           (or (conf-stat->name
                                (cache-get-conf-stat lyskom-pers-no))
@@ -4211,7 +4207,7 @@ One parameter - the prompt string."
     input-string))
 
 
-(defun lyskom-session-nickname ()
+(defun lyskom-session-nickname (&optional in-modeline)
   "Return the nickname to use for this LysKOM session."
   (if kom-session-nickname
       kom-session-nickname
@@ -4219,14 +4215,16 @@ One parameter - the prompt string."
       (or (cdr (assoc server
 		      (append kom-server-aliases
 			      kom-builtin-server-aliases)))
-	  (format "LysKOM(%s)" server)))))
+	  (if in-modeline
+	    (format "LysKOM(%s)" server)
+	    server)))))
    
 ;;; This really is a strange thing to do but...
 ;;
 (defun lyskom-mode-name-from-host ()
   "Calculate what to identify the buffer with."
   (setq mode-line-server-name 
-	(lyskom-session-nickname)))
+	(lyskom-session-nickname t)))
 
 (defvar lyskom-modeline-keymap nil)
 (if lyskom-modeline-keymap

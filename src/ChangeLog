@@ -1,5 +1,20 @@
 2004-11-12  Pontus Freyhult  <pont@soua.net>
 
+	* commands2.el (kom-modeline-select-unread-kom): Use 
+	lyskom-session-nickname.
+	(kom-status-server): Dito.
+
+	* lyskom-rest.el (lyskom-session-nickname): Take additional argument
+	if the nick name is to be put in the mode line.
+	(lyskom-mode-name-from-host): Pass mode-line arg.
+	
+	* async.el (lyskom-show-logged-in-person): Use lyskom-session-nickname.
+	(lyskom-show-logged-out-person): Dito.
+	
+	* utilities.el (lyskom-get-server-alias): Deleted (almost) unused
+	function.
+	(lyskom-nag-about-presentation): Use lyskom-session-nickname instead.
+
 	* vars.el.in (lyskom-commands): Added kom-list-sessions.
 
 	* menus.el (lyskom-menu-template): Added kom-list-sessions.

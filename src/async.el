@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.64 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: async.el,v 44.65 2004-11-12 10:54:56 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.64 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: async.el,v 44.65 2004-11-12 10:54:56 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -403,11 +403,7 @@ according to the value of FLAG."
 
 (defun lyskom-show-logged-in-person (conf-stat)
   "Visa p} kommandoraden vem som loggat in."
-  (let ((server (or (cdr (lyskom-string-assoc
-                          lyskom-server-name
-                          (append kom-server-aliases
-                                  kom-builtin-server-aliases)))
-                    lyskom-server-name)))
+  (let ((server (lyskom-session-nickname)))
     (cond
      ((lyskom-is-in-minibuffer))
      ((lyskom-show-presence (conf-stat->conf-no conf-stat)
@@ -437,11 +433,7 @@ according to the value of FLAG."
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)
   "Visa p} kommandoraden vem som loggat ut."
-  (let ((server (or (cdr (lyskom-string-assoc
-                          lyskom-server-name
-                          (append kom-server-aliases
-                                  kom-builtin-server-aliases)))
-                    lyskom-server-name)))
+  (let ((server (lyskom-session-nickname)))
   (cond
    ((lyskom-is-in-minibuffer))
    ((lyskom-show-presence (conf-stat->conf-no conf-stat) 

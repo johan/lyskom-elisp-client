@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.158 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: utilities.el,v 44.159 2004-11-12 10:54:57 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.158 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: utilities.el,v 44.159 2004-11-12 10:54:57 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1903,17 +1903,6 @@ Any whitespace and newlines in TEXT will be ignored."
       (or (string-match "^\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\|rtsp:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$" text)
           (string-match "^\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$"  text)))))
 
-
-(defun lyskom-get-server-alias (&optional name)
-  "Return the alias for server NAME."
-  (let ((lyskom-both-server-aliases (append kom-server-aliases
-                                            kom-builtin-server-aliases)))
-
-    (or (cdr (lyskom-string-assoc (or name lyskom-server-name)
-                                  lyskom-both-server-aliases))
-        name
-        lyskom-server-name)))
-
 (defun lyskom-nag-about-presentation (&optional harder)
   (unless kom-dont-complain-about-missing-presentation
     (blocking-do-multiple
@@ -1933,7 +1922,7 @@ Any whitespace and newlines in TEXT will be ignored."
         (lyskom-format-insert 'why-you-got-no-presentation
                               `(face ,kom-warning-face)
                               (pers-stat->no-of-created-texts pers-stat)
-                              (lyskom-get-server-alias)
+                              (lyskom-session-nickname)
                               72)
         (sit-for (if harder 0 1))))))
 
