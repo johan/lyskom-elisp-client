@@ -1,3 +1,15 @@
+2000-08-15  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-add-member-answer): Block until we get at
+	least one text in the map or have read the entire map.
+	(lyskom-add-membership): Add parameter BLOCKING to allow blocking
+	until we have read at least one text in the map.
+
+	* prefetch.el (lyskom-fetch-start-of-map): New function.
+
+	* lyskom-rest.el (lyskom-check-go-to-conf): Start prefetch when
+	converting passive membership to active membership.
+
 2000-08-14  David Byers  <davby@ida.liu.se>
 
 	* services.el (lyskom-server-call): Return the ref-no of the call

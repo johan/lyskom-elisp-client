@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.79 2000-08-14 15:56:26 byers Exp $
+;;;;; $Id: commands1.el,v 44.80 2000-08-15 10:09:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.79 2000-08-14 15:56:26 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.80 2000-08-15 10:09:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -524,7 +524,6 @@ is the position where the membership was placed."
                                            (lyskom-get-error-text lyskom-errno)
                                            lyskom-errno)))))
 
-      (lyskom-insert-string 'done)
       ;;+++Borde {ndra i cachen i st{llet.
       (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
       ;;+++Borde {ndra i cachen i st{llet.
@@ -537,18 +536,23 @@ is the position where the membership was placed."
             (unless (membership->position mship)
               (set-membership->position mship pos))
             (lyskom-add-membership mship
-                                   (conf-stat->conf-no conf-conf-stat)))))))
+                                   conf-conf-stat
+                                   t)))
+      (lyskom-insert-string 'done))))
 
 
 
-(defun lyskom-add-membership (membership conf-no)
+(defun lyskom-add-membership (membership conf-no-or-stat &optional blocking)
   "Adds MEMBERSHIP to the sorted list of memberships.
-Args: MEMBERSHIP CONF-STAT THENDO DATA
-Also adds to lyskom-to-do-list."
+If BLOCKING is non-nil, block while reading the conference map until at 
+least one text has been seen. CONF-NO-OR-STAT is the conf-no to add 
+unless BLOCKING is t, in which cast it is the conf-stat."
   (if membership
       (progn
 	(lyskom-insert-membership membership)
-	(lyskom-prefetch-map conf-no membership)
+        (if blocking
+            (lyskom-fetch-start-of-map conf-no-or-stat membership)
+          (lyskom-prefetch-map conf-no-or-stat membership))
         (lyskom-run-hook-with-args 'lyskom-add-membership-hook
                                    membership))
     (lyskom-insert-string 'conf-does-not-exist)))
