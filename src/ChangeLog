@@ -1,3 +1,12 @@
+1999-06-19  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-read-conf-stat): Don't croak if we
+	get an uconf-stat back from lyskom-read-conf.
+
+1999-06-17  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-maxint): Clip to 32 bit integers.
+
 1999-06-17  David Byers  <davby@ida.liu.se>
 
 	* feature.el (lyskom-define-feature): Inherit feature variables

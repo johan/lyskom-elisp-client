@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.67 1999-06-15 14:38:20 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.68 1999-06-20 11:26:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.67 1999-06-15 14:38:20 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.68 1999-06-20 11:26:37 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -856,24 +856,12 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxcCSD]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\(&\\)?\\([][@MmPpnrtsdoxcCSDF]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
  "Find the string corresponding to ATOM and insert it into the LysKOM buffer." 
   (lyskom-insert (lyskom-get-string atom)))
-
-;;(defun lyskom-get-string (atom &optional assoc-list)
-;;  "Get the string corresponding to ATOM and return it."
-;;  (if (stringp atom)
-;;	atom
-;;    (let ((format-pair (assoc atom (or assoc-list lyskom-strings))))
-;;	(if (null format-pair)
-;;	    (signal 'lyskom-internal-error 
-;;		    (list 'lyskom-get-string
-;;			  (list atom ": string not found")))
-;;	  (cdr format-pair)))))
-
 
 (defun lyskom-format (format-string &rest argl)
   (format-state->result (lyskom-do-format format-string argl)))
@@ -963,6 +951,7 @@ Note that it is not allowed to use deferred insertions in the text."
         (format-letter nil)
         (colon-flag nil)
         (equals-flag nil)
+        (face-flag nil)
         (abort-format nil))
 
     ;;
@@ -1020,10 +1009,11 @@ Note that it is not allowed to use deferred insertions in the text."
 						   (match-end 4)))
 		       nil)
 	      colon-flag (match-beginning 5)
-	      format-letter (if (match-beginning 6)
+              face-flag (match-beginning 6)
+	      format-letter (if (match-beginning 7)
 				(aref (format-state->format-string 
 				       format-state)
-				      (match-beginning 6))
+				      (match-beginning 7))
 			      (signal 'lyskom-internal-error
 				      (list 'lyskom-format-aux 
 					    (format-state->format-string
@@ -1047,6 +1037,7 @@ Note that it is not allowed to use deferred insertions in the text."
              format-letter
              equals-flag
              colon-flag
+             face-flag
              (if (and (match-beginning 2)
                       (eq (aref (format-state->format-string format-state)
                                 (match-beginning 2))
@@ -1063,6 +1054,7 @@ Note that it is not allowed to use deferred insertions in the text."
                                format-letter
                                equals-flag
                                colon-flag
+                               face-flag
                                pad-letter
 			       allow-defer)
   (let ((arg nil)
@@ -1173,6 +1165,15 @@ Note that it is not allowed to use deferred insertions in the text."
      ((= format-letter ?\[)
       (setq format-state (lyskom-format-aux format-state allow-defer)
             result nil))
+
+     ((= format-letter ?F)
+      (setq result 
+            (if (lyskom-conf-stat-p arg)
+                (let ((face (conf-stat-find-aux arg 9))
+                      (string (copy-sequence "X")))
+                  (lyskom-maybe-add-face-to-string face string))
+              "!!!")))
+
      ;;
      ;;  Format a conference or person name by retreiving information
      ;;  about the conference or person and inserting it as a button
@@ -1231,18 +1232,15 @@ Note that it is not allowed to use deferred insertions in the text."
                              (format-state->delayed-content
                               format-state)))
                       lyskom-defer-indicator)
+
+                  ;; The conf-stat was in the cache
+
                   (setq arg tmp)
-;                  (let ((aux (conf-stat-find-aux arg
-;                                                 10 
-;                                                 lyskom-pers-no))
-;                        (face (conf-stat-find-aux arg
-;                                                  9)))
-;                    (lyskom-maybe-add-face-to-string
-;                     face
                   (uconf-stat->name arg)
                   )))
 	     
-             ;; Find the name and return it
+             ;; The argument is an integer and we do not permit 
+             ;; deferred printing
              ((integerp arg)
               (let ((conf-stat (blocking-do 'get-uconf-stat arg)))
                 (if (null conf-stat)
@@ -1254,8 +1252,13 @@ Note that it is not allowed to use deferred insertions in the text."
 	     
              ;; We got a conf-stat, and can use it directly
              ((lyskom-conf-stat-p arg)
-              (conf-stat->name arg))
+              (if face-flag
+                  (let ((face (conf-stat-find-aux arg 9)))
+                    (lyskom-maybe-add-face-to-string face
+                                                     (conf-stat->name arg)))
+                (conf-stat->name arg)))
 
+             ;; We have an uconf-stat
              ((lyskom-uconf-stat-p arg)
               (uconf-stat->name arg))
 
@@ -1272,6 +1275,7 @@ Note that it is not allowed to use deferred insertions in the text."
                  (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)
                                         arg)
                  propl))))
+
      ;;
      ;;  Format a conference or person number the same way as names,
      ;;  but insert the number rather than the name

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.56 1999-06-14 14:19:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.57 1999-06-20 11:26:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.56 1999-06-14 14:19:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.57 1999-06-20 11:26:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -171,7 +171,6 @@ du är osäker.\n")
 Email-adress:\nWWW:\t\n\nAnnat:\t")
     (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej närvarande i något möte.")
-    (secret-person . "Hemlig person")
     (in-secret-conference . "Hemligt möte (%#1d).")
     (start-new-session-same-server
      . "Du kör redan mot den servern. Vill du starta en ny session? ")
@@ -793,7 +792,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (has-left . "Nu har %#1:P gått ur %#2s.")
     (has-left-r . "%#2@Nu har %#1P gått ur %#3s.\n")
     (unknown . "okänd")
-    (secret-person . "Hemlig person")
+    (unknown-person . "Okänd person")
 
     (no-longer-member . "Du är inte längre medlem i %#1M\n")
     (no-longer-member-n . "Du är inte längre medlem i möte %#1m (finns inte.)\n")
@@ -835,7 +834,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
     (conf-prompt . "Vilket möte/person? ")
 
-    ;;n From prioritize.el:
+    ;; From prioritize.el:
 
     (cant-move-nothing-nowhere . "Kan inte flytta ingenting någonstans.")
     (goto-priority-prompt . "Hoppa till prioritet: ")
@@ -1269,7 +1268,6 @@ Innehåll:    \"%#9s\"
     (kom-list-news            . "Lista nyheter")
     (kom-list-re              . "Lista (med) regexpar")
     (kom-membership	      . "Lista medlemsskap")
-    ;; (kom-list-marks		"Lista markeringar") 
     (kom-postpone	      . "Uppskjuta läsning")
     (kom-set-session-priority . "Sätt läsnivå")
     (kom-prioritize	      . "Prioritera möten")
@@ -1918,7 +1916,7 @@ Innehåll:    \"%#9s\"
     ;; Help messages
     ;;
 
-    (variable-type-help . "Kryssa i för att spara inställningen i servern")
+    (variable-type-help . "Kryssa i för att spara inställningen i servern.")
     (default-help-echo . "Ändra värdet på %#1s.")
     (change-this-name . "Ändra namnet på denna rad.")
     (show-doc . "Visa hjälptexten.")
@@ -2045,7 +2043,6 @@ i servern. Annars sparas det i din .emacs.")
     (audio-cues .         "Ljudsignaler\n")
     (audio-cues-when    . "Ge ljudsignal:\n")
     (automatic-replies .  "Automatiskt svar\n")
-    (mail-import .        "Emailimport\n")
     
     (audio-cues-doc . "\
   Efterföljande inställningar bestämmer vilken ljudsignal LysKOM skall ge 
@@ -2556,17 +2553,6 @@ i servern. Annars sparas det i din .emacs.")
   av elispklienten, men det var visst någon som ville ha det, så ...")
 
 
-    (kom-mail-address-doc . "\
-  Värde för From:-headern i skickade email.")
-    
-    (kom-mail-importer-persons-doc . "\
-  Personer som i själva verket är emailimportörer.  Inlägg av dessa
-  personer kommer att formatteras som emailtexter istället för som
-  vanliga inlägg.")
-
-    (kom-mail-visible-headers-doc . "\
-  Visa dessa headers i emailtexter.")
-				  
     ;;
     ;; Tags for variables
     ;;
@@ -2683,9 +2669,6 @@ i servern. Annars sparas det i din .emacs.")
     (kom-show-namedays-tag .        "Visa dagens namn:")
     (kom-ispell-dictionary-tag . "Ordlista:")
 
-    (kom-mail-address-tag .          "Emailadress:       ")
-    (kom-mail-importer-persons-tag . "Mailimportörer:    ")
-    (kom-mail-visible-headers-tag .  "Visa dessa headers:")
     )
 )
 

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.63 1999-06-14 14:19:18 byers Exp $
+;;;;; $Id: vars.el.in,v 44.64 1999-06-20 11:26:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.63 1999-06-14 14:19:18 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.64 1999-06-20 11:26:42 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -844,6 +844,14 @@ don't send a reply.
 If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent."
   server)
 
+(def-kom-var kom-agree-text nil
+  "*If non-nil the default text to use when agreeing with a text.
+This variable can be a string, function or list. If a string, the
+string is used as the message. If a function, the function is called
+and the return value is used. If a list, one of the elements is selected
+at random and used. This element may be a string, function or list."
+  server)
+
 (def-kom-var kom-default-language nil
   "*Which language to use for new sessions."
   server inherited protected)
@@ -1034,6 +1042,7 @@ Users are encouraged to use their best sense of humor."
     kom-review-all-marked-texts
     kom-add-recipient
     kom-add-copy
+    kom-add-bcc
     kom-sub-recipient
     kom-move-text
     kom-add-comment
