@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.197 2002-04-22 22:18:03 byers Exp $
+;;;;; $Id: english-strings.el,v 44.198 2002-04-25 20:56:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.197 2002-04-22 22:18:03 byers Exp $"))
+              "$Id: english-strings.el,v 44.198 2002-04-25 20:56:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -875,8 +875,7 @@ Help: \\[describe-mode] ---")
     (which-conf-to-link . "Add link to conference: ")
 
     ; From view-text.el:
-    (line . " /1 line/ ")
-    (lines ." /%#1d lines/ ")
+    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4n line%#4?d%[%]%[s%]/ %#5P%#6?b%[%#6s%]%[%]\n")
 
     (marked-by-you . "Marked by you (type: %#1s).\n")
     (marked-by-you-and-others . "Marked by you (type: %#2s) and %#1?d%[someone else%]%[%#1d others%].\n")
@@ -3450,8 +3449,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-extended-status-information-doc . "\
   When this is on, additional information may be shown by commands that
   display person, conference and server status.")
-    (kom-color-text-background-doc . "\
-  When this is on, texts are shown with an alternate background color.")
+    (kom-highlight-first-line-doc . "\
+  When this is on, the first line (with text number, date and author) is
+  shown with a different format than normal text.")
+    (kom-highlight-dashed-lines-doc . "\
+  When this is on, the lines before and after the text body is shown with
+  a different format than normal text.")
+    (kom-highlight-text-body-doc . "\
+  When this is on, the text body is shown with a different format than
+  normal text.")
 
 
     ;;
@@ -3621,7 +3627,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-auto-review-faqs-tag . "Review new FAQs automatically:")
     (kom-auto-list-faqs-tag . "List new FAQs automatically:")
     (kom-extended-status-information-tag . "Extended status information:")
-    (kom-color-text-background-tag . "Color text backgrounds:")
+    (kom-highlight-first-line-tag . "Color fist line:")
+    (kom-highlight-dashed-lines-tag . "Color dashed lines:")
+    (kom-highlight-text-body-tag . "Color text backgrounds:")
     )
 )
 

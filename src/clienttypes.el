@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.15 2002-04-22 22:18:03 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.16 2002-04-25 20:56:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.15 2002-04-22 22:18:03 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.16 2002-04-25 20:56:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -546,61 +546,76 @@ The element last pushed is first in the list."
 ;;; ================================================================
 ;;;			format-state
 
-(defun make-format-state (format-string
-			  start
-			  argl
-			  result)
-  (cons 'format-state
-	(vector format-string start argl (length argl) result nil nil nil)))
-
-(defsubst format-state-p (arg)
-  (eq 'format-state (car-safe arg)))
-
-(defsubst format-state->format-string (arg)
-  (elt (cdr arg) 0))
-
-(defsubst set-format-state->format-string (arg str)
-  (aset (cdr arg) 0 str))
-
-(defsubst format-state->start (arg)
-  (elt (cdr arg) 1))
-
-(defsubst set-format-state->start (arg pos)
-  (aset (cdr arg) 1 pos))
-
-(defsubst format-state->args (arg)
-  (elt (cdr arg) 2))
-
-(defsubst set-format-state->args (arg argl)
-  (aset (cdr arg) 2 argl)
-  (aset (cdr arg) 3 (length argl)))
-
-(defsubst format-state->args-length (arg)
-  (elt (cdr arg) 3))
-
-(defsubst format-state->result (arg)
-  (elt (cdr arg) 4))
-
-(defsubst set-format-state->result (arg output-list)
-  (aset (cdr arg) 4 output-list))
-
-(defsubst format-state->delayed-propl (arg)
-  (elt (cdr arg) 5))
-
-(defsubst set-format-state->delayed-propl (arg propl)
-  (aset (cdr arg) 5 propl))
-
-(defsubst format-state->delayed-overlays (arg)
-  (elt (cdr arg) 7))
-
-(defsubst set-format-state->delayed-overlays (arg overlays)
-  (aset (cdr arg) 7 overlays))
-
-(defsubst format-state->delayed-content (arg)
-  (elt (cdr arg) 6))
-
-(defsubst set-format-state->delayed-content (arg string)
-  (aset (cdr arg) 6 string))
+(def-komtype format-state
+  format-string
+  start
+  argl
+  length
+  result
+  delayed-propl
+  delayed-overlays
+  delayed-content
+  depth)
+;; 
+;; 
+;; 
+;; (defun make-format-state (format-string
+;; 			  start
+;; 			  argl
+;; 			  result)
+;;   (cons 'format-state
+;; 	(vector format-string start argl (length argl) result nil nil nil nil)))
+;; 
+;; (defsubst format-state-p (arg)
+;;   (eq 'format-state (car-safe arg)))
+;; 
+;; (defsubst format-state->format-string (arg)
+;;   (elt (cdr arg) 0))
+;; 
+;; (defsubst set-format-state->format-string (arg str)
+;;   (aset (cdr arg) 0 str))
+;; 
+;; (defsubst format-state->start (arg)
+;;   (elt (cdr arg) 1))
+;; 
+;; (defsubst set-format-state->start (arg pos)
+;;   (aset (cdr arg) 1 pos))
+;; 
+;; (defsubst format-state->args (arg)
+;;   (elt (cdr arg) 2))
+;; 
+;; (defsubst set-format-state->args (arg argl)
+;;   (aset (cdr arg) 2 argl)
+;;   (aset (cdr arg) 3 (length argl)))
+;; 
+;; (defsubst format-state->args-length (arg)
+;;   (elt (cdr arg) 3))
+;; 
+;; (defsubst format-state->result (arg)
+;;   (elt (cdr arg) 4))
+;; 
+;; (defsubst set-format-state->result (arg output-list)
+;;   (aset (cdr arg) 4 output-list))
+;; 
+;; (defsubst format-state->delayed-propl (arg)
+;;   (elt (cdr arg) 5))
+;; 
+;; (defsubst set-format-state->delayed-propl (arg propl)
+;;   (aset (cdr arg) 5 propl))
+;; 
+;; (defsubst format-state->delayed-overlays (arg)
+;;   (elt (cdr arg) 7))
+;; 
+;; (defsubst set-format-state->delayed-overlays (arg overlays)
+;;   (aset (cdr arg) 7 overlays))
+;; 
+;; (defsubst format-state->delayed-content (arg)
+;;   (elt (cdr arg) 6))
+;; 
+;; (defsubst set-format-state->delayed-content (arg string)
+;;   (aset (cdr arg) 6 string))
+;; 
+;; (defsubst
 
 ;;; ================================================================
 

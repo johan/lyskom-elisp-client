@@ -1,3 +1,27 @@
+2002-04-25  David Byers  <david.byers@swipnet.se>
+
+	* view-text.el (lyskom-print-text): Use kom-highlight-text-body to
+	control highlighting text body. Use kom-highlight-first-line to
+	control highlighting of first line. Print first line using a
+	single format string. Use kom-highlight-dashed-lines to control
+	highlighting of dashed lines.
+
+	* vars.el.in (lyskom-face-schemes): Updated kom-first-line-face to
+	not inherit from default and not be invisible by default.
+	(kom-highlight-first-line): New variable.
+	(kom-highlight-dashed-lines): New variable.
+	(kom-highlight-text-body): Renamed from
+	kom-color-text-background.
+
+	Fix bug 479:
+	* lyskom-rest.el (lyskom-format-aux): Track depth of subformats.
+	(lyskom-format-aux-help): Record format-state depth with delayed
+	properties and delayed overlays.
+	(lyskom-tweak-format-state): Only add properties for delayed
+	property lists that are at the same current format-state depth.
+	Only set end positions for overlays that were created at the
+	current format-state depth.
+
 2002-04-24  David Byers  <david.byers@swipnet.se>
 
 	* header.el: Added a check for obsolete read-kbd-macro (found in

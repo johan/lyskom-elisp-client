@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.231 2002-04-22 22:18:05 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.232 2002-04-25 20:56:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.231 2002-04-22 22:18:05 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.232 2002-04-25 20:56:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -875,8 +875,7 @@ Annat se \\[describe-mode] ---")
     (which-conf-to-link . "Lägg in länk till möte: ")
 
     ;; From view-text.el:
-    (line . " /1 rad/ ")
-    (lines ." /%#1d rader/ ")
+    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4n rad%#4?d%[%]%[er%]/ %#5P%#6?b%[%#6s%]%[%]\n")
 
     (marked-by-you . "Markerad av dig (typ: %#1s).\n")
     (marked-by-you-and-others . "Markerad av dig (typ: %#2s) och %#1?d%[någon annan%]%[%#1d andra%].\n")
@@ -3905,9 +3904,16 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är påslaget so visas extra statusinformation i kommandona
   Status (för) person, Status (för) möte och Status (för) servern 
   (om sådan information finns tillgänglig).")
-    (kom-color-text-background-doc . "\
-  Om detta är påslaget så visas inläggstexter med en annorlunda 
-  bakgrundsfärg än resten av LysKOM.")
+    (kom-highlight-first-line-doc . "\
+  Om detta är påslaget så visas första raden i varje inlägg (den med
+  inläggsnummer, datum och författare) med ett annorlunda utseende än
+  normal text.")
+    (kom-highlight-dashed-lines-doc . "\
+  Om detta är påslaget så visas raderna före och efter inläggstexten med
+  ett annorlunda utseende än normal text.")
+    (kom-highlight-text-body-doc . "\
+  Om detta är påslaget så visas inläggstexter med ett annorlunda utseende
+  än normal text.")
 
 
     ;;
@@ -4077,7 +4083,9 @@ i servern. Annars sparas det i din .emacs.")
     (kom-auto-review-faqs-tag . "Visa nya FAQer automatiskt:")
     (kom-auto-list-faqs-tag . "Lista nya FAQer automatiskt:")
     (kom-extended-status-information-tag . "Utökad statusinformation:")
-    (kom-color-text-background-tag . "Annorlunda bakgrundsfärg på inlägg:")
+    (kom-highlight-first-line-tag . "Annorlunda bakgrundsfärg på första raden:")
+    (kom-highlight-dashed-lines-tag . "Annorlunda bakgrundsfärg före och efter inläggstexten:")
+    (kom-highlight-text-body-tag . "Annorlunda bakgrundsfärg på inläggstexten:")
     )
 )
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.62 2002-04-24 21:20:38 byers Exp $
+;;;;; $Id: view-text.el,v 44.63 2002-04-25 20:56:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.62 2002-04-24 21:20:38 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.63 2002-04-25 20:56:36 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -65,7 +65,6 @@ Note that this function must not be called asynchronously."
 	(filter (and filter-active
                      (lyskom-filter-text-p text-no)))
         (start nil)
-        (end nil)
         (todo nil)
         (lyskom-last-text-format-flags nil))
     (cond ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
@@ -99,8 +98,11 @@ Note that this function must not be called asynchronously."
 		   ;; Use a marker, because the buffer may lose data
 		   ;; at the top if kom-max-buffer-size is set.
 		   (setq start (point-max-marker))
-		   (lyskom-format-insert "%#2@%[%#1n%] " text-stat (list 'lyskom-text-start
-                                                                         (text-stat->text-no text-stat)))
+
+
+
+
+
                    (let ((mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
                          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
                          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
@@ -111,56 +113,32 @@ Note that this function must not be called asynchronously."
 			 (mx-headers (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))
                          (mx-reply-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 18)))
                          
+                   (lyskom-format-insert
+                    'view-text-first-line
+                    text-stat
+                    (list 'lyskom-text-start (text-stat->text-no text-stat))
+                    (if mx-date
+                        (let ((date (lyskom-mx-date-to-time mx-date)))
+                          (if date
+                              (concat
+                               (lyskom-format-time 'date-and-time date)
+                               (if (time->tzhr date)
+                                   (lyskom-format " %#1s%#2s " 
+                                                  (time->tzhr date)
+                                                  (time->tzmin date))
+                                 ""))
+                            (aux-item->data mx-date)))
+                      (lyskom-format-time 'date-and-time
+                                          (text-stat->creation-time text-stat)))
+                    (text-stat->no-of-lines text-stat)
+                    (or (lyskom-format-mx-author mx-from mx-author)
+                        (lyskom-format "%#1P" 
+                                       (text-stat->author text-stat)))
+                    (when (eq filter 'dontshow)
+                      (lyskom-get-string 'filtered))
+                    (when kom-highlight-first-line
+                      '(face kom-first-line-face)))
 
-                     ;; Insert date
-
-                     (if mx-date
-                         (let ((date (lyskom-mx-date-to-time mx-date)))
-                           (if date
-                             (progn
-                               (lyskom-insert (lyskom-format-time 'date-and-time date))
-                               (when (time->tzhr date)
-                                 (lyskom-format-insert " %#1s%#2s " 
-                                                       (time->tzhr date)
-                                                       (time->tzmin date))))
-                             (lyskom-format-insert (aux-item->data mx-date))))
-                       (lyskom-insert
-                        (lyskom-format-time
-                         'date-and-time
-                         (text-stat->creation-time text-stat))))
-
-                   ;; Insert number of lines
-
-		   (lyskom-insert 
-		    (if (= 1 (text-stat->no-of-lines text-stat))
-			(lyskom-get-string 'line)
-		      (lyskom-format 'lines 
-				     (let ((n (text-stat->no-of-lines
-					       text-stat)))
-				       (if (= n 0) ; Added to increase
-					   2 ; compatibility with old KOM. /lw
-					 n)))))
-		   
-                   ;; Insert the author
-
-                   (lyskom-insert (or (lyskom-format-mx-author mx-from mx-author) ""))
-                   (unless (or mx-from mx-author)
-                     (lyskom-format-insert "%#1P" (text-stat->author text-stat)))
-
-                   ;; Insert filtration prompt
-
-		   (when (eq filter 'dontshow)
-                     (lyskom-insert " ")
-                     (lyskom-insert (lyskom-get-string 'filtered)))
-                   (lyskom-insert "\n")
-
-		   (setq end (point-max))
-
-		   (if (and kom-text-properties
-			    (null filter)
-			    (not (lyskom-face-default-p 'kom-first-line-face)))
-		       (add-text-properties
-			start end '(face kom-first-line-face)))
 		   (set-marker start nil)
 
                    ;; Insert sender
@@ -879,11 +857,14 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
                                   (copy-sequence lyskom-current-subject)))
-          (when kom-dashed-lines
-              (lyskom-insert 
-               (make-string kom-text-header-dash-length ?-)))
+            (lyskom-format-insert 
+             "%#2$%#1s\n"
+             (if kom-dashed-lines
+                 (make-string kom-text-header-dash-length ?-)
+               "")
+             (when kom-highlight-dashed-lines
+               '(face kom-dashed-lines-face)))
 
-          (lyskom-insert "\n")
           ;; (setq t1 (point-max))
 
 	  ;; Truncate body if flat-review and long text
@@ -902,12 +883,12 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 		      (setq body (substring body 0 last-line)
 			    pos nil
 			    truncated t)))))
-		    
+
           (let ((lyskom-current-function-phase 'body))
             (lyskom-format-insert "%#2$%#1t\n" 
                                   (cons text-stat body)
-                                  (and kom-color-text-background
-                                       '(face kom-text-background-face)))
+                                  (and kom-highlight-text-body
+                                       '(face kom-text-body-face)))
            ; (overlay-put (make-overlay start (point)) 'face 'foo-face)
             )
 
@@ -916,18 +897,21 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
               (lyskom-signal-reformatted-text
                '(reformat-truncated . (face kom-warning-face))))
 
-	  
+
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
-          (when kom-dashed-lines
-            (lyskom-insert 
-             (make-string kom-text-header-dash-length ?-)))
-          (lyskom-insert "\n")
+          (lyskom-format-insert 
+           "%#2$%#1s\n"
+           (if kom-dashed-lines
+               (make-string kom-text-header-dash-length ?-)
+             "")
+           (when kom-highlight-dashed-lines
+             '(face kom-dashed-lines-face)))
           (lyskom-format-insert "%#2$%#1t\n"
                                 (cons text-stat str)
-                                (and kom-color-text-background
-                                       '(face kom-text-background-face)))
+                                (and kom-highlight-text-body
+                                       '(face kom-text-body-face)))
           (setq lyskom-current-subject "")))
         (sit-for 0)
         (let* ((lyskom-current-function-phase 'footer)
@@ -939,7 +923,10 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                    (or kom-text-footer-format
                        kom-show-author-at-end))
               (progn
-                (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+                (lyskom-format-insert "%#2$%#1s\n"
+                                      lyskom-defer-indicator
+                                      (when kom-highlight-dashed-lines
+                                        '(face kom-dashed-lines-face)))
                 (lyskom-defer-insertion
                  (lyskom-create-defer-info
                   'get-conf-stat
@@ -957,18 +944,21 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                                    (not (eq 0 (text-stat->author text-stat)))
                                    (blocking-do 'get-conf-stat 
                                                 (text-stat->author text-stat)))))
-              (lyskom-insert (lyskom-format-text-footer 
-                              text-stat
-                              conf-stat
-                              (cond (author-name author-name)
-                                    ((eq (text-stat->author text-stat) 0)
-                                     (lyskom-get-string 'person-is-anonymous))
-                                    (conf-stat (conf-stat->name conf-stat))
-                                    (t (lyskom-format 'person-does-not-exist 
-                                                      (text-stat->author text-stat))))
-                              kom-text-footer-format
-                              lyskom-last-text-format-flags)))
-            (lyskom-insert "\n")))
+              (lyskom-format-insert
+               "%#2$%#1s\n"
+               (lyskom-format-text-footer 
+                text-stat
+                conf-stat
+                (cond (author-name author-name)
+                      ((eq (text-stat->author text-stat) 0)
+                       (lyskom-get-string 'person-is-anonymous))
+                      (conf-stat (conf-stat->name conf-stat))
+                      (t (lyskom-format 'person-does-not-exist 
+                                        (text-stat->author text-stat))))
+                kom-text-footer-format
+                lyskom-last-text-format-flags)
+               (when kom-highlight-dashed-lines
+                 '(face kom-dashed-lines-face))))))
         (if mark-as-read
             (lyskom-mark-as-read text-stat))
         (setq lyskom-previous-text lyskom-current-text)

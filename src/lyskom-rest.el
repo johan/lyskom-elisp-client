@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.156 2002-04-24 21:20:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.157 2002-04-25 20:56:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.156 2002-04-24 21:20:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.157 2002-04-25 20:56:35 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1194,11 +1194,16 @@ Deferred insertions and overlays are not supported."
 		 lyskom-buffer)
             (set-buffer lyskom-buffer))
 	(condition-case error
-	    (setq state (lyskom-format-aux (make-format-state
+	    (setq state (lyskom-format-aux (lyskom-create-format-state
 					    fmt
 					    0
 					    argl
-					    "")
+                                            (length argl)
+					    ""
+                                            nil
+                                            nil
+                                            nil
+                                            0)
 					   allow-defer))
 	  (lyskom-format-error
 	   (error "LysKOM internal error formatting %s: %s%s"
@@ -1215,7 +1220,9 @@ Deferred insertions and overlays are not supported."
 
 
 (defun lyskom-format-aux (format-state allow-defer)
-  (let ((format-length (length (format-state->format-string format-state)))
+    (set-format-state->depth format-state
+                             (1+ (format-state->depth format-state)))
+    (let ((format-length (length (format-state->format-string format-state)))
         (arg-no nil)
         (pad-length nil)
         (format-letter nil)
@@ -1316,7 +1323,10 @@ Deferred insertions and overlays are not supported."
                  ?0
                ?\ )
 	     allow-defer))))))
-  (lyskom-tweak-format-state format-state))
+    (lyskom-tweak-format-state format-state)
+    (set-format-state->depth format-state
+                             (1- (format-state->depth format-state)))
+    format-state)
 
 
 (defun lyskom-format-aux-help (format-state
@@ -1338,17 +1348,16 @@ Deferred insertions and overlays are not supported."
                           ((< pad-length 0) (- 0 pad-length))
                           (t pad-length))))
     (if (and arg-no 
-             (< (format-state->args-length format-state) arg-no))
+             (< (format-state->length format-state) arg-no))
         (signal 'lyskom-format-error (list 'lyskom-format
                                              ": too few arguments")))
     (if arg-no
-        (setq arg (nth (1- arg-no) (format-state->args format-state))))
-    
+        (setq arg (nth (1- arg-no) (format-state->argl format-state))))
+
     (if (format-props-p arg)        
         (setq propl (format-props->propl arg)
               arg (format-props->arg arg)))
-    
-    
+
     (cond
      ;;
      ;;  Format a string or symbol by simply inserting it into the
@@ -1359,7 +1368,7 @@ Deferred insertions and overlays are not supported."
                          ((symbolp arg) (symbol-name arg))
                          (t (signal 'lyskom-format-error
                                     (list 'lyskom-format
-                                          ": argument error"))))))
+                                          ": argument error (expected string)"))))))
      ;;
      ;;  Format a number by conferting it to a string and inserting
      ;;  it into the result list
@@ -1372,7 +1381,7 @@ Deferred insertions and overlays are not supported."
                                arg)
                      (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error")))))
+                                   ": argument error (expected int)")))))
      ;;
      ;;  Format a character by converting it to a string and inserting
      ;;  it into the result list
@@ -1382,14 +1391,14 @@ Deferred insertions and overlays are not supported."
                          ((characterp arg) (char-to-string arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error"))))))
+                                          ": argument error (expected char)"))))))
      ;;
      ;;  Format a literal percent character by inserting a string
      ;;  containing it into the result list
      ;;
      ((= format-letter ?%)
       (setq result "%")) 
-     
+
      ;;
      ;;  Format a command name somewhat specially
      ;;
@@ -1418,8 +1427,9 @@ Deferred insertions and overlays are not supported."
      ((= format-letter ?@)
       (set-format-state->delayed-propl
        format-state
-       (cons (cons (length (format-state->result format-state))
-                   arg)
+       (cons (vector (length (format-state->result format-state))
+                     arg
+                     (format-state->depth format-state))
              (format-state->delayed-propl format-state))))
 
      ;;
@@ -1431,7 +1441,8 @@ Deferred insertions and overlays are not supported."
          format-state
          (cons (vector (length (format-state->result format-state))
                        nil
-                       arg)
+                       arg
+                       (format-state->depth format-state))
                (format-state->delayed-overlays format-state)))))
      ;;
      ;;  Format a subformat list by recursively formatting the contents
@@ -1565,7 +1576,7 @@ Deferred insertions and overlays are not supported."
                   (setq arg tmp)
                   (uconf-stat->name arg)
                   )))
-	     
+
              ;; The argument is an integer and we do not permit 
              ;; deferred printing
              ((integerp arg)
@@ -1576,7 +1587,7 @@ Deferred insertions and overlays are not supported."
                                      'conference-does-not-exist)
                                    arg)
                   (uconf-stat->name conf-stat))))
-	     
+
              ;; We got a conf-stat, and can use it directly
              ((lyskom-conf-stat-p arg)
               (if face-flag
@@ -1597,7 +1608,7 @@ Deferred insertions and overlays are not supported."
              ;; Something went wrong
              (t (signal 'lyskom-internal-error
                         (list 'lyskom-format
-                              ": argument error")))))
+                              ": argument error (expected conf)")))))
       (if (and (not colon-flag)
                (or (lyskom-conf-stat-p arg)
                    (lyskom-uconf-stat-p arg)
@@ -1625,7 +1636,7 @@ Deferred insertions and overlays are not supported."
                    (int-to-string (uconf-stat->conf-no arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error")))))
+                                   ": argument error (expected conf)")))))
       (if (not colon-flag)
           (setq propl 
                 (append 
@@ -1643,7 +1654,7 @@ Deferred insertions and overlays are not supported."
                                              (text-stat->text-no arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error")))))
+                                   ": argument error (expected text-no)")))))
       (if (not colon-flag)
           (setq propl
                 (append (lyskom-default-button 'text arg) propl))))
@@ -1655,7 +1666,7 @@ Deferred insertions and overlays are not supported."
       (setq result (cond ((stringp arg) (lyskom-button-transform-text arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error")))))
+                                          ": argument error (expected subject)")))))
       (if (and (not colon-flag)
                (not (lyskom-face-default-p 'kom-subject-face)))
           (setq propl (append (list 'face 'kom-subject-face) propl))))
@@ -1680,7 +1691,7 @@ Deferred insertions and overlays are not supported."
                                             (car arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error"))))))
+                                   ": argument error (expected text)"))))))
 
 
      ;;
@@ -1719,15 +1730,15 @@ Deferred insertions and overlays are not supported."
      ;;
      ;; The format letter was unknown
      ;;
-     
+
      (t (signal 'lyskom-internal-error
 		(list 'lyskom-format-help format-letter))))
-    
+
     ;;
     ;; Pad the result to the appropriate length
     ;; Fix flags so text props go in the right places anyway
     ;;
-    
+
     (cond ((or (null pad-length)
                (null result)) nil)
           ((> abs-length (lyskom-string-width result))
@@ -1816,15 +1827,21 @@ Deferred insertions and overlays are not supported."
 (defun lyskom-tweak-format-state (format-state) 
   (let ((dp (format-state->delayed-propl format-state)))
     (while dp
-      (add-text-properties (car (car dp))
-                           (length (format-state->result format-state))
-                           (cdr (car dp))
-                           (format-state->result format-state))
-      (setq dp (cdr dp)))
-    (set-format-state->delayed-propl format-state nil))
+      (when (eq (format-state->depth format-state)
+                (aref (car dp) 2))
+        (add-text-properties (aref (car dp) 0)
+                             (length (format-state->result format-state))
+                             (aref (car dp) 1)
+                             (format-state->result format-state))
+        (set-format-state->delayed-propl 
+         format-state
+         (delq (car dp) (format-state->delayed-propl format-state))))
+      (setq dp (cdr dp))))
 
   (lyskom-traverse overlay-spec (format-state->delayed-overlays format-state)
-    (unless (aref overlay-spec 1)
+    (unless (or (aref overlay-spec 1)
+                (not (eq (format-state->depth format-state)
+                         (aref overlay-spec 3))))
       (aset overlay-spec 1 (length (format-state->result format-state)))))
 
   format-state)
