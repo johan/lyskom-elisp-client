@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.3 1991-09-15 10:07:04 linus Exp $
+# $Id: Makefile,v 35.4 1991-09-16 16:40:27 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.3 1991-09-15 10:07:04 linus Exp $
+# $Id: Makefile,v 35.4 1991-09-16 16:40:27 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.3  1991-09-15 10:07:04  linus
+# Revision 35.4  1991-09-16 16:40:27  linus
+# alfa talar om att det {r alfa i versionsnumret.
+#
+# Revision 35.3  1991/09/15  10:07:04  linus
 # Added copyright note
 #
 # Revision 35.2  1991/09/13  21:42:53  linus
@@ -63,7 +66,7 @@ PARTS-ELC = $(SRC-ELC)
 all: lyskom.elc
 
 alfa: lyskom.elc
-	install lyskom.elc /usr/local/src/2kom/lyskom.elc
+	sed 's/^\(.*defconst.*clientversion[^"]*\)"\([^"]*\)"/\1"\2.alfa"/' < lyskom.elc > /usr/local/src/2kom/lyskom.elc
 
 lyskom.elc: $(HEADER-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
