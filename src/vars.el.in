@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.236 2003-03-16 11:05:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.237 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.236 2003-03-16 11:05:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.237 2003-03-16 14:03:01 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1650,6 +1650,8 @@ Values other than `t' and `nil' are reserved for future use."
 (def-kom-var kom-highlight-conferences 
   '((kom-friends . kom-friends-face)
     (kom-morons  . kom-morons-face)
+    (lyskom-highlight-has-no-presentation . kom-active-strikethrough-face)
+    (lyskom-highlight-i-am-supervisor . kom-active-highlight-face)
     (lyskom-pers-no . kom-me-face))
   "**How to highlight conference an person names.
 
@@ -1664,6 +1666,12 @@ The following values are legal for keys:
                 number is in the list. If the value is an integer,
                 matches if the conference number matches the integer.
     List        Matches if the conference number is in the list.
+    Function    Matches if the function returns non-nil (see below).
+
+When using a function as the key, the function will be called with a
+single argument, the object to be printed. The type of the argument
+will vary depending on how it is printed. Functions should be written
+so they work regardless of what is passed to them.
 
 All other values are reserved for future use."
   server)

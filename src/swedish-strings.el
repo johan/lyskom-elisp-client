@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.303 2003-03-16 11:05:41 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.304 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.303 2003-03-16 11:05:41 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.304 2003-03-16 14:03:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2973,7 +2973,8 @@ teckenkodning.
     (link-fold-case . "Versaler och gemener lika")
 
     (generated-face . "Automatgenererat teckensnitt")
-    (fonts . "Teckensnitt\n")
+    (predefined-fonts . "Teckensnitt avsedda för specifika tillämpningar\n")
+    (other-fonts . "Teckensnitt utan specifika tillämpningar\n")
     (other-face . "Annat")
 
     (ext-simple-command . "Enkelt kommando")
@@ -2986,6 +2987,8 @@ teckenkodning.
     (morons . "Idioter och knäppskallar")
     (friends . "Vänner och bekanta")
     (me . "Mig själv och ingen annan")
+    (i-am-supervisor . "Möten jag organiserar")
+    (has-no-presentation . "Möten utan presentationer")
     (highlight-conferences . "Möten:")
     (highlight-face . "Utseende:")
     (highlight-conflist . "Möteslista")
@@ -3951,6 +3954,12 @@ i servern. Annars sparas det i din .emacs.")
   Teckensnitt för klickbara texter förutom URLer, möten, vänner och
   bekanta, idioter och knäppskallar, och inläggsnummer. Värdet skall 
   vara namnet på en så kallad `face'.")
+    (kom-active-highlight-face-doc . "\ 
+  Teckensnitt avsett för klickbara texter som skall markeras extra
+  tydligt. Värdet skall vara namnet på en så kallad `face'.")    
+    (kom-active-strikethrough-face-doc . "\ 
+  Teckensnitt avsett för klickbara texter som skall markeras extra
+  tydligt. Värdet skall vara namnet på en så kallad `face'.")
     (kom-url-face-doc . "\
   Teckensnitt för klickbara URLer.")
     (kom-me-face-doc . "\
@@ -4203,6 +4212,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-url-transformation-rules-tag . "Transformation av URLer:")
     (kom-text-links-tag . "Textlänkar:")
     (kom-active-face-tag . "Övriga klickbara texter:")
+    (kom-active-highlight-face-tag . "Tydligare markerade klickbara texter:")
+    (kom-active-strikethrough-face-tag . "Överstrukna klickbara texter:")
     (kom-url-face-tag . "Klickbara URLer:")
     (kom-me-face-tag . "Mitt eget namn:")
     (kom-highlight-face-tag . "Markering av klickbara ytor:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.90 2003-03-13 21:11:52 byers Exp $
+;;;;; $Id: option-edit.el,v 44.91 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.90 2003-03-13 21:11:52 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.91 2003-03-16 14:03:01 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -121,7 +121,7 @@
     
     "\n\n"
     section
-    (fonts bold centered)
+    (predefined-fonts bold centered)
     section
     "\n"
     [kom-active-face]
@@ -141,6 +141,13 @@
     [kom-dashed-lines-face]
     [kom-async-text-body-face]
     [kom-async-dashed-lines-face]
+    "\n\n"
+    section
+    (other-fonts bold centered)
+    section
+    "\n"
+    [kom-active-highlight-face]
+    [kom-active-strikethrough-face]
     "\n\n"
     section
     (audio-cues bold centered)
@@ -667,6 +674,8 @@ customize buffer but do not save them to the server."
      (repeat (cons ((choice ((const (morons kom-morons))
                              (const (friends kom-friends))
                              (const (me lyskom-pers-no))
+                             (const (i-am-supervisor lyskom-highlight-i-am-supervisor))
+                             (const (has-no-presentation lyskom-highlight-has-no-presentation))
                              (repeat (person nil :tag name) 
                                      :indent 12
                                      :tag highlight-conflist
@@ -676,7 +685,12 @@ customize buffer but do not save them to the server."
                             :tag highlight-conferences
                             :format "%[%t%] %v\n"
                             )
-                    (face nil :tag highlight-face))
+                    (face (kom-active-face
+                           kom-active-highlight-face
+                           kom-active-strikethrough-face
+                           kom-friends-face
+                           kom-morons-face
+                           kom-me-face) :tag highlight-face))
                    :format "%v"
                    )
              ))
@@ -809,6 +823,8 @@ customize buffer but do not save them to the server."
     (kom-url-face (face))
     (kom-text-no-face (face))
     (kom-active-face (face))
+    (kom-active-highlight-face (face))
+    (kom-active-strikethrough-face (face))
     (kom-highlight-face (face))
     (kom-me-face (face))
     (kom-friends-face (face))
@@ -1083,21 +1099,24 @@ customize buffer but do not save them to the server."
                                        :tag (symbol-name f)
                                        :value f
                                        :format "%t"))
-                               (cdr (assq var lyskom-predefined-faces)))
+                               (or
+                                (and (listp args) args)
+                                (cdr (assq var lyskom-predefined-faces))))
                        (list (list 'symbol
                                    ':size 30
                                    ':tag (lyskom-custom-string 
                                           'other-face))))))
-    (when args
+    (when (eq args t)
       (setq wargs 
             (append (list (list 'item
                                 :tag (lyskom-custom-string 'generated-face)
                                 :value nil
                                 :format "%t"))
                     wargs)))
-    (if args
+    (if wargs
         (lyskom-build-simple-widget-spec 'menu-choice
-                                         (list ':format "%[%t%] %v\n")
+                                         (list ':format "%[%t%] %v\n"
+                                               ':args wargs)
                                          propl)
       (lyskom-build-simple-widget-spec 'symbol
                                        (list ':format "%[%t%] %v\n"

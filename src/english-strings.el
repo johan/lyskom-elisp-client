@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.265 2003-03-16 11:05:41 byers Exp $
+;;;;; $Id: english-strings.el,v 44.266 2003-03-16 14:03:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.265 2003-03-16 11:05:41 byers Exp $"))
+              "$Id: english-strings.el,v 44.266 2003-03-16 14:03:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2857,7 +2857,8 @@ Select whether to execute command or keyboard macro.")
     (link-fold-case . "Case insensitive")
 
     (generated-face . "Automatic")
-    (fonts . "Fonts\n")
+    (predefined-fonts . "Fonts intended for specific uses\n")
+    (other-fonts . "Fonts with no specific uses\n")
     (other-face . "Other")
 
     (ext-simple-command . "Simple command")
@@ -2870,6 +2871,8 @@ Select whether to execute command or keyboard macro.")
     (morons . "Morons and other \"special\" people")
     (friends . "Friends and other special people")
     (me . "Mig, myself and I")
+    (i-am-supervisor . "Conferences i supervise")
+    (has-no-presentation . "Conferences without presentations")
     (highlight-conferences . "Conferences:")
     (highlight-face . "Face:")
     (highlight-conflist . "Conference list")
@@ -3828,7 +3831,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-active-face-doc . "\
   Face used for clickable areas other than URLs, conference and person
-  names, friends, morons and text numbers..")
+  names, friends, morons and text numbers.")
+    (kom-active-highlight-face-doc . "\
+  Face intended for clickable areas that are to be highlighted.")
+    (kom-active-strikethrough-face-doc . "\
+  Face intended for clickable areas that are to be indicated with
+  strikethrough.")
     (kom-url-face-doc . "\
   Face used for clickable URLs.")
     (kom-me-face-doc . "\
@@ -4081,6 +4089,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-text-links-tag . "Text links:")
 
     (kom-active-face-tag . "Other clickable areas:")
+    (kom-active-highlight-face-tag . "Highlighted clickable areas:")
+    (kom-active-strikethrough-face-tag . "Struck-through clickable areas:")
     (kom-url-face-tag . "Clickable URLs:")
     (kom-me-face-tag . "My own name:")
     (kom-highlight-face-tag . "Mouseover highlight:")
