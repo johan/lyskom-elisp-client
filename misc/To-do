@@ -25,7 +25,26 @@ bort ur den h{r filen.
 ================================================================
 
 * Fixa loginsekvensen s} den tittar p} r{tt variabler.
-?????
+(
+92109 1991-08-22  17:03  /10 rader/ Tommy Persson
+Mottagare: LysKOM Elispklient; buggar, nyheter och annat. <3669>
+Markerad av dig och n}gon annan.
+[rende: Irriterende fr}ga om password
+------------------------------------------------------------
+Jag p}pekde denna bugg i ett tidigare inl{gg men den verkar inte ha
+blivit fixad.  N{r man startar om kom och har en gammal kombuffert
+kvar s} fr}gar kom efter password trots att man skickar med detta som
+argument.
+
+Jag startar kom med:
+
+(defun kom ()
+  (interactive)
+  (lyskom "obel18" "Tommy Persson" lyskom-passwd))
+(92109) -----------------------------------
+Kommentar i text 92110 
+Kommentar i text 92186 av Inge Wallin, ISY
+)
 
 * H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
   conf-stat eller membership vilka delar av mappen f|r m|tet som vi
