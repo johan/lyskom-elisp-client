@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.65 2000-04-29 06:03:17 jhs Exp $
+;;;;; $Id: commands1.el,v 44.66 2000-05-04 13:57:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.65 2000-04-29 06:03:17 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.66 2000-05-04 13:57:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -799,38 +799,15 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 (def-kom-command kom-write-footnote (&optional text-no)
   "Write a footnote to a text.
 If optional arg TEXT-NO is present write a footnote to that text instead."
-  (interactive)
-  (let ((text-stat nil))
-    (setq text-no
-          (cond ((and (null current-prefix-arg)
-                      lyskom-current-text
-                      (setq text-stat
-                            (blocking-do 'get-text-stat lyskom-current-text))
-                      (eq (text-stat->author text-stat) lyskom-pers-no))
-                 (setq text-no lyskom-current-text))
-                
-                ((and (null current-prefix-arg)
-                      lyskom-last-written
-                      (setq text-stat
-                            (blocking-do 'get-text-stat lyskom-last-written)))
-                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)
-                                     lyskom-last-written))
-
-                ((integerp current-prefix-arg) 
-                 current-prefix-arg)
-                
-                ((listp current-prefix-arg)
-                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)
-                                     (lyskom-text-at-point)))
-
-                (t (signal 'lyskom-internal-error '(kom-write-footnote)))))
-
+  (interactive (list 
+                (lyskom-read-text-no-prefix-arg 'what-footnote-no t
+                                                'last-seen-written)))
   (if text-no
       (lyskom-write-comment-soon
        (blocking-do 'get-text-stat text-no)
        (blocking-do 'get-text text-no)
        text-no 'footnote)
-    (lyskom-insert-string 'confusion-what-to-footnote))))
+    (lyskom-insert-string 'confusion-what-to-footnote)))
 
 
 (def-kom-command kom-comment-previous ()

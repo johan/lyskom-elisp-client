@@ -1,3 +1,25 @@
+2000-05-04  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-add-faq): Default text is the most recently
+	seen text the user wrote, or the most recently written one.
+
+	* commands1.el (kom-write-footnote): Default text is the most
+	recently seen text the user wrote, or the most recently written
+	one.
+
+	* view-text.el (lyskom-print-text): Update
+	lyskom-last-seen-written.
+
+	* commands2.el (kom-add-faq): Use lyskom-read-text-no-prefix-arg.
+
+	* vars.el.in (lyskom-last-seen-written): New variable.
+
+	* commands1.el (kom-write-footnote): Use
+	lyskom-read-text-no-prefix-arg.
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Added default
+	parameter.
+
 Thu May  4 15:05:51 2000  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-I

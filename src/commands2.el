@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.62 2000-04-07 11:35:38 byers Exp $
+;;;;; $Id: commands2.el,v 44.63 2000-05-04 13:57:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.62 2000-04-07 11:35:38 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.63 2000-05-04 13:57:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2038,7 +2038,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 (def-kom-command kom-add-faq (&optional conf-no text-no)
   "Add a FAQ to a conference"
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
-                     (lyskom-read-number 'text-to-add-as-faq)))
+                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq t 'last-seen-written)))
   (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)
