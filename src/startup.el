@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.12 1996-12-30 17:51:12 davidk Exp $
+;;;;; $Id: startup.el,v 44.13 1997-01-31 15:46:53 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.12 1996-12-30 17:51:12 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.13 1997-01-31 15:46:53 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -176,7 +176,13 @@ See lyskom-mode for details."
 	      (setq lyskom-executing-command nil) 
 	      ;; Log in
 	      (kom-start-anew t)
-	      (setq lyskom-buffer-list (cons lyskom-buffer lyskom-buffer-list))
+	      (if (memq lyskom-buffer lyskom-buffer-list)
+		  (while (not (eq lyskom-buffer (car lyskom-buffer-list)))
+		    (setq lyskom-buffer-list
+			  (nconc (cdr lyskom-buffer-list)
+				 (list (car lyskom-buffer-list)))))
+		(setq lyskom-buffer-list
+		      (cons lyskom-buffer lyskom-buffer-list)))
 	      (setq init-done t))
 	  ;; Something went wrong. Lets cleanup everything. :->
 	  (if init-done
