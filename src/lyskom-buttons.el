@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 39.0 1996-03-14 18:17:52 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 39.1 1996-03-18 15:43:13 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -236,7 +236,7 @@ the current match-data."
 (defun lyskom-button-get-face (el)
   "Get the button face for button type EL from TEXT according to
 the current match-data."
-  (or (elt el 4) 'kom-active-face))
+  (elt el 4))
 
 
 	
@@ -261,14 +261,16 @@ FACE is the default text face for the button."
                       numarg)
                  (list 'face 
                        (or face
-                           (if (eq persno numarg) 'kom-me-face 'kom-active-face))
+                           (cond ((eq persno numarg) 'kom-me-face)
+                                 ((memq numarg kom-friends) 'kom-friends-face)
+                                 (t 'kom-active-face)))
                        'mouse-face 'kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
                        'lyskom-buffer lyskom-buffer))
                 ((and (eq type 'text) numarg)
-                 (list 'face (or face 'kom-active-face)
+                 (list 'face (or face 'kom-text-no-face)
                        'mouse-face 'kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
@@ -350,7 +352,21 @@ This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
            (kom-view arg))))
-  
+
+
+(defun lyskom-button-review-tree (buf arg text)
+  "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
+This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+	(t (pop-to-buffer buf)
+	   (kom-review-tree arg))))
+
+(defun lyskom-button-find-root (buf arg text)
+  "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
+This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+	(t (pop-to-buffer buf)
+	   (kom-find-root arg))))
 
 (defun lyskom-button-comment-text (buf arg text)
   "In the LysKOM buffer BUF, comment the text ARG. Last argument TEXT is ignored.
@@ -566,11 +582,17 @@ MANAGER is the URL manager that started Netscape.
 
 This function attempts to load the URL in a running Netscape, but failing
 that, starts a new one."
-  (let* ((proc (start-process "netscape"
-                              nil
-                              kom-netscape-command
-                              "-remote" 
-                              (format "openUrl(%s)" url)))
+  (let* ((proc (apply 'start-process "netscape"
+                      nil
+                      (if (listp kom-netscape-command)
+                          (car kom-netscape-command)
+                        kom-netscape-command)
+                      (if (listp kom-netscape-command)
+                          (append (cdr kom-netscape-command)
+                                  (list "-remote"
+                                        (format "openUrl(%s)" url)))
+                        (list "-remote"
+                              (format "openUrl(%s)" url)))))
          (status 'run)
          (exit nil))
     (lyskom-url-manager-starting manager)
@@ -580,10 +602,15 @@ that, starts a new one."
     (setq exit (process-exit-status proc))
     (cond ((and (eq status 'exit) 
                 (eq exit 1))
-           (start-process "netscape"
+           (apply 'start-process "netscape"
                           nil
-                          kom-netscape-command
-                          url))
+                          (if (listp kom-netscape-command)
+                              (car kom-netscape-command)
+                            kom-netscape-command)
+                          (if (listp kom-netscape-command)
+                              (append (cdr kom-netscape-command)
+                                      (list url))
+                            (list url))))
           (t nil))))
 
 
@@ -607,16 +634,26 @@ existing Mosaic process. Failing that, it starts a new Mosaic."
           (write-region (point-min) (point-max) filename nil 'x)
           (kill-buffer tempbuffer)
           (if (= -1 (signal-process pid 30))
-              (start-process "mosaic"
-                             (current-buffer)
-                             kom-mosaic-command 
-                             url)
+              (apply 'start-process "mosaic"
+                     (current-buffer)
+                     (if (listp kom-mosaic-command)
+                         (car kom-mosaic-command)
+                       kom-mosaic-command )
+                     (if (listp kom-mosaic-command)
+                         (append (cdr kom-mosaic-command)
+                                 (list url))
+                       (list url)))
 	    (lyskom-url-manager-starting manager)))
       (save-excursion
-        (start-process "mosaic"
-                       (current-buffer)
-                       kom-mosaic-command 
-                       url)
+        (apply 'start-process "mosaic"
+               (current-buffer)
+               (if (listp kom-mosaic-command)
+                   (car kom-mosaic-command)
+                 kom-mosaic-command )
+               (if (listp kom-mosaic-command)
+                   (append (cdr kom-mosaic-command)
+                           (list url))
+                 (list url)))
 	(lyskom-url-manager-starting manager)))))
 
 

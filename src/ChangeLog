@@ -1,3 +1,17 @@
+Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
+
+	* services.el, lyskom-rest.el, lyskom-buttons.el, view-text.el,
+ 	macros.el: Lade till ställbar timeout till accept-process-output
+	i form av variablerna lyskom-apo-timeout-s och lyskom-apo-timeout-ms
+
+	* filter-edit.el: lyskom-format-filter-pattern klarar av att
+ 	skriva i en skrivskyddad buffert.
+
+	* vars.el.in: Uppdaterade dokumentationssträngar.
+
+	* lyskom-buttons.el: Hantera fallet då kom-netscape-command och
+ 	kom-mosaic-command är listor.
+
 Sun Mar 17 00:10:47 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* flags.el (lyskom-read-options-eval): Överlev trasiga variabler.
@@ -20,6 +34,22 @@ Fri Mar 15 22:53:55 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Slå även upp $KOMSERVER i
  	kom-server-aliases.
+
+Fri Mar 15 16:28:17 1996  David Byers  <byers@lysator.liu.se>
+
+	* edit-text.el: lyskom-send-text: C-C i inläggskropp med tomt
+ 	ärende flyttar markören och säger ifrån.
+
+	* swedish-strings.el, english-strings.el: Lade till
+ 	enter-subject-idi
+
+	* lyskom-buttons.el: Använd kom-text-no-face, lade till återse
+ 	träd och återse urinlägg som knappactions.
+
+	* vars.el.in: Lade till lyskom-ding-on-no-subject, lade till
+ 	återse träd och återse urinlägg till högerknappsmenyerna.
+
+	* review.el: Lade till optional arg till kom-find-root.
 
 Thu Mar 14 09:01:48 1996  David Byers  <byers@lysator.liu.se>
 

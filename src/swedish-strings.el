@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 39.1 1996-03-17 17:45:33 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 39.2 1996-03-18 15:43:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 39.1 1996-03-17 17:45:33 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 39.2 1996-03-18 15:43:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -563,6 +563,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (comment-to-by . "%#1s till text %#2d%#3s.\n")
     (already-sent . "Du har redan skickat denna text en g\345ng. S\344nd \344nd\345? ")
     (subject . "\304rende: ")
+    (enter-subject-idi . "Skriv ett ärende.")
     (which-text-include . "Vilken text skall vi inkludera? ")
     (added-recipient . "Mottagare som skall adderas: ")
     (added-carbon-copy . "Extra kopia till m\366te: ")
@@ -1273,7 +1274,9 @@ Cf. paragraph-start.")
 
 (defvar kom-ansaphone-default-reply 
   "Jag l\344ser inte LysKOM just nu. Skicka gärna ett brev i stället."
-  "*Default message to send when the ansaphone is on.")
+  "*Default message to send when the ansaphone is on.
+
+This variable is stored in the LysKOM server.")
         
 
 ;;;; ================================================================
@@ -1324,7 +1327,9 @@ Users are encouraged to change this dictionary for fun.")
 (defvar kom-mercial (car (cdr (assoc 'kom-tell-wait kom-tell-phrases)))
   "*When the user has seen all texts and has reached the view-time prompt,
 this string is used as the argument to lyskom-tell-server.
-Users are encouraged to use their best sense of humor.")
+Users are encouraged to use their best sense of humor.
+
+This variable is stored in the LysKOM server.")
 
 ;;;
 
