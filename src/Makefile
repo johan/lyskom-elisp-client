@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 39.1 1996-03-15 17:33:06 davidk Exp $
+# $Id: Makefile,v 39.2 1996-03-20 13:14:48 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 39.1 1996-03-15 17:33:06 davidk Exp $
+# $Id: Makefile,v 39.2 1996-03-20 13:14:48 davidk Exp $
 #
 
 CLIENTVERSION = 0.40d
@@ -46,8 +46,8 @@ PARTS-EL = komtypes.el clienttypes.el startup.el \
 	prioritize.el flags.el messages.el ansaphone.el remote-control.el \
 	elib-string.el \
 	lyskom-rest.el
-HEADER-EL = macros.el vars.el
-HEADER-ELC = macros.elc vars.elc
+HEADER-EL = vars.el macros.el
+HEADER-ELC = vars.elc macros.elc
 SWEDISH-EL = swedish-strings.el
 SWEDISH-ELC = swedish-strings.elc
 ENGLISH-EL = english-strings.el

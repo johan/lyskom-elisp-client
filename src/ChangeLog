@@ -1,5 +1,19 @@
 Tue Mar 19 00:03:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* vars.el.in (when): Flyttade från macros.el.
+
+	* Makefile (HEADER-ELC): Bytte ordningen mellan vars.el och
+	macros.el.
+
+	* lyskom-rest.el (lyskom-membership-highest-index): Bytte namn
+	från lyskom-membership-count, eftersom det gamla namnet var
+	missvisande.
+
+	* edit-text.el (lyskom-edit-get-commented): Ignorera alla
+	lyskom-edit-error.
+	(lyskom-edit-parse-headers): Signalera felmeddelande.
+	(lyskom-edit-send): Kombinera min och Byers felhantering.
+
 	* async.el (lyskom-parse-async): Ignorera kom-presence-messages.
 
 Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
@@ -15,6 +29,26 @@ Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el: Hantera fallet då kom-netscape-command och
  	kom-mosaic-command är listor.
+
+Mon Mar 18 00:39:03 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-sub-member): Sänkte inte
+	lyskom-last-conf-done.
+
+	* lyskom-rest.el: Jag gjorde ett tappert försök att snygga till
+	lite i prefetch-koden.
+	(lyskom-membership-count): Ny funktion.
+	(lyskom-what-to-do): Använd den.
+	(lyskom-prefetch-conf): Använd den.
+	(lyskom-prefetch-done): Använd den.
+	(lyskom-prefetch-handle-conf,lyskom-prefetch-handle-map):
+	Omfördelade lite kod.
+
+	* edit-text.el (lyskom-looking-at-header): Kör argumentet till
+	looking-at genom regexp-quote först.
+	(lyskom-edit-parse-headers): Signalera felaktiga headers.
+	(lyskom-edit-get-commented): Ignorera dess fel.
+	(lyskom-edit-send): Hantera dem.
 
 Sun Mar 17 00:10:47 1996  David Kågedal  <davidk@lysator.liu.se>
 

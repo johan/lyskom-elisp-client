@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 39.3 1996-03-18 23:34:02 davidk Exp $
+;;;;; $Id: english-strings.el,v 39.4 1996-03-20 13:15:04 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 39.3 1996-03-18 23:34:02 davidk Exp $"))
+	      "$Id: english-strings.el,v 39.4 1996-03-20 13:15:04 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -547,6 +547,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
     (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
     (no-get-text . "You were not allowed to retrieve the article.")
+    (unknown-header . "Unknown header")
 
 
     ; From view-text.el:
