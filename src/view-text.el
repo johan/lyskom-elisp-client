@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.38 2000-05-04 13:57:45 byers Exp $
+;;;;; $Id: view-text.el,v 44.39 2000-05-29 01:39:03 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.38 2000-05-04 13:57:45 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.39 2000-05-29 01:39:03 jhs Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -269,15 +269,18 @@ Note that this function must not be called asynchronously."
 		     (let ((num-marks (text-stat->no-of-marks text-stat))
 			   (is-marked-by-me (cache-text-is-marked
 					     (text-stat->text-no text-stat))))
-		       (if (> num-marks 0)
-			   (lyskom-insert 
-			    (if is-marked-by-me
-				(if (= num-marks 1)
-				    (lyskom-get-string 'marked-by-you)
-                                  (lyskom-format 'marked-by-you-and-others
-                                                 (1- num-marks)))
-                              (lyskom-format 'marked-by-several num-marks)))))
-		   
+		       (when (> num-marks 0)
+			 (if is-marked-by-me
+			     (if (= num-marks 1)
+				 (lyskom-format-insert 'marked-by-you
+						       (mark->mark-type
+							is-marked-by-me))
+			       (lyskom-format-insert 'marked-by-you-and-others
+						     (1- num-marks)
+						     (mark->mark-type
+						      is-marked-by-me)))
+			   (lyskom-format-insert 'marked-by-several num-marks))))
+
 		     (lyskom-print-text text-stat text
 					mark-as-read text-no flat-review))
 		   
@@ -329,8 +332,8 @@ Note that this function must not be called asynchronously."
                  (setq aux-items (cdr aux-items))))
              )))
     todo))
-	  
-	  
+
+
 
 
 (defun lyskom-follow-comments (text-stat conf-stat 
