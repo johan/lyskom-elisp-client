@@ -1,3 +1,19 @@
+2000-04-29  Johan Sundström  <jhs@lysator.liu.se>
+
+	* utilities.el: (lyskom-read-text-no-prefix-arg): negative prefix
+	arguments are now interpreted as a reference to the text-no `arg'
+	messages up in the kom buffer.
+
+	* commands1.el (kom-view-commented-text): Now uses
+	lyskom-read-text-no-prefix-arg to optionally override text-no via
+	prefix arguments instead of the current text.
+
+	* review.el (kom-review-noconversion): Same here.
+
+	* swedish-strings.el (lyskom-message): Added strings
+	review-noconversion-q and review-commented-q to accomodate for
+	the above functions.
+
 2000-04-01  David Byers  <davby@ida.liu.se>
 
 	* mship-edit.el (lp--calculate-distance): Fix problem when

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.52 2000-04-07 11:35:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.53 2000-04-29 06:55:01 jhs Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.52 2000-04-07 11:35:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.53 2000-04-29 06:55:01 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -454,14 +454,27 @@ The value is actually the element of LIST whose car equals KEY."
 (defun lyskom-read-text-no-prefix-arg (prompt &optional always-read)
   "Call in interactive list to read text-no.
 If optional argument ALWAYS-READ is non-nil the user is prompted if
-an explicit prefix argument was not given."
+an explicit prefix argument was not given. A positive prefix argument
+is interpreted as a text-no, whereas a negative prefix argument will
+try to find the text-no of the text `arg' messages above point from
+the current kom buffer."
   (cond
-   ((null current-prefix-arg) 
-    (if always-read 
+   ((null current-prefix-arg)
+    (if always-read
         (lyskom-read-number prompt lyskom-current-text)
       lyskom-current-text))
-   ((integerp current-prefix-arg) current-prefix-arg)
-   ((listp current-prefix-arg) 
+   ((or (integerp current-prefix-arg)
+	(eq '- current-prefix-arg))
+    (let ((current-prefix-arg
+	   (if (eq '- current-prefix-arg) -1 current-prefix-arg)))
+      (if (> current-prefix-arg 0)
+	  current-prefix-arg
+	(save-excursion
+	  (backward-text (- 1 current-prefix-arg))
+	  (string-to-int
+	   (buffer-substring (point)
+			     (search-forward " ")))))))
+   ((listp current-prefix-arg)
     (lyskom-read-number prompt (lyskom-text-at-point)))
    (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
                     current-prefix-arg))))
