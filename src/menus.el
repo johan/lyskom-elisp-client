@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.14 1997-07-29 14:53:26 byers Exp $
+;;;;; $Id: menus.el,v 44.15 1997-08-18 12:27:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -29,6 +29,14 @@
 ;;;; Author: Niels Möller
 ;;;;
 ;;;;
+
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: menus.el,v 44.15 1997-08-18 12:27:37 byers Exp $\n"))
+
+(lyskom-external-function set-buffer-menubar)
+(lyskom-external-function popup-menu)
+(lyskom-external-function add-submenu)
 
 
 (defvar lyskom-current-menu-category nil

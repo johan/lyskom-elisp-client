@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.12 1997-07-13 10:35:50 byers Exp $
+;;;;; $Id: macros.el,v 44.13 1997-08-18 12:27:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.12 1997-07-13 10:35:50 byers Exp $\n"))
+	      "$Id: macros.el,v 44.13 1997-08-18 12:27:30 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -160,8 +160,7 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 ;;; compiler warnings.
 ;;;
 
-;; (eval-when-compile (defvar lyskom-expected-unresolved-functions nil))
-(defvar lyskom-expected-unresolved-functions nil)
+(eval-and-compile (defvar lyskom-expected-unresolved-functions nil))
 
 (defmacro lyskom-external-function (fn)
   (` (eval-when-compile

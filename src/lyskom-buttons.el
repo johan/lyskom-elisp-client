@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.14 1997-07-29 14:53:17 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.15 1997-08-18 12:27:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -29,6 +29,19 @@
 ;;;; Author: David Byers
 ;;;;
 ;;;;
+
+
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: lyskom-buttons.el,v 44.15 1997-08-18 12:27:10 byers Exp $\n"))
+
+(lyskom-external-function glyph-property)
+(lyskom-external-function widget-at)
+(lyskom-external-function widget-get)
+(lyskom-external-function w3-widget-button-click)
+(lyskom-external-function w3-popup-menu)
+(lyskom-external-function Info-goto-node)
+(lyskom-external-function term-char-mode)
 
 
 (defun lyskom-menu-selection nil
@@ -120,7 +133,8 @@ this-command-keys."
                    (and parent (widget-get parent ':href))
                    (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href)))))
-    (cond (href (w3-widget-button-click event))
+    (cond (href (require 'w3)
+                (w3-widget-button-click event))
           ((and do-default
                 (or (null pos)
                     (null (get-text-property pos 'lyskom-button-type))))
@@ -148,7 +162,8 @@ If there is no active area, then do something else."
                    (and parent (widget-get parent ':href))
                    (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href)))))
-    (cond (href (w3-popup-menu event))
+    (cond (href (require 'w3)
+                (w3-popup-menu event))
           ((and pos (get-text-property pos 'lyskom-button-type))
            (lyskom-button-menu pos event))
           (t (lyskom-background-menu pos event)))))
@@ -298,6 +313,12 @@ lyskom-text-buttons. Returns the modified string."
                                           url
                                           (lyskom-button-get-face el))))
 
+ 	       ((eq (elt el 1) 'info-node)
+ 		(lyskom-generate-button 'info-node
+ 					(lyskom-button-get-arg el text)
+ 					(lyskom-button-get-text el text)
+ 					(lyskom-button-get-face el)))
+               
                ((eq (elt el 1) 'email)
                 (lyskom-generate-button 'email
                                         nil
@@ -640,7 +661,23 @@ This is a LysKOM button action."
     (goto-char (point-max))
     (funcall (elt url-manager 3) url url-manager)))
 
+ 
+ 
+;;;
+;;;	Info node button
+;;;
 
+(defun lyskom-button-goto-info-node (buf arg text)
+  "In the LysKOM buffer BUF, open ARG as an Info node, and ignore TEXT.
+This is a LysKOM button action."
+  (when (not (fboundp 'Info-goto-node))
+    (autoload 'Info-goto-node "info"
+      "Go to info node named NAME.  Give just NODENAME or (FILENAME)NODENAME."
+      t))
+  (setq arg (replace-in-string arg "\n" " " t))
+  (setq arg (replace-in-string arg " +" " " t))
+  (Info-goto-node arg))
+ 
 
 ;;;
 ;;;	LysKOM URL Management
