@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 11
+Unused-Bug-Id: 13
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -180,4 +180,60 @@ senast adderade.
 (230929) -----------------------------------
 Kommentar i text 230930 av ceder (Per Cederqvist  Lysator)
 G} till n{sta m|te -
+
+Id: 11
+Summary: lyskom-try-complete-partials misstake when beginning with whitespace.
+Created: linus: Fri Aug  7 17:44:49 1992
+Currently handled by: 
+Severity: 3
+Priority: 0
+Difficulty: 3
+Last edit: linus: Fri Aug  7 17:48:31 1992
+Reported by: Yf=f(Yf)
+Site: 
+Associated mails:
+End mails.
+---
+The problem is that lookup-name discards this kind of whitespace.
+
+Solution: Remove whitespace before trying the match.
+
+231318 1992-08-07  14:12  /11 rader/ Yf=f(Yf)
+Kommentar till text 231310 av Bellman -- The Recursive Hacker
+Mottagare: LysKOM fr}gor (och) svar <377>
+Mottagare: LysKOM; Elispklientens buggrapporter <117>
+    S{nt:     1992-08-07 14:44
+    S{nt av Bellman -- The Recursive Hacker
+[rende: Ngt konstigt...?
+------------------------------------------------------------
+spy<ret>   => Wem vill du se statusen f|r? Y
+sp y<ret>  => Vem vill du se statusen f|r? Y y
+
+spbe<ret>  => Vem vill du se statusen f|r? Be
+sp be<ret> => Vem vill du se statusen f|r? Be be
+
+smmus<ret>  => Vilket m|te vill du se statusen f|r? Mus
+sm mus<ret> => Vilket m|te vill du se statusen f|r? Mus mus
+
+smk s<ret>  => Vilket m|te vill du se statusen f|r? k s
+sm k s<ret> => Vilket m|te vill du se statusen f|r? K k s
+(231318) -----------------------------------
+Kommentar i text 231322 av Bellman -- The Recursive Hacker
+G} till n{sta m|te -
+
+Id: 12
+Summary: Avoid eternal loop while reviewing root, doing jump
+Created: linus: Fri Aug  7 17:50:16 1992
+Currently handled by: 
+Severity: 3
+Priority: 0
+Difficulty: 2
+Last edit: linus: Fri Aug  7 17:51:14 1992
+Reported by: Calle Dybedahl <calle>
+Site: 
+Associated mails:
+End mails.
+---
+Solution: Don't search "backward" for bigger article number.
+	  Don't search "forward" for smaller article number.
 
