@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.16 1992-03-28 19:54:10 linus Exp $
+# $Id: Makefile,v 35.17 1992-05-11 01:55:38 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.16 1992-03-28 19:54:10 linus Exp $
+# $Id: Makefile,v 35.17 1992-05-11 01:55:38 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.16  1992-03-28 19:54:10  linus
+# Revision 35.17  1992-05-11 01:55:38  linus
+# support for distribution to nanny removed
+#
+# Revision 35.16  1992/03/28  19:54:10  linus
 # Removed mv to old-versions
 #
 # Revision 35.15  1992/03/22  21:10:12  linus
@@ -156,7 +159,7 @@ install: installnodoc installdoc
 
 installnodoc: lyskom.elc lyskom.el
 	cp lyskom.elc /usr/local/lib/elisp/lyskom.elc
-	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
+#	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
 	(VER=`grep "lyskom-clientversion " vars.el | \
 	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp lyskom.elc lyskom-$${VER}.elc;\
