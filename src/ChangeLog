@@ -1,5 +1,24 @@
 2003-07-27  David Byers  <byers@lysator.liu.se>
 
+	Like bug 755 but for footnotes:
+	* utilities.el (lyskom-maybe-get-footnoted-text): New function.
+
+	* vars.el.in (kom-pick-text-no-strategy-alist): Added better
+	default for kom-sub-footnote.
+
+	* commands1.el (kom-sub-comment): Print a message when there are
+	no comments to the text rather than continue.
+	(kom-sub-footnote): Ditto, for footnotes.
+
+	Fix bug 755:
+	* utilities.el (lyskom-maybe-get-commented-text): New function.
+
+	* vars.el.in (kom-pick-text-no-strategy-alist): Added defaults for
+	kom-sub-comment.
+
+	* edit-text.el (lyskom-edit-insert-miscs): Make the read-only
+	marking on the separator non-sticky at the end.
+
 	Fix bug 747:
 	* commands2.el (lyskom-status-pers-list-one-membership): New
 	function.

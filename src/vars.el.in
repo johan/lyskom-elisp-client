@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.251 2003-07-27 20:40:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.252 2003-07-27 22:31:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.251 2003-07-27 20:40:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.252 2003-07-27 22:31:58 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -211,6 +211,10 @@ the priority among links that match the same text is undefined."
                                          (nil . lyskom-get-previous-text)))
     (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
                                     (nil . lyskom-get-previous-text)))
+    (kom-sub-comment . ((t . lyskom-maybe-get-commented-text)
+                        (nil . lyskom-maybe-get-commented-text)))
+    (kom-sub-footnote . ((t . lyskom-maybe-get-footnoted-text)
+                         (nil . lyskom-maybe-get-footnoted-text)))
     (t . ((t   . lyskom-get-text-at-point) ; default for prompts
           (nil . lyskom-get-text-at-point) ; no prefix arg
           (0   . lyskom-prompt-for-text-no)

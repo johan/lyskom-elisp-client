@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.135 2003-07-27 14:17:25 byers Exp $
+;;;;; $Id: utilities.el,v 44.136 2003-07-27 22:31:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.135 2003-07-27 14:17:25 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.136 2003-07-27 22:31:58 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -651,10 +651,29 @@ non-negative integer and 0 means the given text-no."
 	  (setq ancestors (cdr ancestors)))
 	result)))
 
+(defun lyskom-maybe-get-commented-text (&optional arg p d c)
+  (let* ((text-no (lyskom-text-at-point))
+         (text-stat (and text-no (blocking-do 'get-text-stat text-no))))
+    (when text-no
+      (if (lyskom-misc-infos-from-list 
+           'COMM-IN (text-stat->misc-info-list text-stat))
+          text-no
+        (lyskom-get-text-at-point-ancestor 1 p d c)))))
+
+(defun lyskom-maybe-get-footnoted-text (&optional arg p d c)
+  (let* ((text-no (lyskom-text-at-point))
+         (text-stat (and text-no (blocking-do 'get-text-stat text-no))))
+    (when text-no
+      (if (lyskom-misc-infos-from-list 
+           'FOOTN-IN (text-stat->misc-info-list text-stat))
+          text-no
+        (lyskom-get-text-at-point-ancestor 1 p d c)))))
+
 (defun lyskom-get-explicit-text (arg &optional prompt default constraint) arg)
 
 ;; NOTUSED: lyskom-get-command-specified-default-text
-(defun lyskom-get-command-specified-default-text (a p def &optional c) def)
+(defun lyskom-get-command-specified-default-text (a p def &optional c) 
+  def)
 
 (defun lyskom-get-last-read-text (&optional arg prompt default constraint)
   (lyskom-default-value 'lyskom-current-text))
