@@ -1,3 +1,12 @@
+2001-05-09  David Byers  <davby@ida.liu.se>
+
+	* ChangeLog: Set language environment.
+
+	* commands2.el (lyskom-display-help-item): Fixed compiler warning.
+
+	* commands1.el (lyskom-write-comment): Don't reverse the order of
+	recipients when commenting.
+
 2001-05-08  Per Cederqvist  <ceder@moria>
 
 	* TODO: Change all occurances of "x-kom/basic" to
@@ -4295,4 +4304,5 @@ Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 Local Variables:
 outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
 eval: (ispell-change-dictionary "british")
+eval: (set-language-environment 'Latin-1)
 End:

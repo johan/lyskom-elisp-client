@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.107 2001-04-26 11:14:10 jhs Exp $
+;;;;; $Id: commands1.el,v 44.108 2001-05-09 09:07:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.107 2001-04-26 11:14:10 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.108 2001-05-09 09:07:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -882,8 +882,13 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
                                             (misc-info->recipient-no misc-info))
                                data))))))
          (text-stat->misc-info-list text-stat))
-        (lyskom-comment-recipients data lyskom-proc text-stat
-                                   subject type ccrep bccrep)))))
+        (lyskom-comment-recipients (nreverse data)
+                                   lyskom-proc 
+                                   text-stat
+                                   subject 
+                                   type 
+                                   (nreverse ccrep) 
+                                   (nreverse bccrep))))))
 
 
 (defun lyskom-comment-recipients (data lyskom-proc text-stat
