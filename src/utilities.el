@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.141 2003-08-15 18:24:19 byers Exp $
+;;;;; $Id: utilities.el,v 44.142 2003-08-16 16:58:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.141 2003-08-15 18:24:19 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.142 2003-08-16 16:58:47 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -59,7 +59,7 @@
           ;; Check coding system
           (when (and enable-multibyte-characters
                      (not (memq lyskom-server-coding-system
-                                (coding-system-get
+                                (lyskom-coding-system-get
                                  (symbol-value (car coding-category-list))
                                  'alias-coding-systems))))
             (lyskom-format-insert 'coding-system-mismatch-warning
@@ -156,50 +156,17 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 ;;; These should be shared in LysKOM
 ;;;
 
-(eval-and-compile
-  (if (eval-when-compile (string-match "XEmacs" emacs-version))
-      (defmacro lyskom-compiled-function-p (arg) `(compiled-function-p ,arg))
-    (defmacro lyskom-compiled-function-p (arg) `(byte-code-function-p ,arg))))
-
-(lyskom-provide-function copy-tree (l)
-  "Recursively copy the list L"
-  (cond ((atom l) l)
-        (t (cons (copy-tree (car l))
-                 (copy-tree (cdr l))))))
-
-(lyskom-provide-function functionp (obj)
-  "Returns t if OBJ is a function, nil otherwise."
-  (cond
-   ((symbolp obj) (fboundp obj))
-   ((subrp obj))
-   ((lyskom-compiled-function-p obj))
-   ((consp obj)
-    (if (eq (car obj) 'lambda) (listp (car (cdr obj)))))
-   (t nil)))
-
-
 (defun lyskom-ignore (&rest args)
   "Ignore all arguments"
   )
 
-(defun regexpp (re)
-  "Return non-nil if RE looks like a valid regexp."
-  (let ((result t))
-    (save-match-data
-      (condition-case nil
-          (string-match re "")
-        (error (setq result nil))))
-    result))
-
-
-(defun mapcar2 (fn seq1 seq2)
+(defun lyskom-mapcar2 (fn seq1 seq2)
   (let (result)
     (while (and seq1 seq2)
       (setq result (cons (funcall fn (car seq1) (car seq2)) result))
       (setq seq1 (cdr seq1)
             seq2 (cdr seq2)))
     (nreverse result)))
-
 
 (defun lyskom-maxint ()
   (let ((n 1) 
@@ -270,34 +237,6 @@ ITEM to the value VALUE."
          (progn (setcdr pair value) alist)
        (cons (cons item value) alist))))
 
-;;;
-;;; LysKOM utility functions
-;;;
-
-(lyskom-provide-function string-to-sequence (string type)
-  "Convert STRING to a sequence of TYPE which contains characters in STRING.
-TYPE should be `list' or `vector'."
-  (let ((len (length string))
-	(i 0)
-	val)
-    (cond ((eq type 'list)
-	   (setq val (make-list len 0))
-	   (let ((l val))
-	     (while (< i len)
-	       (setcar l (aref string i))
-	       (setq l (cdr l) i (1+ i)))))
-	  ((eq type 'vector)
-	   (setq val (make-vector len 0))
-	   (while (< i len)
-	     (aset val i (aref string i))
-	     (setq i (1+ i))))
-	  (t
-	   (error "Invalid type: %s" type)))
-    val))
-
-(lyskom-provide-subst string-to-vector (string)
-  "Return a vector of characters in STRING."
-  (string-to-sequence string 'vector))
 
 ;;;
 ;;; WARNING!
@@ -324,11 +263,12 @@ The class number defines a proper sorting order.")
 Optional second argument CODING is the coding system to use. If optional
 third argument FORCE is non-nil, always encode multibyte strings, otherwise
 only encode when multibyte strings are not supported."
-  (if (and (multibyte-string-p s) (or force (not enable-multibyte-characters)))
-      (encode-coding-string s (or coding
-                                  (and lyskom-language
-                                       (lyskom-language-coding lyskom-language))
-                                  'raw-text))
+  (if (and (lyskom-multibyte-string-p s)
+           (or force (not enable-multibyte-characters)))
+      (lyskom-encode-coding-string s (or coding
+                                         (and lyskom-language
+                                              (lyskom-language-coding lyskom-language))
+                                         'raw-text))
     s))
 
 (defun lyskom-recode-string-for-title (s coding)
@@ -357,11 +297,11 @@ is non-nil."
 
 (defsubst lyskom-unicase-char (c)
   "Smash case and diacritical marks on c." 
-  (if (< (char-to-int c) (length lyskom-collate-table))
-      (aref lyskom-collate-table (char-to-int c))
+  (if (< (lyskom-char-to-int c) (length lyskom-collate-table))
+      (aref lyskom-collate-table (lyskom-char-to-int c))
     (setq c (lyskom-encode-coding-char c lyskom-server-coding-system))
-    (if (and c (< (char-to-int c) (length lyskom-collate-table)))
-	(aref lyskom-collate-table (char-to-int c))
+    (if (and c (< (lyskom-char-to-int c) (length lyskom-collate-table)))
+	(aref lyskom-collate-table (lyskom-char-to-int c))
       c)))
 
 (defun lyskom-unicase (s)
@@ -369,7 +309,7 @@ is non-nil."
   (lyskom-save-excursion
    (and lyskom-buffer (set-buffer lyskom-buffer))
    (let* ((s2 (string-to-vector 
-               (encode-coding-string s lyskom-server-coding-system)))
+               (lyskom-encode-coding-string s lyskom-server-coding-system)))
           (l (length s2)))
      (while (> l 0)
        (setq l (1- l))
@@ -423,8 +363,8 @@ All other characters are unique."
       (while (> ix 0)
 	(setq ix (1- ix))
 	(let* ((cls (aref map ix))
-	       (str (decode-coding-string (concat (vector ix))
-					  lyskom-server-coding-system))
+	       (str (lyskom-decode-coding-string (concat (vector ix))
+                                                 lyskom-server-coding-system))
 	       (elem (assoc cls cls-to-strings)))
 	  (if elem
 	      (rplacd elem (cons str (cdr elem)))
@@ -499,7 +439,7 @@ the resulting string may be narrower than END-COLUMN."
     (condition-case nil
 	(while (< column start-column)
 	  (setq ch (aref str idx)
-		column (+ column (char-width ch))
+		column (+ column (lyskom-char-width ch))
 		idx (1+ idx)))
       (args-out-of-range (setq idx len)))
     (if (< column start-column)
@@ -514,7 +454,7 @@ the resulting string may be narrower than END-COLUMN."
 	      (setq last-column column
 		    last-idx idx
 		    ch (aref str idx)
-		    column (+ column (char-width ch))
+		    column (+ column (lyskom-char-width ch))
 		    idx (1+ idx)))
 	  (args-out-of-range (setq idx len)))
 	(if (> column end-column)
@@ -552,13 +492,13 @@ the resulting string may be narrower than END-COLUMN."
    (if (< emacs-major-version 20)
        (fset 'lyskom-string= (symbol-function 'string=))
      (defun lyskom-string= (s1 s2)
-       (string= (and s1 (if (multibyte-string-p s1)
+       (string= (and s1 (if (lyskom-multibyte-string-p s1)
 		    s1
-		  (decode-coding-string s1 (lyskom-language-coding
+		  (lyskom-decode-coding-string s1 (lyskom-language-coding
 					    lyskom-language))))
-		(and s2 (if (multibyte-string-p s2)
+		(and s2 (if (lyskom-multibyte-string-p s2)
 		    s2
-		  (decode-coding-string s2 (lyskom-language-coding
+		  (lyskom-decode-coding-string s2 (lyskom-language-coding
 					    lyskom-language)))))))))
 
 (defun lyskom-string-assoc (key list)
@@ -916,44 +856,6 @@ comparison. Comparison is done with eq."
   "Returns t for integers smaller than 0, nil otherwise."
   (and (integerp int) (< int 0)))
 
-;;; ======================================================================
-;;; Display device management
-;;;
-
-
-;;; Definition of some useful functions from XEmacs
-
-(lyskom-provide-function console-type (&optional console)
-  (or window-system 'tty))
-
-(lyskom-external-function display-color-p)
-(lyskom-external-function display-grayscale-p)
-
-(eval-and-compile
-  (cond ((fboundp 'device-class)	; XEmacsism
-	 (defalias 'lyskom-device-class 'device-class))
-	((and (fboundp 'display-color-p) (fboundp 'display-grayscale-p))
-	 ;; Emacs 21 can use color even when not running under
-	 ;; X-windows.  Note that display-grayscale-p can be false when
-	 ;; using a color display!  This happens when running on a
-	 ;; classic Linux tty console.
-	 (defun lyskom-device-class (&optional device)
-	   (cond ((display-color-p device) 'color)
-		 ((display-grayscale-p device) 'grayscale)
-		 (t 'mono))))
-	(t ;; This works in Emacs 20 and earlier.
-	 (defun lyskom-device-class (&optional device)
-	   (condition-case nil
-	       (if (x-display-grayscale-p device)
-		   (if (x-display-color-p device)
-		       'color
-		       'grayscale)
-		   'mono)
-	     (error 'mono))))))
-
-(lyskom-provide-function frame-property (frame property &optional default)
-  (or (cdr (assq property (frame-parameters frame)))
-      default))
 
 
 ;;; ======================================================================

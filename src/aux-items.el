@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.39 2003-08-15 21:47:00 byers Exp $
+;;;;; $Id: aux-items.el,v 44.40 2003-08-16 16:58:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.39 2003-08-15 21:47:00 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.40 2003-08-16 16:58:44 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -134,6 +134,15 @@ return non-nil if the item is to be included in the list."
                             'encode-data
                             (aux-item->data item)
 			    item))
+
+(defun lyskom-aux-item-modify-list (item-list deleted added)
+  "Return a copy of ITEM-LIST with items in DELETED removed and items
+in ADDED added."
+  (let ((new-nos (nconc (mapcar 'aux-item->aux-no deleted)
+                        (mapcar 'aux-item->aux-no added))))
+    (nconc (filter-list (lambda (el) (not (memq (aux-item->aux-no el) new-nos)))
+                        item-list)
+           added)))
 
 
 ;;; ======================================================================
@@ -347,10 +356,10 @@ return non-nil if the item is to be included in the list."
 (defun lyskom-aux-item-decode-data (item)
   (set-aux-item->data 
    item
-   (decode-coding-string (aux-item->data item) lyskom-server-coding-system)))
+   (lyskom-decode-coding-string (aux-item->data item) lyskom-server-coding-system)))
 
 (defun lyskom-aux-item-encode-data (item)
-  (encode-coding-string (aux-item->data item) lyskom-server-coding-system)
+  (lyskom-encode-coding-string (aux-item->data item) lyskom-server-coding-system)
   )
 
 
@@ -578,7 +587,7 @@ return non-nil if the item is to be included in the list."
    (if (null item)
        string
      (setq item (car item))
-     (unless (find-face 'kom-xface)
+     (unless (lyskom-find-face 'kom-xface)
        (make-face 'kom-xface))
      (let* ((h (concat "X-Face: " (aux-item->data item)))
             (g (intern h lyskom-xface-cache))

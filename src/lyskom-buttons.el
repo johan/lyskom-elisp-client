@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.94 2003-07-27 20:40:41 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.95 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.94 2003-07-27 20:40:41 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.95 2003-08-16 16:58:45 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -114,8 +114,8 @@ documentation for the variable lyskom-text-buttons."
 If optional argument do-default is non-nil, call the default binding of
 this-command-keys."
   (interactive "@e")
-  (let* ((pos (event-point event))
-         (glyph (event-glyph event))
+  (let* ((pos (lyskom-event-point event))
+         (glyph (lyskom-event-glyph event))
          (widget (and pos 
                       (or (and glyph (glyph-property glyph 'widget))
                           (widget-at pos))))
@@ -149,8 +149,8 @@ If there is no active area, then do something else."
 (defun kom-popup-menu (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."
   (interactive "@e")
-  (let* ((pos (event-point event))
-         (glyph (event-glyph event))
+  (let* ((pos (lyskom-event-point event))
+         (glyph (lyskom-event-glyph event))
          (widget (and pos 
                       (or (and glyph (glyph-property glyph 'widget))
                           (widget-at pos))))
@@ -975,9 +975,10 @@ after formating it as time. This is a LysKOM button action."
   (require 'browse-url)
   (funcall browse-url-browser-function url))
 
-(defun lyskom-view-url-w3 (url manager)
-  "View the URL URL using W3. Second argument MANAGER is ignored."
-  (w3-fetch url))
+(lyskom-with-external-functions (w3-fetch)
+  (defun lyskom-view-url-w3 (url manager)
+    "View the URL URL using W3. Second argument MANAGER is ignored."
+    (w3-fetch url)))
 
 (defun lyskom-view-url-dired (url manager)
   "View the URL URL using dired. Second argument MANAGER is ignored."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.51 2003-08-14 12:01:28 byers Exp $
+;;;;; $Id: parse.el,v 44.52 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.51 2003-08-14 12:01:28 byers Exp $\n"))
+	      "$Id: parse.el,v 44.52 2003-08-16 16:58:46 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -152,9 +152,8 @@ Signal lyskom-protocol-error if the next token is not a number."
   "Parse the next token as a string in the server coding system.
 Signal lyskom-parse-incomplete if the string is not complete.
 Signal lyskom-protocol-error if the next token is not a string."
-  (decode-coding-string 
-   (lyskom-parse-raw-string)
-   lyskom-server-coding-system))
+  (lyskom-decode-coding-string (lyskom-parse-raw-string)
+                               lyskom-server-coding-system))
 
 (defun lyskom-parse-raw-string ()
   "Parse next token as a raw string.
@@ -260,8 +259,8 @@ Signal lyskom-protocol-error if the next token is not a string."
   (let ((coding (intern (lyskom-parse-coding)))
         (data (lyskom-parse-raw-string)))
     (condition-case nil
-        (progn (check-coding-system coding)
-               (decode-coding-string data coding))
+        (progn (lyskom-check-coding-system coding)
+               (lyskom-decode-coding-string data coding))
       (nil data))))
 
 
@@ -1161,7 +1160,7 @@ i.e creates the buffer, sets all markers and pointers."
 		 (buffer-name)
 		 "-replies")))
   (save-excursion (set-buffer lyskom-unparsed-buffer)
-		  (set-buffer-multibyte nil))
+		  (lyskom-set-buffer-multibyte nil))
   (setq lyskom-unparsed-marker 
 	(lyskom-save-excursion
 	 (let ((proc lyskom-proc))

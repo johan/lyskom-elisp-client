@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.58 2003-08-14 12:21:47 byers Exp $
+;;;;; $Id: async.el,v 44.59 2003-08-16 16:58:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.58 2003-08-14 12:21:47 byers Exp $\n"))
+	      "$Id: async.el,v 44.59 2003-08-16 16:58:44 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -306,6 +306,20 @@ this function shall be with current-buffer the BUFFER."
             (set-conf-stat->msg-of-day (cache-get-conf-stat conf-no)
                                        new-motd)))))
 
+     ((eq msg-no 22)                    ; async-text-aux-changes
+      (let* ((text-no (lyskom-parse-num))
+             (deleted-aux (lyskom-parse-aux-item-list))
+             (added-aux (lyskom-parse-aux-item-list))
+             (text-stat nil))
+        (lyskom-save-excursion
+          (set-buffer buffer)
+          (setq text-stat (cache-get-text-stat text-no))
+          (when text-stat
+            (set-text-stat->aux-items text-stat
+                                      (lyskom-aux-item-modify-list
+                                       (text-stat->aux-items text-stat)
+                                       deleted-aux
+                                       added-aux))))))
      (t
       (lyskom-skip-tokens tokens)))))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.193 2003-08-15 21:47:00 byers Exp $
+;;;;; $Id: commands1.el,v 44.194 2003-08-16 16:58:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.193 2003-08-15 21:47:00 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.194 2003-08-16 16:58:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2555,79 +2555,80 @@ administrative privileges enabled."
 ))
 
 
-(lyskom-external-function calendar-iso-from-absolute)
-(lyskom-external-function calendar-absolute-from-gregorian)
-
-(def-kom-command kom-display-time ()
-  "Display the current date and time, according to the server. If
+(lyskom-with-external-functions (calendar-iso-from-absolute
+                                 calendar-absolute-from-gregorian)
+  (def-kom-command kom-display-time ()
+    "Display the current date and time, according to the server. If
 `kom-show-week-number', include the ISO week number. Display of
 today's name is controlled by `kom-show-namedays'."
-  (interactive)
-  (let ((time (lyskom-current-server-time))
-        (lyskom-last-text-format-flags nil)
-        (weekno nil))
-    (lyskom-format-insert
-     (if kom-show-week-number
-         (condition-case nil
-             (progn (require 'calendar)
-                    (require 'cal-iso)
-                    (setq weekno
-                          (car (calendar-iso-from-absolute
-                                (calendar-absolute-from-gregorian 
-                                 (list (time->mon time)
-                                       (time->mday time)
-                                       (time->year time))))))
-                    'time-is-week)
-           (error 'time-is))
-       'time-is)
-     (lyskom-format-time 'timeformat-day-yyyy-mm-dd-hh-mm-ss time)
-     ;; Kult:
-     (if (and (= (time->hour time)
-                 (+ (/ (time->sec time) 10)
-                    (* (% (time->sec time) 10) 10)))
-              (= (/ (time->min time) 10)
-                 (% (time->min time) 10)))
-         (lyskom-get-string 'palindrome)
-       "")
-     weekno)
-    ;; Mera kult
-    (mapcar (function 
-             (lambda (el)
-               (let ((when (car el))
-                     (event (cdr el)))
-                 (if (and (or (null (elt when 0))
-                              (= (time->year time) (elt when 0)))
-                          (or (null (elt when 1))
-                              (= (time->mon time) (elt when 1)))
-                          (or (null (elt when 2))
-                              (= (time->mday time) (elt when 2)))
-                          (or (null (elt when 3))
-                              (= (time->hour time) (elt when 3)))
-                          (or (null (elt when 4))
-                              (= (time->min time) (elt when 4)))
-                          (or (null (elt when 5))
-                              (= (time->sec time) (elt when 5))))
-                     (condition-case nil
-			 (progn
-			   (lyskom-insert " ")
-                           (lyskom-format-insert 
-                            "%#1t"
-                            (lyskom-format event
-                                           (time->year time)
-                                           (time->mon  time)
-                                           (time->mday time)
-                                           (time->hour time)
-                                           (time->min  time)
-                                           (time->sec  time))))
-		       (error nil))))))
-            lyskom-times)
+    (interactive)
+    (let ((time (lyskom-current-server-time))
+          (lyskom-last-text-format-flags nil)
+          (weekno nil))
+      (lyskom-format-insert
+       (if kom-show-week-number
+           (condition-case nil
+               (progn (require 'calendar)
+                      (require 'cal-iso)
+                      (setq weekno
+                            (car (calendar-iso-from-absolute
+                                  (calendar-absolute-from-gregorian 
+                                   (list (time->mon time)
+                                         (time->mday time)
+                                         (time->year time))))))
+                      'time-is-week)
+             (error 'time-is))
+         'time-is)
+       (lyskom-format-time 'timeformat-day-yyyy-mm-dd-hh-mm-ss time)
+       ;; Kult:
+       (if (and (= (time->hour time)
+                   (+ (/ (time->sec time) 10)
+                      (* (% (time->sec time) 10) 10)))
+                (= (/ (time->min time) 10)
+                   (% (time->min time) 10)))
+           (lyskom-get-string 'palindrome)
+         "")
+       weekno)
+      ;; Mera kult
+      (mapcar (function 
+               (lambda (el)
+                 (let ((when (car el))
+                       (event (cdr el)))
+                   (if (and (or (null (elt when 0))
+                                (= (time->year time) (elt when 0)))
+                            (or (null (elt when 1))
+                                (= (time->mon time) (elt when 1)))
+                            (or (null (elt when 2))
+                                (= (time->mday time) (elt when 2)))
+                            (or (null (elt when 3))
+                                (= (time->hour time) (elt when 3)))
+                            (or (null (elt when 4))
+                                (= (time->min time) (elt when 4)))
+                            (or (null (elt when 5))
+                                (= (time->sec time) (elt when 5))))
+                       (condition-case nil
+                           (progn
+                             (lyskom-insert " ")
+                             (lyskom-format-insert 
+                              "%#1t"
+                              (lyskom-format event
+                                             (time->year time)
+                                             (time->mon  time)
+                                             (time->mday time)
+                                             (time->hour time)
+                                             (time->min  time)
+                                             (time->sec  time))))
+                         (error nil))))))
+              lyskom-times)
 
-    (when kom-show-namedays
-      (let ((tmp (lyskom-nameday time)))
-        (when tmp
-          (lyskom-insert "\n")
-          (lyskom-insert tmp)))))
-  (lyskom-insert "\n"))
+      (when kom-show-namedays
+        (let ((tmp (lyskom-nameday time)))
+          (when tmp
+            (lyskom-insert "\n")
+            (lyskom-insert tmp)))))
+    (lyskom-insert "\n"))
+
+)
 
 
 
@@ -3254,7 +3255,7 @@ prefix argument \(C-u -), list all sessions."
   (let ((win (get-buffer-window (current-buffer))))
     (cond
      (win (window-width win))
-     (t (frame-width)))))
+     (t (lyskom-frame-width)))))
 
 
 (defun lyskom-return-username (who-info)

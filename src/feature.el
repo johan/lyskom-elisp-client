@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: feature.el,v 1.7 2003-03-16 15:57:29 byers Exp $
+;;;;; $Id: feature.el,v 1.8 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: feature.el,v 1.7 2003-03-16 15:57:29 byers Exp $\n"))
+	      "$Id: feature.el,v 1.8 2003-08-16 16:58:45 byers Exp $\n"))
 
 (def-kom-var lyskom-feature-defaults nil
   "Alist with default values of all feature variables")
@@ -74,7 +74,7 @@
   "List all feature values. mapcar ROCKS!"
   (mapcar 'lyskom-insert-before-prompt
           (mapcar (lambda (x) (apply 'format "%S: %S\n" x))
-                  (mapcar2 'list
+                  (lyskom-mapcar2 'list
                            (mapcar 'car lyskom-feature-defaults)
                            (mapcar 'symbol-value 
                                    (mapcar 'lyskom-feature-variable

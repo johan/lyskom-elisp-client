@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.8 2002-09-10 22:04:53 byers Exp $
+;;;;; $Id: mime.el,v 44.9 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.8 2002-09-10 22:04:53 byers Exp $\n"))
+	      "$Id: mime.el,v 44.9 2003-08-16 16:58:46 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -62,11 +62,22 @@
     ;;         chinese-gb2312 japanese-jisx0208
     ;;         korean-ksc5601 japanese-jisx0212
     ;;         chinese-cns11643-1 chinese-cns11643-2)      . iso-2022-int-1)
+
+
+;;    ,(if (or (not (fboundp 'charsetp)) ;; non-Mule case
+;;	     (charsetp 'unicode-a)
+;;	     (not (mm-coding-system-p 'mule-utf-8)))
+;;	 '(utf-8 unicode-a unicode-b unicode-c unicode-d unicode-e)
+;;       ;; If we have utf-8 we're in Mule 5+.
+;;       (append '(utf-8)
+;;	       (delete 'ascii
+;;		       (lyskom-coding-system-get 'mule-utf-8 'safe-charsets))))
+
     ))
 
 
 (defun lyskom-mime-string-charset (data)
-  (let* ((cs (find-charset-string data))
+  (let* ((cs (lyskom-find-charset-string data))
          (tmp lyskom-charset-alist)
          (best-guess (let ((system nil))
                        (while (and tmp cs)
@@ -78,17 +89,19 @@
      best-guess
      (lyskom-xemacs-or-gnu
       lyskom-server-coding-system
-      (let ((coding (find-coding-systems-for-charsets cs)))
+      (let ((coding (lyskom-find-coding-systems-for-charsets cs)))
         (while (and (car coding)
-                    (null (coding-system-get (car coding) 'mime-charset)))
+                    (null (or (lyskom-coding-system-get (car coding) 'mime-charset)
+                              (lyskom-coding-system-get (car coding) :mime-charset))))
           (setq coding (cdr coding)))
         (and (car coding)
-             (coding-system-get (car coding) 'mime-charset))))
+             (or (lyskom-coding-system-get (car coding) 'mime-charset)
+                 (lyskom-coding-system-get (car coding) :mime-charset)))))
     lyskom-server-coding-system)))
 
 (defun lyskom-mime-charset-coding-system (charset)
   (condition-case nil
-      (and (check-coding-system charset)
+      (and (lyskom-check-coding-system charset)
            charset)
     (error 'raw-text)))
 
@@ -96,12 +109,12 @@
   (let* ((mime-charset (lyskom-mime-string-charset data))
          (coding-system (lyskom-mime-charset-coding-system mime-charset)))
     (when (and mime-charset coding-system)
-      (cons mime-charset (encode-coding-string data coding-system)))))
+      (cons mime-charset (lyskom-encode-coding-string data coding-system)))))
 
 (defun lyskom-mime-decode-string (data charset)
   (let* ((coding-system (lyskom-mime-charset-coding-system charset)))
     (if coding-system
-        (decode-coding-string data coding-system)
+        (lyskom-decode-coding-string data coding-system)
       data)))
 
 (defun lyskom-mime-decode-content-type (data)

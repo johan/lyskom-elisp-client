@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.8 2002-05-29 20:22:32 byers Exp $
+;;;;; $Id: view-mode.el,v 44.9 2003-08-16 16:58:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.8 2002-05-29 20:22:32 byers Exp $\n"))
+	      "$Id: view-mode.el,v 44.9 2003-08-16 16:58:47 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")
@@ -48,7 +48,7 @@
         ((assq 'view-mode minor-mode-alist)
          (let* ((keymap (copy-keymap lyskom-view-mode-map)))
            (make-variable-buffer-local 'minor-mode-map-alist)
-           (set-keymap-parent keymap view-mode-map)
+           (lyskom-set-keymap-parent keymap view-mode-map)
            (setq minor-mode-map-alist (cons (cons 'view-mode keymap)
                                             minor-mode-map-alist))
            (view-mode)))

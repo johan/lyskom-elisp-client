@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.24 2003-04-05 20:41:24 byers Exp $
+;;;;; $Id: buffers.el,v 44.25 2003-08-16 16:58:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.24 2003-04-05 20:41:24 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.25 2003-08-16 16:58:44 byers Exp $\n"))
 
 
 ;;;;
@@ -351,18 +351,20 @@ categories")
 (add-hook 'kill-emacs-query-functions 'lyskom-quit-query)
 
 (defun lyskom-recode-buffer-name (name)
-  (cond ((and (multibyte-string-p name) (not enable-multibyte-characters))
-	 (encode-coding-string name 
+  (cond ((and (lyskom-multibyte-string-p name)
+              (not enable-multibyte-characters))
+	 (lyskom-encode-coding-string name 
 			       (or (and lyskom-language
 					(lyskom-language-coding
 					 lyskom-language))
 				   'raw-text)))
-	((and (not (multibyte-string-p name)) enable-multibyte-characters)
-	 (decode-coding-string name 
-			       (or (and lyskom-language
-					(lyskom-language-coding
-					 lyskom-language))
-				   'raw-text)))
+	((and (not (lyskom-multibyte-string-p name)) 
+              enable-multibyte-characters)
+	 (lyskom-decode-coding-string name 
+                                      (or (and lyskom-language
+                                               (lyskom-language-coding
+                                                lyskom-language))
+                                          'raw-text)))
 	(t name)))
 
 (defun lyskom-generate-new-buffer (name)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: regexp.el,v 44.2 2003-01-05 21:37:08 byers Exp $
+;;;;; $Id: regexp.el,v 44.3 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: regexp.el,v 44.2 2003-01-05 21:37:08 byers Exp $\n"))
+	      "$Id: regexp.el,v 44.3 2003-08-16 16:58:46 byers Exp $\n"))
 
 (defvar lyskom-re-converters 
   '((0 . nil)
@@ -236,12 +236,12 @@ Returns the modified parse."
   (let ((acc nil)
         (result nil))
     (while parse
-      (when (and (not (characterp (car parse))) acc)
+      (when (and (not (lyskom-characterp (car parse))) acc)
         (setq result (cons (regexp-quote (apply 'string (nreverse acc)))
                            result)
               acc nil))
       (cond 
-       ((characterp (car parse))
+       ((lyskom-characterp (car parse))
         (setq acc (cons (car parse) acc)))
        ((symbolp (car parse))
         (cond ((eq (car parse) '\.) (setq result (cons "." result)))

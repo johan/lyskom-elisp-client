@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.17 2003-01-09 00:43:26 byers Exp $
+;;;;; $Id: slow.el,v 44.18 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -94,7 +94,7 @@ Currently the prompt is assumed to be on the last line of the buffer."
 (defun kom-slow-click-or-yank (event)
   "Click on a LysKOM button or do the default action if after the prompt."
   (interactive "@e")
-  (let ((pos (event-closest-point event)))
+  (let ((pos (lyskom-event-closest-point event)))
     (if (and (lyskom-slow-on-prompt-line pos)
              (<= (lyskom-slow-start-of-line-pos) pos))
         (let ((fn (lookup-key global-map (this-command-keys))))
@@ -166,7 +166,7 @@ Currently the prompt is assumed to be on the last line of the buffer."
 	  (when (lyskom-string= (lyskom-unicase longest) (lyskom-unicase text))
             (if (or have-space eager-completion)
 		(lyskom-slow-list-completions completes))
-            (unless (or eager-completion (eq ?\  (char-before (point))) (insert " "))))
+            (unless (or eager-completion (eq ?\  (lyskom-char-before (point))) (insert " "))))
           ))
 	 (t (signal 'lyskom-internal-error '()))))))
     command))

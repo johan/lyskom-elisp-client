@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.181 2003-08-15 19:44:55 byers Exp $
+;;;;; $Id: commands2.el,v 44.182 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.181 2003-08-15 19:44:55 byers Exp $\n"))
+              "$Id: commands2.el,v 44.182 2003-08-16 16:58:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -751,22 +751,25 @@ send. If DONTSHOW is non-nil, don't display the sent message."
             (t (setq lyskom-message-string (substring lyskom-message-string 
                                                       0 size)))))))
 
-(lyskom-external-function resize-minibuffer-setup)
+  (defun lyskom-send-message-turn-off-resize-on-exit ()
+    (resize-minibuffer-mode -1)
+    (remove-hook 'kom-send-message-exit-hook
+                 'lyskom-send-message-turn-off-resize-on-exit))
 
-(defun lyskom-send-message-turn-off-resize-on-exit ()
-  (resize-minibuffer-mode -1)
-  (remove-hook 'kom-send-message-exit-hook
-               'lyskom-send-message-turn-off-resize-on-exit))
+  ;; USER-HOOK: lyskom-send-message-resize-minibuffer
+  (defvar resize-minibuffer-mode)
 
-;; USER-HOOK: lyskom-send-message-resize-minibuffer
-(defvar resize-minibuffer-mode)
-(defun lyskom-send-message-resize-minibuffer ()
-  "Temporarily turn on resizing of minibuffer"
-  (unless resize-minibuffer-mode
-    (resize-minibuffer-mode 1)
-    (resize-minibuffer-setup)
-    (add-hook 'kom-send-message-exit-hook
-              'kom-send-message-turn-off-resize-on-exit)))
+(lyskom-with-external-functions (resize-minibuffer-setup)
+
+  (defun lyskom-send-message-resize-minibuffer ()
+    "Temporarily turn on resizing of minibuffer"
+    (unless resize-minibuffer-mode
+      (resize-minibuffer-mode 1)
+      (resize-minibuffer-setup)
+      (add-hook 'kom-send-message-exit-hook
+                'kom-send-message-turn-off-resize-on-exit)))
+
+  )
 
 
 ;; USER-HOOK: lyskom-send-message-auto-fill
@@ -1432,7 +1435,7 @@ YYYY-MM-DD."
                                          (key-description (car arg)))
                                      (cond ((symbolp (car arg))
                                             (format "%s" (car arg)))
-                                           ((characterp (car arg))
+                                           ((lyskom-characterp (car arg))
                                             (format "%c" (car arg)))
                                            (t (format "%S" (car arg)))))
                                    (or (lyskom-command-name (cdr arg))
@@ -1453,27 +1456,13 @@ YYYY-MM-DD."
 
 
 (defun lyskom-help-get-keylist (keymap)
-  (cond
-   ((fboundp 'map-keymap)
-    (and keymap
-         (let (list)
-           (map-keymap
-            (function
-             (lambda (event function)
-               (setq list (cons (cons event function) list))))
-            keymap t)
-           (nreverse list))))
-   ((vectorp keymap)
-    (let ((lis nil)
-          (r 0))
-      (while (< r (length keymap))
-        (if (aref keymap r)
-            (setq lis (cons (cons r (aref keymap r))
-                            lis)))
-        (++ r))
-      (nreverse lis))) 
-   (t
-    (cdr keymap))))
+  (and keymap
+       (let (list)
+         (lyskom-map-keymap
+          (lambda (event function)
+            (setq list (cons (cons event function) list)))
+          keymap t)
+         (nreverse list))))
 
 
 ;;; ================================================================
@@ -2240,27 +2229,28 @@ global effect, including changes to key binding."
 ;;; ============================================================
 ;;; Beräkna
 
-(lyskom-external-function calc-eval)
-(def-kom-command kom-calculate (&optional exprx)
-  "Calculate a mathematical expression.
+(lyskom-with-external-functions (calc-eval)
+
+  (def-kom-command kom-calculate (&optional exprx)
+    "Calculate a mathematical expression.
 This function requires the `calc' package to be installed, and is
 really only a simple interface to the basic functionality of calc."
-  (interactive)
-  (when (lyskom-try-require 'calc 
-                            (lyskom-get-string 'need-library))
-    (let* ((expr (or exprx
-                     (lyskom-read-from-minibuffer 
-                      (lyskom-get-string 'calc-expression)
-                      nil nil nil 'lyskom-expression-history)))
-           (result (calc-eval expr)))
-      (cond ((stringp result)
-             (lyskom-format-insert-before-prompt
-              "%#1s = \n    %#2s\n" expr result))
-            (t (lyskom-format-insert-before-prompt
-                "%#1s = \n%#2s^ %#3s\n"
-                expr
-                (make-string (car result) ?\ )
-                (car (cdr result))))))))
+    (interactive)
+    (when (lyskom-try-require 'calc 
+                              (lyskom-get-string 'need-library))
+      (let* ((expr (or exprx
+                       (lyskom-read-from-minibuffer 
+                        (lyskom-get-string 'calc-expression)
+                        nil nil nil 'lyskom-expression-history)))
+             (result (calc-eval expr)))
+        (cond ((stringp result)
+               (lyskom-format-insert-before-prompt
+                "%#1s = \n    %#2s\n" expr result))
+              (t (lyskom-format-insert-before-prompt
+                  "%#1s = \n%#2s^ %#3s\n"
+                  expr
+                  (make-string (car result) ?\ )
+                  (car (cdr result)))))))))
 
 ;;; ============================================================
 ;;; Ändra namn
@@ -2892,16 +2882,16 @@ This command accepts text number prefix arguments \(see
 
 	(if switches
 	    (setq args (append
-			(split-string (if (consp switches)
-					  (mapconcat 'identity switches " ")
-					switches))
+			(lyskom-split-string (if (consp switches)
+                                                 (mapconcat 'identity switches " ")
+                                               switches))
 			args))
 	  (if diff-switches
 	      (setq args (append
-			  (split-string (if (consp diff-switches)
-					    (mapconcat 'identity diff-switches
-						       " ")
-					  diff-switches))
+			  (lyskom-split-string (if (consp diff-switches)
+                                                   (mapconcat 'identity diff-switches
+                                                              " ")
+                                                 diff-switches))
 			  args))))
 	    
 

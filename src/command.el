@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.49 2003-08-15 18:24:18 byers Exp $
+;;;;; $Id: command.el,v 44.50 2003-08-16 16:58:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.49 2003-08-15 18:24:18 byers Exp $\n"))
+	      "$Id: command.el,v 44.50 2003-08-16 16:58:44 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -207,7 +207,7 @@
 (defvar lyskom-command-minibuffer-local-must-match-map
   (let ((map (copy-keymap minibuffer-local-must-match-map)))
     (lyskom-xemacs-or-gnu 
-     (progn (set-keymap-parent map lyskom-minibuffer-local-completion-map)
+     (progn (lyskom-set-keymap-parent map lyskom-minibuffer-local-completion-map)
             (define-key map " " 'lyskom-command-complete-word))
      (define-key map " " 'lyskom-command-complete-word))
     map)
@@ -392,7 +392,7 @@ and back of the string."
     (let ((completion (try-completion string
                                       minibuffer-completion-table
                                       minibuffer-completion-predicate)))
-      (cond ((null completion) (minibuffer-message " [No match]") nil)
+      (cond ((null completion) (lyskom-minibuffer-message " [No match]") nil)
             ((eq completion t) nil)
             (t (let* ((tmp string))
                  (when (and (string-equal (lyskom-unicase completion)

@@ -1,3 +1,259 @@
+2003-08-16  David Byers  <byers@lysator.liu.se>
+
+	Handle async-text-aux-changed:
+	* async.el (lyskom-parse-async): Handle async-text-aux-changed.
+
+	* aux-items.el (lyskom-aux-item-modify-list): New function.
+
+	* komtypes.el (text-stat): Make aux-items field read-write.
+
+	Major cleanup of compatibility code:
+	* compatibility.el: Cleaned up compatibility code a lot. We no
+	longer provide fake versions of MULE-related functions or any
+	other function that other code might take to mean there's some
+	major feature in Emacs. The only definitions we make in the
+	standard namespace are "safe" functions. Removed functions that
+	are not used. Simplified some of the macros. Moved code here from
+	utilities.el.
+	(lyskom-gnu-keysym,lyskom-xemacs-keysym): Removed swedish chars
+	from the lists since we don't use lyskom-keys for that any more.
+
+	* commands2.el (kom-diff-texts): split-string to
+	lyskom-split-string.
+
+	* compatibility.el (coding-system-type): New compatibility def.
+	(coding-system-property): New compatibility def.
+	(split-string): Provide compatibility definition for split-string.
+
+	* lyskom-rest.el (lyskom-unity-text): Use compatibility functions
+	for MULE stuff.
+
+	* macros.el (lyskom-end-of-compilation): Don't remove
+	compatibility definitions from the list of warnings for unresolved
+	functions since this serves no purpose and hides actual errors.
+
+	* lyskom-rest.el (lyskom-unity-text): coding-system-type to
+	lyskom-coding-system-type.
+
+	* option-edit.el (lyskom-widget-click): event-point to
+	lyskom-event-point.
+
+	* slow.el (kom-slow-click-or-yank): event-closest-point to
+	lyskom-event-closest-point.
+
+	* utilities.el (lyskom-unicase-char): char-to-int to
+	lyskom-char-to-int.
+
+	* lyskom-rest.el (lyskom-fill-message-initial-wrap): char-to-int
+	to lyskom-char-to-int.
+	(lyskom-fill-message): Same here.
+	(lyskom-is-loaded): Same here.
+
+	* faces.el (lyskom-setup-faces-for-buffer): frame-property to
+	lyskom-frame-property.
+
+	* review.el (lyskom-get-texts-by-and-to): mapcar2 to
+	lyskom-mapcar2.
+
+	* lyskom-rest.el (lyskom-split-user-area): mapcar2 to
+	lyskom-mapcar2.
+
+	* feature.el (lyskom-list-features): mapcar2 to lyskom-mapcar2.
+
+	* slow.el (lyskom-expand-slow-command): char-before to
+	lyskom-char-before.
+
+	* option-edit.el (lyskom-widget-click): event-point to
+	lyskom-event-point.
+
+	* lyskom-buttons.el (kom-button-click): event-point to
+	lyskom-event-point. event-glyph to lyskom-event-glyph.
+	(kom-popup-menu): Same here.
+
+	* mship-edit.el (lp--entry-set-background): find-face to
+	lyskom-find-face.
+	(lp--entry-set-foreground): Same here.
+
+	* lyskom-rest.el (lyskom-face-default-p): find-face to
+	lyskom-find-face.
+
+	* aux-items.el (lyskom-maybe-add-face-to-string): find-face to
+	lyskom-find-face.
+
+	* mship-edit.el (lp--format-entry): lyskom-face-background-name to
+	lyskom-face-background. lyskom-face-foreground-name to
+	lyskom-face-foreground.
+	(lp--redraw-entry-mark): Same here.
+
+	* lyskom-rest.el (lyskom-verified-read-enter): minibuffer-message
+	to lyskom-minibuffer-message.
+
+	* command.el (lyskom-command-complete-word): minibuffer-message to
+	lyskom-minibuffer-message.
+
+	* utilities.el (lyskom-maybe-recode-string): multibyte-string-p to
+	lyskom-multibyte-string-p.
+	(lyskom-string=): multibyte-string-p to
+	lyskom-multibyte-string-p.
+
+	* compatibility.el (lyskom-string-width): multibyte-string-p to
+	lyskom-multibyte-string-p.
+
+	* buffers.el (lyskom-recode-buffer-name): multibyte-string-p to
+	lyskom-multibyte-string-p.
+
+	* compatibility.el (lyskom-string-width): string-make-unibyte to
+	lyskom-string-make-unibyte. string-make-multibyte to
+	lyskom-string-make-multibyte.
+
+	* lyskom-rest.el (lyskom-filter): string-as-unibyte to
+	lyskom-string-as-unibyte.
+	(lyskom-prot-a-format-string): Same here.
+	(lyskom-prot-a-format-raw-string): Same here.
+
+	* mime.el (lyskom-mime-string-charset): find-charset-string to
+	lyskom-find-charset-string.
+
+	* utilities.el (lyskom-truncate-string-to-width): char-width to
+	lyskom-char-width.
+
+	* view-text.el (lyskom-format-text-footer): string-width to
+	lyskom-string-width.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity):
+	string-width to lyskom-string-width.
+
+	* utilities.el (lyskom-check-configuration): coding-system-get to
+	lyskom-coding-system-get.
+
+	* mime.el (lyskom-mime-string-charset):
+	find-coding-systems-for-charsets to
+	lyskom-find-coding-systems-for-charsets
+	(lyskom-mime-string-charset): coding-system-get to
+	lyskom-coding-system-get.
+
+	* parse.el (lyskom-parse-coded-string): check-coding-system to
+	lyskom-check-coding-system.
+
+	* mime.el (lyskom-mime-charset-coding-system): check-coding-system
+	to lyskom-check-coding-system.
+
+	* lyskom-rest.el (lyskom-prot-a-format-string): string-bytes to
+	lyskom-string-bytes.
+	(lyskom-prot-a-format-raw-string): string-bytes to
+	lyskom-string-bytes.
+
+	* flags.el (lyskom-save-options): string-bytes to
+	lyskom-string-bytes.
+
+	* utilities.el (lyskom-compute-char-classes): decode-coding-string
+	to lyskom-decode-coding-string.
+	(lyskom-string=): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* parse.el (lyskom-parse-coded-string): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* mime.el (lyskom-mime-decode-string): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* parse.el (lyskom-parse-string): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* flags.el (lyskom-read-options-eval-get-holerith):
+	decode-coding-string to lyskom-decode-coding-string.
+	(lyskom-get-holerith): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* compatibility.el (lyskom-buggy-decode-coding-string):
+	decode-coding-string to lyskom-decode-coding-string.
+
+	* buffers.el (lyskom-recode-buffer-name): decode-coding-string to
+	lyskom-decode-coding-string.
+
+	* aux-items.el (lyskom-aux-item-decode-data): decode-coding-string
+	to lyskom-decode-coding-string.
+
+	* compatibility.el (lyskom-buggy-encode-coding-string):
+	encoded-coding-string to lyskom-encode-coding-string.
+
+	* utilities.el (lyskom-maybe-recode-string): encode-coding-string
+	to lyskom-encode-coding-string.
+	(lyskom-unicase): encode-coding-string to
+	lyskom-encode-coding-string.
+
+	* mime.el (lyskom-mime-encode-string): encode-coding-string to
+	lyskom-encode-coding-string.
+
+	* lyskom-rest.el (lyskom-prot-a-format-string):
+	encode-coding-string to lyskom-encode-coding-string.
+
+	* language.el (lyskom-get-menu-string): encode-coding-string to
+	lyskom-encode-coding-string.
+
+	* keyboard-menu.el (lyskom-keyboard-menu-keys-for-string):
+	encode-coding-string to lyskom-encode-coding-string.
+
+	* flags.el (lyskom-save-options): encode-coding-string to
+	lyskom-encode-coding-string.
+
+	* buffers.el (lyskom-recode-buffer-name): encode-coding-string to
+	lyskom-encode-coding-string.
+
+	* aux-items.el (lyskom-aux-item-encode-data): encode-coding-string
+	to lyskom-encode-coding-string.
+
+	* startup.el (lyskom): set-process-coding-system to
+	lyskom-set-process-coding-system.
+
+	* parse.el (lyskom-init-parse): set-buffer-multibyte to
+	lyskom-set-buffer-multibyte.
+
+	* mship-edit.el (lp--maybe-update-unreads): Use
+	lyskom-next-property-bounds, not next-text-property-bounds.
+
+	* lyskom-rest.el (lyskom-do-special-inserts): Use
+	lyskom-next-property-bounds, not next-text-property-bounds.
+
+	* view-mode.el (lyskom-view-base-mode): set-keymap-parent to
+	lyskom-set-keymap-parent.
+
+	* language.el (lyskom-set-language-keymaps): set-keymap-parent to
+	lyskom-set-keymap-parent.
+
+	* completing-read.el (lyskom-minibuffer-local-must-match-map):
+	set-keymap-parent to lyskom-set-keymap-parent.
+
+	* command.el (lyskom-command-minibuffer-local-must-match-map):
+	set-keymap-parent to lyskom-set-keymap-parent.
+
+	* commands2.el (lyskom-help-get-keylist): map-keymap to
+	lyskom-map-keymap. Removed other branches since map-keymap is
+	always defined now.
+
+	* mship-edit.el (lp--calculate-distance): signum to lyskom-signum.
+
+	* commands1.el (lyskom-window-width): frame-width to
+	lyskom-frame-width.
+
+	* lyskom-rest.el (lyskom-format-aux-help): int-to-char to
+	lyskom-int-to-char.
+
+	* commands2.el (lyskom-help): characterp to lyskom-characterp
+
+	* keyboard-menu.el (lyskom-read-from-menu): characterp to
+	lyskom-characterp.
+
+	* lyskom-rest.el (lyskom-format-aux-help): characterp to
+	lyskom-characterp.
+
+	* regexp.el (lyskom-re-convert-finalize-result): characterp to
+	lyskom-characterp.
+	(lyskom-re-convert-finalize-result): Same here.
+
+	* mime.el (lyskom-mime-string-charset): Use :mime-charset next to
+	mime-charset (Gnus does this ans says it is the Emacs 22 way).
+
 2003-08-15  David Byers  <byers@lysator.liu.se>
 
 	* view-text.el (lyskom-get-text-belongs-to): New function.

@@ -211,7 +211,7 @@ This function does not tell the server about the change."
 
       (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
              (facename (intern (format "lyskom-%s-background" color)))
-             (face (or (find-face facename) (lyskom-make-face facename t))))
+             (face (or (lyskom-find-face facename) (lyskom-make-face facename t))))
         (unless extent
           (lyskom-xemacs-or-gnu
            (setq extent (make-extent (or (lp--entry->start-marker entry) 0)
@@ -244,7 +244,7 @@ This function does not tell the server about the change."
 
       (let* ((extent (cdr (assq 'fcolor (lp--entry->extents entry))))
              (facename (intern (format "lyskom-%s-foreground" color)))
-             (face (or (find-face facename) (lyskom-make-face facename t))))
+             (face (or (lyskom-find-face facename) (lyskom-make-face facename t))))
         (unless extent
           (lyskom-xemacs-or-gnu
            (setq extent (make-extent (or (lp--entry->start-marker entry) 0)
@@ -392,14 +392,14 @@ only recomputed if the window width changes."
 
       (if (membership-type->passive
            (membership->type (lp--entry->membership entry)))
-          (lp--entry-set-foreground entry (lyskom-face-foreground-name kom-dim-face))
+          (lp--entry-set-foreground entry (lyskom-face-foreground kom-dim-face))
         (lp--entry-set-foreground entry nil))
 
       (if (lp--entry->selected entry)
-          (lp--entry-set-background entry (lyskom-face-background-name kom-mark-face))
+          (lp--entry-set-background entry (lyskom-face-background kom-mark-face))
         (lp--entry-set-background entry nil)))
 ))
-      
+
 
 (defun lp--format-entry-expansion (conf-stat defer-info)
   (let ((entry nil))
@@ -460,7 +460,7 @@ The start and end markers of the entry are adjusted"
      (goto-char (lp--entry->start-marker entry))
      (insert (if (lp--entry->selected entry) ?* ?\ ))
      (if (lp--entry->selected entry)
-         (lp--entry-set-background entry (lyskom-face-background-name kom-mark-face))
+         (lp--entry-set-background entry (face-background kom-mark-face))
        (lp--entry-set-background entry nil))
      (delete-char 1)
      (lp--entry-update-extents entry))))
@@ -499,8 +499,9 @@ Normally there should only be one buffer, but who knows..."
      (lambda (conf-no unread)
        (let ((entry (lp--conf-no-entry conf-no)))
          (when entry
-           (let ((bounds (next-text-property-bounds 
-                          1 (lp--entry->start-marker entry) 'lp--unread)))
+           (let ((bounds (lyskom-next-property-bounds 
+                          (lp--entry->start-marker entry) 
+                          (lp--entry->end-marker entry) 'lp--unread)))
              (when bounds
                (lp--save-excursion
                 (let ((buffer-read-only nil))
@@ -998,7 +999,7 @@ Forces a mode line update"
 This includes visible and invisible entries. The sign of the
 returned value has the same sign as DELTA. The result is clipped to the
 size of the list."
-  (let ((step (signum delta))
+  (let ((step (lyskom-signum delta))
         (num (abs delta))
         (result 0))
     (while (> num 0)

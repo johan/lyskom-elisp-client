@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.65 2003-08-15 18:24:18 byers Exp $
+;;;;; $Id: compatibility.el,v 44.66 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,171 +36,119 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.65 2003-08-15 18:24:18 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.66 2003-08-16 16:58:45 byers Exp $\n"))
 
 
-;;; ======================================================================
-;;; Use lyskom-provide to supply a definition that is only to be used
-;;; if no definition already exists. The definition will be evaluated at
-;;; both compile and run time.
-;;;
-;;; lyskom-provide-macros behaves like defmacro
-;;; lyskom-provide-function behaves like defun
-;;; lyskom-provide-subst behaves like defsubst
-;;;
+;;; ============================================================
+;;; Utility macros
 
 (eval-and-compile
   (defvar lyskom-compatibility-definitions nil
-    "Functions defined or redefined because they are incompatible with
-LysKOM"))
+    "Functions defined or redefined because they are incompatible with LysKOM")
 
-;;; ============================================================
-;;; lyskom-compatibility-forms
-;;; lyskom-compatibility-definition
-;;;
-
-
-(defmacro lyskom-compatibility-forms (predicate &rest forms)
-  "If PREDICATE is nil, evaluate FORMS at compile and run time"
-  (` (eval-and-compile
-       (if (not (, predicate))
-           (progn (,@ forms))))))
-
-(defmacro lyskom-compatibility-definition (predicate definition)
-  "If PREDICATE is nil, evaluate DEFINITION at compile and run time.
-Definition should be a function definition of some kind, with syntax 
-similar to defun or defmacro.
-
-To simply define a function if it is not already defined, used one
-of the lyskom-provide-* functions instead."
-  (` (progn ;(eval-when-compile
-            ;  (if (not (, predicate))
-            ;      (message "Compatibility %S for %S"
-            ;               (quote (, (car definition)))
-            ;               (quote (, (car (cdr definition)))))))
-              (eval-and-compile
-                (if (not (, predicate))
-                    (progn
-                      (, definition)
-                      (setq lyskom-compatibility-definitions
-                            (cons (quote (, (car (cdr definition))))
-                                  lyskom-compatibility-definitions))))))))
-
-
-;;; ============================================================
-;;; lyskom-provide
-;;; lyskom-provide-macro
-;;; lyskom-provide-function
-;;; lyskom-provide-subst
-;;;
-;;; Define functions if they are not already defined
-;;;
-
-(defmacro lyskom-provide (definer name rest)
-  `(eval-and-compile
-     (if (not (fboundp ',name))
-         (progn (setq lyskom-compatibility-definitions
-                      (cons ',name lyskom-compatibility-definitions))
-                (,definer ,name ,@rest)))))
-
-
-(defmacro lyskom-provide-macro (name &rest rest)
-  "If NAME is not already defined, define it as a macro."
-  (` (lyskom-provide defmacro (, name) (, rest))))
 
 (defmacro lyskom-provide-function (name &rest rest)
   "If NAME is not already defined, define it as a function."
-  (` (lyskom-provide defun (, name) (, rest))))
+  `(eval-and-compile
+     (or (fboundp ',name)
+         (progn (setq lyskom-compatibility-definitions
+                      (cons ',name lyskom-compatibility-definitions))
+                (defun ,name ,@rest)))))
 
-(defmacro lyskom-provide-subst (name &rest rest)
-  "If NAME is not already defined, define it as a defsubst."
-  (` (lyskom-provide defsubst (, name) (, rest))))
+(defmacro lyskom-provide-macro (name &rest rest)
+  "If NAME is not already defined, define it as a macro."
+  `(eval-and-compile
+     (or (fboundp ',name)
+         (progn (setq lyskom-compatibility-definitions
+                      (cons ',name lyskom-compatibility-definitions))
+                (defmacro ,name ,@rest)))))
+
+(defmacro lyskom-macro-alias (name args &rest body)
+  "Create a LysKOM name alias. If NAME is defined, then
+lyskom-NAME will be an alias to it. Otherwise, lyskom-NAME
+will be defined to be a macro with ARGS and BODY."
+  (let ((alias-name (intern (concat "lyskom-" (symbol-name name)))))
+    `(eval-and-compile
+       (if (fboundp ',name)
+           (defalias ',alias-name ',name)
+         (setq lyskom-compatibility-definitions
+               (cons ',name lyskom-compatibility-definitions))
+         (defmacro ,alias-name ,args ,@body)))))
+
+(defmacro lyskom-function-alias (name args &rest body)
+  "Create a LysKOM name alias. If NAME is defined, then
+lyskom-NAME will be an alias to it. Otherwise, lyskom-NAME
+will be defined to be a function with ARGS and BODY."
+  (let ((alias-name (intern (concat "lyskom-" (symbol-name name)))))
+    `(eval-and-compile
+       (if (fboundp ',name)
+           (defalias ',alias-name ',name)
+         (setq lyskom-compatibility-definitions
+               (cons ',name lyskom-compatibility-definitions))
+         (defun ,alias-name ,args ,@body)))))
+
+(defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
+  "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
+  (if (string-match "XEmacs" (emacs-version))
+      xemacs-form
+    gnu-form))
+)
 
 
-;;; ============================================================
-;;; lyskom-xemacs-or-gnu
-;;;
+
+;;; ======================================================================
+;;; Various definitions
+
+
+;; Lots of Emacsen have buggy definitions of kbd (or no definition at
+;; all) Although it's crufty to redefine a function from subr.el, I
+;; will do so if it appears to be misbehaving. Don't like it? Tough!
 
 (eval-and-compile
-  (defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
-    "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
-    (if (string-match "XEmacs" (emacs-version))
-        xemacs-form
-      gnu-form)))
-
-(put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
-
-
-
-;;; ======================================================================
-;;; Defining keys
-;;;
-;;; Lots of Emacsen have buggy definitions of kbd (or no definition at all)
-;;; Although it's crufty to redefine a function from subr.el, I will do so
-;;; if it appears to be misbehaving. Don't like it? Tough!
-;;;
-
-(lyskom-compatibility-definition
-    (condition-case nil
-        (or (equal (kbd (identity "<down-mouse-2>"))
-                   [down-mouse-2])
-            (error "Bad definition of kbd"))
-      (error nil))
-
-    (defmacro kbd (keys)
-      "Convert KEYS to the internal Emacs key representation.
+  (and (condition-case nil
+           (or (equal (kbd (identity "<down-mouse-2>"))
+                      [down-mouse-2])
+               (error "Bad definition of kbd"))
+         (error t))
+       (progn (fmakunbound 'kbd)
+              (lyskom-provide-macro kbd (keys)
+                "Convert KEYS to the internal Emacs key representation.
 KEYS should be a string in the format used for saving keyboard macros
 \(see `insert-kbd-macro')."
-      (if (or (stringp keys)
-              (vectorp keys))
-          (read-kbd-macro keys)
-        `(read-kbd-macro ,keys))))
+                (if (or (stringp keys)
+                        (vectorp keys))
+                    (read-kbd-macro keys)
+                  `(read-kbd-macro ,keys))))))
 
 
-;;; ======================================================================
-;;; ======================================================================
-;;; ======================================================================
+;; Functions mostly from XEmacs that we use
 
-;;;
+(lyskom-macro-alias compiled-function-p (arg) `(byte-code-function-p ,arg))
+(lyskom-function-alias characterp (obj) (integerp obj))
+(lyskom-function-alias int-to-char (obj) obj)
+(lyskom-function-alias char-to-int (c) c)
+(lyskom-function-alias signum (num) (cond ((< num 0) -1)
+                                          ((> num 0) 1)
+                                          (t 0)))
 
+;; If we use lyskom-function-alias here we'll get an obsolecense
+;; warning about screen-width. This way the compiler won't notice :-)
 
-(lyskom-provide-macro char-before (&optional pos buffer)
-  `(save-excursion
-     (save-restriction 
-       (widen)
-       ,@(if buffer `((set-buffer ,buffer)))
-       ,(if pos 
-	    `(if (or (> ,pos (point-max))
-		     (<= ,pos (point-min)))
-		 nil
-	       (goto-char ,pos)
-	       (preceding-char))
-	   `(if (<= (point) (point-min))
-		nil
-	      (preceding-char))))))
-		       
+(if (fboundp 'frame-width)
+    (defalias 'lyskom-frame-width 'frame-width)
+  (fset 'lyskom-frame-width 'screen-width))
 
-(lyskom-provide-function characterp (obj)
-  (integerp obj))
+;; Some minibuffer compatibility stuff
 
-(lyskom-provide-function int-to-char (obj)
-  obj)
+(lyskom-with-external-functions (temp-minibuffer-message)
+  (lyskom-function-alias minibuffer-contents () (buffer-string))
+  (lyskom-function-alias minibuffer-message (message) 
+    (temp-minibuffer-message message)))
 
-(lyskom-compatibility-forms (fboundp 'frame-width)
-    (fset 'frame-width 'screen-width))
+;; Definition of map-keymap that hopefully works like the one in XEmacs
+;; except that the sort-first argument is ignored.
 
-(lyskom-provide-function signum (num)
-  (cond ((< num 0) -1)
-        ((> num 0) 1)
-        (t 0)))
-
-
-;;; ======================================================================
-;;; Definition of map-keymap that hopefully works like the one in XEmacs
-;;; except that the sort-first argument is ignored.
-;;;
-
-(lyskom-provide-function map-keymap (fn keymap &optional sort-first)
+(lyskom-function-alias map-keymap (fn keymap &optional sort-first)
   (let ((r 0))
     (cond ((vectorp keymap)
            (while (< r (length keymap))
@@ -213,12 +161,18 @@ KEYS should be a string in the format used for saving keyboard macros
                      (cdr keymap))))))
 
 
-(lyskom-provide-function set-keymap-parent (keymap new-parent)
-   (let ((tail keymap))
-     (while (and tail (cdr tail) (not (eq (car (cdr tail)) 'keymap)))
-       (setq tail (cdr tail)))
-     (if tail
-         (setcdr tail new-parent))))
+;; set-keymap-parent also comes from XEmacs
+
+(lyskom-function-alias set-keymap-parent (keymap new-parent)
+  (let ((tail keymap))
+    (while (and tail (cdr tail) (not (eq (car (cdr tail)) 'keymap)))
+      (setq tail (cdr tail)))
+    (if tail
+        (setcdr tail new-parent))))
+
+
+;; XEmacs and Gnu Emacs don't use the same names for mouse events
+;; and such. This is to help us deal with that.
 
 (defconst lyskom-gnu-keysym
   '((button1   . "<down-mouse-1>")
@@ -226,16 +180,7 @@ KEYS should be a string in the format used for saving keyboard macros
     (button3   . "<down-mouse-3>")
     (button1up . "<mouse-1>")
     (button2up . "<mouse-2>")
-    (button3up . "<mouse-3>")
-    (å	       . [229])
-    (Å	       . [197])
-    (C-å       . [(control 229)])
-    (C-Å       . [(control 197)])
-    (ä	       . [228])
-    (Ä	       . [196])
-    (ö	       . [246])
-    (Ö	       . [214])
-))
+    (button3up . "<mouse-3>")))
 
 (defconst lyskom-xemacs-keysym
   '((button1   . "<button1>")
@@ -243,16 +188,7 @@ KEYS should be a string in the format used for saving keyboard macros
     (button3   . "<button3>")
     (button1up . "<button1up>")
     (button2up . "<button2up>")
-    (button3up . "<button3up>")
-    (C-å       . [(control aring)])
-    (C-Å       . [(control Aring)])
-    (å	       . [aring])
-    (Å	       . [Aring])
-    (ä	       . [adiaeresis])
-    (Ä	       . [Adiaeresis])
-    (ö	       . [odiaeresis])
-    (Ö	       . [Odiaeresis])
-))
+    (button3up . "<button3up>")))
 
 
 (defun lyskom-keys (sym)
@@ -261,96 +197,57 @@ KEYS should be a string in the format used for saving keyboard macros
                                        lyskom-gnu-keysym))))
 
 
+
 ;;; ============================================================
-;;; Text property and extents stuff
+;;; MULE stuff
 ;;;
-
-(lyskom-provide-function map-extents (&rest args))
-
-(lyskom-provide-function next-text-property-bounds 
-    (count pos prop &optional object)
-  "Return the COUNTth bounded property region of property PROP after POS.
-If COUNT is less than zero, search backwards.  This returns a cons
-\(START . END) of the COUNTth maximal region of text that begins after POS
-\(starts before POS) and has a non-nil value for PROP.  If there aren't
-that many regions, nil is returned.  OBJECT specifies the buffer or
-string to search in."
-  (or object (setq object (current-buffer)))
-  (let ((begin (if (stringp object) 0 (point-min)))
-	(end (if (stringp object) (length object) (point-max))))
-    (catch 'hit-end
-      (if (> count 0)
-	  (progn
-	    (while (> count 0)
-	      (if (>= pos end)
-		  (throw 'hit-end nil)
-		(and (get-char-property pos prop object)
-		     (setq pos (next-single-property-change pos prop
-							    object end)))
-		(setq pos (next-single-property-change pos prop object end)))
-	      (setq count (1- count)))
-	    (and (< pos end)
-		 (cons pos (next-single-property-change pos prop object end))))
-	(while (< count 0)
-	  (if (<= pos begin)
-	      (throw 'hit-end nil)
-	    (and (get-char-property (1- pos) prop object)
-		 (setq pos (previous-single-property-change pos prop
-							    object begin)))
-	    (setq pos (previous-single-property-change pos prop object
-						       begin)))
-	  (setq count (1+ count)))
-	(and (> pos begin)
-	     (cons (previous-single-property-change pos prop object begin)
-		   pos))))))
-
-
-;;; ============================================================
-;;; Basic stuff
-
-(lyskom-provide-function char-to-int (c) c)
+;;; We used to define dummy versions of basic MULE functions so
+;;; we could code using the standard names. We don't do that any
+;;; more. Instead, we define aliases in our own namespace.
 
 (defvar enable-multibyte-characters nil)
-(lyskom-provide-function set-buffer-multibyte (arg)
+(lyskom-function-alias set-buffer-multibyte (arg)
   (put 'enable-multibyte-characters 'permanent-local t)
   (make-local-variable 'enable-multibyte-characters)
   (setq enable-multibyte-characters arg))
 
-(lyskom-provide-function set-process-coding-system (proc &optional encoding decoding)
-  ) 
+(lyskom-function-alias set-process-coding-system (proc &optional encoding decoding)) 
+(lyskom-function-alias encode-coding-string (str coding-system) (copy-sequence str))
+(lyskom-function-alias decode-coding-string (str coding-system) (copy-sequence str))
+(lyskom-function-alias string-bytes (str) (length str))
+(lyskom-function-alias check-coding-system (name) (error "No such coding system"))
+(lyskom-function-alias find-coding-systems-for-charsets (cs) nil)
+(lyskom-function-alias coding-system-get (cs prop) nil)
+(lyskom-function-alias char-width (c) 1)
+(lyskom-function-alias find-charset-string (str) '(ascii))
+(lyskom-function-alias string-as-unibyte (str) str)
+(lyskom-function-alias string-make-unibyte (str) str)
+(lyskom-function-alias string-make-multibyte (str) str)
+(lyskom-function-alias multibyte-string-p (str) nil)
+(lyskom-function-alias charsetp (arg) nil)
+(lyskom-function-alias coding-system-type (arg) nil)
+(lyskom-function-alias coding-system-property (arg sym) (lyskom-coding-system-get arg sym))
+(lyskom-function-alias split-string (string &optional separators)
+  (string-split (or separators "[ \f\t\n\r\v]+") string))
 
-(lyskom-provide-function encode-coding-string (str coding-system) (copy-sequence str))
-(lyskom-provide-function decode-coding-string (str coding-system) (copy-sequence str))
-(lyskom-provide-function string-bytes (str) (length str))
-(lyskom-provide-function check-coding-system (name) (error "No such coding system"))
-(lyskom-provide-function find-coding-systems-for-charsets (cs) nil)
-(lyskom-provide-function coding-system-get (cs prop) nil)
-(lyskom-provide-function string-width (str) (length str))
-(lyskom-provide-function char-width (c) 1)
-(lyskom-provide-function find-charset-string (str) '(ascii))
-(lyskom-provide-function string-as-unibyte (str) str)
-(lyskom-provide-function string-make-unibyte (str) str)
-(lyskom-provide-function string-make-multibyte (str) str)
-(lyskom-provide-function multibyte-string-p (str) nil)
-
-
-;;; Detect buggy versions of encode-coding-string and decode-coding-string
-;;; such as those provided by APEL (part of TM and often included in XEmacs)
+;; Detect buggy versions of encode-coding-string and
+;; decode-coding-string such as those provided by APEL (part of TM and
+;; often included in XEmacs)
 
 (defun lyskom-buggy-encode-coding-string (str coding-system) str)
 (eval-and-compile
-  (if (let ((test "TEM")) (eq (encode-coding-string test 'raw-text) test))
+  (if (let ((test "TEM")) (eq (lyskom-encode-coding-string test 'raw-text) test))
       (progn (fset 'lyskom-buggy-encode-coding-string
-                   (symbol-function 'encode-coding-string))
-             (defun encode-coding-string (str coding-system)
+                   (symbol-function 'lyskom-encode-coding-string))
+             (defun lyskom-encode-coding-string (str coding-system)
                (copy-sequence (lyskom-buggy-encode-coding-string str coding-system))))))
 
 (defun lyskom-buggy-decode-coding-string (str coding-system) str)
 (eval-and-compile
-  (if (let ((test "TEM")) (eq (decode-coding-string test 'raw-text) test))
+  (if (let ((test "TEM")) (eq (lyskom-decode-coding-string test 'raw-text) test))
       (progn (fset 'lyskom-buggy-decode-coding-string
-                   (symbol-function 'decode-coding-string))
-             (defun decode-coding-string (str coding-system)
+                   (symbol-function 'lyskom-decode-coding-string))
+             (defun lyskom-decode-coding-string (str coding-system)
                (copy-sequence (lyskom-buggy-decode-coding-string str coding-system))))))
 
 
@@ -371,30 +268,117 @@ string to search in."
         (t (defmacro lyskom-encode-coding-char (c system) c))))
 
 
+;; It seems that string-width is buggy with respect to handling
+;; unibyte strings in multibyte environments or vice versa. Or
+;; something like that. There has got to be a good explanation
+;; for the mess below.
+
 (eval-and-compile
+  (if (fboundp 'string-width)
+      (defalias 'lyskom-original-string-width 'string-width)
+    (defmacro lyskom-original-string-width (s) `(length ,s)))
   (lyskom-xemacs-or-gnu
-   (fset 'lyskom-string-width (symbol-function 'string-width))
+   (defalias 'lyskom-string-width 'string-width)
    (defun lyskom-string-width (str)
-     (cond ((and (multibyte-string-p str)
+     (cond ((and (lyskom-multibyte-string-p str)
                  (null enable-multibyte-characters))
-            (string-width (string-make-unibyte str)))
-           ((and (null (multibyte-string-p str))
+            (lyskom-original-string-width (lyskom-string-make-unibyte str)))
+           ((and (null (lyskom-multibyte-string-p str))
                  enable-multibyte-characters)
-            (string-width (string-make-multibyte str)))
-           (t (string-width str))))))
+            (lyskom-original-string-width (lyskom-string-make-multibyte str)))
+           (t (lyskom-original-string-width str))))))
 
 
-(if (fboundp 'minibuffer-contents)
-    (defalias 'lyskom-minibuffer-contents 'minibuffer-contents)
-  (defalias 'lyskom-minibuffer-contents 'buffer-string))
+;;; ================================================================
+;;; Faces and windows and stuff
 
-(lyskom-external-function temp-minibuffer-message)
-(lyskom-provide-function minibuffer-message (message)
-  (temp-minibuffer-message message))
+(lyskom-function-alias frame-property (frame property &optional default)
+  (or (cdr (assq property (frame-parameters frame))) default))
+(lyskom-function-alias face-background (face) nil)
+(lyskom-function-alias face-foreground (face) nil)
+(lyskom-function-alias find-face (face) (and (facep face) face))
+
+(defun lyskom-make-face (name temporary)
+  "Like make-face in XEmacs"
+  (lyskom-xemacs-or-gnu (make-face name nil temporary)
+                        (make-face name)))
+
+(if (not (lyskom-find-face 'strikethrough))
+    (progn (make-face 'strikethrough)
+           (if (eval-when-compile (fboundp 'set-face-strikethrough-p))
+               (set-face-strikethru-p 'strikethrough t)
+             (set-face-underline-p 'strikethrough t))))
+
+
+(defun lyskom-get-buffer-window-list (buffer &optional minibuf frame)
+  "Return windows currently displaying BUFFER, or nil if none.
+See `walk-windows' for the meaning of MINIBUF and FRAME."
+  (let ((buffer (if (bufferp buffer) buffer (get-buffer buffer))) windows)
+    (walk-windows (function (lambda (window)
+			      (if (eq (window-buffer window) buffer)
+				  (setq windows (cons window windows)))))
+		  minibuf frame)
+    windows))
+
+
+;;; ================================================================
+;;; Color stuff
+
+(lyskom-with-external-functions (color-rgb-components
+                                 make-specifier
+                                 set-specifier)
+  (eval-and-compile
+    (cond ((and (fboundp 'color-rgb-components)
+                (fboundp 'make-specifier)
+                (fboundp 'set-specifier))
+           (defun lyskom-color-values (color)
+             (when (stringp color)
+               (let ((spec nil))
+                 (set-specifier (setq spec (make-specifier 'color)) color)
+                 (setq color spec)))
+             (color-rgb-components color)))
+          ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
+          ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values)))))
 
 
 
+;;; ======================================================================
+;;; Event stuff
 
+(lyskom-with-external-functions (event-start)
+  (lyskom-function-alias event-glyph (e))
+  (lyskom-function-alias event-point (e)
+    "Return the character position of the given mouse event.
+If the event did not occur over a window, or did not occur over text,
+then this returns nil.  Otherwise, it returns an index into the buffer
+visible in the event's window."
+    (car (cdr (event-start e))))
+
+  (lyskom-function-alias event-closest-point (e)
+    "Return the character position closest to the mouse event EVENT."
+    (car (cdr (event-start e)))))
+
+
+;;; ======================================================================
+;;; Platform-specific stuff
+
+(lyskom-provide-function w32-shell-execute (&rest args)
+  "Dummy function that raises an error."
+  (error "w32-shell-execute undefined"))
+
+
+
+;;; ================================================================
+;;; We provide these functions in the default namespace since there is
+;;; no reason to beleive that (a) the definitions suck (they're taken
+;;; from either XEmacs or Gnu Emacs) and (b) no package should be
+;;; using them to figure out what environment it is running in
+;;; (unlike, say, the MULE functions).
+;;;
+;;; There are also a few functions (regexpp and functionp) that may
+;;; appear in some version of Emacs, and if they do we accept those
+;;; definitions.
+;;;
 
 (lyskom-provide-function last (x &optional n)
   "Returns the last link in the list LIST.
@@ -447,65 +431,8 @@ If DIR-FLAG is non-nil, create a new empty directory instead of a file."
       nil)
     file))
 
-
-;;; ================================================================
-;;; Faces
-
-(lyskom-provide-function reset-face (face &optional locale tag-set exact-p)
-  )
-
-(lyskom-provide-function lyskom-face-background-name (face)
-  (face-background face))
-
-(lyskom-provide-function lyskom-face-foreground-name (face)
-  (face-foreground face))
-
-
-(lyskom-provide-function find-face (face)
-  (and (facep face) face))
-
-(defun lyskom-make-face (name temporary)
-  "Like make-face in XEmacs"
-  (lyskom-xemacs-or-gnu (make-face name nil temporary)
-                        (make-face name)))
-
-(if (not (find-face 'strikethrough))
-    (progn (make-face 'strikethrough)
-           (if (eval-when-compile (fboundp 'set-face-strikethrough-p))
-               (set-face-strikethru-p 'strikethrough t)
-             (set-face-underline-p 'strikethrough t))))
-
-
-;;; ======================================================================
-;;; Event stuff
-
-(lyskom-external-function event-start)
-(lyskom-provide-function event-point (e)
-  "Return the character position of the given mouse event.
-If the event did not occur over a window, or did not occur over text,
-then this returns nil.  Otherwise, it returns an index into the buffer
-visible in the event's window."
-  (car (cdr (event-start e))))
-
-(lyskom-provide-function event-closest-point (e)
-  "Return the character position closest to the mouse event EVENT."
-  (car (cdr (event-start e))))
-
-(lyskom-provide-function event-glyph (e))
-
-
-(defun lyskom-get-buffer-window-list (buffer &optional minibuf frame)
-  "Return windows currently displaying BUFFER, or nil if none.
-See `walk-windows' for the meaning of MINIBUF and FRAME."
-  (let ((buffer (if (bufferp buffer) buffer (get-buffer buffer))) windows)
-    (walk-windows (function (lambda (window)
-			      (if (eq (window-buffer window) buffer)
-				  (setq windows (cons window windows)))))
-		  minibuf frame)
-    windows))
-
-(lyskom-provide-function 
- replace-in-string (str regexp newtext &optional literal)
+(lyskom-provide-function replace-in-string
+    (str regexp newtext &optional literal)
   "Replaces all matches in STR for REGEXP with NEWTEXT string.
 Optional LITERAL non-nil means do a literal replacement.
 Otherwise treat \\ in NEWTEXT string as special:
@@ -562,34 +489,58 @@ Otherwise treat \\ in NEWTEXT string as special:
   (and (bufferp object)
        (buffer-name object)))
 
+(lyskom-provide-function string-to-vector (string)
+  "Return a vector of characters in STRING."
+  (let ((len (length string)) (i 0) val)
+    (setq val (make-vector len 0))
+    (while (< i len)
+      (aset val i (aref string i))
+      (setq i (1+ i)))))
+
+(lyskom-provide-function copy-tree (l)
+  "Recursively copy the list L"
+  (cond ((atom l) l)
+        (t (cons (copy-tree (car l))
+                 (copy-tree (cdr l))))))
+
+(lyskom-provide-function functionp (obj)
+  "Returns t if OBJ is a function, nil otherwise."
+  (cond ((symbolp obj) (fboundp obj))
+        ((subrp obj))
+        ((lyskom-compiled-function-p obj))
+        ((consp obj) (and (eq (car obj) 'lambda) (listp (car (cdr obj)))))
+        (t nil)))
+
+(lyskom-provide-function regexpp (re)
+  "Return non-nil if RE looks like a valid regexp."
+  (let ((result t))
+    (save-match-data
+      (condition-case nil
+          (string-match re "")
+        (error (setq result nil))))
+    result))
+
+(lyskom-macro-alias char-before (&optional pos buffer)
+  `(save-excursion
+     (save-restriction 
+       (widen)
+       ,@(if buffer `((set-buffer ,buffer)))
+       ,(if pos 
+	    `(if (or (> ,pos (point-max))
+		     (<= ,pos (point-min)))
+		 nil
+	       (goto-char ,pos)
+	       (preceding-char))
+	   `(if (<= (point) (point-min))
+		nil
+	      (preceding-char))))))
+
+
+
 ;;; ================================================================
-;;; Color stuff
-
-(lyskom-external-function set-specifier)
-(lyskom-external-function make-specifier)
-(lyskom-external-function color-rgb-components)
-
-(lyskom-compatibility-definition (not (and (fboundp 'color-rgb-components) 
-                                           (fboundp 'make-specifier)))
-    (defun lyskom-color-values (color)
-      (when (stringp color)
-        (let ((spec nil))
-          (set-specifier (setq spec (make-specifier 'color)) color)
-          (setq color spec)))
-      (color-rgb-components color)))
-
-(eval-and-compile
-  (cond ((fboundp 'lyskom-color-values) nil)
-        ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
-        ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values))))
-
-
-;;; ======================================================================
-;;; Platform-specific stuff
-
-(lyskom-provide-function w32-shell-execute (&rest args)
-  "Dummy function that raises an error."
-  (error "w32-shell-execute undefined"))
+;;; Some symbols are self-evaluating. They're not in all versions
+;;; of Emacs that we would like to support. So we make them
+;;; self-evaluating here.
 
 ;; This code looks the way it does in order to avoid warnings in
 ;; Emacs 21.
@@ -602,16 +553,32 @@ Otherwise treat \\ in NEWTEXT string as special:
        (error (set ',var ',var))))
 
   (lyskom-make-self-evaluating :default)
+  (lyskom-make-self-evaluating :mime-charset)
   (lyskom-make-self-evaluating :default-help-echo)
   (lyskom-make-self-evaluating :group)
   (lyskom-make-self-evaluating :automatic)
   (lyskom-make-self-evaluating :read-only))
 
 
+;;; ================================================================
+;;; ================================================================
+;;; ================================================================
+
+
+;;; Set up edebug-form-spec and friends. We do this here because
+;;; we have to have the eval block at the end, and this at least
+;;; keeps everything together (it would have been nicer to put
+;;; an eval block with each definition, but I don't think that
+;;; would look good, and it might not always work).
+
+(put 'lyskom-provide-function 'lisp-indent-hook 2)
+(put 'lyskom-function-alias 'lisp-indent-hook 2)
+(put 'lyskom-macro-alias 'lisp-indent-hook 2)
+(put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
+
 ;;; Local Variables:
-;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)
 ;;; eval: (put 'lyskom-provide-function 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-provide-subst 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-compatibility-forms 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-compatibility-definition 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-function-alias 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-macro-alias 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
 ;;; end:

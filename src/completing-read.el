@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.45 2003-08-15 18:24:18 byers Exp $
+;;;;; $Id: completing-read.el,v 44.46 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.45 2003-08-15 18:24:18 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.46 2003-08-16 16:58:45 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -110,7 +110,7 @@ but first checks a cache."
 (defvar lyskom-minibuffer-local-must-match-map
   (let ((map (copy-keymap minibuffer-local-must-match-map)))
     (lyskom-xemacs-or-gnu 
-     (set-keymap-parent map lyskom-minibuffer-local-completion-map)
+     (lyskom-set-keymap-parent map lyskom-minibuffer-local-completion-map)
      (define-key map " " nil))
     map)
   "Keymap used for reading LysKOM names.")
@@ -665,7 +665,7 @@ function work as a name-to-conf-stat translator."
 ;;;   (save-excursion
 ;;;     (pop-to-buffer (get-buffer-create "*kom*-complete"))
 ;;;     (erase-buffer)
-;;;     (set-buffer-multibyte nil)
+;;;     (lyskom-set-buffer-multibyte nil)
 ;;;    (while data
 ;;;       (insert
 ;;;        (format "%s\n" (substring (aref (car data) 2)
@@ -1038,7 +1038,7 @@ the LysKOM rules of string matching."
   (lyskom-insert "\n")
   (let* ((s-width (1+ (apply 'max (mapcar (function
 					   (lambda (x)
-					     (string-width (int-to-string x))))
+					     (lyskom-string-width (int-to-string x))))
 					  sessions))))
 	 (format-string-s (lyskom-info-line-format-string s-width "s" "s"))
 	 (format-string-p (lyskom-info-line-format-string s-width "P" "M")))
