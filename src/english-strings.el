@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.213 2002-06-06 22:39:13 byers Exp $
+;;;;; $Id: english-strings.el,v 44.214 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.213 2002-06-06 22:39:13 byers Exp $"))
+              "$Id: english-strings.el,v 44.214 2002-06-09 21:47:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1733,11 +1733,14 @@ Number of sessions:  %21#1d (total)
     (external-program-missing . "Can't find the external program \"%#1s\", that was required for this command.")
     (ignored-user-area-var . "\
 
-Ignoring variable %#1s i in your settings.
-The variable is not a registered LysKOM variable and cannot be read
-from the server. If the variable corresponds to a setting that has
-been removed, you can fix the problem by giving the command \"Save
-variables\".\n\n")
+Ignoring the following variables in your settings:
+
+    %#1s
+
+These variables are not registered as LysKOM variables and cannot be
+read from the server. If the variables corresponds to settings that
+have been removed, you can fix the problem by giving the command
+\"Save variables\".\n\n")
     ))
 
 
@@ -3045,8 +3048,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
 
-    (kom-presence-messages-doc . "\
-  If you want messages in the minibuffer when somebody logs in, logs out or
+    (kom-presence-messages-in-echo-area-doc . "\
+  If you want messages in the echo area when somebody logs in, logs out or
   changes name, turn this setting on. Messages are shown in the minibuffer.
   If you want messages about a limited number of users, specify which ones.
   To not get any messages at all, just specify an empty list.")
@@ -3577,8 +3580,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-deferred-printing-tag . "Delayed display:")
     (kom-continuous-scrolling-tag . "Continuous scrolling:")
 
-    (kom-presence-messages-tag . 
-"Presence messages on or off:           ")
+    (kom-presence-messages-in-echo-area-tag . 
+"Presence messages in echo area:        ")
     (kom-presence-messages-in-buffer-tag .
 "Presence messages in the LysKOM buffer:")
     (kom-page-before-command-tag . "Clear the screen:")

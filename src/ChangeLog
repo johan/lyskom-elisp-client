@@ -1,3 +1,29 @@
+2002-06-09  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 583:
+	* flags.el (lyskom-read-options-eval): New variable
+	lyskom-ignored-user-area-vars.
+	(lyskom-maybe-set-var-from-string): Use it. Removed comment from
+	one of the validity checks.
+
+	Applied patch from Per Starbäck (bug 582):
+	* vars.el.in (kom-presence-messages-in-echo-area): Ny variabel.
+	Den gamla, kom-presence-messages, finns kvar men används inte.
+
+	* async.el (lyskom-parse-async): Changed kom-presence-messages to
+	kom-presence-messages-in-echo-area.
+	(lyskom-show-logged-in-person): Same.
+	(lyskom-show-logged-out-person): Same.
+	(lyskom-show-changed-person): Same.
+
+2002-06-08  David Byers  <david.byers@swipnet.se>
+
+	* mime.el (lyskom-charset-alist): Added iso-8859-15 to
+	lyskom-charset-alist. This will eliminate problems where
+	iso-8859-15 was encoded as latin-1 and Emacs brain-dead recoding
+	would use escape sequences for characters that existed in both
+	charsets.
+
 2002-06-07  David Byers  <david.byers@swipnet.se>
 
 	* help-sv.xml: New file, renamed from help.sv.
