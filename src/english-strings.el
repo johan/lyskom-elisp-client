@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.79 2000-03-11 15:11:05 byers Exp $
+;;;;; $Id: english-strings.el,v 44.80 2000-03-15 15:45:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.79 2000-03-11 15:11:05 byers Exp $"))
+              "$Id: english-strings.el,v 44.80 2000-03-15 15:45:06 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1357,6 +1357,10 @@ You must become an active member of the conference to enter it.\n")
     (invitation-mt-type . "invited")
     (passive-mt-type . "passive")
     (secret-mt-type . "secret")
+
+    (Invitation-mt-type . "Invited")
+    (Passive-mt-type . "Passive")
+    (Secret-mt-type . "Secret")
 
     (not-author-try-anyway-p . "You are not the author of the text. Try anyway? ")
     (what-no-comments-no . "Which text do you want to prevent comments to: ")

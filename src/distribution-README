@@ -38,14 +38,15 @@
     Please mail change requests to kom@lysator.liu.se
 
 
+
 1.  What do I need
 
     You need an Emacs. The client appears to work with the following
     versions of Emacs:
 
-    * XEmacs version 20.2 and 21.2
+    * XEmacs version 21.1 and 21.2
     * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.3 and 20.4
+    * Gnu Emacs version 20.3 and newer
 
     [1] You'll have to replace the included custom package, and if you 
         use Gnus, you may have to update that as well.
@@ -69,7 +70,7 @@
     load path. This file redefines a function that the client relies
     heavly on. The redefinition is buggy. You can recognize this
     problem if your Emacs says something like this: "Key sequence < m
-    o u s e - 2 > uses invalid prefix characters"
+    o u s e - 2 > uses invalid prefix characters".
 
 
 
@@ -84,10 +85,21 @@
     is available from <URL:http://www.cs.indiana.edu/elisp/w3/w3.html>
     
     The latest version of calc, when writing this, is available at
-    <URL:ftp://prep.ai.mit.edu/pub/gnu/calc-2.02f.tar.gz>
+    <URL:ftp://ftp.gnu.org/pub/gnu/calc/calc-2.02f.tar.gz>
 
 
-3.  Installation from the tar archive
+3.  Installation
+
+    There are two ways to install the client. You can assemble,
+    compile and install it from a tar file, or from a single emacs
+    lisp file. 
+
+    If you are using a Unix system (or something sufficiently
+    similar), try installing from the tar file. If you are using
+    Microsoft Windows, install using the single file.
+
+
+3.1 Installation from the tar file
 
     Edit the Makefile in the distribution to reflect your environment. 
     You can change the following variables:
@@ -141,7 +153,7 @@
 
 
 
-4.  Installation from a single .el file
+3.2.  Installation from a single .el file
 
     If you have received the client as a single file named
     lyskom-0.46.el or something similar, first rename the file to
@@ -157,7 +169,7 @@
 
 
 
-5.  Reporting Bugs
+4.  Reporting Bugs
 
     Please report bugs to bug-lyskom@lysator.liu.se. Please give us the 
     following information (at least):

@@ -1,3 +1,16 @@
+2000-03-15  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-format-mx-author): Make mx-from clickable.
+
+	* lyskom-buttons.el (lyskom-default-button): URLs and e-mail get
+	kom-url-face.
+
+	* commands2.el (kom-review-mail-headers): Transform text headers
+	as an external text.
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Don't add
+	text, conf or pers buttons when transforming an external text.
+
 2000-03-11  David Byers  <davby@ida.liu.se>
 
 	* menus.el (lyskom-define-menu-xemacs): Encode menu item strings

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.35 1999-12-05 22:42:10 byers Exp $
+;;;;; $Id: view-text.el,v 44.36 2000-03-15 15:45:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.35 1999-12-05 22:42:10 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.36 2000-03-15 15:45:11 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -1054,7 +1054,12 @@ Args: TEXT-STAT of the text being read."
       (setq author (lyskom-get-string 'email-name-prefix))
       (when mx-author (setq author (concat author (aux-item->data mx-author))))
       (when (and mx-from mx-author) (setq author (concat author " ")))
-      (when mx-from (setq author (concat author "<" (aux-item->data mx-from) ">")))
+      (when mx-from
+        (setq author (concat author
+                      (lyskom-format 
+                       "<%[%#1@%#2s%]>"
+                       (lyskom-default-button 'email (aux-item->data mx-from))
+                       (aux-item->data mx-from)))))
       (setq author (concat (lyskom-get-string 'email-name-suffix) author))
       )
     author))
