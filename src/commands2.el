@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.46 1999-10-09 16:13:19 byers Exp $
+;;;;; $Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.46 1999-10-09 16:13:19 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -263,6 +263,13 @@ otherwise: the conference is read with lyskom-completing-read."
         (lyskom-traverse-aux item
             (conf-stat->aux-items conf-stat)
           (lyskom-aux-item-definition-call item 'status-print item conf-stat))
+
+        (let ((mship (lyskom-try-get-membership (conf-stat->conf-no conf-stat) t)))
+          (when mship
+            (lyskom-format-insert 'conf-mship-priority
+                                  (membership->priority mship)
+                                  (lyskom-return-membership-type
+                                   (membership->type mship)))))
 
         ;; Show all members of CONF-STAT if the user so wishes."
         (lyskom-scroll)
@@ -887,11 +894,13 @@ on one line."
 	    ;; We really don't need the whole text.
 	    )
 	(lyskom-print-summary-line text-stat text text-no 
-				   (time->year time) (time->yday time))
+				   (time->year time)
+                                   (time->mon time)
+                                   (time->mday time))
 	(sit-for 0)))))
 
 
-(defun lyskom-print-summary-line (text-stat text text-no year day)
+(defun lyskom-print-summary-line (text-stat text text-no year mon mday)
   "Handle the info, fetch the author and print it.
 Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
 The year and day is there to be able to choose format on the day.
@@ -902,11 +911,16 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   (txt (text->text-mass text))
 	   (eos (string-match (regexp-quote "\n") txt))
 	   (subject (substring txt 0 eos))
+           (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
+           (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
+           (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
 	   ;; length of the number %%%%%% :8
 	   ;; length for time is: 6
-	   (time (text-stat->creation-time text-stat))
+           (time (or (lyskom-mx-date-to-time mx-date)
+                     (text-stat->creation-time text-stat)))
 	   (time (if (and (= year (time->year time))
-			  (= day (time->yday time)))
+			  (= mon (time->mon time))
+                          (= mday (time->mday time)))
 		     (format "%02d:%02d" (time->hour time)
 			     		 (time->min time))
 		   (format "%02d-%02d" (1+ (time->mon time))
@@ -924,7 +938,9 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    text-no
 			    time
 			    lines
-			    (text-stat->author text-stat)
+                            (if mx-from
+                                (lyskom-format-mx-author mx-from mx-author)
+                              (text-stat->author text-stat))
 			    (lyskom-default-button 'text
 						   text-no)
 			    subject))))

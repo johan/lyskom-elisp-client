@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.26 1999-10-11 13:01:24 byers Exp $
+;;;;; $Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.26 1999-10-11 13:01:24 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -105,32 +105,15 @@ Note that this function must not be called asynchronously."
                      ;; Insert date
 
                      (if mx-date
-                         (if (and 
-                              (condition-case nil
-                                  (progn (require 'calendar)
-                                         (require 'cal-iso)
-                                         t)
-                                nil)
-                              (string-match "\\([0-9][0-9][0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\) \\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\) \\([-+][0-9][0-9]\\)?\\([0-9][0-9]\\)?"
-                                           (aux-item->data mx-date)))
-                              (let* ((secs (string-to-number (match-string 6 (aux-item->data mx-date))))
-                                     (mins (string-to-number (match-string 5 (aux-item->data mx-date))))
-                                     (hour (string-to-number (match-string 4 (aux-item->data mx-date))))
-                                     (mday (string-to-number (match-string 3 (aux-item->data mx-date))))
-                                     (mon  (string-to-number (match-string 2 (aux-item->data mx-date))))
-                                     (year (string-to-number (match-string 1 (aux-item->data mx-date))))
-                                     (tzhr (match-string 7 (aux-item->data mx-date)))
-                                     (tzmin (or (match-string 8 (aux-item->data mx-date)) ""))
-                                     (wday (elt 
-                                            (calendar-iso-from-absolute
-                                             (calendar-absolute-from-gregorian
-                                              (list mon mday year)))
-                                            1)))
-                             (lyskom-print-date-and-time
-                              (lyskom-create-time secs mins hour mday mon (- year 1900) wday 0 nil))
-                             (when tzhr 
-                               (lyskom-format-insert " %#1s%#2s " tzhr tzmin)))
-                           (lyskom-format-insert (aux-item->data mx-date)))
+                         (let ((date (lyskom-mx-date-to-time mx-date)))
+                           (if date
+                             (progn
+                               (lyskom-print-date-and-time date)
+                               (when (time->tzhr date)
+                                 (lyskom-format-insert " %#1s%#2s " 
+                                                       (time->tzhr date)
+                                                       (time->tzmin date))))
+                             (lyskom-format-insert (aux-item->data mx-date))))
                        (lyskom-print-date-and-time (text-stat->creation-time
                                                     text-stat)
                                                    'time-y-m-d-h-m))
@@ -1018,7 +1001,31 @@ Args: TEXT-STAT of the text being read."
       )
     author))
     
-
+(defun lyskom-mx-date-to-time (mx-date)
+ "Attempt to convert MX-DATE to a lyskom time structure.
+Returns the time structure if successful, otherwise nil."
+  (if (and mx-date
+           (condition-case nil
+               (progn (require 'calendar)
+                      (require 'cal-iso)
+                      t)
+             (error nil))
+           (string-match "\\([0-9][0-9][0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\) \\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\) \\([-+][0-9][0-9]\\)?\\([0-9][0-9]\\)?"
+                         (aux-item->data mx-date)))
+      (let* ((secs (string-to-number (match-string 6 (aux-item->data mx-date))))
+             (mins (string-to-number (match-string 5 (aux-item->data mx-date))))
+             (hour (string-to-number (match-string 4 (aux-item->data mx-date))))
+             (mday (string-to-number (match-string 3 (aux-item->data mx-date))))
+             (mon  (string-to-number (match-string 2 (aux-item->data mx-date))))
+             (year (string-to-number (match-string 1 (aux-item->data mx-date))))
+             (tzhr (match-string 7 (aux-item->data mx-date)))
+             (tzmin (or (match-string 8 (aux-item->data mx-date)) ""))
+             (wday (elt 
+                    (calendar-iso-from-absolute
+                     (calendar-absolute-from-gregorian
+                      (list mon mday year)))
+                    1)))
+        (lyskom-create-time secs mins hour mday (1- mon) (- year 1900) wday 0 nil tzhr tzmin))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
