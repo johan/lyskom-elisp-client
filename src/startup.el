@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.56 2000-10-01 19:52:30 ceder Exp $
+;;;;; $Id: startup.el,v 44.57 2000-12-29 17:27:45 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.56 2000-10-01 19:52:30 ceder Exp $\n"))
+	      "$Id: startup.el,v 44.57 2000-12-29 17:27:45 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -116,8 +116,7 @@ See lyskom-mode for details."
       (if (and (lyskom-buffer-p buffer nil)
 	       (not (prog1
 			(j-or-n-p (lyskom-get-string
-				   'start-new-session-same-server)
-                                  t)
+				   'start-new-session-same-server))
 		      (message ""))))
 	  (progn 
             (switch-to-buffer buffer)

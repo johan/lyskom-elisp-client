@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.126 2000-12-12 11:12:52 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.127 2000-12-29 17:27:37 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.126 2000-12-12 11:12:52 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.127 2000-12-29 17:27:37 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2270,8 +2270,7 @@ A list of pairs means OPTARG will be used as a key to look up the real
                    (if (or (not (file-exists-p filename))
                            (prog1 
                                (lyskom-j-or-n-p
-                                (lyskom-format 'save-text-confirm filename)
-                                t)
+                                (lyskom-format 'save-text-confirm filename))
                              (lyskom-message "")))
                        (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text" t))
                              (str (text->decoded-text-mass text text-stat)))
@@ -3053,12 +3052,11 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 
 
 ;;;
-;;; j-or-n-p is similar to y-or-n-p. If optional argument QUITTABLE is
-;;; non-nil C-g will abort. 
+;;; j-or-n-p is similar to y-or-n-p.
 ;;;
 
 
-(defun j-or-n-p (prompt &optional quittable)
+(defun j-or-n-p (prompt)
   "Same as y-or-n-p but language-dependent.
 Uses lyskom-message, lyskom-read-string to do interaction and
 lyskom-get-string to retrieve regexps for answer and string for repeated query."
@@ -3070,12 +3068,11 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 
     (while (and (not (char-in-string input-char
                                      (lyskom-get-string 'y-or-n-instring)))
-                (not (and (or (eq input-char ?\C-g)
+                (not (or (eq input-char ?\C-g)
                               (eq 'keyboard-quit
                                   (lyskom-lookup-key (current-local-map)
                                                      input-char
-                                                     t)))
-                          quittable)))
+                                                     t)))))
 	(lyskom-message "%s" (concat (if nagging 
 					 (lyskom-get-string 'j-or-n-nag)
 				       "") 
@@ -3103,11 +3100,10 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
             (setq nagging nil)
           (setq nagging t)))
 
-    (when (and (or (eq input-char ?\C-g)
-                   (eq 'keyboard-quit (lyskom-lookup-key (current-local-map)
-                                                         input-char
-                                                         t)))
-                          quittable)
+    (when (or (eq input-char ?\C-g)
+	      (eq 'keyboard-quit (lyskom-lookup-key (current-local-map)
+						    input-char
+						    t)))
       (signal 'quit nil))
 
     (lyskom-message "%s" (concat prompt
@@ -3122,10 +3118,10 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 ;;; These versions no longer perform lyskom-end-of-command
 ;; Author: Linus Tolke
 
-(defun lyskom-j-or-n-p (prompt &optional quittable)
+(defun lyskom-j-or-n-p (prompt)
   "Same as j-or-n-p but performs lyskom-end-of-command if quit."
   (condition-case nil
-      (j-or-n-p prompt quittable)
+      (j-or-n-p prompt)
     (quit (signal 'quit nil))))
 
 
@@ -3607,8 +3603,8 @@ One parameter - the prompt string."
         `(kom-show-unread-in-frame-title
           (lyskom-session-has-unreads 
            (" ("
-            ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1))
-             (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1)))
+            ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t))
+             (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t)))
             ")"))))
 
   (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)

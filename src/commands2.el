@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.85 2000-12-12 11:12:50 byers Exp $
+;;;;; $Id: commands2.el,v 44.86 2000-12-29 17:27:42 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.85 2000-12-12 11:12:50 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.86 2000-12-29 17:27:42 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1878,13 +1878,13 @@ Return-value: 'no-session if there is no suitable session to switch to
                             (and ano (lyskom-get-string 'allow-anon))
                             (and ope (lyskom-get-string 'allow-secret))))
                 ", "))
-    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member) t))
+    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
 	   (secret (if (not open)
-		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf) t)))
-	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed) t))
-	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed) t))
+		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
+	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
+	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed)))
            (secmem (and (lyskom-have-feature long-conf-types)
-                        (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed) t)))))
+                        (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed))))))
       (cache-del-conf-stat (uconf-stat->conf-no uconf-stat))
       (cache-del-uconf-stat (uconf-stat->conf-no uconf-stat))
       (if (not (blocking-do 
@@ -2236,7 +2236,7 @@ Return-value: 'no-session if there is no suitable session to switch to
         ;; user wants to try anyway (it might work...)
 
         (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+                (lyskom-j-or-n-p 'not-author-try-anyway-p))
             (progn (lyskom-format-insert 'adding-no-comments
                                          text-no)
                    (lyskom-report-command-answer
@@ -2277,7 +2277,7 @@ Return-value: 'no-session if there is no suitable session to switch to
             ;; user wants to try anyway (it might work...)
 
             (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                    (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+                    (lyskom-j-or-n-p 'not-author-try-anyway-p))
                 (progn (lyskom-format-insert 'adding-private-answer
                                              text-no)
                        (lyskom-report-command-answer
@@ -2318,7 +2318,7 @@ Return-value: 'no-session if there is no suitable session to switch to
             ;; user wants to try anyway (it might work...)
 
             (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                    (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+                    (lyskom-j-or-n-p 'not-author-try-anyway-p))
                 (progn (lyskom-format-insert 'adding-request-confirm
                                              text-no)
                        (lyskom-report-command-answer
