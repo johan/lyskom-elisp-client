@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.5 2002-06-06 22:39:14 byers Exp $
+;;;;; $Id: help.el,v 44.6 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.5 2002-06-06 22:39:14 byers Exp $\n"))
+	      "$Id: help.el,v 44.6 2002-06-12 18:29:32 byers Exp $\n"))
 
 
 
@@ -111,7 +111,8 @@
                           el)))))))
 
 (defun lyskom-help-format-text-properties (data props)
-  (let ((start (point-marker)))
+  (let ((start (point-max-marker)))
+    (set-marker-insertion-type start nil)
     (lyskom-traverse el (lyskom-help-data-get-data data)
       (lyskom-do-help-format el))
     (add-text-properties start (point-max) props)
@@ -202,7 +203,8 @@
           (t (lyskom-insert (format "[%S]" id))))))
 
 (defun lyskom-help-format-p (data)
-  (let ((start (point-marker)))
+  (let ((start (point-max-marker)))
+    (set-marker-insertion-type start nil)
     (lyskom-traverse el (lyskom-help-data-get-data data)
       (lyskom-do-help-format el))
       (save-excursion

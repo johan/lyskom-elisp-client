@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.249 2002-06-09 21:47:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.250 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.249 2002-06-09 21:47:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.250 2002-06-12 18:29:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -493,7 +493,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (client-statistics-line . "    %4#2d %#1s")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
-    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare en dold kopia till? ")
+    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare av en dold kopia? ")
     (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också skickas till %#1M? ") 
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
@@ -1754,7 +1754,48 @@ Variablerna är inte registrerade LysKOM-variabeler och kan därför
 inte läsas från servern. Om någon av variablerna motsvarar en
 inställning som har tagits bort så kan du åtgärda genom att ge
 kommandot \"Spara variabler\".\n\n")
-))
+
+    (unknown-aux-item . "Okänd tilläggsinformation")
+    (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
+
+    (aux-content-type-name . "Innehållstyp")
+    (aux-fast-reply-name . "Anmärkning")
+    (aux-cross-reference-name . "Referens")
+    (aux-no-comments-name . "Begäran om inga kommentarer")
+    (aux-personal-comment-name . "Begäran om personliga svar")
+    (aux-request-confirmation-name . "Begäran om läsbekräftelse")
+    (aux-read-confirm-name . "Läsbekräftelse")
+    (aux-redirect-name . "Omdirigering")
+    (aux-x-face-name . "Bild")
+    (aux-alternate-name-name . "Alternativt namn")
+    (aux-pgp-signature-name . "PGP-signatur")
+    (aux-pgp-public-key-name . "Publik PGP-nyckel")
+    (aux-e-mail-address-name . "E-postadress")
+    (aux-faq-text-name . "FAQ i text")
+    (aux-creating-software-name . "Skapande klient")
+    (aux-mx-author-name . "E-mailförfattare")
+    (aux-mx-from-name . "E-mail från")
+    (aux-mx-reply-to-name . "E-mail svar sänds till")
+    (aux-mx-to-name . "E-mail till")
+    (aux-mx-cc-name . "E-mail CC")
+    (aux-mx-date-name . "E-maildatum")
+    (aux-mx-message-id-name . "E-mail-meddelande-ID")
+    (aux-mx-in-reply-to-name . "E-mail svar till")
+    (aux-mx-misc-name . "E-mailheader")
+    (aux-mx-allow-filter-name . "E-mail allow-filter")
+    (aux-mx-reject-forward-name . "E-mail reject-forward")
+    (aux-notify-comments-name . "Meddela kommentarer")
+    (aux-faq-for-conf-name . "FAQ för möte")
+    (aux-recommended-conf-name . "Mötesrekommendation")
+    (aux-allowed-content-type-name . "Tillåten innehållstyp")
+    (aux-canonical-name-name . "Kanoniskt namn")
+    (aux-mx-list-name-name . "E-maillistnamn")
+    (aux-send-comments-to-name . "Sänd kommentarer till")
+    (aux-world-readable-name . "Läsbart utan inloggning")
+    (aux-elisp-client-read-faq-name . "Läst FAQ")
+    (aux-elisp-client-rejected-invitation-name . "Avvisad inbjudan")
+    
+    ))
 
 (lyskom-language-var local lyskom-month-names sv
   '(("jan" . 1)  ("januari" . 1)
@@ -2594,8 +2635,8 @@ kommandot \"Spara variabler\".\n\n")
     (ar-reply-text   . "Svarstext")
 
     (express-break . "Omedelbart efter de har skapats")
-    (break         . "Efter aktuell kommentarskedja  ")
-    (no-break      . "Efter aktuellt möte            ")
+    (break         . "Efter aktuell kommentarskedja")
+    (no-break      . "Efter aktuellt möte")
 
     (express-server-break . "Omedelbart")
     (express-server-letters-break . "Omedelbart om det kommer brev")

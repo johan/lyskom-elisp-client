@@ -1,3 +1,43 @@
+2002-06-12  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 457:
+	* aux-items.el (send-comments-to): Changed into to info.
+	(mx-reject-forward): Added text-name property.
+
+	* view-text.el (lyskom-view-text): Print unknown aux-items in
+	header, if there are any and we are doing noconversion.
+
+	* macros.el (lyskom-traverse-aux): Put progn around body or we can
+	only have one form in the body.
+
+	* view-text.el
+	(lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1): Use it.
+	(lyskom-view-text): Use it (two places).
+	(lyskom-filter-signature-hook): Use it.
+	(lyskom-view-text): When reviewing with noconversion, print
+	content-type and similar aux items.
+
+	* utilities.el (lyskom-viewing-noconversion): New function.
+
+
+2002-06-11  David Byers  <david.byers@swipnet.se>
+
+	* flags.el (lyskom-save-options): Set content-type på user-arean
+	till x-kom/user-area (dock utan charset).
+
+	Korrigera felaktig formattering av hjälpen:
+	* help.el (lyskom-help-format-p): Gjorde om point-marker till
+	point-max-marker så att formatteringen fungerar även om point inte
+	följer med till slutet av bufferten.
+	(lyskom-help-format-text-properties): Dito.
+
+	Fix bug 589:
+	* commands1.el (kom-add-bcc): Fixade så att prompten blir rätt:
+
+	* option-edit.el (lyskom-custom-variables): Add no-server-break to
+	options for kom-server-priority-breaks. Used to be no-break, which
+	is wrong.
+
 2002-06-09  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 583:

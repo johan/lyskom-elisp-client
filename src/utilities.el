@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.104 2002-06-03 21:48:20 byers Exp $
+;;;;; $Id: utilities.el,v 44.105 2002-06-12 18:29:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.104 2002-06-03 21:48:20 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.105 2002-06-12 18:29:33 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1441,6 +1441,14 @@ in the 20th century")
 
     (list year month day)
     ))
+
+
+;;; ================================================================
+;;; Check noconversion
+
+(defun lyskom-viewing-noconversion ()
+  "Return non-nil if we are reviewing in noconversion mode."
+  (eq 'kom-review-noconversion lyskom-current-command))
 
 
 ;;; ================================================================

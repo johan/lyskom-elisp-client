@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.214 2002-06-09 21:47:16 byers Exp $
+;;;;; $Id: english-strings.el,v 44.215 2002-06-12 18:29:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.214 2002-06-09 21:47:16 byers Exp $"))
+              "$Id: english-strings.el,v 44.215 2002-06-12 18:29:32 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1741,6 +1741,47 @@ These variables are not registered as LysKOM variables and cannot be
 read from the server. If the variables corresponds to settings that
 have been removed, you can fix the problem by giving the command
 \"Save variables\".\n\n")
+
+
+    (unknown-aux-item . "Okänd tilläggsinformation")
+    (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
+
+    (aux-content-type-name . "Content type")
+    (aux-fast-reply-name . "Remark")
+    (aux-cross-reference-name . "Reference")
+    (aux-no-comments-name . "Request for no comments")
+    (aux-personal-comment-name . "Request for personal replies")
+    (aux-request-confirmation-name . "Request for read confirmation")
+    (aux-read-confirm-name . "Read confirmation")
+    (aux-redirect-name . "Redirect")
+    (aux-x-face-name . "Picture")
+    (aux-alternate-name-name . "Alternate name")
+    (aux-pgp-signature-name . "PGP signature")
+    (aux-pgp-public-key-name . "PGP public key")
+    (aux-e-mail-address-name . "E-mail address")
+    (aux-faq-text-name . "FAQ in text")
+    (aux-creating-software-name . "Creating software")
+    (aux-mx-author-name . "E-mail author")
+    (aux-mx-from-name . "E-mail from")
+    (aux-mx-reply-to-name . "E-mail reply to")
+    (aux-mx-to-name . "E-mail to")
+    (aux-mx-cc-name . "E-mail CC")
+    (aux-mx-date-name . "E-mail date")
+    (aux-mx-message-id-name . "E-mail message ID")
+    (aux-mx-in-reply-to-name . "E-mail in reply to")
+    (aux-mx-misc-name . "E-mail headers")
+    (aux-mx-allow-filter-name . "E-mail allow-filter")
+    (aux-mx-reject-forward-name . "E-mail reject-forward")
+    (aux-notify-comments-name . "Notify me about comments")
+    (aux-faq-for-conf-name . "FAQ for conference")
+    (aux-recommended-conf-name . "Conference recommendation")
+    (aux-allowed-content-type-name . "Allowed content type")
+    (aux-canonical-name-name . "Canonical name")
+    (aux-mx-list-name-name . "Mailing list name")
+    (aux-send-comments-to-name . "Send comments to")
+    (aux-world-readable-name . "World-readable")
+    (aux-elisp-client-read-faq-name . "Read FAQ")
+    (aux-elisp-client-rejected-invitation-name . "Rejected invitation")
     ))
 
 
