@@ -109,6 +109,7 @@ access this variable directly.")
 (defvar lp--list-end-marker nil)
 (defvar lp--selected-entry-list nil)
 (defvar lp--buffer-done nil)
+(defvar lp--conf-name-width nil)
 
 
 ;;; ============================================================
@@ -272,6 +273,7 @@ only recomputed if the window width changes."
       lp--last-format-string
     (let ((total (- (window-width) 1 3 3 2 12 2 5 2 4 1)))
       (setq lp--last-window-width (window-width))
+      (setq lp--conf-name-width total)
       (setq lp--last-format-string
             (concat "%#1c %=3#2s %#10c %=-" (number-to-string total)
                     "#3M  %=-12#4s %[%#15@%=5#5s%]  %[%#11@%#6c%]%[%#12@%#7c%]%[%#13@%#8c%]%[%#14@%#9c%]")))))
@@ -840,6 +842,16 @@ clicked on."
      (cond ((null cur) (error "No entry at point"))
            (t (lyskom-prioritize-flag-toggle (current-buffer)
                                              (list cur 'passive)
+                                             ""))))))
+
+(defun lp--toggle-message-flag ()
+  "Toggle the passive bit of the current entry"
+  (interactive)
+  (lp--save-excursion
+   (let ((cur (lp--entry-at (point))))
+     (cond ((null cur) (error "No entry at point"))
+           (t (lyskom-prioritize-flag-toggle (current-buffer)
+                                             (list cur 'message-flag)
                                              ""))))))
 
 (defun lp--toggle-secret ()
@@ -1411,6 +1423,7 @@ With prefix arg, contract only those that were created by self."
   (define-key lp--mode-map (kbd "I") 'lp--toggle-invitation)
   (define-key lp--mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lp--mode-map (kbd "P") 'lp--toggle-passive)
+  (define-key lp--mode-map (kbd "M") 'lp--toggle-message-flag)
   (define-key lp--mode-map (kbd "C-c C-c") 'lp--quit)
   (define-key lp--mode-map (kbd "q") 'lp--quit)
 
@@ -1521,13 +1534,20 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
         (make-local-variable 'lp--buffer-done)
         (setq lp--entry-list nil)
         (setq lp--buffer-done nil)
-        (lyskom-format-insert "\
-Medlemskap för %#1M på %#2s
+        (lp--compute-format-string)
 
-===============================================================================
- Prio   Möte                                            Senast inne  Oläst  IHP
--------------------------------------------------------------------------------
-" lyskom-pers-no lyskom-server-name)
+        (lyskom-format-insert "Medlemskap för %#1M på %#2s\n" lyskom-pers-no lyskom-server-name)
+        (lyskom-insert (make-string (1- (window-width)) ?=))
+        (lyskom-insert "\n")
+        (lyskom-format-insert " Prio   %#1s  Senast inne  Oläst  IHPM\n"
+                              (concat (lyskom-get-string 'conference)
+                                      (make-string (- lp--conf-name-width
+                                                      (length (lyskom-get-string 'conference)))
+                                                   ?\ )))
+
+        (lyskom-insert (make-string (1- (window-width)) ?-))
+        (lyskom-insert "\n")
+
         (setq lp--list-start-marker (point-marker))
         (goto-char (point-max))
         (lyskom-sort-membership)
@@ -1548,11 +1568,11 @@ Medlemskap för %#1M på %#2s
             (setq entry-list (cons entry entry-list))))
         (lp--set-entry-list (nreverse entry-list))
         (setq lp--list-end-marker (point-marker))
-        (insert "\
-===============================================================================
+        (lyskom-insert (make-string (1- (window-width)) ?=))
+        (lyskom-insert "
  Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
  Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
- Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:    I,H,P
+ Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:  I,H,P,M
  Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
         ))

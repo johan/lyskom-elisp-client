@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.206 2003-07-27 20:40:41 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.207 2003-07-28 20:02:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.206 2003-07-27 20:40:41 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.207 2003-07-28 20:02:34 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -718,6 +718,10 @@ If CONF is nil, check the first conf on the to-do list."
         (if (lyskom-j-or-n-p (lyskom-format 'convert-passive conf-stat))
             (progn
               (set-membership-type->passive type nil)
+              (set-membership-type->message-flag
+               type
+               (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q
+                                               conf-stat)))
               (blocking-do 'set-membership-type
                            lyskom-pers-no
                            (conf-stat->conf-no conf-stat)
@@ -1247,7 +1251,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxcCSDF%?]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(:.\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxlcCSDF%?]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
@@ -1390,6 +1394,7 @@ Deferred insertions are not supported."
     (let ((format-length (length (format-state->format-string format-state)))
         (arg-no nil)
         (pad-length nil)
+        (pad-string nil)
         (format-letter nil)
         (colon-flag nil)
         (equals-flag nil)
@@ -1439,25 +1444,26 @@ Deferred insertions are not supported."
 
 	(setq equals-flag (match-beginning 1)
 	      pad-length (if (match-beginning 2)
-			     (string-to-int (substring 
-					     (format-state->format-string
-					      format-state)
-					     (match-beginning 2)
-					     (match-end 2)))
+			     (string-to-int (match-string 
+                                             2 (format-state->format-string
+                                                format-state)))
 			   nil)
-	      arg-no (if (match-beginning 4)
-			 (string-to-int (substring (format-state->format-string
-						    format-state)
-						   (match-beginning 4)
-						   (match-end 4)))
+	      arg-no (if (match-beginning 5)
+			 (string-to-int (match-string 
+                                         5 (format-state->format-string
+                                            format-state)))
 		       nil)
-              downcase-flag (match-beginning 5)
-	      colon-flag (match-beginning 6)
-              face-flag (match-beginning 7)
-	      format-letter (if (match-beginning 8)
+              downcase-flag (match-beginning 6)
+	      colon-flag (match-beginning 7)
+              face-flag (match-beginning 8)
+              pad-string (and (match-beginning 3)
+                              (substring (format-state->format-string format-state)
+                                         (1+ (match-beginning 3))
+                                         (match-end 3)))
+	      format-letter (if (match-beginning 9)
 				(aref (format-state->format-string 
 				       format-state)
-				      (match-beginning 8))
+				      (match-beginning 9))
 			      (signal 'lyskom-internal-error
 				      (list 'lyskom-format-aux 
 					    (format-state->format-string
@@ -1484,12 +1490,13 @@ Deferred insertions are not supported."
              colon-flag
              face-flag
              downcase-flag
-             (if (and (match-beginning 2)
-                      (eq (aref (format-state->format-string format-state)
-                                (match-beginning 2))
-                          ?0))
-                 ?0
-               ?\ )
+             (or (elt pad-string 0)
+                 (if (and (match-beginning 2)
+                          (eq (aref (format-state->format-string format-state)
+                                    (match-beginning 2))
+                              ?0))
+                     ?0
+                   ?\ ))
 	     allow-defer))))))
     (lyskom-tweak-format-state format-state)
     (set-format-state->depth format-state
@@ -1528,6 +1535,23 @@ Deferred insertions are not supported."
      ;;  Format a string or symbol by simply inserting it into the
      ;;  result list
      ;;
+     ((= format-letter ?l)
+      (setq result 
+            (cond ((or (integerp arg)
+                       (characterp arg))
+                   (make-string pad-length arg))
+                  ((stringp arg)
+                   (let ((count (/ pad-length (length arg)))) 
+                     (apply 'concat 
+                            (nreverse
+                             (cons (substring 
+                                    arg 0 
+                                    (- pad-length (* (length arg) count)))
+                                   (make-list count arg))))))
+                  (t (signal 'lyskom-internal-error
+                                          (list 'lyskom-format
+                                                ": argument error (expected char or string)"))))))
+
      ((= format-letter ?s)
       (setq result (cond ((stringp arg) arg)
                          ((symbolp arg) (symbol-name arg))
@@ -3314,8 +3338,7 @@ The list consists of text-nos."
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
 The list consists of text-nos."
   (let ((read (membership->read-texts membership))
-	(first (text-mapping->range-begin map))
-        (iter (text-mapping->iterator map))
+        (iter  (text-mapping->iterator map))
         (el nil))
     (when (not (null read))
       (while (setq el (text-mapping-iterator->next iter))
