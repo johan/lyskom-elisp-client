@@ -1,3 +1,7 @@
+1999-06-20  David Byers  <davby@anton9.ida.liu.se>
+
+	* Release av 0.46-BETA-1
+
 1999-06-19  David Byers  <davby@ida.liu.se>
 
 	* completing-read.el (lyskom-read-conf-stat): Don't croak if we
