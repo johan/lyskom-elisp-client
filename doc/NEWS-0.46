@@ -2,23 +2,61 @@
 		       Nyheter i lyskom.el 0.46
 		       ========================
 
-Version 0.46 av elispklienten finns nu tillgänglig på följande URL.
+    Version 0.46-PRE-1 som är första publika release av elispklienten
+    sedan 1997 finns nu tillgänglig på följande URL. Betrakta detta
+    som en publik betarelease. Den verkar stabil men har säkert en del
+    allvarliga fel.
 
        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
-Filen heter lyskom-0.46.tar.gz, och en kopia av den text du läser just
-nu finns under namnet NEWS-0.46 samt under namnet NEWS-0.46 i
-tar-arkivet.
-
-Det här är sista releasen av elispklienten som jag planerar att göra.
-Det vore väldigt bra om några intresserade personer tog över ansvaret
-för projektet så att det fortsätter att utvecklas. 
-
-                                David Byers   <byers@lysator.liu.se>
+    Filen heter lyskom-0.46-PRE-1.tar.gz, och en kopia av den text du
+    läser just nu finns under namnet NEWS-0.46 samt under namnet
+    NEWS-0.46 i tar-arkivet.
 
 
-Notera att detta är nyheter jämfört med 0.45.1. En del fanns även i
-version 0.45.2.
+
+                         ====================
+                               VIKTIGT
+                         ====================
+
+    Gnu Emacs 20.x
+    --------------
+
+    Om du använder Gnu Emacs 20.x så måste du se till att du har stöd
+    för multibytetecken påslaget. Detta är tvärt emot rekommendationen 
+    för 0.45. Klienten fungerar antagligen med multibyteteckenstödet
+    avslaget, men du kan få smärre problem eftersom det finns buggar i 
+    Emacs som syns när man inte har multibyteteckenstödet på.
+
+    Titta i dina inställningar (filen .emacs i din hemkatalog). Om du
+    hittar "(standard-display-european 1)" eller något liknande
+    (första ordet börjar med standard-display eller ettan är något
+    annat) så skall du ta bort detta. Detta anrop har varit markerat
+    som föråldrat i flera års versioner av Emacs.
+
+    Om du använder Unix, se till att omgivningsvariabeln LC_CTYPE är
+    satt rätt. Oftast skall det vara något i stil med iso_8859_1.
+
+    Starta inte Emacs med flaggan --unibyte. Det kan ställa till
+    problem för på samma sätt som standard-display-european.
+
+
+    Kompilering
+    -----------
+
+    Till skillnad från tidigare versioner så måste man kompilera den
+    här versionen av klienten för att den skall fungera. This is not a
+    bug. It's a feature. Felmeddelandet man får om man inte kompilerar
+    är kryptiskt.
+
+    Kompilera för den version av Emacs som du tänker använda. Om du
+    kompilerar med Gnu Emacs 19.34 så borde resultatet fungera i alla
+    versioner av Emacs sedan 19.34, men säker kan man aldrig vara, och 
+    dessutom kommer klienten att gå långsammare än den egentligen
+    behöver.
+
+                            David Byers     <byers@lysator.liu.se>
+                            Johan Sunström  <johan@id3.org>
 
 
 
@@ -31,262 +69,563 @@ version 0.45.2.
 
 * Fitjurs, förbättringar och andra förändringar
 
-** Om ett inlägg inte kan skapas så får man en prompt om att redigera
-   inlägget som inte kunde skapas.
+** Skriva inlägg
 
-** Kommandot Bli anonym är användbart om man vill skriva anonyma
-   inlägg. Medan man är anonym så ser det ut som om sessionen inte
-   alls är aktiv. Räknaren över antal lästa texter uppdateras inte
-   heller (men listan av lästa texter i varje möte uppdateras.)
-   Använd kommandot Bli icke-anonym för att återgå.
+*** Frågan om alla mottagare till ett inlägg är relevanta ställs
+    enbart om det finns mer än en fullvärdig mottagare. 
+    Extrakopiemottagare och för kännedom räknas inte.
 
-** Man kan ställa in klienten så att den inte bryr sig om färger som
-   sätts av <body> i HTML. Variabeln heter kom-w3-simplify-body.
+*** Om man trycker C-u före i (Skriv inlägg) så får man välja vilket
+    möte inlägget skall skickas till. På så sätt slipper man först gå
+    till mötet och sedan trycka på i.
 
-** Det finns två nya kommandon, kom-next-prompt och kom-prev-prompt
-   som man kan använda för att gå till nästa eller föregående prompt i 
-   bufferten. De är bundna till C-M-n och C-M-p.
+*** Om man skickar brev till ett möte så läggs inte avsändaren till
+    som defaultmottagare om avsändaren är med i brevets mottagare.
 
-** Kommandot "Spara text (på fil)" har bytt namn till "Arkivera inlägg 
-   (till fil)". Ett nytt kommando "Spara inläggstext (på fil)" sparar
-   bara inläggskroppen (och tömmer filen om den redan fanns.) 
+*** Man kan använda comment-region för att citatmarkera ett stycke
+    text.
 
-** Mail som importeras av en modern importör, till exempel
-   komimportmail, visas prydligt. Variablerna
-   kom-show-imported-envelope-sender,
-   kom-show-imported-external-recipients och
-   kom-show-imported-importer styr detaljerna.
+*** Nya kommandon: Bli anonym och Bli icke-anonym (träd fram ur
+    skuggorna) för ljusskygga individer som vill skriva inlägg men
+    inte ta ansvar för innehållet. Bäva månde LysKOM.
 
-** Nytt kommando Återse brevhuvud visar e-mail-headers för mail
-   importerade med en modern importör.
+*** Nya kommandon: Addera fotnot och Subtrahera fotnot.
 
-** Se tiden kan visa veckonummer. 
+*** Nytt kommando: Förhindra kommentarer lägger till information till
+    ett inlägg som säger att författaren inte vill ha kommentarer. Det
+    går fortfarande att kommentera, men klienter som förstår
+    informationen skall gnälla lite extra om man försöker.
 
-** Personliga meddelanden kan visas med klockslaget då de kom.
+*** Nytt kommando: Begär läsbekräftelse lägger till en begäran om
+    läsbekräftelse på ett inlägg. Upplysta klienter frågar om läsaren
+    vill bekräfta läsning.
 
-** Nytt kommando "Ändra prioritet" för att ändra prioritet på ett
-   visst möte. Det går som förut att göra med "Bli medlem" också.
+*** Nytt kommando: Begär personligt svar lägger till information om
+    att författaren vill ha personliga svar, inte vanliga kommentarer. 
+    Det går fortfarande att kommentera vanligt, men upplysta klienter
+    kommer att gnälla lite extra om saken.
 
-** Det går mycket fortare att logga in än tidigare, speciellt om man
-   är med i många möten och bara har olästa i en liten del av dem.
-   Klienten belastar även servern i mycket mindre utsträckning
-   under inloggningsfasen.
+*** Det går inte att ens försöka skicka in inlägg med dublettmotagare
+    eller helt utan mottagare.
 
-** Återsefunktionerna är lite mer robusta. Om man återser inlägg och
-   blir avbruten av ett prioriterat möte så kommer klienten att återgå 
-   till återseendet när man har läst ut mötet. Man kan även styra vad
-   som kan avbryta återseende genom att sätta variabeln
-   kom-review-priority till något lämpligt (255 eller högre om man
-   aldrig vill att återse skall avbrytas av prioriterade inlägg eller
-   möten.)
+*** Om man adderar en mottagare som redan finns men är av en annan typ
+    så konverteras den existerande mottagar-raden.
 
-** Det går att filtrera personliga, grupp- och alarmmeddelanden. 
-   Variabeln kom-ignore-message-senders är en lista av avsändare vars
-   meddelanden inte skall visas. kom-ignore-message-recipients är en
-   lista av mottagare som man inte vill se meddelanden till.
+*** När man skriver en kommentar och det kommenterades författare inte
+    är aktiv medlem i någon mottagare så får man frågan om man skall
+    lägga till personen som mottagare till kommentaren, precis som om
+    författaren till det kommenterade inte var medlem alls i någon
+    mottagare.
 
-** Man kan styra hur klienten skall pipa när det kommer personliga,
-   eller alarmmeddelanden från specifika avsändare och
-   gruppmeddelanden till specifika mottagare. Se dokumentationen för
-   kom-ding-on-personal-messages, kom-ding-on-group-messages och
-   kom-ding-on-common-messages för mer information.
+*** Funktionen kom-insert-last-info-nodename stoppar in en referens
+    till den senaste info-noden man var på i aktuell buffert. 
+    Funktionen kom-yank-info-nodename kopierar en referens till den
+    info-nod man för tillfället är på (använd C-y för att stoppa in
+    den i en buffert).
 
-** Möten med prioritet noll betraktas inte längre som passiva
-   medlemskap eftersom den senaste servern har riktigt stöd för
-   passiva medlemskap. Det går att simulera det gamla beteendet genom
-   att sätta läsnivå till ett eller högre. Använd variabeln
-   kom-default-session-priority för att sätta grundnivån i nya
-   sessioner. 
+*** Om man misslyckas skapa ett inlägg så får man en prompt om att
+    editera inlägget igen. Trycker man på SPC och den gamla
+    inläggsbufferten finns kvar så ploppas den upp direkt.
 
-** Om man gillar långa streckade linjer kan man få det på de flesta
-   håll. Slå på kom-long-lines och sätt kom-text-header-dash-length
-   och kom-text-footer-dash-length till så långa streck du vill ha
-   före och efter inläggstexten.
+*** När man adderar mottagare så får man en fråga om huruvida man vill
+    att framtida kommentarer också skall hamna i den nya mottagaren. 
+    Detta har tillkommit eftersom halva LysKOM verkar ha glömt att man
+    kan använda extra-kopiemottagare.
 
-** Kommandot Återse lista visar information om vanlig läsning också,
-   inte bara återseende. Det är alltså användbart i fler lägen än det
-   gamla kommandot var.
-
-** När man ändrar svarsmeddelande så får man editera sitt gamla
-   meddelande.
-
-** Prefix till Lista Möten anger hur många olästa som skall finnas för 
-   att mötet skall visa. Anger man noll så kommer alla möten att
-   visas. 
-
-** Vilkalistan har numera en tidsstämpel.
-
-** Om man trycker C-u före kommandon för att kommentera, skriva privat 
-   svar eller skriva fotnot så är defaultvärdet för inlägget man skall 
-   kommentera det inlägg som markören står på.
-
-** Man kan lägga till och ta bort fotnoter med kommandona Addera
-   fotnot och Subtrahera fotnot.
-
-** När man går ur ett möte blir man först passiv medlem. För att gå ur 
-   mötet på riktigt så måste man upprepa utträdet. Detta beteende går
-   att styra med variabeln kom-unsubscribe-makes-passive.
-
-** Elispklienten är lite mer Gnus-kompatibel. Om man råkar köra XEmacs 
-   och kom-smileys är satt, så kommer gladmän att visas som små
-   bilder.
-
-** Stöd för tilläggsinformation på inlägg och möten. Se nedan.
-
-** Lista markeringar ger en lista av alla markerade inlägg.
-   Ett numeriskt prefixargument väljer vilken markeringstyp man vill
-   lista. 
-
-** Om man skickar brev till ett möte man är medlem i så läggs man inte
-   längre till som mottagare.
-
-** Man kan ge prefixargument när man skriver inlägg. C-u i gör att
-   elispklienten frågar efter mottagare. Kommandot skiljer sig från
-   att skicka brev genom att avsändaren inte läggs till som mottagare.
-   Man kan ge numeriskt prefix också. Då blir mottagaren för brevet
-   mötet med det nummer man angav, vare sig mötet finns eller inte och
-   helt oavsett om man kan skriva inlägg i mötet eller inte.
-
-** Om man försöker radera ett inlägg som är markerat av någon så
-   gnäller elispklienten lite, och begär att man bekräftar det.
-
-** Om man raderar ett inlägg som man själv har markerat så avmarkeras
-   det samtidigt.
-
-** Elispklienten frågar om man vill lägga till en kommenterad
-   författare som mottagare enbart om man har rätt att skicka brev
-   till den mottagaren.
-
-** Frågan om alla mottagare till ett inlägg är relevanta ställs enbart
-   om det finns mer än en fullvärdig mottagare. Extrakopiemottagare
-   och för kännedom räknas inte.
-
-** Man kan markera med markering 0 nu.
-
-** Om servern har ett alias, som LysKOM, LuddKOM, HelKOM eller TokKOM
-   så skrivs detta ut i alla närvaromeddelanden. Om servern inte har
-   ett alias så används "KOM" där det förr stod "LysKOM".
-
-** Nytt kommando: Vilka (är inloggade) i möte (bundet till lv)
-   Som vilka, men visar endast medlemmar i ett visst möte.
-
-** Nytt kommando: Ändra parentes. 
-
-** Man kan citatmarkera text vid editering av ett inlägg med
-   comment-region.
-
-** Man kan simulera högerknapptryckning med "=" för att kunna använda
-   menyer med tangentbordet.
-
-** Med lyskomd 2.0 så är klienten bättre på att hålla sin cache
-   uppdaterad.
-
-** Långa inlägg kan kortas av när man återser dem.  Se inställningarna
-   för "Korta av långa inlägg".
-
-** Vilkalistorna kan även visa när en session kopplades upp, och hur
-   länge den har varit inaktiv.  Se inställningen "Visa när personer
-   loggade in och när de var aktiva".
+*** Edit-moden har stöd för "Roxen IS style bug/todo-list". Kommandot
+    sitter på C-c C-b i edit-moden. Om du inte vet vad det här är så
+    lär du inte behöva det.
 
 
-* Tilläggsinformation
+** Läsa inlägg
 
-I den senaste versionen av LysKOM-protokollet finns det möjlighet att
-knyta godtycklig information till inlägg och till möten. Den största
-ändringen i elispklienten från version 0.45.1 är möjligheten att
-utnyttja detta. Det har tillkommit ett antal nya kommandon för detta i
-LysKOM-bufferten och i inläggsbufferten.
+*** Man kan tala om för klienten att inte bry sig om färger satta i
+    <body> i HTML-kod. Variabeln kom-w3-simplify-body heter variabeln.
 
-** Tilläggsinformation i LysKOM-bufferten
+** Defaultvärdet för Uppskjuta är inte längre hårdkodat, utan
+   definieras av variabeln kom-postpone-default.
 
-*** Efter tilläggsinformation visas en liten knapp "[*]". Om man
-    klickar på den så visas full information om tillägget.
+** Man kan tala om hur långa streckrader man vill ha före och efter
+   inläggstexten med variablerna kom-text-footer-dash-length och
+   kom-text-header-dash-length. Se även variabeln kom-long-lines på
+   annat håll i den här filen.
 
-*** Om man håller nere högerknappen över en sådan knapp så går det även
-    att radera tillägget.
+*** Den initiala läsnivån för en session definieras av variabeln
+    kom-default-session-priority.
 
-*** Om ett inlägg är märkt med typinformation så används den
-    informationen för att formattera inlägget. 
+*** Läsnivån visas inte i moderaden om den inte skiljer sig från
+    värdet på kom-default-session-priority.
 
-*** Om författaren till ett inlägg har begärt att ingen skall
-    kommentera inlägget så ber elispklienten om bekräftelse innan man
-    kommenterar.
+*** Brev importerade med komimportmail (eller ekvivalenta importörer)
+    visas snyggt.
 
-*** Om författaren till ett inlägg har begärt personliga svar och man
-    försöker kommentera inlägget så frågar klienten om man vill skriva
-    personligt svar istället.
+*** Nytt kommando: Återse brevhuvud visar alla headerrader för ett
+    importerat mail (förutsatt att en vettig importör används).
 
-*** Om författaren till ett inlägg har begärt att alla som läser det
-    skall bekräfta läsning så frågar elispklienten om man vill
-    bekräfta varje gång inlägget visas (tills man har bekräftat det
+*** Nytt kommando: Spara inläggstext (på fil) sparar inläggstexten,
+    utan ärenterad, till en fil och tar bort allt som fanns i filen
+    innan. Användbart för att spara bilagor till e-mail.
+
+*** Nytt kommando: Arkivera inlägg (till fil) ersätter Spara text (på
+    fil). Kommandot sparar inlägget, inklusive headerrader, på slutet
+    av en fil.
+
+*** Man kan bestämma vilka headerrader som hör till importerade e-mail
+    man vill se. Variablerna kom-show-imported-importer (visa
+    importörens namn), kom-show-imported-external-recipients (visa to,
+    cc och reply-to) och kom-show-imported-envelope-sender (visa
+    "envelope sender") styr vad som visas.
+
+*** Elispklienten borde klara av multibytetecken i inlägg. Specifikt
+    så klarar den inlägg kodade med us-ascii, iso-8859-1, iso-8859-2,
+    iso-8859-3, iso-8859-4, iso-8859-5, koi8-r, iso-8859-6,
+    iso-8859-7, iso-8859-8, iso-8859-9, iso-2022-jp, shift_jis,
+    euc-kr, gb2312, big5 och iso-2022-jp-2. Inläggen måste förstås
+    vara markerad med MIME content type.
+
+*** Elispklienten är lite mer Gnus-kompatibel. Om man råkar köra
+    XEmacs har kom-smileys satt till t och har rätt version av Gnus
+    installerad , så kommer gladmän att visas som små bilder. Återse
+    omodifierat gör att man slipper gladmän.
+
+
+** Återse inlägg
+
+*** Man kan sätta prioritet på återsefunktioner. Om man normalt blir
+    avbruten när det kommer prioriterade inlägg, men inte vill att det
+    skall ske när man återser en massa inlägg så kan man sätta
+    kom-review-priority till något högt (över 255 så blir man aldrig
+    avbruten). Bara inlägg som kommer till möten med prioritet över
+    kom-review-priority kommer att avbryta återseendet.
+
+*** Om man håller på att återse inlägg men blir avbruten av
+    prioriterade inlägg så får man prompt om att återuppta återseendet
+    när man har läst ut de prioriterade inläggen. Förr så glömde
+    klienten bort att man höll på att återse inlägg.
+
+*** Man kan få inlägg trunkerade om man vill slippa jättelånga inlägg
+    när man återser kommenterade eller markerade inlägg. Variablerna
+    kom-truncate-threshold och kom-truncate-show-lines bestämmer
+    beteendet. Avkortade inlägg markeras med en fet röd varning.
+
+*** Återse lista visar inte bara vilka återsekommandon som är aktiva
+    utan även alla andra kommandon.
+
+
+** Markeringar
+
+*** Lista markeringar ger en lista av alla markerade inlägg. Ett
+    numeriskt prefixargument väljer vilken markeringstyp man vill
+    lista.
+
+*** Om man försöker radera ett inlägg som någon har markerat så frågar
+    klienten om man vill radera det ändå.
+
+*** Man kan sätta markering 0-255, inte bara 1-255. Detta fungerar
+    inte med riktigt gamla servrar.
+
+*** Om man raderar ett inlägg som man har markerat så avmarkeras det
+    automatiskt.
+
+
+** Medlemskap, möten och olästa
+
+*** Prefix till Lista Möten anger hur många olästa som skall finnas
+    för att mötet skall visa. Anger man noll så kommer alla möten att
+    visas.
+
+*** Nytt kommando: Ändra mötestyp. Man kan ändra mötestype (hemligt,
+    skrivskyddat med mera) i efterhand.
+
+*** Status för möte visar om hemliga medlemmar och anonyma texter är
+    tillåtna.
+
+*** Man kan tillåta eller förbjuda hemliga medlemmar i nya (och gamla)
+    möten.
+
+*** Inbjudningar till medlemskap i möten hanteras speciellt. Med en
+    modern LysKOM-server så kan medlemskap som adderas av andra bli
+    inbjudningar, så att klienten vet att det är frågan om nya
+    medlemskap som andra har skapat.
+
+*** Riktiga passiva medlemskap fungerar. Detta innebär att man kan
+    sätta prioritet noll på möten om man vill. Notera dock att
+    läsnivån är normalt satt till 1.
+
+*** När man utträder ur ett möte så blir man först passiv medlem. 
+    Utträder man igen utträder man på riktigt.
+
+*** Man kan ange prioritet när man adderar andra till möten. Vissa
+    LysKOM-servrar kanske inte bryr sig om den prioriteten. Andra
+    kanske gör det.
+
+*** Defaultvärdet för kom-membership-default-priority är 'ask, vilket
+    innebär att nytillkomna tittare får sätta prioriteter på sina
+    medlemskap.
+
+*** Nytt kommando: Ändra prioritet ändrar prioritet på ett enda möte.
+
+*** Status (för) möte visar prioritet och medlemskapstyp för mötet om
+    man är med i det.
+
+
+** Personliga meddelanden, vilkalistan och in- och utloggning
+
+*** Det går att filtrera personliga, grupp- och alarmmeddelanden. 
+    Variabeln kom-ignore-message-senders är en lista av avsändare vars
+    meddelanden inte skall visas. kom-ignore-message-recipients är en
+    lista av mottagare som man inte vill se meddelanden till.
+
+*** Man får se vilket LysKOM personer går in och ur. Istället för
+    "assar har gått in i LysKOM" så står det "assar har gått in i
+    TokKOM".
+
+*** Om man väljer att få personliga meddelanden i en buffert så är den
+    bufferten mer integrerad i LysKOM. Den försvinner om man dödar
+    LysKOM-bufferten och den har en mode som är anpassad till texter
+    från LysKOM (lyskom-view-mode).
+
+*** Nytt kommando: Vilka är inloggade i möte. Kommandot visar vilka
+    som är inloggade och som också är medlemmar i ett visst möte.
+
+*** Vilkalistan kan visa när en session kopplade upp sig och hur länge
+    den har varit inaktiv. Detta styrs av kom-show-since-and-when.
+
+*** Variabeln kom-silent-ansaphone styr om klienten piper vid
+    personliga meddelanden när automatsvar är påslaget.
+
+*** Tidsstämpel på vilkalistan.
+
+*** När man ändrar svarsmeddelande för autosvar så är det gamla
+    meddelandet default.
+
+*** Man kan sätta alla pipvariabler till en associationslista. I varje
+    par är första elementet (nyckeln) ett argument och andra elementet
+    är hur man skall pipa om lyskom-beep anropas för nyckeln. För
+    tillfället är den här konstruktionen bara meningsfull för
+    kom-ding-on-personal-messages, kom-ding-on-group-messages och
+    kom-ding-on-common-messages.
+  
+    Vad menar han egentligen?
+  
+    Jo. Om det är så att man inte vill ha pip när det kommer
+    meddelanden till "NL:", två pip när det kommer meddelanden till
+    "Matbeställningar (@) Linköping", och ett pip alltid annars så kan
+    man sätta kom-ding-on-group-messages till
+  
+                   ((3225 . nil) (3051 . 2) (t . 1))
+  
+    Nyckeln är alltså ett mötesnummer. Den magiska nyckeln t används
+    om ingen annan nyckel passar. För kom-ding-on-group-messages är
+    nyckeln meddelandets mottagare. För kom-ding-on-personal-messages
+    och kom-ding-on-common-messages är nyckeln avsändaren (mottagaren
+    är ju given).
+
+*** Om man sätter kom-show-personal-message-date till t så får man
+    dautm på personliga meddelanden.
+
+*** Man kan sätta kom-default-message-recipient till 'last-recipient
+    om man vill att defaultmottagaren för ett meddelande skall vara
+    den man senast skickade meddelande till.
+
+
+** Uppkopplingar och kommunikation med servern
+
+*** Man kan sätta kom-www-proxy-headers till extra headerrader som
+    skall skickas till en WWW-proxy. Detta kan vara användbart om
+    proxyn kräver autenticering. Vilken dag som helst orkar någon
+    skriva ett *riktigt* proxy-lager till LysKOM. Denna funktion är
+    100% otestad: you takes youse chances.
+
+*** Nya kommandon: Håll förbindelsen aktiv och Avbryt håll
+    förbindelsen aktiv är till för folk som har kabeltevenät, nej
+    förlåt, det heter tydligen bredband numera, eller som sitter bakom
+    en proxy som stänger av förbindelsen om den ser ut att vara
+    inaktiv. Kommandot Håll förbindelsen aktiv gör att elispklienten
+    pratar lite med servern med jämna mellanrum så att det ser ut som
+    om den arbetar. Variabeln kom-keep-alive-internal är relevant i
+    sammanhanget.
+
+*** Roxen Community KOM finns med i kom-server-aliases.
+
+*** Cachen hålls uppdaterad bättre. Klienten får automatiskt
+    meddelande om att inlägg har raderats, att mottagare har ändrats
+    och att den inloggade personens medlemskap har ändrats. Detta
+    fungerar enbart med lyskomd 2.0 eller nyare (egentligen vilken
+    LysKOM-server som helst som implementerar protokollversion 10).
+
+*** C-u R tömmer alla cachear i klienten.
+
+
+** Hantering av URLer
+
+*** Om compose-mail finns så används den när man använder Emacs för
+    att hantera klick på sladdpostadresser i LysKOM.
+
+*** Defaultsättet att öppna URLer är numera en funktion som använder
+    kommandot "start" i Mickeysoft Windows och som startar netscape på
+    andra plattformar. I inställningsbufferten heter valet "Windows
+    standard eller Netscape". Gamla användare påverkas inte
+    automatiskt.
+
+*** Bättre igenkänning av URLer.
+
+
+** Inställningar
+
+*** Kommandot Ändra variabler är borta.
+
+*** Man kan spara godtyckliga variabler i servern eller i sin .emacs. 
+    Det är bara att sätta dem innan man laddar lyskom.elc så läser
+    inte klienten de variablerna från servern.
+
+*** I inställningsbufferten finns det en kryssruta för att säga att en
+    variabel skall sparas i servern. Ikryssad så sparas den i servern. 
+    Inte ikryssad så hamnar den i .emacs.
+
+
+** Multipla sessioner
+
+** Föregående och nästa LysKOM fungerar bättre. Man kan till och med
+   använda dem från buffertar som inte är LysKOM-buffertar.
+
+** Om man kör XEmacs så kan man klickan på olästamarkeringen i
+   statusraden för att hoppa till första session med olästa
+   (mittenknapp) eller få upp en meny av sessioner med olästa (höger).
+
+** Man kan få Gå till nästa LysKOM som defaultkommando. Genom att
+   pilla på variablerna kom-server-priority och
+   kom-server-priority-breaks (leta efter "Sessionsprioritet" i
+   inställningsbufferten) sp kan man få elispklienten att automatiskt
+   gå till ett annat LysKOM som defaultkommando.
+
+   Variabeln kom-server-priority ger en prioritet till LysKOM-servern.
+   För att en session skall avbryta en annan så måste den avbrytande
+   sessionen ha högre prioritet än det möte man för tillfället läser i 
+   den avbrutna sessionen. 
+
+   Variabeln kom-server-priority-breaks styr när avbrotten får ske.
+   Värdet express betyder att avbrott skall ske direkt.
+   express-letters betyder att avbrott sker direkt om det har kommit
+   brev i den andra sessionen. t betyder avbrott efter aktuell
+   kommentarskedja. letters betyder efter aktuell kommentarskedja om
+   det har kommit brev. after-conf betyder efter aktuellt möte.
+   after-conf-letters betyder efter aktuellt möte om det har kommit
+   brev. 
+
+   Om man sätter kom-server-priority-breaks till when-done så får man
+   prompt om att gå till nästa LysKOM om man läser ut allting i en
+   session och det finns olästa i någon annan session.
+
+
+
+** Diverse blandat och allmänt
+
+*** Negativt prefixargument till de flesta funktioner som vill ha
+    textnummer betyder texten N stek tillbaks i bufferten. Till
+    exempel skall "K" vara samma som "C-u - 1 k" när man står sist i
+    bufferten. Prefixargument noll betyder att klienten alltid skall
+    prompta efter ett inläggsnummer.
+
+*** Precis som man kan markera personer man gillar med variabeln
+    kom-friends så kan man markera idioter med variebln kom-morons. De
+    får ett annat utseende än personer markerade med kom-friends.
+
+*** Variabeln kom-long-lines styr om man får långa streckrader
+    överallt.
+
+*** Om man sätter kom-show-week-number till t och har ett fungerande
+    calendar-paket (det måste förstå ISO-datum) så visar klienten
+    veckonumret när man gör Se tiden.
+
+*** Man kan ställa in standardspråk med kom-default-language.
+
+*** Man kan få använda menyerna för textnummer, personnamn och så
+    vidare i tty-läge genom att trycka "=" på tangentbordet.
+
+*** Nytt kommando: Var finns kommandot. Visar vilka tangenter ett
+    kommado finns på.
+
+*** Nytt kommando: Ändra parentes. Bra för alla som har "beskrivande"
+    parenteser och ändrar dem alldeles för ofta. Meningslöst för oss
+    andra. Fungerar inte vidare bra. Någon parentesgalning får väl
+    fixa.
+
+*** När man scrollar mindre än en skärmsida så markeras den sista
+    synliga raden i blått så att det blir lättare att hitta var man
+    skall börja läsa igen. Markeringen hålls kvar i ungefär en sekund. 
+    Utseendet styrs av kom-mark-face.
+
+*** C-M-p och C-M-n går bakåt respektive framåt till föregående/nästa
+    prompt i LysKOM-bufferten.
+
+*** Genom att sätta kom-complete-numbers-before-names till t så antar
+    klienten att namn som "p 4711" betyder person nummer 4711, inte
+    ett namn vars första ord börjar med "p" och vars andra ord börjar
+    med "4711" (samma gäller givetvis för "m 4711" också).
+
+*** Min förhoppning är att klienten skall fungera vare sig man har
+    multibytestöd på eller inte, och oavsett om man kör med gamla
+    saker som standard-display-european. Det fungerar dock bäst med
+    multibyteteckenstödet påslaget (till skillnad från 0.45).
+
+
+** Tilläggsinformation
+
+   I den senaste versionen av LysKOM-protokollet finns det möjlighet
+   att knyta godtycklig information till inlägg och till möten. Den
+   största ändringen i elispklienten från version 0.45.2 är
+   möjligheten att utnyttja detta. Det har tillkommit ett antal nya
+   kommandon för detta i LysKOM-bufferten och i inläggsbufferten.
+
+*** Tilläggsinformation i LysKOM-bufferten
+
+**** Efter tilläggsinformation visas en liten knapp "[*]". Om man
+     klickar på den så visas full information om tillägget.
+
+**** Om man håller nere högerknappen över en sådan knapp (eller
+     trycker på =) så går det även att radera tillägget.
+
+**** Om ett inlägg är märkt med typinformation så används den
+     informationen för att formattera inlägget.
+
+**** Om författaren till ett inlägg har begärt att ingen skall
+     kommentera inlägget så ber elispklienten om bekräftelse innan man
+     kommenterar.
+
+**** Om författaren till ett inlägg har begärt personliga svar och man
+     försöker kommentera inlägget så frågar klienten om man vill
+     skriva personligt svar istället.
+
+**** Om författaren till ett inlägg har begärt att alla som läser det
+     skall bekräfta läsning så frågar elispklienten om man vill
+     bekräfta varje gång inlägget visas (tills man har bekräftat det
     förstås.)
 
-*** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ och Återse
-    FAQ (bunden till åq) används för att manipulera och läsa FAQer.
-    Servern raderar aldrig en FAQ automatiskt, oavsett hur gammal den
-    är.
+**** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ och Återse
+     FAQ (bunden till åq) används för att manipulera och läsa FAQer. 
+     Servern raderar aldrig en FAQ automatiskt, oavsett hur gammal den
+     är.
 
-*** Man kan skriva korta repliker till inlägg. Dessa är tänkta att
-    ersätta vissa typer av "adderingsmöten" som finns i flera
-    KOM-system. Kommandona "Hålla med" (rh) och "Kort replik" (rr) är 
-    till för att skriva repliker. Se även dokumentationen av variabeln 
-    kom-agree-text för mer information.
-
-
-** Tilläggsinformation i inläggsbufferten
-
-*** Det går att skapa korsreferenser till andra inlägg eller möten
-    genom att trycka på C-c C-a C-x. Korsreferenser är bra när man
-    vill hänvisa till ett annat inlägg eller till ett möte. De visas
-    samlat, och eftersom klienterna vet vad de är så kan de lätt visa
-    det som hänvisas till.
-
-*** Genom att trycka på C-c C-x C-b så kan man begära att alla som
-    läser inlägget bekräftar detta. Elispklienten frågar om man vill
-    bekräfta läsning när ett sådant inlägg visas.
-
-*** Om man inte vill att andra skall kommentera ens inlägg så kan man
-    trycka på C-c C-x C-n för att begära detta. Detta är rådgivande,
-    inte tvingande. Det går fortfarande att kommentera inlägget. I
-    elispklienten måste man bekräfta att man vill kommentera ett
-    inlägg med denna markering.
-
-*** Om man enbart vill ha personliga svar till ett inlägg så kan man
-    begära detta genom att trycka på C-c C-x C-p. Det går fortfarande
-    att skriva vanliga kommentarer, men klienter som känner till den
-    här markeringen bör göra det lite svårare.
-
-*** Genom att manipulera menyn som visas när man håller ned höger
-    musknapp ovanför den lilla haken i vänstermarginalen framför
-    tilläggsinformationen så kan man växla vissa parametrar. Hemlig
-    innebär att tillägget inte visas för någon annan, anonym att vem
-    som lade till tillägget inte visas för någon annan (informationen
-    lagras dock i servern) och ärvd innebär att tillägget kopieras
-    till kommentarer som skrivs till inlägget.
-
-    Notera att servern helt godtyckligt kan ta bort eller lägga till
-    flaggor, utan någon som helst varning, och gör ofta detta. Lite
-    inte på att du blir anonym bara för att du begär det...
+**** Man kan skriva korta repliker till inlägg. Dessa är tänkta att
+     ersätta vissa typer av "adderingsmöten" som finns i flera
+     KOM-system. Kommandona "Hålla med" (rh) och "Kort replik" (rr) är
+     till för att skriva repliker. Se även dokumentationen av
+     variabeln kom-agree-text för mer information.
 
 
-Bugfixar
+*** Tilläggsinformation i inläggsbufferten
 
-** Om man skriver in ett namn som matchar mer än ett i databasen, och
-   matchar det ena exakt utan parentes så kommer det att accepteras
-   som unikt. Förr var man tvungen att skriva in parentesen också
-   (även i 0.45.2).
+**** Det går att skapa korsreferenser till andra inlägg eller möten
+     genom att trycka på C-c C-a C-x. Korsreferenser är bra när man
+     vill hänvisa till ett annat inlägg eller till ett möte. De visas
+     samlat, och eftersom klienterna vet vad de är så kan de lätt visa
+     det som hänvisas till.
 
-** Det går att ladda elispklienten mer än en gång i samma Emacs utan
-   att allting går sönder (även i 0.45.2).
+**** Genom att trycka på C-c C-x C-b så kan man begära att alla som
+     läser inlägget bekräftar detta. Elispklienten frågar om man vill
+     bekräfta läsning när ett sådant inlägg visas.
 
-** Man kan välja språk genom att sätta kom-default-language till det
-   språk man vill ha.
+**** Om man inte vill att andra skall kommentera ens inlägg så kan man
+     trycka på C-c C-x C-n för att begära detta. Detta är rådgivande,
+     inte tvingande. Det går fortfarande att kommentera inlägget. I
+     elispklienten måste man bekräfta att man vill kommentera ett
+     inlägg med denna markering.
 
-** De extremt långa inloggningstiderna som en del personer upplevde
-   (dvs tiden det tog att få första prompten) är förhoppningsvis
-   borta. 
+**** Om man enbart vill ha personliga svar till ett inlägg så kan man
+     begära detta genom att trycka på C-c C-x C-p. Det går fortfarande
+     att skriva vanliga kommentarer, men klienter som känner till den
+     här markeringen bör göra det lite svårare.
 
-** Om man inte har w3 installerat så försöker klienten inte längre
-   anropa w3 för att formattera HTML (även i 0.45.2).
+**** Genom att manipulera menyn som visas när man håller ned höger
+     musknapp ovanför den lilla haken i vänstermarginalen framför
+     tilläggsinformationen så kan man växla vissa parametrar. Hemlig
+     innebär att tillägget inte visas för någon annan, anonym att vem
+     som lade till tillägget inte visas för någon annan (informationen
+     lagras dock i servern) och ärvd innebär att tillägget kopieras
+     till kommentarer som skrivs till inlägget.
+     
+     Notera att servern helt godtyckligt kan ta bort eller lägga till
+     flaggor, utan någon som helst varning, och gör ofta detta. Lita
+     inte på att du blir anonym bara för att du begär det...
 
-** Vi använder lite färre gamla anrop som vi inte borde använda. 
+
+
+* Bugfixar
+
+** Parenteser i URLer kodas om hexadecimalt innan elispklienten
+   försöker skicka dem till Netscape.
+
+** Om ett fel inträffar vid omformattering av ett inlägg så visas
+   inlägget ändå. Meningen är att inga buggar eller oförutsedda
+   features skall hindra en från att läsa inlägg.
+
+** Man får bättre felmeddelanden när man misslyckas addera en medlem
+   till ett möte. Specifikt så får man under vissa omständigheter veta
+   om personen redan var medlem.
+
+** Addering av BCC-mottagare i efterhand fungerar.
+
+** Fördröjningen i formatteringen av inläggsfoten är borta (om den
+   inte behövs).
+
+** Funktionerna för att stega fram och bak enstaka texter fungerar
+   mycket bättre och är Y2K-kompatibla.
+
+** Edit-moden har en bättre placering av nya mottagare.
+
+** Återse senaste visar inte inlägget med sparade inställningar
+   (user-arean). 
+
+** Pipfunktionen hänger inte om man försöker spela en ljudfil med ett
+   program som inte finns.
+
+** Om man kör M-x lyskom och har en buffert med en död session till
+   samma server så återanvänds den bufferten utan någon fråga. Förr så
+   fick man frågan trots att sessionen inte längre var vid liv.
+
+** Om man startar en ny session mot samma server som en gammal
+   session, men till en annan port, så tror inte klienten att man
+   försöker ansluta till samma server.
+
+** Den automatiska radbrytningen är smartare. Den borde till exempel
+   klara av headerrader i sladdpost.
+
+** Anslutningen via HTTP-proxy är lite bättre. 
+
+** Igenkänningen av info-referenser är bättre.
+
+** Vid utskriften av namnsdagar så hanteras dagar utan namnsdag
+   bättre.
+
+** Inläsningen av person- och mötesnamn är bättre och robustare.
+
+** Visningen av systemets lapp på dörren och lite andra saker görs
+   först efter man har läst inställningarna så att rätt språk används.
+
+** Det gåt att trycka C-g på fler ja-och-nej-frågor.
+
+** Man kan ladda om lyskom.elc hur många gånger som helst utan att
+   saker går sönder (även i 0.45.2).
+
+** Parsern är stabilare.
+
+** Hanteringen av HTML är robustare.
+
+** De extremt långa inloggningstiderna som vissa personer upplevde är
+   så gott som borta. Inloggningen har blivit mycket snabbare,
+   speciellt för de som är med i många möten men inte har många
+   olästa.
+
+** Automatisk addering av mottagare när man kommenterar och det
+   kommenterades författare inte är med i någon mottagare är
+   robustare. 
+
+** Användningen av gamla och utrangerade serveranrop har minskats.
+
+** Hanteringen av inställningar sparade i servern (user-arean) är mer
+   robust. Det går att logga in oavsett hur mycket fel som finns i
+   user-arean och elispklienten klarar av att andra klienter har lagt
+   in egna delar.
+
+** Massor av andra osorterade saker.
