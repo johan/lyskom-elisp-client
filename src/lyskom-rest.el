@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.8 1996-10-03 00:20:49 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.9 1996-10-05 20:58:18 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.8 1996-10-03 00:20:49 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.9 1996-10-05 20:58:18 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -657,7 +657,8 @@ The value is actually the membership for the conference."
   (save-excursion
     (if (and kom-max-buffer-size
 	     (> (buffer-size) kom-max-buffer-size))
-	(let ((delchars (- (buffer-size) kom-max-buffer-size)))
+	(let ((delchars (- (buffer-size) kom-max-buffer-size))
+	      (inhibit-read-only t))
 	  (goto-char (point-min))
 	  (while (< (point) delchars)
 	    (forward-line 1))

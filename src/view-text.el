@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.1 1996-09-29 15:18:58 davidk Exp $
+;;;;; $Id: view-text.el,v 44.2 1996-10-05 20:58:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.1 1996-09-29 15:18:58 davidk Exp $\n"))
+	      "$Id: view-text.el,v 44.2 1996-10-05 20:58:27 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -84,7 +84,9 @@ Note that this function must not be called asynchronously."
 		      text)
 		 (progn
                    (run-hooks 'lyskom-view-text-hook)
-		   (setq start (point-max))
+		   ;; Use a marker, because the buffer may lose data
+		   ;; at the top if kom-max-buffer-size is set.
+		   (setq start (point-max-marker))
 		   (lyskom-format-insert "%#1n " 
 					 text-stat)
 		   (lyskom-print-date-and-time (text-stat->creation-time
@@ -114,6 +116,7 @@ Note that this function must not be called asynchronously."
 			    (not (lyskom-face-default-p 'kom-first-line-face)))
 		       (add-text-properties
 			start end '(face kom-first-line-face)))
+		   (set-marker start nil)
 
 		   ;; All recipients and other header lines.
 

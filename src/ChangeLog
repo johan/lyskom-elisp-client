@@ -1,3 +1,16 @@
+Sat Oct  5 19:23:13 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* prefetch.el (lyskom-prefetch-membership-handler): Gör inte om
+ 	vektorn till en lista i onödan.
+	(lyskom-prefetch-one-request): Skicka first-local oförändrat. Den
+ 	gjorde detta två gånger, vilket gjorde att man förlorade hälften
+ 	av de lokala textnumren.
+
+	* view-text.el (lyskom-view-text): Använd en marker för att sätta
+ 	kom-first-line-face korrekt när kom-max-buffer-size används.
+
+	* lyskom-rest.el (lyskom-trim-buffer): Sätt inhibit-read-only.
+
 Thu Oct  3 01:30:03 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-binsearch-internal): Tro inte att två
@@ -6,7 +19,8 @@ Thu Oct  3 01:30:03 1996  David Kågedal  <davidk@lysator.liu.se>
 	* Rensade bort referenser till lyskom-last-conf-*.
 
 	* startup.el (lyskom-clear-vars): Gör lyskom-prefetch-in-action,
- 	lyskom-prefetch-pending-prefetch och lyskom-prefetch-stack lokala.
+ 	lyskom-prefetch-pending-prefetch, lyskom-pending-prefetch och
+ 	lyskom-prefetch-stack lokala.
 
 	* vars.el.in (lyskom-last-conf-fetched): Tog bort.
 	(lyskom-last-conf-received): Tog bort.
