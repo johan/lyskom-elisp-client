@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.176 2001-08-09 22:06:15 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.177 2001-08-15 23:41:11 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.176 2001-08-09 22:06:15 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.177 2001-08-15 23:41:11 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -118,6 +118,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-a <LFD>") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-k") 'kom-edit-add-comment)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a C-l") 'kom-edit-add-link)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
   (define-key lyskom-sv-edit-prefix (kbd "C-x C-b") 'kom-edit-add-read-confirm-request)
@@ -832,6 +833,12 @@ Annat se \\[describe-mode] ---")
     (unknown-header . "Okänd information på raden")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
     (cant-find-info-node . "Hittar inte info-bufferten")
+
+    (link-type . "Vad vill du länka till (inlägg, möte eller person)? ")
+    (which-text-to-link . "Lägg in länk till text nummer: ")
+    (which-text-to-link-err . "Hittar inte texten. Lägg in länk till text nummer: ")
+    (which-pers-to-link . "Lägg in länk till person: ")
+    (which-conf-to-link . "Lägg in länk till möte: ")
 
     ;; From view-text.el:
     (line . " /1 rad/ ")

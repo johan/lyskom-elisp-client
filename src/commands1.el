@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.116 2001-07-11 20:10:12 byers Exp $
+;;;;; $Id: commands1.el,v 44.117 2001-08-15 23:41:08 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.116 2001-07-11 20:10:12 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.117 2001-08-15 23:41:08 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3888,6 +3888,51 @@ corresponding aux-item."
                               0
                               (format "%s%d" char obj)))))
 
+
+(defun lyskom-read-link ()
+  "Query user about link type and value, and return the corresponding
+aux-item."
+  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
+                            (cons (lyskom-get-string 'person) 'pers)
+                            (cons (lyskom-get-string 'text) 'text)))
+         (completion-ignore-case t)
+         (type (cdr (lyskom-string-assoc
+                     (lyskom-completing-read
+                      (lyskom-get-string 'link-type)
+                      (lyskom-maybe-frob-completion-table
+                       completions)
+                      nil
+                      t)
+                     completions)))
+         (obj nil)
+         (prompt nil))
+    (cond
+     ((eq type 'text)
+      (setq prompt (lyskom-get-string 'which-text-to-link))
+      (while (null obj)
+        (setq obj (blocking-do 'get-text-stat
+			       (lyskom-read-number prompt)))
+        (setq prompt (lyskom-get-string 'which-text-to-link-err )))
+      (let* ((text-no (text-stat->text-no obj))
+             (text (blocking-do 'get-text text-no))
+	     (txt (text->decoded-text-mass text obj))
+	     (eos (string-match (regexp-quote "\n") txt))
+	     (subject (substring txt 0 eos)))
+	(format "<text %d: %s>" text-no subject)))
+     
+     ((eq type 'conf)
+      (setq prompt (lyskom-get-string 'which-conf-to-link))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-stat prompt '(conf) nil nil t)))
+      (format "<möte %d: %s>" (conf-stat->conf-no obj)
+			   (conf-stat->name obj)))
+
+     ((eq type 'pers)
+      (setq prompt (lyskom-get-string 'which-pers-to-link))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-stat prompt '(pers) nil nil t)))
+      (format "<person %d: %s>" (conf-stat->conf-no obj)
+			   (conf-stat->name obj))))))
 
 
 ;;; ================================================================
