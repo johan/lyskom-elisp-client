@@ -1,3 +1,8 @@
+Sun Jul 19 12:07:22 1992  Linus Tolke Y  (linus@lysator)
+
+	* commands1.el (lyskom-return-who-info-line): Fixed a bug that
+	  resulted in too much truncation.
+
 Sun Jul  5 05:02:37 1992  Linus Tolke Y  (linus@lysator)
 
 	* completing-read.el (lyskom-completing-read-conf-stat-handler):

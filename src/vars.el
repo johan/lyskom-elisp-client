@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.23 1992-07-05 06:23:02 linus Exp $
+;;;;; $Id: vars.el,v 35.24 1992-07-19 10:10:27 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.23 1992-07-05 06:23:02 linus Exp $\n"))
+	      "$Id: vars.el,v 35.24 1992-07-19 10:10:27 linus Exp $\n"))
 
 
 
@@ -216,7 +216,7 @@ Dont change this. These are defined by the protocol.")
   "List of flags that are to be saved in the common block.
 These are the non-boolean ones. See: lyskom-global-boolean-variables.
 
-Dont change this. These are defined by the protocol.")
+Dont change these. These are defined by the protocol.")
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.21 1992-07-05 03:38:32 linus Exp $
+;;;;; $Id: commands1.el,v 35.22 1992-07-19 10:10:25 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.21 1992-07-05 03:38:32 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.22 1992-07-19 10:10:25 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1663,7 +1663,7 @@ MY-SESSION-NO is the session number of the running session.
 	       (lyskom-fix-str (/ (* 36 (- (lyskom-window-width) 7)) 73)
 			       string2))))
     (while (string= (substring line -1) " ")
-      (setq line (substring line 0 -2)))
+      (setq line (substring line 0 -1)))
     (concat line "\n")))
 
     
