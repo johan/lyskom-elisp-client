@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 39.1 1996-03-18 15:43:10 byers Exp $
+;;;;; $Id: filter-edit.el,v 40.0 1996-03-26 08:31:18 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
