@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.97 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: option-edit.el,v 44.98 2003-08-14 12:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.97 2003-08-02 20:21:46 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.98 2003-08-14 12:01:28 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -840,7 +840,19 @@ All key bindings:
                                                       :tag name) :indent 4))
     (kom-print-relative-dates (toggle (yes no)))
     (kom-print-seconds-in-time-strings (toggle (yes no)))
-    (kom-extended-status-information (toggle (yes no)))
+    (kom-extended-status-information (choice ((const (yes t))
+                                              (repeat (cons ((choice ((const (extended-conf-info server))
+                                                                      (const (extended-pers-info pers))
+                                                                      (const (extended-server-info server))
+                                                                      (const (extended-read-faq-info read-faq))
+                                                                      (const (extended-statistics-info raw-server-stats))
+                                                                      (const (extended-all-other-info t))
+                                                                      )
+                                                                     :tag extended-info-type
+                                                                     :format "%[%t%] %v ")
+                                                             (toggle (yes no) :tag extended-info-show)))
+                                                      :tag specific-extended-info 
+                                                      :menu-tag specific-extended-info))))
     (kom-edit-hide-add-button (noggle (yes no)))
     (kom-keyboard-menu-immediate-selection (noggle (yes no)))
     (kom-url-transformation-rules (repeat (cons ((string nil :tag url-transform-regexp)

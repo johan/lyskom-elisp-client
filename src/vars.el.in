@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.256 2003-08-13 21:35:01 qha Exp $
+;;;;; $Id: vars.el.in,v 44.257 2003-08-14 12:01:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.256 2003-08-13 21:35:01 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.257 2003-08-14 12:01:29 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -422,13 +422,30 @@ overlays."
   "**Controls display of extra information when displaying LysKOM objects.
 
 If `t', extended status information is listed for all objects in
-LysKOM. The information controlled by this variable is the kind of
-data that most users are not interested in, and, if displayed, would
-make more important information hard to find.
+LysKOM. If set to an association list, each element is a pair of tag
+and value. The tag specifies a type of extended information. If the
+corresponding value is `t', the information is shown. If the
+corresponding value is `nil', the information is not shown.
 
-Currently this includes read FAQs (on conferences).
+Valid tags are:
 
-Values other than `t' or `nil' are reserved for future extensions."
+    Tag                 Meaning
+    conf                Show all extended information for conferences
+    pers                Show all extended information for persons
+    server              Show all extended information for the server
+    read-faq            Show read FAQs
+    raw-server-stats    Show raw server statistics
+    raw-boottime-info   Show raw boot-time server information
+    t                   Any information not explicitly listed
+
+The information controlled by this variable is the kind of data that
+most users are not interested in, and, if displayed, would make more
+important information hard to find.
+
+Currently this includes read FAQs (for letterboxes) and full
+statistics and boot-time information (for the server).
+
+Values other than those specified are reserved for future extensions."
 server )
 
 (def-kom-var kom-auto-list-faqs t
@@ -3276,6 +3293,10 @@ will be shown."
 
 (def-kom-var lyskom-static-server-info nil
   "Cache of static-server-info"
+  local)
+
+(def-kom-var lyskom-stats-description nil
+  "Cache of get-stats-description"
   local)
 
 (def-kom-var lyskom-uconf-cache nil

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.176 2003-08-14 08:24:35 byers Exp $
+;;;;; $Id: commands2.el,v 44.177 2003-08-14 12:01:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.176 2003-08-14 08:24:35 byers Exp $\n"))
+              "$Id: commands2.el,v 44.177 2003-08-14 12:01:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -196,7 +196,8 @@ otherwise: the conference is read with lyskom-completing-read."
          (or conf-no
              (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
                                   '(all) nil nil t)))
-        (kom-print-seconds-in-time-strings nil))
+        (kom-print-seconds-in-time-strings nil)
+        (kom-extended-status-information (lyskom-extended-status-override 'conf)))
     (cache-del-conf-stat conf-no)
     (cache-del-uconf-stat conf-no)
     (blocking-do-multiple ((conf-stat (get-conf-stat conf-no))
@@ -397,6 +398,7 @@ This command accepts text number prefix arguments \(see
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
                                   '(pers) nil nil t)))
         (kom-print-seconds-in-time-strings nil)
+        (kom-extended-status-information (lyskom-extended-status-override 'pers))
         conf-stat
         pers-stat)
     (cache-del-conf-stat pers-no)
@@ -2991,7 +2993,12 @@ properly in the client."
                          (server-time (get-time))
                          (highest-text (find-previous-text-no lyskom-max-int))
                          (first-text (find-next-text-no 0))
-                         (session-info (who-is-on-dynamic  t t 0)))
+                         (session-info (who-is-on-dynamic  t t 0))
+                         (stats-desc (get-stats-description))
+                         (text-stats (get-stats "texts"))
+                         (conf-stats (get-stats "confs"))
+                         (pers-stats (get-stats "persons"))
+                         (boottime-info (get-boottime-info)))
     (setq lyskom-server-info (blocking-do 'get-server-info))
     (setq lyskom-server-version-info (blocking-do 'get-version-info))
 
@@ -3003,9 +3010,36 @@ properly in the client."
            (inactive-sessions 0)
            (unknown-activity-sessions 0)
            (total-sessions (length session-info))
-           (idle-hide (* 60 (if (numberp kom-idle-hide) kom-idle-hide 30))))
+           (idle-hide (* 60 (if (numberp kom-idle-hide) kom-idle-hide 30)))
+           (kom-extended-status-information
+            (lyskom-extended-status-override 'server))
+           momentary-index periodic-index)
 
       (setq aux-items (delq canonical-name-aux aux-items))
+
+      ;; Compute the index into statistics that represents the
+      ;; momentary value (when equals zero) and the periodic
+      ;; value (when is at least five minutes).
+
+      (when stats-desc
+        (let ((min-time
+               (apply 'min (listify-vector (stats-description->when
+                                            stats-desc))))
+              (max-time
+               (apply 'max (listify-vector (stats-description->when
+                                            stats-desc))))
+              (i 0)
+              (min-diff lyskom-max-int)
+              max-time-index)
+          (lyskom-traverse val (stats-description->when stats-desc)
+            (when (eq val min-time) (setq momentary-index i))
+            (when (eq val max-time) (setq max-time-index i))
+            (when (and (>= val 300)
+                       (< (- val 300) min-diff))
+              (setq min-diff (- val 300)
+                    periodic-index i))
+            (setq i (1+ i)))
+          (unless periodic-index (setq periodic-index max-time-index))))
 
       ;; ----------------------------------------
       ;; Compute session statistics
@@ -3062,6 +3096,30 @@ properly in the client."
           (lyskom-format-insert 'server-status-server canonical-name canonical-port)))
 
       ;; ----------------------------------------
+      ;; Print start time and such
+
+      (when boottime-info
+        (lyskom-format-insert 'server-status-boot-time
+                            (let ((kom-print-relative-dates nil))
+                              (lyskom-format-time 
+                               'date-and-time
+                               (static-server-info->boot-time
+                                boottime-info))))
+
+        (lyskom-format-insert
+         'server-status-save-time
+         (let ((kom-print-relative-dates nil))
+           (lyskom-format-time 
+            'date-and-time
+            (static-server-info->save-time
+             boottime-info)))
+         (cond ((equal "clean" (static-server-info->db-status boottime-info)) nil)
+               (t (condition-case nil
+                      (lyskom-get-string (intern (concat "db-status-" (static-server-info->db-status boottime-info))))
+                    (error (static-server-info->db-status boottime-info))))))
+         )
+
+      ;; ----------------------------------------
       ;; Print time
       (lyskom-format-insert 'server-status-time
                             (let ((kom-print-relative-dates nil))
@@ -3069,6 +3127,7 @@ properly in the client."
 
       ;; ----------------------------------------
       ;; Print session statistics
+
       (lyskom-format-insert 'server-status-sessions
                             total-sessions
                             active-sessions
@@ -3079,9 +3138,48 @@ properly in the client."
                             (/ idle-hide 60))
 
       ;; ----------------------------------------
+      ;; Print stats for confs and persons
+
+      (when pers-stats
+        (lyskom-format-insert 'server-status-pers
+                              (stats->average
+                               (elt pers-stats momentary-index))
+                              (lyskom-format-time-units
+                               (stats->ascent-rate
+                                (elt pers-stats periodic-index)))
+                              (static-server-info->existing-persons
+                               boottime-info)))
+
+      (when conf-stats
+        (lyskom-format-insert 'server-status-confs
+                              (stats->average
+                               (elt conf-stats momentary-index))
+                              (lyskom-format-time-units
+                               (stats->ascent-rate
+                                (elt conf-stats periodic-index)))
+                              (static-server-info->existing-confs
+                               boottime-info)))
+
+
+      ;; ----------------------------------------
       ;; Print info on text numbers
+
+      (when text-stats
+        (lyskom-format-insert 'server-status-texts
+                              (stats->average
+                               (elt text-stats momentary-index))
+                              (lyskom-format-time-units
+                               (stats->ascent-rate
+                                (elt text-stats periodic-index)))
+                              (static-server-info->existing-texts
+                               boottime-info)))
       (lyskom-format-insert 'server-status-first-text first-text)
-      (lyskom-format-insert 'server-status-last-text highest-text)
+      (lyskom-format-insert 'server-status-last-text 
+                            highest-text
+                            (when boottime-info
+                              (static-server-info->highest-text-no
+                               boottime-info)))
+
 
       ;; ----------------------------------------
       ;; Print remaining aux-items
@@ -3099,55 +3197,56 @@ properly in the client."
       ;; ----------------------------------------
       ;; Print statistics
 
-      (let* ((stats (lyskom-get-server-stats))
-             (what (server-stats->what stats))
-             (maxlen (and stats (apply 'max (mapcar 'length what))))
-             (fmt (and maxlen (format "%%=%d#1s " maxlen))))
-        (when stats
-          (lyskom-format-insert 'status-server-stats)
-          (lyskom-insert (lyskom-format fmt ""))
-          (lyskom-traverse period (server-stats->when stats)
-            (lyskom-format-insert "  %=8#1s" 
-                                  (if (eq 0 period)
-                                      (lyskom-get-string 'current-average)
-                                    (lyskom-format-units period 
-                                                         '((604800 . "w")
-                                                           (86400 . "d")
-                                                           (3600 . "h")
-                                                           (60 . "m"))
-                                                         "s"))))
-          (lyskom-insert "\n")
-          (lyskom-traverse item (server-stats->values stats)
-            (let ((start (point-max))
-                  (inhibit-read-only t))
-              (lyskom-format-insert fmt (car item))
-              (lyskom-traverse val (cdr item)
-                (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
+      (when (lyskom-extended-status-information 'raw-server-stats)
+        (let* ((stats (lyskom-get-server-stats))
+               (what (server-stats->what stats))
+               (maxlen (and stats (apply 'max (mapcar 'length what))))
+               (fmt (and maxlen (format "%%=%d#1s " maxlen))))
+          (when stats
+            (lyskom-format-insert 'status-server-stats)
+            (lyskom-insert (lyskom-format fmt ""))
+            (lyskom-traverse period (server-stats->when stats)
+              (lyskom-format-insert "  %=8#1s" 
+                                    (if (eq 0 period)
+                                        (lyskom-get-string 'current-average)
+                                      (lyskom-format-units period 
+                                                           '((604800 . "w")
+                                                             (86400 . "d")
+                                                             (3600 . "h")
+                                                             (60 . "m"))
+                                                           "s"))))
+            (lyskom-insert "\n")
+            (lyskom-traverse item (server-stats->values stats)
+              (let ((start (point-max))
+                    (inhibit-read-only t))
+                (lyskom-format-insert fmt (car item))
+                (lyskom-traverse val (cdr item)
+                  (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
+                (lyskom-format-insert "\n")
+                (add-text-properties start (point-max) `(face ,kom-mark-face)))
+
+              (lyskom-format-insert fmt "")
+              (lyskom-insert " ")
+              (let ((index 0))
+                (lyskom-traverse val (cdr item)
+                  (if (eq (elt (server-stats->when stats) index) 0)
+                      (lyskom-insert "          ")
+                    (lyskom-format-insert " %=8.2.7#1f+"
+                                          (stats->ascent-rate val)))
+                  (setq index (1+ index))))
               (lyskom-format-insert "\n")
-              (add-text-properties start (point-max) `(face ,kom-mark-face)))
 
-            (lyskom-format-insert fmt "")
-            (lyskom-insert " ")
-            (let ((index 0))
-              (lyskom-traverse val (cdr item)
-                (if (eq (elt (server-stats->when stats) index) 0)
-                    (lyskom-insert "          ")
-                  (lyskom-format-insert " %=8.2.7#1f+"
-                                        (stats->ascent-rate val)))
-                (setq index (1+ index))))
-            (lyskom-format-insert "\n")
-
-            (lyskom-format-insert fmt "")
-            (lyskom-insert " ")
-            (let ((index 0))
-              (lyskom-traverse val (cdr item)
-                (if (eq (elt (server-stats->when stats) index) 0)
-                    (lyskom-insert "          ")
-                  (lyskom-format-insert " %=8.2.7#1f-"
-                                        (stats->descent-rate val)))
-                (setq index (1+ index))))
-            (lyskom-format-insert "\n")
-            )))
+              (lyskom-format-insert fmt "")
+              (lyskom-insert " ")
+              (let ((index 0))
+                (lyskom-traverse val (cdr item)
+                  (if (eq (elt (server-stats->when stats) index) 0)
+                      (lyskom-insert "          ")
+                    (lyskom-format-insert " %=8.2.7#1f-"
+                                          (stats->descent-rate val)))
+                  (setq index (1+ index))))
+              (lyskom-format-insert "\n")
+              ))))
 
 
       ;; ----------------------------------------

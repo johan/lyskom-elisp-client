@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.333 2003-08-13 17:43:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.334 2003-08-14 12:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.333 2003-08-13 17:43:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.334 2003-08-14 12:01:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1807,10 +1807,15 @@ Antal sessioner:     %21#1d (totalt)
                      %21#4d okänd aktivitet
                      %21#5d osynliga sessioner
                      %21#6d ej inloggade/hemliga/zombies\n")
-    (server-status-first-text . "Äldsta befintliga text:    %15#1n\n")
-    (server-status-last-text  . "Yngsta befintliga text:    %15#1n\n")
+    (server-status-first-text . "Äldsta befintliga text:     %14#1n\n")
+    (server-status-last-text  . "Yngsta befintliga text:     %14#1n%#2?b%[ (%#2n vid start)%]%[%]\n")
+    (server-status-texts .      "Antal existerande inlägg:   %14#1d (%#2s, %#3d vid start)\n")
+    (server-status-confs .      "Antal existerande möten:    %14#1d (%#2s, %#3d vid start)\n")
+    (server-status-pers .       "Antal existerande personer: %14#1d (%#2s, %#3d vid start)\n")
     (server-status-has-motd . "\nServern har en lapp på dörren:\n")
     (server-status-time . "Serverns tid:                   %#1s\n")
+    (server-status-boot-time . "Servern startades:              %#1s\n")
+    (server-status-save-time . "Initial databas sparades:       %#1s%#2?b%[ (%#2s)%]%[%]\n")
 
     (mship-type-invitation-q . "Inbjudan till medlemskap? ")
     (mship-type-passive-q . "Passivt medlemskap? ")
@@ -1982,6 +1987,15 @@ att upprepas då och då tills du har skrivit en presentation.%]
 
     (status-server-stats . "Statistik om servern:\n\n")
     (current-average . "nu")
+
+    (unit-second . "sekund")
+    (unit-minute . "minut")
+    (unit-hour . "timme")
+    (unit-day . "dag")
+    (unit-mongth . "månad")
+    (unit-year . "år")
+
+    (db-status-backup . "informationsförlust kan ha förekommit")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -3084,6 +3098,17 @@ att upprepas då och då tills du har skrivit en presentation.%]
 
     (yes-dont-pop . "Ja, men avikonifiera inte fönstret")
     (language . "Språk")
+
+    (specific-extended-info . "Enbart vald information")
+    (extended-info-show . "Visa:")
+    (extended-info-type . "Informationstyp:")
+
+    (extended-server-info . "All utökad serverinformation")
+    (extended-conf-info . "All utökad mötesinformation")
+    (extended-pers-info . "All utökad personinformation")
+    (extended-read-faq-info . "Lästa FAQ")
+    (extended-statistics-info . "Fullständig serverstatistik")
+    (extended-all-other-info . "Annan information")
 
     ;;
     ;; Misc doc strings

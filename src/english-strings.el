@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.294 2003-08-13 17:43:57 byers Exp $
+;;;;; $Id: english-strings.el,v 44.295 2003-08-14 12:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.294 2003-08-13 17:43:57 byers Exp $"))
+              "$Id: english-strings.el,v 44.295 2003-08-14 12:01:28 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1772,10 +1772,15 @@ Number of sessions:  %21#1d (total)
                      %21#4d unknown activity
                      %21#5d invisible sessions
                      %21#6d not logged on/secret/zombies\n")
-    (server-status-first-text . "Oldest existing text:      %15#1n\n")
-    (server-status-last-text  . "Youngest existing text:    %15#1n\n")
+    (server-status-first-text . "Oldest existing text:       %14#1n\n")
+    (server-status-last-text  . "Youngest existing text:     %14#1n%#2?b%[ (%#2n at start)%]%[%]\n")
+    (server-status-texts .      "Number of texts:            %14#1d (%#2s, %#3d at start)\n")
+    (server-status-confs .      "Number of conferences:      %14#1d (%#2s, %#3d at start)\n")
+    (server-status-pers .       "Number of persons:          %14#1d (%#2s, %#3d at start)\n")
     (server-status-has-motd . "\nThe server has a notice:\n")
-    (server-status-time . "Serverns tid:                   %#1s\n")
+    (server-status-time .      "Current server time:            %#1s\n")
+    (server-status-boot-time . "Server start time:              %#1s\n")
+    (server-status-save-time . "Initial database save time:     %#1s%#2?b%[ (%#2s)%]%[%]\n")
 
     (mship-type-invitation-q . "Membership invitation? ")
     (mship-type-passive-q . "Passive membership? ")
@@ -1952,6 +1957,15 @@ written a presentation.%]
 
     (status-server-stats . "Server statistics:\n\n")
     (current-average . "current")
+
+    (unit-second . "second")
+    (unit-minute . "minute")
+    (unit-hour . "hour")
+    (unit-day . "day")
+    (unit-mongth . "month")
+    (unit-year . "year")
+
+    (db-status-backup . "information loss may have occurred")
     ))
 
 
@@ -2971,6 +2985,17 @@ Select whether to execute command or keyboard macro.")
 
     (yes-dont-pop . "Yes, but don't uniconify frames")
     (language . "Language")
+
+    (specific-extended-info . "Only selected information")
+    (extended-info-show . "Show:")
+    (extended-info-type . "Information type:")
+
+    (extended-server-info . "All extended server information")
+    (extended-conf-info . "All extended conference information")
+    (extended-pers-info . "All extended person information")
+    (extended-read-faq-info . "Read FAQs")
+    (extended-statistics-info . "Full server statistics")
+    (extended-all-other-info . "Other information")
 
     ;;
     ;; Misc doc strings
