@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.3 1996-08-10 11:55:57 byers Exp $
+;;;;; $Id: commands1.el,v 43.4 1996-08-10 13:10:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.3 1996-08-10 11:55:57 byers Exp $\n"))
+	      "$Id: commands1.el,v 43.4 1996-08-10 13:10:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1912,14 +1912,52 @@ WHO-INFOS that are potential sessions."
 	       (lyskom-get-string 'doing-nowhere-conn))
 	     (lyskom-format-time
 	      (static-session-info->connection-time static))
-             (if (eq (/ (dynamic-session-info->idle-time info) 60)
-                     0)
-                 "\n"
-               (lyskom-format (lyskom-get-string 'session-status-inactive)
-                              (/ (dynamic-session-info->idle-time info) 60))))
+             (cond ((eq (/ (dynamic-session-info->idle-time info) 60) 0)
+                    (lyskom-get-string 'session-is-active))
+                   ((not (session-flags->user_active_used
+                          (dynamic-session-info->flags info)))
+                    "\n")
+                   (t
+                    (lyskom-format (lyskom-get-string 'session-status-inactive)
+                                   (lyskom-format-secs
+                                    (dynamic-session-info->idle-time info))))))
 	    (if (session-flags->invisible (dynamic-session-info->flags info))
 		(lyskom-insert (lyskom-get-string 'session-is-invisible)))))
       (setq who-info-list (cdr who-info-list)))))
+
+
+(defun lyskom-format-secs-aux (string num x1 x2 one many)
+  (cond ((<= num 0) string)
+        ((= num 1) (if (string= "" string)
+                       (concat string (lyskom-get-string one))
+                     (concat string (if (and (= x1 0)
+                                             (= x2 0))
+                                        (format " %s " 
+                                                (lyskom-get-string 'and))
+                                      ", ")
+                             (lyskom-get-string one))))
+        (t (if (string= "" string)
+               (concat string (format "%d %s" num
+                                      (lyskom-get-string many)))
+             (concat string (if (and (= x1 0)
+                                     (= x2 0))
+                                (format " %s "
+                                        (lyskom-get-string 'and))
+                              ", ")
+                     (format "%d %s"
+                             num
+                             (lyskom-get-string many)))))))
+
+(defun lyskom-format-secs (time)
+  "Format the number of seconds in TIME as a human-readable string."
+  (let ((secs (% time 60))
+        (mins (% (/ time 60) 60))
+        (hrs  (% (/ time 3600) 24))
+        (days (/ time 86400))
+        (string ""))
+    (setq string (lyskom-format-secs-aux string days hrs mins 'one-day 'days))
+    (setq string (lyskom-format-secs-aux string hrs  mins 0 'one-hour 'hours))
+    (setq string (lyskom-format-secs-aux string mins 0 0 'one-minute 'minutes))))
 	
 
 ;;; ================================================================

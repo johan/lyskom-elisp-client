@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 43.1 1996-08-09 20:56:34 davidk Exp $
+;;;;; $Id: komtypes.el,v 43.2 1996-08-10 13:10:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 43.1 1996-08-09 20:56:34 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 43.2 1996-08-10 13:10:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1033,48 +1033,57 @@ TYPE is one of RECPT, CC-RECPT COMM-TO COMM-IN FOOTN-TO or FOOTN-IN."
 
 (defmacro def-komtype (type &rest args)
   (let ((typename (symbol-name type))
-	(n 0))
+	(n 0)
+        (tmp nil))
     ;; Constructor
-    (eval (list 'defsubst
-		(intern (concat "lyskom-create-" typename))
-		args
-		(concat "Create a `" typename "' from arguments.\n"
-			"Args: " (upcase (mapconcat
-					  'symbol-name args " ")) "\n"
-			"Automatically created with def-komtype.")
-		(list 'cons
-		      (list 'quote (intern (upcase typename)))
-		      (cons 'vector args))))
-    ;; Identifier
-    (eval (list 'defsubst
-		(intern (concat typename "-p"))
-		(list type)
-		(concat "Return `t' if " (upcase typename)
-			" is a " typename ".\n"
-			"Args: " (upcase typename) "\n"
-			"Automatically created with def-komtype.")
-		(list 'and
-		      (list 'consp type)
-		      (list 'eq (list 'car type)
-			    (list 'quote (intern (upcase typename)))))))
+    (append
+     (list 'progn
+           (list 'defsubst
+                 (intern (concat "lyskom-create-" typename))
+                 args
+                 (concat "Create a `" typename "' from arguments.\n"
+                         "Args: " (upcase (mapconcat
+                                           'symbol-name args " ")) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'cons
+                       (list 'quote (intern (upcase typename)))
+                       (cons 'vector args)))
+           ;; Identifier
+           (list 'defsubst
+                 (intern (concat typename "-p"))
+                 (list type)
+                 (concat "Return `t' if " (upcase typename)
+                         " is a " typename ".\n"
+                         "Args: " (upcase typename) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'and
+                       (list 'consp type)
+                       (list 'eq (list 'car type)
+                             (list 'quote (intern (upcase typename)))))))
     ;; Selectors/Modifiers
-    (while args
-      (let ((argname (symbol-name (car args))))
-	;; Selctor
-	(eval (list 'defsubst
-		    (intern (concat typename "->" argname))
-		    (list type)
-		    "Automatically created with def-komtype."
-		    (list 'aref (list 'cdr type) n)))
-	;; Modifier
-	(eval (list 'defsubst
-		    (intern (concat "set-" typename "->" argname))
-		    (list type (car args))
-		    "Automatically created with def-komtype."
-		    (list 'aset (list 'cdr type) n (car args))))
-	(setq n (1+ n)
-	      args (cdr args)))))
-  '())
+     (progn
+       (while args
+         (let ((argname (symbol-name (car args))))
+           ;; Selctor
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat typename "->" argname))
+                            (list type)
+                            "Automatically created with def-komtype."
+                            (list 'aref (list 'cdr type) n))
+                      tmp))
+           ;; Modifier
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat "set-" typename "->" argname))
+                            (list type (car args))
+                            "Automatically created with def-komtype."
+                            (list 'aset (list 'cdr type) n (car args)))
+                      tmp))
+           (setq n (1+ n)
+                 args (cdr args))))
+       tmp))))
+
 
 (def-komtype session-flags
   invisible user_active_used user_absent
