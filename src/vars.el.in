@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.33 1997-09-13 16:07:21 byers Exp $
+;;;;; $Id: vars.el.in,v 44.34 1997-09-16 15:08:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.33 1997-09-13 16:07:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.34 1997-09-16 15:08:15 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1022,6 +1022,9 @@ Users are encouraged to use their best sense of humor."
     kom-customize
     kom-change-language
     kom-calculate
+
+    kom-next-kom
+    kom-previous-kom
     ))
 
 ;(defconst lyskom-elisp-variables

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.45 1997-09-10 13:15:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.46 1997-09-16 15:08:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.45 1997-09-10 13:15:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.46 1997-09-16 15:08:05 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1081,8 +1081,8 @@ Note that it is not allowed to use deferred insertions in the text."
                                      (append arg nil) " "))
                          ((and arg (symbolp arg))
                           (if (memq arg lyskom-commands)
-			      (lyskom-get-string arg)
-			    (princ arg)))
+			      (lyskom-command-name arg)
+			    (prin1-to-string arg t)))
                          (t (format "(%S)" arg)))))
 
      ;;

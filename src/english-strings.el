@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.28 1997-09-13 16:07:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.29 1997-09-16 15:08:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.28 1997-09-13 16:07:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.29 1997-09-16 15:08:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1161,6 +1161,8 @@ On since %#8s%#9s")
     (kom-remote-quit          . "Remote control quit")
 
     (kom-status-session . "Status (of a) session")
+    (kom-next-kom             . "Next LysKOM")
+    (kom-previous-kom         . "Previous LysKOM")
     (kom-customize      . "Customize LysKOM")
     (kom-change-language . "Change language")
     (kom-calculate            . "Calculate")

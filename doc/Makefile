@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.2 1997-08-11 19:54:02 davidk Exp $
+# $Id: Makefile,v 44.3 1997-09-16 15:07:36 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,10 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 44.2  1997-08-11 19:54:02  davidk
+# Revision 44.3  1997-09-16 15:07:36  byers
+# Småfixar
+#
+# Revision 44.2  1997/08/11 19:54:02  davidk
 # Ändrade versionsnumret till 0.45
 # Ladda ../src/widget.el manuellt när man bygger lyskom-variables.data
 #
@@ -80,7 +83,7 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-CLIENTVERSION = 0.45
+CLIENTVERSION = 0.45.1
 
 SHELL = /bin/sh
 RM = rm -vf
