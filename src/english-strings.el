@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.230 2002-09-07 21:35:22 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.231 2002-09-10 16:32:59 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.230 2002-09-07 21:35:22 ceder Exp $"))
+              "$Id: english-strings.el,v 44.231 2002-09-10 16:32:59 joel Exp $"))
 
 
 ;;; ================================================================
@@ -527,9 +527,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (error-access-denied-add-recpt . "You are not allowed to add texts to %#2M.\n")
     (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
 
-    (moving-tree-what-action-q . "What do you want to do? (flytta) ")
+    (moving-tree-what-action-q . "What do you want to do? (move) ")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
-    (moving-already-moved . "Text %#1n does not have %#2M as a mottagare.\nSkipping this text and its comments.\n")
+    (moving-already-moved . "Text %#1n does not have %#2M as a recipient.\nSkipping this text and its comments.\n")
     (text-to-add-q . "Add which text as a comment to %#1n? ")
     (text-to-remove-q . "Remove which text as a comment from %#1n? ")
     (text-to-add-footn-q . "Add which text as a footnote to %#1n? ")
@@ -621,7 +621,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
-    (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (skapad av %#2M)\n")
+    (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (created by %#2M)\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
@@ -802,7 +802,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-motd-failed . "Didn't work. Perhaps you were not an administrator.\n")
     (removing-motd . "Removing the login message.\n")
     (removed-motd . "You have removed the login message.\n")
-    (who-to-throw-out . "Who's session do you want to kill? ")
+    (who-to-throw-out . "Whose session do you want to kill? ")
     (throwing-out . "Killing session %#1d... ")
     (postpone-prompt . "How much do you want to read now? ")
     (set-session-priority . "Set reading level: ")
@@ -1689,7 +1689,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-recpt-add-recipient . "Recipient")
     (lyskom-button-recpt-add-copy . "Carbon copy recipient")
     (lyskom-button-recpt-add-bcc . "Blind carbon copy recipient")
-    (lyskom-button-aux-type-xref . "Referenc till conference/person/text")
+    (lyskom-button-aux-type-xref . "Reference to conference/person/text")
     (lyskom-button-aux-type-no-comments . "Request no comments")
     (lyskom-button-aux-type-personal-comments . "Request personal reply")
 
@@ -1735,7 +1735,7 @@ Number of sessions:  %21#1d (total)
     (kom-redirect-comments-e49 . "You do not have permission to perform this redirection")
     (kom-redirect-comments-e48 . "Comment redirection is not supported by the server")
 
-    (external-program-missing . "Can't find the external program \"%#1s\", that was required for this command.")
+    (external-program-missing . "Can't find the external program \"%#1s\" that is required for this command.")
     (ignored-user-area-var . "\
 
 Ignoring the following variables in your settings:
@@ -1747,7 +1747,7 @@ read from the server. You can remove the variables from the server by
 giving the command \"Save options\".\n\n")
 
 
-    (unknown-aux-item . "Okänd tilläggsinformation")
+    (unknown-aux-item . "Unknown auxiliary information")
     (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
 
     (aux-content-type-name . "Content type")
@@ -2007,7 +2007,7 @@ Using the default face in place of these faces.
     (kom-del-server-faq       . "Remove server FAQ")
     (kom-review-server-faq    . "Review server FAQ")
     (kom-change-server-faq    . "Change server FAQ")
-    (kom-recommend-conference . "Recommend cnoference")
+    (kom-recommend-conference . "Recommend conference")
     (kom-redirect-comments    . "Redirect comments")
     ))
 
@@ -3293,7 +3293,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-windows-browser-command-doc . "\
   This setting specifies the command to use to start a web browser
-  under Windows. If empty, a couple of commands that are likely the
+  under Windows. If empty, a couple of commands that are likely to
   work on Windows will be tried.")
 
     (kom-mosaic-command-doc . "\
@@ -3569,7 +3569,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   time of texts and sent messages) will include seconds.")
     (kom-review-uses-cache-doc . "\
   If this is turned on, commands that review texts will use saved copies
-  of the text rather then get new copies from the server. This makes the
+  of the text rather than get new copies from the server. This makes the
   commands run significantly faster, but in some cases the texts may 
   have changed since they were copied, and you will not see those 
   changes.")
@@ -3596,16 +3596,16 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   When this is on, the text body is shown with a different format than
   normal text.")
     (kom-async-highlight-dashed-lines-doc . "\
-  When this is on, the lines before and after personal, group- and alarm
-  messages are shown with  a different format than normal text.")
+  When this is on, the lines before and after personal, group and alarm
+  messages are shown with a different format than normal text.")
     (kom-async-highlight-text-body-doc . "\
-  When this is on, the body of personal, group- and alarm messages are
+  When this is on, the body of personal, group and alarm messages are
   shown with a different format than normal text.")
     (kom-edit-hide-add-button-doc . "\
   When this is on, an [Add...] button will be shown after the list of
   recipients and auxiliary information when writing a new text.")
     (kom-format-html-authors-doc . "\
-  This setting controls which author's HTML messages that the client will
+  This setting controls which authors' HTML messages that the client will
   attempt to format.")
     (kom-keyboard-menu-immediate-selection-doc . "\
   This setting controls whether keyboard shortcuts in text-based context
@@ -3786,7 +3786,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-auto-review-faqs-tag . "Review new FAQs automatically:")
     (kom-auto-list-faqs-tag . "List new FAQs automatically:")
     (kom-extended-status-information-tag . "Extended status information:")
-    (kom-highlight-first-line-tag . "Color fist line:")
+    (kom-highlight-first-line-tag . "Color first line:")
     (kom-highlight-dashed-lines-tag . "Color dashed lines:")
     (kom-highlight-text-body-tag . "Color text backgrounds:")
     (kom-async-highlight-dashed-lines-tag . "Color dashed lines around messages:")

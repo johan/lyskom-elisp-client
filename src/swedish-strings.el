@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.266 2002-09-07 21:35:21 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.267 2002-09-10 16:32:59 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.266 2002-09-07 21:35:21 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.267 2002-09-10 16:32:59 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -408,7 +408,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-add-bcc . "Vilket inlägg vill du skicka som dold kopia:")
     (text-to-delete-recipient . "Vilket inlägg vill du subtrahera mottagare från:")
     (text-to-move . "Vilket inlägg vill du flytta:")
-    (text-tree-to-move . "Vilket inläggs är rot till trädet vill du flytta:")
+    (text-tree-to-move . "Vilket inlägg är rot till trädet du vill flytta:")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till:")
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
@@ -1439,7 +1439,7 @@ Uppkopplad sedan %#8s%#9s")
     (author-fast-reply-aux . "  \"%#1t\"")
     (other-fast-replies . "Anmärkningar:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
-    (fast-reply-too-long . "Kan inte skapa anmärkningar som bestär av mer än en rad.\n")
+    (fast-reply-too-long . "Kan inte skapa anmärkningar som består av mer än en rad.\n")
     
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
     (faq-for-server-aux . "Texten är FAQ för LysKOM-servern") 
@@ -1752,11 +1752,11 @@ Antal sessioner:     %21#1d (totalt)
     (external-program-missing . "Hittar inte det externa programmet \"%#1s\" som krävs för att genomföra kommandot.")
     (ignored-user-area-var . "\
 
-Ignorerar följande variabeler i dina inställningar:
+Ignorerar följande variabler i dina inställningar:
 
     %#1s
 
-Variablerna är inte registrerade LysKOM-variabeler och kan därför inte
+Variablerna är inte registrerade LysKOM-variabler och kan därför inte
 läsas från servern. Du kan ta bort variablerna från servern genom att
 ge kommandot \"Spara variabler\".\n\n")
 
@@ -3588,7 +3588,7 @@ i servern. Annars sparas det i din .emacs.")
   kopplar ned efter en stunds inaktivitet så kan du sätta detta till ungefär 
   hälften och sedan ge kommandot \"Håll förbindelsen aktiv\".")
     (kom-text-no-prompts-doc . "\
-  Den är inställningen styr vilka kommandon som alltid frågar efter 
+  Den här inställningen styr vilka kommandon som alltid frågar efter 
   textnummer (om man inte anger ett explicit som prefixargument). För 
   kommandon som inte står med här används inbyggda standardinställningar.")
     (kom-saved-file-name-doc . "\
@@ -3642,7 +3642,7 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är påslaget så kommer olästa FAQer att listas automatiskt när
   du loggar in eller går till ett möte med en oläst FAQ.")
     (kom-extended-status-information-doc . "\
-  Om detta är påslaget so visas extra statusinformation i kommandona
+  Om detta är påslaget så visas extra statusinformation i kommandona
   Status (för) person, Status (för) möte och Status (för) servern 
   (om sådan information finns tillgänglig).")
     (kom-highlight-first-line-doc . "\
@@ -3853,7 +3853,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
     (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
-    (kom-max-overlays-tag . "Högsta antal färgmarkeringeingar:")
+    (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
     )
 )
 
