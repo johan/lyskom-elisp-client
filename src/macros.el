@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.13 1997-08-18 12:27:30 byers Exp $
+;;;;; $Id: macros.el,v 44.14 1997-09-21 11:43:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.13 1997-08-18 12:27:30 byers Exp $\n"))
+	      "$Id: macros.el,v 44.14 1997-09-21 11:43:12 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -85,6 +85,7 @@ Value returned is always nil."
 	      '(set-buffer __buffer__))))
 
 (put 'lyskom-save-excursion 'edebug-form-spec t)
+(put 'lyskom-provide-macro 'lisp-indent-hook 2)
 
 ;;; ======================================================================
 ;;; Some useful macros to make the code more readable.
@@ -242,6 +243,18 @@ the current buffer, and its value is copied from the LysKOM buffer."
 (lyskom-widget-wrapper widget-get)
 (lyskom-widget-wrapper widget-put)
 
+;;; ============================================================
+;;; Signal gunk
+;;;
+
+(defmacro lyskom-ignore-errors (&rest forms)
+  (` (condition-case nil
+         (progn (,@ forms))
+       (error nil))))
+
+(put 'ignore-errors 'edebug-form-spec
+     '(sexp form body))
+
 
 ;;; ============================================================
 ;;; Local variables
@@ -251,7 +264,8 @@ the current buffer, and its value is copied from the LysKOM buffer."
   (` (lyskom-set-default (quote (, name))
                          (, value))))
 
-
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-ignore-errors 'lisp-indent-hook 2)
 ;;; end: 

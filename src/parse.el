@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.10 1997-09-10 13:15:19 byers Exp $
+;;;;; $Id: parse.el,v 44.11 1997-09-21 11:43:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.10 1997-09-10 13:15:19 byers Exp $\n"))
+	      "$Id: parse.el,v 44.11 1997-09-21 11:43:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -756,7 +756,7 @@ Args: TEXT-NO. Value: text-stat."
 i.e creates the buffer, sets all markers and pointers."
   (setq lyskom-is-parsing nil)
   (setq lyskom-unparsed-buffer 
-	(generate-new-buffer 
+	(lyskom-generate-new-buffer 
 	 (concat (if lyskom-debug-communications-to-buffer "" " ")
 		 (buffer-name)
 		 "-replies")))

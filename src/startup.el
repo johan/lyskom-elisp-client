@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.22 1997-07-29 14:53:34 byers Exp $
+;;;;; $Id: startup.el,v 44.23 1997-09-21 11:43:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.22 1997-07-29 14:53:34 byers Exp $\n"))
+	      "$Id: startup.el,v 44.23 1997-09-21 11:43:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -111,7 +111,7 @@ See lyskom-mode for details."
 				 (apply 'lyskom-create-time time))))
 		       (setq name (buffer-name buffer))))
 		    (t
-		     (setq buffer (generate-new-buffer host))
+		     (setq buffer (lyskom-generate-new-buffer host))
 		     (setq name (buffer-name buffer))))
               (let* ((proxy-host-string
                       (cond ((stringp kom-www-proxy) kom-www-proxy)

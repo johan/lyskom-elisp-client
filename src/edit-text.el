@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.24 1997-09-16 10:19:20 byers Exp $
+;;;;; $Id: edit-text.el,v 44.25 1997-09-21 11:42:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,14 +33,62 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.24 1997-09-16 10:19:20 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.25 1997-09-21 11:42:58 byers Exp $\n"))
 
 
 ;;;; ================================================================
 
+;;; Set variables to make lyskom-edit-mode a minor mode. This
+;;; simplifies some stuff a lot
+
+(defvar lyskom-edit-mode nil
+  "Mode variable for lyskom-edit-mode")
+(make-variable-buffer-local 'lyskom-edit-mode)
+
+(defvar lyskom-edit-sending-mode nil
+  "Mode variable for lyskom-edit-sending-mode")
+(make-variable-buffer-local 'lyskom-edit-sending-mode)
+
+(defvar lyskom-edit-sent-mode nil
+  "Mode variable for lyskom-edit-sent-mode")
+(make-variable-buffer-local 'lyskom-edit-sent-mode)
+
+(put 'lyskom-edit-mode 'permanent-local t)
+
+(or (assq 'lyskom-edit-mode minor-mode-alist)
+    (setq minor-mode-alist (cons '(lyskom-edit-mode " LysKOM Edit")
+                                 minor-mode-alist)))
+
+(or (assq 'lyskom-edit-sending-mode minor-mode-alist)
+    (setq minor-mode-alist (cons '(lyskom-edit-sending-mode " LysKOM Sending")
+                                 minor-mode-alist)))
+
+(or (assq 'lyskom-edit-sent-mode minor-mode-alist)
+    (setq minor-mode-alist (cons '(lyskom-edit-sent-mode " LysKOM Sent")
+                                 minor-mode-alist)))
+
+(or (assq 'lyskom-edit-mode minor-mode-map-alist)
+    (setq minor-mode-map-alist
+	  (cons (cons 'lyskom-edit-mode lyskom-edit-mode-map)
+		minor-mode-map-alist)))
+
+(or (assq 'lyskom-edit-sending-mode minor-mode-map-alist)
+    (setq minor-mode-map-alist
+	  (cons (cons 'lyskom-edit-sending-mode lyskom-edit-mode-map)
+		minor-mode-map-alist)))
+
+(or (assq 'lyskom-edit-sent-mode minor-mode-map-alist)
+    (setq minor-mode-map-alist
+	  (cons (cons 'lyskom-edit-sending-mode lyskom-edit-mode-map)
+		minor-mode-map-alist)))
+
+
 
 (defvar lyskom-edit-mode-name "LysKOM edit"
   "Name of the mode.")
+
+(defvar lyskom-edit-text-sent nil
+  "Non-nil when a text has been sent")
 
 (defvar lyskom-is-dedicated-edit-window nil
   "Status variable for an edit-window.")
@@ -58,13 +106,16 @@ See lyskom-edit-handler.")
 
 ;;; Error signaled by lyskom-edit-parse-headers
 (put 'lyskom-edit-text-abort 'error-conditions
-     '(error lyskom-error lyskom-edit-error lyskom-abort-edit))
+     '(error lyskom-error lyskom-edit-error lyskom-edit-text-abort))
 
 (put 'lyskom-unknown-header 'error-conditions
      '(error lyskom-error lyskom-edit-error lyskom-unknown-header))
 
 (put 'lyskom-no-subject 'error-conditions
      '(error lyskom-error lyskom-edit-error lyskom-no-subject))
+
+(put 'lyskom-edit-error 'error-conditions
+     '(error lyskom-error lyskom-edit-error))
 
 (defun lyskom-edit-text (proc misc-list subject body
 			      &optional handler &rest data)
@@ -93,6 +144,9 @@ Does lyskom-end-of-command."
 	(config (current-window-configuration)))
 
     (lyskom-display-buffer buffer)
+    (text-mode)
+    (lyskom-ignore-errors
+      (run-hooks 'lyskom-edit-mode-mode-hook))
     (lyskom-edit-mode)
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
@@ -244,7 +298,82 @@ Watch out! None of these functions are allowed to do kill-all-local-variables
 because kom-edit-send and other functions depend on some variables to be able
 to enter the text in the correct lyskom-process.")
 
-(defun lyskom-edit-mode ()
+(defvar lyskom-edit-mode-mode-hook nil
+  "*List of functions to be called when entering lyskom-edit-mode.
+Watch out! None of these functions are allowed to do kill-all-local-variables
+because kom-edit-send and other functions depend on some variables to be able
+to enter the text in the correct lyskom-process.
+
+This one differs from lyskom-edit-mode-hook in that it is called before
+the lyskom-special key bindings are added.")
+
+
+;;;(defun lyskom-edit-mode ()
+;;;  "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
+;;;Commands:
+;;;\\[kom-edit-send]   sends the text when you are ready. The buffer will be
+;;;          deleted if (and only if) the server accepts the text.
+;;;\\[kom-edit-quit]   aborts the editing. You will get back to the LysKOM buffer.
+;;;
+;;;\\[kom-edit-show-commented]   shows the commented text in a temporary buffer.
+;;;
+;;;\\[kom-edit-add-recipient]   asks for another recipient and adds him to the header.
+;;;\\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
+;;;
+;;;\\[kom-edit-insert-commented]   inserts the commented of footnoted text.
+;;;\\[kom-edit-insert-text]   inserts the shown text, you tell the number."
+;;;  (interactive)
+;;;  (let ((tmp-keymap nil))
+;;;    (kill-all-local-variables)
+;;;    (text-mode)
+;;;
+;;;    (run-hooks 'lyskom-edit-mode-mode-hook)
+;;;
+;;;    (setq tmp-keymap (and (current-local-map)
+;;;                          (copy-keymap (current-local-map))))
+;;;
+;;;    (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
+;;;    (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
+;;;    (setq major-mode 'lyskom-edit-mode)
+;;;    (setq mode-name lyskom-edit-mode-name)
+;;;
+;;;    (if tmp-keymap
+;;;        (let ((new-keymap (make-sparse-keymap)))
+;;;          (make-local-variable 'lyskom-edit-mode-map)
+;;;          (setq lyskom-edit-mode-map 
+;;;                (lyskom-default-value 'lyskom-edit-mode-map))
+;;;
+;;;          (lyskom-xemacs-or-gnu
+;;;           (set-keymap-parents new-keymap
+;;;                               (list lyskom-edit-mode-map
+;;;                                     tmp-keymap))
+;;;           (progn (set-keymap-parent new-keymap lyskom-edit-mode-map)
+;;;                  (lyskom-overlay-keymap lyskom-edit-mode-map
+;;;                                         tmp-keymap
+;;;                                         new-keymap)))
+;;;          (use-local-map new-keymap))
+;;;
+;;;      (lyskom-use-local-map lyskom-edit-mode-map))
+;;;    
+;;;
+;;;    (auto-save-mode 1)
+;;;    (auto-fill-mode 1)
+;;;    (make-local-variable 'paragraph-start)
+;;;    (make-local-variable 'paragraph-separate)
+;;;    (setq paragraph-start (concat "^" 
+;;;                                  (regexp-quote 
+;;;                                   (substitute-command-keys
+;;;                                    (lyskom-get-string 'header-separator)))
+;;;                                  "$\\|" paragraph-start))
+;;;    (setq paragraph-separate (concat "^" 
+;;;                                     (regexp-quote 
+;;;                                      (substitute-command-keys
+;;;                                       (lyskom-get-string 'header-separator)))
+;;;                                     "$\\|" paragraph-separate))
+;;;    (run-hooks 'lyskom-edit-mode-hook)))
+
+
+(defun lyskom-edit-mode (&optional arg)
   "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
 Commands:
 \\[kom-edit-send]   sends the text when you are ready. The buffer will be
@@ -257,30 +386,59 @@ Commands:
 \\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
 
 \\[kom-edit-insert-commented]   inserts the commented of footnoted text.
-\\[kom-edit-insert-text]   inserts the shown text, you tell the number."
-  (interactive)
-  (kill-all-local-variables)
-  (text-mode)
-  (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
-  (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
-  (setq major-mode 'lyskom-edit-mode)
-  (setq mode-name lyskom-edit-mode-name)
-  (lyskom-use-local-map lyskom-edit-mode-map)
-  (auto-save-mode 1)
-  (auto-fill-mode 1)
-  (make-local-variable 'paragraph-start)
-  (make-local-variable 'paragraph-separate)
-  (setq paragraph-start (concat "^" 
-				(regexp-quote 
-				 (substitute-command-keys
-				  (lyskom-get-string 'header-separator)))
-				"$\\|" paragraph-start))
-  (setq paragraph-separate (concat "^" 
-				   (regexp-quote 
-				    (substitute-command-keys
-				     (lyskom-get-string 'header-separator)))
-				   "$\\|" paragraph-separate))
-  (run-hooks 'lyskom-edit-mode-hook))
+\\[kom-edit-insert-text]   inserts the shown text, you tell the number.
+
+Even though this is a minor mode, it's not intended to be turned on and off,
+so it's not as clean as it ought to be."
+  (interactive "P")
+  (setq lyskom-edit-mode
+        (if (null arg)
+            (not lyskom-edit-mode)
+          (> (prefix-numeric-value arg) 0)))
+
+  (when lyskom-edit-mode
+    (lyskom-edit-sending-mode 0)
+    (lyskom-edit-sent-mode 0)
+    (auto-fill-mode 1)
+    (auto-save-mode 1)
+    (when (not (local-variable-p 'lyskom-edit-text-sent (current-buffer)))
+      (make-local-variable 'lyskom-edit-text-sent)
+      (setq lyskom-edit-text-sent nil))
+    (make-local-variable 'paragraph-start)
+    (make-local-variable 'paragraph-separate)
+    (setq paragraph-start (concat "^" 
+                                  (regexp-quote 
+                                   (substitute-command-keys
+                                    (lyskom-get-string 'header-separator)))
+                                  "$\\|" paragraph-start))
+    (setq paragraph-separate (concat "^" 
+                                     (regexp-quote 
+                                      (substitute-command-keys
+                                       (lyskom-get-string 'header-separator)))
+                                     "$\\|" paragraph-separate))
+    (run-hooks 'lyskom-edit-mode-hook)))
+
+(defun lyskom-edit-sending-mode (arg)
+  (interactive "P")
+  (setq lyskom-edit-sending-mode 
+        (if (null arg)
+            (not lyskom-edit-sending-mode)
+          (> (prefix-numeric-value arg) 0)))
+
+  (when lyskom-edit-sending-mode
+    (lyskom-edit-mode 0)
+    (lyskom-edit-sent-mode 0)))
+
+(defun lyskom-edit-sent-mode (arg)
+  (interactive "P")
+  (setq lyskom-edit-sent-mode 
+        (if (null arg)
+            (not lyskom-edit-sent-mode)
+          (> (prefix-numeric-value arg) 0)))
+
+  (when lyskom-edit-sent-mode
+    (lyskom-edit-sending-mode 0)
+    (lyskom-edit-mode 0)))
 
 
 ;;; ================================================================
@@ -300,7 +458,7 @@ Commands:
 (defun lyskom-edit-send (send-function)
   "Send the text to the server by calling SEND-FUNCTION."
   (condition-case err
-      (if (or (string= mode-name lyskom-edit-mode-name)
+      (if (or (not lyskom-edit-text-sent) ;++MINOR checked mode-name against lyskom-edit-mode-name
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
 	    (let ((buffer (current-buffer))
@@ -355,7 +513,8 @@ Commands:
                                  (lyskom-edit-extract-text))
                       (lyskom-edit-extract-text)))
 
-	      (setq mode-name "LysKOM sending")
+;++MINOR	      (setq mode-name "LysKOM sending")
+              (lyskom-edit-sending-mode 1)
 	      (save-excursion
                 (let ((full-message
                        (cond ((and lyskom-allow-missing-subject
@@ -382,7 +541,7 @@ Commands:
     ;; Catch no-subject and other things
     ;;
 
-    (lyskom-abort-edit
+    (lyskom-edit-text-abort
      (apply 'lyskom-message (cdr-safe err)))
     (lyskom-no-subject
      (lyskom-beep kom-ding-on-no-subject)
@@ -1030,7 +1189,8 @@ Point must be located on the line where the subject is."
     (lyskom-message "%s" (lyskom-format 'could-not-create-text lyskom-errno
 				   (lyskom-get-error-text lyskom-errno)))
     (set-buffer edit-buffer)
-    (setq mode-name lyskom-edit-mode-name)
+    (lyskom-edit-mode 1)
+;++MINOR    (setq mode-name lyskom-edit-mode-name)
     (sit-for 0))
    (t
     (lyskom-insert-before-prompt
@@ -1049,6 +1209,7 @@ Point must be located on the line where the subject is."
       (setq lyskom-dont-change-prompt nil)))
     
     (set-buffer edit-buffer)		;Need local variables.
+    (lyskom-edit-sent-mode 1)
 
     ;; Record the text number
 
@@ -1077,7 +1238,8 @@ Point must be located on the line where the subject is."
     (lyskom-save-excursion
      (set-buffer edit-buffer)
      (delete-auto-save-file-if-necessary))
-    (kill-buffer edit-buffer))))
+    (kill-buffer edit-buffer)
+)))
 
 
 (defun lyskom-edit-show-commented (text editing-buffer window)

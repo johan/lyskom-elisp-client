@@ -7,14 +7,35 @@ Version 0.45.1 av elispklienten finns nu tillgänglig på följande URL.
        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
 Filen heter lyskom-0.45.1.tar.gz, och en kopia av den text du läser
-just nu finns under namnet NEWS-0.45 samt under namnet NEWS-0.45.1 i
+just nu finns under namnet NEWS-0.45.1 samt under namnet NEWS-0.45.1 i
 tar-arkivet.
 
                                 David Byers   <byers@lysator.liu.se>
 
 
 
-* Se NEWS-0.45 för information om 0.45 i största allmänhet.
+* Se NEWS-0.45 för information om 0.45 i största allmänhet. Rätt
+  mycket har ändrats från 0.44.2, så det kan vara värt att läsa detta.
+
+
+* Fitjurs och förbättringar
+
+** Om man vill ändra kom-tell-phrases så är det enklaste sättet att
+   helt enkelt sätta variabeln i sin .emacs. Innehållet kommer att
+   kopieras när man laddar LysKOM. Om man vill ändra kom-tell-phrases
+   efter att ha ladded lyskom.elc så är lösningen att UTSL.
+
+** lyskom-edit-mode-mode-hook är tillbaks. lyskom-edit-mode-mode-map
+   är dock fortfarande borta, och kommer inte att komma tillbaks.
+   Motsvarande funktionalitet går antagligen att få genom att göra
+   use-local-map ifrån lyskom-edit-mode-mode-hook.
+
+** Edit-moden är numera en minor mode. Det gör att man enkelt kan
+   välja "grundmode" via lyskom-edit-mode-mode-hook och att man kan
+   byta mode medan man skriver ett inlägg. 
+
+** Klienten startar Netscape bättre på en Windows-maskin. Patch från
+   Daniel Bratell.
 
 
 * Bugfixar
@@ -24,3 +45,21 @@ tar-arkivet.
 
 ** Fel som hade med utskrift av kommandonamn är rättade.
 
+** C-c } k är kanske tillbaks i edit-moden.
+
+** kom-write-text och vänner är lite robustare m.a.p. fel i
+   lyskom-edit-mode-mode-hook.
+
+** En bug som gjorde att Status Session i vissa fall inte fungerade
+   har blivit rättad.
+
+
+* Kända buggar
+
+** För att alls fungera i Gnu Emacs 20.1 så stänger elispklienten
+   explicit av stödet för multibytetecken i sina buffertar. Det kan
+   hända att vi har missat något ställe. Säg till om du upptäcker
+   något som verkar underligt.
+
+** Det kan vara problem att prata med lyskomd 1.7.0 eller äldre. I
+   Nästa version kommer det garanterat inte att fungera alls.

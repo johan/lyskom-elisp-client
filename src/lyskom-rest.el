@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.46 1997-09-16 15:08:05 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.47 1997-09-21 11:43:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.46 1997-09-16 15:08:05 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.47 1997-09-21 11:43:09 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1429,7 +1429,7 @@ in lyskom-messages."
 (defun lyskom-format-enriched (text)
   (if (not (fboundp 'format-decode-buffer))
       nil
-    (let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
+    (let ((tmpbuf (lyskom-generate-new-buffer "lyskom-enriched")))
       (unwind-protect
           (save-excursion
             (set-buffer tmpbuf)
@@ -2441,17 +2441,11 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
       (setq nagging t))
     (not (string-match (lyskom-get-string 'no-regexp) answer))))
 
+
 ;;;
 ;;; j-or-n-p is similar to y-or-n-p. If optional argument QUITTABLE is
 ;;; non-nil C-g will abort. 
 ;;;
-
-
-(defun lyskom-lookup-key (char)
-  "Look up the character CHAR in the current local and global keymaps."
-  (let ((tmp (vector char)))
-    (or (lookup-key (current-local-map) tmp)
-        (lookup-key (current-global-map) tmp))))
 
 (defun j-or-n-p (prompt &optional quittable)
   "Same as y-or-n-p but language-dependent.
@@ -2464,7 +2458,9 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
                                      (lyskom-get-string 'y-or-n-instring)))
                 (not (and (or (eq input-char 7)
                               (eq 'keyboard-quit
-                                  (lyskom-lookup-key input-char)))
+                                  (lyskom-lookup-key (current-local-map)
+                                                     input-char
+                                                     t)))
                           quittable)))
 	(lyskom-message "%s" (concat (if nagging 
 					 (lyskom-get-string 'j-or-n-nag)
@@ -2487,7 +2483,9 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
         ;;
 
         (if (or (eq input-char 12)
-                (eq 'recenter (lyskom-lookup-key input-char)))
+                (eq 'recenter (lyskom-lookup-key (current-local-map)
+                                                 input-char
+                                                 t)))
             (setq nagging nil)
           (setq nagging t)))
 
@@ -2592,7 +2590,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	       ((and (> lyskom-string-bytes-missing 0)
 		     (< (length output) lyskom-string-bytes-missing))
 		(setq lyskom-string-bytes-missing
-		      (- lyskom-string-bytes-missing (length output))))
+		      (- lyskom-string-bytes-missing
+			 (length output))))
 
 	       ;; This test makes e.g. startup a lot faster. At least
 	       ;; it does when the maps are read in one chunk, which
@@ -2782,8 +2781,9 @@ Other objects are converted correctly."
 
   
 (defun lyskom-format-string (string)
-  (concat (format "%d"(length string))
+  (concat (format "%d" (length string))
 	  "H" string))
+
 
 
 ;;;; ================================================================
@@ -2802,7 +2802,8 @@ One parameter - the prompt string."
   (lyskom-message "%s" prompt-str)
   (let ((input-string "")
 	(input-char)
-	(cursor-in-echo-area t))
+	(cursor-in-echo-area t)
+        (enable-multibyte-characters nil))
     (while (not (or (eq (setq input-char 
 			      (condition-case err
 				  (read-char)

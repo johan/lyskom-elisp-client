@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.6 1997-07-17 10:33:38 byers Exp $
+;;;;; $Id: buffers.el,v 44.7 1997-09-21 11:42:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.6 1997-07-17 10:33:38 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.7 1997-09-21 11:42:47 byers Exp $\n"))
 
 
 ;;;;
@@ -257,6 +257,14 @@ categories")
 (add-hook 'kill-buffer-query-functions 'lyskom-quit-query)
 (add-hook 'kill-emacs-query-functions 'lyskom-quit-query)
 
+(defun lyskom-generate-new-buffer (name)
+  (let ((buf (generate-new-buffer name)))
+    (save-excursion
+      (set-buffer buf)
+      (make-local-variable 'enable-multibyte-characters)
+      (setq enable-multibyte-characters nil))
+    buf))
+
 (defun lyskom-get-buffer-create (category name &optional unique)
   "Create a new buffer of category CATEGORY with name generated from NAME. 
 If UNIQUE is non-nil, re-use the first existing buffer of category
@@ -284,7 +292,9 @@ The created buffer is made a child of the current buffer."
     (lyskom-set-buffer-parent buffer (current-buffer))
     (lyskom-update-inherited-variables buffer)
     (save-excursion (set-buffer buffer)
-                    (setq lyskom-buffer-category category))
+                    (setq lyskom-buffer-category category)
+                    (make-local-variable 'enable-multibyte-characters)
+                    (setq enable-multibyte-characters nil))
     buffer))
 
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.15 1997-08-18 12:27:10 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.16 1997-09-21 11:43:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.15 1997-08-18 12:27:10 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.16 1997-09-21 11:43:05 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -795,17 +795,20 @@ MANAGER is the URL manager that started Netscape.
 
 This function attempts to load the URL in a running Netscape, but failing
 that, starts a new one."
-  (let* ((proc (apply 'start-process "netscape"
+  (let* ((url-string (if (eq window-system 'win32)
+                         (list url)
+                       (list "-remote"
+                             (format "openUrl(%s)" url))))
+         
+         (proc (apply 'start-process "netscape"
                       nil
                       (if (listp kom-netscape-command)
                           (car kom-netscape-command)
                         kom-netscape-command)
                       (if (listp kom-netscape-command)
                           (append (cdr kom-netscape-command)
-                                  (list "-remote"
-                                        (format "openUrl(%s)" url)))
-                        (list "-remote"
-                              (format "openUrl(%s)" url)))))
+                                  url-string)
+                        url-string)))
          (status 'run)
          (exit nil))
     (lyskom-url-manager-starting manager)

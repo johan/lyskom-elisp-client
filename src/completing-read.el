@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.10 1997-07-02 17:46:10 byers Exp $
+;;;;; $Id: completing-read.el,v 44.11 1997-09-21 11:42:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.10 1997-07-02 17:46:10 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.11 1997-09-21 11:42:54 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -52,7 +52,7 @@
 (defvar lyskom-completing-lookup-name-cache nil
   "Temporary cache of server queries")
 
-(defvar lyskom-completing-use-dynamic-info)
+(defvar lyskom-completing-use-dynamic-info nil)
 
 (defun lyskom-completing-clear-cache ()
   (setq lyskom-completing-who-info-cache nil)
@@ -516,6 +516,7 @@ function work as a name-to-conf-stat translator."
 ;  (save-excursion
 ;    (pop-to-buffer (get-buffer-create "*kom*-complete"))
 ;    (erase-buffer)
+;    (setq enable-multibyte-characters nil)
 ;    (while data
 ;      (insert
 ;       (format "%s\n" (substring (aref (car data) 2)
