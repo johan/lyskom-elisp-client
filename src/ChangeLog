@@ -1,3 +1,11 @@
+2000-09-03  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* buffers.el (kill-buffer-hook): Moved the adding to kill-buffer-hook
+	here and added a check for the major-moded; this should keep it from
+	affecting all buffers.
+
+	* english-strings.el (lyskom-custom-strings): Fixed a spelling error.
+
 2000-09-02  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* startup.el (lyskom-mode): kill-buffer-hook runs the

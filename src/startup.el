@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.54 2000-09-02 20:08:53 qha Exp $
+;;;;; $Id: startup.el,v 44.55 2000-09-03 02:56:34 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.54 2000-09-02 20:08:53 qha Exp $\n"))
+	      "$Id: startup.el,v 44.55 2000-09-03 02:56:34 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -815,11 +815,6 @@ to see, set of call."
   (use-local-map lyskom-mode-map)
   (lyskom-set-menus 'lyskom-mode lyskom-mode-map)
   (run-hooks 'lyskom-mode-hook)
-  (add-hook 'kill-buffer-hook '(lambda ()
-				 (let ((lyskom-trim-buffer-delete-to
-					(point-max)))
-				   (run-hooks 'lyskom-trim-buffer-hook)))
-	    nil t)
 
   (buffer-disable-undo (current-buffer))
   (setq buffer-read-only t))

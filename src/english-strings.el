@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.110 2000-09-01 14:13:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.111 2000-09-03 02:56:32 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.110 2000-09-01 14:13:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.111 2000-09-03 02:56:32 qha Exp $"))
 
 
 ;;; ================================================================
@@ -3186,7 +3186,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-trim-buffer-minimum-doc . "\
   If you have limited the LysKOM buffer size, this variable determines
-  how much larget than the limit the buffer has to be before it is
+  how much larger than the limit the buffer has to be before it is
   trimmed back to the maximum size. The variable must be an integer;
   the default is 4096.")
 
