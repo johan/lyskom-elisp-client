@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.5 1996-11-12 22:32:38 davidk Exp $
+;;;;; $Id: parse.el,v 44.6 1997-02-19 08:35:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.5 1996-11-12 22:32:38 davidk Exp $\n"))
+	      "$Id: parse.el,v 44.6 1997-02-19 08:35:50 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -68,11 +68,10 @@
 increase lyskom-parse-pos. Signal lyskom-parse-incomplete if
 the buffer lyskom-unparsed-buffer is exhausted."
   (let ((char (lyskom-parse-char)))
-    (cond
-     ((or (= char ? )
-          (= char ?\n))
-      (lyskom-parse-nonwhite-char))
-     (t char))))
+    (while (or (= char ?\ )
+               (= char ?\n))
+      (setq char (lyskom-parse-char)))
+    char))
 
   
 (defun lyskom-parse-char ()
@@ -80,11 +79,10 @@ the buffer lyskom-unparsed-buffer is exhausted."
 lyskom-parse-pos. Signal lyskom-parse-incomplete if the buffer 
 lyskom-unparsed-buffer is exhausted."
   (cond
-   ((>= lyskom-parse-pos (point-max))
-    (signal 'lyskom-parse-incomplete nil))
-   (t (prog1
-	  (char-after lyskom-parse-pos)
-	(++ lyskom-parse-pos)))))
+   ((< lyskom-parse-pos (point-max))
+    (prog1 (char-after lyskom-parse-pos)
+      (++ lyskom-parse-pos)))
+   (t (signal 'lyskom-parse-incomplete nil))))
 
 
 (defun lyskom-expect-char (char)
@@ -114,35 +112,16 @@ first non-white character was not equal to CHAR."
 Signal lyskom-parse-incomplete if the number is not followed by whitespace.
 Signal lyskom-protocol-error if the next token is not a number."
   (goto-char lyskom-parse-pos)
-  (let* ((max (point-max))
-	 (result (condition-case nil
-		     ;; Eval it to prevent malfunction when
-		     ;; edebug-all-defs or edebug-all-forms is non-nil.
-		     (read (current-buffer))
-		   (end-of-file (signal 'lyskom-parse-incomplete nil))))
-	 (pos (point)))
-    (cond
-     ((and (= max (point))
-	   (prog2
-	     (backward-char 1)
-	     (not (looking-at "[ \t\n\r]"))
-	     (forward-char 1)))
+  (cond
+     ((looking-at "[ \n]*[0-9]+")
+      (setq lyskom-parse-pos (goto-char (match-end 0)))
+      (string-to-int (match-string 0)))
+
+     ((looking-at "[ \n]*\\'") 
+      (goto-char (point-max))
       (signal 'lyskom-parse-incomplete nil))
-     ((numberp result) 
-      (setq lyskom-parse-pos (point)))
-     (t 
-      (goto-char lyskom-parse-pos)
-      (while (looking-at "[ \t\n\r]")
-	(forward-char 1))
-      (if (looking-at "[0-9]+H")
-	  (progn
-	    (setq result (string-to-int (buffer-substring (point) pos)))
-	    (while (looking-at "[0-9]+H")
-	      (forward-char 1))
-	    (setq lyskom-parse-pos (point)))
-	(signal 'lyskom-protocol-error
-		(list "Expected number, got " (lyskom-string-to-parse))))))
-    result))
+     (t (signal 'lyskom-protocol-error
+                (list "Expected number, got " (lyskom-string-to-parse))))))
 
 
 (defun lyskom-parse-string ()
@@ -295,7 +274,7 @@ result is assigned to the element."
   (let ((index 0)
 	(len (length vector)))
     (while (< index len)
-      (aset vector index (apply parser nil))
+      (aset vector index (funcall parser))
       (setq index (1+ index))))
   vector)
 
@@ -920,11 +899,11 @@ functions and variables that are connected with the lyskom-buffer."
 	       (delete-region (point-min) lyskom-parse-pos))
 	   ;; One reply is now parsed.
 	   (lyskom-protocol-error
-	    (delete-region (point-min) (1+ lyskom-parse-pos))
+	    (delete-region (point-min) (min (point-max) (1+ lyskom-parse-pos)))
 	    (signal 'lyskom-protocol-error err)))
 	 (goto-char (point-min))
-	 (while (looking-at "[ \t\n\r]")
-	   (delete-char 1))
+         (if (looking-at "[ \n]+")
+             (delete-region (match-beginning 0) (match-end 0)))
 	 )))
     (store-match-data match-data)))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.8 1997-02-07 18:07:26 byers Exp $
+;;;;; $Id: completing-read.el,v 44.9 1997-02-19 08:35:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.8 1997-02-07 18:07:26 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.9 1997-02-19 08:35:32 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -512,20 +512,20 @@ function work as a name-to-conf-stat translator."
                 (null x-list)))))
 
 
-;(defun lyskom-complete-show-data-list (state data)
-;  (save-excursion
-;    (pop-to-buffer (get-buffer-create "*kom*-complete"))
-;    (erase-buffer)
-;    (while data
-;      (insert
-;       (format "%s\n" (substring (aref (car data) 2)
-;                                 (aref (car data) 0)
-;                                 (aref (car data) 1))))
-;      (setq data (cdr data)))
-;    (insert (format "%S %S: %S" (symbol-value current-state)
-;                    (elt state 0)
-;                    (elt state 1)))
-;    (sit-for 1)))
+(defun lyskom-complete-show-data-list (state data)
+  (save-excursion
+    (pop-to-buffer (get-buffer-create "*kom*-complete"))
+    (erase-buffer)
+    (while data
+      (insert
+       (format "%s\n" (substring (aref (car data) 2)
+                                 (aref (car data) 0)
+                                 (aref (car data) 1))))
+      (setq data (cdr data)))
+    (insert (format "%S %S: %S" (symbol-value current-state)
+                    (elt state 0)
+                    (elt state 1)))
+    (sit-for 1)))
       
 
 (defun lyskom-complete-string (string-list)
@@ -771,25 +771,19 @@ the LysKOM rules of string matching."
    (lyskom-complete-string-close-parens-2 el depth)))
 
 (defun lyskom-complete-string-close-parens-2 (el depth)
-  (let ((tmp nil))
+  (let ((tmp nil)
+        (string (aref el 2))
+        (pos (aref el 0)))
     (while (> depth 0)
-      (setq tmp (string-match "[^(]*)"
-                              (aref el 2)
-                              (aref el 0)))
-      (if tmp
-          (progn
-            (aset el 0 (match-end 0))
-            (setq depth (1- depth)))
-        (progn
-          (setq tmp (string-match "[^)]*("
-                                  (aref el 2)
-                                  (aref el 0)))
-          (if tmp
-              (progn
-                (aset el 0 (match-end 0))
-                (setq depth (1+ depth)))
-            (aset el 0 (aref el 1))
-            (setq depth 0)))))))
+      (cond ((>= pos (length string)) 
+             (setq depth 0))
+            ((= (aref string pos) ?\))
+             (setq depth (1- depth)))
+            ((= (aref string pos) ?\()
+             (setq depth (1+ depth))))
+      (setq pos (1+ pos)))
+    (aset el 0 pos)))
+
 
 ;;;
 ;;; Check what's happenin' next
