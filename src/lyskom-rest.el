@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.5 1996-04-14 23:39:16 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.6 1996-04-22 21:05:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.5 1996-04-14 23:39:16 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.6 1996-04-22 21:05:32 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -146,6 +146,9 @@ assoc list."
 
 (defun lyskom-tell-internat (key)
   "Same as lyskom-tell-server, but use a key to a list of phrases."
+  ;; The server at Lysator produces a lot of network traffic. The
+  ;; solution should to be less verbose. This is very interesting
+  ;; anymore, anyway.
   (lyskom-tell-server (lyskom-tell-string key)))
 
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 40.3 1996-04-14 23:39:12 davidk Exp $
+;;;;; $Id: edit-text.el,v 40.4 1996-04-22 21:05:27 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 40.3 1996-04-14 23:39:12 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 40.4 1996-04-22 21:05:27 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -670,7 +670,7 @@ Point must be located on the line where the subject is."
   
 (defun lyskom-create-text-handler (text-no edit-buffer)
   "Handle an attempt to write a text."
-  (lyskom-tell-server "")
+  (lyskom-tell-internat 'kom-tell-silence)
   (message "")
   (cond
    ((null text-no)

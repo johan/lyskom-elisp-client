@@ -1,3 +1,13 @@
+Wed Apr 17 17:32:23 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* parse.el (lyskom-parse-error): Gör så att en bug inte blir så
+ 	dödlig.
+
+Tue Apr 16 23:47:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-create-text-handler): Bytte ut
+ 	lyskom-tell-server mot lyskom-tell-internat.
+
 Sun Apr 14 23:44:45 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-follow-comments): Felaktiga parametrar i
