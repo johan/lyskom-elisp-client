@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.10 1999-08-22 16:04:51 byers Exp $
+;;;;; $Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.10 1999-08-22 16:04:51 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -848,11 +848,12 @@ FOOTN-TO or FOOTN-IN."
 			   year
 			   wday
 			   yday
-			   isdst)
+			   isdst
+                           &optional tzhr tzmin)
   "Create a time from all parameters."
   (cons
    'TIME
-   (vector sec min hour mday mon year wday yday isdst )))
+   (vector sec min hour mday mon year wday yday isdst tzhr tzmin)))
 
 
 ;;; Selectors:
@@ -892,6 +893,14 @@ FOOTN-TO or FOOTN-IN."
 (defsubst time->isdst (time)
   "Get isdst from time."
   (elt (cdr time) 8))
+
+(defsubst time->tzhr (time)
+  "Get isdst from time."
+  (elt (cdr time) 9))
+
+(defsubst time->tzmin (time)
+  "Get isdst from time."
+  (elt (cdr time) 10))
 
 
 ;;; Predicate:
