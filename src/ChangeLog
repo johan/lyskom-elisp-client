@@ -1,5 +1,9 @@
 2003-08-25  David Byers  <byers@lysator.liu.se>
 
+	* vars.el.in (lyskom-error-codes): Added error codes 55-60.
+
+	* english-strings.el,swedish-strings.el: Added error codes 55-60.
+
 	* startup.el (kom-start-anew): Use lyskom-default-language instead
 	of kom-default-language to set the initial language for the
 	session.
