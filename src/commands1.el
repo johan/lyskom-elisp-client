@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.213 2004-02-27 18:55:42 byers Exp $
+;;;;; $Id: commands1.el,v 44.214 2004-05-03 15:11:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.213 2004-02-27 18:55:42 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.214 2004-05-03 15:11:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -394,8 +394,7 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')
 
 See `kom-review-uses-cache'."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q nil
-                                                     lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
   (cond (text-no
          (lyskom-tell-internat 'kom-tell-read)
         (unless kom-review-uses-cache
@@ -414,8 +413,7 @@ argument this command is identical to `kom-unread-commented-text'.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')"
-  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q nil
-                                                     lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
   (if text-no
       (lyskom-unread-commented-text
        (blocking-do 'get-text-stat text-no))
@@ -1091,8 +1089,7 @@ applicable text."
   :prompt-format (concat "%#1C " (if text-no
                                      (lyskom-format " (%#1n)" text-no)
                                    ""))
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-footnote-no nil
-                                                     'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-footnote-no)))
   (if text-no
       (lyskom-write-comment-soon
        (blocking-do 'get-text-stat text-no)
@@ -1115,8 +1112,7 @@ This command accepts text number prefix arguments (see
   :prompt-format (concat "%#1C " (if text-no
                                      (lyskom-format " (%#1n)" text-no)
                                    ""))
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-comment-no nil
-                                                     lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-comment-no)))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
                              (text (get-text text-no)))
@@ -1375,8 +1371,7 @@ This command accepts text number prefix arguments (see
   :prompt-format (concat "%#1C " (if text-no
                                      (lyskom-format " (%#1n)" text-no)
                                    ""))
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no nil
-                                                     lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no)))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
                              (text (get-text text-no)))
@@ -1557,8 +1552,7 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
    (let ((conf-no (lyskom-read-conf-no 'what-to-set-pres-you '(all) nil nil t))
-         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
-                                                  lyskom-previous-text)))
+         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no)))
      (lyskom-set-pres-or-motd-2
       conf-no
       text-no
@@ -1571,9 +1565,7 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
    (let ((conf-no (lyskom-read-conf-no 'what-to-set-motd-you '(all) nil nil t))
-         (text-no (lyskom-read-text-no-prefix-arg
-                   'what-text-to-set-as-motd-no t
-                   lyskom-previous-text)))
+         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-motd-no)))
      (lyskom-set-pres-or-motd-2 conf-no text-no 'motd)))
 
 (defun lyskom-set-pres-or-motd-2 (conf-no text-no what)
@@ -4103,9 +4095,7 @@ Arguments:
   TEXT-NO-ARG: An argument as gotten from (interactive \"P\").
   PROMPT: A string that is used when prompting for a text number."
   (let ((text-no (let ((current-prefix-arg text-no-arg))
-                   (lyskom-read-text-no-prefix-arg prompt
-                                                   nil
-                                                   lyskom-current-text)))
+                   (lyskom-read-text-no-prefix-arg prompt)))
         (aux-item (lyskom-read-cross-reference-and-get-aux-item)))
     (when (and text-no aux-item)
       (cache-del-text-stat text-no)

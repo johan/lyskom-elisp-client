@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.289 2004-04-11 22:17:46 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.290 2004-05-03 15:12:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.289 2004-04-11 22:17:46 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.290 2004-05-03 15:12:01 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -487,19 +487,16 @@ The format of this variable may change in the future.
 
 
 (defconst kom-old-farts-text-prompt-strategy
-  '((kom-comment-previous . ((t   . lyskom-get-previous-text)
-			     (nil . lyskom-get-previous-text)))
-    (kom-view-previous-commented-text . ((t   . lyskom-get-previous-text)
-                                         (nil . lyskom-get-previous-text)))
-    (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
-                                    (nil . lyskom-get-previous-text)))
-    (t . ((t   . lyskom-get-last-read-text)
-	  (nil . lyskom-get-last-read-text)
-	  (0   . lyskom-get-text-at-point)
-	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
-	  (listp . lyskom-prompt-for-text-no)
-	  (lyskom-plusp . lyskom-get-explicit-text)
-	  (lyskom-minusp  lyskom-get-text-above-point abs))))
+  '((kom-comment-previous (nil . lyskom-get-previous-text))
+    (kom-view-previous-commented-text (nil lyskom-get-previous-text))
+    (kom-private-answer-previous (nil lyskom-get-previous-text))
+    (t  (t   lyskom-get-last-read-text)
+        (nil     lyskom-get-last-read-text)
+        (0       lyskom-get-text-at-point)
+        (lyskom-eq-dash   (lambda () (lyskom-get-text-above-point 1)))
+        (listp   (lambda () (lyskom-tnpa-prompt (lyskom-get-last-read-text))))
+        (plusp   current-prefix-arg)
+        (minusp  (lambda () (lyskom-get-text-above-point (- current-prefix-arg))))))
 "Put in your `kom-pick-text-no-strategy-alist' to get the 0.46 behaviour:
  * No prefix argument refers to the most recently read text.
  * The prefix argument zero refers to the text under point.
@@ -513,74 +510,121 @@ The format of this variable may change in the future.
   "Obsolete: Alias for kom-old-farts-text-prompt-strategy.")
 
 (def-kom-var kom-pick-text-no-strategy-alist
-  '((kom-comment-previous . ((t   . lyskom-get-previous-text)
-                             (nil . lyskom-get-previous-text)))
-    (kom-view-previous-commented-text . ((t   . lyskom-get-previous-text)
-                                         (nil . lyskom-get-previous-text)))
-    (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
-                                    (nil . lyskom-get-previous-text)))
-    (kom-sub-comment . ((t . lyskom-maybe-get-commented-text)
-                        (nil . lyskom-maybe-get-commented-text)))
-    (kom-sub-footnote . ((t . lyskom-maybe-get-footnoted-text)
-                         (nil . lyskom-maybe-get-footnoted-text)))
-    (kom-write-footnote . ((t . lyskom-get-text-at-point)
-                           (t . lyskom-get-last-written-or-read-by-me)
-                           (nil . lyskom-get-text-at-point)
-                           (nil . lyskom-get-last-written-or-read-by-me)))
-    (kom-add-no-comments . ((t . lyskom-get-last-written-or-read-by-me)
-                            (nil . lyskom-get-last-written-or-read-by-me)))
-    (kom-add-private-answer . ((t . lyskom-get-last-written-or-read-by-me)
-                               (nil . lyskom-get-last-written-or-read-by-me)))
-    (kom-add-request-confirm . ((t . lyskom-get-last-written-or-read-by-me)
-                                (nil . lyskom-get-last-written-or-read-by-me)))
-    (t . ((t   . lyskom-get-text-at-point) ; default for prompts
-          (nil . lyskom-get-text-at-point) ; no prefix arg
-          (0   . lyskom-prompt-for-text-no)
-          (-     lyskom-get-text-above-point (lambda (&optional arg) 1))
-          (listp lyskom-get-text-at-point-ancestor
-                 (lambda (arg) (/ (logb (car arg)) 2)))
-          (lyskom-plusp . lyskom-get-text-below-point)
-          (lyskom-minusp  lyskom-get-text-above-point abs))))
+  '(
+
+    ;; Abstract specifications
+
+    (read-or-written
+     (t   (lambda () (lyskom-tnpa-prompt (lyskom-get-text-at-point))))
+     (nil lyskom-get-text-at-point
+          (lambda () (lyskom-tnpa-valid
+                      (lyskom-tnpa-prompt (lyskom-get-last-written-or-read-by-me))))
+          :constraint lyskom-text-written-by-me-p))
+    (previous-text (nil lyskom-get-previous-text))
+    (commented-text (nil lyskom-maybe-get-commented-text))
+    (footnoted-text (nil lyskom-maybe-get-footnoted-text))
+
+    ;; Specifications for actual commands
+
+    (kom-comment-previous             :refer previous-text)
+    (kom-view-previous-commented-text :refer previous-text)
+    (kom-unread-previous-commented-text :refer previous-text)
+    (kom-private-answer-previous      :refer previous-text)
+    (kom-sub-comment                  :refer commented-text)
+    (kom-sub-footnote                 :refer footnoted-text)
+    (kom-write-footnote               :refer read-or-written)
+    (kom-add-no-comments              :refer read-or-written)
+    (kom-add-private-answer           :refer read-or-written)
+    (kom-add-request-confirm          :refer read-or-written)
+
+    ;; Default specification
+
+    (t (nil     lyskom-get-text-at-point)
+       (0       (lambda () (lyskom-tnpa-prompt (lyskom-get-text-at-point))))
+       (lyskom-eq-dash (lambda () (lyskom-get-text-above-point 1)))
+       (car     (lambda () (lyskom-get-text-at-point-ancestor (/ (logb (car current-prefix-arg)) 2))))
+       (plusp   (lambda () (lyskom-get-text-below-point current-prefix-arg)))
+       (minusp  (lambda () (lyskom-get-text-above-point (- current-prefix-arg))))
+       (t       (lambda () (lyskom-tnpa-prompt (lyskom-get-text-at-point))))
+       :constraint nil
+       :filter  nil
+       )
+    )
   "**Defines how prefix arguments are used by commands to find a text to operate on.
 
-The keys \(cars) of the list are either one of the functions that
-invoke `lyskom-read-text-no-prefix-arg' or the value `t' for the
-strategy common to all such functions. For functions in the list, the
-strategy is chosen from the cdr of that entry and, if and when no
-matching rule was found that way, from the common strategy.
+The format of this list is as follows:
 
-Each value \(cdr) of the list is an alist specifying how to do when
-mapping a prefix argument to a text number.
+\((FN-KEY . ((PFX-KEY-1 . (FN1 FN2 ... PROP1 VAL1 PROP2 VAL2 ...)) 
+            (PFX-KEY-2 . (FN1 FN2 ... PROP1 VAL1 PROP2 VAL2 ...))
+            GPROP1 GVAL1
+            GPROP2 GVAL2
+            ...))
+ ...)
 
-The keys \(cars) of this alist are the predicates for which the values
-\(cdrs) map functions that retrieve the text number to operate on.
-Each predicate is tested in turn on the prefix argument, and when one
-returns non-nil, the cdr gets invoked. This process is repeated until
-all predicates have been tested or a cdr returned a non-nil value,
-whichever comes first. If you like, the cars can also be the actual
-prefix-arg values (-, 0 or nil, for example) that you want to invoke
-some special rule for. The value `t' means that the behaviour given by
-the cdr stipulates the default value for the prompt, when one is
-shown.
+FN-KEY is the name of a command, `t' or a symbol that does not
+correspond to any function. Keys corresponding to commands indicate
+configuration for that command. The `t' key indicates fallback
+condiguration that applies to all commands, unless overridden by a
+command-specific configuration. Other keys can be referenced from
+command-specific configurations.
 
-The cdrs on the list may be either of:
+PFX-KEY is a key that indicates a prefix. If it is an atom not bound
+to a function, it indicates configuration for prefix arguments eq to
+the atom \(e.g. 0, - or nil). The special key `t' indicates fallback
+configuration, used when all prefix-specific configurationas failed to
+generate valid values.
 
-* a function, in which case it gets called with four parameters: the
-  prefix argument, the `PROMPT' that would be used to ask the user for a
-  text number, a (possibly nil) `DEFAULT' choice for that prompt, and a
-  `CONSTRAINT' value, all as provided in the call to
-  `lyskom-read-text-no-prefix-arg' (see its docs). Returning a positive
-  integer means return that text number. Returning a common lyskom
-  format string aborts, showing your helpful error description. A
-  `nil' return value means try the next rule to get a text number.
+FN is a function or variable used to generate lists of text numbers.
+If a variable name, the value of the variable is used to generate a
+list of text numbers. If a function, the function is called with no
+arguments, and is expected to return a list of text numbers.
 
-* a list of two functions, optionally followed by additional list items,
-  in which case the second function is called to change the prefix argument
-  parameter for the first function, which is then called as above. Any extra
-  items on the argument list will be appended to its argument list. Hence, a
-  `\(my-get-text-no abs 17 4711)' entry would result in the following call:
-  `\(funcall my-get-text-no (abs prefix-arg) prompt default nil 17 4711)'."
-  )
+PROP is a property name \(see below) and VAL is the corresponding
+value. Properties defined at the inner level apply only to results
+generated for that prefix. Properties defined at the outer level apply
+irrespective of prefix arguments. Properties defined in the default
+element \(with FN-KEY set to `t'\) always apply, unless overridden by
+non-nil properties in command-specific elements.
+
+The following properties are available:
+
+Key             Value
+----------------------------------------------------------------------
+:filter         A function that is called on all text numbers. The filter
+                function is expected to return a new or modified text 
+                number. This can be used to indicate that the command 
+                should prompt or bypass the constraint.
+
+:constraint    A function that is called on all text numbers. It should
+               return non-nil for text numbers that are valid for the 
+               command.
+
+:refer         A symbol indicating a configuration to use. Useful when 
+               several commands share the same (complex) configuration.
+               May not be used in the default element.
+
+
+The following filter functions may be useful:
+
+Name                    What it does
+----------------------------------------------------------------------
+lyskom-tnpa-prompt      Prompt the user for the text number. The 
+                        number used as the argument will be the 
+                        default. 
+
+lyskom-tnpa-valid       Declare that the text number is valid, 
+                        regardless of any constraint functions.
+
+
+When `lyskom-read-text-no-prefix-arg' is called, this list is searched
+both for a command-specific element and for the default element. Any
+`:refer' links are resolved in the command-specific element. The
+filter and constraint properties are extracted. These elements are
+then searched for prefix-specific elements that match the current
+prefix argument. The first text number that is generated that passes
+the filter and constraint functions is used as the text number
+argument for the command."
+)
 
 (def-kom-var kom-url-transformation-rules 
   '(
@@ -2168,7 +2212,7 @@ conference and person buttons are not expected.")
     ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      pseudo-url 0 nil kom-url-face)
 
-    ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
+    ("\\(file://\\|ftp://\\|gopher://\\|rtsp://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      url 0 nil kom-url-face)
 
     ("<URL:\\([^<>]+\\)>"
@@ -2891,6 +2935,7 @@ Values other than `nil' and strings are reserved for future use."
      text-popup-title
      lyskom-button-view-text
      ((lyskom-button-view-text-action . lyskom-button-view-text)
+      (lyskom-button-unread-text-action . lyskom-button-unread-text)
       (lyskom-button-copy-text-no-action . lyskom-button-copy-text-no)
       (lyskom-button-review-noconversion-action . lyskom-button-review-noconversion)
       (lyskom-button-review-converted-action . lyskom-button-review-converted)
@@ -3937,6 +3982,11 @@ This is currently not implemented.")
     kom-add-request-confirm
     kom-add-server-faq
     kom-mark-unread
+    kom-set-presentation
+    kom-set-motd-text
+    kom-will-person-read-text
+    kom-compare-texts
+    kom-diff-texts
     )
   "Commands that prompt for a text number rather than assume a default."
   inherited)

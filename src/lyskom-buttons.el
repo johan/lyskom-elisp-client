@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.96 2003-08-17 17:28:49 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.97 2004-05-03 15:12:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.96 2003-08-17 17:28:49 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.97 2004-05-03 15:12:00 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -676,6 +676,13 @@ This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (goto-char (point-max))
            (kom-view arg))))
+
+(defun lyskom-button-unread-text (buf arg text)
+  "In the LysKOM buffer BUF, unread the text ARG. 
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-mark-unread arg))))
 
 (defun lyskom-button-copy-text-no (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
