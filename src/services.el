@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 43.1 1996-08-09 20:56:41 davidk Exp $
+;;;;; $Id: services.el,v 43.2 1996-08-10 11:56:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 43.1 1996-08-09 20:56:41 davidk Exp $\n"))
+	      "$Id: services.el,v 43.2 1996-08-10 11:56:26 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -709,11 +709,61 @@ Args: KOM-QUEUE HANDLER &rest DATA"
                                          &rest data)
   "Perform a z-lookup.
 Args: KOM-QUEUE HANDLER NAME WANT-PERSONS WANT-CONFS &rest DATA"
-  (lyskom-call kom-queue lyskom-ref-no handler data 
-               'lyskom-parse-conf-z-info-list)
-  (lyskom-send-packet kom-queue (lyskom-format-objects 76 name
-                                                       want-persons
-                                                       want-confs)))
+  (if lyskom-z-lookup-flag
+      (progn
+        (lyskom-call kom-queue lyskom-ref-no handler data 
+                     'lyskom-parse-conf-z-info-list)
+        (lyskom-send-packet kom-queue (lyskom-format-objects 76 name
+                                                             want-persons
+                                                             want-confs)))
+    (let ((ref-no lyskom-ref-no))
+    (lyskom-fake-call kom-queue ref-no handler data)
+    (++ lyskom-ref-no)
+    (initiate-lookup-name 'compat
+                          'initiate-compat-lookup-z-name-2
+                          name
+                          kom-queue
+                          ref-no
+                          want-persons
+                          want-confs))))
+
+(defun initiate-compat-lookup-z-name-2 (result kom-queue
+                                               ref-no
+                                               want-persons
+                                               want-confs)
+  (if (null result)
+      (lyskom-complete-call kom-queue ref-no nil))
+
+  (let ((conf-nos (listify-vector (conf-list->conf-nos result)))
+        (conf-types (listify-vector (conf-list->conf-types result))))
+    (lyskom-collect 'follow)
+    (while conf-nos
+      (if (or (and want-persons
+                   (conf-type->letterbox (car conf-types)))
+              (and want-confs
+                   (not (conf-type->letterbox (car conf-types)))))
+          (initiate-get-conf-stat 'follow nil (car conf-nos)))
+      (setq conf-nos (cdr conf-nos))
+      (setq conf-types (cdr conf-types)))
+    (lyskom-list-use 'follow
+                     'initiate-compat-lookup-z-name-3
+                     kom-queue
+                     ref-no)))
+
+
+
+(defun initiate-compat-lookup-z-name-3 (conf-list kom-queue 
+                                                  ref-no)
+  (lyskom-complete-call kom-queue ref-no
+                        (lyskom-create-conf-z-info-list
+                         (mapcar (function
+                                  (lambda (conf-stat)
+                                    (lyskom-create-conf-z-info
+                                     (conf-stat->name conf-stat)
+                                     (conf-stat->conf-type conf-stat)
+                                     (conf-stat->conf-no conf-stat))))
+                                 conf-list))))
+    
 
 (defun initiate-set-last-read (kom-queue handler conf-no text-no &rest data)
   "Tell the server to set the highest unread article in conference CONF-NO

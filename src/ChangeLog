@@ -1,3 +1,39 @@
+Sat Aug 10 12:24:22 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* vars.el.in (lyskom-server-features): Lägg in information om
+ 	protokollversion för servrar med version lägre än 1.7.0
+	(lyskom-server-features): Lade in lyskom-dynamic-session-info-flag
+ 	och lyskom-idle-time-flag. (lyskom-dynamic-session-info-flag): Ny
+ 	variabel. (lyskom-idle-time-flag): Ny variabel.
+	
+	* startup.el (lyskom-setup-client-check-version): Hantera
+ 	relationen "<".
+
+	* english-strings.el (lyskom-strings): Lade till
+ 	session-status-inactive, session-status-9,
+ 	session-status-invisible
+
+	* swedish-strings.el (lyskom-strings): Lade till
+ 	session-status-inactive, byggde om session-status-9
+
+	* commands1.el (lyskom-status-session-9): Snyggare utskrift om
+ 	användaren inte är idle. (lyskom-who-is-on-9): Hantera
+ 	kom-idle-hide som inte är en siffra. Hantera prefixargumentet -
+ 	som man får om man trycker C-u - 0 v (kom-who-is-on): Testa
+ 	lyskom-dynamic-session-info-flag istf protokollversion.
+	(kom-status-session): Dito.
+
+	* lyskom-rest.el (lyskom-end-of-command): Testa på
+ 	lyskom-idle-time-flag istf protokollversion.
+
+	* services.el (initiate-lookup-z-name): Använd lookup-name om
+ 	servern inte klarar lookup-z-name.
+	(initiate-compat-lookup-z-name-2): Ny funktion.
+	(initiate-compat-lookup-z-name-3): Ny funktion.
+
+	* internal.el (lyskom-complete-call): Ny funktion.
+	(lyskom-fake-call): Ny funktion.
+
 Sat Aug 10 04:30:43 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-commands): La till "Flytta text".
@@ -35,6 +71,8 @@ Fri Aug  9 01:18:34 1996  David Kågedal  <davidk@lysator.liu.se>
 	(kom-expand-slow-or-next-command): Ny funktion.
 
 Thu Aug  8 12:33:03 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* flags.el (lyskom-Edit-options-modify): Anropa modfun *en* gång.
 
 	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
  	till no-changes.
