@@ -1,3 +1,8 @@
+Mon Aug 19 01:08:49 1991  Linus Tolke Y  (linus at robin)
+
+	* edit-text.el (lyskom-edit-mode): Nu klarar den {ven fallet
+	  n{r lyskom-edit-mode-mode-hook inte s{tter current-local-map.
+
  Sun Aug 18 19:32:00 1991  Per Cederqvist  (ceder at lysator)
 
 	* lyskom-rest.el (lyskom-filter) Nu sparas match-data alltid. R{tt
