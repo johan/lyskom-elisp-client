@@ -1,5 +1,12 @@
 Tue Aug 20 01:18:17 1991  Per Cederqvist  (ceder at lysator)
 
+	* clienttypes.el (read-list-delete-text) Om text-no {r nil s}
+	  plockar vi bara bort tomma read-infos fr}n rlist.
+
+	* lyskom-rest.el (kom-view-next-text): Se till att tomma
+	  read-infos tas bort fr}n lyskom-reading-list {ven n{r vi
+	  }terser. (lyskom-is-read 0) hade den effekten.
+
 	* clienttypes.el (read-list-delete-text) Tog bort en gammal,
 	  bortkommenterad, rekursiv, version.
 

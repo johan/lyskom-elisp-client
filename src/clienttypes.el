@@ -203,18 +203,21 @@ Returns t if there was a conference to insert this text into."
 RLIST is a list of read-info.
 Entries of the type REVIEW, REVIEW-TREE or REVIEW-MARK are not changed
 except if they were empty in which case they are removed.
-Returns the modified RLIST."
+Returns the modified RLIST.
+TEXT-NO may be nil, in which case only read-infos on RLIST are removed."
   (let* ((prev rlist)			;"Previous" cons-celll
 	 (curr (cdr rlist)))		;Current cons-cell
     (while curr
-      (cond
-       ((let ((type (read-info->type (car curr)))) ; Don't change REVIEW et c.
-	  (or (eq type 'REVIEW)
-	      (eq type 'REVIEW-TREE)
-	      (eq type 'REVIEW-MARK))))
-       (t				; Do change all other entries.
-	(let ((tl  (read-info->text-list (car curr))))
-	  (set-text-list->texts tl (delq text-no (text-list->texts tl))))))
+      (if text-no
+	  (cond
+	   ((let ((type (read-info->type (car curr)))) 
+	      (or (eq type 'REVIEW)	; Don't change REVIEW et c.
+		  (eq type 'REVIEW-TREE)
+		  (eq type 'REVIEW-MARK))))
+	   (t				; Do change all other entries.
+	    (let ((tl  (read-info->text-list (car curr))))
+	      (set-text-list->texts
+	       tl (delq text-no (text-list->texts tl)))))))
        
       ;; Delete this element from RLIST if the text-list became or was empty.
 	
