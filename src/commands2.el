@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.0 1994-01-06 01:56:53 linus Exp $
+;;;;; $Id: commands2.el,v 38.0.2.1 1995-01-07 12:30:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.0 1994-01-06 01:56:53 linus Exp $\n"))
+	      "$Id: commands2.el,v 38.0.2.1 1995-01-07 12:30:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -489,7 +489,7 @@ Args: MEMBERSHIP-LIST CONF-STAT."
   (condition-case error
       (lyskom-send-message 
        (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
-			    'pers t))
+			    'all t))
     (quit (lyskom-end-of-command)
 	  (signal 'quit "Quitting in kom-send-message"))))
   
@@ -1412,7 +1412,7 @@ current conference to another session."
   (let ((session-name (buffer-name (current-buffer)))
 	(buffer (current-buffer)))
     (if lyskom-debug-communications-to-buffer
-	(bury-buffer lyskom-debug-communications-to-buffer))
+	(bury-buffer lyskom-debug-communications-to-buffer-buffer))
     (if lyskom-who-info-buffer
 	(bury-buffer lyskom-who-info-buffer))
     (bury-buffer)
@@ -1441,3 +1441,27 @@ current conference to another session."
 	  (kom-bury)
 	  (switch-to-buffer (car buffers))))))
 
+
+;;; =======================================================
+;;; Listing people using regexps.
+(defun kom-list-re (regexp)
+  "List all persons and conferences whose name matches REGEXP."
+  (interactive "sSearch regexp: ")
+  (lyskom-start-of-command 'kom-list-re)
+  (lyskom-format-insert 'matching-regexp regexp)
+  (initiate-re-z-lookup 'main 'lyskom-list-re regexp 1 1))
+
+
+(defun lyskom-list-re (conf-list)
+  (mapcar
+   (function (lambda (czi)
+	       (lyskom-insert
+		(concat
+		 (format "%4d %c %s\n"
+			 (conf-z-info->conf-no czi)
+			 (if (conf-type->letterbox 
+			      (conf-z-info->conf-type czi))
+			     ?P ?M)
+			 (conf-z-info->name czi))))))
+   (conf-z-info-list->conf-z-infos conf-list))
+  (lyskom-end-of-command))
