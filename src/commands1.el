@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.189 2003-08-02 22:08:37 byers Exp $
+;;;;; $Id: commands1.el,v 44.190 2003-08-05 00:06:50 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.189 2003-08-02 22:08:37 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.190 2003-08-05 00:06:50 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -888,7 +888,7 @@ supervisor of the conference or of the member being removed."
 			  '(all) nil nil t)))
 
 
-(def-kom-command kom-sub-self (&optional conf)
+(def-kom-command kom-sub-self (&optional conf-no)
   "Resign your membership of a conference. If
 `kom-unsubscribe-makes-passive' is set, them resigning once converts
 your membership to a passive membership and resigning twice removes
@@ -897,11 +897,16 @@ memberships).
 
 See `kom-unsubscribe-makes-passive'."
   (interactive)
-  (lyskom-sub-member 
-   (blocking-do 'get-conf-stat lyskom-pers-no)
-   (if conf (blocking-do 'get-conf-stat conf)
-     (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
-                            '(membership) nil nil t))))
+  (let* ((me (blocking-do 'get-conf-stat lyskom-pers-no))
+	 (conf (if conf-no (blocking-do 'get-conf-stat conf-no)
+		 (let ((default (lyskom-read-conf-guess-initial '(membership)))
+		       (mailbox (conf-stat->name me)))
+		   (if (equal default mailbox)
+		       (setq default ""))
+		   (lyskom-read-conf-stat
+		    (lyskom-get-string 'leave-what-conf)
+		    '(membership) nil default t)))))
+    (lyskom-sub-member me conf)))
 
 (defun lyskom-sub-member (pers conf &optional have-message)
   "Remove the person indicated by PERS as a member of CONF."
@@ -1705,11 +1710,18 @@ Changing conferences runs `kom-change-conf-hook' and
   (interactive)
   (let ((conf (if conf-no
                   (blocking-do 'get-conf-stat conf-no)
-                (lyskom-read-conf-stat
-                 (lyskom-get-string 'go-to-conf-p)
-                 '(all) nil nil t))))
-  (when (lyskom-check-go-to-conf conf)
-    (lyskom-go-to-conf conf))))
+                (let ((default (lyskom-read-conf-guess-initial '(all)))
+                      (current (uconf-stat->name
+                                 (blocking-do 'get-uconf-stat
+                                              lyskom-current-conf))))
+                  (if (or (null current)
+                          (equal default current))
+                      (setq default ""))
+                  (lyskom-read-conf-stat
+                   (lyskom-get-string 'go-to-conf-p)
+		   '(all) nil default t)))))
+    (when (lyskom-check-go-to-conf conf)
+      (lyskom-go-to-conf conf))))
 
 
 (defun lyskom-go-to-conf (conf &optional no-prompt)
