@@ -1,0 +1,93 @@
+
+
+			   LysKOM-Projektet
+		   --------------------------------
+		   Prefetch i LysKOM elispklienten
+		   --------------------------------
+			    av Inge Wallin
+			  <ingwa@isy.liu.se>
+			     14 Mars 1991
+
+
+
+Det h{r dokumentet beskriver prefetchmekanismen i LysKOM elispklienten
+s}som det {r t{nkt att fungera i f|rl{ngningen.  Anledningen till att
+vi vill ha prefetch {r att olika kommandon skall g} snabbare f|r
+anv{ndaren.  Detta uppn}s genom att data som beh|vs h{mtas i f|rv{g
+medan anv{ndaren sysslar med annat, t ex l{sa texter.
+
+
+
+Prefetch som det ser ut idag
+
+N{r man loggar in s} b|rjar klienten med att h{mta vilka m|ten som man
+kan ha ol{sta i.  Detta g|rs genom det speciella anrop som finns f|r
+det i lyskomprotokollet.  Resultatet sparas i variabeln
+lyskom-unread-confs.  [ven information om vilka m|ten man {r medlem i
+h{mtas.  Detta l{ggs i variabeln lyskom-membership.
+
+<Sn{lla Linus, skriv h{r.>
+
+
+Prefetch i framtiden
+
+All prefetch b|r vara inriktad p} att anv{ndaren skall beh|va v{nta s}
+lite som m|jligt.  N{r han/hon ger sitt kommando skall all n|dv{ndig
+information i princip redan vara h{mtad och bara beh|va presenteras.
+Detta kan naturligtvis inte alltid bli fallet, men de vanligaste
+kommandona, dvs de som man f}r som default, skall aldrig beh|va v{nta.
+
+
+F|ljande information kan beh|va cachas i klienten:
+  * Information om samtliga personer och m|ten i LysKOM.
+  * Information om nuvarande texter, dess kommentarer, fotnoter, etc.
+    [ven information om de texter som nuvarande text {r kommentar till
+    m}ste cachas.  G{rna {ven om hela det kommentartr{d som nuvarande
+    text h|r till.  Om anv{ndaren g|r Hoppa s} b|r man ha h{mtat info
+    om n{rmaste icke-kommentar med kommentartr{d.
+  * Textmassan till nuvarande text samt de n{rmast runt omkring (se
+    punkten ovan).
+  * Information om anv{ndarens markeringar.
+  * Information om inloggade personers g|randen och l}tanden.
+   
+
+Naturligtvis kan inte all denna information h{mtas p} en g}ng och man
+m}ste prioritera i vilken ordning som informationen skall h{mtas.
+Dessutom kan man inte skicka iv{g f|rfr}gningar om allt p} en g}ng
+till servern. I s} fall skulle eventuella fr}gor som m}ste st{llas pga
+anv{ndarens kommandon blockeras under mycket l}ng tid.
+
+Max 5 f|rfr}gningar som beror p} prefetch borde allts} ligga ute p} en
+g}ng.  Detta styrs l{mpligen av en variabel.
+
+F|ljande ordning kan vara l{mplig att h{mta info i:
+
+1) Information om m|ten med ol{sta texter i.
+2) Membershiplistan f|r m|ten med ol{sta texter i.
+3) F|rsta delen (10 texter?) av mappen i varje m|te med ol{sta.
+4) ????
+
+3a) Textstatusar f|r kommande texter.
+3b) Information f|r m|ten vi {r medlem i, och texter vi kommer att l{sa
+    {r skickade till.
+3c) Information om inloggade personer i LysKOM, samt f|rfattare och
+    mottagare till de texter vi kommer att l{sa.
+
+4a) Information om |vriga m|ten/personer.
+4b) Information om |vriga ol{sta m|ten.
+4c) |vrigt.
+
+Punkterna 1) ovan h{mtas l{mpligen innan den f|rsta prompten
+skrivs ut, som det sker idag.
+
+Punkt 3) skall h{mtas efterhand som man l{ser och man skall f|rs|ka
+h}lla j{mna steg med den som l{ser (helst ligga lite f|re).
+
+Punkt 4) h{mtas n{r vi f}r tid.
+
+
+
+Local Variables:
+mode:indented-swedish
+eval:(auto-fill-mode 1)
+End:

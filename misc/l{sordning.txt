@@ -1,0 +1,54 @@
+	        det var t{nkt att 
+	      \			 /
+	       -------   -------
+		      \ /
+Denna fil beskriver hur elisp-klienten v{ljer vad man ska l{sa.
+---------------------------------------------------------------
+
+Varje m|te man {r medlem i har en prioritet och en ordning p} listan.
+N{r man loggar in h{mtar klienten listan |ver vilka m|ten man {r med
+i. Sedan sorteras listan stabilt med avseende p} prioriteten. Om tv}
+m|ten har samma prioritet best{ms deras inb|rdes ordning av i vilken
+ordning de stog i i den ursprungliga listan.
+
+Option: lyskom-prefetch-confs
+
+N{r listan {r sorterad h{mtas information om de
+'lyskom-prefetch-confs' f|rsta m|tena. Om personen har n}gra ol{sta
+inl{gg i ett m|te s} l{ggs information om det upp p} variablen
+lyskom-to-do-list.
+
+Varje g}ng en text {r l{st r{knar klienten ut hur m}nga texter som
+finns p} lyskom-to-do-list. Om summan {r f{rre {n
+lyskom-prefetch-conf-tresh s} fr}gas efter nya m|ten, {nda tills
+listan av m|ten man {r medlem i tar slut.
+
+N{r man g}r till ett nytt m|te s} tas informationen bort fr}n
+lyskom-to-do-list och flyttas till lyskom-reading-list. S} sm}ningom
+kommer det att p} lyskom-reading-list finnas objekt av olika typ:
+inl{gg, kommentar till, footnot till, }tersedda inl{gg... Men det blir
+inte i denna version! Den ska ju bli klar _snabbt_! Helst f|re den
+4:e!!!
+
+
+
+Function: lyskom-check-to-do 
+
+Kollar hur m}nga text-stats och text-masses som man har fr}gat efter.
+Om det {r mindre {n lyskom-prefetch-texts s} fr}gas efter nya.
+
+Kollar om f{rre {n lyskom-prefetch-conf-tresh texter {r k{nda, s}
+fr}gas efter nya m|ten, dock max lyskom-prefetch-confs m|ten }t
+g}ngen.
+
+Skriver prompt om lyskom-no-prompt {r non-nil.
+
+----------------
+
+Function: lyskom-end-of-command
+
+Skriver prompt om det finns n}got att l{sa, eller om alla m|ten {r
+genoml{sta (i s} fall "se tiden").
+
+Anropar lyskom-check-to-do.
+

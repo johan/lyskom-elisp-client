@@ -1,0 +1,139 @@
+#!/bin/sh
+# argument lyskom.el [lyskom.elc]
+EMACSBATCH="emacs -batch -l /usr/local/lib/elisp/bytecomp"
+temps=
+maillist=/usr/local/src/2kom/elisp-client/lib/mailing-list
+
+set -- `getopt m: $*`
+if [ $1 != -- ]
+then
+# just sending an announcement message
+
+	recipients=`
+	while read status options
+	do
+		if [ X$status != XACTIVE ]
+		then continue
+		fi
+		set -- \`getopt BCLOU: $options\`
+		while [ $1 != -- ]
+		do
+			shift;
+		done
+		echo $2
+	done < $maillist`
+
+	if [ $2 = - ]
+	then
+		echo Recipients: $recipients
+		echo Type your message. End with EOF
+		messagefile=/tmp/lyskom-message
+		cat > $messagefile
+		temps="$messagefile $temps"
+	else
+		messagefile=$2
+	fi
+	echo Mailing message to $recipients
+	Mail -s "Message on the lyskom source list" $recipients < $messagefile
+
+	rm $temps
+	exit;
+fi
+
+shift
+	
+LYSKOMEL=$1
+LYSKOMELC=$2
+
+NAME=`basename $LYSKOMEL .el`
+
+if [ -z "$LYSKOMELC" ]
+then
+# Oh no. We have to byte-compile.
+	echo Byte-compiling
+	cp $LYSKOMEL /tmp/lyskom.el
+	$EMACSBATCH -f batch-byte-compile /tmp/lyskom.el
+	LYSKOMELC=/tmp/lyskom.elc
+	temps="/tmp/lyskom.el $LYSKOMELC $temps"
+fi
+
+# LYSKOMEL LYSKOMELC {r nu filerna som skall s{ndas 
+# b}da m}ste finnas
+LYSKOMOEL=/tmp/lyskom-sparc.el
+LYSKOMOELC=/tmp/lyskom-sparc.elc
+echo Patching laila.lysator.liu.se - obel18
+sed 's/laila\.lysator\.liu\.se/obel18.ida.liu.se/g' < $LYSKOMEL > $LYSKOMOEL
+sed 's/laila\.lysator\.liu\.se/obel18.ida.liu.se/g' < $LYSKOMELC> $LYSKOMOELC
+chmod 644 $LYSKOMOEL $LYSKOMOELC
+temps="$LYSKOMOEL $LYSKOMOELC $temps"
+while read status options
+do
+	if [ X$status != XACTIVE ]
+	then continue
+	fi
+
+	set -- `getopt BCLOU: $options`
+# defaults
+	file=$LYSKOMEL
+	uuencode='cat $file'
+	compress=cat
+	type=laila
+	dir=
+	bytecomp=el
+	iscompress=no
+	while [ $1 != -- ]
+	do
+		case $1 in
+		-B) uuencode=yes;
+		    bytecomp=elc;
+			;;
+		-C) uuencode=yes;
+		    iscompress=yes;
+		    compress="compress";
+			;;
+		-O) type=obel18;
+			;;
+		-U) uuencode=yes;
+		    shift;
+		    dir=$1
+			;;
+		esac
+		shift
+	done
+	shift
+	if [ $type = laila ] 
+	then
+		if [ $bytecomp = elc ]
+		then file=$LYSKOMELC
+		else file=$LYSKOMEL
+		fi
+	else
+		if [ bytecomp = yes ]
+		then file=$LYSKOMOELC
+		else file=$LYSKOMOEL
+		fi
+	fi
+	if [ $compress = compress ] 
+	then bytecomp="$bytecomp.Z";
+	fi
+	if [ "$uuencode" = yes ]
+	then uuencode="uuencode \$file ${dir}${NAME}.$bytecomp";
+	fi
+
+	echo sending to $1
+
+	if [ $compress = compress ]
+	then
+		compress < $file > /tmp/lyskom.Z
+		chmod 644 /tmp/lyskom.Z
+		file=/tmp/lyskom.Z
+	fi
+	eval $uuencode | Mail -s ${NAME}.$bytecomp $1;
+	if [ $compress = compress ]
+	then
+		rm /tmp/lyskom.Z
+	fi
+
+done < $maillist
+
+rm $temps

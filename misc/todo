@@ -1,0 +1,270 @@
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+H{r ovanf|r {r nya entries som vi {nnu inte har best{mt var de h|r
+hemma.
+================================================================
+
+Det finns 3 grader av angel{genhet hos entryn i den h{r filen:
+
+1) Saker som M]STE fixas innan n{sta release.
+2) Saker som borde fixas inom en inte alltf|r avl{gsen framtid.
+3) Saker som kan vara trevliga att ha n}gon g}ng.
+
+N{r en bug eller en sak som fattas {r }tg{rdad skall det entryt tas
+bort ur den h{r filen.
+
+
+================================================================
+1. Saker som skall fixas innan n{sta release (0.34):
+================================================================
+
+* C-c } k funkar inte p} fotnoterade inl{gg.
+
+* Addera medlem och subtrahera medlem skall inte {ndra prefetch
+  variablerna om man adderar/subtraherar n}gon annan {n sig sj{lv.
+Inge: G|r den det d}? Kolla rad 367 i commands1.el (addera medlem)
+
+* lyskom-end-of-command-hook.
+
+* Status person borde ge tiden f|r skapandet.  Samma f|r status m|te
+  om det g}r.
+
+* Status person/m|te borde h{mta nya confstatar, eller hellre: Det
+  borde finnas ett asynkront meddelande som s{ger att ett m|te/person
+  har {ndrats.
+
+* review.el line 521.  Finns det fler s}dana?
+
+* lyskom-insert-before-prompt borde fixa till variabeln som avg|r hur
+  l}ngt vi f}r skrolla.
+
+* who-bufferten har f|r m}nga mellanslag i slutet av raderna.
+
+* Kolla s} att man kan ha flera sessioner ig}ng alltid, dvs kolla att
+  alla variabler {r bufferlokala (utom t ex
+  kom-emacs-knows-iso-8859-1). 
+
+* Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
+
+* Fixa loginsekvensen s} den tittar p} r{tt variabler.
+
+* Fixa s} att headerradernas f|rstabokst{ver finns i en variabel.
+  (internationaliserings}tg{rd) 
+
+* Snabbare g} till m|te.
+
+* H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
+  conf-stat eller membership vilka delar av mappen f|r m|tet som vi
+  har h{mtat och vilka delar vi saknar.  Det inneb{r ocks} att lista
+  nyheter kommer att bli lite os{krare och mer komplicerad.
+
+* Aldrig kasta ut alla memberships.
+
+* N{r man g}r till ett m|te d{r man inte har n}gra ol{sta h{mtas nog
+  hela mappen igen. Detta {r mindre bra.
+
+* Nya kommandon:
+  \verg} i (till?) administrat|rsmod.	- klart
+  Skapa person?
+  St{nga servern			- klart.
+  [ndra l|senord f|r andra (adm.)	- klart.
+  S{tta lyskom-message-of-the-day	- klart.
+  Ta bort lyskom-message-of-the-day	- klart.
+  Ge adm.r{ttigheter }t n}gon annan.
+  Tvinga n}gon att logga ut.  		- klart.
+
+* Kolla lyskom-is-administrator i f|ljande fall och g|r olika saker
+  beroende om den {r satt eller inte:
+   + i S{tt presentation
+   + ...
+
+* Kasta ut allt som har med who-info att g|ra och ers{tt det med
+  session-info. Kolla ocks} s} att servern aldrig skickar n}gra
+  who-info. 
+
+* Dokumentera alla {ndringar.
+
+================================================================
+2. Saker som borde fixas inom en inte alltf|r avl{gsen framtid:
+================================================================
+
+
+* lyskom-edit-add-misc skall spara undan point och mark i
+  edit-bufferten. (save-excursion (set-buffer ) (save-excursion ...))
+Inge: Linus p}st}r att det h{r beror p} en emacsbug.
+
+* Om man i editbuffern trycker C-c a m (eller C-c a k), och sedan
+  trycker C-g f|r att avbryta adderandet av mottagare, skrivs en extra
+  prompt ut i LysKOM-buffern.
+
+* Byt ut alla ...session-info... mot ...connection-info...
+
+* N{r man g|r endast borde man inte f} Se tiden.
+  Detta {r samma bugg som att man f}r Se tiden n{r man loggar in.
+
+* G} igenom *.el och fixa alla st{llen d{r man kan f} ett nummer eller
+  current text.  G|r en speciell funktion av det.
+
+* fullst{ndigt oberoende lyskom-sessioner i samma emacs. det finns nog
+  n}gra variabler som inte {r korrekt behandlade.
+
+* str{ngar f|r att tala om vilket tecken prompten slutar med.
+
+* n{r man inte f}r l{sa texter (kommentarer) till ett inl{gg borde
+  de inte komma med n{r man g|r }terse alla kommentarer.
+  }terse det kommenterade pss.
+
+* stoppa in lite prefetch i klienten s} att den t ex h{mtar det tr{d
+  som man h}ller p} att l{sa nu eller det m|te.
+
+* m|jlighet att f} fram presentationen och g} med i m|ten fr}n
+  prioritize-bufferten
+
+* addera mottagare, addera kopiemottagare skall kolla om vi har
+  lapp p} d|rren och i s} fall komma med en extra fr}ga.
+klart?
+
+* fixa s} att \file{} genererar citationstecken ist{llet f|r `'
+inge: nja, varf|r det? det {r v{l bra som det {r.
+linus: snyggare.
+
+* kom-page-before-command borde aktiveras f|rst efter det att alla
+  argument till en funktion l{sts in.
+
+* skriva om parsningen av header-rader. jag vill ha klarare kod och
+  s{krare. 
+
+* se till att vi alltid stoppar in mottagare: och extra kopia: p}
+  r{tt st{lle s} att vi kan klara b{ttre typeahead.
+
+* lyskom-pending-calls borde bli en lyskom-queue i st. f en vanlig
+  lista. detta skulle vara effektivare.
+
+* underst|d f|r felrapportering i klartext. vi vill inte ha
+  felmeddelanden av typen "felkod 25".
+
+* flagga som anger om man vill ha de inl{gg som man sj{lv skriver
+  inlagda i sin lyskombuffert.
+
+* ta bort saker ur cachearna n{r de inte beh|vs l{ngre (text-stat:ar och
+
+* b{ttre prefetch. prefetch av samtliga conf-stat:ar, eller }tminstone
+  deras nummer & namn.
+
+* ers{tta borttagning av cacheentries efter asynkrona meddelanden med
+  n}gon form av modifiering av cache-entries.
+
+* fixa f|rst s} att hela listan av medlemsskap aldrig sl{ngs ut.
+
+* status person (och m|te?) skall ge namn och inte bara personnummer
+  p} div. f{lt. 
+  detta {ven om den m}ste h{mta f{lten fr}n servern.
+  de borde h{mta all info ny.
+
+* annan hantering av prioriterade texter och m|ten.
+linus: hur skall det fungera. jo enligt senaste m|tet (april?)
+
+
+================================================================
+3. saker som kan vara trevliga att ha n}gon g}ng:
+================================================================
+
+* om man adderar en kommentar s} finns en tid f|r adderandet och
+  personen som adderat den med i misc-info. detta borde skrivas ut.
+
+* kommandot n{rvarande? ger bara namnen f|r de som {r inne och inget
+  mer. 
+
+* l}nga menyer?
+
+* fler {n ett f|rs|k till uppkoppling vid uppstart. en lista |ver
+  olika maskiner+portar att prova med (en mux kan vara d|d).
+
+* ]terstart efter att processen d|tt. 
+
+* kommandot flytta? (== addera mottagare + subtrahera mottagare.)
+  r{cker det?? 
+
+* review.el: borde kolla om man verkligen f}r h{mta texterna hos vissa
+  personer. n}gon slags "tv{rkoll".
+inge:  det h{r f|rst}r jag inte riktigt.
+linus: jo pga en restriktion i servern s} skickas alla inl{gg som en
+       person skrivit tillbaka som svar p} fr}gan om vilka inl{gg en
+       person skrivit. detta inneb{r {ven texter som personen som g|r
+       }terse inte f}r l{sa kommer med. v{ldigt k{nnbart om man g|r
+       }terse till mig i den och dens brevl}da.
+ceder: restriktionen kommer att vara lyft i protokoll b.
+linus: jag tycker vi v{ntar tills dess.
+
+* skall man kunna s{tta en gr{ns f|r hur stor lyskombufferten f}r vara
+  i antal rader? n{r gr{nsen {r uppn}dd s} b|rjar klienten ta bort
+  rader fr}n starten. detta kan ske antingen radvis eller inl{ggsvis,
+  dvs endast hela utskrivna inl{gg tas bort (komplicerat). Ny flagga?
+Linus: G|r inte detta nu n{r vi {ven anv{nder oss av positioner i
+bufferten f|r att cacha texter. WARNING!
+
+* Fixa unwind-protect runt alla inmatningar fr}n tangentbordet s} att
+  man kan trycka quit lite oftare och f} en ny prompt. Jag vill ha ett
+  macro: lyskom-protect-with som evaluerar ARG1 och evaluerar ARG2 om
+  det blev n}got error under det att ARG1 evaluerades. Typiskt:
+    (lyskom-protect-with
+      (setq inlegg (completing-read "]terse nummer: "
+				    lista
+				    nil
+				    t
+				    (car lista)))
+      (lyskom-end-of-command))	;Quit vi skall tillbaka
+
+* Hoppa borde fungera p} }terse-strukturer.
+  ]terse senaste + hoppa borde g|ra att hoppa plocka bort alla
+  kommentarer rekursivt ur listan som det senaste ]terse senaste
+  kommandot byggde.
+  ]terse markerade p} samma s{tt.
+  ]terse tr{d borde den bara bryta en niv} f|r.
+
+* Olika format kan kanske |nskas p} vilka-listan.
+      M|te
+      N{rvarande (Aktivitet)
+    ------------------------
+    Lysator
+      Lars Willf|r (L{ser.)
+    Emacs erfarenhetsutbyte
+      Inge Wallin, ISY (V{ntar.)
+      Mattias Olofsson (L{ser.)
+      Pell Pell Pell (V{ntar.)
+    LysKOM internals
+      * Jonas S Karlsson (V{ntar.)
+      Bellman - The Recursive Hacker (L{ser.)
+
+    Det intressanta med s}dan lista {r att den {r orienterad kring m|tena
+    vilket ju {r kom:s huvudsakliga ide!
+
+    /jsk
+    och
+    Skulle vilja ha ett litet vilka (v) kommandon exv Vilka (V)
+    med f|ljande resultat:
+
+    N{rvarande i LysKOM:
+      Lars Willf|r; Pell Pell Pell; Inge Wallin, ISY; Mattias Olofsson;
+      Jonas S Karlsson; Bellman - The Recursive Hacker; noppe; Linus Tolke.
+
+    Hmm kommandot N{rvarande (n) kanske?
+
+    /jsk
+
+* Kanske man skall (ide fr}n jsk) skicka olika slags meddelanden till
+  olika funktioner eller vissa buffertar. Det ser ut att bli ganska
+  l{tt om man skriver in det hela med print. Kanske att vi bara skall
+  l}ta lyskom-presence-messages vara en stream med default t.
+
+* Misc-info har tv} olika representationer beroende p} om de kom fr}n
+  servern eller {r p} v{g till servern. Det borde vara samma
+  representation. Dessutom borde man kunna editera misc-infona snyggt
+  i -edit-bufferten.
+
+
+
+Local Variables:
+mode:indented-swedish
+eval:(auto-fill-mode 1)
+End:

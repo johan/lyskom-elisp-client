@@ -1,0 +1,19 @@
+#Formatet f|r denna fil:
+# ACTIVE -BCUfilename mailadress
+#	B bytecompile 
+#	C compress 
+#	Udir uuencode d{r dir {r det dir som skall encodeas in.
+#	O obel18-versionen
+# B eller C implicerar U (tills det finns alternativa konverteringsprogram
+# f|r 7 till 8 bitar (btoa/atob))
+
+# sparcarna
+ACTIVE -BOUpub/ d88perce@odalix.ida.liu.se
+
+# Uwe
+ACTIVE -CU./ geuder@informatik.uni-stuttgart.de
+#
+
+# Zeuge
+ACTIVE Klaus.Zeuge@DoCS.UU.SE
+#

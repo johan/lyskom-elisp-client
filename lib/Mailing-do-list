@@ -1,0 +1,25 @@
+#Formatet f|r denna fil:
+# ACTIVE -ABDP -adir -ddir -udir mailadress
+#	A lyskom.el sharad
+#	B bytecompiled (lyskom.elc) sharad
+#	D documentation sharad
+#	I info-varianten av documentationen sharad
+#	P delade paketet sharad
+#	adir lyskom.el uuencoded
+#	ddir docen uuencoded
+#	idir info-varianten av docen uuencoded
+#	udir lyskom.elc uuencoded
+
+# sparcarna
+ACTIVE -upub/ -dpub/ d88perce@odalix.ida.liu.se
+
+# Uwe
+ACTIVE -a./ -i./ geuder@informatik.uni-stuttgart.de
+#
+
+# Zeuge
+ACTIVE -P Klaus.Zeuge@DoCS.UU.SE
+#
+
+# KPJ Jaakola
+ACTIVE -D -A kpj@emil.csd.uu.se

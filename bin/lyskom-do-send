@@ -1,0 +1,123 @@
+#!/bin/sh -x
+# argument lyskom.el [lyskom.elc]
+# Detta {r en enklare variant av lyskom-send som f|ruts{tter att man st}r
+# i ett iordninggjort dir.
+#
+# P -- PARTS.xx {r distributionen d{r delarna {r var f|r sig
+# A -- ALL.xx {r lyskom.el sharad
+# adir -- lyskom.el uuencodedad.
+# B -- BYTEC.xx {r lyskom.elc sharad
+# udir -- lyskom.elc {r obel18 versionen av klienten med r{tt skyddskod.
+# D -- DOC.xx {r klientdocumentationen sharad.
+# ddir -- elisp-client-*.txt {r klientdocumentationen.
+# I -- IDOC.xx {r klientdocumentationen sharad.
+# idir -- elisp-client-*.txt {r klientdocumentationen.
+
+maillist=/usr/local/src/2kom/elisp-client/lib/mailing-do-list
+
+set -- `getopt m: $*`
+if [ $1 != -- ]
+then
+# just sending an announcement message
+
+	recipients=`
+	while read status options
+	do
+		if [ X$status != XACTIVE ]
+		then continue
+		fi
+		set -- \`getopt BCLOU: $options\`
+		while [ $1 != -- ]
+		do
+			shift;
+		done
+		echo $2
+	done < $maillist`
+
+	if [ $2 = - ]
+	then
+		echo Recipients: $recipients
+		echo Type your message. End with EOF
+		messagefile=/tmp/lyskom-message
+		cat > $messagefile
+		temps="$messagefile $temps"
+	else
+		messagefile=$2
+	fi
+	echo Mailing message to $recipients
+	Mail -s "Message on the lyskom source list" $recipients < $messagefile
+
+	rm $temps
+	exit;
+fi
+
+shift
+
+while read status options
+do
+	if [ X$status != XACTIVE ]
+	then continue
+	fi
+
+	
+	files=
+	all=
+	udir=
+	doc=
+	idoc=
+
+	set -- `getopt PBu:Aa:Dd:Ii: $options`
+# defaults
+	while [ $1 != -- ]
+	do
+		case $1 in
+		-P) files="$files `echo PARTS.*`" ;;
+	 	-B) files="$files `echo BYTEC.*`" ;;
+		-u) shift;
+		    udir=$1 ;;
+		-A) files="$files `echo ALL.*`" ;;
+		-a) shift;
+		    all=$1 ;;
+		-D) files="$files `echo DOC.*`" ;;
+		-d) shift;
+		    doc=$1;;
+		-I) files="$files `echo IDOC.*`" ;;
+		-i) shift;
+		    idoc=$1;;
+		esac
+		shift
+	done
+	
+	shift
+
+
+	echo sending to $1
+
+	for file in $files --
+	do
+		if [ $file != -- ] 
+		then
+			Mail -s $file $1 < $file ;
+		fi
+	done
+	
+	if [ X$all != X ] 
+	then
+		uuencode lyskom.el ${all}lyskom.el | Mail -s lyskom.el $1;
+	fi
+	if [ X$udir != X ] 
+	then
+		uuencode lyskom.elc ${udir}lyskom.elc | Mail -s lyskom.elc $1;
+	fi
+	if [ X$doc != X ] 
+	then
+		file=elisp-client-*.txt;
+		uuencode $file ${doc}$file | Mail -s $file $1;
+	fi
+	if [ X$idoc != X ] 
+	then
+		file=elisp-client-*;
+		uuencode $file ${idoc}$file | Mail -s $file $1;
+	fi
+done < $maillist
+
