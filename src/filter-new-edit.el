@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-new-edit.el,v 44.1 2001-05-02 07:57:05 byers Exp $
+;;;;; $Id: filter-new-edit.el,v 44.2 2001-05-07 15:20:32 byers Exp $
 ;;;;; Copyright (C) 2001  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,12 +34,15 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-new-edit.el,v 44.1 2001-05-02 07:57:05 byers Exp $\n"))
+	      "$Id: filter-new-edit.el,v 44.2 2001-05-07 15:20:32 byers Exp $\n"))
 
 
 
 (defvar lyskom-filter-edit-all-entries nil
   "List of all filter edit entries in a filter edit buffer.")
+
+(defvar lyskom-filter-edit-start-marker nil)
+(defvar lyskom-filter-edit-end-marker nil)
 
 
 ;;; ============================================================
@@ -57,7 +60,8 @@
   tree
   )
 
-
+(defun lyskom-filter-edit-entry-from-filter (filter)
+  )
 
 ;;; ============================================================
 ;;; Transforming to and from the tree editor
@@ -305,22 +309,82 @@ If TO is nil, move to end of list."
   )
 
 
+(defun lyskom-filter-edit-mode ()
+  "\\<lyskom-filter-edit-mode-map>Mode for editing LysKOM filters.
+
+All bindings:
+\\{lyskom-filter-edit-mode-map}
+Entry to this mode runs lyskom-filter-edit-mode-hook."
+  (interactive)
+  (setq major-mode 'lyskom-filter-edit-mode)
+  (setq mode-name "Filter Edit")
+  (make-local-variable 'lyskom-filter-edit-all-entries)
+  (make-local-variable 'lyskom-filter-edit-start-marker)
+  (make-local-variable 'lyskom-filter-edit-end-marker)
+  (setq buffer-read-only t)
+  (run-hooks 'lyskom-filter-edit-mode-hook))
+
+(defun lyskom-filter-edit (lyskom-buffer)
+  "Edit filters for LysKOM buffer lyskom-buffer."
+  (let (edit-buffer)
+    (save-excursion
+      (set-buffer lyskom-buffer)
+      (setq edit-buffer
+            (lyskom-get-buffer-create 'filter-edit
+                                      (concat (buffer-name) "-Filter Edit")
+                                      t)))
+    (set-buffer edit-buffer)
+    (lyskom-filter-edit-mode)
+    (lyskom-filter-edit-set-entries
+     (mapcar 'lyskom-filter-edit-entry-from-filter (lyskom-default-value 
+                                                    'lyskom-filter-list)))
+    (lyskom-filter-edit-update-buffer)))
+
+(defun lyskom-filter-edit-update-buffer ()
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (lyskom-format-insert "\
+Filter för %#1M på %#2s
+
+===============================================================================
+" lyskom-pers-no lyskom-server-name)
+    (setq lyskom-filter-edit-start-marker (point-marker))
+    (set-marker-insertion-type lyskom-filter-edit-start-marker nil)
+    (goto-char (point-max))
+    (let ((entries (lyskom-filter-edit-all-entries)))
+      (while entries
+        (lyskom-filter-edit-draw-entry (car entries))
+        (insert "\n")
+        (setq entries (cdr entries))))
+    (setq lyskom-filter-edit-end-marker (point-marker))
+    (set-marker-insertion-type lyskom-filter-edit-end-marker t)
+    (insert "\
+===============================================================================
+Nytt filter: M-i    Flytta upp:  M-p    Flytta ut:  M-f 
+Ny rad:      i      Flytta ner:  M-n    Flytta in:  M-b
+Klipp ut:    C-k    Ändra:       RET    Mer hjälp:  C-h m
+Klistra in:  C-y    Kommentar:   k      Avsluta:    C-c C-c
+")
+    ))
+
+
 
 ;;; Local Variables:
 ;;; mode: lisp-interaction
+;;; end:
 
-(setq foo (lyskom-filter-edit-create-tree-data
- '(and nil
-       (or nil
-           (recipient nil "Test")
-           (recipient nil "Tset"))
-       (not nil
-            (or nil
-                (subject nil "Foo")
-                (and nil
-                     (text nil "Fjuk")
-                     (recipient nil "Fjuk"))))
-       (not nil (author-re nil "[Dd]x")))))
-
-(lyskom-filter-edit-extract-tree-data tmp)
+;;; (setq foo (lyskom-filter-edit-create-tree-data
+;;;  '(and nil
+;;;        (or nil
+;;;            (recipient nil "Test")
+;;;            (recipient nil "Tset"))
+;;;        (not nil
+;;;             (or nil
+;;;                 (subject nil "Foo")
+;;;                 (and nil
+;;;                      (text nil "Fjuk")
+;;;                      (recipient nil "Fjuk"))))
+;;;        (not nil (author-re nil "[Dd]x")))))
+;;; 
+;;; (lyskom-filter-edit-extract-tree-data tmp)
 

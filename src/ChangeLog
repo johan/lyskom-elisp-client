@@ -1,3 +1,24 @@
+2001-05-07  David Byers  <davby@ida.liu.se>
+
+	* check-strings.el (lyskom-check-strings): Check help strings and
+	help categories.
+	(lcs-check-help-strings): New function.
+	(lcs-check-help-strings-2): New function.
+
+	* english-strings.el (lyskom-en-mode-map): Bind ? to kom-help.
+
+	* swedish-strings.el (lyskom-sv-mode-map): Bind ? to kom-help.
+	(lyskom-help-strings): New string category.
+
+	* vars.el.in (lyskom-commands): Remove describe-mode, add
+	kom-help. 
+	(lyskom-help-categories): New variable.
+
+	* commands2.el (kom-is-person-member-of-conference): Reindent.
+	(kom-help): New command.
+	(lyskom-display-help-category): New function for kom-help to use.
+	(lyskom-display-help-item): Ditto.
+
 2001-05-02  David Byers  <davby@ida.liu.se>
 
 	* filter-new-edit.el: New file. Contains the new filter editor.

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.134 2001-04-25 11:48:37 byers Exp $
+;;;;; $Id: vars.el.in,v 44.135 2001-05-07 15:20:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.134 2001-04-25 11:48:37 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.135 2001-05-07 15:20:34 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1252,9 +1252,249 @@ Users are encouraged to use their best sense of humor."
   server)
 
 
+(defconst lyskom-help-categories
+  '((reading-commands . (
+                         [command kom-review-mail-headers]
+                         [command kom-busy-wait]
+                         [command kom-list-news]
+                         [command kom-list-re]
+                         [command kom-list-conferences]
+                         [command kom-jump]
+                         [command kom-go-to-conf]
+                         [command kom-go-to-next-conf]
+                         [command kom-postpone]
+                         [command kom-set-session-priority]
+                         [command kom-prioritize]
+                         [command kom-change-priority]
+                         [command kom-add-self]
+                         [command kom-sub-self]
+                         [command kom-list-summary]
+                         [command kom-view-next-text]
+                         [command kom-set-unread]
+                         [command kom-save-text]
+                         [command kom-save-text-body]
+                         [category marking-commands (summary)]
+                         [category review-commands (summary)]
+                         [category filter-commands (summary)]
+                         ))
+    (marking-commands . (
+                         [command kom-mark-text]
+                         [command kom-unmark-text]
+                         [command kom-review-marked-texts]
+                         [command kom-review-all-marked-texts]
+                         [command kom-list-marks]
+                         ))
+    (writing-commands . (
+                         [command kom-fast-reply]
+                         [command kom-agree]
+                         [command kom-add-faq]
+                         [command kom-del-faq]
+                         [command kom-change-conf-faq]
+                         [command kom-add-comment]
+                         [command kom-sub-comment]
+                         [command kom-add-cross-reference]
+                         [command kom-add-recipient]
+                         [command kom-add-copy]
+                         [command kom-add-bcc]
+                         [command kom-sub-recipient]
+                         [command kom-move-text]
+                         [command kom-write-text]
+                         [command kom-send-letter]
+                         [command kom-send-message]
+                         [command kom-send-alarm]
+                         [command kom-delete-text]
+                         [command kom-go-to-conf]
+                         [command kom-write-comment]
+                         [command kom-comment-previous]
+                         [command kom-write-footnote]
+                         [command kom-private-answer]
+                         [command kom-private-answer-previous]
+                         ))
+    (review-commands . (
+                        [command kom-view]
+                        [command kom-find-root-review]
+                        [command kom-review-comments]
+                        [command kom-review-tree]
+                        [command kom-review-clear]
+                        [command kom-review-last-normally-read]
+                        [command kom-review-noconversion]
+                        [command kom-review-next]
+                        [command kom-find-root]
+                        [command kom-review-by-to]
+                        [command kom-review-more]
+                        [command kom-review-first]
+                        [command kom-review-all]
+                        [command kom-view-commented-text]
+                        [command kom-view-previous-commented-text]
+                        [command kom-review-stack]
+                        [command kom-review-presentation]
+                        [command kom-review-backward]
+                        [command kom-review-faq]
+                        ))
+    (filter-commands . (
+                        [command kom-filter-author]
+                        [command kom-filter-subject]
+                        [command kom-filter-text]
+                        [command kom-super-jump]
+                        [command kom-filter-edit]
+                        [command kom-list-filters]
+                        ))
+    (conf-admin-commands . (
+                            [command kom-add-faq]
+                            [command kom-del-faq]
+                            [command kom-change-conf-faq]
+                            [command kom-change-conf-type]
+                            [command kom-change-conf-motd]
+                            [command kom-set-garb-nice]
+                            [command kom-set-super-conf]
+                            [command kom-set-permitted-submitters]
+                            [command kom-unset-conf-motd]
+                            [command kom-change-name]
+                            [command kom-create-conf]
+                            [command kom-delete-conf]
+                            [command kom-change-conf-motd]
+                            [command kom-add-member]
+                            [command kom-sub-member]
+                            [command kom-move-text]
+                            ))
+    (pers-admin-commands . (
+                            [command kom-add-member]
+                            [command kom-sub-member]
+                            [command kom-change-name]
+                            [command kom-start-anew]
+                            [command kom-delete-conf]
+                            [command kom-add-member]
+                            [command kom-sub-member]
+                            [command kom-change-parenthesis]
+                            [command kom-change-supervisor]
+                            [command kom-change-presentation]
+                            [command kom-change-password]
+                            ))
+    (admin-commands . (
+                       [command kom-shutdown-server]
+                       [command kom-sync-database]
+                       [command kom-enable-adm-caps]
+                       [command kom-disable-adm-caps]
+                       [command kom-set-motd]
+                       [command kom-remove-motd]
+                       [command kom-force-logout]
+                       [command kom-list-clients]
+                       [command kom-list-re]
+                       [command kom-list-persons]
+                       [command kom-list-conferences]
+                       [command kom-list-created-conferences]
+                       [category conf-admin-commands]
+                       [category pers-admin-commands]
+                       ))
+    (conf-commands . (
+                      [command kom-is-person-member-of-conference]
+                      [command kom-who-is-on-in-conference]
+                      [command kom-review-presentation]
+                      [command kom-sub-self]
+                      [command kom-add-self]
+                      [command kom-change-priority]
+                      [command kom-status-conf]
+                      [command kom-prioritize]
+                      [command kom-create-conf]
+                      [command kom-delete-conf]
+                      [command kom-go-to-conf]
+                      [command kom-list-re]
+                      [command kom-list-conferences]
+                      [command kom-list-created-conferences]
+                      [category conf-admin-commands (summary)]
+                      ))
+    (pers-commands . (
+                      [command kom-is-person-member-of-conference]
+                      [command kom-review-presentation]
+                      [command kom-who-am-i]
+                      [command kom-sub-self]
+                      [command kom-add-self]
+                      [command kom-status-person]
+                      [command kom-membership]
+                      [command kom-list-re]
+                      [command kom-list-persons]
+                      [command kom-list-created-conferences]
+                      [category pers-admin-commands (summary)]
+                      ))
+    (text-commands . (
+                      [command kom-add-footnote]
+                      [command kom-sub-footnote]
+                      [command kom-add-no-comments]
+                      [command kom-add-private-answer]
+                      [command kom-add-request-confirm]
+                      [command kom-save-text]
+                      [command kom-save-text-body]
+                      [command kom-add-comment]
+                      [command kom-sub-comment]
+                      [command kom-add-cross-reference]
+                      [command kom-add-copy]
+                      [command kom-add-bcc]
+                      [command kom-sub-recipient]
+                      [command kom-move-text]
+                      [command kom-view]
+                      [command kom-list-summary]
+                      [command kom-delete-text]
+                      [command kom-add-recipient]
+                      [category marking-commands (summary)]
+                      ))
+    (other-commands . (
+                       [command kom-help]
+                       [command kom-become-anonymous]
+                       [command kom-become-nonanonymous]
+                       [command kom-keep-alive]
+                       [command kom-stop-keep-alive]
+                       [command kom-who-is-on]
+                       [command kom-who-is-on-in-conference]
+                       [command kom-who-am-i]
+                       [command kom-get-appreciation]
+                       [command kom-get-abuse]
+                       [command kom-quit]
+                       [command kom-recover]
+                       [command kom-start-anew]
+                       [command kom-slow-mode]
+                       [command kom-quick-mode]
+                       [command kom-display-time]
+                       [command kom-save-options]
+                       [command kom-show-user-area]
+                       [command kom-status-session]
+                       [command kom-customize]
+                       [command kom-next-kom]
+                       [command kom-previous-kom]
+                       [command kom-next-unread-kom]
+                       [command kom-change-language]
+                       [command kom-calculate]
+                       [command kom-where-is]
+                       ))
+    (auto-reply-commands . (
+                            [command kom-change-auto-reply]
+                            [command kom-toggle-auto-reply]
+                            [command kom-list-messages]
+                            [command kom-erase-messages]
+                            [command kom-remote-autoreply]
+                            [command kom-remote-set-message]
+                            [command kom-remote-list-messages]
+                            [command kom-remote-erase-messages]
+                            ))
+    (remote-control-commands . (
+                                [command kom-remote-autoreply]
+                                [command kom-remote-set-message]
+                                [command kom-remote-list-messages]
+                                [command kom-remote-erase-messages]
+                                [command kom-remote-quit]
+                                ))
+    )
+  "Categories for the help command.
+Each element in this list is an alist where the key is the identity of
+the cagegory and the value is the contents of the category. The contents 
+is a list of vectors, where each vector specifies an item.
+
+    [command X] is the help item for command X
+    [category X] means inline category X
+")
+
 (defconst lyskom-commands
   '(
-    describe-mode
+    kom-help
     kom-slow-mode
     kom-quick-mode
     kom-send-message
@@ -2372,6 +2612,7 @@ to be bold with yellow text on a red background."
 (defvar lyskom-message-history nil)
 (defvar lyskom-language-history nil)
 (defvar lyskom-fast-reply-history nil)
+(defvar lyskom-help-history nil)
 
 
 ;;; ============================================================

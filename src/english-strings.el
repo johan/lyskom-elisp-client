@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.134 2001-04-25 19:51:37 joel Exp $
+;;;;; $Id: english-strings.el,v 44.135 2001-05-07 15:20:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.134 2001-04-25 19:51:37 joel Exp $"))
+              "$Id: english-strings.el,v 44.135 2001-05-07 15:20:31 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1507,6 +1507,10 @@ You must become an active member of the conference to enter it.\n")
     (confusion-what-to-find-root . "I can't figure out which text's root you want to see.\n")
     (confusion-what-to-find-root-review . "I can't figure out which tree you want to review.\n")
 
+    ;; Help stuff
+
+    (help-with-what . "What do you want help with? ")
+
     ;; Button actions
 
     (lyskom-button-view-text-action . "View text")
@@ -1554,7 +1558,7 @@ You must become an active member of the conference to enter it.\n")
 ;;; Formely known as lyskom-commands
 (lyskom-language-strings lyskom-command en
   '(
-    (describe-mode            . "Help")
+    (kom-help                 . "Help")
     (kom-slow-mode            . "Long commands")
     (kom-quick-mode           . "Short commands")
     (kom-send-message         . "Send message")
@@ -1958,7 +1962,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "<LFD>")  'kom-page-next-command)
   (define-key lyskom-en-mode-map (kbd "<RET>")  'kom-line-next-command)
 
-  (define-key lyskom-en-mode-map (kbd "?")  'describe-mode)
+  (define-key lyskom-en-mode-map (kbd "?")  'kom-help)
   (define-key lyskom-en-mode-map (kbd "m")  'kom-send-letter)
   (define-key lyskom-en-mode-map (kbd "g")  'kom-go-to-conf)
   (define-key lyskom-en-mode-map (kbd "a")  'kom-write-text)
