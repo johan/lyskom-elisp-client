@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.82 2000-09-09 11:59:25 byers Exp $
+;;;;; $Id: commands2.el,v 44.83 2000-11-18 11:43:23 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.82 2000-09-09 11:59:25 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.83 2000-11-18 11:43:23 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -377,17 +377,13 @@ otherwise: the conference is read with lyskom-completing-read."
 
       (lyskom-format-insert 'no-of-sessions
 			    (pers-stat->sessions pers-stat))
-      (if (zerop (pers-stat->total-time-present pers-stat))
-	  nil
-	(lyskom-format-insert 'present-time-d-h-m-s
-			      (/ (pers-stat->total-time-present pers-stat)
-				 (* 24 3600))
-			      (% (/ (pers-stat->total-time-present pers-stat)
-				    3600) 24)
-			      (% (/ (pers-stat->total-time-present pers-stat)
-				    60) 60)
-			      (% (pers-stat->total-time-present pers-stat)
-				 60)))
+      (let ((time (pers-stat->total-time-present pers-stat)))
+	(unless (zerop time) ;; Why not let it print "0 d 00:00:00"?
+	  (lyskom-format-insert 'present-time-d-h-m-s
+				(floor time (* 24 3600))
+				(mod (floor time 3600) 24)
+				(mod (floor time 60) 60)
+				(round (mod time 60)))))
       (lyskom-format-insert 'last-log-in
 			    (lyskom-return-date-and-time
 			     (pers-stat->last-login pers-stat)))

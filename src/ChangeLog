@@ -1,3 +1,9 @@
+2000-11-18  Per Starbäck (commit by Per Cederqvist  <ceder@moria>)
+
+	* commands2.el (kom-status-person): Use mod instead of %, since
+	floating point numbers can result from string-to-number in Emacs
+	21.
+
 2000-10-05  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-sentinel): Use dead-ok argument to
