@@ -30,12 +30,16 @@ Buggar
     (FIXAT)
 
     När du skapar ett hemligt möte bör Elispklienten inte erbjuda dig
-    att skriva en presentation i "Presentation (av nya) möten".
+    att skriva en presentation i "Presentation (av nya) möten". (FIXAT)
 
     text 1306568
 
     kom-review-tree på en text med fotnoter visar fotnoterna på en
     gång. Är det en bug?
+
+    Fotnoter som visas på en gång filtreras inte.
+
+    M-> i prioritera-bufferten. Text 1320736.
 
 Allmänna förbättringar
 
@@ -66,6 +70,10 @@ Allmänna förbättringar
 
     text 1306827 (FIXAT)
     
+    text 1319383
+
+    text 1321912
+
     Varför står det "anonym person" på ett ställe, men "Person 0" på
     ett annat? Och vad menar Rickard?
 
