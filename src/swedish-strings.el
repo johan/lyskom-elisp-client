@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.349 2003-08-28 20:58:22 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.350 2003-09-15 08:14:58 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.349 2003-08-28 20:58:22 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.350 2003-09-15 08:14:58 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -858,7 +858,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 
     (conf-to-set-garb-nice-q . "Vilket möte vill du sätta livslängd för? ")
     (new-garb-nice-q . "Efter hur många dagar ska inlägg utplånas? ")
-    (new-keep-commented-q . "Hur många dagar nya kommentarer skydda det kommenterade? ")
+    (new-keep-commented-q . "Hur många dagar ska nya kommentarer skydda det kommenterade? ")
     (garb-nice-for-is . "Ändrar livslängden för %#1M till %#2d dag%#2?d%[%]%[ar%]...")
     (keep-commented-for-is . "Ändrar så kommentarer skyddar från utplåning i %#2d dag%#2?d%[%]%[ar%] för %#1M...")
 

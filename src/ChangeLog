@@ -1,3 +1,8 @@
+2003-09-15  Per Cederqvist  <ceder@ingate.com>
+
+	* swedish-strings.el (lyskom-message): Added missing verb in
+	new-keep-commented-q format.
+
 2003-08-30  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands2.el (kom-change-language): Now always changes bindings,
