@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 39.1 1996-03-20 13:43:52 davidk Exp $
+;;;;; $Id: commands2.el,v 39.2 1996-03-25 17:03:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 39.1 1996-03-20 13:43:52 davidk Exp $\n"))
+	      "$Id: commands2.el,v 39.2 1996-03-25 17:03:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -154,8 +154,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'created-by
 			      creator
 			      creator
-			      (lyskom-default-button 'conf
-						     creator)
 			      (if (and 
 				   (lyskom-conf-stat-p creator)
 				   (> (length (conf-stat->name creator))
@@ -186,8 +184,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'superconf-is-no-name
 			      superconf
 			      superconf
-			      (lyskom-default-button 'conf
-						     superconf)
 			      (if (and 
 				   (lyskom-conf-stat-p superconf)
 				   (> (length (conf-stat->name superconf))
@@ -201,11 +197,9 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'permitted-submitters-no-name
 			      permitted-submitters
 			      (if (zerop (conf-stat->permitted-submitters
-					  conf-stat))
-				  (lyskom-get-string 'Everybody)
-				permitted-submitters)
-			      (lyskom-default-button 'conf
-						     permitted-submitters)
+                              conf-stat))
+                      (lyskom-get-string 'Everybody)
+                    permitted-submitters)
 			      (cond
 			       ((zerop (conf-stat->permitted-submitters
 					conf-stat))
@@ -224,8 +218,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'supervisor-is-no-name
 			      supervisor
 			      supervisor
-			      (lyskom-default-button 'conf
-						     supervisor)
 			      (if (and 
 				   (lyskom-conf-stat-p supervisor)
 				   (> (length (conf-stat->name supervisor))
@@ -357,8 +349,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'superconf
 			      superconf
 			      superconf
-			      (lyskom-default-button 'conf
-						     superconf)
 			      (if (and
 				   (lyskom-conf-stat-p superconf)
 				   (> (length (conf-stat->name superconf))
@@ -373,8 +363,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	    (lyskom-format-insert 'supervisor
 				  supervisor
 				  supervisor
-				  (lyskom-default-button 'conf
-							 supervisor)
 				  (if (and 
 				       (lyskom-conf-stat-p supervisor)
 				       (> (length (conf-stat->name
@@ -768,7 +756,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   (txt (text->text-mass text))
 	   (eos (string-match (regexp-quote "\n") txt))
 	   (subject (substring txt 0 eos))
-	   ;; length of the number %%%%%% :7
+	   ;; length of the number %%%%%% :8
 	   ;; length for time is: 6
 	   (time (text-stat->creation-time text-stat))
 	   (time (if (and (= year (time->year time))
@@ -779,8 +767,8 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			   	       (time->mday time))))
 	   ;; length for lines is: 4
 	   ;; We split the rest between author and subject
-	   (namelen (/ (- (lyskom-window-width) 21) 3))
-	   (subjlen (/ (* (- (lyskom-window-width) 21) 2) 3))
+	   (namelen (/ (- (lyskom-window-width) 22) 3))
+	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
 	   (author-name (lyskom-format "%#1:M" (text-stat->author text-stat))))
       (lyskom-format-insert 'summary-line
 			    text-no
@@ -922,7 +910,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let* ((curbuf (current-buffer))
 	 (old-buf (condition-case ()
-			    (or debugger-old-buffer (current-buffer))
+			    debugger-old-buffer
 			  (void-variable (current-buffer))))
 	 (repname "*lyskom-bugreport*"))
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))

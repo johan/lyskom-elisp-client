@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 39.2 1996-03-25 15:41:48 davidk Exp $
+;;;;; $Id: view-text.el,v 39.3 1996-03-25 17:04:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 39.2 1996-03-25 15:41:48 davidk Exp $\n"))
+	      "$Id: view-text.el,v 39.3 1996-03-25 17:04:06 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -51,8 +51,10 @@ If BUILD-REVIEW-TREE is non-nil then it fixes a new entry in the
 lyskom-reading-list to read the comments to this."
 
   (let ((filter (and filter-active
-		    (lyskom-filter-text-p text-no)))
-	(todo nil))
+                     (lyskom-filter-text-p text-no)))
+        (start nil)
+        (end nil)
+        (todo nil))
     (cond ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
 	   (setq todo 'next-text)
 	   (lyskom-mark-as-read (blocking-do 'get-text-stat text-no))
@@ -78,6 +80,7 @@ lyskom-reading-list to read the comments to this."
 	     (if (and text-stat
 		      text)
 		 (progn
+           (setq start (point-max))
 		   (lyskom-format-insert "%#1n " 
 					 text-stat)
 		   (lyskom-print-date-and-time (text-stat->creation-time
@@ -95,11 +98,17 @@ lyskom-reading-list to read the comments to this."
 		   
 		   (if (eq filter 'dontshow)
 		       (lyskom-format-insert "%#1P %#2s\n"
-					     (text-stat->author text-stat)
-					     (lyskom-get-string 'filtered))
+                                     (text-stat->author text-stat)
+                                     (lyskom-get-string 'filtered))
 		     (lyskom-format-insert "%#1P\n"
-					   (text-stat->author text-stat)))
+                                   (text-stat->author text-stat)))
 		   
+           (setq end (point-max))
+
+           (if (and (null filter)
+                    (not (face-equal 'kom-first-line-face 'default)))
+               (add-text-properties start end '(face kom-first-line-face)))
+
 		   ;; All recipients and other header lines.
 
 		   (if (eq filter 'dontshow)
@@ -361,7 +370,8 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
 	    (setq body (substring str (match-end 0)))
 	    (lyskom-insert-string 'head-Subject)
 	    (setq s1 (point-max))
-	    (lyskom-format-insert "%#1r\n" lyskom-current-subject)
+	    (lyskom-format-insert "%#1r\n" 
+				  (copy-sequence lyskom-current-subject))
 	    (setq s2 (point-max))
 	    (if kom-dashed-lines
 		(lyskom-insert 
