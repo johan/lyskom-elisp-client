@@ -5,7 +5,7 @@ Vid byte från version 0.44.2 av elispklienten (eller tidigare
 versioner) till 0.45 så kan man behöva tänka på några saker:
 
 
-* Din Emacs bör vara Gnu Emacs 19.34 eller nyare, eller XEmacs 19.15
+* Din Emacs bör vara GNU Emacs 19.34 eller nyare, eller XEmacs 19.15
   eller 20.2 eller nyare. LysKOM kanske fungerar med äldre emacsen,
   men det beror i så fall mer på tur än skicklighet.
 
