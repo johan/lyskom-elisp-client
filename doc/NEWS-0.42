@@ -9,6 +9,7 @@ Version 0.42 av elispklienten finns nu tillgänglig på följande URL.
 Filen heter lyskom-0.42.el.gz, och en kopia av den text du läser just
 nu finns under namnet NEWS-0.42.
 
+
 * Fitjurs och förbättringar
 
 ** Kommandot "Lista (med) regexpar" har återuppstått. Det finns bundet
@@ -26,7 +27,9 @@ nu finns under namnet NEWS-0.42.
    snabbare i vissa fall.
 
 ** Den experimentella variabeln 'kom-delayed-printing' har bytt
-   namn. Den heter numera 'kom-deferred-printing'.
+   namn. Den heter numera 'kom-deferred-printing'. Dessutom har den
+   slutat vara experimentell och är påslagen per default. Sätt den
+   till nil om du vill ha det gamla (långsamma) beteendet tillbaka.
 
 ** Fler kommandon, till exempel vilkalistan, använder fördröjd
    utskrift om man slår på det.
@@ -41,8 +44,30 @@ nu finns under namnet NEWS-0.42.
 
 * Bugfixar
 
-** Inga större buggar har fixats, men vi har säkert infört några nya,
-   skojiaga buggar.
+** Klienten scrollar in ner till slutet på bufferten i tid och otid.
+
+** Variabeln kom-text-properties respekteras bättre (om nu någon
+   skulle vilja sätta den till nil).
+
+** Vi har säkert infört några nya, skojiaga buggar.
+
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Man kan inte filtrera anonyma inlägg eller inlägga av personer som
+   inte längre existerar. Den här buggen har låg prioritet.
+
+** Återse senaste och återse första kan ta väldigt lång tid om de
+   måste söka igenom många texter. Den kommer speciellt att ta lång
+   tid om man återser fler inlägg än en person har skrivit till ett
+   möte med många inlägg. Detta är egentligen inte en bug, men det är
+   lika bra att nämna det så ingen rapporterar det i onödan.
+
+** Om man går ur ett möte medan man prioriterar möten kan man inte
+   spara den nya prioriteringen. Denna bug kommer nog att fixas på
+   något vis såsmåningom. 
+
+** Att försöka återse sina inlägg i någon annans brevlåda fungerar
+   inte så bra. Det tar lång tid och resultatet blir noll och intet.
 
 Local variables:
 mode: outline

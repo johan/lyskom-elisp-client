@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.4 1996-05-06 14:58:24 davidk Exp $
+;;;;; $Id: view-text.el,v 41.5 1996-05-08 12:31:19 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.4 1996-05-06 14:58:24 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.5 1996-05-08 12:31:19 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -107,9 +107,11 @@ Note that this function must not be called asynchronously."
 		   
 		   (setq end (point-max))
 
-		   (if (and (null filter)
+		   (if (and kom-text-properties
+			    (null filter)
 			    (not (lyskom-face-default-p 'kom-first-line-face)))
-		       (add-text-properties start end '(face kom-first-line-face)))
+		       (add-text-properties
+			start end '(face kom-first-line-face)))
 
 		   ;; All recipients and other header lines.
 
