@@ -1,5 +1,12 @@
 Wed Jun 23 12:40:40 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
 
+        * lyskom-rest.el (silent-read): Doesn't barf on other
+	  input-events but exits.
+	  (lyskom-maybe-move-unread): Update documentation according
+	  to the fix made by Inge Wallin Apr 23 1991.
+	  (lyskom-insert-before-prompt): Buggfix. lyskom-is-waiting is
+	  usually t.
+
 	* swedish-string.el (lyskom-mode-map, lyskom-edit-mode-map):
 	  emacs-19 way of giving commands.
 
