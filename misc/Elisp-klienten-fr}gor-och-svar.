@@ -860,3 +860,23 @@ finns p} lysator.liu.se f|r ftp i pub/lyskom/elisp-client, eller i
 directory).
 (133763) -----------------------------------
 Kommentar i text 133783 av Klaus Zeuge (fjärrnärvarande) UPDATE
+
+134612 1991-11-02  19:04  /13 rader/ Linus Tolke Y
+Extra kopia: LysKOM fr}gor (&) svar; Elispklienten <198>
+Kommentar till text 134517 av Fredrik (Biker Geek from Hell) Nyman
+Ärende: [ndra namn?
+------------------------------------------------------------
+Kommandon
+*********
+
+
+Det finns tv} slags kommandon, dels de som {r bundna till enskilda
+tangenter, dels de som du m}ste ange i klartext. M}nga kommandon kan
+anges p} b}da s{tten. F|r att ange ett kommando med dess fulla namn
+trycker du tangenten `a', vilket skall uttydas `(N}got) Annat',
+ ett
+kommando som fanns i gamla QZ-KOM. Detta ger dig en fr}ga p} emacs
+meddelanderad och du kan nu trycka `?' och f} en lista p} vilka
+kommandon som finns.
+...
+(134612) -----------------------------------
