@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 43.0 1996-08-07 16:39:18 davidk Exp $
+;;;;; $Id: commands2.el,v 43.1 1996-08-11 10:44:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 43.0 1996-08-07 16:39:18 davidk Exp $\n"))
+	      "$Id: commands2.el,v 43.1 1996-08-11 10:44:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -997,7 +997,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat
 		    (lyskom-get-string 'conf-to-set-garb-nice-q)
-		    '(all))))
+		    '(all) nil nil t)))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((garb-nice (lyskom-read-number
@@ -1023,7 +1023,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'conf-to-set-permitted-submitters-q)
-		    '(all))))
+		    '(all) nil nil t)))
 
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
@@ -1031,7 +1031,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 		       (lyskom-format 'new-permitted-submitters-q
 				      (conf-stat->name conf-stat))
 		       '(all) 
-		       t)))
+		       t nil t)))
 	(if (eq new-conf nil)
 	    (lyskom-format-insert 'permitted-submitters-removed-for-conf 
 				  conf-stat)
@@ -1059,13 +1059,13 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'conf-to-set-super-conf-q)
-		    '(all))))
+		    '(all) nil nil t)))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((new-conf (lyskom-read-conf-stat
 		       (lyskom-format 'new-super-conf-q
 				      (conf-stat->name conf-stat))
-		       '(all))))
+		       '(all) nil nil t)))
       
 	;; Set the super conference for conf-stat to new-conf.
 	(lyskom-format-insert 'super-conf-for-is
