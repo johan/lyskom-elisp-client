@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.5 1996-05-12 12:28:06 byers Exp $
+;;;;; $Id: commands1.el,v 41.6 1996-06-06 01:34:49 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.5 1996-05-12 12:28:06 byers Exp $\n"))
+	      "$Id: commands1.el,v 41.6 1996-06-06 01:34:49 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -102,7 +102,7 @@
 		       ((integerp text-no-arg) text-no-arg)
 		       ((listp text-no-arg) (car text-no-arg))
 		       (t 0))))
-    (if (equal text-no 0)
+    (if (zerop text-no)
 	(setq text-no 
 	      (lyskom-read-number (lyskom-get-string 'what-text-to-delete)
 				  lyskom-current-text)))
