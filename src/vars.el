@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.9 1993-08-20 09:18:48 linus Exp $
+;;;;; $Id: vars.el,v 36.10 1993-08-20 21:58:16 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.9 1993-08-20 09:18:48 linus Exp $\n"))
+	      "$Id: vars.el,v 36.10 1993-08-20 21:58:16 linus Exp $\n"))
 
 
 
@@ -83,7 +83,10 @@ entering a conference.")
 (defvar kom-presence-messages t
   "*If non-nil, lyskom prints continuous info about what other people are doing.
 Info is printed on the message line and never in the buffer. If minibuffer is
-used then no message is printed.")
+used then no message is printed.
+
+If you want the messages in the buffer you could set the variable 
+kom-presence-messages-in-buffer.")
 
 (defvar kom-presence-messages-in-buffer nil
   "*If t, lyskom prints information about what other people are doing in buffer.

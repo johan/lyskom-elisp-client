@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 36.4 1993-05-31 12:19:25 linus Exp $
+;;;;; $Id: async.el,v 36.5 1993-08-20 21:55:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 36.4 1993-05-31 12:19:25 linus Exp $\n"))
+	      "$Id: async.el,v 36.5 1993-08-20 21:55:49 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -285,13 +285,18 @@ INSERT-FUNCTION is a function that given a string inserts it into the
 current buffer."
   (lyskom-handle-as-personal-message
    (if (= recipient 0)
-       (lyskom-format 'message-broadcast
-		      (cond
-		       ((stringp sender) sender)
-		       (sender (conf-stat->name sender))
-		       (t (lyskom-get-string 'unknown)))
-		      message
-		      (substring (current-time-string) 11 19))
+       (progn
+	 (if (eq t kom-ding-on-personal-messages)
+	     (beep))
+	 (lyskom-format 'message-broadcast
+			(cond
+			 ((stringp sender) sender)
+			 (sender (conf-stat->name sender))
+			 (t (lyskom-get-string 'unknown)))
+			message
+			(substring (current-time-string) 11 19)))
+     (if kom-ding-on-personal-messages
+	 (beep))
      (lyskom-format 'message-from
 		    (cond
 		     ((stringp sender) sender)
@@ -319,10 +324,7 @@ The text is converted, before insertion."
 		 string
 	       (iso-8859-1-to-swascii string)))))
    (if kom-pop-personal-messages
-       (display-buffer (current-buffer))))
-  (if (and kom-ding-on-personal-messages
-	   (/= lyskom-pers-no from))
-      (beep)))
+       (display-buffer (current-buffer)))))
   
 
 ;;; ================================================================

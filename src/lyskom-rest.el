@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.9 1993-08-20 08:03:36 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.10 1993-08-20 21:57:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.9 1993-08-20 08:03:36 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.10 1993-08-20 21:57:20 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1005,7 +1005,8 @@ lyskom-is-waiting nil.
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
-  (lyskom-prefetch-and-print-prompt))
+  (lyskom-prefetch-and-print-prompt)
+  (run-hooks 'lyskom-after-command-hook))
 
 
 (defun lyskom-print-prompt ()
@@ -1078,7 +1079,7 @@ list."
     (lyskom-insert lyskom-prompt-text)
     (lyskom-maybe-do-when-starting))
 
-    (lyskom-set-mode-line))
+  (lyskom-set-mode-line))
 
 
 (defun lyskom-maybe-do-when-starting ()
