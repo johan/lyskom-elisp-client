@@ -1,3 +1,7 @@
+Wed Feb 16 16:13:46 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-G
+
 2000-02-11  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-lookup-key): Vectorify event no matter what
