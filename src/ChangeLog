@@ -1,3 +1,31 @@
+2003-07-20  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 409 (use local-to-global):
+	* prefetch.el (lyskom-fetch-start-of-map): Use text-mapping
+	instead of map.
+	(lyskom-prefetch-map-handler): Use text-mapping instead of map.
+	(lyskom-prefetch-one-request): Use local-to-global instead of
+	get-map.
+
+	* lyskom-rest.el (lyskom-list-unread): Handle text-mappings, not
+	just maps.
+	(lyskom-list-unread-mapping): New function.
+
+	* services.el (initiate-local-to-global): Pretend to do
+	local-to-global using get-map.
+
+2003-07-19  David Byers  <byers@lysator.liu.se>
+
+	Work on bug 409:
+	* komtypes.el (def-komtype): Added :constructor-hook modifier.
+	(text-mapping-iterator): New type.
+	(text-mapping->iterator): New function.
+	(text-mapping-iterator->init): New function.
+	(text-mapping-iterator->next): New function.
+	(text-mapping-iterator->step): New function.
+	(text-mapping->remove-local): New function.
+	(text-mapping->remove-local): New function.
+
 2003-07-02  David Byers  <byers@lysator.liu.se>
 
 	Removed unused variables:

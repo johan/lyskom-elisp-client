@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.26 2003-04-21 16:15:17 byers Exp $
+;;;;; $Id: komtypes.el,v 44.27 2003-07-19 22:26:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,20 +35,17 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.26 2003-04-21 16:15:17 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.27 2003-07-19 22:26:14 byers Exp $\n"))
 
 
 ;;; ============================================================
 ;;; Black magic...
 
-(defmacro def-komtype (type args &optional flags)
+(defmacro def-komtype (type args &rest flags)
   "Define a new type named TYPE with fields ARGS and documentation DOC.
 TYPE is the name of the new type; a symbol.
 ARGS is a list of arguments. Each element can be a symbol or a cons whose
 car is the name of the field and the cdr is a property list for the field.
-
-If optional FLAGS is :nil-safe, then calling accessors on nil object
-will return nil and not signal an error.
 
 The special symbol &optional indicates start of fields that will be
 optional in the constructor argument list.
@@ -64,15 +61,56 @@ Legal fiels properties are:
                     the constructor.
 
 Only one of :automatic, :filter or :default may be supplied.
+
+
+Optional FLAGS are additional modifiers.
+
+If :nil-safe is included, then calling accessors on nil object will
+return nil and not signal an error.
+
+If :constructor-hook HOOK is included, HOOK will be inserted into the
+constructor function. When HOOK is evaluated, OBJECT (uppercase) is
+bound to the newly created object. It may be modified.
 "
   (let ((accessors nil)
         (mutators nil)
         (predicate nil)
         (constructor nil)
-        (access-method (if (eq ':nil-safe flags) 'elt 'aref))
-        (type-sym (intern (upcase (symbol-name type)))))
+        (access-method 'aref)
+        (type-sym (intern (upcase (symbol-name type))))
+        (constructor-body nil)
+        (constructor-hook nil))
+
+    (while flags
+      (cond ((eq (car flags) ':nil-safe) (setq access-method 'elt))
+            ((eq (car flags) ':constructor-hook)
+             (setq flags (cdr flags))
+             (setq constructor-hook (car flags))))
+      (setq flags (cdr flags)))
 
     ;; Create constructor
+
+    (setq constructor-body
+          `(cons ',type-sym
+                 (vector
+                  ,@(delq '&optional
+                          (mapcar 
+                           (lambda (arg)
+                             (cond ((plist-member (cdr-safe arg) ':automatic)
+                                    (plist-get (cdr-safe arg) ':automatic))
+                                   ((plist-member (cdr-safe arg) ':filter)
+                                    (plist-get (cdr-safe arg) ':filter))
+                                   ((plist-get (cdr-safe arg) ':default)
+                                    `(or ,(car arg) ,(plist-get (cdr arg) :default)))
+                                   (t (or (car-safe arg) arg))
+                                   ))
+                           args)))))
+
+    (when constructor-hook
+      (setq constructor-body
+            `(let ((OBJECT ,constructor-body))
+               ,constructor-hook
+               OBJECT)))
 
     (setq constructor
           `(defsubst ,(intern (format "lyskom-create-%S" type))
@@ -82,20 +120,7 @@ Only one of :automatic, :filter or :default may be supplied.
                                 args))
              ,(format "Create a `%S' from arguments.
 Automatically created with def-komtype." type)
-             (cons ',type-sym
-                   (vector
-                    ,@(delq '&optional
-                            (mapcar 
-                             (lambda (arg)
-                               (cond ((plist-member (cdr-safe arg) ':automatic)
-                                      (plist-get (cdr-safe arg) ':automatic))
-                                     ((plist-member (cdr-safe arg) ':filter)
-                                      (plist-get (cdr-safe arg) ':filter))
-                                     ((plist-get (cdr-safe arg) ':default)
-                                      `(or ,(car arg) ,(plist-get (cdr arg) :default)))
-                                     (t (or (car-safe arg) arg))
-                                     ))
-                             args))))))
+             ,constructor-body))
 
     ;; Create predicate
 
@@ -528,13 +553,18 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
    (size                :read-only t)
    (later-texts-exist   :read-only t)
    (type                :read-only t)
-   (block               :read-only t)))
+   (block               :read-only nil)))
 
 (defsubst lyskom-create-text-pair (local global) (cons local global))
 ;;UNUSED: text-pair->local-number
 (defsubst text-pair->local-number (pair) (car pair))
 ;;UNUSED: text-pair->global-number
 (defsubst text-pair->global-number (pair) (cdr pair))
+
+(defsubst text-mapping->block-size (map)
+  (if (eq (text-mapping->type map) 'dense)
+      (length (map->text-nos (text-mapping->block map)))
+    (length (text-mapping->block map))))
 
 ;;UNUSED: text-mapping->local-to-global
 (defun text-mapping->local-to-global (map local)
@@ -570,6 +600,63 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
                  (setq result i i (text-mapping->range-end map))
                (setq i (1+ i))))
            result))))
+
+(defun text-mapping->remove-local (map local)
+  (cond ((eq (text-mapping->type map) 'dense)
+         (setq local (- local (text-mapping->range-begin map)))
+         (when (and (>= local 0)
+                    (< local (text-mapping->block-size map)))
+           (aset local (map->text-nos (text-mapping->block map)) 0)))
+
+        ((eq (text-mapping->type map) 'sparse)
+         (let ((el (assq local (text-mapping->block map))))
+           (when el
+             (set-text-mapping->block map 
+                                      (delq el (text-mapping->block map))))))))
+
+(def-komtype    text-mapping-iterator
+  ((map         :read-only t)
+   (next-value  :automatic nil)
+   (state       :automatic nil))
+  :constructor-hook (text-mapping-iterator->init OBJECT))
+
+(defun text-mapping->iterator (map)
+  (lyskom-create-text-mapping-iterator map))
+
+(defun text-mapping-iterator->init (iter)
+  (if (eq (text-mapping->type (text-mapping-iterator->map iter)) 'dense)
+      (set-text-mapping-iterator->state iter 0)
+    (set-text-mapping-iterator->state 
+     iter (text-mapping->block (text-mapping-iterator->map iter)))))
+
+(defun text-mapping-iterator->next (iter)
+  (when (text-mapping-iterator->state iter)
+    (let ((map (text-mapping-iterator->map iter)))
+      (prog1
+          (if (eq (text-mapping->type map) 'dense)
+              (lyskom-create-text-pair (+ (text-mapping-iterator->state iter)
+                                          (text-mapping->range-begin map))
+                                       (aref (map->text-nos (text-mapping->block map))
+                                             (text-mapping-iterator->state iter)))
+            (car (text-mapping-iterator->state iter)))
+        (text-mapping-iterator->step iter)))))
+
+(defun text-mapping-iterator->step (iter)
+  (let ((map (text-mapping-iterator->map iter))
+        (state (text-mapping-iterator->state iter)))
+    (cond 
+     ((eq (text-mapping->type map) 'dense)
+      (setq state (1+ state))
+      (while (and (< state (text-mapping->block-size map))
+                  (eq 0 (aref (map->text-nos (text-mapping->block map)) state)))
+        (setq state (1+ state)))
+      (set-text-mapping-iterator->state 
+       iter (and (< state (text-mapping->block-size map)) state)))
+
+     ((eq (text-mapping->type map) 'sparse)
+      (set-text-mapping-iterator->state iter (cdr state))))))
+
+
 
 ;;; ================================================================
 ;;;                            mark

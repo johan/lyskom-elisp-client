@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.203 2003-07-02 19:10:02 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.204 2003-07-19 22:26:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.203 2003-07-02 19:10:02 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.204 2003-07-19 22:26:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -727,7 +727,7 @@ If CONF is nil, check the first conf on the to-do list."
           (progn
             (setq continue nil))))
       )
-    
+
     ;;; Return the result
     continue))
 
@@ -3279,27 +3279,46 @@ If the full membership hase been read do nothing."
   (lyskom-wait-for-membership))
 
 
+;; FIXME: Here we can handle both maps and mappings, but in 
+;; FIXME: reality this should *never* get called with a map 
+;; FIXME: anymore
+
 (defun lyskom-list-unread (map membership)
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
 The list consists of text-nos."
-  (let ((read (membership->read-texts membership))
-	(first (map->first-local map))
-	(i (length (map->text-nos map)))
-	(the-map (map->text-nos map)))
-    (when (not (null read))
-      (while (> i 0)
-	(-- i)
-	;; The server always send the read texts in sorted order. This
-	;; means that we can use binary search to look for read texts.
+  (if (lyskom-text-mapping-p map)
+      (lyskom-list-unread-mapping map membership)
+    (let ((read (membership->read-texts membership))
+          (first (map->first-local map))
+          (i (length (map->text-nos map)))
+          (the-map (map->text-nos map)))
+      (when (not (null read))
+        (while (> i 0)
+          (-- i)
+          ;; The server always send the read texts in sorted order. This
+          ;; means that we can use binary search to look for read texts.
 
-	;; It might be a good idea to check for zero, and not do a
-	;; sarch in that case, but it depends on how big holes there
-	;; are in the map. In general the extra test is probably a
-	;; slowdow, but when reading the initial part of the I]M map
-	;; it would most likely help a lot.
-	(when (lyskom-binsearch  (+ i first) read)
-	  (aset the-map i 0))))
-    (delq 0 (listify-vector the-map))))
+          ;; It might be a good idea to check for zero, and not do a
+          ;; sarch in that case, but it depends on how big holes there
+          ;; are in the map. In general the extra test is probably a
+          ;; slowdow, but when reading the initial part of the I]M map
+          ;; it would most likely help a lot.
+          (when (lyskom-binsearch  (+ i first) read)
+            (aset the-map i 0))))
+      (delq 0 (listify-vector the-map)))))
+
+(defun lyskom-list-unread-mapping (map membership)
+  "Args: MAP MEMBERSHIP. Return a list of unread texts.
+The list consists of text-nos."
+  (let ((read (membership->read-texts membership))
+	(first (text-mapping->range-begin map))
+        (iter (text-mapping->iterator map))
+        (el nil))
+    (when (not (null read))
+      (while (setq el (text-mapping-iterator->next iter))
+        (when (lyskom-binsearch (text-pair->local-number el) read)
+          (text-mapping->remove-local map (text-pair->local-number el)))))
+    (text-mapping->global-numbers map)))
 
 
 
