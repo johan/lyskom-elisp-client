@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 44.2 1996-10-11 11:16:32 nisse Exp $
+;;;;; $Id: filter.el,v 44.3 1997-07-02 11:12:22 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.2 1996-10-11 11:16:32 nisse Exp $\n"))
+	      "$Id: filter.el,v 44.3 1997-07-02 11:12:22 petli Exp $\n"))
 
 
 ;;;============================================================
@@ -127,7 +127,8 @@ invalid-value until a filter action has been selected.")
       ;; Block until done
       ;;
       (while (eq lyskom-filter-hack 'invalid-value)
-        (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
+        (accept-process-output lyskom-proc
+			       lyskom-apo-timeout-s lyskom-apo-timeout-ms))
       lyskom-filter-hack)))
     
 (defun lyskom-filter-text-p-2 (text-stat)
