@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.6 1993-06-23 23:50:40 linus Exp $
+;;;;; $Id: commands1.el,v 36.7 1993-07-14 15:52:19 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.6 1993-06-23 23:50:40 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.7 1993-07-14 15:52:19 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1321,6 +1321,7 @@ If you are not member in the conference it will be flagged with an asterisk."
 ;;; Changed again: Inge Wallin
 
 
+
 (defun kom-change-name ()
   "Change the name of a person or conference."
   (interactive)
@@ -1346,14 +1347,17 @@ If you are not member in the conference it will be flagged with an asterisk."
 	  (initiate-change-name 'main 'lyskom-change-name-2
 				(conf-stat->conf-no conf-stat)
 				name name))
-      (quit (ding) (lyskom-insert "\n") (lyskom-end-of-command)))))
+      (quit (lyskom-insert "\n")
+	    (lyskom-end-of-command)
+	    (signal 'quit nil)))))
 
 
 (defun lyskom-change-name-2 (answer name)
   "Tell the user wether the name change was ok"
   (if answer
       (lyskom-format-insert 'change-name-done name)
-    (lyskom-format-insert 'change-name-nope name))
+    (lyskom-format-insert 'change-name-nope name 
+			  (lyskom-get-error-text lyskom-errno) lyskom-errno))
   (lyskom-end-of-command))
 
 
