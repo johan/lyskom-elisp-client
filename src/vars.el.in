@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.275 2003-08-28 21:54:00 qha Exp $
+;;;;; $Id: vars.el.in,v 44.276 2003-11-17 21:03:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.275 2003-08-28 21:54:00 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.276 2003-11-17 21:03:49 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -514,6 +514,14 @@ The format of this variable may change in the future.
                         (nil . lyskom-maybe-get-commented-text)))
     (kom-sub-footnote . ((t . lyskom-maybe-get-footnoted-text)
                          (nil . lyskom-maybe-get-footnoted-text)))
+    (kom-write-footnote . ((t . lyskom-get-last-written-or-read-by-me)
+                           (nil . lyskom-get-last-written-or-read-by-me)))
+    (kom-add-no-comments . ((t . lyskom-get-last-written-or-read-by-me)
+                            (nil . lyskom-get-last-written-or-read-by-me)))
+    (kom-add-private-answer . ((t . lyskom-get-last-written-or-read-by-me)
+                               (nil . lyskom-get-last-written-or-read-by-me)))
+    (kom-add-request-confirm . ((t . lyskom-get-last-written-or-read-by-me)
+                                (nil . lyskom-get-last-written-or-read-by-me)))
     (t . ((t   . lyskom-get-text-at-point) ; default for prompts
           (nil . lyskom-get-text-at-point) ; no prefix arg
           (0   . lyskom-prompt-for-text-no)

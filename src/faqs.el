@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.17 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: faqs.el,v 44.18 2003-11-17 21:03:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.17 2003-08-17 12:48:06 byers Exp $\n"))
+              "$Id: faqs.el,v 44.18 2003-11-17 21:03:49 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -85,7 +85,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq
                                           '(conf pers) nil nil t)
-                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
+                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq)))
   (lyskom-add-faq conf-no text-no))
 
 
@@ -97,7 +97,7 @@ a conference that doesn't have one, or change an existing FAQ, use
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq)))
   (lyskom-add-faq nil text-no))
 
 

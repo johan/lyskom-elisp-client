@@ -1,3 +1,39 @@
+2003-11-17  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1132:
+	* commands2.el (lyskom-list-new-conferences): Made this function
+	asynchronous. Use lyskom-get-conf-stat since there's a good
+	chance, shortly after release at any rate, that this command will
+	cause an explosion of get-conf-stats anyway (when the client gets
+	the conf-stat in order to display the presentation status).
+
+2003-11-14  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1140:
+	* vars.el.in (kom-pick-text-no-strategy-alist): Added items to
+	this list corresponding to commands that have non-standard
+	defaults, since these were ignored.
+
+	* faqs.el (kom-add-faq): Don't pass DEFAULT to
+	lyskom-read-text-no-prefix-arg (the default made little sense
+	anyway).
+	(kom-add-server-faq): Same here.
+
+	* commands1.el (kom-set-presentation): Don't pass DEFAULT to
+	lyskom-read-text-no-prefix-arg (the default made little sense
+	anyway).
+	(kom-set-motd-text): Same here.
+
+2003-09-21  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el (lyskom-read-mark-type): Improve handling of empty
+	string entered as mark type.
+
+2003-09-17  David Byers  <byers@lysator.liu.se>
+
+	* cache.el (lyskom-tell-server): Never, ever, send nil to
+	change-what-i-am-doing since this causes a protocol error.
+
 2003-10-26  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* lyskom-rest.el (kom-mark-unread): Fixed typos in doc string.
