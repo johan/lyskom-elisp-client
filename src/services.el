@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.2 1995-02-23 20:42:15 linus Exp $
+;;;;; $Id: services.el,v 38.3 1995-03-01 17:56:04 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.2 1995-02-23 20:42:15 linus Exp $\n"))
+	      "$Id: services.el,v 38.3 1995-03-01 17:56:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -657,5 +657,51 @@ or get-text-stat."
       (while (eq lyskom-blocking-return 'not-yet-gotten)
 	(accept-process-output))
       lyskom-blocking-return)))
+
+
+;; Multiple blocking read from server
+
+(defvar lyskom-multiple-blocking-return nil
+  "Return from blocking-do-multiple")
+
+(defun lyskom-blocking-do-multiple (call-list)
+  (let ((lyskom-blocking-return 'not-yet-gotten))
+    (lyskom-collect 'blocking)
+    (while call-list
+      (apply (intern-soft (concat "initiate-"
+				  (symbol-name (car (car call-list)))))
+	     'blocking nil
+	     (cdr (car call-list)))
+      (setq call-list (cdr call-list)))
+    (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
+    (while (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+      (accept-process-output))
+    lyskom-multiple-blocking-return))
+
+(defun lyskom-blocking-do-multiple-1 (&rest data)
+  (setq lyskom-multiple-blocking-return data))
+
+(defmacro blocking-do-multiple (bind-list &rest body)
+  "Bind variables according to BIND-LIST and then eval BODY.
+The value of the last form in BODY is returned.
+Each element in BIND-LIST is a list (SYMBOL FORM) which binds SYMBOL to
+the result of the server call FORM, which is the same as used in blocking-do.
+All the forms in BIND-LIST are evaluated before and symbols are bound."
+  (let ((bindsym 'multiple-bind-sym)
+	(index 0))
+    (` (let (((, bindsym)
+	      (lyskom-blocking-do-multiple
+	       (list (,@ (mapcar (function (lambda (x) 
+					     (` (list '(, (car (car (cdr x))))
+						      (,@ (cdr (car (cdr x))))))))
+			   bind-list))))))
+	 (let ((,@ (mapcar (function 
+			    (lambda (bpat)
+			      (prog1
+				  (` ((, (car bpat))
+				      (elt (, bindsym) (, index))))
+				(setq index (1+ index)))))
+			   bind-list)))
+	   (,@ body))))))
 
 

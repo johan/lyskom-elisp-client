@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 38.1 1995-02-23 20:41:44 linus Exp $
+;;;;; $Id: flags.el,v 38.2 1995-03-01 17:55:54 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 38.1 1995-02-23 20:41:44 linus Exp $\n"))
+	      "$Id: flags.el,v 38.2 1995-03-01 17:55:54 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -69,6 +69,13 @@
   (fset 'user-variable-p
 	(symbol-function 'original-user-variable-p)))
 
+;;;============================================================
+;;;  kom-edit-options-send
+;;;
+;;;  Finish an edit options session.
+;;;  This function must be kept in sync with lyskom-save-options
+;;;  below.
+;;;
 
 (defun kom-edit-options-send ()
   "Finishes the edit options and sends the new settings to the server."
@@ -154,6 +161,82 @@ If successful then set the buffer not-modified. Else print a warning."
 
 (defvar lyskom-options-done nil
   "When we have read all options this is turned non-nil.")
+
+;;;============================================================
+;;;  lyskom-save-options
+;;;
+;;;  Save user-area without feedback in the KOM buffer. This
+;;;  is for use by all functions but edit-options.
+;;;
+;;;  Messages are given in the minibuffer
+
+(defun lyskom-save-options (kombuf start-message done-message error-message)
+  (let ((common-block 
+         (concat
+          (mapconcat (function
+                      (lambda (var)
+                        (lyskom-format-objects
+                         (substring (symbol-name var) 4) 
+                         (if (symbol-value var) "1" "0"))))
+                     lyskom-global-boolean-variables
+                     "\n")
+          "\n"
+          (mapconcat (function
+                      (lambda (var)
+                        (lyskom-format-objects
+                         (substring (symbol-name var) 4) 
+                         (prin1-to-string (symbol-value var)))))
+                     lyskom-global-non-boolean-variables
+                     "\n")
+          ))
+        (elisp-block
+         (mapconcat (function
+                     (lambda (var)
+                       (lyskom-format-objects (symbol-name var) 
+                                              (prin1-to-string
+                                               (symbol-value var)))))
+                    lyskom-elisp-variables
+                    "\n")))
+    (save-excursion
+      (set-buffer kombuf)
+      (lyskom-message start-message)
+      (initiate-create-text 'options 'lyskom-save-options-2
+                            (apply 'lyskom-format-objects
+                                   (apply 'lyskom-format-objects
+                                          "common"
+                                          "elisp"
+                                          (mapcar 
+                                           (function car)
+                                           lyskom-other-clients-user-areas))
+                                   common-block
+                                   elisp-block
+                                   (mapcar (function cdr)
+                                           lyskom-other-clients-user-areas))
+                            (lyskom-create-misc-list) 
+                            kombuf
+                            done-message
+                            error-message))))
+
+(defun lyskom-save-options-2 (text-no kombuf done-message error-message)
+  (if text-no
+      (initiate-set-user-area 'options 'lyskom-save-options-3
+                              lyskom-pers-no text-no kombuf 
+                              done-message error-message)
+    (save-excusrsion
+     (set-buffer kombuf)
+     (lyskom-insert-string 'could-not-save-options)
+     (lyskom-message (lyskom-get-string 'could-not-save-options)))))
+
+(defun lyskom-save-options-3 (success kombuf done-message error-message)
+  (save-excursion
+    (set-buffer kombuf)
+    (if success
+        (progn
+          (cache-del-pers-stat lyskom-pers-no)
+          (lyskom-message done-message))
+      (lyskom-format-insert 'could-not-set-user-area lyskom-errno)
+      (lyskom-message error-message))))
+
 
 (defun lyskom-read-options ()
   "Reads the user-area and sets the variables according to the choises.

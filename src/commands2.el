@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.1 1995-02-23 20:41:24 linus Exp $
+;;;;; $Id: commands2.el,v 38.2 1995-03-01 17:55:41 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.1 1995-02-23 20:41:24 linus Exp $\n"))
+	      "$Id: commands2.el,v 38.2 1995-03-01 17:55:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -434,6 +434,7 @@ otherwise: the conference is read with lyskom-completing-read."
 
 ;;; Author: Inge Wallin
 ;;; Rewritten to use lyskom-read-conf-no by Linus Tolke
+;;; Modified to use default recipient by David Byers
 
 
 (defun kom-send-message ()
@@ -442,8 +443,21 @@ otherwise: the conference is read with lyskom-completing-read."
   (lyskom-start-of-command 'kom-send-message)
   (unwind-protect
       (lyskom-send-message 
-       (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
-			    'pers t))
+       (cond ((null kom-send-message-to-last-sender)
+	      (lyskom-read-conf-no
+	       (format (lyskom-get-string 'who-to-send-message-to)
+		       (lyskom-get-string 'everybody))
+	       'pers t))
+	     (t
+	      (lyskom-read-conf-no
+	       (format (lyskom-get-string 'who-to-send-message-to)
+		       (lyskom-get-string 'everybody))
+	       'all t
+	       (if lyskom-last-personal-message-sender
+		   (if (string-match "^19" emacs-version)
+		       (cons lyskom-last-personal-message-sender 0)
+		     lyskom-last-personal-message-sender)
+		 "")))))
     (lyskom-end-of-command)))
   
 

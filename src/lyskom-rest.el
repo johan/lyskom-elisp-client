@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.3 1995-02-23 20:41:57 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 38.4 1995-03-01 17:55:59 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.3 1995-02-23 20:41:57 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.4 1995-03-01 17:55:59 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -349,44 +349,55 @@ Related variables are kom-tell-phrases and lyskom-commands.")
   (kom-view-next-text))
 
 
+;;; Modified to handle filters
+
 (defun kom-view-next-text ()
   "Display next text (from lyskom-reading-list)."
   (interactive)
   (unwind-protect
-      (progn
 	(lyskom-start-of-command 'kom-view-next-text)
 	(lyskom-tell-internat 'kom-tell-read)
-	(if (read-list-isempty lyskom-reading-list)
-	    (progn
-	      (if (/= 0 lyskom-current-conf)
-		  (lyskom-insert-string 'completely-read-conf)
-		(lyskom-insert-string 'not-in-any-conf)))
+	(let ((action 'next-text))
+	  (while (eq action 'next-text)
+	    (if (read-list-isempty lyskom-reading-list)
+		(progn
+		  (if (/= 0 lyskom-current-conf)
+		      (lyskom-insert-string 'completely-read-conf)
+		    (lyskom-insert-string 'not-in-any-conf))
+		  (setq action nil))
+	      
+	      (progn
+		(let* ((tri (read-list->first lyskom-reading-list))
+		       (text-no (car (cdr (read-info->text-list tri))))
+		       (type (read-info->type tri))
+		       (priority (read-info->priority
+				  (read-list->first lyskom-reading-list)))
+		       (is-review-tree (eq type 'REVIEW-TREE))
+		       (is-review (or (eq type 'REVIEW)
+					    (eq type 'REVIEW-MARK)
+					    is-review-tree))
+		       (mark-as-read (not is-review)))
+		  (if is-review
+		      (delq text-no 
+			    (read-info->text-list tri))) ;First entry only
+		  (if mark-as-read
+		      (lyskom-is-read text-no)
+		    (read-list-delete-text nil lyskom-reading-list)
+		    (read-list-delete-text nil lyskom-to-do-list))
+		  (setq action
+			(lyskom-view-text text-no mark-as-read 
+					  (and kom-read-depth-first
+					       (not is-review))
+					  (read-info->conf-stat
+					   (read-list->first
+					    lyskom-reading-list))
+					  priority
+					  is-review-tree
+					  (not is-review))))))))
+	  (lyskom-end-of-command)))
+  
 
-	  (progn
-	    (let* ((tri             (read-list->first lyskom-reading-list))
-		   (text-no         (car (cdr (read-info->text-list tri))))
-		   (type            (read-info->type tri))
-		   (priority 	      (read-info->priority
-				       (read-list->first lyskom-reading-list)))
-		   (is-review-tree  (eq type 'REVIEW-TREE))
-		   (is-review       (or (eq type 'REVIEW)
-					(eq type 'REVIEW-MARK)
-					is-review-tree))
-		   (mark-as-read    (not is-review)))
-	      (if is-review
-		  (delq text-no (read-info->text-list tri))) ;First entry only
-	      (if mark-as-read
-		  (lyskom-is-read text-no)
-		(read-list-delete-text nil lyskom-reading-list)
-		(read-list-delete-text nil lyskom-to-do-list))
-	      (lyskom-view-text text-no mark-as-read (and kom-read-depth-first
-							  (not is-review))
-				(read-info->conf-stat
-				 (read-list->first lyskom-reading-list))
-				priority
-				is-review-tree)))))
-    (lyskom-end-of-command)))
-
+;;; Modified to handle filters
 
 (defun lyskom-view-priority-text ()
   "Display the first text from the next conference on the lyskom-to-do-list."
@@ -398,7 +409,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 	 (text-no (car (text-list->texts (read-info->text-list tri)))))
     (lyskom-is-read text-no)
     (lyskom-view-text text-no t nil (read-info->conf-stat tri) 
-		      priority nil))
+		      priority nil t))
   (lyskom-run 'main 'lyskom-end-of-command))
 
 
@@ -1903,6 +1914,19 @@ from the value of kom-tell-phrases-internal."
       (iso-8859-1-to-swascii lyskom-header-separator))
 (setq lyskom-swascii-header-subject
       (iso-8859-1-to-swascii lyskom-header-subject))
+
+(setq lyskom-swascii-filter-actions
+      (mapcar 
+       (function (lambda (pair)
+		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+       lyskom-filter-actions))
+(setq lyskom-swascii-filter-what
+      (mapcar 
+       (function (lambda (pair)
+		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+       lyskom-filter-what))
+
+(setq lyskom-emacs19-p (string-match "^19" emacs-version))
 
 
 ;;; Local Variables: 

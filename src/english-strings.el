@@ -1,6 +1,5 @@
-
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.0 1994-01-06 01:57:48 linus Exp $
+;;;;; $Id: english-strings.el,v 38.1 1995-03-01 17:55:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,11 +32,13 @@
 ;;;; Matches version 36.11 of swedish-strings.el
 ;;;; ================================================================
 ;;;;
+;;;; Translation from swedish-strings.el: David Byers
+;;;;
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.0 1994-01-06 01:57:48 linus Exp $\n"))
+	      "$Id: english-strings.el,v 38.1 1995-03-01 17:55:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -47,6 +48,9 @@
   "Mode map for LysKOM edit.")
 
 ;;; Set the keymap for lyskom-edit-mode
+
+(defvar lyskom-edit-prefix nil
+  "Mode-map for lyskom edit mode")
 
 (if lyskom-edit-mode-map
     nil
@@ -92,10 +96,15 @@ Kill: \\[kom-edit-quit], \
 Help: \\[describe-mode] ---")
   "*String to separate headers from text body.")
 
+(defvar lyskom-swascii-header-separator nil
+  "The swascii version of lyskom-header-separator.")
 
 (defvar lyskom-header-subject "Subject: "
   "*String to prompt for subject in the edit buffer.")
 
+
+(defvar lyskom-swascii-header-subject nil
+  "The swascii version of lyskom-header-subject.")
 
 (defconst lyskom-strings 
   '(
@@ -109,22 +118,23 @@ Help: \\[describe-mode] ---")
     (connection-done . "Connection established. Server version is %#1s.\n\n")
     (what-is-your-name . "What is your name? ")
     (password . "Your Password? ")
-    (wrong-password . "Password incorrect\n")
-    (are-logged-in . "You are now logged on. Please wait...\n")
-    (you-have-motd . "\nYou have a note on the door:\n\n")
+    (wrong-password . "Incorrect password\n")
+    (are-logged-in . "You have entered LysKOM. Please wait...\n")
+    (you-have-motd . "\nYou have a note on your door:\n\n")
     (presentation-encouragement .
-     "You have not written a presentation. Please write a presentation by using the command p. If you do not want to write a presentations, type fk.\n")
+"You have not written a presentation. Please write a presentation by using
+the command Ap. If you do not want to write a presentations, please type fk.\n")
 
     (first-greeting . "%#1s
 This appears to be the first time you use LysKOM. Welcome!
 Please make sure you have spelled your name correctly. You should use your
-full name and organisation, eg. \"Joe Hacker, MIT\". If you spelled your name
+full name and organisation, eg. \"Joe Hacker, MIT\". If your name is spelled
 incorrectly, or you wish to change it, answer 'no' to the question below.
 
-For the time being the LysKOM server stores most of the information so that
+At present the LysKOM server stores most of the information so that
 anybody can read it. Only passwords are encrypted.
 
-If you ar uncertain about how to use LysKOM, you can retreive a manual by
+If you ar uncertain about how to use LysKOM, you can retrieve a manual by
 anonymous ftp to ftp.lysator.liu.se. Ask your system administrator for help
 on how to do this.")
 
@@ -157,19 +167,19 @@ Email-address:\n\nOther:\t")
 
     ; From commands1.el:
     (appreciation . "Tap, tap.\n\n")
-    (abuse . "Thomp! Ouch!")
+    (abuse . "Thomp! Ouch!\n\n")
 
 
     (what-conf-to-delete . "Conference/user to delete: ")
     (confirm-delete-pers-or-conf . "Really delete %#1s %#2s? ")
     (the-pers . "the user")
     (the-conf . "the conference")
-    (deletion-not-confirmed . "Delete canceled\n")
+    (deletion-not-confirmed . "Deletion aborted\n")
     (somebody-else-deleted-that-conf . "Somebody else just deleted the conference.\n")
-    (conf-is-deleted . "Ok, %#1s has now been deleted.\n")
+    (conf-is-deleted . "OK, %#1s is now deleted.\n")
     (you-could-not-delete . "%#1s can't be deleted by you.\n")
 
-    (what-text-to-delete . "Article to remove?")
+    (what-text-to-delete . "Article to remove: ")
     (deleting-text . "Removing article %#1d...")
 
     (presentation-for-whom . "Which conference/user: ")
@@ -195,7 +205,7 @@ Email-address:\n\nOther:\t")
 
     (cant-find-supervisor . "Can't find supervisor of %#1s.\n")
     (is-read-protected-contact-supervisor . "%#1s \344r closed.
-Send a letter to  %#2s to be granted membership.")
+Send a letter to  %#2s to apply for membership.")
 
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
 
@@ -204,13 +214,13 @@ Send a letter to  %#2s to be granted membership.")
 
     (leave-what-conf . "Unsubscribe to which conference: ")
 
-    (error-fetching-person . "Error fetching user.\n")
-    (error-fetching-conf . "Error fetching conference.\n")
+    (error-fetching-person . "Error retreiving user.\n")
+    (error-fetching-conf . "Error retreiving conference.\n")
 
     (name-of-conf . "Conference name: ")
     (anyone-member . "May anyone subscribe? ")
     (secret-conf . "Secret conference? ")
-    (comments-allowed . "Are comments permitted? ")
+    (comments-allowed . "Are comments allowed? ")
     (what-comment-no . "Comment article number: ")
     (confusion-what-to-comment . "I can't figure out which article you want to comment.\n")
     (confusion-what-to-footnote . "I can't figure out to which article you want to write a footnote to.\n")
@@ -225,12 +235,12 @@ Send a letter to  %#2s to be granted membership.")
   LysKOM session finished
   You are now disconnected from the server
 --------------------------------------------\n")
-    (what-to-change-pres-you . "Change presentation of what/who (yourself): ")
+    (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
     (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.")
     (go-to-conf-p . "Go to conference: ")
-    (want-become-member . "Subscribe? ")
+    (want-become-member . "Do you want to subscribe? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
     (who-to-remove-motd-for . "Remove note from the door of who/what: ")
@@ -270,9 +280,9 @@ Send a letter to  %#2s to be granted membership.")
     (text-to-delete-comment-from . "Remove comment from which article: ")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
-    (member-in-conf . "Subscribe to %#1s...")
+    (member-in-conf . "Subscribing to %#1s...")
     (add-member-in . "Adding %#1s as a subscriber to %#2s...")
-    (unsubscribe-to . "Unsubscribe from %#1s...")
+    (unsubscribe-to . "Unsubscribing from %#1s...")
 
     (exclude-from . "Unsubscribing %#1s from %#2s...")
 
@@ -281,23 +291,25 @@ Send a letter to  %#2s to be granted membership.")
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\nError: %#2d.\n")
     (created-conf-no-name . "Conference number %#1d %#2s has been created.\n")
-    (cant-read-textno . "You are not permitted to read article %#1d")
+    (cant-read-textno . "You are not allowed to read article %#1d")
 
     (not-supervisor-for . "You are not the supervisor of %#1s.\n")
     (not-supervisor-for . "You are not the supervisor of %#1s.\n")
     (go-to-conf . "Go to conference %#1s.\n")
-    (cant-go-to-his-mailbox . "You are not permitted to go to %#1ss mailbox.\n")
-    (not-member-of-conf . "You don't subscribe to %#1s.\n")
-    (change-name-done . "\nDone. New name: %#1s.\n")
-    (change-name-nope . "\nDidn't work. Error code %#3d. %#2s.\n")
+    (cant-go-to-his-mailbox . "You are not allowed to go to %#1s's mailbox.\n")
+    (not-member-of-conf . "You are not subscribed to %#1s.\n")
+    (about-to-change-name-from . "%#1s\n")
+    (change-name-done . "Done. New name: %#1s.\n")
+    (change-name-nope . "Didn't work. Error code %#3d. %#2s.\n")
     (change-supervisor-from-to . "Change supervisor of %#1s to %#2s...")
     (change-supervisor-nope . 
-     "\nDidn't work. Perhaps you are not permitted to change the supervisor of %#1s?\n")
+     "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1s?\n")
     
-    (no-marked-texts . "You have no marked articles.\n")
+    (no-marked-texts . "You have not marked any articles.\n")
     (no-marked-texts-mark . 
-     "You have no marked any articles with mark %#1d.\n")
-    (time-is . "The time is %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(according to the server).\n")
+     "You have not marked any articles with mark %#1d.\n")
+    (time-is . "The time is %4#1d %02#3d/%02#2d %02#4d:%02#5d:%02#6d %#7s(according to the server).\n")
+;;  (time-is . "The time is %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(according to the server).\n")
     (total-users . "    A total of %#1d users.\n")
     (who-to-add-q . "Add who/what as a recipient: ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
@@ -311,7 +323,7 @@ Send a letter to  %#2s to be granted membership.")
     (text-to-remove-q . "Remove which article as a comment: ")
     (add-comment-to . "Adding article %#1d as a comment to text %#2d...")
     (sub-comment-to . "Removing article %#1d as a comment to article %#2d...")
-    (comment-keep-recpt-p ."Shall %#1s remain a recipient? ")
+    (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
 
     ; From commands2.el:
 
@@ -336,7 +348,7 @@ Send a letter to  %#2s to be granted membership.")
      "Time of last article: %20#1s (accordning to your cache)\n")
     (no-of-motd . "Note on the door in article: %13#1d\n")
     (superconf-is-no-name . "Superconference:       %19#1d %#2s\n")
-    (permitted-submitters-no-name . "Admitted authors:%25#1d %#2s\n")
+    (permitted-submitters-no-name . "Allowed authors:%25#1d %#2s\n")
     (supervisor-is-no-name . "Supervisor:     %27#1d %#2s\n")
     (presentation-no . "Presentation:    %25#1d\n")
     (conf-has-motd . "\n%#1s has a note on the door:\n")
@@ -345,7 +357,7 @@ Send a letter to  %#2s to be granted membership.")
     (show-members-list-also-q . "List subscribers? ")
     (conf-has-these-members . "\n%#1s has the following subscribers:\n")
     (member-list-header . "Last entered       Unread  Name\n\n")
-    (secret-membership . "*** Secret line ***\n")
+    (secret-membership . "--- Secret line ---\n")
     (pers-for-status . "Get status of which user: ")
     (no-such-pers . "The user doesn't exist.")
     (pers-status-record . "Status of user %#1s (%#2d)\n")
@@ -370,7 +382,7 @@ Send a letter to  %#2s to be granted membership.")
     (not-allowed-see-confs . "You are not premitted to see which conferences %#1s subscribes to.\n")
     (is-member-of . "\n%#1s subscribes to the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
-    (who-to-send-message-to . "Send message to whom? (Everyone) ")
+    (who-to-send-message-to . "Send message to whom? (%s) ")
     (his-total-unread . "\n%#1s has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
     (message-sent-to-user .
@@ -388,12 +400,16 @@ Your public message:
 ----------------------------------------------------------------
 ")
     (message-nope .
-     "Unable to send the message. Perhaps the recipient isn't logged on.\n")
-    (only-last . "Last (0 - %#1d) by %#2s: ")
+     "Unable to send the message. Perhaps the recipient isn't logged on.
+The message you were sending to %#1s was:
+%#2s\n")
+    (only-last . "Last (0 - %#1d) articles by %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
     (you-have-unreads . "You have %#1d unread articles in %#2s\n")
     (you-have-an-unread . "You have 1 unread article in %#1s\n")
+    (you-have-unreads-special . "You have %#1d uncommented articles in %#2s\n")
+    (you-have-an-unread-special . "You have 1 uncommented article in %#1s\n")
     (you-have-read-everything . "No news (is bad news).\n")
     (total-unreads . "\nYou have %#1d unread articles.\n")
     (total-unread . "\nYou have 1 unread article.\n")
@@ -416,16 +432,16 @@ Your public message:
     (buggrepport-compilestart . "Creating bug report...")
     (buggrepport-compileend . "Creating bug report...done")
     (buggreport-description . "This is what I was doing:
-(Fill in your comments below)\n\n\n
-Among the information below are the 100 most recently pressed keys from
+(Fill in your comments below)\n================\n\n
+================
+In the information below are the 100 most recently pressed keys from
 your emacs. If you recently logged on, you password may be contained in
 this list. If that is the case, change the characters corresponding to
 your password to asterisks.
 
-When you have completed writing this, send your bug report to the LysKOM
+When you have finished writing this, send your bug report to the LysKOM
 developers. You can do this either by email to bug-lyskom@lysator.liu.se or
-through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
-buggrapporter\", or if nothing else works, you can send a normal letter to
+by mailing a hardcopy of your bug report to:
 Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
 Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-internals . "LysKOM's internal information:\n\n")
@@ -442,17 +458,17 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-subject . "Bugreport elisp-client version %#1s")
 
 
-    (not-logged-in . "You are not logged on.  ")
+    (not-logged-in . "You are not logged on. ")
     (name-is-not-in-conf . "%#1s is in any conference.\n")
     (name-is-in-conf . "%#1s is in\n%#2s\n")
     (connected-during . "Connect time: %#1d seconds.\n")
 
-    (conf-to-set-permitted-submitters-q . "For which conference do you want to set the admitted authors: ")
+    (conf-to-set-permitted-submitters-q . "For which conference do you want to set the allowed authors: ")
     (conf-to-set-super-conf-q . "Set superconference of which conference: ")
     (new-super-conf-q . "Which conferece do you want as superconference: ")
-    (new-permitted-submitters-q . "Admit members of which conference as authors in %#1s (all): ")
+    (new-permitted-submitters-q . "Allow members of which conference as authors in %#1s (all): ")
     (super-conf-for-is . "Changing superconference of %#1s to %#2s...")
-    (permitted-submitters-removed-for-conf . "Admitting all authors to conference %#1s...")
+    (permitted-submitters-removed-for-conf . "Allowing all authors to conference %#1s...")
     (submitters-conf-for-is . "Changing authors admitted to conference %#1s to the members of %#2s...") 
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference: ")
@@ -480,9 +496,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (info-to-conf . "%#1s to conference: ")
     (info-by-to . "%#1s by %#2s to %#3s forward.")
     (all-confs . "all conferences")
-    (no-get-conf . "You are not permitted to access that conferene.\n")
-    (no-get-pers . "You are not permitted to access that user.\n")
-    (no-review-info . "You are not permitted to review %#1s\n")
+    (no-get-conf . "You are not allowed to access that conferene.\n")
+    (no-get-pers . "You are not allowed to access that user.\n")
+    (no-review-info . "You are not allowed to review %#1s\n")
     (review-info . "Review %#1s\n")
     (you-review . "You are now reviewing %#1s.\n")
     (read-text-first . "You must read a article first.\n")
@@ -508,7 +524,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (conf-has-motd-no . "The conference has a note on the door. (%#1d)\n\n%#2s")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
     (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
-    (no-get-text . "You were not permitted to retreive the article.")
+    (no-get-text . "You were not allowed to retrieve the article.")
 
 
     ; From view-text.el:
@@ -525,9 +541,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 ;; lyskom-text-start variable. DONT change one without changing the other.
 
 ; used by lyskom-print-time
-    (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
+    (time-y-m-d-h-m . "%4#1d %02#3d/%02#1d  %02#4d:%02#5d ")
 ; used by lyskom-return-time
-    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+    (time-yyyy-mm-dd-hh-mm . "%4#1d %02#3d/%02#2d %02#4d:%02#5d")
     (no-such-text-no . "The article doesn't exist. (%#1d)\n")
 
     (head-Subject . "Subject: ")
@@ -552,10 +568,11 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 ===========================================================
 Message from the LysKOM-system: Somebody tried to connect,
 but failed since all connections available to LysKOM are in
-use. Please try later.
+use. Please leave and return later if you are just waiting
+for an article.
 ===========================================================\n")
-    (has-entered . "%#1s has logged onto LysKOM.")
-    (has-entered-r . "%#1s has logged onto LysKOM.\n")
+    (has-entered . "%#1s has entered LysKOM.")
+    (has-entered-r . "%#1s has entered LysKOM.\n")
     (has-left . "%#1s has left LysKOM.")
     (has-left-r . "%#1s has left LysKOM.\n")
     (unknown . "unknown")
@@ -582,12 +599,12 @@ Personal message from %#1s (%#3s):
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
 
     ; From prioritize.el:
-    (cannot-get-membership . "Cannot retreive your subscription list.")
-    (cannot-get-pers-stat . "Cannot retreive your personal status.")
+    (cannot-get-membership . "Cannot retrieve your subscription list.")
+    (cannot-get-pers-stat . "Cannot retrieve your personal status.")
     (your-membship . "Your subscriptions:
   Prio Conf# Conference\n")
     (prio-row . " %5#1d%5#2d  %#3s\n")
-    (too-high-goto-2 . "You are too high,  move down to line two.")
+    (too-high-goto-2 . "You are too high up, move down to line two.")
     (too-low-go-up . "You can't push the last line. Move up one line.")
     (all-confs-popped .  "All conferences have been popped.")
     (prio-died . "Couldn't complete the move. Sorry. Kill the buffer.")
@@ -597,6 +614,7 @@ Personal message from %#1s (%#3s):
     ; From flags.el:
     (saving-settings . "Saving options")
     (hang-on . "Wait a moment...\n")
+    (could-not-save-options . "Couldn't save options.")
     (could-not-create-area . "Couldn't create the article.\n")
     (could-not-set-user-area . "Couldn't alter the user-area. The server says error: %#1d\n")
     (you-dont-exist . "You don't exist. Go away.\n")
@@ -605,6 +623,9 @@ Personal message from %#1s (%#3s):
     ; No entries.
 
     ; From lyskom-rest.el:
+
+    (mode-line-unread . " Unread")
+    (mode-line-letters . " letters")
 
     (error-code . "Error code %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")
@@ -621,7 +642,7 @@ Personal message from %#1s (%#3s):
     (several-unread . " - %#1d unread articles\n")
 
     (save-on-file-q . "Save which article in file: (%#1s) ")
-    (wait-for-prompt . "Wait for the prompt!")
+    (wait-for-prompt . "Wait for the prompt.")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized article")
     (review-next-text-prompt . "Review next article")
@@ -672,6 +693,45 @@ Error message: %#1s**************************************************")
     (footnote . "Footnote")
     (by . " by %#1s")
     (text-created .  "Article %#1d has been created.\n")
+
+    (starting-mosaic . "Starting Mosaic...")
+    (super-jump . "Filtering subject \"%#1s\" in conference \"%#2s\"\n")
+    (filtered . "[Filtered]")
+    (bad-filter-list . "Error in the filter list near %s.")
+    (invalid-filter-list . "Error in the filter list.")
+    (filter-tree . "Skipping article %d \"%s\" by %s and all its comments.\n")
+    (filter-text . "Skipping article %d \"%s\" by %s.\n")
+    (filter-permanent . "Permanent? ")
+    (filter-action . "Filter how: ")
+    (filter-in-conf . "In which conference (all): ")
+    (filter-subject . "Filter which subject: ")
+    (filter-text . "Filter articles containing: ")
+    (filter-author . "Filter which author: ")
+    (permanent . "(permanent)")
+    (temporary . "(temporary)")
+    (filter-edit-buffer-name . "*LysKOM Filter Edit*")
+    (filter-edit-empty-list . "Empty list")
+    (filter-edit-start-of-list . "Beginning of list")
+    (filter-edit-end-of-list . "End of list")
+    (filter-edit-filter-how . "Filter how? ")
+    (filter-edit-filter-what . "What do you want to filter: ")
+    (filter-edit-bad-argument . "Bad input: %s")
+    (filter-edit-outside-entry . "Can't do that outside a filter")
+    (filter-edit-outside-list . "Can't do that outside the list")
+    (filter-edit-end-of-pattern . "End of filter")
+    (filter-edit-save-p . "Save changes? ")
+    (filter-edit-remove-empty . "Empty filters cause all articles to be filtered. Do you want to remove these? ")
+    (filter-edit-restart-p . "You have made changes. Really revert? ")
+    (filter-edit-help . "p Up, n Down, i New line, M-i New filter, d Delete line, M-d Delete filter")
+    (filter-edit-header . "Edit filters on \"%s\"\n")
+    (filter-edit-saving . "Saving changes...")
+    (filter-edit-saving-done . "Saving changes...done")
+    (filter-edit-saving-error . "Couldn't save changes!")
+    (filter-edit-insert-pred . "%#1s (=,!=): ")
+    (filter-edit-insert-arg . "%#1s %#2s (what): ")
+    (no-filters . "No filters are defined.")
+    (view-filters-header . "\nActive filters:\n\n")
+    (view-filters-footer . "")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -684,61 +744,61 @@ Error message: %#1s**************************************************")
 (defconst lyskom-commands
   '(
     (describe-mode              "Help")
-    (kom-slow-mode		"Long commands")
-    (kom-quick-mode		"Short commands")
+    (kom-slow-mode              "Long commands")
+    (kom-quick-mode             "Short commands")
     (kom-send-message           "Send message")
-    (kom-create-conf		"Create conference")
+    (kom-create-conf            "Create conference")
     (kom-delete-conf            "Delete conference")
     (kom-delete-text            "Remove article")
-    (kom-display-time		"Time")
-    (kom-go-to-conf		"Go (to) conference")
-    (kom-go-to-next-conf	"(Go to) next conference")
-    (kom-jump			"Skip (all) comments")
-    (kom-list-conferences 	"List conferences") 
-    (kom-list-persons		"List users")
+    (kom-display-time           "Time")
+    (kom-go-to-conf             "Go (to) conference")
+    (kom-go-to-next-conf        "(Go to) next conference")
+    (kom-jump                   "Skip (all) comments")
+    (kom-list-conferences       "List conferences") 
+    (kom-list-persons           "List users")
     (kom-list-news              "List news")
-    (kom-membership		"List subscriptions")
-    (kom-postpone		"Postpone reading")
-    (kom-prioritize		"Prioritize conferences")
-    (kom-status-person		"Status (of) user")
-    (kom-status-conf		"Status (of) conference")
-    (kom-add-self		"Subscribe (to) conference")
-    (kom-list-summary		"List article (subjects)")
+    (kom-membership             "List subscriptions")
+    (kom-postpone               "Postpone reading")
+    (kom-prioritize             "Prioritize conferences")
+    (kom-status-person          "Status (of) user")
+    (kom-status-conf            "Status (of) conference")
+    (kom-add-self               "Subscribe (to) conference")
+    (kom-list-summary           "List article (subjects)")
     (kom-sub-self               "Unsubscribe (to) conference")
-    (kom-quit			"Quit")
-    (kom-recover		"Recover") 
-    (kom-start-anew		"New User")
-    (kom-view			"Review article")
-    (kom-find-root-review	"Review tree")
-    (kom-review-comments	"Review all comments")
-    (kom-review-tree		"Review all comments recursively")
+    (kom-quit                   "Quit")
+    (kom-recover                "Recover") 
+    (kom-start-anew             "New User")
+    (kom-view                   "Review article")
+    (kom-find-root-review       "Review tree")
+    (kom-review-comments        "Review all comments")
+    (kom-review-tree            "Review all comments recursively")
     (kom-review-clear           "Review and skip")
     (kom-review-last-normally-read
      				"Review again")
     (kom-review-noconversion	"Review unconverted")
     (kom-review-next            "Review next")
-    (kom-find-root		"Review original (article)")
+    (kom-find-root              "Review original (article)")
     (kom-review-by-to           "Review last")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-review-stack           "Review stack")
     (kom-review-presentation    "Review presentation")
     (kom-review-backward        "(Review) Backwards")
-    (kom-view-next-text		"(Read) next article")
-    (kom-who-is-on		"Who (is on)") 
-    (kom-display-who-buffer	"Display who (list)")
-    (kom-busy-wait		"Wait (for news)")
-    (kom-write-comment		"(Write) comment")
-    (kom-comment-previous	"(Write) comment (to) previous article")
+    (kom-view-next-text         "(Read) next article")
+    (kom-who-is-on              "Who (is on)") 
+    (kom-display-who-buffer     "Display who (list)")
+    (kom-busy-wait              "Wait (for news)")
+    (kom-write-comment          "(Write) comment")
+    (kom-comment-previous       "(Write) comment (to) previous article")
     (kom-write-footnote         "(Write) footnote")
     (kom-private-answer         "(Write) personal reply (by letter)")
     (kom-private-answer-previous
      "(Write) personal (reply to) previous article (by letter)")
-    (kom-set-unread		"Only (the) last")
-    (kom-write-text		"Write (an) article")
-    (kom-send-letter		"Write (a) letter")
-    (kom-change-name		"Change name")
+    (kom-set-unread     		"Only (the) last")
+    (kom-write-text             "Write (an) article")
+    (kom-send-letter            "Write (a) letter")
+    (kom-change-name            "Change name")
     (kom-change-password        "Change password")
-    (kom-change-supervisor	"Change supervisor")
+    (kom-change-supervisor  	"Change supervisor")
     (kom-change-presentation	"Change presentation")
     (kom-get-appreciation       "(Please) pat my head")
     (kom-get-abuse              "(Please) kick my butt")
@@ -747,27 +807,68 @@ Error message: %#1s**************************************************")
     (kom-review-marked-texts    "Review marked (articles)")
     (kom-review-all-marked-texts "Review all marked (articles)")
     (kom-add-recipient          "Add recipient")
-    (kom-add-copy		"Add (recipient of) carbon copy")
+    (kom-add-copy               "Add (recipient of) carbon copy")
     (kom-sub-recipient          "Remove recipient")
-    (kom-add-comment		"Add comment")
-    (kom-sub-comment		"Remove comment")
-    (kom-add-member		"Add subscriber")
+    (kom-add-comment            "Add comment")
+    (kom-sub-comment            "Remove comment")
+    (kom-add-member             "Add subscriber")
     (kom-sub-member             "Remove subscriber")
-    (kom-change-conf-motd	"(Post) note (on the) door")
+    (kom-change-conf-motd       "(Post) note (on the) door")
     (kom-set-garb-nice          "Change expiration")
     (kom-set-super-conf         "Change superconference")
-    (kom-set-permitted-submitters  "Change admitted authors")
-    (kom-unset-conf-motd	"Remove note (from the door)")
-    (kom-save-text		"Save article (in file)")
-    (kom-edit-options		"Change options")
+    (kom-set-permitted-submitters  "Change allowed authors")
+    (kom-unset-conf-motd        "Remove note (from the door)")
+    (kom-save-text              "Save article (in file)")
+    (kom-edit-options           "Change options")
     (kom-shutdown-server        "Shut down (server)")
     (kom-enable-adm-caps        "Become administrator")
     (kom-disable-adm-caps       "Become (normal) user")
     (kom-set-motd               "Change login message")
     (kom-remove-motd            "Remove login message")
     (kom-force-logout           "Kill session")
+    (kom-list-files             "List files")
+    (kom-put-file               "Put file")
+    (kom-get-file               "Get file")
+    (kom-filter-author          "Filter author")
+    (kom-filter-subject         "Filter subject")
+    (kom-super-jump             "Super jump")
+    (kom-filter-edit            "Edit filters")
+    (kom-filter-text            "Filter contents")
+    (kom-list-filters           "List filters")
+    (kom-show-user-area         "Show user area")
     )
   "A list of LysKOM-commands recognized by the extended parser.")
+
+(defvar lyskom-swascii-commands nil
+  "The swascii-versions of lyskom-commands.")
+
+(defvar lyskom-filter-predicate-list
+      '(("=" . nil) ("!=" . t))
+      "A list of legal filter comparison predicates.")
+
+(defvar lyskom-filter-what
+      '((author . "Author")
+        (author-no . "Author (number)")
+        (author-re . "Author (regexp)")
+        (subject . "Subject")
+        (subject-re . "Subject (regexp)")
+        (recipient . "Recipient")
+        (recipient-no . "Recipient (number)")
+        (recipient-re . "Recipient (regexp)")
+        (text . "Contents")
+        (text . "Contents (regexp)"))
+      "A list of legal filter conditions and their textual representation.")
+
+(defvar lyskom-filter-actions
+      '((dontshow . "Don't show")
+        (skip-text . "Skip")
+        (skip-tree . "Skip comments"))
+      "A list of legal filter actions an their textual representation.")
+                               
+(defvar lyskom-swascii-filter-actions nil
+  "The swascii-versions of lyskom-filter-actions.")
+(defvar lyskom-swascii-filter-what nil
+  "The swascii version of lyskom-filter-what")
 
 
 (defvar lyskom-text-start "
@@ -784,14 +885,17 @@ Cf. paragraph-start.")
   (define-prefix-command 'lyskom-change-prefix)
   (define-prefix-command 'lyskom-next-prefix)
   (define-prefix-command 'lyskom-list-prefix)
-  (define-prefix-command 'lyskom-get-prefix)
+  (define-prefix-command 'lyskom-filter-get-prefix)
   (define-prefix-command 'lyskom-S-prefix)
   (define-key lyskom-mode-map "A" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "r" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "f" 'lyskom-get-prefix)
+  (define-key lyskom-mode-map "f" 'lyskom-filter-get-prefix)
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
   (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
+
+  (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
+
   ; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-mode-map "A?" 'lyskom-help)
   (define-key lyskom-mode-map "r?" 'lyskom-help)
@@ -817,12 +921,13 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "p"  'kom-private-answer)
   (define-key lyskom-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-mode-map "j"  'kom-jump)
+  (define-key lyskom-mode-map "J"  'kom-super-jump)
   (define-key lyskom-mode-map "lc" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
-  (define-key lyskom-mode-map "lN" 'kom-list-news-old)
   (define-key lyskom-mode-map "lu" 'kom-list-persons)
   (define-key lyskom-mode-map "ls" 'kom-membership)
   (define-key lyskom-mode-map "la" 'kom-list-summary)
+  (define-key lyskom-mode-map "lf" 'kom-list-filters)
   (define-key lyskom-mode-map "S"  'kom-add-self)
   (define-key lyskom-mode-map "M"  'kom-mark-text)
   (define-key lyskom-mode-map "U"  'kom-unmark-text)
@@ -835,9 +940,14 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "t"  'kom-display-time)
   (define-key lyskom-mode-map "fp" 'kom-get-appreciation)
   (define-key lyskom-mode-map "fk" 'kom-get-abuse)
+  (define-key lyskom-mode-map "fs" 'kom-filter-subject)
+  (define-key lyskom-mode-map "fa" 'kom-filter-author)
+  (define-key lyskom-mode-map "fc" 'kom-filter-text)
+
   (define-key lyskom-mode-map "w"  'kom-who-is-on)
   (define-key lyskom-mode-map "W"  'kom-busy-wait)
   (define-key lyskom-mode-map "Ap" 'kom-change-presentation)
+  (define-key lyskom-mode-map "Af" 'kom-filter-edit)
   (define-key lyskom-mode-map "r " 'kom-view)
   (define-key lyskom-mode-map "r0" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "r1" 'kom-initial-digit-view)
@@ -877,6 +987,47 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "\C-?" 'scroll-down)
 )
 
+
+;;;==============================================================
+;;; Keymap for filter editing
+;;;
+
+(defvar lyskom-filter-edit-map nil
+  "Keymap for LysKOM filter edit")
+
+(if lyskom-filter-edit-map ()
+  (setq lyskom-filter-edit-map (make-keymap))
+  (suppress-keymap lyskom-filter-edit-map)
+  (define-key lyskom-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
+  (define-key lyskom-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
+  (define-key lyskom-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-filter-edit-map "q" 'lyskom-filter-edit-quit)
+  (define-key lyskom-filter-edit-map "x" 'lyskom-filter-edit-expunge)
+  (define-key lyskom-filter-edit-map "s" 'lyskom-filter-edit-save)
+  (define-key lyskom-filter-edit-map "g" 'lyskom-filter-edit-revert)
+  (define-key lyskom-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
+  (define-key lyskom-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
+  (define-key lyskom-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
+  )
 
 
 (defvar lyskom-prioritize-mode-map nil
@@ -918,7 +1069,7 @@ Cf. paragraph-start.")
   '(
     (kom-tell-silence		"") ; Why ?
     (kom-tell-send		"Is trying to post an article.")
-    (kom-tell-login		"Is logging in.")
+    (kom-tell-login		"Is entering LysKOM.")
     (kom-tell-read		"Is reading.")
     (kom-tell-1st-pres		"Is writing the first presentation.")
     (kom-tell-write-comment	"Is writing a comment.")
@@ -927,7 +1078,7 @@ Cf. paragraph-start.")
     (kom-tell-write-reply	"Is writing a personal reply.")
     (kom-tell-write-text	"Is writing an article.")
     (kom-tell-conf-pres		"Is writing the presentation for a new conference.")
-    (kom-tell-recover		"Performs a reset. Sigh.")
+    (kom-tell-recover		"Is restarting KOM. Sigh.")
     (kom-tell-wait		"Is waiting.")
     (kom-tell-regret		"Decides to throw away the article.")
     (kom-tell-review		"Is reviewing.")
@@ -954,7 +1105,7 @@ Users are encouraged to use their best sense of humor.")
     (3 . "No longer implemented")
     (4 . "Wrong password")
     (5 . "String too long")
-    (6 . "You have not logged in")
+    (6 . "You have not logged on")
     (7 . "Nobody may enter LysKOM at this time")
     (8 . "You attempted to use conference number 0")
     (9 . "Undefined or secret conference")
@@ -971,7 +1122,7 @@ Users are encouraged to use their best sense of humor.")
     (20 . "The conference already exists")
     (21 . "The user already exists")
     (22 . "Secret but not read-protected")
-    (23 . "You are not permitted to change the erson/conference flag")
+    (23 . "You are not allowed to change the erson/conference flag")
     (24 . "Error in the dtabase. Tough luck.")
     (25 . "Illegal misc-field. (Internal error)")
     (26 . "Illegal info type. (Bug in the client)")
@@ -985,7 +1136,7 @@ Users are encouraged to use their best sense of humor.")
     (34 . "Too many commentsp")
     (35 . "Too many footnotes")
     (36 . "Too many marks")
-    (37 . "You are not the author of this article")
+    (37 . "You are not the author of that article")
     (38 . "You cannot connect to the server")
     (39 . "Out of memory")
     (40 . "The server is gone crazy")
@@ -1001,8 +1152,10 @@ Users are encouraged to use their best sense of humor.")
 
 ;;; Author: Linus Tolke 
 
-(setq lyskom-slow-mode-map
-      (make-sparse-keymap))
+(defvar lyskom-slow-mode-map
+      (make-sparse-keymap)
+"Mode map for the `slow' lyskom command mode.")
+
 (define-key lyskom-slow-mode-map "\r" 'lyskom-parse-command-and-execute)
 
 (defun lyskom-parse-command-and-execute ()
@@ -1078,10 +1231,23 @@ Users are encouraged to use their best sense of humor.")
 		 (t
 		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
   (lyskom-start-of-command 'kom-review-noconversion)
-  (let ((knows-iso-8859-1 kom-emacs-knows-iso-8859-1))
-    (setq kom-emacs-knows-iso-8859-1 t)
-    (lyskom-view-text 'main text-no)
-    (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
-    (lyskom-run 'main 'lyskom-end-of-command)))
+  (let ((kom-emacs-knows-iso-8859-1 t))
+    (lyskom-view-text text-no))
+  (lyskom-end-of-command))
 
+
+;; A bag of goodies for sojge. 
+
+(defun kom-put-file (filename)
+  (interactive "fWhich file do you want to upload? ")
+  (copy-file filename (concat "/ftp@ftp.lysator.liu.se:/open/" 
+			      (file-name-nondirectory filename))))
+
+(defun kom-get-file (filename)
+  (interactive "sWhich file do you want to download? ")
+  (copy-file (concat "/ftp@ftp.lysator.liu.se:/open/" filename) filename))
+
+(defun kom-list-files ()
+  (interactive)
+  (list-directory "/ftp@ftp.lysator.liu.se:/open"))
 
