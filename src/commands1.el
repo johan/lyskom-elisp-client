@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.151 2002-08-05 18:14:39 byers Exp $
+;;;;; $Id: commands1.el,v 44.152 2002-09-07 21:35:22 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.151 2002-08-05 18:14:39 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.152 2002-09-07 21:35:22 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1849,17 +1849,35 @@ If you are not member in the conference it will be flagged with an asterisk."
     (apply 'concat (nreverse res))))
 
 
-(def-kom-command kom-list-re (regexp &optional case-sensitive)
+(def-kom-command kom-list-re (regexp &optional case-sensitive what)
   "List all persons and conferences whose name matches REGEXP.
- If the optional argument CASE-SENSITIVE is true, the regexp will not
-be converted so that the search is case sensitive."
+
+By default, the regexp will be converted so that the match is
+performed in a case insensitive way.  If the optional argument
+CASE-SENSITIVE is true, that conversion will not be performed.
+
+If the optional argument WHAT is 'person, only persons will be listed.
+If it is 'conf, only conferences will be listed."
   (interactive (list (lyskom-read-string
 		      (lyskom-get-string 'search-re))
-		     current-prefix-arg))
+		     current-prefix-arg
+		     (let ((pers (lyskom-j-or-n-p 'include-persons))
+			   (conf (lyskom-j-or-n-p 'include-conferences)))
+		       (cond
+			((and pers conf) nil)
+			(pers 'pers)
+			(conf 'conf)
+			(t (error "This user interface is stupid."))))))
   (unless case-sensitive
     (setq regexp (lyskom-make-re-case-insensitive regexp)))
-  (lyskom-format-insert 'matching-regexp regexp)
-  (let ((conf-list (blocking-do 're-z-lookup regexp 1 1)))
+  (lyskom-format-insert  (cond
+			  ((eq what 'pers) 'matching-regexp-perss)
+			  ((eq what 'conf) 'matching-regexp-confs)
+			  (t 'matching-regexp))
+			 regexp)
+  (let ((conf-list (blocking-do 're-z-lookup regexp
+				(if (eq what 'conf) 0 1)
+				(if (eq what 'pers) 0 1))))
     (if conf-list
         (if (conf-z-info-list->conf-z-infos conf-list)
             (lyskom-traverse czi (conf-z-info-list->conf-z-infos conf-list)
@@ -1872,7 +1890,11 @@ be converted so that the search is case sensitive."
                     (conf-z-info->conf-type czi))
                    ?P ?M)
                ))
-          (lyskom-format-insert 'no-matching-anys regexp))
+          (lyskom-format-insert (cond
+				 ((eq what 'pers) 'no-matching-perss)
+				 ((eq what 'conf) 'no-matching-confs)
+				 (t 'no-matching-anys))
+				regexp))
       (lyskom-format-insert (lyskom-current-error)))))
 
 
