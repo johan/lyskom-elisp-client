@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 41.1 1996-05-04 01:04:03 davidk Exp $
+;;;;; $Id: parse.el,v 41.2 1996-06-12 07:55:53 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 41.1 1996-05-04 01:04:03 davidk Exp $\n"))
+	      "$Id: parse.el,v 41.2 1996-06-12 07:55:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -180,6 +180,22 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 		      lyskom-parse-pos
 		      (buffer-string)))))))
 
+(defun lyskom-maybe-parse-1-or-0 ()
+  "Parse next char and return t if it was 1, nil if it was 0 or 'space if
+it was whitespace. Signal lyskom-protocol-error if it was anything else.
+Signal lyskom-parse-incomplete if there was nothing to parse."
+  (let ((char (lyskom-parse-char)))
+    (cond 
+     ((eq char ?0) nil)
+     ((eq char ?1) t)
+     ((or (eq char ? ) (eq char ?\t) (eq char ?\n) (eq char ?\r))
+      'space)
+     (t (signal 'lyskom-protocol-error
+		(list 'lyskom-parse-1-or-0 char
+		      lyskom-parse-pos
+		      (buffer-string)))))))
+
+
 
 (defun lyskom-parse-time ()
   "Parse a time from server. Args: none."
@@ -261,11 +277,22 @@ result is assigned to the element."
 
 (defun lyskom-parse-conf-type ()
   "Parse a conf-type. No args."
-  (lyskom-create-conf-type
-   (lyskom-parse-1-or-0)		;rd_prot
-   (lyskom-parse-1-or-0)		;original
-   (lyskom-parse-1-or-0)		;secret
-   (lyskom-parse-1-or-0)))		;letterbox
+  (let ((rd_prot (lyskom-parse-1-or-0))
+         (original (lyskom-parse-1-or-0))
+         (secret (lyskom-parse-1-or-0))
+         (letterbox (lyskom-parse-1-or-0))
+         (anarchy (lyskom-maybe-parse-1-or-0)))
+  (lyskom-create-conf-type rd_prot
+                           original
+                           secret
+                           letterbox
+                           anarchy
+                           (and (not (eq anarchy 'space))
+                                (lyskom-parse-1-or-0))
+                           (and (not (eq anarchy 'space))
+                                (lyskom-parse-1-or-0))
+                           (and (not (eq anarchy 'space))
+                                (lyskom-parse-1-or-0)))))
 
 
 (defun lyskom-parse-privs ()
