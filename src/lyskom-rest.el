@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.182 2002-12-16 23:50:22 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.183 2002-12-31 00:22:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.182 2002-12-16 23:50:22 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.183 2002-12-31 00:22:09 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1781,6 +1781,7 @@ Deferred insertions are not supported."
      ;;
      ((= format-letter ?r)
       (setq result (cond ((stringp arg) (lyskom-button-transform-text arg))
+                         ((consp arg) (lyskom-button-transform-text (cdr arg) (car arg)))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error (expected subject)")))))
@@ -2008,7 +2009,8 @@ Deferred insertions are not supported."
     (cond (formatted formatted)
           (t (let ((tmp (if kom-text-properties
                             (lyskom-button-transform-text
-                             (lyskom-fill-message text))
+                             (lyskom-fill-message text)
+                             text-stat)
                           (lyskom-fill-message text))))
                (when (and kom-smileys
                           (fboundp 'smiley-region))
@@ -2102,7 +2104,7 @@ in lyskom-messages."
             (insert (substring text 10))
             (format-decode-buffer)
             (lyskom-signal-reformatted-text 'reformat-enriched)
-            (lyskom-button-transform-text (buffer-string))
+            (lyskom-button-transform-text (buffer-string) text-stat)
             ;; (substring (buffer-string) 0 -1) ; Remove the \n
             )
         (kill-buffer tmpbuf)))))
@@ -2125,7 +2127,7 @@ in lyskom-messages."
              (forward-line 1))
            (lyskom-signal-reformatted-text 'reformat-filled)
            (if kom-text-properties
-               (lyskom-button-transform-text (buffer-string))
+               (lyskom-button-transform-text (buffer-string) text-stat)
              (buffer-substring (point-min) (1- (point-max))))))))
 
 

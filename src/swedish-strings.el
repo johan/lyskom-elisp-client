@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.282 2002-12-16 22:12:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.283 2002-12-31 00:22:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.282 2002-12-16 22:12:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.283 2002-12-31 00:22:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1711,7 +1711,6 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-open-url-action . "Öppna")
     (lyskom-button-copy-url-action . "Kopiera")
     (lyskom-button-goto-info-node-action . "Öppna")
-    (lyskom-button-show-bugzilla-bug-action . "Visa i bugzilla")
     (lyskom-button-open-email-action . "Skicka mail")
     (lyskom-button-copy-email-action . "Kopiera")
     (lyskom-button-info-aux-action . "Information")
@@ -3779,13 +3778,6 @@ i servern. Annars sparas det i din .emacs.")
       \\& ersätts med den text som matchar regexpen
       \\N ersätts med den text som matchar (...)-uttryck N i regexpen
       \\\\ ersätts med en \\.")
-    (kom-my-bugzilla-doc . "\
-  Elispklienten försöker hitta hänvisningar till buggar registrerade i 
-  bugzilla. Den här inställningen anger var bugzilla-servern finns.
-  Värdet skall vara bas-URLen för bugzilla \(till exempel 
-  `http://bugzilla.example.com'\).")
-
-
 
     ;;
     ;; Tags for variables
@@ -3965,7 +3957,6 @@ i servern. Annars sparas det i din .emacs.")
     (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")
     (kom-url-transformation-rules-tag . "Transformation av URLer:")
-    (kom-my-bugzilla-tag . "URL till bugzilla:")
     )
 )
 

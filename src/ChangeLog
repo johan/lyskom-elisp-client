@@ -1,3 +1,73 @@
+2002-12-31  David Byers  <david.byers@swipnet.se>
+
+	Improve kom-list-summary:
+	* commands2.el (lyskom-do-list-summary): Damn. Already midnight.
+	Don't print the subject on comments more than once in a row.
+	(lyskom-print-summary-line): Don't compute subject here. Get it in
+	a param instead.
+
+2002-12-30  David Byers  <david.byers@swipnet.se>
+
+	Improve kom-list-summary:
+	* commands2.el (lyskom-print-summary-line): Print deep comment
+	levels without additional indent, like nn does.
+
+	Remove bugzilla links (text links supersede these):
+	* lyskom-buttons.el (lyskom-button-transform-text): De-implemented
+	bugzilla links.
+	(lyskom-button-show-bugzilla-bug): Removed this function.
+
+	* vars.el.in (kom-my-bugzilla): Removed this variable. Text links
+	generalize bugzilla links.
+	(lyskom-text-buttons): Removed bugzilla text buttons.
+	(lyskom-button-actions): Same here.
+
+	More text links:
+	* lyskom-buttons.el (lyskom-button-add-links): New function.
+	(lyskom-button-transform-text): Call it to create links from
+	kom-text-links.
+
+	* vars.el.in (kom-text-links): New variable.
+
+	* clienttypes.el (lyskom-create-lyskom-text-link): New function.
+	(lyskom-text-link->pattern): New function.
+	(lyskom-text-link->replacement): New function.
+	(lyskom-text-link->highlight): New function.
+	(lyskom-text-link->ignore-case): New function.
+
+	New nameday lists from Hans Persson:
+	* names.el (sv-1993): New nameday list.
+	(sv-pre-1901): Renamed nameday list from sv-1901
+	(sv-1901): New nameday list.
+	(sv-1986): New nameday list.
+
+2002-12-22  David Byers  <david.byers@swipnet.se>
+
+	Work on bug 946:
+	* commands2.el (lyskom-do-list-summary): Display texts in comment
+	order with indentation.
+	(lyskom-print-summary-line): Support indentation.
+
+2002-12-18  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Added
+	text-stat argument.
+
+	Implement text links:
+	* lyskom-rest.el (lyskom-format-ö): Pass text-stat to
+	lyskom-button-transform-text.
+	(lyskom-format-enriched): Ditto.
+	(lyskom-format-text-body): Ditto. 
+	(lyskom-format-aux-help): Handle cons in format-letter r.
+
+	* view-text.el: Send the text-stat when formatting subject.
+
+2002-12-17  David Byers  <david.byers@swipnet.se>
+
+	Work on bug 753:
+	* flags.el (lyskom-read-options): Added optional buffer argument
+	to support reading settings from a different session.
+
 2002-12-17  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* startup.el (lyskom-read-server-name): Updated docstring wrt.

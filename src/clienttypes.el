@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.17 2002-05-25 18:22:39 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.18 2002-12-31 00:22:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.17 2002-05-25 18:22:39 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.18 2002-12-31 00:22:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -677,6 +677,33 @@ The element last pushed is first in the list."
 (defun collector-push (value collector)
   "Push VALUE onto the front of COLLECTOR's value"
   (setcdr collector (cons value (cdr collector))))
+
+
+;;; ================================================================
+;;; Specification for text links (cached)
+;;;
+;;; We don't use def-komtype since the accessors should be able to
+;;; work on user settings too.
+
+(defun lyskom-create-lyskom-text-link (pattern replacement 
+                                               highlight ignore-case)
+  (cons 'LYSKOM-TEXT-LINK (vector pattern replacement highlight ignore-case)))
+
+(defsubst lyskom-text-link->pattern (link)
+  (if (symbolp (car link)) (elt (cdr link) 0) (elt link 0)))
+
+(defsubst lyskom-text-link->replacement (link)
+  (if (symbolp (car link)) (elt (cdr link) 1) (elt link 1)))
+
+(defsubst lyskom-text-link->highlight (link)
+  (if (symbolp (car link)) (elt (cdr link) 2) (elt link 2)))
+
+(defsubst lyskom-text-link->ignore-case (link)
+  (if (symbolp (car link)) (elt (cdr link) 3) (elt link 3)))
+
+
+
+
 
 (eval-and-compile (provide 'lyskom-clienttypes))
 

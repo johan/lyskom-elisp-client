@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.68 2002-06-12 18:37:44 byers Exp $
+;;;;; $Id: view-text.el,v 44.69 2002-12-31 00:22:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.68 2002-06-12 18:37:44 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.69 2002-12-31 00:22:11 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -852,14 +852,16 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           (lyskom-insert-string 'head-Subject)
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
-                                  (copy-sequence lyskom-current-subject)))
-            (lyskom-format-insert 
-             "%#2$%#1s\n"
-             (if kom-dashed-lines
-                 (make-string kom-text-header-dash-length ?-)
-               "")
-             (when kom-highlight-dashed-lines
-               '(face kom-dashed-lines-face)))
+                                  (cons text-stat 
+                                        (copy-sequence
+                                         lyskom-current-subject))))
+          (lyskom-format-insert 
+           "%#2$%#1s\n"
+           (if kom-dashed-lines
+               (make-string kom-text-header-dash-length ?-)
+             "")
+           (when kom-highlight-dashed-lines
+             '(face kom-dashed-lines-face)))
 
           ;; (setq t1 (point-max))
 

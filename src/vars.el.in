@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.217 2002-12-16 19:59:46 byers Exp $
+;;;;; $Id: vars.el.in,v 44.218 2002-12-31 00:22:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.217 2002-12-16 19:59:46 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.218 2002-12-31 00:22:10 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -124,14 +124,18 @@ if the variable is in kom-dont-read-saved-variables."
 
 ;;; User flags
 
-(def-kom-var kom-my-bugzilla "bugzilla.lysator.liu.se"
-  "*Location of bugzilla.
-Either the base URL of bugzilla (e.g. `http://bugzilla.example.com/') or
-the hostname where bugzilla is located (e.g. `bugzilla.example.com'), if
-bugzilla is located in the root of the server.
-
-Values other than a string are reserved for future use."
+(def-kom-var kom-text-links nil
+  "*Links in the text.
+This list is an alist where the car is a conference number and the cdr
+a list of link specifications for that conference. Each link specification
+is a list \(PATTERN REPLACEMENT HIGHLIGHT IGNORE-CASE), where PATTERN is
+a regexp to look for in the text, REPLACEMENT is a replacement text to 
+generate a URL from a match for REGEXP (see the NEWTEXT argument to 
+replace-in-string for more information), HIGHLIGHT is the match group to
+highlight in the LysKOM buffer (use 0 for the entire match) and IGNORE-CASE
+is a flag: when non-nil case is ignored when looking for REGEXP."
   server)
+
 
 (defconst kom-old-farts-text-prompt-strategy
   '((kom-comment-previous . ((t   . lyskom-get-previous-text)
@@ -1058,11 +1062,6 @@ conference and person buttons are not expected.")
     ("<(?person[ \t\n\r]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
      pers 0 1 nil)
 
-    ;; Bugs
-
-    ("\\<bugg?[ \t\n\r]+\\([0-9]+\\)"
-     bugzilla 0 1 kom-url-face)
-
     ;; Info node reference
 
     ("\\*Note[ \n\t]+\\([^:\n]*\\(\n[^:\n]*\\)?\\):\\s-*\\(\\(([^\)]+)\\)?[^.,\t\n]*\\(\n[^.,\t\n]*\\)?\\)[.,\t]" 
@@ -1561,11 +1560,6 @@ appear more than once"
      generic-popup-title
      lyskom-button-goto-info-node
      ((lyskom-button-goto-info-node-action . lyskom-button-goto-info-node))
-     nil)
-    (bugzilla
-     generic-popup-title
-     lyskom-button-show-bugzilla-bug
-     ((lyskom-show-button-bugzilla-bug-action . lyskom-button-show-bugzilla-bug))
      nil)
     (email
      generic-popup-title

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.146 2002-12-16 23:50:22 qha Exp $
+;;;;; $Id: commands2.el,v 44.147 2002-12-31 00:22:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.146 2002-12-16 23:50:22 qha Exp $\n"))
+              "$Id: commands2.el,v 44.147 2002-12-31 00:22:08 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1024,6 +1024,7 @@ the text on one line."
 The summary contains the date, number of lines, author and subject of the text
 on one line."
   (let ((time (lyskom-current-server-time))
+        (indent 0)
         (unique-subjects nil))
 
     ;; The header.
@@ -1035,40 +1036,51 @@ on one line."
                           (lyskom-get-string 'Subject))
 
     ;; The summary lines.
-    (lyskom-traverse
-        text-no texts
-      (let ((text-stat (blocking-do 'get-text-stat text-no))
-            (text (blocking-do 'get-text text-no))
-            ;; We could do som optimization here. 
-            ;; We really don't need the whole text.
-            )
-        (when (or (not unique)
-                  (let* ((txt (text->decoded-text-mass text text-stat))
-                         (eos (string-match (regexp-quote "\n") txt))
-                         (subject (substring txt 0 eos)))
-                    (and (not (lyskom-string-member subject unique-subjects))
-                         (setq unique-subjects (cons subject unique-subjects)))))
-          (lyskom-print-summary-line (lyskom-construct-summary-format-string nil nil)
-                                     text-stat text text-no 
-                                     (time->year time)
-                                     (time->mon time)
-                                     (time->mday time)))
-        (sit-for 0)))))
+    (let ((text-no nil)
+          (last-subject ""))
+      (while texts
+        (setq text-no (car texts) texts (cdr texts))
+        (cond 
+         ((eq text-no 'in) (setq indent (1+ indent)))
+         ((eq text-no 'out) (setq indent (1- indent)))
+         (t (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                                   (text (get-text text-no)))
+              (let* ((txt (text->decoded-text-mass text text-stat))
+                     (eos (string-match (regexp-quote "\n") txt))
+                     (subject (substring txt 0 eos)))
+                (when (or (not unique)
+                          (and (not (lyskom-string-member subject unique-subjects))
+                               (setq unique-subjects (cons subject unique-subjects))))
+                  (lyskom-print-summary-line 
+                   (lyskom-construct-summary-format-string nil nil)
+                   text-stat
+                   (if (and (> indent 0) (string-equal subject last-subject))
+                       ""
+                     subject)
+                   text-no
+                   (time->year time)
+                   (time->mon time)
+                   (time->mday time)
+                   indent))
+                (setq last-subject subject)
+                (let ((comments (lyskom-text-comments text-stat)))
+                  (setq texts (cons 'out texts))
+                  (lyskom-traverse comment-no (nreverse comments)
+                    (when (memq comment-no texts)
+                      (setq texts (cons comment-no (delq comment-no texts)))))
+                  (setq texts (cons 'in texts)))))
+            (sit-for 0)))))))
 
 
-(defun lyskom-print-summary-line (format-string text-stat text text-no year mon mday)
+(defun lyskom-print-summary-line (format-string text-stat subject text-no year mon mday indent)
   "Handle the info, fetch the author and print it.
-Args: FORMAT-STRING TEXT-STAT TEXT TEXT-NO YEAR MON MDAY.
 
 The year, mon and mday are there to be able to choose format on the
 day.  Format is HH:MM(:SS) if the text is written today, otherwise
 YYYY-MM-DD."
-  (if (not (and text-stat text))	;+++ B{ttre felhantering.
+  (if (null text-stat)	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
-           (txt (text->decoded-text-mass text text-stat))
-           (eos (string-match (regexp-quote "\n") txt))
-           (subject (substring txt 0 eos))
            (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
            (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
            (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
@@ -1086,9 +1098,12 @@ YYYY-MM-DD."
                             (if (or mx-from mx-author)
                                 (lyskom-format-mx-author mx-from mx-author)
                               (text-stat->author text-stat))
-                            (lyskom-default-button 'text
-                                                   text-no)
-                            subject))))
+                            (lyskom-default-button 'text text-no)
+                            (concat 
+                             (if (>= indent 10)
+                                 (format ">>>[%d]>>>" indent)
+                               (make-string indent ?\>))
+                             subject)))))
 
 
 (defun lyskom-max-text-no-width ()
