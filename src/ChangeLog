@@ -1,5 +1,17 @@
 2004-02-22  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1125:
+	* commands1.el (lyskom-read-cross-reference-and-get-aux-item): Use
+	lyskom-a-or-b-or-c-p instead of completing-read.
+
+	* edit-text.el (lyskom-read-link): Moved here from commands1.el
+	since this is the only file that uses it.
+	(lyskom-read-link): Use lyskom-a-or-b-or-c instead of
+	completing-read.
+
+	* commands1.el (kom-list-re): Ask what to search for before asking
+	for the search string.
+
 	Fix new bug in kom-is-person-member-of-conference:
 	* lyskom-rest.el (lyskom-get-read-texts-for-membership): Removed
 	this function again. It isn't used anywhere any more.

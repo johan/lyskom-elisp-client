@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.324 2004-02-22 15:48:26 byers Exp $
+;;;;; $Id: english-strings.el,v 44.325 2004-02-22 16:31:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.324 2004-02-22 15:48:26 byers Exp $"))
+              "$Id: english-strings.el,v 44.325 2004-02-22 16:31:01 byers Exp $"))
 
 
 ;;; ================================================================
@@ -957,7 +957,7 @@ Help: \\[describe-mode] ---")
     (transform-error . "Send unformatted (%#1s)? ")
     (cant-find-info-node . "Can't find the info buffer")
 
-    (link-type . "What to you want to link to (text, conference or person)? ")
+    (link-type . "What to you want to link to? ")
     (which-text-to-link . "Add link to text: ")
     (which-text-to-link-err . "Text not found. Add link to text: ")
     (which-pers-to-link . "Add link to user: ")
@@ -1626,8 +1626,11 @@ Contents:     \"%#9s\"
     (Server . "Server")
     (server . "server")
     (servers . "servers")
+    (abc-person . "pPerson")
+    (abc-conference . "cConference")
+    (abc-text . "tText")
 
-    (xref-type . "What to you want to refer to (text, conference or person)? ")
+    (xref-type . "What to you want to refer to? ")
     (which-text-to-xref . "Add reference to text: ")
     (which-text-to-xref-err . "Text not found. Add reference to text: ")
     (which-pers-to-xref . "Add reference to user: ")
