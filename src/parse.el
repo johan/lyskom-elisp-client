@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.27 1999-10-25 13:30:27 byers Exp $
+;;;;; $Id: parse.el,v 44.28 1999-11-19 02:16:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.27 1999-10-25 13:30:27 byers Exp $\n"))
+	      "$Id: parse.el,v 44.28 1999-11-19 02:16:23 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -132,7 +132,15 @@ Signal lyskom-protocol-error if the next token is not a number."
 
 
 (defun lyskom-parse-string ()
-  "Parse next token as a string.
+  "Parse the next token as a string in the server coding system.
+Signal lyskom-parse-incomplete if the string is not complete.
+Signal lyskom-protocol-error if the next token is not a string."
+  (decode-coding-string 
+   (lyskom-parse-raw-string)
+   lyskom-server-coding-system))
+
+(defun lyskom-parse-raw-string ()
+  "Parse next token as a raw string.
 Signal lyskom-parse-incomplete if the string is not complete.
 Signal lyskom-protocol-error if the next token is not a string."
   ;; Kludge to deal with leading spaces.
@@ -922,7 +930,7 @@ Args: TEXT-NO. Value: text-stat."
   Args: TEXT-NO. Result: text-stat."
   (let ((text (lyskom-create-text
 	       text-no
-	       (lyskom-parse-string))))		;The text.
+	       (lyskom-parse-raw-string))))		;The text.
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
      (cache-add-text text))

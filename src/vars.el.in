@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.86 1999-10-25 08:50:51 byers Exp $
+;;;;; $Id: vars.el.in,v 44.87 1999-11-19 02:16:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.86 1999-10-25 08:50:51 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.87 1999-11-19 02:16:45 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1248,6 +1248,10 @@ arguments to setq, symbols are interpreted as variable names set
   "The version of the server.  A list of three integers, major
 version, minor version and revision."
   local)
+
+(def-kom-var lyskom-server-coding-system 'iso-8859-1
+  "The default coding system used by the server for all strings."
+  inherited)
 
 (def-kom-var lyskom-max-packet-size lyskom-max-int
   "The largest possible packet size that can be transmitted to a

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.86 1999-11-17 23:11:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.87 1999-11-19 02:16:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.86 1999-11-17 23:11:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.87 1999-11-19 02:16:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1440,8 +1440,6 @@ Note that it is not allowed to use deferred insertions in the text."
 
       (setq result
             (cond ((stringp arg) (lyskom-format-text-body arg))
-                  ((lyskom-text-p arg) 
-                   (lyskom-format-text-body (text->text-mass arg)))
                   ((and (consp arg)
                         (lyskom-text-stat-p (car arg)))
                    (lyskom-format-text-body (cdr arg)
@@ -1798,12 +1796,13 @@ in lyskom-messages."
   "Minimum number of lines in a brick.")
 
 (defun lyskom-fill-message-initial-wrap (current-line-length pos)
-  (cond ((not (aref lyskom-line-start-chars 
-                    (char-to-int 
-                     (char-after pos))))
+  (cond ((and (< (char-to-int (char-after pos))
+                 (length lyskom-line-start-chars))
+              (not (aref lyskom-line-start-chars 
+                         (char-to-int 
+                          (char-after pos)))))
          nil)
-        ((> current-line-length fill-column)
-         t)
+        ((> current-line-length fill-column) t)
         (t 'maybe)))
 
 (defsubst lyskom-fill-message-colon-line ()
@@ -2017,10 +2016,12 @@ in lyskom-messages."
 
            ((and in-paragraph
                  (or (not (looking-at single-line-regexp))
-                     (not (aref lyskom-line-start-chars
-                                (char-to-int 
-                                 (char-after
-                                  (match-beginning 1)))))))
+                     (and (< (char-to-int (char-after (match-beginning 1)))
+                             (length lyskom-line-start-chars))
+                          (not (aref lyskom-line-start-chars
+                                     (char-to-int 
+                                      (char-after
+                                       (match-beginning 1))))))))
             (setq wrap-paragraph nil))
 
            ;;
@@ -2257,7 +2258,7 @@ The name of the file is read using the minibuffer and the default is kom-text."
                          t)
                       (lyskom-message "")))
                 (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text" t))
-                      (str (text->text-mass text)))
+                      (str (text->decoded-text-mass text text-stat)))
                   (condition-case nil
                       (progn
                         (lyskom-format-insert 'saving-text text-no filename)
@@ -3149,6 +3150,8 @@ Other objects are converted correctly."
       (lyskom-prot-a-format-simple-list (cdr object)))
      ((eq (car object) 'TIME)
       (lyskom-prot-a-format-time (cdr object)))
+     ((eq (car object) 'STRING)
+      (lyskom-prot-a-format-raw-string (cdr object)))
      (t
       (signal 'lyskom-internal-error
               (list 'lyskom-format-object
@@ -3282,7 +3285,12 @@ Other objects are converted correctly."
 
   
 (defun lyskom-prot-a-format-string (string)
-  (format "%dH%s" (length string) string))
+  (let ((tmp (encode-coding-string string lyskom-server-coding-system)))
+    (format "%dH%s" (string-bytes tmp) tmp)))
+
+(defun lyskom-prot-a-format-raw-string (string)
+  (format "%dH%s" (string-bytes (cdr string)) (cdr string)))
+
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.53 1999-11-17 23:11:35 byers Exp $
+;;;;; $Id: commands2.el,v 44.54 1999-11-19 02:15:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.53 1999-11-17 23:11:35 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.54 1999-11-19 02:15:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -908,7 +908,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
-	   (txt (text->text-mass text))
+	   (txt (text->decoded-text-mass text text-stat))
 	   (eos (string-match (regexp-quote "\n") txt))
 	   (subject (substring txt 0 eos))
            (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
@@ -1001,7 +1001,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
-	   (txt (text->text-mass text))
+	   (txt (text->decoded-text-mass text text-stat))
 	   (eos (string-match (regexp-quote "\n") txt))
 	   (subject (substring txt 0 eos))
 	   ;; length of the number %%%%%% :8
@@ -1337,27 +1337,32 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   "Set the message of the day for LysKOM."
   (interactive)
   (if (server-info->motd-of-lyskom lyskom-server-info)
-      (initiate-get-text 'main 'lyskom-set-motd
+      (progn (lyskom-collect 'main)
+             (initiate-get-text-stat 'main nil
+                         (server-info->motd-of-lyskom lyskom-server-info)) 
+             (initiate-get-text 'main nil
                          (server-info->motd-of-lyskom lyskom-server-info))
-    (lyskom-set-motd nil)))
+             (lyskom-use 'main 'lyskom-set-motd))
+    (lyskom-set-motd nil nil)))
 
 
-(defun lyskom-set-motd (old-motd-text)
+(defun lyskom-set-motd (old-motd-text-stat old-motd-text)
   "Set the message of the day for LysKOM. 
 Use OLD-MOTD-TEXT as the default text if non-nil."
   
-  (lyskom-edit-text
-   lyskom-proc
-   (lyskom-create-misc-list)
-   (if (and old-motd-text
-            (string-match "\n" (text->text-mass old-motd-text)))
-       (substring (text->text-mass old-motd-text) 0 (1- (match-end 0)))
-     "")
-   (if (and old-motd-text
-            (string-match "\n" (text->text-mass old-motd-text)))
-       (substring (text->text-mass old-motd-text) (match-end 0))
-     "")
-   'lyskom-set-motd-2))
+  (let ((str (and old-motd-text 
+                  old-motd-text-stat
+                  (text->decoded-text-mass old-motd-text old-motd-text-stat))))
+    (lyskom-edit-text
+     lyskom-proc
+     (lyskom-create-misc-list)
+     (if (and str (string-match "\n" str))
+         (substring str 0 (1- (match-end 0)))
+       "")
+     (if (and str (string-match "\n" str))
+         (substring str (match-end 0))
+       "")
+     'lyskom-set-motd-2)))
 
 
 ;; Should really fix lyskom-edit text instead of the ugly IGNORE

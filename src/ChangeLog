@@ -1,3 +1,52 @@
+1999-11-19  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Decode the motd text mass and format it as
+	a text.
+
+	* lyskom-rest.el (lyskom-format-aux-help): No longer accept text
+	as an argument, because we can't decode it.
+	(kom-save-text-body): Decode the text body.
+
+	* filter.el (lyskom-filter-text-p-3): Decode the text mass of the
+	text.
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Decode the
+	text-mass of the motd.
+	(kom-edit-insert-text): Get the text-stat and text for
+	lyskom-edit-insert-commented.
+	(lyskom-edit-get-commented): Pass text and text-stat to thendo.
+
+	* commands2.el (lyskom-print-summary-line): Decode the text mass.
+	(lyskom-print-mark-summary-line): Same here.
+	(lyskom-set-motd): Same here.Accept text stat as argument.
+	(kom-set-motd): Get the text-stat and text and send them to
+	lyskom-set-motd.
+
+	* commands1.el (lyskom-write-comment-soon): Decode the text mass.
+	(lyskom-private-answer-soon): Same here.
+	(lyskom-private-answer-soon-prev): Same here.
+	(lyskom-change-pres-or-motd-2): Same here.
+
+	* komtypes.el (text->decoded-text-mass): New function.
+
+	* Makefile (SOURCES): Added mime.el to the sources.
+
+	* view-text.el (lyskom-print-text): Decode the string according to 
+	the charset specified by the content type.
+
+	* mime.el (lyskom-charset-alist): New variable.
+	(lyskom-mime-string-charset): New function.
+	(lyskom-mime-charset-coding-system): New function.
+	(lyskom-mime-encode-string): New function.
+	(lyskom-mime-decode-string): New function.
+	(lyskom-mime-decode-content-type): New function.
+
+	* utilities.el (lyskom-subset-p): New function.
+	(lyskom-intersection): Moved from review.el
+
+	* edit-text.el (lyskom-edit-send): Pass on aux-list even if we're
+	anonymous.
+
 1999-11-18  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* Makefile: Debian package building.

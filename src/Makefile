@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.39 1999-11-18 19:57:23 joel Exp $
+# $Id: Makefile,v 44.40 1999-11-19 02:15:39 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.39 1999-11-18 19:57:23 joel Exp $
+# $Id: Makefile,v 44.40 1999-11-19 02:15:39 byers Exp $
 #
 
 
@@ -62,6 +62,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		command.el \
 		buffers.el \
 		aux-items.el \
+		mime.el \
 		prefetch.el \
 		startup.el \
 		reading.el \
