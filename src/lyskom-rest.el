@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.4 1996-09-29 15:18:34 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.5 1996-09-29 15:44:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.4 1996-09-29 15:18:34 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.5 1996-09-29 15:44:01 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1866,8 +1866,9 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 
 (defun lyskom-prefetch-all-confs ()
   "Gets all conferences using prefetch."
-  (while (numberp lyskom-membership-is-read)
-    (lyskom-continue-prefetch))  )
+  ;; (while (numberp lyskom-membership-is-read)
+  ;;   (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
+  )
 
 ;; ---------------------------------------------------------
 ;; prefetch conf-stats
