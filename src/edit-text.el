@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.27 1997-10-23 12:18:58 byers Exp $
+;;;;; $Id: edit-text.el,v 44.28 1997-11-12 09:31:22 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.27 1997-10-23 12:18:58 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.28 1997-11-12 09:31:22 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -508,8 +508,8 @@ so it's not as clean as it ought to be."
                                                         subject)))
                 (if extra-headers
                     (setq misc-list (apply 'lyskom-create-misc-list
-                                           (cdr (nconc headers
-                                                       extra-headers))))))
+                                           (nconc (elt headers 1)
+						  extra-headers)))))
 
               ;;
               ;; Run user hooks
