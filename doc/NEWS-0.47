@@ -1,0 +1,398 @@
+
+                       Nyheter i lyskom.el 0.47
+                       ========================
+
+    Version 0.47 av elispklienten innehåller ett stort antal bugfixar
+    och ny funktionalitet. Den finns att hämta på följande adress:
+
+        <URL:http://www.lystor.liu.se/lyskom/elisp-client/>
+        <URL:ftp://ftp.lystor.liu.se/lyskom/elisp-client/>
+
+    Filen heter lyskom-0.47.tar.gz, och en kopia av den text du läser
+    just nu finns under namned NEWS-0.47 i tar-arkivet. Det finns även
+    en zip-fil för folk som sitter med system som inte förstår
+    tar-filer.
+
+    Om du hittar ett fel i elispklienten och inte klarar att rätta det
+    själv, använd M-x kom-bug-report för att rapportera det. Du kan
+    även lägga in buggar i <URL:http://bugzilla.lysator.liu.se/>.
+    Buggar bilr omhändertagna i mån av tid, ork och lust. Färdiga
+    patchar blir inlagda mycket snabbare.
+
+
+
+                         ====================
+                               VIKTIGT
+                         ====================
+
+    Från och med version 0.47 av elispklienten så är stödet för Gnu
+    Emacs 19.34 och LysKOM-servrar med protokollversion 9 eller
+    tidigare (dvs lyskomd äldre än version 2.0.0). I viss mån
+    fortsätter det att fungera, men alla funktioner är inte
+    tillgängliga och det uppstår varningar vid kompileringen av
+    klienten.
+
+
+
+
+* Kända problem
+
+** De alternativa utseendena som man kan ha på inläggstext,
+   streckrader och första raden sträcker sig bara till textens slut
+   och inte till fönsterkanten i XEmacs, vilket gör att det kan se
+   lite underligt ut.
+
+** Standardinstallationen av XEmacs i åtminstone Debian/Gnu Linux
+   innehåller en fil som heter macedit.el. Denna fil måste tas bort
+   för att elispklienten skall fungera. Det går inte att kompilera
+   eller köra elispklienten om den filen finns.
+
+
+* Funktionalitet
+
+** Språkbyten
+
+*** Nu ändrar Ändra språk inte menyer eller tangentbindningar (men
+    allting annat). Om man anger prefixargument till Ändra språk så
+    ändras alla språkberoende inställningar.
+
+*** Klienten tittar på omgivningsvariablerna KOMLANGUAGE och LANG (i
+    den ordningen) för att bestämma defaultspråk.
+
+*** Defaultspråk har ändrats från svenska till engelska.
+
+
+** Diverse
+
+*** Tangenterna * och = i inläggsskrivarbufferten fungerar på samma
+    sätt som i LysKOM-bufferten. TAB och M-TAB kan användas för att
+    flytta markören mellan intressanta områden i bufferten.
+
+*** Klienten kan visa och skapa fler sorters tilläggsinformation än
+    förr. Klienten hanterar tilläggsinformation som är satt på
+    servern.
+
+*** Texten som visas när man blir inbjuden till ett möte är tydligare.
+
+*** Man kan sätta FAQer på personer (kräver att servern tillåter det).
+
+*** Subtrahera kommentar och subtrahera fotnot har completion på
+    inläggsnummer.
+
+*** "Lista (med) regexpar" har blivit väskokänslig per default (det
+    betyder alltså att ett versalt Z och ett gement z betraktas som
+    samma bokstav). Ger man prefixargument så gör kommandor skillnad
+    mellan versaler och gemener.
+
+*** Listan med fördefinierade LysKOM-servrar har uppdaterats.
+
+*** DSKOM och LysCOM har tillkommit i listan över LysKOM-servrar.
+    CSD-KOM:s adress har uppdaterats, MedioKOM är borta och HelKOM
+    kallas nu HesaKOM.
+
+*** Varje prompt har en tidsstämpel som visas om man högerklickar på
+    prompten.
+
+*** "Kontrollera (om person är) medlem (i möte)" skiljer på aktiva och
+    passiva medlemskap.
+
+*** Bättre defaultvärden i flera kommandon.
+
+*** Återse fler inlägg tar prefixargument.
+
+*** Hoppa fungerar även när man återser träd.
+
+*** När klienten skriver ut felmeddelanden skriver den ut lite mer
+    information om felet.
+
+*** Man kan ställa in om återsekommandona ska använda cachen eller
+    inte. Att använda cachen går fortare än att inte göra det, men man
+    riskerar att få gammal information.
+
+*** Namnsdagslistan har uppdaterats för att följa svenska
+    språknämndens nya nanmlängd.
+
+*** Inläsningen av inläggsnummer till alla kommandon har gjorts mer
+    regelbunden. Man kan ställa in per kommando om kommandot skall
+    fråga efter inläggsnummer eller gissa.
+
+*** Med prefixargument hoppar "Lista ärenden" (l ä) över inlägg som
+    har ett ärende som redan har listats, dvs endast unika ärenden
+    visas.
+
+*** Man kan skapa osynliga sessioner. Eftersom jag tycker att detta är
+    asocialt så tänker jag inte tala om hur man gör :-)
+
+*** Nya val i menyn vid högerklick på inläggsnummer: "Återse träd",
+    "Återse alla kommentarer", "Återse alla kommentarer rekursivt"
+    (kallades förut "Återse träd"), "Fotnotera" och "Anmärk".
+
+*** Ny funktion: lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1.
+    Denna kan läggas i lyskom-view-text-hook för att automagiskt
+    skriva om }{| till åäö i lästa inlägg. (Importerade e-brev
+    undantas från konverterering.)
+
+*** Prefixargument till Status (för) person anger ett inlägg vars
+    författare man vill se status för.
+
+
+** FAQ-hantering
+
+*** FAQer till ett möte visas som om de vore kommentarer till
+    mötespresentationen.
+
+*** När FAQer listat så visas även ärenderaden.
+
+*** Man kan sätta och läsa FAQer på servern.
+
+*** När man loggar in så listas alla olästa FAQer som är satta på
+    servern, och klienten gör automatiskt Återse FAQ på dessa inlägg.
+
+*** När man går till ett möte så listas alla olästa FAQer som är satta
+    på mötet, och klienten gör automatiskt Återse FAQ på dessa inlägg.
+
+*** Prompten visar "Läsa nästa FAQ" när man håller på att återse
+    FAQer.
+
+
+** Omdirigering av kommentarer
+
+*** Man kan tala om vilket möte man vill läggs till som mottagare till
+    kommenterar till ens inlägg som enbart skickas till möten man inte
+    är med i.
+
+*** Om någon har begärt omdirigering av kommentarer så ser klienten
+    till att följa detta.
+
+
+** Mötesrekommendationer
+
+*** Man kan sätta mötesrekommendationer på servern.
+
+*** När man loggar in och det finns rekommenderade möten som man inte
+    är med i och inte har tackat nej till tidigare så frågar klienten
+    om man vill bli medlem i dessa möten.
+
+
+** Integration med webbläsare
+
+*** Elispklienten kan nu visa URLer i Galeon.
+
+*** Klienten är nu bättre på att öppna URL:er i Windows. Dels är
+    heuristiken för val av webbläsare bättre och dels går det att
+    sätta den nya variabeln kom-windows-browser-command till ett
+    lämpligt värde.
+
+
+
+** Redigering av inlägg
+
+*** Stöd för att enkelt lägga in länkar av typen <möte 6090:
+    Elispklient 0.46.2 (betatestarmöte)>, <person 273: KOM-trollet>
+    och <text 44: Programspr}k - syntax och semantik> genom att trycka
+    C-c C-i C-l vid editering av inlägg.
+
+*** Man kan lägga till, ta bort och ändra typ på mottagare och
+    tilläggsinformation genom att använda musen.
+
+*** C-c TAB gör nu samma sak som C-c C-i i inläggsediteringsmoden,
+    vilket borde glädja användare som kör sin Emacs i TTY-läge.
+
+
+** Tangentbindningar
+
+*** "Ändra FAQ" finns på äq. Överlag har FAQ-relaterade kommandon q i
+    tangentbindningen.
+
+*** Tangenten för att ange kommandon har flyttats från a till x för
+    att nästa version av elispklienten ska kunna använda a som prefix
+    för addera-kommandon.
+
+*** Tangenten v har blivit prefix för alla vilka-relaterade kommandon.
+    Kommandot som förr låg på v ligger nu på vi.
+
+*** "Återse brevhuvud" finns nu på åb.
+
+
+** Symboliska markeringar
+
+*** Man kan ha symboliska markeringar genom att definiera att en viss
+    markering har ett visst namn. Ange namnen via Inställningar (för)
+    LysKOM.
+
+*** Man kan få elispklienten att fråga efter nya markeringsnamn när
+    man markerar inlägg (kom-default-mark).
+
+
+** Nya inställningar
+
+*** kom-edit-hide-add-button anger om knappen [Addera...] ska visas
+    eller inte.
+
+*** kom-highlight-text-body anger om inläggstexter ska visas med ett
+    alternativt utseende.
+
+*** kom-highlight-fist-line anger om första raden i inläggshuvudet ska
+    visas med ett alternativt utseende.
+
+*** kom-highlight-dashed-lines anger om streckraderna före och efter
+    inlägg skall visas med ett alternativt utseende.
+
+*** kom-print-seconds-in-time-strings anger om klienten ska skriva ut
+    sekunder i klockslag eller inte.
+
+*** kom-print-relative-dates anger om klienten ska skriva ut
+    närliggande datum som "i dag", "i morgon" och "i går".
+
+*** kom-auto-list-faqs anger om klienten ska lista olästa FAQer för
+    ett möte när man går till mötet eller för servern när man loggar
+    in.
+
+*** kom-auto-review-faqs anger om klienten ska återse olästa FAQer för
+    ett möte när man går till mötet eller för servern när man loggar
+    in.
+
+*** kom-symbolic-marks-alist är en lista av symboliska markeringar.
+
+*** kom-review-uses-cache anger om klienten ska använda cachen när man
+    återser inlägg eller inte (används cachen så kan inaktuell
+    information visas).
+
+*** kom-review-marks-texts-as-read anger om återsekommandona även
+    läsmarkerar inlägg som visas.
+
+*** kom-windows-browser-command anger en webbläsare att använda under
+    Windows.
+
+*** kom-galeon-command anger kommandot för att starta Galeon.
+
+*** kom-text-no-prompts anger hur elispklienten skall fråga efter
+    textnummer när man ger kommandon. Den ersätter
+    kom-prompt-for-text-no.
+
+*** kom-extended-status-information styr om man får se utökad
+    information när man visar status för person, möte eller server.
+
+*** lyskom-after-change-conf-hook är en hook som körs precis efter man
+    har bytt möte på något vis.
+
+
+** Nya kommandon
+
+*** "Hjälp" är ett nytt kommando, infört på prov, som ger hjälp om
+    LysKOM.
+
+*** "Addera referens" kan användas för att addera en korsreferens till
+    ett befintligt inlägg.
+
+*** "Vilka (är) närvarande (i möte)" visar vilka personer som är
+    närvarande i LysKOM och är i ett visst möte.
+
+*** "Vilka vänner (är inloggade)" visar vilka personer i vänner-listan
+    som är inloggade för tillfället.
+
+*** "Vilka (är inloggade i) möte"
+
+*** "Filtrera mottagare" skapar filter baserat på ett inläggs
+    mottagare. Använd för att filtrera alla inlägg som har ett visst
+    möte som mottagare.
+
+*** "Återse läsmarkerar" och "Återse läsmarkerar inte" växlar
+    tillfälligt mellan läget där återsekommandona läsmarkerar
+    och läget där de inte läsmarkerar inläggen som visas.
+
+*** "Addera presentation" sätter ett inlägg som presentation till ett
+    visst möte.
+
+*** "Ta bort presentation" tar bort presentationen från ett möte.
+
+*** "Addera lapp på dörren" sätter ett befintligt inlägg som lapp på
+    dörren på ett möte.
+
+*** "Skapa tilläggsinformation" skapar godtycklig tilläggsinformation.
+    Använd inte det här om du inte vet vad du håller på med.
+
+*** "Status (för) servern" visar statusinformation för LysKOM-servern.
+
+*** "Addera server-FAQ"/"Ta bort server-FAQ" adderar eller tar bort en
+    FAQ på servern.
+
+*** "Återse server-FAQ" visar FAQer som sitter på servern.
+
+*** "Rekommendera möte" skapar en mötesrekommendation för
+    LysKOM-servern.
+
+*** "Dirigera om kommentarer" skapar en begäran att kommentarer som
+    får en viss brevlåda adderad som mottagare för att det
+    kommenterades författare inte är medlem i kommentarens mottagare
+    ska dirigeras om till ett annat möte.
+
+*** "Jämför två texter" jämför två texter med ediff.
+
+*** "Se diff" visar skillnaden mellan två inlägg i LysKOM-bufferten.
+
+*** "Addera för kännedom" heter nu "Addera dold kopia".
+
+
+* Buggfixar
+
+** Man kan köra klienten okompilerad, även om det verkligen inte
+   rekommenderas.
+
+** Utskrifter av klockslag har korrigerats. Tidigare skillnader i
+   tidsangivelser bör vara korrigerade.
+
+** Start av Netscape är lite säkrare (förr kunde den konsumera
+   oändilgt mycket processortid).
+
+** Klickningar när man kör långsamma kommandon fungerar bättre.
+
+** Återse FAQ och återse markerade inlägg använder återseprioriteter
+   på samma sätt som övriga återsekommandon.
+
+** Elispklienten sätter rätt content-type på inlägg den skapar.
+
+** Content-type för kommentars- och fotnotslänkar till importerade
+   e-brev sätts rätt.
+
+** Ombrytning av inlägg som inte fungerar på grund av buggar i Emacs
+   (eller klienten) bör inte längre hindra inlägg från att visas.
+
+** Vi skapar inte längre massvis av *kom*-fcc-buffertar.
+
+** Hanteringen av datum i importerade inlägg är mer robust.
+
+** Man kan ändra presentation även om den gamla presentationen har
+   tagits bort.
+
+** Dold kopia är det nya namnet för "för kännedom".
+
+** Bättre igenkänning av länkar och annat i inlägg.
+
+** Klienten klarar av inlägg med väldigt många kommentarer.
+
+** Om man tackar nej till mötesinbjudan så går man ur mötet. Det blir
+   inte ett passivt medlemskap.
+
+** Klick på brevlåda i Lista nyheter går till brevlådan istället för
+   att visa presentationen.
+
+** Kasta ut session beter sig finare om den angivna personen inte är
+   inloggad.
+
+** Återse-kommandon klarar nu av stora mängder kommentarslänkar.
+
+** Bredden på några kolumner med inläggsnummer var tidigare hårdkodad
+   till sju tecken. Nu frågar klienten servern om högsta inäggsnummer
+   och anpassar sig därefter.
+
+** Status (för) person säger nu "Senaste in-/utloggning" istället för
+   det felaktiga "Senast inne".
+
+** Ett informativt meddelande ges nu vid försök till privat svar på
+   ett anonymt inlägg.
+
+
+** Ett stort antal andra buggar, stavfel och kommandobeskrivningar
+   rättade.
+
