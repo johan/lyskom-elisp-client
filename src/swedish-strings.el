@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.154 2001-03-15 22:21:57 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.155 2001-03-31 08:44:00 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.154 2001-03-15 22:21:57 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.155 2001-03-31 08:44:00 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1545,7 +1545,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
 
 
-;;; The Alist formely known as lyskom-commands
+;;; The Alist formerly known as lyskom-commands
 (lyskom-language-strings lyskom-command sv
   '(
     (describe-mode            . "Hjälp")
@@ -2066,6 +2066,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "} q") 'kom-review-faq)
   (define-key lyskom-sv-mode-map (kbd "} a m") 'kom-review-all-marked-texts)
   (define-key lyskom-sv-mode-map (kbd "} a SPC") 'kom-review-all)
+  (define-key lyskom-sv-mode-map (kbd "} b") 'kom-review-mail-headers)
   (define-key lyskom-sv-mode-map (kbd "B")   'kom-review-backward)
   (define-key lyskom-sv-mode-map (kbd "s m") 'kom-status-conf)
   (define-key lyskom-sv-mode-map (kbd "s p") 'kom-status-person)

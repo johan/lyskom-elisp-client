@@ -1,3 +1,12 @@
+2001-03-31  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* english-strings.el (lyskom-en-mode-map): added binding "r h" for
+	kom-review-mail-headers.
+
+	* swedish-strings.el (lyskom-sv-mode-map): added binding "} b" for
+	kom-review-mail-headers.
+	(): corrected typo.
+
 2001-03-15  Joel Rosdahl  <joel@rosdahl.net>
 
 	* vars.el.in (lyskom-commands): Added kom-add-cross-reference.

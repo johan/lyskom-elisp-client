@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.125 2001-03-15 22:21:56 joel Exp $
+;;;;; $Id: english-strings.el,v 44.126 2001-03-31 08:43:59 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.125 2001-03-15 22:21:56 joel Exp $"))
+              "$Id: english-strings.el,v 44.126 2001-03-31 08:43:59 qha Exp $"))
 
 
 ;;; ================================================================
@@ -2032,6 +2032,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "r a SPC") 'kom-review-all)
   (define-key lyskom-en-mode-map (kbd "r x a") 'kom-agree)
   (define-key lyskom-en-mode-map (kbd "r x q") 'kom-fast-reply)
+  (define-key lyskom-en-mode-map (kbd "r h") 'kom-review-mail-headers)
   (define-key lyskom-en-mode-map (kbd "s c") 'kom-status-conf)
   (define-key lyskom-en-mode-map (kbd "s u") 'kom-status-person)
   (define-key lyskom-en-mode-map (kbd "s s") 'kom-status-session)
