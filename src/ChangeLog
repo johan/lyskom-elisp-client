@@ -1,3 +1,8 @@
+Tue Nov 12 23:40:16 1991  Linus Tolke Y  (linus at lysator)
+
+	* vars.el, async.el, cache.el (lyskom-who-info-buffer-is-on): Ny
+	  variabel som g|r att man kan st{nga av who-bufferten.
+
 Fri Nov  8 13:51:32 1991  Linus Tolke Y  (linus at robert)
 
 	* lyskom-rest.el, edit-text.el, commands2.el, vars.el:

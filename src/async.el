@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.9 1991-10-23 16:13:12 linus Exp $
+;;;;; $Id: async.el,v 35.10 1991-11-12 22:44:08 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.9 1991-10-23 16:13:12 linus Exp $\n"))
+	      "$Id: async.el,v 35.10 1991-11-12 22:44:08 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -149,7 +149,8 @@ this function shall be with current-buffer the BUFFER."
 				      pers-no))
 ;	  (if (not (zerop lyskom-pers-no))
 ;	      (initiate-who-is-on 'who-buffer 'cache-set-who-info-list))
-	  (if (not (zerop lyskom-pers-no))
+	  (if (and (not (zerop lyskom-pers-no))
+		   lyskom-who-info-buffer-is-on)
 	      (initiate-get-session-info 'who-buffer 'cache-add-session-info
 					 session-no))
 	  )))
