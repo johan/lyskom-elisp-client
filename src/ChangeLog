@@ -1,3 +1,23 @@
+2002-04-20  David Byers  <david.byers@swipnet.se>
+
+	Move binding of 'a' to 'x' in the swedish keymaps:
+	* commands2.el (kom-obsolete-extended-command-binding): New
+	command. Note that this command is temporary and will only ever be
+	used in the Swedish version and doesn't do any LysKOM-ish stuff,
+	so we don't have to use def-kom-command or be able to deal with
+	multiple languages.
+
+	* swedish-strings.el (lyskom-sv-mode-map): Change binding of
+	kom-extended-command from a to x. Bind a to
+	kom-obsolete-extended-command-binding.
+
+	People were annoyed that all read FAQs were shown in status
+	person:
+	* aux-items.el (lyskom-print-elisp-client-read-faq): Only print
+	read FAQs when kom-extended-status-information is set.
+
+	* vars.el.in (kom-extended-status-information): New variable.
+
 2002-04-20  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* commands1.el (lyskom-comment-recipients): Removed a stray "x"

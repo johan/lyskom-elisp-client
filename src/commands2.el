@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.117 2002-04-14 21:52:58 ceder Exp $
+;;;;; $Id: commands2.el,v 44.118 2002-04-20 14:52:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.117 2002-04-14 21:52:58 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.118 2002-04-20 14:52:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2760,3 +2760,22 @@ to the first text that NEW is a comment or footnote to."
     (lyskom-report-command-answer (blocking-do 'modify-server-info
                                                nil
                                                (list aux-item)))))
+
+
+;;; ================================================================
+;;; Temporary function for when we moved kom-extended-command from a
+;;; to x.
+
+(defun kom-obsolete-extended-command-binding ()
+  "Temporary function for when we moved kom-extended-command from a"
+  (interactive)
+  (lyskom-insert-before-prompt "\
+----------------------------------------------------------------
+Tangenten för inmatning av kommandon har flyttat från a till x.
+
+Använd x istället för a om du vill ange LysKOM-kommandon vid
+namn. För att undvika att du kör oönskade LysKOM-kommandon så
+måste du trycka på enter för att fortsätta.
+----------------------------------------------------------------
+")
+  (read-from-minibuffer "Tryck return eller enter för att gå vidare: "))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.193 2002-04-15 06:17:32 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.194 2002-04-20 14:52:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.193 2002-04-15 06:17:32 jhs Exp $"))
+              "$Id: english-strings.el,v 44.194 2002-04-20 14:52:52 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1657,7 +1657,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-prioritize-flag-clear-action . "Clear")
 
     (server-status-header   . "Status for LysKOM-server %#1s%#2?b%[ (%#2s:%#3d)%]%[%]\n\n")
-    (server-status-server   . "Canonical server name:                   %#1s%#2?b%[:%#2s%]%[%]")
+    (server-status-server   . "Canonical server name:                   %#1s%#2?b%[:%#2s%]%[%]\n")
     (server-status-version  . "Software version:                        %#1s %#2s\n")
     (server-status-protocol . "Protocol version:          %15#1d\n")
     (server-status-sessions . "\
@@ -3437,6 +3437,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-auto-list-faqs-doc . "\
   If this is turned on, new FAQs will be listed automatically when you
   log on or go to a conference with a new FAQ.")
+    (kom-extended-status-information-doc . "\
+  When this is on, additional information may be shown by commands that
+  display person, conference and server status.")
 
 
     ;;
@@ -3605,6 +3608,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-review-marks-texts-as-read-tag . "Review commands mark texts as read:")
     (kom-auto-review-faqs-tag . "Review new FAQs automatically:")
     (kom-auto-list-faqs-tag . "List new FAQs automatically:")
+    (kom-extended-status-information-tag . "Extended status information:")
     )
 )
 

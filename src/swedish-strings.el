@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.227 2002-04-18 00:19:04 frid Exp $
+;;;;; $Id: swedish-strings.el,v 44.228 2002-04-20 14:52:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.227 2002-04-18 00:19:04 frid Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.228 2002-04-20 14:52:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1657,7 +1657,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-prioritize-flag-clear-action . "Stäng av")
 
     (server-status-header   . "Status för LysKOM-server %#1s%#2?b%[ (%#2s:%#3d)%]%[%]\n\n")
-    (server-status-server   . "Kanonisk server:                         %#1s%#2?b%[:%#2s%]%[%]")
+    (server-status-server   . "Kanonisk server:                         %#1s%#2?b%[:%#2s%]%[%]\n")
     (server-status-version  . "Programversion:                          %#1s %#2s\n")
     (server-status-protocol . "Protokollversion:          %15#1d\n")
     (server-status-sessions . "\
@@ -2558,7 +2558,8 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   
 
   (define-key lyskom-sv-mode-map (kbd "e")   'kom-set-unread)
-  (define-key lyskom-sv-mode-map (kbd "a")   'kom-extended-command)
+  (define-key lyskom-sv-mode-map (kbd "a")   'kom-obsolete-extended-command-binding)
+  (define-key lyskom-sv-mode-map (kbd "x")   'kom-extended-command)
   (define-key lyskom-sv-mode-map (kbd "<SPC>") 'kom-next-command)
   (define-key lyskom-sv-mode-map (kbd "<RET>") 'kom-line-next-command)
   (define-key lyskom-sv-mode-map (kbd "<LFD>") 'kom-page-next-command)
@@ -3886,6 +3887,10 @@ i servern. Annars sparas det i din .emacs.")
     (kom-auto-list-faqs-doc . "\
   Om detta är påslaget så kommer olästa FAQer att listas automatiskt när
   du loggar in eller går till ett möte med en oläst FAQ.")
+    (kom-extended-status-information-doc . "\
+  Om detta är påslaget so visas extra statusinformation i kommandona
+  Status (för) person, Status (för) möte och Status (för) servern 
+  (om sådan information finns tillgänglig).")
 
 
     ;;
@@ -3895,7 +3900,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ansaphone-replies-tag . "Detaljerade automatsvar")
     (kom-bury-buffers-tag . "Begrav buffertar när man byter LysKOM:")
 
-  (kom-personal-messages-in-window-tag . "Personliga meddelanden:   ")
+    (kom-personal-messages-in-window-tag . "Personliga meddelanden:   ")
     (kom-customize-in-window-tag       . "Inställningar för LysKOM: ")
     (kom-write-texts-in-window-tag     . "Skriv inlägg:             ")
     (kom-prioritize-in-window-tag      . "Prioritera möten:         ")
@@ -4054,6 +4059,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-review-marks-texts-as-read-tag . "Återsekommandon läsmarkerar visade texter:")
     (kom-auto-review-faqs-tag . "Visa nya FAQer automatiskt:")
     (kom-auto-list-faqs-tag . "Lista nya FAQer automatiskt:")
+    (kom-extended-status-information-tag . "Utökad statusinformation:")
     )
 )
 
