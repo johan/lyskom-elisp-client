@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.345 2003-08-25 19:47:08 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.346 2003-08-25 20:02:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.345 2003-08-25 19:47:08 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.346 2003-08-25 20:02:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -4538,6 +4538,7 @@ ta fram menyer.")
     (error-58 . "Otillåten prioritet")
     (error-59 . "Otillåten viktning")
     (error-60 . "Viktning noll ej giltig")
+    (error-61 . "Ogiltigt sanningsvärde")
 
     (error--1 . "Du är inte medlem i något mottagarmöte")
 ))
