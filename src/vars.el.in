@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.187 2002-04-26 21:16:13 byers Exp $
+;;;;; $Id: vars.el.in,v 44.188 2002-04-27 18:30:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.187 2002-04-26 21:16:13 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.188 2002-04-27 18:30:33 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -56,7 +56,7 @@
   "List of flags that are to be saved as booleans in the common block.
 
 Don't change these. They are defined by the protocol.")
-				  
+
 (defconst lyskom-global-non-boolean-variables '(
   kom-default-mark
 )
@@ -85,6 +85,9 @@ Don't change these. They are defined by the protocol.")
 
 (defvar lyskom-is-loaded nil
   "Non-nil when lyskom has been loaded.")
+
+(defvar lyskom-have-one-login nil
+  "Non-nil after the first login")
 
 
 (def-kom-var kom-dont-read-saved-variables '(kom-dont-read-saved-variables
@@ -2804,7 +2807,7 @@ the value of  kom-tell-phrases for fun.")
 		    kom-text-face kom-subject-face kom-text-no-face
 		    kom-friends-face kom-morons-face kom-presence-face
 		    kom-first-line-face kom-warning-face kom-mark-face
-                    kom-text-body-face kom-dashed-lines-face)
+                    kom-text-body-face kom-dashed-lines-face kom-dim-face)
   "This is a list of the faces that LysKOM uses.")
 
 (def-kom-var lyskom-face-schemes
@@ -2826,6 +2829,24 @@ the value of  kom-tell-phrases for fun.")
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#e8e8ff")
      )
+    (black-and-tan
+      (kom-text-body-face nil nil "#f8f8f0")
+      (kom-active-face default "#602000" nil)
+      (kom-url-face default "#800040" nil)
+      (kom-me-face bold "#602000" "#f0f0e0")
+      (kom-highlight-face highlight nil nil)
+      (kom-text-face default nil nil)
+      (kom-subject-face default nil nil)
+      (kom-text-no-face kom-active-face nil nil)
+      (kom-friends-face default "#602000" "#f0f0e0")
+      (kom-morons-face default "#602000" "#ffffc0")
+      (kom-presence-face italic "grey" nil)
+      (kom-mark-face bold "#602000" "#f0f0e0")
+      (kom-warning-face bold "red" nil)
+      (kom-first-line-face bold nil nil)
+      (kom-dim-face default "gray" nil)
+      (kom-dashed-lines-face nil nil "#f0f0e0")
+      )
     (inverse
      (kom-text-body-face nil nil "#080808")
      (kom-active-face default "lightblue" nil)
@@ -2842,10 +2863,11 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face bold "red" nil)
      (kom-first-line-face nil nil "black")
      (kom-dim-face default "gray" nil)
-     (kom-first-line-face nil nil "black")
+     (kom-dashed-lines-face nil nil black)
      )
     (monochrome
      (kom-text-body-face nil nil nil)
+     (kom-dashed-lines-face nil nil nil)
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
      (kom-me-face bold nil nil)
@@ -2860,7 +2882,6 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face bold nil nil)
      (kom-first-line-face bold nil nil)
      (kom-dim-face default nil nil)
-     (kom-first-line-face bold nil nil)
      )
     (minimal
      (kom-text-body-face nil nil nil)
@@ -2877,8 +2898,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-mark-face default nil "black")
      (kom-warning-face bold nil nil)
      (kom-first-line-face nil nil nil)
+     (kom-dashed-lines-face nil nil nil)
      (kom-dim-face default nil nil)
-     (kom-first-line-face nil nil nil)
      )
     (highlight
      (kom-text-body-face nil nil "#f8f8ff")
@@ -2895,8 +2916,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-mark-face      bold      "darkblue"   "thistle")
      (kom-warning-face   bold      "yellow"     "red")
      (kom-first-line-face nil  nil          "lavender")
+     (kom-dashed-lines-face nil  nil          "lavender")
      (kom-dim-face       default   "gray"       nil)
-     (kom-first-line-face nil  nil          "lavender")
      ))
   "Face schemes for LysKOM.
 

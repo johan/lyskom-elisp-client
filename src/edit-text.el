@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.96 2002-04-26 21:16:12 byers Exp $
+;;;;; $Id: edit-text.el,v 44.97 2002-04-27 18:30:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.96 2002-04-26 21:16:12 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.97 2002-04-27 18:30:33 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1896,7 +1896,20 @@ buglist style, automating the removal of closed subjects and change-marks."
         (start (point))
         (next-pos nil))
     (if (> (point) header-end)
-        (call-interactively 'self-insert-command)
+        (unless (lyskom-traverse keymap (current-minor-mode-maps)
+                  (let ((binding (lookup-key keymap (this-command-keys))))
+                    (when (and (commandp binding)
+                               (not (eq binding
+                                        'kom-edit-next-button-or-self-insert)))
+                      (call-interactively binding)
+                      (lyskom-traverse-break t))))
+          (let ((binding (lookup-key (current-local-map) 
+                                     (this-command-keys) t)))
+            (if (and (commandp binding)
+                       (not (eq binding
+                                'kom-edit-next-button-or-self-insert)))
+                (call-interactively binding)
+              (call-interactively 'self-insert-command))))
       (while (> num 0)
         (lyskom-next-area 1 'lyskom-button)
         (if (eq start (point))

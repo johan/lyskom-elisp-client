@@ -1,7 +1,32 @@
+2002-04-27  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 485:
+	* english-strings.el, swedish-strings.el: Number of lines in
+	view-text-first-line was formatted as a text number, not a simple
+	integer.
+
+	* header.el: Updated check for macedit to look for the library and
+	include some information on autoloads.
+
+	* startup.el (kom-start-anew): Set languages globally on the first
+	login.
+
+	* vars.el.in (lyskom-have-one-login): Nwe variable.
+
+	Fix bug 484:
+	* edit-text.el (kom-edit-next-button-or-self-insert): Don't do
+	self-insert-command, but traverse the current keymaps to figure
+	out what to do.
+
+	* check-strings.el (lcs-check-face-schemes): New function to check
+	consistency of face schemes.
+
+	* vars.el.in (lyskom-face-schemes): Added scheme black-and-tan.
+
 2002-04-27  Ulrik Haugen  <qha@lysator.liu.se>
 
 	Fix bug 458:
-	
+
 	* swedish-strings.el, english-strings.el
 	(lyskom-message): New string: who-is-friend.
 

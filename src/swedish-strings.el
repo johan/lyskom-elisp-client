@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.234 2002-04-27 17:38:37 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.235 2002-04-27 18:30:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.234 2002-04-27 17:38:37 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.235 2002-04-27 18:30:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -880,7 +880,7 @@ Annat se \\[describe-mode] ---")
     (which-conf-to-link . "Lägg in länk till möte: ")
 
     ;; From view-text.el:
-    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4n rad%#4?d%[%]%[er%]/ %#5P%#6?b%[%#6s%]%[%]\n")
+    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4d rad%#4?d%[%]%[er%]/ %#5P%#6?b%[%#6s%]%[%]\n")
 
     (marked-by-you . "Markerad av dig (typ: %#1s).\n")
     (marked-by-you-and-others . "Markerad av dig (typ: %#2s) och %#1?d%[någon annan%]%[%#1d andra%].\n")
