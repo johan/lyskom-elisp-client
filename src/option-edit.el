@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.3 1996-10-24 09:48:02 byers Exp $
+;;;;; $Id: option-edit.el,v 44.4 1996-10-27 15:57:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.3 1996-10-24 09:48:02 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.4 1996-10-27 15:57:44 davidk Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -747,10 +747,9 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-widget-command-action (widget &optional event)
   (widget-value-set widget
-                    (car-safe
-                     (save-excursion
-                       (set-buffer lyskom-buffer)
-                       (lyskom-read-extended-command))))
+		    (save-excursion
+		      (set-buffer lyskom-buffer)
+		      (lyskom-read-extended-command)))
   (widget-setup))
                
 (defun lyskom-widget-command-value-create (widget)
@@ -760,8 +759,7 @@ customize buffer but do not save them to the server."
          (string (save-excursion
                    (set-buffer lyskom-buffer)
                    (cond ((null value) "")
-                         (t (or (cdr-safe
-				 (assq value lyskom-commands))
+                         (t (or (lyskom-get-string value 'lyskom-command)
                                 (lyskom-format
                                  (lyskom-custom-string 'unknown-command)
                                  (symbol-name value))))))))
