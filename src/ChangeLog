@@ -1,3 +1,9 @@
+2000-11-23  David Byers  <davby@ida.liu.se>
+
+	* filter.el (kom-super-jump): Check for empty subject by matching
+	subject againts regexp, not regexp against subject (which would be
+	plain wrong).
+
 2000-11-19  Joel Rosdahl  <joel@rosdahl.net>
 
 	* vars.el.in (kom-dont-check-commented-authors): Added inherit

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.16 2000-09-09 11:59:31 byers Exp $
+;;;;; $Id: filter.el,v 44.17 2000-11-23 11:09:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.16 2000-09-09 11:59:31 byers Exp $\n"))
+	      "$Id: filter.el,v 44.17 2000-11-23 11:09:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -576,7 +576,7 @@ the current text"
           (lyskom-insert-string 'no-recipient)
             
         (let ((text lyskom-current-subject))
-          (when (string-match lyskom-current-subject "^\\s-*$") (setq text ""))
+          (when (string-match "^\\s-*$" lyskom-current-subject) (setq text ""))
 
           (lyskom-add-filter
            (make-filter (list 
