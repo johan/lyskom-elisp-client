@@ -1,3 +1,10 @@
+Wed Dec 18 04:33:02 1991  Linus Tolke Y  (linus at robert)
+
+	* vars.el (lyskom-who-info-buffer-is-on): Default on.
+
+	* cache.el, startup.el (lyskom-who-info-buffer): Nu skapas
+	  bufferten senare och bara ifall det beh|vs.
+
 Mon Dec 16 01:03:06 1991  Linus Tolke Y  (linus at robin)
 
 	* async.el (lyskom-add-new-text): om vi inte f}r h{mta
