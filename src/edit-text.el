@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.7 1996-01-08 08:18:26 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.8 1996-01-08 22:21:01 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.7 1996-01-08 08:18:26 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.8 1996-01-08 22:21:01 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -541,8 +541,8 @@ only match a number inside <>."
        (concat (downcase (substring (lyskom-get-string header)
 				    0 4))
 	       (if angled
-		   ".*<\\([0-9]+\\)>"
-		 ".*[^0-9]\\([0-9]+\\)")))
+		   "[^0-9]*<\\([0-9]+\\)>"
+		 "[^0-9]*\\([0-9]+\\)")))
       (string-to-int (buffer-substring (match-beginning 1)
 				       (match-end 1)))
     nil))
