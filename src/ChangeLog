@@ -1,3 +1,8 @@
+2001-10-09  Joel Rosdahl  <joel@rosdahl.net>
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Make C-c TAB an
+	alternative to C-c C-i so that TTY mode users stay happy.
+
 2001-09-21  Joel Rosdahl  <joel@rosdahl.net>
 
 	* vars.el.in (lyskom-text-buttons): Require pseudo-url to start at
