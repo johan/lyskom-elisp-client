@@ -150,9 +150,11 @@
       kö för att läsas.
     </p>
 
-    <refer id="filter" />
-    <refer id="review" />
-    <refer id="mark" />
+    <list header="Se även:">
+      <item><refer id="filter" /></item>
+      <item><refer id="review" /></item>
+      <item><refer id="mark" /></item>
+    </list>
   </section>
 
   <section id="filter" prompt="Slippa läsa inlägg">

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.247 2002-06-03 21:48:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.248 2002-06-06 22:39:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.247 2002-06-03 21:48:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.248 2002-06-06 22:39:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1744,6 +1744,13 @@ Antal sessioner:     %21#1d (totalt)
     (kom-redirect-comments-e48 . "Omdirigering av kommentarer stöds inte av servern")
 
     (external-program-missing . "Hittar inte det externa programmet \"%#1s\" som krävs för att genomföra kommandot.")
+    (ignored-user-area-var . "\
+
+Ignorerar variabeln %#1s i dina inställningar.
+Variabeln är inte en registrerad LysKOM-variabel och kan därför inte
+läsas från servern. Om variabeln motsvarar en inställning som har
+tagits bort så kan du åtgärda genom att ge kommandot \"Spara 
+variabler\".\n\n")
 ))
 
 (lyskom-language-var local lyskom-month-names sv

@@ -1,5 +1,5 @@
 <!-- -*-mode: xml-*- -->
-<help language="sv">
+<help language="en">
   <section id="conferences" prompt="Conferences">
 
     <h1>Conferences</h1>
@@ -146,9 +146,11 @@
       mentioned below.
     </p>
 
-    <refer id="filter" />
-    <refer id="review" />
-    <refer id="mark" />
+    <list header="See also:">
+      <item><refer id="filter" /></item>
+      <item><refer id="review" /></item>
+      <item><refer id="mark" /></item>
+    </list>
   </section>
 
   <section id="filter" prompt="Avoiding certain texts">

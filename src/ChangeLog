@@ -1,3 +1,44 @@
+2002-06-07  David Byers  <david.byers@swipnet.se>
+
+	* help-sv.xml: New file, renamed from help.sv.
+
+	* help-en.xml: New file, renamed from help.en.
+
+	* help-compile.el (lyskom-help-compile): Read from help-XX.xml
+	instead of help.XX.
+
+	Improve help data:
+	* help.en: Set language to "en", not "sv".
+
+	* help.en, help.sv: Put cross references in reading inside a list
+	element.
+
+	Fix some problems with help:
+	* help.el (lyskom-help-format-section): New.
+	(lyskom-help-format-refer): Make cross-references clickable.
+
+2002-06-06  David Byers  <david.byers@swipnet.se>
+
+	Fix some problems with help:
+	* help.el (lyskom-help-format-list): Fixed so it works.
+	(lyskom-help-format-item): Ditto.
+	(lyskom-help-show-section): This used to be
+	lyskom-help-format-section.
+
+	* help-compile.el (lyskom-help-parse-string): Support optional
+	attributes.
+	(lyskom-help-syntax): Added optional attributes.
+	(lyskom-help-syntax-required-attrs): New function.
+	(lyskom-help-syntax-optional-attrs): New function.
+	(lyskom-help-parse-help-file): Added optional attributes to bogus
+	toplevel syntax specification.
+
+2002-06-05  David Byers  <david.byers@swipnet.se>
+
+	* flags.el (lyskom-maybe-set-var-from-string): Refuse to set
+	variables from the user area that are not specified as
+	server-stored LysKOM variables.
+
 2002-06-03  David Byers  <david.byers@swipnet.se>
 
 	* commands2.el (lyskom-send-message): Use new faces for dashed
