@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 38.4 1996-03-02 21:37:46 davidk Exp $
+$Id: elisp-client.texinfo,v 39.0 1996-03-14 18:15:04 davidk Exp $
 @end ifinfo
 
 @iftex

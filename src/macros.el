@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.6 1996-03-13 13:44:48 byers Exp $
+;;;;; $Id: macros.el,v 39.0 1996-03-14 18:18:01 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.6 1996-03-13 13:44:48 byers Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 39.0 1996-03-14 18:18:01 davidk Exp $\n"
   "Version for every file in the client.")
 
 
