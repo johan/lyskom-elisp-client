@@ -1,6 +1,9 @@
-# $Id: Makefile,v 35.1 1991-08-21 15:44:47 linus Exp $
+# $Id: Makefile,v 35.2 1991-09-13 21:42:53 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.1  1991-08-21 15:44:47  linus
+# Revision 35.2  1991-09-13 21:42:53  linus
+# Lagt till distclean.
+#
+# Revision 35.1  1991/08/21  15:44:47  linus
 # Lagt till lyskom-clientversion-long
 #
 
@@ -89,6 +92,9 @@ install: lyskom.elc lyskom.el doc
 clean:
 	$(RM) *~ *.elc core
 	-$(RM) -r distribution
+
+distclean: clean
+	$(RM) TAGS Topdir.make */Topdir.make
 
 
 distrib distribution: lyskom.el lyskom.elc doc

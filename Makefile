@@ -13,4 +13,9 @@ clean:
 	rm -vf misc/*~ *~
 	(cd src; ${MAKE} clean)
 
+distclean: clean
+	rm -vf Topdir.make
+	(cd src; ${MAKE} distclean)
+	rm -vf */Topdir.make
+
 depend:;
