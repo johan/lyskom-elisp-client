@@ -1,5 +1,9 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 842:
+	* commands1.el (kom-add-member-answer): Don't enter memberships
+	under the current session priority.
+
 	Fix bug 260:
 	* commands1.el (kom-add-self): Ask for number of unread.
 	 (lyskom-try-add-member): Show no-of-unread in text.

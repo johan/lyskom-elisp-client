@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.173 2003-03-16 17:34:44 byers Exp $
+;;;;; $Id: commands1.el,v 44.174 2003-03-16 17:52:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.173 2003-03-16 17:34:44 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.174 2003-03-16 17:52:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -836,14 +836,18 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
                                   lyskom-pers-no 
                                   (conf-stat->conf-no conf-conf-stat)
                                   t 0)))
-          (unless (membership->position mship)
-            (set-membership->position mship pos))
-          (if (lyskom-try-get-membership (conf-stat->conf-no conf-conf-stat) t)
-              (progn (lyskom-replace-membership mship)
-                     (lyskom-fetch-start-of-map conf-conf-stat mship))
-            (lyskom-add-membership mship
-                                   conf-conf-stat
-                                   t))))
+          (if (< (membership->priority mship) lyskom-session-priority)
+              (lyskom-format-insert-before-prompt
+               'member-in-conf-with-low-priority
+               conf-conf-stat)
+            (unless (membership->position mship)
+              (set-membership->position mship pos))
+            (if (lyskom-try-get-membership (conf-stat->conf-no conf-conf-stat) t)
+                (progn (lyskom-replace-membership mship)
+                       (lyskom-fetch-start-of-map conf-conf-stat mship))
+              (lyskom-add-membership mship
+                                     conf-conf-stat
+                                     t)))))
       (lyskom-insert-string 'done))))
 
 

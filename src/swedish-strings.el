@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.307 2003-03-16 17:34:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.308 2003-03-16 17:52:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.307 2003-03-16 17:34:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.308 2003-03-16 17:52:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -438,6 +438,7 @@ du har läst klart allting. Kom tillbaks senare.
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M%#2?b%[ %#2s%]%[%]...")
+    (member-in-conf-with-low-priority . "%#1M har lägre prioritet än din läsnivå och kommer därför inte att visas.\n")
     (member-in-conf-with-unread-date . "med olästa från %#3d %#2s %#1d")
     (member-in-conf-with-unread . "med %#1d olästa")
     (add-member-in . "Addera %#1P som medlem i %#2M...")
