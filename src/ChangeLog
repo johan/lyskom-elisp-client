@@ -1,3 +1,8 @@
+Sat May  8 19:48:00 1993  Linus Tolke Y  (linus@bodil)
+
+	* swedish-strings.el, english-strings.el (kom-tell-phrases): The
+	  encouragement to change this variable is removed.
+
 Wed May  5 04:47:30 1993  Linus Tolke Y  (linus@bodil)
 
 	* async.el, commands1.el, commands2.el, completing-read.el,
