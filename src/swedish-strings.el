@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.252 2002-06-12 22:27:38 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.253 2002-06-19 08:28:25 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.252 2002-06-12 22:27:38 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.253 2002-06-19 08:28:25 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -1445,7 +1445,7 @@ Uppkopplad sedan %#8s%#9s")
     (conf-to-del-faq . "Vilket möte vill du ta bort en FAQ från? ")
     (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
     (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2?b%[%#2M%]%[servern%]...")
-    (conf-has-no-faq . "%#1?b%[%%#1M%]%[Servern%] har ingen FAQ\n")
+    (conf-has-no-faq . "%#1?b%[%#1M%]%[Servern%] har ingen FAQ\n")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1?b%[%#1M%]%[servern%].\n")
     (changed-faq-for-conf-done . "FAQ i text %#2n för %#1?b%[%#1M%]%[servern%] ändrad till text %#3n.\n")
