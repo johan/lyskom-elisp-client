@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.19 1999-06-11 12:21:26 byers Exp $
+;;;;; $Id: compatibility.el,v 44.20 1999-06-15 14:38:18 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.19 1999-06-11 12:21:26 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.20 1999-06-15 14:38:18 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -174,6 +174,9 @@ KEYS should be a string in the format used for saving keyboard macros
 
 (lyskom-provide-function characterp (obj)
   (integerp obj))
+
+(lyskom-provide-function int-to-char (obj)
+  obj)
 
 (lyskom-compatibility-forms (fboundp 'frame-width)
     (fset 'frame-width 'screen-width))
