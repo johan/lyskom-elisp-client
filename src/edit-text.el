@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.68 2000-08-29 16:15:06 byers Exp $
+;;;;; $Id: edit-text.el,v 44.69 2000-09-01 14:13:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.68 2000-08-29 16:15:06 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.69 2000-09-01 14:13:18 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -896,13 +896,14 @@ Cannot be called from a callback."
           (lyskom-message "%s" (lyskom-get-string 'checking-rcpt))
 
           ;;
-          ;; For each commented text, get the author
-          ;;
+          ;; For each commented text, get the author. Do not include
+          ;; ones that are listed in kom-dont-check-commented-authors
         
           (mapcar 
            (lambda (x)
              (let ((text (blocking-do 'get-text-stat x)))
-               (when text
+               (when (and text (not (memq (text-stat->author text)
+                                          kom-dont-check-commented-authors)))
                  (add-to-list 'author-list (text-stat->author text)))))
            comm-to-list)
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.109 2000-08-31 12:29:44 byers Exp $
+;;;;; $Id: english-strings.el,v 44.110 2000-09-01 14:13:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.109 2000-08-31 12:29:44 byers Exp $"))
+              "$Id: english-strings.el,v 44.110 2000-09-01 14:13:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2420,6 +2420,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
         If not, LysKOM will offer to add the commented authos as a recipient
         to the comment you are writing.
 
+    Authors not to check
+        A list of authors not to check even if check membership of
+        commented author is on.
+
     Check for unread comments
         When this is on, LysKOM will check that you have read all the other
         comments to the text you are commenting before sending your
@@ -3186,6 +3190,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   trimmed back to the maximum size. The variable must be an integer;
   the default is 4096.")
 
+    (kom-dont-check-commented-authors-doc . "")
+
 
     ;;
     ;; Tags for variables
@@ -3342,6 +3348,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-created-texts-are-saved-tag . "Save created texts:")
     (kom-confirm-add-recipients-tag . "Ask if comments should be sent to new recipients:")
     (kom-trim-buffer-minimum-tag . "How small parts of the LysKOM buffer are trimmed:")
+    (kom-dont-check-commented-authors-tag . "Authors not to check:")
     )
 )
 
