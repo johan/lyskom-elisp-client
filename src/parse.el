@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.20 1999-06-12 16:53:12 byers Exp $
+;;;;; $Id: parse.el,v 44.21 1999-06-14 14:19:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.20 1999-06-12 16:53:12 byers Exp $\n"))
+	      "$Id: parse.el,v 44.21 1999-06-14 14:19:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1081,9 +1081,8 @@ CALL-INFO is destructively changed to
       (setq lyskom-pending-calls
 	    (lyskom-assoc-dremove ref-no lyskom-pending-calls))
       (lyskom-decrease-pending-calls)
-      (if call-info
-	  (lyskom-tr-call-to-parsed call-info nil)
-	(lyskom-message "Bug i lyskom-parse-error"))
+      (when call-info
+	  (lyskom-tr-call-to-parsed call-info nil))
       (lyskom-check-call kom-queue))))
 
 
