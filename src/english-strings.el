@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.10 1996-08-23 10:38:11 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.11 1996-08-27 10:52:32 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.10 1996-08-23 10:38:11 davidk Exp $"))
+              "$Id: english-strings.el,v 43.11 1996-08-27 10:52:32 davidk Exp $"))
 
 
 
@@ -322,7 +322,7 @@ and you have finished reading. Please come back later.
     (unsubscribe-failed . "\nDidn't work. Perhaps %#1P isn't a member of %#2M?\n")
 
     (You . "You")
-    (could-not-create-conf . "Couldn't create the conference \"%#1s\".\nError: %#2d.\n")
+    (could-not-create-conf . "Couldn't create the conference \"%#1s\".\n")
     (created-conf-no-name . "Conference number %[%#3@%#1:m %#2:M%] has been created.\n")
     (cant-read-textno . "You are not allowed to read article %#1:n")
 

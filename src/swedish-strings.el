@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.13 1996-08-23 10:38:20 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.14 1996-08-27 10:52:41 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.13 1996-08-23 10:38:20 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.14 1996-08-27 10:52:41 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -319,7 +319,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (unsubscribe-failed . "\nDet gick inte. %#1P var kanske aldrig medlem i %#2M?\n")
 
     (You . "Du")
-    (could-not-create-conf . "M\366tet \"%#1s\" kunde ej skapas.\nFelkod: %#2d.\n")
+    (could-not-create-conf . "M\366tet \"%#1s\" kunde ej skapas.\n")
     (created-conf-no-name . "M\366te nummer %[%#3@%#1:m %#2:M%], skapat.\n")
     (cant-read-textno . "Du f\345r inte l\344sa text %#1:n")
 

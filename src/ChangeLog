@@ -9,6 +9,10 @@ Sat Aug 24 23:54:55 1996  Per Cederqvist  <ceder@lysator.liu.se>
 	that this doesn't fail on user-areas who don't have the "elisp"
 	and/or "common" part.
 
+Sat Aug 24 00:29:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-create-conf): Skriv ut bättre felmeddelanden.
+
 Fri Aug 23 15:11:17 1996  David Kågedal  <kg@infovav.se>
 
 	* review.el (kom-review-tree): Använd def-kom-command.
