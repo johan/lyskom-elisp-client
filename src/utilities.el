@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.42 1999-11-19 13:39:03 byers Exp $
+;;;;; $Id: utilities.el,v 44.43 1999-11-19 22:00:15 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.42 1999-11-19 13:39:03 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.43 1999-11-19 22:00:15 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -293,6 +293,24 @@ of \(current-time\)."
        (setq l (1- l))
        (aset s2 l (lyskom-unicase-char (aref s2 l))))
      s2)))
+
+(defun lyskom-looking-at (s)
+  "Version of looking-at that will work in Gnu Emacs 20.3"
+  (save-excursion
+    (let ((start (point)))
+      (and (re-search-forward s nil t)
+	   (eq (match-beginning 0) start)))))
+
+;; Don't slow things down with our own looking-at unless we have to
+
+(eval-and-compile
+ (condition-case nil
+     (if (and (eq emacs-major-version 20)
+	      (eq emacs-minor-version 3))
+	 nil
+       (fset 'lyskom-looking-at (symbol-function 'looking-at)))
+   (error nil)))
+
 
 
 ;; Stolen from Gnu Emacs
@@ -867,12 +885,3 @@ Cannot be called from a callback."
                                    collector)
         (lyskom-wait-queue (or queue 'background))
         (car (collector->value collector)))))
-
-
-
-
-
-            
-
-          
-                          

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.22 1999-11-19 13:38:51 byers Exp $
+;;;;; $Id: services.el,v 44.23 1999-11-19 22:00:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.22 1999-11-19 13:38:51 byers Exp $\n"))
+	      "$Id: services.el,v 44.23 1999-11-19 22:00:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -86,6 +86,8 @@ from being called in the wrong buffer."
          (set-buffer initiate-something-saved-buffer)))))
 
 (put 'lyskom-server-call 'lisp-indent-function 0)
+(put 'lyskom-server-call 'edebug-form-spec t)
+     
 
 ;;; ================================================================
 ;;;                     Requests for services
