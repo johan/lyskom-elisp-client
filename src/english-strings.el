@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.120 2001-01-28 22:37:00 joel Exp $
+;;;;; $Id: english-strings.el,v 44.121 2001-02-02 23:24:06 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.120 2001-01-28 22:37:00 joel Exp $"))
+              "$Id: english-strings.el,v 44.121 2001-02-02 23:24:06 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1063,6 +1063,7 @@ You should set it to a better value.\n")
     (read-next-footnote-prompt . "Read next footnote")
     (read-next-comment-prompt . "Read next comment")
     (read-next-text-prompt . "Read next text")
+    (read-next-attachment-prompt . "Read next attachment")
     (go-to-conf-of-marked-prompt . "Resume reviewing marked")
     (go-to-conf-of-review-tree-prompt . "Resume reviewing comments")
     (go-to-conf-of-review-prompt . "Resume reviewing texts")
