@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.240 2003-04-05 20:02:29 byers Exp $
+;;;;; $Id: vars.el.in,v 44.241 2003-04-05 20:41:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.240 2003-04-05 20:02:29 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.241 2003-04-05 20:41:26 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1488,11 +1488,13 @@ All values other than those listed are reserved for future use."
   "**Non-nil means pop up a buffer with personal messages as they arrive.
 
 When this variable is set to `nil', personal, group and alarm messages
-are simply inserted in the appropriate buffer
-\(see `kom-show-personal-messages-in-buffer'). The buffer is not
-displayed automatically. When this variable is set to `t', the buffer
-in which a new message is shown will be displayed automatically,
-possibly splitting windows and uniconifying frames.
+are simply inserted in the appropriate buffer \(see
+`kom-show-personal-messages-in-buffer'). The buffer is not displayed
+automatically. When this variable is set to `t', the buffer in which a
+new message is shown will be displayed automatically, possibly
+splitting windows and uniconifying frames. When this variable is set
+to `yes', the behavior is identical to when it is set to `t', but
+frames will not be uniconified.
 
 Values other than `t' and `nil' are reserved for future use."
   server)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.277 2003-04-05 20:02:29 byers Exp $
+;;;;; $Id: english-strings.el,v 44.278 2003-04-05 20:41:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.277 2003-04-05 20:02:29 byers Exp $"))
+              "$Id: english-strings.el,v 44.278 2003-04-05 20:41:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2913,6 +2913,8 @@ Select whether to execute command or keyboard macro.")
     (highlight-conferences . "Conferences:")
     (highlight-face . "Face:")
     (highlight-conflist . "Conference list")
+
+    (yes-dont-pop . "Yes, but don't uniconify frames")
 
     ;;
     ;; Misc doc strings

@@ -1,5 +1,16 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 664:
+	* option-edit.el (lyskom-custom-variables): Support third value
+	for kom-pop-personal-messages.
+
+	* async.el (lyskom-handle-as-personal-message): If
+	kom-pop-personal-messages is non-nil and non-t, don't pop up
+	the frame.
+
+	* buffers.el (lyskom-display-buffer): Added parameter
+	keep-frame-iconfiied.
+
 	Fix bug 742:
 	* commands2.el (kom-will-person-read-text): New command.
 

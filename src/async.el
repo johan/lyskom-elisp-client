@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.55 2003-03-16 15:57:26 byers Exp $
+;;;;; $Id: async.el,v 44.56 2003-04-05 20:41:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.55 2003-03-16 15:57:26 byers Exp $\n"))
+	      "$Id: async.el,v 44.56 2003-04-05 20:41:24 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -584,7 +584,8 @@ converted, before insertion."
            (lyskom-insert string )
            (if pop
                (save-selected-window
-                 (select-window (lyskom-display-buffer (current-buffer)))
+                 (select-window (lyskom-display-buffer (current-buffer)
+                                                       (not (eq pop t))))
                  (goto-char (point-max))
                  (recenter -1))))))))))
   
