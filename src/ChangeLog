@@ -1,5 +1,8 @@
 2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* mship-edit.el (lyskom-read-time): Commented out code that
+	generated a compilation warning.
+
 	* vars.el.in (kom-server-aliases): Added com.lysator.liu.se.
 
 	* swedish-strings.el: Corrected terminology in

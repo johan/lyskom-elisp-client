@@ -1552,7 +1552,11 @@ Medlemskap för %#1M på %#2s
         (time nil))
     (while (not time)
       (setq data (read-from-minibuffer prompt data))
-      (setq time (parse-time-string data))
+
+; Removed to avoid a compilation warning.  /Joel
+;      (setq time (parse-time-string data))
+      (error "parse-time-string not defined")
+
       (if (not (or (elt time 4) (elt time 5)))
           (setq time nil)
         (setq time
