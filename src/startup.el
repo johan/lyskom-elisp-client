@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.5 1991-12-18 03:35:24 linus Exp $
+;;;;; $Id: startup.el,v 35.6 1992-01-12 05:10:00 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.5 1991-12-18 03:35:24 linus Exp $\n"))
+	      "$Id: startup.el,v 35.6 1992-01-12 05:10:00 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -94,6 +94,7 @@ Optional arguments: HOST, USERNAME and PASSWORD."
 
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."
+  (sit-for 0)
   (let ((cur (current-buffer)))
     (set-buffer (process-buffer proc))
     (cond

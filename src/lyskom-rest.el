@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.16 1991-12-13 19:20:55 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.17 1992-01-12 05:10:03 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.16 1991-12-13 19:20:55 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.17 1992-01-12 05:10:03 inge Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1513,6 +1513,7 @@ then a newline is printed after the name instead."
 
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
+  (sit-for 0)
   (let ((inhibit-quit t)		;inhibit-quit is automatically set
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
