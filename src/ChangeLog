@@ -1,3 +1,7 @@
+Fri Aug 11 17:34:39 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-L
+
 2000-08-11  David Byers  <davby@ida.liu.se>
 
 	* option-edit.el (lyskom-file-widget): Fixed bug so that help
@@ -6,7 +10,7 @@
 	* edit-text.el (lyskom-edit-parse-headers): Skip comments in
 	headers.
 	(lyskom-edit-replace-headers): Anchor search for header separator.
-	(lyskom-edit-fcc-text): Mew function to save text almost as if it
+	(lyskom-edit-fcc-text): New function to save text almost as if it
 	were printed properly to a log file.
 	(lyskom-edit-parse-headers): Items in the header can be commented
 	out by prepending a "#". This may be useful if we ever want to put
