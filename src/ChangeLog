@@ -1,5 +1,7 @@
 Tue Oct  8 17:06:05 1991  Linus Tolke Y  (linus at lysator)
 
+	* Distributed version 0.34.2		20:50
+
 	* edit-text.el, lyskom-rest.el (lyskom-edit-text, lyskom-filter):
 	  Found and fixed the bug that made the first char in the
 	  edit-buffer arrive in the *kom*-buffer.
