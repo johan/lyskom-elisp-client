@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.93 2000-11-30 12:08:47 byers Exp $
+;;;;; $Id: commands1.el,v 44.94 2000-12-29 17:27:40 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.93 2000-11-30 12:08:47 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.94 2000-12-29 17:27:40 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -675,13 +675,13 @@ of the person."
   (let* ((conf-name (or name
 			(lyskom-read-string
 			 (lyskom-get-string 'name-of-conf))))
-	 (open (j-or-n-p (lyskom-get-string 'anyone-member) t))
+	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
-		     (j-or-n-p (lyskom-get-string 'secret-conf) t)))
-	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed) t))
-         (anarchy (j-or-n-p (lyskom-get-string 'anonymous-allowed) t))
+		     (j-or-n-p (lyskom-get-string 'secret-conf))))
+	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed)))
+         (anarchy (j-or-n-p (lyskom-get-string 'anonymous-allowed)))
          (secmem (and (lyskom-have-feature long-conf-types)
-                      (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed) t))))
+                      (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed)))))
 	 (conf-no (blocking-do 'create-conf 
 			       conf-name
 			       (lyskom-create-conf-type (not open) 

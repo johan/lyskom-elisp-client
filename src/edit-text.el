@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.71 2000-12-06 22:55:20 joel Exp $
+;;;;; $Id: edit-text.el,v 44.72 2000-12-29 17:27:43 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.71 2000-12-06 22:55:20 joel Exp $\n"))
+	      "$Id: edit-text.el,v 44.72 2000-12-29 17:27:43 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -478,7 +478,7 @@ so it's not as clean as it ought to be."
   "Send the text to the server."
   (interactive)
    (if (and (lyskom-default-value 'lyskom-is-anonymous)
-            (lyskom-j-or-n-p 'do-send-anonymous t))
+            (lyskom-j-or-n-p 'do-send-anonymous))
        (lyskom-edit-send 'initiate-create-anonymous-text t)
      (lyskom-edit-send 'initiate-create-text nil)))
 
@@ -880,7 +880,7 @@ Cannot be called from a callback."
           (goto-char (point-min))
           (if (not 
                (lyskom-j-or-n-p
-                (lyskom-format 'comment-all-relevant-p) t))
+                (lyskom-format 'comment-all-relevant-p)))
               (signal 'lyskom-edit-text-abort 
                       (list "%s" 
                             (lyskom-get-string 
@@ -963,14 +963,12 @@ Cannot be called from a callback."
                                 (lyskom-j-or-n-p
                                  (lyskom-format
                                   'add-recipient-p
-                                  author-number)
-                                 t))
+                                  author-number)))
                            (setq extra-headers
                                  (nconc (list (if (lyskom-j-or-n-p
                                                    (lyskom-format
                                                     'really-add-as-recpt-q
-                                                    author-number)
-                                                   t)
+                                                    author-number))
                                                   'recpt
                                                 'cc-recpt)
                                               author-number)
@@ -997,7 +995,7 @@ Cannot be called from a callback."
                        (save-excursion
                          (set-buffer lyskom-buffer)
                          (lyskom-j-or-n-p 
-                          (lyskom-get-string 'send-formatted) t)))
+                          (lyskom-get-string 'send-formatted))))
                   (concat "enriched:\n" (buffer-string))
                 message))
           (kill-buffer buf)))
@@ -1276,7 +1274,7 @@ RECPT-TYPE is the type of recipient to add."
                     (eq recpt-type 'recpt)
                     (not (lyskom-j-or-n-p (lyskom-format
                                            'really-add-as-recpt-q
-                                           conf-stat) t)))
+                                           conf-stat))))
            (setq recpt-type 'cc-recpt))
 
          (if what-to-do

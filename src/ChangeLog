@@ -1,3 +1,10 @@
+2000-12-29  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-rest.el (j-or-n-p lyskom-j-or-n-p): Rmoved the parameter
+	quittable and rewrote the functions as if it were always
+	t. Callers changed (in aux-items.el, commands1.el, commands2.el,
+	edit-text.el, filter-edit.el and startup.el).
+
 2000-12-17  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* utilities.el: applied patch from Per Starbäck, device-class
