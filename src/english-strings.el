@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.130 2001-04-21 17:53:49 joel Exp $
+;;;;; $Id: english-strings.el,v 44.131 2001-04-21 18:07:18 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.130 2001-04-21 17:53:49 joel Exp $"))
+              "$Id: english-strings.el,v 44.131 2001-04-21 18:07:18 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1557,7 +1557,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-send-message         . "Send message")
     (kom-send-alarm           . "Send alarm")
     (kom-create-conf          . "Create conference")
-    (kom-delete-conf          . "Delete conference")
+    (kom-delete-conf          . "Delete conference/user")
     (kom-delete-text          . "Remove text")
     (kom-display-time         . "Time")
     (kom-go-to-conf           . "Go (to) conference")
