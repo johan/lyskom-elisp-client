@@ -1,3 +1,7 @@
+Thu Oct 14 13:57:16 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-9
+
 1999-10-14  David Byers  <davby@ida.liu.se>
 
 	* option-edit.el (kom-customize): Use lyskom-copy-face.
