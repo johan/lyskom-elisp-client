@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 43.0 1996-08-07 16:36:24 davidk Exp $
+# $Id: Makefile,v 43.1 1996-08-07 20:00:46 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,10 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 43.0  1996-08-07 16:36:24  davidk
+# Revision 43.1  1996-08-07 20:00:46  davidk
+# Ny ansvarsfördelning mellan Makefilerna.
+#
+# Revision 43.0  1996/08/07 16:36:24  davidk
 # Nytt revisionsnummer.
 #
 # Revision 41.1  1996/08/07 16:22:53  davidk
@@ -55,7 +58,10 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-RM = rm -f
+CLIENTVERSION = 0.42
+
+SHELL = /bin/sh
+RM = rm -vf
 
 INFODIR = /usr/gnu/info
 FTPDIR = /usr/ftp/pub/lyskom/elisp-client
@@ -99,6 +105,7 @@ install: elisp-client elisp-client.txt
 	cp elisp-client elisp-client-? $(INFODIR)
 
 release: elisp-client elisp-client.txt
+	cp NEWS-$(CLIENTVERSION) $(FTPDIR)
 	(VER=`grep "^Dokumentationen uppdaterad till klient version " elisp-client.texinfo | \
 	sed -n 's/^.* version \(.*\)$$/\1/p'` ; \
 	tar cf elisp-client.info-$${VER}.tar elisp-client elisp-client-? ; \
