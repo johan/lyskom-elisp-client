@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.33 2000-01-11 10:08:32 byers Exp $
+;;;;; $Id: compatibility.el,v 44.34 2000-02-08 13:09:07 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.33 2000-01-11 10:08:32 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.34 2000-02-08 13:09:07 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -226,8 +226,8 @@ KEYS should be a string in the format used for saving keyboard macros
     (button1up . "<button1up>")
     (button2up . "<button2up>")
     (button3up . "<button3up>")
-    (å	       . [(control aring)])
-    (Å	       . [(control Aring)])
+    (C-å       . [(control aring)])
+    (C-Å       . [(control Aring)])
     (å	       . [aring])
     (Å	       . [Aring])
     (ä	       . [adiaeresis])

@@ -5,7 +5,21 @@ Att göra i elisp-klienten
 
 * SHOWSTOPPERS
 
-** 
+** Martin, hade vissa problem med inställningarna. User-arean såg OK
+   ut och han säger att problemen försvann när han skrev en
+   presentation för sin person Martin;. User-arean finns i 4730269.
+
+** Spara inte bytekoden med filtren.
+
+** I Gnu Emacs 20.4.1 får man ett fyrkantigt tecken före varje svenskt
+   tecken. Antagligen en \201 som spökar. Vi måste bergis koda om alla
+   strängar som hamnar i menyer.
+
+** När man skapar repliker som aux-items så kodas inte texten på något
+   vettigt sätt. Antagligen skulle man koda med serverns
+   defaultkodning. Det här gäller alla aux-items som kan innehålla
+   godtycklig text. Antagligen bör item-definitionen innehålla
+   information om hur texten skall kodas om.
 
 ** Man får illegal consp nil i processfiltret när man går med i eller
    ändrar prioritet på ett möte ibland. Sällan. Jag gick med i

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.57 2000-01-10 13:33:44 byers Exp $
+;;;;; $Id: edit-text.el,v 44.58 2000-02-08 13:09:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.57 2000-01-10 13:33:44 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.58 2000-02-08 13:09:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1244,11 +1244,11 @@ RECPT-TYPE is the type of recipient to add."
                                            conf-stat) t)))
            (setq recpt-type 'cc-recpt))
 
-         (when what-to-do
-           (funcall what-to-do conf-stat insert-at edit-buffer))
-         (lyskom-edit-do-add-recipient/copy recpt-type
-                                            (conf-stat->conf-no conf-stat)
-                                            edit-buffer))
+         (if what-to-do
+           (funcall what-to-do conf-stat insert-at edit-buffer)
+           (lyskom-edit-do-add-recipient/copy recpt-type
+                                              (conf-stat->conf-no conf-stat)
+                                              edit-buffer)))
        (when win-config (set-window-configuration win-config)))))))
 
 (defun kom-edit-add-cross-reference ()

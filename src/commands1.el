@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.63 2000-01-10 23:26:49 byers Exp $
+;;;;; $Id: commands1.el,v 44.64 2000-02-08 13:09:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.63 2000-01-10 23:26:49 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.64 2000-02-08 13:09:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3000,7 +3000,7 @@ command argument."
                   (default-to (get-conf-stat
                                (or lyskom-last-added-rcpt
                                    lyskom-current-conf))))
-               (lyskom-add-sub-recipient text-no-arg
+               (lyskom-add-sub-recipient text-no
                                          (lyskom-get-string 'text-to-move)
                                          'move
                                          default-to
@@ -3019,7 +3019,8 @@ conference to add, remove or move from, CONF2 is thee conference to
 move to (for move) and a non-nil TEXT-NO-IS-READ means that the user has
 already been prompted for a text number so TEXT-NO-ARG contains the 
 actual text to do whatever on."
-  (let* ((text-no (if text-no-is-read text-no-arg
+  (let* ((text-no (if (and text-no-is-read text-no-arg)
+                      text-no-arg
                     (lyskom-read-number prompt 
                                         (or text-no-arg lyskom-current-text))))
 	 (text-stat (blocking-do 'get-text-stat text-no))
