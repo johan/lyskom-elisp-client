@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.165 2003-05-09 22:02:30 byers Exp $
+;;;;; $Id: commands2.el,v 44.166 2003-05-10 09:10:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.165 2003-05-09 22:02:30 byers Exp $\n"))
+              "$Id: commands2.el,v 44.166 2003-05-10 09:10:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3319,19 +3319,19 @@ that this command could take a very long time to complete."
 (def-kom-command kom-limit-import (conf-stat)
   "Specify restrictions on importing e-mail. Note that such restrictions
 are advisory; clients may ignore them."
-  (interactive (list (lyskom-read-conf-stat "Begränsa import till vilket möte"
+  (interactive (list (lyskom-read-conf-stat 'limit-import-to-conf
                                             '(conf pers) nil nil t)))
   (when conf-stat
-    (let* ((what (lyskom-a-or-b-or-c-p "Förbjud import av vad?"
+    (let* ((what (lyskom-a-or-b-or-c-p 'limit-import-of-what
                                        '(abc-spam abc-everything)
                                        'abc-spam))
            (data (cond ((eq what 'abc-spam) "spam")
                        ((eq what 'abc-everything) "all"))))
       (when (or (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
                                       lyskom-pers-no)
-                (lyskom-j-or-n-p "Du verkar inte vara organisatör för mötet. Försök ändå?"))
+                (lyskom-j-or-n-p 'limit-import-not-super))
         (when data
-          (lyskom-format-insert "Begränsar import av %#1s i %#2M..."
+          (lyskom-format-insert 'limiting-import
                                 (substring (lyskom-get-string what) 1)
                                 conf-stat)
           (lyskom-report-command-answer
