@@ -1,8 +1,15 @@
 Mon Jul 27 01:14:24 1992  Linus Tolke Y  (linus@lysator)
 
-	* services.el (initiate-get-part-of-membership): New functions
-	  that makes it possible not to retrieve the whole membership
-	  always.
+        * lyskom-rest.el: Removed obsolete lyskom-prefetch-* functions.
+	  lyskom-list-news amongst others won't work at all.
+	* prefetch.el: Added a few functions, fixed loads of bugs emergin
+	  while testing this for the first time.
+	* startup.el: Fetching first conference-procedure rewritten to be
+	  faster.
+
+	* services.el, vars.el (initiate-get-part-of-membership): New
+	  functions that makes it possible not to retrieve the whole
+	  membership always.
 
 	* flags.el (lyskom-options-done): New variable to tell if we have
 	  already read the user-area.
