@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.109 2001-05-15 12:46:57 byers Exp $
+;;;;; $Id: commands1.el,v 44.110 2001-05-21 12:39:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.109 2001-05-15 12:46:57 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.110 2001-05-21 12:39:21 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -188,6 +188,8 @@ optional arg TEXT-NO is present review the text that text commented instead."
   (if text-no
       (progn
 	(lyskom-tell-internat 'kom-tell-read)
+        (unless kom-review-uses-cache
+          (cache-del-text-stat text-no))
 	(lyskom-view-commented-text
 	 (blocking-do 'get-text-stat text-no)))
     (lyskom-insert-string 'confusion-what-to-view)))
@@ -202,6 +204,8 @@ the other ones."
                                                      lyskom-previous-text)))
   (cond (text-no
          (lyskom-tell-internat 'kom-tell-read)
+        (unless kom-review-uses-cache
+          (cache-del-text-stat text-no))
          (lyskom-view-commented-text
           (blocking-do 'get-text-stat lyskom-previous-text)))
         (t (lyskom-insert-string 'confusion-what-to-view))))
@@ -235,6 +239,8 @@ the other ones."
                 (lyskom-create-text-list (cdr text-nos))
                 lyskom-current-text)
                lyskom-reading-list t))
+          (unless kom-review-uses-cache
+            (cache-del-text-stat (car text-nos)))
           (lyskom-view-text (car text-nos)
 			    nil nil nil 
 			    nil nil nil

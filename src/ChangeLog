@@ -1,3 +1,39 @@
+2001-05-21  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46.1-BETA-1
+
+2001-05-21  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el: Added kom-review-uses-cache.
+
+	* view-text.el (lyskom-view-text): Don't prefetch stuff if we are
+	reviewing and will delete the prefetched stuff anyway.
+
+	* lyskom-rest.el (kom-view): Check kom-review-uses-cache.
+	(kom-view-next-text): Same here.
+
+	* edit-text.el (lyskom-edit-show-commented): Check
+	kom-review-uses-cache.
+
+	* commands1.el (lyskom-view-commented-text): Check
+	kom-review-uses-cache. 
+
+	* review.el (kom-find-root): Check kom-review-uses-cache.
+	(kom-review-comments): Same here.
+	(kom-review-tree): Same here.
+	(kom-find-root): Same here.
+	(kom-find-root-review): Same here.
+	(lyskom-find-root): Same here (two places)
+	(lyskom-review-comments): Same here.
+	(kom-review-last-normally-read): Same here.
+	(kom-review-noconversion): Same here.
+
+	* commands1.el (kom-view-commented-text): Check
+	kom-review-uses-cache. 
+	(kom-view-previous-commented-text): Same here.
+
+	* vars.el.in (kom-review-uses-cache): New variable.
+
 2001-05-15  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (kom-jump): Probably works in tree review mode, at

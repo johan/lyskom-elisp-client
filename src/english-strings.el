@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.135 2001-05-07 15:20:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.136 2001-05-21 12:39:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.135 2001-05-07 15:20:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.136 2001-05-21 12:39:23 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3234,7 +3234,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-print-seconds-in-time-strings-doc . "\
   If this setting is on, some time strings (for example the creation
   time of texts and sent messages) will include seconds.")
-
+    (kom-review-uses-cache-doc . "\
+  If this is turned on, commands that review texts will use saved copies
+  of the text rather then get new copies from the server. This makes the
+  commands run significantly faster, but in some cases the texts may 
+  have changed since they were copied, and you will not see those 
+  changes.")
 
     ;;
     ;; Tags for variables
@@ -3396,6 +3401,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-dont-check-commented-authors-tag . "Authors not to check:")
     (kom-print-relative-dates-tag . "Show relative dates:")
     (kom-print-seconds-in-time-strings-tag . "Include seconds in time strings:")
+    (kom-review-uses-cache-tag . "Review commands use cached texts:")
     )
 )
 

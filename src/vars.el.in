@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.136 2001-05-08 21:45:39 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.137 2001-05-21 12:39:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.136 2001-05-08 21:45:39 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.137 2001-05-21 12:39:28 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -215,6 +215,11 @@ The value of this variable is the file name on which to save new texts."
 
 (def-kom-var kom-reading-puts-comments-in-pointers-last t
   "*If non-nil, the texts are shown with comment references at the end."
+  server
+  inherited)
+
+(def-kom-var kom-review-uses-cache t
+  "*If non-nil, review commands don't use the cache."
   server
   inherited)
 

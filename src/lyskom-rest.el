@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.134 2001-05-10 14:43:58 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.135 2001-05-21 12:39:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.134 2001-05-10 14:43:58 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.135 2001-05-21 12:39:25 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -319,6 +319,8 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
                  )
                (lyskom-tell-internat 'kom-tell-review)
                (lyskom-format-insert 'review-text-no text-no)
+               (unless kom-review-uses-cache
+                 (cache-del-text-stat text-no))
                (lyskom-view-text text-no))
               (t (lyskom-insert 'confusion-what-to-view))))
     (lyskom-end-of-command)))
@@ -400,7 +402,9 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				is-review-tree))
 		 (mark-as-read (not is-review)))
 	    (when is-review
-              (delq text-no (read-info->text-list tri))) ;First entry only
+              (delq text-no (read-info->text-list tri)) ;First entry only
+              (unless kom-review-uses-cache
+                (cache-del-text-stat text-no)))
 	    (setq action
 		  (lyskom-view-text text-no mark-as-read 
 				    (and kom-read-depth-first

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.35 2001-04-25 19:51:40 joel Exp $
+;;;;; $Id: review.el,v 44.36 2001-05-21 12:39:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.35 2001-04-25 19:51:40 joel Exp $\n"))
+	      "$Id: review.el,v 44.36 2001-05-21 12:39:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -978,11 +978,15 @@ instead. In this case the text TEXT-NO is first shown."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-tree-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (if text-no
-      (let ((ts (blocking-do 'get-text-stat text-no)))
-	(lyskom-follow-comments ts
-				nil 'review
-				(lyskom-review-get-priority)
-				t))
+      (progn
+        (unless kom-review-uses-cache
+          (cache-del-text-stat text-no))
+        
+        (let ((ts (blocking-do 'get-text-stat text-no)))
+          (lyskom-follow-comments ts
+                                  nil 'review
+                                  (lyskom-review-get-priority)
+                                  t)))
     (lyskom-insert-string 'read-text-first)))
 
 
@@ -992,6 +996,8 @@ instead. In this case the text TEXT-NO is first shown."
   (lyskom-tell-internat 'kom-tell-review)
   (cond
    (text-no
+    (unless kom-review-uses-cache
+      (cache-del-text-stat text-no))
     (let* ((ts (blocking-do 'get-text-stat text-no))
 	   (r (lyskom-find-root ts t)))
       (cond ((> (length r) 1)
@@ -1004,7 +1010,9 @@ instead. In this case the text TEXT-NO is first shown."
                (lyskom-review-get-priority)
                (lyskom-create-text-list r)
                nil t) t))
-            (r (lyskom-view-text (car r)))
+            (r (unless kom-review-uses-cache
+                 (cache-del-text-stat (car r)))
+               (lyskom-view-text (car r)))
             (t (signal 'lyskom-internal-error "Could not find root")))
       )
     )
@@ -1019,6 +1027,8 @@ reviews the whole tree in deep-first order."
   (lyskom-tell-internat 'kom-tell-review)
   (cond
    (text-no
+    (unless kom-review-uses-cache
+      (cache-del-text-stat text-no))
     (let* ((ts (blocking-do 'get-text-stat text-no))
            (start (lyskom-find-root ts t)))
       (cond ((> (length start) 1)
@@ -1052,12 +1062,16 @@ If ALL is set, return a list of all root texts."
              (setq misclist (text-stat->misc-info-list head))
              (while misclist
                (cond ((eq (misc-info->type (car misclist)) 'COMM-TO)
+                      (unless kom-review-uses-cache
+                        (cache-del-text-stat (misc-info->comm-to (car misclist))))
                       (setq tmp
                             (cons
                              (blocking-do 'get-text-stat
                                           (misc-info->comm-to (car misclist)))
                              tmp)))
                      ((eq (misc-info->type (car misclist)) 'FOOTN-TO)
+                      (unless kom-review-uses-cache
+                        (cache-del-text-stat (misc-info->footn-to (car misclist))))
                       (setq tmp 
                             (cons
                              (blocking-do 'get-text-stat
@@ -1092,6 +1106,8 @@ Does a lyskom-end-of-command.
 Text is a text-no."
   (cond
    ((integerp text)
+    (unless kom-review-uses-cache
+      (cache-del-text-stat text))
     (lyskom-view-text text nil t nil (lyskom-review-get-priority) t))
    (t
     (signal 'lyskom-internal-error
@@ -1197,6 +1213,8 @@ text is shown and a REVIEW list is built to shown the other ones."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond (text-no
+         (unless kom-review-uses-cache
+           (cache-del-text-stat text-no))
          (lyskom-review-comments
           (blocking-do 'get-text-stat text-no)))
         (t lyskom-insert-string 'read-text-first)))
@@ -1223,6 +1241,8 @@ text is shown and a REVIEW list is built to shown the other ones."
          text-nos)
     ;; Only try to review texts that we can read.
     (while all-text-nos
+      (unless kom-review-uses-cache
+        (cache-del-text-stat (car all-text-nos)))
       (if (blocking-do 'get-text-stat (car all-text-nos))
           (setq text-nos (cons (car all-text-nos) text-nos)))
       (setq all-text-nos (cdr all-text-nos)))
@@ -1237,6 +1257,9 @@ text is shown and a REVIEW list is built to shown the other ones."
                 'REVIEW nil (lyskom-review-get-priority)
                 (lyskom-create-text-list (cdr text-nos))
                 lyskom-current-text) t))
+          ;; Don't check the no-cache thing here since we already
+          ;; did earlier. We may end up slightly out of sync with
+          ;; the server, but not so anyone will really notice.
 	  (lyskom-view-text (car text-nos)))
       (lyskom-insert-string 'no-such-text))))
 
@@ -1263,6 +1286,8 @@ text is shown and a REVIEW list is built to shown the other ones."
                 'REVIEW nil (lyskom-review-get-priority)
                 (lyskom-create-text-list (cdr text-nos))
                 lyskom-current-text) t))
+          (unless kom-review-uses-cache
+            (cache-del-text-stat (car text-nos)))
 	  (lyskom-view-text (car text-nos)))
       (lyskom-format-insert 'no-such-text))))
 
@@ -1280,6 +1305,8 @@ text is shown and a REVIEW list is built to shown the other ones."
       (let ((lyskom-format-special nil)
             (kom-smileys nil)
             (kom-autowrap nil))
+          (unless kom-review-uses-cache
+            (cache-del-text-stat text-no))
         (lyskom-view-text text-no))
     (lyskom-insert 'confusion-what-to-view)))
 

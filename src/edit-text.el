@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.78 2001-05-11 12:23:16 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.79 2001-05-21 12:39:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.78 2001-05-11 12:23:16 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.79 2001-05-21 12:39:22 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1763,6 +1763,8 @@ the with-output-to-temp-buffer command is issued to make them both apear."
                (kom-deferred-printing nil))
            (save-selected-window
              (lyskom-display-buffer buf)
+             (unless kom-review-uses-cache
+               (cache-del-text-stat (text->text-no text)))
              (save-excursion (set-buffer buf)
                              (erase-buffer)
                              (lyskom-view-text (text->text-no text))

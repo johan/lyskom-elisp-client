@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.53 2001-04-25 19:51:42 joel Exp $
+;;;;; $Id: view-text.el,v 44.54 2001-05-21 12:39:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.53 2001-04-25 19:51:42 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.54 2001-05-21 12:39:29 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -377,7 +377,9 @@ Note that this function must not be called asynchronously."
 		       (progn
 			 ;; this is a bit silly, as it prefetches all
 			 ;; the texts many times.
-			 (lyskom-prefetch-texttree text-no)
+                         (unless (and build-review-tree
+                                      kom-review-uses-cache)
+                           (lyskom-prefetch-texttree text-no))
 			 (lyskom-follow-comments text-stat
 						 conf-stat mark-as-read
 						 priority build-review-tree)))
