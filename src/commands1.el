@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.114 2001-05-30 05:46:19 joel Exp $
+;;;;; $Id: commands1.el,v 44.115 2001-07-11 19:25:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.114 2001-05-30 05:46:19 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.115 2001-07-11 19:25:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2720,16 +2720,42 @@ If the prefix is 0, all visible sessions are shown."
       (lyskom-no-users
        (lyskom-insert (lyskom-get-string 'null-who-info))))))
 
-(defun lyskom-who-is-on-8 (&optional conf-stat)
+;;; ================================================================
+;;;                Vilka ({r n{rvarande i) möte - Who is present in a conference?
+
+;;; Author: Christer Ekholm
+;;; Copied from kom-who-is-on-in-conference by petli
+
+(def-kom-command kom-who-is-present-in-conference (&optional arg)
+  "Display a list of all connected users currently present in CONF.
+The prefix arg controls the idle limit of the sessions showed. If the
+prefix is negative, invisible sessions are also shown.
+
+If the prefix is 0, all visible sessions are shown."
+  (interactive "P")
+  (let ((conf-stat 
+	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-active-in-what-conference)
+			      '(all) nil nil t)))
+    (condition-case nil
+	(if (lyskom-have-feature dynamic-session-info)
+	    (lyskom-who-is-on-9 arg conf-stat t)
+	  (lyskom-who-is-on-8 conf-stat t))
+      (lyskom-no-users
+       (lyskom-insert (lyskom-get-string 'null-who-info))))))
+
+(defun lyskom-who-is-on-8 (&optional conf-stat show-present-only)
   "Display a list of all connected users.
 Uses Protocol A version 8 calls"
   (let* ((who-info-list (blocking-do 'who-is-on))
-	 (who-list (sort (if conf-stat
-			     (lyskom-who-is-on-check-membership-8 who-info-list conf-stat)
-			   (listify-vector who-info-list))
-			 (function (lambda (who1 who2)
-				     (< (who-info->connection who1)
-					(who-info->connection who2))))))
+	 (who-list (sort (cond (show-present-only
+				(lyskom-who-is-present-check-membership-8 who-info-list conf-stat))
+			       (conf-stat
+				(lyskom-who-is-on-check-membership-8 who-info-list conf-stat))
+			       (t
+				(listify-vector who-info-list))
+			       (function (lambda (who1 who2)
+					   (< (who-info->connection who1)
+					      (who-info->connection who2)))))))
 	 (total-users (length who-list))
 	 (session-width (1+ (length (int-to-string
 				     (who-info->connection
@@ -2741,9 +2767,11 @@ Uses Protocol A version 8 calls"
 	 (lyskom-default-conf-string 'not-present-anywhere)
          (lyskom-default-pers-string 'unknown-person))
 
-    (if conf-stat
-	(lyskom-format-insert 'who-is-active-and-member conf-stat))
-    
+    (cond (show-present-only
+	   (lyskom-format-insert 'who-is-active-and-present conf-stat))
+	  (conf-stat
+	   (lyskom-format-insert 'who-is-active-and-member conf-stat)))
+	  
     (lyskom-format-insert format-string-2
 			  ""
 			  (lyskom-get-string 'lyskom-name)
@@ -2785,7 +2813,7 @@ Uses Protocol A version 8 calls"
                                      'timeformat-day-yyyy-mm-dd-hh-mm-ss)))))
 
 
-(defun lyskom-who-is-on-9 (arg &optional conf-stat)
+(defun lyskom-who-is-on-9 (arg &optional conf-stat show-present-only)
   "Display a list of all connected users.
 Uses Protocol A version 9 calls"
   (let* ((wants-invisibles (or (and (numberp arg) (< arg 0))
@@ -2797,9 +2825,12 @@ Uses Protocol A version 9 calls"
                             (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
 				     't wants-invisibles (* idle-hide 60)))
-	 (who-list (sort (if conf-stat
-			     (lyskom-who-is-on-check-membership-9 who-info-list conf-stat)
-			   (listify-vector who-info-list))
+	 (who-list (sort (cond (show-present-only
+				(lyskom-who-is-present-check-membership-9 who-info-list conf-stat))
+			       (conf-stat
+				(lyskom-who-is-on-check-membership-9 who-info-list conf-stat))
+			       (t
+				(listify-vector who-info-list)))
 			 (function
 			  (lambda (who1 who2)
 			    (< (dynamic-session-info->session who1)
@@ -2826,8 +2857,10 @@ Uses Protocol A version 9 calls"
     (if wants-invisibles
 	(lyskom-insert (lyskom-get-string 'showing-invisibles)))
 
-    (if conf-stat
-	(lyskom-format-insert 'who-is-active-and-member conf-stat))
+    (cond (show-present-only
+	   (lyskom-format-insert 'who-is-active-and-present conf-stat))
+	  (conf-stat
+	   (lyskom-format-insert 'who-is-active-and-member conf-stat)))
 			  
     (lyskom-format-insert format-string-2
 			  ""
@@ -2968,6 +3001,19 @@ Uses Protocol A version 9 calls"
       (setq i (1+ i)))
     res))
 
+(defun lyskom-who-is-present-check-membership-8 (who-info-list conf-stat)
+  "Returns a list of those in WHO-INFO-LIST which is present in CONF-STAT."
+  (let ((len (length who-info-list))
+	(i 0)
+	(res nil))
+    (while (< i len)
+      (if (eq (who-info->working-conf (aref who-info-list i))
+	      (conf-stat->conf-no conf-stat))
+	  
+	  (setq res (cons (aref who-info-list i) res)))
+      (setq i (1+ i)))
+    res))
+
 (defun lyskom-who-is-on-check-membership-9 (who-info-list conf-stat)
   "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
   (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
@@ -2979,6 +3025,19 @@ Uses Protocol A version 9 calls"
       (if (lyskom-member-list-find-member 
            (dynamic-session-info->person (aref who-info-list i))
            members)
+
+	  (setq res (cons (aref who-info-list i) res)))
+      (setq i (1+ i)))
+    res))
+
+(defun lyskom-who-is-present-check-membership-9 (who-info-list conf-stat)
+  "Returns a list of those in WHO-INFO-LIST which is present in CONF-STAT."
+  (let ((len (length who-info-list))
+	(i 0)
+	(res nil))
+    (while (< i len)
+      (if (eq (dynamic-session-info->working-conference (aref who-info-list i))
+	      (conf-stat->conf-no conf-stat))
 
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))

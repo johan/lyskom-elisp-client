@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.172 2001-06-05 11:30:19 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.173 2001-07-11 19:25:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.172 2001-06-05 11:30:19 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.173 2001-07-11 19:25:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -514,7 +514,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (no-unread-lyskom . "Hittar ingen aktiv LysKOM-session med olästa.")
 
     (who-is-on-in-what-conference . "Vilka i vilket möte: ")
+    (who-is-active-in-what-conference . "Vilka närvarande i vilket möte: ")
     (who-is-active-and-member . "Visar endast medlemmar i %#1M.\n")
+    (who-is-active-and-present . "Visar endast medlemmar närvarande i %#1M.\n")
     
     ;; From commands2.el:
 
@@ -1624,6 +1626,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-who-is-on	      . "Vilka är inloggade") 
     (kom-who-is-on-in-conference
      			      . "Vilka är inloggade i möte") 
+    (kom-who-is-present-in-conference
+     			      . "Vilka är närvarande i möte") 
     (kom-who-am-i             . "Var (är) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")
@@ -2119,7 +2123,11 @@ Tar reda på om en given person är medlem i ett visst möte.")
     (kom-change-conf-faq      . "\
 Ändra ett befintligt inlägg som innehåller ofta ställda frågor som hör
 till ett visst möte.")
-    ))
+  
+  (kom-who-is-present-in-conference . "\
+Visar vilka som för tillfället är närvarande i ett visst möte")
+
+))
 
 (lyskom-language-var lyskom-language-codes sv
   '((aa . "Afar")
@@ -2421,6 +2429,7 @@ till ett visst möte.")
   (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
   (define-key lyskom-sv-mode-map (kbd "l v") 'kom-who-is-on-in-conference)
+  (define-key lyskom-sv-mode-map (kbd "l a") 'kom-who-is-present-in-conference)
   (define-key lyskom-sv-mode-map (kbd "m")   'kom-add-self)
   (define-key lyskom-sv-mode-map (kbd "M")   'kom-mark-text)
   (define-key lyskom-sv-mode-map (kbd "A")   'kom-unmark-text)

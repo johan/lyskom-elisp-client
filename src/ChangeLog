@@ -1,3 +1,28 @@
+2001-07-11  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el (lyskom-help-strings): Added strings for
+	kom-who-present-in-conference.
+
+	* vars.el.in (lyskom-commands): Added kom-who-is-present-in-conference
+	(lyskom-help-categories): Added kom-who-is-present-in-conference
+
+2001-07-11  Christer Ekholm  <che@init.se>
+
+	* english-strings.el, swedish-strings.el (lyskom-command): Added
+	kom-who-is-present-in-conference.
+	(lyskom-message): Added strings for
+	kom-who-is-present-in-conference.
+
+	* commands1.el (kom-who-is-present-in-conference): New command.
+	(lyskom-who-is-on-8): Support kom-who-is-present-in-conference.
+	(lyskom-who-is-on-9): Same here.
+
+2001-06-27  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-is-loaded): Bind icon-title-format the
+	same way we bind frame-icon-title-format so icon title for Gnu
+	Emacs has a chance of changing when unreads change.
+
 2001-06-05  Johan Sundström  <jhs@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-message): Changed all references to
