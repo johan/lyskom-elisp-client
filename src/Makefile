@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.14 1992-02-10 02:53:33 linus Exp $
+# $Id: Makefile,v 35.15 1992-03-22 21:10:12 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.14 1992-02-10 02:53:33 linus Exp $
+# $Id: Makefile,v 35.15 1992-03-22 21:10:12 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.14  1992-02-10 02:53:33  linus
+# Revision 35.15  1992-03-22 21:10:12  linus
+# Moved info-dir.
+#
+# Revision 35.14  1992/02/10  02:53:33  linus
 # mkdir replaced by $(MKDIR).
 #
 # Revision 35.13  1991/12/19  12:03:51  linus
@@ -170,7 +173,7 @@ installdoc: doc
 		/usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.info.Z; \
 	 mv elisp-client.txt.Z \
 	     /usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.txt.Z; \
-	 cp ../doc/elisp-client /usr/gnu/emacs/info; \
+	 cp ../doc/elisp-client /usr/gnu/info; \
 	)
 
 clean:
