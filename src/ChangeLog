@@ -1,5 +1,7 @@
 1999-10-15  David Byers  <davby@ida.liu.se>
 
+	* utilities.el (lyskom-client-date-string): Print year correctly.
+
 	* view-text.el (lyskom-print-text): Correct formatting of missing
 	person. 
 	(lyskom-print-text): Format author in text footer correctly even
