@@ -106,14 +106,17 @@
     in a zip file. The archive contains all the files needed to build
     the client and a pre-built client.
 
-    The client is also available as an RPM and a Debian package. These
-    assume that you are using Gnu Emacs 20.5 or later.
-
     You can either install manually (see section 3.1) or using the
     Makefile (section 3.3). However you install, there are a few
     additional steps that you may want to follow to facilitate using
     the client (section 3.3).
 
+    The client is also available as an RPM and a Debian package. The
+    RPM requires Gnu Emacs 20.x, while the Debian package works for
+    all supported Emacs/XEmacs flavors listed in section 1 above. You
+    can also get the Debian package automatically via apt; see
+    <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/debian/README>
+    for more information.
 
 3.1 Manual installation
 
@@ -209,6 +212,8 @@
        site-start.el or default.el):
 
             (autoload 'lyskom "lyskom" "Start LysKOM" t)
+
+       (This is not needed if you are using the Debian package.)
 
     2. If you have your own LysKOM server you may want to modify the
        variable kom-server-aliases. The best place to change it is in

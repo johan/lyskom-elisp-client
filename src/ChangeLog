@@ -1,5 +1,9 @@
 2000-09-05  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* distribution-README: Information about the Debian package.
+
+2000-09-05  Joel Rosdahl  <joel@lysator.liu.se>
+
 	* english-strings.el: Proof-read (to the best of my ability...).
 	Removed misspelled key.
 
