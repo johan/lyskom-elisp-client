@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 41.2 1996-05-08 12:30:55 davidk Exp $
+;;;;; $Id: async.el,v 41.3 1996-06-23 20:05:42 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 41.2 1996-05-08 12:30:55 davidk Exp $\n"))
+	      "$Id: async.el,v 41.3 1996-06-23 20:05:42 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -203,12 +203,20 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message "%s" (lyskom-format 'has-entered conf-stat))))
+    (lyskom-message
+     "%s"
+     (lyskom-format 'has-entered (or conf-stat
+				     (lyskom-get-string 'secret-person))))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-format-insert-before-prompt 'has-entered-r conf-stat
-					(and kom-text-properties
-					     '(face kom-presence-face))))))
+    (if conf-stat
+	(lyskom-format-insert-before-prompt 'has-entered-r conf-stat
+					    (and kom-text-properties
+						 '(face kom-presence-face)))
+      (lyskom-format-insert-before-prompt 'has-entered-r
+					  (lyskom-get-string 'secret-person)
+					  (and kom-text-properties
+					       '(face kom-presence-face)))))))
 
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)
@@ -216,12 +224,20 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message "%s" (lyskom-format 'has-left conf-stat))))
+    (lyskom-message
+     "%s"
+     (lyskom-format 'has-left (or conf-stat
+				  (lyskom-get-string 'secret-person))))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-format-insert-before-prompt 'has-left-r conf-stat
-					(and kom-text-properties
-					     '(face kom-presence-face))))))
+    (if conf-stat
+	(lyskom-format-insert-before-prompt 'has-left-r conf-stat
+					    (and kom-text-properties
+						 '(face kom-presence-face)))
+      (lyskom-format-insert-before-prompt 'has-left-r
+					  (lyskom-get-string 'secret-person)
+					  (and kom-text-properties
+					       '(face kom-presence-face)))))))
 
 
 (defun lyskom-show-changed-person (personconfstat conf-num doing)
