@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 26
+Unused-Bug-Id: 29
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -487,6 +487,54 @@ Reported by: ceder@lysator.liu.se (Per Cederqvist)
 Site: lysator.liu.se
 Associated mails:
 	ceders: <199401132316.AAA27662@dell.lysator.liu.se>
+End mails.
+---
+
+Id: 26
+Summary: Icke existerande texter hamnar som sedda texter n{r man misslyckas se dem.
+Version: 0.38.1
+Created: linus: Sun Jan 16 02:45:29 1994
+Currently handled by: 
+Severity: 3
+Priority: 0
+Difficulty: 1
+Last edit: linus: Sun Jan 16 02:45:29 1994
+Reported by: Klaus Zeuge <Klaus.Zeuge@Minsk.DoCS.UU.SE>
+Site: Minsk.DoCS.UU.SE
+Associated mails:
+	sojge: <9401160045.AA27094@Minsk.DoCS.UU.SE>
+End mails.
+---
+
+Id: 27
+Summary: K{nsligt att avbryta vissa kommandon med Ctrl-G.
+Version: 0.38.1
+Created: linus: Tue Jan 25 00:13:46 1994
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 9
+Last edit: linus: Tue Jan 25 00:13:46 1994
+Reported by: Klaus Zeuge <Klaus.Zeuge@Minsk.DoCS.UU.SE>
+Site: Minsk.DoCS.UU.SE
+Associated mails:
+	kommentera: <9401232254.AA13594@Minsk.DoCS.UU.SE>
+End mails.
+---
+
+Id: 28
+Summary: Inkorrekt v{rde p} variabeln kom-tell-phrases
+Version: 0.38.1
+Created: linus: Sat Jan 29 18:47:35 1994
+Currently handled by: 
+Severity: 0
+Priority: 9
+Difficulty: 4
+Last edit: linus: Sat Jan 29 18:47:35 1994
+Reported by: Andrew Eskilsson <pi92ae@calypso.pt.hk-r.se>
+Site: calypso.pt.hk-r.se
+Associated mails:
+	buggrapport: <9401242325.AA01962@calypso.pt.hk-r.se>
 End mails.
 ---
 
