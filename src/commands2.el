@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.36 1999-06-25 20:17:11 byers Exp $
+;;;;; $Id: commands2.el,v 44.37 1999-06-26 20:48:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.36 1999-06-25 20:17:11 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.37 1999-06-26 20:48:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -725,7 +725,12 @@ send. If DONTSHOW is non-nil, don't display the sent message."
          (sum 0)
          (mship-confs (and (numberp num-arg)
                            (< num-arg 1)
-                           (mapcar 'membership->conf-no lyskom-membership)))
+                           (delq nil 
+                                 (mapcar (lambda (el)
+                                           (when (not (membership-type->passive
+                                                       (membership->type el)))
+                                             (membership->conf-no el)))
+                                         lyskom-membership))))
          (nconfs 0))
     (when num-arg
       (lyskom-format-insert 'list-unread-with-n-unread num-arg))

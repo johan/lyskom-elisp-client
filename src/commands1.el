@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.45 1999-06-25 20:17:09 byers Exp $
+;;;;; $Id: commands1.el,v 44.46 1999-06-26 20:48:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.45 1999-06-25 20:17:09 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.46 1999-06-26 20:48:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -468,8 +468,7 @@ Also adds to lyskom-to-do-list."
   (if membership
       (progn
 	(lyskom-insert-membership membership lyskom-membership)
-	(lyskom-prefetch-map conf-no
-			     membership)
+	(lyskom-prefetch-map conf-no membership)
         (lyskom-run-hook-with-args 'lyskom-add-membership-hook
                                    membership))
     (lyskom-insert-string 'conf-does-not-exist)))
@@ -1087,7 +1086,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    ((null conf-stat)			;+++ annan felhantering
     (lyskom-insert-string 'cant-get-conf-stat))
    ((or lyskom-is-administrator
-	(lyskom-get-membership (conf-stat->supervisor conf-stat))
+	(lyskom-get-membership (conf-stat->supervisor conf-stat) t)
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
     (lyskom-dispatch-edit-text
      lyskom-proc
@@ -1155,7 +1154,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
      ((null conf-stat)
       (lyskom-insert-string 'cant-get-conf-stat))
      ((or lyskom-is-administrator
-	  (lyskom-get-membership (conf-stat->supervisor conf-stat)))
+	  (lyskom-get-membership (conf-stat->supervisor conf-stat) t))
       ;; This works like a dispatch. No error handling.
       (lyskom-set-conf-motd 0 (conf-stat->conf-no conf-stat)))
      (t
@@ -1188,7 +1187,7 @@ back on lyskom-to-do-list."
 Allowed conferences are conferences and the mailboxes you are 
 member of."
   (if (numberp conf) (setq conf (blocking-do 'get-conf-stat conf)))
-  (let ((membership (lyskom-get-membership (conf-stat->conf-no conf))))
+  (let ((membership (lyskom-get-membership (conf-stat->conf-no conf) t)))
     (lyskom-format-insert 'go-to-conf
 			  conf)
 
@@ -1211,7 +1210,7 @@ member of."
 					   lyskom-pers-no)
 		  (lyskom-do-go-to-conf conf
 					(lyskom-get-membership
-					 (conf-stat->conf-no conf)))
+					 (conf-stat->conf-no conf) t))
 		(lyskom-insert-string 'nope))
 	    (lyskom-insert-string 'no-ok))))))
 
@@ -1380,7 +1379,7 @@ If you are not member in the conference it will be flagged with an asterisk."
 			(lyskom-default-button 'conf conf-no)
 			conf-no
 			(if (lyskom-get-membership conf-no)
-			    32 ?*)
+			    ?\  ?*)
 			conf-no))
 
 ;;; ================================================================

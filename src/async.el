@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.17 1999-06-22 14:54:30 byers Exp $
+;;;;; $Id: async.el,v 44.18 1999-06-26 20:48:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.17 1999-06-22 14:54:30 byers Exp $\n"))
+	      "$Id: async.el,v 44.18 1999-06-26 20:48:02 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -255,8 +255,7 @@ this function shall be with current-buffer the BUFFER."
               (set-buffer buffer)
               (cache-del-pers-stat pers-no)
               (cache-del-conf-stat conf-no)
-              (when (and (eq pers-no lyskom-pers-no)
-                         (not (lyskom-try-get-membership conf-no)))
+              (when (eq pers-no lyskom-pers-no)
                 (lyskom-collect 'follow)
                 (initiate-get-conf-stat 'follow nil conf-no)
                 (initiate-query-read-texts 'follow nil pers-no conf-no)
@@ -284,10 +283,37 @@ this function shall be with current-buffer the BUFFER."
                                     membership
                                     pers-no 
                                     conf-no)
-  (when (and membership conf-conf-stat)
-    (lyskom-format-insert-before-prompt 'have-become-member conf-conf-stat))
-    (lyskom-add-membership membership conf-no))
-    
+  ;; Are we already members?
+
+  (when membership
+    (let ((cur-mship (lyskom-try-get-membership conf-no t)))
+      (unless cur-mship
+        (lyskom-format-insert-before-prompt 
+         (if (membership-type->passive (membership->type membership))
+             'have-become-passive-member
+           'have-become-member)
+         conf-conf-stat))
+
+    (cond ((membership-type->passive (membership->type membership))
+           (lyskom-replace-membership membership lyskom-membership)
+           (when (eq conf-no lyskom-current-conf)
+             (set-read-list-empty lyskom-reading-list)
+             (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                                        lyskom-current-conf 0)
+             (setq lyskom-current-conf 0))
+           (read-list-delete-read-info conf-no lyskom-to-do-list)
+           (lyskom-update-prompt))
+
+          ;; Already a member. Perhaps the priority changed.
+          ;; Update the cache. The reading list is probably also
+          ;; not quite correct since the priority might have changed
+          ;; FIXME: Maybe fix this.
+
+          (cur-mship
+           (lyskom-replace-membership membership lyskom-membership))
+
+          ;; Not a member. Completely new. Deal with it.
+          (t (lyskom-add-membership membership conf-no))))))
     
 
 (defun lyskom-show-presence (num flag)
@@ -738,7 +764,15 @@ In that case, just discard this call."
 		       (lyskom-create-text-list (list text-no)))))
 	    (read-list-enter-read-info info lyskom-to-do-list)
 	    (if (= lyskom-current-conf (conf-stat->conf-no recipient))
-		(read-list-enter-first info lyskom-reading-list)))))
+		(read-list-enter-first info lyskom-reading-list)))
+
+        ;; We don't have the membership yet. Treat it as an unread conf
+        ;; and prefetch it. This might result in two prefetches of the
+        ;; same conference, but the prefetch should be able to deal with
+        ;; that.
+        (unless membership
+          (lyskom-prefetch-one-membership (conf-stat->conf-no recipient)
+                                          lyskom-pers-no))))
 
     (lyskom-set-mode-line))))
 

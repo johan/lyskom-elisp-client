@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.12 1998-06-02 12:15:07 byers Exp $
+;;;;; $Id: prefetch.el,v 44.13 1999-06-26 20:48:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.12 1998-06-02 12:15:07 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.13 1999-06-26 20:48:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -231,12 +231,17 @@ prefetched the prefetch is not done."
   
 
 (defun lyskom-prefetch-membership (pers-no &optional queue)
-  "+++"
-  ;; h{mtar medlemsskapet i sm} delar 
-  ;; och d{refter conf-stat f|r m|tena
+  "h{mtar medlemsskapet i sm} delar och d{refter conf-stat f|r m|tena"
   (if queue
       (lyskom-queue-enter queue (cons 'MEMBERSHIP pers-no))
     (lyskom-stack-push lyskom-prefetch-stack (cons 'MEMBERSHIP pers-no)))
+  (lyskom-continue-prefetch))
+
+(defun lyskom-prefetch-one-membership (conf-no pers-no &optional queue)
+  (if queue
+      (lyskom-queue-enter queue (list 'ONE-MEMBERSHIP conf-no pers-no))
+    (lyskom-stack-push lyskom-prefetch-stack (list 'ONE-MEMBERSHIP
+                                                   conf-no pers-no)))
   (lyskom-continue-prefetch))
 
 
@@ -424,7 +429,7 @@ Return t if an element was prefetched, otherwise return nil."
 	 ;; A complex request?
 	 ((and (listp element)
 	       (memq (car element)
-		     '(TEXTAUTH TEXT-ALL TEXTTREE 
+		     '(TEXTAUTH TEXT-ALL TEXTTREE ONE-MEMBERSHIP
 				CONFSTATFORMAP MAP MARKS
 				MEMBERSHIP WHOBUFFER TEXTS)))
 	  (let ((queue (lyskom-queue-create)))
@@ -475,6 +480,7 @@ Return t if an element was prefetched, otherwise return nil."
 
 (defun lyskom-prefetch-one-request (request queue)
   "Prefetch REQUEST. If the request is complex, put the resulting requests on QUEUE."
+;  (message "Prefetch: %s" request)
   (cond
    ((eq (car request) 'CONFSTAT)
     (initiate-get-conf-stat 'prefetch
@@ -496,6 +502,15 @@ Return t if an element was prefetched, otherwise return nil."
    ((eq (car request) 'TEXTTREE)
     (initiate-get-text-stat 'prefetch 'lyskom-prefetch-texttree-handler
 			    (cdr request) queue))
+
+   ((eq (car request) 'ONE-MEMBERSHIP)
+    (initiate-query-read-texts 'prefetch
+                               'lyskom-prefetch-read-texts-handler
+                               (elt request 2)
+                               (elt request 1)
+                               (elt request 1)
+                               queue))
+
    ((eq (car request) 'MEMBERSHIP)
     (if (numberp lyskom-membership-is-read) ; Are we done?
 	(initiate-get-part-of-membership 
@@ -612,18 +627,43 @@ Put the requests on QUEUE."
   (lyskom-start-prefetch))
 
 
+(defun lyskom-prefetch-read-texts-handler (membership pers-no queue)
+  (lyskom-stop-prefetch)
+  (-- lyskom-pending-prefetch)
+  (when membership
+    (unless (lyskom-try-get-membership (membership->conf-no membership) t)
+      (lyskom-add-memberships-to-membership (list membership))
+      (when (and (lyskom-visible-membership membership)
+                 (lyskom-prefetch-map (membership->conf-no membership)
+                                      membership
+                                      queue)))))
+  (lyskom-start-prefetch))
+
+
 (defun lyskom-prefetch-membership-handler (memberships pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
   (let ((size (length memberships))
-	(i 0))
+	(i 0)
+        (old-mships (mapcar (lambda (mship)
+                              (and (lyskom-try-get-membership
+                                    (membership->conf-no mship))
+                                   (membership->conf-no mship)))
+                            memberships)))
     (lyskom-add-memberships-to-membership memberships)
     (while (< i size)
       (let ((membership (aref memberships i)))
-	(if (lyskom-visible-membership membership)
-	    (lyskom-prefetch-map (membership->conf-no membership)
-				 membership
-				 queue)))
+;;; Commented out 1999-06-26 byers
+;;; This should not be necessary since we know that all of these
+;;; maps were empty when we started the client. Texts created after
+;;; the client was started should end up in the reading list anyway
+;;; 'cuase they generate asynchronous messages.
+;;;	(if (and (lyskom-visible-membership membership)
+;;;                 (not (memq (membership->conf-no membership) old-mships)))
+;;;	    (lyskom-prefetch-map (membership->conf-no membership)
+;;;				 membership
+;;;				 queue))
+)
       (++ i))
     (if (and (numberp lyskom-membership-is-read)
 	     (< (length memberships) lyskom-fetch-membership-length))

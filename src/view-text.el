@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.20 1999-06-25 20:17:25 byers Exp $
+;;;;; $Id: view-text.el,v 44.21 1999-06-26 20:48:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.20 1999-06-25 20:17:25 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.21 1999-06-26 20:48:23 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -365,7 +365,7 @@ recipients to it that the user is a member in."
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
-			     (misc-info->recipient-no misc-info)))
+			     (misc-info->recipient-no misc-info) t))
 		(loc-no (misc-info->local-no misc-info)))
 
 	    ;; Make a note that this text really is in a group we are
@@ -404,9 +404,9 @@ blocking-do."
                      (eq type 'CC-RECPT))
                  (setq membership (if bg
                                       (lyskom-try-get-membership
-                                       (misc-info->recipient-no misc-item))
+                                       (misc-info->recipient-no misc-item) t)
                                     (lyskom-get-membership
-                                     (misc-info->recipient-no misc-item))))
+                                     (misc-info->recipient-no misc-item) t)))
                  (when membership
                    (setq is-member t)
                    (when (or (<= (misc-info->local-no misc-item)
@@ -643,7 +643,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 			    truncated t)))))
 		    
           (let ((lyskom-current-function-phase 'body))
-            (lyskom-format-insert "%#1t" (cons text-stat body)))
+            (lyskom-format-insert "%#1t\n" (cons text-stat body)))
 
 	  ;; Indicate that the text was truncated
 	  (if truncated
@@ -657,13 +657,12 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
             (lyskom-insert 
              (make-string kom-text-header-dash-length ?-)))
           (lyskom-insert "\n")
-          (lyskom-format-insert "%#1t" (cons text-stat str))
+          (lyskom-format-insert "%#1t\n" (cons text-stat str))
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))
         (sit-for 0)
         (let ((lyskom-current-function-phase 'footer))
-          (lyskom-insert "\n")
           (if kom-deferred-printing
               (progn
                 (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)

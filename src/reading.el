@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.4 1998-06-02 12:15:11 byers Exp $
+;;;;; $Id: reading.el,v 44.5 1999-06-26 20:48:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.4 1998-06-02 12:15:11 byers Exp $\n"))
+	      "$Id: reading.el,v 44.5 1999-06-26 20:48:16 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -62,6 +62,7 @@ If an item of the membership is already read and entered in the
 lyskom-membership list then this item is not entered."
   (let ((list (listify-vector memberships)))
     (while list
+      ;; If membership is already added or passive, don't add it
       (if (memq (membership->conf-no (car list))
 		(mapcar (function membership->conf-no) lyskom-membership))
 	  nil
