@@ -1,3 +1,8 @@
+1999-07-14  David Kågedal  <davidk@lysator.liu.se>
+
+	* aux-items.el (lyskom-print-creating-software): Typo fix.
+	* edit-text.el (lyskom-edit-send): Set creating-software aux-item.
+
 1999-07-12  Per Cederqvist  <ceder@signum.se>
 
 	* completing-read.el (lyskom-read-session-resolve-ambiguity): Use
