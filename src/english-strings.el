@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.251 2003-01-01 23:32:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.252 2003-01-02 17:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.251 2003-01-01 23:32:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.252 2003-01-02 17:12:26 byers Exp $"))
 
 
 ;;; ================================================================
@@ -722,7 +722,7 @@ Read all about it at http://www.lysator.liu.se/history/")
      "Unable to send the message. Perhaps the recipient isn't logged on.
 The message you were sending to %#1M was:
 %#2t\n")
-    (only-last . "Last (0 - %#1d) texts in %#2s: ")
+    (only-last . "Last texts in %#1s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
     (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")

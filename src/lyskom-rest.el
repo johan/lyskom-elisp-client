@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.185 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.186 2003-01-02 17:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.185 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.186 2003-01-02 17:12:26 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3340,7 +3340,7 @@ VECTOR has to be sorted with regard to <."
 (defvar lyskom-verified-read-predicate nil)
 (defun lyskom-verified-read-enter ()
   (interactive)
-  (let* ((val (minibuffer-contents))
+  (let* ((val (lyskom-minibuffer-contents))
          (err (funcall lyskom-verified-read-predicate val)))
     (if err
         (minibuffer-message (format " [%s]" err))
