@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.208 2004-01-01 22:49:04 byers Exp $
+;;;;; $Id: commands1.el,v 44.209 2004-01-28 23:26:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.208 2004-01-01 22:49:04 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.209 2004-01-28 23:26:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3737,17 +3737,20 @@ recipient to remove and target the recipient to add to text-stat."
                 (target (lyskom-read-conf-stat 'who-to-move-to-q '(all)
                                                nil nil t)))
             (when (and source target)
-              (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'move-footnotes-too-q)))
-              (setq move-attachments (and attachments (lyskom-j-or-n-p 'move-attachments-too-q)))
+              (if (eq (conf-stat->conf-no source)
+                      (conf-stat->conf-no target))
+                  (lyskom-insert-before-prompt 'cant-move-from-to-same)
+                (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'move-footnotes-too-q)))
+                (setq move-attachments (and attachments (lyskom-j-or-n-p 'move-attachments-too-q)))
 
-              (lyskom-traverse text (append (list (cons text-no text-stat))
-                                            (and move-footnotes footnotes)
-                                            (and move-attachments attachments))
-                (lyskom-format-insert 'moving-name source target (cdr text))
-                (if (memq (conf-stat->conf-no source) (lyskom-text-recipients (cdr text)))
-                    (lyskom-move-recipient (car text) source target 'RECPT)
-                  (lyskom-insert 'move-text-not-recipient))
-                ))))))))
+                (lyskom-traverse text (append (list (cons text-no text-stat))
+                                              (and move-footnotes footnotes)
+                                              (and move-attachments attachments))
+                  (lyskom-format-insert 'moving-name source target (cdr text))
+                  (if (memq (conf-stat->conf-no source) (lyskom-text-recipients (cdr text)))
+                      (lyskom-move-recipient (car text) source target 'RECPT)
+                    (lyskom-insert 'move-text-not-recipient))
+                  )))))))))
 
 
 (def-kom-command kom-move-text-tree (text-no)

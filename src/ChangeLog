@@ -1,7 +1,17 @@
+2004-01-29  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): Improved performance of some
+	regexps in lyskom-text-buttons.
+
+	* commands1.el (kom-move-text): Prevent moving from a conference
+	back to the same conference. Doing this deletes the recipient
+	completely.
+
 2004-01-26  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (lyskom-format-special): Explicitly format plaintext
 	types.
+	(lyskom-text-buttons): Simplified the regexps for URLs.
 
 	* lyskom-rest.el (smiley-region): New function.
 	(smiley-region): Use it. Clean up some of the code.
