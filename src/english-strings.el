@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.243 2002-12-09 21:44:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.244 2002-12-13 22:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.243 2002-12-09 21:44:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.244 2002-12-13 22:16:03 byers Exp $"))
 
 
 ;;; ================================================================
@@ -151,6 +151,7 @@
 (lyskom-language-missing-string lyskom-message fnday en)
 (lyskom-language-missing-string lyskom-message allhelgonadag en)
 (lyskom-language-missing-string lyskom-message varnlosdag en)
+(lyskom-language-missing-string lyskom-message luciaday en)
 
 (lyskom-language-ending-mismatch lyskom-message carbon-copy-prefix en sv)
 (lyskom-language-ending-mismatch lyskom-message blank-carbon-copy-prefix en sv)
@@ -304,6 +305,7 @@ instead of removing it.")
     (where-to-add . "To which conference? ")
     (where-to-add-self . "Join which conference? ")
     (priority-q . "Priority of your membership? (0 (low) - 255 (high)) ")
+    (other-priority-q . "Priority of the membership? (0 (low) - 255 (high)) ")
     (done . "done.\n")
     (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")
@@ -2743,6 +2745,10 @@ Select whether to execute command or keyboard macro.")
 
     (url-transform-regexp . "From (regexp):")
     (url-transform-newtext . " To:")
+
+    (default-namedays . "Namedays for current language")
+    (specific-namedays . "Specific name list:")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3403,8 +3409,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   instead.")
 
     (kom-show-namedays-doc . "\
-  This only works in Swedish. If you're running LysKOM in Swedish, turning
-  this on causes today's names to be shown when you ask for the time.")
+  When this is on, display the name of the day. You can choose to display
+  names from a list appropriate to the currently selected language. You
+  can also choose a specific list of names.")
 
     (kom-show-week-number-doc . "\
   The Time command shows week numbers if this is on.")

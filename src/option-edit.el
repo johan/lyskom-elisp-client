@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.80 2002-12-09 20:36:36 byers Exp $
+;;;;; $Id: option-edit.el,v 44.81 2002-12-13 22:16:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.80 2002-12-09 20:36:36 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.81 2002-12-13 22:16:04 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -661,7 +661,9 @@ customize buffer but do not save them to the server."
                                     :indent 4))
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
-    (kom-show-namedays (toggle (on off)))
+    (kom-show-namedays (choice ((const (off nil))
+                                (const (default-namedays t))
+                                (nameday nil :tag specific-namedays))))
 
     (kom-show-week-number (toggle (on off)))
     (kom-membership-default-placement (choice ((const (last last))
@@ -741,6 +743,7 @@ customize buffer but do not save them to the server."
     (const .  lyskom-item-widget)
     (repeat . lyskom-repeat-widget)
     (cons . lyskom-cons-widget)
+    (nameday . lyskom-nameday-widget)
     (kbd-macro . lyskom-kbd-macro-widget)
     (url-viewer . lyskom-url-viewer-widget)
     (ispell-dictionary . lyskom-ispell-dictionary-widget)
@@ -916,6 +919,21 @@ customize buffer but do not save them to the server."
                    ':format "%t"
                    ':value (elt x 0))))
           lyskom-languages))
+   propl))
+
+(defun lyskom-nameday-widget (type &optional args propl)
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':format "%[%t%] %v"
+         ':case-fold t
+         ':args
+         (mapcar
+          (lambda (x)
+            (list 'item
+                  ':tag (nameday-data->name (cdr x))
+                  ':format "%t"
+                  ':value (nameday-data->code (cdr x))))
+          lyskom-namedays))
    propl))
 
 (defun lyskom-ispell-dictionary-widget (type &optional args propl)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.279 2002-12-09 21:44:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.280 2002-12-13 22:16:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.279 2002-12-09 21:44:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.280 2002-12-13 22:16:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -85,10 +85,12 @@
   (define-key lyskom-sv-edit-prefix (kbd "]")       'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-]")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-}")     'lyskom-sv-edit-review-prefix)
+
   (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-Å) 'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-å) 'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix [(control Å)] 'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix [(control å)] 'lyskom-sv-edit-review-prefix)
+
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "C-i")     'lyskom-sv-edit-insert-prefix)
@@ -278,6 +280,7 @@ för att radera det.")
     (where-to-add . "Vilket möte skall han/hon adderas till? ")
     (where-to-add-self . "Vilket möte vill du bli medlem i? ")
     (priority-q . "Prioritet på ditt medlemskap i mötet? (0 (låg) - 255 (hög)) ")
+    (other-priority-q . "Prioritet på den adderades medlemskap i mötet? (0 (låg) - 255 (hög)) ")
     (done . "klart.\n")
     (cancelled . "avbrutet.\n")
     (nope . "det gick inte.\n")
@@ -499,6 +502,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (fnday . "FN-dagen.")
     (allhelgonadag . "Allhelgonadagen.")
     (varnlosdag . "Värnlösa barns dag.")
+    (luciaday . "\nLuciadagen! Glöm inte att lussa för dina kollegor.")
 
     (total-users . "    Sammanlagt %#1d användare (%#2s).\n")
     (total-users-sans-date . "    Sammanlagt %#1d användare\n")
@@ -2281,6 +2285,8 @@ teckenkodning.
 (defvar lyskom-sv-list-prefix nil)
 (defvar lyskom-sv-fast-reply-prefix nil)
 (defvar lyskom-sv-filter-get-prefix nil)
+(defvar lyskom-sv-change-prefix nil)
+(defvar lyskom-sv-review-prefix nil)
 
 (if lyskom-sv-mode-map
     nil
@@ -2301,14 +2307,30 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "s") 'lyskom-sv-S-prefix)
   (define-key lyskom-sv-mode-map (kbd "r") 'lyskom-sv-fast-reply-prefix)
   (define-key lyskom-sv-mode-map (kbd "v") 'lyskom-sv-who-prefix)
-  (define-key lyskom-sv-mode-map (lyskom-keys 'ä) 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map (lyskom-keys 'Ä) 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map (lyskom-keys 'Å) 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map (lyskom-keys 'å) 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map [ä] 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map [Ä] 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map [Å] 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map [å] 'lyskom-sv-review-prefix)
+
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "ä")    'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "{")    'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "[")    'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [adiaeresis] 'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [Adiaeresis] 'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [228]        'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [196]        'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [2276]       'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [2244]       'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [3908]       'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [3940]       'lyskom-sv-change-prefix)
+
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "å") 'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "}") 'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map (kbd "]") 'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [aring]     'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [Aring]     'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [229]     'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [197]     'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [2277]    'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [2245]    'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [3909]    'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [3941]    'lyskom-sv-review-prefix)
 
   (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
 
@@ -2323,12 +2345,6 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "<S-tab>") 'kom-previous-link)
   (define-key lyskom-sv-mode-map (kbd "C-i")   'kom-next-link)
   (define-key lyskom-sv-mode-map (kbd "M-C-i") 'kom-previous-link)
-
-  (define-key lyskom-sv-mode-map (kbd "{") 'lyskom-sv-change-prefix) ; krullar
-  (define-key lyskom-sv-mode-map (kbd "[") 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map (kbd "}") 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map (kbd "]") 'lyskom-sv-review-prefix)
-
 
   ;;(define-key lyskom-sv-mode-map "vi" 'vilka)
   
@@ -2370,12 +2386,19 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "l p") 'kom-list-persons)
   (define-key lyskom-sv-mode-map (kbd "l r") 'kom-list-re)
   (define-key lyskom-sv-mode-map (kbd "l s") 'kom-membership)
-  (define-key lyskom-sv-list-prefix (lyskom-keys 'ä) 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix (lyskom-keys 'Ä) 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix [ä] 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix [Ä] 'kom-list-summary)
-  (define-key lyskom-sv-mode-map (kbd "l {") 'kom-list-summary)
-  (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
+
+  (lyskom-try-define-key lyskom-sv-list-prefix (kbd "ä") 'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix (kbd "{") 'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix (kbd "[") 'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [adiaeresis]     'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [Adiaeresis]     'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [228]     'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [196]     'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [2276]    'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [2244]    'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [3908]    'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [3940]    'kom-list-summary)
+
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
   (define-key lyskom-sv-mode-map (kbd "m")   'kom-add-self)
   (define-key lyskom-sv-mode-map (kbd "M")   'kom-mark-text)
@@ -2394,12 +2417,19 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "f s") 'kom-get-abuse)
   (define-key lyskom-sv-mode-map (kbd "f t") 'kom-move-text)
   (define-key lyskom-sv-mode-map (kbd "f T") 'kom-move-text-tree)
-  (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'ä) 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'Ä) 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix [ä] 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix [Ä] 'kom-filter-subject)
-  (define-key lyskom-sv-mode-map (kbd "f {") 'kom-filter-subject)
-  (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
+
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "ä")    'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "{")    'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "[")    'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [adiaeresis] 'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [Adiaeresis] 'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [228]        'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [196]        'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [2276]       'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [2244]       'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [3908]       'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [3940]       'kom-filter-subject)
+
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
   (define-key lyskom-sv-mode-map (kbd "f i") 'kom-filter-text)
   (define-key lyskom-sv-mode-map (kbd "f m") 'kom-filter-recipient)
@@ -2409,56 +2439,62 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "v v") 'kom-who-is-on-and-friend)
   (define-key lyskom-sv-mode-map (kbd "J")   'kom-who-am-i)
   (define-key lyskom-sv-mode-map (kbd "V")   'kom-busy-wait)
-  (define-key lyskom-sv-mode-map (kbd "{ p") 'kom-change-presentation)
-  (define-key lyskom-sv-mode-map (kbd "{ q") 'kom-change-conf-faq)
-  (define-key lyskom-sv-mode-map (kbd "{ f") 'kom-filter-edit)
-  (define-key lyskom-sv-mode-map (kbd "{ m") 'kom-change-auto-reply)
-  (define-key lyskom-sv-mode-map (kbd "} SPC") 'kom-view)
-  (define-key lyskom-sv-mode-map (kbd "} 0") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 1") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 2") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 3") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 4") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 5") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 6") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 7") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 8") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} 9") 'kom-initial-digit-view)
-  (define-key lyskom-sv-mode-map (kbd "} k") 'kom-view-commented-text)
-  (define-key lyskom-sv-mode-map (kbd "} K") 'kom-view-previous-commented-text)
-  (define-key lyskom-sv-mode-map (kbd "} a ?") 'lyskom-help)
-  (define-key lyskom-sv-mode-map (kbd "} a k") 'kom-review-comments)
-  (define-key lyskom-sv-mode-map (kbd "} a r") 'kom-review-tree)
-  (define-key lyskom-sv-mode-map (kbd "} h") 'kom-review-clear)
-  (define-key lyskom-sv-mode-map (kbd "} i") 'kom-review-last-normally-read)
-  (define-key lyskom-sv-mode-map (kbd "} n") 'kom-review-next)
-  (define-key lyskom-sv-mode-map (kbd "} o") 'kom-review-noconversion)
-  (define-key lyskom-sv-mode-map (kbd "} r") 'kom-find-root)
-  (define-key lyskom-sv-mode-map (kbd "} u") 'kom-find-root)
-  (define-key lyskom-sv-mode-map (kbd "} s") 'kom-review-by-to)
-  (define-key lyskom-sv-mode-map (kbd "} y") 'kom-review-more)
-  (define-key lyskom-sv-mode-map (kbd "} A") 'kom-review-all)
-  (define-key lyskom-sv-mode-map (kbd "} f") 'kom-review-first)
-  (define-key lyskom-sv-mode-map (kbd "} l") 'kom-review-stack)
-  (define-key lyskom-sv-mode-map (kbd "} p") 'kom-review-presentation)
-  (define-key lyskom-sv-mode-map (kbd "} t") 'kom-find-root-review)
-  (define-key lyskom-sv-mode-map (kbd "} m") 'kom-review-marked-texts)
-  (define-key lyskom-sv-mode-map (kbd "} q") 'kom-review-faq)
-  (define-key lyskom-sv-mode-map (kbd "} Q") 'kom-review-server-faq)
-  (define-key lyskom-sv-mode-map (kbd "} a m") 'kom-review-all-marked-texts)
-  (define-key lyskom-sv-mode-map (kbd "} a SPC") 'kom-review-all)
-  (define-key lyskom-sv-mode-map (kbd "} b") 'kom-review-mail-headers)
+  (define-key lyskom-sv-change-prefix (kbd "p") 'kom-change-presentation)
+  (define-key lyskom-sv-change-prefix (kbd "q") 'kom-change-conf-faq)
+  (define-key lyskom-sv-change-prefix (kbd "f") 'kom-filter-edit)
+  (define-key lyskom-sv-change-prefix (kbd "m") 'kom-change-auto-reply)
+  (define-key lyskom-sv-review-prefix (kbd "SPC") 'kom-view)
+  (define-key lyskom-sv-review-prefix (kbd "0") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "1") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "2") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "3") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "4") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "5") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "6") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "7") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "8") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "9") 'kom-initial-digit-view)
+  (define-key lyskom-sv-review-prefix (kbd "k") 'kom-view-commented-text)
+  (define-key lyskom-sv-review-prefix (kbd "K") 'kom-view-previous-commented-text)
+  (define-key lyskom-sv-review-prefix (kbd "a ?") 'lyskom-help)
+  (define-key lyskom-sv-review-prefix (kbd "a k") 'kom-review-comments)
+  (define-key lyskom-sv-review-prefix (kbd "a r") 'kom-review-tree)
+  (define-key lyskom-sv-review-prefix (kbd "h") 'kom-review-clear)
+  (define-key lyskom-sv-review-prefix (kbd "i") 'kom-review-last-normally-read)
+  (define-key lyskom-sv-review-prefix (kbd "n") 'kom-review-next)
+  (define-key lyskom-sv-review-prefix (kbd "o") 'kom-review-noconversion)
+  (define-key lyskom-sv-review-prefix (kbd "r") 'kom-find-root)
+  (define-key lyskom-sv-review-prefix (kbd "u") 'kom-find-root)
+  (define-key lyskom-sv-review-prefix (kbd "s") 'kom-review-by-to)
+  (define-key lyskom-sv-review-prefix (kbd "y") 'kom-review-more)
+  (define-key lyskom-sv-review-prefix (kbd "A") 'kom-review-all)
+  (define-key lyskom-sv-review-prefix (kbd "f") 'kom-review-first)
+  (define-key lyskom-sv-review-prefix (kbd "l") 'kom-review-stack)
+  (define-key lyskom-sv-review-prefix (kbd "p") 'kom-review-presentation)
+  (define-key lyskom-sv-review-prefix (kbd "t") 'kom-find-root-review)
+  (define-key lyskom-sv-review-prefix (kbd "m") 'kom-review-marked-texts)
+  (define-key lyskom-sv-review-prefix (kbd "q") 'kom-review-faq)
+  (define-key lyskom-sv-review-prefix (kbd "Q") 'kom-review-server-faq)
+  (define-key lyskom-sv-review-prefix (kbd "a m") 'kom-review-all-marked-texts)
+  (define-key lyskom-sv-review-prefix (kbd "a SPC") 'kom-review-all)
+  (define-key lyskom-sv-review-prefix (kbd "b") 'kom-review-mail-headers)
   (define-key lyskom-sv-mode-map (kbd "B")   'kom-review-backward)
   (define-key lyskom-sv-mode-map (kbd "s m") 'kom-status-conf)
   (define-key lyskom-sv-mode-map (kbd "s p") 'kom-status-person)
   (define-key lyskom-sv-mode-map (kbd "s s") 'kom-status-session)
   (define-key lyskom-sv-mode-map (kbd "s k") 'kom-status-server)
-  (define-key lyskom-sv-S-prefix (lyskom-keys 'ä) 'kom-send-message)
-  (define-key lyskom-sv-S-prefix (lyskom-keys 'Ä) 'kom-send-message)
-  (define-key lyskom-sv-S-prefix [ä] 'kom-send-message)
-  (define-key lyskom-sv-S-prefix [Ä] 'kom-send-message)
-  (define-key lyskom-sv-mode-map (kbd "s {") 'kom-send-message)
-  (define-key lyskom-sv-mode-map (kbd "s [") 'kom-send-message)
+
+  (lyskom-try-define-key lyskom-sv-S-prefix (kbd "ä")    'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix (kbd "{")    'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix (kbd "[")    'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [adiaeresis] 'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [Adiaeresis] 'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [228]        'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [196]        'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [2276]       'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [2244]       'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [3908]       'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [3940]       'kom-send-message)
 
   (define-key lyskom-sv-mode-map (kbd "r a") 'kom-fast-reply)
   (define-key lyskom-sv-mode-map (kbd "r r") 'kom-fast-reply)
@@ -2796,6 +2832,9 @@ teckenkodning.
 
     (url-transform-regexp . "Från (regexp):")
     (url-transform-newtext . " Till:")
+
+    (default-namedays . "Namnsdagar för aktuellt språk")
+    (specific-namedays . "Specifik namnlängd:")
 
     ;;
     ;; Misc doc strings
@@ -3465,9 +3504,10 @@ i servern. Annars sparas det i din .emacs.")
   att användas istället.")
 
     (kom-show-namedays-doc . "\
-  Påslaget innebär att dagens namn visas när man ser tiden. Antagligen så
-  kommer detta att ersättas av ett nytt kommando i någon kommande version
-  av elispklienten, men det var visst någon som ville ha det, så ...")
+  Påslaget innebär att dagens namn visas när man ser tiden. Det går att
+  välja att se namnsdagarna från namnsdagslängden som hör till det språk
+  man för närvarande använder eller att använda en specifik lista med
+  namn.")
 
     (kom-show-week-number-doc . "\
   Se tiden visar veckonummer om detta är påslaget. Annars visas inte 

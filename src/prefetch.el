@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.24 2002-11-22 17:38:39 byers Exp $
+;;;;; $Id: prefetch.el,v 44.25 2002-12-13 22:16:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.24 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.25 2002-12-13 22:16:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -703,8 +703,8 @@ Put the requests on QUEUE."
 (defun lyskom-prefetch-membership-handler (memberships pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
-  (let ((size (length memberships))
-	(i 0)
+;;;  (let ((size (length memberships))
+;;;	(i 0)
 ;;; Commented out 1999-06-28 byers
 ;;; Used by removed code below
 ;;;        (old-mships (mapcar (lambda (mship)
@@ -712,7 +712,7 @@ Put the requests on QUEUE."
 ;;;                                    (membership->conf-no mship))
 ;;;                                   (membership->conf-no mship)))
 ;;;                            memberships))
-        )
+;;;        )
     (lyskom-insert-memberships-in-membership memberships)
 ;;;     (while (< i size)
 ;;;      (let ((membership (aref memberships i)))
@@ -736,7 +736,8 @@ Put the requests on QUEUE."
       (setq lyskom-membership-is-read (+ lyskom-membership-is-read
 					 lyskom-fetch-membership-length))
       (lyskom-prefetch-membership pers-no queue)
-      ))
+      )
+;;;)
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
