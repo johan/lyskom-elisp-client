@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.61 2000-03-15 17:15:40 byers Exp $
+;;;;; $Id: commands2.el,v 44.62 2000-04-07 11:35:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.61 2000-03-15 17:15:40 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.62 2000-04-07 11:35:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2260,8 +2260,9 @@ Return-value: 'no-session if there is no suitable session to switch to
           ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
           (t (lyskom-format-insert 'mail-headers-for text-no)
              (mapcar (lambda (el) 
-                       (lyskom-format-insert "%#1t" (aux-item->data el))
-                       (lyskom-insert "\n"))
+                       (let ((kom-autowrap nil))
+                         (lyskom-format-insert "%#1t" (aux-item->data el))
+                         (lyskom-insert "\n")))
                      headers)))))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.51 2000-03-26 13:30:56 byers Exp $
+;;;;; $Id: utilities.el,v 44.52 2000-04-07 11:35:41 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.51 2000-03-26 13:30:56 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.52 2000-04-07 11:35:41 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -61,9 +61,12 @@
 
 (defun nfirst (n list)
   "Return a list of the N first elements of LIST."
-  (if (or (<= n 0) (not list))
-      nil
-    (cons (car list) (nfirst (1- n) (cdr list)))))
+  (let ((result nil))
+    (while (and (> n 0) list)
+      (setq result (cons (car list) result)
+            list (cdr list)
+            n (1- n)))
+    (nreverse result)))
 
 (defun lyskom-rotate-list (list el)
   "Destructively rotate LIST so EL becomes the first element.
