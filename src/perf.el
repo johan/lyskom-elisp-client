@@ -281,7 +281,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
   (if window-system
       (progn
 	(when (not (frame-live-p lyskom-prof-frame))
-	  (setq lyskom-prof-frame (make-frame '((height . 25)))))
+	  (setq lyskom-prof-frame (make-frame '((height . 27)))))
 	(select-frame lyskom-prof-frame)
 	(display-buffer lyskom-prof-buffer)
 	(goto-char 0))
