@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.25 2004-01-01 22:18:51 byers Exp $
+;;;;; $Id: check-strings.el,v 44.26 2004-01-01 22:31:29 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -52,17 +52,26 @@
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
 
-  (lcs-message t "Checking menus")
-  (lcs-check-menu-contents)
+  (lcs-message t "Checking menu template: lyskom-menu-template")
+  (lcs-check-menu-template lyskom-menu-template)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
 
-(defun lcs-check-menu-contents ()
+(defun lcs-check-menu-template (template)
   "Check that all commands are in the LysKOM menus."
-  (let ((commands (lcs-extract-commands-from-menu-template lyskom-menu-template)))
-    
-    ))
+  (let ((commands (lcs-extract-commands-from-menu-template template))
+        (required lyskom-commands)
+        (missing nil))
+    (while required
+      (unless (or (memq (car required) lyskom-commands-not-in-menu)
+                  (memq (car required) commands))
+        (setq missing (cons (car required) missing)))
+      (setq required (cdr required)))
+
+    (while missing
+      (lcs-message t "(lyskom-menu-template) Missing command: %s" (car missing))
+      (setq missing (cdr missing)))))
 
 (defun lcs-extract-commands-from-menu-template (template)
   (let ((result nil) (el nil))
@@ -72,10 +81,11 @@
              (setq result
                    (nconc result 
                            (lcs-extract-commands-from-menu-template
-                            (cdr (cdr el))))))
+                            (car (cdr (cdr el)))))))
 
             ((eq (car el) 'item)
-             (setq result (cons (car (cdr el)) result)))))))
+             (setq result (cons (car (cdr el)) result)))))
+    result))
 
 (defun lcs-check-language-vars ()
   "Check that all language-specific variables exist in all languages"
