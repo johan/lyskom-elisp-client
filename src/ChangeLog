@@ -1,3 +1,12 @@
+1999-10-12  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (Info-current-file): Get rid of Info-related
+	compiler warnings.
+
+	* view-text.el (lyskom-insert-deferred-header-comm): Print the
+	content type of attachments.
+	(lyskom-insert-header-comm): Same here.
+
 1999-10-13  David Byers  <davby@ida.liu.se>
 
 	* command.el (lyskom-end-of-command): Don't do user-active when

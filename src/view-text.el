@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $
+;;;;; $Id: view-text.el,v 44.28 1999-10-13 16:42:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.28 1999-10-13 16:42:17 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -914,34 +914,49 @@ Args: TEXT-STAT of the text being read."
                          (lambda (el)
                            (string-to-number (aux-item->data el)))
                          (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
+         (content-type "")
 	 fmt data)
 
     (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
+    ;; Extract the content type
+
+    (if (and mx-from
+             (setq content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data content-type))
+               (setq content-type (format "(%s) "
+                                          (aux-item->data content-type))))
+      (setq content-type ""))
     
     (cond
      ((eq type 'COMM-TO)
-      (setq fmt (cond ((memq (misc-info->comm-to misc) mx-belongs-to) 'attachment-to-text)
+      (setq fmt (cond ((memq (misc-info->comm-to misc) mx-belongs-to)
+                       'attachment-to-text)
                       (author 'comment-to-text-by)
                       (t 'comment-to-text))
 	    data (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
-      (setq fmt (cond ((memq (misc-info->footn-to misc) mx-belongs-to) 'attachment-to-text)
+      (setq fmt (cond ((memq (misc-info->footn-to misc) mx-belongs-to)
+                       'attachment-to-text)
                       (author 'footnote-to-text-by)
                       (t 'footnote-to-text))
 	    data (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
-      (setq fmt (cond ((memq (misc-info->comm-in misc) mx-attachments-in) 'attachment-in-text)
+      (setq fmt (cond ((memq (misc-info->comm-in misc) mx-attachments-in) 
+                       'attachment-in-text)
                       (author 'comment-in-text-by)
                       (t 'comment-in-text))
 	    data (misc-info->comm-in misc)))
      ((eq type 'FOOTN-IN)
-      (setq fmt (cond ((memq (misc-info->footn-in misc) mx-attachments-in) 'attachment-in-text)
+      (setq fmt (cond ((memq (misc-info->footn-in misc) mx-attachments-in)
+                       'attachment-in-text)
                       (author 'footnote-in-text-by)
                       (t 'footnote-in-text))
-	    data(misc-info->footn-in misc)))) 
+	    data (misc-info->footn-in misc)))) 
     (set-defer-info->format defer-info fmt)
     ; Note: author is ignored if fmt is not *-by
-    (lyskom-replace-deferred defer-info data author)))
+    (lyskom-replace-deferred defer-info data author content-type)))
 
 
 
@@ -961,32 +976,58 @@ Args: TEXT-STAT of the text being read."
                         (lambda (el)
                           (string-to-number (aux-item->data el)))
                         (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
+        (content-type "")
+        (is-attachment nil)
         (type (misc-info->type misc)))
 
     (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
+
+    ;; Extract the content type
+
+    (if (and mx-from
+             (setq content-type
+                   (car (lyskom-get-aux-item (text-stat->aux-items 
+                                              text-stat) 1))))
+        (progn (string-match "^\\(\\S-+\\)" (aux-item->data content-type))
+               (setq content-type (format "(%s) "
+                                          (aux-item->data content-type))))
+      (setq content-type ""))
+
     
     (cond
      ((eq type 'COMM-TO)
-      (lyskom-format-insert (if (memq (misc-info->comm-to misc) mx-belongs-to)
+      (lyskom-format-insert (if (and (memq (misc-info->comm-to misc) mx-belongs-to)
+                                     (setq is-attachment t))
                                 'attachment-to-text
                               'comment-to-text)
-                            (misc-info->comm-to misc)))
+                            (misc-info->comm-to misc)
+                            nil
+                            content-type))
      ((eq type 'FOOTN-TO)
-      (lyskom-format-insert (if (memq (misc-info->footn-to misc) mx-belongs-to)
+      (lyskom-format-insert (if (and (memq (misc-info->footn-to misc) mx-belongs-to)
+                                     (setq is-attachment t))
                                 'attachment-to-text
                               'footnote-to-text)
-                            (misc-info->footn-to misc)))
+                            (misc-info->footn-to misc)
+                            nil
+                            content-type))
      ((eq type 'COMM-IN)
-      (lyskom-format-insert (if (memq (misc-info->comm-in misc) mx-attachments-in)
+      (lyskom-format-insert (if (and (memq (misc-info->comm-in misc) mx-attachments-in)
+                                     (setq is-attachment t))
                                 'attachment-in-text
                               'comment-in-text)
-                            (misc-info->comm-in misc)))
+                            (misc-info->comm-in misc)
+                            nil
+                            content-type))
      ((eq type 'FOOTN-IN)
-      (lyskom-format-insert (if (memq (misc-info->footn-in misc) mx-attachments-in)
+      (lyskom-format-insert (if (and (memq (misc-info->footn-in misc) mx-attachments-in)
+                                     (setq is-attachment t))
                                 'attachment-in-text
                               'footnote-in-text)
-                            (misc-info->footn-in misc))))
-    (if author
+                            (misc-info->footn-in misc)
+                            nil
+                            content-type)))
+    (if (and author (not is-attachment))
 	(lyskom-format-insert 'written-by author)
       (lyskom-insert "\n"))))
 
