@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.14 1992-01-06 18:50:27 linus Exp $
+;;;;; $Id: english-strings.el,v 35.15 1992-08-27 11:55:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.14 1992-01-06 18:50:27 linus Exp $\n"))
+	      "$Id: english-strings.el,v 35.15 1992-08-27 11:55:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -50,9 +50,9 @@
 (if lyskom-edit-mode-map
     nil
   (setq lyskom-edit-mode-map (make-sparse-keymap))
-  (fset 'lyskom-edit-prefix (make-keymap))
-  (fset 'lyskom-edit-review-prefix (make-keymap))
-  (fset 'lyskom-edit-insert-prefix (make-keymap))
+  (define-prefix-command 'lyskom-edit-prefix)
+  (define-prefix-command 'lyskom-edit-review-prefix)
+  (define-prefix-command 'lyskom-edit-insert-prefix)
   (define-key lyskom-edit-mode-map "\C-c"	'lyskom-edit-prefix)
   (define-key lyskom-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-edit-mode-map "\C-cr"	'lyskom-edit-review-prefix)
@@ -74,7 +74,7 @@
   (define-key lyskom-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci "	'kom-edit-insert-text)
-  (fset 'lyskom-edit-add-prefix (make-keymap))
+  (define-prefix-command 'lyskom-edit-add-prefix)
   (define-key lyskom-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
   (define-key lyskom-edit-mode-map "\C-car" 'kom-edit-add-recipient)
   (define-key lyskom-edit-mode-map "\C-cac" 'kom-edit-add-copy)
@@ -110,6 +110,8 @@ Help: \\[describe-mode] ---")
     (wrong-password . "Incorrect password\n")
     (are-logged-in . "You are now logged on. Please wait...\n")
     (you-have-motd . "\nYou have a note on the door:\n\n")
+    (presentation-encouragement .
+     "You have not written a presentation. Please write a presentation by using the command p. If you do not want to write a presentations, type fk.\n")
 
     (first-greeting . "%#1s
 This appears to be the first time you use LysKOM. Welcome!
@@ -362,12 +364,26 @@ Email-address:\n\nOther:\t")
     (who-to-send-message-to . "Send message to whom? (Everyone) ")
     (his-total-unread . "\n%#1s has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
-    (message-sent . "Message sent.\n")
+    (message-sent-to-user .
+     "================================================================
+Your message to %#2s:
+
+%#1s
+----------------------------------------------------------------
+")
+    (message-sent-to-all . 
+     "================================================================
+Your public message:
+
+%#1s
+----------------------------------------------------------------
+")
+
     (message-nope .
-  "Unable to send the message. Perhaps the recipient isn't logged on.\n")
+     "Unable to send the message. Perhaps the recipient isn't logged on.\n")
     (only-last . "Last (0 - %#1d) by %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
-
+    
     (you-have-unreads . "You have %#1d unread articles in %#2s\n")
     (you-have-an-unread . "You have 1 unread article in %#1s\n")
     (you-have-read-everything . "No news (is bad news).\n")
@@ -377,7 +393,7 @@ Email-address:\n\nOther:\t")
      "You are waiting for an article in any conference.\n")
     (waiting-higher-than . 
      "You are waiting for an article in any conference with a priority higher than %#1d.\n")
-
+    
     (have-to-be-in-conf . "You must go to the conference first.\n")
     (Texts . "Article")
     (Date . "Date")
@@ -386,19 +402,17 @@ Email-address:\n\nOther:\t")
     (Subject . "  Subject")
     (could-not-read . "You couldn't read the article (%#1d).\n")
     (multiple-choice . "There are several alternatives.")
-    (does-not-exist . "Unknown command.")
-
-    ; Only people fixing bugs or recieving bugg-reports should change these:
+    (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
     (buggreport-compilestart . "Compiling...")
     (buggreport-compileend . "Compiling...done")
-    (buggreport-description . "This is what I was doing:
-(Fill in your comments below)\n\n\n
-When you have completed writing this, send you r bug report to the LysKOM
-developers. You can do this either by email to bug-lyskom@lysator.liu.se or
-through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
-buggrapporter\", or if nothing else works, you can send a normal letter to
-Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
-Mark the envelope with \"LysKOM bug report\"\n\n")
+;    (buggreport-description . "This is what I was doing:
+;(Fill in your comments below)\n\n\n
+;When you have completed writing this, send you r bug report to the LysKOM
+;developers. You can do this either by email to bug-lyskom@lysator.liu.se or
+;through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
+;buggrapporter\", or if nothing else works, you can send a normal letter to
+;Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
+;Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-internals . "LysKOM's internal information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-emacs-version . "emacs-version:")
@@ -412,16 +426,18 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-instead-of-byte-comp . "byte-code(\"byte-string\"")
     (buggreport-subject . "Bugreport elisp-client version %#1s")
 
-
     (not-logged-in . "You are not logged on.  ")
     (name-is-not-in-conf . "%#1s is in any conference.\n")
     (name-is-in-conf . "%#1s is in\n%#2s\n")
     (connected-during . "Connect time: %#1d seconds.\n")
 
+    (conf-to-set-permitted-submitters-q . "For which conference do you want to set the admitted authors: ")
     (conf-to-set-super-conf-q . "Set superconference of which conference: ")
-    (new-super-conf-q . "Which converece do you want as superconference: ")
+    (new-super-conf-q . "Which conferece do you want as superconference: ")
+    (new-permitted-submitters-q . "Admit members of which conference as authors in %#1s (all): ")
     (super-conf-for-is . "Changing superconference of %#1s to %#2s...")
-
+    (permitted-submitters-removed-for-conf . "Admitting all authors to conference %#1s...")
+    (submitters-conf-for-is . "Changing authors admitted to conference %#1s to the members of %#2s...") 
     (conf-to-set-garb-nice-q . "Set expiration time for which conference: ")
     (new-garb-nice-q . "What do you want to set the expiration time to: ")
     (garb-nice-for-is . "Changing expiration for %#1s to %#2d...")
@@ -526,8 +542,20 @@ use. Please try later.
     (has-left-r . "%#1s has left LysKOM.\n")
     (unknown . "unknown")
 
-    (message-broadcast . "Public message from %#1s (%#3s):\n\n%#2s\n")
-    (message-from . "Personal message from %#1s (%#3s):\n\n%#2s\n")
+    (message-broadcast .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Public message from %#1s (%#3s):
+
+%#2s
+----------------------------------------------------------------
+")
+    (message-from . 
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Personal message from %#1s (%#3s):
+
+%#2s
+----------------------------------------------------------------
+")
     (text-is-created . "Article %#1d has been created!")
 
 
@@ -638,6 +666,8 @@ Error message: %#1s**************************************************")
 (defconst lyskom-commands
   '(
     (describe-mode              "Help")
+    (kom-slow-mode		"Long commands")
+    (kom-quick-mode		"Short commands")
     (kom-send-message           "Send message")
     (kom-create-conf		"Create conference")
     (kom-delete-conf            "Delete conference")
@@ -667,6 +697,7 @@ Error message: %#1s**************************************************")
     (kom-review-clear           "Review and skip")
     (kom-review-last-normally-read
      				"Review again")
+    (kom-review-noconversion	"Review unconverted")
     (kom-review-next            "Review next")
     (kom-find-root		"Review original (article)")
     (kom-review-by-to           "Review last")
@@ -682,6 +713,8 @@ Error message: %#1s**************************************************")
     (kom-comment-previous	"(Write) comment (to) previous article")
     (kom-write-footnote         "(Write) footnote")
     (kom-private-answer         "(Write) personal reply (by letter)")
+    (kom-private-answer-previous
+     "(Write) personal (reply to) previous article (by letter)")
     (kom-set-unread		"Only (the) last")
     (kom-write-text		"Write (an) article")
     (kom-send-letter		"Write (a) letter")
@@ -705,6 +738,7 @@ Error message: %#1s**************************************************")
     (kom-change-conf-motd	"(Post) note (on the) door")
     (kom-set-garb-nice          "Change expiration")
     (kom-set-super-conf         "Change superconference")
+    (kom-set-permitted-submitters  "Change admitted authors")
     (kom-unset-conf-motd	"Remove note (from the door)")
     (kom-save-text		"Save article (in file)")
     (kom-edit-options		"Change options")
@@ -728,12 +762,12 @@ Cf. paragraph-start.")
     nil
   (setq lyskom-mode-map (make-keymap))
   (suppress-keymap lyskom-mode-map)
-  (fset 'lyskom-review-prefix (make-keymap))
-  (fset 'lyskom-change-prefix (make-keymap))
-  (fset 'lyskom-next-prefix (make-keymap))
-  (fset 'lyskom-list-prefix (make-keymap))
-  (fset 'lyskom-get-prefix (make-keymap))
-  (fset 'lyskom-S-prefix (make-keymap))
+  (define-prefix-command 'lyskom-review-prefix)
+  (define-prefix-command 'lyskom-change-prefix)
+  (define-prefix-command 'lyskom-next-prefix)
+  (define-prefix-command 'lyskom-list-prefix)
+  (define-prefix-command 'lyskom-get-prefix)
+  (define-prefix-command 'lyskom-S-prefix)
   (define-key lyskom-mode-map "A" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "r" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "f" 'lyskom-get-prefix)
@@ -766,6 +800,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "C"  'kom-comment-previous)
   (define-key lyskom-mode-map "F"  'kom-write-footnote)
   (define-key lyskom-mode-map "p"  'kom-private-answer)
+  (define-key lyskom-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-mode-map "j"  'kom-jump)
   (define-key lyskom-mode-map "lc" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
@@ -803,6 +838,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "rar" 'kom-review-tree)
   (define-key lyskom-mode-map "rj" 'kom-review-clear)
   (define-key lyskom-mode-map "rn" 'kom-review-next)
+  (define-key lyskom-mode-map "ru" 'kom-review-noconversion)
   (define-key lyskom-mode-map "ro" 'kom-find-root)
   (define-key lyskom-mode-map "rl" 'kom-review-by-to)
   (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
@@ -934,3 +970,94 @@ Users are encouraged to use their best sense of humor.")
     (41 . "The client thinks that the server says that it does not understand the client")
     (42 . "No such session"))
   "All the errors reported from the server in plain text.")
+
+
+     
+;;;; This file contains the code that makes it possible to run a 
+;;;; long-commands mode in the lyskom-buffer.
+;;;;
+
+;;; Author: Linus Tolke 
+
+(setq lyskom-slow-mode-map
+      (make-sparse-keymap))
+(define-key lyskom-slow-mode-map "\r" 'lyskom-parse-command-and-execute)
+
+(defun lyskom-parse-command-and-execute ()
+  "Reads a command from the last line in the buffer and executes it."
+  (interactive)
+  (goto-char (point-max))
+  (save-restriction
+    (narrow-to-region lyskom-last-viewed (point-max))
+    (search-backward lyskom-prompt-text))
+  (forward-char (length lyskom-prompt-text))
+  (while (looking-at "\\s-")
+    (forward-char 1))
+  (let* ((text (buffer-substring (point) (point-max)))
+	 (completion-ignore-case t)
+	 (alternatives (mapcar (function reverse)
+			       (if kom-emacs-knows-iso-8859-1
+				   lyskom-commands
+				 lyskom-swascii-commands)))
+	 (completes (all-completions text alternatives)))
+    (cond
+     ((zerop (length text))
+      (kom-next-command))
+     ((> (length completes) 1)
+      (lyskom-insert "\nYou might mean one of the following:\n")
+      (mapcar (function (lambda (string) 
+			  (lyskom-insert string)
+			  (lyskom-insert "\n")))
+	      completes)
+      (lyskom-end-of-command))
+     ((= (length completes) 1)
+      (delete-region (point) (point-max))
+      (call-interactively (car (reverse-assoc (car completes)
+					      (if kom-emacs-knows-iso-8859-1
+						  lyskom-commands
+						lyskom-swascii-commands)))))
+     (t
+      (lyskom-insert "There is not such command.\n")
+      (lyskom-end-of-command)))
+  ))
+
+
+(defun kom-slow-mode ()
+  "Starts the slow-command-mode."
+  (interactive)
+  (lyskom-start-of-command 'kom-slow-mode)
+  (use-local-map lyskom-slow-mode-map)
+  (lyskom-end-of-command))
+
+(defun kom-quick-mode ()
+  "Starts the quick-command-mode."
+  (interactive)
+  (lyskom-start-of-command 'kom-quick-mode)
+  (use-local-map lyskom-mode-map)
+  (lyskom-end-of-command))
+
+
+;; Review a non-converted text
+;; Author: Linus Tolke
+ 
+
+(defun kom-review-noconversion (&optional text-no)
+  "Displays the last read text without any conversion."
+  (interactive (list 
+		(cond
+		 ((null current-prefix-arg)
+		  lyskom-current-text)
+		 ((integerp current-prefix-arg)
+		  current-prefix-arg)
+		 ((and (listp current-prefix-arg) 
+		       (integerp (car current-prefix-arg)) 
+		       (null (cdr current-prefix-arg)))
+		  (car current-prefix-arg))
+		 (t
+		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
+  (lyskom-start-of-command 'kom-review-noconversion)
+  (let ((knows-iso-8859-1 kom-emacs-knows-iso-8859-1))
+    (setq kom-emacs-knows-iso-8859-1 t)
+    (lyskom-view-text 'main text-no)
+    (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
+    (lyskom-run 'main 'lyskom-end-of-command)))
