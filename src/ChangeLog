@@ -1,3 +1,7 @@
+2002-04-03  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* Makefile (debian-packages): new target.
+
 2002-03-25  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* distribution-configure.in: Corrected help text for
