@@ -1,5 +1,9 @@
 2003-08-20  David Byers  <byers@lysator.liu.se>
 
+	More work on bug 459:
+	* vars.el.in (lyskom-default-conference-strategy): Documented this
+	variable.
+
 	Support saving most recent input:
 	* completing-read.el (lyskom-read-conf-saved-inputs): New
 	variable.
