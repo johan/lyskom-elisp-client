@@ -3,8 +3,23 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Completion-koden är ivägen när man vill skapa nya personer.
+
+    Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
+    spara det på fil, så blir det bara fotnoten som sparas.  Man vill
+    nog spara minst själva huvudinlägget, och nog också fotnoterna
+    samtidigt.  Dvs när jag läst 1449843 och 1449847 dykt upp
+    automatiskt och väljer "Spara text (på fil)" så vill jag spara
+    båda dessa inläggen.
+
+    Jag har satt kom-show-footnotes-immediately till nil. Det verkar
+    som man inte får läsa fotnötter först då, t ex fick jag läsa
+    1443562 (en vanlig kommentar) och trädet under det innan jag fig
+    läsa 1443602 (en fotnot till 1443554. Det är inte första gången
+    det händer.
+
     Man kan inte skicka in inlägg med kom-emacs-knows-iso-8859-1 satt
-    till nil.
+    till nil. (FIXAT)
 
     LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
 
@@ -40,7 +55,15 @@ Buggar
 
     Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
 
+    När jag ska läsa en kommentar till ett brev i min brevlåda så blir
+    prompten "Läsa nästa brev" i stället för "Läsa nästa
+    kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
+
 Allmänna förbättringar
+
+    Återse igen (kom-review-last-normally-read) borde kanske använda
+    buffertlokala variabler för vilket inlägg som är det senaste man
+    har läst, så man kan återse det senaste i det KOM man är i.
 
     Skriv inte ut stora fonoter på en gång.
 
