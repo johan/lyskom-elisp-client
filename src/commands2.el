@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.10 1996-07-23 13:16:47 byers Exp $
+;;;;; $Id: commands2.el,v 41.11 1996-07-25 03:11:12 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.10 1996-07-23 13:16:47 byers Exp $\n"))
+	      "$Id: commands2.el,v 41.11 1996-07-25 03:11:12 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1327,64 +1327,91 @@ membership info."
 	     (processp lyskom-proc)
 	     (memq (process-status lyskom-proc) '(run open))))))
 
-(defun lyskom-update-lyskom-buffer-list ()
-  (mapcar (function
-	   (lambda (buf)
-	     (if (and (lyskom-buffer-p buf)
-		      (not (memq buf lyskom-buffer-list)))
-		 ;; This is a LysKOM buffer that we haven't seen yet --
-		 ;; If it is the current buffer, add it at the start
-		 ;; of lyskom-buffer-list, otherwise add it to the end
-		 (if (eq buf (current-buffer))
-		     (setq lyskom-buffer-list (cons buf
-						    lyskom-buffer-list))
-		   (setq lyskom-buffer-list
-			 (nconc lyskom-buffer-list (list buf)))))))
-	  (buffer-list))
-  (mapcar (function
-	   (lambda (buf)
-	     (if buf
-		 (setq lyskom-buffer-list
-		       (delete buf lyskom-buffer-list)))))
-	  (mapcar (function
-		   (lambda (buf)
-		     (if (lyskom-buffer-p buf) nil buf)))
-		  lyskom-buffer-list)))
+;;;(defun lyskom-update-lyskom-buffer-list ()
+;;;  (mapcar (function
+;;;	   (lambda (buf)
+;;;	     (if (and (lyskom-buffer-p buf)
+;;;		      (not (memq buf lyskom-buffer-list)))
+;;;		 ;; This is a LysKOM buffer that we haven't seen yet --
+;;;		 ;; If it is the current buffer, add it at the start
+;;;		 ;; of lyskom-buffer-list, otherwise add it to the end
+;;;		 (if (eq buf (current-buffer))
+;;;		     (setq lyskom-buffer-list (cons buf
+;;;						    lyskom-buffer-list))
+;;;		   (setq lyskom-buffer-list
+;;;			 (nconc lyskom-buffer-list (list buf)))))))
+;;;	  (buffer-list))
+;;;  (mapcar (function
+;;;	   (lambda (buf)
+;;;	     (if buf
+;;;		 (setq lyskom-buffer-list
+;;;		       (delete buf lyskom-buffer-list)))))
+;;;	  (mapcar (function
+;;;		   (lambda (buf)
+;;;		     (if (lyskom-buffer-p buf) nil buf)))
+;;;		  lyskom-buffer-list)))
+
 
 
 (defun kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
   (lyskom-tell-internat 'kom-tell-next-lyskom)
-  (lyskom-update-lyskom-buffer-list)
-  ;; Now we are ready to select the next LysKOM buffer
   (if lyskom-buffer-list
       (progn
-	;;(kom-bury)
-	(setq lyskom-buffer-list (nconc (cdr lyskom-buffer-list)
-					(list (car lyskom-buffer-list))))
-	(switch-to-buffer (car lyskom-buffer-list)))
-    (error "No active LysKOM buffers")))
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    ;; If there is an "active" lyskom buffer, send it to the
+	    ;; back of the list.
+	    (progn
+	      ;; If the "active" lyskom buffer is the current buffer,
+	      ;; and kom-bury-buffers is non-nil, bury it.
+	      (if (and kom-bury-buffers
+		       (eq (car lyskom-buffer-list)
+			   (current-buffer)))
+		  (kom-bury))
+	      (setq lyskom-buffer-list
+		    (nconc (cdr lyskom-buffer-list)
+			   (list (car lyskom-buffer-list)))))
+	  ;; The "active" lyskom buffer is dead, so we remove it from
+	  ;; the list.
+	  (setq lyskom-buffer-list (cdr lyskom-buffer-list)))
+	;; Don't switch to dead sessions.
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    (switch-to-buffer (car lyskom-buffer-list))
+	  (kom-next-kom)))
+    (error "No active LysKOM buffers"))))
 
 
 (defun kom-previous-kom ()
   "Pop up the previous lyskom-session."
   (interactive)
   (lyskom-tell-internat 'kom-tell-next-lyskom)
-  (lyskom-update-lyskom-buffer-list)
-  ;; Now we are ready to select the previous LysKOM buffer
-  (if lyskom-buffer-list
+  (if (> (length lyskom-buffer-list) 1)
       (let (lastbuf
 	    (last-but-one lyskom-buffer-list))
-	;;(kom-bury)
 	(while (cdr (cdr last-but-one))
 	  (setq last-but-one (cdr last-but-one)))
-	(if (setq lastbuf (car (cdr last-but-one)))
+	(setq lastbuf (car (cdr last-but-one)))
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    ;; If there is an "active" lyskom buffer, send it to the
+	    ;; back of the list.
 	    (progn
+	      ;; If the "active" lyskom buffer is the current buffer,
+	      ;; and kom-bury-buffers is non-nil, bury it.
+	      (if (and kom-bury-buffers
+		       (eq (car lyskom-buffer-list)
+			   (current-buffer)))
+		  (kom-bury))
 	      (setq lyskom-buffer-list (cons lastbuf lyskom-buffer-list))
-	      (rplacd last-but-one nil)
-	      (switch-to-buffer lastbuf))))
-    (error "No active LysKOM buffers")))
+	      (rplacd last-but-one nil))
+	  ;; The "active" lyskom buffer is dead, so we remove it from
+	  ;; the list.
+	  (rplacd last-but-one nil))
+	(if (lyskom-buffer-p (car last-but-one))
+	    (switch-to-buffer lastbuf)
+	  (kom-previous-kom)))
+    (if (null lyskom-buffer-list)
+	(error "No active LysKOM buffers"))))
 
 
 (defun kom-next-unread-kom ()
