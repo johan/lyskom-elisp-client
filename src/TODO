@@ -3,6 +3,8 @@ Att göra i elisp-klienten
 
 Buggar
 
+    lyskom-read-session-no hittar inte osynliga sessioner.
+
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
 
