@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.46 2004-10-17 14:24:14 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.47 2004-10-26 17:53:34 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.46 2004-10-17 14:24:14 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.47 2004-10-26 17:53:34 _cvs_pont_lyskomelisp Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -430,7 +430,7 @@ The start and end markers of the entry are adjusted"
      (goto-char (lp--entry->start-marker entry))
      (insert (if (lp--entry->selected entry) ?* ?\ ))
      (if (lp--entry->selected entry)
-         (lp--entry-set-background entry (face-background kom-mark-face))
+         (lp--entry-set-background entry (lyskom-face-background kom-mark-face))
        (lp--entry-set-background entry nil))
      (delete-char 1)
      (lp--entry-update-extents entry))))

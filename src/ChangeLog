@@ -1,5 +1,8 @@
 2004-10-26  Pontus Freyhult  <pont@soua.net>
 
+	* mship-edit.el (lp--redraw-entry-mark): Use lyskom-face-background,
+	not face-background.
+
 	Fix XEmacs problems with kom-prioritize:
 	* compatibility.el (lyskom-face-background): Changed to a wrapper
 	function that returns a string (not a color-specifier) or nil.
