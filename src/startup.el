@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.18 1996-02-21 19:48:28 davidk Exp $
+;;;;; $Id: startup.el,v 38.19 1996-02-27 23:15:31 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.18 1996-02-21 19:48:28 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.19 1996-02-27 23:15:31 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -123,7 +123,7 @@ See lyskom-mode for details."
 				lyskom-server-info)))))
 	    ;; Can't use lyskom-end-of-command here.
 	    (setq lyskom-executing-command nil) 
-	  ;;; B|rja
+	    ;; Log in
 	    (kom-start-anew t)
 	    (setq init-done t))
 	;; Something went wrong. Lets cleanup everything. :->
@@ -377,86 +377,78 @@ alias name is entered, the corresponding address is returned."
 (defun lyskom-mode ()
   "\\<lyskom-mode-map>Mode for LysKOM client.
 Commands:
-\\[kom-next-command]	reads the next text, selects next conference with unread texts
-	or whatever the prompt says.
-\\[kom-go-to-conf]	asks for a conference and makes you a member (if your not) in
-	that conference. (you name the conference).
-\\[kom-list-conferences]	writes a list of conferences matching a given string.
-\\[kom-list-persons]	writes a list of persons matching a given string.
+\\[kom-next-command]	Do the default action. This can be to read the next text,select
+n	ext conference with unread texts or whatever the prompt says.
+\\[kom-go-to-conf]	Go to a conference. LysKOM will ask you for a conference
+	and make you a member of it if you are not already.
+\\[kom-list-conferences]	List conferences matching a given string.
+\\[kom-list-persons]	List persons matching a given string.
 
-\\[kom-list-news]	gives a list of the amount of unread texts you have and in 
-	what conferences.
-\\[kom-go-to-next-conf]	put the current conference in the bottom of the list and read 
-	the next one from the list of conferences with unread texts.
+\\[kom-list-news]	List the conferences you have unread texts in.
+\\[kom-go-to-next-conf]	Go to the next conference with unread texts.
 
-\\[kom-membership]	creates a buffer with the list of conferences you are member in.
+\\[kom-membership]	Display a buffer with the list of conferences you are member in.
 
-\\[kom-quit]	leaves this lyskom session.
-\\[kom-who-is-on]	gives you a list of all the users of lyskom right now.
+\\[kom-quit]	Leave this LysKOM session.
+\\[kom-who-is-on]	Show a list of all the users of lyskom right now.
 
-\\[kom-extended-command]	reads a command using the minibuffer and executes it.
+\\[kom-extended-command]	Read a command using the minibuffer and execute it.
 	This is another way to give commands.
 
-\\[kom-write-text]	asks for subject and start editing of a new text.
-\\[kom-write-comment]	starts editing of a comment to the last read article.
-\\[kom-private-answer]	starts editing of a personal answer to the author of the last
+\\[kom-write-text]	Start writing a new text.
+\\[kom-write-comment]	Start writing a comment to the last read article.
+\\[kom-private-answer]	Start writing a personal answer to the author of the last
 	read article.
-\\[kom-send-letter]	prompts for a name of a person or conference and then starts
-	editing a letter to this person or conference.
+\\[kom-send-letter]	Start writing a letter to a person or conference.
 
-\\[kom-page-next-command]	starts at the top of a page and then does what \\[kom-next-command] does.
-\\[kom-line-next-command]	does what the \\[kom-next-command] does but scrolls at most 1 line.
+\\[kom-page-next-command]	Clear the page and do what \\[kom-next-command] does.
+\\[kom-line-next-command]	Do what \\[kom-next-command] does, but scroll at most 1 line.
 
-0 .. 9	gives a numeric argument to certain commands.
-\\[describe-mode]	gives you this help.
+0 .. 9	Give a numeric argument to the next command.
+\\[describe-mode]	Display this help text.
 
-\\[kom-busy-wait]	put the lyskom-session in wait mode. The next created text with 
+\\[kom-busy-wait]	Put the lyskom-session in wait mode. The next created text with 
 	a priotity higher that that of the next conference you are going
 	to will be read directly when it is created.
-\\[kom-set-unread]	mark a number of texts as unread.
-\\[kom-jump]	skip, mark as read, all the comments to this article recursively.
-\\[kom-display-time]	show the current date and time.
+\\[kom-set-unread]	Mark a number of texts as unread.
+\\[kom-jump]	Skip (mark as read) all the comments to this article recursively.
+\\[kom-display-time]	Show the current date and time.
 
-\\[kom-change-presentation]	change your presentation.
-\\[kom-view]	view the specified text.
-\\[kom-view-commented-text]	view the text that the current text comments or is a footnote to.
-\\[kom-review-presentation]	show the presentation for a person or a conferencce.
+\\[kom-change-presentation]	Change your presentation.
+\\[kom-view]	View the specified text.
+\\[kom-view-commented-text]	View the text that the current text comments or is a footnote to.
+\\[kom-review-presentation]	Show the presentation for a person or a conferencce.
 
-\\[kom-review-comments]	view all comments to the current text.
-\\[kom-review-tree]	view all comments to the current text and step through the tree
+\\[kom-review-comments]	View all comments to the current text.
+\\[kom-review-tree]	View all comments to the current text and step through the tree
 	in depth-first order.
 
-\\[kom-find-root-review]	view the complete comment tree.
-\\[kom-find-root]	show the root text of this comment tree.
-\\[kom-review-by-to]	view the last (first or all) article written by named author
+\\[kom-find-root-review]	View the complete comment tree.
+\\[kom-find-root]	Show the root text of this comment tree.
+\\[kom-review-by-to]	View the last (first or all) article written by named author
 	in a named conference.
 
-\\[kom-mark-text]	creates a mark on a text. (you specify a number).
-\\[kom-unmark-text]	removes the mark on a text.
-\\[kom-review-marked-texts]	view all text marked with a certain mark. (you specify it).
-\\[kom-review-all-marked-texts]	view all marked text.
+\\[kom-mark-text]	Create a mark on a text.
+\\[kom-unmark-text]	Remove the mark on a text.
+\\[kom-review-marked-texts]	View all text marked with a certain mark.
+\\[kom-review-all-marked-texts]	View all marked text.
 
-\\[kom-view-next-new-text]	push the viewing on the bottom of the stack and read the next new
-	text from the list of unread.
-\\[kom-review-next]	continue the viewing.
-\\[kom-review-stack]	show the stack of things we are viewing.
-\\[kom-review-clear]	clear the stack of things we are viewing.
-\\[kom-review-backward]	toggles the read order of reviewed texts. This can only be done
+\\[kom-view-next-new-text]	Read the next text from the list of unread.
+\\[kom-review-next]	Continue the viewing.
+\\[kom-review-stack]	Show the stack of things we are viewing.
+\\[kom-review-clear]	Clear the stack of things we are viewing.
+\\[kom-review-backward]	Toggles the read order of reviewed texts. This can only be done
 	when viewing texts with \\[kom-review-by-to], \\[kom-review-marked-texts] and \\[kom-review-all-marked-texts].
 
-\\[kom-status-conf]	show the status of a conference.
-\\[kom-status-person]	show the status of a person
-\\[kom-save-text]	save the text you are looking at to a file.
+\\[kom-status-conf]	Show the status of a conference.
+\\[kom-status-person]	Show the status of a person
+\\[kom-save-text]	Save the text you are looking at to a file.
 
-\\[kom-get-abuse]	get an insulting text.
-\\[kom-get-appreciation]	get an encouraging text.
+\\[kom-get-abuse]	Get an insulting text.
+\\[kom-get-appreciation]	Get an encouraging text.
 
-\\[kom-list-news-old]	another list of unread texts. Sometimes they differ due to 
-	bugs in the client. This will not exist any more when there are no 
-	more bugs in these parts of the code.
-
-\\[kom-add-self]	makes you a member of a conference.
-\\[kom-sub-self]	removes you as a member of a conference.
+\\[kom-add-self]	Become a member of a conference.
+\\[kom-sub-self]	Removes you as a member of a conference.
 
 All bindings (this is here due to the fact that inconsistensies while 
 developping this package are frequent):
@@ -522,6 +514,8 @@ to see, set of call."
     (make-local-variable 'lyskom-last-conf-done)
     (make-local-variable 'lyskom-last-conf-fetched)
     (make-local-variable 'lyskom-last-conf-received)
+    (make-local-variable 'lyskom-last-group-message-recipient)
+    (make-local-variable 'lyskom-last-personal-message-sender)
     (make-local-variable 'lyskom-last-viewed)
     (make-local-variable 'lyskom-list-of-edit-buffers)
     (make-local-variable 'lyskom-marked-text-cache)

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.22 1996-02-23 12:29:33 byers Exp $
+;;;;; $Id: vars.el.in,v 38.23 1996-02-27 23:15:46 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.22 1996-02-23 12:29:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.23 1996-02-27 23:15:46 davidk Exp $\n"))
 
 
 
@@ -887,36 +887,42 @@ the value of  kom-tell-phrases  for fun.")
 
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
-;;; +++ Should handle dark backgrounds better
-
 (when (eq window-system 'x)
   (if (x-display-color-p)
       (let* ((bgmode (cdr (assq 'background-mode (frame-parameters))))
 	     (dark-bg (eq bgmode 'dark)))
+	;; Face for text buttons and other KOM buttons
 	(lyskom-make-face 'kom-active-face
 	  (copy-face 'default 'kom-active-face)
 	  (set-face-foreground 'kom-active-face
 			       (if dark-bg "lightblue" "blue4")))
+	;; Face for URL buttons
 	(lyskom-make-face 'kom-url-face
 	  (copy-face 'default 'kom-url-face)
 	  (set-face-foreground 'kom-url-face
 			       (if dark-bg "Moccasin" "BlueViolet")))
+	;; Face for highlighting you own name
 	(lyskom-make-face 'kom-me-face
 	  (copy-face 'bold 'kom-me-face)
 	  (set-face-foreground 'kom-me-face "gold")
 	  (set-face-background 'kom-me-face "black"))
+	;; Not sure what this is for
 	(lyskom-make-face 'kom-highlight-face
 	  (copy-face 'highlight 'kom-highlight-face)
 	  (set-face-foreground 'kom-highlight-face 
 			       "midnight blue"))
+	;; This face is not used at the moment (960226)
 	(lyskom-make-face 'kom-text-face
 	  (copy-face 'default 'kom-text-face))
+	;; Face for the subject string
 	(lyskom-make-face 'kom-subject-face
 	  (copy-face 'kom-text-face 'kom-subject-face)
 	  (set-face-foreground 'kom-subject-face
 			       (if dark-bg "Khaki" "dark green")))
+	;; Not used (960226)
 	(lyskom-make-face 'kom-text-no-face
 	  (copy-face 'kom-text-face 'kom-text-no-face))
+	;; Face for presence messages in the buffer
 	(lyskom-make-face 'kom-presence-face
 	  (make-face 'kom-presence-face)
 	  (make-face-italic 'kom-presence-face nil t)
