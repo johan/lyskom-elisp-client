@@ -1,3 +1,16 @@
+Thu Jul 18 10:18:13 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-format-conf-type): Bugfix (det fungerade
+ 	helt enkelt inte).
+
+Wed Jul 17 11:35:10 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Kontroll av
+ 	mottagare hoppar över kommenterade författare om deras brevlådor
+ 	är mottagare och hoppar även över lyskom-pers-no (man ser ju
+ 	alltid texter man skriver själv.) Detta gör att det går snabbare
+ 	att skicka personliga svar.
+
 Tue Jul 16 10:25:47 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* swedish-strings.el (lyskom-strings): Bytte \345 -> \344 på en

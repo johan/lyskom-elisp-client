@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.3 1996-07-17 08:59:40 byers Exp $
+;;;;; $Id: edit-text.el,v 41.4 1996-07-18 08:22:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.3 1996-07-17 08:59:40 byers Exp $\n"))
+	      "$Id: edit-text.el,v 41.4 1996-07-18 08:22:57 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -481,8 +481,10 @@ text is a member of some recipient of this text."
                                                   (lyskom-get-string 
                                                    'please-edit-recipients)))))
 
-    (if kom-check-commented-author-membership
+    (if (and kom-check-commented-author-membership
+             (memq 'comm-to misc-list))
         (progn
+          (lyskom-message (lyskom-get-string 'checking-rcpt))
 
           ;;
           ;; For each commented text, get the author
@@ -495,13 +497,30 @@ text is a member of some recipient of this text."
                              comm-to-list))
 
           ;;
+          ;; For each author, see if the author is a direct decipient
+          ;; of the text. If so, there is no point in continuing.
+          ;; (People can unsubscribe from their mailboxes, but if they
+          ;; do, this code won't help anyway.)
+          ;;
+
+          (lyskom-traverse misc (cdr misc-list)
+            (cond ((eq (car misc) 'comm-to)
+                   (setq comm-to-list (cons (cdr misc)
+                                            comm-to-list)))
+                  ((or (eq (car misc) 'recpt)
+                       (eq (car misc) 'cc-recpt))
+                   (if (or (memq (cdr misc) author-list)
+                           (eq (cdr misc) me))
+                       (setq author-list (delq (cdr misc) author-list))))))
+
+
+          ;;
           ;; For each author, check that the author is a member of one of
           ;; the recipients (I'd like a quick server call for this, rather
           ;; than get the entire membership for the author).
           ;;
 
     
-          (lyskom-message (lyskom-get-string 'checking-rcpt))
           (save-excursion
             (set-buffer (process-buffer lyskom-proc))
             (mapcar (function (lambda (check-recipient-author-map-variable)
