@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.12 1992-08-01 15:53:12 linus Exp $
+;;;;; $Id: startup.el,v 35.13 1992-08-03 04:10:05 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.12 1992-08-01 15:53:12 linus Exp $\n"))
+	      "$Id: startup.el,v 35.13 1992-08-03 04:10:05 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -255,6 +255,7 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
 	     (not (zerop (conf-stat->no-of-texts conf-stat))))
 	(lyskom-insert-string 'presentation-encouragement))
     (lyskom-setup-prefetch)
+    (lyskom-stop-prefetch)
     (setq lyskom-membership-is-read 0)
     (setq lyskom-membership nil)
     (setq lyskom-command-to-do 'unknown)
@@ -321,6 +322,12 @@ Information required for this:
   (let ((list (lyskom-array-to-list membership))
 	sent)
     (lyskom-add-membership-to-membership membership)
+    (lyskom-fetch-until-we-have-an-unread list)))
+
+
+(defun lyskom-fetch-until-we-have-an-unread (&optional list)
+  "Call to fetch info until we have decided if we have an unread. (or are done."
+  (let ((sent))
     (while (and (not sent) list)
       (if (and lyskom-unread-confs
 	       (not (memq (membership->conf-no (car list))
@@ -335,10 +342,11 @@ Information required for this:
       (setq list (cdr list)))
     (if sent
 	nil
-      (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
-				       lyskom-pers-no
-				       lyskom-membership-is-read
-				       lyskom-fetch-membership-length))
+      (if (numberp lyskom-membership-is-read)
+	  (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
+					   lyskom-pers-no
+					   lyskom-membership-is-read
+					   lyskom-fetch-membership-length)))
     (let ((reverse (reverse lyskom-membership)))
       (while reverse
 	(lyskom-prefetch-conf (membership->conf-no (car reverse)))
@@ -377,6 +385,7 @@ If not, fetch next conf-stat from REST-MEMBERSHIPLIST."
 	  (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
 					   lyskom-membership-is-read
 					   lyskom-fetch-membership-length)
+	(setq lyskom-membership-is-read t)
 	(lyskom-run 'main 'lyskom-start-anew-login-3 'cont)))))
 
 
