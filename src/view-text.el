@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.29 1999-10-14 10:39:48 byers Exp $
+;;;;; $Id: view-text.el,v 44.30 1999-10-14 15:34:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.29 1999-10-14 10:39:48 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.30 1999-10-14 15:34:02 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -144,6 +144,15 @@ Note that this function must not be called asynchronously."
                      (lyskom-insert (lyskom-get-string 'filtered)))
                    (lyskom-insert "\n")
 
+		   (setq end (point-max))
+
+		   (if (and kom-text-properties
+			    (null filter)
+			    (not (lyskom-face-default-p 'kom-first-line-face)))
+		       (add-text-properties
+			start end '(face kom-first-line-face)))
+		   (set-marker start nil)
+
                    ;; Insert sender
 
                    (when (and mx-sender kom-show-imported-envelope-sender)
@@ -190,17 +199,7 @@ Note that this function must not be called asynchronously."
                              mx-reply-to)
                      )
 
-		   
-		   (setq end (point-max))
-
-		   (if (and kom-text-properties
-			    (null filter)
-			    (not (lyskom-face-default-p 'kom-first-line-face)))
-		       (add-text-properties
-			start end '(face kom-first-line-face)))
-		   (set-marker start nil)
-
-		   ;; All recipients and other header lines.
+                   ;; All recipients and other header lines.
 
 		   (if (eq filter 'dontshow)
 		       (lyskom-mark-as-read

@@ -1,3 +1,8 @@
+1999-10-14  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-view-text): Don't set first-line-face on
+	the imported header lines.
+
 Thu Oct 14 13:57:16 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-9
