@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.72 2003-01-05 21:37:08 byers Exp $
+;;;;; $Id: view-text.el,v 44.73 2003-04-07 05:24:45 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.72 2003-01-05 21:37:08 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.73 2003-04-07 05:24:45 jhs Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -67,7 +67,11 @@ Note that this function must not be called asynchronously."
         (start nil)
         (todo nil)
         (lyskom-last-text-format-flags nil))
-    (cond ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
+    (cond ((eq filter 'obliterate)
+	   (setq todo 'next-text)
+	   (lyskom-mark-as-read (blocking-do 'get-text-stat text-no))
+	   'next-text)
+	  ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
 	   (setq todo 'next-text)
 	   (lyskom-mark-as-read (blocking-do 'get-text-stat text-no))
 	   'next-text)
