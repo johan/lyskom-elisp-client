@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.33 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: komtypes.el,v 44.34 2003-08-16 19:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.33 2003-08-16 16:58:45 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.34 2003-08-16 19:16:03 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -850,6 +850,11 @@ Do nothing if the TLIST is less than N elements long."
    (existing-confs  :read-only t)
    (existing-persons :read-only t)
    (highest-conf-no :read-only t))
+  :nil-safe)
+
+(def-komtype scheduling-info
+  ((priority        :read-only t)
+   (weight          :read-only t))
   :nil-safe)
 
 
