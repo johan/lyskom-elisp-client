@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.113 2002-07-29 18:00:40 byers Exp $
+;;;;; $Id: utilities.el,v 44.114 2002-07-30 10:53:34 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.113 2002-07-29 18:00:40 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.114 2002-07-30 10:53:34 ceder Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -734,8 +734,8 @@ its first argument and remaining list items appended to the argument list."
       (while (and how (null text-no))
         (let* ((strategy-pred nil) ;; when a predicate to test the prefix
                (compare-value nil) ;; when a value to compare the prefix to
-               (applies-p (caar how)) ;; either one of the above
-               (what-text (cdar how))
+               (applies-p (car (car how))) ;; either one of the above
+               (what-text (cdr (car how)))
                (constraint-not-met nil))
           (if (or (eq applies-p '-) (not (functionp applies-p)))
               (setq compare-value applies-p)
