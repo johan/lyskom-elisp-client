@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.42 2002-07-23 18:28:41 byers Exp $
+;;;;; $Id: parse.el,v 44.43 2002-08-08 07:44:21 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.42 2002-07-23 18:28:41 byers Exp $\n"))
+	      "$Id: parse.el,v 44.43 2002-08-08 07:44:21 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -1190,6 +1190,11 @@ functions and variables that are connected with the lyskom-buffer."
 				       'mode-line-working
 				     'mode-line-waiting))
 		lyskom-is-saving nil)
+	  ;; I guess the following two lines could be replaced by
+	  ;; force-mode-line-update in a modern emacs.
+	  (set-buffer-modified-p (buffer-modified-p))
+	  (sit-for 0)
+
 	  ;; Removed check for kom-presence-messages
 	  (if (and (not (lyskom-is-in-minibuffer)))
 	      (message ""))))
