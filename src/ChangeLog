@@ -1,5 +1,8 @@
 2000-05-23  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el: Detect buggy versions of encode-coding-string
+	and decode-coding-string and provide a correcting wrapper.
+
 	* lyskom-rest.el (lyskom-w3-region): Remove compiler warning about 
 	unreferenced variable.
 	(lyskom-do-insert): Same here.

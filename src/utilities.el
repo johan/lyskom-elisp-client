@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.57 2000-05-23 12:06:47 byers Exp $
+;;;;; $Id: utilities.el,v 44.58 2000-05-23 15:40:01 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.57 2000-05-23 12:06:47 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.58 2000-05-23 15:40:01 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -784,12 +784,7 @@ name of the day of week."
                         (elt now 6)))))
 
 (defun lyskom-client-date ()
-  "Format the current client time as a string.
-The optional format string FMT specifies the format. If no format string
-is supplied time-yyyy-mm-dd-hh-mm is used. The arguments to the format
-string are the following: the year, the month, the day, the hour, the 
-minutes, the seconds, the full name of the day of week, the abbreviated
-name of the day of week."
+  "Return the current time at the client as a LysKOM time structure."
   (let ((now (decode-time)))
     (lyskom-create-time (elt now 0)     ;sec
                         (elt now 1)     ;min

@@ -30,6 +30,8 @@ till funktionen, helst också per KOM.
 
 * SHOWSTOPPERS
 
+** lyskom-unicase använder aset för att sätta element i en sträng.
+
 ** I startup.el så görs en get-collate-table. Skydda anropet från
    servrar som inte har get-collate-table.
 
