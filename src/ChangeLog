@@ -1,3 +1,7 @@
+1999-11-18  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* Makefile: Debian package building.
+
 1999-11-17  David Byers  <davby@ida.liu.se>
 
 	* startup.el (lyskom): Set process coding system to latin-1 again.
