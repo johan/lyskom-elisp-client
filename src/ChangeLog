@@ -1,3 +1,8 @@
+2003-08-28  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (kom-builtin-server-aliases, kom-server-aliases): Fix
+	documentation string ((NICKNAME . SERVER) -> (SERVER . NICKNAME)).
+
 2003-08-28  David Byers  <byers@lysator.liu.se>
 
 	Handle breaking very long texts:
