@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.1 1996-10-20 02:56:42 davidk Exp $
+;;;;; $Id: command.el,v 44.2 1996-10-28 18:01:19 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -222,7 +222,14 @@ chosen according to this"
   (if lyskom-idle-time-flag
       (initiate-user-active 'background nil))
   (if kom-inhibit-typeahead
-      (discard-input)))
+      (discard-input))
+  ;; lyskom-pending-commands should probably be a queue or a stack.
+  (when lyskom-pending-commands
+    (let ((command (car lyskom-pending-commands)))
+      (setq lyskom-pending-commands (cdr lyskom-pending-commands))
+      (if (symbolp command)
+	  (call-interactively command)
+	(eval command)))))
 
 (provide 'lyskom-command)
 
