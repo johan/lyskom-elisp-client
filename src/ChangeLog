@@ -1,3 +1,8 @@
+1999-11-23  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-private-answer-soon): Fixed nesting bug
+	that caused two personal reply buffers to be created.
+
 1999-11-23  Per Hedbor	 <per@idonex.se>
 	* services.el (initiate-create-text): Fixed support for old lyskom
 	servers without call 86.
