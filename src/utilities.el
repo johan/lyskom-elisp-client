@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.118 2002-09-13 09:11:02 jhs Exp $
+;;;;; $Id: utilities.el,v 44.119 2002-09-15 14:52:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.118 2002-09-13 09:11:02 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.119 2002-09-15 14:52:00 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -773,9 +773,10 @@ its first argument and remaining list items appended to the argument list."
            (or always-prompt
                (lyskom-read-text-no-prompt-p lyskom-current-command)))
       (lyskom-read-number prompt 
-                          (if (lyskom-plusp text-no) 
-                              text-no
-                            (lyskom-default-value 'lyskom-current-text))))
+                          (cond ((lyskom-plusp default) default)
+                                ((lyskom-plusp text-no) text-no)
+                                (t (lyskom-default-value
+                                    'lyskom-current-text)))))
      ((and (lyskom-plusp text-no)) ;; a proper text-no
       text-no)
      ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
