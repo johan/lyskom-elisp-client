@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.15 1992-01-24 23:53:40 linus Exp $
+;;;;; $Id: commands1.el,v 35.16 1992-02-28 23:39:46 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.15 1992-01-24 23:53:40 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.16 1992-02-28 23:39:46 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -832,6 +832,7 @@ that text instead."
 
 (defun lyskom-private-answer-soon (text-stat text)
   "Write a private answer to TEXT-STAT, TEXT."
+  (lyskom-start-of-command 'kom-private-answer)
   (if (string-match "\n" (text->text-mass text))
       (lyskom-private-answer text-stat
 			     (substring (text->text-mass text)
@@ -841,7 +842,6 @@ that text instead."
 
 (defun lyskom-private-answer (text-stat subject)
   "Write a private answer. Args: TEXT-STAT SUBJECT."
-  (lyskom-start-of-command 'kom-private-answer)
   (if (null text-stat)
       (progn
 	(lyskom-insert-string 'confusion-what-to-answer-to)
@@ -854,6 +854,33 @@ that text instead."
 			 'recpt (text-stat->author text-stat)
 			 'recpt lyskom-pers-no)
 			subject ""))))
+
+
+;;; ================================================================
+;;;    Personligt svar p} f|reg}ende - kom-private-answer-previous
+
+;;; Author: ceder
+
+(defun kom-private-answer-previous ()
+  "Write a private answer to previously viewed text."
+  (interactive)
+  (lyskom-start-of-command 'kom-private-answer-previous)
+  (if lyskom-previous-text
+      (progn
+	(lyskom-collect 'main)
+	(initiate-get-text-stat 'main nil lyskom-previous-text)
+	(initiate-get-text 'main nil lyskom-previous-text)
+	(lyskom-use 'main 'lyskom-private-answer-soon-prev))
+    (lyskom-insert-string 'confusion-who-to-reply-to)
+    (lyskom-end-of-command)))
+
+(defun lyskom-private-answer-soon-prev (text-stat text)
+  "Write a private answer to TEXT-STAT, TEXT."
+  (if (string-match "\n" (text->text-mass text))
+      (lyskom-private-answer text-stat
+			     (substring (text->text-mass text)
+					0 (match-beginning 0)))
+    (lyskom-private-answer text-stat "")))
 
 
 ;;; ================================================================
