@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.23 1997-07-09 14:41:33 byers Exp $
+;;;;; $Id: vars.el.in,v 44.24 1997-07-10 08:58:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.23 1997-07-09 14:41:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.24 1997-07-10 08:58:50 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1609,16 +1609,24 @@ an unknown person.")
 (def-kom-var kom-no-comments-to-motd nil
   "This should always be set to nil unless you are Klaus Zeuge.") ;+++SOJGE
 
-(defvar lyskom-format-special '((html . lyskom-format-html)
+(def-kom-var lyskom-format-special '((html . lyskom-format-html)
                                 (enriched . lyskom-format-enriched))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")
 
-(defvar lyskom-send-text-transform-function nil
+(def-kom-var lyskom-send-text-transform-function nil
   "Function to call to transform text before sending it to the server.
 The function should accept a single argument and return the transformed
 texts that is to be sent to the server.")
+
+(def-kom-var lyskom-slow-mode nil
+  "Non-nil when in slow mode"
+  local)
+
+(def-kom-var lyskom-saved-read-only nil
+  "Saved value of buffer-read-only when in slow mode."
+  local)
 
 ;;; ======================================================================
 ;;; Event hooks
