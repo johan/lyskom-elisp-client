@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.123 2001-02-25 16:26:52 joel Exp $
+;;;;; $Id: english-strings.el,v 44.124 2001-03-15 20:23:45 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.123 2001-02-25 16:26:52 joel Exp $"))
+              "$Id: english-strings.el,v 44.124 2001-03-15 20:23:45 joel Exp $"))
 
 
 ;;; ================================================================
@@ -71,8 +71,8 @@
   (define-prefix-command 'lyskom-en-edit-insert-prefix)
   (define-prefix-command 'lyskom-en-edit-aux-prefix)
   (define-prefix-command 'lyskom-en-edit-add-prefix)
-  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
-  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
+  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
+  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
@@ -452,7 +452,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s).\n")
     (client-statistics . "    Distribution of clients:\n")
-    (client-statistics-line . "    %=-35#1s: %3#2d")
+    (client-statistics-line . "    %4#2d %#1s")
     (who-to-add-q . "Add whom/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
