@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.1 1991-09-15 10:02:16 linus Exp $
+# $Id: Makefile,v 35.2 1991-09-16 19:23:22 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,18 +22,19 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-VERSION = 0.34
-
-DOCFILE = elisp-client-$(VERSION)
-
 # If you edit this, make sure it works afterwards also. /Linus
 
-elisp-client:	../doc/$(DOCFILE).latexinfo
+include Topdir.make
+include $(TOPDIR)/scripts/import.make
+
+elisp-client:	../doc/elisp-client.latexinfo
 	emacs -batch -l /usr/local/lib/elisp/latexinfo-mode \
 	-l /usr/local/lib/elisp/latexinfo \
 	-f batch-latexinfo-format $?
 
-$(DOCFILE).txt:	../doc/elisp-client
+elisp-client.txt:	../doc/elisp-client
 	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke $?
-	mv elisp-client.txt $(DOCFILE).txt
+
+clean:
+	$(RM) $(GENERIC-CLEAN) elisp-client elisp-client.txt
 
