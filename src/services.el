@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.5 1996-07-23 13:17:20 byers Exp $
+;;;;; $Id: services.el,v 41.6 1996-07-25 16:04:18 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.5 1996-07-23 13:17:20 byers Exp $\n"))
+	      "$Id: services.el,v 41.6 1996-07-25 16:04:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -774,7 +774,7 @@ or get-text-stat."
 ;;        (if (input-pending-p)
 ;;            (execute-kbd-macro (read-key-sequence ""))
         (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
-      (if lyskom-quit-flag
+      (if (or lyskom-quit-flag quit-flag)
 	  (progn
 	    (setq lyskom-quit-flag nil)
 	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
@@ -793,7 +793,7 @@ or get-text-stat."
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (not lyskom-quit-flag))
 	(accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
-      (if lyskom-quit-flag
+      (if (or lyskom-quit-flag quit-flag)
 	  (progn
 	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
 	    (signal 'quit nil)))
