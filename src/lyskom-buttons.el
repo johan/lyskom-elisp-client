@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.53 2001-01-03 22:02:56 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.54 2001-04-25 11:48:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.53 2001-01-03 22:02:56 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.54 2001-04-25 11:48:36 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -914,7 +914,7 @@ that, starts a new one."
          (exit nil))
     (lyskom-url-manager-starting manager)
     (while (eq status 'run)
-      (accept-process-output)
+      (lyskom-accept-process-output)
       (setq status (process-status proc)))
     (setq exit (process-exit-status proc))
     (cond ((and (eq status 'exit) 
