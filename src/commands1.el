@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.152 2002-09-07 21:35:22 ceder Exp $
+;;;;; $Id: commands1.el,v 44.153 2002-09-08 15:18:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.152 2002-09-07 21:35:22 ceder Exp $\n"))
+	      "$Id: commands1.el,v 44.153 2002-09-08 15:18:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1366,13 +1366,14 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
       'pres)))
 
 (def-kom-command kom-set-motd-text (arg)
-  "Add a presentation for a person or conference."
+  "Add a motd for a person or conference."
   (interactive "P")
    (let ((conf-no (lyskom-read-conf-no
-                   (lyskom-get-string 'what-to-set-pres-you)
+                   (lyskom-get-string 'what-to-set-motd-you)
                    '(all) t nil t))
-         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
-                                                  lyskom-previous-text)))
+         (text-no (lyskom-read-text-no-prefix-arg
+                   'what-text-to-set-as-motd-no t
+                   lyskom-previous-text)))
      (when (zerop conf-no)
          (setq conf-no lyskom-pers-no))
      (lyskom-set-pres-or-motd-2
