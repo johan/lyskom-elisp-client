@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.43 2002-06-23 11:34:55 byers Exp $
+;;;;; $Id: command.el,v 44.44 2002-06-23 15:25:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.43 2002-06-23 11:34:55 byers Exp $\n"))
+	      "$Id: command.el,v 44.44 2002-06-23 15:25:31 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -205,7 +205,7 @@
 
 (defvar lyskom-command-minibuffer-local-completion-map
   (let ((map (copy-keymap minibuffer-local-completion-map)))
-    (define-key map " " (lookup-key map (kbd "TAB")))
+    (define-key map " " 'lyskom-complete-command-word)
     map)
   "Keymap used for reading LysKOM names.")
 
@@ -213,9 +213,8 @@
   (let ((map (copy-keymap minibuffer-local-must-match-map)))
     (lyskom-xemacs-or-gnu 
      (progn (set-keymap-parent map lyskom-minibuffer-local-completion-map)
-	    (define-key map " " 
-	      (lookup-key lyskom-minibuffer-local-completion-map (kbd "TAB"))))
-     (define-key map " " (lookup-key map (kbd "TAB"))))
+            (define-key map " " 'lyskom-command-complete-word))
+     (define-key map " " 'lyskom-command-complete-word))
     map)
   "Keymap used for reading LysKOM names.")
 
@@ -388,12 +387,18 @@ and back of the string."
 
 (defun lyskom-command-complete-word ()
   (interactive)
-  (let ((completion (try-completion (buffer-string)
+  (let ((string (buffer-string)))
+    (when (next-single-property-change 0 'read-only string)
+      (setq string 
+            (substring string 
+                       (next-single-property-change 0 'read-only string))))
+
+  (let ((completion (try-completion string
 				    minibuffer-completion-table
 				    minibuffer-completion-predicate)))
     (cond ((null completion) (minibuffer-message " [No match]") nil)
 	  ((eq completion t) nil)
-	  (t (let* ((tmp (buffer-string)))
+	  (t (let* ((tmp string))
 	       (when (and (string-equal (lyskom-unicase completion)
                                         (lyskom-unicase tmp))
                           (not (string-match "\\s-$" completion)))
@@ -403,11 +408,57 @@ and back of the string."
 					 minibuffer-completion-predicate)))
 		     (setq completion tmp)))
 	       (if (string-equal (lyskom-unicase completion)
-				 (lyskom-unicase (buffer-string)))
+				 (lyskom-unicase string))
 		   (progn (minibuffer-completion-help) nil)
-		 (erase-buffer)
+                 (delete-region (- (point-max) (length string))
+                                (point-max))
 		 (insert completion)
-		 t))))))
+		 t)))))))
+
+
+;;; The code below is an alternative implementation of 
+;;; lyskom-command-complete-word that mucks with the
+;;; contents of the minibuffer and then calls the regular
+;;; minibuffer functions.
+;;;
+;;;(defvar lyskom-command-complete-regexp "\\(([^)]*)\\s-*\\)*\\S-+\\(\\s-*([^)]*)\\)*\\(\\s-+\\|\\'\\)")
+;;;
+;;;(defun lyskom-command-complete-word-count-words (string)
+;;;  (let ((count 0)
+;;;        (start 0))
+;;;    (while (string-match lyskom-command-complete-regexp string start)
+;;;      (setq start (match-end 0)
+;;;            count (1+ count)))
+;;;    count))  
+;;;
+;;;(defun lyskom-command-complete-word ()
+;;;  (interactive)
+;;;  (let* ((string (buffer-string))
+;;;         completions)
+;;;    ;; Strip the prompt in Emacs 21
+;;;    (when (next-single-property-change 0 'read-only string)
+;;;      (setq string 
+;;;            (substring string 
+;;;                       (next-single-property-change 0 'read-only string))))
+;;;
+;;;    (setq completions (save-excursion
+;;;                        (set-buffer lyskom-buffer)
+;;;                        (lyskom-complete-command string 
+;;;                                                 nil
+;;;                                                 nil)))
+;;;    (when (stringp completions)
+;;;      (let ((original-count (lyskom-command-complete-word-count-words string))
+;;;            (start 0))
+;;;        (while (and (> original-count 0)
+;;;                    (string-match lyskom-command-complete-regexp completions start))
+;;;          (setq start (match-end 0)
+;;;                original-count (1- original-count)))
+;;;
+;;;        (delete-region (- (point-max) (length string)) (point-max))
+;;;        (let ((result (substring completions 0 start)))
+;;;          (string-match "\\s-*\\'" result)
+;;;          (insert (substring result 0 (match-beginning 0)))))))
+;;;  (minibuffer-complete-word))
 
 
 (defun lyskom-start-of-command (function &optional may-interrupt dead-ok)
