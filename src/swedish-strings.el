@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.7 1996-05-27 20:35:52 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.8 1996-06-11 15:13:45 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.7 1996-05-27 20:35:52 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.8 1996-06-11 15:13:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -238,6 +238,7 @@ Skicka ett brev till %#2P f\366r medlemsskap.\n")
     (anyone-member . "F\345r vem som helst bli medlem? ")
     (secret-conf . "Hemligt m\366te? ")
     (comments-allowed . "F\345r man skriva kommentarer? ")
+    (anonymous-allowed . "F\345r man skriva anonyma texter? ")
     (what-comment-no . "Kommentera text nummer: ")
     (confusion-what-to-comment . "Jag f\366rst\345r inte vilken text du vill kommentera.\n")
     (confusion-what-to-footnote . "Jag f\366rst\345r inte vilken text du vill skriva en fotnot till.\n")
