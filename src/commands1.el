@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.7 1991-09-15 16:58:41 linus Exp $
+;;;;; $Id: commands1.el,v 35.8 1991-10-07 15:34:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.7 1991-09-15 16:58:41 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.8 1991-10-07 15:34:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1067,19 +1067,6 @@ Args: CONF-STAT MEMBERSHIP"
       (lyskom-enter-conf conf-stat (read-list->first lyskom-reading-list))
       (lyskom-end-of-command))
 
-     ((> (+ (conf-stat->first-local-no conf-stat)
-	    (conf-stat->no-of-texts conf-stat)
-	    -1)
-	 (membership->last-text-read membership))
-      ;; There are (probably) some unread texts in this conf.
-      (initiate-get-map 'main 'lyskom-go-to-conf-handle-map
-			(conf-stat->conf-no conf-stat)
-			(1+ (membership->last-text-read membership))
-			(conf-stat->no-of-texts conf-stat)
-			membership
-			conf-stat
-			priority))
-
      (t
       (lyskom-go-to-empty-conf conf-stat)))))
 
@@ -1118,7 +1105,7 @@ PRIORITY is the smallest priority the conference can be read with."
   "Go to a conference with no unseen messages. Args: CONF-STAT."
   (initiate-pepsi 'main nil (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
-  (lyskom-insert-string 'conf-all-read)
+  (lyskom-format-insert 'conf-all-read (conf-stat->name conf-stat))
   (lyskom-end-of-command))
 
 
