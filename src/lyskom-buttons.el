@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 38.6 1996-02-18 05:51:26 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 38.7 1996-02-23 12:29:28 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -29,6 +29,37 @@
 ;;;; Author: David Byers
 ;;;;
 ;;;;
+
+
+(defun lyskom-add-button-action (type text func)
+  "Add a new action to the popup menu for a class of objects.
+Arguments are TYPE, the type of object to adjust, TEXT the menu text
+for the action and FUNC, the function to call when the action is
+selected. By default TYPE may be any one of text, conf, pers or url 
+although users can add other types.
+
+FUNC must be a function with three arguments, BUFFER, ARGUMENT and
+TEXT.  BUFFER is the LysKOM buffer that the command should use, TEXT
+is the text of the selected button and ARGUMENT is the data argument
+associated with the object. For button type text it is a text
+number. For types conf and pers it is the conference number for the
+object. For URLs it is the text of the URL (a string) or NIL. For
+other (user-defined) types, it is a string.
+
+For more information on button types and arguments, see the
+documentation for the variable lyskom-text-buttons."
+  (nconc (nth 3 (assq type lyskom-button-actions))
+	 (list (cons text func))))
+
+(defun lyskom-set-default-button-action (type func)
+  "Set the default action for buttons of the type TYPE to FUNC. 
+
+FUNC must be a valid button action function. For more information
+on such functions see the documentation for lyskom-add-button-action."
+  (let ((el (assq type lyskom-button-actions)))
+    (setcdr (nthcdr 1 el)
+	    (cons func (nthcdr 3 el)))))
+      
 
 
 (defun kom-previous-link (num)
@@ -240,9 +271,15 @@ FACE is the default text face for the button."
                        'mouse-face 'kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
-                       'lyskom-button-arg nil
+                       'lyskom-button-arg arg
                        'lyskom-buffer lyskom-buffer))
-                (t nil))))
+                (t
+		 (list 'face (or face 'kom-active-face)
+		       'mouse-face 'kom-highlight-face
+		       'lyskom-button-text text
+		       'lyskom-button-type type
+		       'lyskom-button-arg arg
+		       'lyskom-buffer lyskom-buffer)))))
     (if (and lyskom-executing-command
              lyskom-current-command
              (assq lyskom-current-command hints))
