@@ -2,6 +2,7 @@
 
 	* parse.el (lyskom-char-p): New implementation to fix spurious
 	protocol errors.
+	(lyskom-char-p): Fixed new implementation.
 
 1999-10-25  David Kagedal  <davidk@lysator.liu.se>
 
