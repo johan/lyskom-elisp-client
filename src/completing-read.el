@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.28 2000-05-23 12:06:42 byers Exp $
+;;;;; $Id: completing-read.el,v 44.29 2000-07-28 11:11:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.28 2000-05-23 12:06:42 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.29 2000-07-28 11:11:34 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -268,11 +268,14 @@ conference number specifications to something useful."
 (defun lyskom-read-conf-lookup-specials (string predicate login-list x-list)
   "Used internally by lyskom-read-conf-internal to look up conf-stats
 from person and conference number specifications."
-  (lyskom-read-conf-expand-specials string
-                                    predicate
-                                    login-list
-                                    x-list
-                                    t))
+  (let ((cs (lyskom-read-conf-expand-specials string
+                                              predicate
+                                              login-list
+                                              x-list
+                                              t)))
+    (lyskom-create-conf-z-info (uconf-stat->name cs)
+                               (uconf-stat->conf-type cs)
+                               (uconf-stat->conf-no cs))))
 
 (defun lyskom-lookup-conf-by-name (string predicate)
   "Return the conf-z-info associated with STRING that also satisfies
@@ -354,14 +357,14 @@ function work as a name-to-conf-stat translator."
                                                           login-list
                                                           candidate-list)))
 
-          (cond ((and kom-complete-numbers-before-names
-                      specials)
+          (cond ((and kom-complete-numbers-before-names specials)
                  (lyskom-read-conf-lookup-specials string
                                                    predicate
                                                    login-list
                                                    candidate-list))
                 ((= (length result-list) 1)
                  (car result-list))
+
                 ((and (> (length result-list) 1)
                       (lyskom-completing-member string names))
                  (elt result-list

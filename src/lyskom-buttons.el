@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.45 2000-07-24 09:36:01 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.46 2000-07-28 11:11:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.45 2000-07-24 09:36:01 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.46 2000-07-28 11:11:35 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -227,22 +227,28 @@ If there is no active area, then do something else."
 
 (defun lyskom-keyboard-menu (title entries buf arg text)
   "Do a keyboard menu selection."
-  (let ((prompt nil)
-        (maxlen 0)
-        (e entries)
-        (completion-ignore-case t))
-    (while e
-      (if (> (lyskom-string-width (car (car e))) maxlen)
-          (setq maxlen (lyskom-string-width (car (car e)))))
-      (setq e (cdr e)))
+  (let* ((prompt nil)
+         (maxlen 0)
+         (entries (mapcar (lambda (el)
+                            (cons (if (stringp (car el)) (car el) (lyskom-get-string (car el)))
+                                  (cdr el))) entries))
+         (title (if (stringp title) title (lyskom-get-string title)))
+         (completion-ignore-case t))
+    (lyskom-traverse e entries
+      (if (> (lyskom-string-width (car e)) maxlen)
+          (setq maxlen (lyskom-string-width (car e)))))
     (setq prompt (concat 
                   (substring title 0
                              (min (lyskom-string-width title)
                                   (- (window-width (minibuffer-window))
                                      maxlen 3))) ": "))
 
-    (let ((choice (completing-read prompt entries nil t 
-                                   (cons (car (car entries)) 0) nil)))
+    (let ((choice (completing-read prompt
+                                   entries
+                                   nil
+                                   t 
+                                   (cons (car (car entries))
+                                         0) nil)))
       (when choice
         (funcall (cdr (lyskom-string-assoc choice entries))
                  buf arg text)))))
@@ -547,6 +553,7 @@ up."
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-view arg))))
 
 (defun lyskom-button-review-noconversion (buf arg text)
@@ -554,6 +561,7 @@ This is a LysKOM button action."
 Last argument TEXT is ignored. This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-review-noconversion arg))))
 
 (defun lyskom-button-review-tree (buf arg text)
@@ -561,6 +569,7 @@ Last argument TEXT is ignored. This is a LysKOM button action."
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
 	(t (pop-to-buffer buf)
+           (goto-char (point-max))
 	   (kom-review-tree arg))))
 
 (defun lyskom-button-find-root (buf arg text)
@@ -568,6 +577,7 @@ This is a LysKOM button action."
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
 	(t (pop-to-buffer buf)
+           (goto-char (point-max))
 	   (kom-find-root arg))))
 
 (defun lyskom-button-comment-text (buf arg text)
@@ -622,6 +632,7 @@ Last argument TEXT is ignored.
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-review-presentation arg))))
 
 (defun lyskom-button-view-conf-status (buf arg text)
@@ -630,6 +641,7 @@ TEXT is ignored.
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-status-conf arg))))
 
 (defun lyskom-button-goto-conf (buf arg text)
@@ -638,6 +650,7 @@ ignored.
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-go-to-conf arg))))
 
 (defun lyskom-button-add-self (buf arg text)
@@ -664,6 +677,7 @@ Last argument TEXT is ignored.
 This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
+           (goto-char (point-max))
            (kom-status-person arg))))
 
 (defun lyskom-button-mail (buf arg text)
@@ -1039,6 +1053,7 @@ depending on the value of `kom-lynx-terminal'."
 
 (defun lyskom-button-info-aux (buf arg text)
   (pop-to-buffer buf)
+  (goto-char (point-max))
   (let ((aux nil))
     (cond ((lyskom-aux-item-p arg))
           ((listp arg) 
