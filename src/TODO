@@ -3,6 +3,10 @@ Att göra i elisp-klienten
 
 Buggar
 
+Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
+endast i ett möte (säg IÅM) innan det prefetchas får man två
+parallella prefetcher på samma möte.
+
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
 
