@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 40.1 1996-03-27 11:45:49 byers Exp $
+;;;;; $Id: edit-text.el,v 40.2 1996-04-02 16:19:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,10 +31,9 @@
 ;;;; a text in a window. It also defines a new mode - lyskom-edit-mode.
 ;;;;
 
-
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 40.1 1996-03-27 11:45:49 byers Exp $\n"))
+	      "$Id: edit-text.el,v 40.2 1996-04-02 16:19:42 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -80,26 +79,20 @@ DATA is extra data to send to the function. HANDLER is called with
 where text-no is the number of the text.
 Does lyskom-end-of-command."
   (setq lyskom-is-writing t)
-  (lyskom-end-of-command)
   (lyskom-dispatch-edit-text proc misc-list subject body
-			     handler data))
+                             handler data))
 
 
 (defun lyskom-dispatch-edit-text (proc misc-list subject body
 				       &optional handler &rest data)
-  "Same as lyskom-edit-text except that it doesn't call lyskom-end-of-command."
+  "Same as lyskom-edit-text except that it doesn't set lyskom-is-writing."
   (let ((buf (process-buffer proc))
 	(buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
 					    lyskom-list-of-edit-buffers))
-    (condition-case emacs-18\.55
 	(process-kill-without-query (get-buffer-process (current-buffer)) t)
-      (error
-       ;; You lose some...
-       (message "Old emacs! Upgrade!")
-       (process-kill-without-query (get-buffer-process (current-buffer)))))
     (cond
      ((and (or (bufferp kom-write-texts-in-window)
 	       (stringp kom-write-texts-in-window))
@@ -122,11 +115,9 @@ Does lyskom-end-of-command."
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
     (make-local-variable 'lyskom-edit-return-to-configuration)
-    (make-local-variable 'kom-buffer)
     (setq lyskom-edit-handler handler)
     (setq lyskom-edit-handler-data data)
     (setq lyskom-edit-return-to-configuration config)
-    (setq kom-buffer buf)
     (lyskom-edit-insert-miscs misc-list subject body)
     (goto-char (point-min))
     (re-search-forward (concat "\\(" (regexp-quote lyskom-header-subject)
@@ -375,9 +366,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		    (end-of-line)
 		    (if (/= (point) old)
 			(signal 'lyskom-no-subject '(enter-subject-idi)))))
-	      (setq message (lyskom-edit-extract-text))
-          (if (fboundp 'lyskom-send-transform-text)
-              (setq message (lyskom-send-transform-text message)))
+	      (setq message
+                (lyskom-send-transform-text (lyskom-edit-extract-text)))
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
 		(set-buffer (process-buffer lyskom-proc))
@@ -411,7 +401,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
      (lyskom-beep lyskom-ding-on-no-subject)
-     (lyskom-message (lyskom-get-string (car (cdr err))))
+     (lyskom-message "%s" (lyskom-get-string (car (cdr err))))
      (condition-case arg
          (let ((text ""))
            (save-excursion
@@ -422,7 +412,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
            (save-excursion (insert text)))
        (error nil)))
     (lyskom-unknown-header
-     (lyskom-message (lyskom-get-string (car (cdr err)))))))
+     (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
 
 
 (defun lyskom-send-transform-text (message)
@@ -486,9 +476,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun kom-edit-insert-digit-text ()
   (interactive)
-  (if (boundp 'unread-command-event)	;Special for lucid-emacs
-      (setq unread-command-event last-command-event)
-    (setq unread-command-char last-command-char))
+  (setq unread-command-events (cons last-command-event unread-command-events))
   (call-interactively 'kom-edit-insert-text nil))
 
 
@@ -513,25 +501,25 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
-	     (headers (condition-case err
-			  (cdr (lyskom-edit-parse-headers))
-			(lyskom-edit-error nil))) ; Ignore these errors
-	     (no nil))
-	(while headers
-	  (if (or (eq (car headers) 'comm-to)
-		  (eq (car headers) 'footn-to))
-	      (setq no (car (cdr headers))
-		    headers nil)
-	    (setq headers (cdr (cdr headers)))))
-	(cond
-	 (no
-	  (goto-char p)
-	  (set-buffer (process-buffer lyskom-proc))
-	  (initiate-get-text 'edit thendo no buffer)
-	  (set-buffer buffer)
-	  (sit-for 0))
-	 (t
-	  (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))))
+             (headers (condition-case err
+                          (cdr (lyskom-edit-parse-headers))
+                        (lyskom-edit-error nil))) ; Ignore these errors
+             (no nil))
+        (while headers
+          (if (or (eq (car headers) 'comm-to)
+                  (eq (car headers) 'footn-to))
+              (setq no (car (cdr headers))
+                    headers nil)
+            (setq headers (cdr (cdr headers)))))
+        (cond
+         (no
+          (goto-char p)
+          (set-buffer (process-buffer lyskom-proc))
+          (initiate-get-text 'edit thendo no buffer)
+          (set-buffer buffer))
+         (t
+          (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
+    (sit-for 0)))
 
 
 ;;; ================================================================
@@ -592,8 +580,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 Return the corresponding number (conf no etc.). If ANGLED is non-nil,
 only match a number inside <>."
   (if (looking-at
-       (concat (regexp-quote (downcase (substring (lyskom-get-string header)
-						  0 4)))
+       (concat (lyskom-get-string header)
 	       (cond ((eq match-number 'angled)
 		      "[^0-9]*<\\([0-9]+\\)>")
 		     (match-number
@@ -627,13 +614,13 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	(let ((case-fold-search t)
 	      n)
 	  (cond
-	   ((setq n (lyskom-looking-at-header 'recipient 'angled))
+	   ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
 	    (nconc result (list 'recpt n)))
-	   ((setq n (lyskom-looking-at-header 'carbon-copy 'angled))
+	   ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
 	    (nconc result (list 'cc-recpt n)))
-	   ((setq n (lyskom-looking-at-header 'comment t))
+	   ((setq n (lyskom-looking-at-header 'comment-prefix t))
 	    (nconc result (list 'comm-to n)))
-	   ((setq n (lyskom-looking-at-header 'footnote t))
+	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
 	    (nconc result (list 'footn-to n)))
 	   ((lyskom-looking-at-header (if kom-emacs-knows-iso-8859-1
 					  lyskom-header-subject
@@ -645,66 +632,6 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	(forward-line 1)))
     result))
 
-	    
-		 
-
-;;; OBSOLETE!!!
-;;(defun lyskom-edit-read-misc-list ()
-;;  "Read misc-list from buffer."
-;;  ; +++ Should use lyskom-create-misc-list.
-;;  (goto-char (point-min))
-;;  (let ((result (cons 'MISC-LIST nil)))
-;;    (while (and (< (point) (point-max))
-;;		(not (or (equal (char-to-string 
-;;				 (elt 
-;;				  (if kom-emacs-knows-iso-8859-1
-;;				      lyskom-header-subject
-;;				    lyskom-swascii-header-subject)
-;;				  0))
-;;				(buffer-substring (point) (1+ (point))))
-;;			 (equal (char-to-string 
-;;				 (elt 
-;;				  (if kom-emacs-knows-iso-8859-1
-;;				      lyskom-swascii-header-subject
-;;				    lyskom-header-subject)
-;;				  0))
-;;				(buffer-substring (point) (1+ (point)))))))
-;;      (let ((char (string-to-char
-;;		   (upcase (buffer-substring (point) (1+ (point)))))))
-;;	(nconc 
-;;	 result
-;;	 (cons
-;;	  (cond
-;;	   ((eq char (elt (lyskom-get-string 'recipient) 0)) ;recpt
-;;	    (re-search-forward "<\\([0-9]+\\)>")
-;;	    (cons 'recpt (string-to-int (buffer-substring
-;;					 (match-beginning 1)
-;;					 (match-end 1)))))
-;;	   ((eq char (elt (lyskom-get-string 'carbon-copy) 0)) ;cc-recpt
-;;	    (re-search-forward "<\\([0-9]+\\)>")
-;;	    (cons 'cc-recpt (string-to-int (buffer-substring
-;;					    (match-beginning 1)
-;;					    (match-end 1)))))
-;;	   ((eq char (elt (lyskom-get-string 'comment) 0)) ;comm-to
-;;	    (re-search-forward "\\([0-9]+\\)")
-;;	    (cons 'comm-to (string-to-int (buffer-substring
-;;					   (match-beginning 1)
-;;					   (match-end 1)))))
-;;	   ((eq char (elt (lyskom-get-string 'footnote) 0)) ;footn-to
-;;	    (re-search-forward "\\([0-9]+\\)")
-;;	    (cons 'footn-to (string-to-int (buffer-substring
-;;					    (match-beginning 1)
-;;					    (match-end 1)))))
-;;	   (t 
-;;	    (signal 'lyskom-internal-error 
-;;		    (list "Unknown header line: "
-;;			  (buffer-substring (point)
-;;					    (progn 
-;;					      (end-of-line)
-;;					      (point)))))))
-;;	  nil)))
-;;      (beginning-of-line 2))
-;;    result))	   
 
 
 (defun lyskom-edit-extract-subject ()
@@ -821,19 +748,20 @@ the with-output-to-temp-buffer command is issued to make them both apear."
 The text is inserted in the buffer with '>' first on each line."
   (if text
       (progn
-	(set-buffer editing-buffer)
-	(and (not (bolp))
-	     (insert "\n"))
-	(and (not (eolp))
-	     (open-line 1))
-	(let* ((pb (point))
-	       (as (string-match "\n" (text->text-mass text)))
-	       (te (substring (text->text-mass text) (1+ as))))
-	  (insert te)
-	  (while (< pb (point))
-	    (beginning-of-line)
-	    (insert 62)
-	    (backward-char 2))))
+        (set-buffer editing-buffer)
+        (and (not (bolp))
+             (insert "\n"))
+        (and (not (eolp))
+             (open-line 1))
+        (let* ((pb (point))
+               (as (string-match "\n" (text->text-mass text)))
+               (te (substring (text->text-mass text) (1+ as))))
+          (insert te)
+          (while (<= pb (point))
+            (beginning-of-line)
+            (insert (or kom-cite-string 62))
+            (forward-line -1)
+            )))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 
@@ -845,24 +773,19 @@ Can be called from any of the lyskom-associated buffers. At least the main
 buffer and edit buffers."
   (save-excursion
     (let ((proc (or (get-buffer-process (current-buffer))
-		    (and (boundp 'lyskom-proc)
-			 (processp lyskom-proc)
-			 lyskom-proc)
-		    (signal 'lyskom-internal-error
-			    "lyskom-count-down-edits called from "
-			    (current-buffer)))))
+                    (and (boundp 'lyskom-proc)
+                         (processp lyskom-proc)
+                         lyskom-proc)
+                    (signal 'lyskom-internal-error
+                            "lyskom-count-down-edits called from "
+                            (current-buffer)))))
       (set-buffer (process-buffer proc))
       (while (and lyskom-list-of-edit-buffers
-		  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
-	(setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
-      (condition-case emacs-18\.55
+                  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
+        (setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
 	  (if lyskom-list-of-edit-buffers
 	      (process-kill-without-query proc t)
-	    (process-kill-without-query proc nil))
-	(error
-	 ;; You loose some if you only have emacs-18.55...
-	 (message "Running emacs 18.55 or earlier? Please upgrade!")
-	 (process-kill-without-query proc))))
+	    (process-kill-without-query proc nil)))
     lyskom-list-of-edit-buffers))
       
 

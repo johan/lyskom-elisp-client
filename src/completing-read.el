@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 40.1 1996-03-26 14:13:51 byers Exp $
+;;;;; $Id: completing-read.el,v 40.2 1996-04-02 16:19:22 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 40.1 1996-03-26 14:13:51 byers Exp $\n"))
+	      "$Id: completing-read.el,v 40.2 1996-04-02 16:19:22 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -104,6 +104,7 @@ The TYPE allows for subsets of the entire Lyskom-name space:
 * confs only conferences
 * pers only persons
 * logins only persons that are logged in right now.
+* conflogin conferences and persons that are logged in.
 If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field."
   (lyskom-completing-clear-cache)
@@ -160,17 +161,12 @@ Returns the name."
           lyskom-minibuffer-local-completion-map)
          (minibuffer-local-must-match-map 
           lyskom-minibuffer-local-must-match-map))
-    (condition-case error
-        (completing-read prompt 
-                         'lyskom-read-conf-name-internal
-                         type
-                         mustmatch
-                         initial
-                         'lyskom-name-hist)
-      (wrong-number-of-arguments        ; This is for emacs 18.
-       (completing-read prompt 'lyskom-read-conf-name-internal
-                        type mustmatch)))
-    ))
+    (completing-read prompt 
+                     'lyskom-read-conf-name-internal
+                     type
+                     mustmatch
+                     initial
+                     'lyskom-name-hist)))
 
 
 (defun lyskom-read-conf-name-internal-verify-type (cs predicate logins)
@@ -186,7 +182,11 @@ Logins is a list of conf-nos (only significant when PREDICATE is logins)."
 	   (conf-type->letterbox
 	    (conf-stat->conf-type cs)))
       (and (eq predicate 'logins)
-	   (memq (conf-stat->conf-no cs) logins))))
+	   (memq (conf-stat->conf-no cs) logins))
+      (and (eq predicate 'conflogin)
+           (or (not (conf-type->letterbox
+                     (conf-stat->conf-type cs)))
+               (memq (conf-stat->conf-no cs) logins)))))
 
 
 (defun lyskom-read-conf-name-internal (string predicate all)
@@ -202,11 +202,13 @@ If third argument ALL is nil then we are called from try-completion.
 If third argument ALL is 'conf-no then we are called from lyskom name
 to conf-no translator."
   (let* ((alllogins (and (string= string "")
-                         (eq predicate 'logins)))
-         (list (if (not alllogins)
+                         (or (eq predicate 'logins)
+                             (eq predicate 'conflogin))))
+         (list (if (or (not alllogins)
+                       (eq predicate 'conflogin))
                    (lyskom-completing-lookup-name string)))
          (nos (listify-vector (conf-list->conf-nos list)))
-         (parlist (if (memq predicate '(pers confs))
+         (parlist (if (memq predicate '(pers confs conflogin))
                       (let ((nos nos)
                             (typs (listify-vector 
                                    (conf-list->conf-types list)))
@@ -216,16 +218,15 @@ to conf-no translator."
                           (setq nos (cdr nos)
                                 typs (cdr typs)))
                         res)))
-         (logins (and (eq predicate 'logins)
+         (logins (and (or (eq predicate 'logins)
+                          (eq predicate 'conflogin))
                       (mapcar
                        (function (lambda (ele)
                                    (who-info->pers-no ele)))
                        (lyskom-completing-who-is-on))))
          (mappedlist (cond
-                      (alllogins
-                       logins)
-                      ((eq predicate 'all)
-                       nos)
+                      (alllogins logins)
+                      ((eq predicate 'all) nos)
                       ((eq predicate 'confs)
                        (apply 'append 
                               (mapcar (function 
@@ -255,7 +256,30 @@ to conf-no translator."
                                   (car lis))
                                (setq lis (cdr lis))
                              (setq nos (cdr nos))))
-                         res)))))
+                         res))
+                      ((eq predicate 'conflogin)
+                       (append
+                        (let ((nos (sort nos '<))
+                              ;; We need logins later on
+                              (lis (sort (copy-sequence logins) '<))
+                              res)
+                          (while (and nos
+                                      lis)
+                            (if (= (car nos) (car lis))
+                                (setq res (cons (car nos) res)))
+                            (if (> (car nos)
+                                   (car lis))
+                                (setq lis (cdr lis))
+                              (setq nos (cdr nos))))
+                          res)                        
+                        (apply 'append
+                               (mapcar 
+                                (function
+                                 (lambda (par)
+                                   (and (not (conf-type->letterbox (cdr par)))
+                                        (list (car par)))))
+                                parlist))))
+                      )))
     (cond
      ;;
      ;; Called from internal name to conf-no translator
@@ -518,17 +542,12 @@ Returns the name."
           lyskom-minibuffer-local-completion-map)
          (minibuffer-local-must-match-map 
           lyskom-minibuffer-local-must-match-map))
-    (condition-case error
-        (completing-read prompt 
-                         'lyskom-read-session-internal
-                         'logins
-                         mustmatch
-                         initial
-                         'lyskom-name-hist)
-      (wrong-number-of-arguments ; This is for emacs 18.
-       (completing-read prompt 'lyskom-read-session-internal
-                        'logins mustmatch)))
-    ))
+    (completing-read prompt 
+                     'lyskom-read-session-internal
+                     'logins
+                     mustmatch
+                     initial
+                     'lyskom-name-hist)))
 
 
 (defun lyskom-read-session-internal (string predicate all)

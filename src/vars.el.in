@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 40.2 1996-03-26 14:25:39 davidk Exp $
+;;;;; $Id: vars.el.in,v 40.3 1996-04-02 16:20:46 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 40.2 1996-03-26 14:25:39 davidk Exp $\n"
+  "$Id: vars.el.in,v 40.3 1996-04-02 16:20:46 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -62,6 +62,11 @@ This variable is not saved in the LysKOM server.")
 A buffer or buffer name means use the first window displaying that buffer.
 If no window is displaying that buffer or the buffer does not exits then it
 uses the same window.
+
+This variable is stored in the LysKOM server.")
+
+(defvar kom-cite-string ">"
+  "*String to insert before each line of a commented text.
 
 This variable is stored in the LysKOM server.")
 
@@ -233,29 +238,43 @@ program named by kom-audio-player.
 
 This variable is stored in the LysKOM server.")
 
+(defvar kom-ding-on-wait-done 1
+  "*Non-nil means ding when busy-waiting finishes.
+A number means the number of times to ding. A string is an argument
+for the program named by kom-audio-player. A symbol is interpreted as a 
+function to call.
+
+This variable is stored in the LysKOM server.")
+
 (defvar kom-ding-on-common-messages 0
-  "*Non-nil means ding as common messages arrive. A number means the number of
+  "*Non-nil means ding as common messages arrive. 
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.
+program named by kom-audio-player. A symbol is interpreted as a function to
+call.
 
 This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-group-messages 1
-  "*Non-nil means ding as group messages arrive. A number means the number of
+  "*Non-nil means ding as group messages arrive.
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.
+program named by kom-audio-player. A symbol is interpreted as a function
+to call.
 
 This variable is stored in the LysKOM server.")
 
 (defvar kom-ding-on-personal-messages 2
-  "*Non-nil means ding as personal messages arrive. A number means the number
+  "*Non-nil means ding as personal messages arrive.
 A number means the number of times to ding. A string is an argument for the
-program named by kom-audio-player.
+program named by kom-audio-player. A symbol is interpreted as a function 
+to call.
 
 This variable is stored in the LysKOM server")
 
 (defvar lyskom-ding-on-no-subject 2
   "How to ding if the user has not entered a subject line.
+A number means the number of times to ding. A string is an argument for the
+program named by kom-audio-player. A symbol is interpreted as a function 
+to call.
 
 This variable is not saved in the LysKOM server.")
 
@@ -436,7 +455,9 @@ This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-print-complex-dates (and (>= emacs-minor-version 29)
 					(>= emacs-major-version 19))
-  "*If non-nil, print today and yesterday using a special format.
+  "If non-nil, print today and yesterday using a special format. Doesn't
+work very well with Emacs 19.28 or older. You may want to set this to nil,
+but never set it to non-nil explicitly.
 
 This variable is not saved in the LysKOM server.")
 
@@ -454,6 +475,14 @@ This variable is not saved in the LysKOM server.")
 
 (defvar kom-ansaphone-on nil
   "t if automatic replies to personal messages are in effect.")
+
+(defvar lyskom-ansaphone-messages nil
+  "Messages collected by the automatic reply facility.
+The most recent message is the first message in the list.")
+
+
+(defvar lyskom-ansaphone-when-set (current-time-string)
+  "Time when the auto-reply facility was enabled.")
 
 
 (defvar kom-remote-control t
@@ -504,6 +533,7 @@ This variable is not saved in the LysKOM server.")
     kom-ding-on-group-messages
     kom-ding-on-common-messages
     kom-ding-on-priority-break
+    kom-ding-on-wait-done
     kom-show-personal-messages-in-buffer
     kom-pop-personal-messages
     kom-do-when-done
@@ -520,6 +550,7 @@ This variable is not saved in the LysKOM server.")
     kom-who-buffer-size-when-displaying
     kom-default-message-recipient
     kom-write-texts-in-window
+    kom-cite-string
     kom-remote-control
     kom-remote-controllers
     kom-self-control
@@ -925,6 +956,22 @@ The name is stored in lyskom-debug-communications-to-buffer-buffer.")
   "Name of the buffer to insert the communications with the server into if
 lyskom-debug-communications-to-buffer is non-nil.")
 
+(defvar lyskom-blocking-process nil
+  "The process the where the lyskom-session is.
+If blocking-do is called from a buffer that is no well-connected to the 
+lyskom-session, i.e. the lyskom-proc variable is not set, then this variable
+has to be set for the blocking-do to be able to know what process to send
+questions to. This is the case when called from the minibuffer when 
+completing.")
+
+(defvar lyskom-doing-default-command nil
+  "Non-nil if LysKOM is executing the default command.")
+
+(defvar lyskom-first-time-around nil
+  "Non-nil if LysKOM is being entered for the first time.")
+
+(defvar lyskom-format-experimental nil
+  "If non-nil, LysKOM is likely to blow up in your face.")
 
 (defvar lyskom-count-var 0
   "This variable is used for counting things in the client, such as

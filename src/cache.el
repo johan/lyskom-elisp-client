@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 40.0 1996-03-26 08:30:40 byers Exp $
+;;;;; $Id: cache.el,v 40.1 1996-04-02 16:19:00 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,10 +32,9 @@
 ;;;;
 ;;;;
 
-
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 40.0 1996-03-26 08:30:40 byers Exp $\n"))
+	      "$Id: cache.el,v 40.1 1996-04-02 16:19:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -351,15 +350,15 @@ Args: KEY DATA CACHE.
 CACHE is a (the only one) quoted variable pointing to the cache (an alist).
 The variable might be changed."
   (cond
-   ((null (eval __cache__))
+   ((null (symbol-value __cache__))
     (set __cache__ (list (cons __key__ __data__))))
-   (t (let ((oldval (assoc __key__ (eval __cache__))))
+   (t (let ((oldval (assoc __key__ (symbol-value __cache__))))
 	(cond
 	 ((null oldval)
 	  (set __cache__
 	       (cons (cons __key__ __data__)
 
-		     (eval __cache__))))
+		     (symbol-value __cache__))))
 	 (t
 	  (setcdr oldval __data__)))))))
 
@@ -367,7 +366,7 @@ The variable might be changed."
 (defun cache-del (__key__ __cache__)
   "Delete item with key KEY from CACHE.
 CACHE is the name of the variable that points to the cache."
-  (let ((oldval (assoc __key__ (eval __cache__))))
+  (let ((oldval (assoc __key__ (symbol-value __cache__))))
     (if oldval
 	(setcdr oldval nil))))		;A pair (key . nil) will remain.
 					;Fix this bug someday. +++

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.0 1996-03-26 08:32:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.1 1996-04-02 16:20:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.0 1996-03-26 08:32:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.1 1996-04-02 16:20:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -529,7 +529,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (who-to-throw-out . "Vilken session vill du kasta ut? ")
     (throwing-out . "Kastar nu ut session %#1d... ")
     (postpone-prompt . "Hur lite vill du l\344sa nu? ")
-    (set-session-priority . "S\344tt l\344sniv\345:")
+    (set-session-priority . "S\344tt l\344sniv\345: ")
 
     ; From review.el:
     (latest-n . "senaste %#1d")
@@ -558,11 +558,14 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c f\366r att skicka in texten.")
     (recipient . "Mottagare:")
+    (recipient-prefix . "[Mm]")
     (carbon-copy . "Extra kopia:")
+    (carbon-copy-prefix . "[Ee]")
     (text-mass . "%#4s%#1s\n%#2s\n%#3s")
     (comment-to-by . "%#1s till text %#2d%#3s.\n")
     (already-sent . "Du har redan skickat denna text en g\345ng. S\344nd \344nd\345? ")
     (subject . "\304rende: ")
+    (subject-prefix . "[\304\344\\{\\[]")
     (enter-subject-idi . "Skriv ett ärende.")
     (which-text-include . "Vilken text skall vi inkludera? ")
     (added-recipient . "Mottagare som skall adderas: ")
@@ -715,6 +718,7 @@ Skicka en bugrapport.\n")
     (save-on-file-q . "Spara inl\344gg p\345 fil: (%#1s) ")
     (wait-for-prompt . "V\344nta p\345 prompten!")
     (prompt-modifier-ansaphone . "[%s]")
+    (prompt-modifier-messages . "%s (%d meddelanden)")
     (go-to-pri-conf-prompt . "G\345 till n\344sta prioriterade m\366te")
     (read-pri-text-conf . "L\344sa n\344sta prioriterade text")
     (review-next-text-prompt . "\305terse n\344sta text")
@@ -763,7 +767,9 @@ Felmeddelande: %#1s**************************************************")
     (backward . "bak\345t")
     (wait . "V\344nta ett tag...\n")
     (comment . "Kommentar")
+    (comment-prefix . "[Kk]")
     (footnote . "Fotnot")
+    (footnote-prefix . "[Ff]")
 
 ;;;+++ not used?
     (by . " av %#1s")

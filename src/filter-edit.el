@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 40.0 1996-03-26 08:31:18 byers Exp $
+;;;;; $Id: filter-edit.el,v 40.1 1996-04-02 16:19:55 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -30,6 +30,10 @@
 ;;;; This file contains the filter editor
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: filter-edit.el,v 40.1 1996-04-02 16:19:55 byers Exp $\n"))
+
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
   "List of filters currently being edited in a filter editor")
@@ -37,30 +41,6 @@
 (defvar filter-edit-filter-list nil)
 (defvar filter-edit-list-start nil)
 (defvar filter-edit-list-end nil)
-
-;;;
-;;; Utility functions
-;;;
-
-(defun rassoc (key list)
-  "Return non-nil if KEY is `equal' to the cdr of an element of LIST.
-The value is actually the element of LIST whose cdr is KEY."
-  (catch 'rassoc
-    (while list
-      (if (equal key (cdr (car list)))
-          (throw 'rassoc (car list))
-        (setq list (cdr list))))
-    (throw 'rassoc nil)))
-
-(defun rassq (key list)
-  "Return non-nil if KEY is `eq' to the cdr of an element of LIST.
-The value is actually the element of LIST whose cdr is KEY."
-  (catch 'rassq
-    (while list
-      (if (eq key (cdr (car list)))
-          (throw 'rassq (car list))
-        (setq list (cdr list))))
-    (throw 'rassq nil)))
 
 (defun copy-filter-list (l)
   "Copy the filter list L"
@@ -808,7 +788,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
              (setq kom-permanent-filter-list (nreverse xpermanent-list))
              (setq kom-session-filter-list (nreverse xtemporary-list))))))
   (setq filter-edit-change-flag nil)
-  (lyskom-message (lyskom-get-string 'filter-edit-saving))
+  (lyskom-message "%s" (lyskom-get-string 'filter-edit-saving))
   (lyskom-save-options lyskom-buffer
                        (lyskom-get-string 'filter-edit-saving)
                        (lyskom-get-string 'filter-edit-saving-done)
@@ -883,7 +863,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
 (defun lyskom-filter-edit-brief-help ()
   "Display a help message in the minibuffer."
   (interactive)
-  (lyskom-message (lyskom-get-string 'filter-edit-help)))
+  (lyskom-message "%s" (lyskom-get-string 'filter-edit-help)))
 
 
 (defun lyskom-filter-edit-mode ()
@@ -922,7 +902,7 @@ All key bindings:
   (make-local-variable 'lyskom-edit-return-to-configuration)
   (setq buffer-read-only t)
   (setq filter-edit-change-flag nil)
-  (buffer-flush-undo (current-buffer))
+  (buffer-disable-undo (current-buffer))
   (use-local-map lyskom-filter-edit-map)
   (setq mode-name "LysKOM Filter Edit")
   (setq major-mode 'lyskom-filter-edit-mode)
