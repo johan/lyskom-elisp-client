@@ -535,8 +535,8 @@
    The initial value is deleted automatically if you start typing a
    new name, and can be edited by moving the cursor before typing.
 
-** Om versions of Emacs that support it, the client can display
-   images. This behavior is controled with kom-format-show-images.
+** In versions of Emacs that support it, the client can display
+   images. This behavior is controlled with kom-format-show-images.
 
 ** The client can re-connect to the server when a command is issued in
    a dead session. See the variables kom-relogin-behavior,
@@ -564,7 +564,7 @@
    confirmation before doing so.
 
 ** Using M-c as a prefix to any review command toggles whether it will
-   use the cace or not.
+   use the cache or not.
 
 ** Reception of group messages can be controlled separately of the
    passive/active status of a membership. This requires a server that
@@ -620,7 +620,7 @@
 ** The client will periodically post a reminder about writing a
    presentation. The frequency of this reminder will increase with
    increased activity. If you want to disable it, you will have to
-   read the source code to find out how.
+   write a presentation (or read the source code to find out how).
 
 ** The variable kom-extended-status-information can take new values.
    This variable controls the display of extended status information
@@ -802,7 +802,7 @@
 
 ** Unknown variables saved in the user area are retained, at least to
    some extent. The user area is versioned to print more informative
-   warnings about  unknown variables.
+   warnings about unknown variables.
 
 ** Saved texts do not have relative dates.
 
