@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.2 1996-08-09 20:56:32 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.3 1996-08-10 03:35:48 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.2 1996-08-09 20:56:32 davidk Exp $"))
+              "$Id: english-strings.el,v 43.3 1996-08-10 03:35:48 davidk Exp $"))
 
 
 
@@ -302,6 +302,7 @@ and you have finished reading. Please come back later.
     (text-to-add-recipient . "Add recipient to which article:")
     (text-to-add-copy . "Add recipient of carbon copy of which article:")
     (text-to-delete-recipient . "Remove recipient from which article:")
+    (text-to-move . "Which text do you want to move: ")
     (text-to-add-comment-to . "Add comment to which article:")
     (text-to-delete-comment-from . "Remove comment from which article:")
 
@@ -352,11 +353,14 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-to-add-q . "Add who/what as a recipient: ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
     (who-to-sub-q . "Remove who/what as a recipient: ")
+    (who-to-move-from-q . "Move from where: ")
+    (who-to-move-to-q . "Move to where: ")
 
     (adding-name-as-recipient . "Adding %#1M as recipient of article %#2n...")
     (adding-name-as-copy . "%#1M will receive a carbon copy of article %#2n...")
     (remove-name-as-recipient .
      "Removing %#1M as recipient of article %#2n...")
+    (moving-name . "Moving text %#3n from %#1M to %#2M...")
     (text-to-add-q . "Add which article as a comment: ")
     (text-to-remove-q . "Remove which article as a comment: ")
     (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
@@ -373,6 +377,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-is-active-all . "Showing all sessions.\n")
     (who-is-active-last-minnutes . "Showing all sessions active tha last %#1d minutes.\n")
     (showing-invisibles . "Showing invisible sessions.\n")
+    (null-who-info . "No one (active) is logged in.\n")
 
     ; From commands2.el:
 
@@ -746,6 +751,8 @@ Send a bug report.\n")
     (mode-line-letters . "letters ")
 
     (error-code . "Error code %#2d: %#1s.\n")
+    (error-in-kom-do-when-done . "The variable kom-do-when-done has an erroneous value.
+You should set it to a better value.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM is waiting for a response from the server. Wait for the prompt.\n")
     (review-text-q . "Review article: ")
@@ -1009,6 +1016,7 @@ Using %#6D from %#3s\n")
     (kom-add-recipient          "Add recipient")
     (kom-add-copy               "Add (recipient of) carbon copy")
     (kom-sub-recipient          "Remove recipient")
+    (kom-move-text              "Move text")
     (kom-add-comment            "Add comment")
     (kom-sub-comment            "Remove comment")
     (kom-add-member             "Add (a) member")
