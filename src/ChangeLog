@@ -1,3 +1,8 @@
+Mon Jul 27 01:14:24 1992  Linus Tolke Y  (linus@lysator)
+
+	* clienttypes.el (lyskom-stack-isempty): New function.
+	  (lyskom-queue-enter): Replaced docstring.
+
 Sun Jul 26 18:10:38 1992  Inge Wallin  (inge@lysator)
 
 	* cache.el: cleaned up handling of the who info buffer slightly.

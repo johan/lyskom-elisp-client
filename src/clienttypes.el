@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 35.6 1992-07-26 16:17:00 inge Exp $
+;;;;; $Id: clienttypes.el,v 35.7 1992-07-26 23:29:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 35.6 1992-07-26 16:17:00 inge Exp $\n"))
+	      "$Id: clienttypes.el,v 35.7 1992-07-26 23:29:50 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -321,7 +321,7 @@ element will be the new first element."
 
 
 (defun lyskom-queue-enter (queue element)
-  "Enter second arg ELEMENT last in the first arg QUEUE."
+  "Enter last into the queue QUEUE the ELEMENT."
   (let ((elementcell (cons element nil)))
     (if (null (car (cdr queue)))
 	; QUEUE is empty
@@ -430,6 +430,11 @@ N counts from zero. If the length of STACK is less than N, nil is returned."
   "Return a list of all entries in STACK.
 The element last pushed is first in the list."
   (cdr stack))
+
+
+(defun lyskom-stack-isempty (stack)
+  "Returns non-nil if the STACK is empty."
+  (not (cdr stack)))
 
 
 ;;; ================================================================
