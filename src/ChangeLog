@@ -1,3 +1,13 @@
+1999-12-03  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-server-priority and kom-server-priority-breaks.
+	(lyskom-custom-variables): Same here.
+
+	* english-strings.el,swedish-strings.el (lyskom-custom-strings):
+	Updated customization strings for kom-server-priority and
+	kom-server-priority-breaks.
+
 1999-12-02  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-what-to-do): Fix code to handle

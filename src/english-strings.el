@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.73 1999-12-02 22:29:46 byers Exp $
+;;;;; $Id: english-strings.el,v 44.74 1999-12-02 23:44:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.73 1999-12-02 22:29:46 byers Exp $"))
+              "$Id: english-strings.el,v 44.74 1999-12-02 23:44:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2910,7 +2910,48 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This text is shown in the list of users when you have finished reading
   everything.")
 
+    (kom-server-priority-doc . "\
+  Priority of this LysKOM session. The client can prompt you do go to
+  a session with unread texts when a text arrives in a session with a
+  higher priority than the one currently being read.")
 
+    (kom-server-priority-breaks-doc . "\
+   This setting controls when a prompt to go to the next LysKOM session
+   with unread texts is presented.
+
+   Immediately                  Present a prompt if any text arrives in
+                                a session with a higher priority.
+
+   Immediately if letters arrive    Present a prompt is a letter arrives
+                                in a session with a higher priority.
+
+   After current comment chain  Present a prompt after the current chain
+                                of comments has been read if a text
+                                arrives in a session with a higher 
+                                priority.
+
+   After current comment chain if letters arrive    Present a prompt
+                                after the current chain of comments has
+                                been read if a letter arrives in a session
+                                with a higher priority.
+
+   After current conference     Present a prompt after all texts in the
+                                current conference have been read if a
+                                text arrives in a session with a higher
+                                priority.
+
+   After current conference if letters arrive       Present a prompt 
+                                after all texts in the current conference
+                                have been read if a letter arrives in a 
+                                session with a higher priority.
+
+   After everything has been read   Present a prompt to go to the next
+                                session with unreads after everything
+                                has been read. The prompt is presented
+                                regardless of session priorities.
+
+   Never                        Never prompt to go to another LysKOM
+                                session.")
 
     (kom-ding-on-no-subject-doc . "")
     (kom-ding-on-personal-messages-doc . "")
@@ -3068,6 +3109,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-show-personal-message-date-tag . "Show date and time of messages")
     (kom-w3-simplify-body-tag . "Display HTML without document colors")
     (kom-mercial-tag . "Text do display when all is read")
+    (kom-server-priority-tag . "Session priority")
+    (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM")
     )
 )
 
