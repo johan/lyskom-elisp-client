@@ -1,9 +1,49 @@
+Fri Nov 17 00:40:47 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* flags.el (lyskom-read-options): Tog bort referenser till
+	   kom-do-when-starting.
+	  (lyskom-read-options-eval): Dito.
+
+	* commands1.el (lyskom-add-member-answer): Kan g} med i tomma
+	   möten.
+
 Fri Nov 17 00:30:20 1995  Linus Tolke Y  <linus@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-filter): Enkel fix som gör att den bara
 	  startar parsningen om den mottagit minst ett newline.
 	  (det går mellan två och tre gånger så snabbt att logga in.)
 	
+Thu Nov 16 23:24:07 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (kom-login-hook): Ny variabel som ersätter
+	   kom-do-when-starting.
+	  (lyskom-elisp-variables): Bytte kom-do-when-starting mot
+	   kom-login-hook.
+	  Tog bort lyskom-login-hook.
+
+	* swedish-strings.el (lyskom-strings): Bytte ut
+	   error-in-do-when-starting mot error-in-login-hook.
+
+	* startup.el (kom-start-anew): Anropa kom-login-hook efter lyckad
+	   inloggning.
+	  (lyskom-clear-vars): Sorterade listan och la till
+	   kom-login-hook, samt tog bort kom-do-when-starting och
+	   lyskom-login-hook.
+
+	* lyskom-rest.el (lyskom-print-prompt): Anropa inte
+	   lyskom-maybe-do-when-starting.
+	  Tog bort lyskom-maybe-do-when-starting.
+
+	* flags.el (lyskom-read-options,lyskom-read-options-eval): Tog
+	   bort anrop av lyskom-login-hook.
+
+	* english-strings.el (lyskom-strings): Diverse fixar. Använd %#1P
+	   etc. på fler ställen. Samma fix som swedish-strings.el.
+
+	* commands2.el (kom-list-news): Gjorde parametern &optional.
+
+	* Makefile: Använd make fast för att kompilera inkrementellt.
+
 Mon Nov 13 13:38:06 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* commands1.el (kom-unset-conf-motd): Klarade inte tomt svar för

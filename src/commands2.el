@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.6 1995-11-13 16:00:37 davidk Exp $
+;;;;; $Id: commands2.el,v 38.7 1995-11-16 23:46:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.6 1995-11-13 16:00:37 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.7 1995-11-16 23:46:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -552,7 +552,7 @@ means send the message to everybody."
 ;;; Rehacked: Inge Wallin
 
 
-(defun kom-list-news (num)
+(defun kom-list-news (&optional num)
   "Runs lyskom-start-of-command and then gets all conferences using 
 lyskom-prefetch-all-confs."
   (interactive "P")
