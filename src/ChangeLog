@@ -4055,7 +4055,5 @@ Sun Oct  7 16:56:40 1990  Per Cederqvist  (ceder at laila)
 
 
 Local Variables:
-mode:indented-swedish
 outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
-eval:(auto-fill-mode 1)
 End:
