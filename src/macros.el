@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.35 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: macros.el,v 44.36 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.35 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: macros.el,v 44.36 2004-02-29 15:12:49 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -349,6 +349,9 @@ the current buffer, and its value is copied from the LysKOM buffer."
      (setq lyskom-ref-no (1+ lyskom-ref-no))
      (when (< lyskom-ref-no 0) (setq lyskom-ref-no 1))))
 
+
+(defsubst lyskom-mime-content-type (ct) (car ct))
+(defsubst lyskom-mime-content-type-get (ct param) (cdr (assq param (cdr ct))))
 
 (eval-and-compile (provide 'lyskom-macros))
 

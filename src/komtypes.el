@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.38 2003-12-07 16:38:51 byers Exp $
+;;;;; $Id: komtypes.el,v 44.39 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.38 2003-12-07 16:38:51 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.39 2004-02-29 15:12:49 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -347,11 +347,11 @@ Automatically created with def-komtype" type)
            (content-type (and (car item)
                               (lyskom-mime-decode-content-type
                                (aux-item->data (car item))))))
-      (if (cdr content-type)
-          (lyskom-mime-decode-string str (cdr content-type))
+      (if (lyskom-mime-content-type-get content-type 'charset)
+          (lyskom-mime-decode-string str (lyskom-mime-content-type-get content-type 'charset))
         str))))
 
-				   
+
 
 ;;; ================================================================
 ;;;                          misc-info

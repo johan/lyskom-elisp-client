@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.229 2004-02-22 20:32:56 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.230 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.229 2004-02-22 20:32:56 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.230 2004-02-29 15:12:49 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2108,6 +2108,7 @@ Deferred insertions are not supported."
 
 (lyskom-try-require 'latin-unity)
 (lyskom-with-external-functions (smiley-region latin-unity-remap-region)
+
   (defun lyskom-format-text-body (text &optional text-stat)
     "Format a text for insertion. Does parsing of special markers in the text."
     (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))

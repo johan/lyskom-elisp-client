@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.101 2004-02-21 23:12:41 byers Exp $
+;;;;; $Id: startup.el,v 44.102 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.101 2004-02-21 23:12:41 byers Exp $\n"))
+	      "$Id: startup.el,v 44.102 2004-02-29 15:12:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -667,9 +667,14 @@ shown to other users."
           (when ignored-user-area-vars
             (lyskom-format-insert-before-prompt
              'ignored-user-area-var
-             (mapconcat 'symbol-name 
+             (mapconcat (lambda (x) (symbol-name (car x)))
                         ignored-user-area-vars
-                        "\n    ")))
+                        "\n    ")
+             (lyskom-string= lyskom-clientversion lyskom-settings-version)
+             lyskom-settings-version
+             lyskom-clientversion
+             72)
+            (setq lyskom-saved-unknown-variables ignored-user-area-vars))
 
           ;; Show motd and encourage writing a presentation
 

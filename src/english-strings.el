@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.326 2004-02-23 19:37:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.327 2004-02-29 15:12:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.326 2004-02-23 19:37:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.327 2004-02-29 15:12:48 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1166,6 +1166,15 @@ Alarm from %#1P (%#3s):
     ; From flags.el:
     (saving-settings . "Saving options...")
     (saving-settings-done . "Saving options...done")
+    (save-options-failed-internal . "\
+Failed to save options because of an internal error.
+
+Global options:       %#1?b%[Encoding failed%]%[OK%]
+Elisp client options: %#2?b%[Encoding failed%]%[OK%]
+Other client options: %#3?b%[Encoding failed%]%[OK%]
+
+Rapportera gärna detta fel till elispklientens utvecklare.
+")
     (hang-on . "Wait a moment...\n")
     (no-changes . "Nothing was saved since no options had been changed.\n")
     (could-not-save-options . "Couldn't save options.\n")
@@ -1176,6 +1185,7 @@ Alarm from %#1P (%#3s):
 It was set to \"%#2s\" in the user area. It is set to nil instead.
 Send a bug report.\n")
     (error-in-options-short . "There was an error in your saved settings. Some settings have not been read.")
+    (reading-settings-from-server . "Saved settings have changed on the server. Re-reading saved settings.\n")
 
     ; From elib-string.el:
     ; No entries.
@@ -1852,7 +1862,13 @@ Ignoring the following variables in your settings:
 
 These variables are not registered as LysKOM variables and cannot be
 read from the server. You can remove the variables from the server by
-giving the command \"Save options\".\n\n")
+giving the command \"Save options\".
+
+%#2?b%[%#5F\
+Unknown variables may be the result of saving your settings in version
+ %#3s of the client; this is version %#4s.
+
+%]%[%]")
 
 
     (unknown-aux-item . "Unknown property")

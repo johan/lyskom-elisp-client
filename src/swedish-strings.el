@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.368 2004-02-27 18:55:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.369 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.368 2004-02-27 18:55:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.369 2004-02-29 15:12:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1198,6 +1198,15 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     ;; From flags.el:
     (saving-settings . "Sparar inställningarna...")
     (saving-settings-done . "Sparar inställningarna...klart")
+    (save-options-failed-internal . "\
+Det gick inte att spara inställningarna på grund av ett internt fel.
+
+Globala inställningar:         %#1?b%[Kodningen misslyckades%]%[OK%]
+Elispklientens inställningar:  %#2?b%[Kodningen misslyckades%]%[OK%]
+Andra klienters inställningar: %#3?b%[Kodningen misslyckades%]%[OK%]
+
+Rapportera gärna detta fel till elispklientens utvecklare.
+")
     (hang-on . "Vänta ett tag...\n")
     (no-changes . "Ingenting behövde sparas eftersom inga variabler hade ändrats.\n")
     (could-not-save-options . "Kunde ej spara inställningarna.\n")
@@ -1208,6 +1217,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
 Det stod \"%#2s\" i user-arean. Den sätts till nil istället.
 Skicka en bugrapport.\n")
     (error-in-options-short . "Det fanns ett fel i dina inställningar. Vissa inställningar har inte lästs in.")
+    (reading-settings-from-server . "Dina sparade inställningar har ändrats på servern. Läser om inställningarna.\n")
 
     ;; From elib-string.el:
     ;; No entries.
@@ -1886,7 +1896,13 @@ Ignorerar följande variabler i dina inställningar:
 
 Variablerna är inte registrerade LysKOM-variabler och kan därför inte
 läsas från servern. Du kan ta bort variablerna från servern genom att
-ge kommandot \"Spara inställningar\".\n\n")
+ge kommandot \"Spara inställningar\" med prefixargument.
+
+%#2?b%[%#5F\
+Okända variabler kan bero på att dina inställningar sparades med
+version %#3s av elispklienten, medan detta är version %#4s.
+
+%]%[%]")
 
     (unknown-aux-item . "Okänd tilläggsinformation")
     (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")

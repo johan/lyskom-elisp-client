@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.41 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: flags.el,v 44.42 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.41 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: flags.el,v 44.42 2004-02-29 15:12:49 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -49,13 +49,15 @@
   "When we have read all options this is turned non-nil."
   local)
 
-(def-kom-command kom-save-options ()
+(def-kom-command kom-save-options (arg)
   "Save all LysKOM settings. This will save settings in the server but
-not save anything to your Emacs init file (usually .emacs).
+not save anything to your Emacs init file (usually .emacs). With a 
+prefix argument, remove all unknown settings.
 
 To edit settings, use `kom-customize'. This command can also save
 settings to your emacs init file."
-  (interactive)
+  (interactive "P")
+  (when arg (setq lyskom-saved-unknown-variables nil))
   (lyskom-save-options (or lyskom-buffer 
                            (current-buffer))
                        (lyskom-get-string 'saving-settings)
@@ -84,7 +86,7 @@ settings and save them to your emacs init file."
                         completions
                         nil t)))
     (lyskom-message (lyskom-get-string 'reading-settings-from) from-session)
-    (lyskom-read-options from-session)
+    (setq lyskom-saved-unknown-variables (lyskom-read-options from-session))
     (lyskom-message (lyskom-get-string 'reading-settings-from-done) from-session)
 
     ;; Inline kom-save-options
@@ -136,43 +138,35 @@ settings and save them to your emacs init file."
                       "\n")
            ))
          (elisp-block
-          (mapconcat
-	   (lambda (var)
-	     (concat (format "%dH%s"
-			     (length (symbol-name var))
-			     (symbol-name var))
-		     " "
-		     (let* ((data (lyskom-flag-value-to-string var))
-			    (coding 
-			     (lyskom-mime-charset-coding-system
-			      (lyskom-mime-string-charset data)))
-			    (val (condition-case nil
-				     (lyskom-encode-coding-string data coding)
-				   (error nil))))
-                       (lyskom-ignore val)
-		       (if (and val nil)
-			   (format "%dC%s%dH%s"
-				   (lyskom-string-bytes (symbol-name coding))
-				   (symbol-name coding)
-				   (lyskom-string-bytes val)
-				   val)
-			 (setq data
-			       (lyskom-encode-coding-string 
-				data
-				(or lyskom-server-coding-system 'raw-text)))
-			 (format "%dH%s"
-				 (lyskom-string-bytes data)
-				 data)))))
-	   lyskom-elisp-variables
-	   "\n")))
-    (save-excursion
-      (set-buffer kombuf)
-      (when start-message (lyskom-message "%s" start-message))
-      (initiate-create-text
-       'options 
-       'lyskom-save-options-2
-       (cons 'raw-text
-	     (apply 'lyskom-format-objects
+          (concat (mapconcat
+                   (lambda (var)
+                     (let ((name (lyskom-encode-coding-string 
+                                  (symbol-name var)
+                                  (or lyskom-server-coding-system 'raw-text)))
+                           (data (lyskom-encode-coding-string 
+                                  (lyskom-flag-value-to-string var)
+                                  (or lyskom-server-coding-system 'raw-text))))
+                       (format "%dH%s %dH%s" 
+                               (lyskom-string-bytes name) name
+                               (lyskom-string-bytes data) data)))
+                   lyskom-elisp-variables
+                   "\n")
+                  (mapconcat
+                   (lambda (el)
+                     (let ((var (lyskom-encode-coding-string
+                                 (symbol-name (car el))
+                                 (or lyskom-server-coding-system 'raw-text)))
+                           (data (lyskom-encode-coding-string 
+                                  (cdr el) 
+                                  (or lyskom-server-coding-system 'raw-text))))
+                       (format "\n%dH%s %dH%s" 
+                               (lyskom-string-bytes var)
+                               var
+                               (lyskom-string-bytes data)
+                               data)))
+                   lyskom-saved-unknown-variables
+                   "")))
+         (user-area (apply 'lyskom-format-objects
 		    (apply 'lyskom-format-objects
 			   "common"
 			   "elisp"
@@ -183,18 +177,54 @@ settings and save them to your emacs init file."
 		    (cons 'STRING (cons 'raw-text common-block))
 		    (cons 'STRING (cons 'raw-text elisp-block))
 		    (mapcar (lambda (el)
-			     (cons 'STRING (cons 'raw-text (cdr el))))
-			    lyskom-other-clients-user-areas)))
-                            (lyskom-create-misc-list) 
-                            (list
-                             (lyskom-create-aux-item 
-                              0 1 nil nil
-                              (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
-                              0
-                              "x-kom/user-area"))
-                            kombuf
-                            done-message
-                            error-message))))
+                              (cons 'STRING (cons 'raw-text (cdr el))))
+			    lyskom-other-clients-user-areas))))
+
+    (if (or (lyskom-multibyte-string-p elisp-block)
+            (lyskom-multibyte-string-p common-block)
+            (memq t (mapcar 'lyskom-multibyte-string-p lyskom-other-clients-user-areas)))
+        (lyskom-save-excursion
+          (set-buffer kombuf)
+          (lyskom-format-insert 'save-options-failed-internal
+                                (lyskom-multibyte-string-p common-block)
+                                (lyskom-multibyte-string-p elisp-block)
+                                (memq t (mapcar 'lyskom-multibyte-string-p 
+                                                lyskom-other-clients-user-areas)))
+          (when error-message (lyskom-message "%s" error-message)))
+      (save-excursion
+        (set-buffer kombuf)
+        (when start-message (lyskom-message "%s" start-message))
+        (initiate-create-text
+         'options 
+         'lyskom-save-options-2
+         (cons 'raw-text user-area)
+         (lyskom-create-misc-list) 
+         (list
+          (lyskom-create-aux-item 
+           0 1 nil nil
+           (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
+           0
+           "x-kom/user-area"))
+         kombuf
+         done-message
+         error-message)))))
+
+;; This was in lyskom-save-options, to encode each string usgin
+;; its own coding system
+;;
+;; (coding 
+;; (lyskom-mime-charset-coding-system
+;; (lyskom-mime-string-charset data)))
+;; (val (condition-case nil
+;; (lyskom-encode-coding-string data coding)
+;; (error nil)))
+;; (lyskom-ignore val)
+;; (format "%dC%s%dH%s"
+;;             (lyskom-string-bytes (symbol-name coding))
+;;             (symbol-name coding)
+;;             (lyskom-string-bytes val)
+;;             val)
+
 
 (defun lyskom-save-options-2 (text-no kombuf done-message error-message)
   (if text-no
@@ -222,8 +252,11 @@ settings and save them to your emacs init file."
 
 (defun lyskom-read-options (&optional buffer)
   "Reads the user-area and sets the variables according to the choises.
-Returns a list of variables that were ignored. If optional BUFFER is
-non-nil, read settings in that buffer."
+Returns a association list of variables that were ignored. Each list
+element is a cons (NAME . VALUE), where NAME is the name of the variable
+and VALUE is the unparsed value (i.e. it is always a string).
+
+If optional BUFFER is non-nil, read settings in that buffer."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (let ((pers-stat 
@@ -248,7 +281,8 @@ non-nil, read settings in that buffer."
 
 (defun lyskom-read-options-eval (text)
   "Handles the call from where we have the text.
-Returns a list of variables that were ignored."
+Returns a alist of variables that were ignored. See lyskom-read-options
+for more information."
   (let ((ignored-user-area-vars nil))
     (condition-case nil
         (when text                        ;+++ Other error handler
@@ -299,7 +333,7 @@ Returns a list of variables that were ignored."
 
                     (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2))
                       (setq ignored-user-area-vars
-                            (cons (elt spec 1) ignored-user-area-vars))))))
+                            (cons (cons (elt spec 1) value) ignored-user-area-vars))))))
                ;; Note that elisp-no may be nil here, so the comparison
                ;; cannot be performed with '=.
                ((equal r elisp-no)
@@ -313,7 +347,7 @@ Returns a list of variables that were ignored."
                           (set name (funcall (cdr (assq name lyskom-transition-variables))
                                              (symbol-value name))))
                       (setq ignored-user-area-vars
-                            (cons name ignored-user-area-vars))))))
+                            (cons (cons name value) ignored-user-area-vars))))))
                (t
                 (let ((pos lyskom-other-clients-user-areas))
                   (while (and pos

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.117 2004-02-22 16:31:00 byers Exp $
+;;;;; $Id: edit-text.el,v 44.118 2004-02-29 15:12:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.117 2004-02-22 16:31:00 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.118 2004-02-29 15:12:48 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -537,8 +537,10 @@ anonymously and take actions to avoid revealing the sender."
                               (t (concat (or subject "") "\n" message))))
                        (content-type (lyskom-get-aux-item aux-list 1))
                        (charset (and content-type
-                                     (cdr (lyskom-mime-decode-content-type
-                                           (aux-item->data (car content-type))))))
+                                     (lyskom-mime-content-type-get
+                                      (lyskom-mime-decode-content-type
+                                           (aux-item->data (car content-type)))
+                                      'charset)))
                        (mime-charset (lyskom-mime-string-charset full-message)))
 
                   ;; If the charset isn't already set, encode the string
