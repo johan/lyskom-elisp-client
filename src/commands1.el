@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.97 2001-01-03 22:02:48 qha Exp $
+;;;;; $Id: commands1.el,v 44.98 2001-02-20 20:43:52 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.97 2001-01-03 22:02:48 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.98 2001-02-20 20:43:52 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1762,7 +1762,12 @@ converted so that the search is case insensitive."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'name-to-be-changed)
-		    '(all) nil nil t)))
+		    '(all)
+                    nil
+                    (cons
+                     (conf-stat->name (blocking-do 'get-conf-stat lyskom-pers-no))
+                     0)
+                    t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (if (string-match "^\\(.*\\)(\\(.*\\))\\(.*\\)$" (conf-stat->name conf-stat))
