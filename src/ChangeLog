@@ -1,3 +1,13 @@
+1999-11-17  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-is-loaded): In XEmacs, set an extent on
+	the "unread" text in the mode line with some basic key bindings.
+
+	* commands2.el (kom-modeline-next-unread-kom): New function.
+	(kom-modeline-select-unread-kom): New function.
+	(lyskom-switch-to-kom-buffer): New function.
+	(lyskom-next-kom): Use it.
+
 1999-11-11  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el (lyskom-message): Added who-to-add-bcc-q.
