@@ -1560,7 +1560,8 @@ Medlemskap för %#1M på %#2s
                                   (or (elt time 2) 0)
                                   (or (elt time 3) 1)
                                   (or (elt time 4) 1)
-                                  (- (or (elt time 5) (elt (decode-time (current-time)) 5)) 1900)
+                                  (or (elt time 5)
+                                      (elt (decode-time (current-time)) 5))
                                   nil
                                   nil
                                   nil))))
