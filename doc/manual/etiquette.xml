@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                      "docbook/dtd/xml/4.2/docbookx.dtd" [
+  <!ENTITY % fnc SYSTEM "fnc.ent">
+  <!ENTITY % var SYSTEM "var.ent">
+
+  %fnc;   <!-- LysKOM functions -->
+  %var;   <!-- LysKOM variables -->
+]>
+
+<book lang="en">
+  <chapter id="chapter:etiquette">
+        <title>Etiquette</title>
+
+        <para>
+          Do not add more conferences as recipients to a text than is
+          necessary. Although a text may be relevant to the topic of
+          several conferences, it may not be appropriate in all of
+          them. Think before you act.
+        </para>
+
+        <para>
+          There are some rules of etiquette that apply to recipients.
+          The rules may vary from LysKOM system to LysKOM system, but
+          here these guidelines are unlikely to get you into trouble.
+        </para>
+
+        <para>
+          When moving a text from one conference to another, or when
+          you write a comment and decide that one of the default
+          recipients isn't relevant any more, leave the original
+          recipient as a carbon copy recipient. This ensures that
+          members of the original recipient will have a chance to
+          notice the move.
+        </para>
+
+        <para>
+          Do not add people's mailboxes as recipients without
+          thinking. The client will sometimes add letterboxes
+          automatically or semi-automatically when appropriate.
+        </para>
+
+        <para>
+          Do not <emphasis>remove</emphasis> people's mailboxes as
+          recipients, or convert them to carbon copy recipients when
+          writing comments. It is up to the user themselves to do
+          this. Most of the time, when a letterbox appears as a
+          recipient, it is because the person in question isn't a
+          member of any of regular recipients of the text, but still
+          wants to participate in the discussion.
+        </para>
+  </chapter>
+</book>
+

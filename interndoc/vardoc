@@ -1,0 +1,32 @@
+
+
+                        VARIABLE DOCUMENTATION
+
+
+
+Variable documentation strings that are intended for inclusion in the
+printed manual must follow these conventions.
+
+* The docstring must start with two asterisks.
+
+* Literal strings will possibly be italicized. They may span lines.
+
+* Code and cross references are indicated with `'
+
+  `kom-<something>'    --- Cross-reference to variable or command
+  `lyskom-<something>' --- Cross-reference to variable or command
+  `<UPPERCASE>'        --- Format as a replaceable
+  `<anything>'         --- Format as a constant
+  non-nil              --- Special case for nil
+
+* To insert a table indent the block from the left, and make second
+  and last lines all dashes. Rows are separated with empty lines. Be
+  careful to start multi-line cells all on the same column. Watch out
+  for the effects of escaped characters in earlier cells.
+  The table ends at the second all-dash line.
+
+* Indicate blocks of preformatted text with a line consisting of a
+  single unindented < before and > after.
+
+* Indicate bulleted lists with * at the start of the paragraph. Each
+  bullet item may consist of a single paragraph only.

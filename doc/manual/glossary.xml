@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                      "docbook/dtd/xml/4.2/docbookx.dtd">
+
+<book lang="en">
+  <glossary>
+    <title>Glossary</title>
+
+    <glossdiv>
+      <title>English</title>
+      <glossentry id="gloss:text:en">
+        <glossterm>text</glossterm>
+        <glossdef>
+          <para>See <xref linkend="chapter:texts"/> for details.</para>
+        </glossdef>
+      </glossentry>
+
+      <glossentry>
+        <glossterm id="gloss:comment:en">comment</glossterm>
+        <glossdef>
+          <para>See <xref linkend="texts:comments"/> for details.</para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>Svenska</title>
+      <glossentry>
+        <glossterm>text</glossterm>
+        <glosssee otherterm="gloss:text:en">Se den engelska termen "text"</glosssee>
+      </glossentry>
+
+      <glossentry>
+        <glossterm>kommentar</glossterm>
+        <glosssee otherterm="gloss:comment:en">Se den engelska termen "comment"</glosssee>
+      </glossentry>
+    </glossdiv>
+  </glossary>
+</book>
