@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: reading.el,v 41.0 1996-05-02 19:28:04 davidk Exp $
-;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;; $Id: reading.el,v 41.1 1996-08-06 21:33:54 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 41.0 1996-05-02 19:28:04 davidk Exp $\n"))
+	      "$Id: reading.el,v 41.1 1996-08-06 21:33:54 davidk Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat)

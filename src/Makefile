@@ -1,12 +1,12 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 41.4 1996-08-02 00:37:04 davidk Exp $
-# Copyright (C) 1991  Lysator Academic Computer Association.
+# $Id: Makefile,v 41.5 1996-08-06 21:33:14 davidk Exp $
+# Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
 # 
 # LysKOM is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by 
-# the Free Software Foundation; either version 1, or (at your option) 
+# the Free Software Foundation; either version 2, or (at your option) 
 # any later version.
 # 
 # LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -22,10 +22,14 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 41.4 1996-08-02 00:37:04 davidk Exp $
+# $Id: Makefile,v 41.5 1996-08-06 21:33:14 davidk Exp $
 #
 
 CLIENTVERSION = 0.42-beta
+
+SHELL = /bin/sh
+
+LISPDIR = /usr/gnu/share/emacs/site-lisp
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
@@ -60,23 +64,18 @@ SRC-ELC = komtypes.elc clienttypes.elc deferred-insert.elc utilities.elc \
 	commands1.elc commands2.elc review.elc edit-text.elc \
 	filter.elc filter-edit.elc lyskom-buttons.elc \
 	view-text.elc async.elc completing-read.elc \
-	prioritize.elc flags.elc messages.elc ansaphone.elc remote-control.elc \
-	elib-string.elc \
+	prioritize.elc flags.elc messages.elc ansaphone.elc \
+	remote-control.elc elib-string.elc \
 	lyskom-rest.elc 
 PARTS-ELC = $(SRC-ELC)
+
+
+# The default target
+all: lyskom.elc
 
 .SUFFIXES : .el .elc
 .el.elc:
 	$(EMACS-BATCH) -l `pwd`/macros -l `pwd`/vars -f batch-byte-compile $*.el
-
-all: lyskom.elc
-
-# I dont want any warnings of the newer file...
-vars.elc: vars.el macros.elc
-	$(EMACS-BATCH) -l `pwd`/macros -f batch-byte-compile $*.el
-
-macros.elc: macros.el
-	$(EMACS-BATCH) -f batch-byte-compile $*.el
 
 # influenced by autoconf? Yes.
 vars.el: vars.el.in Makefile
@@ -90,7 +89,7 @@ lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
 
-# Only testing
+# Do "make verbose" to see where things go wrong
 .PHONY: verbose
 verbose: verbose-el lyskom.elc
 
@@ -103,17 +102,25 @@ verbose-el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 		cat $$i >> lyskom.el ; \
 	done 
 
-# For fast compiling
-.PHONY: fast
-fast: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
-	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
-
 # English version
 english-lyskom.el: $(HEADER-EL) $(ENGLISH-EL) $(PARTS-EL)
 	cat $(HEADER-EL) $(ENGLISH-EL) $(PARTS-EL) > english-lyskom.el
 
 english-lyskom.elc: english-lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile english-lyskom.el
+
+# The method of compiling elc files separately is now depreceated
+# I dont want any warnings of the newer file...
+vars.elc: vars.el macros.elc
+	$(EMACS-BATCH) -l `pwd`/macros -f batch-byte-compile $*.el
+
+macros.elc: macros.el
+	$(EMACS-BATCH) -f batch-byte-compile $*.el
+
+# For fast compiling
+.PHONY: fast
+fast: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
+	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
 
 $(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 
@@ -131,7 +138,7 @@ elc-files: $(HEADER-ELC) $(PARTS-ELC)
 
 wc:
 	@wc $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
-	@wc ../doc/elisp-client.latexinfo ChangeLog ../misc/todo
+	@wc ChangeLog ../misc/todo
 
 TAGS: $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 	etags $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
@@ -141,10 +148,8 @@ doc:
 
 install: installnodoc installdoc
 
-installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
-	cp lyskom.el /usr/gnu/lib/emacs/site-lisp/lyskom.el
-	cp lyskom.el /usr/local/var/elisp/lyskom.el
-	cp lyskom-$(CLIENTVERSION).elc /usr/gnu/lib/emacs/site-lisp/lyskom.elc
+installatlysator: lyskom.elc lyskom.el
+	cp lyskom.el lyskom.elc $(LISPDIR)
 
 lyskom-$(CLIENTVERSION).elc: lyskom.elc
 	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
@@ -167,11 +172,11 @@ installnodoc: installatlysator installatftp
 
 # This is now the responsability of the Makefile in the doc-dir.
 installdoc: doc
-	( cd ../doc; make install )
+	( cd ../doc; $(MAKE) install )
 
 smallclean:
 	$(RM) lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz
-	$(RM) lyskom-$(CLIENTVERSION).elc lyskom.el
+	$(RM) lyskom-$(CLIENTVERSION).elc lyskom.el lyskom.elc
 
 clean: smallclean
 	$(RM) *~ *.elc $(GENERIC-CLEAN)
