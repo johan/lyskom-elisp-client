@@ -1,3 +1,18 @@
+2001-05-02  David Byers  <davby@ida.liu.se>
+
+	* filter-new-edit.el: New file. Contains the new filter editor.
+	Very little is done. Transformation to and from editable trees
+	seems to work.
+
+	* filter-new.el: New file. Contains basic functions for compiling
+	and evaluating new-style filters. The compiler appears to be
+	working. Filter evaluation is untested. The extension mechanisms
+	work.
+
+	* tree-edit.el: New file. Contains basic functionality for editing
+	trees. What's there seems to work fine. Currently dependent on
+	LysKOM, but easy to free of such dependencies.
+
 2001-04-25  David Byers  <davby@ida.liu.se>
 
 	* async.el (lyskom-parse-async): Update name of conference in
