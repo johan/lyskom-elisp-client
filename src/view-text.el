@@ -10,7 +10,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 35.2 1991-09-05 14:03:35 linus Exp $\n"))
+	      "$Id: view-text.el,v 35.3 1991-09-08 20:03:16 ceder Exp $\n"))
 
 
 (defun lyskom-view-text (queue text-no &optional mark-as-read
@@ -314,7 +314,9 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
 
 
 (defun lyskom-mark-as-read (text-stat)
-  "Mark a text as read in all conferences that are recipients."
+  "Mark a text as read in all conferences that are recipients.
+Tell the server that it is read. This function does not remove
+the text from the internal structures of the client."
   (let ((misc-info-list (text-stat->misc-info-list text-stat)))
     (lyskom-traverse
      misc-info misc-info-list
