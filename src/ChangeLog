@@ -1,5 +1,24 @@
 2000-08-21  David Byers  <davby@ida.liu.se>
 
+	* Reworked some MULE details. Hopefully things will work better in
+	unibyte mode now.
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Use
+	lyskom-maybe-recode-string, not encode-coding-string.
+
+	* vars.el.in (lyskom-mule-compiled): Redefined to catch multibyte
+	strings in multibyte-capable but disabled Emacsen (i.e. all Gnu
+	Emacs).
+
+	* compatibility.el: Never set coding system of server process to
+	raw-text. 
+
+	* buffers.el (lyskom-fix-buffer-name): Removed.
+
+	* utilities.el (lyskom-maybe-recode-string): Test agains
+	multibyte-string-p not enable-multibyte-characters since we may
+	have multibyte strings in a unibyte environment.
+
 	* vars.el.in (lyskom-button-actions): Fixed typo.
 	(lyskom-text-buttons): Fixed email regexp to combat very slow
 	matching of long words.

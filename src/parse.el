@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.33 2000-08-11 09:43:43 byers Exp $
+;;;;; $Id: parse.el,v 44.34 2000-08-21 14:20:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.33 2000-08-11 09:43:43 byers Exp $\n"))
+	      "$Id: parse.el,v 44.34 2000-08-21 14:20:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1237,20 +1237,7 @@ functions and variables that are connected with the lyskom-buffer."
                          (format " Current string: ")
                          (buffer-substring lyskom-parse-pos (point-max))))
 
-  (lyskom-message "Saving debugging information...")
-  (setq lyskom-backtrace-list (cons (list (current-time-string)
-                                          (let* ((buffer (generate-new-buffer " *Backtrace*"))
-                                                 (standard-output buffer))
-                                            (backtrace)
-                                            (prog1 (save-excursion
-                                                     (set-buffer buffer)
-                                                     (buffer-string))
-                                              (kill-buffer buffer)))
-                                          (lyskom-string-to-parse))
-                                    lyskom-backtrace-list))
-  (lyskom-message "Saving debugging information...done")
-
-
+  (lyskom-save-backtrace (lyskom-string-to-parse))
   (signal 'lyskom-protocol-error
           (format "Protocol error in %S: %s"
                   function
