@@ -1184,7 +1184,7 @@ current conference to another session."
 	 ((eq type 'CONF)
 	  (let* ((rlist (read-info->text-list
 			 (read-list->first lyskom-reading-list)))
-		 (cell (nthcdr (- (length rlist) today)
+		 (cell (nthcdr (max (- (length rlist) today) 1)
 			       rlist)))
 	    (setcdr rlist cell))
 	  (setq finished t))
