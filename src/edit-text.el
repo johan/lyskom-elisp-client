@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.113 2003-08-04 15:09:13 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.114 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.113 2003-08-04 15:09:13 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.114 2003-08-17 12:48:06 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1202,31 +1202,25 @@ WINDOW plus any optional arguments given in ARG-LIST."
 (defun kom-edit-add-recipient ()
   "Adds a conference as recipient to the text being edited."
   (interactive)
-  (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-recipient)
-                                 nil
-                                  'RECPT))
+  (lyskom-edit-add-recipient/copy 'added-recipient nil 'RECPT))
 
 
 (defun kom-edit-add-bcc ()
   "Adds a conference as bcc recipient to the text being edited."
   (interactive)
-  (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-blank-carbon-copy)
-                                  nil
-                                  'BCC-RECPT))
+  (lyskom-edit-add-recipient/copy 'added-blank-carbon-copy nil 'BCC-RECPT))
 
 
 (defun kom-edit-add-copy ()
   "Adds a conference to which a copy of the edited text will be sent."
   (interactive)
-  (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-carbon-copy)
-                                  nil
-                                  'CC-RECPT))
+  (lyskom-edit-add-recipient/copy 'added-carbon-copy nil 'CC-RECPT))
 
 (defun kom-edit-move-text ()
   "Adds a conference as a recipient, and changes all other recipients to
 CC recipients."
   (interactive)
-  (lyskom-edit-add-recipient/copy (lyskom-get-string 'who-to-move-to-q)
+  (lyskom-edit-add-recipient/copy 'who-to-move-to-q
                                   'lyskom-edit-move-recipients))
 
 
@@ -1276,8 +1270,7 @@ CC recipients."
                                    (elt headers 2)))))
 
 
-(defun lyskom-edit-add-recipient/copy (prompt 
-                                       &optional what-to-do recpt-type)
+(defun lyskom-edit-add-recipient/copy (prompt &optional what-to-do recpt-type)
   "Adds a new recipient or a cc-recipient to the text which is being edited.
 PROMPT is the prompt to use to ask the user for a recipient.
 WHAT-TO-DO is a function to call to do the insertion.

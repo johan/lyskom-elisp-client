@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.142 2003-08-16 16:58:47 byers Exp $
+;;;;; $Id: utilities.el,v 44.143 2003-08-17 12:48:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.142 2003-08-16 16:58:47 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.143 2003-08-17 12:48:07 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1593,6 +1593,10 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
   (or (and (zerop (% year 4))
            (not (zerop (% year 100))))
       (zerop (% year 400))))
+
+(defun lyskom-days-in-year (year)
+  "Return number of days in YEAR."
+  (if (lyskom-is-leap-year year) 366 365))
 
 (defun lyskom-days-in-month (year month)
   "Return the number of days mONTH of YEAR.

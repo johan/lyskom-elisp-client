@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.46 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: completing-read.el,v 44.47 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,9 +36,10 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.46 2003-08-16 16:58:45 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.47 2003-08-17 12:48:06 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
+(defvar lyskom-saved-answers nil)
 
 
 
@@ -205,13 +206,30 @@ See lyskom-read-conf for a description of the parameters."
 (defun lyskom-default-conference-not-current (uc)
   (not (eq (uconf-stat->conf-no uc) lyskom-current-conf)))
 
-(defun lyskom-get-initial-conf-strategy ()
-  (or (cdr (assq lyskom-current-command lyskom-default-conference-strategy))
-      (cdr (assq t lyskom-default-conference-strategy))))
+(defun lyskom-default-conference-last-author ()
+  (and (lyskom-get-last-read-text)
+       (list (text-stat->author
+              (blocking-do 'get-text-stat (lyskom-get-last-read-text))))))
 
-(defun lyskom-read-conf-guess-initial (predicate)
+
+(defun lyskom-get-initial-conf-strategy (prompt)
+  (when (listp prompt) (setq prompt (car prompt)))
+  (let* ((spec-1 (cdr (assq (or lyskom-current-command this-command)
+                            lyskom-default-conference-strategy)))
+         (default-spec 
+           (cdr (assq t (assq t lyskom-default-conference-strategy))))
+         (prompt-spec (cdr (assq prompt spec-1)))
+         (cmd-spec (cdr (assq t spec-1))))
+    (list (or (assq 'default prompt-spec)
+              (assq 'default cmd-spec)
+              (assq 'default default-spec))
+          (or (assq 'filter prompt-spec)
+              (assq 'filter cmd-spec)
+              (assq 'filter default-spec)))))
+
+(defun lyskom-read-conf-guess-initial (prompt predicate)
   "Return a guess for the initial value for lyskom-read-conf."
-  (let* ((strategy (lyskom-get-initial-conf-strategy))
+  (let* ((strategy (lyskom-get-initial-conf-strategy prompt))
          (default (cdr (assq 'default strategy)))
          (filter (cdr (assq 'filter strategy))))
 
@@ -227,7 +245,7 @@ See lyskom-read-conf for a description of the parameters."
                                predicate nil nil)))
                        (mapcar (lambda (conf-no)
                                  (blocking-do 'get-uconf-stat conf-no)) 
-                               (apply 'append (mapcar 'funcall default))))))))
+                               (apply 'append (delq nil (mapcar 'funcall default)))))))))
 
 
 
@@ -235,23 +253,31 @@ See lyskom-read-conf for a description of the parameters."
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
 
-PROMPT is the prompt type type.
+PROMPT is the prompt. It can be a string, symbol or list. If it is a symbol,
+       lyskom-get-string will be used to get the string. If it is a list,
+       it is used as the argument list to lyskom-format to create the
+       prompt. You should use symbols and lists only.
 TYPE   is the type of conferences to return. It is a list of one or
-more of the following:
-    all     Return any conference.
-    conf    Return conferences (not letterboxes).
-    pers    Return persons (letterboxes).
-    login   Return persons who are also logged-in.
-    membership Return only conferences and letterboxes lyskom-pers-no
-            is a member of.
-    none    Return names that do not match anything in the database.
-    (restrict c1 c2 ...) Restrict matching to conference numbers c1, 
-            c2 etc. The implementation is inefficient for long lists.
+       more of the following:
+
+       all     Return any conference.
+       conf    Return conferences (not letterboxes).
+       pers    Return persons (letterboxes).
+       login   Return persons who are also logged-in.
+       membership Return only conferences and letterboxes lyskom-pers-no
+               is a member of.
+       none    Return names that do not match anything in the database.
+       (restrict c1 c2 ...) Restrict matching to conference numbers c1, 
+               c2 etc. The implementation is inefficient for long lists.
 
 Optional arguments
+
 EMPTY     allow nothing to be entered.
+
 INITIAL   initial contents of the minibuffer. If an integer, use the
-          name of that conference.
+          name of that conference. This is normally computed automatically,
+          so pass nil whenever possible.
+
 MUSTMATCH if non-nil, the user must enter a valid name.
 
 The return value may be one of
@@ -271,8 +297,13 @@ A string:    A name that matched nothing in the database."
               ((lyskom-conf-z-info-p initial)
                (conf-z-info->name initial))
               ((consp initial) initial)
-              ((lyskom-read-conf-guess-initial type))
+              ((lyskom-read-conf-guess-initial prompt type))
               (t nil)))
+
+  (setq prompt (cond ((stringp prompt) prompt)
+                     ((symbolp prompt) (lyskom-get-string prompt))
+                     ((listp prompt) (apply 'lyskom-format prompt))
+                     (t (lyskom-get-string 'conf-prompt))))
 
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
@@ -284,9 +315,7 @@ A string:    A name that matched nothing in the database."
          (keep-going t))
 
     (while keep-going
-      (setq read-string (lyskom-completing-read (cond ((stringp prompt) prompt)
-                                                      ((symbolp prompt) (lyskom-get-string prompt))
-                                                      (t (lyskom-get-string 'conf-prompt)))
+      (setq read-string (lyskom-completing-read prompt
                                                 'lyskom-read-conf-internal
                                                 type
                                                 mustmatch

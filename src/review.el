@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.54 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: review.el,v 44.55 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.54 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: review.el,v 44.55 2003-08-17 12:48:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -300,11 +300,10 @@ all review-related functions."
                              (lyskom-format 'first-n
                                             (- count))))))
          (by (lyskom-read-conf-no 
-              (lyskom-format 'review-info (lyskom-format 'info-by-whom info))
+              `(review-info ,(lyskom-format 'info-by-whom info))
               '(pers) t nil t))
          (to (lyskom-read-conf-no 
-              (lyskom-format 'review-info
-                             (lyskom-format 'info-to-conf info))
+              `(review-info ,(lyskom-format 'info-to-conf info))
               '(all) 
               t nil t)))
 
@@ -379,11 +378,10 @@ texts, review the last N texts instead of the first (you can use
                              (lyskom-format 'first-n
                                             (- count))))))
          (by (lyskom-read-conf-no 
-              (lyskom-format 'unread-info (lyskom-format 'info-by-whom info))
+              `(unread-info ,(lyskom-format 'info-by-whom info))
               '(pers) t nil t))
          (to (lyskom-read-conf-no 
-              (lyskom-format 'unread-info
-                             (lyskom-format 'info-to-conf info))
+              `(unread-info ,(lyskom-format 'info-to-conf info))
               '(all) t nil t)))
 
     (if (not (zerop to))

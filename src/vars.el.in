@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.260 2003-08-15 18:24:19 byers Exp $
+;;;;; $Id: vars.el.in,v 44.261 2003-08-17 12:48:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.260 2003-08-15 18:24:19 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.261 2003-08-17 12:48:07 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -199,15 +199,166 @@ the priority among links that match the same text is undefined."
 
 
 (def-kom-var lyskom-default-conference-strategy
-  '((kom-sub-self . ((default . (lyskom-default-conference-at-point
-                                 lyskom-default-conference-current))
-                     (filter . (lyskom-default-conference-not-self))))
-    (kom-go-to-conf . ((default . (lyskom-default-conference-at-point
-                                   lyskom-default-conference-self))
-                       (filter . (lyskom-default-conference-not-current))))
-    (t . ((default . (lyskom-default-conference-at-point
-                      lyskom-default-conference-current
-                      lyskom-default-conference-self)))))
+  '((kom-delete-conf (what-conf-to-delete
+                      (default . (lyskom-default-conference-empty))))
+
+    (kom-sub-self (leave-what-conf
+                   (filter . (lyskom-default-conference-not-self))))
+
+    (kom-change-priority (what-to-change-pres-you
+                          (default . (lyskom-default-conference-at-point
+                                      lyskom-default-conference-self))))
+
+    (kom-change-presentation (what-to-change-pres-you
+                              (default . (lyskom-default-conference-at-point
+                                          lyskom-default-conference-self))))
+
+    (kom-change-conf-motd (who-to-put-motd-for
+                           (default . (lyskom-default-conference-at-point
+                                       lyskom-default-conference-self))))
+
+    (kom-set-presentation (who-to-set-pres-you
+                           (default . (lyskom-default-conference-at-point
+                                       lyskom-default-conference-self))))
+
+    (kom-set-motd-text (who-to-set-motd-you
+                        (default . (lyskom-default-conference-at-point
+                                    lyskom-default-conference-self))))
+
+    (kom-remove-presentation (who-to-remove-pres-for
+                              (default . (lyskom-default-conference-at-point
+                                          lyskom-default-conference-self))))
+
+    (kom-unset-conf-motd (who-to-remove-motd-for
+                          (default . (lyskom-default-conference-at-point
+                                      lyskom-default-conference-self))))
+
+    (kom-go-to-conf (go-to-conf-p
+                     (default . (lyskom-default-conference-at-point
+                                 lyskom-default-conference-self))
+                     (filter . (lyskom-default-conference-not-current))))
+
+    (kom-list-created-conferences (list-confs-created-by
+                                   (default . (lyskom-default-conference-at-point
+                                               lyskom-default-conference-self))))
+
+    (kom-change-name (name-to-be-changed
+                      (default . (lyskom-default-conference-at-point
+                                  lyskom-default-conference-self))))
+
+    (kom-change-parenthesis (name-to-be-changed
+                             (default . (lyskom-default-conference-at-point
+                                         lyskom-default-conference-self))))
+
+    (kom-change-password (whos-passwd
+                          (default . (lyskom-default-conference-at-point
+                                      lyskom-default-conference-self))))
+
+    (kom-redirect-comments (redirect-for-whom
+                            (default . (lyskom-default-conference-at-point
+                                        lyskom-default-conference-self)))
+                           (redirect-to-which-conf))
+
+    (kom-filter-author (filter-author
+                        (default . (lyskom-default-conference-at-point
+                                    lyskom-default-conference-last-author))
+                        (filter . (lyskom-default-conference-not-self)))
+                       (filter-in-conf
+                        (filter . (lyskom-default-conference-not-self))))
+
+
+    (kom-review-by-to (info-by-whom
+                       (default . (lyskom-default-conference-at-point
+                                   lyskom-default-conference-empty)))
+                      (info-to-conf))
+
+    (kom-review-first (info-by-whom
+                       (default . (lyskom-default-conference-at-point
+                                   lyskom-default-conference-empty)))
+                      (info-to-conf))
+
+    (kom-review-all (info-by-whom
+                     (default . (lyskom-default-conference-at-point
+                                 lyskom-default-conference-empty)))
+                    (info-to-conf))
+
+    (kom-unread-by-to (info-by-whom
+                       (default . (lyskom-default-conference-at-point
+                                   lyskom-default-conference-empty)))
+                      (info-to-conf))
+
+    (kom-unread-first (info-by-whom
+                      (default . (lyskom-default-conference-at-point
+                                  lyskom-default-conference-empty)))
+                      (info-to-conf))
+
+    (kom-unread-all (info-by-whom 
+                     (default . (lyskom-default-conference-at-point
+                                 lyskom-default-conference-empty)))
+                    (info-to-conf))
+
+    (lyskom (what-is-your-name 
+             (default . (lyskom-default-conference-empty))))
+
+
+    ;; Things I suspect to magical stuff
+
+    (kom-add-recipient (who-to-add-q))
+    (kom-add-copy (who-to-add-copy-q))
+    (kom-add-bcc (who-to-add-bcc-q))
+    (kom-sub-recipient (who-to-sub-q))
+    (kom-send-message (who-to-send-message-to))
+    (kom-move-text (who-to-move-from-q) (who-to-move-to-q))
+    (kom-move-text-tree (who-to-move-from-q) (who-to-move-to-q)
+                        (who-to-move-to-or-sub-q))
+
+
+    ;; Defaults and commands that use the defaults
+
+    (kom-review-presentation (presentation-for-whom))
+    (kom-unread-presentation (unread-presentation-for-whom))
+    (kom-add-member (who-to-add) (where-to-add))
+    (kom-add-self (where-to-add-self))
+    (kom-change-priority (change-priority-for-q))
+    (kom-sub-member (who-to-exclude) (where-from-exclude))
+    (kom-write-text (who-send-text-to))
+    (kom-send-letter (who-letter-to))
+    (kom-change-supervisor (what-to-change-supervisor-for) (new-supervisor))
+    (kom-who-is-on-in-conference (who-is-on-in-what-conference))
+    (kom-who-is-present-in-conference (who-is-present-in-what-conference))
+    (kom-add-cross-reference (which-conf-to-xref) (which-pers-to-xref))
+    (kom-edit-add-cross-reference (which-conf-to-xref) (which-pers-to-xref))
+    (kom-edit-insert-link (which-conf-to-link) (which-pers-to-link))
+    (kom-status-conf (conf-for-status))
+    (kom-status-person (pers-for-status))
+    (kom-set-garb-nice (conf-to-set-garb-nice-q))
+    (kom-set-permitted-submitters (conf-to-set-permitted-submitters-q)
+                                  (new-permitted-submitters-q))
+    (kom-set-super-conf (conf-to-set-super-conf-q) (new-super-conf-q))
+    (kom-set-personal-label (label-what-pers) (label-what-conf))
+    (kom-is-person-member-of-conference (pers-to-check-mship-for) (conf-to-check-mship-of))
+    (kom-will-person-read-text (pers-to-check-will-read-for))
+    (kom-create-aux-item (which-conf-to-add-aux-to))
+    (kom-recommend-conference (recommend-which-conf))
+    (kom-limit-import (limit-import-to-conf))
+    (kom-edit-add-recipient (added-recipient))
+    (kom-edit-add-bcc (added-blank-carbon-copy))
+    (kom-edit-add-copy (added-carbon-copy))
+    (kom-edit-move-text (who-to-move-to-q))
+    (kom-add-faq (conf-to-add-faq))
+    (kom-del-faq (conf-to-del-faq))
+    (kom-review-faq (view-which-faq))
+    (kom-unread-faq (unread-which-faq))
+    (kom-change-conf-faq (what-to-change-faq-you))
+    (kom-list-faqs (conf-to-list-faqs))
+    (kom-filter-subject (filter-in-conf))
+    (kom-filter-recipient (filter-recipient))
+    (kom-filter-text (filter-in-conf))
+
+    (t (t (default . (lyskom-default-conference-at-point
+                      lyskom-default-conference-current))))
+    )
+
   "Strategy for the initial value for conference defaults.
 
 The meaning and format of this variable will probably change in the future.")
