@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.56 1999-11-21 15:39:49 byers Exp $
+;;;;; $Id: commands2.el,v 44.57 1999-11-22 14:38:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.56 1999-11-21 15:39:49 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.57 1999-11-22 14:38:55 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -513,36 +513,44 @@ otherwise: the conference is read with lyskom-completing-read."
 (def-kom-command kom-send-message (&optional who message)
   "Send a message to one of the users in KOM right now."
   (interactive)
-  (let ((target (or who
-		    (lyskom-read-conf-no
-		     (format (lyskom-get-string 'who-to-send-message-to)
-			     (lyskom-get-string 'nobody))
-                     (if kom-permissive-completion
-                         '(all)
-                       '(login conf))
-		     ;; Initial string:
-                     t
-		     (cond
-		      ((eq kom-default-message-recipient 'everybody) nil)
+  (let* ((tmp nil)
+         (target (or who
+                     (lyskom-read-conf-no
+                      (format (lyskom-get-string 'who-to-send-message-to)
+                              (lyskom-get-string 'nobody))
+                      (if kom-permissive-completion
+                          '(all)
+                        '(login conf))
+                      ;; Initial string:
+                      t
+                      (cond
+                       ((eq kom-default-message-recipient 'everybody) nil)
 
-		      ((and (eq kom-default-message-recipient 'group)
-			    lyskom-last-group-message-recipient)
-		       (cons lyskom-last-group-message-recipient 0))
+                       ((and (eq kom-default-message-recipient 'group)
+                             lyskom-last-group-message-recipient)
+                        (cons lyskom-last-group-message-recipient 0))
 
-		      ((or (and (eq kom-default-message-recipient 'group)
-				(null lyskom-last-group-message-recipient))
-			   (and (eq kom-default-message-recipient 'sender)
-				lyskom-last-personal-message-sender))
-		       (cons lyskom-last-personal-message-sender 0))
+                       ((or (and (eq kom-default-message-recipient 'group)
+                                 (null lyskom-last-group-message-recipient))
+                            (and (eq kom-default-message-recipient 'sender)
+                                 lyskom-last-personal-message-sender))
+                        (cons lyskom-last-personal-message-sender 0))
 
-		      (t 
-		       (if lyskom-last-personal-message-sender
-			   (cons lyskom-last-personal-message-sender 0)
-			 "")))
-                     t))))
+                       ((and (eq kom-default-message-recipient 'last-recipient)
+                             lyskom-last-message-recipient
+                             (not (eq 0 lyskom-last-message-recipient))
+                             (setq tmp (blocking-do 'get-uconf-stat lyskom-last-message-recipient)))
+                        (cons (conf-stat->name tmp) 0))
+
+                       (t 
+                        (if lyskom-last-personal-message-sender
+                            (cons lyskom-last-personal-message-sender 0)
+                          "")))
+                      t))))
     (if (zerop target)
         (lyskom-format-insert 'message-use-alarm-instead
                               (lyskom-command-name 'kom-send-alarm))
+      (setq lyskom-last-message-recipient target)
       (lyskom-format-insert 'message-recipient-info target)
       (lyskom-send-message target message))))
   

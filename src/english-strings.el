@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.71 1999-11-21 17:59:32 byers Exp $
+;;;;; $Id: english-strings.el,v 44.72 1999-11-22 14:38:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.71 1999-11-21 17:59:32 byers Exp $"))
+              "$Id: english-strings.el,v 44.72 1999-11-22 14:38:59 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2118,9 +2118,10 @@ Select whether to execute command or keyboard macro.")
     (discard-messages .          "Nowhere - discard them")
     (in-named-buffer .           "In a named buffer     ")
 
-    (everybody-rcpt . "Everybody                              ")
-    (group-rcpt .     "The recipient of the last group message")
-    (sender-rcpt .    "The sender of the most recent message  ")
+    (everybody-rcpt . "Everybody                                ")
+    (group-rcpt .     "The recipient of the last group message  ")
+    (sender-rcpt .    "The sender of the most recent message    ")
+    (last-recipient-recpt . "The last person I send a message to")
 
     (viewer-program . "Web browser")
     (no-viewer            . "(ingenting valt)")

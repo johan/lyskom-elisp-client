@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.53 1999-11-21 17:59:29 byers Exp $
+;;;;; $Id: edit-text.el,v 44.54 1999-11-22 14:38:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.53 1999-11-21 17:59:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.54 1999-11-22 14:38:57 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1059,11 +1059,10 @@ Cannot be called from a callback."
          (no
           (goto-char p)
           (set-buffer lyskom-buffer)
-          (lyskom-collect 'edit)
-          (initiate-get-text 'edit thendo no)
-          (initiate-get-text-stat 'edit nil no)
-          (lyskom-use 'edit thendo buffer window)
-          (set-buffer buffer))
+          (blocking-do-multiple ((text (get-text no))
+                                 (text-stat (get-text-stat no)))
+            (set-buffer buffer)
+            (funcall thendo text text-stat buffer window)))
          (t
           (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
     (sit-for 0)))

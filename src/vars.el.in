@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.87 1999-11-19 02:16:45 byers Exp $
+;;;;; $Id: vars.el.in,v 44.88 1999-11-22 14:39:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.87 1999-11-19 02:16:45 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.88 1999-11-22 14:39:11 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1780,6 +1780,10 @@ an unknown person.")
 
 (def-kom-var lyskom-last-group-message-recipient ""
   "Name of target for last group message received"
+  local)
+
+(def-kom-var lyskom-last-message-recipient nil
+  "Number of last async message recipient sent to."
   local)
 
 (def-kom-var lyskom-is-new-user nil

@@ -1,3 +1,19 @@
+1999-11-22  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-modeline-keymap): Go to unread session on
+	mouse up, not mouse down since mouse up event is bound to bad
+	things in XEmacs.
+
+	* edit-text.el (lyskom-edit-get-commented): Rewrote as blocking.
+
+	* option-edit.el (lyskom-custom-variables): Added last-recipient
+	option to kom-default-message-recipient.
+
+	* vars.el.in (lyskom-last-message-recipient): New variable.
+
+	* commands2.el (kom-send-message): Added last-recipient option to
+	kom-default-message-recipients..
+
 1999-11-21  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-miscs): Use lyskom-princ to
