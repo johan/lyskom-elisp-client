@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.4 1996-10-02 16:59:06 davidk Exp $
+;;;;; $Id: startup.el,v 44.5 1996-10-03 00:21:36 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.4 1996-10-02 16:59:06 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.5 1996-10-03 00:21:36 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -364,14 +364,10 @@ This is called at login and after prioritize and set-unread."
   ;; (setq lyskom-membership-is-read t)
   ;; (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
 
-  (setq lyskom-last-conf-received -1)
-  (setq lyskom-last-conf-done -1)
-
   (lyskom-reset-prefetch)
   (lyskom-start-prefetch)
   (lyskom-prefetch-membership lyskom-pers-no)
 
-  (setq lyskom-last-conf-fetched -1)
   (setq lyskom-to-do-list (lyskom-create-read-list))
   (setq lyskom-reading-list (lyskom-create-read-list)))
 
@@ -645,9 +641,6 @@ to see, set of call."
     (make-local-variable 'lyskom-is-parsing)
     (make-local-variable 'lyskom-is-waiting)
     (make-local-variable 'lyskom-is-writing)
-    (make-local-variable 'lyskom-last-conf-done)
-    (make-local-variable 'lyskom-last-conf-fetched)
-    (make-local-variable 'lyskom-last-conf-received)
     (make-local-variable 'lyskom-last-group-message-recipient)
     (make-local-variable 'lyskom-last-personal-message-sender)
     (make-local-variable 'lyskom-last-viewed)
@@ -667,6 +660,9 @@ to see, set of call."
     (make-local-variable 'lyskom-pers-no)
     (make-local-variable 'lyskom-prefetch-conf-tresh)
     (make-local-variable 'lyskom-prefetch-confs)
+    (make-local-variable 'lyskom-prefetch-in-action)
+    (make-local-variable 'lyskom-prefetch-pending-prefetch)
+    (make-local-variable 'lyskom-prefetch-stack)
     (make-local-variable 'lyskom-prefetch-texts)
     (make-local-variable 'lyskom-previous-text)
     (make-local-variable 'lyskom-prioritize-buffer)
