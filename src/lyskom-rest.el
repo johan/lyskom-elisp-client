@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.13 1993-12-19 18:01:23 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.14 1994-01-05 23:06:41 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.13 1993-12-19 18:01:23 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.14 1994-01-05 23:06:41 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1828,9 +1828,13 @@ from the value of kom-tell-phrases-internal."
 (run-hooks 'lyskom-init-hook)
 
 (or (assq 'lyskom-sessions-with-unread minor-mode-alist)
-    (setq minor-mode-alist (cons (list 'lyskom-sessions-with-unread 
-				       (lyskom-get-string 'mode-line-unread))
-				 minor-mode-alist)))
+    (setq minor-mode-alist 
+	  (cons (list 'lyskom-sessions-with-unread 
+		      (let ((str (lyskom-get-string 'mode-line-unread)))
+			(if kom-emacs-knows-iso-8859-1
+			    str
+			  (iso-8859-1-to-swascii str))))
+		minor-mode-alist)))
 
 (lyskom-tell-phrases-validate)
 
