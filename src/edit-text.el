@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.80 2001-06-05 11:30:22 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.81 2001-08-15 23:41:09 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.80 2001-06-05 11:30:22 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.81 2001-08-15 23:41:09 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1308,7 +1308,12 @@ RECPT-TYPE is the type of recipient to add."
                            (lyskom-create-aux-item-flags
                             nil nil nil nil nil nil nil nil)
                            0 "")))
-  
+
+(defun kom-edit-add-link ()
+  (interactive)
+  (let ((item (lyskom-read-link)))
+    (when item
+      (insert item))))
     
 
 

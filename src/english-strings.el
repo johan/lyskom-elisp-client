@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.144 2001-08-09 22:06:12 qha Exp $
+;;;;; $Id: english-strings.el,v 44.145 2001-08-15 23:41:10 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.144 2001-08-09 22:06:12 qha Exp $"))
+              "$Id: english-strings.el,v 44.145 2001-08-15 23:41:10 qha Exp $"))
 
 
 ;;; ================================================================
@@ -107,6 +107,7 @@
   (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)
   (define-key lyskom-en-edit-prefix (kbd "C-a <RET>") 'kom-edit-move-text)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
+  (define-key lyskom-en-edit-prefix (kbd "C-a C-l") 'kom-edit-add-link)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-r") 'kom-edit-add-read-confirm-request)
@@ -833,6 +834,12 @@ Help: \\[describe-mode] ---")
     (unknown-header . "Unknown header")
     (transform-error . "Send unformatted (%#1s)? ")
     (cant-find-info-node . "Can't find the info buffer")
+
+    (link-type . "What to you want to link to (text, conference or person)? ")
+    (which-text-to-link . "Add link to text: ")
+    (which-text-to-link-err . "Text not found. Add link to text: ")
+    (which-pers-to-link . "Add link to user: ")
+    (which-conf-to-link . "Add link to conference: ")
 
     ; From view-text.el:
     (line . " /1 line/ ")

@@ -1,3 +1,18 @@
+2001-08-16  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* edit-text.el (kom-edit-add-link): new. Inserts a link
+	in the text you are writing.
+
+	* commands1.el (lyskom-read-link): new. Returns a link to a text,
+	person or conference.
+
+	* swedish-strings.el (lyskom-message): added messages for
+	link-insertion.
+	(lyskom-sv-edit-mode-map): C-c C-a C-l runs kom-edit-add-link.
+
+	* english-strings.el (lyskom-en-edit-mode-map): 
+	(lyskom-message): see swedish-strings.el
+
 2001-08-09  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-button-find-root-review): this
