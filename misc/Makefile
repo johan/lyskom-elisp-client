@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 43.1 1996-08-07 20:00:40 davidk Exp $
+# $Id: Makefile,v 43.1 1996-08-07 20:00:53 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,27 +23,13 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
 
-all: lisp doc
-
-lisp:
-	( cd src; ${MAKE} )
-
-doc:
-	( cd doc; $(MAKE) )
+all:
 
 install:
-	( cd src; $(MAKE) install )
-	( cd doc; $(MAKE) install )
 
 release:
-	( cd src; $(MAKE) release )
-	( cd doc; $(MAKE) release )
 
 clean:
 	rm -vf *~
-	( cd src; ${MAKE} clean )
-	( cd doc; ${MAKE} clean )
-	( cd misc; ${MAKE} clean )
 
 distclean: clean
-	( cd src; ${MAKE} distclean )
