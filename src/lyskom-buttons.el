@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.7 1997-02-07 18:07:46 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.8 1997-05-14 11:12:40 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -766,6 +766,47 @@ existing Mosaic process. Failing that, it starts a new Mosaic."
                  (list url)))
 	(lyskom-url-manager-starting manager)))))
 
+;; Added by Peter Liljenberg
+(defun lyskom-view-url-lynx (url manager)
+  "View the URL URL using Lynx.
+Lynx will be run either in an xterm or in Emacs terminal mode,
+depending on the value of `kom-lynx-terminal'."
+  (cond
+   ((eq kom-lynx-terminal 'xterm)
+    (apply 'start-process
+	   "lynx"
+	   nil
+	   (car kom-lynx-xterm-command)
+	   (append (cdr kom-lynx-xterm-command) (list url)))
+    (lyskom-url-manager-starting manager))
+
+   ((eq kom-lynx-terminal 'terminal)
+    (let* ((lbuf (get-buffer "*Lynx*"))
+	   (lproc (and lbuf (get-buffer-process lbuf))))
+      (if lproc
+	  ;; Tell existing Lynx to fetch URL
+	  (process-send-string lproc (concat "g" url "\n"))
+
+	;; Create a new Lynx
+	(switch-to-buffer
+	 (apply 'make-term "Lynx"
+		(if (listp kom-lynx-terminal-command)
+		    (car kom-lynx-terminal-command)
+		  kom-lynx-terminal-command)
+		nil
+		(if (listp kom-lynx-terminal-command)
+		    (append (cdr kom-lynx-terminal-command) (list url))
+		  (list url))))
+	(delete-other-windows)
+	(term-char-mode)
+	(set-process-sentinel
+	 (get-buffer-process (current-buffer))
+	 (function (lambda (proc str)
+		     (kill-buffer (process-buffer proc))))))
+      (lyskom-url-manager-starting manager)))
+
+   (t (lyskom-error "Bad Lynx terminal: %s" kom-lynx-terminal))
+   ))
 
 ;;;
 ;;;	email buttons
