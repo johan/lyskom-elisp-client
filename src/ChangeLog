@@ -1,3 +1,7 @@
+2003-08-29  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-message): Don't kill the last char.
+
 2003-08-28  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (kom-builtin-server-aliases, kom-server-aliases): Fix
