@@ -1,3 +1,15 @@
+Wed Jul  2 13:07:38 1997  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-filter): Tog bort
+	(lyskom-reset-apo-timeout).
+
+	* utilities.el: Kommenterade bort lyskom-accept-process-output och
+	vänner.
+
+	* filter.el (lyskom-filter-text-p),
+	macros.el (lyskom-blocking-do-multiple),
+	services.el (blocking-do): Fixade accept-process-output.
+
 Tue Jul  1 18:26:42 1997  Peter Liljenberg  <petli@lysator.liu.se>
 
 	* check-strings.el: Helt omskriven för att klara det nya
