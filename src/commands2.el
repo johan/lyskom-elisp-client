@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.64 2000-05-19 02:22:19 jhs Exp $
+;;;;; $Id: commands2.el,v 44.65 2000-05-19 10:35:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.64 2000-05-19 02:22:19 jhs Exp $\n"))
+	      "$Id: commands2.el,v 44.65 2000-05-19 10:35:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -644,7 +644,6 @@ send. If DONTSHOW is non-nil, don't display the sent message."
             (t (setq lyskom-message-string (substring lyskom-message-string 
                                                       0 size)))))))
 
-(lyskom-external-function lyskom-resize-minibuffer-mode)
 (lyskom-external-function resize-minibuffer-setup)
 
 (defun lyskom-send-message-turn-off-resize-on-exit ()
@@ -655,15 +654,11 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 (defvar resize-minibuffer-mode)
 (defun lyskom-send-message-resize-minibuffer ()
   "Temporarily turn on resizing of minibuffer"
-  (let ((tmp nil))
-    (if (not resize-minibuffer-mode)
-        (progn
-          (if (not (memq 'resize-minibuffer-setup minibuffer-setup-hook))
-              (setq tmp t))
-          (resize-minibuffer-mode 0)
-          (if tmp (resize-minibuffer-setup))
-          (add-hook 'lyskom-send-message-exit-hook
-                    'lyskom-send-message-turn-off-resize-on-exit)))))
+  (unless resize-minibuffer-mode
+    (resize-minibuffer-mode 1)
+    (resize-minibuffer-setup)
+    (add-hook 'lyskom-send-message-exit-hook
+              'lyskom-send-message-turn-off-resize-on-exit)))
 
 
 (defun lyskom-send-message-auto-fill ()
@@ -2038,7 +2033,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 (def-kom-command kom-add-faq (&optional conf-no text-no)
   "Add a FAQ to a conference"
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
-                     (lyskom-read-number 'text-to-add-as-faq)))
+                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq t 'last-seen-written)))
   (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)

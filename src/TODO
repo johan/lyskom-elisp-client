@@ -9,8 +9,8 @@ Det vore trevligt om "Arkivera inlägg (till fil)" fanns i kontextmenyn
 för inläggsnummer också, samt om man kunde ställa in en defaultpath
 till funktionen, helst också per KOM.
 
-** Blockera eller klara av att man ger kommandon i bufferten medan den
-   håller på att uppdateras.
+** Blockera eller klara av att man ger kommandon i
+   kom-handle-membership medan bufferten håller på att uppdateras.
 
 ** Stöd för att helt dölja ett medlemskap i kom-handle-membership. Man
    vill kanske dölja alla man inte har olästa i, eller alla som man
@@ -24,10 +24,16 @@ till funktionen, helst också per KOM.
    HTTP-proxyn. Se specen för HTTP 1.1, kapitel 11 och RFC 2069.
 
         ftp://ftp.isi.edu/in-notes/rfc2616.txt
-        ftp://ftp.isi.edu/in-notes/rfc261y.txt
+        ftp://ftp.isi.edu/in-notes/rfc2069.txt
+  Instoppat i LysKOM.
 
 
 * SHOWSTOPPERS
+
+** Buggar i completion. (lyskom-complete-string '("Björn" "Bjørn"))
+   returnerar "Bj", inte "Björn". I Gnu Emacs ger "Väderd" TAB TAB
+   inte en lista. Det verkar bli så om completion innehåller svenska
+   tecken. Det blir rätt om man startar med --unibyte.
 
 ** Martin, hade vissa problem med inställningarna. User-arean såg OK
    ut och han säger att problemen försvann när han skrev en
@@ -220,6 +226,7 @@ j-or-n-p.
     hamnar på en indragen rad. Indragna rader skulle inte sabotera
     ord:-prefixet. 
     FIX BY: 0.46-0.47
+        Inlagd i LysKOM.
 
 
 ** DEFERRED INSERT
@@ -370,6 +377,7 @@ j-or-n-p.
     man normalt hoppar över. Det är saker som till exempel
     creating-software.
     FIX BY: 0.46
+        Inlagd i lyskom.
 
     Det vore skoj om lyskom.el kunde, som jag har för mig att någon
     föreslog en gång, parsa fotnoter av det där slaget [sed-mönster
@@ -393,6 +401,7 @@ j-or-n-p.
 
     Någon form at reply till importerade brev som använder mx-reply-to
     eller mx-to, mx-cc om de finns.
+        Inlagd i LysKOM
 
     Frågan om flera mottagare kanske inte borde ställas om man har
     arrangerat om mottagarlistan rejält. Den skall ställas om man
@@ -421,6 +430,7 @@ j-or-n-p.
           börjar kommentera om kommentarer som redan finns där. Den
           varningen borde vara oberoende av den som kommer när man
           skickar in.
+        Inlagd i LysKOM.
 
     Addera det kommenterades författare som mottagare vid behov när
     man börjar skriva inlägget. Se till att inte gnälla om denna
@@ -438,7 +448,7 @@ j-or-n-p.
           skulle hindra att man tog bort mottagare så att det
           kommenterades författare blev utan.) Hans Persson har helt
           rätt.
-
+        Inlagd i LysKOM.
 
 ** EDIT-BUFFERTEN
 
@@ -468,9 +478,11 @@ j-or-n-p.
 
     Ny filter-edit-mode
     FIX BY: 0.48
+        Inskriven i LysKOM
 
     Använd den nya filterkompilatorn.
     FIX BY: 0.48
+        Inskriven i LysKOM
 
     Gör inte nästa kommando efter en filtrering. Kontrollera med
     variabel.
@@ -502,10 +514,12 @@ j-or-n-p.
 
     Lägg till kommandot ändra medlemskapstyp.
     FIX BY: 0.46
+        Inskriven i LysKOM
  
     När man accepterar en inbjudan borde man automatiskt prioritera om
     den enligt ens defaultprioritet och defaultposition.
     FIX BY: 0.46
+        Inskriven i LysKOM
 
 
 ** ÅTERSE
@@ -514,21 +528,26 @@ j-or-n-p.
     mycket man hinner under säg tre sekunder och stoppa någonting på
     read-listan som hämtar nästa tre sekunder eller så.
     FIX BY: 0.47 or later
+        Inskriven i LysKOM
 
     "Återse n inlägg av person x till möte y från datum z framåt"
     FIX BY: 0.47 or later
+        Inskriven i LysKOM
 
     "Återse n inlägg av person x till möte y under de senaste k dagarna"
     FIX BY: 0.47 or later
+        Inskriven i LysKOM
 
     Strunta i hemliga texter vid åar.
     FIX BY: 0.46-0.47
+        Inskriven i LysKOM
 
     Återse alla markerade borde gå att avbryta med nästa möte.
     FIX BY: 0.46-0.47           NOTE: Verkar fungera
 
     Det vore trevligt om inlägg man återsåg inte bidde varnade för när
     man skriver kommentarer.
+        Inskriven i LysKOM
     FIX BY: Who knows?
 
 
@@ -557,7 +576,7 @@ j-or-n-p.
     kanske den senaste man läste om det var man själv som skrev den?
     Snarare den sista man läste av sig själv alt. den sista man skrev
     om man inte har läst något av sig själv sedan dess.
-    FIX BY: 0.46-0.47
+    FIX BY: 0.46-0.47               FIXAT.
 
 
 ** ANVäNDARVäNLIGHET
@@ -566,6 +585,7 @@ j-or-n-p.
     olästa i någon session. Det skulle vara praktiskt för oss som har
     KOM igång ikonifierad i en separat Emacs större delen av tiden.
     FIX BY: 0.48
+        Inskrivet i LysKOM.
 
     Klickbara kommandon, vad nu det är.
     FIX BY: 0.48
@@ -577,6 +597,7 @@ j-or-n-p.
 
     Språkgranskning av den engelska versionen.
     FIX BY:
+        Inskrivet i LysKOM.
 
     Det skulle vara bra om man kunde ange för varje inställning om den
     skulle sparas i servern eller inte. I princip är det enkelt, men
@@ -597,6 +618,7 @@ j-or-n-p.
 
     JySKomska markeringstyper.
     FIX BY: 0.47-0.48
+        Inskrivet i LysKOM
 
 
 ** PREFETCH
@@ -610,9 +632,10 @@ j-or-n-p.
 
     Lista sessioner, ungefär som lista klienter, men som ger mer
     sessionsinformation, till exempel idletid. Önskad av David Hedbor.
-    FIX BY: 0.47-0.48
+    FIX BY: 0.47-0.48               Integrerat i Vilka. Klart.
 
     Sortera vilkaslistan efter t.ex. idletid.
+        Inskrivet i LysKOM
 
     Lista nyheter borde göra start of command innan den pratar om att
     vänta på medlemskapslistan. Den gör rätt ibland, men inte alltid.
@@ -622,7 +645,7 @@ j-or-n-p.
     ingenting är beroende av att medlemsskapslistan hämtas i
     prioritetsordning. Prefetchen måste kunna sortera in medlemsskap i
     prioritetsordning när den får dem från servern.
-    FIX BY: 0.47
+    FIX BY: 0.47            get-unread-confs används nu.
 
     kom-show-presence-messages borde kunna ha ett alternativ som gör
     att kom-friends används, så man får närvaromeddelanden enbart om
@@ -637,6 +660,7 @@ j-or-n-p.
     Implementera anonyma medlemskap i klienten. Detta är inte långt
     ifrån klart. Vi har hemliga medlemskap och behöver bara en hook
     att bli anonym när man går in i mötet.
+        Inskrivet i LysKOM.
     
     Implementera re-z-lookup med re-lookup-X så att vi kan återinföra
     maximal kompatibilitet.
