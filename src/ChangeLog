@@ -1,3 +1,10 @@
+1999-01-01  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* parse.el (lyskom-skip-array): Glöm inte att skippa det
+	avslutande }-tecknet i arrayen.
+	* flags.el (lyskom-read-options-eval): Krascha inte om det finns
+	mer än en del i user-arean från en annan klient.
+
 1998-12-14  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-beep): Häng inte om kom-audio-player
