@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.6 1996-07-25 16:04:18 byers Exp $
+;;;;; $Id: services.el,v 41.7 1996-07-27 11:39:52 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.6 1996-07-25 16:04:18 byers Exp $\n"))
+	      "$Id: services.el,v 41.7 1996-07-27 11:39:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -696,6 +696,23 @@ Args: KOM-QUEUE HANDLER REGEXP WANT-PERSONS WANT-CONFS &rest DATA."
 	       'lyskom-parse-conf-z-info-list)
   (lyskom-send-packet kom-queue (lyskom-format-objects 74 regexp want-persons
 						       want-confs)))
+
+(defun initiate-get-version-info (kom-queue handler &rest data)
+  "Perform a get-version-info vall.
+Args: KOM-QUEUE HANDLER &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-version-info)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 75)))
+
+
+(defun initiate-lookup-z-name (kom-queue handler name want-persons want-confs
+                                         &rest data)
+  "Perform a z-lookup.
+Args: KOM-QUEUE HANDLER NAME WANT-PERSONS WANT-CONFS &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data 
+               'lyskom-parse-conf-z-info-list)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 76 name
+                                                       want-persons
+                                                       want-confs)))
 
 (defun initiate-set-last-read (kom-queue handler conf-no text-no &rest data)
   "Tell the server to set the highest unread article in conference CONF-NO

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.16 1996-07-25 06:53:16 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.17 1996-07-27 11:39:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.16 1996-07-25 06:53:16 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.17 1996-07-27 11:39:45 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2207,7 +2207,11 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	      (setq lyskom-quit-flag nil)
 
 	      (if lyskom-debug-communications-to-buffer
-		  (lyskom-debug-insert proc "-----> " output))
+                  (if (not lyskom-debug-what-i-am-doing)
+                      (if (not (and (eq ?: (elt output 0))
+                                    (eq ?5 (elt output 1))))
+                          (lyskom-debug-insert proc "-----> " output))
+                    (lyskom-debug-insert proc "-----> " output)))
 	      
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
@@ -2311,6 +2315,7 @@ Other objects are converted correctly."
 	  (cond
 	   ((stringp object) (lyskom-format-string object))
 	   ((integerp object) (int-to-string object))
+           ((null object) "0")
 	   ((listp object)
 	    (cond
 	     ((eq (car object) 'MISC-LIST)
@@ -2326,6 +2331,7 @@ Other objects are converted correctly."
 		      (list 'lyskom-format-object
 			    ": no support for object "
 			    object)))))
+           ((eq object t) "1")
 	   (t (signal 'lyskom-internal-error
 		      (list 'lyskom-format-object
 			    ": no support for object "
