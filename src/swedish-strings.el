@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.29 1992-06-13 21:17:48 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.30 1992-06-29 22:28:11 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.29 1992-06-13 21:17:48 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.30 1992-06-29 22:28:11 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -863,6 +863,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}h" 'kom-review-clear)
   (define-key lyskom-mode-map "}i" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "}n" 'kom-review-next)
+  (define-key lyskom-mode-map "}o" 'kom-review-noconversion)
   (define-key lyskom-mode-map "}r" 'kom-find-root)
   (define-key lyskom-mode-map "}s" 'kom-review-by-to)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
