@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.18 2004-07-12 13:14:00 byers Exp $
+;;;;; $Id: reading.el,v 44.19 2004-07-12 20:56:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.18 2004-07-12 13:14:00 byers Exp $\n"))
+	      "$Id: reading.el,v 44.19 2004-07-12 20:56:34 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -162,15 +162,28 @@ lyskom-membership list then this item is not entered."
     (lyskom-update-membership-positions)
     (lp--update-buffer (membership->conf-no mship))))
 
-(defun lyskom-replace-membership (mship)
-  "Find the membership for the same conference as MSHIP, and
-replace it with MSHIP into lyskom-membership."
-  (lyskom-with-lyskom-buffer
-    (when (lyskom-mship-cache-get (membership->conf-no mship))
-      (lyskom-mship-cache-del (membership->conf-no mship)))
-    (lyskom-mship-cache-put mship)
-    (lyskom-update-membership-positions)
-    (lp--update-buffer (membership->conf-no mship))))
+(defmacro lyskom-replace-membership (mship &rest body)
+  "Replace the membership MSHIP while evaluating BODY.
+
+This function should be used when altering the priority or position of
+a membership. The membership is removed from the cache, then BODY is
+evaluated and finally the membership is inserted into the cache again.
+
+Note that altering the priority or position without first removing the
+membership from the cache may render it impossible to remove it later."
+  `(progn
+     (lyskom-with-lyskom-buffer
+       (when (lyskom-mship-cache-get (membership->conf-no ,mship))
+         (lyskom-mship-cache-del (membership->conf-no ,mship))))
+     ,@body
+     (lyskom-with-lyskom-buffer
+       (lyskom-mship-cache-put ,mship)
+       (lyskom-update-membership-positions)
+       (lp--update-buffer (membership->conf-no ,mship)))))
+
+(put 'lyskom-replace-membership 'lisp-indent-hook 1)
+(put 'lyskom-replace-membership 'edebug-form-spec '(sexp body))
+
 
 (defun lyskom-remove-membership (conf-no)
   "Remove the membership for CONF-NO from lyskom-membership."
