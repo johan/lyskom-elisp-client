@@ -1,3 +1,8 @@
+2001-09-21  Joel Rosdahl  <joel@rosdahl.net>
+
+	* vars.el.in (lyskom-text-buttons): Require pseudo-url to start at
+ 	the beginning of a word.
+
 2001-09-06  Joel Rosdahl  <joel@rosdahl.net>
 
 	* vars.el.in (lyskom-personal-message-hook): Fixed documentation.
