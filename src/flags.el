@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.16 1999-11-21 17:59:35 byers Exp $
+;;;;; $Id: flags.el,v 44.17 1999-11-25 15:57:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.16 1999-11-21 17:59:35 byers Exp $\n"))
+	      "$Id: flags.el,v 44.17 1999-11-25 15:57:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -353,7 +353,7 @@ If successful then set the buffer not-modified. Else print a warning."
   "Handles the call from where we have the text."
   (if text				;+++ Other error handler
       (let* ((lyskom-options-text (text->text-mass text))
-	     (pointers (lyskom-read-options-eval-get-holerith))
+	     (pointers (lyskom-read-options-eval-get-holerith t))
 	     common-no elisp-no
 	     (rest lyskom-options-text)
 	     working
@@ -362,7 +362,7 @@ If successful then set the buffer not-modified. Else print a warning."
 	       word
 	       (r 1))
 	  (while (> (length lyskom-options-text) 2)
-	    (setq word (lyskom-read-options-eval-get-holerith))
+	    (setq word (lyskom-read-options-eval-get-holerith t))
 	    (cond
 	     ((lyskom-string= word "common")
 	      (setq common-no r))
@@ -378,7 +378,7 @@ If successful then set the buffer not-modified. Else print a warning."
 	      (nreverse lyskom-other-clients-user-areas))
 	(setq lyskom-options-text rest)
 	(while (> (length lyskom-options-text) 2)
-	  (setq working (lyskom-read-options-eval-get-holerith))
+	  (setq working (lyskom-read-options-eval-get-holerith t))
 	  (cond
 	   ;; Note that common-no may be nil here, so the comparison
 	   ;; cannot be performed with '=.
@@ -438,8 +438,8 @@ If successful then set the buffer not-modified. Else print a warning."
   (setq lyskom-options-done t))
 
 
-(defun lyskom-read-options-eval-get-holerith ()
-  (let ((coding lyskom-server-coding-system))
+(defun lyskom-read-options-eval-get-holerith (&optional no-coding)
+  (let ((coding (if no-coding 'raw-text lyskom-server-coding-system)))
     (while (string-match "\\s-" (substring lyskom-options-text 0 1))
       (setq lyskom-options-text (substring lyskom-options-text 1)))
 
