@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.2 1996-05-04 01:03:42 davidk Exp $
+;;;;; $Id: commands1.el,v 41.3 1996-05-05 22:19:43 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.2 1996-05-04 01:03:42 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.3 1996-05-05 22:19:43 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1481,92 +1481,100 @@ If MARK-NO == 0, review all marked texts."
 (def-kom-command kom-who-is-on ()
   "Display a list of all connected users."
   (interactive)
-  (let ((who-info-list (blocking-do 'who-is-on))
-	(format-string-1 (lyskom-info-line-format-string 7 "P" "M"))
-	(format-string-2 (lyskom-info-line-format-string 7 "s" "s"))
-	(lyskom-default-conf-string 'not-present-anywhere))
+  (let* ((who-info-list (blocking-do 'who-is-on))
+	 (who-list (sort (listify-vector who-info-list)
+			 (function (lambda (who1 who2)
+				     (< (who-info->connection who1)
+					(who-info->connection who2))))))
+	 (total-users (length who-list))
+	 (session-width (1+ (length (int-to-string
+				     (who-info->connection
+				      (nth (1- total-users) who-list))))))
+	 (format-string-1 (lyskom-info-line-format-string
+			   session-width "P" "M"))
+	 (format-string-2 (lyskom-info-line-format-string
+			   session-width "s" "s"))
+	 (lyskom-default-conf-string 'not-present-anywhere))
     (lyskom-format-insert format-string-2
-			  "      "
+			  ""
 			  (lyskom-get-string 'lyskom-name)
 			  (lyskom-get-string 'is-in-conf))
     (if kom-show-where-and-what
 	(lyskom-format-insert format-string-2
-			      "      "
+			      ""
 			      (lyskom-get-string 'from-machine)
 			      (lyskom-get-string 'is-doing)))
     
     (lyskom-insert
      (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
-
-    (let* ((who-list (sort (listify-vector who-info-list)
-			   (function (lambda (who1 who2)
-				       (< (who-info->connection who1)
-					  (who-info->connection who2))))))
-	   (total-users (length who-list)))
-      (while who-list
-	(let* ((who-info (car who-list))
-	       (session-no (format "%5d" (who-info->connection who-info)))
-	       (my-session (if (= lyskom-session-no
-				  (who-info->connection who-info))
-			       "*"
-			     " ")))
-	  (lyskom-format-insert
-	   format-string-1
-	   (concat session-no my-session)
-	   (who-info->pers-no who-info)
-	   (or (who-info->working-conf who-info)
-	       (lyskom-get-string 'not-present-anywhere)))
-	  (if kom-show-where-and-what
-	      (lyskom-format-insert
-	       format-string-2
-	       "       "
-	       (lyskom-return-username who-info)
-	       (concat "(" (who-info->doing-what who-info) ")"))))
-	(setq who-list (cdr who-list)))
+    
+    (while who-list
+      (let* ((who-info (car who-list))
+	     (session-no (int-to-string (who-info->connection who-info)))
+	     (my-session (if (= lyskom-session-no
+				(who-info->connection who-info))
+			     "*"
+			   " ")))
+	(lyskom-format-insert
+	 format-string-1
+	 (concat session-no my-session)
+	 (who-info->pers-no who-info)
+	 (or (who-info->working-conf who-info)
+	     (lyskom-get-string 'not-present-anywhere)))
+	(if kom-show-where-and-what
+	    (lyskom-format-insert
+	     format-string-2
+	     ""
+	     (lyskom-return-username who-info)
+	     (concat "(" (who-info->doing-what who-info) ")"))))
+      (setq who-list (cdr who-list)))
       
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			     "\n"))
-      (lyskom-insert (lyskom-format 'total-users total-users)))))
+      (lyskom-insert (lyskom-format 'total-users total-users))))
 
 
 		 
 (def-kom-command kom-list-clients ()
   "Display a list of all connected users."
   (interactive)
-  (let ((who-info-list (blocking-do 'who-is-on))
-	(format-string (lyskom-info-line-format-string 7 "P" "s")))
+  (let* ((who-info-list (blocking-do 'who-is-on))
+	 (who-list (sort (listify-vector who-info-list)
+			 (function (lambda (who1 who2)
+				     (< (who-info->connection who1)
+					(who-info->connection who2))))))
+	 (total-users (length who-list))
+	 (s-width (1+ (length (int-to-string
+			       (who-info->connection
+				(nth (1- total-users) who-list))))))
+	 (format-string (lyskom-info-line-format-string s-width "P" "s")))
     (lyskom-format-insert format-string
-			  "      "
+			  ""
 			  (lyskom-get-string 'lyskom-name)
 			  (lyskom-get-string 'lyskom-client))
     (lyskom-insert
      (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
 
-    (let* ((who-list (sort (listify-vector who-info-list)
-			   (function (lambda (who1 who2)
-				       (< (who-info->connection who1)
-					  (who-info->connection who2))))))
-	   (total-users (length who-list)))
-      (while who-list
-	(let* ((who-info (car who-list))
-	       (session-no (format "%5d" (who-info->connection who-info)))
-	       (my-session (if (= lyskom-session-no
-				  (who-info->connection who-info))
-			       "*"
-			     " ")))
-	  (lyskom-format-insert
-	   format-string
-	   (concat session-no my-session)
-	   (blocking-do 'get-conf-stat (who-info->pers-no who-info))
-	   (blocking-do-multiple
-	       ((name (get-client-name (who-info->connection who-info)))
-		(version (get-client-version (who-info->connection who-info))))
-	     (concat name " " version))))
-	(setq who-list (cdr who-list)))
+    (while who-list
+      (let* ((who-info (car who-list))
+	     (session-no (int-to-string (who-info->connection who-info)))
+	     (my-session (if (= lyskom-session-no
+				(who-info->connection who-info))
+			     "*"
+			   " ")))
+	(lyskom-format-insert
+	 format-string
+	 (concat session-no my-session)
+	 (who-info->pers-no who-info)
+	 (blocking-do-multiple
+	     ((name (get-client-name (who-info->connection who-info)))
+	      (version (get-client-version (who-info->connection who-info))))
+	   (concat name " " version))))
+      (setq who-list (cdr who-list)))
 
-      (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
-			     "\n"))
-      (lyskom-insert (lyskom-format 'total-users total-users)))))
+    (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+			   "\n"))
+    (lyskom-insert (lyskom-format 'total-users total-users))))
 
 
 

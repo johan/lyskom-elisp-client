@@ -1,3 +1,34 @@
+Sun May  5 03:18:19 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* Makefile (PARTS-EL): Flyttade deferred-insert.el till HEADER-EL.
+
+	* deferred-insert.el (lyskom-replace-deferred): Nytt makro.
+	(lyskom-deferred-insert-conf): Skrev om med makrot.
+
+	* view-text.el (lyskom-insert-deferred-header-comm): Dito.
+
+	* commands1.el (kom-list-clients): Anpassa bredden på
+ 	sessionsfältet.
+
+	* view-text.el (lyskom-view-text): Skicka bara mötesnummer till
+ 	lyskom-print-header-recpt.
+	(lyskom-print-header-recpt): Fördröj utskrifter.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity):
+ 	Anpassa bredden på sessionsnumret och tillåt lite defer.
+
+	* commands2.el (kom-status-conf): Tillåt defer. Formateringen
+ 	ändrades lite också.
+	(kom-status-person): Dito.
+
+	* commands1.el (kom-who-is-on): Anpassar bredden på första fältet
+ 	så att sessionsnumret precis får plats.
+	(kom-list-clients): Tillåt defer.
+
+	* lyskom-rest.el (kom-view-next-text): Läsmarkera texter efter att
+ 	de har skrivits ut. Förhoppningsvis får detta inga otrevliga
+ 	bieffekter.
+
 Sat May  4 00:07:06 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-insert-header-comm): Ta insert-funktionen

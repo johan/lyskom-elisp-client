@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.2 1996-05-04 17:55:47 davidk Exp $
+;;;;; $Id: view-text.el,v 41.3 1996-05-05 22:20:08 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.2 1996-05-04 17:55:47 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.3 1996-05-05 22:20:08 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -123,9 +123,7 @@ Note that this function must not be called asynchronously."
 			  ((or (eq type 'RECPT)
 			       (eq type 'CC-RECPT))
 			   (lyskom-print-header-recpt 
-			    (blocking-do 'get-conf-stat
-					 (misc-info->recipient-no
-					  misc))
+			    (misc-info->recipient-no misc)
 			    misc))
 			  ((eq type 'COMM-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
@@ -404,23 +402,26 @@ the client. That is done by lyskom-is-read."
 				(list (misc-info->local-no misc-info)))))))
 
 
-(defun lyskom-print-header-recpt (conf-stat misc)
+(defun lyskom-print-header-recpt (conf-no misc)
   "Print a line of info about a recipient (or cc-recipient) of a text."
   (lyskom-format-insert "%#1s: %#2M <%#3d>\n"
 			(cond ((eq (misc-info->type misc) 'RECPT)
 			       (lyskom-get-string 'Recipient))
 			      (t (lyskom-get-string 'Extra-recipient)))
-			conf-stat
+			conf-no
 			(misc-info->local-no misc))
   (if (misc-info->sent-at misc)
       (lyskom-format-insert 'send-at
 			    (lyskom-return-date-and-time 
 			     (misc-info->sent-at misc))))
   (if (misc-info->sender misc)
-	(lyskom-insert (lyskom-format 'sent-by (misc-info->sender misc))))
+      (lyskom-format-insert 'sent-by (misc-info->sender misc)))
   (if (misc-info->rec-time misc)
-      (lyskom-format-insert 'recieved-at
-			    (lyskom-return-date-and-time (misc-info->rec-time misc)))))
+      (lyskom-format-insert
+       'recieved-at
+       (lyskom-return-date-and-time (misc-info->rec-time misc)))))
+
+
 
 
 (defun lyskom-view-text-handle-saved-comments (text-stat)
@@ -460,13 +461,9 @@ Args: TEXT-STAT of the text being read."
 
 
 (defun lyskom-insert-deferred-header-comm (text-stat defer-info)
-  (save-excursion
-    (goto-char (defer-info->pos defer-info))
+  (lyskom-replace-deferred defer-info
     (lyskom-insert-header-comm text-stat (defer-info->data defer-info)
-			       'lyskom-format-insert-at-point)
-    (let ((inhibit-read-only t))
-      (delete-char (defer-info->del-chars defer-info)))
-    (set-marker (defer-info->pos defer-info) nil)))
+			       'lyskom-format-insert-at-point)))
 
 
 

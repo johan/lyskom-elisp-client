@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.1 1996-05-03 22:41:20 davidk Exp $
+;;;;; $Id: completing-read.el,v 41.2 1996-05-05 22:19:53 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.1 1996-05-03 22:41:20 davidk Exp $\n"))
+       "$Id: completing-read.el,v 41.2 1996-05-05 22:19:53 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -462,14 +462,18 @@ If ONLY-ONE is non-nil only one session number will be returned."
 
 (defun lyskom-read-session-resolve-ambiguity (sessions)
   (lyskom-insert "\n")
-  (let ((format-string-s (lyskom-info-line-format-string 7 "s" "s"))
-	(format-string-p (lyskom-info-line-format-string 7 "P" "M")))
+  (let* ((s-width (1+ (apply 'max (mapcar (function
+					   (lambda (x)
+					     (length (int-to-string x))))
+					  sessions))))
+	 (format-string-s (lyskom-info-line-format-string s-width "s" "s"))
+	 (format-string-p (lyskom-info-line-format-string s-width "P" "M")))
     (lyskom-format-insert format-string-s
-			  "       "
+			  ""
 			  (lyskom-get-string 'lyskom-name)
 			  (lyskom-get-string 'is-in-conf))
     (lyskom-format-insert format-string-s
-			  "       "
+			  ""
 			  (lyskom-get-string 'from-machine)
 			  (lyskom-get-string 'is-doing))
     (lyskom-insert
@@ -480,27 +484,23 @@ If ONLY-ONE is non-nil only one session number will be returned."
 	   (mapcar (function
 		    (lambda (el)
 		      (let* ((info (blocking-do 'get-session-info el))
-			     (persconfstat
-			      (blocking-do 'get-conf-stat
-					   (session-info->pers-no info)))
 			     (confconfstat
 			      (blocking-do 'get-conf-stat
 					   (session-info->working-conf info))))
 			(lyskom-format-insert
 			 format-string-p
-			 (format "%4d%s"
-				  (session-info->connection info)
-				  (if (eq (session-info->connection info)
-					  lyskom-session-no)
-				      "*" " "))
-			 (blocking-do 'get-conf-stat
-				      (session-info->pers-no info))
-			  (if (conf-stat->name confconfstat)
-			      confconfstat
-			    (lyskom-get-string 'not-present-anywhere)))
+			 (format "%d%s"
+				 (session-info->connection info)
+				 (if (eq (session-info->connection info)
+					 lyskom-session-no)
+				     "*" " "))
+			 (session-info->pers-no info)
+			 (if (conf-stat->name confconfstat)
+			     confconfstat
+			   (lyskom-get-string 'not-present-anywhere)))
 			(lyskom-format-insert
 			 format-string-p
-			 "     "
+			 ""
 			 (lyskom-return-username info)
 			 (concat "("
 				 (session-info->doing info)
