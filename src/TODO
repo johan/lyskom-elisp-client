@@ -7,6 +7,18 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+I lyskom-sort-membership måste man ordna om lyskom-to-do-list för att
+matcha den nya medlemskapslistan. Det skulle antagligen vara rätt
+enkelt att skriva en lyskom-sort-to-do-list. Den skulle sortera
+elementen efter mötesprioritet och position för CONF och existerande
+prioritet för REVIEW och REVIEW-TREE (som antas vara först inom sin
+prioritet.) Kanske skulle man behöva gå in och uppdatera alla
+prioriteter innan man sorterar.
+
+Som det ser ut just nu, om man gör hantera medlemskap och sedan loggar 
+in som en ny person i LysKOM-bufferten så blir det fel saatan eftersom 
+prioriterabufferten använder lyskom-pers-no.
+
 När man har kört prefetchen får man en skum kö i lyskom-prefetch-stack 
 som inte innehåller något annat än element som är köer vars sista
 element är FINISHED. Ibland verkar köerna bli cirkulära.
@@ -1224,6 +1236,8 @@ en fotnot till den nyss skrivna texten.
 Jag inser dock att det kan vara jobbigt att bygga, om klienten inte
 råkar hålla reda på att man skrivit en kommentar senare än man läst en
 text.
+
+FIX BY: 0.46            KLART.
 
 
 

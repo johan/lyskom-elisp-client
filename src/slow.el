@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.6 1998-06-02 12:15:18 byers Exp $
+;;;;; $Id: slow.el,v 44.7 1999-08-25 07:17:42 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -65,8 +65,10 @@ If no text is entered, nil is returned."
       nil
     (buffer-substring (point) (point-max))))
 
-(defun kom-expand-slow-command ()
+(defun kom-expand-slow-command (&optional try-exact)
   "Tries to complete the command at point.
+If optional TRY-EXACT is non-nil, look for an exact match.
+
 If the completion was exact return a pair `(COMMAND . POINT)' where
 COMMAND is the command and POINT is the point where the command text
 starts.
@@ -79,6 +81,7 @@ If the completion was not exact it returns nil."
 					   (cons (cdr pair) (car pair))))
 			       (lyskom-get-strings
 				lyskom-commands 'lyskom-command)))
+         (exact (and try-exact text (lyskom-string-assoc text alternatives)))
 	 (completes (and text (all-completions text alternatives)))
 	 (command nil))
     (cond
@@ -87,6 +90,8 @@ If the completion was not exact it returns nil."
      ((null completes)
       (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command))
       (lyskom-beep t))
+     (exact
+      (setq command (cons (cdr exact) (point))))
      ((= (length completes) 1)
       (setq command (cons (cdr (assq (car completes) alternatives))
 			  (point)))
@@ -109,12 +114,12 @@ If the completion was not exact it returns nil."
     command))
 
 
-(defun kom-expand-slow-or-next-command ()
+(defun kom-expand-slow-or-next-command (&optional try-exact)
   "If any part of a slow command has been entered, call
 `kom-expand-slow-command'. Otherwise, do `kom-next-command'."
   (interactive)
   (if (lyskom-get-entered-slow-command)
-      (kom-expand-slow-command)
+      (kom-expand-slow-command try-exact)
     (buffer-disable-undo)
     (kom-next-command)))
 
@@ -123,7 +128,7 @@ If the completion was not exact it returns nil."
   "Reads a command from the last line in the buffer and executes it."
   (interactive)
   (let* ((text (lyskom-get-entered-slow-command))
-	 (command (and text (kom-expand-slow-command))))
+	 (command (and text (kom-expand-slow-command t))))
     (buffer-disable-undo)
     (cond
      ((null text)

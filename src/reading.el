@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.7 1999-08-23 09:51:44 byers Exp $
+;;;;; $Id: reading.el,v 44.8 1999-08-25 07:17:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.7 1999-08-23 09:51:44 byers Exp $\n"))
+	      "$Id: reading.el,v 44.8 1999-08-25 07:17:41 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -55,6 +55,21 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
 	 list))
        lyskom-to-do-list))))
 
+
+(defun lyskom-sort-membership ()
+  "Sort the internal membership list."
+  (setq lyskom-membership (sort lyskom-membership 'lyskom-membership-<))
+  (lyskom-update-membership-positions))
+
+(defun lyskom-update-membership-positions ()
+  "Update all the position fields in the memberships in the membership list."
+  (let ((mship lyskom-membership)
+        (num 0))
+    (while mship 
+      (set-membership->position (car mship) num)
+      (setq num (1+ num) mship (cdr mship)))
+  ;; FIXME: If something changed, tell the server.
+  (lyskom-sort-to-do-list)))
 
 (defun lyskom-add-memberships-to-membership (memberships)
   "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.
@@ -78,18 +93,18 @@ lyskom-membership list then this item is not entered."
 	  nil
 	(setq lyskom-membership (cons (car list) lyskom-membership)))
       (setq list (cdr list))))
-  (setq lyskom-membership (sort lyskom-membership 'lyskom-membership-<)))
+  (lyskom-sort-membership))
 
 
 (defun lyskom-insert-membership (membership membership-list)
   "Add MEMBERSHIP into MEMBERSHIP-LIST, sorted by priority."
-  (setq lyskom-membership (sort (cons membership lyskom-membership)
-				'lyskom-membership-<)))  
+  (setq lyskom-membership (cons membership lyskom-membership))
+  (lyskom-sort-membership))
 
 
 (defun lyskom-replace-membership (membership membership-list)
   "Find the membership for the same conference as MEMBERSHIP, and
-replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
+replace it with MEMBERSHIP into MEMBERSHIP-LIST."
   (let ((conf-no (membership->conf-no membership))
 	(list lyskom-membership))
     (while list
@@ -102,7 +117,7 @@ replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
                              membership
                              membership-list))
 
-(defun lyskom-remove-membership (conf-no membership-list)
+p(defun lyskom-remove-membership (conf-no membership-list)
   "Remove the membership for CONF-NO from MEMBERSHIP-LIST."
   (let ((list lyskom-membership))
     (while list
@@ -115,3 +130,57 @@ replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
   (lyskom-run-hook-with-args 'lyskom-remove-membership-hook
                              conf-no membership-list))
   
+(defun lyskom-membership-position (conf-no)
+  "Return the position of the membership for CONF-NO."
+  (let ((mship (lyskom-get-membership conf-no t)))
+    (or (membership->position mship)
+        (- (length (memq mship lyskom-membership))
+           (length lyskom-membership)))))
+
+
+(defun lyskom-sort-to-do-list ()
+  "Sort lyskom-to-do-list in order of membership priorities. 
+The priorities for CONF elements are updated to match the membership
+priorities. Elements that are not of type CONF appear first on the list
+within their priority. This may not be totally accurate, but it's a
+reasonable guess."
+  (let ((todo (read-list->all-entries lyskom-to-do-list))
+        (info nil))
+
+    ;; Update the priorities in the read list
+
+    (while todo
+      (setq info (car todo))
+      (setq todo (cdr todo))
+      (when (eq (read-info->type info) 'CONF)
+        (let ((mship 
+               (lyskom-get-membership 
+                (conf-stat->conf-no (read-info->conf-stat info)) t)))
+          (when mship
+            (set-read-info->priority info
+                                     (membership->priority mship))))))
+
+    ;; Sort the todo list
+
+    (setq lyskom-to-do-list (cons 'READ-LIST
+                                  (sort (read-list->all-entries lyskom-to-do-list)
+                                        'lyskom-read-info-<)))
+    (lyskom-update-prompt)))
+
+(defun lyskom-read-info-< (a b)
+  (cond ((< (read-info->priority a) (read-info->priority b)) nil)
+        ((> (read-info->priority a) (read-info->priority b)) t)
+
+        ;; Both are confs of equal priority; check position in mship
+        ((and (eq (read-info->type a) 'CONF) 
+              (eq (read-info->type b) 'CONF))
+         (>= (lyskom-membership-position 
+             (conf-stat->conf-no (read-info->conf-stat a)))
+            (lyskom-membership-position 
+             (conf-stat->conf-no (read-info->conf-stat b)))))
+
+        ;; A is a CONF and B is not; B is greater.
+        ((eq (read-info->type a) 'CONF) nil)
+
+        ;; Both are not CONF, so A is not less than B
+        (t t)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.76 1999-08-22 16:04:52 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.77 1999-08-25 07:17:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.76 1999-08-22 16:04:52 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.77 1999-08-25 07:17:39 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -579,6 +579,13 @@ Args: CONF-STAT READ-INFO"
                           conf-stat
                           num-unread)))  
 
+(defun lyskom-leave-current-conf ()
+  "Leave the current conference without going to another one."
+  (set-read-list-empty lyskom-reading-list)
+  (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                             lyskom-current-conf 0)
+  (setq lyskom-current-conf 0)
+  (initiate-pepsi 'main nil 0))
 
 
 ;;;================================================================
@@ -608,38 +615,33 @@ CONF can be a a conf-stat or a string."
 	       ((lyskom-conf-stat-p conf)
 		(conf-stat->name conf))
 	       (t "")))
+        (conf-no (if (null conf) 0 (conf-stat->conf-no conf)))
 	(unread -1)
 	(total-unread 0)
 	(letters 0)
 	(len 0)
 	(read-info-list nil))
 
-    (if (null name)
-	nil				; We didn't have the name.
-
       ;; Set unread to the number of unread texts in CONF.
-      (if (lyskom-conf-stat-p conf)
-	  (progn
-	    (setq read-info-list 
-		  (read-list->all-entries lyskom-to-do-list))
+    (setq read-info-list (read-list->all-entries lyskom-to-do-list))
 
-	    ;; This was weird. Someone had begun to write an if, but
-	    ;; this was all there was: (if 
-	    (while read-info-list
-	      (if (read-info->conf-stat (car read-info-list))
-		  (progn
-		    (setq len (text-list->length
-			       (read-info->text-list (car read-info-list))))
-		    (if (= (conf-stat->conf-no conf)
-			   (conf-stat->conf-no 
-			    (read-info->conf-stat (car read-info-list))))
-			(setq unread len))
-		    (if (= lyskom-pers-no
-			   (conf-stat->conf-no 
-			    (read-info->conf-stat (car read-info-list))))
-			(setq letters len))
-		    (setq total-unread (+ total-unread len))))
-	      (setq read-info-list (cdr read-info-list)))))
+    ;; This was weird. Someone had begun to write an if, but
+    ;; this was all there was: (if 
+    (while read-info-list
+      (if (read-info->conf-stat (car read-info-list))
+          (progn
+            (setq len (text-list->length
+                       (read-info->text-list (car read-info-list))))
+            (if (= conf-no
+                   (conf-stat->conf-no 
+                    (read-info->conf-stat (car read-info-list))))
+                (setq unread len))
+            (if (= lyskom-pers-no
+                   (conf-stat->conf-no 
+                    (read-info->conf-stat (car read-info-list))))
+                (setq letters len))
+            (setq total-unread (+ total-unread len))))
+      (setq read-info-list (cdr read-info-list)))
       (if (= unread -1)
 	  (setq unread 0))
       
@@ -670,7 +672,7 @@ CONF can be a a conf-stat or a string."
 		(delq lyskom-buffer lyskom-sessions-with-unread-letters))
 	(or (memq lyskom-buffer lyskom-sessions-with-unread-letters)
 	    (setq lyskom-sessions-with-unread-letters
-		  (cons lyskom-buffer lyskom-sessions-with-unread-letters)))))
+		  (cons lyskom-buffer lyskom-sessions-with-unread-letters))))
     (force-mode-line-update)))
 
 
@@ -1089,7 +1091,7 @@ Note that it is not allowed to use deferred insertions in the text."
                                 (match-beginning 2))
                           ?0))
                  ?0
-               ? )
+               ?\ )
 	     allow-defer))))))
   (lyskom-tweak-format-state format-state))
 
@@ -1254,7 +1256,7 @@ Note that it is not allowed to use deferred insertions in the text."
                 (let ((face (conf-stat-find-aux arg 9))
                       (string (copy-sequence "X")))
                   (lyskom-maybe-add-face-to-string face string))
-              "!!!")))
+              " ")))
 
      ;;
      ;;  Format a conference or person name by retreiving information

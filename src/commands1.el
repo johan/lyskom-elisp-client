@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.52 1999-08-23 09:51:39 byers Exp $
+;;;;; $Id: commands1.el,v 44.53 1999-08-25 07:17:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.52 1999-08-23 09:51:39 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.53 1999-08-25 07:17:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -581,12 +581,8 @@ of the person."
                                      conf)
              (lyskom-insert-string 'done)
              (lyskom-format-insert 'passivate-done conf)
-             (if (= (conf-stat->conf-no conf) lyskom-current-conf)
-		 (progn 
-		   (set-read-list-empty lyskom-reading-list)
-                   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                                              lyskom-current-conf 0)
-		   (setq lyskom-current-conf 0)))
+             (when (= (conf-stat->conf-no conf) lyskom-current-conf)
+               (lyskom-leave-current-conf))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
 					 lyskom-to-do-list)))
 	  (t
@@ -611,14 +607,9 @@ of the person."
 				       (conf-stat->name pers))
 				     conf)
 	     (lyskom-insert-string 'done)
-	     (if (and self
-		      (= (conf-stat->conf-no conf)
-			 lyskom-current-conf))
-		 (progn 
-		   (set-read-list-empty lyskom-reading-list)
-                   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                                              lyskom-current-conf 0)
-		   (setq lyskom-current-conf 0)))
+	     (when (and self (= (conf-stat->conf-no conf)
+                              lyskom-current-conf))
+               (lyskom-leave-current-conf))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
 					 lyskom-to-do-list))))))
 	   

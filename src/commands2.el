@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.44 1999-08-23 09:51:41 byers Exp $
+;;;;; $Id: commands2.el,v 44.45 1999-08-25 07:17:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.44 1999-08-23 09:51:41 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.45 1999-08-25 07:17:37 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -670,7 +670,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   "Set number of unread articles in current conference."
   (interactive "P")
   (setq conf-no (or conf-no lyskom-current-conf))
-  (if (and (zerop lyskom-current-conf) (null conf-no))
+  (if (zerop conf-no)
       (progn
         (lyskom-insert-string 'not-present-anywhere)
         (lyskom-insert-string "\n"))
@@ -1666,11 +1666,11 @@ Return-value: 'no-session if there is no suitable session to switch to
      ;; switch from the current buffer. If unlisted, list it.
      ((lyskom-buffer-p current) 
       (unless (memq current buffer-list)
-        (setq lyskom-buffer-list (cons current lyskom-buffer-list))))
+        (setq buffer-list (cons current buffer-list))))
 
      ;; If we are in a non-LysKOM buffer, the start buffer is the
      ;; last one in the list
-     (t (setq current (car lyskom-buffer-list))))
+     (t (setq current (car buffer-list))))
 
     ;; Rotate the buffer list so the target buffer is first
 
@@ -1678,7 +1678,7 @@ Return-value: 'no-session if there is no suitable session to switch to
       (cond ((eq direction 'forward)
              (setq buffer-list 
                    (lyskom-rotate-list buffer-list
-                                       (car (cdr (memq current lyskom-buffer-list))))))
+                                       (car (cdr (memq current buffer-list))))))
             (t
              (setq buffer-list
                    (lyskom-rotate-list buffer-list
