@@ -1,6 +1,10 @@
 ;;; mship-edit.el --- Summary
 ;; TO DO
 ;; see tmp.el
+;;
+;; Maybe move setting the membership priority to 
+;; lyskom-change-membership-priority. 
+;;
 ;; -------------------------------------------------------------------------
 ;; When prioritizing an entry we need to sort the read lists to put
 ;; the entries in the proper order. It's possible that we'll have to
@@ -28,7 +32,7 @@
 ;; Changing priority might put the conference above or below the
 ;; current session priority. We need to fetch or delete maps.
 ;;
-;; Do this under lyskom-update-membership
+;; Do this under lyskom-update-membership. Done.
 ;;
 ;; Test cases:
 ;;
@@ -55,7 +59,7 @@
 ;;   the prompt.
 ;; - Sort the membership list.
 ;;
-;; Do this under lyskom-update-membership
+;; Done in set-lp--entry-pri-and-pos and lp--update-membership.
 ;;
 
 
@@ -481,17 +485,43 @@ clicked on."
                    (save-excursion
                      (set-buffer lyskom-buffer)
                      (when (eq (membership->conf-no mship) lyskom-current-conf)
-                       (set-read-list-empty lyskom-reading-list)
-                       (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                                                  lyskom-current-conf 0)
-                       (setq lyskom-current-conf 0))
+                       (lyskom-leave-current-conf))
                      (read-list-delete-read-info (membership->conf-no mship)
                                                  lyskom-to-do-list)
                      (lyskom-update-prompt t)))
-                  (t (lyskom-prefetch-map (membership->conf-no mship)
-                                          mship))))
+                  (t (lyskom-prefetch-map (membership->conf-no mship) mship))))
           (blocking-do 'get-conf-stat (membership->conf-no mship))))
       (lp--redraw-entry entry))))
+
+(defun lp--toggle-invitation ()
+  "Toggle the invitation bit of the current entry"
+  (interactive)
+  (lp--save-excursion
+   (let ((cur (lp--entry-at (point))))
+     (cond ((null cur) (error "No entry at point"))
+           (t (lyskom-prioritize-flag-toggle (current-buffer)
+                                             (list cur 'invitation)
+                                             ""))))))
+
+(defun lp--toggle-passive ()
+  "Toggle the passive bit of the current entry"
+  (interactive)
+  (lp--save-excursion
+   (let ((cur (lp--entry-at (point))))
+     (cond ((null cur) (error "No entry at point"))
+           (t (lyskom-prioritize-flag-toggle (current-buffer)
+                                             (list cur 'passive)
+                                             ""))))))
+
+(defun lp--toggle-secret ()
+  "Toggle the secret bit of the current entry"
+  (interactive)
+  (lp--save-excursion
+   (let ((cur (lp--entry-at (point))))
+     (cond ((null cur) (error "No entry at point"))
+           (t (lyskom-prioritize-flag-toggle (current-buffer)
+                                             (list cur 'secret)
+                                             ""))))))
 
 
 
@@ -531,7 +561,7 @@ Forces a mode line update"
 ;;; ------------------------------------------------------------
 ;; Server update functions
 
-(defun lp--update-membership (entry)
+(defun lp--update-membership (entry old-pri old-pos)
   "Update the server and local versions of membership in ENTRY."
   (save-excursion
     (set-buffer lyskom-buffer)
@@ -540,6 +570,17 @@ Forces a mode line update"
                                          (lp--entry-position entry))
       (lyskom-change-membership-priority (membership->conf-no mship)
                                          (lp--entry->priority mship))
+      (cond ((and (>= old-pri lyskom-session-priority)
+                  (< (membership->priority mship) lyskom-session-priority))
+             (when (eq lyskom-current-conf (membership->conf-no mship))
+               (lyskom-leave-current-conf))
+             (read-list-delete-read-info (membership->conf-no mship)
+                                         lyskom-to-do-list)
+             (lyskom-update-prompt t))
+            ((and (< old-pri lyskom-session-priority)
+                  (>= (membership->priority mship) lyskom-session-priority))
+             (lyskom-prefetch-map (membership->conf-no mship) mship)))
+
       (initiate-add-member 'background nil
                            (membership->conf-no mship)
                            lyskom-pers-no
@@ -618,24 +659,40 @@ SELECT specifies new select."
 ;;; ============================================================
 ;; Reprioritization functions
 
+(defun set-lp--entry-pri-and-pos (entry priority position)
+  "Set the priority of ENTRY to PRIORITY and the position to POSITION.
+If PRIORITY or POSITION is nil, the parameter is ignored.
+If the position changes, lp--move-entry is called.
+lp--update-membership is called automatically before this function exits."
+  (let ((old-pri (lp--entry->priority entry))
+        (old-pos (lp--entry-position entry))
+        (new-redraw nil))
+    (when (and priority (not (eq priority old-pri)))
+      (set-lp--entry->priority entry priority)
+      (set-membership->priority (lp--entry->membership entry) priority)
+      (setq need-redraw t))
+    (when (and position (not (eq position old-pos)))
+      (lp--move-entry entry position)
+      (setq need-redraw nil))
+    (lp--update-membership entry old-pri old-pos)
+    (when need-redraw (lp--redraw-entry entry))))
+
 (defun lp--yank ()
   "Insert all the selected memberships before the entry at point."
   (interactive)
-  (let* ((cur (lp--entry-at (point)))
-         (pos (and cur (lp--entry-position cur)))
-         (priority (and cur (lp--entry->priority cur)))
-         (entries (lp--all-selected-entries)))
-    (cond ((null cur) (error "No entry at point"))
-          ((null entries) (error "No entries selected"))
-          (t (mapcar 
-              (lambda (entry)
-                (set-lp--entry->priority entry priority)
-                (set-membership->priority
-                 (lp--entry->membership entry) priority)
-                (lp--move-entry entry (lp--entry-position 
-                                       (lp--find-new-position entry nil pos)))
-                (lp--update-membership entry))
-              entries)))))
+  (lp--save-excursion
+   (let* ((cur (lp--entry-at (point)))
+          (pos (and cur (lp--entry-position cur)))
+          (priority (and cur (lp--entry->priority cur)))
+          (entries (lp--all-selected-entries)))
+     (cond ((null cur) (error "No entry at point"))
+           ((null entries) (error "No entries selected"))
+           (t (mapcar 
+               (lambda (entry)
+                 (set-lp--entry-pri-and-pos
+                  entry priority
+                  (lp--entry-position (lp--find-new-position entry nil pos))))
+               entries))))))
           
 
 
@@ -665,12 +722,8 @@ possible in the list."
      (mapcar (lambda (entry)
                (let ((new-pos (lp--entry-position
                                (lp--find-new-position entry priority))))
-                 (set-lp--entry->priority entry priority)
-                 (set-membership->priority
-                  (lp--entry->membership entry) priority)
-                 (lp--move-entry entry new-pos)))
-             entries)
-     (mapcar 'lp--update-membership entries))))
+                 (set-lp--entry-pri-and-pos entry priority new-pos)))
+             entries))))
 
 (defun lp--bump-priority (amount)
   "Increase the priority of the current entry by one"
@@ -695,12 +748,10 @@ possible in the list."
        (error "Already at maximum priority"))
 
      (cond ((null cur) (error "Nor on an entry"))
-           (t (let ((new-pos (lp--entry-position (lp--find-new-position cur (+ pri amount)))))
-                (set-lp--entry->priority cur new-pri)
-                (set-membership->priority
-                 (lp--entry->membership cur) new-pri)
-                (lp--move-entry cur new-pos)
-                (lp--update-membership cur)))))))
+           (t (let ((new-pos (lp--entry-position 
+                              (lp--find-new-position cur (+ pri amount)))))
+                (set-lp--entry-pri-and-pos cur new-pri new-pos)))))))
+
 
 (defun lp--increase-priority (arg)
   (interactive "p")
@@ -721,13 +772,15 @@ possible in the list."
           (prev (and cur (> pos 1) (lp--get-entry (1- pos)))))
      (cond ((null cur) (error "Not on an entry"))
            ((null prev) (error "Beginning of list"))
-           (t (if (/= (lp--entry->priority cur)
-                      (lp--entry->priority prev))
-                  (progn (set-lp--entry->priority cur (lp--entry->priority prev))
-                         (set-membership->priority (lp--entry->membership cur) (lp--entry->priority prev))
-                         (lp--redraw-entry cur))
-                (lp--move-entry cur (1- pos)))
-              (lp--update-membership cur))))))
+           (t (let ((old-pri (lp--entry->priority cur)))
+                (if (/= (lp--entry->priority cur)
+                        (lp--entry->priority prev))
+                    (progn
+                      (set-lp--entry-pri-and-pos cur
+                                                 (lp--entry->priority prev)
+                                                 nil)
+                      (lp--redraw-entry cur))
+                  (set-lp--entry-pri-and-pos cur nil (1- pos)))))))))
 
 (defun lp--move-down ()
   "Move the current entry up down notch."
@@ -738,14 +791,15 @@ possible in the list."
           (prev (and cur (lp--get-entry (1+ pos)))))
      (cond ((null cur) (error "Not on an entry"))
            ((null prev) (error "End of list"))
-           (t (if (/= (lp--entry->priority cur)
+           (t (let ((old-pri (lp--entry->priority cur)))
+                (if (/= (lp--entry->priority cur)
                       (lp--entry->priority prev))
-                  (progn (set-lp--entry->priority cur (lp--entry->priority prev))
-                         (set-membership->priority (lp--entry->membership cur) (lp--entry->priority prev))
-                         (lp--redraw-entry cur))
-                (lp--move-entry cur (1+ pos)))
-              (lp--update-membership cur))))))
-
+                    (progn
+                      (set-lp--entry-pri-and-pos cur
+                                                 (lp--entry->priority prev)
+                                                 nil)
+                      (lp--redraw-entry cur))
+                  (set-lp--entry-pri-and-pos cur nil (1+ pos)))))))))
 
 
 
@@ -969,6 +1023,9 @@ Medlemskap för %#1M på %#2s
   (define-key lp--mode-map (kbd "-") 'lp--decrease-priority)
   (define-key lp--mode-map (kbd "M-p") 'lp--move-up)
   (define-key lp--mode-map (kbd "M-n") 'lp--move-down)
+  (define-key lp--mode-map (kbd "I") 'lp--toggle-invitation)
+  (define-key lp--mode-map (kbd "H") 'lp--toggle-secret)
+  (define-key lp--mode-map (kbd "P") 'lp--toggle-passive)
 
   (define-key lp--mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lp--mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)

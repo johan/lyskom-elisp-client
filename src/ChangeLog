@@ -1,4 +1,23 @@
+1999-10-20  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--update-membership): When we set the priority
+	to under the session priority, remove the conf from the reading
+	list, leave it and update the prompt. Take old priority and old
+	position as arguments.
+	(set-lp--entry-pri-and-pos): New function.
+	(lp--yank): Use it.
+	(lp--set-priority): Use it.
+	(lp--bump-priority): Use it.
+	(lp--move-up): Use it.
+	(lp--move-down): Use it.
+
 1999-10-19  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--toggle-invitation): New function.
+	(lp--toggle-passive): New function.
+	(lp--toggle-secret): New function.
+	(lp--mode-map): Added lp--toggle-invitation, lp--toggle-passive,
+	lp--toggle-secret.
 
 	* commands2.el (lyskom-print-summary-line): Test mx-author
 	and mx-from to see if we should print the mx-author name.
