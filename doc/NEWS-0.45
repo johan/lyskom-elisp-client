@@ -14,9 +14,32 @@ Se även MIGRATION-0.44-0.45 för information som är av intresse när man
 byter från 0.44 till 0.45 (samma information finns här, men är mer
 detaljerad i den andra filen.)
 
-Frivilliga sökes som är intresserade av att försöka få elispklienten
-att fungera ännu bättre tillsammans med XEmacs. Till exempel vore det
-trevligt med nybörjarvänliga knappar och liknanade otyg.
+
+          =================================================
+                            PERSONAL SÖKES
+
+          Det vore skoj med fler och bättre översättningar
+          av elispklienten till andra språk. Om du kan ett
+          annat språk och gillar LysKOM, och kan tänka dig
+          att skriva en översättning, så skicka mail till
+          byers@lysator.liu.se. Du behöver inte kunna
+          programmera för att göra översättningen.
+
+          Om du tycker att språk som Japanska är roliga så
+          får du gärna hjälpa till att göra LysKOM MULE och
+          XEmacs/MULE-kompatibel, så att man kan skriva
+          sina inlägg på Japanska och Kinesiska. Antagligen
+          behövs det inte så mycket arbete för att få detta
+          att fungera.
+
+          David & David har fått en massa riktigt jobb på
+          halsen, och har rätt lite tid över till att hacka
+          elispklient. Det vore trevligt om någon eller
+          några andra ville haka på. Det är faktiskt ganska
+          så skoj.
+
+          =================================================
+
 
 
 * Fitjurs och förbättringar
@@ -46,6 +69,12 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 ** Elispklienten förstår numera ett antal felaktiga URLer.
 
+** Om man har ispell installerat kan man använda kommandot
+   kom-ispell-message. Det finns i menyn och är bundet till C-c C-s. 
+   Man väljer ordlista genom att sätta kom-ispell-dictionary till
+   ordlistan man vill använda ("svenska" eller "svenska8" brukar vara
+   ett bra val.)
+
 ** Elispklienten kodar ajtomagiskt av HTML och enriched text in
    inlägg. Inläggen måste vara markerade på ett speciellt för att det
    skall fungera, och för HTML så måste man ha en rätt färsk version
@@ -58,7 +87,8 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    stavningskontroll (kräver ispell), gör (add-hook
    'lyskom-send-text-hook 'lyskom-ispell-text) och se till att
    kom-ispell-dictionary är satt vettigt (notera att
-   kom-ispell-dictionary sparas i servern.)
+   kom-ispell-dictionary sparas servern.) Vettigt innebär antagligen
+   "svenska" om du kör LysKOM.
 
 ** Numera går det alldeles utmärkt att gå med och gå ur möten medan
    mötesprioriteringsbufferten är uppe. Den hålls synkroniserad med
@@ -70,16 +100,13 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    servern.
 
 ** Färgläggning av KOM-bufferten sker även under Windows-versionen av
-   Emacs.
+   Emacs. Färgläggning borde till och med ske under alla fönstersystem.
 
 ** Kommandot "Återse fler inlägg", bunder till "åy" (som i Återse
    Ytterligare) fortsätter ett återsekommando från den plats det
    slutade, med samma kriterier. Det innebär att Återse senaste 10 av
    XX till YY följt av Återse 10 fler inlägg kommer att visa de
    senaste 20 inläggen av XX till YY i två omgångar (10 per kommando.)
-
-** Man kan numera stoppa in vektorer som tangentbordsmakron i
-   kom-do-when-done. 
 
 ** kom-permissive-completion är satt till t per default.
 
@@ -116,7 +143,7 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 ** Variabeln kom-ding-on-new-letter kontrollerar hur elispklienten
    piper när det kommer brev. Default är att inte pipa alls.
 
-** Elispklienten känner igen e-mail adresser i inläggstexter.
+** Elispklienten känner igen e-mail-adresser i inläggstexter.
    Hanteringen är dock något primitiv eftersom man inte kan välja
    vilket program som skall användas för att skicka mail.
 
@@ -128,13 +155,28 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 ** Om kom-check-for-new-comments inte är nil kommer klienten att
    kontrollera att man inte har olästa kommentarer till en text man
-   håller på kommentera.
+   håller på kommentera. 
+
+** Variabeln kom-dont-read-saved-variables kan användas för att styra
+   vilka variables som läses från servern. Om den är nil fungerar allt
+   som vanligt. Om den är t så kommer inga variabler att läsas från
+   servern och om den är en lista så kommer bara de variabler som inte 
+   nämns i listan att läsas från servern.
+
+** En ny hook, lyskom-change-conf-hook anropas nu vid mötesbyten. Den
+   är tänkt för folk som vill byta variabelvärden i vissa möten.
+   Funktioner i hooken anropas med två argument. Första argumentet är
+   vilket möte man står i och andra är vilket möte man håller på att
+   gå till. 
 
 ** Elispklienten är snabbare överlag.
 
 
 
 * Bugfixar
+
+** Man kan numera stoppa in vektorer som tangentbordsmakron i
+   kom-do-when-done. 
 
 ** Funktionerna lyskom-send-message-resize-minibuffer och
    lyskom-send-message-auto-fill är bra att stoppa in i
@@ -162,8 +204,9 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 * Kända buggar som behöver rapporteras
 
 ** Det verkar som om LysKOM-parsern har en liten bug, men vi lyckas
-   inte reproducera den. Om du kan reproducera en lyskom-parse-error
-   så vill vi veta hur.
+   inte reproducera den. Om du kan reproducera ett parse error
+   (notera, det är inte frågan om "Error i lyskom-parse-error", som
+   man får om man trycker C-g och R flitigt) så vill vi veta hur.
 
 
 
