@@ -38,11 +38,6 @@ Linus: en sn{ll uppmaning inlagt. R{cker det?
 
 * Trunkera detta m|te ur kommentarskedjan. (Tommy)
 
-* who-bufferten skall ha antalet inloggade i sin statusrad.
-
-* N{r n}gon g|r "aB|rja med nytt namn" s} hamnar hans session sist i
-  who-bufferten hos alla andra som {r med i LysKOM.
-
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
 
@@ -64,28 +59,6 @@ bort ur den h{r filen.
 ================================================================
 1. Saker som skall fixas innan n{sta release (0.35):
 ================================================================
-
-* Fixa loginsekvensen s} den tittar p} r{tt variabler.
-(
-92109 1991-08-22  17:03  /10 rader/ Tommy Persson
-Mottagare: LysKOM Elispklient; buggar, nyheter och annat. <3669>
-Markerad av dig och n}gon annan.
-[rende: Irriterende fr}ga om password
-------------------------------------------------------------
-Jag p}pekde denna bugg i ett tidigare inl{gg men den verkar inte ha
-blivit fixad.  N{r man startar om kom och har en gammal kombuffert
-kvar s} fr}gar kom efter password trots att man skickar med detta som
-argument.
-
-Jag startar kom med:
-
-(defun kom ()
-  (interactive)
-  (lyskom "obel18" "Tommy Persson" lyskom-passwd))
-(92109) -----------------------------------
-Kommentar i text 92110 
-Kommentar i text 92186 av Inge Wallin, ISY
-)
 
 * lyskom-connect-filter skall skrivas om s} att den klarar av ifall
   LysKOM\n delar paket med ett annat asynkront meddelande.
@@ -111,8 +84,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
   (* = dokumenterat (tror jag))
 
-* lyskom-end-of-command-hook.
-
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
   borde finnas ett asynkront meddelande som s{ger att ett m|te/person
   har {ndrats.
@@ -128,12 +99,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
 * N{r man g}r till ett m|te d{r man inte har n}gra ol{sta h{mtas nog
   hela mappen igen. Detta {r mindre bra.
-
-* Kasta ut allt som har med who-info att g|ra och ers{tt det med
-  session-info. Kolla ocks} s} att servern aldrig skickar n}gra
-  who-info. 
-(* Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
-  skall bli obsolete!)
 
 * cookie-mode skall anv{ndas till:
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
@@ -161,17 +126,11 @@ Inge: Linus p}st}r att det h{r beror p} en emacsbug.
 * N{r man g|r endast borde man inte f} Se tiden.
   Detta {r samma bugg som att man f}r Se tiden n{r man loggar in.
 
-* G} igenom *.el och fixa alla st{llen d{r man kan f} ett nummer eller
-  current text.  G|r en speciell funktion av det.
-
 * str{ngar f|r att tala om vilket tecken prompten slutar med.
 
 * n{r man inte f}r l{sa texter (kommentarer) till ett inl{gg borde
   de inte komma med n{r man g|r }terse alla kommentarer.
   }terse det kommenterade pss.
-
-* stoppa in lite prefetch i klienten s} att den t ex h{mtar det tr{d
-  som man h}ller p} att l{sa nu eller det m|te.
 
 * m|jlighet att f} fram presentationen och g} med i m|ten fr}n
   prioritize-bufferten
@@ -243,15 +202,6 @@ linus: jo pga en restriktion i servern s} skickas alla inl{gg som en
        }terse till mig i den och dens brevl}da.
 ceder: restriktionen kommer att vara lyft i protokoll b.
 linus: jag tycker vi v{ntar tills dess.
-
-* skall man kunna s{tta en gr{ns f|r hur stor lyskombufferten f}r vara
-  i antal rader? n{r gr{nsen {r uppn}dd s} b|rjar klienten ta bort
-  rader fr}n starten. detta kan ske antingen radvis eller inl{ggsvis,
-  dvs endast hela utskrivna inl{gg tas bort (komplicerat). Ny flagga?
-linus: G|r inte detta nu n{r vi {ven anv{nder oss av positioner i
-bufferten f|r att cacha texter. WARNING!
-linus: Fr}n och med 0.34.6 har jag sl{ngt ut bufferten som cache igen.
-R{ttare sagt, det finns ingen text-cachning l{ngre.
 
 * Fixa unwind-protect runt alla inmatningar fr}n tangentbordet s} att
   man kan trycka quit lite oftare och f} en ny prompt. Jag vill ha ett
