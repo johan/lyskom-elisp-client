@@ -144,6 +144,8 @@ otherwise => the new conf is entered after all conferences.")
   lyskom-prefetch-confs
   lyskom-prefetch-texts
   lyskom-who-info-has-changed-hook
+  lyskom-prompt-text
+  lyskom-prompt-executing-default-command-text
   )
   "*Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")

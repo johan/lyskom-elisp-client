@@ -1,5 +1,9 @@
 Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
 
+	* vars.el (lyskom-elisp-variables): Lagt till lyskom-prompt-text
+	  och lyskom-prompt-executing-default-command-text till listan av
+	  variabler som sparas f|r denna klient.
+
 	* swedish-strings.el, commands2.el (kom-compile-bug-report): Lite
 	  sk|nhets{ndringar. Nu skall Backtracen hanteras snyggare.
 
