@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 39.0 1996-03-14 18:18:30 davidk Exp $
+;;;;; $Id: review.el,v 39.1 1996-03-18 15:43:24 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 39.0 1996-03-14 18:18:30 davidk Exp $\n"))
+	      "$Id: review.el,v 39.1 1996-03-18 15:43:24 byers Exp $\n"))
 
 
 
@@ -309,7 +309,7 @@ instead. In this case the text TEXT-NO is first shown."
     (lyskom-end-of-command)))
 
 
-(defun kom-find-root ()
+(defun kom-find-root (&optional text-no)
   "Finds the root text of the tree containing the text in lyskom-current-text."
   (interactive)
   (lyskom-start-of-command 'kom-find-root)
@@ -318,7 +318,8 @@ instead. In this case the text TEXT-NO is first shown."
 	(lyskom-tell-internat 'kom-tell-review)
 	(cond
 	 (lyskom-current-text 
-	  (let* ((ts (blocking-do 'get-text-stat lyskom-current-text))
+	  (let* ((ts (blocking-do 'get-text-stat (or text-no 
+						     lyskom-current-text)))
 		 (r (lyskom-find-root ts ts)))
 	    (if r
 		(lyskom-view-text r)

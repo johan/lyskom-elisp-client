@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 39.0 1996-03-14 18:17:20 davidk Exp $
+;;;;; $Id: edit-text.el,v 39.1 1996-03-18 15:43:02 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 39.0 1996-03-14 18:17:20 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 39.1 1996-03-18 15:43:02 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -59,6 +59,8 @@ See lyskom-edit-handler.")
 
 (defvar lyskom-edit-return-to-configuration nil
   "Status variable for an edit-buffer.")
+
+(put 'abort-send 'error-conditions '(error lyskom-error lyskom-edit-error))
 
 (defun lyskom-edit-text (proc misc-list subject body
 			      &optional handler &rest data)
@@ -347,39 +349,53 @@ Entry to this mode runs lyskom-edit-mode-hook."
 (defun lyskom-edit-send (send-function)
   "Send the text to the server by calling SEND-FUNCTION."
   (interactive)
-  (if (or (string= mode-name lyskom-edit-mode-name)
-	  (j-or-n-p (lyskom-get-string 'already-sent)))
-      (progn 
-	(let ((buffer (current-buffer))
-	      headers misc-list subject message)
+  (condition-case data
+      (if (or (string= mode-name lyskom-edit-mode-name)
+	      (j-or-n-p (lyskom-get-string 'already-sent)))
+	  (progn 
+	    (let ((buffer (current-buffer))
+		  headers misc-list subject message)
 
-	  (save-excursion
-	    (setq headers (lyskom-edit-parse-headers)
-		  misc-list (apply 'lyskom-create-misc-list (cdr headers))
-		  subject (car headers)))
-	  (setq message (lyskom-edit-extract-text))
-	  (setq mode-name "LysKOM sending")
-	  (save-excursion
-	    (set-buffer (process-buffer lyskom-proc))
-	    ;; Don't change the prompt if we won't see our own text
-	    (if kom-created-texts-are-read
-		(setq lyskom-dont-change-prompt t))
-	    (setq lyskom-is-writing nil)
-	    (lyskom-tell-internat 'kom-tell-send)
-	    (funcall send-function 'sending 'lyskom-create-text-handler
-				  (concat subject "\n" message) misc-list
-				  buffer)))
-	(if kom-dont-restore-window-after-editing
-	    (bury-buffer)
-	  (save-excursion
-	    (if (and (boundp 'lyskom-is-dedicated-edit-window)
-		     lyskom-is-dedicated-edit-window)
-		(condition-case error
-		    (delete-frame)
-		  (error))))
-	  (set-window-configuration lyskom-edit-return-to-configuration)
-	  (set-buffer (window-buffer (selected-window))))
-	(goto-char (point-max)))))
+	      (save-excursion
+		(setq headers (lyskom-edit-parse-headers)
+		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
+		      subject (car headers)))
+	      (if (string= subject "")
+		  (let ((old (point)))
+		    (goto-char (point-min))
+		    (re-search-forward (if kom-emacs-knows-iso-8859-1
+					   lyskom-header-subject
+					 lyskom-swascii-header-subject)
+				       nil t)
+		    (end-of-line)
+		    (if (/= (point) old)
+			(signal 'abort-send 'enter-subject-idi))))
+	      (setq message (lyskom-edit-extract-text))
+	      (setq mode-name "LysKOM sending")
+	      (save-excursion
+		(set-buffer (process-buffer lyskom-proc))
+		;; Don't change the prompt if we won't see our own text
+		(if kom-created-texts-are-read
+		    (setq lyskom-dont-change-prompt t))
+		(setq lyskom-is-writing nil)
+		(lyskom-tell-internat 'kom-tell-send)
+		(funcall send-function 'sending 'lyskom-create-text-handler
+			 (concat subject "\n" message) misc-list
+			 buffer)))
+	    (if kom-dont-restore-window-after-editing
+		(bury-buffer)
+	      (save-excursion
+		(if (and (boundp 'lyskom-is-dedicated-edit-window)
+			 lyskom-is-dedicated-edit-window)
+		    (condition-case error
+			(delete-frame)
+		      (error))))
+	      (set-window-configuration lyskom-edit-return-to-configuration)
+	      (set-buffer (window-buffer (selected-window))))
+	    (goto-char (point-max))))
+    (lyskom-edit-error
+     (lyskom-beep lyskom-ding-on-no-subject)
+     (lyskom-message (lyskom-get-string (cdr data))))))
 
 
 (defun kom-edit-quit ()

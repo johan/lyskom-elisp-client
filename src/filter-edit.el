@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 39.0 1996-03-14 18:17:32 davidk Exp $
+;;;;; $Id: filter-edit.el,v 39.1 1996-03-18 15:43:10 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -257,7 +257,8 @@ current buffer."
 (defun lyskom-format-filter-pattern (pat)
   "Format and insert the filter pattern PAT into the current buffer.
 Returns an filter-entry structure representing the entry."
-  (let (start end lines)
+  (let ((inhibit-read-only t)
+        start end lines)
    
     ;;
     ;; Insert text representation

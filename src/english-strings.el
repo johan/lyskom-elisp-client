@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 39.1 1996-03-17 17:45:28 davidk Exp $
+;;;;; $Id: english-strings.el,v 39.2 1996-03-18 15:43:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 39.1 1996-03-17 17:45:28 davidk Exp $"))
+	      "$Id: english-strings.el,v 39.2 1996-03-18 15:43:06 byers Exp $"))
 
 
 ;;; ================================================================
@@ -539,6 +539,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (comment-to-by . "%#1s to article %#2d%#3s.\n")
     (already-sent . "You have already posted this article. Post it anyway? ")
     (subject . "Subject: ")
+    (enter-subject-idi . "Enter a subject.")
     (which-text-include . "Include which article: ")
     (added-recipient . "Recipient: ")
     (added-carbon-copy . "Carbon copy to conference: ")
@@ -1176,7 +1177,9 @@ Cf. paragraph-start.")
 
 (defvar kom-ansaphone-default-reply 
   "I am not reading LysKOM right not. Please write a letter instead."
-  "*Default message to send when the ansaphone is on.")
+  "*Default message to send when the ansaphone is on.
+
+This variable is stored in the LysKOM server.")
         
 
 ;;;; ================================================================
@@ -1225,7 +1228,9 @@ The variable kom-mercial defaults to kom-tell-wait.")
 (defvar kom-mercial (car (cdr (assoc 'kom-tell-wait kom-tell-phrases)))
   "*When the user has seen all articles and has reached the view-time prompt,
 this string is used as the argument to lyskom-tell-server.
-Users are encouraged to use their best sense of humor.")
+Users are encouraged to use their best sense of humor.
+
+This variable is stored in the LysKOM server.")
 
 
 (defconst lyskom-error-texts
