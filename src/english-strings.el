@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.168 2002-02-25 18:31:45 joel Exp $
+;;;;; $Id: english-strings.el,v 44.169 2002-02-26 07:37:04 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.168 2002-02-25 18:31:45 joel Exp $"))
+              "$Id: english-strings.el,v 44.169 2002-02-26 07:37:04 joel Exp $"))
 
 
 ;;; ================================================================
@@ -760,7 +760,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-motd-failed . "Didn't work. Perhaps you were not an administrator.\n")
     (removing-motd . "Removing the login message.\n")
     (removed-motd . "You have removed the login message.\n")
-    (who-to-throw-out . "Which session do you want to kill? ")
+    (who-to-throw-out . "Who's session do you want to kill? ")
     (throwing-out . "Killing session %#1d... ")
     (postpone-prompt . "How much do you want to read now? ")
     (set-session-priority . "Set reading level: ")

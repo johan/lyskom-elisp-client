@@ -1,3 +1,10 @@
+2002-02-26  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-message): Likewise.
+
+	* english-strings.el (lyskom-message): Corrected who-to-throw-out
+	to ask "who's session", not "which session".
+
 2002-02-25  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-message): Ditto.
