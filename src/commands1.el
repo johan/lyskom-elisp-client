@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.59 1999-11-23 17:17:06 byers Exp $
+;;;;; $Id: commands1.el,v 44.60 1999-11-25 12:47:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.59 1999-11-23 17:17:06 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.60 1999-11-25 12:47:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1161,11 +1161,11 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
            (if (and (eq type 'pres)
                     (conf-type->letterbox (conf-stat->conf-type conf-stat)))
                (lyskom-get-string 'presentation-form)
-             ""))))
-      (cond
-       ((eq type 'pres) 'lyskom-set-presentation)
-       ((eq type 'motd) 'lyskom-set-conf-motd))
-      (conf-stat->conf-no conf-stat)))
+             ""))
+         (cond
+          ((eq type 'pres) 'lyskom-set-presentation)
+          ((eq type 'motd) 'lyskom-set-conf-motd))
+         (conf-stat->conf-no conf-stat)))))
    (t
     (lyskom-format-insert 'not-supervisor-for
 			  conf-stat))))
