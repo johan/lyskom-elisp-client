@@ -1,5 +1,7 @@
 Tue Aug 20 22:58:03 1991  Linus Tolke Y  (linus at lysator)
 
+	* flags.el (lyskom-read-options-eval): Bugfix kom-do-when-done.
+
 	* commands2.el (kom-postpone): Klarar nu {ven fallet att man g|r
 	  uppskjut p} fler inl{gg {n man har ol{sta.
 
