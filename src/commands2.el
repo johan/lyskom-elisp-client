@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.74 2000-07-03 10:50:01 byers Exp $
+;;;;; $Id: commands2.el,v 44.75 2000-07-29 23:38:17 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.74 2000-07-03 10:50:01 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.75 2000-07-29 23:38:17 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1714,7 +1714,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                                              'no-other-lyskom-r))
              (error (lyskom-get-string 'no-lyskom-session))))
           (t nil))))
-               
+
 
 (def-kom-emacs-command kom-next-unread-kom ()
   "Pop up the previous lyskom-session."
@@ -1727,8 +1727,12 @@ Return-value: 'no-session if there is no suitable session to switch to
              (error (lyskom-get-string 'no-unread-lyskom))))
           ((eq result 'same-session)
            (if kom-next-unread-kom-running-as-kom-command
-               (lyskom-insert-before-prompt (lyskom-get-string
-                                             'no-other-unread-lyskom-r))
+	       (lyskom-insert-before-prompt
+		(lyskom-get-string
+		 ;; Are there are any other sessions at all?
+		 (if (= 1 (length lyskom-buffer-list))
+		     'no-other-lyskom-r
+		   'no-other-unread-lyskom-r)))
              (error (lyskom-get-string 'no-lyskom-session))))
           (t nil))))
 
