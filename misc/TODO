@@ -19,6 +19,8 @@ bort ur den h{r filen.
 1. Saker som skall fixas innan n{sta release (0.34):
 ================================================================
 
+* lyskom-insert-before-prompt stoppar in saker i fel ordning.
+
 * Addera medlem och subtrahera medlem skall inte {ndra prefetch
   variablerna om man adderar/subtraherar n}gon annan {n sig sj{lv.
 Inge: G|r den det d}? Kolla rad 367 i commands1.el (addera medlem)
