@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.12 1996-10-20 02:56:44 davidk Exp $
+;;;;; $Id: commands1.el,v 44.13 1996-10-24 09:47:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.12 1996-10-20 02:56:44 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.13 1996-10-24 09:47:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1551,8 +1551,8 @@ Uses Protocol A version 9 calls"
   (let* ((wants-invisibles (or (and (numberp arg) (< arg 0))
                                (and (symbolp arg) (eq '- arg))))
 	 (idle-hide (if (numberp arg) (abs arg) 
-                      (cond ((numberp kom-idle-hide) kom-idle-hide)
-                            ((eq '- arg) 0)
+                      (cond ((eq '- arg) 0)
+                            ((numberp kom-idle-hide) kom-idle-hide)
                             (kom-idle-hide 30)
                             (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
