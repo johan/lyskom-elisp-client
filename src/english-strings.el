@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.19 1996-03-04 15:13:06 byers Exp $
+;;;;; $Id: english-strings.el,v 38.20 1996-03-04 15:22:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.19 1996-03-04 15:13:06 byers Exp $"))
+	      "$Id: english-strings.el,v 38.20 1996-03-04 15:22:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -335,7 +335,7 @@ and you have finished reading. Please come back later.
 
     (your-memberships . "Your LysKOM conference subscriptions:\n")
     (memberships-header . "Last access	   Prio	Unread	Conference\n")
-    (memberships-line . "%#16s  %#2d\t%#3d\t%#4M\n")
+    (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     
     (conf-for-status . "Get status of which conference: ")
     (no-such-conf . "The conference doesn't exist.")
