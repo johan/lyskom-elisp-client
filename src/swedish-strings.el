@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.228 2002-04-20 14:52:52 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.229 2002-04-20 16:53:38 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.228 2002-04-20 14:52:52 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.229 2002-04-20 16:53:38 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -1859,6 +1859,7 @@ Antal sessioner:     %21#1d (totalt)
     (kom-review-mail-headers  . "Återse brevhuvud")
     
     (kom-compare-texts        . "Jämför två texter")
+    (kom-diff-texts           . "Se diff")
 
     (kom-become-anonymous     . "Bli anonym")
     (kom-become-nonanonymous  . "Bli icke-anonym (träd fram ur skuggorna)")
@@ -2264,6 +2265,8 @@ Begär att alla som läser ett visst inlägg bekräftar läsningen.")
 
     (kom-compare-texts        . "\
 Jämför två texter med hjälp av ediff.")
+    (kom-diff-texts        . "\
+Jämför två texter med hjälp av diff.")
 
     (kom-become-anonymous     . "\
 Ändra klientens beteende så att du blir lite mer anonym. Det blir även
