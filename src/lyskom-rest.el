@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.69 1999-06-22 13:37:02 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.70 1999-06-25 20:17:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.69 1999-06-22 13:37:02 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.70 1999-06-25 20:17:17 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -887,12 +887,14 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\(&\\)?\\([][@MmPpnrtsdoxcCSDF]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\(&\\)?\\([][@MmPpnrtsdoxcCSDF?]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
  "Find the string corresponding to ATOM and insert it into the LysKOM buffer." 
-  (lyskom-insert (lyskom-get-string atom)))
+ (if (stringp atom)
+     (lyskom-insert atom)
+   (lyskom-insert (lyskom-get-string atom))))
 
 (defun lyskom-format (format-string &rest argl)
   (format-state->result (lyskom-do-format format-string argl)))
@@ -1050,10 +1052,11 @@ Note that it is not allowed to use deferred insertions in the text."
 					    (format-state->format-string
 					     format-state)))))
 
-    ;;
-    ;;  If the format letter is an end-of-group letter, abort
-    ;;  formatting and return to the caller.
-    ;;
+
+        ;;
+        ;;  If the format letter is an end-of-group letter, abort
+        ;;  formatting and return to the caller.
+        ;;
 
 	(if (= ?\] format-letter)
 	    (progn 
@@ -1196,6 +1199,42 @@ Note that it is not allowed to use deferred insertions in the text."
      ((= format-letter ?\[)
       (setq format-state (lyskom-format-aux format-state allow-defer)
             result nil))
+
+     ;; A predicate
+     ;; Get the predicate type and then parse the format string
+     ;; accordingly
+
+     ((= format-letter ?\?)
+      (unless (string-match "[db]" 
+                            (format-state->format-string format-state)
+                            (format-state->start format-state))
+        (lyskom-error "Unknown predicate in format string %s (%d)"
+                      (format-state->format-string format-state)
+                      (format-state->start format-state)))
+      (set-format-state->start format-state (match-end 0))
+      (let ((predicate-type (elt (match-string 0
+                                 (format-state->format-string format-state))
+                                 0)))
+        (cond 
+
+         ;; Plural/singular predicate
+         ;; arg is an integer. Use the first subformat if it is one
+         ;; and the second if it is other than one.
+         ((= predicate-type ?d)
+          (setq format-state
+                (lyskom-format-do-binary-predicate (= arg 1)
+                                                   format-state 
+                                                   allow-defer)
+                result nil))
+
+         ;; True/false predicate
+         ((= predicate-type ?b)
+          (setq format-state
+                (lyskom-format-do-binary-predicate arg
+                                                   format-state
+                                                   allow-defer)
+                result nil))
+         )))
 
      ((= format-letter ?F)
       (setq result 
@@ -1456,6 +1495,60 @@ Note that it is not allowed to use deferred insertions in the text."
          (format-state->result format-state))))
   format-state)
 
+
+(defun lyskom-format-do-binary-predicate (option format-state allow-defer)
+  (cond (option
+         (setq format-state
+               (lyskom-format-enter-subformat format-state allow-defer))
+         (lyskom-format-skip-subformat format-state))
+        (t
+         (lyskom-format-skip-subformat format-state)
+         (setq format-state 
+               (lyskom-format-enter-subformat format-state allow-defer))
+         ))
+  format-state)
+
+(defun lyskom-format-enter-subformat (format-state allow-defer)
+  "The format string should  be just before a subformat. Enter it."
+  (unless (string-match "%\\[" 
+                        (format-state->format-string format-state)
+                        (format-state->start format-state))
+    (lyskom-error "Predicate syntax error in format string %s (%d)"
+                  (format-state->format-string format-state)
+                  (format-state->start format-state)))
+  (set-format-state->start format-state (match-end 0))
+  (lyskom-format-aux format-state allow-defer))
+
+
+(defun lyskom-format-skip-subformat (format-state)
+  "Skip the subformat specification at the start of format-state"
+
+  ;; Check that it looks like a subformat in the first place
+  (unless (string-match "%\\[" 
+                        (format-state->format-string format-state)
+                        (format-state->start format-state))
+    (lyskom-error "Predicate syntax error in format string %s (%d)"
+                  (format-state->format-string format-state)
+                  (format-state->start format-state)))
+  (set-format-state->start format-state (match-end 0))
+
+  ;; We are now inside the start of the subformat
+
+  (let ((level 1))
+    (while (> level 0)
+      (setq tmp (substring (format-state->format-string format-state)
+                           (format-state->start format-state)))
+      (if (null (string-match "\\(%\\[\\|%\\]\\)"
+                              (format-state->format-string format-state)
+                              (format-state->start format-state)))
+          (lyskom-error "Bad nesting in format string %s (%d)" 
+                        (format-state->format-string format-state)
+                        (format-state->start format-state))
+        (let ((ch (elt (match-string 
+                        1 (format-state->format-string format-state)) 1)))
+        (cond ((= ?\[ ch) (setq level (1+ level)))
+              (t (setq level (1- level))))
+        (set-format-state->start format-state (match-end 0)))))))
 
 
 
@@ -2026,6 +2119,18 @@ A symbol other than t means call it as a function."
 ;;;;                         Running in buffer 
 
 ;;; Author: Linus
+
+
+(defun lyskom-text-at-point ()
+  "Return the text that point is in, or nil it is impossible to determine."
+  (save-excursion
+    (let ((paragraph-start lyskom-text-start)
+          (paragraph-ignore-fill-prefix t))
+      (end-of-line)
+      (backward-paragraph 1))
+    (beginning-of-line)
+    (and (looking-at "[0-9]+")
+         (string-to-int (match-string 0)))))
 
 
 (defun backward-text (&optional arg)
@@ -3128,29 +3233,20 @@ One parameter - the prompt string."
 	(format "LysKOM(%s)" server))))
 
 
-;;; Validation of kom-tell-phrases
-;;;
-;;; Author: Roger Mikael Adolfsson
 
-;;; This code removed (lyskom-tell-phrases-validate)
+(if lyskom-is-loaded
+    nil
 
-
-;;
-(lyskom-set-language lyskom-language)
-
-;; Build the menus
-;; (lyskom-build-menus)
-
-
-(or (memq 'lyskom-unread-mode-line global-mode-string)
-    (setq global-mode-string
-	  (append '("" lyskom-unread-mode-line) global-mode-string)))
-(setq lyskom-unread-mode-line
-      (list (list 'lyskom-sessions-with-unread 
-		  (lyskom-get-string 'mode-line-unread))
-	    (list 'lyskom-sessions-with-unread-letters
-		  (lyskom-get-string 'mode-line-letters))
-	    " "))
+  (lyskom-set-language lyskom-language)
+  (or (memq 'lyskom-unread-mode-line global-mode-string)
+      (setq global-mode-string
+            (append '("" lyskom-unread-mode-line) global-mode-string)))
+  (setq lyskom-unread-mode-line
+        (list (list 'lyskom-sessions-with-unread 
+                    (lyskom-get-string 'mode-line-unread))
+              (list 'lyskom-sessions-with-unread-letters
+                    (lyskom-get-string 'mode-line-letters))
+              " "))
 
 ;;;
 ;;; Set up lyskom-line-start-chars. The reason we do it here is that
@@ -3158,9 +3254,7 @@ One parameter - the prompt string."
 ;;; loaded.
 ;;;
 
-(setq lyskom-line-start-chars
-;;      (if (fboundp 'string-to-vector)
-;;          (string-to-vector lyskom-line-start-chars-string)
+  (setq lyskom-line-start-chars
         (let ((tmp (make-vector 256 nil)))
           (mapcar 
            (function
@@ -3168,53 +3262,29 @@ One parameter - the prompt string."
               (aset tmp (char-to-int x) t)))
            lyskom-line-start-chars-string)
           tmp))
-;;)
-		 
 
 
-;;; Formely lyskom-swascii-commands
-;;(lyskom-define-language 'lyskom-command 'swascii
-;;  (mapcar 
-;;   (function (lambda (pair)
-;;		 (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;   (lyskom-get-strings lyskom-commands 'lyskom-command)))
-
-;;(setq lyskom-swascii-header-separator 
-;;	(iso-8859-1-to-swascii lyskom-header-separator))
-;;(setq lyskom-swascii-header-subject
-;;	(iso-8859-1-to-swascii lyskom-header-subject))
-
-;;(setq lyskom-swascii-filter-actions
-;;	(mapcar 
-;;	 (function (lambda (pair)
-;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;	 lyskom-filter-actions))
-;;(setq lyskom-swascii-filter-what
-;;	(mapcar 
-;;	 (function (lambda (pair)
-;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-;;	 lyskom-filter-what))
+  ;; Setup the queue priorities
+  (lyskom-set-queue-priority 'blocking 9)
+  (lyskom-set-queue-priority 'main 9)
+  (lyskom-set-queue-priority 'sending 9)
+  (lyskom-set-queue-priority 'follow 9)
+  (lyskom-set-queue-priority 'options 9)
+  (lyskom-set-queue-priority 'deferred 6)
+  (lyskom-set-queue-priority 'background 6)
+  (lyskom-set-queue-priority 'modeline 6)
+  (lyskom-set-queue-priority 'async 3)
+  (lyskom-set-queue-priority 'prefetch 0)
+  (run-hooks 'lyskom-after-load-hook)
+  (setq lyskom-is-loaded t))
 
 
-;; Setup the queue priorities
-(lyskom-set-queue-priority 'blocking 9)
-(lyskom-set-queue-priority 'main 9)
-(lyskom-set-queue-priority 'sending 9)
-(lyskom-set-queue-priority 'follow 9)
-(lyskom-set-queue-priority 'options 9)
-(lyskom-set-queue-priority 'deferred 6)
-(lyskom-set-queue-priority 'background 6)
-(lyskom-set-queue-priority 'modeline 6)
-(lyskom-set-queue-priority 'async 3)
-(lyskom-set-queue-priority 'prefetch 0)
 
-
-(provide 'lyskoom-rest)
+(provide 'lyskom-rest)
 
 ;;; This should be the very last lines of lyskom.el Everything should
 ;;; be loaded now, so it's time to run the lyskom-after-load-hook.
 
-(run-hooks 'lyskom-after-load-hook)
 
 (lyskom-end-of-compilation)
 

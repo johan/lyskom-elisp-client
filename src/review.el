@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.15 1999-06-10 13:36:19 byers Exp $
+;;;;; $Id: review.el,v 44.16 1999-06-25 20:17:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.15 1999-06-10 13:36:19 byers Exp $\n"))
+	      "$Id: review.el,v 44.16 1999-06-25 20:17:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1152,23 +1152,30 @@ end."
 (def-kom-command kom-review-stack ()
   "Displays the review-stack."
   (interactive)
-  (mapcar
-   (function
-    (lambda (info)
-      (let ((un (length (cdr (read-info->text-list info))))
-	    (type (read-info->type info))
-	    (cto (read-info->comm-to info)))
-	(cond
-	 ((eq type 'REVIEW)
-	  (lyskom-format-insert 'review-n-texts un))
-	 ((eq type 'REVIEW-TREE)
-	  ; +++ Hmmm. Pluralformer. Besv{rligt!
-	  (if (= un 1)
-	      (lyskom-format-insert 'review-one-comment cto)
-	    (lyskom-format-insert 'review-many-comments cto un)))
-	 ((eq type 'REVIEW-MARK)
-	  (lyskom-format-insert 'review-marked un))))))
-   (read-list->all-entries lyskom-reading-list)))
+  (if (read-list->all-entries lyskom-reading-list)
+      (mapcar
+       (function
+        (lambda (info)
+          (let ((un (length (cdr (read-info->text-list info))))
+                (type (read-info->type info))
+                (cto (read-info->comm-to info))
+                (conf (read-info->conf-stat info)))
+            (cond
+             ((eq type 'COMM-IN)
+              (lyskom-format-insert 'view-many-comments cto un))
+             ((eq type 'CONF)
+              (lyskom-format-insert 'view-texts-in-conf un conf))
+             ((eq type 'REVIEW)
+              (lyskom-format-insert 'review-n-texts un))
+             ((eq type 'REVIEW-TREE)
+              (lyskom-format-insert 'review-many-comments cto un))
+             ((eq type 'REVIEW-MARK)
+              (lyskom-format-insert 'review-marked un))))))
+       (read-list->all-entries lyskom-reading-list))
+    (cond (lyskom-current-conf 
+           (lyskom-format-insert 'you-have-no-unreads lyskom-current-conf))
+          (lyskom-insert 'not-reading-anywhere))))
+
 
 
 ;;; ================================================================

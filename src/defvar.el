@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.9 1998-06-02 12:14:33 byers Exp $
+;;;;; $Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.9 1998-06-02 12:14:33 byers Exp $\n"
+  "$Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -215,6 +215,8 @@ local-hook      A hook variable that is made local in LysKOM buffers."
         (setq arglist (cdr arglist)))
 
       (` (progn (dont-compile (if (and (boundp (quote (, name)))
+                                       (or (not (boundp lyskom-is-loaded))
+                                           (not lyskom-is-loaded))
                                        (listp kom-dont-read-saved-variables))
                                   (add-to-list 'kom-dont-read-saved-variables
                                                (quote (, name)))))

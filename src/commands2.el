@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.35 1999-06-22 14:54:33 byers Exp $
+;;;;; $Id: commands2.el,v 44.36 1999-06-25 20:17:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.35 1999-06-22 14:54:33 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.36 1999-06-25 20:17:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -717,41 +717,47 @@ send. If DONTSHOW is non-nil, don't display the sent message."
     (sit-for 0)
     (lyskom-prefetch-all-confs))
 
-  (let ((num-arg (cond
-                  ((numberp num) num)
-                  ((and (listp num)
-                        (numberp (car num))) (car num))
-                  (t nil)))
-        (sum 0))
+  (let* ((num-arg (cond
+                   ((numberp num) num)
+                   ((and (listp num)
+                         (numberp (car num))) (car num))
+                   (t nil)))
+         (sum 0)
+         (mship-confs (and (numberp num-arg)
+                           (< num-arg 1)
+                           (mapcar 'membership->conf-no lyskom-membership)))
+         (nconfs 0))
+    (when num-arg
+      (lyskom-format-insert 'list-unread-with-n-unread num-arg))
     (mapcar
      (function
       (lambda (info)
         (let ((un (length (cdr (read-info->text-list info))))
               (name (conf-stat->name (read-info->conf-stat info)))
               (conf-stat (read-info->conf-stat info)))
+          (setq mship-confs (delq (conf-stat->conf-no conf-stat) mship-confs))
           (cond
            ((eq (read-info->type info) 'CONF)
             (if (or (not num-arg)
-                    (>= (-- num-arg) 0))
+                    (>= un num-arg))
                 (lyskom-insert 
                  (if (and (boundp 'lyskom-special-conf-name)
                           (stringp lyskom-special-conf-name)
                           (string-match lyskom-special-conf-name name))
-                     (if (/= un 1)
-                         (lyskom-format 'you-have-unreads-special un conf-stat)
-                       (lyskom-format 'you-have-an-unread-special conf-stat))
-                   (if (/= un 1)
-                       (lyskom-format 'you-have-unreads un conf-stat)
-                     (lyskom-format 'you-have-an-unread conf-stat)))))
-            (setq sum (+ sum un)))))))
+                     (lyskom-format 'you-have-unreads-special un conf-stat)
+                   (lyskom-format 'you-have-unreads un conf-stat))))
+            (setq sum (+ sum un)
+                  nconfs (1+ nconfs)))))))
      (read-list->all-entries lyskom-to-do-list))
+
+    (mapcar 
+     (lambda (conf-no)
+       (lyskom-format-insert 'you-have-no-unreads conf-no))
+       mship-confs)
+
     (if (= 0 sum)
         (lyskom-insert-string 'you-have-read-everything)
-      (lyskom-insert 
-       (if (/= sum 1)
-           (lyskom-format 'total-unreads 
-                          sum)
-         (format (lyskom-get-string 'total-unread)))))))
+      (lyskom-format-insert 'total-unreads sum nconfs))))
 
 
 ;;; ================================================================

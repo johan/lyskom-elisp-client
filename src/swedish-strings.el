@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.60 1999-06-22 14:54:37 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.61 1999-06-25 20:17:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.60 1999-06-22 14:54:37 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.61 1999-06-25 20:17:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -215,10 +215,8 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (what-text-to-delete . "Vilket inlägg skall tas bort? ")
     (delete-marked-text . "Inlägget är %#1s. Ta bort ändå? ")
     (delete-marked-by-you . "markerat av dig")
-    (delete-marked-by-you-and-one . "markerat av dig och någon annan")
-    (delete-marked-by-you-and-several . "markerat av dig och %#1d andra")
-    (delete-marked-by-one . "markerat av 1 person")
-    (delete-marked-by-several . "markerat av %#1d personer")
+    (delete-marked-by-you-and-others . "markerad av dig och %#1?d%[någon annan%]%[%#1d andra%]")
+    (delete-marked-by-several . "markerat av %#1d person%#1?d%[%]%[er%]")
     (deleting-text . "Radering av text %#1:n...")
 
     (presentation-for-whom . "Vilket möte/person? ")
@@ -268,8 +266,7 @@ Skicka ett brev till %#2P för medlemsskap.\n")
     (confusion-what-to-footnote . "Jag förstår inte vilken text du vill skriva en fotnot till.\n")
 
     (what-private-no . "Personligt svar till text nummer: ")
-    (confusion-who-to-reply-to . "Jag förstår inte vems inlägg du vill
- skriva ett privat svar till.\n")
+    (confusion-who-to-reply-to . "Jag förstår inte vems inlägg du vill skriva ett privat svar till.\n")
     (confusion-what-to-answer-to . "Jag förstår inte vilken text du vill besvara.\n")
     (confusion-what-to-view . "Jag förstår inte vilken text du vill återse.\n")
     (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots osänt meddelande? ")
@@ -384,7 +381,7 @@ du har läst klart allting. Kom tillbaks senare.
 ;    (northward . "norrut")
 ;    (southward . "söderut")
 ;    (permanent-sundown . "Solen kommer inte att gå upp. Flytta %#1s!")
-;    (permanent-sunup . "Solen kommer inte att gå ned. Fytta %#1s!")
+;    (permanent-sunup . "Solen kommer inte att gå ned. Flytta %#1s!")
 ;    (sunup-soon . "Solen går snart upp")
 ;    (sundown-recently . "Solen gick nyligen ned")
 ;    (after-sunset . "Solen har gått ned")
@@ -393,6 +390,7 @@ du har läst klart allting. Kom tillbaks senare.
 ;;;
     (weekdays . ["söndag" "måndag" "tisdag" "onsdag" "torsdag"
 		 "fredag" "lördag" "söndag"])
+    (weekdays-short . ["sön" "mån" "tis" "ons" "tor" "fre" "lör" "sön"])
     (time-is . "Det är %#1s %#2s(enligt servern).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
@@ -409,11 +407,11 @@ På denna dag, år 1973, grundades Lysator, och det var en stor dag
 i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
 
-    (total-users . "    Sammanlagt %#1d användare.\n")
-    (total-visible-users . "    Sammanlagt %#1d synliga användare.\n")
-    (total-active-users . "    Sammanlagt %#1d aktiva användare.\n")
+    (total-users . "    Sammanlagt %#1d användare (%#2s.)\n")
+    (total-visible-users . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] användare (%#2s.)\n")
+    (total-active-users . "    Sammanlagt %#1d aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (total-visible-active-users
-     . "    Sammanlagt %#1d synliga aktiva användare.\n")
+     . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
@@ -573,15 +571,14 @@ Ditt alarmmeddelande löd:
 Meddelandet du försökte sända till %#1M var:
 %#2t\n")
     (only-last . "Endast läsa senaste (0 - %#1d) i %#2s: ")
-    (only-error . "Något gick galet. Sorry.\n")
+    (only-error . "Något gick galet. Ledsen.\n")
 
-    (you-have-unreads . "Du har %#1d olästa inlägg i %#2M\n")
-    (you-have-an-unread . "Du har 1 oläst inlägg i %#1M\n")
-    (you-have-unreads-special . "Du har %#1d okommenterade inlägg i %#2M\n")
-    (you-have-an-unread-special . "Du har 1 okommenterat inlägg i %#1M\n")
+    (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")
+    (you-have-unreads-special . "Du har %#1d okommentera%#1?d%[t%]%[de%] inlägg i %#2M\n")
+    (you-have-no-unreads . "Du har inget oläst i %#1M.\n")
     (you-have-read-everything . "Du har sett alla nyheter.\n")
-    (total-unreads . "\nDu har %#1d olästa inlägg.\n")
-    (total-unread . "\nDu har 1 oläst inlägg.\n")
+    (total-unreads . "\nDu har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2d möte%#2?d%[%]%[n%].\n")
+    (list-unread-with-n-unread . "Visar endast möten med minst %#1d olästa.\n")
     (waiting-for-anything .
 			  "Du väntar på ett inlägg i vilket möte som helst.\n")
     (waiting-higher-than . 
@@ -707,8 +704,10 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (review-n-texts . "Återse %#1d inlägg.\n")
     (review-marked . "Återse %#1d markerade.\n")
     (review-text-no . "Återse text nummer %#1n\n")
-    (review-one-comment . "Återse en kommentar till inlägg %#1n.\n")
-    (review-many-comments . "Återse %#2d kommentarer till inlägg %#1n.\n")
+    (review-many-comments . "Återse %#2?d%[en%]%[%#2d] kommentar%#2?d%[%]%[er%] till inlägg %#1n.\n")
+    (view-many-comments . "Läs %#2?d%[en%]%[%#2d] kommentar%#2?d%[%]%[er%] till %#1n.\n")
+    (view-texts-in-conf . "Totalt %#1d inlägg att läsa i %#2M.\n")
+    (not-reading-anywhere . "Du läser inte i något möte.\n")
     (read-normally-read . "Hur många vill du se igen? ")
 
     (review-conf-gone . "Mötet finns inte.\n")
@@ -765,10 +764,8 @@ Annat se \\[describe-mode] ---")
     (lines ." /%#1d rader/ ")
 
     (marked-by-you . "Markerad av dig.\n")
-    (marked-by-you-and-one . "Markerad av dig och någon annan.\n")
-    (marked-by-you-and-several . "Markerad av dig och %#1d andra.\n")
-    (marked-by-one . "Markerad av 1 person.\n")
-    (marked-by-several . "Markerad av %#1d personer.\n")
+    (marked-by-you-and-others . "Markerad av dig och %#1?d%[någon annan%]%[%#1d andra%].\n")
+    (marked-by-several . "Markerad av %#1d person%#1?d%[%]%[er%].\n")
 
     ;; The format of this function should coincide with the
     ;; format of the lyskom-text-start variable. DONT change
@@ -919,7 +916,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (too-high-goto-2 . "Du står för högt upp. Gå ner till rad 2.")
     (too-low-go-up . "Du kan inte pusha sista raden. Gå upp en rad.")
     (all-confs-popped .  "Alla möten är poppade.")
-    (prio-died . "Flyttningen misslyckades. Sorry. Döda bufferten.")
+    (prio-died . "Flyttningen misslyckades. Ledsen. Döda bufferten.")
     (new-priority . "Ny prioritet? (0 (låg) - 255 (hög)) ")
     (new-prio . "%6#1d")
 
@@ -2101,7 +2098,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 \\[widget-forward] flyttar till nästa inställning
 \\[widget-button-press] ändrar värdet
 
-Hälptexter:  [?] Visa hjälptext    [!] Göm hjälptext
+Hjälptexter: [?] Visa hjälptext    [!] Göm hjälptext
 Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde
 
 Om rutan före inställningens namn är ikryssad kommer värdet att sparas
@@ -2173,7 +2170,7 @@ i servern. Annars sparas det i din .emacs.")
 
     I en annan frame
         I en annan frame än LysKOM. Om det bara finns en frame så kommer en
-        ny frame att skapas, och tas bort när man är klar. 
+        ny frame att skapas, och (tas bort när man är klar.)
 
     I en ny frame
         En ny frame skapas för ändamålet, och tas bort när man är klar.
@@ -2243,7 +2240,7 @@ i servern. Annars sparas det i din .emacs.")
     %  - Sätter in mellanslag om det ser ut att behövas.
     %% - Sätter in ett procenttecken.
 
-  Nägra exempel:
+  Några exempel:
 
     \"%[%c% %m%] - \"             Standardprompt
     \"%[%s: %c% %m%] - \"         Till exempel \"LysKOM: Se tiden - \"")
@@ -2264,7 +2261,7 @@ i servern. Annars sparas det i din .emacs.")
     %  - Sätter in mellanslag om det ser ut att behövas.
     %% - Sätter in ett procenttecken.
 
-  Nägra exempel:
+  Några exempel:
 
     \"%[%c% %m%].\"             Standardprompt
     \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
@@ -2434,9 +2431,9 @@ i servern. Annars sparas det i din .emacs.")
   personen var aktiv.")
 
     (kom-idle-hide-doc . "\
-  I vilkalistan visas per default enbart de sessioner som har varit aktiva
+  I vilkalistan visas normalt enbart de sessioner som har varit aktiva
   under den senaste tiden. Denna inställning bestämmer hur många minuter
-  en session får ha varit stilla och ändå visas i vilkalistan.")
+  en session får ha varit inaktiv och ändå visas i vilkalistan.")
 
 
     (kom-show-footnotes-immediately-doc . "\
@@ -2468,7 +2465,7 @@ i servern. Annars sparas det i din .emacs.")
 
   Om man läser inläggen i tidsordning kommer de att visas i ordningen
   1002, 1003, 1004, 1005, 1006 och 1007. I kommentarsordning blir det
-  i stället 1003, 1003, 1006, 1004, 1005 och 1007.")
+  i stället 1002, 1003, 1006, 1004, 1005 och 1007.")
 
 
     (kom-continuous-scrolling-doc . "\
@@ -2544,17 +2541,17 @@ i servern. Annars sparas det i din .emacs.")
 
 
     (kom-default-message-recipient-doc . "\
-  Denna inställning bestämmer vem som kommer att vara defaultmottagare för
-  personliga meddelande man skickar. Alternativen som finns är att meddelanden
-  per default är allmänna, att avsändaren för det senast mottagna meddelandet
-  skall vara default eller att mottagaren för det senaste gruppmeddelandet
-  (eller avsändaren av det senaste personliga eller almänna meddelandet) skall
-  vara mottagare.")
+  Denna inställning bestämmer vem som kommer att vara defaultmottagare
+  för personliga meddelanden man skickar. Alternativen som finns är
+  att meddelanden normalt är allmänna, att avsändaren för det senast
+  mottagna meddelandet skall vara default eller att mottagaren för det
+  senaste gruppmeddelandet (eller avsändaren av det senaste personliga
+  eller allmänna meddelandet) skall vara mottagare.")
 
 
     (lyskom-filter-outgoing-messages-doc . "\
   Om denna inställning är påslagen så kommer meddelanden som skickas 
-  automatiskt, till exempel automatiska svar och svar på fjärkontrollförsök
+  automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
   även att visas som om man hade skickat det manuellt.")
 
     (kom-friends-doc . "\
@@ -2844,7 +2841,7 @@ i servern. Annars sparas det i din .emacs.")
 ;;;; ================================================================
 ;;;; Tell phrases should really be configured with the default
 ;;;; language used at the server and not for person reading if they
-;;;; happens to differ. This is of coarse because they are sent to the
+;;;; happen to differ. This is of coarse because they are sent to the
 ;;;; server for everybody else to see.
 
 ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
