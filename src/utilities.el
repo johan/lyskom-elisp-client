@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.87 2001-11-13 17:10:31 byers Exp $
+;;;;; $Id: utilities.el,v 44.88 2002-01-03 15:47:40 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.87 2001-11-13 17:10:31 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.88 2002-01-03 15:47:40 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1258,3 +1258,45 @@ car of each element is the recipient number and the cdr is the type."
           (setq result (cons (misc-info->recipient-no misc)
                              result)))))
     (nreverse result)))
+
+
+(defun lyskom-find-text-by-date (conf-stat target-date)
+  "Search texts in CONF-STAT for a text added on or about TARGET-DATE.
+Returns a cons of (LOCAL . GLOBAL)"
+  (let* ((lowest (conf-stat->first-local-no conf-stat))
+         (highest (+ lowest (conf-stat->no-of-texts conf-stat)))
+         (result nil)
+         (index (+ lowest (/ (- highest lowest) 2)))
+         (last-index (1- index))
+         (ix 0))
+    (while (/= last-index index)
+      (let* ((map (blocking-do 'local-to-global 
+                               (conf-stat->conf-no conf-stat)
+                               index
+                               1)))
+        (cond ((null map) (setq lowest highest))
+              ((null (text-mapping->global-numbers map))
+               (setq highest index))
+              (t 
+               (let* ((text-no (car (text-mapping->global-numbers map)))
+                      (text-stat (blocking-do 'get-text-stat text-no))
+                      (local-no (text-mapping->global-to-local map text-no))
+                      (date (and text-stat
+                                 (lyskom-traverse misc
+                                     (text-stat->misc-info-list text-stat)
+                                   (when (memq (misc-info->type misc) lyskom-recpt-types-list)
+                                     (lyskom-traverse-break 
+                                      (if (misc-info->sent-at misc)
+                                          (misc-info->sent-at misc)
+                                        (text-stat->creation-time text-stat))))))))
+                 (when text-stat
+                   (setq index local-no)
+                   (if (lyskom-time-greater
+                        (text-stat->creation-time text-stat)
+                        target-date)
+                       (setq highest index)
+                     (setq lowest index))
+                   (setq result text-stat))))))
+      (setq last-index index)
+      (setq index (+ lowest (/ (- highest lowest) 2))))
+    (cons last-index result)))

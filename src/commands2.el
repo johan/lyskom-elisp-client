@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.101 2002-01-02 14:32:41 byers Exp $
+ ;;;;; $Id: commands2.el,v 44.102 2002-01-03 15:47:39 byers Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.101 2002-01-02 14:32:41 byers Exp $\n"))
+               "$Id: commands2.el,v 44.102 2002-01-03 15:47:39 byers Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -684,41 +684,41 @@
  ;;; Rehacked: David K}gedal
 
 
- (def-kom-command kom-set-unread (&optional arg conf-no)
-   "Set number of unread articles in current conference."
-   (interactive "P")
-   (setq conf-no (or conf-no lyskom-current-conf))
-   (if (or (null conf-no) (zerop conf-no))
-       (progn
-         (lyskom-insert-string 'not-present-anywhere)
-         (lyskom-insert-string "\n"))
-     (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
-       (if (null conf-stat)              ;+++ annan errorhantering
-           (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
-         (let* ((narg (prefix-numeric-value arg))
-                (n (if (and arg
-                            (<= 0 narg)
-                            (<= narg (conf-stat->no-of-texts conf-stat)))
-                       narg
-                     (lyskom-read-num-range 
-                      0 (conf-stat->no-of-texts conf-stat)
-                      (lyskom-format 'only-last
-                                     (conf-stat->no-of-texts conf-stat)
-                                     (conf-stat->name conf-stat)))))
-                (result (blocking-do 'set-unread conf-no n))
-                (membership (blocking-do 'query-read-texts
-                                         lyskom-pers-no
-                                         conf-no)))
-           (lyskom-ignore result)
-           (lyskom-replace-membership membership)
-           (if (= conf-no lyskom-current-conf)
-               (set-read-list-empty lyskom-reading-list))
-           (read-list-delete-read-info conf-no lyskom-to-do-list)
-           (if (= conf-no lyskom-current-conf)
-               (progn (lyskom-fetch-start-of-map conf-stat membership)
-                      (lyskom-go-to-conf lyskom-current-conf t))
-             (lyskom-prefetch-map conf-no membership))
-           )))))
+(def-kom-command kom-set-unread (&optional arg conf-no)
+  "Set number of unread articles in current conference."
+  (interactive "P")
+  (setq conf-no (or conf-no lyskom-current-conf))
+  (if (or (null conf-no) (zerop conf-no))
+      (progn
+        (lyskom-insert-string 'not-present-anywhere)
+        (lyskom-insert-string "\n"))
+    (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
+      (if (null conf-stat)              ;+++ annan errorhantering
+          (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
+        (let* ((narg (prefix-numeric-value arg))
+               (n (if (and arg
+                           (<= 0 narg)
+                           (<= narg (conf-stat->no-of-texts conf-stat)))
+                      narg
+                    (lyskom-read-num-range 
+                     0 (conf-stat->no-of-texts conf-stat)
+                     (lyskom-format 'only-last
+                                    (conf-stat->no-of-texts conf-stat)
+                                    (conf-stat->name conf-stat)))))
+               (result (blocking-do 'set-unread conf-no n))
+               (membership (blocking-do 'query-read-texts
+                                        lyskom-pers-no
+                                        conf-no)))
+          (lyskom-ignore result)
+          (lyskom-replace-membership membership)
+          (if (= conf-no lyskom-current-conf)
+              (set-read-list-empty lyskom-reading-list))
+          (read-list-delete-read-info conf-no lyskom-to-do-list)
+          (if (= conf-no lyskom-current-conf)
+              (progn (lyskom-fetch-start-of-map conf-stat membership)
+                     (lyskom-go-to-conf lyskom-current-conf t))
+            (lyskom-prefetch-map conf-no membership))
+          )))))
 
 
 
@@ -914,16 +914,22 @@
 
 
 
- (defun lyskom-time-greater (time1 time2)
-   "Returns t if TIME2 is before TIME1 chronologically."
-   (cond
-    ((< (time->year time2) (time->year time1)))
-    ((< (time->mon time2) (time->mon time1)))
-    ((< (time->mday time2) (time->mday time1)))
-    ((< (time->hour time2) (time->hour time1)))
-    ((< (time->min time2) (time->min time1)))
-    ((< (time->sec time2) (time->sec time1)))
-    (t nil)))
+(defun lyskom-time-greater (time1 time2)
+  "Returns t if TIME2 is before TIME1 chronologically."
+  (cond
+   ((< (time->year time2) (time->year time1)))
+   ((> (time->year time2) (time->year time1)) nil)
+   ((< (time->mon time2) (time->mon time1)))
+   ((> (time->mon time2) (time->mon time1)) nil)
+   ((< (time->mday time2) (time->mday time1)))
+   ((> (time->mday time2) (time->mday time1)) nil)
+   ((< (time->hour time2) (time->hour time1)))
+   ((> (time->hour time2) (time->hour time1)) nil)
+   ((< (time->min time2) (time->min time1)))
+   ((> (time->min time2) (time->min time1)) nil)
+   ((< (time->sec time2) (time->sec time1)))
+   ((> (time->sec time2) (time->sec time1)) nil)
+   (t nil)))
 
 
  ;;; ================================================================

@@ -1,6 +1,17 @@
+2002-01-03  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-set-unread): Reindented.
+
+	* utilities.el (lyskom-find-text-by-date): New function.
+
+	* commands2.el (lyskom-time-greater): Reindented.
+
 2002-01-02  David Byers  <davby@ida.liu.se>
 
-	Work on bug 280
+	* parse.el (lyskom-parse-text-mapping): New implementation that
+	actually corresponds to the protocol specification.
+
+	Work on bug 280:
 	* commands1.el (kom-remove-presentation): New command.
 
 	* vars.el.in (lyskom-commands): Added kom-set-presentation and
@@ -13,7 +24,7 @@
 	(kom-set-motd): New command
 	(lyskom-set-pres-or-motd-2): New function.
 
-	Various bugs
+	Various bugs:
 	* vars.el.in (lyskom-button-actions): Set pers actions for
 	kom-list-news and kom-membership to the values they have for conf
 	(bug 293).

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.28 2000-08-14 15:56:31 byers Exp $
+;;;;; $Id: services.el,v 44.29 2002-01-03 15:47:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.28 2000-08-14 15:56:31 byers Exp $\n"))
+	      "$Id: services.el,v 44.29 2002-01-03 15:47:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1229,7 +1229,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
   "Send local-to-global to server."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data
-                 'lyskom-parse-text-mapping)
+                 'lyskom-parse-text-mapping no-of-texts)
     (lyskom-send-packet kom-queue
                         (lyskom-format-objects 103 
                                                conf-no
@@ -1244,7 +1244,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
   "Send map-created-texts to the server."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 
-                 'lyskom-parse-text-mappinng)
+                 'lyskom-parse-text-mappinng no-of-texts)
     (lyskom-send-packet kom-queue
                         (lyskom-format-objects 104
                                                author
@@ -1257,8 +1257,9 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
   (lyskom-server-call
    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
    (lyskom-send-packet kom-queue (lyskom-format-objects 105 conf-no keep))
-   (cache-del-conf-stat conf-no)))  
-                                                       
+   (cache-del-conf-stat conf-no)))
+
+
 
 ;;; ================================================================
 
