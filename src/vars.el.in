@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 43.1 1996-08-09 20:56:48 davidk Exp $
+;;;;; $Id: vars.el.in,v 43.2 1996-08-10 11:56:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 43.1 1996-08-09 20:56:48 davidk Exp $\n"
+  "$Id: vars.el.in,v 43.2 1996-08-10 11:56:41 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -692,7 +692,9 @@ Dont change these. These are defined by the protocol.")
   "The largest int emacs, and thus this LysKOM client, can handle.")
 
 (defconst lyskom-server-features
-  '(((>= 1 9 0) (lyskom-accept-async-flag))
+  '(((>= 1 9 0) (lyskom-accept-async-flag
+                 lyskom-dynamic-session-info-flag
+                 lyskom-idle-time-flag))
     ((>= 1 8 0) (lyskom-long-conf-types-flag 
                  lyskom-set-last-read-flag
                  lyskom-uconf-stats-flag))
@@ -700,7 +702,8 @@ Dont change these. These are defined by the protocol.")
     ((= 1 9 0) ((protocol-version 9)))
     ((= 1 8 0) ((protocol-version 8)))
     ((= 1 7 0) ((protocol-version 7)))
-    ((= 1 7 1) ((protocol-version 7))))
+    ((= 1 7 1) ((protocol-version 7)))
+    ((< 1 7 0) ((protocol-version 6))))
   "List describing which features a certain server version has.
 Each element is a list containing the server version and what it
 supports:
@@ -724,6 +727,12 @@ version, minor version and revision.")
 (defvar lyskom-server-supports nil
   "Assoc list of features supported by the LysKOM server. See
 lyskom-server-features for more information.")
+
+(defvar lyskom-idle-time-flag nil
+  "t if idle time calls are supported by the server.")
+
+(defvar lyskom-dynamic-session-info-flag nil
+  "t if dynamic session info is supported by the server.")
 
 (defvar lyskom-long-conf-types-flag nil
   "t if extended conf types are supported by the server.")

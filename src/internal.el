@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 43.0 1996-08-07 16:40:08 davidk Exp $
+;;;;; $Id: internal.el,v 43.1 1996-08-10 11:56:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 43.0 1996-08-07 16:40:08 davidk Exp $\n"))
+	      "$Id: internal.el,v 43.1 1996-08-10 11:56:11 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -260,6 +260,22 @@ Arguments: KOM-QUEUE REF-NO HANDLER HANDLER-DATA
 	   PARSER &rest PARSER-DATA."
   (lyskom-call-add kom-queue 'CALL ref-no 
 		   parser parser-data handler handler-data))
+
+(defun lyskom-fake-call (kom-queue ref-no handler handler-data)
+  "Add information about a call that will not return from the server,
+but will be filled in by some other function."
+  (lyskom-call-add kom-queue 'CALL ref-no
+                   nil nil handler handler-data))
+
+(defun lyskom-complete-call (kom-queue ref-no result)
+  "Force a call placed on KOM-QUEUE with reference number REF-NO to return 
+RESULT. This should only be used to complete calls placed on the queue using
+lyskom-fake-call, or the parser might get confused."
+  (let ((call-info (lyskom-locate-ref-no kom-queue ref-no)))
+    (if call-info
+        (progn
+          (lyskom-tr-call-to-parsed call-info result)
+          (lyskom-check-call kom-queue)))))
 
 
 ;;; This is used by z-initiate-get-map, which is not used.

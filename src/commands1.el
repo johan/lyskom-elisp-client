@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.2 1996-08-10 03:35:45 davidk Exp $
+;;;;; $Id: commands1.el,v 43.3 1996-08-10 11:55:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.2 1996-08-10 03:35:45 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.3 1996-08-10 11:55:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1494,7 +1494,7 @@ If MARK-NO == 0, review all marked texts."
   "Display a list of all connected users."
   (interactive "P")
   (condition-case err
-      (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+      (if lyskom-dynamic-session-info-flag
 	  (lyskom-who-is-on-9 arg)
 	(lyskom-who-is-on-8))
     (lyskom-no-users
@@ -1560,8 +1560,13 @@ Uses Protocol A version 8 calls"
 (defun lyskom-who-is-on-9 (arg)
   "Display a list of all connected users.
 Uses Protocol A version 9 calls"
-  (let* ((wants-invisibles (and (numberp arg) (< arg 0)))
-	 (idle-hide (if (numberp arg) (abs arg) kom-idle-hide))
+  (let* ((wants-invisibles (or (and (numberp arg) (< arg 0))
+                               (and (symbolp arg) (eq '- arg))))
+	 (idle-hide (if (numberp arg) (abs arg) 
+                      (cond ((numberp kom-idle-hide) kom-idle-hide)
+                            ((eq '- arg) 0)
+                            (kom-idle-hide 30)
+                            (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
 				     't wants-invisibles (* idle-hide 60)))
 	 (who-list (sort (listify-vector who-info-list)
@@ -1809,7 +1814,7 @@ about or a single session number."
                       (lyskom-read-session-no 
                        (lyskom-get-string 'status-for-session))))
 	who-info)
-    (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+    (if lyskom-dynamic-session-info-flag
 	(progn
 	  (setq who-info (listify-vector
 			  (blocking-do 'who-is-on-dynamic t t 0)))
@@ -1907,7 +1912,11 @@ WHO-INFOS that are potential sessions."
 	       (lyskom-get-string 'doing-nowhere-conn))
 	     (lyskom-format-time
 	      (static-session-info->connection-time static))
-	     (/ (dynamic-session-info->idle-time info) 60))
+             (if (eq (/ (dynamic-session-info->idle-time info) 60)
+                     0)
+                 "\n"
+               (lyskom-format (lyskom-get-string 'session-status-inactive)
+                              (/ (dynamic-session-info->idle-time info) 60))))
 	    (if (session-flags->invisible (dynamic-session-info->flags info))
 		(lyskom-insert (lyskom-get-string 'session-is-invisible)))))
       (setq who-info-list (cdr who-info-list)))))
