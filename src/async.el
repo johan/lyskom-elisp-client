@@ -13,7 +13,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.3 1991-09-09 14:55:22 willfor Exp $\n"))
+	      "$Id: async.el,v 35.4 1991-09-10 10:05:22 willfor Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -132,15 +132,7 @@ this function shall be with current-buffer the BUFFER."
 					 session-no))
 	  )))
 
-     ((eq msg-no 10)			; Broadcast message (obsolete? /lw)
-      (let ((sender (lyskom-parse-num))
-	    (lyskom-message (lyskom-parse-string)))
-	(lyskom-save-excursion
-	 (set-buffer buffer)
-	 (initiate-get-conf-stat 'follow
-				 'lyskom-show-personal-message sender
-				 recipient
-				 message))))
+; msg-no 10 is the old broadcast message. No longer used.
 
      ((eq msg-no 11)
       (lyskom-save-excursion
