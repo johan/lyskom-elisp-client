@@ -1,4 +1,4 @@
-% -*-texinfo-*-
+% -*-mode: texinfo; TeX-default-extension: "texinfo"-*-
 \input svensktexinfo
 
 @setfilename elisp-client
@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 40.2 1996-04-16 03:55:11 davidk Exp $
+$Id: elisp-client.texinfo,v 40.3 1996-04-27 20:15:00 davidk Exp $
 @end ifinfo
 
 @iftex
@@ -49,7 +49,7 @@ $Id: elisp-client.texinfo,v 40.2 1996-04-16 03:55:11 davidk Exp $
 
 @titlepage
 @title Användarhandledning för LysKOMs emacslispklient
-@subtitle En LysKOM-klient för GNU emacs.
+@subtitle En LysKOM-klient för GNU Emacs.
 
 @author Linus Tolke @file{linus@@lysator.liu.se}
 @author Per Cederqvist @file{ceder@@lysator.liu.se}
@@ -128,7 +128,6 @@ Dokumentationen uppdaterad till klient version 0.38
 * Köra LysKOM::                 Köra LysKOM
 * Namn::                        Namn
 * Skriva inlägg::               Att skriva inlägg
-* Vilkabufferten::              Vilkabufferten
 * Flaggor::                     Flaggor
 * Variabler::                   Variabler
 * Hookar::                      Hookar
@@ -233,7 +232,7 @@ läser dokumentationen och studerar programkoden ordentligt. Men för att
 du snabbast ska kunna lära dig systemet är det bäst att du kontaktar
 någon av utvecklarna.
 
-@node Andra klienter, , Utveckling av klienten, Top
+@node Andra klienter, , Utveckling av klienten, Förord
 @comment  node-name,  next,  previous,  up
 
 Det finns alternativ till LysKOMs emacslispklient som också är fritt
@@ -455,17 +454,17 @@ kommandot @code{Återse presentation}.
 @c referera till det, dvs när man går till mötet eller skickar brev till
 @c mötet.
 
-Diskussionerna i LysKOM förs i olika @dfn{möten}.Alla inlägg läggs i ett
-eller flera sådana möten, och för att man ska se de inlägg som skapas
-krävs det att man är medlem i något av dessa möten. Ett möte har ett
-namn som kortfattat beskriver vad inläggen i mötet ska handla om. Möten
-har också presentationer som lite mer utförligt beskriver vad mötet är
-tänkt att handla om.
+Diskussionerna i LysKOM förs i olika @dfn{möten}. Alla inlägg läggs i
+ett eller flera sådana möten, och för att man ska se de inlägg som
+skapas krävs det att man är medlem i något av dessa möten. Ett möte har
+ett namn som kortfattat beskriver vad inläggen i mötet ska handla
+om. Möten har också presentationer som lite mer utförligt beskriver vad
+mötet är tänkt att handla om.
 
 De flesta möten är öppna för alla att bli medlemmar i, men det finns
 också slutna möten, som det krävs att man kontaktar administratören för
-mötet för att bli medlem i. Dessutom finns det hemlig möten, som bara
-kan ses av den som är medlemmar i mötet.
+mötet för att bli medlem i. Dessutom finns det hemliga möten, vars
+existens inte kan upptäckas annat än av medlemmarna i mötet.
 
 Det finns inga som helst mekanismer eller garantier för att kontrollera
 att medlemmarna i ett möte, och andra också för den delen, skickar
@@ -1797,7 +1796,7 @@ tecken för att bestämma vilken person man menar. Detta gäller
 naturligtvis också för mötesnamn.
 
 
-@node Skriva inlägg, Vilkabufferten, Namn, Top
+@node Skriva inlägg, Flaggor, Namn, Top
 @comment  node-name,  next,  previous,  up
 @chapter Att skriva inlägg
 
@@ -1892,25 +1891,7 @@ vem eller vilket möte du skall lägga till. Om du vill ta bort en
 mottagare innan du skickar in inlägget är det bara att ta bort den rad
 som anger mötet som mottagare (t.ex. med @kbd{C-k}).
 
-@ifset fjuk
-
-@node Vilkabufferten, Flaggor, Skriva inlägg, Top
-@comment  node-name,  next,  previous,  up
-@chapter Vilkabufferten
-
-LysKOMs Emacslispklient upprätthåller en lista på vilka som är inloggade och
-vad de sysslar med i den så kallade vilkabufferten. Man kan se vad
-alla gör hela tiden om man har den framme, annars finns den bara i
-bakgrunden.
-
-Denna finess drar ansenliga mängder extra cpu-kraft från maskinen du kör
-klienten på. Därför finns det möjlighet att slå av den. Har man väl
-slagit av den finns de däremot ingen möjlighet att slå på den igen utan
-att starta om LysKOM.
-
-@end ifset
-
-@node Flaggor, Variabler, Vilkabufferten, Top
+@node Flaggor, Variabler, Skriva inlägg, Top
 @comment  node-name,  next,  previous,  up
 @chapter Flaggor
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 40.4 1996-04-22 21:05:27 davidk Exp $
+;;;;; $Id: edit-text.el,v 40.5 1996-04-27 20:15:34 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 40.4 1996-04-22 21:05:27 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 40.5 1996-04-27 20:15:34 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -552,6 +552,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
     (lyskom-save-excursion
      ;;(save-excursion
      (set-buffer (process-buffer lyskom-proc))
+     ;; +++ The information about msg-of-day might be old. We should
+     ;; make sure it is up-to-date.
      (let ((text-no (conf-stat->msg-of-day conf-stat)))
        (if (zerop text-no)
 	   (lyskom-edit-insert-misc-conf conf-stat string insert-at nil)
@@ -564,9 +566,11 @@ Entry to this mode runs lyskom-edit-mode-hook."
 					 (text->text-no text)
 					 (text->text-mass text))))
 		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
-		      (lyskom-edit-insert-misc-conf conf-stat string insert-at nil))
+		      (lyskom-edit-insert-misc-conf conf-stat string
+						    insert-at nil))
 		 (set-window-configuration win-config))
-	     (lyskom-edit-insert-misc-conf conf-stat string insert-at nil))))))))
+	     (lyskom-edit-insert-misc-conf conf-stat string
+					   insert-at nil))))))))
 
 
 
