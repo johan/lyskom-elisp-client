@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.362 2004-02-12 21:07:53 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.363 2004-02-21 23:12:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.362 2004-02-12 21:07:53 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.363 2004-02-21 23:12:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -4279,6 +4279,10 @@ ta fram menyer.")
   bra de olika valen fungerar beror på vilken variant av Netscape eller
   Mozilla man använder, och till och med vilket operativsystem man
   använder.")
+    (kom-auto-confirm-new-conferences-doc . "\
+  Om den här inställningen är påslagen så kommer kommandona \"Lista
+  nya möten\" och \"Lista nya personer\" automatiskt markera nya
+  möten och personer som kända.")
 
     ;;
     ;; Tags for variables
@@ -4486,6 +4490,7 @@ ta fram menyer.")
     (kom-show-sync-messages-tag . "Visa databasen-sparar-meddelanden:")
     (kom-highlight-conferences-tag . "Färgläggning av namn:")
     (kom-netscape-variant-tag . "Var ska Netscape/Mozilla öppna URLer:")
+    (kom-auto-confirm-new-conferences-tag . "Markera alltid nya möten och personer som kända:")
     )
 )
 

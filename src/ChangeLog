@@ -1,4 +1,15 @@
+2004-02-22  David Byers  <byers@lysator.liu.se>
+
+	* option-edit.el: Added kom-auto-confirm-new-conferences to the
+	settings buffer.
+
 2004-02-21  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1276:
+	* startup.el (lyskom-setup-ssh-relay): Use kom-ssh-command instead
+	of hardcoding the ssh command name.
+
+	* vars.el.in (kom-ssh-command): New variable.
 
 	Fix bug 1250:
 	* view-text.el (lyskom-text-read-at-least-once-p): Don't consider
@@ -17,7 +28,7 @@
 	Make kom-list-new-conferences quittable:
 	* commands2.el (lyskom-list-new-conferences): Handle C-g when
 	listing conferences or persons using the new lyskom-cancel-calls.
-
+ 
 	* internal.el (lyskom-cancel-calls): It works now.
 
 2004-02-11  David Byers  <byers@lysator.liu.se>

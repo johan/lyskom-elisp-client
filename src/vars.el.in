@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.284 2004-02-12 21:07:53 byers Exp $
+;;;;; $Id: vars.el.in,v 44.285 2004-02-21 23:12:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.284 2004-02-12 21:07:53 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.285 2004-02-21 23:12:41 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2495,7 +2495,19 @@ indicated by the value of this variable.
 
 Note that storing this variable in the LysKOM server makes no sense.
 
+See `kom-ssh-command' for additional configuration options.
+
 Values other than strings are reserved for future use.")
+
+(def-kom-var kom-ssh-command "ssh"
+  "**Command to start ssh.
+
+This variable should be set to a command that runs ssh. Note that it
+is not possible to specify command-line arguments using this variable.
+
+See `kom-ssh-relay-host' for more information.
+
+Non-string values are reserved for future use.")
 
 (def-kom-var lyskom-ssh-proxy nil
   "When non-nil, the ssh proxy used for this buffer."

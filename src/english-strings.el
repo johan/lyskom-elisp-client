@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.321 2004-02-12 21:07:51 byers Exp $
+;;;;; $Id: english-strings.el,v 44.322 2004-02-21 23:12:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.321 2004-02-12 21:07:51 byers Exp $"))
+              "$Id: english-strings.el,v 44.322 2004-02-21 23:12:40 byers Exp $"))
 
 
 ;;; ================================================================
@@ -4156,6 +4156,10 @@ up menus.")
   This setting controls where the client opens URLs. How well the
   settings work depends on which variant of Netscape or Mozilla you
   are using, and even on which operating system you are on.")
+    (kom-auto-confirm-new-conferences-doc . "\
+  If this setting is on, the commands \"List new conferences\" and
+  \"List new users\" will automatically mark new conferences and
+  users as known.")
 
     ;;
     ;; Tags for variables
@@ -4364,6 +4368,7 @@ up menus.")
     (kom-show-sync-messages-tag . "Show database-saving message:")
     (kom-highlight-conferences-tag . "Display of names::")
     (kom-netscape-variant-tag . "Where Netscape/Mozilla opens URLs:")
+    (kom-auto-confirm-new-conferences-tag . "Always mark new conferences as known:")
     )
 )
 
