@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 38.1 1995-02-23 20:55:41 linus Exp $
+$Id: elisp-client.texinfo,v 38.2 1995-10-25 09:13:43 davidk Exp $
 @end ifinfo
 
 @iftex
@@ -139,14 +139,13 @@ Dokumentationen uppdaterad till klient version 0.38
 
 Förord
 
-* Bakgrund:: Lite om koms historia fram till LysKOM.
+* Historia:: Lite om koms historia fram till LysKOM.
 * Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
 * Andra klienter:: Alternativ till LysKOMs emacslispklient.
 
 Uppstart
 
 * Lysator::			Koppla upp sig från lysator.
-* IDA::				Koppla upp sig från elev-sparcarna på IDA.
 * Andra maskiner::		Hur du för annars.
 
 
@@ -203,17 +202,17 @@ detta en fördel, men det är på inget vis nödvändigt för förståelsen av
 LysKOM.
 
 @menu
-* Bakgrund:: Lite om koms historia fram till LysKOM.
+* Historia:: Lite om koms historia fram till LysKOM.
 * Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
 * Andra klienter:: Alternativ till LysKOMs emacslispklient.
 @end menu
 
 @c Ja, den h{r noden och de f|ljande: Utveckling av klienten och
-@c Bakgrund ligger i "fel" ordning i dokumentet. Det beror p} att jag
+@c Historia ligger i "fel" ordning i dokumentet. Det beror p} att jag
 @c vill ha texten som ligger i dessa tv} f|ljande noder direkt under
 @c f|rordet medan det skall vara en egen nod i info-varianten.
 
-@node Utveckling av klienten, Andra klienter, Bakgrund, Förord
+@node Utveckling av klienten, Andra klienter, Historia, Förord
 @comment  node-name,  next,  previous,  up
 
 All utveckling av LysKOMs emacslispklient, lyskom-systemet och i detta
@@ -231,7 +230,7 @@ intensivkurs i Linköping för att få riktigt grepp om hur det hela
 hänger ihop.
 
 
-@node Andra klienter, Historia, Förord, Top
+@node Andra klienter, , Utveckling av klienten, Top
 @comment  node-name,  next,  previous,  up
 
 Det finns alternativ till LysKOMs emacslispklient som också är fritt
@@ -289,7 +288,7 @@ eller @code{<inge@@lysator.liu.se>}.
 
 @end table
 
-@node Historia,  Utveckling av klienten,, Förord
+@node Historia, Utveckling av klienten, Förord, Förord
 @comment  node-name,  next,  previous,  up
 @chapter Historia
 
@@ -348,12 +347,11 @@ nedan.
 
 @menu
 * Lysator::			Koppla upp sig från lysator.
-* IDA::				Koppla upp sig från elev-sparcarna på IDA.
 * Andra maskiner::		Hur du för annars.
 
 @end menu
 @end ifinfo
-@node Lysator, IDA, Uppstart, Uppstart
+@node Lysator, Andra maskiner, Uppstart, Uppstart
 @comment  node-name,  next,  previous,  up
 @section Från Lysators maskiner
 
@@ -366,22 +364,7 @@ för att sätta igång. Svara på frågan om server med
 att trycka @key{RET}.
 
 
-@node IDA, Andra maskiner, Lysator, Uppstart
-@comment  node-name,  next,  previous,  up
-@section Från elev-sparcarna på IDA (Inst. för Datavetenskap på LiTH):
-
-Lägg in
-@example
-(autoload 'lyskom "~d88perce/lyskom" "Köra LysKOM" t)
-@end example
-i din @file{.emacs}. Starta om emacs eller läs in @file{.emacs} i din emacs igen.
-Skriv @code{M-x lyskom} @key{RET}. När du får frågan om server svarar du @code{med3} och
-hoppas att allt fungerar. Kör inte från IDA:s maskiner om de är
-nerlastade - vi vill inte att någon ska få för sig att stänga
-denna möjlighet att köra LysKOM. På @file{med3.ida.liu.se} ligger ett litet
-program som reläar anropen vidare till @file{varg.lysator.liu.se} där
-servern ligger.
-@node Andra maskiner,  , IDA, Uppstart
+@node Andra maskiner,  , Lysator, Uppstart
 @comment  node-name,  next,  previous,  up
 @section Från andra maskiner
 
@@ -389,7 +372,7 @@ Om du vill hämta LysKOMs emacslispklient från någonstans utanför LiTH
 kan du hämta den senaste versionen via anonym ftp från
 @file{ftp.lysator.liu.se (130.236.254.153)}. Ange din emailadress som
 lösenord. Gå ner i directoryt @file{pub/lyskom/elisp-client} och skriv
-code{get lyskom-X.el.gz} där @code{X} är det högsta nummer du kan hitta
+@code{get lyskom-X.el.gz} där @code{X} är det högsta nummer du kan hitta
 i det directoryt. Filen med det högsta numret är alltid den senaste
 versionen. Dessutom hämtar du denna dokumentation från filen
 @code{elisp-client.info-X.tar.gz}. När överföringen är klar, bryt
@@ -1207,7 +1190,7 @@ personen är medlem i och hur många olästa han har i dem.
 Vill man inte ha denna lista skall man svara @kbd{n} på frågan.
 @end table
 
-@node Spara ett eller flera inlägg, Markeringar, Status, Kommandon
+@node Spara text, Markeringar, Status, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Spara ett eller flera inlägg
 
