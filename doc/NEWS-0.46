@@ -1,6 +1,6 @@
 
-		       Nyheter i lyskom.el 0.46
-		       ========================
+                       Nyheter i lyskom.el 0.46
+                       ========================
 
     Version 0.46-PRE-1 som är första publika release av elispklienten
     sedan 1997 finns nu tillgänglig på följande URL. Betrakta detta
@@ -225,6 +225,8 @@
 *** Återse lista visar inte bara vilka återsekommandon som är aktiva
     utan även alla andra kommandon.
 
+*** De flesta återse-kommandon försöker nu inte återse inlägg som inte
+    kan kan läsas.
 
 ** Markeringar
 
@@ -623,7 +625,7 @@
 ** Visningen av systemets lapp på dörren och lite andra saker görs
    först efter man har läst inställningarna så att rätt språk används.
 
-** Det gåt att trycka C-g på fler ja-och-nej-frågor.
+** Det går att trycka C-g på fler ja-och-nej-frågor.
 
 ** Man kan ladda om lyskom.elc hur många gånger som helst utan att
    saker går sönder (även i 0.45.2).
@@ -647,5 +649,8 @@
    robust. Det går att logga in oavsett hur mycket fel som finns i
    user-arean och elispklienten klarar av att andra klienter har lagt
    in egna delar.
+
+** Bättre hantering av mottagare när det kommenterade/fotnoterade
+   ligger i ett originalmöte.
 
 ** Massor av andra osorterade saker.
