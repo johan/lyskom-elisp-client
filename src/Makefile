@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.34 1999-10-13 09:23:31 byers Exp $
+# $Id: Makefile,v 44.35 1999-10-13 12:36:45 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.34 1999-10-13 09:23:31 byers Exp $
+# $Id: Makefile,v 44.35 1999-10-13 12:36:45 byers Exp $
 #
 
 
@@ -116,7 +116,7 @@ vars.el: vars.el.in Makefile
 	chmod 444 vars.el
 
 %.elc: %.el header.el
-	$(EMACS-BATCH) -l ./header.el -l ./lpath.el -f batch-byte-compile $<
+	$(EMACS-BATCH)  -l ./lpath.el -l ./header.el -f batch-byte-compile $<
 
 header.el: $(HEADER)
 	cat $(HEADER) > header.el
