@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.1 1996-05-03 22:41:15 davidk Exp $
+;;;;; $Id: commands2.el,v 41.2 1996-05-05 22:19:49 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.1 1996-05-03 22:41:15 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.2 1996-05-05 22:19:49 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -147,10 +147,7 @@ otherwise: the conference is read with lyskom-completing-read."
 					(if pro (lyskom-get-string 'closed) "")
 					")"))
 			       (t ""))))
-      (let ((creator (or (blocking-do 'get-conf-stat
-				      (conf-stat->creator conf-stat))
-			 (conf-stat->creator conf-stat))))
-
+      (let ((creator (conf-stat->creator conf-stat)))
 	(lyskom-format-insert 'created-by
 			      creator
 			      creator
@@ -177,10 +174,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			     (conf-stat->last-written conf-stat)))
       (lyskom-format-insert 'no-of-motd
 			    (conf-stat->msg-of-day conf-stat))
-      (let ((superconf 
-	     (or (blocking-do 'get-conf-stat
-			      (conf-stat->super-conf conf-stat))
-		 (conf-stat->super-conf conf-stat))))
+      (let ((superconf (conf-stat->super-conf conf-stat)))
 	(lyskom-format-insert 'superconf-is-no-name
 			      superconf
 			      superconf
@@ -190,40 +184,18 @@ otherwise: the conference is read with lyskom-completing-read."
 				      (- (lyskom-window-width) 46)))
 				  "\n"
 				"")))
-      (let ((permitted-submitters
-	     (or (blocking-do 'get-conf-stat 
-			      (conf-stat->permitted-submitters conf-stat))
-		 (conf-stat->permitted-submitters conf-stat))))
+      (let ((permitted-submitters (conf-stat->permitted-submitters conf-stat)))
 	(lyskom-format-insert 'permitted-submitters-no-name
 			      permitted-submitters
-			      (if (zerop (conf-stat->permitted-submitters
-                              conf-stat))
-                      (lyskom-get-string 'Everybody)
-                    permitted-submitters)
-			      (cond
-			       ((zerop (conf-stat->permitted-submitters
-					conf-stat))
-				"")
-			       ((lyskom-conf-stat-p permitted-submitters)
-				(if (> (length 
-					(conf-stat->name 
-					 permitted-submitters))
-				       (- (lyskom-window-width) 46))
-				    "\n"
-				  ""))
-			       (t permitted-submitters))))
-      (let ((supervisor (or (blocking-do 'get-conf-stat
-					 (conf-stat->supervisor conf-stat))
-			    (conf-stat->supervisor conf-stat))))
+			      (if (zerop permitted-submitters)
+				  (lyskom-get-string 'Everybody)
+				permitted-submitters)
+			      ""))
+      (let ((supervisor (conf-stat->supervisor conf-stat)))
 	(lyskom-format-insert 'supervisor-is-no-name
 			      supervisor
 			      supervisor
-			      (if (and 
-				   (lyskom-conf-stat-p supervisor)
-				   (> (length (conf-stat->name supervisor))
-				      (- (lyskom-window-width) 46)))
-				  "\n"
-				"")))
+			      ""))
       (lyskom-format-insert 'presentation-no
 			    (conf-stat->presentation conf-stat))
 
@@ -343,34 +315,17 @@ otherwise: the conference is read with lyskom-completing-read."
 			    (lyskom-return-date-and-time
 			     (conf-stat->last-written conf-stat)))
 
-      (let ((superconf 
-	     (or (blocking-do 'get-conf-stat
-			      (conf-stat->super-conf conf-stat))
-		 (conf-stat->super-conf conf-stat))))
+      (let ((superconf (conf-stat->super-conf conf-stat)))
 	(lyskom-format-insert 'superconf
 			      superconf
 			      superconf
-			      (if (and
-				   (lyskom-conf-stat-p superconf)
-				   (> (length (conf-stat->name superconf))
-				      (- (lyskom-window-width) 46)))
-				  "\n"
-				"")))
+			      ""))
       (if (not (zerop (conf-stat->supervisor conf-stat)))
-	  (let ((supervisor 
-		 (or (blocking-do 'get-conf-stat
-				  (conf-stat->supervisor conf-stat))
-		     (conf-stat->supervisor conf-stat))))
+	  (let ((supervisor (conf-stat->supervisor conf-stat)))
 	    (lyskom-format-insert 'supervisor
 				  supervisor
 				  supervisor
-				  (if (and 
-				       (lyskom-conf-stat-p supervisor)
-				       (> (length (conf-stat->name
-						   supervisor))
-					  (- (lyskom-window-width) 46)))
-				      "\n"
-				    ""))))
+				  "")))
       (lyskom-format-insert 'member-of-confs
 			    (pers-stat->no-of-confs pers-stat))
       (lyskom-format-insert 'presentation

@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 41.2 1996-05-03 22:41:00 davidk Exp $
+# $Id: Makefile,v 41.3 1996-05-05 22:19:35 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 41.2 1996-05-03 22:41:00 davidk Exp $
+# $Id: Makefile,v 41.3 1996-05-05 22:19:35 davidk Exp $
 #
 
 CLIENTVERSION = 0.42-beta
@@ -37,22 +37,24 @@ EMACS=emacs
 EMACS-BATCH = $(EMACS) -batch
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
-PARTS-EL = komtypes.el clienttypes.el utilities.el startup.el \
+PARTS-EL = komtypes.el clienttypes.el  deferred-insert.el utilities.el \
+	startup.el \
 	reading.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
 	filter.el filter-edit.el lyskom-buttons.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el messages.el ansaphone.el remote-control.el \
-	elib-string.el deferred-insert.el \
+	elib-string.el  \
 	lyskom-rest.el
 HEADER-EL = vars.el macros.el
-HEADER-ELC = vars.elc macros.elc
+HEADER-ELC = vars.elc macros.elc deferred-insert.elc
 SWEDISH-EL = swedish-strings.el
 SWEDISH-ELC = swedish-strings.elc
 ENGLISH-EL = english-strings.el
 ENGLISH-ELC = english-strings.elc
-SRC-ELC = komtypes.elc clienttypes.elc utilities.elc startup.elc \
+SRC-ELC = komtypes.elc clienttypes.elc deferred-insert.elc utilities.elc \
+	startup.elc \
 	reading.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
