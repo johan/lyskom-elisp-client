@@ -1,3 +1,11 @@
+Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-format-aux-help): Liten ändring av
+ 	formatsträngen för uppskjutna mötesnamn.
+
+	* deferred-insert.el (lyskom-deferred-insert-conf): Använd redan
+ 	satta properties.
+
 Mon May  6 00:27:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (lyskom-faces): Ny variabel.
