@@ -224,6 +224,8 @@ cat <<EOF
 
 Följande saker måste fortfarande göras:
 
+* Lägga till releasen i Bugzilla så att den kan buggrapporteras.  
+  Säg åt ceder att göra det om du inte kan göra det själv.
 * Installera klienten på Lysator
 * Kopiera releasen till ftp.lysator.liu.se (om inte make release gör det.)
 * Annonsera i LysKOM
