@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.13 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: filter-edit.el,v 44.14 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.13 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: filter-edit.el,v 44.14 2003-01-05 21:37:06 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -70,42 +70,11 @@
 ;;; PATTERN is the filter displayed (type filter)
 ;;;
 
-(defun filter-entry->start (e)
-  "Get starting position of entry E."
-  (aref e 0))
-
-(defun set-filter-entry->start (e s)
-  "Set starting position of entry E to S."
-  (aset e 0 s))
-
-(defun filter-entry->end (e)
-  "Get end position of entry E."
-  (aref e 1))
-
-(defun set-filter-entry->end (e s)
-  "Set end position of entry E to S."
-  (aset e 1 s))
-
-(defun filter-entry->lines (e)
-  "Get line start list of entry E."
-  (aref e 2))
-
-(defun set-filter-entry->lines (e p)
-  "Set line start list of entry E to P."
-  (aset e 2 p))
-
-(defun filter-entry->filter (e)
-  "Get filter of entry E."
-  (aref e 3))
-
-(defun set-filter-entry->filter (e p)
-  "Set filter of entry E to P."
-  (aset e 3 p))
-
-(defun make-filter-entry (start end lines pattern)
-  "Create an filter entry with START, END, LINES and PATTERN as values."
-  (vector start end lines pattern))
-
+(def-komtype filter-entry 
+  ((start :read-only t)
+   (end   :read-only t)
+   lines
+   (filter :read-only t)))
 
 
 ;;;============================================================
@@ -244,7 +213,7 @@ Returns an filter-entry structure representing the entry."
     (setq lines (lyskom-format-filter-pattern-2 (filter->pattern pat) nil))
     (setq end (point-marker))
     (insert "\n")
-    (make-filter-entry start end lines pat)))
+    (lyskom-create-filter-entry start end lines pat)))
 
 
 (defun lyskom-format-filter-pattern-2 (pat lines &optional neg)
@@ -486,7 +455,7 @@ If NEWLINE is non-nil, insert a newline after the header."
       (lyskom-filter-format-entry-header filter t)
       (setq end (point-marker))
       (setq entry
-            (make-filter-entry start end nil filter))
+            (lyskom-create-filter-entry start end nil filter))
       (if filter-edit-currently-edited-filter-entry-list
           (setcdr (nthcdr (1- (length filter-edit-currently-edited-filter-entry-list)) filter-edit-currently-edited-filter-entry-list)
                   (cons entry nil))

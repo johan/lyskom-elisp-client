@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.6 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: help.el,v 44.7 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.6 2002-06-12 18:29:32 byers Exp $\n"))
+	      "$Id: help.el,v 44.7 2003-01-05 21:37:06 byers Exp $\n"))
 
 
 
@@ -60,6 +60,7 @@
 
 ;;; Note that these are duplicated in help-compile.el. Change one and change both!
 
+;;UNUSED: lyskom-help-create-data
 (defsubst lyskom-help-create-data (tag attr data)
   (list tag attr data))
 
@@ -69,6 +70,7 @@
 (defsubst lyskom-help-data-get-attr (attr data)
   (cdr (assq attr (elt data 1))))
 
+;;UNUSED: lyskom-help-data-get-attrs
 (defsubst lyskom-help-data-get-attrs (data)
   (elt data 1))
 

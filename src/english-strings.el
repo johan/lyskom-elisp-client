@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.254 2003-01-03 21:50:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.255 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.254 2003-01-03 21:50:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.255 2003-01-05 21:37:06 byers Exp $"))
 
 
 ;;; ================================================================
@@ -119,24 +119,6 @@
   (define-key lyskom-en-edit-prefix (kbd "C-a ?") 'lyskom-help))
 
 
-;;(defvar lyskom-header-separator
-;;  (substitute-command-keys
-;;   "\\<lyskom-edit-mode-map>\
-;;--- Write below. \
-;;Post: \\[kom-edit-send], \
-;;Kill: \\[kom-edit-quit], \
-;;Help: \\[describe-mode] ---")
-;;  "*String to separate headers from text body.")
-;;
-;;(defvar lyskom-swascii-header-separator nil
-;;  "The swascii version of lyskom-header-separator.")
-;;
-;;(defvar lyskom-header-subject "Subject: "
-;;  "*String to prompt for subject in the edit buffer.")
-;;
-;;
-;;(defvar lyskom-swascii-header-subject nil
-;;  "The swascii version of lyskom-header-subject.")
 
 (lyskom-language-missing-string lyskom-message cgdag en)
 (lyskom-language-missing-string lyskom-message sixjune en)
@@ -2506,22 +2488,6 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-filter-edit-map (kbd "h") 'lyskom-filter-edit-brief-help)
   )
 
-
-;;;(if lyskom-prioritize-mode-map
-;;;    nil
-;;;  (setq lyskom-prioritize-mode-map (make-keymap))
-;;;  (suppress-keymap lyskom-prioritize-mode-map)
-;;;  (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
-;;;  (define-key lyskom-prioritize-mode-map " "    'next-line)
-;;;  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
-;;;  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
-;;;  (define-key lyskom-prioritize-mode-map "p"     'kom-prioritize-set-priority)
-;;;  (define-key lyskom-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
-;;;  (define-key lyskom-prioritize-mode-map "q"     'kom-prioritize-quit)
-;;;  (define-key lyskom-prioritize-mode-map "Q"     'kom-prioritize-quit)
-;;;  (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
-;;;  (define-key lyskom-prioritize-mode-map "d"     'kom-prioritize-move-down)
-;;;)
 
 (defvar lyskom-en-prioritize-mode-map nil)
 (lyskom-language-keymap lyskom-prioritize-mode-map en lyskom-en-prioritize-mode-map)

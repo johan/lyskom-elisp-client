@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-new.el,v 44.3 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: filter-new.el,v 44.4 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-new.el,v 44.3 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: filter-new.el,v 44.4 2003-01-05 21:37:06 byers Exp $\n"))
 
 ;;; ================================================================
 ;;; Sections
@@ -177,22 +177,20 @@
 (defvar lyskom-filter-predicates nil)
 
 (def-komtype filter-datatype 
-  name
+  (name
   compile-function
   read-function
   print-function
   data-predicate
-  is-function
-  )
+  is-function))
 
 (def-komtype filter-predicate
-  name
+  (name
   datatype
   prerequisite-data
   compile-args
   read-function-args
-  print-function
-  )
+  print-function))
 
 (defmacro define-lyskom-filter-datatype (name &rest args)
   `(setq lyskom-filter-datatypes
@@ -435,10 +433,9 @@
 
 
 (def-komtype lyskom-filter 
-  pattern
+  (pattern
   attributes
-  compiled
-  )
+  compiled))
 
 
 (defun set-lyskom-filter-attribute (filter attribute value)

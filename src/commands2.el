@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.152 2003-01-02 23:42:52 byers Exp $
+;;;;; $Id: commands2.el,v 44.153 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.152 2003-01-02 23:42:52 byers Exp $\n"))
+              "$Id: commands2.el,v 44.153 2003-01-05 21:37:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -704,6 +704,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   (remove-hook 'kom-send-message-exit-hook
                'lyskom-send-message-turn-off-resize-on-exit))
 
+;; USER-HOOK: lyskom-send-message-resize-minibuffer
 (defvar resize-minibuffer-mode)
 (defun lyskom-send-message-resize-minibuffer ()
   "Temporarily turn on resizing of minibuffer"
@@ -714,6 +715,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
               'kom-send-message-turn-off-resize-on-exit)))
 
 
+;; USER-HOOK: lyskom-send-message-auto-fill
 (defun lyskom-send-message-auto-fill ()
   "Temporarily turn on auto fill in minibuffer"
   (setq fill-column 78)                 ;+++ Ta bort?
@@ -905,7 +907,7 @@ least one unread message in them."
   (mapcar
    (function
     (lambda (info)
-      (let ((unreads (length (cdr (read-info->text-list info))))
+      (let ((unreads (length (text-list->texts (read-info->text-list info))))
             (conf-stat (read-info->conf-stat info)))
         (when (eq (read-info->type info) 'CONF)
           (if callback
@@ -1303,26 +1305,6 @@ YYYY-MM-DD."
 
 
 
-;;; ================================================================
-;;;      kom-display-who-buffer - Visa vilka-listan
-
-;;; Author: Linus Tolke
-
-
-;;(def-kom-command kom-display-who-buffer ()
-;;  "Make the who-buffer appear on the screen as a temp buffer."
-;;  (interactive)
-;;  (let ((win (selected-window))
-;;	(who (display-buffer lyskom-who-info-buffer)))
-;;    (unwind-protect
-;;	(progn
-;;	  (select-window who)
-;;	  (if (numberp kom-who-buffer-size-when-displaying)
-;;	      (enlarge-window (- kom-who-buffer-size-when-displaying 
-;;				 (window-height who)))))
-;;      (select-window win))))
-
-
 
 ;;; ================================================================
 ;;;          Hj{lp vid del av kommando - Help function
@@ -1405,16 +1387,6 @@ YYYY-MM-DD."
       (nreverse lis))) 
    (t
     (cdr keymap))))
-
-
-
-
-;    (setq next-char (read-char))
-;    (cond
-;     ((commandp (key-binding (concat tohere (char-to-string next-char))))
-;      (command-execute (concat tohere (char-to-string next-char))))
-;     (t (lyskom-message "%s" (lyskom-get-string 'does-not-exist))))
-
 
 
 ;;; ================================================================
@@ -1740,10 +1712,6 @@ membership info."
   (interactive)
   (let ((session-name (buffer-name (current-buffer)))
         (buffer (current-buffer)))
-;;;    (if lyskom-debug-communications-to-buffer
-;;;	(bury-buffer lyskom-debug-communications-to-buffer-buffer))
-    (if lyskom-who-info-buffer
-        (bury-buffer lyskom-who-info-buffer))
     (bury-buffer)
     (while (and (string-match (regexp-quote session-name)
                               (buffer-name (current-buffer)))
@@ -1766,30 +1734,6 @@ is alive."
            (or (and may-be-dead
                     (memq (process-status lyskom-proc) '(run open closed)))
                (memq (process-status lyskom-proc) '(run open)))))))
-
-;;;(defun lyskom-update-lyskom-buffer-list ()
-;;;  (mapcar (function
-;;;	   (lambda (buf)
-;;;	     (if (and (lyskom-buffer-p buf)
-;;;		      (not (memq buf lyskom-buffer-list)))
-;;;		 ;; This is a LysKOM buffer that we haven't seen yet --
-;;;		 ;; If it is the current buffer, add it at the start
-;;;		 ;; of lyskom-buffer-list, otherwise add it to the end
-;;;		 (if (eq buf (current-buffer))
-;;;		     (setq lyskom-buffer-list (cons buf
-;;;						    lyskom-buffer-list))
-;;;		   (setq lyskom-buffer-list
-;;;			 (nconc lyskom-buffer-list (list buf)))))))
-;;;	  (buffer-list))
-;;;  (mapcar (function
-;;;	   (lambda (buf)
-;;;	     (if buf
-;;;		 (setq lyskom-buffer-list
-;;;		       (delete buf lyskom-buffer-list)))))
-;;;	  (mapcar (function
-;;;		   (lambda (buf)
-;;;		     (if (lyskom-buffer-p buf) nil buf)))
-;;;		  lyskom-buffer-list)))
 
 
 (defun lyskom-next-kom (buffer-list-name direction)

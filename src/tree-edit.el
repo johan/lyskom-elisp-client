@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: tree-edit.el,v 44.2 2002-07-23 18:28:41 byers Exp $
+;;;;; $Id: tree-edit.el,v 44.3 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 2001 David Byers
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs lisp client
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: tree-edit.el,v 44.2 2002-07-23 18:28:41 byers Exp $\n"))
+	      "$Id: tree-edit.el,v 44.3 2003-01-05 21:37:08 byers Exp $\n"))
 
 ;;;;
 ;;;; TODO
@@ -202,16 +202,17 @@ or nil (in which case nothing is printed).
 ;;;
 
 (def-komtype tree-node 
-  text                                  ; Text of node
-  data                                  ; Data of node
-  start                                 ; Start marker for node
-  text-end                              ; Marker for end of node text
-  text-start                            ; Marker for start of node text
-  end                                   ; End marker for entire subtree
-  parent                                ; Parent of node
-  properties                            ; General properties (plist)
-  children                              ; Children of node
-)
+  (
+   text                                 ; Text of node
+   data                                 ; Data of node
+   start                                ; Start marker for node
+   text-end                             ; Marker for end of node text
+   text-start                           ; Marker for start of node text
+   end                                  ; End marker for entire subtree
+   parent                               ; Parent of node
+   properties                           ; General properties (plist)
+   children                             ; Children of node
+   ))
 
 (defun tree-node-root (node)
   "Return the root of the tree that includes NODE."

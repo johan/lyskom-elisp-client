@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.223 2003-01-02 23:42:54 byers Exp $
+;;;;; $Id: vars.el.in,v 44.224 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.223 2003-01-02 23:42:54 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.224 2003-01-05 21:37:08 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2170,19 +2170,6 @@ will be shown."
 (def-kom-var lyskom-marked-text-cache nil
   "Cache of marks of all texts the current user has marked. "
   local)
-
-(def-kom-var lyskom-who-info-cache nil
-  "Cache of people presently logged in in LysKOM."
-  local)
-
-(def-kom-var lyskom-who-info-buffer nil
-  "Buffer for the who info presentation."
-  local)
-
-(def-kom-var lyskom-who-info-buffer-is-on nil
-  "Says whether we are collecting who-information or not."
-  local)
-
 
 (def-kom-var lyskom-is-parsing t
   "True when parsing a result.

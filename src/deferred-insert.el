@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.4 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: deferred-insert.el,v 44.5 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -86,34 +86,16 @@
 
 ;;; Type: defer-info
 
-(defun lyskom-create-defer-info (server-call call-par handler pos
-					     del-chars format
-					     &optional data)
-  (cons 'DEFER-INFO
-	(vector server-call call-par handler pos del-chars format data
-		lyskom-last-viewed)))
-
-(defun lyskom-defer-info-p (obj)
-  (and (consp obj)
-       (eq (car obj) 'DEFER-INFO)))
-
-(defun defer-info->server-call (di) (aref (cdr di) 0))
-(defun defer-info->call-par (di)    (aref (cdr di) 1))
-(defun defer-info->handler (di)     (aref (cdr di) 2))
-(defun defer-info->pos (di)         (aref (cdr di) 3))
-(defun defer-info->del-chars (di)   (aref (cdr di) 4))
-(defun defer-info->format (di)      (aref (cdr di) 5))
-(defun defer-info->data (di)        (aref (cdr di) 6))
-(defun defer-info->last-viewed (di) (aref (cdr di) 7))
-
-(defun set-defer-info->server-call (di x) (aset (cdr di) 0 x))
-(defun set-defer-info->call-par (di x)    (aset (cdr di) 1 x))
-(defun set-defer-info->handler (di x)     (aset (cdr di) 2 x))
-(defun set-defer-info->pos (di x)         (aset (cdr di) 3 x))
-(defun set-defer-info->del-chars (di x)   (aset (cdr di) 4 x))
-(defun set-defer-info->format (di x)      (aset (cdr di) 5 x))
-(defun set-defer-info->data (di x)        (aset (cdr di) 6 x))
-(defun set-defer-info->last-viewed (di x) (aset (cdr di) 7 x))
+(def-komtype defer-info 
+  (server-call
+   call-par
+   handler
+   pos
+   del-chars
+   format
+   &optional
+   data
+   (last-viewed :automatic lyskom-last-viewed)))
 
 
 (defun lyskom-defer-insertion (defer-info)
@@ -157,10 +139,6 @@ The insertion will be at (point)."
 	    (save-selected-window
 	      (select-window window)
 	      (lyskom-scroll))
-	    ;; (move-to-window-line -1)
-	    ;; (vertical-motion 1)
-	    ;; (if (not (pos-visible-in-window-p))
-	    ;;     (forward-char -1))
 	    )))))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.37 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: completing-read.el,v 44.38 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.37 2002-02-24 20:23:26 joel Exp $\n"))
+       "$Id: completing-read.el,v 44.38 2003-01-05 21:37:06 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -584,23 +584,24 @@ function work as a name-to-conf-stat translator."
            (and (null conf-no)
                 (null x-list)))))
 
+;;; FOR DEBUGGING (DON'T DELETE)     /byers
+;;;
+;;; (defun lyskom-complete-show-data-list (state data)
+;;;   (save-excursion
+;;;     (pop-to-buffer (get-buffer-create "*kom*-complete"))
+;;;     (erase-buffer)
+;;;     (set-buffer-multibyte nil)
+;;;    (while data
+;;;       (insert
+;;;        (format "%s\n" (substring (aref (car data) 2)
+;;;                                  (aref (car data) 0)
+;;;                                  (aref (car data) 1))))
+;;;       (setq data (cdr data)))
+;;;     (insert (format "%S %S: %S" (symbol-value current-state)
+;;;                     (elt state 0)
+;;;                     (elt state 1)))
+;;;     (sit-for 5)))
 
-; (defun lyskom-complete-show-data-list (state data)
-;   (save-excursion
-;     (pop-to-buffer (get-buffer-create "*kom*-complete"))
-;     (erase-buffer)
-;     (set-buffer-multibyte nil)
-;    (while data
-;       (insert
-;        (format "%s\n" (substring (aref (car data) 2)
-;                                  (aref (car data) 0)
-;                                  (aref (car data) 1))))
-;       (setq data (cdr data)))
-;     (insert (format "%S %S: %S" (symbol-value current-state)
-;                     (elt state 0)
-;                     (elt state 1)))
-;     (sit-for 5)))
-      
 
 (defun lyskom-complete-string (string-list)
   "Find the longest common prefix of all strings in STRING-LIST according to

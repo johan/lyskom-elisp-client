@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.12 2002-08-06 19:43:32 byers Exp $
+;;;;; $Id: cache.el,v 44.13 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.12 2002-08-06 19:43:32 byers Exp $\n"))
+	      "$Id: cache.el,v 44.13 2003-01-05 21:37:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -241,127 +241,6 @@ otherwise return nil"
   (cache-del session 'lyskom-static-session-info-cache))
 
 
-
-;;; ================================================================
-;;;                         who-info cache
-
-
-(defun cache-initiate-who-info-buffer (who-info-arr kombuf)
-  "Sets the cache of who-info items."
-  (setq lyskom-who-info-cache (list 'WHO-INFO-LIST))
-  (lyskom-save-excursion
-   (setq lyskom-who-info-buffer 
-	 (lyskom-get-buffer-create 'WHO-INFO (concat (buffer-name) "-who") t))
-   (set-buffer lyskom-who-info-buffer)
-   (make-local-variable 'kom-buffer)
-   (setq lyskom-buffer kombuf)
-   (local-set-key [mouse-2] 'kom-mouse-2)
-   (erase-buffer))
-  (mapcar 'cache-add-who-info
-	  (sort (listify-vector who-info-arr)
-		(function (lambda (who1 who2)
-			    (< (who-info->connection who1)
-			       (who-info->connection who2)))))))
-
-
-(defun cache-add-who-info (who-info)
-  "Adds another entry to the lyskom-who-info-cache. Updating the buffer."
-  (if lyskom-who-info-buffer-is-on
-      (progn
-	(lyskom-collect 'who-buffer)
-	(initiate-get-conf-stat
-	 'who-buffer nil (who-info->pers-no who-info))
-	(initiate-get-conf-stat 
-	 'who-buffer nil (who-info->working-conf who-info))
-	(lyskom-use 'who-buffer 'lyskom-set-who-info-buffer-2
-		    who-info))))
-
-
-(defun cache-add-session-info (session-info)
-  "Adds another entry to the lyskom-who-info-cache. Updating the buffer.
-ARG: session-info"
-  (if (null session-info)
-      nil				;+++ Annan felhantering
-    (lyskom-halt 'who-buffer)
-    (lyskom-collect 'who-buffer-2)
-    (initiate-get-conf-stat
-     'who-buffer-2 nil (session-info->pers-no session-info))
-    (initiate-get-conf-stat 
-     'who-buffer-2 nil (session-info->working-conf session-info))
-    (lyskom-use 'who-buffer-2 'lyskom-set-session-info
-		session-info)
-    (lyskom-run 'who-buffer-2 'lyskom-resume 'who-buffer)))
-
-
-(defun cache-del-who-info (session-no)
-  "Delete the session SESSION-NO from the lyskom-who-info-cache. Updating buffer."
-  (if lyskom-who-info-buffer-is-on
-      (let ((where (cache-assoc session-no lyskom-who-info-cache)))
-	(if where
-	    (progn
-	      (lyskom-save-excursion
-	       (set-buffer lyskom-who-info-buffer)
-	       (delete-region (marker-position
-			       (who-buffer-info->start-marker where))
-			      (marker-position
-			       (who-buffer-info->end-marker where))))
-	      (set-marker (who-buffer-info->start-marker where) nil)
-	      (set-marker (who-buffer-info->end-marker where) nil)
-	      (cache-del session-no 'lyskom-who-info-cache))))))
-
-
-(defun lyskom-set-who-info-buffer-2 (pers-conf-stat conf-conf-stat who-info)
-  "Inserts a who-buffer-info into lyskom-who-info-cache"
-;;  ;We can use lyskom-insert (not beautiful)
-;;  ;we insert everything at the end of the buffer.
-
-;;  ;defensive programming and it will work:
-;;  (if (and lyskom-who-info-buffer-is-on
-;;	   lyskom-who-info-buffer)
-;;      (let ((sesno lyskom-session-no)
-;;	    min max
-;;	    (where (cache-assoc (who-info->connection who-info) 
-;;				lyskom-who-info-cache)))
-;;	(lyskom-save-excursion
-;;	 (set-buffer lyskom-who-info-buffer)
-;;	 (save-restriction
-;;	   (if where
-;;	       (progn
-;;		 (narrow-to-region (marker-position 
-;;				    (who-buffer-info->start-marker where))
-;;				   (1- (marker-position 
-;;					(who-buffer-info->end-marker where))))
-;;		 (delete-region (point-min) (point-max)))
-;;	     (goto-char (point-max))
-;;	     (insert " ")
-;;	     (narrow-to-region (point-min) (1- (point-max))))
-;;	   (setq min (point-max-marker))
-;;	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
-;;				  (function
-;;				   (lambda (string)
-;;				     (insert string))))
-;;	   (setq max (point-max-marker))
-;;	   (goto-char (point-max)))
-;;	 (delete-char 1))
-;;	(cache-add (who-info->connection who-info) 
-;;		   (lyskom-create-who-buffer-info who-info min max)
-;;		   'lyskom-who-info-cache)
-;;	(run-hooks 'lyskom-who-info-has-changed-hook)))
-  )
-
-
-(defun lyskom-set-session-info (pers-conf-stat conf-conf-stat session-info)
-  "Inserts a session-info into lyskom-who-info-cache"
-;;;  (lyskom-set-who-info-buffer-2 pers-conf-stat conf-conf-stat
-;;;				(lyskom-create-who-info
-;;;				 (session-info->pers-no session-info)
-;;;				 (session-info->working-conf session-info)
-;;;				 (session-info->connection session-info)
-;;;				 (session-info->doing session-info)
-;;;				 (session-info->username session-info)))
-  )
-
-
 ;;; ================================================================
 ;;;                     Generic cache routines
 
@@ -409,71 +288,6 @@ CACHE is the name of the variable that points to the cache."
   (set cache nil)
   (setq lyskom-caches (delete cache lyskom-caches)))
 
-;; (defsubst cache-hash (key cache)
-;;   "Return a hash value for use in the cache."
-;;   (mod key (length (aref cache 2))))
-;; 
-;; (defun cache-create (cache &optional size)
-;;   (set cache (vector 'CACHE-HASH (or size 1000)
-;; 			(make-vector (or size 1000) nil)))
-;;   (if (not (memq cache lyskom-caches))
-;; 	 (setq lyskom-caches (cons cache lyskom-caches)))
-;;   (symbol-value cache))
-;; 
-;; (defun cache-rehash (cache-symbol)
-;;   (let* ((cache (symbol-value cache-symbol))
-;; 	    (newsize (/ (aref cache 1) 5))
-;; 	    (oldsize (length (aref cache 2)))
-;; 	    (i 0))
-;;     (cache-create cache-symbol newsize)
-;;     (while (< i oldsize)
-;; 	 (let ((entries (aref cache i)))
-;; 	   (while entries
-;; 	     (cache-add cache-symbol (car (car entries)) (cdr (car entries)))
-;; 	     (setq entries (cdr entries))))
-;; 	 (setq i (1+ i)))
-;;     (symbol-value cache-symbol)))
-;; 
-;; (defun cache-assoc (key cache)
-;;   "Get data for item with key KEY from CACHE.
-;; CACHE is an assoc-list in this implementation."
-;;   (if cache
-;; 	 (cdr-safe (assq key (aref (aref cache 2)
-;; 				   (cache-hash key cache))))))
-;; 	     
-;; 
-;; 
-;; (defun cache-add (key data cache-symbol)
-;;   "Add DATA to CACHE under the key KEY.
-;; Args: KEY DATA CACHE.
-;; CACHE is a (the only one) quoted variable pointing to the cache (an alist).
-;; The variable might be changed."
-;;   (let ((cache (symbol-value cache-symbol)))
-;;     (if (null cache)
-;; 	   (setq cache (cache-create cache-symbol))
-;; 	 (if (> (aset cache 1 (1+ (aref cache 1)))
-;; 		(* (length (aref cache 2)) 20))
-;; 	     (setq cache (cache-rehash cache-symbol))))
-;;     (let ((hash (cache-hash key cache)))
-;; 	 (aset (aref cache 2) hash
-;; 	       (cons (cons key data) (aref (aref cache 2) hash))))))
-;; 
-;; (defun cache-del (key cache-symbol)
-;;   "Delete item with key KEY from CACHE.
-;; CACHE is the name of the variable that points to the cache."
-;;   (let ((cache (symbol-value cache-symbol)))
-;;     (if cache
-;; 	   (let* ((hash (cache-hash key cache))
-;; 		  (entries (aref (aref cache 2) hash))
-;; 		  (ass (assq key entries)))
-;; 	     (if ass
-;; 		 (progn (aset cache 1 (1- (aref cache 1)))
-;; 			(aset (aref cache 2) hash
-;; 			      (delq ass entries))))))))
-;; 
-;; (defun cache-clear (cache)
-;;   (set cache nil)
-;;   (setq lyskom-caches (delete cache lyskom-caches)))
 
 (defun clear-all-caches ()
   (mapcar (function (lambda (cache) (set cache nil)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: regexp.el,v 44.1 2002-12-31 10:30:42 byers Exp $
+;;;;; $Id: regexp.el,v 44.2 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: regexp.el,v 44.1 2002-12-31 10:30:42 byers Exp $\n"))
+	      "$Id: regexp.el,v 44.2 2003-01-05 21:37:08 byers Exp $\n"))
 
 (defvar lyskom-re-converters 
   '((0 . nil)
@@ -67,7 +67,7 @@ regexp is in the cache."
   "Non-nil if Emacs regexps support back references")
 
 
-(def-komtype regex-parse re pos stack result)
+(def-komtype regex-parse (re pos stack result))
 
 (defun lyskom-re-parse-posix-limit (parse)
   (cond

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.163 2003-01-03 22:07:17 byers Exp $
+;;;;; $Id: commands1.el,v 44.164 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.163 2003-01-03 22:07:17 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.164 2003-01-05 21:37:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1518,13 +1518,6 @@ If NO-PROMPT is non-nil, don't print message that we have gone to conf."
     ))
   
 
-;; Dead function /davidk 960217
-;;(defun lyskom-fixup-and-go-to-conf (conf-no)
-;;  "Prefetches and after lyskom-member-in-conf and then goes to CONF-NO."
-;;  (lyskom-do-go-to-conf (blocking-do 'get-conf-stat conf-no)
-;;			(lyskom-member-p conf-no)))
-
- 
 (defun lyskom-do-go-to-conf (conf-stat membership)
   "Go to a conference. Args: CONF-STAT MEMBERSHIP.
  Put a read-info of type CONF first on lyskom-reading-list.
@@ -1579,37 +1572,12 @@ Args: CONF-STAT MEMBERSHIP"
                       (conf-stat->conf-no conf-stat)))
 
 
-
-;;(def-kom-var kom-iåm-conf-no 6
-;;  "*Conf-no of IÅM."
-;;local)
-
-;;(defun kom-change-to-iåm-hook (old new)
-;;  (cond ((eq new kom-iåm-conf-no)
-;;         (make-local-variable kom-iåm-saved-variables)
-;;         (setq kom-iåm-saved-variables
-;;               (list kom-check-commented-author-membership
-;;                     kom-check-for-new-comments
-;;                     kom-confirm-multiple-recipients))
-;;         (setq kom-check-commented-author-membership nil
-;;               kom-check-for-new-comments nil
-;;               kom-confirm-multiple-recipients nil))
-;;        (t (when kom-iåm-saved-variables
-;;             (setq kom-check-commented-author-membership 
-;;                   (elt kom-iåm-saved-variables 0)
-;;                   kom-check-for-new-comments
-;;                   (elt kom-iåm-saved-variables 1)
-;;                   kom-confirm-multiple-recipients
-;;                   (elt kom-iåm-saved-variables 2))))))
-
-         
-
 (defun lyskom-get-current-priority ()
   "Return the current priority level."
-  (or (read-info->priority (read-list->first 
-			    lyskom-reading-list))
-      (read-info->priority (read-list->first
-			    lyskom-to-do-list))
+  (or (and (read-list->first lyskom-reading-list)
+           (read-info->priority (read-list->first lyskom-reading-list)))
+      (and (read-list->first lyskom-to-do-list)
+           (read-info->priority (read-list->first lyskom-to-do-list)))
       -1))
 
 
@@ -2366,14 +2334,6 @@ If MARK-NO is nil, review all marked texts."
   (lyskom-insert "\n"))
 
 
-;(def-kom-command kom-display-calendar ()
-;  "Nothing yet"
-;  (interactive)
-;  (let* ((time (lyskom-current-server-time))
-;         (nameday (lyskom-nameday time))
-;         (special (lyskom-special-date time)))
-;    ))
-
 
 
 ;;; ================================================================
@@ -2819,11 +2779,6 @@ Uses Protocol A version 9 calls"
 	(setq result (cons (car who-list) result)))
       (setq who-list (cdr who-list)))
     result))
-
-;;    (dolist (who-info who-list result)
-;;      (when (memq (dynamic-session-info->person who-info)
-;;		  kom-friends)
-;;	(setq result (cons who-info result))))))
 
 (defun lyskom-insert-deferred-session-info (session-info defer-info)
   (if session-info

@@ -1,5 +1,104 @@
 2003-01-05  David Byers  <david.byers@swipnet.se>
 
+	* I have cleaned up all over the place. There are no ChangeLog
+	entries for most of the changes. Changes include: converting types
+	to use def-komtype; removing who-buffer code; removing who-info
+	cache; removing dead code; removing commented-out code.
+
+	* mship-edit.el (lp--hide-memberships-by-date): Call
+	lyskom-read-date.
+
+	Code cleanup:
+	* prefetch.el (lyskom-prefetch-whobuffer-handler): Commented out
+	the code since thw who buffer is gone.
+
+	* commands2.el (kom-bury): Removed who-buffer code.
+
+	* cache.el: Removed who-info cache.
+
+	* async.el (lyskom-parse-async): Removed who-buffer code.
+	(lyskom-parse-async): Don't cache who info.
+
+	* filter-edit.el (filter-entry): Redefined using def-komtype.
+
+	* komtypes.el (conf-no-list): Redefined using def-komtype.
+
+	* prioritize.el (prioritize-entry): Redefined using def-komtype.
+
+	* clienttypes.el: Removed format-props and who-buffer-related
+	types.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Removed something about
+	format-props, which aren't used anywhere.
+
+	* komtypes.el,deferred-insert.el,clienttypes.el,mship-edit.el,names.el,
+	regexp.el,tree-edit.el: Rewrote all uses of def-komtype. Defined
+	more datatypes using def-komtype. Removed unused functions.
+
+	* clienttypes.el (format-state): Renamed argl to args, since
+	that's what we actually use.
+	(format-state): Converted to new def-komtype syntax.
+
+	* lyskom-rest.el (lyskom-membership-highest-index): Unused.
+	Removed.
+
+	* komtypes.el (def-komtype): Added support for &optional in the
+	arg list and for default values.
+	(privs): Re-implemented with def-komtype.
+	(pers-stat): Ditto.
+	(text-stat): Ditto.
+	(conf-stat): Ditto.
+	(flags): Ditto.
+	(map): Ditto.
+	(membership): Ditto.
+	(conf-list): Ditto.
+	(text): Ditto.
+	(misc-info): Ditto.
+	(mark): Ditto.
+	(lyskom-create-who-info): Ditto.
+	(session-info): Ditto.
+	(conf-type): Ditto.
+	(server-info): Ditto.
+	(version-info): Ditto.
+	(conf-z-info-list): Ditto.
+
+	* deferred-insert.el (defer-info): Re-implemented with
+	def-komtype.
+
+	* language.el (lyskom-string-check-category): Unused. Removed.
+
+	* async.el (lyskom-show-changed-person): Unused. Removed.
+
+	* utilities.el (lyskom-set-face-foreground): Unused. Removed.
+	(lyskom-set-face-background): Unused. Removed.
+
+	* lyskom-buttons.el (lyskom-set-default-button-action): Unused.
+	Removed.
+
+	* startup.el (lyskom-print-name): Unused. Removed.
+
+	* lyskom-buttons.el (lyskom-menu-selection): Unused. Removed.
+
+	* aux-items.el (lyskom-map-aux-items): Unused. Removed.
+
+	* view-text.el (lyskom-fetch-author-for-cache): Unused. Removed.
+
+	* utilities.el (lyskom-emacs-version): Unused. Removed.
+
+	* view-text.el (lyskom-fetch-text-for-cache): Unused. Removed.
+
+	* utilities.el (lyskom-face-resource): Unused. Removed.
+	(lyskom-modify-face): Unused. Removed.
+
+	* startup.el (lyskom-extract-persons): Unused. Removed.
+	(lyskom-extract-confs): Unused. Removed.
+	(lyskom-do-extract-persons-or-confs): Unused. Removed.
+
+	* edit-text.el (lyskom-edit-goto-char): Unused. Removed.
+	(lyskom-edit-on-aux-item): Unused. Removed.
+
+	* utilities.el (lyskom-background-mode): Unused. Removed.
+
 	Fix bug 677:
 	* filter.el (kom-super-jump): Fixed recipient selection. The order
 	is now current conf, recipient user is a member of, cc user is a

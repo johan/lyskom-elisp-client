@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.51 2003-01-02 23:42:52 byers Exp $
+;;;;; $Id: async.el,v 44.52 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.51 2003-01-02 23:42:52 byers Exp $\n"))
+	      "$Id: async.el,v 44.52 2003-01-05 21:37:05 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -97,7 +97,6 @@ this function shall be with current-buffer the BUFFER."
 	      'you-changed-name-to
 	      new-name
 	      (lyskom-default-button 'conf conf-no)))
-	 ;; (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
 	 (let ((cached-stat (cache-get-conf-stat conf-no))
                (cached-ustat (cache-get-uconf-stat conf-no)))
 	   (when cached-stat
@@ -120,16 +119,10 @@ this function shall be with current-buffer the BUFFER."
          ;; Update in the mship-edit buffer
 
          (lp--maybe-update-entry-for-conf conf-no))))
-     
+
      ((eq msg-no 6)			;i_am_on - something is moving
-      (let ((info (lyskom-parse-who-info)))
-	(lyskom-save-excursion
-	 (set-buffer buffer)
-	 (if (or (null lyskom-pers-no)
-		 (zerop lyskom-pers-no))
-	     nil
-	   (cache-add-who-info info)))))
-     
+      (lyskom-parse-who-info))
+
      ((eq msg-no 7)			; Database is syncing.
       (lyskom-save-excursion
        (set-buffer buffer)
@@ -157,7 +150,9 @@ this function shall be with current-buffer the BUFFER."
      
      ((eq msg-no 9)			; A person has logged in
       (let ((pers-no (lyskom-parse-num))
-	    (session-no (lyskom-parse-num)))
+	    ;;;(session-no (lyskom-parse-num))
+            )
+        (lyskom-parse-num)
 	(lyskom-save-excursion
 	 (set-buffer buffer)
 	 (if (and lyskom-pers-no
@@ -166,11 +161,6 @@ this function shall be with current-buffer the BUFFER."
 	     (initiate-get-conf-stat 'follow
 				     'lyskom-show-logged-in-person
 				     pers-no))
-	 (if (and lyskom-pers-no
-		  (not (zerop lyskom-pers-no))
-		  lyskom-who-info-buffer-is-on)
-	     (initiate-get-session-info 'who-buffer 'cache-add-session-info
-					session-no))
 	 )))
 
      ;; msg-no 10 is the old broadcast message. No longer used.
@@ -179,13 +169,6 @@ this function shall be with current-buffer the BUFFER."
       (lyskom-save-excursion
        (set-buffer buffer)
        (lyskom-insert-before-prompt (lyskom-get-string-sol 'lyskom-is-full))
-;;;       (if (and (eq major-mode 'lyskom-mode)
-;;;		(not (listp lyskom-time-last-command))
-;;;		kom-auto-quit-when-idle)
-;;;	   (progn
-;;;	     (lyskom-insert-before-prompt
-;;;	      (lyskom-get-string-sol 'session-auto-ended))
-;;;	      (kom-quit 1)
        ))
      
      
@@ -218,9 +201,7 @@ this function shall be with current-buffer the BUFFER."
 		      (lyskom-show-presence pers-no kom-presence-messages-in-buffer)))
 	     (initiate-get-conf-stat 'follow
 				     'lyskom-show-logged-out-person
-				     pers-no session-no))
-	 (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
-	     (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
+				     pers-no session-no)))))
 
      ((eq msg-no 14)                    ; Deleted text
       (let* ((text-no (lyskom-parse-num))
@@ -415,35 +396,6 @@ according to the value of FLAG."
 					       `(face ,kom-presence-face))
                                           server))))))
 
-
-
-(defun lyskom-show-changed-person (personconfstat conf-num doing)
-  "Tells the user what another person is doing."
-  (if personconfstat			;+++ Annan felhantering
-      (progn
-	(cond
-	 ((and (lyskom-show-presence (conf-stat->conf-no personconfstat)
-                                     kom-presence-messages-in-echo-area)
-	       (or (= 0 conf-num)
-		   (eq conf-num lyskom-current-conf))
-	       (/= 0 (length doing)))
-	  (lyskom-message "%s %s" (conf-stat->name personconfstat) 
-		   (let ((string
-			  (concat (char-to-string (downcase
-						   (string-to-char doing)))
-				  (substring doing 1))))
-		     string))))
-	(cond
-	 ((and (lyskom-show-presence (conf-stat->conf-no personconfstat)
-                                     kom-presence-messages-in-buffer)
-	       (or (= 0 conf-num)
-		   (eq conf-num lyskom-current-conf))
-	       (/= 0 (length doing)))
-	  (lyskom-format-insert-before-prompt
-	   "%#1M %#2s\n"
-	   personconfstat
-	   (concat (char-to-string (downcase (string-to-char doing)))
-		   (substring doing 1))))))))
 
 
 (defun lyskom-is-in-minibuffer ()

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.71 2003-01-02 23:42:54 byers Exp $
+;;;;; $Id: view-text.el,v 44.72 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.71 2003-01-02 23:42:54 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.72 2003-01-05 21:37:08 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -553,35 +553,6 @@ lyskom-reading-list."
         (when mark-as-read
           (lyskom-mark-as-read text-stat)
           (lyskom-is-read-handler text-stat))))))
-
-
-(defun lyskom-fetch-text-for-cache (text-stat)
-  "Fetches the author and other things of a text and does nothing with it."
-  (cond
-   (text-stat
-    (lyskom-fetch-author-for-cache text-stat)
-    (initiate-get-text 'fill-cache nil (text-stat->text-no text-stat))
-    (lyskom-traverse misc (text-stat->misc-info-list text-stat)
-      (cond
-       ((eq (misc-info->type misc) 'FOOTN-IN)
-	(initiate-get-text-stat 'fill-cache 'lyskom-fetch-author-for-cache
-				(misc-info->footn-in misc)))
-       ((eq (misc-info->type misc) 'FOOTN-TO)
-	(initiate-get-text-stat 'fill-cache 'lyskom-fetch-author-for-cache
-				(misc-info->footn-to misc)))
-       ((eq (misc-info->type misc) 'COMM-IN)
-	(initiate-get-text-stat 'fill-cache 'lyskom-fetch-author-for-cache
-				(misc-info->comm-in misc)))
-       ((eq (misc-info->type misc) 'COMM-TO)
-	(initiate-get-text-stat 'fill-cache 'lyskom-fetch-author-for-cache
-				(misc-info->comm-to misc))))))))
-
-
-
-(defun lyskom-fetch-author-for-cache (text-stat)
-  "Fetches the author of a text and does nothing with it."
-  (if text-stat				;Error check.
-      (initiate-get-conf-stat 'fill-cache nil (text-stat->author text-stat))))
 
 
 

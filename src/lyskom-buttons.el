@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.80 2003-01-02 23:42:53 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.81 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.80 2003-01-02 23:42:53 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.81 2003-01-05 21:37:07 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -44,9 +44,6 @@
 (lyskom-external-function Info-goto-node)
 (lyskom-external-function term-char-mode)
 
-
-(defun lyskom-menu-selection nil
-  "Variable used to work around the handling of menus in XEmacs.")
 
 (defun lyskom-add-button-action (type text func)
   "Add a new action to the popup menu for a class of objects.
@@ -67,16 +64,6 @@ For more information on button types and arguments, see the
 documentation for the variable lyskom-text-buttons."
   (nconc (nth 3 (assq type lyskom-button-actions))
 	 (list (cons text func))))
-
-(defun lyskom-set-default-button-action (type func)
-  "Set the default action for buttons of the type TYPE to FUNC. 
-
-FUNC must be a valid button action function. For more information
-on such functions see the documentation for lyskom-add-button-action."
-  (let ((el (assq type lyskom-button-actions)))
-    (setcdr (nthcdr 1 el)
-	    (cons func (nthcdr 3 el)))))
-      
 
 
 (defun kom-previous-link (num)
@@ -344,7 +331,7 @@ LINKS is a list of lyskom-text-link objects."
   "Add text properties to the string TEXT according to the definition of
 lyskom-text-buttons. Returns the modified string."
   (let ((blist lyskom-text-buttons)
-        (rcpts (reverse (lyskom-text-recipients text-stat)))
+        (rcpts (reverse (and text-stat (lyskom-text-recipients text-stat))))
         (start 0)
         (el nil))
 

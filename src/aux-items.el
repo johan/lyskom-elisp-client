@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.35 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: aux-items.el,v 44.36 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,13 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.35 2002-06-12 18:29:32 byers Exp $\n"))
-
-;;; (eval-when-compile
-;;;   (require 'lyskom-defvar "defvar.el")
-;;;   (require 'lyskom-vars "vars.el")
-;;;   (require 'lyskom-types "komtypes.el"))
-
+	      "$Id: aux-items.el,v 44.36 2003-01-05 21:37:05 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -57,16 +51,6 @@
 
 (defun lyskom-aux-item-definition->number (def)
   (car def))
-
-(defun lyskom-map-aux-items (fn text-stat)
-  "Apply FN to every aux item in TEXT-STAT."
-  (let ((items (text-stat->aux-items text-stat)))
-    (while items
-      (when (and (car items) 
-                 (not (aux-item-flags->deleted (aux-item->flags items))))
-        (funcall fn (car items)))
-      (setq items (cdr items)))))
-
 
 
 (defun lyskom-aux-item-try-call (item method default &rest args)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.9 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: internal.el,v 44.10 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.9 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: internal.el,v 44.10 2003-01-05 21:37:06 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -279,30 +279,6 @@ lyskom-fake-call, or the parser might get confused."
           (lyskom-check-call kom-queue)))))
 
 
-;;; This is used by z-initiate-get-map, which is not used.
-;;; This was a temporary solution.
-
-;;(defun lyskom-kom-queue-collect-p (queue-name)
-;;  "Return t if the kom-queue QUEUE-NAME has an unmatched 'COLLECT item.
-;;It is illegal to call lyskom-collect or lyskom-collect-ignore-err on
-;;the kom-queue if and only if this function returns t."
-;;  (let* ((queue (cdr-safe (assoc queue-name lyskom-call-data)))
-;;	 (pending (lyskom-queue->all-entries (kom-queue->pending queue)))
-;;	 (collect-flg nil)
-;;	 (type nil))
-;;    (while (and queue pending)
-;;      (setq type (car (car pending)))
-;;      (setq pending (cdr pending))
-;;      (cond
-;;       ((eq type 'COLLECT)
-;;	(setq collect-flg t))
-;;       ((eq type 'COLLECT-IGNORE)
-;;	(setq collect-flg t))
-;;       ((eq type 'USE)
-;;	(setq collect-flg nil))
-;;       ((eq type 'LIST-USE)
-;;	(setq collect-flg nil))))
-;;    collect-flg))
 
 
 ;;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.106 2002-12-31 19:15:26 byers Exp $
+;;;;; $Id: edit-text.el,v 44.107 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.106 2002-12-31 19:15:26 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.107 2003-01-05 21:37:06 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -255,15 +255,6 @@ nil             -> Ingenting."
     (set-buffer edit-buffer)
     (goto-char where-put-misc)
     ))
-
-
-(defun lyskom-edit-goto-char (marker)
-  "Positions the editing at MARKER."
-  (let ((curbuf (current-buffer)))
-    (set-buffer (marker-buffer marker))
-    (save-window-excursion
-      (goto-char marker))
-    (set-buffer curbuf)))
 
 
 (defun lyskom-edit-insert-misc-conf (conf-stat string stream number)
@@ -657,6 +648,7 @@ anonymously and take actions to avoid revealing the sender."
 (eval-when-compile (defvar ispell-message-end-skip nil))
 
 
+;;USER-HOOK: lyskom-ispell-text
 (defun lyskom-ispell-text ()
   "Check spelling of the text body.
 Put this in kom-send-text-hook"
@@ -1041,7 +1033,9 @@ Cannot be called from a callback."
                             (conf-stat->conf-no author))
                      extra-headers)))))))
     extra-headers))
-    
+
+
+;;UNUSED: lyskom-send-enriched
 (defun lyskom-send-enriched (message)
   (condition-case err
       (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
@@ -1676,14 +1670,6 @@ Point must be located on the line where the subject is."
 			    (backward-char 1)) ; whitespace
 			  (forward-char 1)
 			  (point))))))
-
-
-(defun lyskom-edit-on-aux-item ()
-  "Return non-nil if point is on the same line as an aux-item"
-  (save-excursion
-    (beginning-of-line)
-    (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
-         (> (lyskom-edit-find-separator) (point)))))
 
 
 (defun lyskom-create-text-handler (text-no edit-buffer 
