@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.53 2000-04-29 06:55:01 jhs Exp $
+;;;;; $Id: utilities.el,v 44.54 2000-04-29 08:35:56 jhs Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.53 2000-04-29 06:55:01 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.54 2000-04-29 08:35:56 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -471,9 +471,10 @@ the current kom buffer."
 	  current-prefix-arg
 	(save-excursion
 	  (backward-text (- 1 current-prefix-arg))
-	  (string-to-int
-	   (buffer-substring (point)
-			     (search-forward " ")))))))
+	  (if (looking-at "\\([0-9]+\\)\\s-")
+	      (string-to-int (match-string 1))
+	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+	    current-prefix-arg))))))
    ((listp current-prefix-arg)
     (lyskom-read-number prompt (lyskom-text-at-point)))
    (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)

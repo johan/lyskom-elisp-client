@@ -1,5 +1,8 @@
 2000-04-29  Johan Sundström  <jhs@lysator.liu.se>
 
+	* utilities.el (lyskom-read-text-no-prefix-arg): Minor code
+	cleanup and more error handling.
+
 	* edit-text.el (kom-edit-insert-buglist): New command in the edit
 	window for inserting a commented Roxen IS style bug/todo-list.
 	(lyskom-edit-insert-buglist): Implements the lower-level parts of
@@ -10,7 +13,7 @@
 	kom-edit-insert-buglist; C-c C-b for now.
 	(lyskom-menu): Added menu shortcut for kom-edit-insert-buglist.
 
-	* utilities.el: (lyskom-read-text-no-prefix-arg): negative prefix
+	* utilities.el: (lyskom-read-text-no-prefix-arg): Negative prefix
 	arguments are now interpreted as a reference to the text-no `arg'
 	messages up in the kom buffer.
 
