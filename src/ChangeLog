@@ -1,5 +1,15 @@
 Tue Sep 16 11:24:24 1997  David Byers  <davby@ida.liu.se>
 
+	* commands2.el (kom-previous-kom): Använd def-kom-command.
+	(kom-next-kom): Dito.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Fixade fel i %C.
+
+	* english-strings.el,swedish-strings.el (lyskom-command): Lade
+ 	till kom-next-kom och kom-previous-kom
+
+	* vars.el.in (lyskom-commands): Dito.
+
 	* lyskom.el: Release av version 0.45.
 
 	* envcheck.el: Snyggare meddelanden.
