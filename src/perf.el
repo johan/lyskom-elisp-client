@@ -255,7 +255,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
   (sit-for 0))
 
 
-(defadvice lyskom-accept-process-output (around stat activate)
+(defadvice lyskom-accept-process-output (around stat activate protect)
   (fields-replace lyskom-prof-fields 'apo "apo")
   (sit-for 0)
   ad-do-it
