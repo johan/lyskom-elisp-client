@@ -1,3 +1,9 @@
+Fri Sep 13 23:50:56 1991  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest.el(lyskom-set-mode-line): Nu rapporterar klienten
+	  b}de antal ol{sta i nuvarande m|te och totalt antal ol{sta i
+	  status-raden. 
+
 Mon Sep  9 16:35:39 1991  Lars Willf|r  (willfor at robin)
 
 	* Tog bort hanteringen av den gamla typen av
