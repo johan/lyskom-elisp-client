@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.82 2000-03-26 13:30:49 byers Exp $
+;;;;; $Id: english-strings.el,v 44.83 2000-05-04 12:12:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.82 2000-03-26 13:30:49 byers Exp $"))
+              "$Id: english-strings.el,v 44.83 2000-05-04 12:12:46 byers Exp $"))
 
 
 ;;; ================================================================
@@ -89,6 +89,7 @@
   (define-key lyskom-en-edit-prefix (kbd "C-i ?") 'lyskom-help)
   (define-key lyskom-en-edit-prefix (kbd "C-i C-c") 'kom-edit-insert-commented)
   (define-key lyskom-en-edit-prefix (kbd "C-i C-y") 'kom-edit-insert-commented)
+  (define-key lyskom-sv-edit-prefix (kbd "C-b")     'kom-edit-insert-buglist)
   (define-key lyskom-en-edit-prefix (kbd "C-i 1") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 2") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 3") 'kom-edit-insert-digit-text)
@@ -1040,7 +1041,7 @@ You should set it to a better value.\n")
 
     (process-signal . "Signal from the process.")
     (dead-session . "No active LysKOM session.")
-    (not-lyskom-buffer . "This is not an active LysKOM session")
+    (not-lyskom-buffer . "This is not an active LysKOM session.")
     (closed-connection . "
 **************************************************
 %#2s
@@ -1389,6 +1390,9 @@ You must become an active member of the conference to enter it.\n")
 
     (start-keep-alive . "Sending data at %#1d second intervals to keep the connection active.")
     (stop-keep-alive . "No longer keeping connection active by sending extra data.")
+
+    (review-noconversion-q . "Review which text unconverted?")
+    (review-commented-q . "Review the commented for which text?")
     ))
 
 
@@ -1714,6 +1718,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-edit-add-copy . "Add carbon copy")
     (kom-edit-show-commented . "Review commented")
     (kom-edit-insert-commented . "Cite commented")
+    (kom-edit-insert-buglist . "Paste commented bug list")
     (kom-edit-add-bcc . "Add blind carbon copy")
     (kom-edit-add-cross-reference . "Add cross reference")
     (kom-edit-add-no-comments . "Request no comments")

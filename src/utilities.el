@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.54 2000-04-29 08:35:56 jhs Exp $
+;;;;; $Id: utilities.el,v 44.55 2000-05-04 12:12:48 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.54 2000-04-29 08:35:56 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.55 2000-05-04 12:12:48 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -322,6 +322,37 @@ of \(current-time\)."
        (fset 'lyskom-looking-at (symbol-function 'looking-at)))
    (error nil)))
 
+
+;; Stolen from thingatpt.el
+;; FIXME: We may not really need this function. Check the callers.
+
+(defun lyskom-thing-at-point-looking-at (regexp)
+  "Return non-nil if point is in or just after a match for REGEXP.
+Set the match data from the earliest such match ending at or after
+point."
+  (save-excursion
+    (let ((old-point (point)) match)
+      (and (looking-at regexp)
+	   (>= (match-end 0) old-point)
+	   (setq match (point)))
+      ;; Search back repeatedly from end of next match.
+      ;; This may fail if next match ends before this match does.
+      (re-search-forward regexp nil 'limit)
+      (while (and (re-search-backward regexp nil t)
+		  (or (> (match-beginning 0) old-point)
+		      (and (looking-at regexp) ; Extend match-end past search start
+			   (>= (match-end 0) old-point)
+			   (setq match (point))))))
+      (if (not match) nil
+	(goto-char match)
+	;; Back up a char at a time in case search skipped
+	;; intermediate match straddling search start pos.
+	(while (and (not (bobp))
+		    (progn (backward-char 1) (looking-at regexp))
+		    (>= (match-end 0) old-point)
+		    (setq match (point))))
+	(goto-char match)
+	(looking-at regexp)))))
 
 
 ;; Stolen from Gnu Emacs
