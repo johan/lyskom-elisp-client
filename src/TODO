@@ -5,6 +5,22 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+Kommentera inlägg med vänner borde kolla om man försöker kommentera en
+bilaga. I så fall borde man få förslag att kommentera "urinlägget"
+istället. Klienten får följa "belongs-to"-länkarna uppåt. 
+
+Inför en ATTACHMENT-IN type i read-listan som komplement till COMM-IN.
+Prompten blir läsa nästa bilaga.
+
+Det går inte att konsekvent få se "bilaga" istället för "text" eller
+"inlägg" eftersom man inte alltid har text-staten i tid. Till exempel
+slipper man nog när man bygger kontextmenyn för inläggsnumret.
+
+Om man vill få se "återse nästa bilaga" när man gör åak, åar, åt så
+behöve ett komplement till REVIEW-TREE och REVIEW. Man måste ha
+text-staten när man skapar entryt för att kunna titta på mx-belongs-to
+innan man stoppar in det i read-listan.
+
 
 Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
 meningsfullt. Följande är relevanta:

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.26 2000-06-02 13:51:16 byers Exp $
+;;;;; $Id: review.el,v 44.27 2000-06-05 11:04:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.26 2000-06-02 13:51:16 byers Exp $\n"))
+	      "$Id: review.el,v 44.27 2000-06-05 11:04:21 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1199,12 +1199,12 @@ end."
   "View the comments to this text.
 If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond (text-no
          (lyskom-review-comments
           (blocking-do 'get-text-stat text-no)))
-        (t lyskom-insert-string 'read-text-first))))
+        (t lyskom-insert-string 'read-text-first)))
 
 
 (defun lyskom-review-comments (text-stat)

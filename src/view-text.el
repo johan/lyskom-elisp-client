@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.41 2000-05-31 15:35:38 byers Exp $
+;;;;; $Id: view-text.el,v 44.42 2000-06-05 11:04:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.41 2000-05-31 15:35:38 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.42 2000-06-05 11:04:26 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -224,11 +224,10 @@ Note that this function must not be called asynchronously."
 			  ((eq type 'COMM-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
 			       nil
-                             (if lyskom-show-comments ; +++SOJGE
-                                 (lyskom-print-header-comm
-                                  (misc-info->comm-in misc)
-                                  misc
-                                  text-stat))))
+                             (lyskom-print-header-comm 
+                              (misc-info->comm-in misc)
+                              misc
+                              text-stat)))
 			  ((eq type 'FOOTN-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
 			       nil
@@ -382,7 +381,9 @@ lyskom-reading-list."
   ;; . Fix the reading-list
   ;; . Issue cache-filling initiate-calls for everything left comments.
   
-  (let (flist clist)
+  (let ((flist nil)
+        (clist nil)
+        (mx-attachments-in (lyskom-get-text-attachments text-stat)))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
       (cond
        ((and (eq (misc-info->type misc) 'FOOTN-IN)
@@ -395,18 +396,22 @@ lyskom-reading-list."
        ((eq (misc-info->type misc) 'FOOTN-IN)
 	(setq flist (cons (misc-info->footn-in misc) flist)))
        ((eq (misc-info->type misc) 'COMM-IN)
-        (if lyskom-show-comments        ; +++SOJGE
-            (setq clist (cons (misc-info->comm-in misc) clist))))))
+        (setq clist (cons (misc-info->comm-in misc) clist)))))
     
     (let (comments footnotes)
       ;; Find the comments that we should read and enter them into the
       ;; read-list.
       (lyskom-traverse no clist
-	(let ((text-stat (blocking-do 'get-text-stat no)))
-	  (if (or review-tree
-		  (and text-stat
-		       (not (lyskom-text-read-p text-stat))))
-	      (setq comments (cons no comments)))))
+        (cond ((or review-tree
+                   kom-follow-attachments
+                   (not (memq no mx-attachments-in)))
+               (let ((text-stat (blocking-do 'get-text-stat no)))
+                 (if (or review-tree
+                         (and text-stat
+                              (not (lyskom-text-read-p text-stat))))
+                     (setq comments (cons no comments)))))
+              ((memq no mx-attachments-in)
+               (lyskom-skip-attachments no mark-as-read))))
       (if comments
           (if review-tree
               (lyskom-review-enter-read-info
@@ -437,6 +442,44 @@ lyskom-reading-list."
 				    (lyskom-create-text-list footnotes)
 				    (text-stat->text-no text-stat))
 	   lyskom-reading-list t)))))
+
+(defun lyskom-get-text-attachments (text-stat)
+  "Return a list of all attachments to TEXT-STAT."
+  (mapcar
+   (lambda (el)
+     (string-to-number (aux-item->data el)))
+   (lyskom-get-aux-item (text-stat->aux-items text-stat) 10101)))
+
+(defun lyskom-skip-attachments (text-no mark-as-read)
+  "Skip the hierarchy of attachments starting at text-no"
+  (let ((queue (list text-no))
+        (done nil)
+        (tmp (make-collector))
+        (result nil))
+    ;; Note: this does block the client, but explicitly checks that
+    ;;       it is not being called from under the parser (where it
+    ;;       really doesn't make a whole lot of sense anyway), so
+    ;;       we ought to be OK anyway.
+    (unless lyskom-is-parsing
+      (while queue
+        (while queue
+          (when (not (memq (car queue) done))
+            (initiate-get-text-stat 'background
+                                    'collector-push
+                                    (car queue) 
+                                    tmp)
+            (setq queue (cdr queue))
+            (setq done (cons (car queue) done))))
+        (lyskom-wait-queue 'background)
+
+        (setq result (nconc result (collector->value tmp)))
+        (lyskom-traverse text-stat (collector->value tmp)
+          (setq queue (nconc queue (lyskom-get-text-attachments text-stat)))))
+
+      (lyskom-traverse text-stat result
+        (read-list-delete-text (text-stat->text-no text-stat) lyskom-reading-list)
+        (read-list-delete-text (text-stat->text-no text-stat) lyskom-to-do-list)
+        (if mark-as-read (lyskom-is-read-handler text-stat))))))
 
 
 (defun lyskom-fetch-text-for-cache (text-stat)
@@ -914,8 +957,7 @@ Args: TEXT-STAT of the text being read."
     (let ((type (misc-info->type misc)))
       (cond
        ((eq type 'COMM-IN)
-        (if lyskom-show-comments        ;+++SOJGE
-            (lyskom-print-header-comm (misc-info->comm-in misc) misc text-stat)))
+        (lyskom-print-header-comm (misc-info->comm-in misc) misc text-stat))
        ((eq type 'FOOTN-IN)
 	(lyskom-print-header-comm (misc-info->footn-in misc) misc text-stat))))))
 
@@ -959,10 +1001,7 @@ Args: TEXT-STAT of the text being read."
 	 (type (misc-info->type misc))
          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-         (mx-attachments-in (mapcar
-                             (lambda (el)
-                               (string-to-number (aux-item->data el)))
-                             (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10101)))
+         (mx-attachments-in (lyskom-get-text-attachments text-stat))
          (mx-belongs-to (mapcar
                          (lambda (el)
                            (string-to-number (aux-item->data el)))
@@ -1021,10 +1060,7 @@ Args: TEXT-STAT of the text being read."
 		  nil))
         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-        (mx-attachments-in (mapcar
-                            (lambda (el)
-                              (string-to-number (aux-item->data el)))
-                            (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10101)))
+        (mx-attachments-in (lyskom-get-text-attachments text-stat))
         (mx-belongs-to (mapcar
                         (lambda (el)
                           (string-to-number (aux-item->data el)))
