@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.8 1992-05-04 00:41:56 linus Exp $
+;;;;; $Id: cache.el,v 35.9 1992-05-11 01:54:25 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.8 1992-05-04 00:41:56 linus Exp $\n"))
+	      "$Id: cache.el,v 35.9 1992-05-11 01:54:25 linus Exp $\n"))
 
 
 
@@ -104,19 +104,10 @@
 
 
 (defun cache-get-text (text-no)
-  "Get text for textno TEXT-NO, or nil if nothing is cached.
-This is a special case:
-The entry could be a text or a textpointers"
+  "Get text for textno TEXT-NO, or nil if nothing is cached."
   (let ((tx (cache-assoc text-no lyskom-text-mass-cache)))
     (cond
-     ((lyskom-text-p tx) tx)
-     ((lyskom-textpointers-p tx)
-      (lyskom-create-text 
-       (textpointers->text-no tx)
-       (concat (buffer-substring (textpointers->start-subject tx)
-				 (textpointers->end-subject tx))
-	       (buffer-substring (textpointers->start-text tx)
-				 (textpointers->end-text tx))))))))
+     ((lyskom-text-p tx) tx))))
 
   
 (defun cache-add-text (text)
