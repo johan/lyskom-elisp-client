@@ -1,5 +1,10 @@
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
+
+* I swedish-strings.el, n{r lyskom-modem-map skapas, anv{nds 
+  (fset 'lyskom-review-prefix (make-keymap)). Jag tror det borde 
+  vara (define-prefix-command 'lyskom-review-prefix) ist{llet. /ceder
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 H{r ovanf|r {r nya entries som vi {nnu inte har best{mt var de h|r
 hemma.
