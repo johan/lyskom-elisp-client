@@ -26,14 +26,10 @@ create. ALIST is a mapping from symbols to strings."
 (defun lyskom-get-string (symbol &optional category)
   "Returns string assiciated with SYMBOL"
   (if (not category) (setq category 'message))
-  (let ((prop (cond ((eq category 'command)
-		     (get symbol 'lyskom-command))
-		    ((eq category 'menu)
-		     (or (get symbol 'lyskom-menu)
-			 (get symbol 'lyskom-command)))
-		    ((eq category 'message)
-		     (get symbol 'lyskom-message))
-		    (t nil))))
+  (let ((prop (if (eq category 'menu)
+		  (or (get symbol 'lyskom-menu)
+		      (get symbol 'lyskom-command))
+		(get symbol (cdr (assq category lyskom-category-properties))))))
     (or (cdr (assq lyskom-language prop))
 	(signal 'lyskom-internal-error 
 		(list 'lyskom-get-string
