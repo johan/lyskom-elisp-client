@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.10 1996-06-23 00:28:31 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.11 1996-07-04 12:19:29 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.10 1996-06-23 00:28:31 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.11 1996-07-04 12:19:29 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2016,13 +2016,36 @@ lyskom-fetched-texts are not fetched."
     (if (memq (car list) lyskom-fetched-texts)
 	nil				;already fetched (but maybe not yet
 					;received).
-      (initiate-get-text-stat 'background nil (car list))
+      (initiate-get-text-stat 'background 'lyskom-prefetch-comment-stats
+			      (car list))
       (initiate-get-text 'background nil (car list))
       (setq lyskom-fetched-texts (cons (car list) lyskom-fetched-texts)))
     (setq list (cdr list))
     (-- n-texts))
   n-texts)
 
+(defun lyskom-prefetch-comment-stats (text-stat)
+  "Prefetch the text-stats of the comments to this text."
+  (let ((misc (text-stat->misc-info-list text-stat)))
+    (while misc
+      (cond ((eq 'COMM-IN (misc-info->type (car misc)))
+	     (initiate-get-text-stat 'background nil
+				     (misc-info->comm-in (car misc))))
+	    ((eq 'FOOTN-IN (misc-info->type (car misc)))
+	     (initiate-get-text-stat 'background nil
+				     (misc-info->footn-in (car misc))))
+	    ((eq 'COMM-TO (misc-info->type (car misc)))
+	     (initiate-get-text-stat 'background nil
+				     (misc-info->comm-to (car misc))))
+	    ((eq 'FOOTN-TO (misc-info->type (car misc)))
+	     (initiate-get-text-stat 'background nil
+				     (misc-info->footn-to (car misc))))
+	    ((or (eq 'RCPT (misc-info->type (car misc)))
+		 (eq 'CC-RCPT (misc-info->type (car misc))))
+	     (initiate-get-conf-stat 'background nil
+				     (misc-info->recipient-no (car misc))))
+	    (t nil))
+      (setq misc (cdr misc)))))
 
 ;;;; ================================================================
 

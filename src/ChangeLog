@@ -1,3 +1,7 @@
+Tue Jul  2 09:14:53 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-prefetch-comment-stats): Ny funktion.
+
 Sun Jun 23 02:16:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Anropa lyskom-setup-faces
