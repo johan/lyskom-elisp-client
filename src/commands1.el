@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.5 1993-06-23 21:51:21 linus Exp $
+;;;;; $Id: commands1.el,v 36.6 1993-06-23 23:50:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.5 1993-06-23 21:51:21 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.6 1993-06-23 23:50:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1341,7 +1341,8 @@ If you are not member in the conference it will be flagged with an asterisk."
 	  (lyskom-insert (conf-stat->name conf-stat))
 	  (lyskom-scroll)
 	  (lyskom-tell-internat 'kom-tell-change-name)
-	  (setq name (read-from-minibuffer (lyskom-get-string 'new-name)))
+	  (setq name (read-from-minibuffer (lyskom-get-string 'new-name)
+					   (conf-stat->name conf-stat)))
 	  (initiate-change-name 'main 'lyskom-change-name-2
 				(conf-stat->conf-no conf-stat)
 				name name))
