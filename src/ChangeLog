@@ -1,5 +1,16 @@
 2004-07-12  David Byers  <byers@lysator.liu.se>
 
+	Make kom-handle-membership work again:
+	* reading.el (lyskom-replace-membership): Turned this into a macro
+	so the membership can be altered while replacing it.
+
+	* mship-edit.el (lyskom-change-membership-priority): Use
+	lyskom-replace-membership properly.
+	(lyskom-change-membership-position): Ditto.
+	(lp--set-entry-pri-and-pos): Ditto. Also inhibit buffer updates to
+	avoid infinite recursion due to calling lp--update-buffer from
+	within lyskom-replace-membership.
+
 	Deal with changes in 21.4 widget package:
 	* option-edit.el (lyskom-create-widget): Don't mask errors when
 	creating the storage widget. Changed args for the storage widget

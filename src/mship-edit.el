@@ -127,6 +127,7 @@ access this variable directly.")
 (defvar lp--selected-entry-list nil)
 (defvar lp--buffer-done nil)
 (defvar lp--conf-name-width nil)
+(defvar lp--inhibit-update nil)
 
 
 ;;; ============================================================
@@ -158,8 +159,9 @@ This function does not tell the server about the change."
   (let* ((mship (lyskom-get-membership conf-no t))
          (old-priority (and mship (membership->priority mship))))
     (when mship
-      (set-membership->priority mship new-priority)
-      (lyskom-replace-membership mship)
+      (lyskom-replace-membership mship
+        (set-membership->priority mship new-priority))
+
       (cond
        ((and (>= old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
@@ -183,8 +185,8 @@ This function does not tell the server about the change."
 This function does not tell the server about the change."
   (let ((mship (lyskom-get-membership conf-no t)))
     (when mship
-      (set-membership->position mship new-position)
-      (lyskom-replace-membership mship)
+      (lyskom-replace-membership mship
+        (set-membership->position mship new-position))
       (lyskom-update-membership-positions))))
 
 
@@ -642,72 +644,69 @@ entry priority"
   "Move element EL by side effects so it appears at position TO in LIST."
   (lp--add-to-list to el (lp--remove-from-list el list)))
 
-(defun lp--add-membership-callback (membership)
-  (lp--update-buffer (membership->conf-no membership)))
-
-
 (defun lp--update-buffer (conf-no)
   "Update the entry for CONF-NO in the buffer.
 If optional NEW-MSHIP is non-nil, then get the membership again."
-  (lp--save-excursion
-    (let ((buffers (lyskom-buffers-of-category 'prioritize)))
-      (mapcar (lambda (buffer)
-                (set-buffer buffer)
-                (let ((entry (lp--conf-no-entry conf-no))
-                      (mship (lyskom-get-membership conf-no t)))
+  (unless lp--inhibit-update
+    (lp--save-excursion
+     (let ((buffers (lyskom-buffers-of-category 'prioritize)))
+       (mapcar (lambda (buffer)
+                 (set-buffer buffer)
+                 (let ((entry (lp--conf-no-entry conf-no))
+                       (mship (lyskom-get-membership conf-no t)))
 
-                  ;; A new membership
+                   ;; A new membership
 
-                  (cond 
-                   ((null entry)
-                    (let* ((pos (lyskom-membership-position mship))
-                           (elem (and pos (lp--get-entry pos)))
-                           (entry (lyskom-create-lp--entry 
-                                   nil
-                                   nil
-                                   (membership->priority mship)
-                                   mship
-                                   nil
-                                   (if (memq (membership->created-by mship)
-                                             (list lyskom-pers-no 0))
-                                       'contracted
-                                     'expanded)
-                                   t
-                                   nil)))
-                      (when pos
-                        (save-excursion
-                          (goto-char (if elem
-                                         (lp--entry->start-marker elem)
-                                       lp--list-end-marker))
-                          (lp--set-entry-list
-                           (lp--add-to-list pos entry (lp--all-entries)))
-                          (lp--print-entry entry)))))
+                   (cond 
+                    ((null entry)
+                     (let* ((pos (lyskom-membership-position mship))
+                            (elem (and pos (lp--get-entry pos)))
+                            (entry (lyskom-create-lp--entry 
+                                    nil
+                                    nil
+                                    (membership->priority mship)
+                                    mship
+                                    nil
+                                    (if (memq (membership->created-by mship)
+                                              (list lyskom-pers-no 0))
+                                        'contracted
+                                      'expanded)
+                                    t
+                                    nil)))
+                       (when pos
+                         (save-excursion
+                           (goto-char (if elem
+                                          (lp--entry->start-marker elem)
+                                        lp--list-end-marker))
+                           (lp--set-entry-list
+                            (lp--add-to-list pos entry (lp--all-entries)))
+                           (lp--print-entry entry)))))
 
-                   ;; We have unsubscribed for good
+                    ;; We have unsubscribed for good
 
-                   ((null mship)
-                    (when entry
-                      (lp--set-entry-list
-                       (lp--remove-from-list (lp--entry-position entry)
-                                             (lp--all-entries)))
-                      (lp--erase-entry entry)))
+                    ((null mship)
+                     (when entry
+                       (lp--set-entry-list
+                        (lp--remove-from-list (lp--entry-position entry)
+                                              (lp--all-entries)))
+                       (lp--erase-entry entry)))
 
-                   ;; The priority or position of a membership has changed
+                    ;; The priority or position of a membership has changed
 
-                   ((or (/= (lp--entry->priority entry)
-                            (membership->priority mship))
-                        (/= (lp--entry-position entry)
-                            (membership->position mship)))
-                    (let ((new-pos (lp--entry-position
-                                    (lp--find-new-position 
-                                     entry (membership->priority mship)))))
-                      (lp--set-entry-pri-and-pos
-                       entry (membership->priority mship) new-pos)
-                      (set-lp--entry->membership entry mship)))
+                    ((or (/= (lp--entry->priority entry)
+                             (membership->priority mship))
+                         (/= (lp--entry-position entry)
+                             (membership->position mship)))
+                     (let ((new-pos (lp--entry-position
+                                     (lp--find-new-position 
+                                      entry (membership->priority mship)))))
+                       (lp--set-entry-pri-and-pos
+                        entry (membership->priority mship) new-pos)
+                       (set-lp--entry->membership entry mship)))
 
-                   (t (set-lp--entry->membership entry mship)
-                      (lp--redraw-entry entry)))))
-              buffers))))
+                    (t (set-lp--entry->membership entry mship)
+                       (lp--redraw-entry entry)))))
+               buffers)))))
 
 
 
@@ -1083,14 +1082,16 @@ If the position changes, lp--move-entry is called.
 lp--update-membership is called automatically before this function exits."
   (let ((old-pri (lp--entry->priority entry))
         (old-pos (lp--entry-position entry))
+        (lp--inhibit-update t)
         (need-redraw nil))
-    (when (and priority (not (eq priority old-pri)))
-      (set-lp--entry->priority entry priority)
-      (set-membership->priority (lp--entry->membership entry) priority)
-      (setq need-redraw t))
-    (when (and position (not (eq position old-pos)))
-      (lp--move-entry entry position)
-      (setq need-redraw nil))
+    (lyskom-replace-membership (lp--entry->membership entry)
+      (when (and priority (not (eq priority old-pri)))
+        (set-lp--entry->priority entry priority)
+        (set-membership->priority (lp--entry->membership entry) priority)
+        (setq need-redraw t))
+      (when (and position (not (eq position old-pos)))
+        (lp--move-entry entry position)
+        (setq need-redraw nil)))
     (sit-for 0)
     (lp--update-membership entry old-pri old-pos)
     (when need-redraw (lp--redraw-entry entry))))
