@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 35.3 1991-09-16 18:43:55 linus Exp $
+;;;;; $Id: clienttypes.el,v 35.4 1992-01-22 00:04:02 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 35.3 1991-09-16 18:43:55 linus Exp $\n"))
+	      "$Id: clienttypes.el,v 35.4 1992-01-22 00:04:02 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -264,17 +264,33 @@ Args: READ-INFO RLIST &optional BEFORE.
 A new item with the same priority as an item that is alreay on the list
 will nomally be inserted after the old one, but if BEFORE is non-nil it
 will be inserted before it."
-  (cond
-   ((null rlist)
-    (cons read-info nil))
-   ((or (atom (car rlist))		;The dummy element.
-	(<= (read-info->priority read-info)
-	    (+ (if before -1 0)
-	       (read-info->priority (car rlist)))))
-    (setcdr rlist (read-list-enter-read-info read-info (cdr rlist) before))
-    rlist)
-   (t
-    (cons read-info rlist))))
+  (let ((pri (+ (if before 0 -1)
+		(read-info->priority read-info)))
+	(continue t))
+    (while continue
+      (cond
+       ((null (cdr rlist))
+	(setcdr rlist (list read-info))
+	(setq continue nil))
+       ((>= pri (read-info->priority (car (cdr rlist))))
+	(setcdr rlist (cons read-info (cdr rlist)))
+	(setq continue nil))
+       (t 
+	(setq rlist (cdr rlist)))))))
+
+;; This is the old recursive version.  It can be removed once it is
+;; established that the iterative version is correct.  /Inge
+;;  (cond
+;;   ((null rlist)
+;;    (cons read-info nil))
+;;   ((or (atom (car rlist))		;The dummy element.
+;;	(<= (read-info->priority read-info)
+;;	    (+ (if before -1 0)
+;;	       (read-info->priority (car rlist)))))
+;;    (setcdr rlist (read-list-enter-read-info read-info (cdr rlist) before))
+;;    rlist)
+;;   (t
+;;    (cons read-info rlist))))
 
 
 (defun read-list-delete-read-info (conf-no rlist)
