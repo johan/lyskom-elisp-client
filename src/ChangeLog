@@ -1,3 +1,20 @@
+1999-06-22  David Byers  <davby@ida.liu.se>
+
+	Support long dashed lines in a variety of places.
+	* language.el (lyskom-get-string-sol): New function.
+
+	* vars.el.in (kom-text-header-dash-length): New variable.
+	(kom-text-footer-dash-length): New variable.
+	(kom-long-lines): New variable.
+
+	* view-text.el (lyskom-format-text-footer): Use
+ 	kom-text-footer-dash-length to specify total footer size.
+	(lyskom-print-text): Use kom-text-header-dash-length to specify
+ 	total length of dashed line before text.
+	(lyskom-format-text-footer): Print the format-flags string as part
+ 	of the dashed lines, not after the dashed line.
+
+
 Tue Jun 22 15:59:15 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-3

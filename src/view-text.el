@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.17 1999-06-14 14:19:20 byers Exp $
+;;;;; $Id: view-text.el,v 44.18 1999-06-22 14:54:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.17 1999-06-14 14:19:20 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.18 1999-06-22 14:54:40 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -480,37 +480,49 @@ blocking-do."
          (kom-deferred-printing nil)
          (have-author (and format (string-match "%=?[0-9]*P" format))))
 
+    ;; No user-specified format, so output dashes and stuff
+
     (if (null format)
-        (lyskom-format
-         (cond ((and kom-dashed-lines kom-show-author-at-end)
-                "(%#1n) /%#2P/%#3s%#4s")
-               (kom-dashed-lines
-                "(%#1n) %#3s%#4s")
-               (kom-show-author-at-end
-                "(%#1n) /%#2P/")
-               (t
-                "(%#1n)"))
-         text
-         (or author author-name)
-         (if kom-show-author-at-end
-             (if (> (length author-name) 42)
-                 ""
-               (make-string (- 42 (length author-name)) ?-))
-           "------------------------------------------")
-         (if (and format-flags (listp format-flags))
-	     (let ((first-flag t))
-	       (concat
-		"("
-		(mapconcat (function
-			    (lambda (str)
-			      (cond
-			       (first-flag
-				(setq first-flag nil)
-				(upcase-initials (lyskom-get-string str)))
-			       (t (lyskom-get-string str)))))
-			   format-flags ", ")
-		")"))
-           ""))
+        (let* ((format-flag-string
+                (if (and format-flags (listp format-flags))
+                    (let ((first-flag t))
+                      (concat
+                       "("
+                       (mapconcat (function
+                                   (lambda (str)
+                                     (cond
+                                      (first-flag
+                                       (setq first-flag nil)
+                                       (upcase-initials (lyskom-get-string str)))
+                                      (t (lyskom-get-string str)))))
+
+                                  format-flags ", ")
+                       ")"))
+                  ""))
+               (end-dash-chars
+                (- kom-text-footer-dash-length
+                   (length (int-to-string (text-stat->text-no text))) 
+                   3                             ; Parens and space
+                   (if kom-show-author-at-end
+                       (+ (length author-name) 2) 
+                     0)
+                   (length format-flag-string)))
+               (end-dash (if (> end-dash-chars 0)
+                             (make-string end-dash-chars ?-)
+                           "")))
+          (lyskom-format
+           (cond ((and kom-dashed-lines kom-show-author-at-end)
+                  "(%#1n) /%#2P/%#3s%#4s")
+                 (kom-dashed-lines
+                  "(%#1n) %#3s%#4s")
+                 (kom-show-author-at-end
+                  "(%#1n) /%#2P/")
+                 (t
+                  "(%#1n)"))
+           text
+           (or author author-name)
+           end-dash
+           format-flag-string))
 
       (while (string-match "%\\(=?-?[0-9]+\\)?\\([-nPpf% ]\\)" format start)
         (setq result (concat result (substring format start 
@@ -610,10 +622,11 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
                                   (copy-sequence lyskom-current-subject)))
-          (if kom-dashed-lines
+          (when kom-dashed-lines
               (lyskom-insert 
-               "------------------------------------------------------------\n")
-            (lyskom-insert "\n"))
+               (make-string kom-text-header-dash-length ?-)))
+
+          (lyskom-insert "\n")
           ;; (setq t1 (point-max))
 
 	  ;; Truncate body if flat-review and long text

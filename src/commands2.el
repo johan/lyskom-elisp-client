@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.34 1999-06-20 11:26:31 byers Exp $
+;;;;; $Id: commands2.el,v 44.35 1999-06-22 14:54:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.34 1999-06-20 11:26:31 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.35 1999-06-22 14:54:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -597,10 +597,12 @@ send. If DONTSHOW is non-nil, don't display the sent message."
               (if (not dontshow)
                   (lyskom-handle-as-personal-message
                    (if lyskom-message-recipient
-                       (lyskom-format 'message-sent-to-user
+                       (lyskom-format (lyskom-get-string-sol 
+                                       'message-sent-to-user)
                                       lyskom-message-string 
                                       lyskom-message-recipient)
-                     (lyskom-format 'message-sent-to-all
+                     (lyskom-format (lyskom-get-string-sol 
+                                     'message-sent-to-all)
                                     lyskom-message-string))
                    lyskom-pers-no
                    lyskom-filter-outgoing-messages))

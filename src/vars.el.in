@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.66 1999-06-22 13:51:50 byers Exp $
+;;;;; $Id: vars.el.in,v 44.67 1999-06-22 14:54:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.66 1999-06-22 13:51:50 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.67 1999-06-22 14:54:39 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -213,6 +213,28 @@ enabled mode."
   "*If Non-nil then all texts will be surrounded by lines of dashes."
   server
   inherited)
+
+(def-kom-var kom-long-lines nil
+  "*If non-nil, then some lines and borders will be made longer."
+  server
+  inherited)
+
+(def-kom-var kom-text-footer-dash-length 52
+  "*If non-nil, the total length of the text footer, when dashes are in use.
+Note that the footer may end up longer than this if one or more elements
+together are longer than this length.
+
+This length is currently ignored when kom-text-footer-format is used."
+  server
+  inherited)
+
+(def-kom-var kom-text-header-dash-length 60
+  "*If non-nil, the total length of the dashes before a text body.
+If kom-dashed-lines is non-nil, this is ignored."
+  server
+  inherited)
+
+
 
 (def-kom-var kom-text-footer-format nil
   "*If non-nil, this specifies the format of a text footer.
