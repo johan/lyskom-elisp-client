@@ -1,3 +1,22 @@
+Thu May  2 16:37:53 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * swedish-strings.el,english-strings.el (lyskom-commands): Lade in
+    kom-review-all (lyskom-mode-map): Lade in kom-review-all på "}A" och
+    "åa ". Bytte ut åttabitarstecken mot oktala koder.
+
+    * review.el (kom-review-first): Hantera prefixargument.
+    (lyskom-review-by-to): Använd strängen everything för att skriva ut
+    "alla". (lyskom-get-texts-generic): Hantera återse alla.
+    (lyskom-get-texts-by): Hantera återse alla.
+    (lyskom-get-texts-by-and-to): Returnera rätt antal inlägg vid återse
+    första. (lyskom-get-texts-by-and-to): Hantera återse alla.
+    (kom-review-all): Lade till detta kommando.
+
+    * english-strings.el,english-strings.el (lyskom-strings): Lade till
+    everything som sträng.
+
+    * review.el (kom-review-first): Hantera prefixargument.
+    
 Thu May  2 15:20:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-delayed-header-comm): Klarade inte av

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.5 1996-04-29 11:59:17 byers Exp $
+;;;;; $Id: review.el,v 40.6 1996-05-02 16:20:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.5 1996-04-29 11:59:17 byers Exp $\n"))
+	      "$Id: review.el,v 40.6 1996-05-02 16:20:44 byers Exp $\n"))
 
 
 
@@ -60,8 +60,14 @@ The order of the list a is kept."
 ;;; ================================================================
 ;;;              ]terse av, till - Review by X to Conference Y.
 
-;;; Author: Linus Tolke, David Kågedal, David Byers
+;;; Author: David Byers, David Kågedal, Linus Tolke
 
+
+(def-kom-command kom-review-all ()
+  "Review every articles of an author written to a conference."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-review)
+  (lyskom-review-by-to 0))
 
 
 (def-kom-command kom-review-first (&optional count)
@@ -74,7 +80,7 @@ chosen. If the argument is positive then the first -COUNT articles are chosen.
 If the argument is zero the all articles are chosen.
 No argument is equivalent to COUNT 1.
 The defaults for this command is the conference that you are in."
-  (interactive)
+  (interactive "P")
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to (- (or count
                            (lyskom-read-number
@@ -106,7 +112,7 @@ The defaults for this command is the conference that you are in."
                           (setq count (car count)))
                       (cond ((zerop count) 
                              (setq count nil)
-                             (lyskom-get-string 'everybody))
+                             (lyskom-get-string 'everything))
                             ((> count 0)
                              (lyskom-format 'latest-n count))
                             ((< count 0)
@@ -129,9 +135,6 @@ The defaults for this command is the conference that you are in."
                               lyskom-current-conf)))
               t)))
 
-    ;; Since we fetch everything anyway we don't need to do this.  If
-    ;; we later choose to fetch all in small chunks we will have to do
-    ;; this then.
     (if (not (zerop to))
         (cache-del-conf-stat to))
     (if (not (zerop by)) 
@@ -250,10 +253,14 @@ Args: persno confno num"
          (increment 30)
          (plow (pers-stat->first-created-text persstat))
          (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
-         (pmark (if (< num 0) plow phigh))
+         (pmark (if (and num (< num 0)) plow phigh))
          (clow (conf-stat->first-local-no confstat))
          (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
-         (cmark (if (< num 0) clow chigh)))
+         (cmark (if (and num (< num 0)) clow chigh)))
+
+    (if (null num)
+        (setq num (1+ phigh)))
+          
 
     (while (and (or (and (<= pmark phigh)
                          (>= pmark plow))
@@ -282,6 +289,7 @@ Args: persno confno num"
                                         cmark
                                       (max 0 (- cmark (1- increment))))
                                     increment))))))
+
       ;;
       ;;    Add intersection between new TO and old BYs
       ;;    to the results list.
@@ -339,7 +347,7 @@ Args: persno confno num"
 
     (if (> num 0)
         (nthcdr (- (length result-list) num) result-list)
-      (nfirst (- (length result-list) (- num))  result-list))))      
+      (nfirst (- num)  result-list))))
 
 
 ;;; ===============================================================
@@ -358,6 +366,8 @@ Args: persno confno num"
   LOW is the lowest local text number and HIGH the highest in the
   conference or person map. GET-OPERATION is the blocking-do operation
   to use to get texts (get-map or get-created-texts)."
+  (if (null num)
+      (setq num (1+ high)))
   (let* ((result nil)
          (increment (abs num))
          (mark (if (< num 0) low high)))
@@ -397,6 +407,10 @@ Args: persno confno num"
          (new-data t)
          (remaining num)
          (result-list nil))
+
+    (if (null num)
+        (setq num (1+ phigh)
+              remaining (1+ phigh)))
 
     ;;  +++
     ;;  Get segments of the user's map until we have enough results

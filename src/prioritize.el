@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 40.3 1996-05-01 13:55:40 byers Exp $
+;;;;; $Id: prioritize.el,v 40.4 1996-05-02 16:20:40 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 40.3 1996-05-01 13:55:40 byers Exp $\n"))
+	      "$Id: prioritize.el,v 40.4 1996-05-02 16:20:40 byers Exp $\n"))
 
 
 
@@ -497,16 +497,21 @@ the same as the entry above it, but to not move it."
          (where 1)
          (elem nil))
 
+    (if (not (eq default prio-from))
+        (setq tmp nil))
+
     (if (and prio-from prio-to)
         (progn
           (while (<= where (length lyskom-prioritize-entry-list))
             (setq elem (lyskom-prioritize-get-entry-from-no where))
             (if (= (prioritize-entry->priority elem) prio-from)
-                (set-prioritize-entry->priority elem prio-to))
+                (progn
+                  (set-prioritize-entry->priority elem prio-to)
+                  (if (null tmp) (setq tmp elem))))
             (setq where (1+ where)))
           (lyskom-prioritize-sort-entries)
           (lyskom-prioritize-redraw-buffer)
-          (kom-prioritize-goto-priority prio-to)))))
+          (lyskom-prioritize-goto-entry tmp)))))
 
 
 (defun kom-prioritize-yank ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.5 1996-05-01 13:55:13 byers Exp $
+;;;;; $Id: english-strings.el,v 40.6 1996-05-02 16:20:34 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 40.5 1996-05-01 13:55:13 byers Exp $"))
+              "$Id: english-strings.el,v 40.6 1996-05-02 16:20:34 byers Exp $"))
 
 
 
@@ -762,6 +762,7 @@ Error message: %#1s**************************************************")
     (no-such-text . "The article doesn't exist.\n")
     (no-such-text-m . "The article doesn't exist.")
     (everybody . "everyone")
+    (everything . "everything")
     (anybody . "anyone")
     (forward . "forward")
     (backward . "backward")
@@ -913,6 +914,7 @@ Text:
     (kom-review-next            "Review next")
     (kom-find-root              "Review original (article)")
     (kom-review-by-to           "Review last")
+    (kom-review-all             "Review all")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-view-previous-commented-text
      				"Review (the) previouls commented (article)")
@@ -1126,6 +1128,8 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "ru" 'kom-review-noconversion)
   (define-key lyskom-mode-map "ro" 'kom-find-root)
   (define-key lyskom-mode-map "rl" 'kom-review-by-to)
+  (define-key lyskom-mode-map "rf" 'kom-review-first)
+  (define-key lyskom-mode-map "rA" 'kom-review-all)
   (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "rs" 'kom-review-stack)
@@ -1133,6 +1137,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "rr" 'kom-find-root-review)
   (define-key lyskom-mode-map "rm" 'kom-review-marked-texts)
   (define-key lyskom-mode-map "ram" 'kom-review-all-marked-texts)
+  (define-key lyskom-mode-map "ra " 'kom-review-all)
   (define-key lyskom-mode-map "sc" 'kom-status-conf)
   (define-key lyskom-mode-map "su" 'kom-status-person)
 

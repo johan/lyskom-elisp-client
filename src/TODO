@@ -55,3 +55,8 @@ Allmänna förbättringar
     Å K - Återse den text som den föregående texten kommenterade
 
     Återinför Olästa
+
+    Man skall få en lista av alternativ om man matar in ett namn som
+    har flera kompletteringar när man loggar in. Skall vi använda en
+    riktig completing-read vid inloggningen? Se inlägg 1375140
+    (markerat av David Byers) i LysKOM.
