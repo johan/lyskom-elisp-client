@@ -10,7 +10,7 @@ Checklista för att göra en ny release
  * Se till att allt går att kompilera och köra. Även den engelska
    versionen.
 
- * Skriv ett ChangeLog-entry om att den nya verionen släpps.
+ * Skriv ett ChangeLog-entry om att den nya versionen släpps.
 
  * Se till att allt är incheckat
 
