@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.7 1996-05-20 16:28:29 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.8 1996-06-06 01:34:55 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.7 1996-05-20 16:28:29 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.8 1996-06-06 01:34:55 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2078,7 +2078,8 @@ If quit is typed it executes lyskom-end-of-command."
 			     prompt
 			   (lyskom-get-string 'give-a-number))
 			 (if numdefault 
-			     (format " (%d) " numdefault))))
+			     (format " (%d) " numdefault)
+			   " ")))
 	      (setq quit nil)))
       (cond ((and (string= numstr "") 
 		  numdefault)

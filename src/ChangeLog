@@ -1,3 +1,10 @@
+Wed May 29 13:10:54 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-read-number): Lägg till ett mellanslag
+	även när det inte finns något defaultvärde.
+
+	* commands1.el (kom-delete-text): Använd zerop.
+
 Sun May 26 03:01:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-strings): La in en radbrytning i
