@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.8 1996-01-19 18:50:08 byers Exp $
+;;;;; $Id: services.el,v 38.9 1996-01-21 17:55:02 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.8 1996-01-19 18:50:08 byers Exp $\n"))
+	      "$Id: services.el,v 38.9 1996-01-21 17:55:02 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -681,6 +681,8 @@ COMMAND is one lyskom-command (like the initiate-* but the initiate- is
 stripped.
 The cache is consulted when command is get-conf-stat, get-pers-stat
 or get-text-stat."
+  ;; Here we could check if lyskom-blocking-return is non-nil, in
+  ;; which case there is a bug in the code
   (save-excursion
     (set-buffer (process-buffer (or lyskom-proc
 				    lyskom-blocking-process)))
@@ -692,8 +694,27 @@ or get-text-stat."
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (not lyskom-quit-flag))
 	(accept-process-output))
-      (if lyskom-quit-flag (error (lyskom-get-string 'interrupted)))
+      (if lyskom-quit-flag
+	  (progn
+	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
+	    (signal 'quit nil)))
       (setq lyskom-quit-flag nil)
       lyskom-blocking-return)))
 
 
+(defun lyskom-wait-queue (queue)
+  "Waits until all data on QUEUE has been processed"
+  (save-excursion
+    (set-buffer (process-buffer (or lyskom-proc
+				    lyskom-blocking-process)))
+    (let ((lyskom-blocking-return 'not-yet-gotten))
+      (lyskom-run queue 'blocking-return (list t))
+      (while (and (eq lyskom-blocking-return 'not-yet-gotten)
+		  (not lyskom-quit-flag))
+	(accept-process-output))
+      (if lyskom-quit-flag
+	  (progn
+	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
+	    (signal 'quit nil)))
+      (setq lyskom-quit-flag nil)
+      lyskom-blocking-return)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.2 1996-01-17 11:51:05 davidk Exp $
+;;;;; $Id: macros.el,v 38.3 1996-01-21 17:54:56 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.2 1996-01-17 11:51:05 davidk Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 38.3 1996-01-21 17:54:56 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -54,6 +54,10 @@ Value returned is always nil."
 			    (list 'setq atom '(aref __sequence__ __i__)))
 		      body
 		      (list '(setq __i__ (1+ __i__)))))))
+
+
+(put 'lyskom-traverse 'edebug-form-spec
+     '(sexp form body))
 
 
 ;;;; lyskom-save-excursion Does not save point and mark.
@@ -177,6 +181,8 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 			   bind-list)))
 	   (,@ body))))))
 
+(put 'blocking-do-multiple 'edebug-form-spec
+     '(sexp body))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
