@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.126 2001-03-31 08:43:59 qha Exp $
+;;;;; $Id: english-strings.el,v 44.127 2001-04-01 13:18:34 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.126 2001-03-31 08:43:59 qha Exp $"))
+              "$Id: english-strings.el,v 44.127 2001-04-01 13:18:34 joel Exp $"))
 
 
 ;;; ================================================================
@@ -364,13 +364,14 @@ and you have finished reading. Please come back later.
     (new-supervisor . "New supervisor: ")
     (text-to-mark . "Mark which text? ")
     (text-to-unmark . "Unmark which text? ")
-    (what-mark . "Set which mark? ")
+    (what-mark . "Set which mark type (name or 0-255)? ")
+    (erroneous-mark . "Erroneous mark type.\n")
     (unmarking-textno . "Unmarking text %#1n...")
     (marking-textno . "Marking text %#1n...")
-    (list-which-mark . "List texts with which mark (0-255, RET for all)? ")
+    (list-which-mark . "List texts with which mark type (name or 0-255, RET for all)? ")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
-    (what-mark-to-view . "Review which mark? ")
+    (what-mark-to-view . "Review which mark type (name or 0-255, RET for all)? ")
     (whos-passwd . "Change password for whom? (yourself) ")
     (old-passwd . "Your current password: ")
     (new-passwd . "The new password: ")
@@ -427,7 +428,7 @@ and you have finished reading. Please come back later.
     
     (no-marked-texts . "You have not marked any texts.\n")
     (no-marked-texts-mark . 
-     "You have not marked any texts with mark %#1d.\n")
+     "You have not marked any texts with mark type \"%#1s\".\n")
 
     (weekdays . ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday"
 		 "Friday" "Saturday" "Sunday"])
@@ -664,10 +665,6 @@ The message you were sending to %#1M was:
     (could-not-read . "You couldn't read the text (%#1n).\n")
     (multiple-choice . "There are several alternatives.")
 
-    (what-mark-to-list . "List which mark? ")
-    (you-have-marks . "You have %#1d texts marked with %#2d.\n")
-    (you-have-marks-all . "You have %#1d marked texts.\n")
-
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or receiving bug reports should change these:
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
@@ -825,8 +822,8 @@ Help: \\[describe-mode] ---")
     (line . " /1 line/ ")
     (lines ." /%#1d lines/ ")
 
-    (marked-by-you . "Marked by you (%#1d).\n")
-    (marked-by-you-and-others . "Marked by you (%#2d) and %#1?d%[someone else%]%[%#1d others%].\n")
+    (marked-by-you . "Marked by you (type: %#1s).\n")
+    (marked-by-you-and-others . "Marked by you (type: %#2s) and %#1?d%[someone else%]%[%#1d others%].\n")
     (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
 
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
@@ -2358,7 +2355,11 @@ Select whether to execute command or keyboard macro.")
     (a-string . "The string")
     (some-string . "A random string")
     (unspecified . "Unspecified")
-    
+
+    (symbolic-mark-association . "Association")
+    (symbolic-mark-name . "Symbolic name: ")
+    (mark-type-to-assoc . "Mark type to associate with: ")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -2670,8 +2671,17 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   off, those texts are presented as any other texts.")
 
     (kom-default-mark-doc . "\
-  The default value used for marking texts. If no value is selected, LysKOM
-  asks for a mark value every time. Values between 1 and 255 are allowed.")
+  The default mark type used for marking texts. A mark type is an integer
+  between 0 and 255 (inclusive). If no default mark type is selected, LysKOM
+  asks for a mark type every time a text is to be marked. This can be used
+  to separate different types of marks. You can, for example, mark texts
+  which contain valuable information with a certain integer and texts which
+  you should remember to comment some time with another integer.")
+
+    (kom-symbolic-marks-alist-doc . "\
+  To avoid having to memorize what the integer mark types are supposed to
+  mean, you can define a list of symbolic mark types. A symbolic mark type
+  is a descriptive string that is associated with an integer mark type.")
 
     (kom-reading-puts-comments-in-pointers-last-doc . "\
   Controls if comment links are listed before or after the body of a text.
@@ -3299,6 +3309,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
     (kom-netscape-command-tag . "Command to start Netscape Navigator:")
+
+    (kom-symbolic-marks-alist-tag . "Symbolic mark types:")
 
     (kom-cite-string-tag . "Quotation indicator: ")
     (kom-confirm-multiple-recipients-tag . 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.15 2001-01-03 22:02:55 qha Exp $
+;;;;; $Id: komtypes.el,v 44.16 2001-04-01 13:18:35 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.15 2001-01-03 22:02:55 qha Exp $\n"))
+	      "$Id: komtypes.el,v 44.16 2001-04-01 13:18:35 joel Exp $\n"))
 
 
 ;;; ============================================================
@@ -1466,6 +1466,10 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Return t if OBJECT is a mark."
   (eq (car-safe object) 'MARK))
 
+;;; Utilities
+
+(defun mark->symbolic-mark-type (mark)
+  (lyskom-symbolic-mark-type-string (mark->mark-type mark)))
 
 ;;; ================================================================
 ;;;                           who-info

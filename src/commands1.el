@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.99 2001-03-15 22:21:54 joel Exp $
+;;;;; $Id: commands1.el,v 44.100 2001-04-01 13:18:32 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.99 2001-03-15 22:21:54 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.100 2001-04-01 13:18:32 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1825,7 +1825,7 @@ converted so that the search is case insensitive."
 ;;;         Markera och Avmarkera - Mark and Unmark a text
 
 ;;; Author: Inge Wallin
-;;; Modified by: Linus Tolke, Johan Sundström
+;;; Modified by: Linus Tolke, Johan Sundström, Joel Rosdahl
 
 (def-kom-command kom-mark-text (&optional text-no)
   "Mark the text TEXT-NO."
@@ -1861,8 +1861,7 @@ the user for what mark to use."
   (let ((mark
 	 (or mark
 	     kom-default-mark
-	     (lyskom-read-num-range
-	      0 255 (lyskom-get-string 'what-mark) t))))
+	     (lyskom-read-mark-type (lyskom-get-string 'what-mark)))))
     (lyskom-format-insert 'marking-textno text-no)
 
     (if (blocking-do 'mark-text text-no mark)
@@ -1873,18 +1872,56 @@ the user for what mark to use."
     (cache-del-text-stat text-no)))
 
 
+(defun lyskom-read-mark-type (prompt &optional nildefault)
+  "Ask user about symbolic mark type and return the (integer)
+mark-type.  Prompt with PROMPT.  If NILDEFAULT is non-nil, nil is
+returned if the user enters the empty string, otherwise the user is
+prompted again."
+  (let ((mark-type -1)
+        (completion-ignore-case t)
+        (completions kom-symbolic-marks-alist)
+        (first-time t)
+        (default-chosen nil))
+    (while (and (not default-chosen)
+                (or (not (integerp mark-type))
+                    (< mark-type 0)
+                    (> mark-type 255)))
+      (if first-time
+          (setq first-time nil)
+        (lyskom-insert 'erroneous-mark))
+      (let ((mark (lyskom-completing-read
+                    prompt
+                    (lyskom-maybe-frob-completion-table
+                     completions))))
+        (if (and nildefault
+                 (stringp mark)
+                 (string= mark ""))
+            (setq default-chosen t)
+          (setq mark-type
+                (let ((tmp (lyskom-string-assoc mark completions)))
+                  (if tmp
+                      ;; Correct completion.
+                      (cdr tmp)
+                    ;; Incorrect completion.  Check for an integer.
+                    (if (string-match "\\`[0-9]+\\'" mark)
+                        (string-to-int mark)
+                      -1)))))))
+    (if default-chosen
+        nil
+      mark-type)))
+
+
 ;;; ================================================================
 ;;;          ]terse alla markerade - Review marked texts
 
 ;;; Author: Inge Wallin
-
+;;; Modified by: Joel Rosdahl
 
 (def-kom-command kom-review-marked-texts ()
   "Review marked texts with a certain mark."
   (interactive)
-  (lyskom-review-marked-texts 
-   (lyskom-read-num-range 
-    0 255 (lyskom-get-string 'what-mark-to-view) t)))
+  (lyskom-review-marked-texts
+   (lyskom-read-mark-type (lyskom-get-string 'what-mark-to-view) t)))
 
 
 (def-kom-command kom-review-all-marked-texts ()
@@ -1909,7 +1946,9 @@ If MARK-NO is nil, review all marked texts."
     (if (eq (length text-list) 0)
 	(lyskom-insert (if (null mark-no)
 			   (lyskom-get-string 'no-marked-texts)
-			 (lyskom-format 'no-marked-texts-mark mark-no)))
+			 (lyskom-format 'no-marked-texts-mark
+                                        (lyskom-symbolic-mark-type-string
+                                         mark-no))))
       (let ((read-info (lyskom-create-read-info
 			'REVIEW-MARK nil 
 			(lyskom-get-current-priority)

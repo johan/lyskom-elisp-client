@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.50 2000-09-09 11:59:32 byers Exp $
+;;;;; $Id: option-edit.el,v 44.51 2001-04-01 13:18:36 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.50 2000-09-09 11:59:32 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.51 2001-04-01 13:18:36 joel Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -158,6 +158,7 @@
     "\n"
     [kom-saved-file-name]
     [kom-default-mark]
+    [kom-symbolic-marks-alist]
     [kom-membership-default-priority]
     [kom-membership-default-placement]
     [kom-unsubscribe-makes-passive]
@@ -495,6 +496,12 @@ customize buffer but do not save them to the server."
                                        :format "%[%t%] (%v)"
                                        :size 0)
                                (const (ask nil)))))
+    (kom-symbolic-marks-alist (repeat (mark-association
+                                       nil
+                                       :tag symbolic-mark-association
+                                       :mark-key-prompt symbolic-mark-name
+                                       :mark-value-prompt mark-type-to-assoc)
+                                      :indent 4))
     (kom-reading-puts-comments-in-pointers-last (toggle (after before)))
     (kom-autowrap (choice ((const (on t))
                            (const (off nil))
@@ -688,6 +695,7 @@ customize buffer but do not save them to the server."
     (language-choice . lyskom-language-widget)
     (file . lyskom-file-widget)
     (ansaphone . lyskom-ansaphone-reply-widget)
+    (mark-association . lyskom-mark-association-widget)
 ))
 
 (defun lyskom-make-menu-tag (str)
@@ -819,6 +827,9 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-person-widget (type &optional args propl)
   (lyskom-build-simple-widget-spec 'lyskom-name nil propl))
+
+(defun lyskom-mark-association-widget (type &optional args propl)
+  (lyskom-build-simple-widget-spec 'lyskom-mark-association nil propl))
 
 (defun lyskom-command-widget (type &optional args propl)
   (lyskom-build-simple-widget-spec 'lyskom-command nil propl))
@@ -1495,6 +1506,68 @@ customize buffer but do not save them to the server."
   ':value-to-internal 'lyskom-widget-value-to-internal
   ':match 'lyskom-widget-kbd-macro-match)
 
+
+;;;
+;;; Mark association widget
+;;;
+
+(defun lyskom-widget-mark-association-action (widget &optional event)
+  (widget-value-set
+   widget
+   (cons
+    (lyskom-read-string (widget-get widget ':mark-key-prompt))
+    (lyskom-read-num-range 0
+                           255
+                           (widget-get widget ':mark-value-prompt)
+                           t)))
+  (widget-setup))
+
+(defun lyskom-widget-mark-association-match (widget value)
+  (and (consp value)
+       (let ((s (car value))
+             (i (cdr value)))
+         (and (stringp s)
+              (> (length s) 0)
+              (integerp i)
+              (>= i 0)
+              (<= i 255)))))
+
+(defun lyskom-widget-mark-association-validate (widget)
+  (let ((value (widget-value widget)))
+    (if (lyskom-widget-mark-association-match widget value)
+        nil
+      (lyskom-widget-invalid-value widget))))
+
+(defun lyskom-widget-mark-association-value-create (widget)
+  (let ((from (point))
+        (value (widget-value widget)))
+    (insert (format "%s <--> %s"
+                    (car value)
+                    (if (and (string= (car value) "...")
+                             (= (cdr value) 0))
+                        "..."
+                      (cdr value))))
+    (widget-put widget ':value-from (copy-marker from))
+    (widget-put widget ':value-to (copy-marker (point)))))
+
+(define-widget 'lyskom-mark-association 'default
+  "A mark association."
+  :tag "Mark association"
+  :format "%[%t%] %v\n"
+  :value '("..." . 0)
+  :help-echo (lyskom-custom-string 'change-this-name)
+  :match 'lyskom-widget-mark-association-match
+  :validate 'lyskom-widget-mark-association-validate
+  :action 'lyskom-widget-mark-association-action
+  :value-create 'lyskom-widget-mark-association-value-create
+  :value-delete 'lyskom-widget-value-delete
+  :value-get 'lyskom-widget-value-get
+  :value-to-external 'lyskom-widget-value-to-external
+  :value-to-internal 'lyskom-widget-value-to-internal)
+
+;;;
+;;; Help widget
+;;;
 
 (defun lyskom-widget-help-action (widget &optional event)
   (let* ((value (widget-get widget ':value))

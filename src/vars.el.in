@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.130 2001-03-15 22:22:00 joel Exp $
+;;;;; $Id: vars.el.in,v 44.131 2001-04-01 13:18:39 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.130 2001-03-15 22:22:00 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.131 2001-04-01 13:18:39 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -207,6 +207,10 @@ The value of this variable is the file name on which to save new texts."
 
 (def-kom-var kom-default-mark 100
   "*If non-nil (must be an integer), the user is not asked for type of mark."
+  server)
+
+(def-kom-var kom-symbolic-marks-alist '(("Standard" . 100))
+  "*Assoc list which maps symbolic mark strings to mark numbers."
   server)
 
 (def-kom-var kom-reading-puts-comments-in-pointers-last t

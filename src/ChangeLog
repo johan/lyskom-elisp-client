@@ -1,3 +1,42 @@
+2001-04-01  Joel Rosdahl  <joel@rosdahl.net>
+
+	* view-text.el (lyskom-view-text): Insert symbolic mark type.
+
+	* vars.el.in (kom-symbolic-marks-alist): Added.
+
+	* swedish-strings.el (lyskom-message): Changed mark-related
+	strings.
+	(lyskom-custom-strings): Added mark-related strings. More
+	documentation in kom-default-mark-doc.
+
+	* english-strings.el (lyskom-message): Changed mark-related
+	strings.
+	(lyskom-custom-strings): Added mark-related strings. More
+	documentation in kom-default-mark-doc.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-symbolic-marks-alist.
+	(lyskom-custom-variables): Ditto.
+	(lyskom-widget-functions): Added mark-association.
+	(lyskom-mark-association-widget): New function.
+	(lyskom-widget-mark-association-action): New function.
+	(lyskom-widget-mark-association-match): New function.
+	(lyskom-widget-mark-association-validate): New function.
+	(lyskom-widget-mark-association-value-create): New function.
+	(lyskom-mark-association): New widget.
+
+	* komtypes.el (mark->symbolic-mark-type): New function.
+
+	* commands2.el (kom-list-marks): Insert symbolic mark type.
+	(lyskom-print-mark-summary-line): Ditto.
+	(lyskom-symbolic-mark-type-string): New function.
+	(lyskom-max-mark-width): New function.
+
+	* commands1.el (lyskom-read-mark-type): New function.
+	(lyskom-mark-text): Use lyskom-read-mark-type.
+	(kom-review-marked-texts): Use lyskom-read-mark-type.
+	(lyskom-review-marked-texts): Insert symbolic mark type.
+
 2001-03-31  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* english-strings.el (lyskom-en-mode-map): added binding "r h" for
