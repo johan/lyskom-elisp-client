@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.0 1996-08-30 14:46:38 davidk Exp $
+;;;;; $Id: flags.el,v 44.1 1996-10-06 05:18:18 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.0 1996-08-30 14:46:38 davidk Exp $\n"))
+	      "$Id: flags.el,v 44.1 1996-10-06 05:18:18 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -309,7 +309,7 @@ If successful then set the buffer not-modified. Else print a warning."
 	     working
 	     (r 1))
 	(let* ((lyskom-options-text pointers)
-	       word no
+	       word
 	       (r 1))
 	  (while (> (length lyskom-options-text) 2)
 	    (setq word (lyskom-read-options-eval-get-holerith))
@@ -395,7 +395,7 @@ If successful then set the buffer not-modified. Else print a warning."
 It returns nil, and writes a message when an error occurs."
   (set (intern var)
        (car
-	(condition-case err
+	(condition-case nil
 	    (read-from-string string)
 	  (invalid-read-syntax
 	   (lyskom-format-insert (lyskom-get-string 'error-in-options)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 44.0 1996-08-30 14:46:34 davidk Exp $
+;;;;; $Id: filter.el,v 44.1 1996-10-06 05:18:16 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.0 1996-08-30 14:46:34 davidk Exp $\n"))
+	      "$Id: filter.el,v 44.1 1996-10-06 05:18:16 davidk Exp $\n"))
 
 
 ;;;============================================================
@@ -170,7 +170,7 @@ invalid-value until a filter action has been selected.")
   (if (or (null text)
 	  (null author))
       (setq lyskom-filter-hack nil)
-    (let (subject recipient-list text-stat)
+    (let (subject text-stat)
       
       ;;
       ;; Extract the subject
@@ -211,7 +211,7 @@ invalid-value until a filter action has been selected.")
                                  filter-list)
   (let (tmp)
     (while filter-list
-      (condition-case err
+      (condition-case nil
           (if (functionp (filter->function (car filter-list)))
               (setq tmp (funcall (filter->function (car filter-list))
                                  (car filter-list)
@@ -256,7 +256,7 @@ invalid-value until a filter action has been selected.")
        (, (cons 'and (lyskom-create-filter-function-body pattern))))))
 
 (defun lyskom-create-filter-function-body (pattern)
-  (let (inverse tmp)
+  (let (inverse)
     (cond
      ;;
      ;; End of pattern
@@ -623,8 +623,7 @@ the current text"
 (def-kom-command kom-list-filters ()
   "Display all filters"
   (interactive)
-  (let ((filters lyskom-filter-list)
-        (filter nil))
+  (let ((filters lyskom-filter-list))
     (goto-char (point-max))
     (if (null filters)
         (lyskom-insert (lyskom-get-string 'no-filters))

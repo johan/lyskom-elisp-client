@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.6 1996-10-03 00:20:25 davidk Exp $
+;;;;; $Id: commands1.el,v 44.7 1996-10-06 05:18:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.6 1996-10-03 00:20:25 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.7 1996-10-06 05:18:01 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -228,7 +228,7 @@ as TYPE. If no such misc-info, return NIL"
 (def-kom-command kom-send-letter (&optional pers-no)
   "Send a personal letter to a person or a conference."
   (interactive)
-  (condition-case error
+  (condition-case nil
       (progn
         (lyskom-tell-internat 'kom-tell-write-letter)
 	;; If there was a motd, which is now removed we have to
@@ -729,7 +729,7 @@ The call is continued to the lyskom-edit-text.
 TYPE is info whether this is going to be a comment of footnote.
 CCREP is a list of all recipients that are going to be cc-recipients."
 
-  (condition-case x
+  (condition-case nil
       ;; Catch any quits
       (progn
 	;; Filter multiple recipients through y-or-n-p.
@@ -1077,8 +1077,7 @@ Args: CONF-STAT MEMBERSHIP"
 	(lyskom-set-mode-line conf-stat))
     (cond
      ((let ((r 0)
-	    (len (read-list-length lyskom-to-do-list))
-	    (list (read-list->all-entries lyskom-to-do-list))
+	    (len (read-list-length lyskom-to-do-list)) 
 	    (found nil))
 	(while (and (not found)
 		    (< r len))
@@ -1457,24 +1456,24 @@ If MARK-NO == 0, review all marked texts."
     ;; Mera kult
     (mapcar (function 
              (lambda (el)
-               (let ((x (car el))
-                     (y (cdr el)))
-                 (if (and (or (null (elt x 0))
-                              (= (+ (time->year time) 1900) (elt x 0)))
-                          (or (null (elt x 1))
-                              (= (1+ (time->mon time)) (elt x 1)))
-                          (or (null (elt x 2))
-                              (= (time->mday time) (elt x 2)))
-                          (or (null (elt x 3))
-                              (= (time->hour time) (elt x 3)))
-                          (or (null (elt x 4))
-                              (= (time->min time) (elt x 4)))
-                          (or (null (elt x 5))
-                              (= (time->sec time) (elt x 5))))
-                     (condition-case err
+               (let ((when (car el))
+                     (event (cdr el)))
+                 (if (and (or (null (elt when 0))
+                              (= (+ (time->year time) 1900) (elt when 0)))
+                          (or (null (elt when 1))
+                              (= (1+ (time->mon time)) (elt when 1)))
+                          (or (null (elt when 2))
+                              (= (time->mday time) (elt when 2)))
+                          (or (null (elt when 3))
+                              (= (time->hour time) (elt when 3)))
+                          (or (null (elt when 4))
+                              (= (time->min time) (elt when 4)))
+                          (or (null (elt when 5))
+                              (= (time->sec time) (elt when 5))))
+                     (condition-case nil
 			 (progn
 			   (lyskom-insert " ")
-			   (lyskom-format-insert (cdr el)
+			   (lyskom-format-insert event
 						 (+ (time->year time) 1900)
 						 (1+ (time->mon  time))
 						 (time->mday time)
@@ -1504,7 +1503,7 @@ prefix is negativ, invisible sessions are also shown.
 
 If the prefix is 0, all visible sessions are shown."
   (interactive "P")
-  (condition-case err
+  (condition-case nil
       (if lyskom-dynamic-session-info-flag
 	  (lyskom-who-is-on-9 arg)
 	(lyskom-who-is-on-8))
@@ -1983,7 +1982,7 @@ WHO-INFOS that are potential sessions."
 
 (defun lyskom-format-secs (time)
   "Format the number of seconds in TIME as a human-readable string."
-  (let ((secs (% time 60))
+  (let (;; (secs (% time 60))
         (mins (% (/ time 60) 60))
         (hrs  (% (/ time 3600) 24))
         (days (/ time 86400))

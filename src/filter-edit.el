@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.0 1996-08-30 14:46:28 davidk Exp $
+;;;;; $Id: filter-edit.el,v 44.1 1996-10-06 05:18:15 davidk Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.0 1996-08-30 14:46:28 davidk Exp $\n"))
+	      "$Id: filter-edit.el,v 44.1 1996-10-06 05:18:15 davidk Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -153,7 +153,7 @@
 
 (defun lyskom-filter-verify-regexp (re)
   "Return t if RE is a valid regexp."
-  (condition-case error
+  (condition-case nil
       (progn
         (string-match re "teststring")
         t)
@@ -481,7 +481,7 @@ If NEWLINE is non-nil, insert a newline after the header."
          (lyskom-reverse-pairs (if kom-emacs-knows-iso-8859-1
                                    lyskom-filter-actions
                                  lyskom-swascii-filter-actions)))
-        action permanent filter tmp start end entry)
+        action permanent filter start end entry)
     (if filter-edit-currently-edited-filter-entry-list
         (progn
           (goto-char (filter-entry->end (elt filter-edit-currently-edited-filter-entry-list

@@ -1,3 +1,44 @@
+Sun Oct  6 02:55:49 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-mark-as-read): Markera texten som läst även
+ 	i möten man inte är med i. Det kan vara så att de inte har hämtats
+ 	än.
+
+	* utilities.el (lyskom-set-face-scheme): Flyttade hit från
+ 	vars.el.in.
+	(lyskom-setup-faces): Dito.
+	(lyskom-set-face-background): Dito.
+	(lyskom-set-face-foreground): Dito.
+	(lyskom-emacs-version): Ny funktion.
+	(lyskom-face-resource): Ny funktion.
+	(lyskom-setup-faces): Använd lyskom-face-resource.
+
+	* vars.el.in (kom-default-face-scheme): Låt den vara nil så länge.
+
+	* utilities.el (lyskom-setup-faces): Sätt kom-default-face-scheme
+ 	om den inte är satt.
+
+	* macros.el (unless): Nytt makro.
+
+	* utilities.el (lyskom-delete-frame-hook): Använd ett bättre test.
+
+	* commands2.el (kom-change-conf-type): Skrev om lite renare.
+
+	* Rensade upp bland oanvända variabler.
+
+	* vars.el.in (lyskom-setup-faces): Använd console-type
+	(kom-default-face-scheme): Dito.
+	(lyskom-set-face-scheme): Dito.
+
+	* macros.el (map-keymap): Tog bort en onödig lokal variabel.
+
+	* utilities.el (console-type): Ny funktion.
+	(device-class): Ny funktion.
+	(frame-property): Ny funktion.
+	(lyskom-background-mode): Ny funktion.
+
+	* vars.el.in (kom-default-face-scheme): Använd dem.
+
 Sat Oct  5 19:23:13 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* prefetch.el (lyskom-prefetch-membership-handler): Gör inte om

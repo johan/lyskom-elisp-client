@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.1 1996-09-03 16:01:21 byers Exp $
+;;;;; $Id: commands2.el,v 44.2 1996-10-06 05:18:07 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.1 1996-09-03 16:01:21 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.2 1996-10-06 05:18:07 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -764,8 +764,7 @@ on one line."
     (lyskom-list-summary
       (text-list->texts 
        (read-info->text-list 
-	(let ((list (read-list->all-entries lyskom-reading-list))
-	      (len (read-list-length lyskom-reading-list))
+	(let ((len (read-list-length lyskom-reading-list))
 	      (r 0))
 	  (while (< r len)
 	    (let ((type (read-info->type 
@@ -848,7 +847,6 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   ;; We split the rest between author and subject
 	   (namelen (/ (- (lyskom-window-width) 22) 3))
 	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
-	   (author-name (lyskom-format "%#1:P" (text-stat->author text-stat)))
 	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
 				  (int-to-string namelen)
 				  "#4P  %[%#5@%=-"
@@ -963,11 +961,13 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
                                      (format "%c" (car arg)))
                                    (or (lyskom-command-name (cdr arg))
                                        (and (keymapp (cdr arg))
-                                            (lyskom-get-string 'multiple-choice))
+                                            (lyskom-get-string
+					     'multiple-choice))
                                        (cdr arg)))))
                         keylis
                         "\n")))
-         next-char)
+         ;; next-char
+	 )
     (if (eq major-mode 'lyskom-mode)
         (progn
           (lyskom-insert text)
@@ -1026,10 +1026,10 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
     (set-buffer old-buf)
     (cond
-     ((condition-case error
+     ((condition-case nil
           (eq old-buf (process-buffer lyskom-proc))
         (error nil)))
-     ((condition-case error
+     ((condition-case nil
           (save-excursion
             (set-buffer (process-buffer lyskom-proc))
             (set-buffer lyskom-unparsed-buffer)
@@ -1053,7 +1053,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (princ (lyskom-get-string 'buggreport-system-id))
       (print system-type)
       (princ (lyskom-get-string 'buggreport-ctl-arrow-doc))
-      (print (condition-case error
+      (print (condition-case nil
                  (documentation-property 'ctl-arrow 'variable-documentation)
                (error)))
 
@@ -1588,54 +1588,53 @@ membership info."
   (let* ((conf-stat (lyskom-read-conf-stat
                      (lyskom-get-string 'what-conf-to-change)
                      '(conf pers) nil "" t))
-         (foo
-          (let* ((type (conf-stat->conf-type conf-stat))
-                 (box (conf-type->letterbox type))
-                 (ori (conf-type->original type))
-                 (pro (conf-type->rd_prot type))
-                 (sec (conf-type->secret type)))
-            (lyskom-format-insert 'change-type-prompt
-                                  conf-stat
-                                  conf-stat
-                                  (cond
-                                   ((or box ori pro sec)
-                                    (concat
-                                     "("
-                                     (if box (lyskom-get-string 'Mailbox) "")
-                                     (if (and box (or sec ori pro)) ", " "")
-                                     (if sec (lyskom-get-string
-                                              'Protected) "")
-                                     (if (and sec (or ori pro)) ", " "")
-                                     (if ori (lyskom-get-string
-                                              'no-comments) "")
-                                     (if (and ori pro) ", " "")
-                                     (if pro (lyskom-get-string 'closed) "")
-                                     ")"))
-                                   (t "")))))
-	 (open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
-	 (secret (if (not open)
-		     (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
-	 (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
-         (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed))))
-    (cache-del-conf-stat (conf-stat->conf-no conf-stat))
-    (if (not (blocking-do 
-              'set-conf-type
-              (conf-stat->conf-no conf-stat)
-              (lyskom-create-conf-type (not open)
-                                       (not orig)
-                                       secret
-                                       (conf-type->letterbox
-                                        (conf-stat->conf-type  conf-stat))
-                                       anarchy
-                                       (conf-type->rsv1
-                                        (conf-stat->conf-type conf-stat))
-                                       (conf-type->rsv2
-                                        (conf-stat->conf-type conf-stat))
-                                       (conf-type->rsv3
-                                        (conf-stat->conf-type conf-stat)))))
-	(progn (lyskom-insert-string 'nope)
-	       (lyskom-format-insert 'error-code
-				     (lyskom-get-error-text lyskom-errno)
-				     lyskom-errno)))))
+	 (type (conf-stat->conf-type conf-stat))
+	 (box (conf-type->letterbox type))
+	 (ori (conf-type->original type))
+	 (pro (conf-type->rd_prot type))
+	 (sec (conf-type->secret type)))
+    (lyskom-format-insert 'change-type-prompt
+			  conf-stat
+			  conf-stat
+			  (cond
+			   ((or box ori pro sec)
+			    (concat
+			     "("
+			     (if box (lyskom-get-string 'Mailbox) "")
+			     (if (and box (or sec ori pro)) ", " "")
+			     (if sec (lyskom-get-string
+				      'Protected) "")
+			     (if (and sec (or ori pro)) ", " "")
+			     (if ori (lyskom-get-string
+				      'no-comments) "")
+			     (if (and ori pro) ", " "")
+			     (if pro (lyskom-get-string 'closed) "")
+			     ")"))
+			   (t "")))
+    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
+	   (secret (if (not open)
+		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
+	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
+	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed))))
+      (cache-del-conf-stat (conf-stat->conf-no conf-stat))
+      (if (not (blocking-do 
+		'set-conf-type
+		(conf-stat->conf-no conf-stat)
+		(lyskom-create-conf-type (not open)
+					 (not orig)
+					 secret
+					 (conf-type->letterbox
+					  (conf-stat->conf-type  conf-stat))
+					 anarchy
+					 (conf-type->rsv1
+					  (conf-stat->conf-type conf-stat))
+					 (conf-type->rsv2
+					  (conf-stat->conf-type conf-stat))
+					 (conf-type->rsv3
+					  (conf-stat->conf-type conf-stat)))))
+	  (progn (lyskom-insert-string 'nope)
+		 (lyskom-format-insert 'error-code
+				       (lyskom-get-error-text lyskom-errno)
+				       lyskom-errno))))))
 
 
