@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.19 2000-08-15 10:09:52 byers Exp $
+;;;;; $Id: prefetch.el,v 44.20 2000-08-15 10:32:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.19 2000-08-15 10:09:52 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.20 2000-08-15 10:32:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -177,7 +177,7 @@ This is used to prevent the prefetch code to reenter itself.")
 (defun lyskom-fetch-start-of-map (conf-stat membership)
   "Block fetching map for MEMBERSHIP until we see a text.
 Start the prefetch for the remainder of the map."
-  (let ((first-local (membership->last-text-read membership))
+  (let ((first-local (1+ (membership->last-text-read membership)))
         (last-local (1- (+ (conf-stat->no-of-texts conf-stat)
                            (conf-stat->first-local-no conf-stat))))
         (done nil))

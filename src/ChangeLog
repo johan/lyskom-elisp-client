@@ -1,5 +1,15 @@
 2000-08-15  David Byers  <davby@ida.liu.se>
 
+	* commands2.el (kom-set-unread): Immediately go to
+	lyskom-current-conf if that is the conf being changed.
+
+	* prefetch.el (lyskom-fetch-start-of-map): Fix off-by-one error in
+	map fetching.
+
+	* commands2.el (kom-set-unread): Use lyskom-fetch-start-of-map to
+	block until we see a text in the map of the conference we are
+	setting unread in.
+
 	* commands1.el (lyskom-add-member-answer): Block until we get at
 	least one text in the map or have read the entire map.
 	(lyskom-add-membership): Add parameter BLOCKING to allow blocking

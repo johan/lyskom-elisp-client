@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.80 2000-08-15 10:09:45 byers Exp $
+;;;;; $Id: commands1.el,v 44.81 2000-08-15 10:32:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.80 2000-08-15 10:09:45 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.81 2000-08-15 10:32:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1228,14 +1228,15 @@ back on lyskom-to-do-list."
     (lyskom-go-to-conf conf))))
 
 
-(defun lyskom-go-to-conf (conf)
+(defun lyskom-go-to-conf (conf &optional no-prompt)
   "Go to the conference in CONF. CONF can be conf-no of conf-stat.
 Allowed conferences are conferences and the mailboxes you are 
-member of."
+member of.
+If NO-PROMPT is non-nil, don't print message that we have gone to conf."
   (if (numberp conf) (setq conf (blocking-do 'get-conf-stat conf)))
   (let ((membership (lyskom-get-membership (conf-stat->conf-no conf) t)))
-    (lyskom-format-insert 'go-to-conf
-			  conf)
+    (unless no-prompt
+      (lyskom-format-insert 'go-to-conf conf))
 
     ;; FIXME: DEBUG+++
     (let ((lyskom-inhibit-prefetch t))
