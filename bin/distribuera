@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 # Distributionsskript.
 # KISS - Keep it simple stupid.
