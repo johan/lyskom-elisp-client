@@ -118,6 +118,9 @@
     for more information. After installing the package, continue
     reading section 2.3.
 
+    There are currently no prebuilt RPMs, but the source archive
+    includes an RPM spec file that might be useful.
+
 
 2.1 Manual installation
 
