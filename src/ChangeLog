@@ -1,5 +1,13 @@
 Sun Jul  5 05:02:37 1992  Linus Tolke Y  (linus@lysator)
 
+	* completing-read.el (lyskom-completing-read-conf-stat-handler):
+	  Fixed a bug when using 'empty, it returned nil instead of 0.
+
+	* commands2.el (kom-set-permitted-submitters): Added a possibility
+	  to set permitted submitters.
+	  Changes to: kom-set-super-conf, 
+	  lyskom-set-conf-for-conf* (was: lyskom-set-super-conf*...).
+
 	* commands1.el (lyskom-return-who-info-line): Now removes all
 	  ending spaces.
 

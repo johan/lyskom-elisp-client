@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.11 1992-06-15 22:38:07 linus Exp $
+;;;;; $Id: commands2.el,v 35.12 1992-07-05 06:24:12 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.11 1992-06-15 22:38:07 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.12 1992-07-05 06:24:12 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1089,6 +1089,21 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 
 
 ;;; ================================================================
+;;;       S{tt till}tna f|rfattare - set-permitted-submitters
+
+;;; Author: Linus Tolke
+
+(defun kom-set-permitted-submitters ()
+  "Set the permitted submitters of a conference."
+  (interactive)
+  (lyskom-start-of-command 'kom-set-permitted-submitters)
+  (lyskom-completing-read-conf-stat
+   'main 'lyskom-set-conf-for-conf
+   (lyskom-get-string 'conf-to-set-permitted-submitters-q)
+   nil nil "" 'permitted-submitters))
+
+
+;;; ================================================================
 ;;;             [ndra superm|te - Set super conference 
 
 ;;; Author: Inge Wallin
@@ -1099,37 +1114,57 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (lyskom-start-of-command 'kom-set-super-conf)
   (lyskom-completing-read-conf-stat 
-   'main 'lyskom-set-super-conf
+   'main 'lyskom-set-conf-for-conf
    (lyskom-get-string 'conf-to-set-super-conf-q)
-   nil nil ""))
+   nil nil "" 'super-conf))
 
 
-(defun lyskom-set-super-conf (conf-stat)
-  "Set the super conference value for CONF-STAT."
+(defun lyskom-set-conf-for-conf (conf-stat type)
+  "Set the super conference of permitted submitters value for CONF-STAT.
+Which it is depends on the value of the TYPE parameter."
   (if (not conf-stat)
       (progn
 	(lyskom-insert-string 'somebody-deleted-that-conf)
 	(lyskom-end-of-command))
     (lyskom-completing-read-conf-stat
-     'main 'lyskom-set-super-conf-2
-     (lyskom-get-string 'new-super-conf-q)
-     nil nil "" conf-stat)))
+     'main 'lyskom-set-conf-for-conf-2
+     (lyskom-format (if (eq type 'super-conf)
+			'new-super-conf-q
+		      'new-permitted-submitters-q)
+		    (conf-stat->name conf-stat))
+     nil (if (eq type 'permitted-submitters)
+	     'empty) "" conf-stat type)))
 
 
-(defun lyskom-set-super-conf-2 (super-conf conf-stat)
-  "Set the super conference value for CONF-STAT to SUPER-CONF.
-Args: SUPER-CONF CONF_STAT"
-  (lyskom-format-insert 'super-conf-for-is
-			    (conf-stat->name conf-stat)
-			    (conf-stat->name super-conf))
-  (initiate-set-super-conf 'main 'lyskom-set-super-conf-3
-			      (conf-stat->conf-no conf-stat) 
-			      (conf-stat->conf-no super-conf) 
-			      conf-stat))
+(defun lyskom-set-conf-for-conf-2 (super-conf conf-stat type)
+  "Set the super conference or permitted submitters for CONF-STAT to SUPER-CONF.
+Args: SUPER-CONF CONF_STAT TYPE"
+  (if (and (eq type 'permitted-submitters)
+	   (eq super-conf 0))		;Allowing all to write there.
+      (progn
+	(lyskom-format-insert 'permitted-submitters-removed-for-conf 
+			      (conf-stat->name conf-stat))
+	(initiate-set-permitted-submitters 'main 'lyskom-set-conf-for-conf-3
+					   (conf-stat->conf-no conf-stat) 0
+					   conf-stat type))
+    (lyskom-format-insert (if (eq type 'super-conf)
+			      'super-conf-for-is
+			    'submitters-conf-for-is)
+			  (conf-stat->name conf-stat)
+			  (conf-stat->name super-conf))
+    (if (eq type 'super-conf)
+	(initiate-set-super-conf 'main 'lyskom-set-conf-for-conf-3
+				 (conf-stat->conf-no conf-stat) 
+				 (conf-stat->conf-no super-conf) 
+				 conf-stat type)
+      (initiate-set-permitted-submitters 'main 'lyskom-set-conf-for-conf-3
+					 (conf-stat->conf-no conf-stat) 
+					 (conf-stat->conf-no super-conf) 
+					 conf-stat type))))
 
 
-(defun lyskom-set-super-conf-3 (answer conf-stat)
-  "Get the answer from lyskom-set-super-conf and report the result."
+(defun lyskom-set-conf-for-conf-3 (answer conf-stat type)
+  "Get the answer from lyskom-set-conf-for-conf and report the result."
   (if (not answer)
       (lyskom-insert-string 'nope)
     (lyskom-insert-string 'done)

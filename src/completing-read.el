@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 35.4 1992-06-15 22:38:13 linus Exp $
+;;;;; $Id: completing-read.el,v 35.5 1992-07-05 06:24:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 35.4 1992-06-15 22:38:13 linus Exp $\n"))
+	      "$Id: completing-read.el,v 35.5 1992-07-05 06:24:20 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -55,10 +55,13 @@ ARGS: QUEUE HANDLER PROMPT TYPE NEW INITIAL &rest DATA"
 
 (defun lyskom-completing-read-conf-stat-handler (conf-no queue handler &rest data)
   "Take CONF-NO (returned by lyskom-completing-read) and send it through QUEUE
-to HANDLER using initiate-get-conf-stat. Also send DATA to it."
-  (if data
-      (apply 'initiate-get-conf-stat queue handler conf-no data)
-    (initiate-get-conf-stat queue handler conf-no)))
+to HANDLER using initiate-get-conf-stat. Also send DATA to it.
+If we had the empty conf-no could be 0. Then we shall return 0."
+  (if (eq conf-no 0)
+      (apply handler 0 data)
+    (if data
+	(apply 'initiate-get-conf-stat queue handler conf-no data)
+      (initiate-get-conf-stat queue handler conf-no))))
 
 
 (defvar lyskom-completing-map nil
