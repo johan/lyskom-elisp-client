@@ -1,3 +1,9 @@
+2001-01-18  Joel Rosdahl  <joel@rosdahl.net>
+
+	* view-text.el (lyskom-print-text): Keep viewed text in cache a
+	bit longer so that it won't be prefetched a second time.
+	(lyskom-view-text): Ditto.
+
 2001-01-02  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* All files changed when I replaced
