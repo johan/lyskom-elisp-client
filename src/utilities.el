@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.105 2002-06-12 18:29:33 byers Exp $
+;;;;; $Id: utilities.el,v 44.106 2002-07-11 14:25:54 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.105 2002-06-12 18:29:33 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.106 2002-07-11 14:25:54 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -594,61 +594,263 @@ The value is actually the element of LIST whose car equals KEY."
 ;;; ============================================================
 ;;; Prefix arguments
 
+(defun lyskom-get-ancestors-of-text (text-no level)
+  "Returns a list of all ancestors of TEXT-NO that are LEVEL
+comment/foot-note levels up the comment tree. LEVEL is a
+non-negative integer and 0 means the given text-no."
+  (if (< level 1)
+      (list text-no)
+    (let* ((text-stat (blocking-do 'get-text-stat text-no))
+	   (ancestors (and text-stat
+			   (lyskom-text-stat-commented-texts text-stat)))
+	   (level (1- level))
+	   (result '()))
+	(while ancestors
+	  (setq result
+		(lyskom-join-lists 
+		 result
+		 (lyskom-get-ancestors-of-text (car ancestors) level)))
+	  (setq ancestors (cdr ancestors)))
+	result)))
+
+(defun lyskom-get-explicit-text (arg &optional prompt default constraint) arg)
+(defun lyskom-get-command-specified-default-text (a p def &optional c) def)
+
+(defun lyskom-get-last-read-text (&optional arg prompt default constraint)
+  (lyskom-default-value 'lyskom-current-text))
+
+(defun lyskom-get-text-at-point (&optional arg prompt default constraint)
+  (or (lyskom-text-at-point)
+       (lyskom-get-string 'no-text-at-point)))
+
+(defun lyskom-get-text-at-point-ancestor (arg &optional p d c)
+  (let* ((text (lyskom-text-at-point))
+	 (cnos (and text (lyskom-get-ancestors-of-text text arg)))
+	 (txts (length cnos)))
+    (cond
+     ((not text)
+      (lyskom-get-string 'no-text-at-point))
+     ((eq txts 0)
+      (lyskom-get-string 'no-comment-to))
+     ((eq txts 1)
+      (car cnos))
+     (t
+      (lyskom-read-number (lyskom-get-string 'what-ancestor) (car cnos))))))
+
+(defun lyskom-prompt-for-text-no (arg prompt default &optional constraint)
+  (lyskom-read-number prompt default))
+
+(defun lyskom-get-last-text-written-by-me (&optional a p d c)
+  (lyskom-default-value 'lyskom-last-written))
+
+(defun lyskom-get-last-written-or-read-by-me (&optional a p d c)
+  (lyskom-default-value 'lyskom-last-seen-written))
+
+(defun lyskom-get-text-above-point (arg &optional prompt default constraint)
+  (save-excursion
+    (let ((former-point (point)))
+      (backward-text (+ 1 arg))
+      (if (looking-at "\\([0-9]+\\)\\s-")
+	  (string-to-int (match-string 1))
+	(progn ;; we probably ended up above the first message in the buffer
+	  (forward-text)
+	  (if (and (< (point) former-point)
+		   (looking-at "\\([0-9]+\\)\\s-"))
+	      (string-to-int (match-string 1))
+	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix) arg)))))))
+
+(defun lyskom-get-text-below-point (arg &optional prompt default constraint)
+  (save-excursion
+    (let ((former-point (point)))
+      (forward-text arg)
+      (if (looking-at "\\([0-9]+\\)\\s-")
+	  (string-to-int (match-string 1))
+	(progn ;; we probably ended up below the final message in the buffer
+	  (backward-text)
+	  (if (and (> (point) former-point)
+		   (looking-at "\\([0-9]+\\)\\s-"))
+	      (string-to-int (match-string 1))
+	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix) arg)))))))
+
+(defconst lyskom-old-farts-text-prompt-strategy
+  '((t . ((nil . lyskom-get-last-read-text)
+	  (t   . lyskom-get-last-read-text)
+	  (0   . lyskom-get-text-at-point)
+	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
+	  (listp . lyskom-prompt-for-text-no)
+	  (plusp . lyskom-get-explicit-text)
+	  (minusp  lyskom-get-text-above-point abs))))
+"Put in your `lyskom-pick-text-no-strategy-alist' to get the 0.46 behaviour:
+ * No prefix argument refers to the most recently read text.
+ * The prefix argument zero refers to the text under point.
+ * A positive prefix argument is interpreted as a text-no.
+ * A negative prefix argument will try to find the text-no
+   of the text `arg' messages above point from the current
+   kom buffer.")
+
+(defvar lyskom-pick-text-no-strategy-alist
+      '((t . ((nil . lyskom-get-text-at-point) ; no prefix arg
+	      (t   . lyskom-get-text-at-point) ; default for prompts
+	      (0   . lyskom-prompt-for-text-no)
+	      (-     lyskom-get-text-above-point (lambda (&optional arg) 1))
+	      (listp lyskom-get-text-at-point-ancestor
+		     (lambda (arg) (/ (logb (car arg)) 2)))
+	      (plusp . lyskom-get-text-below-point)
+	      (minusp  lyskom-get-text-above-point abs))))
+      "Defines how prefix arguments are used to find a text-no to operate on.
+The cars on the list are either one of the functions which invokes
+`lyskom-read-text-no-prefix-arg' (typically the one of the kom-* functions),
+or the value t for the strategy common to all such functions. For functions in
+the list, the strategy is chosen from the cdr of that entry and, if and when
+no matching rule was found that way, from the common strategy.
+
+Each cdr on the list is an alist specifying when to do how when mapping a
+prefix argument to a text-no.
+
+The cars on this alist are the predicates for which the cdrs map functions that
+retrieve the text-no to operate on. Each predicate is tested in turn on the
+prefix argument, and when one returns non-nil, the cdr gets invoked, until the
+list is empty or one cdr returned some non-nil value, whichever comes first. If
+you like, the cars can also be the actual prefix-arg values (-, 0 or nil, for
+example) that you want to invoke some special rule for. The value t means that
+the behaviour given by the cdr stipulates the DEFAULT value for the prompt,
+when one is shown.
+
+The cdrs on the list may be either of:
+
+* a function, in which case it gets called with four parameters: the prefix
+  argument, the PROMPT that would be used to ask the user for a text-no, a
+  (possibly nil) DEFAULT choice for that prompt, and a CONSTRAINT value, all
+  as provided in the call to `lyskom-read-text-no-prefix-arg' (see its docs)
+  Returning a positive integer means return that text-no. Returning a common
+  lyskom format string aborts, showing your helpful error description. A nil
+  return value means try successive rules instead to get a text-no.
+
+* a list of two functions, optionally followed by additional list items,
+  in which case the second function is called to change the prefix argument
+  parameter for the first function, which is then called as above. Any extra
+  items on the argument list will be appended to its argument list. Hence, a
+  '(my-get-text-no abs 17 4711) entry would result in a my-get-text-no call
+  (funcall my-get-text-no (abs prefix-arg) prompt default nil 17 4711).")
+
 (defun lyskom-read-text-no-prompt-p (command)
   "Return non-nil if the COMMAND should prompt for a text number."
   (let ((check (assq command kom-text-no-prompts)))
     (if check (cdr check) (memq command lyskom-text-no-prompts-defaults))))
 
-(defun lyskom-read-text-no-prefix-arg (prompt &optional always-read default)
-  "Call in interactive list to read text-no.
-If optional argument ALWAYS-READ is non-nil the user is prompted if an
-explicit prefix argument was not given. The prefix argument zero
-refers to the text under point. A positive prefix argument is
-interpreted as a text-no, whereas a negative prefix argument will try
-to find the text-no of the text `arg' messages above point from the
-current kom buffer. DEFAULT specifies the default text to use. If it
-is nil, the most recently read text is the default. The symbol
-last-written means use the text most recently written. The symbol
-last-seen-written means use the text in lyskom-last-seen-written. A
-number means use that text as the default."
-  (let ((default (cond ((or (null default)
-                            (eq 0 default))
-                        (lyskom-default-value 'lyskom-current-text))
-                       ((numberp default) default)
-                       ((eq default 'last-written)
-                        (or (lyskom-default-value 'lyskom-last-seen-written)
-                            (lyskom-default-value 'lyskom-current-text)))
-                       ((eq default 'last-seen-written)
-                        (or (lyskom-default-value 'lyskom-last-seen-written)
-                            (lyskom-default-value 'lyskom-current-text))))))
-    ;; If the default is *still* zero, then we really can't figure
-    ;; one out, so set it to nil.
-    (when (eq 0 default) (setq default nil))
+(defun lyskom-read-text-no-prefix-arg (prompt &optional always-prompt
+				       default constraint)
+  "Call in interactive list to read text-no for lyskom-commands using
+configurable prefix argument heuristics. The strategy used for picking a
+text-no is defined by the variable `lyskom-pick-text-no-strategy-alist'.
+
+The PROMPT will be used to prompt for the number, either if invoked by the
+strategy directly, or as a fallback when no strategy rule found a text-no,
+or when that text-no did not meet the CONSTRAINT.
+
+If the optional argument ALWAYS-PROMPT is non-nil and the user did not give
+a prefix argument, she gets prompted for the text number regardless of the
+`lyskom-pick-text-no-strategy-alist' settings. Another method of overriding
+the prefix-less strategies for a command is via `kom-text-no-prompts'.
+
+When DEFAULT is given, it will be the default text-no fall-back shown in the
+prompt, when `lyskom-pick-text-no-strategy-alist' did not specify a working
+default. The requirements that must be met are given by CONSTRAINT, when
+specified. DEFAULT is either a text-no, a function for returning one or one
+of the symbols 'last-seen-written and 'last-written, which are compatibility
+aliases for lyskom-get-last-written-or-read-by-me and
+lyskom-get-last-text-written-by-me respectively.
+
+If the optional CONSTRAINT function or list is provided, it is called for
+the text chosen by the strategy alist functions to validate that the text
+really applies to the command. Returning nil means that it does, and
+otherwise a helpful lyskom format string should be returned, which explains
+to the user why that text did not apply to the command. This string may
+refer to the text-no as %#1. The message is then presented to the user and
+she gets prompted for a better text number. Failing a second time will
+invoke the command anyway (probably to fail miserably, reporting a less
+helpful error message).
+
+When CONSTRAINT is a list, its first item is called with the text number as
+its first argument and remaining list items appended to the argument list."
+;  (lyskom-insert (format "Prefix arg: %s\n" current-prefix-arg))
+  (let ((default (cond ((eq default 'last-written)
+			(lyskom-get-last-text-written-by-me))
+		       ((eq default 'last-seen-written)
+			(lyskom-get-last-written-or-read-by-me))
+		       ((functionp default) (funcall default))
+		       (t default)))
+	(constraint-func constraint)
+	(constraint-args '())
+	(text-no nil))
+    (if (and (null current-prefix-arg)
+	     (or always-prompt
+		 (lyskom-read-text-no-prompt-p lyskom-current-command)))
+	(lyskom-read-number prompt default)
+      (when (listp constraint)
+	(setq constraint-func (car constraint))
+	(setq constraint-args (cdr constraint)))
+      (let* ((strategies lyskom-pick-text-no-strategy-alist)
+	     (how (append (cdr (assq lyskom-current-command strategies))
+			  (cdr (assq t strategies)))))
+	(while (and how (null text-no))
+	  (let* ((strategy-pred nil) ;; when a predicate to test the prefix
+		 (compare-value nil) ;; when a value to compare the prefix to
+		 (applies-p (caar how)) ;; either one of the above
+		 (what-text (cdar how))
+		 (constraint-not-met nil))
+	    (if (or (eq applies-p '-) (not (functionp applies-p)))
+		(setq compare-value applies-p)
+	      (setq strategy-pred applies-p))
+	    
+	    (cond
+	     ((eq compare-value t) ;; provided a default value for the prompt
+	      (let ((new-default (lyskom-evaluate-text-no-strategy
+				  what-text prompt default constraint)))
+		(when (and (numberp new-default) (plusp new-default))
+		  (setq default (or default new-default)))))
+
+	     ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
+		  (condition-case nil
+		      (funcall strategy-pred current-prefix-arg)
+		    (t . nil)))
+	      (setq text-no (lyskom-evaluate-text-no-strategy
+			     what-text prompt default constraint))
+;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
+;				     compare-value strategy-pred text-no))
+	      (when (and (not (stringp text-no)) text-no constraint)
+		(setq constraint-not-met
+		      (apply constraint-func text-no constraint-args))
+		(when constraint-not-met
+		  (lyskom-format-insert constraint-not-met text-no)
+		  (lyskom-format-insert
+		   (lyskom-get-string 'prefix-arg-try-again))
+		  (setq text-no (lyskom-read-number prompt default))))))
+	    (setq how (cdr how)))))
+      (cond
+       ((stringp text-no) ;; a strategy failure error message
+	(lyskom-error text-no))
+       ((and (integerp text-no) (plusp text-no)) ;; a proper text-no
+	text-no)
+       ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
+	(lyskom-read-number prompt default))
+       (t
+	(lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+		      current-prefix-arg))))))
+
+(defun lyskom-evaluate-text-no-strategy (strategy prompt default constraint)
+  (let ((prefix current-prefix-arg)
+	(strategy-func nil)
+	(strategy-args '()))
     (cond
-     ((null current-prefix-arg)
-      (if (or always-read
-              (lyskom-read-text-no-prompt-p lyskom-current-command)
-              (null default))
-          (lyskom-read-number prompt default)
-        default))
-     ((or (integerp current-prefix-arg)
-          (eq '- current-prefix-arg))
-      (let ((current-prefix-arg
-             (if (eq '- current-prefix-arg) -1 current-prefix-arg)))
-        (cond
-	 ((> current-prefix-arg 0) current-prefix-arg)
-	 ((zerop current-prefix-arg) (lyskom-text-at-point))
-	 (t
-          (save-excursion
-            (backward-text (- 1 current-prefix-arg))
-            (if (looking-at "\\([0-9]+\\)\\s-")
-                (string-to-int (match-string 1))
-              (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-                            current-prefix-arg)))))))
-     ((listp current-prefix-arg)
-      (lyskom-read-number prompt default))
-     (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-                      current-prefix-arg)))))
+     ((listp strategy)
+      (setq strategy-func (first strategy))
+      (setq prefix (funcall (second strategy) prefix))
+      (setq strategy-args (cddr strategy))
+      (apply strategy-func prefix prompt default constraint
+	     strategy-args))
+     ((functionp strategy)
+      (funcall strategy prefix prompt default constraint)))))
 
 ;;; ============================================================
 ;;; Set functions
@@ -697,6 +899,12 @@ comparison. Comparison is done with eq."
         (setq result (cons el result))))
     (nreverse (mapcar 'cdr result))))
 
+(defun lyskom-join-lists (list1 list2)
+  "Like append, but only elements of list2 that are not present in list1 are
+added to the result. The comparison is done with eq."
+  (let ((in-both (lyskom-intersection list1 list2)))
+    (mapc (lambda (o) (setq list2 (delq o list2))) in-both)
+    (append list1 list2)))
 
 
 ;;; ======================================================================
