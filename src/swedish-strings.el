@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.140 2000-09-01 14:13:24 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.141 2000-09-04 22:03:26 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.140 2000-09-01 14:13:24 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.141 2000-09-04 22:03:26 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -137,7 +137,6 @@
     ;; From startup.el:
     (server-q . "LysKOM-server? (%#1s) ")
     (try-connect . "LysKOM elisp-klient version %#1s.\nFörsöker koppla upp mot %#2s.\n")
-    (protocoll-error . "Protocol error. Servers says: %#1s")
     (too-old-server . "Servern är för gammal för den här versionen av klienten.")
     (connection-done . "Uppkopplingen klar. Serverns versionsnummer är %#1s.\n\n")
     (what-is-your-name . "Vad heter du? ")
@@ -2542,7 +2541,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
@@ -2565,7 +2564,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
@@ -2589,7 +2588,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
@@ -2612,7 +2611,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
@@ -2635,7 +2634,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
@@ -2658,7 +2657,7 @@ i servern. Annars sparas det i din .emacs.")
 
     %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
     %[ - Sätter in '[' om automatsvar är påslaget.
-    %] - Sätter in ']' om automatsvar är avstängt.     
+    %] - Sätter in ']' om automatsvar är påslaget.     
     %m - Sätter in information om antal inspelade meddelanden.
     %s - Sätter in LysKOM-systemets namn
     %S - Sätter in LysKOM-serverns namn
