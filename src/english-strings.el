@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.151 2001-08-25 19:12:12 qha Exp $
+;;;;; $Id: english-strings.el,v 44.152 2001-10-09 18:42:15 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.151 2001-08-25 19:12:12 qha Exp $"))
+              "$Id: english-strings.el,v 44.152 2001-10-09 18:42:15 joel Exp $"))
 
 
 ;;; ================================================================
@@ -80,6 +80,7 @@
   (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
   (define-key lyskom-en-edit-prefix (kbd "C-r") 'lyskom-en-edit-review-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-i") 'lyskom-en-edit-insert-prefix)
+  (define-key lyskom-en-edit-prefix (kbd "TAB") 'lyskom-en-edit-insert-prefix)
   (define-key lyskom-en-edit-prefix (kbd "*") 'kom-button-press)
   (define-key lyskom-en-edit-prefix (kbd "+") 'kom-menu-button-press)
   (define-key lyskom-en-edit-prefix (kbd "C-c")	'kom-edit-send)
