@@ -60,7 +60,7 @@
     versions of Gnus will not work.
 
     The version that is bundled with recent versions of XEmacs, with
-    Gnu Emacs 20.1, with recent versions of Gnus and w3 is the one you 
+    Gnu Emacs 20, with recent versions of Gnus and w3 is the one you 
     need. 
 
     Custom is not longer distributed as a separate package, but it may
@@ -151,11 +151,15 @@
         lyskom-clientversion.
 
     o   The symptoms of the bug. Please be as detailed as possible.
-        Please do not try to make conclusions. Just the facts ma'am.
+        Please do not try to make conclusions. Just give us the facts.
 
     o   How you triggered the bug. If you know how to reproduce it,
         please tell us. We're pretty good at fixing bugs we can
         reproduce.
+
+    o   How you started Emacs, what variables you have changed and
+        which packages you have loaded. If possible, try to  reproduce
+        the bug with Emacs started with the -q command line switch.
 
     The command kom-bug-report may come in handy. It gives us a lot of 
     information that you might not think of (such as what the internal 
