@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.5 1997-02-19 08:35:58 byers Exp $
+;;;;; $Id: view-text.el,v 44.6 1997-03-11 13:49:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.5 1997-02-19 08:35:58 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.6 1997-03-11 13:49:17 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -324,6 +324,38 @@ recipients to it that the user is a member in."
       res)))
 
 
+(defun lyskom-text-read-at-least-once-p (text-stat)
+  "Return t if TEXT-STAT has been marked as read in any of the recipients
+the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
+  (if text-stat
+      (let* ((misc-info-list (text-stat->misc-info-list text-stat))
+             (misc-item nil)
+             (type nil)
+             (membership nil)
+             (is-member nil)
+             (result nil))
+        (while misc-info-list
+          (setq misc-item (car misc-info-list))
+          (setq type (misc-info->type misc-item))
+          (setq misc-info-list (cdr misc-info-list))
+          (cond ((or (eq type 'RECPT) (eq type 'CC-RECPT))
+                 (setq membership (lyskom-get-membership
+                                   (misc-info->recipient-no misc-item)))
+                 (when membership
+                   (setq is-member t)
+                   (when (or (<= (misc-info->local-no misc-item)
+                                 (membership->last-text-read membership))
+                             (lyskom-vmemq (misc-info->local-no misc-item)
+                                           (membership->read-texts
+                                            membership)))
+                     (setq result t)
+                     (setq misc-info-list nil))))))
+        (cond (result result)
+              ((not is-member) (not kom-follow-comments-outside-membership))
+              (t nil)))
+    t))
+
+
 (defun lyskom-subtract-one-day (x)
   (let ((high-x (1- (car x)))
         (low-x (car (cdr x))))
@@ -367,6 +399,24 @@ recipients to it that the user is a member in."
   "Print date and time. Arg: TIME"
   (lyskom-insert (lyskom-return-date-and-time time fmt)))
 
+(defun lyskom-deferred-insert-footer (conf-stat defer-info)
+  "Insert the name of a conference at a previously reserved place."
+  (let* ((name (cond (conf-stat (conf-stat->name conf-stat))
+                      ((= (defer-info->call-par defer-info) 0)
+                       (lyskom-get-string 'person-is-anonymous))
+                      (t (lyskom-format 'person-does-not-exist
+                                        (defer-info->call-par defer-info)))))
+         (dashes (if (> 42 (length name))
+                     (make-string (- 42 (length name)) ?-)
+                   ""))
+         (text (lyskom-format "/%[%#3@%#1P%]/%#2s"
+                              conf-stat
+                              dashes
+                              (text-properties-at
+                               (defer-info->pos defer-info)))))
+    (lyskom-replace-deferred
+     defer-info
+     text)))
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
   "Print a text. The header must already be printed.
@@ -412,11 +462,41 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
             (cache-del-text (text->text-no text)))
         (sit-for 0)
         (let ((lyskom-current-function-phase 'footer))
-          (lyskom-format-insert 
-           (if kom-dashed-lines
-               "\n(%#1n) -----------------------------------\n"
-             "\n(%#1n)\n")
-           (text->text-no text)))
+          (cond (kom-dashed-lines
+                 (lyskom-format-insert "\n(%#1n) " (text->text-no text))
+                 (if (not kom-show-author-at-end)
+                     (lyskom-insert "-----------------------------------\n")
+                   (if kom-deferred-printing
+                       (progn
+                         (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+                         (lyskom-defer-insertion
+                          (lyskom-create-defer-info 
+                           'get-conf-stat
+                           (text-stat->author text-stat)
+                           'lyskom-deferred-insert-footer
+                           (set-marker
+                            (make-marker)
+                             (- (point-max)
+                                (length lyskom-defer-indicator)
+                                1))
+                           (length lyskom-defer-indicator)
+                           "%#1s")))
+                     (let* ((conf-stat (blocking-do 
+                                        'get-conf-stat
+                                        (text-stat->author text-stat)))
+                            (name (lyskom-format "%#1P" conf-stat)))
+                       (lyskom-format-insert 
+                        "/%#1P/%#2s\n"
+                        conf-stat
+                        (if (> 42 (length name))
+                            (make-string (- 42 (length name)) ?-)
+                          ""))))))
+                (t (lyskom-format-insert
+                    (if kom-show-author-at-end 
+                        "\n(%#1n) /%#2P/\n"
+                      "\n(%#1n)\n")
+                    (text->text-no text)
+                    (text-stat->author text-stat)))))
         (if mark-as-read
             (lyskom-mark-as-read text-stat))
         (setq lyskom-previous-text lyskom-current-text)

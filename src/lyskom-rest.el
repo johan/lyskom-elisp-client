@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.27 1997-03-08 02:57:41 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.28 1997-03-11 13:48:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.27 1997-03-08 02:57:41 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.28 1997-03-11 13:48:57 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1397,8 +1397,11 @@ A symbol other than t means call it as a function."
 
 (defun lyskom-face-default-p (f1)
   "Return t if f1 is undefined or the default face."
-  (or (not (facep f1))
-      (face-equal f1 'default)))
+  (lyskom-xemacs-or-gnu (or (not (find-face f1))
+                            (face-equal (find-face f1)
+                                        (find-face 'default)))
+                        (or (not (facep f1))
+                            (face-equal f1 'default))))
 		  
 
 ;;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.2 1997-02-12 13:46:00 byers Exp $
+;;;;; $Id: buffers.el,v 44.3 1997-03-11 13:48:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.2 1997-02-12 13:46:00 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.3 1997-03-11 13:48:39 byers Exp $\n"))
 
 
 ;;;;
@@ -233,6 +233,21 @@ categories")
                                         (lyskom-default-value
                                          'lyskom-associated-buffer-list)))))))
 
+
+(defun lyskom-quit-query ()
+  (if (and (boundp 'lyskom-buffer)
+           (local-variable-p 'lyskom-buffer (current-buffer))
+             (eq lyskom-buffer (current-buffer))
+             (lyskom-buffers-of-category 'write-texts))
+    (unwind-protect
+        (progn
+          (display-buffer (car (lyskom-buffers-of-category 'write-texts)))
+          (lyskom-ja-or-nej-p (lyskom-get-string 'quit-in-spite-of-unsent)))
+      nil)
+    t))
+
+(add-hook 'kill-buffer-query-functions 'lyskom-quit-query)
+(add-hook 'kill-emacs-query-functions 'lyskom-quit-query)
 
 (defun lyskom-get-buffer-create (category name &optional unique)
   "Create a new buffer of category CATEGORY with name generated from NAME. 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.10 1997-03-08 02:56:51 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.11 1997-03-11 13:48:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.10 1997-03-08 02:56:51 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.11 1997-03-11 13:48:47 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -92,32 +92,7 @@ Does lyskom-end-of-command."
                                            "-edit")))
 	(config (current-window-configuration)))
 
-    (process-kill-without-query (get-buffer-process (current-buffer)) t)
-
     (lyskom-display-buffer buffer)
-;;;                           'kom-write-texts-in-window
-;;;                           'kom-dont-restore-window-after-editing)
-    
-
-;;;    (cond
-;;;     ((and (or (bufferp kom-write-texts-in-window)
-;;;	       (stringp kom-write-texts-in-window))
-;;;	   (get-buffer-window kom-write-texts-in-window))
-;;;      (select-window (get-buffer-window kom-write-texts-in-window))
-;;;      (switch-to-buffer buffer))
-;;;     ((eq kom-write-texts-in-window 'other)
-;;;      (switch-to-buffer-other-window buffer))
-;;;     ((and (eq kom-write-texts-in-window 'other-frame)
-;;;	   (not (eq (selected-frame) (next-frame))))
-;;;      (select-frame (next-frame))
-;;;      (switch-to-buffer buffer))
-;;;     ((eq kom-write-texts-in-window 'new-frame)
-;;;      (switch-to-buffer-other-frame buffer)
-;;;      (make-local-variable 'lyskom-is-dedicated-edit-window)
-;;;      (setq lyskom-is-dedicated-edit-window t))
-;;;     (t
-;;;      (switch-to-buffer buffer)))
-
     (lyskom-edit-mode)
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
@@ -136,6 +111,7 @@ Does lyskom-end-of-command."
     (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
   (set-buffer lyskom-buffer)
   )
+
 
 
 (defun lyskom-edit-insert-miscs (misc-list subject body)
@@ -373,17 +349,6 @@ Commands:
                          misc-list
                          buffer)))
             (lyskom-undisplay-buffer)
-;;;	    (if kom-dont-restore-window-after-editing
-;;;		(bury-buffer)
-;;;	      (save-excursion
-;;;		(if (and (boundp 'lyskom-is-dedicated-edit-window)
-;;;			 lyskom-is-dedicated-edit-window)
-;;;		    (condition-case error
-;;;			(delete-frame)
-;;;		      (error))))
-;;;	      (set-window-configuration lyskom-edit-return-to-configuration)
-;;;	      (set-buffer (window-buffer (selected-window))))
-
 	    (goto-char (point-max))))
     ;;
     ;; Catch no-subject and other things
@@ -392,7 +357,7 @@ Commands:
     (lyskom-abort-edit
      (apply 'lyskom-message (cdr-safe err)))
     (lyskom-no-subject
-     (lyskom-beep lyskom-ding-on-no-subject)
+     (lyskom-beep kom-ding-on-no-subject)
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
      (lyskom-message "%s" (lyskom-get-string (car (cdr err))))
@@ -417,14 +382,17 @@ text is a member of some recipient of this text."
          (recipient-list nil)
          (author-list nil)
          (author-is-member nil)
+         (text-stat nil)
          (collector (make-collector))
          (extra-headers nil)
+         (buffer (current-buffer))
          (me (save-excursion (set-buffer lyskom-buffer)
                              lyskom-pers-no))
          (num-me 0))
 
     ;;
     ;; List all texts this text is a comment to
+    ;; List all recipients of the text
     ;;
 
     (lyskom-traverse misc (cdr misc-list)
@@ -437,11 +405,55 @@ text is a member of some recipient of this text."
              (setq recipient-list (cons (cdr misc) recipient-list)))))
 
     ;;
+    ;; Check for new comments
+    ;;
+
+    (when (save-excursion (set-buffer lyskom-buffer)
+                           (cond ((null kom-check-for-new-comments) nil)
+                                 ((functionp kom-check-for-new-comments)
+                                  (funcall kom-check-for-new-comments
+                                           buffer misc-list subject))
+                                 (t t)))
+      (lyskom-message (lyskom-format 'checking-comments))
+      (save-excursion
+        (set-buffer lyskom-buffer)
+        (set-collector->value collector nil)
+
+        (mapcar (function (lambda (text-stat)
+                            (cache-del-text-stat text-stat)
+                            (initiate-get-text-stat 'sending 
+                                                    'collector-push
+                                                    text-stat
+                                                    collector)))
+                comm-to-list)
+        (lyskom-wait-queue 'sending)
+                                             
+        (lyskom-traverse text-stat (collector->value collector)
+          (when text-stat
+            (lyskom-traverse misc-item (text-stat->misc-info-list text-stat)
+              (when (and (eq (misc-info->type misc-item) 'COMM-IN)
+                         (not (lyskom-text-read-at-least-once-p 
+                               (blocking-do 'get-text-stat
+                                            (misc-info->comm-in misc-item))))
+                         (not (lyskom-j-or-n-p
+                               (lyskom-format 'have-unread-comment
+                                              text-stat))))
+                (signal 'lyskom-edit-text-abort
+                        (list "%s"
+                              (lyskom-get-string 
+                               'please-check-commented-texts))))))))
+      (lyskom-message (lyskom-format 'checking-comments-done)))
+
+
+    ;;
     ;; Confirm multiple recipients
     ;;
     
-    (if (and kom-confirm-multiple-recipients
-             (not (eq kom-confirm-multiple-recipients 'before))
+
+    (set-collector->value collector nil)
+    (if (and (lyskom-default-value 'kom-confirm-multiple-recipients)
+             (not (eq (lyskom-default-value 'kom-confirm-multiple-recipients)
+                      'before))
              (> (- (length recipient-list) num-me) 1))
         (save-excursion
           (goto-char (point-min))
@@ -453,7 +465,7 @@ text is a member of some recipient of this text."
                             (lyskom-get-string 
                              'please-edit-recipients))))))
 
-    (if (and kom-check-commented-author-membership
+    (if (and (lyskom-default-value 'kom-check-commented-author-membership)
              (assq 'comm-to (cdr misc-list)))
         (progn
           (lyskom-message (lyskom-get-string 'checking-rcpt))

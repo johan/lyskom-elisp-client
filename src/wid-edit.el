@@ -4,7 +4,7 @@
 ;;
 ;; Author: Per Abrahamsen <abraham@dina.kvl.dk>
 ;; Keywords: extensions
-;; Version: 1.56
+;; Version: 1.61
 ;; X-URL: http://www.dina.kvl.dk/~abraham/custom/
 
 ;;; Commentary:
@@ -14,32 +14,37 @@
 ;;; Code:
 
 (require 'widget)
-(require 'cl)
-(autoload 'pp-to-string "pp")
-(autoload 'Info-goto-node "info")
 
-(if (string-match "XEmacs" emacs-version)
-    ;; XEmacs spell `intangible' as `atomic'.
-    (defun widget-make-intangible (from to side)
-      "Make text between FROM and TO atomic with regard to movement.
+(eval-and-compile
+  (require 'cl))
+
+;;; Compatibility.
+
+(eval-and-compile
+  (autoload 'pp-to-string "pp")
+  (autoload 'Info-goto-node "info")
+
+  (if (string-match "XEmacs" emacs-version)
+      ;; XEmacs spell `intangible' as `atomic'.
+      (defun widget-make-intangible (from to side)
+	"Make text between FROM and TO atomic with regard to movement.
 Third argument should be `start-open' if it should be sticky to the rear,
 and `end-open' if it should sticky to the front."
-      (require 'atomic-extents)
-      (let ((ext (make-extent from to)))
-	 ;; XEmacs doesn't understant different kinds of read-only, so
-	 ;; we have to use extents instead.  
-	(put-text-property from to 'read-only nil)
-	(set-extent-property ext 'read-only t)
-	(set-extent-property ext 'start-open nil)
-	(set-extent-property ext 'end-open nil)
-	(set-extent-property ext side t)
-	(set-extent-property ext 'atomic t)))
-  (defun widget-make-intangible (from to size)
-    "Make text between FROM and TO intangible."
-    (put-text-property from to 'intangible 'front)))
+	(require 'atomic-extents)
+	(let ((ext (make-extent from to)))
+	   ;; XEmacs doesn't understant different kinds of read-only, so
+	   ;; we have to use extents instead.  
+	  (put-text-property from to 'read-only nil)
+	  (set-extent-property ext 'read-only t)
+	  (set-extent-property ext 'start-open nil)
+	  (set-extent-property ext 'end-open nil)
+	  (set-extent-property ext side t)
+	  (set-extent-property ext 'atomic t)))
+    (defun widget-make-intangible (from to size)
+      "Make text between FROM and TO intangible."
+      (put-text-property from to 'intangible 'front)))
 	  
 ;; The following should go away when bundled with Emacs.
-(eval-and-compile
   (condition-case ()
       (require 'custom)
     (error nil))
@@ -54,27 +59,25 @@ and `end-open' if it should sticky to the front."
     (when (fboundp 'copy-face)
       (copy-face 'default 'widget-documentation-face)
       (copy-face 'bold 'widget-button-face)
-      (copy-face 'italic 'widget-field-face))))
+      (copy-face 'italic 'widget-field-face)))
 
-;;; Compatibility.
-
-(unless (fboundp 'event-point)
-  ;; XEmacs function missing in Emacs.
-  (defun event-point (event)
-    "Return the character position of the given mouse-motion, button-press,
+  (unless (fboundp 'event-point)
+    ;; XEmacs function missing in Emacs.
+    (defun event-point (event)
+      "Return the character position of the given mouse-motion, button-press,
 or button-release event.  If the event did not occur over a window, or did
 not occur over text, then this returns nil.  Otherwise, it returns an index
 into the buffer visible in the event's window."
-    (posn-point (event-start event))))
+      (posn-point (event-start event))))
 
-(unless (fboundp 'error-message-string)
-  ;; Emacs function missing in XEmacs.
-  (defun error-message-string (obj)
-    "Convert an error value to an error message."
-    (let ((buf (get-buffer-create " *error-message*")))
-      (erase-buffer buf)
-      (display-error obj buf)
-      (buffer-string buf))))
+  (unless (fboundp 'error-message-string)
+    ;; Emacs function missing in XEmacs.
+    (defun error-message-string (obj)
+      "Convert an error value to an error message."
+      (let ((buf (get-buffer-create " *error-message*")))
+	(erase-buffer buf)
+	(display-error obj buf)
+	(buffer-string buf)))))
 
 ;;; Customization.
 
@@ -232,8 +235,8 @@ This is only meaningful for radio buttons or checkboxes in a list."
 
   ;; Make it possible to edit the front end of the field.
   (add-text-properties (1- from) from (list 'rear-nonsticky t
-					    'end-open t
-					    'invisible t))
+					      'end-open t
+					      'invisible t))
   (when (or (string-match "\\(.\\|\n\\)%v" (widget-get widget :format))
 	    (widget-get widget :hide-front-space))
     ;; WARNING: This is going to lose horrible if the character just
@@ -274,7 +277,13 @@ This is only meaningful for radio buttons or checkboxes in a list."
 	(secret-to to)
 	(size (widget-get widget :size))
 	(face (or (widget-get widget :value-face)
-		  'widget-field-face)))
+		  'widget-field-face))
+	(help-echo (widget-get widget :help-echo))
+	(help-property (if (featurep 'balloon-help)
+			   'balloon-help
+			 'help-echo)))
+    (unless (or (stringp help-echo) (null help-echo))
+      (setq help-echo 'widget-mouse-help))
 
     (when secret 
       (while (and size
@@ -295,8 +304,9 @@ This is only meaningful for radio buttons or checkboxes in a list."
 				       'read-only nil
 				       'keymap map
 				       'local-map map
+				       help-property help-echo
 				       'face face))
-
+    
     (when secret 
       (save-excursion
 	(goto-char from)
@@ -308,18 +318,38 @@ This is only meaningful for radio buttons or checkboxes in a list."
 
     (unless (widget-get widget :size)
       (add-text-properties to (1+ to) (list 'field widget
+					    help-property help-echo
 					    'face face)))
     (add-text-properties to (1+ to) (list 'local-map map
 					  'keymap map))))
 
 (defun widget-specify-button (widget from to)
   ;; Specify button for WIDGET between FROM and TO.
-  (let ((face (widget-apply widget :button-face-get)))
+  (let ((face (widget-apply widget :button-face-get))
+	(help-echo (widget-get widget :help-echo))
+	(help-property (if (featurep 'balloon-help)
+			   'balloon-help
+			 'help-echo)))
+    (unless (or (null help-echo) (stringp help-echo))
+      (setq help-echo 'widget-mouse-help))
     (add-text-properties from to (list 'button widget
 				       'mouse-face widget-mouse-face
 				       'start-open t
 				       'end-open t
+				       help-property help-echo
 				       'face face))))
+
+(defun widget-mouse-help (extent)
+  "Find mouse help string for button in extent."
+  (let* ((widget (widget-at (extent-start-position extent)))
+	 (help-echo (and widget (widget-get widget :help-echo))))
+    (cond ((stringp help-echo)
+	   help-echo)
+	  ((and (symbolp help-echo) (fboundp help-echo)
+		(stringp (setq help-echo (funcall help-echo widget))))
+	   help-echo)
+	  (t
+	   (format "(widget %S :help-echo %S)" widget help-echo)))))
 
 (defun widget-specify-sample (widget from to)
   ;; Specify sample for WIDGET between FROM and TO.
@@ -387,7 +417,7 @@ later with `widget-put'."
 
 (defun widget-apply (widget property &rest args)
   "Apply the value of WIDGET's PROPERTY to the widget itself.
-ARGS are passed as extra argments to the function."
+ARGS are passed as extra arguments to the function."
   (apply (widget-get widget property) widget args))
 
 (defun widget-value (widget)
@@ -462,7 +492,16 @@ same glyph for multiple widgets, "
   (insert "*")
   (add-text-properties (1- (point)) (point) 
 		       (list 'invisible t
-			     'end-glyph glyph)))
+			     'end-glyph glyph))
+  (let ((help-echo (widget-get widget :help-echo)))
+    (when help-echo
+      (let ((extent (extent-at (1- (point)) nil 'end-glyph))
+	    (help-property (if (featurep 'balloon-help)
+			       'balloon-help
+			     'help-echo)))
+	(set-extent-property extent help-property (if (stringp help-echo)
+						      help-echo
+						    'widget-mouse-help))))))
 
 ;;; Creating Widgets.
 
@@ -567,7 +606,7 @@ The optional ARGS are additional keyword arguments."
     (apply 'insert args)
     (widget-specify-text from (point))))
 
-;;; Keymap and Comands.
+;;; Keymap and Commands.
 
 (defvar widget-keymap nil
   "Keymap containing useful binding for buffers containing widgets.
@@ -694,7 +733,11 @@ ARG may be negative to move backward."
 		       (button (goto-char button))
 		       (field (goto-char field))
 		       (t
-			(error "No buttons or fields found")))))))))
+			(error "No buttons or fields found"))))))
+	(setq button (widget-at (point)))
+	(if (and button (widget-get button :tab-order)
+		 (< (widget-get button :tab-order) 0))
+	    (setq arg (1+ arg))))))
   (while (< arg 0)
     (if (= (point-min) (point))
 	(forward-char 1))
@@ -728,7 +771,11 @@ ARG may be negative to move backward."
       (cond ((and button field)
 	     (goto-char (max button field)))
 	    (button (goto-char button))
-	    (field (goto-char field)))))
+	    (field (goto-char field)))
+      (setq button (widget-at (point)))
+      (if (and button (widget-get button :tab-order)
+	       (< (widget-get button :tab-order) 0))
+	  (setq arg (1- arg)))))
   (widget-echo-help (point))
   (run-hooks 'widget-move-hook))
 
@@ -1155,7 +1202,7 @@ With optional ARG, move across that many fields."
 
 (define-widget 'link 'item
   "An embedded link."
-  :help-echo "Push me to follow the link."
+  :help-echo "Follow the link."
   :format "%[_%t_%]")
 
 ;;; The `info-link' Widget.
@@ -1482,6 +1529,8 @@ With optional ARG, move across that many fields."
   (widget-specify-insert 
    (let* ((children (widget-get widget :children))
 	  (buttons (widget-get widget :buttons))
+	  (button-args (or (widget-get type :sibling-args)
+			   (widget-get widget :button-args)))
 	  (from (point))
 	  child button)
      (insert (widget-get widget :entry-format))
@@ -1493,8 +1542,10 @@ With optional ARG, move across that many fields."
 	 (cond ((eq escape ?%)
 		(insert "%"))
 	       ((eq escape ?b)
-		(setq button (widget-create-child-and-convert
-			      widget 'checkbox :value (not (null chosen)))))
+		(setq button (apply 'widget-create-child-and-convert
+				    widget 'checkbox
+				    :value (not (null chosen))
+				    button-args)))
 	       ((eq escape ?v)
 		(setq child
 		      (cond ((not chosen)
@@ -1661,6 +1712,8 @@ With optional ARG, move across that many fields."
    (let* ((value (widget-get widget :value))
 	  (children (widget-get widget :children))
 	  (buttons (widget-get widget :buttons))
+	  (button-args (or (widget-get type :sibling-args)
+			   (widget-get widget :button-args)))
 	  (from (point))
 	  (chosen (and (null (widget-get widget :choice))
 		       (widget-apply type :match value)))
@@ -1674,9 +1727,10 @@ With optional ARG, move across that many fields."
 	 (cond ((eq escape ?%)
 		(insert "%"))
 	       ((eq escape ?b)
-		(setq button (widget-create-child-and-convert
-			      widget 'radio-button 
-			      :value (not (null chosen)))))
+		(setq button (apply 'widget-create-child-and-convert
+				    widget 'radio-button 
+				    :value (not (null chosen))
+				    button-args)))
 	       ((eq escape ?v)
 		(setq child (if chosen
 				(widget-create-child-value
@@ -1779,6 +1833,7 @@ With optional ARG, move across that many fields."
 (define-widget 'insert-button 'push-button
   "An insert button for the `editable-list' widget."
   :tag "INS"
+  :help-echo "Insert a new item into the list at this position."
   :action 'widget-insert-button-action)
 
 (defun widget-insert-button-action (widget &optional event)
@@ -1791,6 +1846,7 @@ With optional ARG, move across that many fields."
 (define-widget 'delete-button 'push-button
   "A delete button for the `editable-list' widget."
   :tag "DEL"
+  :help-echo "Delete this item from the list."
   :action 'widget-delete-button-action)
 
 (defun widget-delete-button-action (widget &optional event)
@@ -1828,7 +1884,9 @@ With optional ARG, move across that many fields."
     (cond ((eq escape ?i)
 	   (and (widget-get widget :indent)
 		(insert-char ?  (widget-get widget :indent)))
-	   (widget-create-child-and-convert widget 'insert-button))
+	   (apply 'widget-create-child-and-convert 
+		  widget 'insert-button
+		  (widget-get widget :append-button-args)))
 	  (t 
 	   (widget-default-format-handler widget escape)))))
 
@@ -1954,11 +2012,13 @@ With optional ARG, move across that many fields."
 	 (cond ((eq escape ?%)
 		(insert "%"))
 	       ((eq escape ?i)
-		(setq insert (widget-create-child-and-convert
-			      widget 'insert-button)))
+		(setq insert (apply 'widget-create-child-and-convert
+				    widget 'insert-button
+				    (widget-get widget :insert-button-args))))
 	       ((eq escape ?d)
-		(setq delete (widget-create-child-and-convert
-			      widget 'delete-button)))
+		(setq delete (apply 'widget-create-child-and-convert
+				    widget 'delete-button
+				    (widget-get widget :delete-button-args))))
 	       ((eq escape ?v)
 		(if conv
 		    (setq child (widget-create-child-value 
@@ -2044,7 +2104,7 @@ With optional ARG, move across that many fields."
 (define-widget 'widget-help 'push-button
   "The widget documentation button."
   :format "%[[%t]%] %d"
-  :help-echo "Push me to toggle the documentation."
+  :help-echo "Toggle display of documentation."
   :action 'widget-help-action)
 
 (defun widget-help-action (widget &optional event)
@@ -2275,8 +2335,8 @@ It will read a directory name from the minibuffer when activated."
 
 (define-widget 'color-item 'choice-item
   "A color name (with sample)."
-  :format "%v (%[sample%])\n"
-  :button-face-get 'widget-color-item-button-face-get)
+  :format "%v (%{sample%})\n"
+  :sample-face-get 'widget-color-item-button-face-get)
 
 (defun widget-color-item-button-face-get (widget)
   ;; We create a face from the value.
@@ -2289,7 +2349,7 @@ It will read a directory name from the minibuffer when activated."
   "Choose a color name (with sample)."
   :format "%[%t%]: %v"
   :tag "Color"
-  :value "default"
+  :value "black"
   :value-create 'widget-color-value-create
   :value-delete 'widget-children-value-delete
   :value-get 'widget-color-value-get
