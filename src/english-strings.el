@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.233 2002-09-14 20:56:54 byers Exp $
+;;;;; $Id: english-strings.el,v 44.234 2002-09-14 22:31:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.233 2002-09-14 20:56:54 byers Exp $"))
+              "$Id: english-strings.el,v 44.234 2002-09-14 22:31:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -587,7 +587,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     ; From commands2.el:
 
     (your-memberships . "Your LysKOM conference memberships:\n")
-    (memberships-header . "Last access	   Prio	Unread	Conference\n")
+    (memberships-header . "Last access	   Prio Unread	Conference\n")
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     
     (conf-for-status . "Get status of which conference? ")
@@ -635,9 +635,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (show-membership-info-q . "Show number of unreads? ")
     (conf-has-these-members . "\n%#1M has the following members:\n")
     (conf-has-no-members . "\n%#1M has no members.\n")
-    (member-list-header . "Last entered        Unread  Name\n\n")
+    (member-list-header . "\nLast entered        Unread  Name\n")
     (secret-membership . "--- Secret line ---\n")
-    (conf-membership-line . "%#1s%#2M %#3s\n")
+    (conf-membership-line . "%#4@%#1s%#2M %#3s\n")
     (conf-membership-line-2 . "                            Added %#1s by %#2P\n")
     (pers-for-status . "Get status of which user? ")
     (text-to-see-author-status-of . "Get status of the author of which text? ")
@@ -664,13 +664,13 @@ Read all about it at http://www.lysator.liu.se/history/")
     (show-membership-list-also-q . "List memberships? ")
     (not-allowed-see-confs . "%#1P is not a member of any conferences.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
-    (membership-list-header . "Last access          Unread  Conference\n\n")
-    (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
+    (membership-list-header . "\nLast access         Unread   Conference\n")
+    (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Added %#1s by %#2P\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Send message to whom? (%s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
-    (his-total-unread . "\n%#1M has a total of %#2d unread texts.\n")
+    (his-total-unread . "\n%#1M has %#2d unread texts (plus %#3d in passive memberships).\n")
     (message-prompt . "Message: ")
     (message-sent-to-user . "\
 %[%#3$================================================================

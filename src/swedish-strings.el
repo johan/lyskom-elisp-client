@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.269 2002-09-14 20:56:55 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.270 2002-09-14 22:31:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.269 2002-09-14 20:56:55 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.270 2002-09-14 22:31:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -618,9 +618,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (show-membership-info-q . "Visa antalet olästa? ")
     (conf-has-these-members . "\n%#1M har följande medlemmar:\n")
     (conf-has-no-members . "\n%#1M har inga medlemmar.\n")
-    (member-list-header . "Senast inne          Osett  Namn\n\n")
+    (member-list-header . "\nSenast inne         Osett   Namn\n")
     (secret-membership . "*** Hemlig rad ***\n")
-    (conf-membership-line . "%#1s%#2M %#3s\n")
+    (conf-membership-line . "%#4@%#1s%#2M %#3s\n")
     (conf-membership-line-2 . "                            Adderad %#1s av %#2P\n")
     (pers-for-status . "Vem vill du se statusen för? ")
     (text-to-see-author-status-of . "Vilken texts författare vill du statusen för? ")
@@ -647,13 +647,13 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (show-membership-list-also-q . "Vill du se vilka möten personen är medlem i också? ")
     (not-allowed-see-confs . "%#1P är inte medlem i några möten.\n")
     (is-member-of . "\n%#1P är medlem i följande möten:\n")
-    (membership-list-header . "Senast inne           Osett  Namn\n\n")
-    (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
+    (membership-list-header . "\nSenast inne           Osett  Namn\n")
+    (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Adderad %#1s av %#2P\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
-    (his-total-unread . "\n%#1M har totalt %#2d olästa.\n")
+    (his-total-unread . "\n%#1M har totalt %#2d olästa (plus %#3d i passiva medlemskap).\n")
     (message-prompt . "Meddelande: ")
     (message-sent-to-user . "\
 %[%#3$\

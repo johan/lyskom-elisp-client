@@ -1,3 +1,10 @@
+2002-09-15  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 746:
+	* commands2.el (kom-status-person): Count unreads in passive
+	conferences separately. Show passive memberships in gray.
+	(kom-status-conf): Show passive members in gray.
+
 2002-09-14  David Byers  <david.byers@swipnet.se>
 
 	Start fixing bug 750:
