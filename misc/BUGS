@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 19
+Unused-Bug-Id: 20
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -25,7 +25,7 @@ Currently handled by:
 Severity: 7
 Priority: 7
 Difficulty: 6
-Last edit: inge: Mon Aug  3 00:55:57 1992
+Last edit: linus: Wed Jan  5 20:32:42 1994
 Reported by: ingwa
 Site: 
 Associated mails:
@@ -33,6 +33,9 @@ End mails.
 ---
 See further bug with id 1.  I suggest we fix this one at the same time
 as bug no 1 is fixed.
+
+The order in which the sessions are sorted is not obvious. We could
+provide choices: Alphabetically, Friends first/last...
 
 Id: 3
 Summary: The who buffer should have the number of logged in people in its status line
@@ -358,6 +361,21 @@ Priority: 1
 Difficulty: 7
 Last edit: linus: Sat Dec 11 14:40:31 1993
 Reported by: linus@lysator.liu.se
+Site: lysator
+Associated mails:
+End mails.
+---
+
+Id: 19
+Summary: kom-bug-report borde heta annorlunda och sl{nga in mig i mail-mode.
+Version: 0.38
+Created: linus: Wed Jan  5 21:04:18 1994
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 0
+Last edit: linus: Wed Jan  5 21:04:18 1994
+Reported by: linus
 Site: lysator
 Associated mails:
 End mails.
