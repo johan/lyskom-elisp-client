@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 40.4 1996-04-04 11:55:11 byers Exp $
+;;;;; $Id: vars.el.in,v 40.5 1996-04-25 15:03:30 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 40.4 1996-04-04 11:55:11 byers Exp $\n"
+  "$Id: vars.el.in,v 40.5 1996-04-25 15:03:30 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -147,6 +147,14 @@ This variable is stored in the LysKOM server.")
 position (generally the most recent prompt) will alsways be visisble.
 
 This variable is stored in the LysKOM server.")
+
+;; Should this be set to nil if baud-rate is low?
+;; This is set to nil until we are sure that it works OK.
+(defvar kom-delayed-printing nil
+  "*Non-nil means delay printing of some information not in the cache.
+You might want to turn this off to have the old, linear behaviour.
+
+This variable is not stored in the LysKOM server.")
 
 (defvar kom-higher-priority-breaks nil
   "*Non-nil means allow texts from conferences with highter priority to break in.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.4 1996-04-14 23:39:08 davidk Exp $
+;;;;; $Id: commands1.el,v 40.5 1996-04-25 15:03:01 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.4 1996-04-14 23:39:08 davidk Exp $\n"))
+	      "$Id: commands1.el,v 40.5 1996-04-25 15:03:01 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1139,17 +1139,16 @@ Args: CONF-STAT MEMBERSHIP"
 		      (lyskom-get-string 'search-for-pers))))
   (mapcar
    (function (lambda (no)
-	       (lyskom-list-pers-print (blocking-do 'get-conf-stat no))))
+	       (lyskom-list-pers-print no)))
    (lyskom-extract-persons (blocking-do 'lookup-name match))))
 
 
-(defun lyskom-list-pers-print (conf-stat)
-  "Print name of the person in CONF-STAT for kom-list-persons."
-  (if conf-stat
-      (lyskom-format-insert "%[%#1@%4#2:p %#3:P%]\n"
-			    (lyskom-default-button 'conf conf-stat)
-			    conf-stat
-			    conf-stat)))
+(defun lyskom-list-pers-print (conf-no)
+  "Print name of the person CONF-NO for kom-list-persons."
+  (lyskom-format-insert "%[%#1@%4#2:p %#3P%]\n"
+			(lyskom-default-button 'pers conf-no)
+			conf-no
+			conf-no))
 
 
 
@@ -1166,21 +1165,19 @@ Those that you are not a member in will be marked with an asterisk."
 		      (lyskom-get-string 'search-for-conf))))
   (mapcar
    (function (lambda (no)
-	       (lyskom-list-conf-print (blocking-do 'get-conf-stat no))))
+	       (lyskom-list-conf-print no)))
    (lyskom-extract-confs (blocking-do 'lookup-name match))))
 
 
-(defun lyskom-list-conf-print (conf-stat)
-  "Print a line of info about conf-stat.
+(defun lyskom-list-conf-print (conf-no)
+  "Print a line of info about CONF-NO.
 If you are not member in the conference it will be flagged with an asterisk."
-  (if (not conf-stat)
-      nil
-    (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4:M%]\n"
-			  (lyskom-default-button 'conf conf-stat)
-			  conf-stat
-			  (if (lyskom-member-p (conf-stat->conf-no conf-stat))
-			      32 ?*)
-			  conf-stat)))
+  (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4M%]\n"
+			(lyskom-default-button 'conf conf-no)
+			conf-no
+			(if (lyskom-member-p conf-no)
+			    32 ?*)
+			conf-no))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.3 1996-04-14 23:39:21 davidk Exp $
+;;;;; $Id: review.el,v 40.4 1996-04-25 15:03:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.3 1996-04-14 23:39:21 davidk Exp $\n"))
+	      "$Id: review.el,v 40.4 1996-04-25 15:03:20 davidk Exp $\n"))
 
 
 
@@ -181,34 +181,42 @@ Args: BY TO NUM"
 
 ;;; ================================================================
 ;;; lyskom-get-texts-by-and-to
-;;; Author: David Byers
-;;;
-;;; Conceptual algorithm:
-;;;
-;;; Get a segment from the start or end of the person's map of created
-;;; texts and the conference's map of texts whose intersection
-;;; contains at least NUM texts. Calculate the intersection and return
-;;; the NUM first or last texts in the intersection.
-;;;
-;;; Real algorithm:
-;;;
-;;; In each iteration, get INCREMENT new texts from the person's map
-;;; (call these BY) and the conference's map (call these TO).
-;;; Calculate the intersection between TO and all previous BYs (call
-;;; these BY1, BY2 ... BYi) and prepend this to the result list. Next
-;;; calculate the intersection between BY and all previous TOs (call
-;;; these TO1, TO2 ... TOi) and concatenate the result to the
-;;; corresponding element in the result list. At this point, the
-;;; concatenation of all elements of the result list will be the
-;;; intersection between the concatenation of all BYi's and all TOi's.
-;;; 
-;;; When the intersection is large enough, concatenate the results in
-;;; the proper order and return NUM texts from the beginning or end of
-;;; the results.
-;;;
-;;; The tricky iteration ensures that we don't do any redundant
-;;; intersection calculations. 
-;;;
+;;; Author: David K}gedal
+
+(defmacro lyskom-bat-advance-by-list ()
+  (` (if (cdr by-list)
+	 (setq by-list (cdr by-list))
+       (setq by-list (nreverse
+		      (lyskom-remove-zeroes
+		       (listify-vector
+			(map->text-nos
+			 (blocking-do 'get-created-texts
+				      (pers-stat->pers-no persstat)
+				      (if (< num 0)
+					  pmark
+					(- pmark (1- increment)))
+				      increment))))))
+       (if (> num 0)
+	   (setq pmark (- pmark increment))
+	 (setq pmark (+ pmark increment))))))
+
+(defmacro lyskom-bat-advance-to-list ()
+  (` (if (cdr to-list)
+	 (setq to-list (cdr to-list))
+       (setq to-list (nreverse
+		      (lyskom-remove-zeroes
+		       (listify-vector
+			(map->text-nos
+			 (blocking-do 'get-map
+				      (conf-stat->conf-no confstat)
+				      (if (< num 0)
+					  cmark
+					(- cmark (1- increment)))
+				      increment))))))
+       (if (> num 0)
+	   (setq cmark (- cmark increment))
+	 (setq cmark (+ cmark increment))))))
+
 
 (defun lyskom-get-texts-by-and-to (persno confno num)
   "Get NUM texts written by person PERSNO with conference CONFNO as a
@@ -229,88 +237,40 @@ Args: persno confno num"
          (clow (conf-stat->first-local-no confstat))
          (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
          (cmark (if (< num 0) clow chigh)))
+    ;; Initialize by-list and to-list
+    (lyskom-bat-advance-to-list)
+    (lyskom-bat-advance-by-list)
 
-    (while (and (<= pmark phigh)
-                (<= cmark chigh)
-                (>= pmark plow)
-                (>= cmark clow)
-                (> (abs num) result-size))
-      (setq by (lyskom-remove-zeroes
-                (listify-vector
-                 (map->text-nos
-                  (blocking-do 'get-created-texts
-                            (pers-stat->pers-no persstat)
-                            (if (< num 0)
-                                pmark
-                              (- pmark (1- increment)))
-                            increment))))
-            to (lyskom-remove-zeroes
-                (listify-vector
-                 (map->text-nos
-                  (blocking-do 'get-map
-                            (conf-stat->conf-no confstat)
-                            (if (< num 0)
-                                cmark
-                              (- cmark (1- increment)))
-                            increment)))))
-      ;;
-      ;;    Add intersection between new TO and old BYs
-      ;;    to the results list.
-      ;;
+    ;; The real work below
+    (while (and (< result-size num)
+		by-list
+		to-list)
+      (cond (;; We have found a text in both lists. Then we add it to
+	     ;; result-list and move on.
+	     (= (car by-list) (car to-list))
+	     (setq result-list (cons (car by-list) result-list))
+	     (lyskom-bat-advance-to-list)
+	     (lyskom-bat-advance-by-list)
+	     (++ result-size))
 
-      (setq result-list
-            (cons (apply 'nconc
-                         (mapcar 
-                          (function
-                           (lambda (x)
-                             (lyskom-intersection to x)))
-                          by-list))
-                  result-list))
+	    ;; We know that the first text on to-list can't be on
+	    ;; by-list. So we skip it and move on.
+	    ((or (and (< num 0) (> (car by-list) (car to-list)))
+		 (and (> num 0) (< (car by-list) (car to-list))))
+	     (lyskom-bat-advance-to-list))
 
-      ;;
-      ;;    Add new BY and TO to the by-list and to-list
-      ;;
+	    ;; We know that the first text on by-list can't be on
+	    ;; to-list. So we skip it and move on.
+	    (t
+	     (lyskom-bat-advance-by-list))))
+    
+    ;; If we were searching from lower numbers, the resulting list
+    ;; will be reversed.
+    (if (< num 0)
+	(setq result-list (nreverse result-list)))
 
-      (setq by-list (cons by by-list)
-            to-list (cons to to-list))
+    result-list))
       
-
-      ;;
-      ;;    Add intersections between new BY and all TOs
-      ;;
-
-      (setq result-list
-            (mapcar2 (function
-                      (lambda (x y)
-                        (lyskom-intersection y
-                         (nconc x by))))
-                     result-list
-                     to-list))
-
-      (setq result-size (apply '+ (mapcar 'length result-list)))
-
-      ;;
-      ;;    Adjust the marks
-      ;;
-
-      (if (> num 0)
-          (setq pmark (- pmark increment)
-                cmark (- cmark increment))
-        (setq pmark (+ pmark increment)
-              cmark (+ cmark increment))))
-
-    ;;
-    ;;  Extract results
-    ;;
-
-    (setq result-list
-          (apply 'nconc (if (< num 0)
-                            (nreverse result-list)
-                          result-list)))
-
-    (if (> num 0)
-        (nthcdr (- (length result-list) num) result-list)
-      (nfirst (- (length result-list) (- num))  result-list))))
 
 
 ;;; ===============================================================

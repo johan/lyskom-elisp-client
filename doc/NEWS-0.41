@@ -1,12 +1,12 @@
+
+		       Nyheter i lyskom.el 0.41
+		       ========================
+
 Version 0.41 av elispklienten finns nu tillgänglig. Den innehåller
 rättningar på ett par mer eller mindra allvarligar buggar i 0.40 och
 ett par nya finesser.
 
 * Fitjurs och förbättringar
-
-** Det går en aning fortare att visa texter. Detta görs genom att
-   utskrift av namn på författare till kommentarer mm. fördröjs om de
-   inte redan finns i cachen.
 
 ** Innehållet i bufferten scrollas mer kontinuerligt allteftersom
    utmatning kommer. Tidigare scrollade den bara när man fick en
@@ -17,10 +17,22 @@ ett par nya finesser.
 ** Man blir inte längre ombedd att skriva en presentation när man
    skapar hemliga möten.
 
-** Kommandot kom-view-previous-commented-text är nytt.
+** Kommandot "Återse det föregående kommenterade"
+   (kom-view-previous-commented-text) är nytt, och finns på åK.
 
 ** Information om vem som har adderat en kommentarslänk visas nu i
    kommentaren.
+
+** Det kan gå mycket fortare än förut. Detta görs genom att utskrift
+   av namn och information om kommentarslänkar fördröjs om de inte
+   redan finns i cachen. Detta kan eventuellt bli besvärligt om man
+   använder en långsam terminal. Beteendet kan styras med variabeln
+   kom-delayed-printing.
+
+   I denna version är detta avslaget per default, eftersom vi inte har
+   testat att det fungerar tillfredsställande, men vi uppmanar alla
+   att testa att sätta kom-delayed-printing till t och berätta om
+   eventuella problem.
 
 * Bugfixar
 
@@ -37,7 +49,7 @@ ett par nya finesser.
 ** Det är svårare att få klienten att stoppa köerna av misstag.
 
 ** Man kan nu trycka 'åak' direkt efter att ha skrivit en kommentar
-   genom att trycka på 'k'.
+   genom att trycka på 'k' igen.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
@@ -91,3 +103,7 @@ kom-default-face-scheme och lyskom-face-schemes för mer information.
 
 Hanteringen av färger kan nog ändras igen om vi kommer på ett
 smidigare sätt att göra det.
+
+Local variables:
+mode: outline
+End:
