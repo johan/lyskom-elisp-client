@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.59 1999-10-09 16:13:24 byers Exp $
+;;;;; $Id: english-strings.el,v 44.60 1999-10-09 16:45:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.59 1999-10-09 16:13:24 byers Exp $"))
+              "$Id: english-strings.el,v 44.60 1999-10-09 16:45:11 byers Exp $"))
 
 
 ;;; ================================================================
@@ -783,11 +783,17 @@ Help: \\[describe-mode] ---")
     (yesterday . "yesterday")
     (no-such-text-no . "The text doesn't exist. (%#1:n)\n")
     (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
+    (text-created-at . "Created: %#1s\n")
+    (text-imported-at . "Imported: %#1s\n")
+    (text-imported-at-by . "Imported: %#1s by %#2P\n")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
     (Extra-recipient . "CC")
     (Hidden-recipient . "BCC")
+    (mx-Recipient . "External recipient")
+    (mx-Extra-recipient . "External CC")
+    (mx-Extern-reply-to . "External replies to")
     (Strange-recipient . "Also to")
     (send-at . "   Posted:     %#1s\n")
     (sent-by . "   Posted by %#1P\n")
@@ -797,6 +803,12 @@ Help: \\[describe-mode] ---")
     (footnote-to-text . "Footnote to text %#1n")
     (comment-in-text . "Comment in text %#1n")
     (footnote-in-text . "Footnote in text %#1n")
+
+    (attachment-to-text . "Attachment to text %#1n")
+    (attachment-in-text . "Attachment in text %#1n")
+    
+    (envelope-sender . "Sent by: %#1s\n")
+    (attachment-filename . "Attachment file name: \"%#1s\"\n")
 
     (comment-to-text-by . "Comment to text %#1n by %#2P")
     (footnote-to-text-by . "Footnote to text %#1n by %#2P")
@@ -1330,6 +1342,12 @@ You must become an active member of the conference to enter it.\n")
     (what-request-confirm-no . "Which text do you want read confirmations for: ")
     (adding-request-confirm . "Requesting read confirmation for text %#1n...")
     (already-request-confirm . "Text %#1n already has a request for read confirmation.\n")
+
+    (review-mail-headers-to-what . "Which text's mail headers do you want to see? ")
+    (no-mail-headers . "Text %#1n has no mail headers\n")
+    (mail-headers-for . "Mail headers for text %#1n:\n")
+    (email-name-prefix . "")
+    (email-name-suffix . "")
     ))
 
 
@@ -1482,6 +1500,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-add-no-comments      . "Prevent comments")
     (kom-add-private-answer   . "Request private reply")
     (kom-add-request-confirm  . "Request confirmation of reading")
+    (kom-review-mail-headers  . "Review mail headers")
     ))
 
 (lyskom-language-var lyskom-language-codes en
