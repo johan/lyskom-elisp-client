@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.11 1997-07-11 14:17:13 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.12 1997-07-12 13:11:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -649,6 +649,8 @@ This is a LysKOM button action."
   (lyskom-message "%s" (lyskom-format (lyskom-get-string 'starting-program)
 				 (elt manager 2))))
 
+
+(eval-when-compile (defvar browse-url-browser-function nil))
 
 (defun lyskom-view-url-browse-url (url manager)
   (require 'browse-url)

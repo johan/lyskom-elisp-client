@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.12 1997-07-06 14:27:27 byers Exp $
+;;;;; $Id: commands2.el,v 44.13 1997-07-12 13:11:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.12 1997-07-06 14:27:27 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.13 1997-07-12 13:11:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -516,7 +516,8 @@ means send the message to everybody. MESSAGE is the message to
 send. If DONTSHOW is non-nil, don't display the sent message."
   (let* ((lyskom-message-string nil)
          (reply nil)
-         (lyskom-message-recipient nil))
+         (lyskom-message-recipient nil)
+         (lyskom-last-text-format-flags nil))
 
     (add-hook 'minibuffer-setup-hook
               'lyskom-send-message-minibuffer-setup-hook)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.6 1997-03-08 02:44:15 davidk Exp $
+;;;;; $Id: async.el,v 44.7 1997-07-12 13:10:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.6 1997-03-08 02:44:15 davidk Exp $\n"))
+	      "$Id: async.el,v 44.7 1997-07-12 13:10:52 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -343,7 +343,7 @@ MESSAGE is a string containing the message.
 WHEN, if given, is the time when the message arrived. It must be of the same 
 format at (current-time-string)
 Non-nil NOBEEP means don't beep."
-  (progn
+  (let ((lyskom-last-text-format-flags nil))
     (if (null when)
         (setq when (current-time-string)))
     (if (not (string= (substring when 0 10)

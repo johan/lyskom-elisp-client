@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.11 1997-07-11 14:17:24 byers Exp $
+;;;;; $Id: option-edit.el,v 44.12 1997-07-12 13:11:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.11 1997-07-11 14:17:24 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.12 1997-07-12 13:11:24 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -117,6 +117,7 @@
     [kom-membership-default-priority]
     "\n"
     [kom-print-number-of-unread-on-entrance]
+    [kom-autowrap]
     [kom-dashed-lines]
     [kom-show-author-at-end]
 
@@ -192,6 +193,8 @@ customize buffer but do not save them to the server."
         (set (car (car tmp))
              (widget-value (cdr (car tmp))))
         (setq tmp (cdr tmp))))))
+
+(eval-when-compile (defvar save-options-init-file nil))
 
 (defun lyskom-customize-send ()
   "Save variables to the server"
@@ -403,6 +406,7 @@ customize buffer but do not save them to the server."
                                        :size 0)
                                (const (ask nil)))))
     (kom-reading-puts-comments-in-pointers-last (toggle (before after)))
+    (kom-autowrap (toggle (on off)))
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))

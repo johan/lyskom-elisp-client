@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.25 1997-07-11 08:54:15 byers Exp $
+;;;;; $Id: vars.el.in,v 44.26 1997-07-12 13:11:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.25 1997-07-11 08:54:15 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.26 1997-07-12 13:11:41 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -470,6 +470,10 @@ various LysKOM elements.")
 
 (def-kom-var kom-use-button-hints t
   "*Non-nil means use button hints for overriding default actions.")
+
+(def-kom-var kom-autowrap t
+  "*Non-nil means auto wrap articles with discretion"
+  server)
 
 
 ;;;
@@ -1625,6 +1629,25 @@ texts that is to be sent to the server.")
 (def-kom-var lyskom-saved-read-only nil
   "Saved value of buffer-read-only when in slow mode."
   local)
+
+(def-kom-var lyskom-line-start-chars
+  [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
+       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t 
+       nil t nil t t t t t t nil t t t t t t t t t t t t t nil nil t nil nil
+       nil nil t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil
+       t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil nil nil
+       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
+       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t nil
+       t t t nil t nil t t t t t t nil nil t t t nil t t nil nil t t t t t t
+       t t t t t t t t t t t t t t t t t t t t t t t t nil t t t t t t t t t
+       t t t t t t t t t t t t t t t t t t t t t t nil t t t t t t t t]
+  "Vector defining which ISO-8859-1 characters can be expected to start
+lines of text.")
+
+(def-kom-var lyskom-last-text-format-flags nil
+  "List of flags specifying how the last text was reformatted. This variable
+should be dynamically bound whenever it needs to be used.")
+
 
 ;;; ======================================================================
 ;;; Event hooks
