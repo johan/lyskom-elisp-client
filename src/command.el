@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.28 2000-05-29 10:45:30 byers Exp $
+;;;;; $Id: command.el,v 44.29 2000-05-31 13:41:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.28 2000-05-29 10:45:30 byers Exp $\n"))
+	      "$Id: command.el,v 44.29 2000-05-31 13:41:05 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -65,7 +65,7 @@
 (eval-and-compile
   (defun lyskom-fix-interactive-decl (decl command)
     (cond ((stringp (car (cdr decl))) decl)
-          (t `(interactive (let ((lyskom-executing-command ',command))
+          (t `(interactive (let ((lyskom-current-command ',command))
                              ,@(cdr decl)))))))
 
 
