@@ -1,3 +1,20 @@
+Tue Apr  8 22:49:59 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Fråga bara om
+	man ska skicka in trots olästa kommentarer en gång.
+
+Thu Mar 27 02:51:57 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* utilities.el (functionp): byte-code-p heter egentligen
+ 	byte-code-function-p.
+
+Tue Mar 18 17:24:19 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* review.el (lyskom-find-root): Klarade inte av kommentarer till
+ 	hemliga texter.
+
+	* commands1.el (kom-mark-text): Fixade dokumentationen.
+
 Thu Mar 13 09:23:25 1997  David Byers  <davby@sen21.ida.liu.se>
 
 	* view-text.el (lyskom-deferred-insert-footer): Bugfix.
