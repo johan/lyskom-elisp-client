@@ -1,5 +1,8 @@
 2002-02-25  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* vars.el.in (kom-server-aliases): Call com.lysator.liu.se "LysCOM
+	(LysKOM in English)" for now.
+
 	* commands2.el (lyskom-do-list-summary): Print Written/Skrivet
 	instead of Date/Datum in review lists.
 
