@@ -1,5 +1,51 @@
-2003-03-08  Per Cederqvist  <ceder@ceder.dyndns.org>
+2003-03-13  David Byers  <david.byers@swipnet.se>
+
+	Some work on bug 983:
+	* option-edit.el (lyskom-custom-variables): Added
+	kom-highlight-conferences.
+
+	* lyskom-buttons.el (lyskom-generate-button): Allow explicit lists
+	of numbers as the key in kom-highlight-conferences.
+
+	Fix bug 745 (Patch from C C Magnus Gustavsson):
+	* review.el (kom-review-converted): New command.
+
+	* vars.el.in (lyskom-commands): Added kom-review-converted.
+	(lyskom-button-actions): Added lyskom-button-review-converted.
+
+	* lyskom-buttons.el (lyskom-button-review-converted): New
+	function.
+
+	Fix bug 987:
+	* commands1.el (kom-list-conferences): Print legend.
+
+	Fix bug 995:
+	* utilities.el (lyskom-get-send-comments-to): Handle CONF-NO set
+	to nil.
+
+	Fix bug 979:
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-show-sync-messages.
+	(lyskom-custom-variables): Ditto.
+
+	* vars.el.in (kom-show-sync-messages): New variable.
+
+	* async.el (lyskom-parse-async): Use it.
+
+2003-03-11  David Byers  <david.byers@swipnet.se>
+
+	* utilities.el (lyskom-buffer-display-message): New function.
+
+2003-02-09  David Byers  <david.byers@swipnet.se>
+
 	
+	* lyskom-buttons.el (lyskom-generate-button): Use
+	kom-highlight-conferences instead of kom-friends and kom-morons.
+
+	* vars.el.in (kom-highlight-conferences): New variable
+
+2003-03-08  Per Cederqvist  <ceder@ceder.dyndns.org>
+
 	kom-review-backward always raised an error.
 
 	* review.el (kom-review-backward): Extract the list of texts to
@@ -51,7 +97,7 @@
 2003-01-15  David Byers  <david.byers@swipnet.se>
 
 	* vars.el.in: Minor fixes to documentation.
-	
+
 	* vars.el.in: YES! YES! YES! FINALLY DONE (FOR NOW)! All user
 	variables (well at least nearly all) are documented! God, this was
 	boring work.

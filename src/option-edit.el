@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.89 2003-01-12 22:30:43 byers Exp $
+;;;;; $Id: option-edit.el,v 44.90 2003-03-13 21:11:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.89 2003-01-12 22:30:43 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.90 2003-03-13 21:11:52 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -75,6 +75,7 @@
     [kom-show-where-and-what]
     [kom-show-since-and-when]
     "\n"
+    [kom-highlight-conferences]
     [kom-friends]
     [kom-morons]
     "\n"
@@ -90,6 +91,7 @@
     [kom-trim-buffer-minimum]
     [kom-bury-buffers]
     [kom-keep-alive-interval]
+    [kom-show-sync-messages]
     "\n"
     [kom-agree-text]
     [kom-mercial]
@@ -661,6 +663,23 @@ customize buffer but do not save them to the server."
               (const (sender-rcpt sender))
               (const (last-recipient-recpt last-recipient)))))
     (kom-filter-outgoing-messages (noggle (yes no)))
+    (kom-highlight-conferences
+     (repeat (cons ((choice ((const (morons kom-morons))
+                             (const (friends kom-friends))
+                             (const (me lyskom-pers-no))
+                             (repeat (person nil :tag name) 
+                                     :indent 12
+                                     :tag highlight-conflist
+                                     :lyskom-predicate (pers conf)
+                                     :menu-tag highlight-conflist)
+                             )
+                            :tag highlight-conferences
+                            :format "%[%t%] %v\n"
+                            )
+                    (face nil :tag highlight-face))
+                   :format "%v"
+                   )
+             ))
     (kom-friends (repeat (person nil :tag name) :indent 4))
     (kom-morons (repeat (person nil :tag name) :indent 4))
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
@@ -804,6 +823,7 @@ customize buffer but do not save them to the server."
     (kom-dashed-lines-face (face t))
     (kom-async-text-body-face (face t))
     (kom-async-dashed-lines-face (face t))
+    (kom-show-sync-messages (toggle (yes no)))
 ))
 
 (defvar lyskom-widget-functions 
@@ -1075,11 +1095,15 @@ customize buffer but do not save them to the server."
                                 :value nil
                                 :format "%t"))
                     wargs)))
-    (lyskom-build-simple-widget-spec
-     'menu-choice
-     (list ':format "%[%t%] %v\n"
-           ':args wargs)
-     propl)))
+    (if args
+        (lyskom-build-simple-widget-spec 'menu-choice
+                                         (list ':format "%[%t%] %v\n")
+                                         propl)
+      (lyskom-build-simple-widget-spec 'symbol
+                                       (list ':format "%[%t%] %v\n"
+                                             ':size 30
+                                             ':args wargs)
+                                       propl))))
 
 (defun lyskom-url-viewer-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.168 2003-03-03 13:06:41 jhs Exp $
+;;;;; $Id: commands1.el,v 44.169 2003-03-13 21:11:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.168 2003-03-03 13:06:41 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.169 2003-03-13 21:11:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1786,8 +1786,10 @@ For more flexible searching, use `kom-list-re'."
   (let ((result (blocking-do 'lookup-z-name match 0 1)))
     (if result 
         (if (conf-z-info-list->conf-z-infos result)
-            (lyskom-traverse info (conf-z-info-list->conf-z-infos result)
-              (lyskom-list-conf-print info))
+            (progn 
+              (lyskom-traverse info (conf-z-info-list->conf-z-infos result)
+                (lyskom-list-conf-print info))
+              (lyskom-insert 'conf-list-legend))
           (lyskom-format-insert 'no-matching-confs match))
       (lyskom-insert (lyskom-current-error)))))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.260 2003-03-03 13:06:42 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.261 2003-03-13 21:11:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.260 2003-03-03 13:06:42 jhs Exp $"))
+              "$Id: english-strings.el,v 44.261 2003-03-13 21:11:52 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1602,6 +1602,7 @@ You must become an active member of the conference to enter it.\n")
     (start-keep-alive . "Sending data at %#1d second intervals to keep the connection active.")
     (stop-keep-alive . "No longer keeping connection active by sending extra data.")
 
+    (review-converted-q . "Review which text converted?")
     (review-noconversion-q . "Review which text unconverted?")
     (review-commented-q . "Review the commented for which text?")
 
@@ -1650,6 +1651,7 @@ You must become an active member of the conference to enter it.\n")
 
     (lyskom-button-view-text-action . "View text")
     (lyskom-button-copy-text-no-action . "Copy text number")
+    (lyskom-button-review-converted-action . "Review converted")
     (lyskom-button-review-noconversion-action . "Review unconverted")
     (lyskom-button-find-root-review-action . "Review tree")
     (lyskom-button-find-root-action . "Review root text")
@@ -1844,6 +1846,7 @@ environment to one that uses \"%#2s\" to encode text.
     (reading-settings-from-done . "Reading options from %s...done")
 
     (super-jump-q . "Super jump which text? ")
+    (conf-list-legend . "* Not member; - Passive member\n")
     ))
 
 
@@ -1907,6 +1910,7 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-review-clear         . "Review and skip")
     (kom-review-last-normally-read
      			      . "Review again")
+    (kom-review-converted     . "Review converted")
     (kom-review-noconversion  . "Review unconverted")
     (kom-review-next          . "Review next")
     (kom-find-root            . "Review original (text)")
@@ -2394,6 +2398,7 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-review-prefix (kbd "j") 'kom-review-clear)
   (define-key lyskom-en-review-prefix (kbd "n") 'kom-review-next)
   (define-key lyskom-en-review-prefix (kbd "u") 'kom-review-noconversion)
+  (define-key lyskom-en-review-prefix (kbd "v") 'kom-review-converted)
   (define-key lyskom-en-review-prefix (kbd "o") 'kom-find-root)
   (define-key lyskom-en-review-prefix (kbd "l") 'kom-review-by-to)
   (define-key lyskom-en-review-prefix (kbd "f") 'kom-review-first)
@@ -2781,6 +2786,13 @@ Select whether to execute command or keyboard macro.")
 
     (lynx-xterm . "Lynx in xterm")
     (lynx-emacs . "Lynx in emacs terminal-mode")
+
+    (morons . "Morons and other \"special\" people")
+    (friends . "Friends and other special people")
+    (me . "Mig, myself and I")
+    (highlight-conferences . "Conferences:")
+    (highlight-face . "Face:")
+    (highlight-conflist . "Conference list")
 
     ;;
     ;; Misc doc strings
@@ -3800,6 +3812,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-lynx-xterm-command-doc . "\
   This is the command to use to start Lynx in an xterm. The command
   neets to start both the terminal emulator and lynx.")
+    (kom-show-sync-messages-doc . "\
+  When this is on, the client will display a message when the LysKOM
+  server signals that it is saving the database.")
+    (kom-highlight-conferences-doc . "\
+  This setting controls display of conference names. For each choice
+  it is possible to select a face. The value must be either a face or
+  the name of a variable that contains a face.")
 
     ;;
     ;; Tags for variables
@@ -4001,6 +4020,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-lynx-terminal-command-tag . "Command to run lynx in emacs:")
     (kom-lynx-terminal-tag . "Where to run lynx:")
     (kom-lynx-xterm-command-tag . "Command to run lynx in xterm:")
+    (kom-show-sync-messages-tag . "Show database-saving message:")
+    (kom-highlight-conferences-tag . "Display of names::")
     )
 )
 
