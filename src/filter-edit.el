@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 40.1 1996-04-02 16:19:55 byers Exp $
+;;;;; $Id: filter-edit.el,v 41.0 1996-05-02 19:26:48 davidk Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 40.1 1996-04-02 16:19:55 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 41.0 1996-05-02 19:26:48 davidk Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil

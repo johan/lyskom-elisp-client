@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: test-async.el,v 40.0 1996-03-26 08:32:40 byers Exp $
+;;;;; $Id: test-async.el,v 41.0 1996-05-02 19:29:27 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
