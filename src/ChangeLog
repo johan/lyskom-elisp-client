@@ -3,6 +3,12 @@ Sun Jun 23 02:16:23 1996  David Kågedal  <davidk@lysator.liu.se>
 	* edit-text.el (lyskom-edit-parse-headers): Kör
  	lyskom-swascii-header-subject genom regexp-quote innan matchning.
 
+Thu Jun 20 01:08:00 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* async.el (lyskom-show-logged-in-person): Hantera hemliga
+	personer.
+	(lyskom-show-logged-out-person): Dito.
+
 Tue Jun 11 09:25:24 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * parse.el (lyskom-parse-conf-type): Hanterar Any-Conf-Type.
@@ -27,6 +33,9 @@ Tue Jun 11 09:25:24 1996  David Byers  <davby@sen2.ida.liu.se>
     texter.
 
 Thu Jun  6 02:59:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-strings): La till kolon på några
+ 	frågor.
 
 	* startup.el (kom-start-anew): Anropa clear-all-caches.
 
