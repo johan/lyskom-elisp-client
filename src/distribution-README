@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: distribution-README,v 35.1 1991-09-15 10:06:04 linus Exp $
+;;;;; $Id: distribution-README,v 35.2 1992-03-24 11:07:34 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -24,7 +24,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;; ================================================================
-;;;;; The lyskom project is conducted at the Lysator CC at the        
+;;;;; The LysKOM project is conducted at the Lysator CC at the        
 ;;;;; Link|ping institute of Technology.                              
 ;;;;;                                                                 
 ;;;;; The developers are interested in any improvements you do in the 
