@@ -1,0 +1,97 @@
+
+                      Nyheter i lyskom.el 0.46.1
+                      ==========================
+
+    Version 0.46.1 rättar vissa fel som fanns i 0.46. Den finns att
+    hämta på följande adress:
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+    Filen heter lyskom-0.46.1.tar.gz, och en kopia av den text du
+    läser just nu finns under namnet NEWS-0.46.1 samt under namnet
+    NEWS-0.46.1 i tar-arkivet. Det finns även en zip-fil för folk som
+    sitter med system som inte förstår tar-filer.
+
+    För information om nyheterna i 0.46, se NEWS-0.46.
+
+    Om du hittar ett fel i elispklienten och inte klarar av att rätta
+    den själv, använd M-x kom-bug-report för att rapportera den. 
+    Buggar blir omhändertagna i mån av tid, ork och lust. Färdiga
+    patchar blir inlagda mycket snabbare.
+
+    
+
+
+                         ====================
+                               VIKTIGT
+                         ====================
+
+    Gnu Emacs 20.x
+    --------------
+
+    Om du använder Gnu Emacs 20.x så måste du se till att du har stöd
+    för multibytetecken påslaget. Detta är tvärt emot rekommendationen
+    för 0.45. Klienten fungerar antagligen med multibyteteckenstödet
+    avslaget, men du kan få smärre problem eftersom det finns buggar i
+    Emacs som märks när man inte har multibyteteckenstödet på.
+
+    Titta i dina inställningar (filen .emacs i din hemkatalog). Om du
+    hittar "(standard-display-european 1)" eller något liknande
+    (första ordet börjar med standard-display eller ettan är något
+    annat) så skall du ta bort detta. Detta anrop har varit markerat
+    som föråldrat i flera år.
+
+    Du behöver tala om för Emacs vilken typ av teckenuppsättning du
+    skall använda. För de flesta så betyder det ISO-8859-1. Se först
+    till att omgivningsvariabeln LC_CTYPE är satt rätt. Oftast skall
+    det vara något i stil med iso_8859_1. Det brukar räcka med att
+    sätta LC_CTYPE, men om du fortfarande har problem (svenska tecken
+    visas som frågetecken eller numeriska koder) så kan du ange
+    språkomgivning genom att använda set-language-environment,
+    antingen interaktivt med M-x eller genom att skriva
+    (set-language-environment 'latin-1) i .emacs.
+
+    Om du inte har någon särskild anledning att slå av Emacs stöd för
+    multibytetecken så är det oftast bäst att låta bli. Se till att
+    omgivningsvariabeln EMACS_UNIBYTE inte är satt, att du inte
+    startar Emacs med flaggan --unibyte och att du inte anropar
+    standard-display-european (eller annan standard-display-funktion)
+    eller set-buffer-multibyte i din .emacs.
+
+
+
+    Kompilering
+    -----------
+
+    Till skillnad från tidigare versioner så måste man kompilera den
+    här versionen av klienten för att den skall fungera. This is not a
+    bug. It's a feature. Felmeddelandet man får om man inte kompilerar
+    är kryptiskt.
+
+    Kompilera för den version av Emacs som du tänker använda. Det
+    finns kontroller som skall hindra att man försöker köra klienten i
+    en version av Emacs som inte är kompatibel med den man kompilerade
+    i.
+
+
+* Funktionalitet
+
+** När man dödar LysKOM-bufferten så körs lyskom-trim-buffer-hook på
+   hela bufferten. Praktiskt för den som sparar sina LysKOM-sessioner
+   på fil.
+
+
+* Bugfixar
+
+** Ändra prioritet ändrar inte automatiskt till ens defaultprioritet,
+   så man får en fråga om ny prioritet oavsett om man har ställt in en
+   defaultprioritet eller inte.
+
+** Utfyllnaden och igenkänningen av kommandon i minibufferten är
+   bättre. Det finns förmodligen ytterligare några oväntade problem.
+
+** Långsamma kommandon fungerar bättre.
+
+** Den engelska versionens tangentbindningar är korrigerade.
+
+** En del strängar har rättats.
