@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.5 1991-09-24 22:38:05 linus Exp $
+# $Id: Makefile,v 35.6 1991-12-19 11:43:21 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -30,10 +30,10 @@ include $(TOPDIR)/scripts/import.make
 elisp-client: elisp-client.latexinfo
 	emacs -batch -l /usr/local/lib/elisp/latexinfo-mode \
 	-l /usr/local/lib/elisp/latexinfo \
-	-f batch-latexinfo-format $?
+	-f batch-latexinfo-format `pwd`/$?
 
 elisp-client.txt: elisp-client
-	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke $?
+	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke `pwd`/$?
 
 elisp-client.dvi: elisp-client.latexinfo
 	latex elisp-client.latexinfo
