@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.162 2001-04-23 21:39:49 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.163 2001-04-25 12:31:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.162 2001-04-23 21:39:49 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.163 2001-04-25 12:31:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -902,6 +902,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (has-left-r . "%#2@Nu har %#1P gått ur %#3s.\n")
     (Unknown . "Okänd")
     (unknown . "okänd")
+    (Unknown2 . "Okänt")
     (unknown-person . "Okänd person")
 
     (no-longer-member . "Du är inte längre medlem i %#1M.\n")
@@ -1905,6 +1906,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 (lyskom-language-var lyskom-filter-actions sv
       '((skip-text . "Hoppa över")
         (dontshow . "Visa inte")
+        (read . "Undanta från filtrering")
         (skip-tree . "Hoppa över kommentarer")))
                                
 
