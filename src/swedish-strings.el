@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.37 1997-12-06 15:26:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.38 1997-12-28 19:16:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.37 1997-12-06 15:26:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.38 1997-12-28 19:16:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -66,8 +66,9 @@
   (define-prefix-command 'lyskom-sv-edit-review-prefix)
   (define-prefix-command 'lyskom-sv-edit-insert-prefix)
   (define-prefix-command 'lyskom-sv-edit-aux-prefix)
+  (define-prefix-command 'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c"	'lyskom-sv-edit-prefix)
-  (define-key lyskom-sv-edit-mode-map "\C-c\C-x" 'lyskom-sv-edit-prefix)
+  (define-key lyskom-sv-edit-mode-map "\C-c\C-x" 'lyskom-sv-edit-aux-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-sv-edit-mode-map "\C-c}"	'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c]"	'lyskom-sv-edit-review-prefix)
@@ -102,7 +103,6 @@
   (define-key lyskom-sv-edit-mode-map "\C-c\C-i8" 'kom-edit-insert-digit-text)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-i9" 'kom-edit-insert-digit-text)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-i " 'kom-edit-insert-text)
-  (define-prefix-command 'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-a" 'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-a\C-m" 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-mode-map "\C-c\C-a\C-k" 'kom-edit-add-comment)
@@ -1448,6 +1448,7 @@ Innehåll:    \"%#9s\"
     (conference . "Möte")
     (person    . "Person")
     (other     . "Annat")
+    (marks     . "Markeringar")
     (move      . "Gå")
     (info      . "Om")
     (send      . "Sänd")
@@ -1460,7 +1461,14 @@ Innehåll:    \"%#9s\"
     (kom-edit-add-recipient . "Addera mottagare")
     (kom-edit-add-copy . "Addera extra kopiemottagare")
     (kom-edit-show-commented . "Återse det kommenterade")
-    (kom-edit-insert-commented . "Citera det kommenterade")))
+    (kom-edit-insert-commented . "Citera det kommenterade")
+    (kom-edit-add-bcc . "Addera för kännedom")
+    (kom-edit-add-cross-reference . "Addera korsreferens")
+    (kom-edit-add-no-comments . "Begär inga kommentarer")
+    (kom-edit-add-personal-comments . "Begär personliga svar")
+    (kom-edit-add-read-confirm-request . "Begär läsbekräftelse")
+    (kom-edit-move-text . "Flytta till en ny mottagare")
+))
 
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
@@ -1587,6 +1595,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-sv-mode-map "h"  'kom-jump)
   (define-key lyskom-sv-mode-map "H"  'kom-super-jump)
+  (define-key lyskom-sv-mode-map "lM" 'kom-list-marks)
   (define-key lyskom-sv-mode-map "lm" 'kom-list-conferences)
   (define-key lyskom-sv-mode-map "ln" 'kom-list-news)
   (define-key lyskom-sv-mode-map "lp" 'kom-list-persons)
@@ -1594,10 +1603,6 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map "ls" 'kom-membership)
   (define-key lyskom-sv-mode-map "l{" 'kom-list-summary)
   (define-key lyskom-sv-mode-map "l[" 'kom-list-summary)
-  ;; (define-key lyskom-sv-mode-map "lä" 'kom-list-summary) ; 8-bit emacs
-  ;; (define-key lyskom-sv-mode-map "lÄ" 'kom-list-summary)
-  ;; (define-key lyskom-sv-mode-map "l\M-{" 'kom-list-summary) ; 7(8)-bit emacs
-  ;; (define-key lyskom-sv-mode-map "l\M-[" 'kom-list-summary)
   (define-key lyskom-sv-mode-map "lf" 'kom-list-filters)
   (define-key lyskom-sv-mode-map "m"  'kom-add-self)
   (define-key lyskom-sv-mode-map "M"  'kom-mark-text)
@@ -1617,10 +1622,6 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map "ft" 'kom-move-text)
   (define-key lyskom-sv-mode-map "f{" 'kom-filter-subject)
   (define-key lyskom-sv-mode-map "f[" 'kom-filter-subject)
-  ;; (define-key lyskom-sv-mode-map "fä" 'kom-filter-subject)
-  ;; (define-key lyskom-sv-mode-map "fÄ" 'kom-filter-subject)
-  ;; (define-key lyskom-sv-mode-map "f\M-{" 'kom-filter-subject)
-  ;; (define-key lyskom-sv-mode-map "f\M-[" 'kom-filter-subject)
   (define-key lyskom-sv-mode-map "ff" 'kom-filter-author)
   (define-key lyskom-sv-mode-map "fi" 'kom-filter-text)
   (define-key lyskom-sv-mode-map "v"  'kom-who-is-on)
@@ -2020,6 +2021,12 @@ Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde")
   Bestämmer hur bufferten hanteras när man går till ett annat KOM med Nästa
   LysKOM och liknande funktioner. Påslaget innebär att den aktuella bufferten
   läggs sist i buffertlistan när man byter LysKOM.")
+
+    (kom-personal-messages-in-window-doc . "\
+  Bestämmer i vilket fönster som bufferten med personliga meddelanden visas.
+  För att den här inställningen skall spela någon roll så måste personliga
+  meddelanden visas i en separat buffert, och bufferten måste visas varje
+  gång det kommer meddelanden.")
 
     (kom-write-texts-in-window-doc . "\
   Bestämmer i vilket fönster nya texter skrivs.")
@@ -2440,6 +2447,7 @@ Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde")
     (kom-emacs-knows-iso-8859-1-tag . "Emacs förstår ISO-8859-1:")
     (kom-bury-buffers-tag . "Begrav buffertar när man byter LysKOM:")
 
+  (kom-personal-messages-in-window-tag . "Personliga meddelanden:   ")
     (kom-customize-in-window-tag       . "Inställningar för LysKOM: ")
     (kom-write-texts-in-window-tag     . "Skriv inlägg:             ")
     (kom-prioritize-in-window-tag      . "Prioritera möten:         ")

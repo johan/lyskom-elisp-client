@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.30 1997-11-30 17:19:11 byers Exp $
+;;;;; $Id: edit-text.el,v 44.31 1997-12-28 19:16:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.30 1997-11-30 17:19:11 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.31 1997-12-28 19:16:25 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -405,6 +405,8 @@ so it's not as clean as it ought to be."
         (if (null arg)
             (not lyskom-edit-mode)
           (> (prefix-numeric-value arg) 0)))
+
+  (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
 
   (when lyskom-edit-mode
     (lyskom-edit-sending-mode 0)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.25 1997-11-30 17:19:33 byers Exp $
+;;;;; $Id: startup.el,v 44.26 1997-12-28 19:16:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,12 +35,20 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.25 1997-11-30 17:19:33 byers Exp $\n"))
+	      "$Id: startup.el,v 44.26 1997-12-28 19:16:38 byers Exp $\n"))
 
 
 ;;; ================================================================
 ;;;                         Start kom.
 
+
+(defvar lyskom-www-proxy-connect-phase 1
+  "Phase when reading connection response from www-proxy:
+1: (initial phase) waiting for the
+   string \"HTTP/1.0 2000 Connection established\"
+2: we have seen the connection string. After this, it may come lines stating
+   proxy-agents and other things. They all seem to end with an empty line,
+   so in this phase we wait for an empty line.")
 
 ;;;###autoload
 (defun lyskom (&optional host username password session-priority)
@@ -136,12 +144,33 @@ See lyskom-mode for details."
                        (setq proc (open-network-stream name buffer
                                                        proxy-host
                                                        proxy-port))
+
+		       ;; Install our filter.
+		       ;; Do this before we send the CONNECT command to
+		       ;; the proxy, in case the proxy answers fast.
+		       (setq lyskom-www-proxy-connect-phase 1)
+		       (set-process-filter proc
+					   'lyskom-www-proxy-connect-filter)
+		       (process-kill-without-query proc nil)
+
                        (lyskom-process-send-string 
                         proc
                         (format "\
-connect %s:%d HTTP/1.0\r\n\
+CONNECT %s:%d HTTP/1.0\r\n\
 \r\n"
-                                host port)))
+                                host port))
+
+		       ;; Now wait for the answer from the proxy
+		       ;;
+		       ;; This is because anything we send before the
+		       ;; connection ack will be thrown away by the proxy
+		       ;; so it is bad to try to start talking with the
+		       ;; server before the connection is up.
+		       (while (eq 'lyskom-www-proxy-connect-filter
+				  (process-filter proc))
+			 (accept-process-output proc))
+		       ;; Now the proxy has connected to the kom server
+		       )
                       (t (setq proc (open-network-stream name buffer
                                                          host port)))))
 	      (switch-to-buffer buffer)
@@ -216,6 +245,24 @@ connect %s:%d HTTP/1.0\r\n\
 	      nil
 	    (if proc (delete-process proc))
 	    (unless reused-buffer (kill-buffer buffer))))))))
+
+
+
+(defun lyskom-www-proxy-connect-filter (proc output)
+  "Receive connection acknowledgement from proxy."
+  (if lyskom-debug-communications-to-buffer
+      (lyskom-debug-insert proc "-----> " output))
+  (cond
+   ((and (= lyskom-www-proxy-connect-phase 1)
+	 (string-match "^HTTP/1.0 200.*\r\n" output))
+    (setq lyskom-www-proxy-connect-phase 2)
+    ;; safety check: see if the empty line is already in this output
+    (lyskom-www-proxy-connect-filter proc output))
+
+   ((and (= lyskom-www-proxy-connect-phase 2)
+	 (string-match "^\r\n" output))
+    (set-process-filter proc 'lyskom-connect-filter))))
+
 
 
 (defun lyskom-setup-client-for-server-version ()
@@ -379,13 +426,14 @@ connect %s:%d HTTP/1.0\r\n\
                                      lyskom-current-conf
                                      0)
           (setq lyskom-current-conf 0)
-          (lyskom-refetch)
           ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
           (cache-set-marked-texts (blocking-do 'get-marks))
           ;; What is this variable? It is never used. It is ust to
           ;; fill the cache?
           (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
-            (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
+            (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i)))
+          ;; Start the prefetch
+          (lyskom-refetch))
 	  
       ;; If login succeeded, clear the caches and set the language
 

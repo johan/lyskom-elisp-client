@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.34 1997-12-06 15:26:21 byers Exp $
+;;;;; $Id: english-strings.el,v 44.35 1997-12-28 19:16:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.34 1997-12-06 15:26:21 byers Exp $"))
+              "$Id: english-strings.el,v 44.35 1997-12-28 19:16:29 byers Exp $"))
 
 
 ;;; ================================================================
@@ -65,7 +65,10 @@
   (define-prefix-command 'lyskom-en-edit-prefix)
   (define-prefix-command 'lyskom-en-edit-review-prefix)
   (define-prefix-command 'lyskom-en-edit-insert-prefix)
+  (define-prefix-command 'lyskom-en-edit-aux-prefix)
+  (define-prefix-command 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-en-edit-prefix)
+  (define-key lyskom-sv-edit-mode-map "\C-c\C-x" 'lyskom-en-edit-aux-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-en-edit-mode-map "\C-c\C-r" 'lyskom-en-edit-review-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c\C-i" 'lyskom-en-edit-insert-prefix)
@@ -91,11 +94,14 @@
   (define-key lyskom-en-edit-mode-map "\C-c\C-i8" 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-mode-map "\C-c\C-i9" 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-mode-map "\C-c\C-i " 'kom-edit-insert-text)
-  (define-prefix-command 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c\C-a" 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-r" 'kom-edit-add-recipient)
   (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-c" 'kom-edit-add-copy)
   (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-m" 'kom-edit-move-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-x" 'kom-edit-add-cross-reference)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-x\C-p" 'kom-edit-add-personal-comments)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-x\C-n" 'kom-edit-add-no-comments)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-x\C-r" 'kom-edit-add-read-confirm-request)
   (define-key lyskom-en-edit-mode-map "\C-c\C-a?" 'lyskom-help))
 
 
@@ -896,7 +902,7 @@ You should set it to a better value.\n")
     (closed-connection . "
 **************************************************
 %#2s
-LysKOM session killed abnormallly
+LysKOM session killed abnormally
 Error message: %#1s**************************************************")
     (error-not-found . "Error code %#1d. No explanation available.")
 
@@ -1425,6 +1431,7 @@ Contents:     \"%#9s\"
     (conference . "Conference")
     (other     . "Other")
     (person    . "User")
+    (marks     . "Marks")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
@@ -1437,7 +1444,14 @@ Contents:     \"%#9s\"
     (kom-edit-add-recipient . "Add recipient")
     (kom-edit-add-copy . "Add carbon copy")
     (kom-edit-show-commented . "Review commented")
-    (kom-edit-insert-commented . "Cite commented")))
+    (kom-edit-insert-commented . "Cite commented")
+    (kom-edit-add-bcc . "Add blind carbon copy")
+    (kom-edit-add-cross-reference . "Add cross reference")
+    (kom-edit-add-no-comments . "Request no comments")
+    (kom-edit-add-personal-comments . "Request personal replies")
+    (kom-edit-add-read-confirm-request . "Request read confirmation")
+    (kom-edit-move-text . "Move to new recipient")
+))
 
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
@@ -1532,6 +1546,7 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-en-mode-map "j"  'kom-jump)
   (define-key lyskom-en-mode-map "J"  'kom-super-jump)
+  (define-key lyskom-en-mode-map "lM" 'kom-list-marks)
   (define-key lyskom-en-mode-map "lc" 'kom-list-conferences)
   (define-key lyskom-en-mode-map "ln" 'kom-list-news)
   (define-key lyskom-en-mode-map "lu" 'kom-list-persons)
@@ -1965,6 +1980,12 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
   with the Next and Previous LysKOM commands. When turned on the current
   buffer is buried.")
 
+    (kom-personal-messages-in-window-doc . "\
+  Controls which window is used to display the buffer with personal messages.
+  For this setting to have any effect, personal messages must be displayed
+  in a separate buffer, and that buffer must be displayed automatically
+  every time a message is received.")
+
     (kom-write-texts-in-window-doc . "\
   Controls which window is used to write new texts.")
 
@@ -2363,6 +2384,7 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
     (kom-emacs-knows-iso-8859-1-tag . "Emacs can display ISO-8859-1:")
     (kom-bury-buffers-tag . "Bury buffers when changing LysKOM:")
 
+  (kom-personal-messages-in-window-tag . "Personal messages:      ")
     (kom-customize-in-window-tag       . "LysKOM customization:   ")
     (kom-write-texts-in-window-tag     . "Author new articles:    ")
     (kom-prioritize-in-window-tag      . "Prioritize conferences: ")
