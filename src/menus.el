@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.34 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: menus.el,v 44.35 2004-10-17 14:24:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.34 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: menus.el,v 44.35 2004-10-17 14:24:14 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -330,8 +330,47 @@
 	   (item kom-edit-quit))))
   "The menus for editing LysKOM messages.")
 
+(defvar lyskom-prioritize-menu-template
+  '((menu lyskom
+          ((item lp--toggle-membership-selection)
+           (hline select-separator-1)
+           (item lp--select-region)
+           (item lp--select-priority)
+           (hline select-separator-2)
+           (item lp--deselect-priority)
+           (item lp--deselect-all)
+           (hline select-separator-3)
+           (menu lp--membership-priority
+                 ((item lp--set-priority)
+                  (item lp--move-up)
+                  (item lp--move-down)
+                  (item lp--increase-priority)
+                  (item lp--decrease-priority)
+                  (item lp--yank)))
+           (menu lp--membership-type
+                 ((item lp--toggle-invitation)
+                  (item lp--toggle-passive)
+                  (item lp--toggle-message-flag)
+                  (item lp--toggle-secret)))
+           (menu lp--filter
+                 ((item lp--show-hide-memberships-read-before)
+                  (item lp--show-hide-memberships-read-after)
+                  (item lp--show-hide-read-memberships)
+                  (item lp--show-hide-passive-memberships)
+                  (hline filter-separator)
+                  (item lp--show-all)))
+           (menu lp--membership-expansion
+                 ((item lp--toggle-entry-expansion)
+                  (item lp--expand-entry)
+                  (item lp--contract-entry))
+                 (hline quit-separator)
+                 (item lp--quit))))))
+
+
+
 (defvar lyskom-menu-list '((lyskom-mode . lyskom-menu)
-                           (lyskom-edit-mode . lyskom-edit-menu))
+                           (lyskom-edit-mode . lyskom-edit-menu)
+                           (lp--mode . lyskom-prioritize-menu))
   "List of menu sets in LysKOM")
 
 (defvar lyskom-menu nil
@@ -339,6 +378,9 @@
 
 (defvar lyskom-edit-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
+
+(defvar lyskom-prioritize-menu nil
+  "Menus for the prioritize mode.")
 
 (defvar lyskom-popup-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
@@ -397,6 +439,7 @@
 
 
 (defun lyskom-build-menus-xemacs ()
+  (setq lyskom-prioritize-menu (lyskom-define-menu-xemacs lyskom-prioritize-menu-template))
   (setq lyskom-edit-menu (lyskom-define-menu-xemacs lyskom-edit-menu-template))
   (setq lyskom-popup-menu (lyskom-define-menu-xemacs
                                lyskom-popup-menu-template))
@@ -408,6 +451,9 @@
   (setq lyskom-menu (make-sparse-keymap))
   (setq lyskom-edit-menu (make-sparse-keymap))
   (setq lyskom-popup-menu (make-sparse-keymap))
+  (setq lyskom-prioritize-menu (make-sparse-keymap))
+
+  (lyskom-define-menu-gnu lyskom-prioritize-menu lyskom-prioritize-menu-template)
   (lyskom-define-menu-gnu lyskom-menu lyskom-menu-template)
   (lyskom-define-menu-gnu lyskom-edit-menu lyskom-edit-menu-template)
   (lyskom-define-menu-gnu lyskom-popup-menu

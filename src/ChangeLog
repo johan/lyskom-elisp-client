@@ -1,3 +1,15 @@
+2004-10-17  David Byers  <byers@lysator.liu.se>
+
+	* mship-edit.el (lp--mode): Added mode documentation.
+
+2004-09-27  David Byers  <byers@lysator.liu.se>
+
+	* menus.el (lyskom-prioritize-menu-template): New template.
+	(lyskom-prioritize-menu): New variable.
+	(lyskom-build-menus-xemacs): Build prioritize menu.
+	(lyskom-build-menus-gnu): Build prioritize menu.
+	(lyskom-menu-list): Add prioritize menu.
+
 2004-07-21  David Byers  <byers@lysator.liu.se>
 
 	* mship-edit.el (lp--update-buffer): When updating an existing

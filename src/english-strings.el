@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.334 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: english-strings.el,v 44.335 2004-10-17 14:24:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.334 2004-07-20 19:28:10 byers Exp $"))
+              "$Id: english-strings.el,v 44.335 2004-10-17 14:24:13 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2054,7 +2054,9 @@ Change privileges for %#1P (%#1p)...")
     ;; From mship-edit.el
 
     (no-selection . "No selection")
-    (selection . "%d selected")
+    (selection . "%#1d selected")
+    (lp-no-hidden . "")
+    (lp-hidden . "(%#1d hidden)")
     (priority-prompt . "New priority for %#1M: ")
     (priority-prompt-marked . "New priority for selected conferences: ")
     (lp-no-creation-info . "No information on when the membership was created")
@@ -2511,6 +2513,35 @@ Change privileges for %#1P (%#1p)...")
     (kom-edit-add-personal-comments . "Request personal replies")
     (kom-edit-add-read-confirm-request . "Request read confirmation")
     (kom-edit-move-text . "Move to new recipient")
+
+    (lp--toggle-membership-selection . "Toggle membership selection")
+    (lp--select-region . "Select region")
+    (lp--select-priority . "Select priority")
+    (lp--deselect-priority . "Deselect priority")
+    (lp--deselect-all . "Deselect all")
+    (lp--membership-expansion . "Membership expansion")
+    (lp--toggle-entry-expansion . "Toggle expansion")
+    (lp--expand-entry . "Expand membership")
+    (lp--contract-entry . "Contract membership")
+    (lp--membership-priority . "Priority")
+    (lp--set-priority . "Change priority")
+    (lp--move-up . "Move up")
+    (lp--move-down . "Move down")
+    (lp--increase-priority . "Increase priority")
+    (lp--decrease-priority . "Lower priority")
+    (lp--yank . "Move selected")
+    (lp--filter . "Filter")
+    (lp--show-hide-memberships-read-before . "Toggle display of memberships read before...")
+    (lp--show-hide-memberships-read-after . "Toggle display of memberships read after...")
+    (lp--show-hide-read-memberships . "Toggle display of memberships without unreads")
+    (lp--show-hide-passive-memberships . "Toggle display of passive memberships")
+    (lp--show-all . "Show all memberships")
+    (lp--membership-type . "Membership type")
+    (lp--toggle-invitation . "Toggle invitation")
+    (lp--toggle-passive . "Toggle passive")
+    (lp--toggle-message-flag . "Toggle messages")
+    (lp--toggle-secret . "Toggle secret")
+    (lp--quit . "Quit")
 ))
 
 (lyskom-language-var local lyskom-move-tree-actions en
