@@ -1,3 +1,17 @@
+2002-01-07  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* aux-items.el (lyskom-edit-insert-cross-reference)
+	(lyskom-edit-insert-no-comments) 
+	(lyskom-edit-insert-personal-comments) 
+	(lyskom-edit-insert-request-confirmation): Added the flags to the
+	string returned.
+
+	* edit-text.el (lyskom-edit-generate-aux-item-flags): New
+	function, the parts of lyskom-edit-insert-aux-item-flags that do
+	not alter the buffer.
+	(lyskom-edit-insert-aux-item-flags): Split out the parts that do
+	not alter the buffer.
+
 2002-01-07  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-miscs): Place add button after
