@@ -23,6 +23,13 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Möten med prioritet noll betraktas inte längre som passiva
+   medlemskap eftersom den senaste servern har riktigt stöd för
+   passiva medlemskap. Det går att simulera det gamla beteendet genom
+   att sätta läsnivå till ett eller högre. Använd variabeln
+   kom-default-session-priority för att sätta grundnivån i nya
+   sessioner.
+
 ** Om man gillar långa streckade linjer kan man få det på de flesta
    håll. Slå på kom-long-lines och sätt kom-text-header-dash-length
    och kom-text-footer-dash-length till så långa streck du vill ha

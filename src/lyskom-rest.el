@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.71 1999-06-26 20:48:11 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.72 1999-06-28 15:16:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.71 1999-06-26 20:48:11 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.72 1999-06-28 15:16:56 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -646,7 +646,8 @@ CONF can be a a conf-stat or a string."
 	(setq mode-line-conf-name 
 	      (substring (concat
 			  (if (lyskom-conf-stat-p conf)
-			      (if (> lyskom-session-priority 0)
+			      (if (not (eq lyskom-session-priority 
+                                           kom-default-session-priority))
 				  (format "(%d/%d:%d) "
 					  unread total-unread
 					  lyskom-session-priority)
