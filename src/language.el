@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.12 1998-06-02 12:14:50 byers Exp $
+;;;;; $Id: language.el,v 44.13 1998-12-15 12:35:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -163,6 +163,11 @@ create. ALIST is a mapping from symbols to strings."
 	alist)) 
 
 (put 'lyskom-language-strings 'lisp-indent-function 2)
+
+(defsubst lyskom-tell-string (key)
+  "Retrieve the phrase indexed by the key from the kom-tell-phrases
+assoc list."
+  (lyskom-get-string key 'kom-tell-phrases))
 
 (defsubst lyskom-get-string-internal (symbol category)
     (cdr (assq lyskom-language (get symbol category))))

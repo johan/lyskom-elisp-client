@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.33 1998-06-02 12:14:35 byers Exp $
+;;;;; $Id: edit-text.el,v 44.34 1998-12-15 12:35:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.33 1998-06-02 12:14:35 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.34 1998-12-15 12:35:25 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -470,9 +470,12 @@ so it's not as clean as it ought to be."
 (defun kom-edit-send ()
   "Send the text to the server."
   (interactive)
-  (lyskom-edit-send 'initiate-create-text))
+   (if (and (lyskom-default-value 'lyskom-is-anonymous)
+            (lyskom-j-or-n-p 'do-send-anonymous t))
+  (lyskom-edit-send 'initiate-create-anonymous-text t)
+       (lyskom-edit-send 'initiate-create-text nil)))
 
-(defun lyskom-edit-send (send-function)
+(defun lyskom-edit-send (send-function &optional never-mark-as-read)
   "Send the text to the server by calling SEND-FUNCTION."
   (condition-case err
       (if (or (not lyskom-edit-text-sent) ;++MINOR checked mode-name against lyskom-edit-mode-name
@@ -549,7 +552,8 @@ so it's not as clean as it ought to be."
 
 		(set-buffer lyskom-buffer)
 		;; Don't change the prompt if we won't see our own text
-		(if kom-created-texts-are-read
+		(if (and kom-created-texts-are-read
+                         (not never-mark-as-read))
 		    (setq lyskom-dont-change-prompt t))
 		(setq lyskom-is-writing nil)
 		(lyskom-tell-internat 'kom-tell-send)
@@ -559,7 +563,8 @@ so it's not as clean as it ought to be."
                          full-message
                          misc-list
                          aux-list
-                         buffer))))
+                         buffer
+                         never-mark-as-read))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -1443,7 +1448,8 @@ Point must be located on the line where the subject is."
           nil (point-max)))))
 
 
-(defun lyskom-create-text-handler (text-no edit-buffer)
+(defun lyskom-create-text-handler (text-no edit-buffer 
+                                           &optional never-mark-as-read)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)
   (message "")
@@ -1466,7 +1472,8 @@ Point must be located on the line where the subject is."
     ;; Immediately mark the text as read if kom-created-texts-are-read is set.
     
     (cond
-     (kom-created-texts-are-read
+     ((and kom-created-texts-are-read
+           never-mark-as-read)
       (lyskom-is-read text-no)
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.60 1998-08-10 01:37:14 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.61 1998-12-15 12:35:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.60 1998-08-10 01:37:14 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.61 1998-12-15 12:35:34 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -143,12 +143,6 @@
 
 ;;; ----------------------------------------------------------------
 ;;; Author: Aronsson
-
-(defsubst lyskom-tell-string (key)
-  "Retrieve the phrase indexed by the key from the kom-tell-phrases
-assoc list."
-  (lyskom-get-string key 'kom-tell-phrases))
-
 
 (defun lyskom-tell-internat (key)
   "Same as lyskom-tell-server, but use a key to a list of phrases."
@@ -1492,6 +1486,7 @@ in lyskom-messages."
 
 (defun lyskom-w3-region (start end)
   (w3-region start end)
+  (w3-finish-drawing)
   (add-text-properties start (min (point-max) end) '(end-closed nil)))
 
 (defun lyskom-format-html (text)
@@ -1940,10 +1935,9 @@ A symbol other than t means call it as a function."
                          (sit-for kom-ding-pause-amount)
                          (setq arg (1- arg))))
         ((stringp arg)
-         (start-process "audio"
-                        nil
-                        kom-audio-player
-                        arg))
+         (condition-case nil
+             (start-process "audio" nil kom-audio-player arg)
+           (error nil)))
         ((and (symbolp arg)
               (fboundp arg))
          (condition-case nil
@@ -2150,6 +2144,10 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                (if executing 
                                    kom-enabled-prompt-format-executing
                                  kom-enabled-prompt-format))
+                              (lyskom-is-anonymous
+                               (if executing
+                                   kom-anonymous-prompt-format-executing
+                                 kom-anonymous-prompt-format))
                               (t (if executing
                                      kom-user-prompt-format-executing
                                    kom-user-prompt-format)))
@@ -2212,6 +2210,12 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 
                          ((eq format-letter ?#) (number-to-string 
                                                 lyskom-session-no))
+                         ((eq format-letter ?a)
+                          (lyskom-get-string 'anonymous))
+
+                         ((eq format-letter ?A)
+                          (lyskom-get-string 'Anonymous))
+
                          ((eq format-letter ?m)
                           (cond ((< messages 1)
                                  "")
