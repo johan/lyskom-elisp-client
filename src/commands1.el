@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.15 1996-12-30 17:53:15 davidk Exp $
+;;;;; $Id: commands1.el,v 44.16 1997-01-31 15:45:42 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.15 1996-12-30 17:53:15 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.16 1997-01-31 15:45:42 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1412,7 +1412,7 @@ If MARK-NO == 0, review all marked texts."
   '(((nil 12 24 nil nil nil) . xmaseve)
     ((nil 12 25 nil nil nil) . xmasday)
     ((nil  1  1 nil nil nil) . newyearday)
-    ((nil 12 31  11 nil nil) . newyearevelate)
+    ((nil 12 31  23 nil nil) . newyearevelate)
     ((nil 12 31 nil nil nil) . newyeareve)
     ((nil  4 30 nil nil nil) . cgdag)
     ((nil  6  6 nil nil nil) . sixjune)
