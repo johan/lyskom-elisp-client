@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 40.0 1996-03-26 08:28:08 byers Exp $
+$Id: elisp-client.texinfo,v 40.1 1996-04-16 00:05:57 davidk Exp $
 @end ifinfo
 
 @iftex
@@ -89,11 +89,12 @@ Lysator vid Linköpings Tekniska Högskola --- LiTH.
 
 Den som för tillfället arbetar mest med LysKOMs emacslispklient är:
 
-Linus Tolke --- @file{linus@@lysator.liu.se}
 David Byers --- @file{byers@@lysator.liu.se}
+David Kågedal --- @file{davidk@@lysator.liu.se}
 
 Andra mer eller mindre aktiva personer är:
 
+Linus Tolke --- @file{linus@@lysator.liu.se}
 Per Cederqvist --- @file{ceder@@lysator.liu.se}
 Inge Wallin --- @file{ingwa@@isy.liu.se} eller @file{inge@@lysator.liu.se}
 Thomas Bellman --- @file{bellman@@lysator.liu.se}
@@ -109,6 +110,7 @@ LysKOM-Projektet
 En klient skriven i GNU-emacs-lisp.
 
 @c Don't change this line. Check install in Makefile.
+@c davidk: Why not? This seems to be the place to change it.
 Dokumentationen uppdaterad till klient version 0.38
 @end ifinfo
 
