@@ -144,7 +144,7 @@
     riskerar att få gammal information.
 
 *** Namnsdagslistan har uppdaterats för att följa svenska
-    språknämndens nya nanmlängd.
+    språknämndens nya namnlängd.
 
 *** Inläsningen av inläggsnummer till alla kommandon har gjorts mer
     regelbunden. Man kan ställa in per kommando om kommandot skall
@@ -173,7 +173,7 @@
 *** Prefixargument till "Status (för) person" anger ett inlägg vars
     författare man vill se presentation för.
 
-*** Det finns ytterligare några uppsättningar färger att fälja mellan.
+*** Det finns ytterligare några uppsättningar färger att välja mellan.
 
 
 ** FAQ-hantering
