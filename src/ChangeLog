@@ -1,3 +1,8 @@
+Wed Jul 14 17:37:30 1993  Linus Tolke Y  (linus@robin)
+
+	* commands1.el, swedish-string.el (lyskom-change-name): Better
+	  quit recovery, Better error message.
+
 Thu Jun 24 00:38:01 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
 
 	* commands1.el (lyskom-change-name): Initial contents, the old name.
