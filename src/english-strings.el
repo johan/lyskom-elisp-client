@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.198 2002-04-25 20:56:35 byers Exp $
+;;;;; $Id: english-strings.el,v 44.199 2002-04-26 21:16:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -30,7 +30,6 @@
 ;;;;
 ;;;; This file contains all strings in the LysKOM elisp client.
 ;;;; Language:     English.
-;;;; Matches version 36.11 of swedish-strings.el
 ;;;; ================================================================
 ;;;;
 ;;;; Translation from swedish-strings.el: David Byers
@@ -41,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.198 2002-04-25 20:56:35 byers Exp $"))
+              "$Id: english-strings.el,v 44.199 2002-04-26 21:16:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -75,6 +74,10 @@
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-en-edit-mode-map (kbd "*")     'kom-button-press-or-self-insert-command)
+  (define-key lyskom-en-edit-mode-map (kbd "=")     'kom-menu-button-press-or-self-insert-command)
+  (define-key lyskom-en-edit-mode-map (kbd "TAB")   'kom-edit-next-button-or-self-insert)
+  (define-key lyskom-en-edit-mode-map (kbd "M-TAB") 'kom-edit-prev-button)
   (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-x") 'lyskom-en-edit-aux-prefix)
   (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
@@ -82,7 +85,7 @@
   (define-key lyskom-en-edit-prefix (kbd "C-i") 'lyskom-en-edit-insert-prefix)
   (define-key lyskom-en-edit-prefix (kbd "TAB") 'lyskom-en-edit-insert-prefix)
   (define-key lyskom-en-edit-prefix (kbd "*") 'kom-button-press)
-  (define-key lyskom-en-edit-prefix (kbd "+") 'kom-menu-button-press)
+  (define-key lyskom-en-edit-prefix (kbd "=") 'kom-menu-button-press)
   (define-key lyskom-en-edit-prefix (kbd "C-c")	'kom-edit-send)
   (define-key lyskom-en-edit-prefix (kbd "C-s") 'kom-ispell-message)
   (define-key lyskom-en-edit-prefix (kbd "C-k")	'kom-edit-quit)
@@ -2124,7 +2127,7 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-mode-map (kbd "*") 'kom-button-press)
-  (define-key lyskom-en-mode-map (kbd "+") 'kom-menu-button-press)
+  (define-key lyskom-en-mode-map (kbd "=") 'kom-menu-button-press)
   (define-key lyskom-en-mode-map (kbd "TAB") 'kom-next-link)
   (define-key lyskom-en-mode-map (kbd "M-TAB") 'kom-previous-link)
 
@@ -3458,6 +3461,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-highlight-text-body-doc . "\
   When this is on, the text body is shown with a different format than
   normal text.")
+    (kom-edit-hide-add-button-doc . "\
+  When this is on, an [Add...] button will be shown after the list of
+  recipients and auxiliary information when writing a new text.")
 
 
     ;;
@@ -3630,6 +3636,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-highlight-first-line-tag . "Color fist line:")
     (kom-highlight-dashed-lines-tag . "Color dashed lines:")
     (kom-highlight-text-body-tag . "Color text backgrounds:")
+    (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
     )
 )
 
