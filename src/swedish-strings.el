@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.95 1999-12-02 23:44:31 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.96 1999-12-03 15:33:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.95 1999-12-02 23:44:31 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.96 1999-12-03 15:33:23 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -959,6 +959,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (error-in-options . "Det fanns ett fel i en av dina variabler (%#1s)
 Det stod \"%#2s\" i user-arean. Den sätts till nil istället.
 Skicka en bugrapport.\n")
+    (error-in-options-short . "Det fanns ett fel i dina inställningar. Vissa inställningar har inte lästs in.")
 
     ;; From elib-string.el:
     ;; No entries.
@@ -1487,7 +1488,6 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-unset-conf-motd      . "Ta bort lapp på dörren")
     (kom-save-text	      . "Arkivera inlägg (till fil)")
     (kom-save-text-body	      . "Spara inläggstext (på fil)")
-    (kom-edit-options	      . "Ändra variabler")
     (kom-save-options         . "Spara variabler")
     (kom-shutdown-server      . "Stäng av servern")
     (kom-sync-database        . "Spara databasen")
