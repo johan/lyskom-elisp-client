@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.0 1996-08-30 14:47:05 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.1 1996-09-03 16:01:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.0 1996-08-30 14:47:05 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.1 1996-09-03 16:01:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -168,6 +168,13 @@ assoc list."
 (defun kom-extended-command ()
   "Read a LysKOM function name and call the function."
   (interactive)
+  (let ((fnc (lyskom-read-extended-command)))
+    (cond
+     (fnc (call-interactively (car fnc)))
+     (t (kom-next-command))))
+)
+
+(defun lyskom-read-extended-command ()
   (let* ((completion-ignore-case t)
 	 (alternatives (mapcar (function reverse)
 			       (if kom-emacs-knows-iso-8859-1
@@ -182,15 +189,12 @@ assoc list."
 				(list 'lambda '(alternative)
 				      (list 'lyskom-ok-command 'alternative
 					    lyskom-is-administrator))
-				t nil))
+				"" nil))
 	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
 			     (if kom-emacs-knows-iso-8859-1
 				 lyskom-commands
 			       lyskom-swascii-commands))))
-    (cond
-     (fnc (call-interactively (car fnc)))
-     (t (kom-next-command)))))
-
+    fnc))
 
 ;;; Resume operation after a crash.
 
@@ -796,11 +800,11 @@ Args: FORMAT-STRING &rest ARGS"
  "Find the string corresponding to ATOM and insert it into the LysKOM buffer." 
   (lyskom-insert (lyskom-get-string atom)))
 
-(defun lyskom-get-string (atom)
+(defun lyskom-get-string (atom &optional assoc-list)
   "Get the string corresponding to ATOM and return it."
   (if (stringp atom)
       atom
-    (let ((format-pair (assoc atom lyskom-strings)))
+    (let ((format-pair (assoc atom (or assoc-list lyskom-strings))))
       (if (null format-pair)
 	  (signal 'lyskom-internal-error 
 		  (list 'lyskom-get-string
