@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.32 1999-11-21 15:39:57 byers Exp $
+;;;;; $Id: option-edit.el,v 44.33 1999-11-22 14:39:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.32 1999-11-21 15:39:57 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.33 1999-11-22 14:39:05 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -552,7 +552,8 @@ customize buffer but do not save them to the server."
     (kom-default-message-recipient 
      (choice ((const (everybody-rcpt everybody))
               (const (group-rcpt group))
-              (const (sender-rcpt sender)))))
+              (const (sender-rcpt sender))
+              (const (last-recipient-recpt last-recipient)))))
     (lyskom-filter-outgoing-messages (noggle (yes no)))
     (kom-friends (repeat (person nil :tag name) :indent 4))
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)

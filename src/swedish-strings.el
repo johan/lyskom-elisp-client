@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.91 1999-11-21 17:59:40 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.92 1999-11-22 14:39:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.91 1999-11-21 17:59:40 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.92 1999-11-22 14:39:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2169,9 +2169,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (discard-messages .          "Ingenstans         ")
     (in-named-buffer .           "I namngiven buffert")
 
-    (everybody-rcpt . "Alla")
-    (group-rcpt .     "Senaste gruppmeddelandes mottagare")
-    (sender-rcpt .    "Senaste meddelandes avsändare")
+    (everybody-rcpt .       "Alla                              ")
+    (group-rcpt .           "Senaste gruppmeddelandes mottagare")
+    (sender-rcpt .          "Senaste meddelandes avsändare     ")
+    (last-recipient-recpt . "Senaste mottagaren                ")
 
     (viewer-program . "WWW-läsare")
     (no-viewer            . "(ingenting valt)")
