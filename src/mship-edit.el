@@ -1,10 +1,12 @@
 ;;; mship-edit.el --- Summary
 ;; TO DO
-;;
+;; see tmp.el
 ;; -------------------------------------------------------------------------
 ;; When prioritizing an entry we need to sort the read lists to put
 ;; the entries in the proper order. It's possible that we'll have to
 ;; change the prompt.
+;;
+;; Do this under lyskom-update-membership
 ;;
 ;; Test cases:
 ;;
@@ -25,6 +27,8 @@
 ;; -------------------------------------------------------------------------
 ;; Changing priority might put the conference above or below the
 ;; current session priority. We need to fetch or delete maps.
+;;
+;; Do this under lyskom-update-membership
 ;;
 ;; Test cases:
 ;;
@@ -51,6 +55,7 @@
 ;;   the prompt.
 ;; - Sort the membership list.
 ;;
+;; Do this under lyskom-update-membership
 ;;
 
 
@@ -173,26 +178,29 @@ Returns a string suitable for insertion in a membership list."
 (defun lp--print-entry (entry)
   "Print the entry ENTRY at the current position in the buffer.
 The start and end markers of the entry are adjusted"
-  (insert-before-markers "\n")
-  (forward-char -1)
-  (set-lp--entry->start-marker entry (point-marker))
-  (insert (lp--format-entry entry))
-  (set-lp--entry->end-marker entry (point-marker))
-  (forward-char 1))
+  (let ((buffer-read-only nil))
+    (insert-before-markers "\n")
+    (forward-char -1)
+    (set-lp--entry->start-marker entry (point-marker))
+    (insert (lp--format-entry entry))
+    (set-lp--entry->end-marker entry (point-marker))
+    (forward-char 1)))
 
 (defun lp--erase-entry (entry)
   "Erase the printed representation of the entry ENTRY in the buffer."
-  (delete-region (lp--entry->start-marker entry)
-                 (1+ (lp--entry->end-marker entry)))
-  (set-lp--entry->start-marker entry nil)
-  (set-lp--entry->end-marker entry nil))
+  (let ((buffer-read-only nil))
+    (delete-region (lp--entry->start-marker entry)
+                   (1+ (lp--entry->end-marker entry)))
+    (set-lp--entry->start-marker entry nil)
+    (set-lp--entry->end-marker entry nil)))
 
 (defun lp--redraw-entry-mark (entry)
   "Redraw the mark for ENTRY."
-  (lp--save-excursion
-    (goto-char (lp--entry->start-marker entry))
-    (insert (if (lp--entry->selected entry) ?* ?\ ))
-    (delete-char 1)))
+  (let ((buffer-read-only nil))
+    (lp--save-excursion
+     (goto-char (lp--entry->start-marker entry))
+     (insert (if (lp--entry->selected entry) ?* ?\ ))
+     (delete-char 1))))
 
 (defun lp--redraw-entry (entry)
   "Redraw the entry ENTRY."
@@ -200,59 +208,6 @@ The start and end markers of the entry are adjusted"
    (goto-char (lp--entry->start-marker entry))
    (lp--erase-entry entry)
    (lp--print-entry entry)))
-
-
-
-
-;;; ============================================================
-;; Buffer functions
-
-(defun lp--create-buffer ()
-  "Create a buffer for managing memberships."
-  (interactive)
-  (let ((buf (lyskom-get-buffer-create 'prioritize
-                                       (concat (buffer-name) "-prioritize")
-                                       t))
-        (entry-list nil))
-
-    ;;; First cache all the conf stats
-    (lyskom-save-excursion
-      (set-buffer buf)
-      (erase-buffer)
-      (make-local-variable 'lp--entry-list)
-      (make-local-variable 'lp--list-start-marker)
-      (make-local-variable 'lp--list-end-marker)
-      (setq lp--entry-list nil)
-      (lyskom-format-insert "\
-Medlemskap för %#1M på %#2s
-
-===============================================================================
- Prio   Möte                                            Senast inne  Oläst  IHP
--------------------------------------------------------------------------------
-" lyskom-pers-no lyskom-server-name)
-      (setq lp--list-start-marker (point-marker))
-      (goto-char (point-max))
-      (lyskom-sort-membership)
-      (lyskom-display-buffer buf)
-      (lyskom-traverse mship (lyskom-default-value 'lyskom-membership)
-        (blocking-do 'get-conf-stat (membership->conf-no mship))
-        (let ((entry (lyskom-create-lp--entry nil ; Start
-                                              nil ; End
-                                              (membership->priority mship)
-                                              mship
-                                              nil
-                                              'normal)))
-          (lp--print-entry entry)
-          (setq entry-list (cons entry entry-list))))
-      (lp--set-entry-list (nreverse entry-list))
-      (setq lp--list-end-marker (point-marker))
-      (insert "\
-===============================================================================
- Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
- Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
- Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:    I,H,P
- Avsluta och spara:  C-c C-c                           Mer hjälp:        C-h m
-"))))
 
 
 
@@ -279,7 +234,7 @@ Medlemskap för %#1M på %#2s
       (setq entries (cdr entries)))
     found))
 
-(defun lp--find-new-position (entry priority)
+(defun lp--find-new-position (entry priority &optional pos)
   "Find the new position for ENTRY it is were given priority PRIORITY.
 If priority is lower than the entry priority this is the last position
 currently occupied by an entry with a higher priority.  If priority is
@@ -292,9 +247,13 @@ entry priority"
 
      ;; Moving down. Return the last entry spotted with a higher
      ;; than requested priority
-     ((> (lp--entry->priority entry) priority)
+     ((if priority 
+          (> (lp--entry->priority entry) priority)
+        (< (lp--entry-position entry) pos))
       (while (and entries (null result))
-        (when (<= (lp--entry->priority (car entries)) priority)
+        (when (if priority
+                  (<= (lp--entry->priority (car entries)) priority)
+                (>= (lp--entry-position (car entries)) pos))
           (setq result tmp))
         (setq tmp (car entries))
         (setq entries (cdr entries)))
@@ -302,12 +261,15 @@ entry priority"
 
      ;; Moving up. Return the first entry with a priority strictly
      ;; less than the requested one
-     ((< (lp--entry->priority entry) priority)
+     ((if priority
+          (< (lp--entry->priority entry) priority)
+        (> (lp--entry-position entry) pos))
       (while (and entries (null result))
-        (while (and entries (null result))
-          (when (< (lp--entry->priority (car entries)) priority)
-            (setq result (car entries)))
-          (setq entries (cdr entries)))))
+        (when (if priority
+                  (< (lp--entry->priority (car entries)) priority)
+                (>= (lp--entry-position (car entries)) pos))
+          (setq result (car entries)))
+        (setq entries (cdr entries))))
      (t (setq result entry)))
     result))
   
@@ -541,7 +503,7 @@ clicked on."
   "Set the selection value of all entries in ENTRY-LIST to STATE.
 Forces a mode line update"
   (lp--do-select-entries entry-list state)
-  (force-mode-line-update))
+  (lp--update-mode-line))
 
 (defun lp--do-select-entries (entry-list state)
   "Set the selection value of all entries in ENTRY-LIST to STATE."
@@ -563,7 +525,7 @@ Forces a mode line update"
 Forces a mode line update"
   (lp--do-select-entries (lp--all-selected-entries) nil)
   (lp--do-select-entries entry-list t)
-  (force-mode-line-update))
+  (lp--update-mode-line))
 
 
 ;;; ------------------------------------------------------------
@@ -656,6 +618,27 @@ SELECT specifies new select."
 ;;; ============================================================
 ;; Reprioritization functions
 
+(defun lp--yank ()
+  "Insert all the selected memberships before the entry at point."
+  (interactive)
+  (let* ((cur (lp--entry-at (point)))
+         (pos (and cur (lp--entry-position cur)))
+         (priority (and cur (lp--entry->priority cur)))
+         (entries (lp--all-selected-entries)))
+    (cond ((null cur) (error "No entry at point"))
+          ((null entries) (error "No entries selected"))
+          (t (mapcar 
+              (lambda (entry)
+                (set-lp--entry->priority entry priority)
+                (set-membership->priority
+                 (lp--entry->membership entry) priority)
+                (lp--move-entry entry (lp--entry-position 
+                                       (lp--find-new-position entry nil pos)))
+                (lp--update-membership entry))
+              entries)))))
+          
+
+
 (defun lp--set-priority (priority)
   "Set the priority of selected memberships to PRIORITY.
 Memberships that must be moved will be moved the shortest distance
@@ -688,7 +671,81 @@ possible in the list."
                  (lp--move-entry entry new-pos)))
              entries)
      (mapcar 'lp--update-membership entries))))
-                              
+
+(defun lp--bump-priority (amount)
+  "Increase the priority of the current entry by one"
+  (lp--save-excursion
+   (let* ((cur (lp--entry-at (point)))
+          (pri (and cur (lp--entry->priority cur)))
+          (pos (lp--entry-position cur))
+          (new-pri (+ pri amount)))
+     (when (> new-pri 255) (setq new-pri 255))
+     (when (< new-pri 0) (setq new-pri 0))
+
+     (when (and cur
+                (eq pri new-pri)
+                (eq pri 0)
+                (eq pos (1- (length (lp--all-entries)))))
+       (error "Already at minimum priority"))
+
+     (when (and cur
+                (eq pri new-pri)
+                (eq pri 255)
+                (eq pos 0))
+       (error "Already at maximum priority"))
+
+     (cond ((null cur) (error "Nor on an entry"))
+           (t (let ((new-pos (lp--entry-position (lp--find-new-position cur (+ pri amount)))))
+                (set-lp--entry->priority cur new-pri)
+                (set-membership->priority
+                 (lp--entry->membership cur) new-pri)
+                (lp--move-entry cur new-pos)
+                (lp--update-membership cur)))))))
+
+(defun lp--increase-priority (arg)
+  (interactive "p")
+  (lp--bump-priority arg))
+
+(defun lp--decrease-priority (arg)
+  (interactive "p")
+  (lp--bump-priority (- arg)))
+
+
+
+(defun lp--move-up ()
+  "Move the current entry up one notch."
+  (interactive)
+  (lp--save-excursion
+   (let* ((cur (lp--entry-at (point)))
+          (pos (and cur (lp--entry-position cur)))
+          (prev (and cur (> pos 1) (lp--get-entry (1- pos)))))
+     (cond ((null cur) (error "Not on an entry"))
+           ((null prev) (error "Beginning of list"))
+           (t (if (/= (lp--entry->priority cur)
+                      (lp--entry->priority prev))
+                  (progn (set-lp--entry->priority cur (lp--entry->priority prev))
+                         (set-membership->priority (lp--entry->membership cur) (lp--entry->priority prev))
+                         (lp--redraw-entry cur))
+                (lp--move-entry cur (1- pos)))
+              (lp--update-membership cur))))))
+
+(defun lp--move-down ()
+  "Move the current entry up down notch."
+  (interactive)
+  (lp--save-excursion
+   (let* ((cur (lp--entry-at (point)))
+          (pos (and cur (lp--entry-position cur)))
+          (prev (and cur (lp--get-entry (1+ pos)))))
+     (cond ((null cur) (error "Not on an entry"))
+           ((null prev) (error "End of list"))
+           (t (if (/= (lp--entry->priority cur)
+                      (lp--entry->priority prev))
+                  (progn (set-lp--entry->priority cur (lp--entry->priority prev))
+                         (set-membership->priority (lp--entry->membership cur) (lp--entry->priority prev))
+                         (lp--redraw-entry cur))
+                (lp--move-entry cur (1+ pos)))
+              (lp--update-membership cur))))))
+
 
 
 
@@ -726,7 +783,7 @@ The cursor will always move to the start of the target entry."
   (interactive)
   (condition-case nil
       (goto-char
-       (lp--entry->start-marker (lp--get-entry (1- (length lp--all-entries)))))
+       (lp--entry->start-marker (lp--get-entry (1- (length (lp--all-entries))))))
     (error nil)))
 
 (defun lp--goto-priority (priority)
@@ -769,6 +826,171 @@ entry with an adjacent priority."
        entry
        (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
       (lp--redraw-entry entry))))
+
+
+;;; ============================================================
+;; The mode
+
+(defvar lp--mode-line '("" 
+                        mode-line-modified
+                        mode-line-buffer-identification
+                        "   "
+                        global-mode-string
+                        "   %[("
+                        mode-name
+                        mode-line-process
+                        minor-mode-alist
+                        ")%] "
+                        lp--mode-line-selected
+                        "--"
+                        (-3 . "%p")
+                        "-%-"))
+
+(defvar lp--mode-line-selected ""
+  "String showing number of selected entries.")
+
+
+(def-kom-command kom-handle-membership ()
+  "Pop up a buffer to manage memberships in"
+  (interactive)
+  (set-buffer (lp--create-buffer))
+  (lp--mode))
+
+(defun lp--mode ()
+  "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
+
+Commands:
+TBD.
+
+All bindings:
+\\{lyskom-prioritize-mode-map}
+Entry to this mode runs lyskom-prioritize-mode-hook."
+  (interactive)
+  (setq major-mode 'lp--mode)
+  (setq mode-name "Prioritize")
+  (make-local-variable 'lp--last-format-string)
+  (make-local-variable 'lp--last-window-width)
+  (make-local-variable 'lp--entry-list)
+  (make-local-variable 'lp--list-start-marker)
+  (make-local-variable 'lp--list-end-marker)
+  (make-local-variable 'lp--selected-entry-list)
+  (make-local-variable 'lp--mode-line-selected)
+  (setq lp--mode-line-selected "")
+
+  (setq mode-line-format lp--mode-line)
+  (lp--update-mode-line)
+  (setq buffer-read-only t)
+  (lyskom-use-local-map lp--mode-map)
+;;  (lyskom-add-hook 'lyskom-add-membership-hook
+;;                   'lyskom-prioritize-add-membership
+;;                   t)
+;;  (lyskom-add-hook 'lyskom-remove-membership-hook 
+;;                   'lyskom-prioritize-remove-membership
+;;                   t)
+;;  (lyskom-add-hook 'lyskom-replace-membership-hook 
+;;                   'lyskom-prioritize-replace-membership
+;;                   t)
+  (run-hooks 'lp--mode-hook))
+
+
+(defun lp--create-buffer ()
+  "Create a buffer for managing memberships."
+  (let ((buf (lyskom-get-buffer-create 'prioritize
+                                       (concat (buffer-name) "-prioritize")
+                                       t))
+        (entry-list nil))
+
+    ;;; First cache all the conf stats
+    (lyskom-save-excursion
+      (set-buffer buf)
+      (let ((buffer-read-only nil))
+        (erase-buffer)
+        (make-local-variable 'lp--entry-list)
+        (make-local-variable 'lp--list-start-marker)
+        (make-local-variable 'lp--list-end-marker)
+        (setq lp--entry-list nil)
+        (lyskom-format-insert "\
+Medlemskap för %#1M på %#2s
+
+===============================================================================
+ Prio   Möte                                            Senast inne  Oläst  IHP
+-------------------------------------------------------------------------------
+" lyskom-pers-no lyskom-server-name)
+        (setq lp--list-start-marker (point-marker))
+        (goto-char (point-max))
+        (lyskom-sort-membership)
+        (lyskom-display-buffer buf)
+        (lyskom-traverse mship (lyskom-default-value 'lyskom-membership)
+          (blocking-do 'get-conf-stat (membership->conf-no mship))
+          (let ((entry (lyskom-create-lp--entry nil ; Start
+                                                nil ; End
+                                                (membership->priority mship)
+                                                mship
+                                                nil
+                                                'normal)))
+            (lp--print-entry entry)
+            (setq entry-list (cons entry entry-list))))
+        (lp--set-entry-list (nreverse entry-list))
+        (setq lp--list-end-marker (point-marker))
+        (insert "\
+===============================================================================
+ Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
+ Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
+ Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:    I,H,P
+ Avsluta och spara:  C-c C-c                           Mer hjälp:        C-h m
+")
+        buf
+        ))))
+
+
+
+(defvar lp--mode-map nil
+  "Keymap used in lp--mode")
+
+(if lp--mode-map
+    nil
+  (setq lp--mode-map (make-keymap))
+  (suppress-keymap lp--mode-map)
+  (define-key lp--mode-map (kbd "SPC") 'lp--toggle-membership-selection)
+  (define-key lp--mode-map (kbd "p")   'lp--set-priority)
+  (define-key lp--mode-map (kbd "C-w") 'lp--select-region)
+  (define-key lp--mode-map (kbd "C-y") 'lp--yank)
+  (define-key lp--mode-map (kbd "#")   'lp--select-priority)
+  (define-key lp--mode-map (kbd "M-DEL") 'lp--deselect-all)
+  (define-key lp--mode-map (kbd "C-p") 'lp--previous-entry)
+  (define-key lp--mode-map (kbd "<up>") 'lp--previous-entry)
+  (define-key lp--mode-map (kbd "C-n") 'lp--next-entry)
+  (define-key lp--mode-map (kbd "<down>") 'lp--next-entry)
+  (define-key lp--mode-map (kbd "M-<") 'lp--first-entry)
+  (define-key lp--mode-map (kbd "M->") 'lp--last-entry)
+  (define-key lp--mode-map (kbd "g") 'lp--goto-priority)
+  (define-key lp--mode-map (kbd "RET") 'lp--toggle-entry-expansion)
+  (define-key lp--mode-map (kbd "+") 'lp--increase-priority)
+  (define-key lp--mode-map (kbd "-") 'lp--decrease-priority)
+  (define-key lp--mode-map (kbd "M-p") 'lp--move-up)
+  (define-key lp--mode-map (kbd "M-n") 'lp--move-down)
+
+  (define-key lp--mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lp--mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lp--mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lp--mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lp--mode-map (kbd "*") 'kom-button-press)
+  (define-key lp--mode-map (kbd "=") 'kom-menu-button-press)
+  (define-key lp--mode-map (kbd "TAB") 'kom-next-link)
+  (define-key lp--mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lp--mode-map (kbd "C-i") 'kom-next-link)
+  (define-key lp--mode-map (kbd "M-C-i") 'kom-previous-link)
+  )
+
+
+
+(defun lp--update-mode-line ()
+  (setq lp--mode-line-selected
+        (cond ((= (length (lp--all-selected-entries)) 0)
+               (lyskom-get-string 'no-selection))
+               (t (format (lyskom-get-string 'selection)
+                          (length (lp--all-selected-entries))))))
+  (force-mode-line-update))
 
 (provide 'mship-edit)
 
