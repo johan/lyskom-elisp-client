@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.2 1996-06-06 01:35:51 davidk Exp $
+;;;;; $Id: startup.el,v 41.3 1996-06-08 11:39:56 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.2 1996-06-06 01:35:51 davidk Exp $\n"))
+	      "$Id: startup.el,v 41.3 1996-06-08 11:39:56 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -89,6 +89,7 @@ See lyskom-mode for details."
 	    (setq lyskom-default-password password)
 	    (setq lyskom-server-name host)
 	    (setq lyskom-proc proc)
+        (lyskom-set-face-scheme kom-default-face-scheme)
 	    (lyskom-insert
 	     (lyskom-format 'try-connect lyskom-clientversion host))
 	    (set-process-filter proc 'lyskom-connect-filter)
@@ -506,6 +507,9 @@ to see, set of call."
     (make-local-variable 'kom-remote-control)
     (make-local-variable 'kom-remote-controllers)
     (make-local-variable 'kom-login-hook)
+    (make-local-variable 'kom-friends)
+    (make-local-variable 'kom-permanent-filter-list)
+    (make-local-variable 'kom-session-filter-list)
     (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-buffer)
     (make-local-variable 'lyskom-command-to-do)
