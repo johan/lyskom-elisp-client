@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.28 1997-09-21 11:42:51 byers Exp $
+;;;;; $Id: commands1.el,v 44.29 1997-10-23 12:18:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.28 1997-09-21 11:42:51 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.29 1997-10-23 12:18:51 byers Exp $\n"))
+
+(eval-when-compile
+  (require 'lyskom-command "command"))
 
 
 ;;; ================================================================
@@ -533,7 +536,8 @@ of the person."
                                                         anarchy
                                                         nil
                                                         nil
-                                                        nil))))
+                                                        nil)
+                               nil)))
     (if (null conf-no)
 	(progn
 	  (lyskom-format-insert 'could-not-create-conf
@@ -601,14 +605,11 @@ This does lyskom-end-of-command"
 If optional arg TEXT-NO is present write a comment to that text instead."
   (interactive (list 
 		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
+		 ((null current-prefix-arg) lyskom-current-text)
+		 ((integerp current-prefix-arg) current-prefix-arg)
 		 ((listp current-prefix-arg) 
 		  (lyskom-read-number (lyskom-get-string 'what-comment-no)))
-		 (t
-		  (signal 'lyskom-internal-error '(kom-write-comment))))))
+		 (t (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
@@ -616,11 +617,23 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 			      "")))
   (unwind-protect
       (if text-no
-          (lyskom-write-comment-soon
-           (blocking-do 'get-text-stat text-no)
-           (blocking-do 'get-text text-no)
-           text-no
-           'comment)
+          (blocking-do-multiple ((text (get-text text-no))
+                                 (text-stat (get-text-stat text-no)))
+            (when (or (null (text-stat-find-aux text-stat 4))
+                      (lyskom-j-or-n-p 
+                       (lyskom-get-string 'no-comments-q)))
+              (if (and (text-stat-find-aux text-stat 5)
+                       (lyskom-j-or-n-p
+                        (lyskom-get-string 'private-answer-q)))
+                  (lyskom-private-answer-soon
+                   text-stat
+                   text
+                   text-no)
+              (lyskom-write-comment-soon
+               text-stat
+               text
+               text-no
+               'comment))))
         (lyskom-insert-string 'confusion-what-to-comment))
     (lyskom-end-of-command)))
 
@@ -665,10 +678,25 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
   "Write a comment to previously viewed text."
   (interactive)
   (if lyskom-previous-text
-      (lyskom-write-comment-soon 
-       (blocking-do 'get-text-stat lyskom-previous-text)
-       (blocking-do 'get-text lyskom-previous-text)
-       lyskom-previous-text 'comment)
+      (blocking-do-multiple ((text-stat (get-text-stat lyskom-previous-text))
+                             (text (get-text lyskom-previous-text)))
+        (when (or (null text-stat)
+                  (null text)
+                  (null (text-stat-find-aux text-stat 4))
+                  (lyskom-j-or-n-p 
+                   (lyskom-get-string 'no-comments-q)))
+          (if (and (text-stat-find-aux text-stat 5)
+                   (lyskom-j-or-n-p
+                    (lyskom-get-string 'private-answer-q)))
+              (lyskom-private-answer-soon
+               text-stat
+               text
+               lyskom-previous-text)
+              (lyskom-write-comment-soon
+               text-stat
+               text
+               lyskom-previous-text
+               'comment))))
     (lyskom-insert-string 'confusion-what-to-comment)))
 
 
@@ -813,19 +841,18 @@ If optional arg TEXT-NO is present write a private answer to
 that text instead."
   (interactive (list
 		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
+		 ((null current-prefix-arg) lyskom-current-text)
+		 ((integerp current-prefix-arg) current-prefix-arg)
 		 ((listp current-prefix-arg) 
-		  (lyskom-read-number (lyskom-get-string 'what-private-no)))
-		 (t
-		  (signal 'lyskom-internal-error '(kom-private-answer))))))
+                  (lyskom-read-number (lyskom-get-string 'what-private-no)))
+		 (t (signal 'lyskom-internal-error '(kom-private-answer))))))
   (if text-no
-      (lyskom-private-answer-soon
-       (blocking-do 'get-text-stat text-no)
-       (blocking-do 'get-text text-no)
-       text-no)
+      (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                             (text (get-text text-no)))
+        (when (or (null (text-stat-find-aux text-stat 4))
+                  (lyskom-j-or-n-p 
+                   (lyskom-get-string 'no-comments-q)))
+          (lyskom-private-answer-soon text-stat text text-no)))
     (lyskom-insert-string 'confusion-who-to-reply-to)))
 
 
@@ -865,10 +892,14 @@ that text instead."
   "Write a private answer to previously viewed text."
   (interactive)
   (if lyskom-previous-text
-      (lyskom-private-answer-soon-prev
-       (blocking-do 'get-text-stat lyskom-previous-text)
-       (blocking-do 'get-text lyskom-previous-text))
+      (blocking-do-multiple ((text-stat (get-text-stat lyskom-previous-text))
+                             (text (get-text lyskom-previous-text)))
+        (when (or (null (text-stat-find-aux text-stat 4))
+                  (lyskom-j-or-n-p 
+                   (lyskom-get-string 'no-comments-q)))
+          (lyskom-private-answer-soon text-stat text lyskom-previous-text)))
     (lyskom-insert-string 'confusion-who-to-reply-to)))
+
 
 (defun lyskom-private-answer-soon-prev (text-stat text)
   "Write a private answer to TEXT-STAT, TEXT."

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.7 1997-09-26 10:07:45 byers Exp $
+;;;;; $Id: flags.el,v 44.8 1997-10-23 12:19:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.7 1997-09-26 10:07:45 byers Exp $\n"))
+	      "$Id: flags.el,v 44.8 1997-10-23 12:19:01 byers Exp $\n"))
+
+(eval-when-compile
+  (require 'lyskom-command "command"))
 
 
 ;;; Author: Linus Tolke
@@ -164,19 +167,21 @@
         (lyskom-insert-string 'hang-on)
         (initiate-create-text 'options 'lyskom-edit-options-send
 			    ;;; This is a cludge awaiting prot-B
-                              (apply 'lyskom-format-objects 
-                                     (apply 'lyskom-format-objects 
-                                            "common"
-                                            "elisp"
-                                            (mapcar 
-                                             (function car)
-                                             lyskom-other-clients-user-areas))
-                                     common-block
-                                     elisp-block
-                                     (mapcar (function cdr) 
-                                             lyskom-other-clients-user-areas))
-                                        ;			    (concat common-block "----------\n" elisp-block)
-                              (lyskom-create-misc-list) optbuf))))
+			    (apply 'lyskom-format-objects 
+				   (apply 'lyskom-format-objects 
+					  "common"
+					  "elisp"
+					  (mapcar 
+					   (function car)
+					   lyskom-other-clients-user-areas))
+				   common-block
+				   elisp-block
+				   (mapcar (function cdr) 
+					   lyskom-other-clients-user-areas))
+;			    (concat common-block "----------\n" elisp-block)
+			    (lyskom-create-misc-list) 
+                            nil
+                            optbuf)))
    (t
     (let ((optbuf (current-buffer)))
       (set-buffer lyskom-buffer)
@@ -264,6 +269,7 @@ If successful then set the buffer not-modified. Else print a warning."
                                    (mapcar (function cdr)
                                            lyskom-other-clients-user-areas))
                             (lyskom-create-misc-list) 
+                            nil
                             kombuf
                             done-message
                             error-message))))

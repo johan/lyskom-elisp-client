@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.1 1997-07-12 13:11:26 byers Exp $
+;;;;; $Id: remote-control.el,v 44.2 1997-10-23 12:19:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.1 1997-07-12 13:11:26 byers Exp $\n"))
+	      "$Id: remote-control.el,v 44.2 1997-10-23 12:19:14 byers Exp $\n"))
+
+(eval-when-compile
+  (require 'lyskom-command "command"))
 
 
 ;;;============================================================

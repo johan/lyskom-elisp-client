@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.8 1997-09-10 13:14:41 byers Exp $
+;;;;; $Id: async.el,v 44.9 1997-10-23 12:18:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.8 1997-09-10 13:14:41 byers Exp $\n"))
+	      "$Id: async.el,v 44.9 1997-10-23 12:18:47 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -57,7 +57,7 @@ this function shall be with current-buffer the BUFFER."
     (cond
      ((eq msg-no 0)			; New text
       (let* ((text-no (lyskom-parse-num))
-	     (text-stat (lyskom-parse-text-stat text-no)))
+	     (text-stat (lyskom-parse-text-stat-old text-no)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
 	 (lyskom-async-new-text text-stat)))) ;
