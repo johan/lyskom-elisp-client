@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.19 1996-03-04 15:13:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.20 1996-03-04 15:22:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.19 1996-03-04 15:13:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.20 1996-03-04 15:22:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -345,7 +345,7 @@ du har l\344st klart allting. Kom tillbaks senare.
 
     (your-memberships . "Ditt medlemskap i olika KOM-m\366ten:\n")
     (memberships-header . "Senast inne	   Prio	Ol\344sta	M\366tesnamn\n")
-    (memberships-line . "%#16s  %#2d\t%#3d\t%#4M\n")
+    (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     (conf-for-status . "Vilket m\366te vill du se statusen f\366r? ")
     (no-such-conf . "M\366tet finns ej.")
     (status-record . "Status f\366r m\366te %#1M (%#2m) %#3s\n\n")
