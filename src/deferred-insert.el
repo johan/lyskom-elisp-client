@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 41.4 1996-05-07 09:23:27 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 41.5 1996-05-07 13:37:34 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -114,7 +114,7 @@
 (defun lyskom-defer-insertion (defer-info)
   "Defer insertion of something.
 The insertion will be at (point)."
-  (goto-char (defer-info->pos defer-info))
+  ;; (goto-char (defer-info->pos defer-info))
   (funcall (intern-soft (concat "initiate-"
 				(symbol-name (defer-info->server-call
 					       defer-info)))) 

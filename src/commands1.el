@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.3 1996-05-05 22:19:43 davidk Exp $
+;;;;; $Id: commands1.el,v 41.4 1996-05-07 13:37:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.3 1996-05-05 22:19:43 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.4 1996-05-07 13:37:29 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -241,7 +241,7 @@ as TYPE. If no such misc-info, return NIL"
           (if (if (zerop (conf-stat->msg-of-day conf-stat))
                   t
                 (progn
-                  (recenter 0)
+                  (recenter 1)
                   (lyskom-format-insert 'has-motd 
                                         conf-stat)
                   (lyskom-view-text (conf-stat->msg-of-day conf-stat))
@@ -1193,14 +1193,15 @@ If you are not member in the conference it will be flagged with an asterisk."
   (let ((conf-list (blocking-do 're-z-lookup regexp 1 1)))
     (mapcar
      (function (lambda (czi)
-		 (lyskom-insert
-		  (concat
-		   (format "%4d %c %s\n"
-			   (conf-z-info->conf-no czi)
-			   (if (conf-type->letterbox 
-				(conf-z-info->conf-type czi))
-			       ?P ?M)
-			   (conf-z-info->name czi))))))
+		 (lyskom-format-insert
+		  "%[%#1@%4#2:m %#3c %#4:M%]\n"
+		  (lyskom-default-button
+		   'conf (conf-z-info->conf-no czi))
+		  (conf-z-info->conf-no czi)
+		  (if (conf-type->letterbox 
+		       (conf-z-info->conf-type czi))
+		      ?P ?M)
+		  (conf-z-info->name czi))))
      (conf-z-info-list->conf-z-infos conf-list))))
 
 
@@ -1547,7 +1548,8 @@ If MARK-NO == 0, review all marked texts."
 	 (s-width (1+ (length (int-to-string
 			       (who-info->connection
 				(nth (1- total-users) who-list))))))
-	 (format-string (lyskom-info-line-format-string s-width "P" "s")))
+	 (format-string (lyskom-info-line-format-string
+			 s-width "P" (if kom-deferred-printing "D" "s"))))
     (lyskom-format-insert format-string
 			  ""
 			  (lyskom-get-string 'lyskom-name)
@@ -1561,20 +1563,43 @@ If MARK-NO == 0, review all marked texts."
 	     (my-session (if (= lyskom-session-no
 				(who-info->connection who-info))
 			     "*"
-			   " ")))
+			   " "))
+	     (client (if kom-deferred-printing
+			 (lyskom-create-defer-info
+			  'get-client-name
+			  (who-info->connection who-info)
+			  'lyskom-deferred-client-1
+			  nil nil nil	; Filled in later
+			  (who-info->connection who-info))
+		       (blocking-do-multiple
+			   ((name (get-client-name
+				   (who-info->connection who-info)))
+			    (version (get-client-version
+				      (who-info->connection who-info))))
+			 (concat name " " version)))))
 	(lyskom-format-insert
 	 format-string
 	 (concat session-no my-session)
 	 (who-info->pers-no who-info)
-	 (blocking-do-multiple
-	     ((name (get-client-name (who-info->connection who-info)))
-	      (version (get-client-version (who-info->connection who-info))))
-	   (concat name " " version))))
+	 client))
       (setq who-list (cdr who-list)))
 
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			   "\n"))
     (lyskom-insert (lyskom-format 'total-users total-users))))
+
+
+(defun lyskom-deferred-client-1 (name defer-info)
+  (initiate-get-client-version 'deferred
+			       'lyskom-deferred-client-2
+			       (defer-info->data defer-info)
+			       defer-info
+			       name))
+
+(defun lyskom-deferred-client-2 (version defer-info name)
+  (lyskom-replace-deferred defer-info (if (zerop (length name))
+					  "-"
+					(concat name " " version))))
 
 
 

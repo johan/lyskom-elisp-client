@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.4 1996-05-07 09:23:31 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.5 1996-05-07 13:37:38 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.4 1996-05-07 09:23:31 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.5 1996-05-07 13:37:38 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -331,7 +331,7 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 					    lyskom-current-text)))
 	(if (or (not (listp kom-page-before-command))
 		(memq 'kom-view kom-page-before-command))
-	    (recenter 0))
+	    (recenter 1))
 	(lyskom-tell-internat 'kom-tell-review)
 	(lyskom-format-insert 'review-text-no text-no)
 	(lyskom-view-text text-no))
@@ -742,17 +742,19 @@ scrolling past lyskom-last-viewed (generally the most recent prompt.)
 Leaves the point at the end of the window if not possible. If buffer
 is not on screen then doesn't move point.
 The text is converted according to the value of kom-emacs-knows-iso-8859-1."
-  (goto-char (point-max))
-  (let ((buffer-read-only nil))
-    (insert (if kom-emacs-knows-iso-8859-1
-                string
-              (iso-8859-1-to-swascii string))))
-  (lyskom-trim-buffer)
-  (let ((window (get-buffer-window (current-buffer))))
-    (if window
-        (if (pos-visible-in-window-p (point) window)
-            nil
-          (and kom-continuous-scrolling (lyskom-scroll))))))
+  (let ((was-at-max (= (save-excursion (end-of-line) (point)) (point-max))))
+    (save-excursion
+      (goto-char (point-max))
+      (let ((buffer-read-only nil))
+	(insert (if kom-emacs-knows-iso-8859-1
+		    string
+		  (iso-8859-1-to-swascii string))))
+      (lyskom-trim-buffer))
+    (let ((window (get-buffer-window (current-buffer))))
+      (if (and window was-at-max)
+	  (if (pos-visible-in-window-p (point-max) window)
+	      (goto-char (point-max))
+	    (and kom-continuous-scrolling (lyskom-scroll)))))))
 
 
 (defun lyskom-insert-at-point (string)
@@ -1263,9 +1265,46 @@ The string is inserted at point."
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error"))))))
+
+
+     ;;
+     ;; Insert some deferred text
+     ;;
+     ((= format-letter ?D)
+      (setq result
+	    (cond
+	     ((stringp arg) arg)
+	     (t
+	      (let ((format-element
+		     (concat "%"
+			     (if equals-flag "=" "")
+			     (if pad-length (int-to-string pad-length))
+			     "#1"
+			     (if colon-flag ":" "")
+			     "s")))
+		(set-defer-info->pos arg oldpos)
+		(set-defer-info->del-chars
+		 arg (if pad-length
+			 (if equals-flag
+			     (abs pad-length)
+			   (max (length
+				 lyskom-defer-indicator)
+				(abs pad-length)))
+		       (length lyskom-defer-indicator)))
+		(set-defer-info->format arg format-element))
+	      (set-format-state->delayed-content
+	       format-state
+	       (cons arg
+		     (format-state->delayed-content
+		      format-state)))
+	      lyskom-defer-indicator))))
+
+     ;;
+     ;; The format letter was unknown
+     ;;
      
      (t (signal 'lyskom-internal-error
-		 (list 'lyskom-format-help format-letter))))
+		(list 'lyskom-format-help format-letter))))
     
     ;;
     ;; Pad the result to the appropriate length
@@ -1542,18 +1581,18 @@ chosen according to this"
   (if (and (eq (window-buffer (selected-window))
                (current-buffer))
            ;; (= (point) (point-max))
-	   )				;Tell user something is
+	   ) 
       (progn
 	;; The following line is necessary for people who use
 	;; kom-page-before-command.
-        (beginning-of-line 0)           ;about to happen.
-        (sit-for 0)))
+        ;;(beginning-of-line 0) 
+        (sit-for 0))) 
                                         ;  (lyskom-scroll)
   (run-hooks 'lyskom-before-command-hook)
   (if kom-page-before-command           ;Nice with dumb terminals.
       (if (or (not (listp kom-page-before-command))
               (memq function kom-page-before-command))
-          (recenter 0))))
+          (recenter 1))))
 
 
 (defun lyskom-end-of-command ()
