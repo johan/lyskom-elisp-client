@@ -1,4 +1,14 @@
+Wed Feb 12 14:43:31 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* defvar.el (lyskom-save-variables): Fixade buggen med lokala
+ 	variabler.
+
+	* buffers.el (lyskom-buffer-list): Bytte namn till
+ 	lyskom-associated-buffer-list
+
 Sun Feb  9 11:25:35 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* lyskom-rest.el (kom-save-text): Skrev om.
 
 	* utilities.el (lyskom-apo-timeout): Ny variabel.
 	(lyskom-apo-timeout-index): Dito.

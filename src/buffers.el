@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.1 1997-02-07 18:07:08 byers Exp $
+;;;;; $Id: buffers.el,v 44.2 1997-02-12 13:46:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.1 1997-02-07 18:07:08 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.2 1997-02-12 13:46:00 byers Exp $\n"))
 
 
 ;;;;
@@ -169,12 +169,12 @@ the children object"
 ;;;; ======================================================================
 ;;;; ======================================================================
 
-(defvar lyskom-buffer-list nil
+(defvar lyskom-associated-buffer-list nil
   "List of (CATEGORY . BUFFER-LIST) listing all buffers of various
 categories")
 
-(make-variable-buffer-local 'lyskom-buffer-list)
-(lyskom-protect-variable 'lyskom-buffer-list)
+(make-variable-buffer-local 'lyskom-associated-buffer-list)
+(lyskom-protect-variable 'lyskom-associated-buffer-list)
 
 (defvar lyskom-buffer-category nil
   "Category of this buffer")
@@ -200,7 +200,7 @@ categories")
 
 
 (defun lyskom-clean-up-buffer-category (cat)
-  (let ((buffers (cdr (assq cat (lyskom-default-value 'lyskom-buffer-list))))
+  (let ((buffers (cdr (assq cat (lyskom-default-value 'lyskom-associated-buffer-list))))
         (result nil))
     (while buffers
       (when (buffer-live-p (car buffers))
@@ -210,28 +210,28 @@ categories")
 
 
 (defun lyskom-set-buffers-of-category (category buflist)
-  (let ((tmp (assq category (lyskom-default-value 'lyskom-buffer-list))))
+  (let ((tmp (assq category (lyskom-default-value 'lyskom-associated-buffer-list))))
     (cond (tmp (setcdr tmp buflist))
           (t (lyskom-setq-default 
-              lyskom-buffer-list
+              lyskom-associated-buffer-list
               (cons (cons category buflist)
-                    (lyskom-default-value 'lyskom-buffer-list)))))))
+                    (lyskom-default-value 'lyskom-associated-buffer-list)))))))
 
 
 (defun lyskom-buffers-of-category (cat)
   "Return all live buffers of catgory CAT"
   (lyskom-clean-up-buffer-category cat)
-  (cdr (assq cat (lyskom-default-value 'lyskom-buffer-list))))
+  (cdr (assq cat (lyskom-default-value 'lyskom-associated-buffer-list))))
 
 
 (defun lyskom-add-buffer-of-category (buffer category)
   "Add BUFFER as a buffer of category CATEGORY"
-  (let ((tmp (assq category (lyskom-default-value 'lyskom-buffer-list))))
+  (let ((tmp (assq category (lyskom-default-value 'lyskom-associated-buffer-list))))
     (cond (tmp (setcdr tmp (cons buffer (cdr tmp))))
-          (t (lyskom-setq-default 'lyskom-buffer-list
+          (t (lyskom-setq-default 'lyskom-associated-buffer-list
                                   (cons (cons category (list buffer))
                                         (lyskom-default-value
-                                         'lyskom-buffer-list)))))))
+                                         'lyskom-associated-buffer-list)))))))
 
 
 (defun lyskom-get-buffer-create (category name &optional unique)
