@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.182 2002-04-20 16:53:37 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.183 2002-04-21 21:32:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.182 2002-04-20 16:53:37 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.183 2002-04-21 21:32:17 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1106,14 +1106,19 @@ at random and used. This element may be a string, function or list."
   server)
 
 (def-kom-var kom-default-language nil
-  "*Which language to use for new sessions."
+  "*Which language to use for messages in new sessions."
   server 
   inherited
   protected)
 
 (def-kom-var lyskom-language kom-default-language
-  "The language currently in use.")
+  local
+  inherited
+  protected
+  "The language currently in use for messages.")
 
+(def-kom-var lyskom-global-language kom-default-language
+  "The language for language-specific things that affect multiple sessions.")
 
 (def-kom-var lyskom-edit-mode-map nil
   "Mode map for LysKOM edit."
@@ -1308,17 +1313,17 @@ appear more than once"
      ((lyskom-button-recpt-type-recipient
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
-	    'recpt (car recpt-and-buffer)
+	    'RECPT (car recpt-and-buffer)
 	    (cadr recpt-and-buffer))))
       (lyskom-button-recpt-type-copy
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
-	    'cc-recpt (car recpt-and-buffer)
+	    'CC-RECPT (car recpt-and-buffer)
 	    (cadr recpt-and-buffer))))
       (lyskom-button-recpt-type-bcc
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
-	    'bcc-recpt (car recpt-and-buffer)
+	    'BCC-RECPT (car recpt-and-buffer)
 	    (cadr recpt-and-buffer))))
       (lyskom-button-recpt-type-sub
        . (lambda (buffer recpt-and-buffer text)
@@ -1828,6 +1833,7 @@ is a list of vectors, where each vector specifies an item.
     kom-change-server-faq
     kom-review-server-faq
     kom-recommend-conference
+    kom-redirect-comments
     ))
 
 ;;; ================================================================
@@ -2686,6 +2692,66 @@ the value of  kom-tell-phrases for fun.")
     kom-change-server-faq
     kom-recommend-conference))
 
+
+;;; ================================================================
+;;; Symbolic error codes
+
+(defvar lyskom-error-codes
+  '((no-error . 0)
+    (not-implemented . 2)
+    (obsolete-call . 3)
+    (invalid-password . 4)
+    (string-too-long . 5)
+    (login-first . 6)
+    (login-disallowed . 7)
+    (conference-zero . 8)
+    (undefined-conference . 9)
+    (undefined-person . 10)
+    (access-denied . 11)
+    (permission-denied . 12)
+    (not-member . 13)
+    (no-such-text . 14)
+    (text-zero . 15)
+    (no-such-local-text . 16)
+    (local-text-zero . 17)
+    (bad-name . 18)
+    (index-out-of-range . 19)
+    (conference-exists . 20)
+    (person-exists . 21)
+    (secret-public . 22)
+    (letterbox . 23)
+    (ldb-error . 24)
+    (illegal-misc . 25)
+    (illegal-info-type . 26)
+    (already-recipient . 27)
+    (already-comment . 28)
+    (already-footnote . 29)
+    (not-recipient . 30)
+    (not-comment . 31)
+    (not-footnote . 32)
+    (recipient-limit . 33)
+    (comment-limit . 34)
+    (footnote-limit . 35)
+    (mark-limit . 36)
+    (not-author . 37)
+    (no-connect . 38)
+    (out-of-memory . 39)
+    (server-is-crazy . 40)
+    (client-is-crazy . 41)
+    (undefined-session . 42)
+    (regexp-error . 43)
+    (not-marked . 44)
+    (temporary-failure . 45)
+    (long-array . 46)
+    (anonymous-rejected . 47)
+    (illegal-aux-item . 48)
+    (aux-item-permission . 49)
+    (unknown-async . 50)
+    (internal-error . 51)
+    (feature-disabled . 52)
+    (message-not-sent . 53)
+    (invalid-membership-type . 54))
+  )
 
 ;;; ================================================================
 ;;;          Externally defined variables (environment)

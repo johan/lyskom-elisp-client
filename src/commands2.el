@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.119 2002-04-20 16:53:38 ceder Exp $
+;;;;; $Id: commands2.el,v 44.120 2002-04-21 21:32:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.119 2002-04-20 16:53:38 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.120 2002-04-21 21:32:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2024,7 +2024,8 @@ Return-value: 'no-session if there is no suitable session to switch to
                     nil
                     'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
-      (lyskom-set-language (cdr (lyskom-string-assoc language table))))))
+      (lyskom-set-language (cdr (lyskom-string-assoc language table)) 
+                           'local))))
 
 
 
@@ -2836,6 +2837,46 @@ to the first text that NEW is a comment or footnote to."
     (lyskom-report-command-answer (blocking-do 'modify-server-info
                                                nil
                                                (list aux-item)))))
+
+
+;;; ================================================================
+;;; Add send-comments-to
+;;;
+
+(def-kom-command kom-redirect-comments ()
+  "Add extended information to your letterbox that causes some other
+conference to be added as a recipient to comments to your texts when
+someone posts them in a conference you are not a member of.
+
+Note that this functionality depends on the client. Not all clients
+will honor this redirection."
+  (interactive)
+  (let* ((conf-stat (lyskom-read-conf-stat 'redirect-for-whom
+                                           '(pers) nil nil t))
+         (redirect-to (lyskom-read-conf-stat 'redirect-to-which-conf
+                                             '(pers conf) nil nil t))
+         (old-redirect (car (lyskom-get-aux-item 
+                             (conf-stat->aux-items conf-stat)
+                             33))))
+    (lyskom-format-insert 'redirecting-comments-to
+                          conf-stat redirect-to old-redirect)
+    (lyskom-report-command-answer
+     (blocking-do 'modify-conf-info
+                  (conf-stat->conf-no conf-stat)
+                  (and old-redirect (list (aux-item->aux-no old-redirect)))
+                  (list (lyskom-create-aux-item 
+                         0
+                         33
+                         nil nil
+                         (lyskom-create-aux-item-flags
+                          nil nil nil nil 
+                          nil nil nil nil)
+                         0
+                         (format "%d" (conf-stat->conf-no redirect-to)))))
+     nil
+     '((illegal-aux-item . kom-redirect-comments-e48)
+       (aux-item-permission . kom-redirect-comments-e48))))
+  )
 
 
 ;;; ================================================================

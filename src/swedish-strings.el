@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.229 2002-04-20 16:53:38 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.230 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,16 +39,16 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.229 2002-04-20 16:53:38 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.230 2002-04-21 21:32:16 byers Exp $\n"))
 
 
 ;;; ================================================================
 ;;; The language definition
 
-(lyskom-define-language
- 'sv
- 'iso-8859-1
- "Svenska")
+(lyskom-define-language 'sv
+                        'iso-8859-1
+                        "Svenska"
+                        )
 
 
 ;;; ================================================================
@@ -133,7 +133,7 @@
 
 
 ;;; The alist formely known as lyskom-strings
-(lyskom-language-strings lyskom-message sv
+(lyskom-language-strings local lyskom-message sv
   '(
     ;; From vars.el: 
     ;; From komtypes.el: nil
@@ -520,7 +520,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (duplicate-recipients . "Kan inte skicka in texten. En mottagare förekommer flera gånger (%#1M)")
     (no-recipients . "Kan inte skicka in texten. Inga mottagare har angivits.")
 
-    (add-recipient-p . "Addera %#1P som mottagare? ")
+    (add-recipient-p . "Addera mottagare %#2?b%[ %#2M för att nå%]%[%] %#1P? ")
     (matching-regexp . "Möten/personer som matchar '%#1s'\n")
 
     (who-is-active-all . "Visar alla sessioner.\n")
@@ -584,6 +584,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Läst FAQ:                  %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:             %#1M %#2s\n")
+    (status-send-comments-to . "Dirigera om kommentarer till:            %#1M <%#1m> %#2s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1111,8 +1112,9 @@ Du bör sätta den till ett bättre värde.\n")
     (prompt-several-messages . "(%d meddelanden)")
     (prompt-single-message   . "(%d meddelande)")
 
-    (re-edit-text-prompt . "Redigera texten som inte kunde skapas")
     (text-buffer-missing . "Inläggsbufferten existerar inte längre.\n")
+
+    (re-edit-text-prompt . "Redigera texten som inte kunde skapas")
     (go-to-pri-conf-prompt . "Gå till nästa prioriterade möte")
     (read-pri-text-conf . "Läsa nästa prioriterade text")
     (review-next-text-prompt . "Återse nästa text")
@@ -1132,6 +1134,7 @@ Du bör sätta den till ett bättre värde.\n")
     (go-to-your-mailbox-prompt . "Gå till din brevlåda")
     (next-pri-session-prompt . "Gå till prioriterat LysKOM \"%#1s\"")
     (next-unread-session-prompt . "Gå till LysKOM \"%#1s\"")
+
     (no-such-kom-session . "Det finns ingen sådan session med olästa.\n")
     (the-command . "Kommandot: %#1C")
     (error-in-login-hook . "Det fanns ett fel i din kom-login-hook: %#1s\n")
@@ -1488,7 +1491,7 @@ Innehåll:    \"%#9s\"
     (which-aux-item-inherit . "Sätt inherit-flaggan? ")
     (which-aux-item-secret . "Sätt secret-flaggan? ")
     (which-aux-item-anonymous . "Sätt anonymous-flaggan? ")
-    (which-aux-item-rsv1 . "Sätt reserved1-flaggan? ")
+    (which-aux-item-rsv1 . "Sätt dont-garb-flaggan? ")
     (which-aux-item-rsv2 . "Sätt reserved2-flaggan? ")
     (which-aux-item-rsv3 . "Sätt reserved3-flaggan? ")
     (which-aux-item-rsv4 . "Sätt reserved4-flaggan? ")
@@ -1682,9 +1685,16 @@ Antal sessioner:     %21#1d (totalt)
     (has-recommended-conf . "%#1P har rekommenderat möte %#2M. Vill du bli medlem?\n")
     (accept-recommendation . "Gå med i %#1M? ")
     (accepting-recommendataion . "Gå med i rekommenderat möte %#1M...")
+
+    (redirect-for-whom . "Dirigera om kommentarer för: ")
+    (redirect-to-which-conf . "Dirigera om kommentarer till: ")
+    (redirecting-comments-to . "Dirigerar om kommentarer för %#1P till %#2M%#3?b%[ (förr %#1M)%]%[%]...")
+
+    (kom-redirect-comments-e49 . "Du har inte rätt att ändra denna omdirigering")
+    (kom-redirect-comments-e48 . "Omdirigering av kommentarer stöds inte av servern")
 ))
 
-(lyskom-language-var lyskom-month-names sv
+(lyskom-language-var local lyskom-month-names sv
   '(("jan" . 1)  ("januari" . 1)
     ("feb" . 2)  ("februari" . 2)
     ("mar" . 3)  ("mars" . 3)
@@ -1705,7 +1715,7 @@ Antal sessioner:     %21#1d (totalt)
 
 
 ;;; The Alist formerly known as lyskom-commands
-(lyskom-language-strings lyskom-command sv
+(lyskom-language-strings global lyskom-command sv
   '(
     (kom-help                 . "Hjälp")
     (kom-slow-mode            . "Långsamma kommandon")
@@ -1883,9 +1893,10 @@ Antal sessioner:     %21#1d (totalt)
     (kom-review-server-faq    . "Återse server-FAQ")
     (kom-change-server-faq    . "Ändra server-FAQ")
     (kom-recommend-conference . "Rekommendera möte")
+    (kom-redirect-comments    . "Dirigera om kommentarer")
     ))
 
-(lyskom-language-strings lyskom-help-strings sv
+(lyskom-language-strings local lyskom-help-strings sv
   '(
     (reading-commands         . "Kommandon för läsning")
     (marking-commands         . "Kommandon för markering av inlägg")
@@ -2292,7 +2303,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
 
 ))
 
-(lyskom-language-var lyskom-language-codes sv
+(lyskom-language-var local lyskom-language-codes sv
   '((aa . "Afar")
     (ab . "Abkhasianska")
     (af . "Afrikaans")
@@ -2435,7 +2446,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
     (-- . "Okänt språk (%#1s)")))
 
 
-(lyskom-language-strings lyskom-menu sv
+(lyskom-language-strings global lyskom-menu sv
   '((lyskom    . "LysKOM")
     (read      . "Läs")
     (dont-read . "Hoppa")
@@ -2469,13 +2480,13 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
 
-(lyskom-language-var lyskom-onoff-table sv
+(lyskom-language-var local lyskom-onoff-table sv
   '(("på" . on) ("av" . off)))
 
-(lyskom-language-var lyskom-filter-predicate-list sv
+(lyskom-language-var local lyskom-filter-predicate-list sv
       '(("=" . nil) ("!=" . t)))
 
-(lyskom-language-var lyskom-filter-what sv
+(lyskom-language-var local lyskom-filter-what sv
       '((author . "Författare")
         (author-no . "Författare (nummer)")
         (author-re . "Författare (regexp)")
@@ -2487,7 +2498,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
         (text . "Innehåll")
         (text . "Innehåll (regexp)")))
 
-(lyskom-language-var lyskom-filter-actions sv
+(lyskom-language-var local lyskom-filter-actions sv
       '((skip-text . "Hoppa över")
         (dontshow . "Visa inte")
         (read . "Undanta från filtrering")
@@ -2793,9 +2804,9 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
 )
 
 
-(lyskom-language-var lyskom-prioritize-header-lines sv 2)
+(lyskom-language-var local lyskom-prioritize-header-lines sv 2)
 
-(lyskom-language-var lyskom-prioritize-header sv
+(lyskom-language-var local lyskom-prioritize-header sv
 " Prio   Möte
 -------------------------------------------------------------------------------
 ")
@@ -2832,7 +2843,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-customize-map (kbd "?") 'lyskom-customize-help)
 )
 
-(lyskom-language-strings lyskom-custom-strings sv
+(lyskom-language-strings local lyskom-custom-strings sv
   '(
     ;;
     ;; Widget strings
@@ -4073,14 +4084,14 @@ i servern. Annars sparas det i din .emacs.")
 ;;;; yet. People who know how to use it are smart enough to do it
 ;;;; right.
 
-(lyskom-language-var kom-ansaphone-default-reply sv
+(lyskom-language-var local kom-ansaphone-default-reply sv
   "Jag läser inte LysKOM just nu. Skicka gärna ett brev i stället.")
 
 ;;;; ============================================================
 ;;;; Other language-dependent variables
 ;;;;
 
-(lyskom-language-var kom-ispell-dictionary sv
+(lyskom-language-var local kom-ispell-dictionary sv
   "svenska")
 
 
@@ -4103,8 +4114,7 @@ i servern. Annars sparas det i din .emacs.")
 
 (eval-when-compile (defvar kom-tell-phrases))
 
-(lyskom-language-strings 
- kom-tell-phrases sv
+(lyskom-language-strings local kom-tell-phrases sv
  '((kom-tell-silence		. "")   ; Why ?
    (kom-tell-send		. "Försöker lägga in en text.")
    (kom-tell-login		. "Loggar in.")
@@ -4126,7 +4136,7 @@ i servern. Annars sparas det i din .emacs.")
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)
-    (lyskom-language-strings kom-tell-phrases sv
+    (lyskom-language-strings local kom-tell-phrases sv
       (mapcar (function 
                (lambda (x)
                  (cond ((and (consp x)
@@ -4144,12 +4154,13 @@ i servern. Annars sparas det i din .emacs.")
 ;; Placed here because this must NOT be evaluated before 
 ;; kom-tell-phrases is defined:
 
-(lyskom-language-var kom-mercial sv (lyskom-get-string 'kom-tell-wait 'kom-tell-phrases))
+(lyskom-language-var local kom-mercial sv
+                     (lyskom-get-string 'kom-tell-wait 'kom-tell-phrases))
 
 ;;;
 
 
-(lyskom-language-strings lyskom-error-texts sv
+(lyskom-language-strings local lyskom-error-texts sv
   '((error-0 . "Inget fel har inträffat")
     (error-2 . "Ännu ej implementerat")
     (error-3 . "Inte längre implementerat")
@@ -4206,10 +4217,10 @@ i servern. Annars sparas det i din .emacs.")
     (error-54 . "Otillåten typ på medlemskap")
 ))
 
-(lyskom-language-var lyskom-unread-mode-line sv
+(lyskom-language-var global lyskom-unread-mode-line sv
   (lyskom-make-lyskom-unread-mode-line))
 
-(lyskom-language-var lyskom-unread-title-format sv
+(lyskom-language-var global lyskom-unread-title-format sv
   (lyskom-make-lyskom-unread-title-format))
 
 (provide 'lyskom-language-sv)

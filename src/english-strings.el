@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.195 2002-04-20 16:53:38 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.196 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.195 2002-04-20 16:53:38 ceder Exp $"))
+              "$Id: english-strings.el,v 44.196 2002-04-21 21:32:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -153,7 +153,7 @@
 (lyskom-language-ending-mismatch lyskom-message newyeareve en sv)
 
 ;;; Formely known as lyskom-strings
-(lyskom-language-strings lyskom-message en 
+(lyskom-language-strings local lyskom-message en 
   '(
     ; From vars.el: 
     ; From komtypes.el: nil
@@ -521,7 +521,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
     (comment-all-relevant-p . "There are multiple recipients. Are they all relevant? ")
     (please-edit-recipients . "Modify the recipient list and send the text again.")
-    (add-recipient-p . "Add recipient %#1P? ")
+    (add-recipient-p . "Add recipient%#2?b%[ %#2M to reach%]%[%] %#1P? ")
     (checking-rcpt . "Checking recipients...")
     (checking-rcpt-done . "Checking recipients...done")
     (checking-comments . "Checking commented texts...")
@@ -603,6 +603,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Rejected recommendation for:             %#1M %#2s\n")
+    (status-send-comments-to . "Redirect comments to:                    %#1M <%#1m> %#2s\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1112,8 +1113,8 @@ You should set it to a better value.\n")
     (prompt-several-messages . "(%d messages)")
     (prompt-single-message . "(%d message)")
 
-    (re-edit-text-prompt . "Edit the text that couldn't be created")
     (text-buffer-missing . "The text buffer no longer exists.\n")
+    (re-edit-text-prompt . "Edit the text that couldn't be created")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized text")
     (review-next-text-prompt . "Review next text")
@@ -1489,7 +1490,7 @@ Contents:     \"%#9s\"
     (which-aux-item-inherit . "Set the  inherit-flag? ")
     (which-aux-item-secret . "Set the secret-flag? ")
     (which-aux-item-anonymous . "Set the anonymous-flag? ")
-    (which-aux-item-rsv1 . "Set the reserved1-flag? ")
+    (which-aux-item-rsv1 . "Set the dont-garb-flag? ")
     (which-aux-item-rsv2 . "Set the reserved2-flag? ")
     (which-aux-item-rsv3 . "Set the reserved3-flag? ")
     (which-aux-item-rsv4 . "Set the reserved4-flag? ")
@@ -1682,10 +1683,17 @@ Number of sessions:  %21#1d (total)
     (has-recommended-conf . "%#1P has recommended conference %#2M. Do you want to become a member?\n")
     (accept-recommendation . "Join conference %#1M? ")
     (accepting-recommendataion . "Joining recommended conference %#1M...")
+
+    (redirect-for-whom . "Redirect comments for whom: ")
+    (redirect-to-which-conf . "Redirect comments to: ")
+    (redirecting-comments-to . "Redirecting comments for %#1P to %#2M%#3?b%[ (old %#1M)%]%[%]...")
+
+    (kom-redirect-comments-e49 . "You do not have permission to perform this redirection")
+    (kom-redirect-comments-e48 . "Comment redirection is not supported by the server")
     ))
 
 
-(lyskom-language-var lyskom-month-names en
+(lyskom-language-var local lyskom-month-names en
   '(("jan" . 1)  ("january" . 1)
     ("feb" . 2)  ("february" . 2)
     ("mar" . 3)  ("march" . 3)
@@ -1705,7 +1713,7 @@ Number of sessions:  %21#1d (total)
 
 
 ;;; Formely known as lyskom-commands
-(lyskom-language-strings lyskom-command en
+(lyskom-language-strings local lyskom-command en
   '(
     (kom-help                 . "Help")
     (kom-slow-mode            . "Long commands")
@@ -1883,9 +1891,10 @@ Number of sessions:  %21#1d (total)
     (kom-review-server-faq    . "Review server FAQ")
     (kom-change-server-faq    . "Change server FAQ")
     (kom-recommend-conference . "Recommend cnoference")
+    (kom-redirect-comments    . "Redirect comments")
     ))
 
-(lyskom-language-var lyskom-language-codes en
+(lyskom-language-var global lyskom-language-codes en
   '((aa . "Afar")
     (ab . "Abkhazian")
     (af . "Afrikaans")
@@ -2027,7 +2036,7 @@ Number of sessions:  %21#1d (total)
     (zu . "Zulu")
     (-- . "Unknown language (%#1s)")))
 
-(lyskom-language-strings lyskom-menu en
+(lyskom-language-strings global lyskom-menu en
   '((lyskom    . "LysKOM")
     (read      . "Read")
     (dont-read . "Jump")
@@ -2061,13 +2070,13 @@ Number of sessions:  %21#1d (total)
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
 
-(lyskom-language-var lyskom-onoff-table en
+(lyskom-language-var local lyskom-onoff-table en
   '(("on" . on) ("off" . off)))
 
-(lyskom-language-var lyskom-filter-predicate-list en
+(lyskom-language-var local lyskom-filter-predicate-list en
       '(("=" . nil) ("!=" . t)))
 
-(lyskom-language-var lyskom-filter-what en
+(lyskom-language-var local lyskom-filter-what en
       '((author . "Author")
         (author-no . "Author (number)")
         (author-re . "Author (regexp)")
@@ -2079,7 +2088,7 @@ Number of sessions:  %21#1d (total)
         (text . "Contents")
         (text . "Contents (regexp)")))
 
-(lyskom-language-var lyskom-filter-actions en
+(lyskom-language-var local lyskom-filter-actions en
       '((skip-text . "Skip")
         (dontshow . "Don't show")
         (read . "Exclude from filter")
@@ -2345,9 +2354,9 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-prioritize-mode-map "\M-\C-i" 'kom-previous-link)
 )
 
-(lyskom-language-var lyskom-prioritize-header-lines en 2)
+(lyskom-language-var local lyskom-prioritize-header-lines en 2)
 
-(lyskom-language-var lyskom-prioritize-header en 
+(lyskom-language-var local lyskom-prioritize-header en 
 " Prio   Conference
 -----------------------------------------------------------------------------
 ")
@@ -2384,7 +2393,7 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-customize-map (kbd "?") 'lyskom-customize-help)
 )
 
-(lyskom-language-strings lyskom-custom-strings en
+(lyskom-language-strings local lyskom-custom-strings en
   '(
     ;;
     ;; Widget strings
@@ -3624,14 +3633,14 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 ;;;; yet. People who know how to use it are smart enough to do it
 ;;;; right.
 
-(lyskom-language-var kom-ansaphone-default-reply en 
+(lyskom-language-var local kom-ansaphone-default-reply en 
   "I am not reading LysKOM right now. Please write a letter instead.")
         
 ;;;; ============================================================
 ;;;; Other language-dependent variables
 ;;;;
 
-(lyskom-language-var kom-ispell-dictionary en
+(lyskom-language-var local kom-ispell-dictionary en
   "english")
 
 
@@ -3653,7 +3662,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (eval-when-compile (defvar kom-tell-phrases))
 
-(lyskom-language-strings kom-tell-phrases en
+(lyskom-language-strings local kom-tell-phrases en
   '((kom-tell-silence		. "") ; Why ?
     (kom-tell-send		. "Is trying to post a text.")
     (kom-tell-login		. "Is entering LysKOM.")
@@ -3675,7 +3684,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)
-    (lyskom-language-strings kom-tell-phrases en
+    (lyskom-language-strings local kom-tell-phrases en
       (mapcar (function 
                (lambda (x)
                  (cond ((and (consp x)
@@ -3693,11 +3702,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 ;; Placed here because this must NOT be evaluated before 
 ;; kom-tell-phrases is defined:
 
-(lyskom-language-var kom-mercial en (lyskom-get-string 'kom-tell-wait 
+(lyskom-language-var local kom-mercial en (lyskom-get-string 'kom-tell-wait 
                                                        'kom-tell-phrases))
 
 
-(lyskom-language-strings lyskom-error-texts en
+(lyskom-language-strings local lyskom-error-texts en
   '((error-0 . "No error")
     (error-2 . "Not yet implemented")
     (error-3 . "No longer implemented")
@@ -3754,8 +3763,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-54 . "Invalid membership type")
 ))
 
+(lyskom-language-var global lyskom-unread-mode-line en
+  (lyskom-make-lyskom-unread-mode-line))
 
-     
+(lyskom-language-var global lyskom-unread-title-format en
+  (lyskom-make-lyskom-unread-title-format))
+
+
 (provide 'lyskom-strings)
 
 ;;; english-strings ends here

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.93 2002-04-11 18:49:09 byers Exp $
+;;;;; $Id: edit-text.el,v 44.94 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.93 2002-04-11 18:49:09 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.94 2002-04-21 21:32:16 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -173,11 +173,11 @@ Does lyskom-end-of-command."
 
 (defun lyskom-edit-insert-miscs (misc-list subject body &optional aux-list)
   "Insert MISC-LIST into header of text.
-recpt		-> Mottagare: <%d> %s.
-cc-recpt	-> Extra kopia: <%d> %s.
-bcc-recpt       -> Blind kopia: <%d> %s.
-comm-to		-> Kommentar till text %d.
-footn-to	-> Fotnot till text %d.
+RECPT		-> Mottagare: <%d> %s.
+CC-RECPT	-> Extra kopia: <%d> %s.
+BCC-RECPT       -> Blind kopia: <%d> %s.
+COMM-TO		-> Kommentar till text %d.
+FOOTN-TO	-> Fotnot till text %d.
 nil             -> Ingenting."
   (let ((edit-buffer (current-buffer))
 	(where-put-misc (point-min-marker))
@@ -188,23 +188,23 @@ nil             -> Ingenting."
       (let ((key (car (car misc-list)))
 	    (data (cdr (car misc-list))))
 	(cond
-	 ((eq key 'recpt)
+	 ((eq key 'RECPT)
 	  (lyskom-edit-insert-misc-conf (blocking-do 'get-conf-stat data)
 					(lyskom-get-string 'recipient)
 					where-put-misc data))
-	 ((eq key 'cc-recpt)
+	 ((eq key 'CC-RECPT)
 	  (lyskom-edit-insert-misc-conf (blocking-do 'get-conf-stat data)
 					(lyskom-get-string 'carbon-copy)
 					where-put-misc data))
-	 ((eq key 'bcc-recpt)
+	 ((eq key 'BCC-RECPT)
 	  (lyskom-edit-insert-misc-conf (blocking-do 'get-conf-stat data)
 					(lyskom-get-string 'blank-carbon-copy)
 					where-put-misc data))
-	 ((eq key 'comm-to)
+	 ((eq key 'COMM-TO)
 	  (lyskom-edit-get-commented-author (blocking-do 'get-text-stat data)
 					    (lyskom-get-string 'comment)
 					    where-put-misc data))
-	 ((eq key 'footn-to)
+	 ((eq key 'FOOTN-TO)
 	  (lyskom-edit-get-commented-author (blocking-do 'get-text-stat data)
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
@@ -305,15 +305,15 @@ has the same format for the two things, this client uses two quite
 different formats.
 
 The arguments to this function is any number of pairs of data. The first
-item in each pair should be one of recpt, cc-recpt, comm-to or footn-to.
+item in each pair should be one of RECPT, CC-RECPT, COMM-TO or FOOTN-TO.
 The second item should be the corresponding conf- or text-no.
 
 The result is a list of dotted pairs:
-	('recpt . conf-no)
-	('cc-recpt . conf-no)
-	('bcc-recpt . conf-no)
-	('comm-to . text-no)
-	('footn-to . text-no).
+	('RECPT . conf-no)
+	('CC-RECPT . conf-no)
+	('BCC-RECPT . conf-no)
+	('COMM-TO . text-no)
+	('FOOTN-TO . text-no).
 First element is a type-tag."
    (let ((result (cons 'MISC-LIST nil)))
     (while (not (null misc-pairs))
@@ -794,8 +794,6 @@ text is a member of some recipient of this text.
 Cannot be called from a callback."
   (let* ((comm-to-list nil)
          (recipient-list nil)
-         (author-list nil)
-         (author-is-member nil)
          (text-stat nil)
          (collector (make-collector))
          (extra-headers nil)
@@ -804,7 +802,7 @@ Cannot be called from a callback."
                              lyskom-pers-no))
          (num-me 0)
          (num-real-recpt 0))
-    (lyskom-ignore text-stat)              ; Have no idea if its ever used...
+    (lyskom-ignore text-stat)       ; Have no idea if its ever used...
 
     ;;
     ;; List all texts this text is a comment to
@@ -812,11 +810,11 @@ Cannot be called from a callback."
     ;;
 
     (lyskom-traverse misc (cdr misc-list)
-      (cond ((eq (car misc) 'comm-to)
+      (cond ((eq (car misc) 'COMM-TO)
              (setq comm-to-list (cons (cdr misc)
                                       comm-to-list)))
-            ((memq (car misc) '(recpt cc-recpt bcc-recpt))
-             (when (eq (car misc) 'recpt)
+            ((memq (car misc) lyskom-recpt-types-list)
+             (when (eq (car misc) 'RECPT)
                (setq num-real-recpt (1+ num-real-recpt))
                (when (eq (cdr misc) me) (setq num-me (1+ num-me))))
              (setq recipient-list (cons (cdr misc) recipient-list)))))
@@ -843,11 +841,11 @@ Cannot be called from a callback."
     ;;
 
     (when (save-excursion (set-buffer lyskom-buffer)
-                           (cond ((null kom-check-for-new-comments) nil)
-                                 ((functionp kom-check-for-new-comments)
-                                  (funcall kom-check-for-new-comments
-                                           buffer misc-list subject))
-                                 (t t)))
+                          (cond ((null kom-check-for-new-comments) nil)
+                                ((functionp kom-check-for-new-comments)
+                                 (funcall kom-check-for-new-comments
+                                          buffer misc-list subject))
+                                (t t)))
       (lyskom-message "%s" (lyskom-format 'checking-comments))
       (save-excursion
         (set-buffer lyskom-buffer)
@@ -863,23 +861,23 @@ Cannot be called from a callback."
         (lyskom-wait-queue 'sending)
                                              
 	(lyskom-traverse
-	 text-stat (collector->value collector)
-	 (when text-stat
-	   (when (catch 'unread
-		   (lyskom-traverse
-		    misc-item (text-stat->misc-info-list text-stat)
-		    (when (and (eq (misc-info->type misc-item) 'COMM-IN)
-			       (not (lyskom-text-read-at-least-once-p 
-				     (blocking-do
-				      'get-text-stat
-				      (misc-info->comm-in misc-item)))))
-		      (throw 'unread t))))
-	     (unless (lyskom-j-or-n-p
-		      (lyskom-format 'have-unread-comment text-stat))
-	       (signal 'lyskom-edit-text-abort
-		       (list "%s"
-			     (lyskom-get-string 
-			      'please-check-commented-texts))))))))
+            text-stat (collector->value collector)
+          (when text-stat
+            (when (catch 'unread
+                    (lyskom-traverse
+                        misc-item (text-stat->misc-info-list text-stat)
+                      (when (and (eq (misc-info->type misc-item) 'COMM-IN)
+                                 (not (lyskom-text-read-at-least-once-p 
+                                       (blocking-do
+                                        'get-text-stat
+                                        (misc-info->comm-in misc-item)))))
+                        (throw 'unread t))))
+              (unless (lyskom-j-or-n-p
+                       (lyskom-format 'have-unread-comment text-stat))
+                (signal 'lyskom-edit-text-abort
+                        (list "%s"
+                              (lyskom-get-string 
+                               'please-check-commented-texts))))))))
       (lyskom-message "%s" (lyskom-format 'checking-comments-done)))
     
     
@@ -907,88 +905,149 @@ Cannot be called from a callback."
     ;; Check that the authors of all commented texts get to see the new text
     ;;
 
-    (if (and (lyskom-default-value 'kom-check-commented-author-membership)
-             (assq 'comm-to (cdr misc-list)))
-        (progn
-          (lyskom-message "%s" (lyskom-get-string 'checking-rcpt))
+    (when (and (lyskom-default-value 'kom-check-commented-author-membership)
+               (assq 'COMM-TO (cdr misc-list)))
+      (lyskom-message "%s" (lyskom-get-string 'checking-rcpt))
 
-          ;;
-          ;; For each commented text, get the author. Do not include
-          ;; ones that are listed in kom-dont-check-commented-authors
-        
-          (mapcar 
-           (lambda (x)
-             (let ((text (blocking-do 'get-text-stat x)))
-               (when (and text (not (memq (text-stat->author text)
-                                          kom-dont-check-commented-authors)))
-                 (add-to-list 'author-list (text-stat->author text)))))
-           comm-to-list)
+      (let ((raw-author-list (make-collector))
+            (author-list nil)
+            (authors-to-ask-about nil)
+            (authors-to-add nil)
+            (recipient-list (let ((result nil))
+                              (lyskom-traverse misc (cdr misc-list)
+                                (when (memq (car misc) 
+                                            lyskom-recpt-types-list)
+                                  (setq result (cons (cdr misc) result))))
+                              (nreverse result))))
+        ;;
+        ;; Collect conf-stats of all authors to check. Since there
+        ;; could be several, do it in a non-blocking way.
+        ;;
 
-          ;;
-          ;; For each author, see if the author is a direct recipient
-          ;; of the text. If so, there is no point in continuing.
-          ;; (People can unsubscribe from their mailboxes, but if they
-          ;; do, this code won't help anyway.)
-          ;;
+        (lyskom-traverse text-no comm-to-list
+          (initiate-get-text-stat 
+           'sending
+           (lambda (text-stat collector)
+             (when text-stat
+               (initiate-get-conf-stat 'sending
+                                       'collector-push
+                                       (text-stat->author text-stat)
+                                       collector)))
+           text-no
+           raw-author-list))
+        (lyskom-wait-queue 'sending)
+        (setq raw-author-list (collector->value raw-author-list))
 
-          (lyskom-traverse misc (cdr misc-list)
-            (cond ((memq (car misc) '(recpt bcc-recpt cc-recpt))
-                   (if (or (memq (cdr misc) author-list)
-                           (eq (cdr misc) me))
-                       (setq author-list (delq (cdr misc) author-list))))))
+        ;;
+        ;; Filter the list. Remote all authors that are direct recipients
+        ;; or whose send-comments-to is a direct recipient or who are
+        ;; listed in kom-dont-check-commented-authors
+        ;;
 
-          ;;
-          ;; For each author, get his or her memberships in all
-          ;; recipient conferences.
-          ;;
+        (lyskom-traverse author raw-author-list
+          (let ((send-comments-to
+                 (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
+            (if (and send-comments-to
+                     (string-match "^\\([0-9]+\\)"
+                                   (aux-item->data send-comments-to)))
+                (setq send-comments-to
+                      (string-to-number
+                       (match-string 1 (aux-item->data send-comments-to))))
+              (setq send-comments-to nil))
 
-          (save-excursion
-            (set-buffer lyskom-buffer)
-            (mapcar (function
-                     (lambda (author-number)
-		       (setq author-is-member nil)
-		       (set-collector->value collector nil)
-                       (mapcar
-                        (function
-                         (lambda (conference-number)
-                           (initiate-query-read-texts 
-                            'sending
-                            'collector-push
-                            author-number conference-number
-                            collector)))
-                        recipient-list)
-                       (lyskom-wait-queue 'sending)
 
-                       ;; Now collector contains all the memberships for
-                       ;; author-number in the recipients.
+            (cond
 
-                       (let ((tmp (collector->value collector)))
-                         (while tmp
-                           (when (and (lyskom-membership-p (car tmp))
-                                      (not (membership-type->passive
-                                        (membership->type (car tmp)))))
-                             (setq author-is-member t
-                                   tmp nil))
-                           (setq tmp (cdr tmp))))
+             ;; Author is in kom-dont-check-commented-authors
 
-                       (if (and (not author-is-member)
-				(not (zerop author-number))
-                                (lyskom-is-permitted-author
-                                 (blocking-do 'get-conf-stat author-number))
-                                (lyskom-j-or-n-p
-                                 (lyskom-format
-                                  'add-recipient-p
-                                  author-number)))
-                           (setq extra-headers
-                                 (nconc (list (if (lyskom-j-or-n-p
-                                                   (lyskom-format
-                                                    'really-add-as-recpt-q
-                                                    author-number))
-                                                  'recpt
-                                                'cc-recpt)
-                                              author-number)
-                                        extra-headers)))))
-                    author-list))))
+             ((memq (conf-stat->conf-no author) 
+                    kom-dont-check-commented-authors))
+
+             ;; Author is direct recipient to text
+
+             ((memq (conf-stat->conf-no author) recipient-list))
+
+             ;; Author has a zero send-comments-to
+
+             ((and send-comments-to (zerop send-comments-to)))
+
+             ;; We don't have permission to send stuff to the author's
+             ;; send-comments-to or to the author if there is no
+             ;; send-comments-to
+
+             ((or (and send-comments-to
+                       (not (lyskom-is-permitted-author
+                             (blocking-do 'get-conf-stat send-comments-to))))
+                  (and (not send-comments-to)
+                       (not (lyskom-is-permitted-author author)))))
+
+             ;; We can't filter the author straight off, so we add it
+             ;; to the list that we want to check completely.
+
+             (t (setq author-list (cons author author-list))))))
+
+        ;;
+        ;; Now author-list contains a list of authors that we need to
+        ;; check memberships of. Traverse all authors and get their
+        ;; memberships in all recipients.
+
+        (lyskom-traverse author author-list
+          (let ((memberships (make-collector)))
+            (lyskom-traverse recipient recipient-list
+              (initiate-query-read-texts 'sending
+                                         (lambda (x y)
+                                           (collector-push x y))
+                                         (conf-stat->conf-no author)
+                                         recipient
+                                         memberships))
+            (lyskom-wait-queue 'sending)
+            (setq memberships (collector->value memberships))
+
+            ;;
+            ;; Now memberships contains the memberships of author
+            ;; in all recipients of the text. Traverse all memberships
+            ;; in the collector and see if there is one that is not
+            ;; an active membership. If there is not, then we need to
+            ;; ask the user whether they want to add the author.
+            ;;
+
+            (unless (lyskom-traverse membership memberships
+                      (when (and membership
+                                 (not (membership-type->passive
+                                       (membership->type membership))))
+                        (lyskom-traverse-break t)))
+              (setq authors-to-ask-about (cons author authors-to-ask-about)))
+
+            ;;
+            ;; Now authors-to-ask-about contains all authors that we
+            ;; want to ask about. So do that.
+            ;;
+
+            (lyskom-traverse author authors-to-ask-about
+              (let ((send-comments-to
+                     (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
+                (if (and send-comments-to
+                         (string-match "^\\([0-9]+\\)"
+                                       (aux-item->data send-comments-to)))
+                    (setq send-comments-to
+                          (string-to-number
+                           (match-string 1 (aux-item->data send-comments-to))))
+                  (setq send-comments-to nil))
+
+                (when (lyskom-j-or-n-p 
+                       (lyskom-format 'add-recipient-p 
+                                      author
+                                      send-comments-to))
+                  (setq extra-headers
+                        (nconc (list (if (lyskom-j-or-n-p
+                                          (lyskom-format
+                                           'really-add-as-recpt-q
+                                           (or send-comments-to author)))
+                                         'RECPT
+                                       'CC-RECPT)
+                                     (or send-comments-to 
+                                         (conf-stat->conf-no author)))
+                               extra-headers)))))))))
 
     extra-headers))
     
@@ -1097,7 +1156,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
         (while headers
-          (if (memq (car headers) '(comm-to footn-to))
+          (if (memq (car headers) '(COMM-TO FOOTN-TO))
               (setq no (car (cdr headers))
                     headers nil)
             (setq headers (cdr (cdr headers)))))
@@ -1170,7 +1229,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-recipient)
                                  nil
-                                  'recpt))
+                                  'RECPT))
 
 
 (defun kom-edit-add-bcc ()
@@ -1178,7 +1237,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-blank-carbon-copy)
                                   nil
-                                  'bcc-recpt))
+                                  'BCC-RECPT))
 
 
 (defun kom-edit-add-copy ()
@@ -1186,7 +1245,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-carbon-copy)
                                   nil
-                                  'cc-recpt))
+                                  'CC-RECPT))
 
 (defun kom-edit-move-text ()
   "Adds a conference as a recipient, and changes all other recipients to
@@ -1201,8 +1260,8 @@ CC recipients."
     (set-buffer edit-buffer)
     (let* ((tmp (lyskom-edit-parse-headers))
            (subject (car tmp))
-           (miscs (mapcar (lambda (x) (if (eq (car x) 'recpt) 
-                                          (cons 'cc-recpt (cdr x)) x))
+           (miscs (mapcar (lambda (x) (if (eq (car x) 'RECPT) 
+                                          (cons 'CC-RECPT (cdr x)) x))
                   (cdr (lyskom-edit-translate-headers (elt tmp 1)))))
            (aux-list (elt tmp 2))
            (elem nil))
@@ -1211,14 +1270,14 @@ CC recipients."
       ;; If the new target is already a recipient, convert it to the right 
       ;; kind. Otherwise insert the new target after the last comm-to
 
-      (setq elem (lyskom-edit-find-misc miscs '(recpt cc-recpt bcc-recpt) 
+      (setq elem (lyskom-edit-find-misc miscs lyskom-recpt-types-list 
                                         (conf-stat->conf-no conf-stat)))
       (if elem
-          (setcar elem 'recpt)
+          (setcar elem 'RECPT)
         (lyskom-insert-in-list
-         (cons 'recpt (conf-stat->conf-no conf-stat))
+         (cons 'RECPT (conf-stat->conf-no conf-stat))
          miscs
-         (car (cdr (memq (lyskom-edit-find-misc miscs '(footn-to comm-to) 
+         (car (cdr (memq (lyskom-edit-find-misc miscs '(FOOTN-TO COMM-TO) 
                                                 nil t)
                          miscs)))))
 
@@ -1231,7 +1290,7 @@ CC recipients."
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (miscs (lyskom-edit-translate-headers (elt headers 1)))
-           (elem (lyskom-edit-find-misc miscs '(cc-recpt bcc-recpt recpt)
+           (elem (lyskom-edit-find-misc miscs lyskom-recpt-types-list
                                         recpt-no)))
 
       (cond (elem (setcar elem recpt-type))
@@ -1283,11 +1342,11 @@ RECPT-TYPE is the type of recipient to add."
                         (j-or-n-p (lyskom-get-string 'still-want-to-add))))
 
          (when (and kom-confirm-add-recipients
-                    (eq recpt-type 'recpt)
+                    (eq recpt-type 'RECPT)
                     (not (lyskom-j-or-n-p (lyskom-format
                                            'really-add-as-recpt-q
                                            conf-stat))))
-           (setq recpt-type 'cc-recpt))
+           (setq recpt-type 'CC-RECPT))
 
          (if what-to-do
            (funcall what-to-do conf-stat insert-at edit-buffer)
@@ -1302,7 +1361,7 @@ RECPT-TYPE is the type of recipient to add."
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (miscs (lyskom-edit-translate-headers (elt headers 1)))
-           (elem (lyskom-edit-find-misc miscs '(cc-recpt bcc-recpt recpt)
+           (elem (lyskom-edit-find-misc miscs lyskom-recpt-types-list
                                         recpt-no)))
 
       (when elem (setcar elem nil))
@@ -1529,7 +1588,7 @@ non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
   "Parse the headers of an article.
 They are returned as a list where the first element is the subject,
 and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
-either 'recpt, 'cc-recpt, 'comm-to or 'footn-to. This is to make it
+either 'RECPT, 'CC-RECPT, 'COMM-TO or 'FOOTN-TO. This is to make it
 easy to use the result in a call to `lyskom-create-misc-list'."
   (goto-char (point-min))
   (let ((misc nil)
@@ -1550,16 +1609,16 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	      (n nil))
 	  (cond
 	   ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
-	    (setq misc (nconc misc (list 'recpt n))))
+	    (setq misc (nconc misc (list 'RECPT n))))
 	   ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
-	    (setq misc (nconc misc (list 'cc-recpt n))))
+	    (setq misc (nconc misc (list 'CC-RECPT n))))
 	   ((setq n (lyskom-looking-at-header 'blank-carbon-copy-prefix
                                               'angled))
-	    (setq misc (nconc misc (list 'bcc-recpt n))))
+	    (setq misc (nconc misc (list 'BCC-RECPT n))))
 	   ((setq n (lyskom-looking-at-header 'comment-prefix t))
-	    (setq misc (nconc misc (list 'comm-to n))))
+	    (setq misc (nconc misc (list 'COMM-TO n))))
 	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
-	    (setq misc (nconc misc (list 'footn-to n))))
+	    (setq misc (nconc misc (list 'FOOTN-TO n))))
 	   ((lyskom-looking-at-header 'header-subject nil)
 	    (setq subject (lyskom-edit-extract-subject)))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.50 2002-04-20 17:47:00 ceder Exp $
+;;;;; $Id: compatibility.el,v 44.51 2002-04-21 21:32:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.50 2002-04-20 17:47:00 ceder Exp $\n"))
+	      "$Id: compatibility.el,v 44.51 2002-04-21 21:32:15 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -597,6 +597,14 @@ Otherwise treat \\ in NEWTEXT string as special:
 (lyskom-provide-function w32-shell-execute (&rest args)
   "Dummy function that raises an error."
   (error "w32-shell-execute undefined"))
+
+;; This code looks the way it does in order to avoid warnings in
+;; Emacs 21.
+
+(eval-and-compile
+  (condition-case nil
+      (symbol-value ':default-help-echo)
+    (error (set ':default-help-echo ':default-help-echo))))
 
 
 ;;; Local Variables:

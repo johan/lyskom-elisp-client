@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.66 2002-04-11 18:49:09 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.67 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.66 2002-04-11 18:49:09 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.67 2002-04-21 21:32:16 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -161,7 +161,8 @@ If there is no active area, then do something else."
   ;; Use the command as the event for simplicity.  Note that the menu
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
-  (let ((title (lyskom-maybe-recode-string title 'iso-8859-1 t)))
+  (let* ((lyskom-language lyskom-global-language)
+         (title (lyskom-maybe-recode-string title 'iso-8859-1 t)))
     (when (> (length title) 44) (setq title (concat (substring title 0 40)
                                                     " ...")))
     (cond ((string-match "XEmacs" (emacs-version))
