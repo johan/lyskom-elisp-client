@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.1 1996-08-08 11:33:11 byers Exp $
+;;;;; $Id: english-strings.el,v 43.2 1996-08-09 20:56:32 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.1 1996-08-08 11:33:11 byers Exp $"))
+              "$Id: english-strings.el,v 43.2 1996-08-09 20:56:32 davidk Exp $"))
 
 
 
@@ -369,6 +369,10 @@ Read all about it at http://www.lysator.liu.se/history/")
     (checking-rcpt-done . "Checking recipients...done")
 
     (matching-regexp . "Conferences/users matching `%#1s'\n")
+
+    (who-is-active-all . "Showing all sessions.\n")
+    (who-is-active-last-minnutes . "Showing all sessions active tha last %#1d minutes.\n")
+    (showing-invisibles . "Showing invisible sessions.\n")
 
     ; From commands2.el:
 

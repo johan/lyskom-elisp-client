@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.0 1996-08-07 16:39:11 davidk Exp $
+;;;;; $Id: commands1.el,v 43.1 1996-08-09 20:56:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.0 1996-08-07 16:39:11 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.1 1996-08-09 20:56:27 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1487,9 +1487,17 @@ If MARK-NO == 0, review all marked texts."
 ;;; Rewritten by: David K}gedal
 
 
-(def-kom-command kom-who-is-on ()
+(def-kom-command kom-who-is-on (&optional arg)
   "Display a list of all connected users."
-  (interactive)
+  (interactive "P")
+  (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+      (lyskom-who-is-on-9 arg)
+    (lyskom-who-is-on-8)))
+
+
+(defun lyskom-who-is-on-8 ()
+  "Display a list of all connected users.
+Uses Protocol A version 8 calls"
   (let* ((who-info-list (blocking-do 'who-is-on))
 	 (who-list (sort (listify-vector who-info-list)
 			 (function (lambda (who1 who2)
@@ -1541,6 +1549,107 @@ If MARK-NO == 0, review all marked texts."
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			     "\n"))
       (lyskom-insert (lyskom-format 'total-users total-users))))
+
+
+(defun lyskom-who-is-on-9 (arg)
+  "Display a list of all connected users.
+Uses Protocol A version 9 calls"
+  (let* ((wants-invisibles (and (numberp arg) (< arg 0)))
+	 (idle-hide (if (numberp arg) (abs arg) kom-idle-hide))
+	 (who-info-list (blocking-do 'who-is-on-dynamic
+				     't wants-invisibles (* idle-hide 60)))
+	 (who-list (sort (listify-vector who-info-list)
+			 (function
+			  (lambda (who1 who2)
+			    (< (dynamic-session-info->session who1)
+			       (dynamic-session-info->session who2))))))
+	 (total-users (length who-list))
+	 (session-width (1+ (length (int-to-string
+				     (dynamic-session-info->session
+				      (nth (1- total-users) who-list))))))
+	 (format-string-1 (lyskom-info-line-format-string
+			   session-width "P" "M"))
+	 (format-string-2 (lyskom-info-line-format-string
+			   session-width "D" "s"))
+	 (lyskom-default-conf-string 'not-present-anywhere))
+
+    (if (zerop idle-hide)
+	(lyskom-insert (lyskom-get-string 'who-is-active-all))
+      (lyskom-format-insert 'who-is-active-last-minutes idle-hide))
+
+    (if wants-invisibles
+	(lyskom-insert (lyskom-get-string 'showing-invisibles)))
+			  
+    (lyskom-format-insert format-string-2
+			  ""
+			  (lyskom-get-string 'lyskom-name)
+			  (lyskom-get-string 'is-in-conf))
+    (if kom-show-where-and-what
+	(lyskom-format-insert format-string-2
+			      ""
+			      (lyskom-get-string 'from-machine)
+			      (lyskom-get-string 'is-doing)))
+    
+    (lyskom-insert
+     (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
+    
+    (while who-list
+      (let* ((who-info (car who-list))
+	     (session-no (dynamic-session-info->session who-info))
+	     (session-no-s (int-to-string session-no))
+	     (my-session (if (= lyskom-session-no session-no)
+			     "*"
+			   " ")))
+	(lyskom-format-insert
+	 format-string-1
+	 (concat session-no-s my-session)
+	 (dynamic-session-info->person who-info)
+	 (or (dynamic-session-info->working-conference who-info)
+	     (lyskom-get-string 'not-present-anywhere)))
+	(if kom-show-where-and-what
+	    (let* (static defer-info username)
+	      (cond (kom-deferred-printing
+		     (setq static (cache-get-static-session-info session-no))
+		     (if static
+			 (setq username
+			       (lyskom-combine-username
+				(static-session-info->username static)
+				(static-session-info->ident-user static)
+				(static-session-info->hostname static)))
+		       (setq defer-info
+			     (lyskom-create-defer-info
+			      'get-static-session-info
+			      session-no
+			      'lyskom-insert-deferred-session-info
+			      (make-marker)
+			      (length lyskom-defer-indicator)
+			      "%#1s"))
+		       (setq username defer-info)))
+		    (t
+		     (setq static
+			   (blocking-do 'get-static-session-info session-no))
+		     (setq username (lyskom-combine-username
+				     (static-session-info->username static)
+				     (static-session-info->ident-user static)
+				     (static-session-info->hostname static)))))
+	      (lyskom-format-insert
+	       format-string-2
+	       ""
+	       username
+	       (concat "(" (dynamic-session-info->what-am-i-doing who-info)
+		       ")"))))
+	(setq who-list (cdr who-list))))
+    
+    (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+			   "\n"))
+    (lyskom-insert (lyskom-format 'total-users total-users))))
+
+(defun lyskom-insert-deferred-session-info (session-info defer-info)
+  (lyskom-replace-deferred defer-info
+			   (lyskom-combine-username
+			    (static-session-info->username session-info)
+			    (static-session-info->ident-user session-info)
+			    (static-session-info->hostname session-info))))
 
 ;;; =====================================================================
 ;;;                 Lista klienter - List clients
@@ -1638,9 +1747,7 @@ If MARK-NO == 0, review all marked texts."
 
 (defun lyskom-return-username (who-info)
   "Takes the username from the WHO-INFO and returns it on a better format."
-  (let* ((username (if (eq 'SESSION-INFO who-info) ; Weird...
-                       (session-info->username who-info)
-                     (who-info->username who-info)))
+  (let* ((username (who-info->username who-info))
 	 (type (or 
 		(string-match "\\([^%@.]+\\)%\\(.+\\)@\\([^%@.]+\\)" username)
 		(string-match "\\([^%@.]+\\)@\\([^%@.]+\\)" username))))
@@ -1665,7 +1772,19 @@ If MARK-NO == 0, review all marked texts."
 	      (concat name "@" gott rest)
 	    (concat name "@" sent " (" gott rest ")")))
       username)))
-  
+
+
+(defun lyskom-combine-username (username identname hostname)
+  "Return a description of from where a user is logged in."
+  ;; Ignore ident info for now
+  (if (string-match "\\(.*\\)%\\(.*\\)" username)
+      (let ((user (substring username (match-beginning 1) (match-end 1)))
+	    (uhost (substring username (match-beginning 2) (match-end 2))))
+	(if (string= uhost hostname)
+	    (concat user "@" hostname)
+	  (concat username "@" hostname)))
+    (concat username "@" hostname)))
+
 
 ;;; ================================================================
 ;;;            Status (för) Session - Status (for a) session
@@ -1681,52 +1800,109 @@ about or a single session number."
                             ((numberp arg) (list arg)))
                       (lyskom-read-session-no 
                        (lyskom-get-string 'status-for-session))))
-        (who-info (listify-vector (blocking-do 'who-is-on))))
-    (mapcar (function (lambda (x) (lyskom-status-session x who-info)))
-            sessions)))
+	who-info)
+    (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+	(progn
+	  (setq who-info (listify-vector
+			  (blocking-do 'who-is-on-dynamic t t 0)))
+	  (mapcar (function (lambda (x) (lyskom-status-session-9 x who-info)))
+		  sessions))
+      (setq who-info (listify-vector (blocking-do 'who-is-on)))
+      (mapcar (function (lambda (x) (lyskom-status-session-8 x who-info)))
+	      sessions))))
 
 
-(defun lyskom-status-session (sid who-info)
+(defun lyskom-status-session-8 (sid who-info-list)
   "Show session status for session SID. WHO-INFO is a list of
 WHO-INFOS that are potential sessions."
-  (while who-info
-    (if (eq sid (who-info->connection (car who-info)))
-        (lyskom-status-session-2 (car who-info)))
-    (setq who-info (cdr who-info))))
+  (while who-info-list
+    (if (eq sid (who-info->connection (car who-info-list)))
+	(let* ((info (car who-info-list))
+	       (client (if kom-deferred-printing
+			   (lyskom-create-defer-info
+			    'get-client-name
+			    (who-info->connection info)
+			    'lyskom-deferred-client-1
+			    nil nil nil
+			    (who-info->connection info))
+			 (blocking-do-multiple
+			     ((name (get-client-name
+				     (who-info->connection info)))
+			      (version (get-client-version
+					(who-info->connection info))))
+			   (concat name " " version)))))
+	  (lyskom-format-insert
+	   (lyskom-get-string 'session-status)
+	   (who-info->connection info)
+	   (who-info->pers-no info)
+	   (lyskom-return-username info)
+	   (if (not (eq (who-info->working-conf info) 0))
+	       (who-info->working-conf info)
+	     (lyskom-get-string 'not-present-anywhere))
+	   (let ((string (if (string-match "^\\(.*[^.]\\)\\.*$"
+					   (who-info->doing-what info))
+			     (match-string 1 (who-info->doing-what info))
+			   (who-info->doing-what info))))
+	     (if (string= string "")
+		 (lyskom-get-string 'unknown-doing-what)
+	       string))
+	   client
+	   (if (not (eq (who-info->working-conf info) 0))
+	       (lyskom-get-string 'doing-where-conn)
+	     (lyskom-get-string 'doing-nowhere-conn)))))
+    (setq who-info-list (cdr who-info-list))))
 
-(defun lyskom-status-session-2 (info)
-  "Internal to lyskom-status-session"
-  (let ((client (if kom-deferred-printing
-                    (lyskom-create-defer-info 'get-client-name
-                                              (who-info->connection info)
-                                              'lyskom-deferred-client-1
-                                              nil nil nil
-                                              (who-info->connection info))
-                  (blocking-do-multiple
-                      ((name (get-client-name
-                              (who-info->connection info)))
-                       (version (get-client-version
-                                 (who-info->connection info))))
-                    (concat name " " version)))))
-  (lyskom-format-insert (lyskom-get-string 'session-status)
-                        (who-info->connection info)
-                        (who-info->pers-no info)
-                        (lyskom-return-username info)
-                        (if (not (eq (who-info->working-conf info) 0))
-                            (who-info->working-conf info)
-                          (lyskom-get-string 'not-present-anywhere))
-                        (let ((string 
-                               (if (string-match "^\\(.*[^.]\\)\\.*$"
-                                                 (who-info->doing-what info))
-                                   (match-string 1 (who-info->doing-what info))
-                                 (who-info->doing-what info))))
-                          (if (string= string "")
-                              (lyskom-get-string 'unknown-doing-what)
-                            string))
-                        client
-                        (if (not (eq (who-info->working-conf info) 0))
-                            (lyskom-get-string 'doing-where-conn)
-                          (lyskom-get-string 'doing-nowhere-conn)))))
+
+(defun lyskom-status-session-9 (sid who-info-list)
+  "Show session status for session SID. WHO-INFO is a list of
+WHO-INFOS that are potential sessions."
+  (let ((static (blocking-do 'get-static-session-info sid)))
+    (while who-info-list
+      (if (eq sid (dynamic-session-info->session (car who-info-list)))
+	  (let* ((info (car who-info-list))
+		 (client (if kom-deferred-printing
+			     (lyskom-create-defer-info
+			      'get-client-name
+			      (dynamic-session-info->session info)
+			      'lyskom-deferred-client-1
+			      nil nil nil
+			      (dynamic-session-info->session info))
+			   (blocking-do-multiple
+			       ((name (get-client-name
+				       (dynamic-session-info->session info)))
+				(version
+				 (get-client-version
+				  (dynamic-session-info->session info))))
+			     (concat name " " version)))))
+	    (lyskom-format-insert
+	     (lyskom-get-string 'session-status-9)
+	     (dynamic-session-info->session info)
+	     (dynamic-session-info->person info)
+	     (lyskom-combine-username (static-session-info->username static)
+				      (static-session-info->ident-user static)
+				      (static-session-info->hostname static))
+	     (if (not (eq (dynamic-session-info->working-conference info) 0))
+		 (dynamic-session-info->working-conference info)
+	       (lyskom-get-string 'not-present-anywhere))
+	     (let ((string (if (string-match
+				"^\\(.*[^.]\\)\\.*$"
+				(dynamic-session-info->what-am-i-doing info))
+			       (match-string
+				1 (dynamic-session-info->what-am-i-doing info))
+			     (dynamic-session-info->what-am-i-doing info))))
+	       (if (string= string "")
+		   (lyskom-get-string 'unknown-doing-what)
+		 string))
+	     client
+	     (if (not (eq (dynamic-session-info->working-conference info) 0))
+		 (lyskom-get-string 'doing-where-conn)
+	       (lyskom-get-string 'doing-nowhere-conn))
+	     (lyskom-format-time
+	      (static-session-info->connection-time static))
+	     (/ (dynamic-session-info->idle-time info) 60))
+	    (if (session-flags->invisible (dynamic-session-info->flags info))
+		(lyskom-insert (lyskom-get-string 'session-is-invisible)))))
+      (setq who-info-list (cdr who-info-list)))))
 	
 
 ;;; ================================================================

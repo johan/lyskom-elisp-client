@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 43.0 1996-08-07 16:39:31 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 43.1 1996-08-09 20:56:30 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,8 @@
 ;;;  1. Insert some temporary text. Use the variable
 ;;;     `lyskom-defer-indicator' as a placeholder.
 ;;; 
-;;;  2. Create a defer-info-structure with the following parameters
+;;;  2. Create a defer-info-structure by calling
+;;;     `lyskom-create-defe-info' with the following parameters
 ;;;
 ;;;        SERVER-CALL - the call to get the data (initate-get-*)
 ;;;        CALL-ARG    - the argument for the server call. This is
@@ -88,7 +89,8 @@
 					     del-chars format
 					     &optional data)
   (cons 'DEFER-INFO
-	(vector server-call call-par handler pos del-chars format data)))
+	(vector server-call call-par handler pos del-chars format data
+		lyskom-last-viewed)))
 
 (defun lyskom-defer-info-p (obj)
   (and (consp obj)
@@ -101,6 +103,7 @@
 (defun defer-info->del-chars (di)   (aref (cdr di) 4))
 (defun defer-info->format (di)      (aref (cdr di) 5))
 (defun defer-info->data (di)        (aref (cdr di) 6))
+(defun defer-info->last-viewed (di) (aref (cdr di) 7))
 
 (defun set-defer-info->server-call (di x) (aset (cdr di) 0 x))
 (defun set-defer-info->call-par (di x)    (aset (cdr di) 1 x))
@@ -109,11 +112,13 @@
 (defun set-defer-info->del-chars (di x)   (aset (cdr di) 4 x))
 (defun set-defer-info->format (di x)      (aset (cdr di) 5 x))
 (defun set-defer-info->data (di x)        (aset (cdr di) 6 x))
+(defun set-defer-info->last-viewed (di x) (aset (cdr di) 7 x))
 
 
 (defun lyskom-defer-insertion (defer-info)
   "Defer insertion of something.
 The insertion will be at (point)."
+  (set-defer-info->last-viewed defer-info lyskom-last-viewed)
   ;; (goto-char (defer-info->pos defer-info))
   (funcall (intern-soft (concat "initiate-"
 				(symbol-name (defer-info->server-call
@@ -143,10 +148,15 @@ The insertion will be at (point)."
 	;; that we can't use lyskom-last-viewed, because it has been
 	;; updated to the new prompt. Until that is solved we make
 	;; sure that we never scroll.
-	(move-to-window-line -1)
-	(vertical-motion 1)
-	(if (not (pos-visible-in-window-p))
-	    (forward-char -1))
+	;;
+	;; The solution is to save lyskom-last-viewed in the defer-info
+	(save-selected-window
+	  (select-window window)
+	  (lyskom-scroll))
+	;; (move-to-window-line -1)
+	;; (vertical-motion 1)
+	;; (if (not (pos-visible-in-window-p))
+	;;     (forward-char -1))
 	))))
 
 
