@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.72 2002-05-24 12:42:44 davidk Exp $
+;;;;; $Id: startup.el,v 44.73 2002-05-25 18:22:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.72 2002-05-24 12:42:44 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.73 2002-05-25 18:22:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -438,81 +438,84 @@ shown to other users."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
   (lyskom-completing-clear-cache)
-  (let ((old-me lyskom-pers-no)
-	(new-me nil)
+  (let ((new-me nil)
 	(login-successful nil))
     (unwind-protect
         (progn
           (if lyskom-first-time-around
               nil
             (lyskom-tell-internat 'kom-tell-login))
-	  ;; We can't allow the prefetch to go on after the new user
-	  ;; is logged in, but to shut down the prefetch would be too
-	  ;; brutal, since the new login might be cancelled. To
-	  ;; prevent the blocking-do calls below from allowing
-	  ;; prefetch we set lyskom-inhibit-prefetch locally.
-	  (let ((lyskom-inhibit-prefetch t))
-	    (while (not new-me)
+          ;; We can't allow the prefetch to go on after the new user
+          ;; is logged in, but to shut down the prefetch would be too
+          ;; brutal, since the new login might be cancelled. To
+          ;; prevent the blocking-do calls below from allowing
+          ;; prefetch we set lyskom-inhibit-prefetch locally.
+          (let ((lyskom-inhibit-prefetch t))
+            (while (not new-me)
 
-	      (if (and lyskom-first-time-around
-		       lyskom-default-user-name)
-		  ;; This is nil if we can't find a unique match.
-		  (setq new-me
-			(conf-z-info->conf-no
-			 (lyskom-lookup-conf-by-name lyskom-default-user-name
-						     '(pers)))))
-	      (if new-me
-		  nil
-		(let ((name (lyskom-read-conf-name
-			     (lyskom-get-string 'what-is-your-name)
-			     '(pers none) t "" t)))
-		  (setq new-me
-			(or (conf-z-info->conf-no 
-			     (lyskom-lookup-conf-by-name name '(pers)))
-			    (lyskom-create-new-person name)))))
-	      ;; Now new-me contains a number of a person.
-	      ;; Lets log him in.
-	      (if new-me
-		  (let ((conf-stat (blocking-do 'get-conf-stat new-me))
-			(lyskom-inhibit-minibuffer-messages t))
+              (if (and lyskom-first-time-around
+                       lyskom-default-user-name)
+                  ;; This is nil if we can't find a unique match.
+                  (setq new-me
+                        (conf-z-info->conf-no
+                         (lyskom-lookup-conf-by-name lyskom-default-user-name
+                                                     '(pers)))))
+              (if new-me
+                  nil
+                (let ((name (lyskom-read-conf-name
+                             (lyskom-get-string 'what-is-your-name) 
+                             '(pers none) t "" t)))
+                  (setq new-me
+                        (or (conf-z-info->conf-no 
+                             (lyskom-lookup-conf-by-name name '(pers)))
+                            (lyskom-create-new-person name)))))
+              ;; Now new-me contains a number of a person.
+              ;; Lets log him in.
+              (if new-me
+                  (let ((conf-stat (blocking-do 'get-conf-stat new-me))
+                        (lyskom-inhibit-minibuffer-messages t))
 
-		    ;; Previously this code used lyskom-pers-no
-		    ;; directly instead of new-me, but that caused
-		    ;; problem with asynchrounous code trying to
-		    ;; access it.
-		    (setq lyskom-pers-no new-me)
+                    ;; Previously this code used lyskom-pers-no
+                    ;; directly instead of new-me, but that caused
+                    ;; problem with asynchrounous code trying to
+                    ;; access it.
+                    ;;
+                    ;; Setting lyskom-pers-no fscks up other things
+                    ;; if we do keyboard-quit in the middle, so don't.
+                    ;;
+                    ;; (setq lyskom-pers-no new-me)
 
-		    ;; DEBUG
-		    (if (null conf-stat)
-			(lyskom-insert "You don't exist. Go away.\n"))
+                    ;; DEBUG
+                    (if (null conf-stat)
+                        (lyskom-insert "You don't exist. Go away.\n"))
 
-		    (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
-		    (setq lyskom-first-time-around nil)
-		    (if (blocking-do 'login new-me
-				     (if lyskom-default-password
-					 (prog1
-					     lyskom-default-password
-					   (setq lyskom-default-password nil)
-					   (set-default 'lyskom-default-password
-							nil))
-				       ;; Use password read when creating
-				       ;; the person when loggin in new
-				       ;; users
-				       (or lyskom-is-new-user
-					   (silent-read
-					    (lyskom-get-string 'password))))
+                    (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
+                    (setq lyskom-first-time-around nil)
+                    (if (blocking-do 'login new-me
+                                     (if lyskom-default-password
+                                         (prog1
+                                             lyskom-default-password
+                                           (setq lyskom-default-password nil)
+                                           (set-default 'lyskom-default-password
+                                                        nil))
+                                       ;; Use password read when creating
+                                       ;; the person when loggin in new
+                                       ;; users
+                                       (or lyskom-is-new-user
+                                           (silent-read
+                                            (lyskom-get-string 'password))))
                                      (if invisiblep 1 0))
-			(progn
-			  (if lyskom-is-new-user
-			      (blocking-do 'add-member
-					   (server-info->conf-pres-conf lyskom-server-info)
-					   new-me
+                        (progn
+                          (if lyskom-is-new-user
+                              (blocking-do 'add-member
+                                           (server-info->conf-pres-conf lyskom-server-info)
+                                           new-me
                                            100 
                                            1
                                            (lyskom-create-membership-type
                                             nil nil nil nil nil nil nil nil)))
-			  (setq login-successful t))
-		      (lyskom-insert-string 'wrong-password)
+                          (setq login-successful t))
+                      (lyskom-insert-string 'wrong-password)
                       (when (lyskom-get-aux-item 
                              (server-info->aux-item-list lyskom-server-info)
                              13)        ; e-mail
@@ -524,49 +527,49 @@ shown to other users."
                                  (server-info->aux-item-list lyskom-server-info)
                                  13)    ; e-mail
                                 ))
-		      (setq new-me nil))
-		    (setq lyskom-is-new-user nil))))
+                      (setq new-me nil))
+                    (setq lyskom-is-new-user nil))))
 
-	    ;; Now we are logged in.
-	    (lyskom-insert-string 'are-logged-in)
+            ;; Now we are logged in.
+            (setq lyskom-pers-no new-me)
+            (lyskom-insert-string 'are-logged-in)
 
             (unless lyskom-is-running-compiled
               (lyskom-insert-string 'warning-about-uncompiled-client))
 
-	    (if (not lyskom-dont-read-user-area)
-		(lyskom-read-options))
+            (if (not lyskom-dont-read-user-area)
+                (lyskom-read-options))
             (when (or session-priority kom-default-session-priority)
               (setq lyskom-session-priority
                     (or session-priority kom-default-session-priority)))
-	    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-				       lyskom-current-conf
-				       0)
-	    (lyskom-run-hook-with-args 'kom-change-conf-hook
-				       lyskom-current-conf
-				       0)
-	    (setq lyskom-current-conf 0)
-	    ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
-	    (cache-set-marked-texts (blocking-do 'get-marks))
-	    ;; What is this variable? It is never used. It is ust to
-	    ;; fill the cache?
-	    (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
-	      (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
+            (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                                       lyskom-current-conf
+                                       0)
+            (lyskom-run-hook-with-args 'kom-change-conf-hook
+                                       lyskom-current-conf
+                                       0)
+            (setq lyskom-current-conf 0)
+            ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
+            (cache-set-marked-texts (blocking-do 'get-marks))
+            ;; What is this variable? It is never used. It is ust to
+            ;; fill the cache?
+            (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
+              (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
 
           ;; If login succeeded, clear the caches and set the language
 
-          (if login-successful
-              (progn (clear-all-caches)
-                     (unless (eq lyskom-language kom-default-language)   
-                       (when (lyskom-set-language kom-default-language 'local)
-                         (unless lyskom-have-one-login
-                           (lyskom-set-language kom-default-language 'global)
-                           (lyskom-maybe-setq-default kom-default-language kom-default-language)
-                           (setq-default lyskom-language kom-default-language))
-                         (lyskom-format-insert 
-                          'language-set-to
-                          (lyskom-language-name kom-default-language))))
-                     (setq lyskom-have-one-login t))
-            (setq lyskom-pers-no old-me))
+          (when login-successful
+            (progn (clear-all-caches)
+                   (unless (eq lyskom-language kom-default-language)   
+                     (when (lyskom-set-language kom-default-language 'local)
+                       (unless lyskom-have-one-login
+                         (lyskom-set-language kom-default-language 'global)
+                         (lyskom-maybe-setq-default kom-default-language kom-default-language)
+                         (setq-default lyskom-language kom-default-language))
+                       (lyskom-format-insert 
+                        'language-set-to
+                        (lyskom-language-name kom-default-language))))
+                   (setq lyskom-have-one-login t)))
 
           ;; Show motd and encourage writing a presentation
 
@@ -585,7 +588,6 @@ shown to other users."
 
           ;; Start the prefetch and update some basic caches
           (lyskom-refetch))
-
       (lyskom-end-of-command)))
 
   ;; Run the hook kom-login-hook. We don't want to hang the

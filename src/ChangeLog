@@ -1,3 +1,18 @@
+2002-05-25  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 528:
+	* lyskom-buttons.el (lyskom-button-copy-text-no): New function.
+
+	* vars.el.in (lyskom-button-actions): Added
+	lyskom-button-copy-text-no for texts.
+
+	Fix bug 571:
+	* utilities.el (lyskom-delete-duplicates): New function.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Misplaced
+	paren caused two loops to be nested when they shouldn't have been.
+	Use lyskom-delete-duplicates to eliminaate duplicate authors.
+
 2002-05-25  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* vars.el.in (lyskom-maybe-setq): Added missing commas: we want to
