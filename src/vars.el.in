@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.34 1997-09-16 15:08:15 byers Exp $
+;;;;; $Id: vars.el.in,v 44.35 1997-09-21 11:43:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.34 1997-09-16 15:08:15 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.35 1997-09-21 11:43:24 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -555,6 +555,7 @@ to some URL viewers.")
 
 (def-kom-var kom-url-managers '(("default"
                             ".*"
+                            "Browse-URL"
                             lyskom-view-url-browse-url)
                            ("w3" 
 			    "\\(http\\|gopher\\|ftp\\)"
@@ -1872,6 +1873,12 @@ to be bold with yellow text on a red background."
 (defvar lyskom-expression-history nil)
 (defvar lyskom-message-history nil)
 (defvar lyskom-language-history nil)
+
+
+;;; ============================================================
+;;; MULE workaround
+
+(put 'enable-multibyte-characters 'permanent-local t)
 
 
 

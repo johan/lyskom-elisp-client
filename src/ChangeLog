@@ -1,3 +1,60 @@
+Sun Sep 21 10:25:51 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (silent-read): Sätt enable-multibyte-characters
+ 	till nil.
+
+	* startup.el (lyskom): Använd lyskom-generate-new-buffer
+
+	* lyskom-rest.el (lyskom-format-enriched): Använd
+ 	lyskom-generate-new-buffer.
+
+	* cache.el (cache-initiate-who-info-buffer): Använd
+ 	lyskom-get-buffer-create.
+
+	* buffers.el (lyskom-generate-new-buffer): Ny funktion.
+	(lyskom-get-buffer-create): Sätt enable-multibyte-characters i
+ 	bufferten.
+
+	* defvar.el (lyskom-setup-minibuffer-variables): Sätt
+ 	enable-multibyte-characters i minibufferten.
+
+	* commands1.el (lyskom-quit): Få tyst på elint.
+
+	* edit-text.el (lyskom-edit-error): Få tyst på elint.
+	(lyskom-edit-text-abort): Dito.
+
+	* completing-read.el (lyskom-completing-use-dynamic-info): Ge
+ 	variabeln ett värde.
+
+Fri Sep 19 08:34:01 1997  David Byers  <davby@ida.liu.se>
+
+	* TODO: Gjorde om i outline-mode.
+
+	* macros.el (lyskom-ignore-errors): Nytt makro.
+
+	* command.el (lyskom-end-of-command): Välj lyskom-buffer innan vi
+ 	kör kroppen.
+
+Thu Sep 18 17:51:10 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el: Gjorde om lyskom-edit-mode-till en minor-mode. Det
+ 	innebar ändringar i flera funktioner. Se instanser av
+ 	lyskom-edit-sending-mode, lyskom-edit-sent-mode och
+ 	lyskom-edit-mode.
+
+	* utilities.el: (lyskom-overlay-keys): Ny funktion.
+	(lyskom-overlay-keymap): Dito.
+	(lyskom-lookup-key): Dito.
+
+	* lyskom-rest.el (j-or-n-p): Använd nya lyskom-lookup-key
+
+Wed Sep 17 13:56:29 1997  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el ((and (boundp 'kom-tell-phrases)
+ 	kom-tell-phrases)): Låt innehållet i variabeln kom-tell-phrases
+ 	åverrajda det som sätts som default.
+	(lyskom-sv-edit-mode-map): Lade tillbaks C-c } k
+
 Tue Sep 16 11:24:24 1997  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (kom-previous-kom): Använd def-kom-command.

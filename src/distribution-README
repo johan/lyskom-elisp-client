@@ -38,33 +38,55 @@
     Please mail change requests to kom@lysator.liu.se
 
 
+1.  What do I need
 
+    You need an Emacs. The client appears to work with the following
+    versions of Emacs:
+
+    * XEmacs version 20.2
+    * Gnu Emacs version 19.34 [1]
+    * Gnu Emacs version 20.1  [2]
+
+    [1] You'll have to replace the included custom package, and if you 
+        use Gnus, you may have to update that as well.
+
+    [2] Multibyte characters are not, and will not be, supported.
+        If you notice a case where something doesn't work, or Emacs
+        complains about "Not on a character boundary", please let us
+        know about it.
+
+    You need to have a recent version of the custom package installed.
+    The custom.el file that is bundled with Gnu Emacs 19.34 and older
+    versions of Gnus will not work.
+
+    The version that is bundled with recent versions of XEmacs, with
+    Gnu Emacs 20.1, with recent versions of Gnus and w3 is the one you 
+    need. 
+
+    Custom is not longer distributed as a separate package, but it may
+    still be available at <URL:http://www.dina.kvl.dk/~abraham/custom/>. 
+
+    If you have a version of Gnus installed that uses the old custom
+    package, it's time to upgrade. The latest version of Gnus is
+    available from <URL:http://www.gnus.org/>.
+
+
+
+2.  What should I have
+
+    LysKOM can use w3 for displaying HTML and calc for performing
+    calculations. You don't really need any of these packages, but
+    they're so useful in their own right that you might as well make
+    sure you have them.
+
+    At the time of writing this, the latest version of W3 is 4.0. It
+    is available from <URL:http://www.cs.indiana.edu/elisp/w3/w3.html>
     
-1.  Prerequisites
-
-    To use LysKOM you need an Emacs. Specifically, you need Gnu Emacs
-    version 19.34 or XEmacs, version 19.15 or 20.2 or higher. It is
-    possible that LysKOM will work with older versions of Emacs, but if 
-    it does, it's purely coincidence.
-
-    You also need the custom package from Per Abrahamsen. You can pick
-    it up at <URL:http://www.dina.kvl.dk/~abraham/custom/>. Note that
-    if you have an older version of Gnus installed, it is possible that 
-    you already have a file named custom.el. If this is the case,
-    you'll have to upgrade Gnus as well. More recent versions of Gnus
-    use the same version of custom that LysKOM uses.
-
-    You should have w3 version 3.somthing installed. LysKOM will work
-    without it, but won't be able to format HTML code.
-
-    To make things simpler, just type `make envcheck' in the
-    distribution directory, and the script will tell you if there seem
-    to be any problems with your Emacs environment.
+    The latest version of calc, when writing this, is available at
+    <URL:ftp://prep.ai.mit.edu/pub/gnu/calc-2.02f.tar.gz>
 
 
-
-
-2.  Installation
+3.  Installation
 
     Edit the Makefile in the distribution to reflect your environment. 
     You can change the following variables:
@@ -87,10 +109,12 @@
         will be the default language.
 
     Type `make envcheck' to make sure your Emacs environment is set up
-    correctly. 
+    correctly. The environment check is somewhat pessimistic. It is
+    entirely possible that LysKOM will run just fine even if it
+    complains.
 
-    If you need to add anything to the default load path, edit the
-    file lpath.el.
+    If you need to add anything to the default load path for
+    compiling, edit the file lpath.el.
 
     Type `make'. If your environment is set up correctly, LysKOM
     should be compiled. When compilation is finished, type `make
@@ -117,7 +141,7 @@
 
 
 
-3.  Reporting Bugs
+4.  Reporting Bugs
 
     Please report bugs to bug-lyskom@lysator.liu.se. Please give us the 
     following information (at least):
@@ -127,11 +151,12 @@
         lyskom-clientversion.
 
     o   The symptoms of the bug. Please be as detailed as possible.
-        Please do not try to make conclusions. Just give us the facts.
+        Please do not try to make conclusions. Just the facts ma'am.
 
     o   How you triggered the bug. If you know how to reproduce it,
         please tell us. We're pretty good at fixing bugs we can
         reproduce.
 
-    For your convenience, you may use the command kom-bug-report to
-    report bugs to us.
+    The command kom-bug-report may come in handy. It gives us a lot of 
+    information that you might not think of (such as what the internal 
+    data structures look like.)

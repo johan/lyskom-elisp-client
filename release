@@ -107,10 +107,23 @@ while [ ! "$q1" ] ; do
     fi
 done
 
+revision=""
+ask "Vill du göra en numerisk revision för alla filer" ja
+if [ "$yes" ] ; then
+    echo "Revision: \c"
+    read revision
+fi
+        
 tag=`echo v$version | tr "." "-"`
 
+
+if [ "$revision" ] then
+    echo "cvs revision blir $revision"
+else
+    echo "cvs revision blir oförändrad"
+fi
+
 cat <<EOF
-cvs revision blir $version
 cvs symboliska tag blir $tag
 
 Du står i begrepp att börja checka in, ändra revisioner och tagga 
@@ -139,13 +152,15 @@ else
     fi
 fi
 
-echo "Uppdaterar revisionsnumret..."
-if ( set -x; cvs commit -r $version ) ; then
-    ;
-else
-    echo "Fortsätt trots att revisionsändringen inte gick bra" nej
-    if [ "$no" ] ; then
-        exit 1
+if [ "$revision" ] ; then
+    echo "Uppdaterar revisionsnumret..."
+    if ( set -x; cvs commit -r $version ) ; then
+        ;
+    else
+        echo "Fortsätt trots att revisionsändringen inte gick bra" nej
+        if [ "$no" ] ; then
+            exit 1
+        fi
     fi
 fi
 
