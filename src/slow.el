@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.16 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: slow.el,v 44.17 2003-01-09 00:43:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -229,7 +229,8 @@ If the completion was not exact it returns nil."
 
 
 (defun kom-slow-mode ()
-  "Starts the slow-command-mode."
+  "Starts the slow-command-mode. In this mode you write commands in the
+main LysKOM buffer instead of using keyboard shortcuts."
   (interactive)
   (lyskom-start-of-command 'kom-slow-mode)
   (unless lyskom-slow-mode
@@ -240,7 +241,9 @@ If the completion was not exact it returns nil."
   (lyskom-end-of-command))
 
 (defun kom-quick-mode ()
-  "Starts the quick-command-mode."
+  "Starts the quick command mode. This is the standard mode for LysKOM,
+where you use keyboard shortcuts for most commands, and the \"x\" prefix
+for all other commands."
   (interactive)
   (lyskom-start-of-command 'kom-quick-mode)
   (when lyskom-slow-mode

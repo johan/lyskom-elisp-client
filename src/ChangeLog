@@ -1,3 +1,16 @@
+2003-01-08  David Byers  <david.byers@swipnet.se>
+
+	* filter.el (kom-super-jump): Fixed problem with prefix arg.
+
+	* faqs.el: Fixed some invalid variable references in the new
+	docstrings.
+
+	* commands1.el: Fixed some invalid variable references in the new
+	docstrings.
+
+	* faqs.el: Fixed some invalid variable references in the new
+	docstrings.
+
 2003-01-08  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-month-limits): Wrong number of days for

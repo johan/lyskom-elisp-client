@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.166 2003-01-07 21:17:12 byers Exp $
+;;;;; $Id: commands1.el,v 44.167 2003-01-09 00:43:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.166 2003-01-07 21:17:12 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.167 2003-01-09 00:43:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -768,12 +768,12 @@ supervisor of the conference or of the member being removed."
 
 (def-kom-command kom-sub-self (&optional conf)
   "Resign your membership of a conference. If
-`kom-unsubscribe-make-passive' is set, them resigning once converts
+`kom-unsubscribe-makes-passive' is set, them resigning once converts
 your membership to a passive membership and resigning twice removes
 the membership completely (if the server supports passive
 memberships).
 
-See `kom-unsubscribe-make-passive'."
+See `kom-unsubscribe-makes-passive'."
   (interactive)
   (lyskom-sub-member 
    (blocking-do 'get-conf-stat lyskom-pers-no)
@@ -2489,7 +2489,7 @@ today's name is controlled by `kom-show-namedays'."
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument
-\(i.e. `0', not `-0'), list all visible sessions. With a negative
+\(i.e. \"0\", not \"-0\"), list all visible sessions. With a negative
 nonzero prefix argument ARG, list both visible and invisible sessions
 who have been active in the last -ARG minutes. With a negative zero
 prefix argument (C-u -), list all sessions.
@@ -2515,7 +2515,7 @@ particular cnoference.
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument
-\(i.e. `0', not `-0'), list all visible sessions. With a negative
+\(i.e. \"0\", not \"-0\"), list all visible sessions. With a negative
 nonzero prefix argument ARG, list both visible and invisible sessions
 who have been active in the last -ARG minutes. With a negative zero
 prefix argument \(C-u -), list all sessions.
@@ -2555,7 +2555,7 @@ particular conference.
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument
-\(i.e. `0', not `-0'), list all visible sessions. With a negative
+\(i.e. \"0\", not \"-0\"), list all visible sessions. With a negative
 nonzero prefix argument ARG, list both visible and invisible sessions
 who have been active in the last -ARG minutes. With a negative zero
 prefix argument \(C-u -), list all sessions.
@@ -2593,7 +2593,7 @@ Several variables affect display. See `kom-show-where-and-what',
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument
-\(i.e. `0', not `-0'), list all visible sessions. With a negative
+\(i.e. \"0\", not \"-0\"), list all visible sessions. With a negative
 nonzero prefix argument ARG, list both visible and invisible sessions
 who have been active in the last -ARG minutes. With a negative zero
 prefix argument \(C-u -), list all sessions.
@@ -2974,7 +2974,7 @@ and client software.
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument
-\(i.e. `0', not `-0'), list all visible sessions. With a negative
+\(i.e. \"0\", not \"-0\"), list all visible sessions. With a negative
 nonzero prefix argument ARG, list both visible and invisible sessions
 who have been active in the last -ARG minutes. With a negative zero
 prefix argument \(C-u -), list all sessions."
@@ -3884,7 +3884,7 @@ DO-ADD: NIL if a comment should be subtracted.
 (def-kom-command kom-add-footnote (text-no-arg)
   "Add a text as a footnote to another text. This command is used to
 add a text as a footnote to another text after both have been created.
-If you want to write a new footnote, use `kom-write-footnot' instead.
+If you want to write a new footnote, use `kom-write-footnote' instead.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."

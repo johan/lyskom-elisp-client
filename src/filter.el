@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.24 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: filter.el,v 44.25 2003-01-09 00:43:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.24 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: filter.el,v 44.25 2003-01-09 00:43:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -572,9 +572,9 @@ user is a member of.
 
 To change existing filters, use `kom-filter-edit'.
 
-This command accepts text number prefix arguments (see
+This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (lyskom-read-text-no-prefix-arg 'super-jump-q))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'super-jump-q)))
   (if (or (null lyskom-current-text)
           (zerop lyskom-current-text))
       (lyskom-insert-string 'have-to-read)
