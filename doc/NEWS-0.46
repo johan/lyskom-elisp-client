@@ -23,6 +23,14 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** När man går ur ett möte blir man först passiv medlem. För att gå ur 
+   mötet på riktigt så måste man upprepa utträdet. Detta beteende går
+   att styra med variabeln kom-unsubscribe-makes-passive.
+
+** Elispklienten är lite mer Gnus-kompatibel. Om man råkar köra XEmacs 
+   och kom-smileys är satt, så kommer gladmän att visas som små
+   bilder.
+
 ** Stöd för tilläggsinformation på inlägg och möten. Se nedan.
 
 ** Lista markeringar ger en lista av alla markerade inlägg.
@@ -90,10 +98,6 @@ utnyttja detta. Det har tillkommit ett antal nya kommandon för detta i
 LysKOM-bufferten och i inläggsbufferten.
 
 ** Tilläggsinformation i LysKOM-bufferten
-
-*** Sätt personlig etikett sätter en personlig etikett på ett möte, en
-    person eller ett inlägg. Denna etikett visas oftast istället för
-    person- eller mötesnamnet eller inläggets ärenderad.
 
 *** Efter tilläggsinformation visas en liten knapp "[*]". Om man
     klickar på den så visas full information om tillägget.

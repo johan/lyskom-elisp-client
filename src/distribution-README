@@ -43,17 +43,12 @@
     You need an Emacs. The client appears to work with the following
     versions of Emacs:
 
-    * XEmacs version 20.2
+    * XEmacs version 20.2 and 21.2
     * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.1  [2]
+    * Gnu Emacs version 20.3 and 20.4
 
     [1] You'll have to replace the included custom package, and if you 
         use Gnus, you may have to update that as well.
-
-    [2] Multibyte characters are not, and will not be, supported.
-        If you notice a case where something doesn't work, or Emacs
-        complains about "Not on a character boundary", please let us
-        know about it.
 
     You need to have a recent version of the custom package installed.
     The custom.el file that is bundled with Gnu Emacs 19.34 and older
@@ -69,6 +64,12 @@
     If you have a version of Gnus installed that uses the old custom
     package, it's time to upgrade. The latest version of Gnus is
     available from <URL:http://www.gnus.org/>.
+
+    MAKE SURE YOU DO NOT HAVE a file called macedit.el early in your
+    load path. This file redefines a function that the client relies
+    heavly on. The redefinition is buggy. You can recognize this
+    problem if your Emacs says something like this: "Key sequence < m
+    o u s e - 2 > uses invalid prefix characters"
 
 
 

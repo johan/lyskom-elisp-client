@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.64 1999-06-20 11:26:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.65 1999-06-22 13:37:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.64 1999-06-20 11:26:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.65 1999-06-22 13:37:08 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -332,7 +332,6 @@ This is used when executing the kom-display-who-buffer command."
   "*Non-nil means read comments and footnotes to a text before other texts."
   server)
 
-
 (def-kom-var kom-continuous-scrolling t
   "*Non-nil means scroll LysKOM window as text is inserted. The last viewed
 position (generally the most recent prompt) will always be visible."
@@ -425,6 +424,11 @@ persons who are not logged in. Values other than t or nil are reserved
 for future use."
   server)
 
+
+(def-kom-var kom-unsubscribe-makes-passive t
+  "*If non-nil subtracting oneself from a conference makes the membership
+passive. A second leave will actually remove the membership."
+  server)
 
 (def-kom-var kom-membership-default-priority 100
   "*Default priority when joining a new conference.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.47 1999-06-20 11:26:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.48 1999-06-22 13:36:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.47 1999-06-20 11:26:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.48 1999-06-22 13:36:59 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1151,7 +1151,7 @@ On since %#8s%#9s")
     (personal-comment-edit-aux . "Request private replies only")
     (personal-comment-regexp . "Request private replies only")
     
-    (request-confirmation-aux . "The author requests confirmation of reading")
+    (request-confirmation-aux . "%#1P requests confirmation of reading")
     (request-confirmation-edit-aux . "Request confirmation of reading")
     (request-confirmation-regexp . "Request confirmation of reading")
     (confirm-read-q . "Confirm reading article %#1n? ")
@@ -1216,9 +1216,15 @@ Contents:     \"%#9s\"
     (no-comments-q . "Author requestes no comments. Comment anyway? ")
     (private-answer-q . "Author requests private replies. Write private reply? ")
 
-    (your-invited . "You have been invited to %#1M by %#2P.\n")
+    (your-invited . "You have been invited to %#1M by %#2P.
+By accepting the invitation you will continue to be a member of %#1M.
+If you decline the invitation you will not be a member of the conference.
+")
     (accept-invitation . "Do you want to accept the invitation now? ")
-    (enter-passive . "You are a passive member of %#1M.\n")
+    (decline-invitation . "You are no longer a member of %#1M\n")
+    (enter-passive . "You are a passive member of %#1M.
+You must become an active member of the conference to enter it.\n")
+    (convert-passive . "Vill du bli aktiv medlem i %#1M? ")
 
     (invitation-mt-type . "invited")
     (passive-mt-type . "passive")

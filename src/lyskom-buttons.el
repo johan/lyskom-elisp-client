@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.27 1999-06-14 15:32:46 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.28 1999-06-22 13:37:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.27 1999-06-14 15:32:46 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.28 1999-06-22 13:37:01 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -247,7 +247,8 @@ If there is no active area, then do something else."
   "Do a keyboard menu selection."
   (let ((prompt nil)
         (maxlen 0)
-        (e entries))
+        (e entries)
+        (completion-ignore-case t))
     (while e
       (if (> (length (car (car e))) maxlen)
           (setq maxlen (length (car (car e)))))

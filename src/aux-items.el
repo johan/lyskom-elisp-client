@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.9 1999-06-20 06:33:59 byers Exp $
+;;;;; $Id: aux-items.el,v 44.10 1999-06-22 13:36:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.9 1999-06-20 06:33:59 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.10 1999-06-22 13:36:55 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -395,7 +395,8 @@
        ""))
 
 (defun lyskom-print-request-confirmation (item &optional obj)
-  (concat (lyskom-format 'request-confirmation-aux)
+  (concat (lyskom-format 'request-confirmation-aux
+                         (aux-item->creator item))
           (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-edit-insert-request-confirmation (item &optional obj)
@@ -409,21 +410,22 @@
         (setq have-confirmation t)
         (setq confirmations nil))
       (setq confirmations (cdr confirmations)))
-    (when (and (not have-confirmation)
-               (lyskom-j-or-n-p
-                (lyskom-format (lyskom-get-string 'confirm-read-q)
-                               text-stat)))
-      (let ((item (lyskom-create-aux-item 0 7 lyskom-pers-no
-                                          nil 
-                                          (lyskom-create-aux-item-flags
-                                           nil nil nil nil nil nil nil nil)
-                                          0 "")))
-        (initiate-modify-text-info 'background
-                                   nil
-                                   (text-stat->text-no text-stat)
-                                   nil
-                                   (list item))
-        (cache-del-text-stat (text-stat->text-no text-stat))))))
+    (when  (not have-confirmation)
+      (lyskom-scroll)
+      (when (lyskom-j-or-n-p
+             (lyskom-format (lyskom-get-string 'confirm-read-q)
+                            text-stat))
+        (let ((item (lyskom-create-aux-item 0 7 lyskom-pers-no
+                                            nil 
+                                            (lyskom-create-aux-item-flags
+                                             nil nil nil nil nil nil nil nil)
+                                            0 "")))
+          (initiate-modify-text-info 'background
+                                     nil
+                                     (text-stat->text-no text-stat)
+                                     nil
+                                     (list item))
+          (cache-del-text-stat (text-stat->text-no text-stat)))))))
 
 (defun lyskom-print-read-confirm (item &optional obj)
   (concat 
