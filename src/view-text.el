@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.7 1996-07-17 09:00:31 byers Exp $
+;;;;; $Id: view-text.el,v 41.8 1996-07-19 16:55:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.7 1996-07-17 09:00:31 byers Exp $\n"))
+	      "$Id: view-text.el,v 41.8 1996-07-19 16:55:26 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -173,6 +173,8 @@ Note that this function must not be called asynchronously."
 		       (lyskom-view-text-handle-saved-comments text-stat))
 		   
 		   (if (or follow-comments
+			   ;; Checking build-review-tree should not be
+			   ;; necessary, really /davidk
 			   build-review-tree)
 		       ;; This shows footnotes also.
 		       (lyskom-follow-comments text-stat conf-stat mark-as-read
@@ -200,7 +202,7 @@ lyskom-reading-list."
   ;; . Fix the reading-list
   ;; . Issue cache-filling initiate-calls for everything left comments.
   
-  (let ((list))
+  (let (flist clist)
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
       (cond
        ((and (eq (misc-info->type misc) 'FOOTN-IN)
@@ -211,17 +213,20 @@ lyskom-reading-list."
 			  mark-as-read t conf-stat priority review-tree)
 	(lyskom-is-read (misc-info->footn-in misc)))
        ((eq (misc-info->type misc) 'FOOTN-IN)
-	(setq list (cons (misc-info->footn-in misc) list)))
+	(setq flist (cons (misc-info->footn-in misc) flist)))
        ((eq (misc-info->type misc) 'COMM-IN)
         (if lyskom-show-comments        ; +++SOJGE
-            (setq list (cons (misc-info->comm-in misc) list))))))
-
-    (let ((comments nil))
-      (lyskom-traverse no list
-	(cond
-	 ((or review-tree
-	      (not (lyskom-text-read-p (blocking-do 'get-text-stat no))))
-	  (setq comments (cons no comments)))))
+            (setq clist (cons (misc-info->comm-in misc) clist))))))
+    
+    (let (comments footnotes)
+      ;; Find the comments that we should read and enter them into the
+      ;; read-list.
+      (lyskom-traverse no clist
+	(let ((text-stat (blocking-do 'get-text-stat no)))
+	  (if (or review-tree
+		  (and text-stat
+		       (not (lyskom-text-read-p text-stat))))
+	      (setq comments (cons no comments)))))
       (if comments
 	  (read-list-enter-read-info
 	   (lyskom-create-read-info (if review-tree 'REVIEW-TREE 'COMM-IN)
@@ -229,10 +234,22 @@ lyskom-reading-list."
 				    (lyskom-create-text-list comments)
 				    (text-stat->text-no text-stat))
 	   lyskom-reading-list t))
-      ;; We have most of the text stats in the cache...
-      ;; Just a few stray things to fill the cache...
-      (lyskom-traverse no comments
-	(initiate-get-text-stat 'fill-cache 'lyskom-fetch-text-for-cache no)))))
+      ;; Find the footnotes that we should read and enter them into
+      ;; the read-list. A slight trick is to increase the priority so
+      ;; that they will be read first.
+      (lyskom-traverse no flist
+	(let ((text-stat (blocking-do 'get-text-stat no)))
+	  (if (or review-tree
+		  (and text-stat
+		       (not (lyskom-text-read-p text-stat))))
+	      (setq footnotes (cons no footnotes)))))
+      (if footnotes
+	  (read-list-enter-read-info
+	   (lyskom-create-read-info (if review-tree 'REVIEW-TREE 'FOOTN-IN)
+				    conf-stat (1+ priority)
+				    (lyskom-create-text-list footnotes)
+				    (text-stat->text-no text-stat))
+	   lyskom-reading-list t)))))
 
 
 (defun lyskom-fetch-text-for-cache (text-stat)

@@ -1,3 +1,18 @@
+Fri Jul 19 18:29:41 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Det stod comments på ett
+ 	stället där det skulle ha stått footnotes.
+
+Thu Jul 18 10:53:36 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-status-session): Ny kod från David.
+
+	* view-text.el (lyskom-follow-comments): Försökte läsa hemliga
+ 	kommentarer om kom-follow-comments-outside-membership var t.
+  	Gjorde om försöket att få fotnoter att läsas först om
+ 	kom-show-footnotes-immediately är nil. Förhoppningsvis lyckades
+ 	det den här gången (Jag tjuvkikade på 0.38.2).
+
 Thu Jul 18 10:18:13 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* lyskom-rest.el (lyskom-format-conf-type): Bugfix (det fungerade
@@ -10,6 +25,11 @@ Wed Jul 17 11:35:10 1996  David Byers  <davby@sen2.ida.liu.se>
  	är mottagare och hoppar även över lyskom-pers-no (man ser ju
  	alltid texter man skriver själv.) Detta gör att det går snabbare
  	att skicka personliga svar.
+
+Wed Jul 17 01:07:40 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Försökte fixa så att
+ 	fotnoter får läsas först om kom-show-footnotes-immediately är nil.
 
 Tue Jul 16 10:25:47 1996  David Byers  <davby@sen2.ida.liu.se>
 
