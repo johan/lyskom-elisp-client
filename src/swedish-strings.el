@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.397 2005-01-26 10:34:01 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.398 2005-02-14 21:58:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.397 2005-01-26 10:34:01 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.398 2005-02-14 21:58:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -175,7 +175,7 @@
     ;; From komtypes.el: nil
     ;; From clienttypes.el: nil
     ;; From startup.el:
-    (server-q . "LysKOM-server? (%#1s) ")
+    (server-q . "LysKOM-server? ")
     (try-connect . "LysKOM elisp-klient version %#1s.\nFörsöker koppla upp mot %#2s.\n")
     (too-old-server . "Servern är för gammal för den här versionen av klienten.")
     (connection-done . "Uppkopplingen klar. Serverns versionsnummer är %#1s.\n\n")

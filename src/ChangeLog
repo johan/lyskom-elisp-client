@@ -1,5 +1,12 @@
 2005-02-14  David Byers  <byers@lysator.liu.se>
 
+	Fix ugliness when default server is unset:
+	* startup.el (lyskom): New calling conventions for
+	lyskom-read-server-name.
+	(lyskom-read-server-name): New parameter list. Do not accept empty
+	input. Use initial value and magic minibuffer instead of default
+	value.
+
 	Fix bug 1511:
 	* commands1.el (lyskom-combine-username): Downcase hostnames.
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.353 2005-01-26 10:34:01 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.354 2005-02-14 21:58:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.353 2005-01-26 10:34:01 jhs Exp $"))
+              "$Id: english-strings.el,v 44.354 2005-02-14 21:58:36 byers Exp $"))
 
 
 ;;; ================================================================
@@ -157,7 +157,7 @@
     ; From komtypes.el: nil
     ; From clienttypes.el: nil
     ; From startup.el:
-    (server-q . "LysKOM server? (%#1s) ")
+    (server-q . "LysKOM server? ")
     (try-connect . "LysKOM elisp client version %#1s.\nAttempting to connect to %#2s.\n")
     (too-old-server . "The server is too old for this version of the client.")
     (connection-done . "Connection established. Server version is %#1s.\n\n")

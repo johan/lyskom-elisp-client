@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.112 2005-02-14 18:14:34 byers Exp $
+;;;;; $Id: startup.el,v 44.113 2005-02-14 21:58:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.112 2005-02-14 18:14:34 byers Exp $\n"))
+	      "$Id: startup.el,v 44.113 2005-02-14 21:58:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -79,11 +79,7 @@ Optional arguments: HOST, USERNAME, PASSWORD and INVISIBLEP.
 A numeric prefix argument sets the session priority. A prefix argument
 of `C-u', on the other hand, logs in the session without notifying other
 clients of the event. See lyskom-mode for details on lyskom."
-  (interactive (list (lyskom-read-server-name
-		      (lyskom-format 'server-q
-				     (or (getenv "KOMSERVER")
-					 lyskom-default-server
-					 kom-default-server)))
+  (interactive (list (lyskom-read-server-name)
 		     nil
 		     nil
 		     (if current-prefix-arg
@@ -790,7 +786,7 @@ This is called at login and after prioritize and set-unread."
     nil)))
 
 
-(defun lyskom-read-server-name (prompt)
+(defun lyskom-read-server-name ()
   "Read the name of a LysKOM server.
 Copmpletion is done on the servers i kom-server-aliases and
 kom-builtin-server-aliases. If an alias name is entered, the
@@ -807,13 +803,18 @@ corresponding address is returned."
 			 (append kom-server-aliases kom-builtin-server-aliases))))
 	(completion-ignore-case t)
 	server)
-    (setq server (lyskom-completing-read prompt
-                                         (lyskom-maybe-frob-completion-table
-                                          known-servers)
-                                         nil nil))
+    (while (null server)
+      (setq server (lyskom-completing-read (lyskom-format 'server-q)
+                                           (lyskom-maybe-frob-completion-table
+                                            known-servers)
+                                           nil nil
+                                           (cons (or (getenv "KOMSERVER")
+                                                     lyskom-default-server
+                                                     kom-default-server
+                                                     "") 0))))
     (or (cdr (lyskom-string-assoc server known-servers))
 	server)))
-      
+
 
 ;;; ================================================================
 ;;;                        The LysKOM mode.
