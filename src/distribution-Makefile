@@ -1,0 +1,107 @@
+# -*- Makefile -*-
+# $Id: distribution-Makefile,v 44.1 1997-07-07 15:25:13 byers Exp $
+# Copyright (C) 1997  Lysator Academic Computer Association.
+#
+
+# ======================================================================
+# EMACS is the command used to start Emacs on your system. You need
+# Gnu Emacs 19.34 or later, or XEmacs 19.15 or 20.2 or later.
+# ======================================================================
+
+EMACS=emacs
+
+
+# ======================================================================
+# The following lines control where things go when installed
+# LISPDIR is where lyskom.el and lyskom.elc go
+# INFODIR is where documentation goes (if there is any)
+# ======================================================================
+
+LISPDIR=/usr/gnu/share/emacs/site-list
+INFODIR=/usr/gnu/info
+
+
+# ======================================================================
+# LANGUAGE is a list of languages to compile in. Entries in the list
+# are separated by whitespace. The following # languages are available
+#
+#	Name in list		Language
+#	swedish			Swedish
+#	english			U.S. English
+#
+# The first language in the list will be the default language.
+# ======================================================================
+
+LANGUAGES=swedish english
+
+
+# ======================================================================
+# ======================================================================
+#
+#		You should change nothing beyond this point
+#
+# ======================================================================
+# ======================================================================
+
+RM=/bin/rm -f
+SHELL=/bin/sh
+LANGUAGE-EL=$(LANGUAGES:%=%-strings.el)
+EMACS-BATCH=$(EMACS) -batch
+SOURCES	 = 	$(LANGUAGE-EL) \
+		komtypes.el \
+		clienttypes.el \
+		deferred-insert.el \
+		utilities.el \
+		buffers.el \
+		prefetch.el \
+		startup.el \
+		reading.el \
+		internal.el \
+		services.el \
+		command.el \
+		parse.el \
+		cache.el \
+		commands1.el \
+		commands2.el \
+		review.el \
+		edit-text.el \
+		filter.el \
+		filter-edit.el \
+		lyskom-buttons.el \
+		view-text.el \
+		async.el \
+		completing-read.el \
+		prioritize.el \
+		flags.el \
+		messages.el \
+		ansaphone.el \
+		remote-control.el \
+		menus.el slow.el \
+		elib-string.el \
+		option-edit.el \
+		lyskom-rest.el
+
+HEADER = 	defvar.el \
+		vars.el \
+		macros.el \
+		compatibility.el \
+		language.el
+
+
+all: envcheck lyskom.elc
+
+envcheck:
+	$(EMACS-BATCH) -l ./envcheck.el -f lyskom-check-environment
+
+lyskom.elc: lyskom.el
+	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
+
+lyskom.el: $(HEADER) $(SOURCES) 
+	cat $(HEADER) $(SOURCES) > lyskom.el
+
+install: all
+	cp lykom.el lyskom.elc $(LISPDIR)
+
+clean:
+	$(RM) lyskom.el
+	$(RM) *~ *.elc core *.bak

@@ -1,3 +1,8 @@
+Mon Jul  7 17:25:46 1997  David Byers  <davby@ida.liu.se>
+
+	* Makefile: Rensade sånt som inte fungerade, gjorde lite mer lik
+ 	distribution-Makefile
+
 Sun Jul  6 14:41:16 1997  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-format-html): Markera bara att texten 

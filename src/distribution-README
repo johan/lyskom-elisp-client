@@ -1,37 +1,135 @@
-;;;;;
-;;;;; $Id: distribution-README,v 44.0 1996-08-30 14:46:00 davidk Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
-;;;;;
-;;;;; This file is part of the LysKOM server.
-;;;;; 
-;;;;; LysKOM is free software; you can redistribute it and/or modify it
-;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 2, or (at your option) 
-;;;;; any later version.
-;;;;; 
-;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
-;;;;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;;;;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-;;;;; for more details.
-;;;;; 
-;;;;; You should have received a copy of the GNU General Public License
-;;;;; along with LysKOM; see the file COPYING.  If not, write to
-;;;;; Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN,
-;;;;; or the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-;;;;; MA 02139, USA.
-;;;;;
-;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
-;;;;;
-;;;;; ================================================================
-;;;;; ================================================================
-;;;;; The LysKOM project is conducted at the Lysator CC at the        
-;;;;; Link|ping institute of Technology.                              
-;;;;;                                                                 
-;;;;; The developers are interested in any improvements you do in the 
-;;;;; code so please make sure they get a copy of your                
-;;;;; fixes/enhancements.                                             
-;;;;; email to linus@lysator.liu.se, inge@lysator.liu.se or           
-;;;;; kom@lysator.liu.se.
 
 
 
+---------------------------------------------------------------------------
+
+                     The LysKOM Emacs Lisp Client
+
+---------------------------------------------------------------------------
+
+
+
+
+    LysKOM is a project in progress at the Lysator Academic Computing
+    Society at Linköping University in Sweden. For information abuot
+    Lysator, see <URL:http://www.lysator.liu.se/>. For more information
+    on LysKOM, see <URL:http://www.lysator.liu.se/lyskom/>.
+
+    The latest version of the Emacs Lisp client for LysKOM is available 
+    from <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>.
+
+    LysKOM is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2, or (at your option)
+    any later version.
+
+    LysKOM is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with LysKOM; see the file COPYING. If not, write to Lysator,
+    c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN, or the
+    Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,
+    USA.
+
+    Please mail bug reports to bug-lyskom@lysator.liu.se. 
+    Please mail change requests to kom@lysator.liu.se
+
+
+
+    
+1.  Prerequisites
+
+    To use LysKOM you need an Emacs. Specifically, you need Gnu Emacs
+    version 19.34 or XEmacs, version 19.15 or 20.2 or higher. It is
+    possible that LysKOM will work with older versions of Emacs, but if 
+    it does, it's purely coincidence.
+
+    You also need the custom package from Per Abrahamsen. You can pick
+    it up at <URL:http://www.dina.kvl.dk/~abraham/custom/>. Note that
+    if you have an older version of Gnus installed, it is possible that 
+    you already have a file named custom.el. If this is the case,
+    you'll have to upgrade Gnus as well. More recent versions of Gnus
+    use the same version of custom that LysKOM uses.
+
+    You should have w3 version 3.somthing installed. LysKOM will work
+    without it, but won't be able to format HTML code.
+
+    To make things simpler, just type `make envcheck' in the
+    distribution directory, and the script will tell you if there seem
+    to be any problems with your Emacs environment.
+
+
+
+
+2.  Installation
+
+    Edit the Makefile in the distribution to reflect your environment. 
+    You can change the following variables:
+
+        EMACS should be set to the command used to start Emacs. Usually 
+        this will be either emacs or xemacs.
+
+        LISPDIR is the directory in which the compiled and uncompiled
+        client will go. This will normally be set to your site-lisp
+        directory.
+
+        INFODIR is where the info files will go, once we've written
+        them. You should set this variable on the off chance that we
+        distributed some documentation with the code.
+
+        LANGUAGES is a list of languages to compile in. As of version
+        0.45 there are only two translations of LysKOM. The Makefile
+        states which values are legal. Just list all the languages you
+        want, separated by whitespace. The first language you specify
+        will be the default language.
+
+    Type `make envcheck' to make sure your Emacs environment is set up
+    correctly. 
+
+    If you need to add anything to the default load path, edit the
+    file lpath.el.
+
+    Type `make'. If your environment is set up correctly, LysKOM
+    should be compiled. When compilation is finished, type `make
+    install' to copy all the relevant files to the relevant places.
+
+    Start Emacs, load lyskom.elc and type M-x lyskom RET, and you
+    should be in business.
+
+    If you have your own LysKOM server you may want to modify the
+    variable kom-server-aliases. The best place to change it is in your 
+    site init file. For example, if you are running a server on
+    kom.domain.org, you might want to say something like this in your
+    init file:
+
+         (defvar kom-server-aliases 
+                 '(("kom.domain.org     . "DomainKOM")
+                   ("kom.lysator.liu.se . "LysKOM")))
+
+    The first server listed in kom-server-aliases will be the default
+    server for new users.
+
+
+
+
+3.  Reporting Bugs
+
+    Please report bugs to bug-lyskom@lysator.liu.se. Please give us the 
+    following information (at least):
+
+    o   The LysKOM version you are using. This is shown when you start
+        LysKOM and is also contained in the variable
+        lyskom-clientversion.
+
+    o   The symptoms of the bug. Please be as detailed as possible.
+        Please do not try to make conclusions. Just give us the facts.
+
+    o   How you triggered the bug. If you know how to reproduce it,
+        please tell us. We're pretty good at fixing bugs we can
+        reproduce.
+
+    For your convenience, you may use the command kom-bug-report to
+    report bugs to us.
