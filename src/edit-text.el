@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.36 1999-06-11 12:21:28 byers Exp $
+;;;;; $Id: edit-text.el,v 44.37 1999-06-26 20:48:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.36 1999-06-11 12:21:28 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.37 1999-06-26 20:48:08 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -708,7 +708,7 @@ Based on ispell-message."
         ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
         ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
         ((eq 0 (conf-stat->supervisor conf-stat)) nil)
-        ((lyskom-get-membership (conf-stat->conf-no conf-stat)) t)
+        ((lyskom-get-membership (conf-stat->conf-no conf-stat) t) t)
         ((lyskom-is-supervisor
           (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
           (cons (conf-stat->conf-no conf-stat) memo)))))

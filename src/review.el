@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.16 1999-06-25 20:17:19 byers Exp $
+;;;;; $Id: review.el,v 44.17 1999-06-26 20:48:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.16 1999-06-25 20:17:19 byers Exp $\n"))
+	      "$Id: review.el,v 44.17 1999-06-26 20:48:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1174,7 +1174,7 @@ end."
        (read-list->all-entries lyskom-reading-list))
     (cond (lyskom-current-conf 
            (lyskom-format-insert 'you-have-no-unreads lyskom-current-conf))
-          (lyskom-insert 'not-reading-anywhere))))
+          (t (lyskom-insert 'not-reading-anywhere)))))
 
 
 

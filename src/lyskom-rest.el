@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.70 1999-06-25 20:17:17 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.71 1999-06-26 20:48:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.70 1999-06-25 20:17:17 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.71 1999-06-26 20:48:11 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -507,7 +507,7 @@ If CONF is nil, check the first conf on the to-do list."
                         (read-info->conf-stat 
                          (read-list->first lyskom-to-do-list))))
          (mship (and conf-stat 
-                     (lyskom-get-membership (conf-stat->conf-no conf-stat))))
+                     (lyskom-get-membership (conf-stat->conf-no conf-stat) t)))
          (type nil)
          (continue t))
     (when (and conf-stat mship)
@@ -675,37 +675,46 @@ CONF can be a a conf-stat or a string."
 
 ;;; +++Where should this be moved???
 
-
-(defun lyskom-try-get-membership (conf-no)
+(defun lyskom-try-get-membership (conf-no &optional want-passive)
   "Returns non-nil if conference CONF-NO is present on lyskom-membership.
 The value is actually the membership for the conference.
 
 For foreground functions, lyskom-get-membership should probably be used
 instead.
 
-This function does not use blocking-do."
+This function does not use blocking-do.
+
+Optional argument mship-list is the membership list to look in."
   (let ((list lyskom-membership)
 	(found nil))
     (while (and (not found) (not (null list)))
       (if (= conf-no (membership->conf-no (car list)))
 	  (setq found (car list)))
       (setq list (cdr list)))
-    found))
+    (if (and found
+             (or want-passive
+                 (not (membership-type->passive (membership->type found)))))
+        found
+      nil)))
 
-
-(defun lyskom-get-membership (conf-no)
+(defun lyskom-get-membership (conf-no &optional want-passive)
   "Get the membership for CONF-NO, or nil if the user is not a member of
 CONF-NO.
 
 If the membership list is not fully prefetched and the membership can't be
 found in lyskom-membership, a blocking call to the server is made."
-  (or (lyskom-try-get-membership conf-no)
+  (or (lyskom-try-get-membership conf-no want-passive)
       (and (not (lyskom-membership-is-read))
 	   (let ((membership
 		  (blocking-do 'query-read-texts lyskom-pers-no conf-no)))
 	     (if (and membership (lyskom-visible-membership membership))
 		 (lyskom-add-membership membership conf-no))
-	     membership))))
+    (if (and membership
+             (or want-passive
+                 (not (membership-type->passive
+                       (membership->type membership)))))
+        membership
+      nil)))))
 
 
 ;;;; ================================================================
@@ -1536,8 +1545,6 @@ Note that it is not allowed to use deferred insertions in the text."
 
   (let ((level 1))
     (while (> level 0)
-      (setq tmp (substring (format-state->format-string format-state)
-                           (format-state->start format-state)))
       (if (null (string-match "\\(%\\[\\|%\\]\\)"
                               (format-state->format-string format-state)
                               (format-state->start format-state)))
@@ -2878,7 +2885,7 @@ lyskom-session-priority and nil otherwise.
 
 If MEMBERSHIPs prioriy is 0, it always returns nil."
   (let ((priority (membership->priority membership)))
-    (and (> priority 0)
+    (and (not (membership-type->passive (membership->type membership)))
 	 (>= priority lyskom-session-priority))))
 
 ;;; The filter.

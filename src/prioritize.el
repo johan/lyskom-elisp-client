@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.12 1999-06-10 13:36:18 byers Exp $
+;;;;; $Id: prioritize.el,v 44.13 1999-06-26 20:48:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.12 1999-06-10 13:36:18 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.13 1999-06-26 20:48:15 byers Exp $\n"))
 
 
 
@@ -75,7 +75,7 @@
 ;;;
 
 (defun make-prioritize-entry (prio conf-stat membership)
-  (vector prio conf-stat nil nil membership))
+  (vector prio conf-stat nil membership))
 
 (defun prioritize-entry->priority (el)
   (aref el 0))
@@ -721,6 +721,7 @@ of conferences you are a member of."
                           (string (concat (lyskom-mode-name-from-host)
                                           " prioritize: "
                                           lyskom-server-name)))
+                     (setq membership-list (listify-vector membership-list))
                      (set-buffer tmp-buffer)
                      (make-local-variable 'lyskom-pers-no)
                      (make-local-variable 'lyskom-prioritize-entry-list)
@@ -737,7 +738,8 @@ of conferences you are a member of."
                                        'prioritize
                                        'lyskom-prioritize-handle-get-conf-stat
                                        (membership->conf-no memb-ship)
-                                       collector))
+                                       collector
+                                       ))
 
                      (lyskom-wait-queue 'prioritize)
                      
@@ -759,9 +761,10 @@ of conferences you are a member of."
         (lyskom-end-of-command)))))
 
 
-(defun lyskom-prioritize-handle-get-conf-stat (conf-stat collector)
-  (let* ((membership (lyskom-get-membership
-                      (conf-stat->conf-no conf-stat)))
+(defun lyskom-prioritize-handle-get-conf-stat (conf-stat 
+                                               collector)
+  (let* ((membership (lyskom-try-get-membership
+                      (conf-stat->conf-no conf-stat) t))
          (tmp (make-prioritize-entry
                (membership->priority 
                 membership)
@@ -859,16 +862,17 @@ only tell server about that entry."
              (save-excursion
                (set-buffer lyskom-buffer)
                (set-membership->priority 
-                (lyskom-get-membership conf-no)
+                (lyskom-get-membership conf-no t)
                 (prioritize-entry->priority entry))
-               (initiate-add-member 'priority
-                                    'lyskom-prioritize-handler
-                                    conf-no
-                                    lyskom-pers-no
-                                    (prioritize-entry->priority entry)
-                                    entry-number
-                                    (membership->type
-                                     (prioritize-entry->membership entry))))))))
+               (lyskom-ignoring-async (18)
+                 (initiate-add-member 'priority
+                                      'lyskom-prioritize-handler
+                                      conf-no
+                                      lyskom-pers-no
+                                      (prioritize-entry->priority entry)
+                                      entry-number
+                                      (membership->type
+                                       (prioritize-entry->membership entry)))))))))
                  
       
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.7 1999-06-20 06:32:49 byers Exp $
+;;;;; $Id: komtypes.el,v 44.8 1999-06-26 20:48:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.7 1999-06-20 06:32:49 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.8 1999-06-26 20:48:09 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -47,7 +47,10 @@
   "Create a conf-no-list from all parameters."
   (cons
    'CONF-NO-LIST
-   (apply 'vector conf-nos)))
+   (vector
+    (cond ((vectorp conf-nos) (append conf-nos nil))
+          (t conf-nos)))))
+
 
 
 ;;; Selector:

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.34 1999-06-11 10:34:33 byers Exp $
+;;;;; $Id: startup.el,v 44.35 1999-06-26 20:48:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.34 1999-06-11 10:34:33 byers Exp $\n"))
+	      "$Id: startup.el,v 44.35 1999-06-26 20:48:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -533,12 +533,17 @@ This is called at login and after prioritize and set-unread."
 
   (setq lyskom-membership nil)
 
-  (lyskom-reset-prefetch)
-  (lyskom-start-prefetch)
-  (lyskom-prefetch-membership lyskom-pers-no)
-
   (setq lyskom-to-do-list (lyskom-create-read-list))
-  (setq lyskom-reading-list (lyskom-create-read-list)))
+  (setq lyskom-reading-list (lyskom-create-read-list))
+
+
+  (lyskom-reset-prefetch)
+  (let ((unreads (blocking-do 'get-unread-confs lyskom-pers-no)))
+    (lyskom-traverse conf-no (conf-no-list->conf-nos unreads)
+      (lyskom-prefetch-one-membership conf-no lyskom-pers-no)))
+  (lyskom-prefetch-membership lyskom-pers-no)
+  (lyskom-start-prefetch)
+)
 
 
 (defun lyskom-set-membership (membership)
