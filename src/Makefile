@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.8 1993-12-14 02:21:29 linus Exp $
+# $Id: Makefile,v 36.9 1994-01-06 00:55:12 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.8 1993-12-14 02:21:29 linus Exp $
+# $Id: Makefile,v 36.9 1994-01-06 00:55:12 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.8  1993-12-14 02:21:29  linus
+# Revision 36.9  1994-01-06 00:55:12  linus
+# Removed installation of doc.
+#
+# Revision 36.8  1993/12/14  02:21:29  linus
 # Small fixes for emacs 18.55, jump.
 #
 # Revision 36.7  1993/11/21  04:37:06  linus
@@ -216,17 +219,9 @@ installnodoc: lyskom.elc lyskom.el
 	 cp lyskom-$${VER}.el.gz /usr/ftp/pub/lyskom/elisp-client;)
 
 
+# This is now the responsability of the Makefile in the doc-dir.
 installdoc: doc
-	(VER=`grep "lyskom-clientversion " vars.el | \
-	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
-	 cp ../doc/elisp-client ../doc/elisp-client.txt .;\
-	 gzip elisp-client elisp-client.txt;\
-	 mv elisp-client.gz \
-		/usr/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.info.gz; \
-	 mv elisp-client.txt.gz \
-	     /usr/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.txt.gz; \
-	 cp ../doc/elisp-client /usr/gnu/info; \
-	)
+	( cd ../doc; make install )
 
 clean:
 	$(RM) *~ *.elc $(GENERIC-CLEAN) makealfa.c
