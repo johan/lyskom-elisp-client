@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.297 2003-03-03 13:06:41 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.298 2003-03-04 16:27:53 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.297 2003-03-03 13:06:41 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.298 2003-03-04 16:27:53 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -2332,6 +2332,8 @@ teckenkodning.
   (lyskom-try-define-key lyskom-sv-mode-map (kbd "[")    'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [adiaeresis] 'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [Adiaeresis] 'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [ä]          'lyskom-sv-change-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [Ä]          'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [228]        'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [196]        'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [2276]       'lyskom-sv-change-prefix)
@@ -2344,6 +2346,8 @@ teckenkodning.
   (lyskom-try-define-key lyskom-sv-mode-map (kbd "]") 'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [aring]     'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [Aring]     'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [å]       'lyskom-sv-review-prefix)
+  (lyskom-try-define-key lyskom-sv-mode-map [Å]       'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [229]     'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [197]     'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [2277]    'lyskom-sv-review-prefix)
@@ -2427,6 +2431,8 @@ teckenkodning.
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "[") 'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [adiaeresis]     'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [Adiaeresis]     'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [ä]       'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [Ä]       'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [228]     'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [196]     'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [2276]    'kom-list-summary)
@@ -2447,6 +2453,8 @@ teckenkodning.
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "[")    'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [adiaeresis] 'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [Adiaeresis] 'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [ä]          'kom-filter-subject)
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [Ä]          'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [228]        'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [196]        'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [2276]       'kom-filter-subject)
@@ -2515,6 +2523,8 @@ teckenkodning.
   (lyskom-try-define-key lyskom-sv-S-prefix (kbd "[")    'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [adiaeresis] 'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [Adiaeresis] 'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [ä]          'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [Ä]          'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [228]        'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [196]        'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [2276]       'kom-send-message)

@@ -1,3 +1,9 @@
+2003-03-04  Johan Sundström  <jhs@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): [ä], [Ä], [å] and [Å] are
+	now also bound in all appropriate places. (These are used by XEmacs,
+	at least when run under screen in a PuTTY, and worked in 0.47.1.)
+
 2003-03-03  Johan Sundström  <jhs@lysator.liu.se>
 
 	* english-strings.el, swedish-strings.el: Improved garb-nice strings.
