@@ -130,86 +130,78 @@ Calls initiate-get-conf-stat and prints using lyskom-status-conf."
 				      (if pro (lyskom-get-string 'closed) "")
 				      ")"))
 			     (t ""))))
-    (lyskom-insert
-     (lyskom-format 'created-by
-	     (format "%25d" (conf-stat->creator conf-stat))
-	     (let ((creator (cache-get-conf-stat
-			     (conf-stat->creator conf-stat))))
-	       (if creator
-		   (concat (if (> (length (conf-stat->name creator))
-				  (- (lyskom-window-width) 46))
-			       "\n("
-			     "(")
-			   (conf-stat->name creator)")")
-		 ""))))
+    (lyskom-format-insert 'created-by
+			  (format "%25d" (conf-stat->creator conf-stat))
+			  (let ((creator (cache-get-conf-stat
+					  (conf-stat->creator conf-stat))))
+			    (if creator
+				(concat
+				 (if (> (length (conf-stat->name creator))
+					(- (lyskom-window-width) 46))
+				     "\n("
+				   "(")
+					(conf-stat->name creator)")")
+			      "")))
     (lyskom-format-insert 'created-at
 			  (lyskom-return-time
 			   (conf-stat->creation-time conf-stat)))
-    (lyskom-insert
-     (lyskom-format 'members
-	     (conf-stat->no-of-members conf-stat)))
-    (lyskom-insert
-     (lyskom-format 'garb-nice
-	     (conf-stat->garb-nice conf-stat)))
-    (lyskom-insert
-     (lyskom-format 'lowest-local-no
-	     (conf-stat->first-local-no conf-stat)))
-    (lyskom-insert
-     (lyskom-format 'highest-local-no
-	     (1- (+ (conf-stat->no-of-texts conf-stat)
-		    (conf-stat->first-local-no conf-stat)))))
-    (lyskom-insert
-     (lyskom-format 'last-text-time
-	     (lyskom-return-time (conf-stat->last-written conf-stat))))
-    (lyskom-insert
-     (lyskom-format 'no-of-motd
-	     (conf-stat->msg-of-day conf-stat)))
-    (lyskom-insert
-     (lyskom-format 'superconf-is-no-name
-		    (conf-stat->super-conf conf-stat)
-		    (let ((super-conf (cache-get-conf-stat
-				       (conf-stat->super-conf conf-stat))))
-		      (if super-conf
-			  (concat (if (> (length (conf-stat->name super-conf))
-					 (- (lyskom-window-width) 46))
-				      "\n("
-				    "(")
-				  (conf-stat->name super-conf)")")
-			""))))
-    (lyskom-insert
-     (lyskom-format 'permitted-submitters-no-name
-		    (conf-stat->permitted-submitters conf-stat)
-		    (let ((permitted-submitters
-			   (cache-get-conf-stat
-			    (conf-stat->permitted-submitters
-			     conf-stat))))
-		      (cond
-		       (permitted-submitters
-			(concat
-			 (if (> (length (conf-stat->name permitted-submitters))
-				(- (lyskom-window-width) 46))
-			     "\n("
-			   "(")
-			 (conf-stat->name permitted-submitters)
-			 ")"))
-		       ((zerop (conf-stat->permitted-submitters conf-stat))
-			(lyskom-get-string 'Everybody))
-		       (t "")))))
-    (lyskom-insert
-     (lyskom-format 'supervisor-is-no-name
-		    (conf-stat->supervisor conf-stat)
-		    (let ((supervisor (cache-get-conf-stat
-				       (conf-stat->supervisor conf-stat))))
-		      (if supervisor
-			  (concat (if (> (length (conf-stat->name supervisor))
-					 (- (lyskom-window-width) 46))
-				      "\n(" 
-				    "(")
-				  (conf-stat->name supervisor)")")
-			""))))
-    (lyskom-insert
-     (lyskom-format 'presentation-no
-	     (conf-stat->presentation conf-stat)))
+    (lyskom-format-insert 'members
+			  (conf-stat->no-of-members conf-stat))
+    (lyskom-format-insert 'garb-nice
+			  (conf-stat->garb-nice conf-stat))
+    (lyskom-format-insert 'lowest-local-no
+			  (conf-stat->first-local-no conf-stat))
+    (lyskom-format-insert 'highest-local-no
+			  (1- (+ (conf-stat->no-of-texts conf-stat)
+				 (conf-stat->first-local-no conf-stat))))
+    (lyskom-format-insert 'last-text-time
+			  (lyskom-return-time
+			   (conf-stat->last-written conf-stat)))
+    (lyskom-format-insert 'no-of-motd
+			  (conf-stat->msg-of-day conf-stat))
+    (lyskom-format-insert 'superconf-is-no-name
+			  (conf-stat->super-conf conf-stat)
+			  (let ((super-conf (cache-get-conf-stat
+					     (conf-stat->super-conf conf-stat))))
+			    (if super-conf
+				(concat
+				 (if (> (length (conf-stat->name super-conf))
+					(- (lyskom-window-width) 46))
+				     "\n("
+				   "(")
+				 (conf-stat->name super-conf)")")
+			      "")))
+    (lyskom-format-insert 'permitted-submitters-no-name
+			  (conf-stat->permitted-submitters conf-stat)
+			  (let ((permitted-submitters
+				 (cache-get-conf-stat
+				  (conf-stat->permitted-submitters
+				   conf-stat))))
+			    (cond
+			     (permitted-submitters
+			      (concat
+			       (if (> (length (conf-stat->name permitted-submitters))
+				      (- (lyskom-window-width) 46))
+				   "\n("
+				 "(")
+			       (conf-stat->name permitted-submitters)
+			       ")"))
+			     ((zerop (conf-stat->permitted-submitters conf-stat))
+			      (lyskom-get-string 'Everybody))
+			     (t ""))))
+    (lyskom-format-insert 'supervisor-is-no-name
+			  (conf-stat->supervisor conf-stat)
+			  (let ((supervisor (cache-get-conf-stat
+					     (conf-stat->supervisor conf-stat))))
+			    (if supervisor
+				(concat (if (> (length (conf-stat->name supervisor))
+					       (- (lyskom-window-width) 46))
+					    "\n(" 
+					  "(")
+					(conf-stat->name supervisor)")")
+			      "")))
+    (lyskom-format-insert 'presentation-no
+			  (conf-stat->presentation conf-stat))
 
     (if (zerop (conf-stat->msg-of-day conf-stat))
 	nil
@@ -343,45 +335,45 @@ is the one we are interested in."
 			  (lyskom-return-time
 			   (conf-stat->last-written conf-stat)))
 
-    (lyskom-insert
-     (lyskom-format 'superconf
-		    (conf-stat->super-conf conf-stat)
-		    (let ((super-conf (cache-get-conf-stat
-				       (conf-stat->super-conf conf-stat))))
-		      (if super-conf
-			  (concat (if (> (length (conf-stat->name super-conf))
-					 (- (lyskom-window-width) 46))
-				      "\n("
-				    "(")
-				  (conf-stat->name super-conf)")")
-			""))))
+    (lyskom-format-insert 'superconf
+			  (conf-stat->super-conf conf-stat)
+			  (let ((super-conf 
+				 (cache-get-conf-stat
+				  (conf-stat->super-conf conf-stat))))
+			    (if super-conf
+				(concat
+				 (if (> (length (conf-stat->name super-conf))
+					(- (lyskom-window-width) 46))
+				     "\n("
+				   "(")
+				 (conf-stat->name super-conf)")")
+			      "")))
     (if (not (zerop (conf-stat->supervisor conf-stat)))
-	(lyskom-insert
-	 (lyskom-format 'supervisor
-			(conf-stat->supervisor conf-stat)
-			(let ((supervisor (cache-get-conf-stat
-					   (conf-stat->supervisor conf-stat))))
-			  (if supervisor
-			      (concat
-			       (if (> (length (conf-stat->name supervisor))
-				      (- (lyskom-window-width) 46))
-				   "\n(" 
-				 "(")
-			       (conf-stat->name supervisor)")")
-			    "")))))
+	(lyskom-format-insert 'supervisor
+			      (conf-stat->supervisor conf-stat)
+			      (let ((supervisor
+				     (cache-get-conf-stat
+				      (conf-stat->supervisor conf-stat))))
+				(if supervisor
+				    (concat
+				     (if (> (length (conf-stat->name supervisor))
+					    (- (lyskom-window-width) 46))
+					 "\n(" 
+				       "(")
+				     (conf-stat->name supervisor)")")
+				  ""))))
     (lyskom-format-insert 'member-of-confs
 			  (pers-stat->no-of-confs pers-stat))
     (lyskom-format-insert 'presentation
-			  (conf-stat->presentation conf-stat))
+			  (conf-stat->presentation conf-stat))))
 
   (if (not (zerop (conf-stat->msg-of-day conf-stat)))
       (progn
-	(lyskom-run 'main 'lyskom-insert
-		    (lyskom-format 'has-motd
-				   (conf-stat->name conf-stat)))
+	(lyskom-run 'main 'lyskom-format-insert
+		    'has-motd (conf-stat->name conf-stat))
 	(lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))))
 
-  (lyskom-run 'main 'lyskom-status-pers-3 conf-stat))))
+  (lyskom-run 'main 'lyskom-status-pers-3 conf-stat))
 
 
 (defun lyskom-status-pers-3 (conf-stat)
