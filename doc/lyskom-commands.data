@@ -1,0 +1,111 @@
+kom-status-session	Status (för) session	s s		kom-who-am-i	Visar information om en given session i LysKOM. Frågar eftersessionsnummer eller användarnamn att titta på. Kommandot visarsessionsnummer, vem som är inloggad, vad personen gör i vilket möte,vilken klient personen kör och från vilken dator, samt hur längesessionen har varit uppkopplad och hur länge den har varit inaktiv(förutsatt att servern klarar anropen som krävs).
+kom-remote-quit	Fjärrkontrollera avsluta		kom-remote-controllerskom-remote-control	kom-force-logout	Frågar efter en session att avsluta. För att kunna fjärrkontrollera ensession krävs det att sessionen har fjärrkontrollen påslagen (genomatt @ref{kom-remote-control} är på och att den person som försäkerfjärrkontrollera står med i @ref{kom-remote-controllers}.
+kom-remote-erase-messages	Fjärrkontrollera radera meddelanden		kom-remote-controlkom-remote-controllers		Raderar inspelade meddelanden i en annan session. För att genomföra kommandot krävs att villkoren för fjärrkontrollering är uppfyllda.
+kom-remote-list-messages	Fjärrkontrollera lista meddelanden		kom-remote-controlkom-remote-controllers		Listar inspelade meddelanden i en annan session. För att utföra kommandotkrävs att alla villkor för att få genomföra fjärrkontroll är uppfyllda.
+kom-remote-set-message	Fjärrkontrollera ändra svarsmeddelande		kom-remote-controlkom-remote-controllers		
+kom-remote-autoreply	Fjärrkontrollera automatsvar		kom-remote-controlkom-remote-controllers		
+kom-erase-messages	Radera meddelanden		kom-ansaphone-record-messages	kom-toggle-auto-replykom-list-messages	Raderar alla meddelanden som har spelats in av automatsvararen.
+kom-list-messages	Lista meddelanden		kom-ansaphone-record-messages	kom-toggle-auto-replykom-erase-messages	Visar alla meddelanden som automatsvararen har spelat in. 
+kom-toggle-auto-reply	Automatsvar			kom-change-auto-replykom-list-messageskom-erase-messages	Slår på eller av automatsvar i LysKOM-bufferten, beroende på om det varav eller på innan.
+kom-change-auto-reply	Ändra svarsmeddelande	ä m		kom-toggle-auto-reply	Byter meddelande som automatsvararen skickar som svar på personliga meddelanden. Kommandot frågar efter nytt meddelande i minibufferten.
+kom-change-conf-type	Ändra mötestyp			kom-set-permitted-submitters	Detta kommando ändrar mötestyp för ett visst möte. Ett möte kan varaöppet, slutet eller hemligt. Dessutom får man ange om mötet skall varaett originalmöte, dvs om det är tillåtet att skriva kommentarer imötet och om anonyma inlägg är tillåtna.
+kom-show-user-area	Visa user-arean			kom-save-options	Detta kommando är mest till för de som utvecklar elisp-klienten. Detskriver ut innehållet i din user-area, det vill säga det inlägg sominnehåller värdet på de variabler som sparas i servern.
+kom-list-filters	Lista filter	l f			Visar vilka filter som är aktiva för tillfället genom att skriva ut demi LysKOM-bufferten.
+kom-filter-edit	Ändra filter	ä f			Poppar upp en ny buffert som listar alla filter. I den här bufferten harman tillgång till speciella kommandon för att ändra, ta bort och läggatill nya filter. De kommandon som finns är:@table @asis@item @kbd{n, C-n}Flytta markören till nästa rad i listan.@item @kbd{p, C-p}Flytta markören till föregående rad i listan.@item @kbd{N, M-n}Flytta markören till nästa filter i listan.@item @kbd{P, M-p}Flytta markören till föregående filter i listan.@item @kbd{>, M->}Flytta markören till slutet av sista filtret i listan.@item @kbd{<, M-<}Flytta markören till första raden av första filtret i listan.@item @kbd{d, C-d}Radera den rad markören står på.@item @kbd{D, M-d}Radera det filter markören står i.@item @kbd{i, I}Lägg till en rad i ett filter. Frågar efter filterfunktion.@item @kbd{M-i}Lägg till ett filter. Frågar efter filtertyp och tidsbegränsning.@item @kbd{a}Byt filtertyp. Kommandot växlar mellan alla tillgängliga alternativ.@item @kbd{t}Byt tidsbegränsning (bara mellan permanent och tillfällig).@item @kbd{s}Spara filterlistan.@item @kbd{q}Avsluta.@end table
+kom-super-jump	Superhoppa	H			Skapa ett filter som hoppar över alla texter i det aktuella mötet medsamma ärenderad som den senast lästa texten. Detta kommando är bra omman vill hoppa över alla grenar i en gammal diskussion.
+kom-filter-text	Filtrera innehåll	f i			Lägger till ett filter som tar bort alla inlägg som innehåller en visstext. Frågar efter text, möte och typ av filtrering.
+kom-filter-subject	Filtrera ärende	f ä			Lägger till ett filter som tar bort alla inlägg med en vissärenderad. Frågar efter ärende, möte och typ av filtrering.
+kom-filter-author	Filtrera författare	f f			Lägger till ett filter som tar bort alla inlägg av en vissperson. Frågar efter författare, möte och typ av filtrering.
+kom-get-file	Ladda ner fil			kom-put-filekom-list-files	Laddar ned en fil från en FTP-server. Detta kommando är inte användbart.
+kom-put-file	Ladda upp fil			kom-get-filekom-list-files	Sparar en fil på en FTP-server. Detta kommando är inte användbart.
+kom-list-files	Lista filarean			kom-get-filekom-put-file	Listar vilka filer som finns på en FTP-server. Detta kommando är inte användbart. 
+kom-force-logout	Kasta ut en session			kom-remote-quit	Du kan slänga ut en session som har hängt sig eller som duglömt på någon annan maskin. Du kan bara slänga ut sessioner där personer som du är organisatör för ärinloggade om du inte är i administratörsmod.
+kom-remove-motd	Ta bort loginmeddelande			kom-set-motd	Tar bortloginmeddelandet. Notera att under lyskomd 1.8 och tidigare såsparas inte aktuellt loginmeddelande, utan måste ställas om i serverns konfigurationsfil.
+kom-set-motd	Sätt loginmeddelande			kom-remove-motd	Ändrar loginmeddelandet. Notera att under lyskomd 1.8 och tidigare så sparasinte aktuellt loginmeddelande, utan måste ändras i serverns konfigurationsfiler för att få permanent effekt.
+kom-disable-adm-caps	Övergå till normalmod			kom-enable-adm-caps	När man inte längre vill köra i administratörsmod kanman slå av det med detta kommandot. Det hindrar dig att av misstag läsa inlägg som du inte får läsa mm.
+kom-enable-adm-caps	Övergå till administratörsmod			kom-disable-adm-caps	För att kunna utnyttja kommandona i detta avsnitt måste manförst övergå i administratörsmod, vilket sker med dettakommando. Dessutom måste du ha administrativa rättigheter i databasen, för att kommandona skall fungera.
+kom-sync-database	Spara databasen			kom-enable-adm-caps	Sparas serverns databas till disk. Detta är sällan ett användbartkommando, och det kan ta lång tid att köra. Kommantod är enbarttillgängligt i administratörsmod, och fungerar inte på versionerav lyskomd tidigare än 1.9.0.
+kom-shutdown-server	Stäng av servern			kom-sync-database	Sparar databasen och stänger av servern. Ofta finns det program somautomatiskt startar om servern igen.
+kom-save-options	Spara variabler			kom-edit-options	Sparar alla variabler som skall sparas i databasen. Detta kommandoär lämpligt att använda om man har ändrat variabler med något annatkommando är Ändra variabler.
+kom-edit-options	Ändra variabler			kom-save-options	Poppar upp en ny buffert som listar dina nuvarnade inställningar.Denna nya buffert har @code{edit-options} moden och ser dessutom likadan ut förutom det faktum att den bara innehåller devariabler som är av intresse för LysKOM.(@inforef{Edit Options,ändringsmode,emacs}.)Alla kommandon funkar precis som i @code{edit-options} moden och de viktigaste är:@table @asis@item @kbd{0}Sätt värdet till @code{nil}@item @kbd{1}Sätt värdet till @code{t}@item @kbd{s}Fråga efter värdet och sätt variabeln till det.@item @kbd{n}Gå till nästa variabel.@item @kbd{p}Gå till föregående variabel.@end tableNär du är nöjd med dina inställningar och vill skicka in demtill LysKOM så trycker du @kbd{C-c C-c}.Om du ångrar dig och inte vill skicka in några värden tillLysKOM så trycker du @kbd{C-c C-k}.Noteras bör att om du ändrar LysKOM-variabler på något annatsätt i din emacs än med kommandona beskrivna ovan så kommer detaktuella värdet att visas i bufferten och sparas.Om du däremot ändrar värdena i din emacs utan att efter det skickain värdena (med @kbd{C-c C-c} i denna bufferten) så kommerinställningarna  du gjort inte att sparas i LysKOM utan går förlorade.@end table
+kom-save-text	Spara text (på fil)	s t			Spara det senast lästa inlägget på fil. Frågar efter filnamn.Om man anger ett prefixargument sparas de sista @code{n} inläggen.
+kom-unset-conf-motd	Ta bort lapp på dörren			kom-change-conf-motd	Frågar efter möte eller person och tar bort lappen på dörren förpersonen/mötet i fråga.
+kom-set-permitted-submitters	Ändra tillåtna författare			kom-change-conf-type	Ändrar vilka som får skriva inlägg i ett möte. Frågar efter möte ochefter vilka som är tillåtna författare.
+kom-set-super-conf	Ändra supermöte				Frågar efter vilket möte vi skall ändra supermöte församt vilket möte som skall vara det nya supermötet.
+kom-set-garb-nice	Ändra livslängd				Frågar först efter det möte som du vill ändra inläggens livslängdi och sedan efter vilken den nya livslängden skall vara. Om duinte är organisatör för mötet så få du inte sätta en ny livslängdoch då får du ett felmeddelande.
+kom-change-conf-motd	Sätt lapp på dörren				Frågar efter möte eller person som du vill sätta en lapp på för.Lapp på dörren betyder att en person som försöker skicka brev tillpersonen/mötet får ett meddelande innan brevet sänds iväg. Dettakan t ex vara användbart när man reser bort och vill lämna entemporär adress. Man får också se lappen när man använderkommandot @code{Status person} på personen.
+kom-sub-member	Uteslut medlem			kom-add-member	Frågar efter person som skall uteslutas samt vilket möte sompersonen skall uteslutas ifrån. Detta kommando kan t ex användasav organisatören för ett möte när han vill utesluta någon frånmötet.
+kom-add-member	Addera medlem			kom-sub-member	Frågar efter person som skall adderas samt till vilket möte.Detta kommando måste användas för att addera medlemmar till ettslutet möte och det är bara organisatören för det mötet som kananvända det. Det kan också användas för att addera medlemmar tillen brevlåda, dvs en person, om man vill att någon annan skallkunna läsa dennes post. Ett exempel är om man vill skapa enbrevgrupp där flera personer kan läsa posten som kommer tillgruppen. 
+kom-sub-comment	Subtrahera kommentar			kom-add-commentkom-write-footnotekom-write-comment	Frågar efter två inläggsnummer. Om det första inlägget, som haraktuellt inlägg som default, är kommenterad av det andra inläggetkommer denna bindning att plockas bort.
+kom-add-comment	Addera kommentar			kom-sub-commentkom-write-commentkom-write-footnote	Frågar efter två inläggsnummer. Det första inlägget kommer attkommenteras av det andra. Default för det kommenterade inläggetär senaste refererade inläggen.
+kom-move-text	Flytta inlägg	f t		kom-add-recipientkom-sub-recipitne	Frågar efter ett inlägg som skall flyttas, vilken mottagare det skall flyttas från och vilken mottagare det skall flyttas till. Kommandot ärungefär ekvivalent med att först addera och sedan subtrahera mottagare.
+kom-sub-recipient	Subtrahera mottagare			kom-add-recipientkom-move-text	Frågar efter inläggsnummer och namnet på ett möte eller en person.Inlägget får då inte längre angivet möte eller person som mottagare.Defaultvärdet för i inläggsnumret är senast lästa inlägg och defaultvärdetför mötet/personen är det möte som vi står i just nu.
+kom-add-copy	Addera extra kopiemottagare			kom-add-recipientkom-sub-recipient	Samma som Addera mottagare men adderar en mottagare av typen extrakopiemottagare istället. Defaultvärdet för inläggsnumret är senast lästainlägg och defaultvärdet för mötet är den senast adderade extrakopiemottagaren.Du får bara addera möten som du får lov att skriva inlägg i.
+kom-add-recipient	Addera mottagare			kom-sub-recipientkom-move-text	Frågar efter inläggsnummer och namnet på ett möte eller en person.Defaultvärdet för inläggsnumret är senast lästa inlägg och defaultvärdetför mötet är det senast adderade mötet.Du får bara addera möten som du får lov att skriva inlägg i.
+kom-review-all-marked-texts	Återse alla markerade	å a m		kom-mark-textkom-unmark-text	
+kom-review-marked-texts	Återse markerade	å m			
+kom-unmark-text	Avmarkera (inlägg)	A			
+kom-mark-text	Markera (inlägg)	M			
+kom-get-abuse	Få skäll	f s			
+kom-get-appreciation	Få uppmuntran	f u			
+kom-change-presentation	Ändra presentation	ä p			
+kom-change-supervisor	Ändra organisatör				
+kom-change-password	Ändra lösenord				
+kom-change-name	Ändra namn				
+kom-send-letter	Skicka brev	b			
+kom-write-text	Skriva ett inlägg	i			
+kom-set-unread	Endast läsa senaste	e			
+kom-private-answer-previous	Personligt svar på föregående inlägg	P			
+kom-private-answer	Personligt svar	p			
+kom-write-footnote	Fotnot till inlägg	F			
+kom-comment-previous	Kommentera föregående inlägg	K			
+kom-write-comment	Kommentera inlägget	k			
+kom-busy-wait	Vänta på ett inlägg	V			
+kom-list-clients	Lista klienter				
+kom-who-am-i	Var (är) jag	J			
+kom-who-is-on	Vilka är inloggade	v			
+kom-view-next-text	Läsa nästa inlägg				
+kom-review-backward	(Återse) Baklänges	B			
+kom-review-presentation	Återse presentation	å p			
+kom-review-stack	Återse lista	å l			
+kom-view-previous-commented-text	Återse det föregående kommenterade	å K			
+kom-view-commented-text	Återse det kommenterade	å k			
+kom-review-all	Återse alla	å A, å a SPC			
+kom-review-first	Återse första	å f			
+kom-review-by-to	Återse senaste	å s			
+kom-find-root	Återse urinlägget	å u, å r			
+kom-review-next	Återse nästa	å n			
+kom-review-noconversion	Återse omodifierat	å o			
+kom-review-last-normally-read	Återse igen	å i			
+kom-review-clear	Återse hoppa	å h			
+kom-review-tree	Återse alla kommentarer rekursivt	å a r			
+kom-review-comments	Återse alla kommentarer	å a k			
+kom-find-root-review	Återse träd	å t			
+kom-view	Återse inlägg	å SPC			
+kom-start-anew	Börja med nytt namn				
+kom-recover	Återstarta kom	R			
+kom-quit	Sluta	S, q			
+kom-sub-self	Utträda ur möte				
+kom-list-summary	Lista ärenden	l ä, l ä, l Ä, l ä			
+kom-add-self	Bli medlem i möte	m			
+kom-status-conf	Status (för) möte	s m			
+kom-status-person	Status (för) person	s p			
+kom-prioritize	Prioritera möten				
+kom-set-session-priority	Sätt läsnivå				
+kom-postpone	Uppskjuta läsning				
+kom-membership	Lista medlemsskap	l s			
+kom-list-re	Lista (med) regexpar	l r			
+kom-list-news	Lista nyheter	l n			
+kom-list-persons	Lista personer	l p			
+kom-list-conferences	Lista möten	l m			
+kom-jump	Hoppa över alla kommentarer	h			
+kom-go-to-next-conf	Gå till nästa möte	n m			
+kom-go-to-conf	Gå till möte	g			
+kom-display-time	Se tiden	t			
+kom-delete-text	Radera inlägg				
+kom-delete-conf	Utplåna				
+kom-create-conf	Skapa möte				
+kom-send-message	Sända meddelande				
+kom-quick-mode	Snabba kommandon				
+kom-slow-mode	Långsamma kommandon				
+describe-mode	Hjälp	?, C-h m, menu-bar help-menu describe-mode, C-h m, menu-bar help-menu describe-mode			
