@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.78 1999-10-13 09:23:37 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.79 1999-10-13 15:50:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.78 1999-10-13 09:23:37 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.79 1999-10-13 15:50:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1059,6 +1059,10 @@ Felmeddelande: %#1s**************************************************")
 
     (by . " av %#1P")
     (text-created .  "Text nummer %#1n är skapad.\n")
+    (text-created-anonymous .  "\
+Text nummer %#1n är skapad (anonymt). För att göra det svårare för 
+andra att ta reda på att du skapade inlägget bör du vänta ett tag med
+att läsa det.\n")
 
     (resolve-session . "Ange vilken session: ")
 
@@ -1364,6 +1368,11 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (mail-headers-for . "Brevhuvud för inlägg %#1n:\n")
     (email-name-prefix . "")
     (email-name-suffix . "")
+
+    (you-are-anonymous . "Du är nu någorlunda anonym.\n")
+    (you-are-nonanonymous . "Du är inte längre anonym.\n")
+    (you-are-already-anonymous . "Du är redan någorlunda anonym.\n")
+    (you-are-already-nonanonymous . "Du är redan icke-anonym.\n")
 ))
 
 
@@ -1522,6 +1531,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-add-request-confirm  . "Begär läsbekräftelse")
 
     (kom-review-mail-headers  . "Återse brevhuvud")
+    (kom-become-anonymous     . "Bli anonym")
+    (kom-become-nonanonymous  . "Bli icke-anonym (träd fram ur skuggorna)")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
@@ -2100,7 +2111,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (ask . "Fråga varje gång")
     (before . "Före texten")
     (after . "Efter texten")
-    (fist . "Först")
+    (first . "Först")
     (last . "Sist ")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
@@ -2801,6 +2812,12 @@ i servern. Annars sparas det i din .emacs.")
   När detta är påslaget så visas datum och klockslag för alla personliga,
   grupp och alarmmeddelanden.")
 
+    (kom-w3-simplify-body-doc . "\
+  När detta är påslaget så visas HTML utan de färger som anges i HTML-koden.")
+
+    (kom-mercial-doc . "\
+  Denna text visas i vilkalistan då du har läst färdigt alla möten.")
+
     (kom-ding-on-no-subject-doc . "")
     (kom-ding-on-personal-messages-doc . "")
     (kom-ding-on-group-messages-doc . "")
@@ -2951,6 +2968,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-text-footer-dash-length-tag . "Inläggsfotens längd")
     (kom-text-header-dash-length-tag . "Längden på linjen ovanför inläggstexten")
     (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden")
+    (kom-w3-simplify-body-tag . "Visa HTML utan standardfärger")
+    (kom-mercial-tag . "Text när allt är utläst")
     )
 )
 
@@ -3089,8 +3108,7 @@ i servern. Annars sparas det i din .emacs.")
    (kom-tell-review		. "Återser.")
    (kom-tell-change-name       . "Ändrar sitt namn till något annat.")
    (kom-tell-change-supervisor . "Ändrar organisatör för något.")
-   (kom-tell-next-lyskom       . "Hoppar till ett annat LysKOM.")
-   (kom-tell-is-anonymous      . "Är hemlighetsfull")))
+   (kom-tell-next-lyskom       . "Hoppar till ett annat LysKOM.")))
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)

@@ -1,5 +1,22 @@
 1999-10-13  David Byers  <davby@ida.liu.se>
 
+	* command.el (lyskom-end-of-command): Don't do user-active when
+	we're anonymous.
+
+	* swedish-strings.el, english-strings.el (kom-tell-phrases): Tog
+	bort kom-tell-is-anonymous
+
+	* language.el (lyskom-tell-string): Print the missing tell key.
+
+	* cache.el (lyskom-tell-server): Don't tell server if we're
+	anonymous.
+
+	* commands2.el (kom-become-anonymous): Ny funktion.
+	(kom-become-nonanonymous): Ny funktion.
+
+	* lyskom-rest.el (lyskom-format-prompt): Make %a work in prompt
+	formats.
+
 	* completing-read.el (lyskom-read-conf-internal): Don't try to get 
 	completion for all confs.
 

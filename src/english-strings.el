@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $
+;;;;; $Id: english-strings.el,v 44.63 1999-10-13 15:50:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $"))
+              "$Id: english-strings.el,v 44.63 1999-10-13 15:50:31 byers Exp $"))
 
 
 ;;; ================================================================
@@ -508,6 +508,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (supervisor-is-no-name . "Supervisor: %30#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
+    (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
 
     (Everybody . "Everyone")
@@ -1049,6 +1050,10 @@ Error message: %#1s**************************************************")
     (footnote-prefix . "[Ff]")
     (by . " by %#1P")
     (text-created .  "Text %#1n has been created.\n")
+    (text-created-anonymous .  "\
+Text %#1n has been created (anonymously). To make it more difficult
+for others to figure out that you wrote the text, you should wait a while
+before reading it.\n")
 
     (resolve-session . "Which session: ")
 
@@ -1354,6 +1359,11 @@ You must become an active member of the conference to enter it.\n")
     (mail-headers-for . "Mail headers for text %#1n:\n")
     (email-name-prefix . "")
     (email-name-suffix . "")
+
+    (you-are-anonymous . "You are now somewhat anonymous.\n")
+    (you-are-nonanonymous . "You are no longer anonymous.\n")
+    (you-are-already-anonymous . "You are already somewhat anonymous.\n")
+    (you-are-already-nonanonymous . "You are alreay non-anonymous.\n")
     ))
 
 
@@ -1508,6 +1518,9 @@ You must become an active member of the conference to enter it.\n")
     (kom-add-private-answer   . "Request private reply")
     (kom-add-request-confirm  . "Request confirmation of reading")
     (kom-review-mail-headers  . "Review mail headers")
+
+    (kom-become-anonymous     . "Become anonymous")
+    (kom-become-nonanonymous  . "Become non-anonymous (come forth into the light)")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -2050,9 +2063,11 @@ Select whether to execute command or keyboard macro.")
 
     (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
+    (specific-spec . "Per mottager/avsändare")
     (sound-file . "Audio file")
 
     (selected-mark . "Mark          ")
+    (conf-or-person . "Person eller möte")
     (ask .           "Ask every time         ")
 
     (before . "Before the text")
@@ -2744,6 +2759,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   When this is on, the date and time is shown on all personal, group and
   alarm messages.")
 
+    (kom-w3-simplify-body-doc . "\
+  When this is on, the client will ignore colors set in the HTML body when
+  displaying formatted HTML.")
+
+    (kom-mercial-doc . "\
+  This text is shown in the list of users when you have finished reading
+  everything.")
+
+
 
     (kom-ding-on-no-subject-doc . "")
     (kom-ding-on-personal-messages-doc . "")
@@ -3030,8 +3054,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-tell-review		. "Is reviewing.")
     (kom-tell-change-name       . "Takes on a new name.")
     (kom-tell-change-supervisor . "Changes the supervisor of something.")
-    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")
-    (kom-tell-is-anonymous      . "Being secretive")))
+    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")))
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)

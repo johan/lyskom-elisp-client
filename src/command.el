@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $
+;;;;; $Id: command.el,v 44.17 1999-10-13 15:50:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $\n"))
+	      "$Id: command.el,v 44.17 1999-10-13 15:50:26 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -318,9 +318,10 @@ chosen according to this"
        (lyskom-set-last-viewed))
    (lyskom-prefetch-and-print-prompt)
    (run-hooks 'lyskom-after-command-hook)
-   (if (lyskom-have-feature idle-time)
-       (save-excursion (set-buffer lyskom-buffer)
-                       (initiate-user-active 'background nil)))
+   (when (and (lyskom-have-feature idle-time)
+              (not lyskom-is-anonymous))
+     (save-excursion (set-buffer lyskom-buffer)
+                     (initiate-user-active 'background nil)))
    (if kom-inhibit-typeahead
        (discard-input))
    ;; lyskom-pending-commands should probably be a queue or a stack.
