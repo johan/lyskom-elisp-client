@@ -1,3 +1,35 @@
+1999-11-21  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Set rear-nonsticky on
+	prompt text properties.
+
+	* view-text.el (lyskom-format-text-footer): Use string-width, not
+	length to compute width of author name, width of text number,
+	flags.
+
+	* option-edit.el (lyskom-widget-name-value-create): Use
+	string-width to compute padding.
+	(lyskom-widget-command-value-create): Ditto.
+	(lyskom-widget-kbd-macro-value-create): Same here.
+
+	* lyskom-buttons.el (lyskom-keyboard-menu): USe string-width to
+	get the width of a string.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity): Use
+	string-width to get width of a string.
+
+	* commands2.el (kom-status-conf): Use string-width, not length, to 
+	get width of string.
+
+	* filter.el (lyskom-recompile-filter): New function.
+
+	* flags.el (lyskom-read-options-eval-get-holerith): Handle
+	explicitly coded strings.
+	(kom-edit-options-send): Output explicit coding for strings in the 
+	elisp area.
+	(lyskom-read-options-eval): Recompile filters after reading from
+	user area.
+
 1999-11-20  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el (lyskom-string-width): New function. Gnu Emacs

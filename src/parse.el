@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.30 1999-11-19 13:50:53 byers Exp $
+;;;;; $Id: parse.el,v 44.31 1999-11-21 15:39:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.30 1999-11-19 13:50:53 byers Exp $\n"))
+	      "$Id: parse.el,v 44.31 1999-11-21 15:39:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -170,6 +170,51 @@ Signal lyskom-protocol-error if the next token is not a string."
 				   (+ lyskom-parse-pos len))
             (lyskom-setq-default lyskom-string-bytes-missing 0)
 	    (setq lyskom-parse-pos (+ lyskom-parse-pos len))))))))))
+
+
+(defun lyskom-parse-coding ()
+  "Parse next token as a raw string.
+Signal lyskom-parse-incomplete if the string is not complete.
+Signal lyskom-protocol-error if the next token is not a string."
+  ;; Kludge to deal with leading spaces.
+  (lyskom-parse-nonwhite-char)
+  (setq lyskom-parse-pos (1- lyskom-parse-pos))
+  ;; End kludge.
+  (let ((to-parse (lyskom-string-to-parse)))
+    (cond
+     ((string-match "\\`[0-9]*\\(\\|C\\)\\'" to-parse)
+      (signal 'lyskom-parse-incomplete nil))
+     ((null (string-match "\\`[0-9]+C" to-parse))
+      (lyskom-protocol-error 'lyskom-parse-string
+                             "Expected hollerith, got %S" 
+                             to-parse)) ;Not a legal string.
+     (t
+      (let ((end (match-end 0))
+	    (len (string-to-int to-parse)))
+	(setq lyskom-parse-pos (+ lyskom-parse-pos end))
+	(cond
+	 ((< (point-max) (+ lyskom-parse-pos len))
+	  (lyskom-setq-default lyskom-string-bytes-missing
+		(- (+ lyskom-parse-pos len)
+		   (point-max)))
+	  (signal 'lyskom-parse-incomplete nil))
+	 (t
+	  (prog1 (buffer-substring lyskom-parse-pos 
+				   (+ lyskom-parse-pos len))
+            (lyskom-setq-default lyskom-string-bytes-missing 0)
+	    (setq lyskom-parse-pos (+ lyskom-parse-pos len))))))))))
+
+(defun lyskom-parse-coded-string ()
+  "Parse a string with explicit coding."
+  (let ((coding (intern (lyskom-parse-coding)))
+        (data (lyskom-parse-raw-string)))
+    (condition-case nil
+        (progn (check-coding-system coding)
+               (decode-coding-string data coding))
+      (nil data))))
+
+
+
 
 
 (defun lyskom-parse-1-or-0 ()
@@ -756,7 +801,7 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
                           (lyskom-parse-time)   ; sent-at
                           (lyskom-parse-aux-item-flags)
                           (lyskom-parse-num)    ; inherit-limit
-                          (lyskom-parse-string) ; data
+                          (lyskom-parse-raw-string) ; data
                           ))
 
 (defun lyskom-parse-aux-item-flags ()

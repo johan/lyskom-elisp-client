@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.33 1999-11-19 13:38:11 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.34 1999-11-21 15:39:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.33 1999-11-19 13:38:11 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.34 1999-11-21 15:39:53 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -229,12 +229,12 @@ If there is no active area, then do something else."
         (e entries)
         (completion-ignore-case t))
     (while e
-      (if (> (length (car (car e))) maxlen)
-          (setq maxlen (length (car (car e)))))
+      (if (> (lyskom-string-width (car (car e))) maxlen)
+          (setq maxlen (lyskom-string-width (car (car e)))))
       (setq e (cdr e)))
     (setq prompt (concat 
                   (substring title 0
-                             (min (length title)
+                             (min (lyskom-string-width title)
                                   (- (window-width (minibuffer-window))
                                      maxlen 3))) ": "))
 

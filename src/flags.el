@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.14 1999-11-19 13:38:02 byers Exp $
+;;;;; $Id: flags.el,v 44.15 1999-11-21 15:39:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.14 1999-11-19 13:38:02 byers Exp $\n"))
+	      "$Id: flags.el,v 44.15 1999-11-21 15:39:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -160,26 +160,43 @@
          elisp-block
           (mapconcat (function
                       (lambda (var)
-                        (lyskom-format-objects (symbol-name var) 
-                                               (prin1-to-string
-                                                (symbol-value var)))))
+                        (concat (symbol-name var)
+                                " "
+                                (let* ((data (prin1-to-string (symbol-value var)))
+                                       (coding 
+                                        (lyskom-mime-charset-coding-system
+                                         (lyskom-mime-string-charset data)))
+                                       (val (condition-case nil
+                                                (encode-coding-string data coding)
+                                              (error nil))))
+                                  ;; FIXME
+                                  (if (and val nil)
+                                      (format "%dC%s%dH%s"
+                                              (string-bytes (symbol-name coding))
+                                              (symbol-name coding)
+                                              (string-bytes val)
+                                              val)
+                                    (format "%dH%s"
+                                            (string-bytes data)
+                                            data))))))
                      lyskom-elisp-variables
                      "\n"))
         (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
         (lyskom-insert-string 'hang-on)
         (initiate-create-text 'options 'lyskom-edit-options-send
 			    ;;; This is a cludge awaiting prot-B
-			    (apply 'lyskom-format-objects 
-				   (apply 'lyskom-format-objects 
-					  "common"
-					  "elisp"
-					  (mapcar 
-					   (function car)
-					   lyskom-other-clients-user-areas))
-				   common-block
-				   elisp-block
-				   (mapcar (function cdr) 
-					   lyskom-other-clients-user-areas))
+                              (cons 'raw-text
+                                    (apply 'lyskom-format-objects 
+                                           (apply 'lyskom-format-objects 
+                                                  "common"
+                                                  "elisp"
+                                                  (mapcar 
+                                                   (function car)
+                                                   lyskom-other-clients-user-areas))
+                                           common-block
+                                           elisp-block
+                                           (mapcar (function cdr) 
+                                                   lyskom-other-clients-user-areas)))
 ;			    (concat common-block "----------\n" elisp-block)
 			    (lyskom-create-misc-list) 
                             nil
@@ -250,26 +267,44 @@ If successful then set the buffer not-modified. Else print a warning."
          (elisp-block
           (mapconcat (function
                       (lambda (var)
-                        (lyskom-format-objects (symbol-name var) 
-                                               (prin1-to-string
-                                                (symbol-value var)))))
+                        (concat (format "%dH%s"
+                                        (length (symbol-name var))
+                                        (symbol-name var))
+                                " "
+                                (let* ((data (prin1-to-string (symbol-value var)))
+                                       (coding 
+                                        (lyskom-mime-charset-coding-system
+                                         (lyskom-mime-string-charset data)))
+                                       (val (condition-case nil
+                                                (encode-coding-string data coding)
+                                              (error nil))))
+                                  (if (and val nil)
+                                      (format "%dC%s%dH%s"
+                                              (string-bytes (symbol-name coding))
+                                              (symbol-name coding)
+                                              (string-bytes val)
+                                              val)
+                                    (format "%dH%s"
+                                            (string-bytes data)
+                                            data))))))
                      lyskom-elisp-variables
                      "\n")))
     (save-excursion
       (set-buffer kombuf)
       (lyskom-message "%s" start-message)
       (initiate-create-text 'options 'lyskom-save-options-2
-                            (apply 'lyskom-format-objects
-                                   (apply 'lyskom-format-objects
-                                          "common"
-                                          "elisp"
-                                          (mapcar 
-                                           (function car)
-                                           lyskom-other-clients-user-areas))
-                                   common-block
-                                   elisp-block
-                                   (mapcar (function cdr)
-                                           lyskom-other-clients-user-areas))
+                            (cons 'raw-text
+                                  (apply 'lyskom-format-objects
+                                         (apply 'lyskom-format-objects
+                                                "common"
+                                                "elisp"
+                                                (mapcar 
+                                                 (function car)
+                                                 lyskom-other-clients-user-areas))
+                                         common-block
+                                         elisp-block
+                                         (mapcar (function cdr)
+                                                 lyskom-other-clients-user-areas)))
                             (lyskom-create-misc-list) 
                             nil
                             kombuf
@@ -387,6 +422,9 @@ If successful then set the buffer not-modified. Else print a warning."
 						 ;was stored.
 	  (++ r))
 
+        (mapcar 'lyskom-recompile-filter kom-permanent-filter-list)
+        (mapcar 'lyskom-recompile-filter kom-session-filter-list)
+
 	(setq lyskom-filter-list (append kom-permanent-filter-list
 					 kom-session-filter-list))
 	(setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
@@ -401,15 +439,32 @@ If successful then set the buffer not-modified. Else print a warning."
 
 
 (defun lyskom-read-options-eval-get-holerith ()
-  (while (string-match "\\s-" (substring lyskom-options-text 0 1))
-    (setq lyskom-options-text (substring lyskom-options-text 1)))
-  (let ((len (string-to-int lyskom-options-text))
-	(start (progn (string-match "[0-9]+H" lyskom-options-text)
-		      (match-end 0))))
-    (let ((name (substring lyskom-options-text start (+ start len))))
-      (setq lyskom-options-text (substring lyskom-options-text
-                                           (+ start len)))
-      name)))
+  (let ((coding lyskom-server-coding-system))
+    (while (string-match "\\s-" (substring lyskom-options-text 0 1))
+      (setq lyskom-options-text (substring lyskom-options-text 1)))
+
+    ;; Read the explicit coding, if any
+
+    (when (string-match "^[0-9]+C" lyskom-options-text)
+      (let ((len (string-to-int lyskom-options-text)))
+        (setq coding (intern
+                      (substring lyskom-options-text 
+                                 (match-end 0)
+                                 (+ (match-end 0) len))))
+        (setq lyskom-options-text (substring lyskom-options-text
+                                             (+ (match-end 0) len))))) 
+
+    ;; Read the string
+
+    (let ((len (string-to-int lyskom-options-text))
+          (start (progn (string-match "[0-9]+H" lyskom-options-text)
+                        (match-end 0))))
+      (let ((name (substring lyskom-options-text start (+ start len))))
+        (setq lyskom-options-text (substring lyskom-options-text
+                                             (+ start len)))
+        (condition-case nil
+            (decode-coding-string name coding)
+          (error name))))))
 
 (defun lyskom-maybe-set-var-from-string (var string)
   "This is a wrapper around lyskom-set-var-from-string that does nothing

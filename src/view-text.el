@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.32 1999-11-19 02:16:48 byers Exp $
+;;;;; $Id: view-text.el,v 44.33 1999-11-21 15:39:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.32 1999-11-19 02:16:48 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.33 1999-11-21 15:39:59 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -562,7 +562,7 @@ blocking-do."
          (author-name-len nil)
          (have-author (and format (string-match "%=?[0-9]*P" format))))
 
-    (setq author-name-len (length (or author-name (conf-stat->name author))))
+    (setq author-name-len (lyskom-string-width (or author-name (conf-stat->name author))))
 
     ;; No user-specified format, so output dashes and stuff
 
@@ -594,12 +594,12 @@ blocking-do."
                   ""))
                (end-dash-chars
                 (- kom-text-footer-dash-length
-                   (length (int-to-string (text-stat->text-no text))) 
+                   (lyskom-string-width (int-to-string (text-stat->text-no text))) 
                    3                             ; Parens and space
                    (if kom-show-author-at-end
                        (+ author-name-len 2) 
                      0)
-                   (length format-flag-string)))
+                   (string-width format-flag-string)))
                (end-dash (if (> end-dash-chars 0)
                              (make-string end-dash-chars ?-)
                            "")))

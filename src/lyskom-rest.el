@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.91 1999-11-20 21:55:21 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.92 1999-11-21 15:39:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.91 1999-11-20 21:55:21 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.92 1999-11-21 15:39:55 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1465,12 +1465,13 @@ Note that it is not allowed to use deferred insertions in the text."
 			     (if colon-flag ":" "")
 			     "s")))
 		(set-defer-info->pos arg oldpos)
+
+                ;; Note: length is right below. string-width is wrong.
 		(set-defer-info->del-chars
 		 arg (if pad-length
 			 (if equals-flag
 			     (abs pad-length)
-			   (max (length
-				 lyskom-defer-indicator)
+			   (max (length lyskom-defer-indicator)
 				(abs pad-length)))
 		       (length lyskom-defer-indicator)))
 		(set-defer-info->format arg format-element))
@@ -2392,7 +2393,8 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	      (beginning-of-line)
               (when lyskom-slow-mode
                 (add-text-properties 0 (length prompt-text)
-                                     '(read-only t) prompt-text))
+                                     '(read-only t rear-nonsticky t)
+				     prompt-text))
 	      (insert-string prompt-text)
 	      ;; Delete the old prompt
 	      (if lyskom-current-prompt
@@ -2992,7 +2994,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
   "Receive replies from LysKOM server."
 ;  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
 ;  (setq lyskom-apo-timeout-log
-;        (cons lyskom-apo-timeout lyskom-apo-timeout-log))
+;        (cons (cons (current-time-string) lyskom-apo-timeout) lyskom-apo-timeout-log))
   (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
   (let ((old-match-data (match-data))
 	;; lyskom-filter-old-buffer is also changed when starting to edit
@@ -3215,7 +3217,7 @@ Other objects are converted correctly."
    (int-to-string (aux-item->tag item))                     " "
    (lyskom-prot-a-format-aux-item-flags (aux-item->flags item))    " "
    (int-to-string (aux-item->inherit-limit item))           " "
-   (lyskom-prot-a-format-raw-string (cons 'STRING (aux-item->data item)))))
+   (lyskom-prot-a-format-raw-string (cons 'raw-text (aux-item->data item)))))
 
 (defun lyskom-prot-a-format-aux-item-flags (flags)
   "Format AUX-ITEM-FLAGS for output to the server."
@@ -3328,8 +3330,7 @@ One parameter - the prompt string."
 	(setq input-string
 	      (cond
 	       ((eq input-char ?\C-?)
-		(if (equal (length input-string)
-			   0)
+		(if (equal (length input-string) 0)
 		    ""
 		  (substring input-string 0 -1)))
 	       ((eq input-char ?\C-u)
