@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.18 1991-11-24 02:49:10 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 35.19 1991-11-27 22:31:27 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.18 1991-11-24 02:49:10 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.19 1991-11-27 22:31:27 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -600,10 +600,10 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (yes-or-no-nag . "Svara bara ja eller nej.")
     (yes-or-no . "(ja eller nej) ")
 
-    (y-or-n-instring . "jJnN ")
+    (y-or-n-instring . "jJnN")
     (j-or-n-nag . "Svara bara j eller n. ")
     (j-or-n . "(j eller n) ")
-    (y-instring . "jJ ")
+    (y-instring . "jJ")
 
     (person-does-not-exist . "Person %#1d (finns inte).")
     (conf-does-not-exist . "Möte %#1d (finns inte).")
