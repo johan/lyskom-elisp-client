@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.7 1991-11-08 13:16:02 linus Exp $
+;;;;; $Id: commands2.el,v 35.8 1991-12-13 18:26:05 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.7 1991-11-08 13:16:02 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.8 1991-12-13 18:26:05 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -1059,6 +1059,55 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 
 
 ;;; ================================================================
+;;;             [ndra superm|te - Set super conference 
+
+;;; Author: Inge Wallin
+
+
+(defun kom-set-super-conf ()
+  "Set the super conference for a conference."
+  (interactive)
+  (lyskom-start-of-command 'kom-set-super-conf)
+  (lyskom-completing-read-conf-stat 
+   'main 'lyskom-set-super-conf
+   (lyskom-get-string 'conf-to-set-super-conf-q)
+   nil nil ""))
+
+
+(defun lyskom-set-super-conf (conf-stat)
+  "Set the super conference value for CONF-STAT."
+  (if (not conf-stat)
+      (progn
+	(lyskom-insert-string 'somebody-deleted-that-conf)
+	(lyskom-end-of-command))
+    (lyskom-completing-read-conf-stat
+     'main 'lyskom-set-super-conf-2
+     (lyskom-get-string 'new-super-conf-q)
+     nil nil "" conf-stat)))
+
+
+(defun lyskom-set-super-conf-2 (super-conf conf-stat)
+  "Set the super conference value for CONF-STAT to SUPER-CONF.
+Args: SUPER-CONF CONF_STAT"
+  (lyskom-format-insert 'super-conf-for-is
+			    (conf-stat->name conf-stat)
+			    (conf-stat->name super-conf))
+  (initiate-set-super-conf 'main 'lyskom-set-super-conf-3
+			      (conf-stat->conf-no conf-stat) 
+			      (conf-stat->conf-no super-conf) 
+			      conf-stat))
+
+
+(defun lyskom-set-super-conf-3 (answer conf-stat)
+  "Get the answer from lyskom-set-super-conf and report the result."
+  (if (not answer)
+      (lyskom-insert-string 'nope)
+    (lyskom-insert-string 'done)
+    (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
+  (lyskom-end-of-command))
+
+
+;;; ================================================================
 ;;;                  St{ng av servern - Shutdown
 
 ;;; Author: Inge Wallin
@@ -1192,6 +1241,7 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
     (lyskom-format-insert 'throwing-out session)
     (initiate-disconnect 'main 'lyskom-handle-command-answer
 			 session)))
+
 
 ;;; ================================================================
 ;;;                  Skjut upp l{sning - postpone
