@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.6 1996-10-06 05:18:42 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.7 1996-10-08 12:19:07 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.6 1996-10-06 05:18:42 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.7 1996-10-08 12:19:07 nisse Exp $\n"
   "Version for every file in the client.")
 
 
@@ -649,6 +649,13 @@ If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.
 
 This variable is not saved in the LysKOM server.")
 
+(defvar lyskom-language 'sv
+  ;; One might extend this into a list of languages, sorted in
+  ;; preference order.
+  "*Which language to use.
+
+Supported languages are 'sv, 'en and 'swascii.")
+
 
 ;;; =================================================================
 ;;;
@@ -682,6 +689,127 @@ This variable is not saved in the LysKOM server.")
             lyskom-inherited-variables)
     "Variables that need to be protected by lyskom-protect-environment."))
 
+
+(defconst lyskom-commands
+  '(
+    describe-mode
+    kom-slow-mode
+    kom-quick-mode
+    kom-send-message
+    kom-create-conf
+    kom-delete-conf
+    kom-delete-text
+    kom-display-time
+    kom-go-to-conf
+    kom-go-to-next-conf
+    kom-jump
+    kom-list-conferences 
+    kom-list-persons
+    kom-list-news
+    kom-list-re
+    kom-membership
+    ;; kom-list-marks
+    kom-postpone
+    kom-set-session-priority
+    kom-prioritize
+    kom-status-person
+    kom-status-conf
+    kom-add-self
+    kom-list-summary
+    kom-sub-self
+    kom-quit
+    kom-recover 
+    kom-start-anew
+    kom-view
+    kom-find-root-review
+    kom-review-comments
+    kom-review-tree
+    kom-review-clear
+    kom-review-last-normally-read
+    kom-review-noconversion
+    kom-review-next
+    kom-find-root
+    kom-review-by-to
+    kom-review-more
+    kom-review-first
+    kom-review-all
+    kom-view-commented-text
+    kom-view-previous-commented-text
+    kom-review-stack
+    kom-review-presentation
+    kom-review-backward
+    kom-view-next-text
+    kom-who-is-on 
+    kom-who-am-i
+    ;;   kom-display-who-buffer
+    kom-list-clients
+    kom-busy-wait
+    kom-write-comment
+    kom-comment-previous
+    kom-write-footnote
+    kom-private-answer
+    kom-private-answer-previous
+    kom-set-unread
+    kom-write-text
+    kom-send-letter
+    kom-change-name
+    kom-change-password
+    kom-change-supervisor
+    kom-change-presentation
+    kom-get-appreciation
+    kom-get-abuse
+    kom-mark-text
+    kom-unmark-text
+    kom-review-marked-texts
+    kom-review-all-marked-texts
+    kom-add-recipient
+    kom-add-copy
+    kom-sub-recipient
+    kom-move-text
+    kom-add-comment
+    kom-sub-comment
+    kom-add-member
+    kom-sub-member
+    kom-change-conf-motd
+    kom-set-garb-nice
+    kom-set-super-conf
+    kom-set-permitted-submitters
+    kom-unset-conf-motd
+    kom-save-text
+    kom-edit-options
+    kom-save-options
+    kom-shutdown-server
+    kom-sync-database
+    kom-enable-adm-caps
+    kom-disable-adm-caps
+    kom-set-motd
+    kom-remove-motd
+    kom-force-logout
+    kom-list-files
+    kom-put-file
+    kom-get-file
+    kom-filter-author
+    kom-filter-subject
+    kom-filter-text
+    kom-super-jump
+    kom-filter-edit
+    kom-list-filters
+    kom-show-user-area
+    kom-change-conf-type
+
+    kom-change-auto-reply
+    kom-toggle-auto-reply
+    kom-list-messages
+    kom-erase-messages
+
+    kom-remote-autoreply
+    kom-remote-set-message
+    kom-remote-list-messages
+    kom-remote-erase-messages
+    kom-remote-quit
+
+    kom-status-session
+    ))
 
 (defconst lyskom-elisp-variables
   '(kom-permissive-completion
@@ -731,7 +859,8 @@ This variable is not saved in the LysKOM server.")
     lyskom-prefetch-texts
     lyskom-prompt-executing-default-command-text
     lyskom-prompt-text
-    lyskom-who-info-has-changed-hook)
+    lyskom-who-info-has-changed-hook
+    lyskom-language)
   "Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")
 
