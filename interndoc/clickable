@@ -66,8 +66,6 @@
         prioritize-flag-menu    Membership flag in mship-edit.el
         --------------------------------------------------------
 
-    Define new types by updating lyskom-button-actions. This list is
-    language-dependent. Don't forget to update it in all languages.
 
 
 
@@ -121,8 +119,7 @@
 
     The variable lyskom-button-actions defines the types of buttons
     available in the client. If you want to add a new kind of button,
-    this is where to do it. The variable is language-dependent so you
-    must define it in all languages. Sorry about that.
+    this is where to do it. 
 
     Each element in lyskom-button-actions defines one type of button.
     The elements have the following structure:
@@ -131,8 +128,7 @@
 
     LABEL   is the default menu title for buttons of this type. It
             should be a symbol that the client looks up with
-            lyskom-get-string. Actually, this parameter is not used at
-            all at the moment. It will be.
+            lyskom-get-string.
 
     DEFAULT is the default action to take on a click. It must be a
             function (actually name of a function) that takes three
@@ -144,8 +140,9 @@
 
     ACTIONS is a list of other possible actions. These are used to
             build the popup menu for the button. Each element in
-            ACTIONS is a cons cell of (STRING . FUNCTION) where STRING
-            is the string to use in the popup menu and FUNCTION is the
+            ACTIONS is a cons cell of (SYMBOL . FUNCTION) where SYMBOL
+            is a string key that can be found lyskom-get-string to get
+            a string to use as a menu item, and FUNCTION is the
             function to call if the user selects that command.
 
     HINTS   is a list of hints that can be used to override the
@@ -158,14 +155,14 @@
     Here is a small example of a button type:
 
         (conf 
-         conf-text
+         conf-popup-title
          lyskom-button-view-conf-presentation
-         (("Visa presentation" . lyskom-button-view-conf-presentation)
-          ("Visa mötesstatus" . lyskom-button-view-conf-status)
-          ("Gå till mötet" . lyskom-button-goto-conf)
-          ("Skicka gruppmeddelande" . lyskom-button-send-message)
-          ("Bli medlem i mötet" . lyskom-button-add-self)
-          ("Utträd ur mötet" . lyskom-button-sub-self))
+         ((view-conf-menu-item . lyskom-button-view-conf-presentation)
+          (view-conf-stat-menu-item . lyskom-button-view-conf-status)
+          (go-to-conf-menu-item . lyskom-button-goto-conf)
+          (send-message-menu-item . lyskom-button-send-message)
+          (become-member-menu-item . lyskom-button-add-self)
+          (sub-self-menu-item . lyskom-button-sub-self))
          ((kom-list-news . lyskom-button-goto-conf)
           (kom-membership . lyskom-button-goto-conf)))
 
@@ -177,15 +174,6 @@
     default action is to go to that conference rather than view the
     presentation. 
 
-
-    NOTE: The popup menu title must be defined in the lyskom-messages
-          list of strings. The symbol myst be TYPE-popup-title, where
-          TYPE is the button type. The string may be a format string
-          with one argument, the button text. UTSL for examples.
-
-    NOTE: Perhaps one day someone will fix things so that we don't use
-          hard-coded title names and so that the variable is not
-          language-dependent.
 
     You can extend an existing button type by using the function
     lyskom-add-button-action. This is mostly useful for users who want
