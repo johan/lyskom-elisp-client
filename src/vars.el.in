@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.119 2000-08-29 16:15:17 byers Exp $
+;;;;; $Id: vars.el.in,v 44.120 2000-08-30 18:47:15 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.119 2000-08-29 16:15:17 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.120 2000-08-30 18:47:15 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1035,6 +1035,10 @@ at random and used. This element may be a string, function or list."
 (def-kom-var lyskom-customize-map nil
   "Keymap for the customize buffer"
   local)
+
+(def-kom-var kom-trim-buffer-minimum 4096
+  "*This number of bytes rounded to a whole line is the ammount of text trimmed
+each time." server)
 
 
 ;;; =================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.107 2000-08-29 16:15:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.108 2000-08-30 18:47:02 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.107 2000-08-29 16:15:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.108 2000-08-30 18:47:02 qha Exp $"))
 
 
 ;;; ================================================================
@@ -3180,6 +3180,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   recipient. When this is off, comments will always be sent to the new
   recipient. For most people it is a good idea to leave this on.")
 
+    (kom-trim-buffer-minimum-doc . "\
+  If you have anything in lyskom-trim-buffer-hook this variable determines
+  with how many characters the lyskom buffer size must excede
+  kom-max-buffer-size before your hook is run and the buffer is trimmed.
+  The variable should be an integer, the default is 4096.")
+
+
     ;;
     ;; Tags for variables
     ;;
@@ -3334,6 +3341,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar:")
     (kom-created-texts-are-saved-tag . "Save created texts:")
     (kom-confirm-add-recipients-tag . "Ask if comments shoulw be sent to new recipients:")
+    (kom-trim-buffer-minimum-tag . "How small parts of the lyskom buffer are trimmed.")
     )
 )
 

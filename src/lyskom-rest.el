@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.116 2000-08-23 10:43:47 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.117 2000-08-30 18:47:06 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.116 2000-08-23 10:43:47 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.117 2000-08-30 18:47:06 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -770,12 +770,13 @@ found in lyskom-membership, a blocking call to the server is made."
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
 
+
 (defvar lyskom-trim-buffer-delete-to)
 
 (defun lyskom-trim-buffer ()
   "Trim the size of a lyskom buffer to lyskom-max-buffer-size"
   (when (and kom-max-buffer-size
-	     (> (buffer-size) kom-max-buffer-size))
+	     (> (- (buffer-size) kom-trim-buffer-minimum) kom-max-buffer-size))
     (lyskom-save-excursion
       (let ((lyskom-trim-buffer-delete-to (- (buffer-size)
 					     kom-max-buffer-size))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.136 2000-08-29 16:15:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.137 2000-08-30 18:47:11 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.136 2000-08-29 16:15:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.137 2000-08-30 18:47:11 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -3224,6 +3224,12 @@ i servern. Annars sparas det i din .emacs.")
   kommer kommentarer alltid att skickas även till den nya mottagaren. 
   Det är oftast bra att ha påslaget.")
 
+    (kom-trim-buffer-minimum-doc . "\
+  Om du har något i lyskom-trim-buffer-hook bestämmer den här variabeln
+  hur många tecken större än kom-max-buffer-size lyskom-bufferten måste
+  vara innan din hook körs och bufferten trimmas. Variablen ska vara ett
+  heltal, default är 4096.")
+
 
     ;;
     ;; Tags for variables
@@ -3379,6 +3385,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden:")
     (kom-created-texts-are-saved-tag . "Spara författade inlägg:")
     (kom-confirm-add-recipients-tag . "Fråga om kommentarer skall sändas till nya mottagare:")
+    (kom-trim-buffer-minimum-tag . "Hur små bitar av lyskom-bufferten som trimmas.")
     )
 )
 
