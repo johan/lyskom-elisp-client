@@ -148,7 +148,7 @@
           (let ((command-running-as-kom-command nil))
             (condition-case nil
                 (progn (lyskom-start-of-command 'command)
-                       (setq command-running-as-kom-command))
+                       (setq command-running-as-kom-command t))
               (error nil))
         
             (let ((command-start-buffer (current-buffer)))
@@ -186,14 +186,14 @@
     (let ((command-start-buffer ...)) ...)
 
     This bit is like def-kom-command, but lyskom-end-of-command is
-    only called if command-running-as-kom-command if non-nil.
+    only called if command-running-as-kom-command is non-nil.
 
 
 
     STARTING AND ENDING COMMANDS
     -----------------------------------------------------------------------
 
-    All command must start with lyskom-start-of-command and end with
+    All commands must start with lyskom-start-of-command and end with
     lyskom-end-of-command. The current buffer must be the same in both 
     cases. These functions are housekeeping functions that *must* be
     executed for each command, or the client will probably stop
@@ -211,4 +211,4 @@
     printed before the prompt, scrolls the buffer, updates the mode
     line, runs the prefetch, runs after-command hooks, sends an
     is-active message to the server, discards typeahead (if requested
-    to), runs commands that are queued to run automatically.
+    to) and runs commands that are queued to run automatically.
