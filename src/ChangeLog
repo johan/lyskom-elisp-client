@@ -1,3 +1,43 @@
+Thu Apr  4 10:36:06 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * lyskom-rest.el (lyskom-insert): Gör lyskom-scroll i lyskom-insert
+    bara om kom-continuous-scrolling är satt.
+
+    * vars.el.in (kom-continuous-scrolling): Ny variabel.
+    (lyskom-elisp-variables): Lade till kom-continuous-scrolling.
+
+    * english-strings.el, swedish-strings.el (lyskom-mode-map): Lade till
+    kom-review-first.
+
+    * swedish-strings.el, english-strings.el (lyskom-strings): Lade till
+    lyskom-review-how-many.
+
+    * review.el (lyskom-get-texts-by-to): Skrev helt om den här funktionen
+    så den anropar olika funktioner för att göra jobbet beroende på
+    inputmönster. (lyskom-get-texts-by-and-to): Ny funktion som hämtar
+    texter av en person till ett möte. (lyskom-get-texts-generic): Ny
+    funktion som hämtar texter av en person eller till ett möte.
+    (lyskom-get-texts-by): Ny funktion som hämtar texter av en person.
+    (lyskom-get-texts-to): Ny funktion som hämtar texter till ett möte.
+
+Wed Apr  3 12:56:19 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * english-strings.el, swedish-strings.el (lyskom-strings): Lade till
+    confusion-what-to-view. (lyskom-mode-map): Lade till tangentbindningar
+    för lyskom-view-previous-commented-text.
+
+    * commands1.el (kom-view-previous-commented-text): Lade till denna
+    funktion (skriven av Teddy).
+
+    * lyskom-rest.el (lyskom-insert): Lade in ett anrop till lyskom-scroll
+    om point hamnar utanför skärmen. Detta får betraktas som ett
+    experiment.
+
+    * review.el (lyskom-get-texts-by-to): Fixade buggar i David Kågedals
+    version och tog bort den gamla versionen.
+
+    * utilities.el (nfirst): Flyttade från review.el
+
 Tue Apr  2 15:15:11 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * Blev av med alla kompilatorvarningar genom att ta bort

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 40.1 1996-04-02 16:20:42 byers Exp $
+;;;;; $Id: utilities.el,v 40.2 1996-04-04 11:55:08 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 40.1 1996-04-02 16:20:42 byers Exp $\n"))
+	      "$Id: utilities.el,v 40.2 1996-04-04 11:55:08 byers Exp $\n"))
 
 
 ;;;
@@ -70,6 +70,13 @@ The value is actually the element of LIST whose cdr is KEY."
 (defun reverse-assoc (key cache)
   "Same as assoc, but searches on last element in a list"
   (reverse (assoc key (mapcar (function reverse) cache))))
+
+
+(defun nfirst (n list)
+  "Return a list of the N first elements of LIST."
+  (if (or (<= n 0) (not list))
+      nil
+    (cons (car list) (nfirst (1- n) (cdr list)))))
 
 
 (defun skip-first-zeros (list)
@@ -108,6 +115,15 @@ The value is actually the element of LIST whose cdr is KEY."
           (string-match re "")
         (error (setq result nil))))
     result))
+
+
+(defun mapcar2 (fn seq1 seq2)
+  (let (result)
+    (while (and seq1 seq2)
+      (setq result (cons (funcall fn (car seq1) (car seq2)) result))
+      (setq seq1 (cdr seq1)
+            seq2 (cdr seq2)))
+    (nreverse result)))
 
 
 ;;;
