@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.58 1999-11-21 17:59:24 byers Exp $
+;;;;; $Id: commands1.el,v 44.59 1999-11-23 17:17:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.58 1999-11-21 17:59:24 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.59 1999-11-23 17:17:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -973,9 +973,9 @@ that text instead."
         (if (string-match "\n" str)
             (lyskom-private-answer text-stat
                                    (substring str
-                                              0 (match-beginning 0))))
-        (lyskom-private-answer text-stat ""))
-    (lyskom-format-insert 'no-such-text-no text-no)))
+                                              0 (match-beginning 0)))
+          (lyskom-private-answer text-stat ""))
+    (lyskom-format-insert 'no-such-text-no text-no))))
 
 
 (defun lyskom-private-answer (text-stat subject)
