@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.30 1999-10-14 15:34:02 byers Exp $
+;;;;; $Id: view-text.el,v 44.31 1999-10-15 12:13:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.30 1999-10-14 15:34:02 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.31 1999-10-15 12:13:08 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -684,7 +684,8 @@ blocking-do."
          (name (cond (conf-stat nil)
                       ((= (defer-info->call-par defer-info) 0)
                        (lyskom-get-string 'person-is-anonymous))
-                      (t (lyskom-format 'person-does-not-exist)))))
+                      (t (lyskom-format 'person-does-not-exist
+                                        (text-stat->author text-stat))))))
 
     (setq name (or (lyskom-format-mx-author mx-from mx-author) name))
 
@@ -766,8 +767,14 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))
         (sit-for 0)
-        (let ((lyskom-current-function-phase 'footer))
-          (if kom-deferred-printing
+        (let* ((lyskom-current-function-phase 'footer)
+               (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
+               (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
+               (author-name (lyskom-format-mx-author mx-from mx-author)))
+
+          (if (and kom-deferred-printing
+                   (or kom-text-footer-format
+                       kom-show-author-at-end))
               (progn
                 (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
                 (lyskom-defer-insertion
@@ -782,18 +789,20 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                   (length lyskom-defer-indicator)
                   "%#1s"
                   (list text-stat lyskom-last-text-format-flags))))
-            (let* ((conf-stat (blocking-do 'get-conf-stat 
-                                           (text-stat->author text-stat)))
-                   (author-name
-                    (or (conf-stat->name conf-stat)
-                        (and (eq (text-stat->author text-stat) 0)
-                             (lyskom-get-string 'person-is-anonymous))
-                        (lyskom-format 'person-does-not-exist
-                                       (text-stat->author text-stat)))))
+            (let* ((conf-stat (and (or kom-text-footer-format
+                                       kom-show-author-at-end)
+                                   (not (eq 0 (text-stat->author text-stat)))
+                                   (blocking-do 'get-conf-stat 
+                                                (text-stat->author text-stat)))))
               (lyskom-insert (lyskom-format-text-footer 
                               text-stat
                               conf-stat
-                              author-name
+                              (cond (author-name author-name)
+                                    ((eq (text-stat->author text-stat) 0)
+                                     (lyskom-get-string 'person-is-anonymous))
+                                    (conf-stat (conf-stat->name conf-stat))
+                                    (t (lyskom-format 'person-does-not-exist 
+                                                      (text-stat->author text-stat))))
                               kom-text-footer-format
                               lyskom-last-text-format-flags)))
             (lyskom-insert "\n")))
@@ -1041,7 +1050,7 @@ Args: TEXT-STAT of the text being read."
       (setq author (concat (lyskom-get-string 'email-name-suffix) author))
       )
     author))
-    
+
 (defun lyskom-mx-date-to-time (mx-date)
  "Attempt to convert MX-DATE to a lyskom time structure.
 Returns the time structure if successful, otherwise nil."

@@ -1,3 +1,13 @@
+1999-10-15  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-print-text): Correct formatting of missing
+	person. 
+	(lyskom-print-text): Format author in text footer correctly even
+	if deferred printing is off.
+	(lyskom-print-text): Don't do deferred printing of the footer
+	unless it's really necessary. Don't block to get the author for
+	the footer unless it's necessary.
+
 1999-10-14  David Byers  <davby@ida.liu.se>
 
 	* view-text.el (lyskom-view-text): Don't set first-line-face on
