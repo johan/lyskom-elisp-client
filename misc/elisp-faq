@@ -340,7 +340,7 @@ atoi inte fungerar på samma sätt).
 Här är en patch som kan läggas i .emacs eller liknande:
 
 ;;;; fix to make string-to-int behave the same on DECstation as on sun
-(if (= 0 (string-to-int "Ön17"))
+(if (= 0 (string-to-int "\n17"))
     (progn
       (fset 'string-to-int-orig (symbol-function 'string-to-int))
       (defun string-to-int (string)
@@ -349,8 +349,9 @@ Skip leading spaces and newlines."
         (if (length string)
             (let ((i 0)
                   (c (aref string 0)))
-              (while (or (= c ?Ön) (= c ?Ö ))
-                (setq i (1+ i))                                                                 (setq c (aref string i)))
+              (while (or (= c ?\n) (= c ?\ ))
+                (setq i (1+ i))
+		(setq c (aref string i)))
               (string-to-int-orig (substring string i)))
           0))))
 
