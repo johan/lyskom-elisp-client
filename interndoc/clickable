@@ -1,0 +1,277 @@
+
+
+                 CLICKABLE AREAS IN THE ELISP CLIENT
+                             David Byers
+
+
+    This file documents how things get clickable and get context menus
+    in the elisp client. You need to know this if you want to make
+    clickable areas in the client.
+
+                               CONTENTS
+        ------------------------------------------------------------
+        Basic buttons.......How to create a button
+        Text buttons........Automagical button creation in text
+        Button types........Defining new/extending old button types
+        Guts and glory......How buttons are implemented 
+        ------------------------------------------------------------
+
+
+
+    BASIC BUTTONS
+
+    Use the function lyskom-default-button to manually add buttons.
+    This function returns a list of text properties that are required
+    to create the button. Typically code for a manual button will look
+    something like this:
+
+        (lyskom-format-insert "%[%#1@Conference 1%]"
+                              (lyskom-default-button 'conf 1))
+
+    Recall that "%[" starts a subformat string and %#1@ inserts text
+    properties valid to the end of the subformat string. The function
+    lyskom-default-button creates text properties suitable for a
+    button. 
+
+    Here's another quickie that shows how you can use arbitrary code:
+
+        (lyskom-format-insert
+            "%[%#1@Add 1 2 3%]\n"
+            (lyskom-default-button 'func
+                                  '((lambda (&rest args)
+                                      (message "%S" (apply '+ args)))
+                                     1 2 3)))
+
+    This creates a button that when clicked will display "6" in the
+    echo area. The button type is "func", which means any function.
+    The car of the argument is a function and the cdr are arguments to
+    the function.
+
+
+    Button types are defined in lyskom-button-actions. The following
+    buttons types are defined (this list may not be all-inclusive
+    since people might edit the code without updating this list):
+
+        Button type             What it is
+        --------------------------------------------------------
+        func                    Execute function
+        text                    Text number
+        conf                    Conference
+        pers                    Person
+        url                     URL
+        info-node               Info node reference
+        email                   E-mail address
+        aux                     Aux-item
+        aux-edit-menu           Aux-item in edit buffer
+        prioritize-flag-menu    Membership flag in mship-edit.el
+        --------------------------------------------------------
+
+    Define new types by updating lyskom-button-actions. This list is
+    language-dependent. Don't forget to update it in all languages.
+
+
+
+    TEXT BUTTONS
+
+    The client is capable of automatically generating buttons in text.
+    This happens when you use the %t or %r format directives. The
+    function lyskom-button-transform-text does the actual detection
+    and button generation.
+
+    Text buttons are defined by the variable lyskom-text-buttons. Each
+    element in this list is a list that defines one type of button and
+    has the following structure:
+
+    REGEXP  is a regular expression that is used to recognize a
+            button. The regular expression may match more than just
+            the button if required (but this can have adverse effects
+            since the search for new buttons starts again where the
+            entire match ends).
+
+    TYPE    is the type of button to create when the regexp is
+            matched. This type is NOT the same as the types defined in
+            lyskom-button-actions. This type is hard-coded into
+            lyskom-button-transform-text. UTSL.
+
+    BUTTON-MATCH is the match number of the actual button. This can be
+            used when the regexp matches more than just the button
+            itself. If you don't want to use this feature, say 0 here.
+
+    BUTTON-ARG-MATCH is the match number of the button argument. The
+            text matched by this group gets put in the text property
+            lyskom-button-arg.
+
+    FACE    is the name of the face (a symbol) to use for the button.
+            Typically this will be kom-url-face (for links to external
+            resources) or nil (to use the default).
+
+    The following is a simple example of a button that still uses most
+    of the features:
+
+        ("<(?text *\\([0-9]+\\)[^0-9>]*)?>" text 0 1 nil)
+
+    The regexp part matches strings like "<text 12: read it>". The
+    button type is text (a text number), the entire match will become
+    the button and the button argument will be the text number matched
+    by the sole group. The default face (kom-active-face) will be
+    used.
+
+
+    BUTTON TYPES
+
+    The variable lyskom-button-actions defines the types of buttons
+    available in the client. If you want to add a new kind of button,
+    this is where to do it. The variable is language-dependent so you
+    must define it in all languages. Sorry about that.
+
+    Each element in lyskom-button-actions defines one type of button.
+    The elements have the following structure:
+
+    TYPE    is the button type, a symbol. Make up your own.
+
+    LABEL   is the default menu title for buttons of this type. It
+            should be a symbol that the client looks up with
+            lyskom-get-string. Actually, this parameter is not used at
+            all at the moment. It will be.
+
+    DEFAULT is the default action to take on a click. It must be a
+            function (actually name of a function) that takes three
+            arguments: buffer, arguments and text. buffer is the
+            LysKOM buffer to use (from lyskom-buffer text property),
+            arguments are the user-defined arguments (from the
+            lyskom-button-arg text property) and text is the button
+            text (from the lyskom-button-text text property).
+
+    ACTIONS is a list of other possible actions. These are used to
+            build the popup menu for the button. Each element in
+            ACTIONS is a cons cell of (STRING . FUNCTION) where STRING
+            is the string to use in the popup menu and FUNCTION is the
+            function to call if the user selects that command.
+
+    HINTS   is a list of hints that can be used to override the
+            default action. Each hint is a cons cell where the car of
+            the list is a LysKOM command (a symbol) and the cdr of the
+            list is the default action when lyskom-current-command is
+            equal to the car of the list when the button is created
+            (with lyskom-default-button).
+
+    Here is a small example of a button type:
+
+        (conf 
+         conf-text
+         lyskom-button-view-conf-presentation
+         (("Visa presentation" . lyskom-button-view-conf-presentation)
+          ("Visa mötesstatus" . lyskom-button-view-conf-status)
+          ("Gå till mötet" . lyskom-button-goto-conf)
+          ("Skicka gruppmeddelande" . lyskom-button-send-message)
+          ("Bli medlem i mötet" . lyskom-button-add-self)
+          ("Utträd ur mötet" . lyskom-button-sub-self))
+         ((kom-list-news . lyskom-button-goto-conf)
+          (kom-membership . lyskom-button-goto-conf)))
+
+    This specifies a button of type conf, with popup title conf-text.
+    The default action for this button (middle mouse button click) is
+    lyskom-button-view-conf-presentation. The popup menu will contain
+    six commands. The hints list specifies that if the button is
+    created by the command kom-list-news of kom-membership, the
+    default action is to go to that conference rather than view the
+    presentation. 
+
+
+    NOTE: The popup menu title must be defined in the lyskom-messages
+          list of strings. The symbol myst be TYPE-popup-title, where
+          TYPE is the button type. The string may be a format string
+          with one argument, the button text. UTSL for examples.
+
+    NOTE: Perhaps one day someone will fix things so that we don't use
+          hard-coded title names and so that the variable is not
+          language-dependent.
+
+    You can extend an existing button type by using the function
+    lyskom-add-button-action. This is mostly useful for users who want
+    to customize LysKOM. The function has regular Lisp documentation.
+    
+
+
+    GUTS AND GLORY (AKA TEXT PROPERTIES)
+
+    The client uses text properties to define buttons (clickable
+    areas). Use the function lyskom-default-button to add them.
+
+
+    lyskom-button-type
+
+        The type of button. This is an atom which must be a key in the
+        alist lyskom-button-actions. See BASIC BUTTONS above for a
+        list of available types.
+
+
+    lyskom-button-arg
+
+        Data for the button action. What this needs to be depends on
+        the type of button. The following list may not be exhaustive.
+        It depends on whether people adding new button types remember
+        to update it.
+
+        Button type             Argument
+        ------------------------------------------------------------
+        func                    Special [0]
+        text                    Text number (an integer)
+        conf                    Conference number (an integer)
+        pers                    Person number (an integer)
+        url                     None
+        info-node               The info nodename
+        email                   None
+        aux                     Special [1]
+        aux-edit-menu           Special [2]
+        prioritize-flag-menu    Special [3]
+        ------------------------------------------------------------
+
+        [0] The argument for functions is a list where the car of the
+            list is a function to be applied to the cdr of the list.
+            If the function needs to know which LysKOM buffer to use
+            you have to provide the buffer as an argument.
+
+        [1] The argument for aux-items is a list of (TYPE ARG NO),
+            where TYPE is one of text or conf, ARG is the text number
+            (for type text) or conference number (for type conf) and
+            NO is the aux-item number. 
+
+        [2] The argument for aux-exit-menu is a cons cell of (BUFFER . 
+            MARKER) where BUFFER is the edit buffer containing the
+            aux-item and MARKER is the position of the item in that
+            buffer.
+
+        [3] The argument for prioritize-flag-menu is a list of (ENTRY
+            TYPE) where ENTRY is the entry the flag applies to and
+            TYPE is one of invitation, secret or passive.
+
+
+    lyskom-button-text
+
+        The text that is active. This is stored mostly for convenience
+        and in case the text gets changed later. Some buttons
+        (particularly those that have no argument) use the text as
+        their data.
+
+
+    lyskom-buffer
+
+        The buffer to execute LysKOM functions in. The addition of
+        this text property makes the buttons work even if they are not
+        in a LysKOM buffer.
+
+    
+    lyskom-button-hint
+
+        A hint that can override the default button action. In some
+        cases the default action is not appropriate. The addition of a
+        hint can be used to select a more appropriate default action.
+        Hints are usually generated automatically.
+
+
+    lyskom-button-menu-title
+
+        The title to use for the popup menu. If this property is not
+        set, the title will be constructed based on the button type. 
+
