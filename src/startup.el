@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.33 1999-06-10 13:36:22 byers Exp $
+;;;;; $Id: startup.el,v 44.34 1999-06-11 10:34:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.33 1999-06-10 13:36:22 byers Exp $\n"))
+	      "$Id: startup.el,v 44.34 1999-06-11 10:34:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -270,9 +270,9 @@ CONNECT %s:%d HTTP/1.0\r\n\
 
 
 (defun lyskom-accept-async ()
-  (let ((res (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18))))
-    (when (and (null res)
-               (eq 50 lyskom-errno))
+  (let* ((res (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18)))
+         (ans (blocking-do 'query-async)))
+    (unless (memq 15 (listify-vector ans))
       (blocking-do 'accept-async '(0 5 7 8 9 11 12 13 14 16 17 18)))))
 
 
