@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.118 2000-08-31 12:29:47 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.119 2000-08-31 15:00:16 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.118 2000-08-31 12:29:47 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.119 2000-08-31 15:00:16 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -774,19 +774,28 @@ found in lyskom-membership, a blocking call to the server is made."
 (defvar lyskom-trim-buffer-delete-to)
 
 (defun lyskom-trim-buffer ()
-  "Trim the size of a lyskom buffer to lyskom-max-buffer-size"
+  "Trim the size of a lyskom buffer to lyskom-max-buffer-size
+returns t if it trimmed the buffer, nil otherwise."
   (when (and kom-max-buffer-size
 	     (> (- (buffer-size) kom-trim-buffer-minimum) kom-max-buffer-size))
     (lyskom-save-excursion
       (let ((lyskom-trim-buffer-delete-to (- (buffer-size)
 					     kom-max-buffer-size))
+	    (old-point (point))
+	    (old-mark (mark))
 	    (inhibit-read-only t))
 	(goto-char (point-min))
 	(while (< (point) lyskom-trim-buffer-delete-to)
 	  (forward-line 1))
 	(setq lyskom-trim-buffer-delete-to (point))
 	(run-hooks 'lyskom-trim-buffer-hook)
-	(delete-region (point-min) lyskom-trim-buffer-delete-to)))))
+	(delete-region (point-min) lyskom-trim-buffer-delete-to)
+	
+	(setq lyskom-last-viewed
+	      (- (+ lyskom-last-viewed 1) lyskom-trim-buffer-delete-to))
+	(set-mark (- (+ old-mark 1) lyskom-trim-buffer-delete-to))
+	(goto-char (- (+ old-point 1) lyskom-trim-buffer-delete-to))))
+      t))
 
 (defun lyskom-garb-lyskom-buffer-to-file ()
   "Appends the deleted initial portions of the buffer to a file.
