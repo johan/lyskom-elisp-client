@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.125 2000-08-11 09:43:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.126 2000-08-11 15:00:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.125 2000-08-11 09:43:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.126 2000-08-11 15:00:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -769,6 +769,10 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (anonymous-aux-flag . "anonym")
     (inherit-aux-flag  . "ärvd")
     (aux-item-prefix . "> ")
+    (comment-item-prefix . "#\\s-*")
+    (text-no-comment . "%#1d %#2s /%#3d rad%#3?d%[%]%[er%]/ %#4P %#5?b%[ [anonymt]%]%[%]\n")
+    (cant-fcc-text-file-error . "Kan inte spara inlägg %#1n till \"%#2s\" (%#3s: %#4s).\n")
+    (cant-fcc-text . "Kan inte spara inlägg %#1n till \"%#2s\" (%#3s).\n")
 
     (header-subject . "Ärende: ")
     (header-separator . "\\<lyskom-edit-mode-map>\
@@ -1469,7 +1473,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-private-comment-text-action . "Personligt svar")
     (lyskom-button-mark-text-action . "Markera texten")
     (lyskom-button-unmark-text-action . "Avmarkera texten")
-    (lyskom-button-save-text-action . "Arkivera")
+    (lyskom-button-save-text-action . "Arkivera inlägg")
+    (lyskom-button-save-text-body-action . "Spara inläggstext")
     (lyskom-button-view-conf-presentation-action . "Visa presentation")
     (lyskom-button-view-conf-status-action . "Visa mötesstatus")
     (lyskom-button-goto-conf-action . "Gå till mötet")
@@ -2236,6 +2241,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (off . "Av")
     (yes . "Ja ")
     (no . "Nej")
+    (to-file . "Till fil:")
     (max-text-length . "För inlägg kortare än: ")
     
     (friends . "Vänner och bekanta")
@@ -3175,6 +3181,10 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är påslaget så visas \"(Olästa)\" i titelraden för de
   fönster vars valda buffert hör till en LysKOM-session med olästa. 
   Det är inte säkert att titelraden ändras om fönstret inte är öppet.")
+    (kom-created-texts-are-saved-doc . "\
+  Om detta är ett filnamn så sparas alla inlägg man skriver till den
+  filen i ungefär samma format som de har när man läser dem. Inlägg
+  som inte kan skapas sparas inte.")
 
 
     ;;
@@ -3313,22 +3323,23 @@ i servern. Annars sparas det i din .emacs.")
     (kom-long-lines-tag . "Långa streckade linjer:")
     (kom-postpone-default-tag . "Skönsvärde för uppskjuta läsning:")
     (kom-allow-incompleteness-tag . "Tillåt ofullständig information om olästa:")
-    (kom-smileys-tag . "Visa gladmän grafiskt")
-    (kom-ignore-message-senders-tag . "Visa inte meddelanden från")
-    (kom-ignore-message-recipients-tag . "Visa inte meddelanden till")
-    (kom-text-footer-dash-length-tag . "Inläggsfotens längd")
-    (kom-text-header-dash-length-tag . "Längden på linjen ovanför inläggstexten")
-    (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden")
-    (kom-w3-simplify-body-tag . "Visa HTML utan standardfärger")
-    (kom-mercial-tag . "Text när allt är utläst")
-    (kom-server-priority-tag . "Sessionsprioritet")
-    (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa")
-    (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn")
-    (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång")
-    (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer")
-    (kom-saved-file-name-tag . "Fil att arkivera inlägg i")
-    (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt")
-    (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden")
+    (kom-smileys-tag . "Visa gladmän grafiskt:")
+    (kom-ignore-message-senders-tag . "Visa inte meddelanden från:")
+    (kom-ignore-message-recipients-tag . "Visa inte meddelanden till:")
+    (kom-text-footer-dash-length-tag . "Inläggsfotens längd:")
+    (kom-text-header-dash-length-tag . "Längden på linjen ovanför inläggstexten:")
+    (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden:")
+    (kom-w3-simplify-body-tag . "Visa HTML utan standardfärger:")
+    (kom-mercial-tag . "Text när allt är utläst:")
+    (kom-server-priority-tag . "Sessionsprioritet:")
+    (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa:")
+    (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn:")
+    (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång:")
+    (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer:")
+    (kom-saved-file-name-tag . "Fil att arkivera inlägg i:")
+    (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt:")
+    (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden:")
+    (kom-created-texts-are-saved-tag . "Spara författade inlägg:")
     )
 )
 

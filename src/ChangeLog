@@ -1,6 +1,43 @@
+2000-08-11  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-file-widget): Fixed bug so that help
+	button appears on the same line as the file name.
+
+	* edit-text.el (lyskom-edit-parse-headers): Skip comments in
+	headers.
+	(lyskom-edit-replace-headers): Anchor search for header separator.
+	(lyskom-edit-fcc-text): Mew function to save text almost as if it
+	were printed properly to a log file.
+	(lyskom-edit-parse-headers): Items in the header can be commented
+	out by prepending a "#". This may be useful if we ever want to put
+	temporary information into the header lines. Maybe.
+
+	* lyskom-rest.el (kom-save-text): Factor out saving code to
+	lyskom-save-text. Use lyskom-save-text. Added FILENAME parameter.
+	(lyskom-save-text): New function.
+
+	* edit-text.el (lyskom-create-text-handler): It appeared that
+	the edit buffer for anonymously created texts was never deleted
+	and the successful creation never recorded. Fixed. Save created
+	text if kom-created-texts-are-saved is non-nil.
+	(lyskom-edit-send): Call lyskom-create-text-hook. 
+
+	* vars.el.in (lyskom-new-text-hook): Fixed doc-string (no-message
+	does not exist). Don't save in server per default. Do not list as
+	a user variable (anyone who needs to use this hook should be smart
+	enough to find it anyway).
+	(kom-created-texts-are-saved): New variable.
+	(lyskom-button-actions): Added save text body to context menu for
+	texts.
+	(lyskom-deleted-text-hook): Same here.
+	(lyskom-new-recipient-hook): Same here.
+	(lyskom-create-text-hook): New variable.
+
+	* lyskom-buttons.el (lyskom-button-save-text-body): New function.
+
 2000-08-10  David Byers  <davby@ida.liu.se>
 
-	* commands1.el (kom-list-created-conferences): New function.
+	* commands1.el (kom-list-created-conferences): New command.
 	(lyskom-list-created-conferences-2): New function.
 
 	Kill da bottlenecks:

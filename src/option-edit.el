@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.44 2000-07-28 12:15:47 byers Exp $
+;;;;; $Id: option-edit.el,v 44.45 2000-08-11 15:00:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.44 2000-07-28 12:15:47 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.45 2000-08-11 15:00:57 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -152,6 +152,7 @@
     [kom-follow-comments-outside-membership]
     [kom-follow-attachments]
     [kom-created-texts-are-read]
+    [kom-created-texts-are-saved]
     "\n"
     [kom-saved-file-name]
     [kom-default-mark]
@@ -480,6 +481,8 @@ customize buffer but do not save them to the server."
     (kom-enabled-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
+    (kom-created-texts-are-saved (choice ((const (no nil))
+                                          (file nil :tag to-file))))
     (kom-default-mark (choice ((number (0 255) 
                                        :tag selected-mark
                                        :format "%[%t%] (%v)"
@@ -800,7 +803,7 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-file-widget (type &optional args propl)
   (lyskom-build-simple-widget-spec 'file
-                                   '(:format "%[%t%] %v" ':size 0)
+                                   '(:format "%[%t%] %v" :size 0)
                                    propl))
 
 (defun lyskom-person-widget (type &optional args propl)
