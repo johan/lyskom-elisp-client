@@ -1,5 +1,26 @@
 1999-10-14  David Byers  <davby@ida.liu.se>
 
+	* english-strings.el, swedish-strings.el, vars.el.in: Removed
+	variable lyskom-text-start.
+
+	* lyskom-rest.el (backward-text): Implement using
+	lyskom-prev-area. 
+	(forward-text): Implement using lyskom-next-area.
+	(lyskom-text-at-point): Implement using lyskom-prev-area.
+
+	* view-text.el (lyskom-view-text): Insert property
+	lyskom-text-start on the number of each newly inserted text.
+
+	* utilities.el (lyskom-prev-area): New function.
+	(lyskom-next-area): New function.
+
+	* lyskom-rest.el (kom-prev-prompt): New function.
+	(kom-next-prompt): New function.
+
+	* lyskom-buttons.el (kom-previous-link): Implement using
+	lyskom-prev-area.
+	(kom-next-link): Implement using lyskom-next-area.
+
 	* english-strings.el (lyskom-text-start): Updated to work with
 	imported texts.
 

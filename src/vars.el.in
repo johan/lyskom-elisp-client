@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.84 1999-10-13 22:32:32 byers Exp $
+;;;;; $Id: vars.el.in,v 44.85 1999-10-14 10:39:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.84 1999-10-13 22:32:32 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.85 1999-10-14 10:39:47 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -965,10 +965,6 @@ at random and used. This element may be a string, function or list."
 (def-kom-var lyskom-filter-actions nil
       "A list of legal filter actions an their textual representation."
       local)
-
-(def-kom-var lyskom-text-start nil
-  "Regexp matching beginning of a text in lyskom buffer.
-Cf. paragraph-start.")
 
 (def-kom-var lyskom-filter-edit-map nil
   "Keymap for LysKOM filter edit"

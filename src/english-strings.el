@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.65 1999-10-14 09:29:50 byers Exp $
+;;;;; $Id: english-strings.el,v 44.66 1999-10-14 10:39:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.65 1999-10-14 09:29:50 byers Exp $"))
+              "$Id: english-strings.el,v 44.66 1999-10-14 10:39:37 byers Exp $"))
 
 
 ;;; ================================================================
@@ -771,9 +771,6 @@ Help: \\[describe-mode] ---")
     (marked-by-you . "Marked by you.\n")
     (marked-by-you-and-others . "Marked by you and %#1?d%[someone else%]%[%#1d others%].\n")
     (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
-
-;; The format of this function should coincide with the format of the 
-;; lyskom-text-start variable. DONT change one without changing the other.
 
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
 
@@ -1721,16 +1718,6 @@ You must become an active member of the conference to enter it.\n")
         (dontshow . "Don't show")
         (skip-tree . "Skip comments")))
                                
-;;(defvar lyskom-swascii-filter-actions nil
-;;  "The swascii-versions of lyskom-filter-actions.")
-;;(defvar lyskom-swascii-filter-what nil
-;;  "The swascii version of lyskom-filter-what")
-
-
-(lyskom-language-var lyskom-text-start en
-  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +\\([-+][0-9][0-9][0-9][0-9] +\\)?/[0-9]+ line\\(s\\)?/ ")
-
-
 (defconst lyskom-keybindings-missing nil)
 
 (defvar lyskom-en-mode-map nil)
@@ -1866,6 +1853,8 @@ You must become an active member of the conference to enter it.\n")
 
   (define-key lyskom-en-mode-map (kbd "M-p") 'backward-text)
   (define-key lyskom-en-mode-map (kbd "M-n") 'forward-text)
+  (define-key lyskom-sv-mode-map (kbd "C-M-p") 'kom-prev-prompt)
+  (define-key lyskom-sv-mode-map (kbd "C-M-n") 'kom-next-prompt)
   (define-key lyskom-en-mode-map (kbd "s a") 'kom-save-text)
 
   (define-key lyskom-en-mode-map (kbd "C-?") 'scroll-down)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.32 1999-10-14 10:39:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.32 1999-10-14 10:39:39 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -82,36 +82,12 @@ on such functions see the documentation for lyskom-add-button-action."
 (defun kom-previous-link (num)
   "Move the cursor to the previous active area in the LysKOM buffer."
   (interactive "p")
-  (while (> num 0)
-    (let ((where (previous-single-property-change (point) 
-                                                  'lyskom-button-text)))
-      (if where
-          (progn
-            (if (not (get-text-property where 'lyskom-button-text))
-                (setq where (previous-single-property-change 
-                             where
-                             'lyskom-button-text)))
-            (if where
-                (goto-char where)
-              (goto-char (point-min))
-              (setq num 1)))))
-    (setq num (1- num))))
+  (lyskom-prev-area num 'lyskom-button-text))
 
 (defun kom-next-link (num)
   "Move the cursor to the next active area in the LysKOM buffer."
   (interactive "p")
-  (while (> num 0)
-    (let ((where (next-single-property-change (point) 'lyskom-button-text)))
-      (if where
-          (progn
-            (if (not (get-text-property where 'lyskom-button-text))
-                (setq where (next-single-property-change where
-                                                         'lyskom-button-text)))
-            (if where
-                (goto-char where)
-              (goto-char (point-max))
-              (setq num 1)))))
-    (setq num (1- num))))
+  (lyskom-next-area num 'lyskom-button-text))
 
 
 (defun kom-button-press ()

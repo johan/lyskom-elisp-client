@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.82 1999-10-13 22:32:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.83 1999-10-14 10:39:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.82 1999-10-13 22:32:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.83 1999-10-14 10:39:40 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2138,30 +2138,33 @@ A list of pairs means OPTARG will be used as a key to look up the real
 (defun lyskom-text-at-point ()
   "Return the text that point is in, or nil it is impossible to determine."
   (save-excursion
-    (let ((paragraph-start lyskom-text-start)
-          (paragraph-ignore-fill-prefix t))
-      (end-of-line)
-      (backward-paragraph 1))
-    (beginning-of-line)
-    (and (looking-at "[0-9]+")
-         (string-to-int (match-string 0)))))
+    (lyskom-prev-area 1 'lyskom-text-start)
+    (get-text-property (point) 'lyskom-text-start)))
+
+(defun kom-next-prompt (num)
+  "Move the cursor to the next prompt in the LysKOM buffer"
+  (interactive "p")
+  (lyskom-next-area num 'lyskom-prompt))
+
+
+(defun kom-prev-prompt (num)
+  "Move the cursor to the previous prompt in the LysKOM buffer"
+  (interactive "p")
+  (beginning-of-line)
+  (lyskom-prev-area num 'lyskom-prompt))
+  
 
 
 (defun backward-text (&optional arg)
   "Searches backwards for a text start and recenters with that text at the top."
   (interactive "p")
-  (let ((paragraph-start lyskom-text-start)
-        (paragraph-ignore-fill-prefix t))
-    (backward-paragraph arg))
+  (lyskom-prev-area (or arg 1) 'lyskom-text-start)
   (beginning-of-line))
-
 
 (defun forward-text (&optional arg)
   "Searches forward for a text start and recenters with that text at the top."
   (interactive "p")
-  (let ((paragraph-start lyskom-text-start)
-        (paragraph-ignore-fill-prefix t))
-    (forward-paragraph arg)))
+  (lyskom-next-area (or arg 1) 'lyskom-text-start))
 
 
 (def-kom-command kom-save-text (&optional arg)
@@ -2376,18 +2379,20 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
     (lyskom-set-mode-line)))
 
 (defun lyskom-modify-prompt (s &optional executing)
-  (lyskom-format-prompt (cond (lyskom-is-administrator
-                               (if executing 
-                                   kom-enabled-prompt-format-executing
-                                 kom-enabled-prompt-format))
-                              (lyskom-is-anonymous
-                               (if executing
-                                   kom-anonymous-prompt-format-executing
-                                 kom-anonymous-prompt-format))
-                              (t (if executing
-                                     kom-user-prompt-format-executing
-                                   kom-user-prompt-format)))
-                        s))
+  (let ((text (lyskom-format-prompt (cond (lyskom-is-administrator
+                                           (if executing 
+                                               kom-enabled-prompt-format-executing
+                                             kom-enabled-prompt-format))
+                                          (lyskom-is-anonymous
+                                           (if executing
+                                               kom-anonymous-prompt-format-executing
+                                             kom-anonymous-prompt-format))
+                                          (t (if executing
+                                                 kom-user-prompt-format-executing
+                                               kom-user-prompt-format)))
+                                    s)))
+    (add-text-properties 0 (length text) '(lyskom-prompt t) text)
+    text))
            
 
 

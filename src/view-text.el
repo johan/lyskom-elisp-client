@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.28 1999-10-13 16:42:17 byers Exp $
+;;;;; $Id: view-text.el,v 44.29 1999-10-14 10:39:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.28 1999-10-13 16:42:17 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.29 1999-10-14 10:39:48 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -91,7 +91,8 @@ Note that this function must not be called asynchronously."
 		   ;; Use a marker, because the buffer may lose data
 		   ;; at the top if kom-max-buffer-size is set.
 		   (setq start (point-max-marker))
-		   (lyskom-format-insert "%#1n " text-stat)
+		   (lyskom-format-insert "%#2@%[%#1n%] " text-stat (list 'lyskom-text-start
+                                                                         (text-stat->text-no text-stat)))
                    (let ((mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
                          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
                          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
