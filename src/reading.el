@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.20 2004-07-18 14:58:05 byers Exp $
+;;;;; $Id: reading.el,v 44.21 2004-07-18 18:50:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.20 2004-07-18 14:58:05 byers Exp $\n"))
+	      "$Id: reading.el,v 44.21 2004-07-18 18:50:48 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -315,16 +315,19 @@ reasonable guess."
   (set-membership-list->size mship-list (1- (membership-list->size mship-list))))
 
 (defun lyskom-membership-list-move (mship-list node)
-  "Move the node NODE in MSHIP-LIST to its new position."
+  "Move the node NODE in MSHIP-LIST to its new position.
+Returns non-nil value if the membership actually moved."
   (let* ((prev (mship-list-node->prev node))
          (next (mship-list-node->next node))
          (mship (mship-list-node->data node))
+         (moved nil)
          (new-pos nil))
 
     (cond
      ((lyskom-membership-list-compare-next mship next t) ; Move right
       (setq prev nil)
       (while (lyskom-membership-list-compare-next mship next t)
+        (setq moved t)
         (setq new-pos (membership->position (mship-list-node->data next)))
         (set-membership->position (mship-list-node->data next) (1- new-pos))
         (setq prev next next (mship-list-node->next next)))
@@ -333,6 +336,7 @@ reasonable guess."
      ((lyskom-membership-list-compare-prev mship prev) ; Move left
       (setq next nil)
       (while (lyskom-membership-list-compare-prev mship prev)
+        (setq moved t)
         (setq new-pos (membership->position (mship-list-node->data prev)))
         (set-membership->position (mship-list-node->data prev) (1+ new-pos))
         (setq next prev prev (mship-list-node->prev prev)))
@@ -366,8 +370,9 @@ reasonable guess."
 
     (if next
         (set-mship-list-node->prev next node)
-      (set-membership-list->tail mship-list node)))
-  )
+      (set-membership-list->tail mship-list node))
+    moved
+  ))
 
 
 
@@ -420,15 +425,18 @@ reasonable guess."
   "Add MSHIP into lyskom-membership, sorted by priority."
   (lyskom-with-lyskom-buffer
     (lyskom-mship-cache-put mship)
-    (lp--update-buffer (membership->conf-no mship))))
+    (lp--update-buffer (membership->conf-no mship))
+    ))
 
 
 (defun lyskom-replace-membership (mship)
   "Replace the membership MSHIP."
   (lyskom-with-lyskom-buffer
     (let ((node (lyskom-mship-cache-get (membership->conf-no mship))))
+      (set-mship-list-node->data node mship)
       (if node
-          (lyskom-membership-list-move (lyskom-mship-cache-data) node)
+          (when (lyskom-membership-list-move (lyskom-mship-cache-data) node)
+            (lyskom-sort-to-do-list))
         (lyskom-mship-cache-put mship)))
     (lp--update-buffer (membership->conf-no mship))))
 

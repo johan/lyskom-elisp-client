@@ -1,5 +1,32 @@
 2004-07-18  David Byers  <byers@lysator.liu.se>
 
+	* reading.el (lyskom-membership-list-move): Return non-nil if
+	moved.
+	(lyskom-replace-membership): Sort the to-do list if the membership
+	moved.
+
+	* mship-edit.el (lp--update-buffer): Use regular save-excursion
+	around the complete function, not lp--save-excursion.
+
+	* reading.el (lyskom-replace-membership): Make it actually work.
+
+	* lyskom-rest.el (lyskom-binsearch-internal): Use elt, not aref,
+	so the thing can work on lists too -- searching for elt n in C is
+	a lot faster than linear search in lisp.
+	(lyskom-binsearch): Accept comparison function.
+	(lyskom-binsearch-internal): User-supplied comparison function.
+
+	* mship-edit.el (lp--mode-map): Added bindings for M-up and
+	M-down (same as M-p and M-n).
+	(lp--do-select-priority): Prompt for priority (defaults to
+	priority of current entry)
+	(lp--mode-map): M-# now bound to lp--deselect-priority
+	(lp--mode-map): M-w now bound to lp--select-region (my fingers
+	refuse to hit C-w when I don't want text to be deleted)
+	(lp--mode-map): Bound <home> and <end>
+	(lp--expand-entry): New function. Replaces lp--expand-all
+	(lp--contract-entry): New function. Replaces lp--contract-all
+
 	New membership list data structure:
 	* mship-edit.el (lyskom-change-membership-priority): New API for
 	lyskom-replace-membership.

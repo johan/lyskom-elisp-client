@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.240 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.241 2004-07-18 18:50:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.240 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.241 2004-07-18 18:50:48 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3438,28 +3438,42 @@ The list consists of text-nos."
 	  (setq found t)))
     found))
 
-      
-(defun lyskom-binsearch (num vector &optional first last+1)
-  "Return the index if NUM is a member of (present in) VECTOR.
-VECTOR has to be sorted with regard to <."
-  (lyskom-binsearch-internal num vector
-			     (or first 0)
-			     (or last+1 (length vector))))
 
-(defun lyskom-binsearch-internal (num vector first last+1)
+(defun lyskom-binsearch (el sequence &optional first last+1 fn)
+  "Return the index if EL is a member of (present in) SEQUENCE.
+SEQUENCE has to be sorted with regard to the comparison function.
+
+Optional arguments FIRST and LAST+1 should only be used if you know
+what they are for.
+
+Optional argument FN is the function to use for comparison. It should
+take arguments A and B and return non-nil if A is less than B. If not
+supplied, FN defaults to <."
+  (lyskom-binsearch-internal el sequence
+			     (or first 0)
+			     (or last+1 (length sequence))
+                             (or fn '<)))
+
+(defun lyskom-binsearch-internal (num vector first last+1 less-than)
   "Return the index if ELT is a member of the sorted vector VECTOR."
   (let* ((split (/ (+ first last+1) 2))
-	 (splitval (aref vector split)))
+	 (splitval (elt vector split)))
     (cond
      ;; Only one element
-     ((= (- last+1 first) 1) (if (= num splitval) split nil))
-     ;; This is not really necessary, but it _might_ speed it up..
-     ((= num splitval) split)
+     ((= (- last+1 first) 1) 
+      (if (not (or (funcall less-than num splitval) 
+                   (funcall less-than splitval num)))
+          split nil))
      ;; Search the left subtree
-     ((< num splitval)
-      (lyskom-binsearch-internal num vector first split))
+     ((funcall less-than num splitval)
+      (lyskom-binsearch-internal num vector first split less-than))
+
      ;; Search the left subtree
-     (t (lyskom-binsearch-internal num vector split last+1)))))
+     ((funcall less-than splitval num)
+      (lyskom-binsearch-internal num vector split last+1 less-than))
+
+     ;; Found
+     (t split))))
 
 (defvar lyskom-verified-read-predicate nil)
 (defun lyskom-verified-read-enter ()
