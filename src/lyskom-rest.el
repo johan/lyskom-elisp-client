@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.230 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.231 2004-02-29 18:02:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.230 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.231 2004-02-29 18:02:20 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2131,6 +2131,7 @@ Deferred insertions are not supported."
       (or formatted text)))
 
   (defun lyskom-format-plaintext (text text-stat)
+    (lyskom-format-plaintext-fonts text)
     (let ((tmp (if kom-text-properties
                    (lyskom-button-transform-text
                     (lyskom-fill-message text)
@@ -2166,6 +2167,20 @@ Deferred insertions are not supported."
               (latin-unity-remap-region start (min (point-max) (1+ end))
                                         gr nil t))))
       (error nil))))
+
+(defun lyskom-format-plaintext-fonts (text)
+  (let ((start 0))
+    (while (string-match "\\(_[^ \n\r\t_]\\([^_<>=%$\n]*[^ \n\r\t_]\\)?_\\)\\|\\(/[^ \n\r\t_]\\([^/<>=%$\n]*[^ \n\r\t_]\\)?/\\)\\|\\(\\*[^ \n\r\t_]\\([^*<>=%$\n]*[^ \n\r\t_]\\)?\\*\\)"
+                         text start)
+      (add-text-properties (1+ (match-beginning 0))
+                           (1- (match-end 0))
+                           `(face ,(cond ((match-beginning 1) 'underline)
+                                         ((match-beginning 3) 'italic)
+                                         ((match-beginning 5) 'bold)))
+                           text)
+      (setq start (1- (match-end 0))))))
+
+
 
 
 

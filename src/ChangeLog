@@ -1,5 +1,17 @@
 2004-02-29  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1282:
+	* services.el (initiate-query-read-texts): Call correct membership
+	parser. Use new names.
+	(initiate-get-membership): Ditto.
+	(initiate-get-part-of-membership): Ditto.
+
+	* parse.el (lyskom-parse-membership-10) New name.
+	(lyskom-parse-membership-list-10): New name.
+
+	Goofing off:
+	* lyskom-rest.el (lyskom-format-plaintext-fonts): New function.
+
 	* macros.el (lyskom-mime-content-type-get): Moved here from
 	mime.el.
 	(lyskom-mime-content-type): Moved here from mime.el.
