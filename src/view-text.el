@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.67 2002-06-12 18:29:33 byers Exp $
+;;;;; $Id: view-text.el,v 44.68 2002-06-12 18:37:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.67 2002-06-12 18:29:33 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.68 2002-06-12 18:37:44 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -234,16 +234,17 @@ Note that this function must not be called asynchronously."
                        (when (or (and (lyskom-viewing-noconversion) (not (eq tpw 'footer)))
                                  (eq tpw 'header)
                                  (and (eq tpw 'comment) (not kom-reading-puts-comments-in-pointers-last)))
-                         (lyskom-insert
-                          (or (lyskom-aux-item-call aux 'text-print aux text-stat)
-                              (lyskom-format 'text-header-aux-item
-                                             (lyskom-get-string
-                                              (or (car (lyskom-aux-item-definition-field aux 'text-name))
-                                                  'unknown-aux-item))
-                                             (aux-item->tag aux)
-                                             (aux-item->data aux)
-                                             (lyskom-aux-item-terminating-button aux text-stat))))
-                         (lyskom-insert "\n"))))
+                         (if (lyskom-aux-item-has-call aux 'text-print)
+                             (let ((text (lyskom-aux-item-call aux 'text-print aux text-stat)))
+                               (when text (lyskom-insert text) (lyskom-insert "\n")))
+                           (lyskom-format-insert 'text-header-aux-item
+                                                 (lyskom-get-string
+                                                  (or (car (lyskom-aux-item-definition-field aux 'text-name))
+                                                      'unknown-aux-item))
+                                                 (aux-item->tag aux)
+                                                 (aux-item->data aux)
+                                                 (lyskom-aux-item-terminating-button aux text-stat))
+                           (lyskom-insert "\n")))))
 
 
                      ;; If the text is marked, insert line saying so.
