@@ -1,3 +1,8 @@
+Administrat|rskommandona borde bara vara under a n{r man {r i 
+administrat|rsmode:
+	\verg} till normalmode, Ta bort loginmeddelande, S{tt
+	loginmeddelande, St{ng  av servern.
+
 * N{r man skickar ett egen meddelande s} skall det inte tuta.
 
 * Ordningen av argumenten till funktioner som markera, avmarkera,
