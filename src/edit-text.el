@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.3 1995-02-23 20:41:38 linus Exp $
+;;;;; $Id: edit-text.el,v 38.4 1995-10-23 11:55:29 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.3 1995-02-23 20:41:38 linus Exp $\n"))
+	      "$Id: edit-text.el,v 38.4 1995-10-23 11:55:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -81,7 +81,8 @@ Does lyskom-end-of-command."
 (defun lyskom-dispatch-edit-text (proc misc-list subject body
 				       &optional handler &rest data)
   "Same as lyskom-edit-text except that it doesn't call lyskom-end-of-command."
-  (let ((buffer (generate-new-buffer
+  (let ((buf (process-buffer proc))
+	(buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
@@ -114,9 +115,11 @@ Does lyskom-end-of-command."
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
     (make-local-variable 'lyskom-edit-return-to-configuration)
+    (make-local-variable 'kom-buffer)
     (setq lyskom-edit-handler handler)
     (setq lyskom-edit-handler-data data)
     (setq lyskom-edit-return-to-configuration config)
+    (setq kom-buffer buf)
     (lyskom-edit-insert-miscs misc-list subject body)
     (goto-char (point-min))
     (re-search-forward (concat "\\(" (regexp-quote lyskom-header-subject)

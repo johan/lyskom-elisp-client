@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.4 1995-03-01 17:55:59 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.5 1995-10-23 11:55:46 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.4 1995-03-01 17:55:59 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.5 1995-10-23 11:55:46 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -522,18 +522,16 @@ according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
   (initiate-pepsi 'main nil (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
-  (lyskom-insert
-   (concat (conf-stat->name conf-stat)
-	   (if (not kom-print-number-of-unread-on-entrance)
-	       "\n"
-	     (let ((num_unread
-		    (length (text-list->texts
+  (let ((num-unread (length (text-list->texts
 			     (read-info->text-list
 			      read-info)))))
-	       (if (= num_unread 1)
-		   (lyskom-get-string 'one-unread)
-		 (lyskom-format 'several-unread num_unread)))))))
-
+    (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
+			      'enter-conf
+			    (if (= num-unread 1)
+				'one-unread
+			      'several-unread))
+			  conf-stat
+			  num-unread)))
   
 
 (defun lyskom-put-back-on-to-do-list (read-list low-priority)
@@ -729,6 +727,9 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   "Insert STRING just before the prompt of if no prompt then just buffers.
 If prompt on screen then do the scroll if necessary.
 The strings buffered are printed before the prompt by lyskom-print-prompt."
+  (lyskom-do-insert-before-prompt string))
+
+(defun lyskom-do-insert-before-prompt (string)
   (cond
    ((and lyskom-executing-command
 	 (not lyskom-is-waiting)
@@ -736,14 +737,16 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
     ;; Don't insert the string until the current command is finished.
     (if (null lyskom-to-be-printed-before-prompt)
 	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
-    (lyskom-queue-enter lyskom-to-be-printed-before-prompt string))
+    (lyskom-queue-enter lyskom-to-be-printed-before-prompt 
+			(list string)))
    (t
     (goto-char (point-max))
     (let* ((window (get-buffer-window (current-buffer)))
 	   (pv (and window
 		    (pos-visible-in-window-p (point) window))))
       (beginning-of-line)
-      (let ((buffer-read-only nil))
+      (let ((buffer-read-only nil)
+	    (start (point)))
 	(insert (if kom-emacs-knows-iso-8859-1
 		    string
 		  (iso-8859-1-to-swascii string))))
@@ -786,129 +789,393 @@ Args: FORMAT-STRING &rest ARGS"
 ;;; ================================================================
 ;;;                  Extended string formatting
 
-;;; Author: Inge Wallin
+;;; Author: David Byers
+;;; Original code: Inge Wallin
 
+
+(defvar lyskom-format-format
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxc]\\)"
+  "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
  "Find the string corresponding to ATOM and insert it into the LysKOM buffer." 
   (lyskom-insert (lyskom-get-string atom)))
 
-
-(defun lyskom-format-insert (format-atom &rest args)
-  "Format the string FORMAT-ATOM and insert it into the LysKOM buffer.
-Use lyskom-format to format the string.
-Args: FORMAT-ATOM &rest ARGS"
-  (lyskom-insert (apply 'lyskom-format format-atom args)))
-
-
-(defun lyskom-format (format-atom &rest args)
-  "Find FORMAT-ATOM in the list of strings in LysKOM and call lyskom-do-format.
-Args: FORMAT-ATOM &rest ARGS."
-  (apply 'lyskom-do-format (lyskom-get-string format-atom) args))
-
-
 (defun lyskom-get-string (atom)
   "Get the string corresponding to ATOM and return it."
-  (let ((format-pair (assoc atom lyskom-strings)))
-    (if (null format-pair)
-	(signal 'lyskom-internal-error 
-		(list 'lyskom-get-string
-		      (list atom ": string not found")))
-      (cdr format-pair))))
+  (if (stringp atom)
+      atom
+    (let ((format-pair (assoc atom lyskom-strings)))
+      (if (null format-pair)
+	  (signal 'lyskom-internal-error 
+		  (list 'lyskom-get-string
+			(list atom ": string not found")))
+	(cdr format-pair)))))
 
 
-(defun lyskom-do-format (format-string &rest args)
-  (let ((format-length (length format-string))
-	(start 0)
-	(parts nil)
-	(length 0)
-	(arg-no nil)
-	(format-letter nil))
-    (while (< start format-length)
-      (if (null (string-match "%\\(-?[0-9]+\\)?#\\([0-9]+\\)\\([sdoxc]\\)"
-			       format-string start))
-	  (setq parts (cons (substring format-string start)
-			    parts)
-		start format-length)
-	(setq parts (cons (substring format-string start (match-beginning 0))
-			  parts)
-	      length (if (match-beginning 1)
-			 (string-to-int (substring format-string
-						   (match-beginning 1)
-						   (match-end 1)))
-		       nil)
-	      arg-no (if (match-beginning 2)
-			 (string-to-int (substring format-string
-						   (match-beginning 2)
-						   (match-end 2)))
-		       (signal 'lyskom-internal-error
-			       (list 'lyskom-format format-string)))
-	      format-letter (if (match-beginning 3)
-				(aref format-string 
-				      (match-beginning 3))
-			      (signal 'lyskom-internal-error
-				      (list 'lyskom-format format-string)))
-	      start (match-end 0))
-         (setq parts (lyskom-format-help parts length 
-					 arg-no args format-letter
-					 (if (and (match-beginning 1)
-						  (eq (aref format-string
-							    (match-beginning 1))
-						      ?0))
-					     ?0
-					   ? )))))
-    (apply 'concat (reverse parts))))
+(defun lyskom-format (format-string &rest argl)
+  (lyskom-do-format format-string argl))
+
+(defun lyskom-format-insert (format-string &rest argl)
+  "Format and insert a string according to FORMAT-STRING"
+  (lyskom-insert (lyskom-do-format format-string argl)))
+
+(defun lyskom-format-insert-before-prompt (format-string &rest argl)
+  (lyskom-insert-before-prompt (lyskom-do-format format-string argl)))
 
 
-(defun lyskom-format-help (parts length arg-no args format-letter pad-letter)
-  (let ((args-length (length args))
-	(arg nil)
-	(result nil)
-	(abs-length (cond ((null length) nil)
-			  ((< length 0) (- 0 length))
-			  (t length))))
-    (if (< args-length arg-no)
-	(signal 'lyskom-internal-error (list 'lyskom-format
-					     ": too few arguments"))
-      (setq arg (nth (1- arg-no) args))
-      (cond
-       ((eq format-letter ?s)
-	(setq result (cond ((stringp arg) arg)
-			   ((symbolp arg) (symbol-name arg))
-			   (t (signal 'lyskom-internal-error
-				      (list 'lyskom-format
-					    ": argument error"))))))
-       ((or (eq format-letter ?d)
-	    (eq format-letter ?o)
-	    (eq format-letter ?x))
-	(setq result (if (integerp arg)
-			 (format (format "%%%c" format-letter)
-				 arg)
-		       (signal 'lyskom-internal-error
-			       (list 'lyskom-format
-				     ": argument error")))))
-       ((eq format-letter ?c)
-	(setq result (if (integerp arg)
-			 (char-to-string arg)
-		       (signal 'lyskom-internal-error
-			       (list 'lyskom-format
-				     ": argument error")))))
-       ((eq format-letter ?%)
-	(setq result "%"))
-       (t (signal 'lyskom-internal-error
-		  (list 'lyskom-format-help format-letter))))
+(defun lyskom-do-format (format-string &optional argl)
+  (let ((fmt (cond ((stringp format-string) format-string)
+		   ((symbolp format-string) (lyskom-get-string 
+					     format-string))))
+	(state nil))
+    (if (null fmt)
+        (signal 'lyskom-internal-error (list 'lyskom-format-insert
+                                             ": bad format string"))
+      (save-excursion
+        (if (boundp 'kom-buffer)
+            (set-buffer kom-buffer))
+        (setq state (lyskom-format-aux (make-format-state
+                                        fmt
+                                        0
+                                        argl
+                                        "")))))
+    (format-state->result state)))
 
-      ; Pad the result to appropriate length
-      (cons (cond ((or (null length)
-		       (< abs-length (length result)))
-		   result)
-		  ((< length 0)		; left align
-		   (substring (concat result (make-string abs-length ? ))
-			      0 abs-length))
-		  (t			; right align
-		   (substring (concat (make-string length pad-letter) result)
-			      (- 0 length))))
-	    parts))))
+
+
+
+
+(defun lyskom-format-aux (format-state)
+  (let ((format-length (length (format-state->format-string format-state)))
+        (arg-no nil)
+        (pad-length nil)
+        (format-letter nil)
+        (colon-flag nil)
+        (equals-flag nil)
+        (abort-format nil))
+
+    ;;
+    ;;  Eat the format string bit by bit
+    ;;
+
+    (while (and (not abort-format)
+                (< (format-state->start format-state)
+                   format-length))
+
+      ;;
+      ;;    Look for a format letter. If there is none, finish up,
+      ;;    otherwise handle each letter separately
+      ;;
+
+      (if (null (string-match lyskom-format-format
+                              (format-state->format-string format-state)
+                              (format-state->start format-state)))
+          (progn
+            (set-format-state->result 
+             format-state
+             (concat (format-state->result format-state)
+                     (substring (format-state->format-string format-state)
+                                (format-state->start format-state))))
+            (set-format-state->start format-state
+                                     (length (format-state->format-string
+                                              format-state))))
+
+        ;;
+        ;; A format letter has been found
+        ;;
+
+        (set-format-state->result 
+         format-state
+         (concat (format-state->result format-state)
+                 (substring (format-state->format-string format-state)
+                            (format-state->start format-state)
+                            (match-beginning 0))))
+
+        (set-format-state->start format-state
+                                 (match-end 0))
+
+	(setq equals-flag (match-beginning 1)
+          pad-length (if (match-beginning 2)
+                         (string-to-int (substring 
+                                         (format-state->format-string
+                                          format-state)
+                                         (match-beginning 2)
+                                         (match-end 2)))
+                       nil)
+	      arg-no (if (match-beginning 4)
+                     (string-to-int (substring (format-state->format-string
+                                                format-state)
+                                               (match-beginning 4)
+                                               (match-end 4)))
+                   nil)
+	      colon-flag (match-beginning 5)
+	      format-letter (if (match-beginning 6)
+                            (aref (format-state->format-string 
+                                   format-state)
+                                  (match-beginning 6))
+                          (signal 'lyskom-internal-error
+                                  (list 'lyskom-format-aux 
+                                        (format-state->format-string
+                                         format-state)))))
+
+    ;;
+    ;;  If the format letter is an end-of-group letter, abort
+    ;;  formatting and return to the caller.
+    ;;
+
+	(if (= ?\] format-letter)
+	    (progn 
+	      (setq abort-format t)
+	      (set-format-state->start format-state (match-end 0)))
+
+	  (setq format-state 
+            (lyskom-format-aux-help 
+             format-state
+             pad-length
+             arg-no
+             format-letter
+             equals-flag
+             colon-flag
+             (if (and (match-beginning 2)
+                      (eq (aref (format-state->format-string format-state)
+                                (match-beginning 2))
+                          ?0))
+                 ?0
+               ? )))))))
+  (lyskom-tweak-format-state format-state))
+
+
+(defun lyskom-format-aux-help (format-state
+                               pad-length
+                               arg-no
+                               format-letter
+                               equals-flag
+                               colon-flag
+                               pad-letter)
+  (let ((arg nil)
+        (result nil)
+        (propl nil)
+        (prop-adjust-start 0)
+        (prop-adjust-end 0)
+        (oldpos (length (format-state->result format-state)))
+        (abs-length (cond ((null pad-length) nil)
+                          ((< pad-length 0) (- 0 pad-length))
+                          (t pad-length))))
+    (if (and arg-no 
+             (< (format-state->args-length format-state) arg-no))
+        (signal 'lyskom-internal-error (list 'lyskom-format
+                                             ": too few arguments")))
+    (if arg-no
+        (setq arg (nth (1- arg-no) (format-state->args format-state))))
+    
+    (if (format-props-p arg)        
+        (setq propl (format-props->propl arg)
+              arg (format-props->arg arg)))
+    
+    
+    (cond
+     ;;
+     ;;  Format a string or symbol by simply inserting it into the
+     ;;  result list
+     ;;
+     ((= format-letter ?s)
+      (setq result (cond ((stringp arg) arg)
+                         ((symbolp arg) (symbol-name arg))
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error"))))))
+     ;;
+     ;;  Format a number by conferting it to a string and inserting
+     ;;  it into the result list
+     ;;
+     ((or (= format-letter ?d)
+          (= format-letter ?o)
+          (= format-letter ?x))
+      (setq result (if (integerp arg)
+                       (format (format "%%%c" format-letter)
+                               arg)
+                     (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error")))))
+     ;;
+     ;;  Format a character by converting it to a string and inserting
+     ;;  it into the result list
+     ;;
+     ((= format-letter ?c)
+      (setq result (if (integerp arg)
+                       (char-to-string arg)
+                     (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error")))))
+     ;;
+     ;;  Format a literal percent character by inserting a string
+     ;;  containing it into the result list
+     ;;
+     ((= format-letter ?%)
+      (setq result "%")) 
+     
+     ;;
+     ;;  Format a text property array indicator by retreiving the
+     ;;  properties from the argument list and adding a start of 
+     ;;  new properties to the format state
+     ;;
+     ((= format-letter ?@)
+      (set-format-state->delayed-propl
+       format-state
+       (cons (cons (length (format-state->result format-state))
+                   arg)
+             (format-state->delayed-propl format-state))))
+     ;;
+     ;;  Format a subformat list by recursively formatting the contents
+     ;;  of the list, augmenting the result and format state
+     ;;
+     ((= format-letter ?\[)
+      (setq format-state (lyskom-format-aux format-state)
+            result nil))
+     ;;
+     ;;  Format a conference or person name by retreiving information
+     ;;  about the conference or person and inserting it as a button
+     ;;  (unless the colon flag is set)
+     ;;
+     ((or (= format-letter ?M)
+          (= format-letter ?P))
+      (setq result
+            (cond ((stringp arg) arg)
+                  ((integerp arg)
+                   (let ((tmp (blocking-do 'get-conf-stat arg)))
+                     (if (null tmp)
+                         (progn
+                           (setq colon-flag t)
+                           (lyskom-format (if (= format-letter ?P)
+                                              'person-does-not-exist
+                                            'conference-does-not-exist)
+                                          arg))
+                       (setq arg tmp)
+                       (conf-stat->name arg))))
+                  ((lyskom-conf-stat-p arg) (conf-stat->name arg))
+                  (t (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error")))))
+      (if (and (not colon-flag)
+               (lyskom-conf-stat-p arg))
+          (setq propl 
+                (append
+                 (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)
+                                        arg)
+                 propl))))
+     ;;
+     ;;  Format a conference or person number the same way as names,
+     ;;  but insert the number rather than the name
+     ;;
+     ((or (= format-letter ?m)
+          (= format-letter ?p))
+      (setq result
+            (cond ((integerp arg) 
+                   (let ((tmp (blocking-do 'get-conf-stat arg)))
+                     (if (null tmp)
+                         (int-to-string arg)
+                       (setq arg tmp)
+                       (int-to-string arg))))
+                  ((lyskom-conf-stat-p arg) 
+                   (int-to-string (conf-stat->conf-no arg)))
+                  (t (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error")))))
+      (if (not colon-flag)
+          (setq propl 
+                (append 
+                 (lyskom-default-button (if (= format-letter ?p) 'pers 'conf)
+                                        arg)
+                 propl))))
+     ;;
+     ;;  Format an integer or text-stat as a text number by adding the
+     ;;  by inserting a button (unless the colon flag is set)
+     ;;
+     ((= format-letter ?n)
+      (setq result
+            (cond ((integerp arg) (int-to-string arg))
+                  ((lyskom-text-stat-p arg) (int-to-string
+                                             (text-stat->text-no arg)))
+                  (t (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error")))))
+      (if (not colon-flag)
+          (setq propl
+                (append (lyskom-default-button 'text arg) propl))))
+     ;;
+     ;;  Format a subject line by adding the subject face to the text
+     ;;  properties and the subject to the result list
+     ;;
+     ((= format-letter ?r)
+      (setq result (cond ((stringp arg) arg)
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error")))))
+      (if (not colon-flag)
+          (setq propl (append (list 'face 'kom-subject-face) propl))))
+     ;;
+     ;;  Format a LysKOM text body. Currently this does nothing. It
+     ;;  should parse the text for buttons
+     ;;
+     ((= format-letter ?t)
+      (setq result
+            (cond ((stringp arg) (lyskom-button-transform-text arg))
+                  ((lyskom-text-p arg) 
+		   (lyskom-button-transform-text (text->text-mass arg)))
+                  (t (signal 'lyskom-internal-error
+                             (list 'lyskom-format
+                                   ": argument error"))))))
+     
+     (t (signal 'lyskom-internal-error
+                (list 'lyskom-format-help format-letter))))
+    
+    ;;
+    ;; Pad the result to the appropriate length
+    ;; Fix flags so text props go in the right places anyway
+    ;;
+    
+    (cond ((or (null pad-length)
+               (null result)) nil)
+          ((> abs-length (length result))
+           (let ((padstring (make-string (- abs-length (length result))
+                                         pad-letter)))
+             (if (< pad-length 0)	; LEFT justify
+                 (setq result (concat result padstring)
+                       prop-adjust-end (- (- abs-length (length result))))
+               (setq result (concat padstring result)
+                     prop-adjust-start (- abs-length (length result))))))
+          ((and equals-flag
+                (< abs-length (length result)))
+           (setq result (substring result 0 abs-length))))
+    
+    (if result
+        (progn
+          (set-format-state->result 
+           format-state
+           (concat (format-state->result format-state)
+                   result))))
+    (if (and propl kom-text-properties)
+        (add-text-properties
+         (+ oldpos prop-adjust-start)
+         (+ (length (format-state->result format-state)) prop-adjust-end)
+         propl
+         (format-state->result format-state))))
+  format-state)
+
+
+
+
+(defun lyskom-tweak-format-state (format-state) 
+  (let ((dp (format-state->delayed-propl format-state)))
+    (while dp
+      (add-text-properties (car dp)
+                           (length (format-state->result format-state))
+                           (cdr dp)
+                           (format-state->result format-state))
+      (setq dp (cdr dp)))
+    (set-format-state->delayed-propl format-state nil))
+  format-state)
 
 
 ;;; ================================================================
@@ -1051,10 +1318,13 @@ lyskom-is-waiting nil.
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
   (message "")
-  (while (and lyskom-to-be-printed-before-prompt
-	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-    (lyskom-insert (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-    (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
+  (let ((start 0))
+    (while (and lyskom-to-be-printed-before-prompt
+		(lyskom-queue->first lyskom-to-be-printed-before-prompt))
+      (setq start (point-max))
+      (lyskom-insert (car (lyskom-queue->first 
+			   lyskom-to-be-printed-before-prompt)))
+      (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt)))
   (setq lyskom-executing-command nil)
   (setq lyskom-no-prompt t)
   (lyskom-scroll)
@@ -1631,7 +1901,7 @@ then a newline is printed after the name instead."
        ((null conf-stat)
 	(lyskom-insert (lyskom-fix-str format
 				       (if (not is-person)
-					   (lyskom-format 'conf-does-not-exist
+					   (lyskom-format 'conference-does-not-exist
 							  conf-no)
 					 (lyskom-format 'person-does-not-exist
 							conf-no)))))
@@ -1640,7 +1910,7 @@ then a newline is printed after the name instead."
     (cond
      ((null conf-stat)
       (lyskom-insert (if (not is-person)
-			 (lyskom-format 'conf-does-not-exist
+			 (lyskom-format 'conference-does-not-exist
 					conf-no)
 		       (lyskom-format 'person-does-not-exist
 				      conf-no)))

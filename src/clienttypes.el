@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 38.0 1994-01-06 01:56:38 linus Exp $
+;;;;; $Id: clienttypes.el,v 38.1 1995-10-23 11:55:18 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 38.0 1994-01-06 01:56:38 linus Exp $\n"))
+	      "$Id: clienttypes.el,v 38.1 1995-10-23 11:55:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -491,5 +491,73 @@ The element last pushed is first in the list."
   "Return t if OBJECT is a who-buffer-info."
   (eq (car-safe object) 'WHO-BUFFER-INFO))
 
+
+;;; ================================================================
+;;;			format-props
+
+(defun make-format-props (arg propl)
+  (cons 'format-props (vector arg propl)))
+
+(defsubst format-props-p (arg)
+  (eq 'format-props (car-safe arg)))
+
+(defsubst format-props->arg (arg)
+  (elt (cdr arg) 0))
+
+(defsubst format-props->propl (arg)
+  (elt (cdr arg) 1))
+
+;;;
+;;;	Help functions
+;;;
+
+
+
+;;; ================================================================
+;;;			format-state
+
+(defun make-format-state (format-string
+			  start
+			  argl
+              result)
+  (cons 'format-state
+	(vector format-string start argl (length argl) result nil)))
+
+(defsubst format-state-p (arg)
+  (eq 'format-state (car-safe arg)))
+
+(defsubst format-state->format-string (arg)
+  (elt (cdr arg) 0))
+
+(defsubst set-format-state->format-string (arg str)
+  (aset (cdr arg) 0 str))
+
+(defsubst format-state->start (arg)
+  (elt (cdr arg) 1))
+
+(defsubst set-format-state->start (arg pos)
+  (aset (cdr arg) 1 pos))
+
+(defsubst format-state->args (arg)
+  (elt (cdr arg) 2))
+
+(defsubst set-format-state->args (arg argl)
+  (aset (cdr arg) 2 argl)
+  (aset (cdr arg) 3 (length argl)))
+
+(defsubst format-state->args-length (arg)
+  (elt (cdr arg) 3))
+
+(defsubst format-state->result (arg)
+  (elt (cdr arg) 4))
+
+(defsubst set-format-state->result (arg output-list)
+  (aset (cdr arg) 4 output-list))
+
+(defsubst format-state->delayed-propl (arg)
+  (elt (cdr arg) 5))
+
+(defsubst set-format-state->delayed-propl (arg propl)
+  (aset (cdr arg) 5 propl))
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.2 1995-03-04 14:16:06 byers Exp $
+;;;;; $Id: commands1.el,v 38.3 1995-10-23 11:55:22 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.2 1995-03-04 14:16:06 byers Exp $\n"))
+	      "$Id: commands1.el,v 38.3 1995-10-23 11:55:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -91,7 +91,7 @@
 		    (lyskom-format-insert 'conf-is-deleted
 					  (conf-stat->name conf-stat))
 		  (lyskom-format-insert 'you-could-not-delete
-					(conf-stat->name conf-stat)))
+					conf-stat))
 	      (lyskom-insert-string 'deletion-not-confirmed))
 	  (lyskom-insert-string 'somebody-else-deleted-that-conf)))
     (lyskom-end-of-command)))
@@ -138,11 +138,11 @@
 	  (if (null conf-stat)
 	      (lyskom-insert-string 'somebody-deleted-that-conf)
 	    (lyskom-format-insert 'review-presentation-of
-				  (conf-stat->name conf-stat))
+				  conf-stat)
 	    (if (/= (conf-stat->presentation conf-stat) 0)
 		(lyskom-view-text (conf-stat->presentation conf-stat))
 	      (lyskom-format-insert 'has-no-presentation
-				    (conf-stat->name conf-stat)))))
+				    conf-stat))))
       (if end-of-command-taken-care-of
 	  nil
 	(lyskom-end-of-command)))))
@@ -191,7 +191,8 @@ text is shown and a REVIEW list is built to shown the other ones."
 			     misc-infos))))
 	(if text-nos
 	    (progn
-	      (lyskom-format-insert 'review-text-no (car text-nos))
+	      (lyskom-format-insert 'review-text-no 
+				    (car text-nos))
 	      (if (cdr text-nos)
 		  (read-list-enter-read-info
 		   (lyskom-create-read-info
@@ -234,7 +235,8 @@ as TYPE. If no such misc-info, return NIL"
 		  t
 		(progn
 		  (recenter 0)
-		  (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
+		  (lyskom-format-insert 'has-motd 
+					conf-stat)
 		  (lyskom-view-text (conf-stat->msg-of-day conf-stat))
 		  (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
 		      t
@@ -354,10 +356,10 @@ Returns t if it was possible, otherwise nil."
       (if (= (conf-stat->conf-no pers-conf-stat)
 	     lyskom-pers-no)
 	  (lyskom-format-insert 'member-in-conf
-				(conf-stat->name conf-conf-stat))
+				conf-conf-stat)
 	(lyskom-format-insert 'add-member-in
-			      (conf-stat->name pers-conf-stat)
-			      (conf-stat->name conf-conf-stat)))
+			      pers-conf-stat
+			      conf-conf-stat))
       (blocking-do 'add-member 
 		   (conf-stat->conf-no conf-conf-stat)
 		   (conf-stat->conf-no pers-conf-stat)
@@ -392,10 +394,10 @@ Returns t if it was possible, otherwise nil."
   "Suggests that we contact the supervisor to become a member."
   (if (not supervisorconf)
       (lyskom-format-insert 'cant-find-supervisor
-			    (conf-stat->name conf-conf-stat))
+			    conf-conf-stat)
     (lyskom-format-insert 'is-read-protected-contact-supervisor
-			  (conf-stat->name conf-conf-stat)
-			  (conf-stat->name supervisorconf))))
+			  conf-conf-stat
+			  supervisorconf)))
 
 
 
@@ -508,29 +510,29 @@ user so instead."
 	 (if (= (conf-stat->conf-no pers-conf-stat)
 		lyskom-pers-no)
 	     (lyskom-format-insert 'unsubscribe-to
-				   (conf-stat->name conf-conf-stat))
+				   conf-conf-stat)
 	   (lyskom-format-insert 'exclude-from
-				 (conf-stat->name pers-conf-stat)
-				 (conf-stat->name conf-conf-stat)))
-	 (initiate-sub-member 'main 'lyskom-sub-member-answer
-			      (conf-stat->conf-no conf-conf-stat) 
-			      (conf-stat->conf-no pers-conf-stat)
-			      conf-conf-stat pers-conf-stat)
-	 (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
-	     (initiate-get-membership 'main 'lyskom-set-membership
-				      (conf-stat->conf-no
-				       pers-conf-stat))))))
+				 pers-conf-stat
+				 conf-conf-stat)
+	   (initiate-sub-member 'main 'lyskom-sub-member-answer
+				(conf-stat->conf-no conf-conf-stat) 
+				(conf-stat->conf-no pers-conf-stat)
+				conf-conf-stat pers-conf-stat)
+	   (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
+	       (initiate-get-membership 'main 'lyskom-set-membership
+					(conf-stat->conf-no
+					 pers-conf-stat)))))))
 
 
 (defun lyskom-sub-member-answer (answer conf-conf-stat pers-conf-stat)
   "Handles the answer after the unsubscribe call to the server."
   (if (not answer)
-      (lyskom-insert
-       (lyskom-format 'unsubscribe-failed
-	       (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
-		   (lyskom-get-string 'You)
-		 (conf-stat->name pers-conf-stat))
-	       (conf-stat->name conf-conf-stat)))
+      (lyskom-format-insert
+       'unsubscribe-failed
+       (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
+	   (lyskom-get-string 'You)
+	 pers-conf-stat)
+       conf-conf-stat)
     (lyskom-insert-string 'done)
     (if (and (= (conf-stat->conf-no pers-conf-stat)
 		lyskom-pers-no)
@@ -579,12 +581,16 @@ user so instead."
 Add the person creating and execute lyskom-end-of-command."
   (if (null conf-no)
       (lyskom-format-insert 'could-not-create-conf
-			    conf-name
+			     conf-name
 			    lyskom-errno)
     (progn
-      (lyskom-format-insert 'created-conf-no-name 
-			    conf-no
-			    conf-name)
+      (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
+	(lyskom-format-insert 'created-conf-no-name 
+			      (or conf-stat conf-no)
+			      (or conf-stat conf-name)
+			      (if conf-stat
+				  (lyskom-default-button 'conf conf-stat)
+				nil)))
       (lyskom-scroll)
       (lyskom-add-member-2 conf-no lyskom-pers-no
 			   'lyskom-create-conf-handler-2 conf-no conf-name))))
@@ -1012,7 +1018,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
      (conf-stat->conf-no conf-stat)))
    (t
     (lyskom-format-insert 'not-supervisor-for
-			  (conf-stat->name conf-stat)))))
+			  conf-stat))))
 
 
    
@@ -1035,12 +1041,12 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 	 ((null conf-stat)
 	  (lyskom-insert-string 'cant-get-conf-stat))
 	 ((or lyskom-is-administrator
-	      (lyskom-member-p (conf-stat->supervisor conf)))
+	      (lyskom-member-p (conf-stat->supervisor conf-stat)))
 	  ;; This works like a dispatch. No error handling.
-	  (lyskom-set-conf-motd 0 (conf-stat->conf-no conf)))
+	  (lyskom-set-conf-motd 0 (conf-stat->conf-no conf-stat)))
 	 (t
 	  (lyskom-format-insert 'not-supervisor-for
-				(conf-stat->name conf)))))
+				conf-stat))))
     (lyskom-end-of-command)))
   
 
@@ -1067,17 +1073,17 @@ back on lyskom-to-do-list."
 	(let ((membership (lyskom-member-p
 			   (conf-stat->conf-no conf))))
 	  (lyskom-format-insert 'go-to-conf
-				(conf-stat->name conf))
+				conf)
 	  (cond
 	   (membership
 	    (lyskom-do-go-to-conf conf membership))
 	   ((conf-type->letterbox (conf-stat->conf-type conf))
 	    (lyskom-format-insert 'cant-go-to-his-mailbox
-				  (conf-stat->name conf)))
+				  conf))
 	   (t
 	    (progn
 	      (lyskom-format-insert 'not-member-of-conf
-				    (conf-stat->name conf))
+				    conf)
 	      (lyskom-scroll)
 	      (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
 		  (if (lyskom-add-member-2 (conf-stat->conf-no conf)
@@ -1137,7 +1143,8 @@ Args: CONF-STAT MEMBERSHIP"
   "Go to a conference with no unseen messages. Args: CONF-STAT."
   (blocking-do 'pepsi (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
-  (lyskom-format-insert 'conf-all-read (conf-stat->name conf-stat)))
+  (lyskom-format-insert 'conf-all-read 
+			conf-stat))
 
 
 
@@ -1192,10 +1199,12 @@ Args: CONF-STAT MEMBERSHIP"
 
 (defun lyskom-list-pers-print (conf-stat)
   "Print name of the person in CONF-STAT for kom-list-persons."
-   (if conf-stat
-       (lyskom-insert (concat (format "%4d " (conf-stat->conf-no conf-stat))
-			      (conf-stat->name conf-stat)
-			      "\n"))))
+  (if conf-stat
+      (lyskom-format-insert "%[%#1@%4#2:p %#3:P%]\n"
+			    (lyskom-default-button 'conf conf-stat)
+			    conf-stat
+			    conf-stat)))
+
 
 
 ;;; ================================================================
@@ -1223,14 +1232,13 @@ Those that you are not a member in will be marked with an asterisk."
 If you are not member in the conference it will be flagged with an asterisk."
   (if (not conf-stat)
       nil
-    (lyskom-insert (concat (format "%4d %c "
-				   (conf-stat->conf-no conf-stat)
-				   (if (lyskom-member-p
-					(conf-stat->conf-no conf-stat))
-				       32
-				     ?*))
-			   (conf-stat->name conf-stat)
-			   "\n"))))
+    (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4M%]\n"
+			  (lyskom-default-button 'conf conf-stat)
+			  conf-stat
+			  (if (lyskom-member-p (conf-stat->conf-no conf-stat))
+			      32 ?*)
+			  conf-stat)))
+
 
 ;;; ================================================================
 ;;;                 [ndra namn - Change name
@@ -1253,13 +1261,14 @@ If you are not member in the conference it will be flagged with an asterisk."
 	    (lyskom-insert-string 'no-such-conf-or-pers)
 	  (let (name)
 	    (lyskom-format-insert 'about-to-change-name-from
-				  (conf-stat->name conf-stat))
+				  conf-stat)
 	    (lyskom-scroll)
 	    (lyskom-tell-internat 'kom-tell-change-name)
 	    (setq name (lyskom-read-string (lyskom-get-string 'new-name)
 					   (conf-stat->name conf-stat)))
 	    (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
-		(lyskom-format-insert 'change-name-done name)
+		(lyskom-format-insert 'change-name-done name
+				      (lyskom-default-button 'conf conf-stat))
 	      (lyskom-format-insert 'change-name-nope name 
 				    (lyskom-get-error-text lyskom-errno)
 				    lyskom-errno)))))
@@ -1288,17 +1297,17 @@ If you are not member in the conference it will be flagged with an asterisk."
 			     (lyskom-get-string 'new-supervisor)
 			     'all)))
 	    (lyskom-format-insert 'change-supervisor-from-to
-				  (conf-stat->name supervisee)
-				  (conf-stat->name supervisor))
+				  supervisee
+				  supervisor)
 	    (if (blocking-do 'set-supervisor 
 			     (conf-stat->conf-no supervisee) 
 			     (conf-stat->conf-no supervisor))
 		(progn
 		  (lyskom-insert-string 'done)
 		  (cache-del-conf-stat (conf-stat->conf-no supervisee)))
-	      (lyskom-insert
-	       (lyskom-format 'change-supervisor-nope
-			      (conf-stat->name supervisee)))))))
+	      (lyskom-format-insert
+	       'change-supervisor-nope
+	       supervisee)))))
     (lyskom-end-of-command)))
 
 
@@ -1346,8 +1355,10 @@ MARK:   A number that is used as the mark."
 		  (lyskom-read-num-range
 		   1 255 (lyskom-get-string 'what-mark) t))))
     (if (equal mark 0)
-	(lyskom-format-insert 'unmarking-textno text-no)
-      (lyskom-format-insert 'marking-textno text-no))
+	(lyskom-format-insert 'unmarking-textno 
+			      text-no)
+      (lyskom-format-insert 'marking-textno 
+			      text-no))
     
     (if (blocking-do 'mark-text text-no mark)
 	(progn
@@ -1525,19 +1536,19 @@ MY-SESSION-NO is the session number of the running session.
 		       insert-function
 		     'lyskom-insert)))
     (funcall insertfun
-	     (lyskom-return-who-info-line 
+	     (lyskom-return-who-info-line-as-state 
 	      (format "%4d%s" 
 		      (who-info->connection who-info)
 		      (if (= my-session-no (who-info->connection who-info))
 			  "*"
 			" "))
-	      (conf-stat->name conf-stat)
+	      conf-stat
 	      (cond
-	       ((conf-stat->name working))
+	       ((conf-stat->name working) working)
 	       (t (lyskom-get-string 'not-present-anywhere)))))
     (if kom-show-where-and-what
 	(funcall insertfun
-		 (lyskom-return-who-info-line 
+		 (lyskom-return-who-info-line-as-state
 		  "     "
 		  (lyskom-return-username who-info)
 		  (concat "(" 
@@ -1553,6 +1564,31 @@ MY-SESSION-NO is the session number of the running session.
 		  "                                                        ")))
   (substring str 0 len))
 
+
+(defun lyskom-return-who-info-line-as-state (prefix arg1 arg2)
+  "Return the format state appropriate for the arguments and
+the window width."
+  (let ((formatstring
+	 (concat prefix
+		 "%=-"
+		 (int-to-string (/ (* 37 (- (lyskom-window-width) 7)) 73))
+		 (if (lyskom-conf-stat-p arg1) 
+		     (if (conf-type->letterbox
+			  (conf-stat->conf-type arg1))
+			 "#1P"
+		       "#1M")
+		   "#1s")
+		 " %=-"
+		 (int-to-string (/ (* 37 (- (lyskom-window-width) 8)) 73))
+		 (if (lyskom-conf-stat-p arg2) 
+		     (if (conf-type->letterbox
+			  (conf-stat->conf-type arg2))
+			 "#2P"
+		       "#2M")
+		   "#2s")
+		 "\n")))
+    (lyskom-format formatstring arg1 arg2)))
+    
 
 (defun lyskom-return-who-info-line (prefix string1 string2)
   "Return a formatted line (with reference to the current window width."
@@ -1748,7 +1784,7 @@ DEFAULT: The default conference to be prompted for."
 	(lyskom-format-insert (if (eq do-add 'copy)
 				  'adding-name-as-copy
 				'adding-name-as-recipient)
-			      (conf-stat->name conf-stat)
+			      conf-stat
 			      text-no)
 	(initiate-add-recipient 
 	 'main 'lyskom-handle-command-answer
@@ -1759,7 +1795,7 @@ DEFAULT: The default conference to be prompted for."
 	    (setq lyskom-last-added-ccrcpt (conf-stat->conf-no conf-stat))
 	  (setq lyskom-last-added-rcpt (conf-stat->conf-no conf-stat))))
     (lyskom-format-insert 'remove-name-as-recipient
-			  (conf-stat->name conf-stat)
+			  conf-stat
 			  text-no)
     (initiate-sub-recipient 
      'main 'lyskom-handle-command-answer
@@ -1814,8 +1850,12 @@ DO-ADD: NIL if a comment should be subtracted.
 	       nil
 	     lyskom-current-text)))
      (if do-add
-	 (lyskom-format-insert 'add-comment-to comment-text-no text-no)
-       (lyskom-format-insert 'sub-comment-to comment-text-no text-no))
+	 (lyskom-format-insert 'add-comment-to
+			       comment-text-no
+			       text-no)
+       (lyskom-format-insert 'sub-comment-to 
+			     comment-text-no
+			     text-no)
     (if do-add
 	(initiate-add-comment 'main
 			      'lyskom-handle-command-answer
@@ -1826,7 +1866,7 @@ DO-ADD: NIL if a comment should be subtracted.
 			    comment-text-no
 			    text-no))
     (cache-del-text-stat text-no)
-    (cache-del-text-stat comment-text-no)))
+    (cache-del-text-stat comment-text-no))))
 
 
 ;;; ================================================================

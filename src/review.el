@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.3 1995-03-09 09:22:54 linus Exp $
+;;;;; $Id: review.el,v 38.4 1995-10-23 11:55:52 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.3 1995-03-09 09:22:54 linus Exp $\n"))
+	      "$Id: review.el,v 38.4 1995-10-23 11:55:52 byers Exp $\n"))
 
 
 
@@ -110,22 +110,20 @@ The defaults for this command is the conference that you are in."
 	;   (cache-del-conf-stat to))
 	; (if (not (zerop by)) 
 	;   (cache-del-pers-stat by))
-	(setq info (lyskom-format 'info-by-to info 
-				  (if (zerop by)
-				      (lyskom-get-string 'anybody)
-				    (conf-stat->name 
-				     (blocking-do 'get-conf-stat by)))
-				  (if (zerop to)
-				      (lyskom-get-string 'all-confs)
-				    (conf-stat->name 
-				     (blocking-do 'get-conf-stat to)))))
-
-	(lyskom-format-insert 'review-info info)
+	(let* ((info-by (if (zerop by) 
+			    (lyskom-get-string 'anybody)
+			  (blocking-do 'get-conf-stat by)))
+	       (info-to (if (zerop to)
+			    (lyskom-get-string 'all-confs)
+			  (blocking-do 'get-conf-stat to))))
+	  (lyskom-format-insert 'review-info-by-to
+				info
+				info-by
+				info-to))
 
 	;; Now we have 
 	;; - the person number in by
 	;; - the conf number in to
-	;; - the info text in info
 	;; - the number of interesting texts in count (if negative, then 
 	;;   count from the beginning.
 	;;
@@ -195,10 +193,10 @@ If reading forward then starts reading backward and the other way round."
 	   (forward (read-info->forward info)))
       (setcdr list (nreverse (cdr list)))
       (set-read-info->forward info (not forward))
-      (lyskom-insert
-       (lyskom-format 'you-review (lyskom-get-string (if (not forward)
-							 'forward
-						       'backward))))))
+      (lyskom-format-insert 'you-review 
+			    (lyskom-get-string (if (not forward)
+						   'forward
+						 'backward)))))
    (t
     (lyskom-insert-string 'illegal-command)))
   (lyskom-end-of-command)) 
