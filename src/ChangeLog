@@ -1,5 +1,8 @@
 2003-08-27  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el (string-to-vector): Don't just compute the
+ 	result. Return it too...
+	
 	* utilities.el (lyskom-completing-read): Protect the value of
 	this-command from alteration.
 	(lyskom-read-from-minibuffer): Same here.

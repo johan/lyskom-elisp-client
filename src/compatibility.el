@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.66 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: compatibility.el,v 44.67 2003-08-27 15:16:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.66 2003-08-16 16:58:45 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.67 2003-08-27 15:16:30 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -495,7 +495,8 @@ Otherwise treat \\ in NEWTEXT string as special:
     (setq val (make-vector len 0))
     (while (< i len)
       (aset val i (aref string i))
-      (setq i (1+ i)))))
+      (setq i (1+ i)))
+    val))
 
 (lyskom-provide-function copy-tree (l)
   "Recursively copy the list L"
