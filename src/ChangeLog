@@ -1,3 +1,10 @@
+1999-06-22  David Byers  <davby@ida.liu.se>
+	
+	Add/remove footnotes
+	* commands1.el (kom-sub-footnote): New function.
+	(lyskom-add-sub-footnote): New function.
+	(kom-add-footnote): New function.
+
 1999-06-21  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (lyskom-sub-member): Become passive member the

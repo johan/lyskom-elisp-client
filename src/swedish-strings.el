@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.58 1999-06-22 13:37:05 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.59 1999-06-22 13:51:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.58 1999-06-22 13:37:05 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.59 1999-06-22 13:51:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -336,6 +336,8 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-move . "Vilket inlägg vill du flytta: ")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till:")
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
+    (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
+    (text-to-delete-footnote-from . "Vilket inlägg vill du subtrahera en fotnot från:")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M...")
@@ -414,8 +416,12 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar? ")
     (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar? ")
+    (text-to-add-footn-q . "Vilket inlägg vill du addera som fotnot? ")
+    (text-to-remove-footn-q . "Vilket inlägg vill du subtrahera som fotnot? ")
     (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...") ;
     (sub-comment-to . "Subtraherar text %#1n som kommentar till text %#2n...")
+    (add-footnote-to . "Adderar text %#1n som fotnot till text %#2n...") ;
+    (sub-footnote-to . "Subtraherar text %#1n som fotnot till text %#2n...")
     (comment-keep-recpt-p ."Ska %#1s vara mottagare? ")
     (comment-all-relevant-p . "Inlägget har flera mottagare. Är alla relevanta? ")
     (please-edit-recipients . "Ändra mottagarlistan och skicka in inlägget igen.")
@@ -1393,6 +1399,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-add-faq              . "Addera FAQ")
     (kom-del-faq              . "Ta bort FAQ")
     (kom-review-faq           . "Återse FAQ")
+
+    (kom-add-footnote	      . "Addera fotnot")
+    (kom-sub-footnote	      . "Subtrahera fotnot")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
