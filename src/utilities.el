@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.106 2002-07-11 14:25:54 jhs Exp $
+;;;;; $Id: utilities.el,v 44.107 2002-07-13 00:33:37 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.106 2002-07-11 14:25:54 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.107 2002-07-13 00:33:37 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -678,8 +678,8 @@ non-negative integer and 0 means the given text-no."
 	  (0   . lyskom-get-text-at-point)
 	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
 	  (listp . lyskom-prompt-for-text-no)
-	  (plusp . lyskom-get-explicit-text)
-	  (minusp  lyskom-get-text-above-point abs))))
+	  (lyskom-plusp . lyskom-get-explicit-text)
+	  (lyskom-minusp  lyskom-get-text-above-point abs))))
 "Put in your `lyskom-pick-text-no-strategy-alist' to get the 0.46 behaviour:
  * No prefix argument refers to the most recently read text.
  * The prefix argument zero refers to the text under point.
@@ -689,14 +689,14 @@ non-negative integer and 0 means the given text-no."
    kom buffer.")
 
 (defvar lyskom-pick-text-no-strategy-alist
-      '((t . ((nil . lyskom-get-text-at-point) ; no prefix arg
-	      (t   . lyskom-get-text-at-point) ; default for prompts
+      '((t . ((t   . lyskom-get-text-at-point) ; default for prompts
+	      (nil . lyskom-get-text-at-point) ; no prefix arg
 	      (0   . lyskom-prompt-for-text-no)
 	      (-     lyskom-get-text-above-point (lambda (&optional arg) 1))
 	      (listp lyskom-get-text-at-point-ancestor
 		     (lambda (arg) (/ (logb (car arg)) 2)))
-	      (plusp . lyskom-get-text-below-point)
-	      (minusp  lyskom-get-text-above-point abs))))
+	      (lyskom-plusp . lyskom-get-text-below-point)
+	      (lyskom-minusp  lyskom-get-text-above-point abs))))
       "Defines how prefix arguments are used to find a text-no to operate on.
 The cars on the list are either one of the functions which invokes
 `lyskom-read-text-no-prefix-arg' (typically the one of the kom-* functions),
@@ -807,13 +807,11 @@ its first argument and remaining list items appended to the argument list."
 	     ((eq compare-value t) ;; provided a default value for the prompt
 	      (let ((new-default (lyskom-evaluate-text-no-strategy
 				  what-text prompt default constraint)))
-		(when (and (numberp new-default) (plusp new-default))
+		(when (and (lyskom-plusp new-default))
 		  (setq default (or default new-default)))))
 
 	     ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
-		  (condition-case nil
-		      (funcall strategy-pred current-prefix-arg)
-		    (t . nil)))
+		  (funcall strategy-pred current-prefix-arg))
 	      (setq text-no (lyskom-evaluate-text-no-strategy
 			     what-text prompt default constraint))
 ;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
@@ -830,7 +828,7 @@ its first argument and remaining list items appended to the argument list."
       (cond
        ((stringp text-no) ;; a strategy failure error message
 	(lyskom-error text-no))
-       ((and (integerp text-no) (plusp text-no)) ;; a proper text-no
+       ((and (lyskom-plusp text-no)) ;; a proper text-no
 	text-no)
        ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
 	(lyskom-read-number prompt default))
@@ -906,6 +904,13 @@ added to the result. The comparison is done with eq."
     (mapc (lambda (o) (setq list2 (delq o list2))) in-both)
     (append list1 list2)))
 
+(defun lyskom-plusp (int)
+  "Returns t for integers greater than 0, nil otherwise."
+  (and (integerp int) (> int 0)))
+
+(defun lyskom-minusp (int)
+  "Returns t for integers smaller than 0, nil otherwise."
+  (and (integerp int) (> int 0)))
 
 ;;; ======================================================================
 ;;; Display device management
