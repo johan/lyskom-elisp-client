@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 38.1 1995-03-01 17:55:48 byers Exp $
+;;;;; $Id: filter-edit.el,v 38.2 1995-10-23 11:55:36 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -352,7 +352,7 @@ If NEWLINE is non-nil, insert a newline after the header."
                       (setq tmp (filter-entry->start tmp))
                     (lyskom-error (lyskom-get-string 'filter-edit-end-of-list))))))
 
-              ((= lineno (length (filter-entry->lines entry)))
+              ((= lineno (1- (length (filter-entry->lines entry))))
                (setq tmp (elt entry-list (1+ entry-no)))
                (if tmp 
                    (setq tmp (filter-entry->start tmp))

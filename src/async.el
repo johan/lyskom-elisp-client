@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.3 1995-03-01 18:04:28 byers Exp $
+;;;;; $Id: async.el,v 38.4 1995-10-23 11:55:12 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.3 1995-03-01 18:04:28 byers Exp $\n"))
+	      "$Id: async.el,v 38.4 1995-10-23 11:55:12 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -81,8 +81,10 @@ this function shall be with current-buffer the BUFFER."
 	(lyskom-save-excursion
 	  (set-buffer buffer)
 	  (if (and lyskom-pers-no (= conf-no lyskom-pers-no))
-	      (lyskom-insert-before-prompt 
-	       (lyskom-format 'you-changed-name-to new-name)))
+	      (lyskom-format-insert-before-prompt 
+	       'you-changed-name-to
+	       new-name
+	       (lyskom-default-button 'conf conf-no)))
 	  (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
 	  (cond
 	   ((lyskom-is-in-minibuffer))
@@ -91,8 +93,11 @@ this function shall be with current-buffer the BUFFER."
 						old-name new-name))))
 	  (cond
 	   (kom-presence-messages-in-buffer
-	    (lyskom-insert-before-prompt
-	     (lyskom-format 'name-has-changed-to-name-r old-name new-name )))))))
+	    (lyskom-format-insert-before-prompt
+	      'name-has-changed-to-name-r 
+	      old-name 
+	      new-name
+	      (lyskom-default-button 'conf conf-no)))))))
 
      ((eq msg-no 6)			;i_am_on - something is moving
       (let ((info (lyskom-parse-who-info)))
@@ -156,10 +161,19 @@ this function shall be with current-buffer the BUFFER."
 				  (format "emacs-version: %s\nclient-version: %s"
 					  (emacs-version)
 					  lyskom-clientversion)))
-	  (t (initiate-get-conf-stat 'async
-				     'lyskom-show-personal-message sender
-				     recipient
-				     message))))))
+	  (t
+	   (if (zerop recipient)
+	       (initiate-get-conf-stat 'async
+				       'lyskom-show-personal-message
+				       sender
+				       0
+				       message)
+	     (lyskom-collect 'async)
+	     (initiate-get-conf-stat 'async nil sender)
+	     (initiate-get-conf-stat 'async nil recipient)
+	     (lyskom-use 'async
+			 'lyskom-show-personal-message
+			 message)))))))
 
      ((eq msg-no 13)			; New logout
       (let ((pers-no (lyskom-parse-num))
@@ -191,9 +205,7 @@ this function shall be with current-buffer the BUFFER."
 					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-insert-before-prompt
-     (lyskom-format 'has-entered-r
-		    (conf-stat->name conf-stat))))))
+    (lyskom-format-insert-before-prompt 'has-entered-r conf-stat))))
 
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)
@@ -205,9 +217,7 @@ this function shall be with current-buffer the BUFFER."
 					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-insert-before-prompt
-     (lyskom-format 'has-left-r
-	     (conf-stat->name conf-stat))))))
+    (lyskom-format-insert-before-prompt 'has-left-r conf-stat))))
 
 
 (defun lyskom-show-changed-person (personconfstat conf-num doing)
@@ -233,12 +243,11 @@ this function shall be with current-buffer the BUFFER."
 	       (or (= 0 conf-num)
 		   (eq conf-num lyskom-current-conf))
 	       (/= 0 (length doing)))
-	  (lyskom-insert-before-prompt
-	   (concat (conf-stat->name personconfstat)
-		   " "
-		   (concat (char-to-string (downcase (string-to-char doing)))
-			   (substring doing 1)) 
-		   "\n")))))))
+	  (lyskom-format-insert-before-prompt
+	   "%#1M %#2s\n"
+	   persconfstat
+	   (concat (char-to-string (downcase (string-to-char doing)))
+		   (substring doing 1))))))))
 
 
 (defun lyskom-is-in-minibuffer ()
@@ -250,8 +259,8 @@ this function shall be with current-buffer the BUFFER."
   "Insert a personal message into the lyskom buffer.
 Args: SENDER: conf-stat for the person issuing the broadcast message or a
 	      string that is the sender.
-      RECIPIENT: 0 if this message is for everybody, otherwise the pers-no 
-                 of the user.
+      RECIPIENT: 0 if this message is for everybody, otherwise the conf-stat
+                 of the recipient.
       MESSAGE: A string containing the message."
   (lyskom-insert-personal-message sender recipient message)
   (setq lyskom-last-personal-message-sender (if (stringp sender) sender
@@ -268,34 +277,45 @@ MESSAGE is a string containing the message.
 INSERT-FUNCTION is a function that given a string inserts it into the
 current buffer."
   (lyskom-handle-as-personal-message
-   (if (= recipient 0)
-       (progn
-	 (if (eq t kom-ding-on-personal-messages)
-	     (beep))
-	 (lyskom-format 'message-broadcast
-			(cond
-			 ((stringp sender) sender)
-			 (sender (conf-stat->name sender))
-			 (t (lyskom-get-string 'unknown)))
-			message
-			(substring (current-time-string) 11 19)))
-     (if kom-ding-on-personal-messages
-	 (beep))
-     (lyskom-format 'message-from
-		    (cond
-		     ((stringp sender) sender)
-		     (sender (conf-stat->name sender))
-		     (t (lyskom-get-string 'unknown)))
-		    message
-		    (substring (current-time-string) 11 19)))
+   (cond ((eq recipient 0)
+	  (if (eq t kom-ding-on-personal-messages) (beep))
+	  (lyskom-format 'message-broadcast
+			 (cond
+			  ((stringp sender) sender)
+			  (sender sender)
+			  (t (lyskom-get-string 'unknown)))
+			 message
+			 (substring (current-time-string) 11 19)))
+	 ((= (conf-stat->conf-no recipient) lyskom-pers-no)
+	  (if (memq kom-ding-on-personal-messages '(t personal)) (beep))
+	  (lyskom-format 'message-from
+			 (cond
+			  ((stringp sender) sender)
+			  (sender sender)
+			  (t (lyskom-get-string 'unknown)))
+			 message
+			 (substring (current-time-string) 11 19)))
+       (t
+	(if (memq kom-ding-on-personal-messages '(t group)) (beep))
+	(lyskom-format 'message-from-to
+		       message
+		       (cond
+			((stringp sender) sender)
+			(sender (conf-stat->name sender))
+			(t (lyskom-get-string 'unknown)))
+		       (cond
+			((stringp recipient) recipient)
+			(recipient (conf-stat->name recipient))
+			(t (lyskom-get-string 'unknown)))
+		       (substring (current-time-string) 11 19))))
    (conf-stat->conf-no sender)))
 
   
 (defun lyskom-handle-as-personal-message (string from)
-  "Insert STRING as a personal message and beep if not from me and supposed to.
-The buffer, is chosen according to the kom-show-personal-messages-in-buffer
-variable value.
-The text is converted, before insertion."
+  "Insert STRING (a format state) as a personal message and beep if
+not from me and supposed to. The buffer, is chosen according to the
+kom-show-personal-messages-in-buffer variable value.  The text is
+converted, before insertion."
   (lyskom-save-excursion
    (cond
     ((eq kom-show-personal-messages-in-buffer t)
@@ -305,8 +325,8 @@ The text is converted, before insertion."
      (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
      (goto-char (point-max))
      (insert (if kom-emacs-knows-iso-8859-1
-		 string
-	       (iso-8859-1-to-swascii string)))))
+		       string
+		     (iso-8859-1-to-swascii string)))))
    (if kom-pop-personal-messages
        (display-buffer (current-buffer)))))
   

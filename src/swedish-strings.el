@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.3 1995-03-01 17:56:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.4 1995-10-23 11:55:58 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.3 1995-03-01 17:56:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.4 1995-10-23 11:55:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -189,23 +189,23 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
     (deletion-not-confirmed . "Utpl\345ningen avbruten\n")
     (somebody-else-deleted-that-conf . "N\345gon annan tog precis bort m\366tet.\n")
     (conf-is-deleted . "Ok, nu \344r %#1s utpl\345nad.\n")
-    (you-could-not-delete . "%#1s kunde inte utpl\345nas av dig.\n")
+    (you-could-not-delete . "%#1M kunde inte utpl\345nas av dig.\n")
 
     (what-text-to-delete . "Vilket inl\344gg skall tas bort?")
-    (deleting-text . "Radering av text %#1d...")
+    (deleting-text . "Radering av text %#1:n...")
 
     (presentation-for-whom . "Vilket m\366te/person? ")
     (somebody-deleted-that-conf . "N\345gon tog precis bort m\366tet.\n")
-    (review-presentation-of . "\305terse presentation av %#1s.\n")
-    (has-no-presentation . "%#1s har ingen presentation.\n")
+    (review-presentation-of . "\305terse presentation av %#1M.\n")
+    (has-no-presentation . "%#1:M har ingen presentation.\n")
 
     (have-to-read . "Du m\345ste l\344sa ett inl\344gg f\366rst.\n")
 
-    (review-text-no . "\305terse text nummer %#1d.\n")
+    (review-text-no . "\305terse text nummer %#1n.\n")
     (no-comment-to . "Det finns inget kommenterat inl\344gg att titta p\345.\n")
 
     (who-letter-to . "Vem vill du skicka brev till? ")
-    (has-motd . "%#1s har en lapp p\345 d\366rren:\n\n")
+    (has-motd . "%#1M har en lapp p\345 d\366rren:\n\n")
     (motd-persist-q . "Vill du fortfarande skicka brevet? ")
 
     (who-to-add . "Vem vill du addera? ")
@@ -215,9 +215,9 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
     (done . "klart.\n")
     (nope . "Det gick inte.\n")
 
-    (cant-find-supervisor . "Hittar inte organisat\366ren f\366r %#1s.\n")
-    (is-read-protected-contact-supervisor . "%#1s \344r slutet.
-Skicka ett brev till %#2s f\366r medlemsskap.\n")
+    (cant-find-supervisor . "Hittar inte organisat\366ren f\366r %#1M.\n")
+    (is-read-protected-contact-supervisor . "%#1M \344r slutet.
+Skicka ett brev till %#2P f\366r medlemsskap.\n")
 
     (conf-does-not-exist . "\nM\366tet finns inte.\n")
 
@@ -257,7 +257,7 @@ Lyskom-sessionen \344r avslutad.
 
     (who-to-remove-motd-for . "Vilket m\366te/person vill du ta bort lapp p\345 d\366rr f\366r (dig sj{lv): ")
 
-    (conf-all-read . "%#1s - inga ol\344sta.\n")
+    (conf-all-read . "%#1M - inga ol\344sta.\n")
     (no-in-conf . "Du \344r inte n\344rvarande i n\345got m\366te.\n")
 
     (search-for-pers . "Ange s\366kvillkor (RETURN f\366r alla personer) ")
@@ -270,8 +270,8 @@ Lyskom-sessionen \344r avslutad.
     (text-to-mark . "Vilket inl\344gg vill du markera? ")
     (text-to-unmark . "Vilket inl\344gg vill du avmarkera? ")
     (what-mark . "Vilken markering vill du s\344tta? ")
-    (unmarking-textno . "Avmarkering av text %#1d...")
-    (marking-textno . "Markering av text %#1d...")
+    (unmarking-textno . "Avmarkering av text %#1n...")
+    (marking-textno . "Markering av text %#1n...")
 
     (new-passwd-again . "Mata in det nya l\366senordet igen f\366r kontroll: ")
     (what-mark-to-view . "Vilken markering vill du \345terse? ")
@@ -292,30 +292,29 @@ Lyskom-sessionen \344r avslutad.
     (text-to-delete-comment-from . "Vilket inl\344gg vill du subtrahera en kommentar fr\345n")
 
     (where-on-list-q . "Placering p\345 listan? (0-%#1d) ")
-    (member-in-conf . "Bli medlem i %#1s...")
-    (add-member-in . "Addera %#1s som medlem i %#2s...")
-    (unsubscribe-to . "Uttr\344da ur %#1s...")
+    (member-in-conf . "Bli medlem i %#1M...")
+    (add-member-in . "Addera %#1P som medlem i %#2M...")
+    (unsubscribe-to . "Uttr\344da ur %#1M...")
 
-    (exclude-from . "Utesluta %#1s fr\345n %#2s...")
+    (exclude-from . "Utesluta %#1P fr\345n %#2M...")
 
-    (unsubscribe-failed . "\nDet gick inte. %#1s var kanske aldrig medlem i %#2s?\n")
+    (unsubscribe-failed . "\nDet gick inte. %#1P var kanske aldrig medlem i %#2M?\n")
 
     (You . "Du")
     (could-not-create-conf . "M\366tet \"%#1s\" kunde ej skapas.\nFelkod: %#2d.\n")
-    (created-conf-no-name . "M\366te nummer %#1d %#2s, skapat.\n")
-    (cant-read-textno . "Du f\345r inte l\344sa text %#1d")
+    (created-conf-no-name . "M\366te nummer %[%#3@%#1:m %#2:M%], skapat.\n")
+    (cant-read-textno . "Du f\345r inte l\344sa text %#1:n")
 
-    (not-supervisor-for . "Du \344r inte organisat\366r f\366r %#1s.\n")
-    (not-supervisor-for . "Du \344r inte organisat\366r f\366r %#1s.\n")
-    (go-to-conf . "G\345 till %#1s.\n")
-    (cant-go-to-his-mailbox . "Du f\345r inte g\345 till %#1ss brevl\345da.\n")
-    (not-member-of-conf . "Du \344r inte medlem i %#1s.\n")
-    (about-to-change-name-from . "%#1s\n")
-    (change-name-done . "Klart. Nytt namn: %#1s.\n")
+    (not-supervisor-for . "Du \344r inte organisat\366r f\366r %#1M.\n")
+    (go-to-conf . "G\345 till %#1M.\n")
+    (cant-go-to-his-mailbox . "Du f\345r inte g\345 till %#1Ms brevl\345da.\n")
+    (not-member-of-conf . "Du \344r inte medlem i %#1M.\n")
+    (about-to-change-name-from . "%#1M\n")
+    (change-name-done . "Klart. Nytt namn: %[%#2@%#1:M%].\n")
     (change-name-nope . "Det gick inte bra att \344ndra till %#1s.\nFelkod %#3d. %#2s.\n")
-    (change-supervisor-from-to . "\304ndra organisat\366r f\366r %#1s till %#2s...")
+    (change-supervisor-from-to . "\304ndra organisat\366r f\366r %#1M till %#2P...")
     (change-supervisor-nope . 
-     "\nDet gick inte. Kanske du inte f\345r \344ndra organisat\366r f\366r %#1s?\n")
+     "\nDet gick inte. Kanske du inte f\345r \344ndra organisat\366r f\366r %#1M?\n")
     
     (no-marked-texts . "Du har inga markerade inl\344gg.\n")
     (no-marked-texts-mark . 
@@ -326,30 +325,30 @@ Lyskom-sessionen \344r avslutad.
     (who-to-add-copy-q . "Vilket m\366te/person vill du addera som kopiemottagare? ")
     (who-to-sub-q . "Vilket m\366te/person vill du subtrahera som mottagare? ")
 
-    (adding-name-as-recipient . "Adderar %#1s som mottagare till text %#2d...")
-    (adding-name-as-copy . "Adderar %#1s som kopiemottagare till text %#2d...")
+    (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
+    (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
     (remove-name-as-recipient .
-     "Subtraherar %#1s som mottagare fr\345n text %#2d...")
+     "Subtraherar %#1M som mottagare fr\345n text %#2n...")
     (text-to-add-q . "Vilket inl\344gg vill du addera som kommentar? ")
     (text-to-remove-q . "Vilket inl\344gg vill du subtrahera som kommentar? ")
-    (add-comment-to . "Adderar text %#1d som kommentar till text %#2d...")
-    (sub-comment-to . "Subtraherar text %#1d som kommentar till text %#2d...")
+    (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...")
+    (sub-comment-to . "Subtraherar text %#1n som kommentar till text %#2n...")
     (comment-keep-recpt-p ."Ska %#1s vara mottagare? ")
 
     ; From commands2.el:
 
     (your-memberships . "Ditt medlemskap i olika KOM-m\366ten:\n")
     (memberships-header . "Senast inne	   Prio	Ol\344sta	M\366tesnamn\n")
-    
+    (memberships-line . "%#1s  %#2d\t%#3d\t%#4M\n")
     (conf-for-status . "Vilket m\366te vill du se statusen f\366r? ")
     (no-such-conf . "M\366tet finns ej.")
-    (status-record . "Status f\366r m\366te %#1s (%#2s) %#3s\n\n")
+    (status-record . "Status f\366r m\366te %#1M (%#2m) %#3s\n\n")
     (Mailbox . "Brevl\345da")
     (Protected . "Skyddat")
     (no-comments . "original")
     (closed . "slutet")
 
-    (created-by . "Skapat av person %#1s %#2s\n")
+    (created-by . "%[%#3@Skapat av person %25#1:p%] %#4s(%#2P)\n")
     (created-at . "Skapad:%35#1s\n")
     (members .    "Antal medlemmar: %25#1d\n")
     (garb-nice . "Livsl\344ngd p\345 inl\344gg (dagar):%14#1d\n")
@@ -357,21 +356,22 @@ Lyskom-sessionen \344r avslutad.
     (highest-local-no . "H\366gsta existerande lokala nummer: %8#1d\n")
     (last-text-time . 
      "Tid f\366r senaste inl\344gg: %18#1s (st\345r det i din cache)\n")
-    (no-of-motd . "Lapp p\345 d\366rren i text nummer: %12#1d\n")
-    (superconf-is-no-name . "Superm\366te:       %25#1d %#2s\n")
-    (permitted-submitters-no-name . "Till\345tna f\366rfattare:%22#1d %#2s\n")
-    (supervisor-is-no-name . "Organisat\366r:     %25#1d %#2s\n")
-    (presentation-no . "Presentation:    %25#1d\n")
-    (conf-has-motd . "\n%#1s har en lapp p\345 d\366rren:\n")
+    (no-of-motd . "Lapp p\345 d\366rren i text nummer: %12#1n\n")
+    (superconf-is-no-name . "%[%#3@Superm\366te:       %25#1:m%] %#4s(%#2M)\n")
+    (permitted-submitters-no-name . "%[%#3@Till\345tna f\366rfattare:%22#1:m%] %#4s(%#2M)\n")
+    (supervisor-is-no-name . "%[%#3@Organisat\366r:     %25#1:p%] %#4s(%#2P)\n")
+    (presentation-no . "Presentation:    %25#1n\n")
+    (conf-has-motd . "\n%#1M har en lapp p\345 d\366rren:\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan ocks\345? ")
-    (conf-has-these-members . "\n%#1s har f\366ljande medlemmar:\n")
+    (conf-has-these-members . "\n%#1M har f\366ljande medlemmar:\n")
     (member-list-header . "Senast inne         Osett  Namn\n\n")
     (secret-membership . "*** Hemlig rad ***\n")
+    (conf-membership-line . "%#1s%#2M\n")
     (pers-for-status . "Vem vill du se statusen f\366r? ")
     (no-such-pers . "Det finns ingen s\345dan person.")
-    (pers-status-record . "Status f\366r person %#1s (%#2d)\n")
+    (pers-status-record . "Status f\366r person %#1P (%#2p)\n")
     (created-time .  "Skapad:%34#1s\n\n")
     (created-confs . "Skapade m\366ten:%27#1d\n")
     (created-persons . "Skapade personer:%24#1d\n")
@@ -385,42 +385,44 @@ Lyskom-sessionen \344r avslutad.
 
     (read-texts . "L\344sta texter:%28#1d\n")
     (time-for-last-letter . "Tid f\366r senaste brev:%20#1s (st\345r det i din cache)\n")
-    (superconf . "Superm\366te:%31#1d %#2s\n")
-    (supervisor . "Organisat\366r:%29#1d %#2s\n")
+    (superconf . "%[%#3@Superm\366te:%31#1:m%] %#4s(%#2M)\n")
+    (supervisor . "%[%#3@Organisat\366r:%29#1:p%] %#4s(%#2P)\n")
     (member-of-confs . "Medlem i (antal m\366ten):%18#1d\n")
-    (presentation . "Presentation:    %24#1d\n")
+    (presentation . "Presentation:    %24#1n\n")
     (show-membership-list-also-q . "Vill du se vilka m\366ten personen \344r medlem i ocks\345? ")
-    (not-allowed-see-confs . "Du f\345r inte se vilka m\366ten %#1s \344r medlem i.\n")
-    (is-member-of . "\n%#1s \344r medlem i f\366ljande m\366ten:\n")
+    (not-allowed-see-confs . "Du f\345r inte se vilka m\366ten %#1P \344r medlem i.\n")
+    (is-member-of . "\n%#1P \344r medlem i f\366ljande m\366ten:\n")
     (membership-list-header . "Senast inne         Osett  Namn\n\n")
+    (pers-membership-line . "%#1s%#2s%#3M\n")
+    (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
-    (his-total-unread . "\n%#1s har totalt %#2d ol\344sta.\n")
+    (his-total-unread . "\n%#1M har totalt %#2d ol\344sta.\n")
     (message-prompt . "Meddelande: ")
     (message-sent-to-user . 
 "================================================================
-Ditt meddelande till %#2s:
+Ditt meddelande till %#2M:
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")
     (message-sent-to-all . 
 "================================================================
 Ditt allm\344nna meddelande l\366d:
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")
     (message-nope .
   "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
-Meddelandet du f\366rs\366kte s\344nda till %#1s var:
-%#2s\n")
+Meddelandet du f\366rs\366kte s\344nda till %#1M var:
+%#2t\n")
     (only-last . "Endast l\344sa senaste (0 - %#1d) i %#2s? ")
     (only-error . "N\345t gick galet. Sorry.\n")
 
-    (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2s\n")
-    (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1s\n")
-    (you-have-unreads-special . "Du har %#1d okommenterade inl\344gg i %#2s\n")
-    (you-have-an-unread-special . "Du har 1 okommenterat inl\344gg i %#1s\n")
+    (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2M\n")
+    (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1M\n")
+    (you-have-unreads-special . "Du har %#1d okommenterade inl\344gg i %#2M\n")
+    (you-have-an-unread-special . "Du har 1 okommenterat inl\344gg i %#1M\n")
     (you-have-read-everything . "Du har sett alla nyheter\n")
     (total-unreads . "\nDu har %#1d ol\344sta inl\344gg.\n")
     (total-unread . "\nDu har 1 ol\344st inl\344gg.\n")
@@ -435,9 +437,11 @@ Meddelandet du f\366rs\366kte s\344nda till %#1s var:
     (Lines . "Rader")
     (Author . "  F\366rfattare")
     (Subject . "  \304rende")
-    (could-not-read . "Du fick inte l\344sa denna text (%#1d).\n")
+    (could-not-read . "Du fick inte l\344sa denna text (%#1n).\n")
     (multiple-choice . "Flera alternativ finns.")
     (does-not-exist . "Detta kommando finns inte.")
+    (summary-line . "%=-7#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
+
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
     (buggreport-compilestart . "Skapar buggrapporten...")
@@ -476,28 +480,33 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 
 
     (not-logged-in . "Du \344r inte inloggad.  ")
+
+
+;; +++ cant seem to find where these are used:
     (name-is-not-in-conf . "%#1s \344r inte n\344rvarande i n\345got m\366te.\n")
     (name-is-in-conf . "%#1s \344r n\344rvarande i\n%#2s\n")
     (connected-during . "Uppkopplingstid: %#1d sekunder.\n")
+;; +++
+
 
     (conf-to-set-permitted-submitters-q . "Vilket m\366te vill du s\344tta till\345tna f\366rfattare f\366r? ")
     (conf-to-set-super-conf-q . "Vilket m\366te vill du s\344tta superm\366te f\366r? ")
     (new-super-conf-q . "Vilket m\366te vill du ha som superm\366te? ")
     (new-permitted-submitters-q . "M\366te med till\345tna f\366rfattare till %#1s? (alla) ")
-    (super-conf-for-is . "\304ndra superm\366te f\366r %#1s till %#2s...")
-    (permitted-submitters-removed-for-conf . "Till\345t alla f\366rfattare i m\366te %#1s...")
-    (submitters-conf-for-is . "\304ndra till\345tna f\366rfattare f\366r m\366te %#1s till\nmedlemmarna i %#2s...")
+    (super-conf-for-is . "\304ndra superm\366te f\366r %#1M till %#2M...")
+    (permitted-submitters-removed-for-conf . "Till\345t alla f\366rfattare i m\366te %#1M...")
+    (submitters-conf-for-is . "\304ndra till\345tna f\366rfattare f\366r m\366te %#1M till\nmedlemmarna i %#2M...")
 
     (conf-to-set-garb-nice-q . "Vilket m\366te vill du s\344tta livsl\344ngd f\366r? ")
     (new-garb-nice-q . "Vilket v\344rde vill du s\344tta livsl\344ngden till? ")
-    (garb-nice-for-is . "\304ndra livsl\344ngden f\366r %#1s till %#2d...")
+    (garb-nice-for-is . "\304ndra livsl\344ngden f\366r %#1M till %#2d...")
 
     (really-shutdown . "\304r du s\344ker p\345 att du vill st\344nga av servern? ")
     (closing-server . "St\344nga av servern...")
     (administrator . "administrat\366r")
     (no-longer-administrator . "en normal anv\344ndare igen")
     (you-are-now . "Ok, du k\366r nu som %#1s.\n")
-    (setting-motd . "S\344tter loginmeddelandet till text %#1d.\n")
+    (setting-motd . "S\344tter loginmeddelandet till text %#1n.\n")
     (set-motd-success . "Du har satt ett nytt loginmeddelande.\n")
     (set-motd-failed . "Det gick inte. Du var kanske inte administrat\366r.\n")
     (removing-motd . "Tar bort loginmeddelandet.\n")
@@ -511,20 +520,23 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (first-n . "f\366rsta %#1d")
     (info-by-whom . "%#1s av vem: ")
     (info-to-conf . "%#1s till m\366te: ")
-    (info-by-to . "%#1s av %#2s till %#3s fram\345t.")
     (all-confs . "alla m\366ten")
+;; +++ not used?
+    (info-by-to . "%#1s av %#2P till %#3M fram\345t.")
     (no-get-conf . "Du f\345r inte h\344mta m\366tet.\n")
     (no-get-pers . "Du f\345r inte h\344mta personen.\n")
     (no-review-info . "Ej till\345tet \345terse %#1s\n")
     (review-info . "\305terse %#1s\n")
+;; +++
+    (review-info-by-to . "\305terse %#1s av %#2P till %#3M fram\345t.\n")
     (you-review . "Du \345terser nu %#1s.\n")
     (read-text-first . "Du m\345ste l\344sa en text f\366rst.\n")
     (cannot-read-last-text . "Du kan inte l\344sa den senast l\344sta texten.\n")
     (review-n-texts . "\305terse %#1d inl\344gg.\n")
     (review-marked . "\305terse %#1d markerade.\n")
-    (review-text-no . "\305terse text nummer %#1d")
-    (review-one-comment . "\305terse en kommentar till inl\344gg %#1d.\n")
-    (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1d.\n")
+    (review-text-no . "\305terse text nummer %#1n")
+    (review-one-comment . "\305terse en kommentar till inl\344gg %#1n.\n")
+    (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1n.\n")
     (read-normally-read . "Hur m\345nga vill du se igen?")
 
     ; From edit-text.el:
@@ -561,25 +573,27 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
-    (no-such-text-no . "Det finns ingen s\345dan text. (%#1d)\n")
+    (no-such-text-no . "Det finns ingen s\345dan text. (%#1n)\n")
 
     (head-Subject . "\304rende: ")
     (Recipient . "Mottagare")
     (Extra-recipient . "Extra kopia")
     (send-at . "    S\344nt:     %#1s\n")
-    (sent-by . "    S\344nt av ")
+    (sent-by . "    S\344nt av %#1P\n")
     (recieved-at . "    Mottaget: %#1s\n")
-    (written-by . "av %#1s")
-    (comment-to-text-by . "Kommentar till text %#1d %#2s\n")
-    (footnote-to-text-by . "Fotnot till text %#1d %#2s\n")
-    (comment-in-text-by . "Kommentar i text %#1d %#2s\n")
-    (footnote-in-text-by . "Fotnot i text %#1d %#2s\n")
+;; +++ unused?
+    (written-by . "av %#1P")
+;;; +++
+    (comment-to-text-by . "Kommentar till text %#1n av %#2P\n")
+    (footnote-to-text-by . "Fotnot till text %#1n av %#2P\n")
+    (comment-in-text-by . "Kommentar i text %#1n av %#2P\n")
+    (footnote-in-text-by . "Fotnot i text %#1n av %#2P\n")
 
     ; From async.el:
 
-    (name-has-changed-to-name . "%#1s har nu bytt namn till %#2s")
-    (name-has-changed-to-name-r . "%#1s har nu bytt namn till %#2s\n")
-    (you-changed-name-to . "Nu har du bytt namn till %#1s.\n")
+    (name-has-changed-to-name . "%#1:P har nu bytt namn till %#2:P")
+    (name-has-changed-to-name-r . "%[%#3@%#1:P%] har nu bytt namn till %[%#3@%#2:P%]\n")
+    (you-changed-name-to . "Nu har du bytt namn till %[%#2@%#1:P%].\n")
     (database-sync . "Databasen synkas.")
     (lyskom-is-full . "\
 ===========================================================
@@ -587,27 +601,34 @@ Meddelande fr\345n LysKOM-systemet: N\345gon f\366rs\366kte koppla upp,
 men misslyckades eftersom alla tillg\344ngliga f\366rbindelser \344r
 upptagna. Logga ut och kom tillbaks senare om du v\344ntar nu.
 ===========================================================\n")
-    (has-entered . "Nu har %#1s g\345tt in i LysKOM.")
-    (has-entered-r . "Nu har %#1s g\345tt in i LysKOM.\n")
-    (has-left . "Nu har %#1s g\345tt ur LysKOM.")
-    (has-left-r . "Nu har %#1s g\345tt ur LysKOM.\n")
+    (has-entered . "Nu har %#1:P g\345tt in i LysKOM.")
+    (has-entered-r . "Nu har %#1P g\345tt in i LysKOM.\n")
+    (has-left . "Nu har %#1:P g\345tt ur LysKOM.")
+    (has-left-r . "Nu har %#1P g\345tt ur LysKOM.\n")
     (unknown . "ok\344nd")
 
     (message-broadcast . 
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Allm\344nt meddelande fr\345n %#1s (%#3s):
+Allm\344nt meddelande fr\345n %#1P (%#3s):
 
-%#2s
+%#2t
 ----------------------------------------------------------------
 ")
     (message-from . 
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personligt meddelande fr\345n %#1s (%#3s):
+Personligt meddelande fr\345n %#1P (%#3s):
 
-%#2s
+%#2t
 ----------------------------------------------------------------
 ")
-    (text-is-created . "Text %#1d \344r skapad!")
+    (message-from-to .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
+
+%#1s
+----------------------------------------------------------------
+")
+    (text-is-created . "Text %#1n \344r skapad!")
 
 
     ; From completing-read.el:
@@ -619,7 +640,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
     (your-membship . "Ditt medlemsskap i olika KOM-m\366ten:
   Prio M\366tesnr M\366tesnamn\n")
-    (prio-row . " %5#1d%5#2d  %#3s\n")
+    (prio-row . " %5#1d%5#2m  %#3M\n")
     (too-high-goto-2 . "Du st\345r f\366r h\366gt upp. G\345 ner till rad 2.")
     (too-low-go-up . "Du kan inte pusha sista raden. G\345 upp en rad.")
     (all-confs-popped .  "Alla m\366ten \344r poppade.")
@@ -654,8 +675,9 @@ Personligt meddelande fr\345n %#1s (%#3s):
 
     (all-conf-unread-r . "Du har l\344st ut alla m\366ten.\n")
     (all-conf-unread-s . "Du har l\344st ut alla m\366ten. ")
-    (one-unread . " - 1 ol\344st\n")
-    (several-unread . " - %#1d ol\344sta\n")
+    (one-unread . "%#1M - 1 ol\344st\n")
+    (several-unread . "%#1M - %#2d ol\344sta\n")
+    (enter-conf . "%#1M\n")
 
     (save-on-file-q . "Spara inl\344gg p\345 fil: (%#1s) ")
     (wait-for-prompt . "V\344nta p\345 prompten!")
@@ -687,7 +709,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
     (y-instring . "jJ")
 
     (person-does-not-exist . "Person %#1d (finns inte).")
-    (conf-does-not-exist . "M\366te %#1d (finns inte).")
+    (conference-does-not-exist . "M\366te %#1d (finns inte).")
 
     (process-signal . "Signal fr\345n processen.")
     (closed-connection . "
@@ -707,15 +729,19 @@ Felmeddelande: %#1s**************************************************")
     (wait . "V\344nta ett tag...\n")
     (comment . "Kommentar")
     (footnote . "Fotnot")
+;;;+++ not used?
     (by . " av %#1s")
-    (text-created .  "Text nummer %#1d \344r skapad.\n")
-    (starting-mosaic . "Startar Mosaic...")
-    (super-jump . "Filtrerar \344rende \"%#1s\" i m\366te \"%#2s\"\n")
+    (text-created .  "Text nummer %#1n \344r skapad.\n")
+
+    (starting-program . "Startar %#1s...")
+    (super-jump . "Filtrerar \344rende \"%#1r\" i m\366te \"%#2M\"\n")
     (filtered . "[Filtrerad]")
-    (bad-filter-list . "Fel i filtereingslistan n\344ra %s.")
-    (invalid-filter-list . "Fel i filtreringslistan.")
-    (filter-tree . "Hoppar \366ver text %d \"%s\" av %s och dess kommentarstr\344d.\n")
-    (filter-text . "Hoppar \366ver text %d \"%s\" av %s.\n")
+    (filter-error-specification . "Fel i filterspecifikationen")
+    (filter-error-bad-not . "Fel i filterspecifikation efter 'not'")
+    (filter-error-unknown-key . "Filternyckeln '%S' \344r ok\344nd.")
+    (filter-error-key-arg . "Fel filterdata (%S %S)")
+    (filter-tree . "Hoppar \366ver text %#1n \"%#2r\" av %#3P och dess kommentarstr\344d.\n")
+    (filter-text . "Hoppar \366ver text %#1n \"%#2r\" av %#3P.\n")
     (filter-permanent . "Permanent? ")
     (filter-action . "Hur vill du filtrera? ")
     (filter-in-conf . "I vilket m\366te (Alla)? ")
@@ -1090,6 +1116,7 @@ Cf. paragraph-start.")
     nil
   (setq lyskom-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-prioritize-mode-map)
+  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
   (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
   (define-key lyskom-prioritize-mode-map " "    'next-line)
   (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
@@ -1305,3 +1332,52 @@ Users are encouraged to use their best sense of humor.")
 (defun kom-list-files ()
   (interactive)
   (list-directory "/ftp@ftp.lysator.liu.se:/open"))
+
+
+(defmacro lyskom-make-face (name &rest body)
+  (` (if (memq (, name) (face-list))
+	 nil
+       (,@ body))))
+
+
+(if (x-display-color-p)
+    (progn
+      (lyskom-make-face 'kom-active-face
+			(copy-face 'default 'kom-active-face)
+			(set-face-foreground 'kom-active-face "blue4"))
+      (lyskom-make-face 'kom-url-face
+			(copy-face 'default 'kom-url-face)
+			(set-face-foreground 'kom-url-face "BlueViolet"))
+      (lyskom-make-face 'kom-me-face
+			(copy-face 'bold 'kom-me-face)
+			(set-face-foreground 'kom-me-face "yellow")
+			(set-face-background 'kom-me-face "black"))
+      (lyskom-make-face 'kom-highlight-face
+			(copy-face 'highlight 'kom-highlight-face)
+			(set-face-foreground 'kom-highlight-face 
+					     "midnight blue"))
+      (lyskom-make-face 'kom-text-face
+			(copy-face 'default 'kom-text-face))
+      (lyskom-make-face 'kom-subject-face
+			(copy-face 'kom-text-face 'kom-subject-face)
+			(set-face-foreground 'kom-subject-face "dark green"))
+      (lyskom-make-face 'kom-text-no-face
+			(copy-face 'kom-text-face 'kom-text-no-face)))
+  (progn
+    (lyskom-make-face 'kom-active-face
+		      (copy-face 'underline 'kom-active-face))
+    (lyskom-make-face 'kom-url-face
+		      (copy-face 'kom-active-face 'kom-url-face))
+    (lyskom-make-face 'kom-me-face
+		      (copy-face 'highlight 'kom-me-face))
+    (lyskom-make-face 'kom-highlight-face
+		      (copy-face 'highlight 'kom-highlight-face))
+    (lyskom-make-face 'kom-subject-face
+		      (copy-face 'default 'kom-subject-face))
+    (lyskom-make-face 'kom-text-face
+		      (copy-face 'default 'kom-subject-face))
+    (lyskom-make-face 'kom-text-no-face
+		      (copy-face 'default 'kom-subject-face))))
+
+
+

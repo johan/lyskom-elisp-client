@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.1 1995-03-01 17:55:44 byers Exp $
+;;;;; $Id: english-strings.el,v 38.2 1995-10-23 11:55:33 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.1 1995-03-01 17:55:44 byers Exp $"))
+	      "$Id: english-strings.el,v 38.2 1995-10-23 11:55:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -591,7 +591,13 @@ Personal message from %#1s (%#3s):
 %#2s
 ----------------------------------------------------------------
 ")
-    (text-is-created . "Article %#1d has been created!")
+    (message-from-to .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Group message to %#3s from %#2s (%#4s):
+
+%#1s
+----------------------------------------------------------------
+")    (text-is-created . "Article %#1d has been created!")
 
 
     ; From completing-read.el:
@@ -694,11 +700,13 @@ Error message: %#1s**************************************************")
     (by . " by %#1s")
     (text-created .  "Article %#1d has been created.\n")
 
-    (starting-mosaic . "Starting Mosaic...")
+    (starting-program . "Starting %#1s...")
     (super-jump . "Filtering subject \"%#1s\" in conference \"%#2s\"\n")
     (filtered . "[Filtered]")
-    (bad-filter-list . "Error in the filter list near %s.")
-    (invalid-filter-list . "Error in the filter list.")
+    (filter-error-specification . "Error in the filter specification")
+    (filter-error-bad-not . "Error in the filter specification after 'not'")
+    (filter-error-unknown-key . "The filter key '%S' is unknown.")
+    (filter-error-key-arg . "Bad filter data (%S %S)")
     (filter-tree . "Skipping article %d \"%s\" by %s and all its comments.\n")
     (filter-text . "Skipping article %d \"%s\" by %s.\n")
     (filter-permanent . "Permanent? ")
@@ -1250,4 +1258,51 @@ Users are encouraged to use their best sense of humor.")
 (defun kom-list-files ()
   (interactive)
   (list-directory "/ftp@ftp.lysator.liu.se:/open"))
+
+(defmacro lyskom-make-face (name &rest body)
+  (` (if (memq (, name) (face-list))
+	 nil
+       (,@ body))))
+
+
+(if (x-display-color-p)
+    (progn
+      (lyskom-make-face 'kom-active-face
+			(copy-face 'default 'kom-active-face)
+			(set-face-foreground 'kom-active-face "blue4"))
+      (lyskom-make-face 'kom-url-face
+			(copy-face 'default 'kom-url-face)
+			(set-face-foreground 'kom-url-face "BlueViolet"))
+      (lyskom-make-face 'kom-me-face
+			(copy-face 'bold 'kom-me-face)
+			(set-face-foreground 'kom-me-face "yellow")
+			(set-face-background 'kom-me-face "black"))
+      (lyskom-make-face 'kom-highlight-face
+			(copy-face 'highlight 'kom-highlight-face)
+			(set-face-foreground 'kom-highlight-face 
+					     "midnight blue"))
+      (lyskom-make-face 'kom-text-face
+			(copy-face 'default 'kom-text-face))
+      (lyskom-make-face 'kom-subject-face
+			(copy-face 'kom-text-face 'kom-subject-face)
+			(set-face-foreground 'kom-subject-face "dark green"))
+      (lyskom-make-face 'kom-text-no-face
+			(copy-face 'kom-text-face 'kom-text-no-face)))
+  (progn
+    (lyskom-make-face 'kom-active-face
+		      (copy-face 'underline 'kom-active-face))
+    (lyskom-make-face 'kom-url-face
+		      (copy-face 'kom-active-face 'kom-url-face))
+    (lyskom-make-face 'kom-me-face
+		      (copy-face 'highlight 'kom-me-face))
+    (lyskom-make-face 'kom-highlight-face
+		      (copy-face 'highlight 'kom-highlight-face))
+    (lyskom-make-face 'kom-subject-face
+		      (copy-face 'default 'kom-subject-face))
+    (lyskom-make-face 'kom-text-face
+		      (copy-face 'default 'kom-subject-face))
+    (lyskom-make-face 'kom-text-no-face
+		      (copy-face 'default 'kom-subject-face))))
+
+
 
