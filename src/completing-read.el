@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.16 1999-06-13 15:00:55 byers Exp $
+;;;;; $Id: completing-read.el,v 44.17 1999-06-17 12:58:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.16 1999-06-13 15:00:55 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.17 1999-06-17 12:58:22 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -66,9 +66,7 @@
       lyskom-completing-who-info-cache
     (setq lyskom-completing-who-info-cache
           (listify-vector
-	   (if (or (and (lyskom-is-in-minibuffer) 
-                        lyskom-completing-use-dynamic-info)
-		   (lyskom-have-feature dynamic-session-info))
+	   (if (lyskom-have-feature dynamic-session-info)
 	       (blocking-do 'who-is-on-dynamic t t 0)
 	     (blocking-do 'who-is-on))))))
 
@@ -307,9 +305,9 @@ function work as a name-to-conf-stat translator."
    ((and (null all)
          (string= string "")) "")
    ((and (eq all 'lyskom-lookup)
-         (string= string "")) nil)
+         (string-match "^\\s-*$" string)) nil)
    ((and (eq all 'lambda)
-         (string= string "")) nil)
+         (string-match "^\\s-*$" string)) nil)
    (t
 
     (let* ((login-list (and (memq 'login predicate)
@@ -893,8 +891,7 @@ the LysKOM rules of string matching."
         (sessions nil))
     (if (lyskom-have-feature dynamic-session-info)
 	(while who-list
-	  (if (eq (dynamic-session-info->person (car who-list))
-		  conf-no)
+	  (if (eq (dynamic-session-info->person (car who-list)) conf-no)
 	      (setq sessions (cons (dynamic-session-info->session
 				    (car who-list))
 				   sessions)))
