@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.19 1992-03-06 16:01:53 linus Exp $
+;;;;; $Id: vars.el,v 35.20 1992-04-26 13:44:10 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.19 1992-03-06 16:01:53 linus Exp $\n"))
+	      "$Id: vars.el,v 35.20 1992-04-26 13:44:10 linus Exp $\n"))
 
 
 
@@ -222,7 +222,7 @@ Dont change this. These are defined by the protocol.")
 ;;;                  Internal variables and constants
 
 
-(defconst lyskom-clientversion "0.34.4"
+(defconst lyskom-clientversion "0.34.5"
   "Version of the LysKOM elisp client.")
 
 (defconst lyskom-max-int 8388607
