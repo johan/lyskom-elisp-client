@@ -1086,9 +1086,7 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
   
   (lyskom-edit-text
    lyskom-proc
-   (lyskom-create-misc-list 'recpt
-			    (server-info->motd-conf lyskom-server-info))
-   
+   (lyskom-create-misc-list)
    (if (and old-motd-text
 	    (string-match "\n" (text->text-mass old-motd-text)))
        (substring (text->text-mass old-motd-text) 0 (1- (match-end 0)))
