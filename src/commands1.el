@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.82 2000-08-16 14:21:13 byers Exp $
+;;;;; $Id: commands1.el,v 44.83 2000-08-16 15:39:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.82 2000-08-16 14:21:13 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.83 2000-08-16 15:39:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1442,7 +1442,7 @@ Those that you are not a member in will be marked with an asterisk."
     (lyskom-prefetch-all-confs))
 
   (blocking-do 'get-uconf-stat lyskom-pers-no)
-  (let ((pers-no (lyskom-read-conf-no 
+  (let ((pers (lyskom-read-conf-stat
                   (if arg 'list-pers-confs-created-by 'list-confs-created-by)
                   '(pers) 
                   nil
@@ -1450,6 +1450,7 @@ Those that you are not a member in will be marked with an asterisk."
                       (cons (conf-stat->name (cache-get-uconf-stat lyskom-pers-no)) 0)1
                       nil)
                   t)))
+    (lyskom-format-insert 'listing-confs-created-by (conf-stat->conf-no pers))
     (lyskom-message (lyskom-get-string (if arg 'getting-all-pers-confs 'getting-all-confs)))
     (let ((result (blocking-do 'lookup-z-name "" (if arg 1 0) 1)))
       (lyskom-message (lyskom-get-string (if arg 'getting-all-pers-confs-done 'getting-all-confs-done)))
@@ -1467,13 +1468,13 @@ Those that you are not a member in will be marked with an asterisk."
                                                                   'lyskom-list-created-conferences-2
                                                                   (conf-z-info->conf-no conf-z)
                                                                   counter
-                                                                  pers-no
+                                                                  (conf-stat->conf-no pers)
                                                                   arg
                                                                   )
                                           calls)))
                            (lyskom-wait-queue 'main)
                            (when (eq 0 (elt counter 3))
-                             (lyskom-format-insert 'no-created-confs pers-no))
+                             (lyskom-format-insert 'no-created-confs pers))
                            )
                   (quit (aset counter 0 t)
                         (lyskom-cancel-call 'main calls))))
@@ -1510,7 +1511,8 @@ Those that you are not a member in will be marked with an asterisk."
                                         (lyskom-get-string 'superconf-conf-letter) " "))
                             (cond ((conf-type->secret (conf-stat->conf-type cs)) (lyskom-get-string 'secret-conf-letter))
                                   ((conf-type->rd_prot (conf-stat->conf-type cs)) (lyskom-get-string 'protected-conf-letter))
-                                  (t " "))))))
+                                  (t " ")))
+      (sit-for 0))))
 
 
 (defun lyskom-list-conf-print (conf-z)
