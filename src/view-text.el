@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.1 1996-03-29 03:05:16 davidk Exp $
+;;;;; $Id: view-text.el,v 40.2 1996-04-14 23:39:24 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.1 1996-03-29 03:05:16 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.2 1996-04-14 23:39:24 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -229,7 +229,8 @@ lyskom-reading-list."
 	     (> (misc-info->footn-in misc) (text-stat->text-no text-stat))
 	     kom-show-footnotes-immediately)
 	;; Show the footnote
-	(lyskom-view-text (misc-info->footn-in misc) mark-as-read)
+	(lyskom-view-text (misc-info->footn-in misc)
+			  mark-as-read t conf-stat priority review-tree)
 	(lyskom-is-read (misc-info->footn-in misc)))
        ((eq (misc-info->type misc) 'FOOTN-IN)
 	(setq list (cons (misc-info->footn-in misc) list)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 40.2 1996-04-02 16:19:42 byers Exp $
+;;;;; $Id: edit-text.el,v 40.3 1996-04-14 23:39:12 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 40.2 1996-04-02 16:19:42 byers Exp $\n"))
+	      "$Id: edit-text.el,v 40.3 1996-04-14 23:39:12 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -577,8 +577,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun lyskom-looking-at-header (header match-number)
   "Check if point is at the beginning of a header of type HEADER.
-Return the corresponding number (conf no etc.). If ANGLED is non-nil,
-only match a number inside <>."
+Return the corresponding number (conf no etc.) if MATCH-NUMBER is
+non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
   (if (looking-at
        (concat (lyskom-get-string header)
 	       (cond ((eq match-number 'angled)

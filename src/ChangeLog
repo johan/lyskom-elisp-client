@@ -1,3 +1,8 @@
+Sun Apr 14 23:44:45 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Felaktiga parametrar i
+	ett anrop till lyskom-view-text.
+
 Thu Apr  4 10:36:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * lyskom-rest.el (lyskom-insert): Gör lyskom-scroll i lyskom-insert
@@ -19,6 +24,11 @@ Thu Apr  4 10:36:06 1996  David Byers  <davby@sen2.ida.liu.se>
     funktion som hämtar texter av en person eller till ett möte.
     (lyskom-get-texts-by): Ny funktion som hämtar texter av en person.
     (lyskom-get-texts-to): Ny funktion som hämtar texter till ett möte.
+
+Wed Apr  3 12:33:45 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-create-conf-handler-2): Testa inte om mötet
+	är hemligt. Detta görs i kom-create-conf istället.
 
 Wed Apr  3 12:56:19 1996  David Byers  <davby@sen2.ida.liu.se>
 
@@ -84,6 +94,15 @@ Tue Apr  2 15:15:11 1996  David Byers  <davby@sen2.ida.liu.se>
     referenser till debugger-old-buffer för att slippa
     kompileringsvarningar. 
 
+Tue Apr  2 00:45:27 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Anropa lyskom-view-text
+ 	med fler argument.
+
+	* commands1.el (kom-create-conf): Slog ihop med
+ 	lyskom-create-conf-handler. Skriv inga presentationer till hemliga
+ 	möten.
+
 Mon Apr  1 14:57:53 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * commands1.el: Prioritet sätts mellan 1 och 255, aldrig till noll.
@@ -112,6 +131,14 @@ Mon Apr  1 14:57:53 1996  David Byers  <davby@sen2.ida.liu.se>
     * lyskom-rest.el (lyskom-print-prompt): Sätt lyskom-is-waiting till
     nil om man inte är vid sista prompten. lyskom-is-waiting måste vara
     nil om asynkrona texter skall sparas och inte skrivas ut.
+
+Sat Mar 30 00:33:32 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-start-of-command): Fungerade dåligt om
+	man hade satt kom-page-before-command.
+
+	* review.el (kom-review-comments): Bakade in
+	lyskom-review-comments.
 
 Fri Mar 29 03:26:34 1996  David Kågedal  <davidk@lysator.liu.se>
 

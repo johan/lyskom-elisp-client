@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.4 1996-04-04 11:54:51 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.5 1996-04-14 23:39:16 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.4 1996-04-04 11:54:51 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.5 1996-04-14 23:39:16 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1449,7 +1449,9 @@ lyskom-is-waiting nil.
            ;; (= (point) (point-max))
 	   )				;Tell user something is
       (progn
-        ;; (beginning-of-line 0)           ;about to happen.
+	;; The following line is necessary for people who use
+	;; kom-page-before-command.
+        (beginning-of-line 0)           ;about to happen.
         (sit-for 0)))
                                         ;  (lyskom-scroll)
   (if kom-page-before-command           ;Nice with dumb terminals.
