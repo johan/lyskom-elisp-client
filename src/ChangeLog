@@ -1,3 +1,20 @@
+2002-12-17  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* startup.el (lyskom-read-server-name): Updated docstring wrt.
+	kom-builtin-server-aliases.
+
+	* lyskom-rest.el (lyskom-update-prompt, lyskom-format-prompt)
+	(lyskom-mode-name-from-host): Use both kom-server-aliases and
+	kom-builtin-server-aliases.
+
+	* commands2.el (kom-modeline-select-unread-kom)
+	(kom-status-server): Use both kom-server-aliases and
+	kom-builtin-server-aliases.
+
+	* async.el (lyskom-show-logged-in-person)
+	(lyskom-show-logged-out-person): Use both kom-server-aliases and
+	kom-builtin-server-aliases.
+
 2002-12-16  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 701:

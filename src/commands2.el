@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.145 2002-10-30 13:43:08 ceder Exp $
+;;;;; $Id: commands2.el,v 44.146 2002-12-16 23:50:22 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.145 2002-10-30 13:43:08 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.146 2002-12-16 23:50:22 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1888,8 +1888,10 @@ Return-value: 'no-session if there is no suitable session to switch to
                        (vector
                         (lyskom-format "%#1P, %#2s%#3?b%[ (%#4s)%]%[%]"
                                        lyskom-pers-no
-                                       (or (cdr (assoc lyskom-server-name
-                                                       kom-server-aliases))
+                                       (or (cdr (assoc
+                                                 lyskom-server-name
+                                                 (append kom-server-aliases
+                                                         kom-builtin-server-aliases)))
                                            lyskom-server-name)
                                        (memq buffer lyskom-sessions-with-unread-letters)
                                        (lyskom-get-string 'unread-letters))
@@ -2769,13 +2771,15 @@ to the first text that NEW is a comment or footnote to."
       ;; ----------------------------------------
       ;; Print header
 
-      (lyskom-format-insert 'server-status-header 
-                            (cond ((cdr (lyskom-string-assoc lyskom-server-name kom-server-aliases)))
-                                  ((cdr (lyskom-string-rassoc lyskom-server-name kom-server-aliases)))
-                                  (t lyskom-server-name))
-                            (cond ((car (lyskom-string-rassoc lyskom-server-name kom-server-aliases)))
-                                  (t lyskom-server-name))
-                            lyskom-server-port)
+      (let ((lyskom-both-server-aliases (append kom-server-aliases
+                                                kom-builtin-server-aliases)))
+        (lyskom-format-insert 'server-status-header
+                              (cond ((cdr (lyskom-string-assoc lyskom-server-name lyskom-both-server-aliases)))
+                                    ((cdr (lyskom-string-rassoc lyskom-server-name lyskom-both-server-aliases)))
+                                    (t lyskom-server-name))
+                              (cond ((car (lyskom-string-rassoc lyskom-server-name lyskom-both-server-aliases)))
+                                    (t lyskom-server-name))
+                              lyskom-server-port))
 
       ;; ----------------------------------------
       ;; Print software name and version
