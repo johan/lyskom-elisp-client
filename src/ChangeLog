@@ -1,3 +1,60 @@
+2003-08-02  David Byers  <byers@lysator.liu.se>
+
+	Coherent and useful defaults reading conference names:
+	* filter.el (kom-filter-subject): Don't set default when reading
+	conference name (the default default is better). Also cleaned up
+	the code some (it was downright embarrasing).
+	(kom-filter-author): Same here (sans the cleaning).
+	(kom-filter-text): Same here.
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Don't set default
+	when reading conference name (the default default is better).
+
+	* faqs.el (kom-review-faq): Don't set default when reading
+	conference name (the default default is better).
+	(kom-change-conf-faq): Same here.
+	(kom-list-faqs): Same here.
+
+	* review.el (lyskom-review-by-to): Don't set default when reading
+	conference name (the default default is better).
+	(lyskom-unread-by-to): Same here.
+
+	* commands2.el (kom-status-person): Don't set default when reading
+	conference name (the default default is better).
+	(kom-send-message): Fall back to the default default when reading
+	recipient name (better than the empty string, I think).
+
+	* commands1.el (kom-write-text): Don't set default when reading
+	conference name (the default default is better).
+	(kom-review-presentation): Pass nil as the initial for
+	lyskom-read-conf-stat.
+	(kom-unread-presentation): Same here.
+	(kom-add-self): Same here.
+	(kom-change-priority): Same here.
+	(kom-sub-member): Same here.
+	(kom-sub-self): Same here.
+	(kom-go-to-conf): Same here.
+	(kom-list-created-conferences): Same here.
+	(kom-change-password): Same here.
+	(kom-who-is-on-in-conference): Same here.
+	(kom-who-is-present-in-conference): Same here.
+	(kom-change-parenthesis): Pass lyskom-pers-no in initial.
+	(kom-sub-recipient): Use default INITIAL if no better choice is
+	found.
+	(lyskom-add-helper): Same here.
+	(kom-move-text): Same here.
+	(kom-move-text-tree): Same here.
+
+	* command.el (def-kom-command): Added binding of
+	lyskom-command-point.
+
+	* completing-read.el (lyskom-read-conf): Handle loads of different
+	types for INITIAL.
+	(lyskom-read-conf-guess-initial): New function that guesses a
+	default for conference reading commands. The default is the first
+	that fits the predicate of the conference under point, the current
+	conference and the current person.
+
 2003-07-31  David Byers  <byers@lysator.liu.se>
 
 	Make moving memberships work again:

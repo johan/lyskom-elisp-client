@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.52 2003-06-01 18:10:34 byers Exp $
+;;;;; $Id: review.el,v 44.53 2003-08-02 20:21:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.52 2003-06-01 18:10:34 byers Exp $\n"))
+	      "$Id: review.el,v 44.53 2003-08-02 20:21:46 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -306,17 +306,7 @@ all review-related functions."
               (lyskom-format 'review-info
                              (lyskom-format 'info-to-conf info))
               '(all) 
-              t
-              ;; If person is not given we must give
-              ;; conf  -- Not anymore!
-              ;; (not (zerop by))
-              (if (or (null lyskom-current-conf)
-                      (zerop lyskom-current-conf))
-                  ""
-                (cons (conf-stat->name
-                         (blocking-do 'get-conf-stat
-                                      lyskom-current-conf)) 0))
-              t)))
+              t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
@@ -394,18 +384,7 @@ texts, review the last N texts instead of the first (you can use
          (to (lyskom-read-conf-no 
               (lyskom-format 'unread-info
                              (lyskom-format 'info-to-conf info))
-              '(all) 
-              t
-              ;; If person is not given we must give
-              ;; conf  -- Not anymore!
-              ;; (not (zerop by))
-              (if (or (null lyskom-current-conf)
-                      (zerop lyskom-current-conf))
-                  ""
-                (cons (conf-stat->name
-                         (blocking-do 'get-conf-stat
-                                      lyskom-current-conf)) 0))
-              t)))
+              '(all) t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
