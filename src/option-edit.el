@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.51 2001-04-01 13:18:36 joel Exp $
+;;;;; $Id: option-edit.el,v 44.52 2001-04-01 14:06:20 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.51 2001-04-01 13:18:36 joel Exp $\n"))
+	      "$Id: option-edit.el,v 44.52 2001-04-01 14:06:20 joel Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -128,6 +128,7 @@
     [kom-ding-on-common-messages]
     [kom-ding-on-group-messages]
     [kom-ding-on-personal-messages]
+    "\n"
     [kom-silent-ansaphone]
     "\n\n"
     section

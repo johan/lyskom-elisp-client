@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.156 2001-04-01 13:18:37 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.157 2001-04-01 14:06:21 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.156 2001-04-01 13:18:37 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.157 2001-04-01 14:06:21 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -2301,7 +2301,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
 
-    (ar-message-type . "Meddelandetype")
+    (ar-message-type . "Meddelandetyp")
     (ar-personal     . "Personligt meddelande")
     (ar-group        . "Gruppmeddelande")
     (ar-alarm        . "Alarmmeddelande")
@@ -3342,7 +3342,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ding-on-common-messages-tag   . "Vid alarmmeddelanden:               ")
     (kom-ding-on-group-messages-tag    . "Vid gruppmeddelanden:               ")
     (kom-ding-on-personal-messages-tag . "Vid personliga meddelanden:         ")
-    (kom-ding-on-no-subject-tag     . "När ärenderad saknas:              ")
+    (kom-ding-on-no-subject-tag        . "När ärenderad saknas:               ")
 
     (lyskom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
     (kom-friends-tag . "Vänner och bekanta:")
