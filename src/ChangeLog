@@ -1,3 +1,21 @@
+Thu Jul 23 15:03:10 1998  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-keyboard-menu):
+	(lyskom-button-menu):
+	(kom-menu-button-press): Skrev kom-menu-button-press som
+ 	komplement till kom-button-press.
+
+	* view-mode.el (lyskom-view-mode-map): Se ovan.
+
+	* english-strings.el (lyskom-en-edit-mode-map): 
+	(lyskom-en-mode-map): 
+	(lyskom-en-prioritize-mode-map): Se ovan.
+
+	* swedish-strings.el (lyskom-sv-mode-map):
+	(lyskom-sv-prioritize-mode-map): 
+	(lyskom-sv-edit-mode-map): Se ovan.
+
+
 Wed Jul  8 13:12:48 1998  David Kagedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Den frågade inte om man ville fortsätta med

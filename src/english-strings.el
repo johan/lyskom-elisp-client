@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.39 1998-06-02 12:14:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.40 1998-07-23 15:04:06 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.39 1998-06-02 12:14:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.40 1998-07-23 15:04:06 petli Exp $"))
 
 
 ;;; ================================================================
@@ -77,6 +77,7 @@
   (define-key lyskom-en-edit-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-button-press)
+  (define-key lyskom-en-edit-mode-map "\C-c+" 'kom-menu-button-press)
   (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
   (define-key lyskom-en-edit-mode-map "\C-c\C-s" 'kom-ispell-message)
   (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
@@ -1051,6 +1052,8 @@ On since %#8s%#9s")
     (doing-nowhere-conn . "but is")
     (waiting-for-membership . "Waiting for the membership list to be fetched...%d/%d")
 
+    (keyboard-menu-help . "Next: SPC  Prev: DEL  Select: RET  Cancel: ESC")
+
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
@@ -1522,6 +1525,7 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-en-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-en-mode-map "*" 'kom-button-press)
+  (define-key lyskom-en-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)
   (define-key lyskom-en-mode-map "\M-\C-i" 'kom-previous-link)
 
@@ -1698,6 +1702,7 @@ Contents:     \"%#9s\"
   (define-key lyskom-en-prioritize-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-en-prioritize-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-en-prioritize-mode-map "*" 'kom-button-press)
+  (define-key lyskom-en-prioritize-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-prioritize-mode-map "?" 'kom-prioritize-help)
   (define-key lyskom-en-prioritize-mode-map "\C-k" 'kom-prioritize-select)
   (define-key lyskom-en-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
