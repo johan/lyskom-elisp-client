@@ -1,3 +1,7 @@
+Thu Nov 25 17:05:19 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-C på riktigt
+
 1999-11-25  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el: Use lyskom-keys for all swedish chars in the
