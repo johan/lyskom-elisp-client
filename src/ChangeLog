@@ -1,5 +1,9 @@
 Mon Sep  9 16:35:39 1991  Lars Willf|r  (willfor at robin)
 
+	* Tog bort den gamla funktionen lyskom-show-broadcast-message
+	  (ers{tts av lyskom-show-personal-message) och den av den
+	  funktionen anv{nda str{ngen broadcast-from.
+
 	* async.el och swedish-strings.el: Nu visas tiden (enligt
 	  klienten) n{r man f}r ett personligt eller allm{nt meddelande.
 

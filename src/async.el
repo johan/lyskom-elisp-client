@@ -13,7 +13,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.2 1991-09-09 14:39:10 willfor Exp $\n"))
+	      "$Id: async.el,v 35.3 1991-09-09 14:55:22 willfor Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -132,13 +132,14 @@ this function shall be with current-buffer the BUFFER."
 					 session-no))
 	  )))
 
-     ((eq msg-no 10)			; Broadcast message
+     ((eq msg-no 10)			; Broadcast message (obsolete? /lw)
       (let ((sender (lyskom-parse-num))
 	    (lyskom-message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
 	 (initiate-get-conf-stat 'follow
-				 'lyskom-show-broadcast-message sender
+				 'lyskom-show-personal-message sender
+				 recipient
 				 message))))
 
      ((eq msg-no 11)
@@ -249,25 +250,6 @@ this function shall be with current-buffer the BUFFER."
 (defun lyskom-is-in-minibuffer ()
   "Returns non-nil if I am using the minibuffer for some reading."
   (not (zerop (minibuffer-depth))))
-
-
-(defun lyskom-show-broadcast-message (sender message)
-  "Insert a broadcast message into the lyskom buffer.
-Args: SENDER: conf-stat for the person issuing the broadcast message or a
-	      string that is the sender.
-      MESSAGE: A string containing the message."
-  (lyskom-insert-before-prompt
-   "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (lyskom-insert-before-prompt (lyskom-format 'broadcast-from
-				       (cond
-					((stringp sender) sender)
-					(sender (conf-stat->name sender))
-					(t (lyskom-get-string 'unknown)))
-				       message
-))
-  (lyskom-insert-before-prompt
-   "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (beep))
 
 
 (defun lyskom-show-personal-message (sender recipient message)
