@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.147 2002-12-31 00:22:08 byers Exp $
+;;;;; $Id: commands2.el,v 44.148 2002-12-31 10:30:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.147 2002-12-31 00:22:08 byers Exp $\n"))
+              "$Id: commands2.el,v 44.148 2002-12-31 10:30:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1024,6 +1024,7 @@ the text on one line."
 The summary contains the date, number of lines, author and subject of the text
 on one line."
   (let ((time (lyskom-current-server-time))
+        (texts (copy-sequence texts))
         (indent 0)
         (unique-subjects nil))
 
