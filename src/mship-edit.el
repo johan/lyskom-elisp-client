@@ -9,10 +9,6 @@
 ;; Maybe move setting the membership priority to 
 ;; lyskom-change-membership-priority. 
 ;;
-;; We get into all kinds of trouble if we hide all entries. In particular
-;; check all users of lp--get-last-visible-entry and 
-;; lp--get-next-visible-entry.
-;;
 ;; -------------------------------------------------------------------------
 ;; When prioritizing an entry we need to sort the read lists to put
 ;; the entries in the proper order. It's possible that we'll have to
@@ -515,9 +511,10 @@ entry priority"
   "Return the last visible entry in the list."
   (let* ((pos (1- (length (lp--all-entries))))
          (entry (lp--get-entry pos)))
-    (while (and entry (not (lp--entry->visible entry)))
-      (setq pos (1- pos)))
-    entry))
+    (while (and (> pos 0) entry (not (lp--entry->visible entry)))
+      (setq pos (1- pos))
+      (setq entry (lp--get-entry pos)))
+    (if (lp--entry->visible entry) entry nil)))
 
 (defun lp--get-entry (pos)
   "Return the entry at position POS in the list."
@@ -908,16 +905,19 @@ Forces a mode line update"
 (defun lp--calculate-distance (pos delta)
   "Return one more than the number of entries between POS and POS+DELTA.
 This includes visible and invisible entries. The sign of the
-returned value has the same sign as DELTA."
+returned value has the same sign as DELTA. The result is clipped to the
+size of the list."
   (let ((step (signum delta))
         (num (abs delta))
         (result 0))
     (while (> num 0)
       (setq pos (+ step pos))
-      (setq result (1+ result))
-      (let ((entry (lp--get-entry pos)))
-        (cond ((null entry) (setq result (1+ result) num 0))
-              ((lp--entry->visible (lp--get-entry pos)) (setq num (1- num))))))
+      (if (< pos 0)
+          (setq num 0)
+        (setq result (1+ result))
+        (let ((entry (lp--get-entry pos)))
+          (cond ((null entry) (setq result (1+ result) num 0))
+                ((lp--entry->visible (lp--get-entry pos)) (setq num (1- num)))))))
     (* result step)))
 
 
@@ -1157,18 +1157,19 @@ possible in the list."
 The cursor will always move to the start of the target entry."
   (interactive "p")
   (let* ((entry (lp--entry-at (point)))
-         (pos (cond ((and (null entry) (< (point)
-                                          (lp--entry->start-marker 
-                                            (lp--get-entry
-                                             (lp--next-visible-entry 0)))))
-                     0)
-                    ((and (null entry) (> (point) 
-                                          (lp--entry->end-marker 
-                                           (lp--get-last-visible-entry))))
-                     (1- (length (lp--all-entries))))
-                    (t (max 0 (- (lp--entry-position entry) count))))))
+         (last-entry (lp--get-last-visible-entry))
+         (first-entry (lp--next-visible-entry 0))
+         (pos (lp--entry-position entry))
+         (new-pos (cond ((null last-entry) nil)
+                        ((and (null entry) (< (point)
+                                              (lp--entry->start-marker 
+                                               (lp--get-entry first-entry)))) 0)
+                        ((and (null entry) (> (point) 
+                                              (lp--entry->end-marker last-entry)))
+                         (1- (length (lp--all-entries))))
+                        (t (max 0 (+ pos (lp--calculate-distance pos (- count))))))))
     (condition-case nil
-        (goto-char (lp--entry->start-marker (lp--get-entry pos)))
+        (goto-char (lp--entry->start-marker (lp--get-entry new-pos)))
       (error nil))))
 
 (defun lp--next-entry (count)
@@ -1176,35 +1177,42 @@ The cursor will always move to the start of the target entry."
 The cursor will always move to the start of the target entry."
   (interactive "p")
   (let* ((entry (lp--entry-at (point)))
-         (pos (cond ((and (null entry) (< (point) 
+         (last-entry (lp--get-last-visible-entry))
+         (first-entry (lp--next-visible-entry 0))
+         (pos (lp--entry-position entry))
+         (new-pos (cond ((null last-entry) nil)
+                    ((and (null entry) (< (point) 
                                           (lp--entry->start-marker 
                                            (lp--get-entry
-                                            (lp--next-visible-entry 0)))))
+                                            first-entry))))
                      0)
                     ((and (null entry) (> (point) 
                                           (lp--entry->end-marker 
-                                           (lp--get-last-visible-entry))))
+                                           last-entry)))
                      (1- (length (lp--all-entries))))
                     (t (min (1- (length (lp--all-entries)))
-                            (+ (lp--entry-position entry) count))))))
+                            (+ pos (lp--calculate-distance pos count)))))))
     (condition-case nil
-        (goto-char (lp--entry->start-marker (lp--get-entry pos)))
+        (goto-char (lp--entry->start-marker (lp--get-entry new-pos)))
       (error nil))))
 
 (defun lp--first-entry ()
   "Move point to the first entry in the membership list."
   (interactive)
   (condition-case nil
-      (goto-char (lp--entry->start-marker 
-                  (lp--get-entry (lp--next-visible-entry 0))))
+      (let ((entry (lp--get-entry (lp--next-visible-entry 0))))
+        (cond ((null entry) (goto-char lp--list-end-marker))
+              (t (goto-char (lp--entry->start-marker 
+                             (lp--get-entry (lp--next-visible-entry 0)))))))
     (error nil)))
 
 (defun lp--last-entry ()
   "Move point to the last entry in the membership list."
   (interactive)
   (condition-case nil
-      (goto-char
-       (lp--entry->start-marker (lp--get-last-visible-entry)))
+      (let ((entry (lp--get-last-visible-entry)))
+        (cond ((null entry) (goto-char lp--list-end-marker))
+              (t (goto-char (lp--entry->start-marker entry)))))
     (error nil)))
 
 (defun lp--goto-priority (priority)
@@ -1260,20 +1268,24 @@ entry with an adjacent priority."
     (funcall fn)
     (when (and (boundp 'lyskom-buffer-category)
                lyskom-buffer-category 'prioritize)
-      (cond ((> (point) (lp--entry->end-marker (lp--get-last-visible-entry)))
-             (goto-char (lp--entry->end-marker (lp--get-last-visible-entry)))
-             (when (> (current-column) cur)
-               (beginning-of-line)
-               (forward-char cur)))
+      (let ((last-entry (lp--get-last-visible-entry ))
+            (first-entry (lp--next-visible-entry 0)))
+        (cond ((null last-entry)
+               (goto-char lp--list-end-marker))
+              ((> (point) (lp--entry->end-marker last-entry))
+               (goto-char (lp--entry->end-marker last-entry))
+               (when (> (current-column) cur)
+                 (beginning-of-line)
+                 (forward-char cur)))
 
-            ((< (point) (lp--entry->start-marker
-                         (lp--get-entry (lp--next-visible-entry 0))))
-             (goto-char (lp--entry->start-marker 
-                         (lp--get-entry (lp--next-visible-entry 0))))
-             (end-of-line)
-             (when (> (current-column) cur)
-               (beginning-of-line)
-               (forward-char cur)))))))
+              ((< (point) (lp--entry->start-marker
+                           (lp--get-entry first-entry)))
+               (goto-char (lp--entry->start-marker 
+                           (lp--get-entry first-entry)))
+               (end-of-line)
+               (when (> (current-column) cur)
+                 (beginning-of-line)
+                 (forward-char cur))))))))
 
 (defadvice scroll-up-command (around lp--scroll-up-advice activate)
   (lp--scroll-advice (lambda () ad-do-it)))
@@ -1417,7 +1429,9 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
         (make-local-variable 'lp--entry-list)
         (make-local-variable 'lp--list-start-marker)
         (make-local-variable 'lp--list-end-marker)
+        (make-local-variable 'lp--buffer-done)
         (setq lp--entry-list nil)
+        (setq lp--buffer-done nil)
         (lyskom-format-insert "\
 Medlemskap för %#1M på %#2s
 

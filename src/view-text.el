@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.36 2000-03-15 15:45:11 byers Exp $
+;;;;; $Id: view-text.el,v 44.37 2000-04-07 11:35:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.36 2000-03-15 15:45:11 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.37 2000-04-07 11:35:42 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -100,6 +100,7 @@ Note that this function must not be called asynchronously."
                          (mx-cc (lyskom-get-aux-item (text-stat->aux-items text-stat) 20))
                          (mx-filename (lyskom-get-aux-item (text-stat->aux-items text-stat) 10104))
                          (mx-sender (lyskom-get-aux-item (text-stat->aux-items text-stat) 10103))
+			 (mx-headers (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))
                          (mx-reply-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 18)))
                          
 
@@ -164,7 +165,7 @@ Note that this function must not be called asynchronously."
 
                    ;; Insert imported at
 
-                   (cond ((and mx-from 
+                   (cond ((and (or mx-from mx-author mx-sender mx-headers)
                                (text-stat->author text-stat)
                                kom-show-imported-importer)
                           (lyskom-format-insert 'text-imported-at-by
