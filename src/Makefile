@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.9 1994-01-06 00:55:12 linus Exp $
+# $Id: Makefile,v 38.0 1994-01-06 01:56:09 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.9 1994-01-06 00:55:12 linus Exp $
+# $Id: Makefile,v 38.0 1994-01-06 01:56:09 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.9  1994-01-06 00:55:12  linus
+# Revision 38.0  1994-01-06 01:56:09  linus
+# New version
+#
+# Revision 36.9  1994/01/06  00:55:12  linus
 # Removed installation of doc.
 #
 # Revision 36.8  1993/12/14  02:21:29  linus

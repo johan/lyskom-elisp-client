@@ -1,6 +1,6 @@
 
 ;;;;;
-;;;;; $Id: english-strings.el,v 36.5 1993-08-19 19:39:03 byers Exp $
+;;;;; $Id: english-strings.el,v 38.0 1994-01-06 01:57:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 36.5 1993-08-19 19:39:03 byers Exp $\n"))
+	      "$Id: english-strings.el,v 38.0 1994-01-06 01:57:48 linus Exp $\n"))
 
 
 ;;; ================================================================
