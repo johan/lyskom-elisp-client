@@ -1,3 +1,16 @@
+2000-12-12  David Byers  <davby@sen5.ida.liu.se>
+
+	* Release av 0.46.1-BETA-4
+
+2000-12-12  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-modeline-next-unread-kom): Don't check for
+	Emacs version.
+	(kom-modeline-select-unread-kom): Don't check for Emacs version.
+
+	* lyskom-rest.el (lyskom-is-loaded): Set modeline keymap for
+	lyskom-unread-mode-line in Gnu Emacs too.
+
 2000-12-09  Joel Rosdahl  <joel@rosdahl.net>
 
 	* commands2.el (kom-status-conf): More space allocated for the

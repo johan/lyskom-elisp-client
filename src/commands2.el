@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.84 2000-12-09 09:22:21 joel Exp $
+;;;;; $Id: commands2.el,v 44.85 2000-12-12 11:12:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.84 2000-12-09 09:22:21 joel Exp $\n"))
+	      "$Id: commands2.el,v 44.85 2000-12-12 11:12:50 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1740,34 +1740,30 @@ Return-value: 'no-session if there is no suitable session to switch to
 (defun kom-modeline-next-unread-kom ()
   "Pop up the previous unread lyskom session, if there is one"
   (interactive)
-  (lyskom-xemacs-or-gnu
-   (lyskom-next-kom 'lyskom-sessions-with-unread 'forward)
-   nil))
+  (lyskom-next-kom 'lyskom-sessions-with-unread 'forward))
 
 (defun kom-modeline-select-unread-kom (event)
   "Pop up a menu of sessions with unreads"
   (interactive "@e")
-  (lyskom-xemacs-or-gnu
-   (when lyskom-sessions-with-unread
-     (let ((unreads
-            (mapcar (lambda (buffer)
-                      (save-excursion
-                        (set-buffer buffer)
-                        (vector
-                         (lyskom-format "%#1P, %#2s%#3?b%[ (%#4s)%]%[%]"
-                                        lyskom-pers-no
-                                        (or (cdr (assoc lyskom-server-name
-                                                        kom-server-aliases))
-                                            lyskom-server-name)
-                                        (memq buffer lyskom-sessions-with-unread-letters)
-                                        (lyskom-get-string 'unread-letters))
-                         (list 'lyskom-switch-to-kom-buffer buffer)
-                         :active t)))
-                    lyskom-sessions-with-unread)))
-       (popup-menu
-        (cons (lyskom-get-string 'sessions-with-unreads) unreads)
-        event)))
-   nil))
+  (when lyskom-sessions-with-unread
+    (let ((unreads
+           (mapcar (lambda (buffer)
+                     (save-excursion
+                       (set-buffer buffer)
+                       (vector
+                        (lyskom-format "%#1P, %#2s%#3?b%[ (%#4s)%]%[%]"
+                                       lyskom-pers-no
+                                       (or (cdr (assoc lyskom-server-name
+                                                       kom-server-aliases))
+                                           lyskom-server-name)
+                                       (memq buffer lyskom-sessions-with-unread-letters)
+                                       (lyskom-get-string 'unread-letters))
+                        (list 'lyskom-switch-to-kom-buffer buffer)
+                        :active t)))
+                   lyskom-sessions-with-unread)))
+      (popup-menu
+       (cons (lyskom-get-string 'sessions-with-unreads) unreads)
+       event))))
 
 
 
