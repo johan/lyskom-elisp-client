@@ -1,5 +1,7 @@
 2003-12-03  David Byers  <davby@ida-gw.sysinst.ida.liu.se>
 
+	* names.el: Changed some names and tpyos.
+
 	* commands1.el (lyskom-list-clients-collect): Client statistics
 	now semi-ignore parentheses in the version field.
 

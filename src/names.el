@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.10 2003-07-02 19:10:02 byers Exp $
+;;;;; $Id: names.el,v 44.11 2003-12-03 18:08:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.10 2003-07-02 19:10:02 byers Exp $\n"))
+	      "$Id: names.el,v 44.11 2003-12-03 18:08:25 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -487,7 +487,7 @@ Namnsdagar enligt svenska språknämndens nya namnlängd (2001)."
                                  (31 . ("Sylvester"))))))
 
 (lyskom-define-namedays 'sv-pre-1901
-                        "Sverige (före 1901)"
+                        "Sverige, före 1901"
                         "\
 Namnsdagar enligt namnlängd från före 1901, med uppenbara helgdagar
 borttagna."
@@ -881,7 +881,7 @@ borttagna."
                                  ))))
 
 (lyskom-define-namedays 'sv-1901
-                        "Sverige (1901 års namnlängd)"
+                        "Sverige, 1901 års namnlängd"
                         "\
 Namnsdagar enligt namnlängd från 1901, med uppenbara helgdagar borttagna."
                         '((1 . (
@@ -1275,7 +1275,7 @@ Namnsdagar enligt namnlängd från 1901, med uppenbara helgdagar borttagna."
                                  ))))
 
 (lyskom-define-namedays 'sv-1986
-                        "Sverige (1986 års namnlängd)"
+                        "Sverige, 1986 års namnlängd"
                         "\
 Namnsdagar enligt namnlängd från 1986, med uppenbara helgdagar borttagna."
                         '((1 . (
@@ -1669,7 +1669,7 @@ Namnsdagar enligt namnlängd från 1986, med uppenbara helgdagar borttagna."
                                  ))))
 
 (lyskom-define-namedays 'sv-1993
-                        "Sverige (1993 års namnlängd)"
+                        "Sverige, 1993 års namnlängd"
                         "\
 Namnsdagar enligt namnlängd från 1993, med uppenbara helgdagar borttagna."
                         '((1 . (
@@ -2463,7 +2463,7 @@ texten på rätt språk."
 (lyskom-define-namedays 'fi-sv
                         "Finlandssvenska"
                         "\
-Namnsdagar enligt någon finlandssvenskt namnlängd."
+Namnsdagar enligt någon finlandssvensk namnlängd."
                         '((1 . ((1 . ())
                                 (2 . ("Gehard" "Gert"))
                                 (3 . ("Elmer" "Helmer"))
@@ -3260,12 +3260,12 @@ tjeckiska så är beskrivningen på svenska, med förhoppningen att någon
 som kan tjeckiska kommer att reta sig på den och skriva om texten på
 rätt språk."
                         '((1 . (
-                                (1 . ("Nov-Bý rok"))-A
+                                (1 . ("Nov-Bý-A rok"))
                                 (2 . ("Karina"))
                                 (3 . ("Radmila"))
                                 (4 . ("Diana"))
                                 (5 . ("Dalimil"))
-                                (6 . ("T-Bøi králové"))-A
+                                (6 . ("T-Bøi-A kr-Bálové"))-A
                                 (7 . ("Vilma"))
                                 (8 . ("-BÈestmír"))-A
                                 (9 . ("Vladan"))
@@ -3362,7 +3362,7 @@ rätt språk."
                                 (4 . ("Ivana"))
                                 (5 . ("Miroslava"))
                                 (6 . ("Vendula"))
-                                (7 . ("He-Bøman" "Hermína"))-A
+                                (7 . ("He-Bøman"-A "Herm-Bína"))-A
                                 (8 . ("Ema"))
                                 (9 . ("Du-B¹an"))-A
                                 (10 . ("Darja"))
@@ -3388,7 +3388,7 @@ rätt språk."
                                 (30 . ("Blahoslav"))
                                 ))
                           (5 . (
-                                (1 . ("Sv-Bátek práce"))-A
+                                (1 . ("Sv-Bátek-A pr-Báce"))-A
                                 (2 . ("Zikmund"))
                                 (3 . ("Alexej"))
                                 (4 . ("Kv-Bìtoslav"))-A
@@ -3416,7 +3416,7 @@ rätt språk."
                                 (26 . ("Filip"))
                                 (27 . ("Valdemar"))
                                 (28 . ("Vil-Bém"))-A
-                                (29 . ("Maximili-Bán" "Maxim"))-A
+                                (29 . ("Maximili-Bán"-A "Maxim"))
                                 (30 . ("Ferdinand"))
                                 (31 . ("Kamila"))
                                 ))
@@ -3552,14 +3552,14 @@ rätt språk."
                                 ))
                           (10 . (
                                  (1 . ("Igor"))
-                                 (2 . ("Ol-Bívie" "Galina" "Oliver"))-A
+                                 (2 . ("Ol-Bívie"-A "Galina" "Oliver"))
                                  (3 . ("Bohumil"))
                                  (4 . ("Franti-B¹ek"))-A
                                  (5 . ("Eli-B¹ka"))-A
                                  (6 . ("Hanu-B¹"))-A
                                  (7 . ("Sergej"))
                                  (8 . ("V-Bìra"))-A
-                                 (9 . ("-B©tefan" "Sára"))-A
+                                 (9 . ("-B©tefan"-A "S-Bára"))-A
                                  (10 . ("Marina"))
                                  (11 . ("Andrej"))
                                  (12 . ("Marcel"))
@@ -3577,7 +3577,7 @@ rätt språk."
                                  (24 . ("Nina"))
                                  (25 . ("Be-Báta"))-A
                                  (26 . ("Erik"))
-                                 (27 . ("-B©arlota" "Zoja" "Zoe"))-A
+                                 (27 . ("-B©arlota"-A "Zoja" "Zoe"))
                                  (28 . ())
                                  (29 . ("Silvie"))
                                  (30 . ("Tade-Bá¹"))-A
@@ -3622,7 +3622,7 @@ rätt språk."
                                  (4 . ("Barbora"))
                                  (5 . ("Jitka"))
                                  (6 . ("Mikul-Bá¹"))-A
-                                 (7 . ("Ambro-B¾" "Benjamín"))-A
+                                 (7 . ("Ambro-B¾"-A "Benjam-Bín"))-A
                                  (8 . ("Kv-Bìtoslava"))-A
                                  (9 . ("Vratislav"))
                                  (10 . ("Julie"))
@@ -3640,7 +3640,7 @@ rätt språk."
                                  (22 . ("-B©imon"))-A
                                  (23 . ("Vlasta"))
                                  (24 . ("Adam a Eva"))
-                                 (25 . ("Bo-B¾í hod"))-A
+                                 (25 . ("Bo-B¾í-A hod"))
                                  (26 . ("-B©tìpán"))-A
                                  (27 . ("-B®aneta"))-A
                                  (28 . ("Bohumila"))
