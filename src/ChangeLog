@@ -1,4 +1,16 @@
+Thu Sep 16 15:46:36 1993  Linus Tolke Y  (linus@dell)
+
+	* swedish-strings.el (lyskom-mode-map): Klar bugg, glömda ? för
+	  emacs 19.
+
+Tue Sep 14 12:06:42 1993  Linus Tolke Y  (linus@dell)
+
+	* lyskom-rest.el (lyskom-set-mode-line): Fixed an entry in the
+	  global minor-mode-alist, like Compiling.
+
 Tue Aug 31 12:23:25 1993  Linus Tolke Y  (linus@astrid)
+
+	* Distribuerat version 0.37		17.24
 
 	* completing-read.el (lyskom-read-conf-name): Works with emacs-18.
 	(lyskom-read-conf-name-internal): Works correctly when complete

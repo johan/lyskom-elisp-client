@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.10 1993-08-20 21:57:20 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.11 1993-09-21 23:17:30 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.10 1993-08-20 21:57:20 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.11 1993-09-21 23:17:30 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -534,7 +534,12 @@ Alter the priority to kom-low-priority if LOW-PRIORITY is non-nil."
 ;;;================================================================
 
 ;;; Whereto?
-
+(defvar lyskom-sessions-with-unread nil
+  "Global variable. List of lyskom-sessions with unread articles.")
+(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
+    (setq minor-mode-alist (cons '(lyskom-sessions-with-unread 
+				   (lyskom-get-string 'mode-line-unread))
+				 minor-mode-alist)))
 
 (defun lyskom-set-mode-line (&optional conf)
   "Sets mode-line-conf-name to the name of the optional argument conf CONF.
@@ -555,39 +560,49 @@ CONF can be a a conf-stat or a string."
 	(len 0)
 	(read-info-list nil))
 
-    ; Set unread to the number of unread texts in CONF.
-    (if (lyskom-conf-stat-p conf)
-	(progn
-	  (setq read-info-list 
-		(read-list->all-entries lyskom-to-do-list))
-
-	  (while read-info-list
-	    (if (read-info->conf-stat (car read-info-list))
-		(progn
-		  (setq len (length (text-list->texts 
-				     (read-info->text-list 
-				      (car read-info-list)))))
-		  (if (= (conf-stat->conf-no conf)
-			 (conf-stat->conf-no 
-			  (read-info->conf-stat (car read-info-list))))
-		      (setq unread len))
-		  (setq total-unread (+ total-unread len))))
-	    (setq read-info-list (cdr read-info-list)))))
-    (if (= unread -1)
-	(setq unread 0))
-
     (if (null name)
-	nil
-      (setq mode-line-conf-name 
-	    (substring (concat (if (lyskom-conf-stat-p conf)
-				   (format "(%d/%d) " unread total-unread)
-				 "")
-			       name
-			       (make-string 27 ? ))
-		       0 27))
-      (if (not kom-emacs-knows-iso-8859-1)
-	  (setq mode-line-conf-name
-		(iso-8859-1-to-swascii mode-line-conf-name))))))
+	nil				; We didn't have the name.
+
+      ;; Set unread to the number of unread texts in CONF.
+      (if (lyskom-conf-stat-p conf)
+	  (progn
+	    (setq read-info-list 
+		  (read-list->all-entries lyskom-to-do-list))
+
+	    (while read-info-list
+	      (if (read-info->conf-stat (car read-info-list))
+		  (progn
+		    (setq len (length (text-list->texts 
+				       (read-info->text-list 
+					(car read-info-list)))))
+		    (if (= (conf-stat->conf-no conf)
+			   (conf-stat->conf-no 
+			    (read-info->conf-stat (car read-info-list))))
+			(setq unread len))
+		    (setq total-unread (+ total-unread len))))
+	      (setq read-info-list (cdr read-info-list)))))
+      (if (= unread -1)
+	  (setq unread 0))
+
+      (if (null name)
+	  nil
+	(setq mode-line-conf-name 
+	      (substring (concat (if (lyskom-conf-stat-p conf)
+				     (format "(%d/%d) " unread total-unread)
+				   "")
+				 name
+				 (make-string 27 ? ))
+			 0 27))
+	(if (not kom-emacs-knows-iso-8859-1)
+	    (setq mode-line-conf-name
+		  (iso-8859-1-to-swascii mode-line-conf-name))))
+
+      (if (zerop total-unread)
+	  (setq lyskom-sessions-with-unread
+		(delq lyskom-proc lyskom-sessions-with-unread))
+	(or (assq lyskom-proc lyskom-sessions-with-unread)
+	    (setq lyskom-sessions-with-unread
+		  (cons lyskom-proc lyskom-sessions-with-unread)))))))
 
 
 ;;; ================================================================
@@ -1601,6 +1616,8 @@ then a newline is printed after the name instead."
 
 (defun lyskom-sentinel (proc sentinel)
   "Handles changes in the lyskom-process."
+  (setq lyskom-sessions-with-unread
+	(delq proc lyskom-sessions-with-unread))
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
   (lyskom-clear-vars)
