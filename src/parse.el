@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.25 1999-10-25 10:30:01 byers Exp $
+;;;;; $Id: parse.el,v 44.26 1999-10-25 11:57:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.25 1999-10-25 10:30:01 byers Exp $\n"))
+	      "$Id: parse.el,v 44.26 1999-10-25 11:57:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -100,7 +100,7 @@ first non-white character was not equal to CHAR."
 (defun lyskom-char-p (char)
   "Check if next token is CHAR (a character)."
   (let* ((lyskom-parse-pos lyskom-parse-pos)
-         (c (lyskom-parse-char)))
+         (c (lyskom-parse-nonwhite-char)))
     (eq char c)))
 
 (defun lyskom-string-to-parse ()
@@ -1153,7 +1153,7 @@ functions and variables that are connected with the lyskom-buffer."
                                           (let* ((buffer (generate-new-buffer " *Backtrace*"))
                                                  (standard-output buffer))
                                             (backtrace)
-                                            (prog1 (buffer-string buffer)
+                                            (prog1 (buffer-string nil nil buffer)
                                               (kill-buffer buffer)))
                                           (lyskom-string-to-parse))
                                     lyskom-backtrace-list))
