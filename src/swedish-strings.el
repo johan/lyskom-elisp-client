@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.66 1999-06-29 14:21:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.67 1999-06-30 09:01:07 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.66 1999-06-29 14:21:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.67 1999-06-30 09:01:07 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -706,8 +706,8 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (review-n-texts . "Återse %#1d inlägg.\n")
     (review-marked . "Återse %#1d markerade.\n")
     (review-text-no . "Återse text nummer %#1n\n")
-    (review-many-comments . "Återse %#2?d%[en%]%[%#2d] kommentar%#2?d%[%]%[er%] till inlägg %#1n.\n")
-    (view-many-comments . "Läs %#2?d%[en%]%[%#2d] kommentar%#2?d%[%]%[er%] till %#1n.\n")
+    (review-many-comments . "Återse %#2?d%[en%]%[%#2d%] kommentar%#2?d%[%]%[er%] till inlägg %#1n.\n")
+    (view-many-comments . "Läs %#2?d%[en%]%[%#2d%] kommentar%#2?d%[%]%[er%] till %#1n.\n")
     (view-texts-in-conf . "Totalt %#1d inlägg att läsa i %#2M.\n")
     (not-reading-anywhere . "Du läser inte i något möte.\n")
     (read-normally-read . "Hur många vill du se igen? ")

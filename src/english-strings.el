@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.53 1999-06-29 10:20:14 byers Exp $
+;;;;; $Id: english-strings.el,v 44.54 1999-06-30 09:01:02 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.53 1999-06-29 10:20:14 byers Exp $"))
+              "$Id: english-strings.el,v 44.54 1999-06-30 09:01:02 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -696,8 +696,8 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-n-texts . "Review %#1d articles.\n")
     (review-marked . "Review %#1d marked articles.\n")
     (review-text-no . "Review article %#1n\n")
-    (review-many-comments . "Review %#2?d%[one%]%[%#2d] comment%#2?d%[%]%[s%] to article %#1n.\n")
-    (view-many-comments . "Read %#2?d%[one%]%[%#2d] comment%#2?d%[%]%[s%] to %#1n.\n")
+    (review-many-comments . "Review %#2?d%[one%]%[%#2d%] comment%#2?d%[%]%[s%] to article %#1n.\n")
+    (view-many-comments . "Read %#2?d%[one%]%[%#2d%] comment%#2?d%[%]%[s%] to %#1n.\n")
     (view-texts-in-conf . "Grand total of %#1d articles to read in %#2M.\n")
 
     (not-reading-anywhere . "You are not reading in any conference.\n")
