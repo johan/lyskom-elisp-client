@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.278 2002-12-09 20:36:36 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.279 2002-12-09 21:44:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.278 2002-12-09 20:36:36 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.279 2002-12-09 21:44:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1858,6 +1858,9 @@ emacs till en som använder \"%#2s\" som förstahandsval för
 teckenkodning.
 
 ")
+
+    (has-nameday-1 . "%#1s har namnsdag i dag.")
+    (has-nameday-2 . "%#1s och %#2s har namnsdag i dag.")
 
 
     ))

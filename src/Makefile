@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.105 2002-10-23 17:54:45 byers Exp $
+# $Id: Makefile,v 44.106 2002-12-09 21:44:20 byers Exp $
 
 # Useful targets:
 #
@@ -86,6 +86,7 @@ SOURCES	 = 	komtypes.el \
 		parse.el \
 		cache.el \
 		view-mode.el \
+		names.el \
 		commands1.el \
 		commands2.el \
 		review.el \
