@@ -1,5 +1,8 @@
 Sat Jan 25 00:47:53 1992  Linus Tolke Y  (linus at ruben)
 
+	* swedish-strings.el (kom-page-next-command): Nu {ven bunden till
+	  "j".
+
 	* commands1.el (lyskom-change-name): A quit in the reading of the
 	  name to change to will now give a new prompt.
 
