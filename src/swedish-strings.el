@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.376 2004-07-19 20:11:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.377 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.376 2004-07-19 20:11:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.377 2004-07-20 19:28:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2081,7 +2081,9 @@ Nuvarande rättigheter för %#1P (%#1p):
     (canceling-command . "Abryter kommandot...")
 
     (no-selection . "Ingen markerad")
-    (selection . "%d markerade")
+    (selection . "%#1d markerad%#1?d%[%]%[e%]")
+    (lp-no-hidden . "")
+    (lp-hidden . "(%#1d dold%#1?d%[%]%[a%])")
     (priority-prompt . "Ny prioritet för %#1M: ")
     (priority-prompt-marked . "Ny prioritet på markerade möten: ")
     (lp-no-creation-info . "Ingen information om när medlemskapet skapades")
@@ -2108,7 +2110,7 @@ Nuvarande rättigheter för %#1P (%#1p):
  Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:  I,H,P,M
  Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
-    (lp-hide-read-efter . "Dölj medlemskap lästa efter: ")
+    (lp-hide-read-after . "Dölj medlemskap lästa efter: ")
     (lp-hide-read-since . "Dölj medlemskap ej lästa sedan: ")
     ))
 

@@ -1,3 +1,34 @@
+2004-07-20  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-enter-conf): Update the membership buffer
+	when going to a conference.
+
+	* commands1.el (lyskom-go-to-empty-conf): Update the membership
+	buffer when going to a conference.
+
+	Improve handling of hidden entries in mship-edit:
+	* mship-edit.el (lp--entry-set-visible): New function that handles
+	bookkeeping for visibility.
+	(lp--update-mode-line): Compute hidden information.
+	(lp--mode-line-hidden): New variable.
+	(lp--mode-line): Show number of hidden. Don't show modified
+	status (what would the point be).
+	(lp--entry-filter-after): New function.
+	(lp--entry-filter-before): New function.
+	(lp--show-all): New implementation. Moved.
+	(lp--show-hide-memberships-by-date): New implementation.
+	(lp--show-hide-read-memberships): New command.
+	(lp--show-hide-passive-memberships): New command.
+	(lp--mode): Set some local vars to nil on entry to mode.
+	(lp--apply-entry-filter): Preserve cursor position.
+	(lp--replace-entry-filter): New function.
+
+	Fixed some remaining places where unreads weren't updated:
+	* clienttypes.el (read-list-enter-first): Maybe update unreads in
+	membership buffer.
+	(set-read-list-del-first): Same here
+	(set-read-list-empty): Same here
+
 2004-07-19  David Byers  <byers@lysator.liu.se>
 
 	Support for entry filters and buffer headers:

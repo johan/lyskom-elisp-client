@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.242 2004-07-19 11:53:42 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.243 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.242 2004-07-19 11:53:42 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.243 2004-07-20 19:28:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -836,14 +836,21 @@ Args: CONF-STAT READ-INFO"
     (lyskom-run-hook-with-args 'lyskom-change-conf-hook
                                from-conf
                                to-conf)
-    (unless lyskom-is-anonymous
-      (initiate-pepsi 'main nil to-conf))
+    (lyskom-run-hook-with-args 'kom-change-conf-hook 
+                               lyskom-current-conf
+                               (conf-stat->conf-no conf-stat))
+    (unless lyskom-is-anonymous (initiate-pepsi 'main nil to-conf))
     (setq lyskom-current-conf to-conf)
+    (lp--update-buffer from-conf)
+    (lp--update-buffer to-conf)
     (let ((num-unread (text-list->length (read-info->text-list read-info))))
       (lyskom-enter-conf-print-unread conf-stat num-unread)
       (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
                                  from-conf
-                                 to-conf))))
+                                 to-conf)
+      (lyskom-run-hook-with-args 'kom-after-change-conf-hook 
+                                 lyskom-current-conf
+                                 (conf-stat->conf-no conf-stat)))))
 
 (defun lyskom-enter-conf-print-unread (conf num)
   "Print information about unread (if requested) when entering a conf.

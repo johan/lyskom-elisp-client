@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.333 2004-07-19 20:11:57 byers Exp $
+;;;;; $Id: english-strings.el,v 44.334 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.333 2004-07-19 20:11:57 byers Exp $"))
+              "$Id: english-strings.el,v 44.334 2004-07-20 19:28:10 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2081,7 +2081,7 @@ Change privileges for %#1P (%#1p)...")
  Move up:            M-p      Move down:      M-n      Toggle flags:   I,H,P,M
  Quit:               C-c C-c                           More help:        C-h m
 ")
-    (lp-hide-read-efter . "Hide memberships read after: ")
+    (lp-hide-read-after . "Hide memberships read after: ")
     (lp-hide-read-since . "Hide memberships not read since: ")
     ))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.43 2004-07-19 20:11:57 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.44 2004-07-20 19:28:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.43 2004-07-19 20:11:57 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.44 2004-07-20 19:28:10 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -88,9 +88,9 @@
 (defvar lp--buffer-done nil)
 (defvar lp--conf-name-width nil)
 (defvar lp--inhibit-update nil)
-
-(defvar lp--entry-filter nil)
 (defvar lp--hidden-entries nil)
+(defvar lp--entry-filter nil)
+
 
 
 ;;; ============================================================
@@ -351,10 +351,19 @@ only recomputed if the window width changes."
           (lp--entry-set-foreground entry (lyskom-face-foreground kom-dim-face))
         (lp--entry-set-foreground entry nil))
 
-      (if (lp--entry->selected entry)
-          (lp--entry-set-background entry (lyskom-face-background kom-mark-face))
-        (lp--entry-set-background entry nil)))
-))
+      (cond ((lp--entry->selected entry)
+             (lp--entry-set-background entry
+                                       (lyskom-face-background kom-mark-face)))
+
+            (t (lp--entry-set-background entry nil)))
+
+      (cond ((eq (membership->conf-no (lp--entry->membership entry))
+                 (lyskom-default-value 'lyskom-current-conf))
+             (lp--entry-set-foreground entry (lyskom-face-foreground
+                                              kom-url-face)))
+
+            (t (lp--entry-set-foreground entry nil)))
+)))
 
 
 (defun lp--format-entry-expansion (conf-stat defer-info)
@@ -392,7 +401,7 @@ only recomputed if the window width changes."
 (defun lp--print-entry (entry)
   "Print the entry ENTRY at the current position in the buffer.
 The start and end markers of the entry are adjusted"
-  (if (set-lp--entry->visible entry (lp--entry-compute-visible entry))
+  (if (lp--entry-set-visible entry (lp--entry-compute-visible entry))
       (let ((buffer-read-only nil))
         (insert-before-markers "\n")
         (forward-char -1)
@@ -557,7 +566,7 @@ entry priority"
     (while (and (> pos 0) entry (not (lp--entry->visible entry)))
       (setq pos (1- pos))
       (setq entry (lp--get-entry pos)))
-    (if (lp--entry->visible entry) entry nil)))
+    (if (and entry (lp--entry->visible entry)) entry nil)))
 
 (defun lp--get-entry (pos)
   "Return the entry at position POS in the list."
@@ -910,24 +919,27 @@ Forces a mode line update"
 (defun lp--entry-compute-visible (entry)
   "Compute the visibility of ENTRY."
   (not (lyskom-traverse filter lp--entry-filter
-         (unless (funcall filter entry)
+         (unless (apply (car filter) entry (cdr filter))
            (lyskom-traverse-break t)))))
 
-(defun lp--entry-set-visible (entry-list state)
-  "Set the visibility of all entries in ENTRY-LIST to STATE."
-  (when (null state)
-    (lp--select-entries entry-list nil))
-  (mapcar (lambda (entry) 
-            (unless (eq (lp--entry->visible entry) state)
-              (let ((pos (lp--get-entry 
-                          (lp--next-visible-entry
-                           (lp--entry-position entry)))))
-                (if pos
-                    (goto-char (lp--entry->start-marker pos))
-                  (goto-char lp--list-end-marker))
-              (set-lp--entry->visible entry state)
-              (lp--redraw-entry entry))))
-          entry-list))
+(defun lp--entry-set-visible (entry state)
+  "Set the visibility of ENTRY to STATE"
+  (let ((old-state (lp--entry->visible entry)))
+    (unless (eq state old-state)
+      (set-lp--entry->visible entry state)
+      (if state
+          (setq lp--hidden-entries (delq entry lp--hidden-entries))
+        (setq lp--hidden-entries (cons entry lp--hidden-entries)))
+      (lp--update-mode-line)))
+  state)
+
+(defun lp--show-all ()
+  (interactive)
+  (setq lp--entry-filter nil)
+  (lyskom-traverse entry lp--hidden-entries
+    (lp--redraw-entry entry))
+  (setq lp--hidden-entries nil))
+
 
 
 
@@ -1002,35 +1014,54 @@ size of the list."
 ;;; ----------------------------------------------------------------
 ;;; Filtration
 
-(defun lp--add-entry-filter (filter)
+(defun lp--entry-filter-active (filter)
+  "Return non-nil if FILTER is an active entry filter."
+  (assq filter lp--entry-filter))
+
+(defun lp--add-entry-filter (filter &rest filter-args)
   "Add entry filter FILTER.
 FILTER is a function that should take one argument, an lp--entry,
-and return non-nil if the entry should be visible."
+and return non-nil if the entry should be visible.
+
+If optional arguments FILTER-ARGS are supplied, these are also
+passed to the filter function."
   (unless (symbolp filter) (error "entry filter must be a symbol"))
-  (unless (memq filter lp--entry-filter)
-    (setq lp--entry-filter (cons filter lp--entry-filter))
+  (unless (assq filter lp--entry-filter)
+    (setq lp--entry-filter (cons (cons filter filter-args) lp--entry-filter))
     (lp--apply-entry-filter)))
+
+(defun lp--replace-entry-filter (filter &rest filter-args)
+  "Replace existing entry filter FILTER.
+
+See `lp--add-entry-filter' for more information."
+  (unless (symbolp filter) (error "entry filter must be a symbol"))
+  (if (assq filter lp--entry-filter)
+      (setcdr (assq filter lp--entry-filter) filter-args)
+    (setq lp--entry-filter (cons (cons filter filter-args) lp--entry-filter)))
+  (lp--apply-entry-filter))
+
 
 (defun lp--del-entry-filter (filter)
   "Remove the entry filter FILTER."
-  (let ((el (memq filter lp--entry-filter)))
+  (let ((el (assq filter lp--entry-filter)))
     (when el
       (setq lp--entry-filter (delq el lp--entry-filter))
       (lp--apply-entry-filter))))
 
 (defun lp--apply-entry-filter ()
   "Apply the current filter list to all entries."
-  (lp--update-filter-description)
-  (lyskom-traverse entry (lp--all-entries)
-    (let ((vis (lp--entry-compute-visible entry)))
-      (unless (eq vis (lp--entry->visible entry))
-        (lp--redraw-entry entry)))))
+  (lp--save-excursion
+   (lp--update-filter-description)
+   (lyskom-traverse entry (lp--all-entries)
+     (let ((vis (lp--entry-compute-visible entry)))
+       (unless (eq vis (lp--entry->visible entry))
+         (lp--redraw-entry entry))))))
 
 (defun lp--entry-filter-description ()
   "Return a string representing the current entry filters."
   (let (res)
     (lyskom-traverse filter lp--entry-filter
-      (let ((name filter))
+      (let ((name (car filter)))
         (when name (setq res (cons name res)))))
     (or (and res (mapconcat 'symbol-name (nreverse res) ", "))
         (lyskom-get-string 'lp-no-active-filter))))
@@ -1040,21 +1071,33 @@ and return non-nil if the entry should be visible."
   (lp--set-header 'filter (lyskom-format 'lp-active-filters
                                          (lp--entry-filter-description))))
 
+
+;; Filter functions should return the desired visibility state
+
 (defun lp--entry-filter-read (entry)
   "Entry filter that displays only conferences with unread texts."
   (let ((n (lyskom-find-unread 
             (membership->conf-no (lp--entry->membership entry)))))
-    (and n (> n 0))))
+    (or (eq (membership->conf-no (lp--entry->membership entry))
+            (lyskom-default-value 'lyskom-current-conf))
+        (and n (> n 0)))))
 
 (defun lp--entry-filter-passive (entry)
   "Entry filter that displays only active memberships."
   (not (membership-type->passive 
         (membership->type (lp--entry->membership entry)))))
 
-(defun lp--entry-filter-hidden (entry)
-  "Entry filter that hides entries that are manually hidden."
-  (not (memq entry lp--hidden-entries)))
+(defun lp--entry-filter-after (entry time)
+  "Hide entries read after a certain time"
+  (not (lyskom-time-greater (membership->last-time-read
+                             (lp--entry->membership entry))
+                            time)))
 
+(defun lp--entry-filter-before (entry time)
+  "Hide entries read before a certain time"
+  (lyskom-time-greater (membership->last-time-read
+                        (lp--entry->membership entry))
+                       time))
 
 
 ;;; ================================================================
@@ -1308,15 +1351,20 @@ The cursor will always move to the start of the target entry."
          (first-entry (lp--next-visible-entry 0))
          (pos (lp--entry-position entry))
          (new-pos (cond ((null last-entry) nil)
-                        ((and (null entry) (< (point)
-                                              (lp--entry->start-marker 
-                                               (lp--get-entry first-entry)))) 0)
-                        ((and (null entry) (> (point) 
-                                              (lp--entry->end-marker last-entry)))
-                         (1- (length (lp--all-entries))))
-                        (t (max 0 (+ pos (lp--calculate-distance pos (- count))))))))
+                        ((and (null entry) 
+                              (< (point)
+                                 (lp--entry->start-marker 
+                                  (lp--get-entry first-entry))))
+                         (lp--get-entry first-entry))
+                        ((and (null entry)
+                              (> (point) 
+                                 (lp--entry->end-marker last-entry)))
+                         last-entry)
+                        (t (lp--get-entry
+                            (max 0 (+ pos (lp--calculate-distance
+                                           pos (- count)))))))))
     (condition-case nil
-        (goto-char (lp--entry->start-marker (lp--get-entry new-pos)))
+        (goto-char (lp--entry->start-marker new-pos))
       (error nil))))
 
 (defun lp--next-entry (count)
@@ -1332,15 +1380,16 @@ The cursor will always move to the start of the target entry."
                                           (lp--entry->start-marker 
                                            (lp--get-entry
                                             first-entry))))
-                     0)
+                     (lp--get-entry first-entry))
                     ((and (null entry) (> (point) 
                                           (lp--entry->end-marker 
                                            last-entry)))
-                     (1- (length (lp--all-entries))))
-                    (t (min (1- (length (lp--all-entries)))
-                            (+ pos (lp--calculate-distance pos count)))))))
+                     last-entry)
+                    (t (lp--get-entry 
+                        (min (1- (length (lp--all-entries)))
+                             (+ pos (lp--calculate-distance pos count))))))))
     (condition-case nil
-        (goto-char (lp--entry->start-marker (lp--get-entry new-pos)))
+        (goto-char (lp--entry->start-marker new-pos))
       (error nil))))
 
 (defun lp--first-entry ()
@@ -1479,8 +1528,7 @@ With prefix arg, contract only those that were created by self."
 ;;; ============================================================
 ;; The mode
 
-(defvar lp--mode-line '("" 
-                        mode-line-modified
+(defvar lp--mode-line '("--" 
                         mode-line-buffer-identification
                         "   "
                         global-mode-string
@@ -1491,18 +1539,28 @@ With prefix arg, contract only those that were created by self."
                         ")%] "
                         lp--mode-line-selected
                         "--"
+                        lp--mode-line-hidden
+                        "--"
                         (-3 . "%p")
                         "-%-"))
 
 (defvar lp--mode-line-selected ""
   "String showing number of selected entries.")
 
+(defvar lp--mode-line-hidden ""
+  "String showing number of hidden entries.")
+
 (defun lp--update-mode-line ()
   (setq lp--mode-line-selected
         (cond ((= (length (lp--all-selected-entries)) 0)
                (lyskom-get-string 'no-selection))
-               (t (format (lyskom-get-string 'selection)
-                          (length (lp--all-selected-entries))))))
+               (t (lyskom-format 'selection
+                                 (length (lp--all-selected-entries))))))
+  (setq lp--mode-line-hidden
+        (cond ((= (length lp--hidden-entries) 0)
+               (lyskom-get-string 'lp-no-hidden))
+               (t (lyskom-format 'lp-hidden
+                                 (length lp--hidden-entries)))))
   (force-mode-line-update))
 
 
@@ -1539,8 +1597,8 @@ Entry to this mode runs lp--mode-hook."
   (make-local-variable 'lp--hidden-entries)
   (make-local-variable 'lp--entry-filter)
 
-  (lp--add-entry-filter 'lp--entry-filter-hidden) 
-
+  (setq lp--hidden-entries nil)
+  (setq lp--entry-filter nil)
 
   (setq lp--mode-line-selected "")
   (setq mode-line-format lp--mode-line)
@@ -1641,42 +1699,61 @@ Entry to this mode runs lp--mode-hook."
     ))
 
 
-(defun lp--hide-memberships-by-date (arg)
+
+
+;;; ================================================================
+;;; User functions for filtering
+
+
+(defun lp--show-hide-memberships-read-before (arg)
+  "Hide memberships that have not been read since a specific date.
+With prefix arg, removes any such filter that has been applied."
   (interactive "P")
-  (let ((old-entries nil)
-        (old-time (lyskom-read-date (lyskom-get-string
-                                     (if arg
-                                         'lp-hide-read-after
-                                       'lp-hide-read-sine)))))
-    (mapcar (lambda (entry) 
-              (cond ((and arg
-                          (not (lyskom-time-greater
-                                old-time 
-                                (membership->last-time-read
-                                 (lp--entry->membership entry)))))
-                     (setq old-entries (cons entry old-entries)))
-                    ((and (not arg) 
-                          (lyskom-time-greater old-time 
-                                               (membership->last-time-read
-                                                (lp--entry->membership entry))))
-                     (setq old-entries (cons entry old-entries)))
-                    ))
-            (lp--all-entries))
-    (lp--entry-set-visible old-entries nil)))
+  (if arg
+      (lp--del-entry-filter 'lp--entry-filter-before)
+
+    (let* ((n (lyskom-read-date (lyskom-get-string 'lp-hide-read-sice)))
+           (date (and n (lyskom-create-time 0 0 0 (elt n 2)
+                                            (elt n 1) (elt n 0)
+                                            0 0 nil))))
+      (lp--replace-entry-filter 'lp--entry-filter-before date))))
 
 
-(defun lp--hide-entry ()
-  (interactive)
-  (let ((entry (lp--entry-at (point))))
-    (lp--entry-set-visible (list entry) nil)))
+(defun lp--show-hide-memberships-read-after (arg)
+  "Hide memberships that have been read since a specific date.
+With prefix arg, removes any such filter that has been applied."
+  (interactive "P")
+  (if arg
+      (lp--del-entry-filter 'lp--entry-filter-after)
 
-(defun lp--show-all ()
-  (interactive)
-  (let ((elements nil))
-    (mapcar (lambda (entry) (unless (eq t (lp--entry->visible entry))
-                              (setq elements (cons entry elements))))
-            (lp--all-entries))
-    (lp--entry-set-visible elements t)))
+    (let* ((n (lyskom-read-date (lyskom-get-string 'lp-hide-read-after)))
+           (date (and n (lyskom-create-time 0 0 0 (elt n 2)
+                                            (elt n 1) (elt n 0)
+                                            0 0 nil))))
+      (lp--replace-entry-filter 'lp--entry-filter-after date))))
+
+
+(defun lp--show-hide-read-memberships (arg)
+  "Hide memberships that contain only read texts.
+With prefix argument, remove any such filters."
+  (interactive "P")
+  (if arg
+      (lp--del-entry-filter 'lp--entry-filter-read)
+  (unless (lp--entry-filter-active 'lp--entry-filter-read)
+    (lp--add-entry-filter 'lp--entry-filter-read))))
+
+(defun lp--show-hide-passive-memberships (arg)
+  "Hide passive memberships.
+With prefix argument, remove any such filters."
+  (interactive "P")
+  (if arg
+      (lp--del-entry-filter 'lp--entry-filter-passive)
+    (unless (lp--entry-filter-active 'lp--entry-filter-passive)
+      (lp--add-entry-filter 'lp--entry-filter-passive))))
+
+
+
+
 
 (provide 'mship-edit)
 
