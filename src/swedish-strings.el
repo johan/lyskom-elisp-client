@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.7 1991-09-15 10:04:37 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.8 1991-09-15 16:59:17 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,11 +36,15 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.7 1991-09-15 10:04:37 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.8 1991-09-15 16:59:17 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
   "*String to separate headers from text body.")
+
+
+(defvar lyskom-header-subject "Ärende: "
+  "*String to prompt for subject in the edit buffer.")
 
 
 (defconst lyskom-strings 
@@ -398,7 +402,7 @@ Lyskom-sessionen är avslutad.
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")
     (recipient . "Mottagare:")
     (carbon-copy . "Extra kopia:")
-    (text-mass . "Ärende: %#1s\n%#2s\n%#3s")
+    (text-mass . "%#4s%#1s\n%#2s\n%#3s")
     (comment-to-by . "%#1s till text %#2d%#3s.\n")
     (already-sent . "Du har redan skickat denna text en gång. Sänd ändå? ")
     (subject . "Ärende: ")
