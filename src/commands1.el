@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.9 1996-07-17 08:59:25 byers Exp $
+;;;;; $Id: commands1.el,v 41.10 1996-07-19 16:55:19 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.9 1996-07-17 08:59:25 byers Exp $\n"))
+	      "$Id: commands1.el,v 41.10 1996-07-19 16:55:19 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1638,7 +1638,7 @@ If MARK-NO == 0, review all marked texts."
 
 (defun lyskom-return-username (who-info)
   "Takes the username from the WHO-INFO and returns it on a better format."
-  (let* ((username (if (eq 'SESSION-INFO who-info)
+  (let* ((username (if (eq 'SESSION-INFO who-info) ; Weird...
                        (session-info->username who-info)
                      (who-info->username who-info)))
 	 (type (or 
@@ -1677,16 +1677,14 @@ If MARK-NO == 0, review all marked texts."
 Optional argument ARG should be a list of sessions to get information
 about or a single session number."
   (interactive)
-  (let ((sessions (or arg
+  (let ((sessions (or (cond ((listp arg) arg)
+                            ((numberp arg) (list arg)))
                       (lyskom-read-session-no 
                        (lyskom-get-string 'status-for-session))))
         (who-info (listify-vector (blocking-do 'who-is-on))))
-    (cond ((listp arg))
-          ((numberp arg) (list arg))
-          (t (setq arg (lyskom-read-session-no 
-                        (lyskom-get-string 'status-for-session)))))
     (mapcar (function (lambda (x) (lyskom-status-session x who-info)))
             sessions)))
+
 
 (defun lyskom-status-session (sid who-info)
   "Show session status for session SID. WHO-INFO is a list of
