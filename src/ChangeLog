@@ -1,3 +1,8 @@
+Mon Feb 23 22:41:38 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (lyskom-face-schemes): Det stod fel i kom-mark-face i
+	ett par scheman.
+
 Sun Feb 22 11:37:57 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Sätt lyskom-server-port.
