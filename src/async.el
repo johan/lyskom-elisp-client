@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.11 1991-12-16 00:40:44 linus Exp $
+;;;;; $Id: async.el,v 35.12 1992-01-24 23:13:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.11 1991-12-16 00:40:44 linus Exp $\n"))
+	      "$Id: async.el,v 35.12 1992-01-24 23:13:23 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -262,33 +262,19 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
       RECIPIENT: 0 if this message is for everybody, otherwise the pers-no 
                  of the user.
       MESSAGE: A string containing the message."
-  (cond
-   ((eq kom-show-personal-messages-in-buffer t)
-    (lyskom-insert-personal-message sender recipient message
-				    'lyskom-insert-before-prompt))
-   ((null kom-show-personal-messages-in-buffer))
-   (t
-    (lyskom-save-excursion
-     (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
-     (goto-char (point-max))
-     (lyskom-insert-personal-message sender recipient message 'insert))))
+  (lyskom-insert-personal-message sender recipient message)
   (run-hooks 'lyskom-personal-message-hook))
 
-(defun lyskom-insert-personal-message (sender recipient message
-					      insert-function)
+
+(defun lyskom-insert-personal-message (sender recipient message)
   "Insert a personal message in the current buffer.
-Arguments: SENDER RECIPIENT MESSAGE INSERT-FUNCTION.
+Arguments: SENDER RECIPIENT MESSAGE.
 SENDER is a pers-stat (possibly nil) or a string.
 RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
 MESSAGE is a string containing the message.
 INSERT-FUNCTION is a function that given a string inserts it into the
 current buffer."
-     
-  (funcall
-   insert-function
-   "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (funcall
-   insert-function
+  (lyskom-handle-as-personal-message
    (if (= recipient 0)
        (lyskom-format 'message-broadcast
 		      (cond
@@ -298,19 +284,35 @@ current buffer."
 		      message
 		      (substring (current-time-string) 11 19))
      (lyskom-format 'message-from
-		      (cond
-		       ((stringp sender) sender)
-		       (sender (conf-stat->name sender))
-		       (t (lyskom-get-string 'unknown)))
-		      message
-		      (substring (current-time-string) 11 19))))
-  (funcall insert-function
-   "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (if kom-pop-personal-messages
-      (display-buffer (current-buffer)))
+		    (cond
+		     ((stringp sender) sender)
+		     (sender (conf-stat->name sender))
+		     (t (lyskom-get-string 'unknown)))
+		    message
+		    (substring (current-time-string) 11 19)))))
+
+  
+(defun lyskom-handle-as-personal-message (string)
+  "Insert STRING as a personal message.
+The buffer, is chosen according to the kom-show-personal-messages-in-buffer
+variable value.
+The text is converted, before insertion."
+  (lyskom-save-excursion
+   (cond
+    ((eq kom-show-personal-messages-in-buffer t)
+     (lyskom-insert-before-prompt string))
+    ((null kom-show-personal-messages-in-buffer))
+    (t
+     (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
+     (goto-char (point-max))
+     (insert (if kom-emacs-knows-iso-8859-1
+		 string
+	       (iso-8859-1-to-swascii string)))))
+   (if kom-pop-personal-messages
+       (display-buffer (current-buffer))))
   (if kom-ding-on-personal-messages
       (beep)))
-
+  
 
 ;;; ================================================================
 ;;;            Functions for dealing with a new text
