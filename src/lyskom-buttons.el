@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.12 1997-07-12 13:11:13 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.13 1997-07-15 10:23:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -105,8 +105,10 @@ on such functions see the documentation for lyskom-add-button-action."
   (interactive)
   (lyskom-button-press (point)))
 
-(defun kom-button-click (event)
-  "Execute the default action of the active area under the mouse."
+(defun kom-button-click (event &optional do-default)
+  "Execute the default action of the active area under the mouse.
+If optional argument do-default is non-nil, call the default binding of
+this-command-keys."
   (interactive "@e")
   (let* ((pos (event-point event))
          (glyph (event-glyph event))
@@ -119,7 +121,19 @@ on such functions see the documentation for lyskom-add-button-action."
                    (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href)))))
     (cond (href (w3-widget-button-click event))
+          ((and do-default
+                (or (null pos)
+                    (null (get-text-property pos 'lyskom-button-type))))
+           (let ((fn (lookup-key global-map (this-command-keys))))
+             (when (commandp fn)
+               (call-interactively fn))))
           (t (lyskom-button-press pos)))))
+
+(defun kom-button-click-or-yank (event)
+  "Execute the default action of the active area under the mouse.
+If there is no active area, then do something else."
+  (interactive "@e")
+  (kom-button-click event t))
 
 (defun kom-popup-menu (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."
@@ -206,24 +220,25 @@ on such functions see the documentation for lyskom-add-button-action."
 
 (defun lyskom-button-press (pos)
   "Execute the default action of the active area at POS if any."
-  (let* ((type (get-text-property pos 'lyskom-button-type))
-         (arg  (get-text-property pos 'lyskom-button-arg))
-         (text (get-text-property pos 'lyskom-button-text))
-         (buf  (get-text-property pos 'lyskom-buffer))
-         (hint (get-text-property pos 'lyskom-button-hint))
-         (data (assq type lyskom-button-actions))
-         (act  (or (and kom-use-button-hints hint)
-                   (and data (elt data 2)))))
+  (when pos
+    (let* ((type (get-text-property pos 'lyskom-button-type))
+           (arg  (get-text-property pos 'lyskom-button-arg))
+           (text (get-text-property pos 'lyskom-button-text))
+           (buf  (get-text-property pos 'lyskom-buffer))
+           (hint (get-text-property pos 'lyskom-button-hint))
+           (data (assq type lyskom-button-actions))
+           (act  (or (and kom-use-button-hints hint)
+                     (and data (elt data 2)))))
                  
-    (cond ((null act) (goto-char pos))
-          ((null buf) (goto-char pos))
-          ((and buf (null (get-buffer buf))) 
-           (lyskom-message "%s" (lyskom-get-string 'no-such-buffer)))
-          (t (and buf (set-buffer buf))
-             (funcall act
-                      buf
-                      arg
-                      text)))))
+      (cond ((null act) (goto-char pos))
+            ((null buf) (goto-char pos))
+            ((and buf (null (get-buffer buf))) 
+             (lyskom-message "%s" (lyskom-get-string 'no-such-buffer)))
+            (t (and buf (set-buffer buf))
+               (funcall act
+                        buf
+                        arg
+                        text))))))
                       
 
 (defun lyskom-fix-pseudo-url (url)

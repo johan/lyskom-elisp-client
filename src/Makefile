@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.14 1997-07-11 09:54:54 byers Exp $
+# $Id: Makefile,v 44.15 1997-07-15 10:22:52 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.14 1997-07-11 09:54:54 byers Exp $
+# $Id: Makefile,v 44.15 1997-07-15 10:22:52 byers Exp $
 #
 
 
@@ -39,7 +39,8 @@
 CLIENTVERSION = 0.45-beta
 DOCFILES=NEWS-0.45 MIGRATION-0.44-0.45
 
-FTPDIR = /usr/ftp/pub/lyskom/elisp-client
+FTPDIR=/home/davby/www-pub
+#FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 LISPDIR = /usr/gnu/share/emacs/site-lisp
 LANGUAGES = swedish english
 
@@ -66,6 +67,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		command.el \
 		parse.el \
 		cache.el \
+		view-mode.el \
 		commands1.el \
 		commands2.el \
 		review.el \
@@ -151,6 +153,7 @@ release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	for i in $(DOCFILES) ; do \
 		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
 	done
+	chmod -R u+rw,g+r,o+r lyskom-$(CLIENTVERSION)
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar
 	cp lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR)
