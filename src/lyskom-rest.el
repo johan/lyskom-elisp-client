@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.234 2004-02-29 22:09:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.235 2004-02-29 22:43:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.234 2004-02-29 22:09:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.235 2004-02-29 22:43:30 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2176,30 +2176,35 @@ Deferred insertions are not supported."
 (defmacro lyskom-format-plaintext-fonts-body ()
   "Internal macro for lyskom-format-plaintext-fonts"
   (let* ((re-x 0)
-         (re-1 "[^\]\}\) ^\n\r\t%s]")
-         (re-2 "[^^<>=%%$\r\n%s]")
-         (re-3 '(("_" . italic) ("*" . bold)))
-         (re (mapconcat (lambda (x)
-                          (setq x (regexp-quote (car x)))
-                          (format "\\(%s%s\\(%s*%s\\)?%s\\)"
-                                  x
-                                  (format re-1 x)
-                                  (format re-2 x)
-                                  (format re-1 x)
-                                  x))
+         (re-1 "[^\]\|\}\) ^\n\r\t%s]")
+         (re-2 "[^^\|<>=%%$\r\n%s]")
+         (re-3 '(("_" (prefix . "") (suffix . "") (face . italic))
+                 ("*" (prefix . "") (suffix . "") (face . bold))
+                 ("/" (prefix . "\\s-") (suffix . "[\].,;:-_!\"#$%&\(\)\[\{\}=+?' \t\r\n]") (face . italic))))
+         (re (mapconcat (lambda (el)
+                          (let ((x (regexp-quote (car el))))
+                            (format "%s\\(%s%s\\(%s*%s\\)?%s\\)%s"
+                                    (cdr (assq 'prefix (cdr el)))
+                                    x
+                                    (format re-1 x)
+                                    (format re-2 x)
+                                    (format re-1 x)
+                                    x
+                                    (cdr (assq 'suffix (cdr el)))
+                                    )))
                         re-3
                         "\\|")))
     `(let ((start 0))
        (while (string-match ,re text start)
-         (add-text-properties (1+ (match-beginning 0))
-                              (1- (match-end 0))
-                              (cond ,@(mapcar (lambda (el)
-                                                (prog1
-                                                    `((match-beginning ,(+ 1 (* re-x 2)))
-                                                      '(face ,(cdr (elt re-3 re-x))))
-                                                  (setq re-x (1+ re-x))))
-                                              re-3))
-                              text)
+         (cond ,@(mapcar (lambda (el)
+                           (prog1
+                               `((match-beginning ,(+ 1 (* re-x 2)))
+                                 (add-text-properties (1+ (match-beginning ,(+ 1 (* re-x 2))))
+                                                      (1- (match-end ,(+ 1 (* re-x 2))))
+                                                      '(face ,(cdr (assq 'face (elt re-3 re-x))))
+                                                      text))
+                             (setq re-x (1+ re-x))))
+                         re-3))
          (setq start (1- (match-end 0)))))))
 
 (defun lyskom-format-plaintext-fonts (text)
