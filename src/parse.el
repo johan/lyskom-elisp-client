@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.16 1998-06-14 14:15:54 byers Exp $
+;;;;; $Id: parse.el,v 44.17 1999-01-01 19:51:46 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.16 1998-06-14 14:15:54 byers Exp $\n"))
+	      "$Id: parse.el,v 44.17 1999-01-01 19:51:46 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -252,7 +252,8 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 (defun lyskom-skip-array ()
   (let ((to-parse (lyskom-string-to-parse)))
     (cond
-     ((string-match "\\`}" to-parse))
+     ((string-match "\\`}" to-parse)
+      (lyskom-parse-nonwhite-char))
      (t (lyskom-skip-one-token)
 	(lyskom-skip-array)))))
   
