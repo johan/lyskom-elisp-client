@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.59 2000-01-10 23:26:51 byers Exp $
+;;;;; $Id: commands2.el,v 44.60 2000-03-15 15:45:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.59 2000-01-10 23:26:51 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.60 2000-03-15 15:45:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2254,11 +2254,12 @@ Return-value: 'no-session if there is no suitable session to switch to
   (interactive (list (lyskom-read-text-no-prefix-arg
                       'review-mail-headers-to-what t)))
   (let* ((text-stat (blocking-do 'get-text-stat text-no))
-         (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))))
+         (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24)))
+         (lyskom-transforming-external-text t))
     (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
           ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
           (t (lyskom-format-insert 'mail-headers-for text-no)
              (mapcar (lambda (el) 
-                       (lyskom-insert (aux-item->data el))
+                       (lyskom-format-insert "%#1t" (aux-item->data el))
                        (lyskom-insert "\n"))
                      headers)))))

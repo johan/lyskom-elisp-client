@@ -5,6 +5,10 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+** Knappar i email-adressen i importerade brev.
+
+** Knappar å sånt i Återse brevhuvud.
+
 ** Man vill kunna skicka user-agent och proxy-authorization till
    HTTP-proxyn. Se specen för HTTP 1.1, kapitel 11 och RFC 2069.
 
@@ -18,10 +22,6 @@ Att göra i elisp-klienten
    ut och han säger att problemen försvann när han skrev en
    presentation för sin person Martin;. User-arean finns i 4730269.
 
-** I Gnu Emacs 20.4.1 får man ett fyrkantigt tecken före varje svenskt
-   tecken. Antagligen en \201 som spökar. Vi måste bergis koda om alla
-   strängar som hamnar i menyer.
-
 ** Man får illegal consp nil i processfiltret när man går med i eller
    ändrar prioritet på ett möte ibland. Sällan. Jag gick med i
    programmering i TokKOM med kom-handle-membership uppe. När jag
@@ -30,14 +30,6 @@ Att göra i elisp-klienten
    det på andra sätt också.
 
    Händer ibland när man loggar in också.
-
-** Inställningsbufferten är buggig. Om man har en inställning i
-   servern och markerar att den skall sparas i .emacs så sparas
-   defaultvärdet och inte det aktuella värdet. Buggligt ju! Jag undrar 
-   om det kan bli fel när man går åt andra hållet också.
-
-   Antagligen är det fixat nu.
-
 
 ** När man går med i ett möte så sorteras inte medlemskapet in korrekt 
    i medlemskapslistan.
@@ -65,7 +57,6 @@ Att göra i elisp-klienten
    appropriate bytedness. Maybe.
 
 ** In completing-read.el, MULEify the character comparisons.
-   
 
 ** In completing-read.el, end of lyskom-complete-string, check how the
    result of make-string is used and modified.
@@ -187,13 +178,6 @@ j-or-n-p.
     kommando, utan hamnar överst i bufferten.
     FIX BY: ---
 
-    Om man byter buffert med C-x b till den sista aktiva KOM-bufferten
-    så tycker Nästa LysKOM att det inte finns fler aktiva
-    KOM-sessioner. Funktionen verkar vara lite för känslig för hur
-    lyskom-buffer-list ser ut. Den borde nog göra något lite
-    intelligentare när listan ser ut att ha tagit slut.
-    FIX BY: 0.46        KLART
-
     Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
     och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
     blev det rätt. Det verkar som om window-width ljuger.
@@ -249,9 +233,6 @@ j-or-n-p.
     endast i ett möte (säg IÅM) innan det prefetchas får man två
     parallella prefetcher på samma möte.
     FIX BY: 
-
-    Gå ur mötet man prefetchar genererar en bug.
-    FIX BY: 0.46            FIXED
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
@@ -462,7 +443,7 @@ j-or-n-p.
     Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
     ploppa upp edit-bufferten, alternativt ha ett kommando för att
     göra det (och göra det till defaultkommandot.)
-    FIX BY: 0.46
+    FIX BY: 0.46            KLART
 
     Man borde kunna manipulera mottagare i editbufferten med musen (ta
     bort, ändra typ.)
@@ -488,7 +469,7 @@ j-or-n-p.
     FIX BY: 0.47
 
     Filtrera asynkrona meddelanden (Pontus Lidman)
-    FIX BY: 0.47
+    FIX BY: 0.47            KLART
 
 
 ** MEDLEMSSKAPSINFORMATION
@@ -586,7 +567,7 @@ j-or-n-p.
     Det skulle vara bra om man kunde ange för varje inställning om den
     skulle sparas i servern eller inte. I princip är det enkelt, men
     det behövs ett gränssnitt för det.
-    FIX BY: 0.46
+    FIX BY: 0.46                                    KLART
 
 
 ** AUX-ITEMS

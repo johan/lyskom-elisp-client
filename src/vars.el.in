@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.94 2000-03-03 15:01:34 byers Exp $
+;;;;; $Id: vars.el.in,v 44.95 2000-03-15 15:45:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.94 2000-03-03 15:01:34 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.95 2000-03-15 15:45:10 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -669,6 +669,10 @@ A number means wrap articles shorter than the number (in bytes)."
 ;;;
 
 
+(defvar lyskom-transforming-external-text nil
+  "Dynamically bound to non-nil when transforming text in which text,
+conference and person buttons are not expected.")
+
 (def-kom-var lyskom-url-protocol-regexp
   "\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|mailto\\|telnet\\):"
   "Regexp to match the protocol part of a URL.")
@@ -748,7 +752,7 @@ to some URL viewers."
 			    lyskom-view-url-w3)
                            ("windows"
                             ".*"
-                            "Windows web brower"
+                            "web brower"
                             lyskom-view-url-windows)
 			   ("netscape"
 			    ".*"

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.38 2000-03-11 15:11:07 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.39 2000-03-15 15:45:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.38 2000-03-11 15:11:07 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.39 2000-03-15 15:45:08 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -162,7 +162,7 @@ If there is no active area, then do something else."
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
   (cond ((string-match "XEmacs" (emacs-version))
-         (cons title 
+         (cons (encode-coding-string title 'iso-8859-1)
                (mapcar (function
                         (lambda (entry)
                           (vector (encode-coding-string
@@ -302,7 +302,8 @@ lyskom-text-buttons. Returns the modified string."
         (add-text-properties 
          (match-beginning (or (elt el 2) 0))
          (match-end (or (elt el 2) 0))
-         (cond ((eq (elt el 1) 'text)
+         (cond ((and (eq (elt el 1) 'text)
+                     (not lyskom-transforming-external-text))
                 (lyskom-generate-button 'text
                                         (lyskom-button-get-arg el text)
                                         (lyskom-button-get-text el text)
@@ -468,7 +469,7 @@ MENU-TITLE is a list consisting of a format string or symbol and arguments
 for the format string. The arguments are not when the menu is popped
 up."
   (and kom-text-properties
-       (let (xarg text)
+       (let (xarg text face)
 	 (cond ((eq type 'conf)
 		(cond ((lyskom-conf-stat-p arg)
 		       (if (conf-type->letterbox (conf-stat->conf-type arg))
@@ -521,10 +522,17 @@ up."
 			     text (number-to-string (text-stat->text-no arg))))
 		      (t (setq xarg 0 text ""))))
 	       ((eq type 'url)
+                (setq face 'kom-url-face)
 		(cond ((stringp arg) (setq xarg nil text arg))
 		      (t (setq xarg nil text ""))))
+
+               ((eq type 'email)
+                (setq face 'kom-url-face)
+                (cond ((stringp arg) (setq xarg nil text arg))
+                      (t (setq xarg nil text ""))))
+
 	       (t (setq xarg arg text "")))
-	 (lyskom-generate-button type xarg text nil menu-title))))
+	 (lyskom-generate-button type xarg text face menu-title))))
                   
 
            
