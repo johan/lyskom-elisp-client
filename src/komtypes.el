@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.17 2001-04-23 21:39:45 joel Exp $
+;;;;; $Id: komtypes.el,v 44.18 2002-01-03 15:47:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.17 2001-04-23 21:39:45 joel Exp $\n"))
+	      "$Id: komtypes.el,v 44.18 2002-01-03 15:47:39 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -1418,14 +1418,55 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
       (lyskom-create-map first (apply 'vconcat maplist)))))
 
 
-;;; ============================================================
-;;; Local to global mapping
-;;; - Sparse map
-;;; - Text mapping
+;;; ================================================================
+;;; Text-Mapping support
 
-(def-komtype sparse-map mapping)
-(def-komtype text-mapping have-more type mapping)
+(def-komtype text-mapping
+  range-begin
+  range-end
+  size
+  later-texts-exist
+  type
+  block)
 
+(defsubst lyskom-create-text-pair (local global) (cons local global))
+(defsubst text-pair->local-number (pair) (car pair))
+(defsubst text-pair->global-number (pair) (cdr pair))
+
+(defun text-mapping->local-to-global (map local)
+  (cond ((or (< local (text-mapping->range-begin map))
+             (> local (text-mapping->range-end map))) nil)
+        ((eq (text-mapping->type map) 'sparse)
+         (cdr (assq local (text-mapping->block map))))
+
+        ((eq (text-mapping->type map) 'dense)
+         (let ((result (aref (text-mapping->block map)
+                             (- local (text-mapping->range-begin map)))))
+           (and (not (zerop result)) result)))))
+
+(defun text-mapping->global-numbers (map)
+  (cond ((eq (text-mapping->type map) 'sparse)
+         (mapcar 'cdr (text-mapping->block map)))
+        ((eq (text-mapping->type map) 'dense)
+         (let ((result nil))
+           (mapc (lambda (el)
+                   (unless (zerop el) (setq result (cons el result))))
+                 (map->text-nos (text-mapping->block map)))
+           (nreverse result)))))
+
+(defun text-mapping->global-to-local (map global)
+  (cond ((eq (text-mapping->type map) 'sparse)
+         (cdr (rassq global (text-mapping->block map))))
+        ((eq (text-mapping->type map) 'dense)
+         (let ((i (text-mapping->range-begin map))
+               (result nil))
+           (while (< i (text-mapping->range-end map))
+             (if (eq (aref (map->text-nos (text-mapping->block map)) 
+                           (- i (text-mapping->range-begin map)))
+                     global)
+                 (setq result i i (text-mapping->range-end map))
+               (setq i (1+ i))))
+           result))))
 
 ;;; ================================================================
 ;;;                            mark

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.37 2001-04-23 21:39:48 joel Exp $
+;;;;; $Id: parse.el,v 44.38 2002-01-03 15:47:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.37 2001-04-23 21:39:48 joel Exp $\n"))
+	      "$Id: parse.el,v 44.38 2002-01-03 15:47:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -685,32 +685,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-vector			;text-nos
     (lyskom-parse-num) 'lyskom-parse-num)))
 
-(defun lyskom-parse-sparse-map ()
-  "Parse a sparce l2g block."
-  (lyskom-create-sparse-map
-   (lyskom-parse-list (lyskom-parse-num)
-                      'lyskom-parse-text-number-pair)))
-
-(defun lyskom-parse-text-number-pair ()
-  (cons (lyskom-parse-num) (lyskom-parse-num)))
-
-
-(defun lyskom-parse-text-mapping ()
-  "Parse a text-mapping"
-  (let ((have-more (lyskom-parse-1-or-0))
-        (kind (lyskom-parse-num)))
-    (cond ((= kind 0) 
-           (lyskom-create-text-mapping have-more
-                                       'sparse
-                                       (lyskom-parse-sparse-map)))
-          ((= kind 1)
-           (lyskom-create-text-mapping have-more
-                                       'dense
-                                       (lyskom-parse-map))))))
-
-
-
-
 (defun lyskom-parse-who-info ()
   "Parse a who-info."
   (lyskom-create-who-info
@@ -1029,6 +1003,31 @@ Args: TEXT-NO. Value: text-stat."
    (lyskom-parse-num)))			;conf-no
 
 
+(defun lyskom-parse-text-mapping (existing)
+  "Parse a Text-Mapping"
+  (let ((block-type nil))
+    (lyskom-create-text-mapping
+     (lyskom-parse-num)
+     (lyskom-parse-num)
+     existing
+     (lyskom-parse-1-or-0)
+     (let ((val (lyskom-parse-num)))
+       (cond ((= val 0) (setq block-type 'sparse))
+             ((= val 1) (setq block-type 'dense)))
+       block-type)
+     (lyskom-parse-local-to-global-block block-type))))
+
+(defun lyskom-parse-local-to-global-block (block-type)
+  "Parse a Local-To-Global-Block"
+  (cond ((eq block-type 'sparse)
+         (let ((len (lyskom-parse-num)))
+           (lyskom-parse-list len 'lyskom-parse-text-number-pair)))
+        ((eq block-type 'dense)
+         (lyskom-parse-map))))
+
+(defun lyskom-parse-text-number-pair ()
+  "Parse a Text-Number-Pair"
+  (lyskom-create-text-pair (lyskom-parse-num) (lyskom-parse-num)))
 
 ;;; ================================================================
 ;;;          Parsing of complex datatypes without cache.
