@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.2 1995-02-23 20:42:10 linus Exp $
+;;;;; $Id: review.el,v 38.3 1995-03-09 09:22:54 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.2 1995-02-23 20:42:10 linus Exp $\n"))
+	      "$Id: review.el,v 38.3 1995-03-09 09:22:54 linus Exp $\n"))
 
 
 
@@ -139,14 +139,16 @@ The defaults for this command is the conference that you are in."
 
 	(let* ((found-by (or (zerop by)
 			     (lyskom-remove-zeroes
-			      (map->text-nos
-			       (blocking-do 'get-created-texts by
-					    0 lyskom-max-int)))))
+			      (append
+			       (map->text-nos
+				(blocking-do 'get-created-texts by
+					     0 lyskom-max-int)) nil))))
 	       (found-to (or (zerop to)
 			     (lyskom-remove-zeroes
-			      (map->text-nos
-			       (blocking-do 'get-map to
-					    0 lyskom-max-int)))))
+			      (append
+			       (map->text-nos
+				(blocking-do 'get-map to
+					     0 lyskom-max-int)) nil))))
 	       (list (cond
 		      ((zerop by) found-to)
 		      ((zerop to) found-by)
