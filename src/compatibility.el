@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.16 1999-06-10 13:36:06 byers Exp $
+;;;;; $Id: compatibility.el,v 44.17 1999-06-11 08:54:50 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.16 1999-06-10 13:36:06 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.17 1999-06-11 08:54:50 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -134,6 +134,22 @@ of the lyskom-provide-* functions instead."
        (, gnu-form))))
 
 (put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
+
+
+
+;;; ======================================================================
+;;; Defining keys
+;;;
+
+(lyskom-provide-macro kbd (keys)
+  "Convert KEYS to the internal Emacs key representation.
+KEYS should be a string in the format used for saving keyboard macros
+\(see `insert-kbd-macro')."
+  (if (or (stringp keys)
+	  (vectorp keys))
+      (read-kbd-macro keys)
+    `(read-kbd-macro ,keys)))
+
 
 ;;; ======================================================================
 ;;; ======================================================================
