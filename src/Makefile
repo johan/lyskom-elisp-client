@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.6 1991-09-16 19:31:37 linus Exp $
+# $Id: Makefile,v 35.7 1991-09-16 19:59:28 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.6 1991-09-16 19:31:37 linus Exp $
+# $Id: Makefile,v 35.7 1991-09-16 19:59:28 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.6  1991-09-16 19:31:37  linus
+# Revision 35.7  1991-09-16 19:59:28  linus
+# Makefile now works with clientversion-long.
+#
+# Revision 35.6  1991/09/16  19:31:37  linus
 # Makefile now works with new doc-file names.
 #
 # Revision 35.5  1991/09/16  18:02:02  linus
@@ -105,22 +108,20 @@ elc-files: $(HEADER-ELC) $(PARTS-ELC)
 
 wc:
 	wc $(HEADER-EL) $(PARTS-EL)
-	wc ../doc/elisp-client-`grep lyskom-clientversion vars.el | \
-	sed -n 's/^.*defconst.*lyskom-clientversion.*"\(.*\)".*$$/\1/p'`.*\
-	   ChangeLog ../misc/To-do
+	wc ../doc/elisp-client.latexinfo ChangeLog ../misc/To-do
 
 tags:
 	etags $(HEADER-EL) $(PARTS-EL)
 
 doc:
-	(cd ../doc ; make elisp-client elisp-client.txt) ; )
+	(cd ../doc ; make elisp-client elisp-client.txt ; )
 
 
 install: lyskom.elc lyskom.el doc
 	cp lyskom.elc /usr/local/lib/elisp/lyskom.elc
 	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
-	(VER=`grep lyskom-clientversion lyskom.el | \
-	 sed -n 's/^.*defconst.*lyskom-clientversion.*"\(.*\)".*$$/\1/p'`;\
+	(VER=`grep "lyskom-clientversion " vars.el | \
+	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp lyskom.elc lyskom-$${VER}.elc;\
 	 compress lyskom-$${VER}.elc;\
 	 mv lyskom-$${VER}.elc.Z /usr/local/ftp/pub/lyskom/;\
