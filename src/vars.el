@@ -9,7 +9,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.1 1991-08-21 15:45:22 linus Exp $\n"))
+	      "$Id: vars.el,v 35.2 1991-09-05 16:15:46 linus Exp $\n"))
 
 
 
@@ -372,6 +372,8 @@ message \"new text\" is received.")
 (defvar lyskom-current-subject ""
   "Current subject.")
 
+(defvar lyskom-saved-file-name (concat default-directory "kom-text")
+  "The default file name when saving a lyskom-text.")
 
 (defvar lyskom-mode-hook nil
   "Hook to run when lyskom-mode is entered.")
