@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.9 1993-12-14 02:10:32 linus Exp $
+# $Id: Makefile,v 35.10 1994-01-06 00:04:42 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -20,17 +20,33 @@
 # or the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
 # MA 02139, USA.
 #
-# Please mail bug reports to bug-lyskom@lysator.liu.se. 
+# Please mail bug reports to bug-lyskom@lysator.liu.se.
+#
+# $Log: Makefile,v $
+# Revision 35.10  1994-01-06 00:04:42  linus
+# Fixed so info-nuke works even if infod using makeinfo.
+#
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
 RM = rm -f
 
+all: elisp-client elisp-client.txt elisp-client.dvi
+.PHONY: all
+
 elisp-client: elisp-client.texinfo
 	makeinfo elisp-client.texinfo
 
 elisp-client.txt: elisp-client
-	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke `pwd`/$?
+	if [ -s elisp-client-1 ] ; then \
+		mv elisp-client info.index ; \
+		echo e | tr e '\037' | cat elisp-client-? - > elisp-client ; \
+	fi
+	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke `pwd`/elisp-client
+	if [ -s elisp-client-1 ] ; then \
+		rm elisp-client ; \
+		mv info.index elisp-client ; \
+	fi
 
 INDEXES = elisp-client.fns elisp-client.kys elisp-client.vrs
 
@@ -53,7 +69,7 @@ smallclean:
 	$(RM) *.fns *.kys *.pgs *.tps *.vrs *.cps indexes
 
 clean: smallclean
-	$(RM) elisp-client elisp-client.txt
+	$(RM) elisp-client elisp-client-? info.index elisp-client.txt
 	$(RM) *.aux *.dvi 
 	$(RM) *.fn  *.ky  *.pg  *.tp  *.vr  *.cp
 	$(RM) *.toc
