@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.49 2003-03-15 23:00:51 byers Exp $
+;;;;; $Id: review.el,v 44.50 2003-03-15 23:14:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.49 2003-03-15 23:00:51 byers Exp $\n"))
+	      "$Id: review.el,v 44.50 2003-03-15 23:14:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -121,6 +121,13 @@ all review-related functions."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to 0))
+
+(def-kom-command kom-unread-all ()
+  "Mark all articles written by a particular author to a particular
+conference as unread. This can also be accomplished by using
+`kom-unread-by-to' and specifying zero texts."
+  (interactive)
+  (lyskom-unread-by-to 0))
 
 
 (def-kom-command kom-review-more (count)
@@ -246,6 +253,18 @@ all review-related functions."
   (lyskom-review-by-to (- (or count
                            (lyskom-read-number
                             (lyskom-get-string 'review-how-many) 1)))))
+
+(def-kom-command kom-unread-first (&optional count)
+  "Mark the first N articles written by a particular author to some
+conference as unread. With no author specified, review texts by all 
+authors. With zero texts specified, review all text. With no conference
+specified, review texts to all conferences. With a negative number of
+texts, review the last N texts instead of the first (you can use
+`kom-unread-by-to' instead."
+  (interactive "P")
+  (lyskom-unread-by-to (- (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'unread-how-many) 1)))))
 
 
 (def-kom-command kom-review-by-to (&optional count)

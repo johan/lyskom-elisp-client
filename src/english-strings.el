@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.263 2003-03-15 23:00:50 byers Exp $
+;;;;; $Id: english-strings.el,v 44.264 2003-03-15 23:14:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.263 2003-03-15 23:00:50 byers Exp $"))
+              "$Id: english-strings.el,v 44.264 2003-03-15 23:14:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2086,6 +2086,8 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-unread-root-review   . "Unread tree")
     (kom-unread-last-normally-read
      			      . "Unread again")
+    (kom-unread-first         . "Unread first")
+    (kom-unread-all           . "Unread all")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -2436,6 +2438,8 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-unread-prefix (kbd "l") 'kom-unread-by-to)
   (define-key lyskom-en-unread-prefix (kbd "M") 'kom-unread-more)
   (define-key lyskom-en-unread-prefix (kbd "r") 'kom-unread-root-review)
+  (define-key lyskom-en-unread-prefix (kbd "f") 'kom-unread-first)
+  (define-key lyskom-en-unread-prefix (kbd "A") 'kom-unread-all)
 
   (define-key lyskom-en-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-en-review-prefix (kbd "0") 'kom-initial-digit-view)
