@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.67 1999-06-30 09:01:07 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.68 1999-07-02 15:03:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.67 1999-06-30 09:01:07 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.68 1999-07-02 15:03:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1861,6 +1861,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 (if lyskom-sv-filter-edit-map ()
   (setq lyskom-sv-filter-edit-map (make-keymap))
   (suppress-keymap lyskom-sv-filter-edit-map)
+  (define-prefix-command 'lyskom-sv-filter-edit-prefix)
+  (define-key lyskom-sv-filter-edit-map (kbd "C-c") 'lyskom-sv-filter-edit-prefix)
   (define-key lyskom-sv-filter-edit-map (kbd "p")   'lyskom-filter-edit-prev-pattern)
   (define-key lyskom-sv-filter-edit-map (kbd "P")   'lyskom-filter-edit-prev-entry)
   (define-key lyskom-sv-filter-edit-map (kbd "n")   'lyskom-filter-edit-next-pattern)
@@ -1883,6 +1885,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-filter-edit-map (kbd "M-<") 'lyskom-filter-edit-beginning-of-list)
   (define-key lyskom-sv-filter-edit-map (kbd "M->") 'lyskom-filter-edit-end-of-list)
   (define-key lyskom-sv-filter-edit-map (kbd "q")   'lyskom-filter-edit-quit)
+  (define-key lyskom-sv-filter-edit-map (kbd "C-c C-c")   'lyskom-filter-edit-quit)
   (define-key lyskom-sv-filter-edit-map (kbd "x")   'lyskom-filter-edit-expunge)
   (define-key lyskom-sv-filter-edit-map (kbd "s")   'lyskom-filter-edit-save)
   (define-key lyskom-sv-filter-edit-map (kbd "g")   'lyskom-filter-edit-revert)
