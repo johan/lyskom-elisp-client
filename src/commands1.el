@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.162 2003-01-01 23:32:43 byers Exp $
+;;;;; $Id: commands1.el,v 44.163 2003-01-03 22:07:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.162 2003-01-01 23:32:43 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.163 2003-01-03 22:07:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -406,7 +406,7 @@ as TYPE. If no such misc-info, return NIL"
         (let* ((tono (or pers-no
                          (lyskom-read-conf-no
                           (lyskom-get-string 'who-letter-to)
-                          '(all) nil nil t)))
+                          '(pers) nil nil t)))
                (conf-stat (blocking-do 'get-conf-stat tono)))
 	  (cache-del-conf-stat tono)
           (if (if (zerop (conf-stat->msg-of-day conf-stat))
@@ -1620,15 +1620,21 @@ Args: CONF-STAT MEMBERSHIP"
 
 
 (def-kom-command kom-write-text (&optional arg)
-  "write a text."
+  "Start writing a LysKOM text that isn't a comment.."
   (interactive "P")
-  (let ((recpt nil))
-    (cond ((consp arg) (setq recpt
-                         (lyskom-read-conf-no
-                          (lyskom-get-string 'who-send-text-to)
-                          '(all) nil nil t)))
-          ((numberp arg) (setq recpt arg))
-          (t (setq recpt lyskom-current-conf)))
+  (let ((recpt (cond ((consp arg) lyskom-current-conf)
+		     ((numberp arg) arg)
+		     (t (lyskom-read-conf-no
+			 (lyskom-get-string 'who-send-text-to)
+			 '(all)
+			 nil
+                         (if (zerop lyskom-current-conf)
+                             nil
+                           (cons (conf-stat->name
+                                  (blocking-do 'get-conf-stat 
+                                               lyskom-current-conf))
+                                 0))
+			 t)))))
     (if (or (null recpt)
             (zerop recpt))
 	(lyskom-insert-string 'no-in-conf)

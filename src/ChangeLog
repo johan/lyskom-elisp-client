@@ -1,5 +1,12 @@
 2003-01-03  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 823:
+	* commands1.el (kom-write-text): Ask for recipient by default. Old
+	behavior is on C-u kom-write-text.
+	(kom-send-letter): Only complete letterboxes when reading
+	recipient.
+
+	Fix bug 834:
 	* swedish-strings.el (lyskom-sv-mode-map): Added prefix "a" for
 	add commands. Added bindings for add and subtract commands.
 	(lyskom-sv-mode-map): Commented out obsolesence bindings for a and
