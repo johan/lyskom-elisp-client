@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.4 1993-05-11 16:00:11 linus Exp $
+;;;;; $Id: commands2.el,v 36.5 1993-06-18 11:51:00 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.4 1993-05-11 16:00:11 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.5 1993-06-18 11:51:00 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1369,3 +1369,27 @@ current conference to another session."
     (read-list-delete-text nil lyskom-to-do-list)))
 
   (lyskom-end-of-command))
+
+
+
+;;; ================================================================
+;;;              Begrav lyskom-sessionen - kom-bury
+
+;;; Author: Linus Tolke
+
+(defun kom-bury () 
+  "Puts the kom-session in the background."
+  (interactive)
+  (let ((session-name (buffer-name (current-buffer)))
+	(buffer (current-buffer)))
+    (if lyskom-debug-communications-to-buffer
+	(bury-buffer lyskom-debug-communications-to-buffer))
+    (if lyskom-who-info-buffer
+	(bury-buffer lyskom-who-info-buffer))
+    (bury-buffer)
+    (while (and (string-match (regexp-quote session-name) (buffer-name (current-buffer)))
+		(not (eq buffer (current-buffer))))
+      (bury-buffer (current-buffer)))))
+
+
+
