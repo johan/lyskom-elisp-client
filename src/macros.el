@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 36.1 1993-04-26 19:37:30 linus Exp $
+;;;;; $Id: macros.el,v 36.2 1993-12-14 02:22:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 36.1 1993-04-26 19:37:30 linus Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 36.2 1993-12-14 02:22:37 linus Exp $\n"
   "Version for every file in the client.")
 
 
@@ -86,3 +86,7 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
+
+;;; Local Variables: 
+;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; end: 
