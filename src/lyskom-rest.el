@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.23 1992-07-26 23:44:14 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.24 1992-07-30 01:59:22 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.23 1992-07-26 23:44:14 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.24 1992-07-30 01:59:22 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1058,7 +1058,7 @@ list."
 			      (lyskom-command-name (key-binding command))))
 			(t (lyskom-format 'the-command command))))))
 
-     (t (signal 'lyskom-internal-error '(lyskom-print-prompt) to-do))))
+     (t (signal 'lyskom-internal-error (list 'lyskom-print-prompt to-do)))))
 
   (if lyskom-no-prompt
       nil
