@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.9 1992-01-24 23:13:17 linus Exp $
+;;;;; $Id: commands2.el,v 35.10 1992-06-13 21:15:59 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.9 1992-01-24 23:13:17 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.10 1992-06-13 21:15:59 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -502,7 +502,8 @@ means send the message to everybody."
        (if to-conf-stat
 	   (lyskom-format 'message-sent-to-user
 			  string (conf-stat->name to-conf-stat))
-	 (lyskom-format 'message-sent-to-all string)))
+	 (lyskom-format 'message-sent-to-all string))
+       lyskom-pers-no)
     (lyskom-insert-before-prompt
      (lyskom-get-string 'message-nope)))
   (lyskom-end-of-command))
