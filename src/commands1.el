@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.46 1999-06-26 20:48:04 byers Exp $
+;;;;; $Id: commands1.el,v 44.47 1999-06-28 10:41:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.46 1999-06-26 20:48:04 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.47 1999-06-28 10:41:01 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -380,13 +380,14 @@ Returns t if it was possible, otherwise nil."
       nil				; We have some problem here.
     (let ((priority
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
-	       100			; When adding someone else
+	       (lyskom-read-num-range 0 255
+                                      (lyskom-get-string 'priority-q)
+                                      nil 100)
 	     (if (and (numberp kom-membership-default-priority)
 		      (< kom-membership-default-priority 256)
-		      (> kom-membership-default-priority 0))
+		      (>= kom-membership-default-priority 0))
 		 kom-membership-default-priority
-	       (lyskom-read-num-range
-		0 255 (lyskom-get-string 'priority-q)))))
+	       (lyskom-read-num-range 0 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
@@ -2505,7 +2506,9 @@ Uses Protocol A version 9 calls"
 			   "\n"))
     (lyskom-insert (lyskom-format (if want-invisible
                                       'total-users
-                                    'total-visible-users) total-users))))
+                                    'total-visible-users) total-users
+                                    (lyskom-client-date-string 
+                                     'time-format-exact)))))
 
 
 (defun lyskom-deferred-client-1 (name defer-info)
