@@ -1,7 +1,8 @@
 2002-03-28  Hans Persson  <hans@localhost.localdomain>
 
-	* elisp-client.sgml: Lagt till beskrivningar av de flesta
-	mötesrelaterade kommandon.
+	* elisp-client.sgml: Lagt till beskrivningar av alla
+	mötesrelaterade kommandon. Lagt till uppmärkning av ord som ska
+	finnas i registret.
 
 2002-03-26  Hans Persson  <hans@localhost.localdomain>
 
