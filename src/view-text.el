@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.56 2001-05-30 13:02:22 byers Exp $
+;;;;; $Id: view-text.el,v 44.57 2001-11-04 21:57:05 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.56 2001-05-30 13:02:22 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.57 2001-11-04 21:57:05 jhs Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -49,7 +49,8 @@
   "Display text number TEXT-NO.
 Args: TEXT-NO &optional MARK-AS-READ FOLLOW-COMMENTS CONF-STAT 
 PRIORITY BUILD-REVIEW-TREE FLAT-REVIEW.
-If MARK-AS-READ is non-nil the text will be marked as read.
+If MARK-AS-READ (or `kom-review-marks-texts-as-read') is non-nil the text will
+be marked as read.
 If FOLLOW-COMMENTS is non-nil all comments and footnotes to this text will be
 read before the next text. CONF-STAT must be the conference status of the
 current conference, and PRIORITY the priority, if FOLLOW-COMMENTS is non-nil.
@@ -291,7 +292,9 @@ Note that this function must not be called asynchronously."
                      ;; Insert the text body.
 
 		     (lyskom-print-text text-stat text
-					mark-as-read text-no flat-review))
+					(or mark-as-read kom-review-marks-texts-as-read)
+					text-no flat-review)
+		     (if kom-review-marks-texts-as-read (lyskom-is-read text-no)))
 
                    ;; Insert aux-items that go in the footer.
 
@@ -381,7 +384,8 @@ Note that this function must not be called asynchronously."
                                       kom-review-uses-cache)
                            (lyskom-prefetch-texttree text-no))
 			 (lyskom-follow-comments text-stat
-						 conf-stat mark-as-read
+						 conf-stat
+						 (or mark-as-read kom-review-marks-texts-as-read)
 						 priority build-review-tree)))
                    (if (lyskom-text-p (cache-get-text text-no))
                        (cache-del-text text-no))
