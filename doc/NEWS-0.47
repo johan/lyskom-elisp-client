@@ -89,11 +89,11 @@
    optimerade för antingen vit eller svart bakgrund. Det går att
    ställa enstaka färger i kom-login-hook om man så önskar.
 
-** FAQ-hanteringen har ändrats en del. Bland måste man läsa om alla
-   FAQ:er en gång på grund av hur FAQ-läsmarkeringar fungerar numera;
-   information om vilka mötes-FAQ:er man har läst sparas i servern,
-   och varje gång det kommer en ny FAQ till ett möte man är med i så
-   meddelas man om det nästa gång man går till mötet.
+** FAQ-hanteringen har ändrats en del. Bland annat måste man läsa om
+   alla FAQ:er en gång på grund av hur FAQ-läsmarkeringar fungerar
+   numera; information om vilka mötes-FAQ:er man har läst sparas i
+   servern, och varje gång det kommer en ny FAQ till ett möte man är
+   med i så meddelas man om det nästa gång man går till mötet.
 
 ** De alternativa utseendena som man kan ha på inläggstext,
    streckrader och första raden ser lite underliga ut i XEmacs
