@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.2 1996-10-28 18:01:19 davidk Exp $
+;;;;; $Id: command.el,v 44.3 1996-12-30 17:52:19 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -111,11 +111,20 @@
 (defun lyskom-read-extended-command ()
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
+	 (minibuffer-setup-hook minibuffer-setup-hook)
 	 (alternatives (mapcar (function (lambda (pair)
 					   (cons (cdr pair) (car pair))))
 			       (lyskom-get-strings lyskom-commands
 						   'lyskom-command)))
-	 (name (completing-read (lyskom-get-string 'extended-command)
+	 (name nil))
+    ;; (add-hook 'minibuffer-setup-hook
+    ;; 		 (function
+    ;; 		  (lambda ()
+    ;; 		    (let ((table (make-char-table 'case-table)))
+    ;; 		      (set-char-table-parent table (current-case-table))
+    ;; 		      (aset table ?\} 345)
+    ;; 		      (set-case-table table)))))
+    (setq name (completing-read (lyskom-get-string 'extended-command)
 				alternatives 
 				;; lyskom-is-administrator is buffer-local and
 				;; must be evalled before the call to 
@@ -128,7 +137,7 @@
 				     (lyskom-ok-command
 				      alternative
 				      (, lyskom-is-administrator))))
-				t nil)))
+				t nil))
     (cdr (assoc name alternatives))))
 
 (defun lyskom-start-of-command (function &optional may-interrupt)
