@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.188 2001-11-18 23:27:25 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.189 2001-11-23 22:46:38 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.188 2001-11-18 23:27:25 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.189 2001-11-23 22:46:38 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -796,11 +796,12 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     ;; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")
     (recipient . "Mottagare")
-    (recipient-prefix . "[Mm]")
     (carbon-copy . "Extra kopia")
     (blank-carbon-copy . "Dold kopia")
+    (recipient-prefix . "[Mm]")
     (carbon-copy-prefix . "[Ee]")
     (blank-carbon-copy-prefix . "[Dd]")
+    (add-recipient . "Addera mottagare")
 
     (secret-aux-flag . "hemlig")
     (anonymous-aux-flag . "anonym")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.86 2001-11-19 11:31:25 byers Exp $
+;;;;; $Id: edit-text.el,v 44.87 2001-11-23 22:46:37 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.86 2001-11-19 11:31:25 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.87 2001-11-23 22:46:37 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -209,6 +209,11 @@ nil             -> Ingenting."
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
+    (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
+                                 (lyskom-default-button 'add-recipient
+                                                        edit-buffer)
+                                 (lyskom-get-string 'add-recipient))
+                  where-put-misc)
     (mapcar (function
              (lambda (item)
                (let ((data (lyskom-aux-item-call
@@ -1288,7 +1293,6 @@ RECPT-TYPE is the type of recipient to add."
 
 (defun lyskom-edit-sub-recipient/copy (recpt-no edit-buffer)
   "Remove the recipient having RECPT-NO from EDIT-BUFFER"
-  ;; XXX: lyskom-edit-sub-recipient/copy: Symbol's value as variable is void: recpt
   (save-excursion
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
@@ -1559,6 +1563,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
                 (lyskom-looking-at-header 'carbon-copy-prefix 'empty)
                 (lyskom-looking-at-header 'recipient-prefix 'empty))
             nil)
+           ((lyskom-looking-at-header 'add-recipient nil) nil)
 
 	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))

@@ -1,3 +1,15 @@
+2001-11-23  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-miscs): print a button with
+	type add-recipient after the recipients.
+	(lyskom-edit-parse-headers): Ignorera 'add-recipient i headrarna.
+
+	* vars.el.in (lyskom-button-actions): new button type:
+	add-recipient.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): new
+	string: add-recipient
+
 2001-11-21  Johan Sundström  <jhs@lysator.liu.se>
 
 	* startup.el (lyskom): A `C-u' prefix argument makes the session
@@ -18,10 +30,10 @@
 
 	* vars.el.in (lyskom-button-actions): added "remove" option to the
 	recpt-type menu. Better argument names for the lambda-functions in
-	recpt-type 
+	recpt-type.
 
 	* lyskom-buttons.el (lyskom-generate-button): do a car on
-	menu-title so we get an errormessage if it's not a cons when the
+	menu-title so we get an error message if it's not a cons when the
 	button is generated in stead of when it's used.
 
 	* swedish-strings.el, english-strings.el (lyskom-message): new
