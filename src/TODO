@@ -5,10 +5,6 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
-** Knappar i email-adressen i importerade brev.
-
-** Knappar å sånt i Återse brevhuvud.
-
 ** Man vill kunna skicka user-agent och proxy-authorization till
    HTTP-proxyn. Se specen för HTTP 1.1, kapitel 11 och RFC 2069.
 
