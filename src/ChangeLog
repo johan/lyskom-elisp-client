@@ -1,4 +1,22 @@
+Sun Feb 18 06:30:46 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* services.el (blocking-do): Återställ lyskom-quit-flag på rätt
+ 	sätt.
+
+	* lyskom-rest.el (lyskom-sentinel): Sätt mode-line-process till
+ 	något lämpligt.
+
+	* async.el (lyskom-parse-async): Dito.
+
+	* startup.el (lyskom-mode): Dito.
+
+	* lyskom-rest.el (lyskom-start-of-command)
+	(lyskom-end-of-command): Dito.
+
 Sat Feb 17 00:24:23 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-mouse-3): Ta bort ett musklick ur
+ 	event-kön.
 
 	* commands1.el (lyskom-fixup-and-go-to-conf): Tog bort.
 	(lyskom-add-member-by-no): Anropa lyskom-add-member-answer för att

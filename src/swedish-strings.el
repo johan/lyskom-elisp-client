@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.16 1996-02-17 15:36:49 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.17 1996-02-18 05:51:41 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.16 1996-02-17 15:36:49 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.17 1996-02-18 05:51:41 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -648,6 +648,11 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
 ")
     (text-is-created . "Text %#1n \344r skapad!")
 
+    ; Used in mode-line-process
+    (mode-line-waiting . ": v\344ntar")
+    (mode-line-working . ": arbetar")
+    (mode-line-saving . ": sparar")
+    (mode-line-down . ": nerkopplad")
 
     ; From completing-read.el:
 

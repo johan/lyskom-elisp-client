@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.24 1996-02-17 15:36:27 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.25 1996-02-18 05:51:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.24 1996-02-17 15:36:27 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.25 1996-02-18 05:51:29 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1395,6 +1395,7 @@ lyskom-is-waiting nil.
             (goto-char (point-max))
             (delete-char (- (length lyskom-prompt-text))))))
     (lyskom-insert lyskom-prompt-executing-default-command-text))
+  (setq mode-line-process (lyskom-get-string 'mode-line-working))
   (if (pos-visible-in-window-p (point-max))
       (save-excursion
         (goto-char (point-max))
@@ -1429,6 +1430,7 @@ lyskom-is-waiting nil.
   (setq lyskom-current-command nil)
   (setq lyskom-no-prompt t)
   (lyskom-scroll)
+  (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
   (lyskom-prefetch-and-print-prompt)
@@ -2096,6 +2098,7 @@ lyskom-session-priority and nil otherwise."
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
   (lyskom-clear-vars)
   (lyskom-format-insert 'closed-connection sentinel)
+  (setq mode-line-process (lyskom-get-string 'mode-line-down))
   (beep)
   (lyskom-scroll))
 
