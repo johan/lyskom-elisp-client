@@ -1,3 +1,24 @@
+2002-03-02  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-windows): Rewritten (based on
+	work by Klaus Zeuge).
+
+	* compatibility.el (w32-shell-execute): New dummy function.
+
+	* vars.el.in (kom-windows-browser-command): New variable.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-windows-browser-command.
+	(lyskom-custom-variables): Added kom-windows-browser-command.
+
+	* english-strings.el (lyskom-custom-strings): Added
+	kom-windows-browser-command-doc.
+	(lyskom-custom-strings): Added kom-windows-browser-command-tag.
+
+	* swedish-strings.el (lyskom-custom-strings): Added
+	kom-windows-browser-command-doc.
+	(lyskom-custom-strings): Added kom-windows-browser-command-tag.
+
 2002-02-28  Joel Rosdahl  <joel@lysator.liu.se>
 
 	Made it possible to run the client uncompiled.
