@@ -1,5 +1,5 @@
 #
-# $Id: distribution-makefile,v 35.1 1991-09-15 10:06:00 linus Exp $
+# $Id: distribution-makefile,v 35.2 1991-10-08 19:38:30 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -31,33 +31,41 @@ RM = /usr/gnu/bin/rm -vf
 # this should load your favorite byte-compiler
 EMACS-BATCH = emacs -batch 
 
-PARTS-EL = vars.el komtypes.el clienttypes.el startup.el \
+PARTS-EL = komtypes.el clienttypes.el startup.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
 	view-text.el async.el completing-read.el \
-	prioritize.el \
+	prioritize.el flags.el \
+	elib-string.el \
 	lyskom-rest.el
-HEADER-EL = macros.el
-HEADER-ELC = macros.elc
-SRC-ELC = vars.elc komtypes.elc clienttypes.elc startup.elc \
+HEADER-EL = macros.el vars.el
+HEADER-ELC = macros.elc vars.elc
+SWEDISH-EL = swedish-strings.el
+SWEDISH-ELC = swedish-strings.elc
+ENGLISH-EL = english-strings.el
+ENGLISH-ELC = english-strings.elc
+SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
 	view-text.elc async.elc completing-read.elc \
-	prioritize.elc \
+	prioritize.elc flags.elc \
+	elib-string.elc \
 	lyskom-rest.elc
 PARTS-ELC = $(SRC-ELC)
-
 
 .SUFFIXES : .el .elc
 .el.elc:
 	$(EMACS-BATCH) -l ./macros.elc -f batch-byte-compile $*.el
 
 
-lyskom.elc: elc-files
-	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
+lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
+	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
 
-lyskom.el: $(HEADER-EL) $(PARTS-EL)
-	cat $(HEADER-EL) $(PARTS-EL) > lyskom.el
+english-lyskom.elc: $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC)
+	cat $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC) > english-lyskom.elc
+
+lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
 
 elc-files: $(HEADER-ELC) $(PARTS-ELC) 
 
