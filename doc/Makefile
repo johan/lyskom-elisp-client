@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.7 1993-05-26 18:11:45 linus Exp $
+# $Id: Makefile,v 35.8 1993-05-27 13:20:07 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -28,8 +28,8 @@ RM = rm
 GENERIC-CLEAN = core
 
 elisp-client: elisp-client.latexinfo
-	emacs -batch -l /usr/local/lib/elisp/latexinfo-mode \
-	-l /usr/local/lib/elisp/latexinfo \
+	emacs -batch -l /usr/local/var/elisp/latexinfo-mode \
+	-l /usr/local/var/elisp/latexinfo \
 	-f batch-latexinfo-format `pwd`/$?
 
 elisp-client.txt: elisp-client
