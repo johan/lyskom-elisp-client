@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.14 1996-08-27 10:52:41 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.15 1996-08-27 15:15:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.14 1996-08-27 10:52:41 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.15 1996-08-27 15:15:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -738,6 +738,7 @@ Gruppmeddelande till %#3M\nfr\345n %#2P (%#4s):
     ; From completing-read.el:
 
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
+    (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
 
     ; From prioritize.el:
 
@@ -966,6 +967,8 @@ Text:
     (who-i-am-server . "Detta \344r %#1s, version %#2s.\n")
     (who-i-am-emacs . "Det k\366rs under %#1s.\n")
 
+    (no-such-session-r . "Det finns ingen sådan session. Personen kanske inte \344r inloggad.\n")
+    (person-not-logged-in-r . "%#1P är inte inloggad.\n")
     (session-status . "Session %#1d \344r %#2P <%#2p>
 %#5s %#7s %#4M
 K\366r %#6D fr\345n %#3s\n")

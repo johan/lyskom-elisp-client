@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 43.0 1996-08-07 16:39:05 davidk Exp $
+;;;;; $Id: clienttypes.el,v 43.1 1996-08-27 15:14:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 43.0 1996-08-07 16:39:05 davidk Exp $\n"))
+	      "$Id: clienttypes.el,v 43.1 1996-08-27 15:14:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -566,3 +566,62 @@ The element last pushed is first in the list."
   (aset (cdr arg) 6 string))
 
 ;;; ================================================================
+
+
+;;; ======================================================================
+;;;
+;;; collector
+;;;
+
+;;; A collector is used when a handler needs to pass information
+;;; back to a function using asynchronous calls. You could use
+;;; dynamically scoped variables, but that causes problems when
+;;; the user quits before all handlers have been called since the
+;;; result variable will be out of scope for the remaining handlers.
+;;; The best-case scenario will be a crash. The worst-case scenario
+;;; is when the handler clobbers another variable with the same name
+;;; that has come into scope.
+;;;
+;;; So, so collect a number of results, do the following:
+;;;
+;;;    (setq <result> (make-collector))
+;;;    (<loop-function>
+;;;        (initiate-<någonting> '<queue> <function> <argl> <result>))
+;;;    (lyskom-wait-queue '<queue>)
+;;;    (<use> (collector->value <result>))
+;;;
+;;; where function is something like this:
+;;;
+;;;    (defun <funktion> (data-från-servern collector)
+;;;        (set-collector->value collector
+;;;                              (cons (<behandla> data-från-servern)
+;;;                                    (collector->value collector))))
+;;;
+;;; or shorter,
+;;;
+;;;    (defun <funktion> (data-från-servern collector)
+;;;        (collector-push (<behandla> data-från-servern)))
+;;;
+;;; This sidestepping protects the handler from scope changes.
+;;;
+
+
+(defun make-collector ()
+  "Create a data type for collecting asynchronous results safely"
+  (cons 'COLLECTOR nil))
+
+(defsubst collector->value (collector)
+  "Get the current value of a collector"
+  (cdr collector))
+
+(defsubst set-collector->value (collector value)
+  "Set the calue of a collector"
+  (setcdr collector value))
+
+(defun set-value-of-collector (value collector)
+  "For use with lyskom handlers. In other cases, use set-collector->value"
+  (set-collector->value collector value))
+
+(defun collector-push (value collector)
+  "Push VALUE onto the front of COLLECTOR's value"
+  (setcdr collector (cons value (cdr collector))))

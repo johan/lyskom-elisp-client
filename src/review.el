@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 43.1 1996-08-23 22:07:16 davidk Exp $
+;;;;; $Id: review.el,v 43.2 1996-08-27 15:15:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 43.1 1996-08-23 22:07:16 davidk Exp $\n"))
+	      "$Id: review.el,v 43.2 1996-08-27 15:15:50 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -498,7 +498,9 @@ Args: persno confno num"
            (result nil)
            (increment (if num (abs num)))
            (mark (if (and num (< num 0)) plow phigh))
+           (collector nil)
            (found nil)
+           (start nil)
            (data nil))
     
 
@@ -507,30 +509,44 @@ Args: persno confno num"
                 mark phigh
                 increment (1+ phigh)))
 
-      (setq increment (min lyskom-fetch-map-nos increment))
-
       (while (and (<= mark phigh)
                   (>= mark plow)
                   (> (abs num) (length result)))
+
+        (setq increment (min lyskom-fetch-map-nos increment))
+        (setq start (if (< num 0)
+                        mark
+                      (- mark (1- increment))))
+        (if (< start 0)
+            (progn
+              (setq increment (- increment start))
+              (setq start 0)))
       
         (setq data (lyskom-remove-zeroes
                     (listify-vector
                      (map->text-nos
                       (blocking-do 'get-created-texts
                                    persno
-                                   (if (< num 0)
-                                       mark
-                                     (- mark (1- increment)))
+                                   start
                                    increment)))))
 
-        (mapcar (function (lambda (x) (initiate-get-text-stat 'main nil x)))
-                data)
+        (setq collector (make-collector))
+        (mapcar
+         (function
+          (lambda (x)
+            (initiate-get-text-stat 'main 
+                                    (function
+                                     (lambda (x collector)
+                                       (if x 
+                                           (collector-push 
+                                            (text-stat->text-no x)
+                                            collector))))
+                                    x
+                                    collector)))
+         data)
+
         (lyskom-wait-queue 'main)
-        (setq found nil)
-        (mapcar (function (lambda (x) (if (cache-get-text-stat x)
-                                          (setq found (cons x found)))))
-                data)
-        (setq found (nreverse found))
+        (setq found (nreverse (collector->value collector)))
 
         (if (> num 0)
             (setq result (nconc found result)
@@ -556,6 +572,7 @@ Args: persno confno num"
     (let* ((clow (conf-stat->first-local-no confstat))
            (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
            (result nil)
+           (start nil)
            (increment (and num (abs num)))
            (mark (if (and num (< num 0)) clow chigh)))
 
@@ -566,19 +583,25 @@ Args: persno confno num"
                 increment (1+ chigh)
                 mark chigh))
 
-      (setq increment (min lyskom-fetch-map-nos increment))
-
       (while (and (<= mark chigh)
                   (>= mark clow)
                   (> (abs num) (length result)))
+
+        (setq increment (min lyskom-fetch-map-nos increment))
+        (setq start (if (< num 0)
+                        mark
+                      (- mark (1- increment))))
+        (if (< start 0)
+            (progn
+              (setq increment (- increment start))
+              (setq start 0)))
+
         (let ((found (lyskom-remove-zeroes
                       (listify-vector
                        (map->text-nos
                         (blocking-do 'get-map
                                      confno
-                                     (if (< num 0)
-                                         mark
-                                       (- mark (1- increment)))
+                                     start
                                      increment))))))
           (if (> num 0)
               (setq result (nconc found result)
