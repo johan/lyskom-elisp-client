@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.184 2002-04-22 22:18:06 byers Exp $
+;;;;; $Id: vars.el.in,v 44.185 2002-04-24 21:20:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.184 2002-04-22 22:18:06 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.185 2002-04-24 21:20:38 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1850,7 +1850,7 @@ is a list of vectors, where each vector specifies an item.
 (defconst lyskom-clientversion "@@CLIENTVERSION@@"
   "Version of the LysKOM elisp client.")
 
-(defconst lyskom-max-int 8388607
+(defvar lyskom-max-int 8388607
   "The largest int Emacs, and thus this LysKOM client, can handle.")
 
 (defconst lyskom-server-features

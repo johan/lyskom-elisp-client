@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.61 2002-04-22 22:18:06 byers Exp $
+;;;;; $Id: view-text.el,v 44.62 2002-04-24 21:20:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.61 2002-04-22 22:18:06 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.62 2002-04-24 21:20:38 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -903,8 +903,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 			    pos nil
 			    truncated t)))))
 		    
-          (let ((lyskom-current-function-phase 'body)
-                (start (point)))
+          (let ((lyskom-current-function-phase 'body))
             (lyskom-format-insert "%#2$%#1t\n" 
                                   (cons text-stat body)
                                   (and kom-color-text-background

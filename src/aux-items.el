@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.33 2002-04-21 21:32:15 byers Exp $
+;;;;; $Id: aux-items.el,v 44.34 2002-04-24 21:20:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.33 2002-04-21 21:32:15 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.34 2002-04-24 21:20:37 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -578,14 +578,13 @@ return non-nil if the item is to be included in the list."
           (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-print-faq-format-subject (text text-stat text-no)
-  (let ((subject ""))
-    (if (and text text-stat)
-        (concat "\""
-                (cond ((string-match "\n" (text->decoded-text-mass text text-stat))
-                       (substring (text->decoded-text-mass text text-stat) 0 (match-beginning 0)))
-                      (t ""))
-                "\"")
-      (lyskom-format 'no-such-text-no text-no))))
+  (if (and text text-stat)
+      (concat "\""
+	      (cond ((string-match "\n" (text->decoded-text-mass text text-stat))
+		     (substring (text->decoded-text-mass text text-stat) 0 (match-beginning 0)))
+		    (t ""))
+	      "\"")
+    (lyskom-format 'no-such-text-no text-no)))
 
 (defun lyskom-deferred-print-faq (text-stat defer-info)
   (if text-stat

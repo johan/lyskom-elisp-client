@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.121 2002-04-24 12:51:58 davidk Exp $
+;;;;; $Id: commands2.el,v 44.122 2002-04-24 21:20:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.121 2002-04-24 12:51:58 davidk Exp $\n"))
+              "$Id: commands2.el,v 44.122 2002-04-24 21:20:37 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2547,6 +2547,8 @@ to the first text that NEW is a comment or footnote to."
     (kill-buffer buf)
     file))
 
+(defvar diff-command)
+
 (def-kom-command kom-diff-texts (old new &optional switches)
   "Show differences between text OLD and NEW.
 When called interactively, it will prompt for the NEW text first,
@@ -2602,7 +2604,10 @@ to the first text that NEW is a comment or footnote to."
 
       (set-buffer buf)
       (let ((buffer-read-only nil))
-	(apply 'call-process diff-command nil buf nil args))
+	(apply 'call-process (if (boundp 'diff-command)
+                                 diff-command
+                               "diff")
+               nil buf nil args))
       (delete-file oldfile)
       (delete-file newfile))))
       
@@ -2685,9 +2690,6 @@ to the first text that NEW is a comment or footnote to."
     (setq lyskom-server-version-info (blocking-do 'get-version-info))
 
     (let* ((aux-items (server-info->aux-item-list lyskom-server-info))
-           (e-mail-address (lyskom-get-aux-item aux-items 13))
-           (faqs (lyskom-get-aux-item aux-items 14))
-           (recommended-conf (lyskom-get-aux-item aux-items 29))
            (canonical-name-aux (car (lyskom-get-aux-item aux-items 31)))
            (invisible-sessions 0)
            (anonymous-sessions 0)
