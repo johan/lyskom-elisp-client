@@ -1,3 +1,27 @@
+Wed Jul  9 11:55:47 1997  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-default-collate-table): Rättat strängen som
+ 	någon hade förstört.
+
+	* compatibility.el (char-to-int): Nu kompatibilitetssubst.
+
+	* utilities.el (lyskom-unicase-char): Använd char-to-int.
+
+	* vars.el.in (kom-dont-read-saved-variables): Ny variabel.
+
+	* flags.el (lyskom-maybe-set-var-from-string): Ny funktion.
+
+	* vars.el.in (lyskom-change-conf-hook): Ny variabel.
+
+	* commands1.el (lyskom-go-to-empty-conf): Kör den.
+	(lyskom-sub-member): Kör den.
+
+	* lyskom-rest.el (lyskom-enter-conf): Kör den.
+
+	* startup.el (kom-start-anew): Kör den.
+
+	* prioritize.el (kom-prioritize-set-priority): Fixade en bug.
+
 Mon Jul  7 17:25:46 1997  David Byers  <davby@ida.liu.se>
 
 	* Makefile: Rensade sånt som inte fungerade, gjorde lite mer lik

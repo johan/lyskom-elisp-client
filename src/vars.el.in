@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.22 1997-07-06 14:27:51 byers Exp $
+;;;;; $Id: vars.el.in,v 44.23 1997-07-09 14:41:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.22 1997-07-06 14:27:51 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.23 1997-07-09 14:41:33 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -77,6 +77,11 @@ Dont change these. These are defined by the protocol.")
 (defun lyskom-setup-local-variables ()
   (mapcar 'make-local-variable lyskom-local-variables)
   (mapcar 'make-local-hook lyskom-local-hooks))
+
+(def-kom-var kom-dont-read-saved-variables nil
+  "*Non nil means don't read some variables from the server.
+t means don't read any variables. A list means don't read variables that
+are in the list.")
 
 
 ;;;;;; ================================================================
@@ -295,6 +300,11 @@ signal suggess and nil to prevent the text from being sent.")
 
 (def-kom-var lyskom-after-load-hook nil
   "*Hook to run once after lyskom is loaded.")
+
+(def-kom-var lyskom-change-conf-hook nil
+  "*Hook to run when changing conferences.
+The functions in this list are run with two arguments. The first is the 
+current conf-no and the second is the conf-no being changed to.")
 
 (def-kom-var lyskom-login-hook nil
   "*What to do when logged in.
