@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.52 2000-08-29 16:15:11 byers Exp $
+;;;;; $Id: startup.el,v 44.53 2000-08-31 12:29:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.52 2000-08-29 16:15:11 byers Exp $\n"))
+	      "$Id: startup.el,v 44.53 2000-08-31 12:29:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -261,7 +261,8 @@ See lyskom-mode for details."
 	       (version-info->software-version lyskom-server-version-info))
 
               (when (lyskom-have-call 85)
-                (setq lyskom-collate-table (blocking-do 'get-collate-table)))
+                (setq lyskom-collate-table (blocking-do 'get-collate-table))
+                (lyskom-update-command-completion))
 	      (if (not (zerop (server-info->motd-of-lyskom
 			       lyskom-server-info)))
 		  (blocking-do-multiple ((text (get-text 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.47 2000-08-30 18:47:08 qha Exp $
+;;;;; $Id: option-edit.el,v 44.48 2000-08-31 12:29:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.47 2000-08-30 18:47:08 qha Exp $\n"))
+	      "$Id: option-edit.el,v 44.48 2000-08-31 12:29:49 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -80,6 +80,7 @@
     [kom-page-before-command]
     [kom-deferred-printing]
     [kom-max-buffer-size]
+    [kom-trim-buffer-minimum]
     [kom-bury-buffers]
     [kom-keep-alive-interval]
     "\n"
@@ -240,7 +241,6 @@
     "\n"
     [kom-login-hook]
     [kom-do-when-done]
-    [kom-trim-buffer-minimum]
     ))
 
 ;;; ======================================================================

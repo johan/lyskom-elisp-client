@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.20 2000-08-29 16:15:09 byers Exp $
+;;;;; $Id: language.el,v 44.21 2000-08-31 12:29:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -285,6 +285,7 @@ if 'lyskom-menu is not found."
            (lyskom-set-language-keymaps language)
            (lyskom-update-menus)
            (lyskom-update-prompt t)
+           (lyskom-update-command-completion)
            t)))
 
 			      

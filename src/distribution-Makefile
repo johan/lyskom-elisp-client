@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.12 2000-08-30 09:49:44 byers Exp $
+# $Id: distribution-Makefile,v 44.13 2000-08-31 12:29:43 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -52,6 +52,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		clienttypes.el \
 		deferred-insert.el \
 		utilities.el \
+		completing-read.el \
 		command.el \
 		buffers.el \
 		aux-items.el \
@@ -73,7 +74,6 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		lyskom-buttons.el \
 		view-text.el \
 		async.el \
-		completing-read.el \
 		mship-edit.el \
 		prioritize.el \
 		flags.el \

@@ -1,3 +1,48 @@
+2000-08-31  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-customize-buffer-format): Moved
+	lyskom-trim-buffer-minimum to a better position.
+
+	* english-strings.el, swedish-strings.el: Fixed some minor rookie
+	mistakes made by Ulrik.
+
+	* completing-read.el (lyskom-completing-match-string-regexp):
+	Moved to avoid compiler warnings and to make inlining work.
+	(lyskom-completing-match-string): Ditto.
+
+	* Makefile (SOURCES): Moved completing-read up to avoid warnings.
+
+2000-08-30  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Don't fsck up the command
+	the user is currently entering at the prompt when in slow mode.
+
+	* vars.el.in (lyskom-command-alternatives): New variable.
+
+	* slow.el (kom-slow-list-completions): New command.
+
+	* swedish-strings.el (lyskom-command): Renamed "Återstarta kom" so
+	that "Återse" would be easier to complete when using slow
+	commands.
+
+	* language.el (lyskom-set-language): Call
+	lyskom-update-command-completion. 
+
+	* lyskom-rest.el (lyskom-is-loaded): Set the default value of
+	lyskom-collate-table so that lyskom-unicase works even before we
+	connect to the server.
+
+	* utilities.el (lyskom-unicase): Don't attempt to switch to lyskom
+	buffer if there is none.
+
+	* command.el (lyskom-update-command-completion): New function.
+	(lyskom-lookup-command-by-name): New function.
+	(lyskom-complete-command): New function.
+
+	* completing-read.el (lyskom-completing-match-string-regexp): New
+	function.
+	(lyskom-completing-match-string): Use it.
+	
 2000-08-30  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* english-strings.el (lyskom-custom-strings)

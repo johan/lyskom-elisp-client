@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.117 2000-08-30 18:47:06 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.118 2000-08-31 12:29:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.117 2000-08-30 18:47:06 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.118 2000-08-31 12:29:47 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -795,8 +795,6 @@ kom-max-buffer-size to something clever, and the trimmed text
 will automagically flow into your lyskom log file."
   (append-to-file 1 lyskom-trim-buffer-delete-to
 		  (expand-file-name (concat "~/" (buffer-name) "-history"))))
-
-;(add-hook 'lyskom-trim-buffer-hook 'jhs-garb-lyskom-buffer-to-file)
 
 
 (defun lyskom-scroll ()
@@ -2380,132 +2378,139 @@ positions are counted from 0, as they are."
 (defun lyskom-update-prompt (&optional force-prompt-update)
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
-  (if (or lyskom-executing-command
-	  (and lyskom-current-prompt
-	       lyskom-dont-change-prompt))
-      nil
-    (let ((to-do (lyskom-what-to-do))
-          (prompt nil)
-          (prompt-args nil))
-      (setq lyskom-command-to-do to-do)
-      (cond
+  (let ((was-at-max (eq (point) (point-max)))
+        (saved-suffix (if lyskom-slow-mode
+                          (save-excursion (lyskom-get-entered-slow-command))
+                        nil)))
+    (if (or lyskom-executing-command
+            (and lyskom-current-prompt
+                 lyskom-dont-change-prompt))
+        nil
+      (let ((to-do (lyskom-what-to-do))
+            (prompt nil)
+            (prompt-args nil))
+        (setq lyskom-command-to-do to-do)
+        (cond
 
-       ((eq to-do 'next-pri-conf)
-        (setq prompt 'go-to-pri-conf-prompt)
-        (or (eq lyskom-current-prompt prompt)
-            (lyskom-beep kom-ding-on-priority-break)))
+         ((eq to-do 'next-pri-conf)
+          (setq prompt 'go-to-pri-conf-prompt)
+          (or (eq lyskom-current-prompt prompt)
+              (lyskom-beep kom-ding-on-priority-break)))
 
-       ((eq to-do 'reedit-text)
-        (setq prompt 're-edit-text-prompt))
+         ((eq to-do 'reedit-text)
+          (setq prompt 're-edit-text-prompt))
 
-       ((and (eq to-do 'next-pri-session)
-             (lyskom-get-prioritized-session))
-        (if (and (read-list-isempty lyskom-reading-list)
-                 (read-list-isempty lyskom-to-do-list))
-            (setq prompt 'next-unread-session-prompt)
-          (setq prompt 'next-pri-session-prompt))
-        (setq prompt-args 
-              (save-excursion
-                (set-buffer (lyskom-get-prioritized-session))
-                (list
-                 (or (cdr (lyskom-string-assoc lyskom-server-name 
-                                               kom-server-aliases))
-                     lyskom-server-name)))))
+         ((and (eq to-do 'next-pri-session)
+               (lyskom-get-prioritized-session))
+          (if (and (read-list-isempty lyskom-reading-list)
+                   (read-list-isempty lyskom-to-do-list))
+              (setq prompt 'next-unread-session-prompt)
+            (setq prompt 'next-pri-session-prompt))
+          (setq prompt-args 
+                (save-excursion
+                  (set-buffer (lyskom-get-prioritized-session))
+                  (list
+                   (or (cdr (lyskom-string-assoc lyskom-server-name 
+                                                 kom-server-aliases))
+                       lyskom-server-name)))))
 
-       ((eq to-do 'next-pri-text)
-        (setq prompt 'read-pri-text-conf)
-        (or (eq lyskom-current-prompt prompt)
-            (lyskom-beep kom-ding-on-priority-break)))
+         ((eq to-do 'next-pri-text)
+          (setq prompt 'read-pri-text-conf)
+          (or (eq lyskom-current-prompt prompt)
+              (lyskom-beep kom-ding-on-priority-break)))
 
-       ((eq to-do 'next-text)
-        (setq prompt
-              (let ((read-info (read-list->first lyskom-reading-list)))
+         ((eq to-do 'next-text)
+          (setq prompt
+                (let ((read-info (read-list->first lyskom-reading-list)))
+                  (cond
+                   ((eq 'REVIEW (read-info->type read-info))
+                    'review-next-text-prompt)
+                   ((eq 'REVIEW-TREE (read-info->type read-info))
+                    'review-next-comment-prompt)
+                   ((eq 'REVIEW-MARK (read-info->type read-info))
+                    'review-next-marked-prompt)
+                   ;; The following is not really correct. The text to be
+                   ;; read might be in another conference.
+                   ((= lyskom-current-conf lyskom-pers-no)
+                    'read-next-letter-prompt)
+                   ((eq 'FOOTN-IN (read-info->type read-info))
+                    'read-next-footnote-prompt)
+                   ((eq 'COMM-IN (read-info->type read-info))
+                    'read-next-comment-prompt)
+                   (t
+                    'read-next-text-prompt)))))
+
+         ((eq to-do 'next-conf)
+          (setq prompt
                 (cond
-                 ((eq 'REVIEW (read-info->type read-info))
-                  'review-next-text-prompt)
-                 ((eq 'REVIEW-TREE (read-info->type read-info))
-                  'review-next-comment-prompt)
-                 ((eq 'REVIEW-MARK (read-info->type read-info))
-                  'review-next-marked-prompt)
-                 ;; The following is not really correct. The text to be
-                 ;; read might be in another conference.
-                 ((= lyskom-current-conf lyskom-pers-no)
-                  'read-next-letter-prompt)
-                 ((eq 'FOOTN-IN (read-info->type read-info))
-                  'read-next-footnote-prompt)
-                 ((eq 'COMM-IN (read-info->type read-info))
-                  'read-next-comment-prompt)
+                 ((eq 'REVIEW-MARK 
+                      (read-info->type (read-list->first lyskom-to-do-list)))
+                  'go-to-conf-of-marked-prompt)
+                 ((eq 'REVIEW
+                      (read-info->type (read-list->first lyskom-to-do-list)))
+                  'go-to-conf-of-review-prompt)
+                 ((eq 'REVIEW-TREE 
+                      (read-info->type (read-list->first lyskom-to-do-list)))
+                  'go-to-conf-of-review-tree-prompt)
+                 ((/= lyskom-pers-no
+                      (conf-stat->conf-no
+                       (read-info->conf-stat (read-list->first
+                                              lyskom-to-do-list))))
+                  'go-to-next-conf-prompt)
                  (t
-                  'read-next-text-prompt)))))
-
-       ((eq to-do 'next-conf)
-        (setq prompt
-              (cond
-               ((eq 'REVIEW-MARK 
-                    (read-info->type (read-list->first lyskom-to-do-list)))
-                'go-to-conf-of-marked-prompt)
-               ((eq 'REVIEW
-                    (read-info->type (read-list->first lyskom-to-do-list)))
-                'go-to-conf-of-review-prompt)
-               ((eq 'REVIEW-TREE 
-                    (read-info->type (read-list->first lyskom-to-do-list)))
-                'go-to-conf-of-review-tree-prompt)
-               ((/= lyskom-pers-no
-                    (conf-stat->conf-no
-                     (read-info->conf-stat (read-list->first
-                                            lyskom-to-do-list))))
-                'go-to-next-conf-prompt)
-               (t
-                'go-to-your-mailbox-prompt))))
+                  'go-to-your-mailbox-prompt))))
     
-       ((eq to-do 'when-done)
-        (if (not lyskom-is-writing)
-            (lyskom-tell-server kom-mercial))
-        (setq prompt
-              (let ((command (lyskom-what-to-do-when-done t)))
-                (cond			    
-                 ((lyskom-command-name command))
-                 ((and (stringp command)
-                       (lyskom-command-name (key-binding command))))
-                 (t (lyskom-format 'the-command command))))))
+         ((eq to-do 'when-done)
+          (if (not lyskom-is-writing)
+              (lyskom-tell-server kom-mercial))
+          (setq prompt
+                (let ((command (lyskom-what-to-do-when-done t)))
+                  (cond			    
+                   ((lyskom-command-name command))
+                   ((and (stringp command)
+                         (lyskom-command-name (key-binding command))))
+                   (t (lyskom-format 'the-command command))))))
      
-       ((eq to-do 'unknown)		;Pending replies from server.
-        (setq prompt nil))
+         ((eq to-do 'unknown)		;Pending replies from server.
+          (setq prompt nil))
      
-       (t (message "%s" to-do)
-          (setq prompt "???")))
+         (t (message "%s" to-do)
+            (setq prompt "???")))
 
-      (when (or force-prompt-update
-                (not (equal prompt lyskom-current-prompt)))
-        (let ((inhibit-read-only t)
-              (prompt-text
-               (if prompt
-                   (lyskom-modify-prompt
-                    (apply 'lyskom-format
-                           (cond
-                            ((symbolp prompt) (lyskom-get-string prompt))
-                            (t prompt))
-                           prompt-args))
-                 ""))
-              (was-at-max (eq (point) (point-max))))
-          (save-excursion
-            ;; Insert the new prompt
-            (goto-char (point-max))
-            (beginning-of-line)
-            (when lyskom-slow-mode
+        (when (or force-prompt-update
+                  (not (equal prompt lyskom-current-prompt)))
+          (let ((inhibit-read-only t)
+                (prompt-text
+                 (if prompt
+                     (lyskom-modify-prompt
+                      (apply 'lyskom-format
+                             (cond
+                              ((symbolp prompt) (lyskom-get-string prompt))
+                              (t prompt))
+                             prompt-args))
+                   "")))
+            (save-excursion
+              ;; Insert the new prompt
+              (goto-char (point-max))
+              (beginning-of-line)
               (add-text-properties 0 (length prompt-text)
                                    '(read-only t rear-nonsticky t)
-                                   prompt-text))
-            (insert-string prompt-text)
-            ;; Delete the old prompt
-            (if lyskom-current-prompt
-                (delete-region (point) (point-max))))
-          (if was-at-max (goto-char (point-max)))
+                                   prompt-text)
+              (insert-string prompt-text)
+              ;; Delete the old prompt
+              (when lyskom-current-prompt
+                (if (and lyskom-slow-mode 
+                         (looking-at 
+                          (regexp-quote lyskom-current-prompt-text)))
+                    (delete-region (point) (match-end 0))
+                  (delete-region (point) (point-max))
+                  (if saved-suffix (insert saved-suffix)))))
+            (if was-at-max (goto-char (point-max)))
 	  
-          (setq lyskom-current-prompt prompt)
-          (setq lyskom-current-prompt-args prompt-args)
-          (setq lyskom-current-prompt-text prompt-text))))
-    (lyskom-set-mode-line)))
+            (setq lyskom-current-prompt prompt)
+            (setq lyskom-current-prompt-args prompt-args)
+            (setq lyskom-current-prompt-text prompt-text))))
+      (lyskom-set-mode-line))))
 
 (defun lyskom-modify-prompt (s &optional executing)
   (let ((text (lyskom-format-prompt (cond (lyskom-is-administrator
@@ -3545,6 +3550,7 @@ One parameter - the prompt string."
 (if lyskom-is-loaded
     nil
 
+  (setq-default lyskom-collate-table lyskom-default-collate-table)
   (lyskom-set-language lyskom-language)
   (unless (or (memq 'lyskom-unread-mode-line global-mode-string)
               (rassq 'lyskom-unread-mode-line global-mode-string))

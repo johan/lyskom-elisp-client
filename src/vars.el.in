@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.120 2000-08-30 18:47:15 qha Exp $
+;;;;; $Id: vars.el.in,v 44.121 2000-08-31 12:29:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.120 2000-08-30 18:47:15 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.121 2000-08-31 12:29:57 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -522,7 +522,6 @@ If it isn't a list and isn't nil the screen is cleared before all commands."
 persons who are not logged in. Values other than t or nil are reserved
 for future use."
   server)
-
 
 (def-kom-var kom-unsubscribe-makes-passive t
   "*If non-nil subtracting oneself from a conference makes the membership
@@ -1036,9 +1035,14 @@ at random and used. This element may be a string, function or list."
   "Keymap for the customize buffer"
   local)
 
+(def-kom-var lyskom-command-alternatives nil
+  "Possible command completions."
+  local)
+
 (def-kom-var kom-trim-buffer-minimum 4096
-  "*This number of bytes rounded to a whole line is the ammount of text trimmed
-each time." server)
+  "*This number of bytes rounded to a whole line is the amount of text trimmed
+each time ." 
+  server)
 
 
 ;;; =================================================================

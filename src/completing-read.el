@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.31 2000-08-23 10:43:40 byers Exp $
+;;;;; $Id: completing-read.el,v 44.32 2000-08-31 12:29:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.31 2000-08-23 10:43:40 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.32 2000-08-31 12:29:42 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -115,8 +115,16 @@ but first checks a cache."
     map)
   "Keymap used for reading LysKOM names.")
 
+(defsubst lyskom-completing-match-string-regexp (string)
+  (concat "^"
+          (replace-in-string (regexp-quote (lyskom-unicase (lyskom-completing-strip-name string)))
+                             "\\s-+" "\\\\S-*\\\\s-+")
+          "\\s-*"))
 
-
+(defsubst lyskom-completing-match-string (string name)
+  "Return non-nil if STRING matches NAME using LysKOM completion rules."
+  (string-match (lyskom-completing-match-string-regexp string)
+                (lyskom-completing-strip-name (lyskom-unicase name))))
 
 
 (defun lyskom-read-conf-no (prompt type &optional empty initial mustmatch)
@@ -529,14 +537,6 @@ function work as a name-to-conf-stat translator."
                              login-list
                              candidate-list)
                             (list string))))))))))))
-
-(defun lyskom-completing-match-string (string name)
-  "Return non-nil if STRING matches NAME using LysKOM completion rules."
-  (string-match (concat "^"
-                        (replace-in-string (regexp-quote (lyskom-unicase (lyskom-completing-strip-name string)))
-                                  "\\s-+" "\\\\S-*\\\\s-+")
-                        "\\s-*")
-                (lyskom-completing-strip-name (lyskom-unicase name))))
         
 
 (defun lyskom-completing-member (string list)
