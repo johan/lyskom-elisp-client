@@ -57,11 +57,16 @@ tar-arkivet.
 ** Nytt kommando: Vilka (är inloggade) i möte (bundet till lv)
    Som vilka, men visar endast medlemmar i ett visst möte.
 
+** Nytt kommando: Ändra parentes. 
+
 ** Man kan citatmarkera text vid editering av ett inlägg med
    comment-region.
 
 ** Man kan simulera högerknapptryckning med + för att kunna använda
    menyer med tangentbordet.
+
+** Med lyskomd 2.0 så är klienten bättre på att hålla sin cache
+   uppdaterad.
 
 ** Långa inlägg kan kortas av när man återser dem.  Se inställningarna
    för "Korta av långa inlägg".
