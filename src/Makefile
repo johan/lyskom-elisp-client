@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.6 1995-03-01 23:20:16 linus Exp $
+# $Id: Makefile,v 38.7 1995-07-25 14:28:57 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.6 1995-03-01 23:20:16 linus Exp $
+# $Id: Makefile,v 38.7 1995-07-25 14:28:57 linus Exp $
 #
 
 CLIENTVERSION = 0.39
@@ -55,7 +55,7 @@ SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
 	reading.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
-	filter.el filter-edit.el \
+	filter.elc filter-edit.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc \
 	elib-string.elc \
