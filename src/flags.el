@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.33 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: flags.el,v 44.34 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.33 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: flags.el,v 44.34 2003-01-08 00:33:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -48,7 +48,11 @@
   local)
 
 (def-kom-command kom-save-options ()
-  "Save options that have been set somewhere."
+  "Save all LysKOM settings. This will save settings in the server but
+not save anything to your Emacs init file (usually .emacs).
+
+To edit settings, use `kom-customize'. This command can also save
+settings to your emacs init file."
   (interactive)
   (lyskom-save-options (or lyskom-buffer 
                            (current-buffer))
@@ -57,7 +61,13 @@
                        (lyskom-get-string 'could-not-save-options)))
 
 (def-kom-command kom-copy-options ()
-  "Copy options from one setting to another."
+  "Copy settings from one LysKOM session to another. This is useful if
+you have configured on session to your liking and want ths settings to
+be used on other servers as well.
+
+This command will save settings to the LysKOM server, but will not
+save anything to your Emacs init file. Use `kom-customize' to edit
+settings and save them to your emacs init file."
   (interactive)
   (let* ((completions
           (mapcar (lambda (x)

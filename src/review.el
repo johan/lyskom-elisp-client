@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.44 2003-01-05 21:37:08 byers Exp $
+;;;;; $Id: review.el,v 44.45 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.44 2003-01-05 21:37:08 byers Exp $\n"))
+	      "$Id: review.el,v 44.45 2003-01-08 00:33:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -98,14 +98,26 @@ kom-review-marks-texts-as-read toggled."
 
 
 (def-kom-command kom-review-all ()
-  "Review every articles of an author written to a conference."
+  "Review all articles written by a particular author to a particular
+conference. This can also be accomplished by using `kom-review-by-to'
+and specifying zero texts.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to 0))
 
 
 (def-kom-command kom-review-more (count)
-  "Review more articles using the same critera as the last review."
+  "Review more articles using the same critera as the last review
+performed with `kom-review-by-to'. The review will be resumed where
+the previous review finished.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive "P")
   (if (not lyskom-have-review)
       (lyskom-format-insert 'no-review-done)
@@ -154,18 +166,19 @@ kom-review-marks-texts-as-read toggled."
                                  nil
                                (lyskom-insert-string 'no-such-text)))))))
 
-                       
+
 
 (def-kom-command kom-review-first (&optional count)
-  "Reviews all articles of author that is written to conference recipient.
-If return is given instead of an author then all authors to that conference is
-shown. If return is given instead of conference then all conferences for that
-person is chosen.
-If a negative numeric argument is given then only the last COUNT articles are 
-chosen. If the argument is positive then the first -COUNT articles are chosen.
-If the argument is zero the all articles are chosen.
-No argument is equivalent to COUNT 1.
-The defaults for this command is the conference that you are in."
+  "Review the first N articles written by a particular author to some
+conference. With no author specified, review texts by all authors.
+With zero texts specified, review all text. With no conference
+specified, review texts to all conferences. With a negative number of
+texts, review the last N texts instead of the first (you can use
+`kom-review-by-to' instead.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive "P")
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to (- (or count
@@ -174,15 +187,16 @@ The defaults for this command is the conference that you are in."
 
 
 (def-kom-command kom-review-by-to (&optional count)
-  "Reviews all articles of author that is written to conference recipient.
-If return is given instead of an author then all authors to that conference is
-shown. If return is given instead of conference then all conferences for that
-person is chosen.
-If a positive numeric argument is given then only the last COUNT articles are 
-chosen. If the argument is negative then the first -COUNT articles are chosen.
-If the argument is zero the all articles are chosen.
-No argument is equivalent to COUNT 1.
-The defaults for this command is the conference that you are in."
+  "Review the last N articles written by a particular author to some
+conference. With no author specified, review texts by all authors.
+With zero texts specified, review all text. With no conference
+specified, review texts to all conferences. With a negative number of
+texts, review the last N texts instead of the first (you can use
+`kom-review-first' instead.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive "P")
   (lyskom-review-by-to (or count
                            (lyskom-read-number
@@ -961,8 +975,13 @@ Cannot be called from a callback."
 ;;;
 
 (def-kom-command kom-review-backward ()
-  "Toggles the reviewing order.
-If reading forward then starts reading backward and the other way round."
+  "Toggles the reviewing order. If you are currently reviewing texts
+oldest to newest, review newest to oldest instead. When reviewing
+newest to oldest, change to oldest to newest.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive)
   (cond
    ((and (not (read-list-isempty lyskom-reading-list))
@@ -989,11 +1008,17 @@ If reading forward then starts reading backward and the other way round."
 
 
 (def-kom-command kom-review-tree (&optional text-no)
-  "Review all comments to this text.
-Descends recursively in the comment-tree without marking the texts as read.
-The tree is forgotten when a kom-go-to-next-conf command is issued.
-If optional prefix argument TEXT-NO is present view tree from that text 
-instead. In this case the text TEXT-NO is first shown." 
+  "Recursively review all comments to the selected text.
+This command will descend recursively in the comment tree, as when
+reading texts normally. Unlike when reading normally, filters are
+not applied and circular structures are not dealt with gracefully.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-tree-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (if text-no
@@ -1010,7 +1035,16 @@ instead. In this case the text TEXT-NO is first shown."
 
 
 (def-kom-command kom-find-root (text-no)
-  "Finds the root text of the tree containing the text in lyskom-current-text."
+  "Finds the root text of the tree containing the selected text.
+When there is more than one root, all will be included in a review
+operation.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond
@@ -1040,8 +1074,17 @@ instead. In this case the text TEXT-NO is first shown."
 
 
 (def-kom-command kom-find-root-review (text-no)
-  "Finds the root text of the tree containing the text in lyskom-current-text and
-reviews the whole tree in deep-first order."
+  "Finds the root of the comment tree containing the selected texts
+and then recursively reviews all its comments. For texts with a single
+root, this is equivalent to doing `kom-find-root' followed by
+`kom-review-tree'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-review-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond
@@ -1142,9 +1185,14 @@ Text is a text-no."
 
 
 (def-kom-command kom-review-next ()
-  "Resumes an interupted review by moving all review and review-tree entries in
-the lyskom-reading-list to the beginning. i.e by moving all other types to the
-end."
+  "Resumes an interupted review by moving all suspended review entries
+to the front. This command may be less-than-useful depending on how
+review priorities are set, and the setting of
+`kom-higher-priority-breaks'.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
   (let ((len (read-list-length lyskom-reading-list))
@@ -1167,7 +1215,12 @@ end."
 
 
 (def-kom-command kom-review-stack ()
-  "Displays the review-stack."
+  "Displays a list of suspended review commands, and possibly regular
+read commands that have been suspended by reviewing.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive)
   (if (read-list->all-entries lyskom-reading-list)
       (mapcar
@@ -1202,7 +1255,11 @@ end."
 
 
 (def-kom-command kom-review-clear ()
-  "Deletes all review-types from the lyskom-reading-list and lyskom-to-do-list."
+  "Cancel all active and suspended review commands.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive)
   (let ((found nil))
     (if (not (read-list-isempty lyskom-reading-list))
@@ -1226,9 +1283,16 @@ end."
 
 
 (def-kom-command kom-review-comments (text-no)
-  "View the comments to this text.
-If the current text has comments in (footnotes in) some texts then the first
-text is shown and a REVIEW list is built to shown the other ones."
+  "Review all comments to the selected text text. This command only
+reviews one level of comments. To see the entire comment tree, use
+`kom-review-tree' instead.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond (text-no
@@ -1290,7 +1354,13 @@ text is shown and a REVIEW list is built to shown the other ones."
 
 
 (def-kom-command kom-review-last-normally-read (no)
-  "Reviews the NO last normally read texts."
+  "Reviews the N texts most recently read using normal commands.
+After reviewing a number of texts, this will show the N texts
+read prior to that.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-read' for information on settings that affect
+all review-related functions."
   (interactive 
    (list 
     (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
@@ -1318,7 +1388,12 @@ text is shown and a REVIEW list is built to shown the other ones."
 ;;; Modified by: Johan Sundström
 
 (def-kom-command kom-review-noconversion (text-no)
-  "Displays TEXT-NO or the last read text without any conversion."
+  "Displays the selected text without any conversions or filtering
+\(i.e. no conversion of HTML, no automatic line breaks, all header
+lines etc).
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-noconversion-q)))
   (if text-no
       (let ((lyskom-format-special nil)

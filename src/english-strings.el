@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.256 2003-01-06 11:18:25 byers Exp $
+;;;;; $Id: english-strings.el,v 44.257 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.256 2003-01-06 11:18:25 byers Exp $"))
+              "$Id: english-strings.el,v 44.257 2003-01-08 00:33:14 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1842,6 +1842,8 @@ environment to one that uses \"%#2s\" to encode text.
     (session-to-copy-options-from . "Session to copy options from: ")
     (reading-settings-from . "Reeading options from %s...")
     (reading-settings-from-done . "Reading options from %s...done")
+
+    (super-jump-q . "Super jump which text? ")
     ))
 
 

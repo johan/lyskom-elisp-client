@@ -1448,7 +1448,9 @@ With prefix arg, contract only those that were created by self."
 
 
 (def-kom-command kom-handle-membership ()
-  "Pop up a buffer to manage memberships in"
+  "Pop up a buffer where you can see and manipulate all your
+memberships. This command is not finished. It mostly works, but has
+bugs and is somewhat fragile. Handle with care."
   (interactive)
   (let ((kom-deferred-printing nil))
     (set-buffer (lp--create-buffer)))
