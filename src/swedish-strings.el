@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.189 2001-11-23 22:46:38 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.190 2001-11-27 10:41:05 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.189 2001-11-23 22:46:38 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.190 2001-11-27 10:41:05 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1549,6 +1549,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-unmark-text-action . "Avmarkera texten")
     (lyskom-button-save-text-action . "Arkivera inlägg")
     (lyskom-button-save-text-body-action . "Spara inläggstext")
+    (lyskom-button-review-comments-action . "Återse alla kommentarer")
+    (lyskom-button-review-tree-action . "Återse alla kommentarer rekursivt")
+    (lyskom-button-write-footnote-action . "Fotnotera")
+    (lyskom-button-fast-reply-action . "Anmärk")
     (lyskom-button-view-conf-presentation-action . "Visa presentation")
     (lyskom-button-view-conf-status-action . "Visa mötesstatus")
     (lyskom-button-goto-conf-action . "Gå till mötet")

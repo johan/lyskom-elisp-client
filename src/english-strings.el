@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.157 2001-11-23 22:46:38 qha Exp $
+;;;;; $Id: english-strings.el,v 44.158 2001-11-27 10:41:05 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.157 2001-11-23 22:46:38 qha Exp $"))
+              "$Id: english-strings.el,v 44.158 2001-11-27 10:41:05 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1544,12 +1544,16 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-review-noconversion-action . "Review unconverted")
     (lyskom-button-find-root-review-action . "Review tree")
     (lyskom-button-find-root-action . "Review root text")
-    (lyskom-button-comment-text-action . "Write commend")
+    (lyskom-button-comment-text-action . "Write comment")
     (lyskom-button-private-comment-text-action . "Write personal reply")
     (lyskom-button-mark-text-action . "Mark text")
     (lyskom-button-unmark-text-action . "Unmark text")
     (lyskom-button-save-text-action . "Save archive copy")
     (lyskom-button-save-text-body-action . "Save text body")
+    (lyskom-button-review-comments-action . "Review all comments")
+    (lyskom-button-review-tree-action . "Review all comments recursively")
+    (lyskom-button-write-footnote-action . "Write footnote")
+    (lyskom-button-fast-reply-action . "Remark")
     (lyskom-button-view-conf-presentation-action . "View presentation")
     (lyskom-button-view-conf-status-action . "View conference status")
     (lyskom-button-goto-conf-action . "Go to conference")

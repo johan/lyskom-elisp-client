@@ -1,3 +1,15 @@
+2001-11-27  Johan Sundström  <jhs@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-button-review-comments,
+	lyskom-button-review-tree, lyskom-button-write-footnote,
+	lyskom-button-fast-reply): New button actions.
+
+	* vars.el.in (lyskom-button-actions): Added above button actions
+	for text buttons.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	action names.
+
 2001-11-23  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-miscs): print a button with
