@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.1 1993-04-26 19:35:11 linus Exp $
+# $Id: Makefile,v 36.2 1993-05-27 13:21:12 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.1 1993-04-26 19:35:11 linus Exp $
+# $Id: Makefile,v 36.2 1993-05-27 13:21:12 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.1  1993-04-26 19:35:11  linus
+# Revision 36.2  1993-05-27 13:21:12  linus
+# obel18 => diag19
+#
+# Revision 36.1  1993/04/26  19:35:11  linus
 # New version
 #
 # Revision 35.22  1993/04/26  19:30:54  linus
@@ -234,7 +237,7 @@ distrib distribution: lyskom.el lyskom.elc doc
 	  shar -v -cCmx -l 50 -o BYTEC README lyskom.elc
 	cd distribution; \
 	  ( $(RM) lyskom.elc ; \
-	    sed 's/kom\.lysator\.liu\.se/obel18.ida.liu.se/g' > lyskom.elc )\
+	    sed 's/kom\.lysator\.liu\.se/diag19.ida.liu.se/g' > lyskom.elc )\
 	  < lyskom.elc ; \
 	  chmod 644 lyskom.el lyskom.elc elisp-client.txt
 	cd distribution; \
