@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.104 2002-09-15 23:14:16 byers Exp $
+;;;;; $Id: edit-text.el,v 44.105 2002-09-18 20:48:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.104 2002-09-15 23:14:16 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.105 2002-09-18 20:48:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1559,8 +1559,8 @@ non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
 		     (nil
 		      ""))))
       (if match-number
-	  (string-to-int (buffer-substring (match-beginning 1)
-					   (match-end 1)))
+	  (string-to-int (buffer-substring (match-beginning 2)
+					   (match-end 2)))
 	t)
     nil))
 

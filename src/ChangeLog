@@ -1,5 +1,15 @@
 2002-09-18  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 762:
+	* commands2.el (kom-set-motd): Rewrote using blocking commands.
+	The old code didn't really work. Also pick recipients for the text
+	correctly.
+
+	Fix bug 763:
+	* edit-text.el (lyskom-looking-at-header): Changed from match
+	number 1 to match number 2 because we need that for english
+	strings. 
+
 	Fix bug 522:
 	* startup.el (lyskom): Print motd of lyskom sort of like a normal
 	text. Don't print the header because it distracts attention. Do

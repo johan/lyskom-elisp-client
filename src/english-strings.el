@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.236 2002-09-15 23:14:16 byers Exp $
+;;;;; $Id: english-strings.el,v 44.237 2002-09-18 20:48:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.236 2002-09-15 23:14:16 byers Exp $"))
+              "$Id: english-strings.el,v 44.237 2002-09-18 20:48:32 byers Exp $"))
 
 
 ;;; ================================================================
@@ -862,9 +862,9 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the text.")
     (recipient . "Recipient")
-    (recipient-prefix . "[Rr]")
     (carbon-copy . "Carbon copy")
     (blank-carbon-copy . "Blind Carbon copy")
+    (recipient-prefix . "\\([Rr]\\)")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
     (add-recipient . "Add a recipient")
