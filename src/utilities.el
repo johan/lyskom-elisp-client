@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.115 2002-08-06 19:43:33 byers Exp $
+;;;;; $Id: utilities.el,v 44.116 2002-08-09 15:14:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.115 2002-08-06 19:43:33 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.116 2002-08-09 15:14:50 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1079,40 +1079,49 @@ in lyskom-face-schemes."
       ;; the face scheme expects. If not, copy the computed highlight
       ;; faces to the real highlight faces.
 
-      (when (or (not (facep 'kom-dashed-lines-face))
-                (not (facep 'kom-async-dashed-lines-face))
-                (not (facep 'kom-text-body-face))
-                (not (facep 'kom-async-text-body-face))
-                (not (and background
-                          (assq 'expected-background properties)
-                          (equal (lyskom-color-values 
-                                  (cdr (assq 'expected-background properties)))
-                                 (lyskom-color-values background)))))
-          (setq set-faces (append set-faces
-                                  (list 'kom-dashed-lines-face
-                                        'kom-text-body-face
-                                        'kom-async-dashed-lines-face
-                                        'kom-async-text-body-face)))
-          (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face)
-          (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face)
-          (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face)
-          (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
+      (let ((expected-background
+             (or (null background)
+                 (null (assq 'expected-background properties))
+                 (equal (lyskom-color-values 
+                         (cdr (assq 'expected-background properties)))
+                        (lyskom-color-values background)))))
+         (unless (and (memq 'kom-dashed-lines-face set-faces)
+                      expected-background)
+           (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face))
 
-      ;; Check that we've set all faces. If not, copy the default face and post a message
+         (unless (and (memq 'kom-text-body-face set-faces)
+                      expected-background)
+           (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))
 
-      (let ((unset-faces nil))
-        (lyskom-traverse face-name lyskom-faces
-          (unless (memq face-name set-faces)
-            (setq unset-faces (cons face-name unset-faces))
-            (copy-face 'default face-name)))
+         (unless (and (memq 'kom-async-dashed-lines-face set-faces)
+                      expected-background)
+           (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face))
 
-        (when unset-faces
-          (lyskom-format-insert-before-prompt 
-           'missing-faces
-           (symbol-name scheme)
-           (mapconcat 'symbol-name
-                      unset-faces
-                      "\n    ")))))))
+         (unless (and (memq 'kom-async-text-body-face set-faces)
+                      expected-background)
+           (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
+
+         (setq set-faces (append set-faces
+                                 (list 'kom-dashed-lines-face
+                                       'kom-text-body-face
+                                       'kom-async-dashed-lines-face
+                                       'kom-async-text-body-face))))
+
+        ;; Check that we've set all faces. If not, copy the default face and post a message
+
+        (let ((unset-faces nil))
+          (lyskom-traverse face-name lyskom-faces
+            (unless (memq face-name set-faces)
+              (setq unset-faces (cons face-name unset-faces))
+              (copy-face 'default face-name)))
+
+          (when unset-faces
+            (lyskom-format-insert-before-prompt 
+             'missing-faces
+             (symbol-name scheme)
+             (mapconcat 'symbol-name
+                        unset-faces
+                        "\n    ")))))))
 
 
 (defun lyskom-face-resource (face-name attr type)

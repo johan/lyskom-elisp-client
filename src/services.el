@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.33 2002-05-21 22:05:43 byers Exp $
+;;;;; $Id: services.el,v 44.34 2002-08-09 15:14:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.33 2002-05-21 22:05:43 byers Exp $\n"))
+	      "$Id: services.el,v 44.34 2002-08-09 15:14:50 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1328,10 +1328,10 @@ or get-text-stat."
   (save-excursion
     (set-buffer (or lyskom-buffer
                     (process-buffer lyskom-proc)))
-    (let ((lyskom-blocking-return 'not-yet-gotten))
-      (lyskom-run queue 'blocking-return (list t))
+    (let ((collector (make-collector)))
+      (lyskom-run queue (lambda (c) (set-collector->value c t)) collector)
       (unwind-protect
-	  (while (and (eq lyskom-blocking-return 'not-yet-gotten)
+	  (while (and (null (collector->value collector))
 		      (not lyskom-quit-flag))
 	    (lyskom-accept-process-output))
 	(setq lyskom-ok-to-send-new-calls t)
@@ -1341,7 +1341,7 @@ or get-text-stat."
 	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
 	    (signal 'quit nil)))
       (setq lyskom-quit-flag nil)
-      lyskom-blocking-return)))
+      (collector->value collector))))
 
 
 (defvar lyskom-multiple-blocking-return nil
