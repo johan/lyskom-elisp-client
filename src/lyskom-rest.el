@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.164 2002-06-12 22:27:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.165 2002-06-28 17:38:55 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.164 2002-06-12 22:27:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.165 2002-06-28 17:38:55 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1952,6 +1952,12 @@ Deferred insertions are not supported."
                                       (length tmp) 
                                       '(special-insert lyskom-postprocess-text)
                                       tmp))
+              (when (and (fboundp 'latin-unity-remap-region)
+                         (lyskom-try-require 'latin-unity))
+                (add-text-properties 0
+                                     (length tmp)
+                                     '(special-insert lyskom-unity-text)
+                                     tmp))
                tmp)))))
 
 (defun lyskom-postprocess-text (start end &rest args)
@@ -1959,6 +1965,19 @@ Deferred insertions are not supported."
       (smiley-region start (min (point-max) (1+ end)))
     (error nil)))
 
+(defun lyskom-unity-text (start end &rest args)
+  (condition-case nil
+      (let ((codesys (car latin-unity-preferred-coding-system-list)))
+       (when (memq codesys latin-unity-iso-8859-1-aliases)
+         (setq codesys 'iso-8859-1))
+       (let ((gr (or (car (rassq codesys latin-unity-cset-codesys-alist))
+                     (and codesys
+                          (eq (coding-system-type codesys) 'iso2022)
+                          (coding-system-property codesys 'charset-g1)))))
+         (when gr
+           (latin-unity-remap-region start (min (point-max) (1+ end))
+                                     gr nil t))))
+    (error nil)))
 
 
 
