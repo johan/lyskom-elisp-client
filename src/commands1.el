@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.134 2002-04-13 21:07:58 byers Exp $
+;;;;; $Id: commands1.el,v 44.135 2002-04-13 22:38:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.134 2002-04-13 21:07:58 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.135 2002-04-13 22:38:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -522,7 +522,9 @@ for person PERS-NO and send them into lyskom-try-add-member."
                               pers-stat
                               membership-type
                               &optional message-string
-                              need-extra-information)
+                              need-extra-information
+                              use-priority
+                              use-position)
   "Add a member to a conference.
 Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
 CONF-CONF-STAT: the conf-stat of the conference the person is being added to
@@ -534,30 +536,35 @@ Returns t if it was possible, otherwise nil.
 
 If optional NEED-EXTRA-INFORMATION is non-nil, the return value will be
 a list where the first element is the result of add-member and the second
-is the position where the membership was placed."
+is the position where the membership was placed.
+
+If optional USE-PRIORITY is non-nil then use that as the priority.
+
+If optional USE-POSITION is non-nil, then use that as the position.
+"
   (if (or (null conf-conf-stat)
 	  (null pers-conf-stat))
       nil				; We have some problem here.
     (let ((priority
-	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
-	       (lyskom-read-num-range 0 255
+           (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
+               (lyskom-read-num-range 0 255
                                       (lyskom-get-string 'priority-q)
                                       nil 100)
-	     (if (and (numberp kom-membership-default-priority)
-		      (< kom-membership-default-priority 256)
-		      (>= kom-membership-default-priority 0))
-		 kom-membership-default-priority
-	       (lyskom-read-num-range 0 255 (lyskom-get-string 'priority-q)))))
+             (if (and (numberp (or use-priority kom-membership-default-priority))
+                      (< (or use-priority kom-membership-default-priority) 256)
+                      (>= (or use-priority kom-membership-default-priority) 0))
+                 (or use-priority kom-membership-default-priority)
+               (lyskom-read-num-range 0 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
 	     (cond
-	      ((and (numberp kom-membership-default-placement)
-		    (>= kom-membership-default-placement 0))
-	       kom-membership-default-placement)
-	      ((eq kom-membership-default-placement 'first)
+	      ((and (numberp (or use-position kom-membership-default-placement))
+		    (>= (or use-position kom-membership-default-placement) 0))
+	       (or use-position kom-membership-default-placement))
+	      ((eq (or use-position kom-membership-default-placement) 'first)
 	       0)
-	      ((eq kom-membership-default-placement 'last)
+	      ((eq (or use-position kom-membership-default-placement) 'last)
 	       (length lyskom-membership))
 	      (t
 	       (lyskom-read-num-range

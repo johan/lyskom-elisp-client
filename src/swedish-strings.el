@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.223 2002-04-13 21:08:01 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.224 2002-04-13 22:38:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.223 2002-04-13 21:08:01 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.224 2002-04-13 22:38:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -582,7 +582,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
-    (status-read-aux-item . "Läst FAQ:                  %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
+    (status-read-faq-aux-item . "Läst FAQ:                  %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
+    (status-rejected-invitation-aux-item . "Avvisad mötesinbjudan:                  %#2M %#1?z%[%by #1M%]%[skapad automatiskt%] %#3s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")

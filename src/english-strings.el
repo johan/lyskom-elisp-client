@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.190 2002-04-13 21:07:59 byers Exp $
+;;;;; $Id: english-strings.el,v 44.191 2002-04-13 22:38:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.190 2002-04-13 21:07:59 byers Exp $"))
+              "$Id: english-strings.el,v 44.191 2002-04-13 22:38:18 byers Exp $"))
 
 
 ;;; ================================================================
@@ -601,7 +601,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
-    (status-read-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
+    (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
+    (status-rejected-invitation-aux-item . "Rejected invitation to:                 %#2M %#1?z%[%by #1M%]%[created automatically%] %#3s\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
