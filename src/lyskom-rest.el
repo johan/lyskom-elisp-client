@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.132 2001-04-23 21:39:46 joel Exp $
+;;;;; $Id: lyskom-rest.el,v 44.133 2001-04-25 19:51:38 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.132 2001-04-23 21:39:46 joel Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.133 2001-04-25 19:51:38 joel Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1247,7 +1247,7 @@ Note that it is not allowed to use deferred insertions in the text."
       (setq result (format "%S" arg)))
 
      ;;
-     ;;  Format a text property array indicator by retreiving the
+     ;;  Format a text property array indicator by retrieving the
      ;;  properties from the argument list and adding a start of 
      ;;  new properties to the format state
      ;;
@@ -1318,7 +1318,7 @@ Note that it is not allowed to use deferred insertions in the text."
               " ")))
 
      ;;
-     ;;  Format a conference or person name by retreiving information
+     ;;  Format a conference or person name by retrieving information
      ;;  about the conference or person and inserting it as a button
      ;;  (unless the colon flag is set)
      ;;

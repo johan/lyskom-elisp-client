@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.163 2001-04-25 12:31:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.164 2001-04-25 19:51:40 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.163 2001-04-25 12:31:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.164 2001-04-25 19:51:40 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -856,7 +856,7 @@ Annat se \\[describe-mode] ---")
     (Strange-recipient . "Underlig mottagare")
     (send-at . "    Sänt:     %#1s\n")
     (sent-by . "    Sänt av %#1P\n")
-    (recieved-at . "    Mottaget: %#1s\n")
+    (received-at . "    Mottaget: %#1s\n")
 
     (comment-to-text . "Kommentar till text %#1n")
     (footnote-to-text . "Fotnot till text %#1n")
@@ -1863,7 +1863,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (move      . "Gå")
     (info      . "Om")
     (send      . "Sänd")
-    (recievers . "Mottagare")
+    (receivers . "Mottagare")
     (commented . "Kommenterar")
     (kom-edit-send . "Skicka in")
     (kom-edit-send-anonymous . "Skicka anonymt")
@@ -3141,10 +3141,10 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-smileys-doc . "\
   Gladmän, som :-), visas grafiskt när denna inställning är på, förutsatt
-  att Emacs klarar det och paketet smiley.el (en del av gnus) är installerat.")
+  att Emacs klarar det och paketet smiley.el (en del av Gnus) är installerat.")
 
     (kom-ignore-message-senders-doc . "\
-  Visa inte personliga, grupp och alarmmeddelanden från dessa personer.")
+  Visa inte personliga, grupp- och alarmmeddelanden från dessa personer.")
 
     (kom-ignore-message-recipients-doc . "\
   Visa inte gruppmeddelanden riktade till dessa möten.")
@@ -3159,7 +3159,7 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-show-personal-message-date-doc . "\
   När detta är påslaget så visas datum och klockslag för alla personliga,
-  grupp och alarmmeddelanden.")
+  grupp- och alarmmeddelanden.")
 
     (kom-w3-simplify-body-doc . "\
   När detta är påslaget så visas HTML utan de färger som anges i HTML-koden.")

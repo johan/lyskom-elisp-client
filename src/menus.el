@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.21 1999-11-19 13:38:20 byers Exp $
+;;;;; $Id: menus.el,v 44.22 2001-04-25 19:51:39 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.21 1999-11-19 13:38:20 byers Exp $\n"))
+	      "$Id: menus.el,v 44.22 2001-04-25 19:51:39 joel Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -109,7 +109,7 @@
   '((menu lyskom
 	  ((item kom-ispell-message)
            (item kom-edit-send)
-	   (hline reciever-separator)
+	   (hline receiver-separator)
 	   (item kom-edit-add-recipient)
 	   (item kom-edit-add-copy)
            (item kom-edit-add-bcc)
