@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 39.0 1996-03-14 18:16:35 davidk Exp $
+# $Id: Makefile,v 39.1 1996-03-15 17:33:06 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,10 +22,10 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 39.0 1996-03-14 18:16:35 davidk Exp $
+# $Id: Makefile,v 39.1 1996-03-15 17:33:06 davidk Exp $
 #
 
-CLIENTVERSION = 0.39
+CLIENTVERSION = 0.40d
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
