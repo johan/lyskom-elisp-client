@@ -1,6 +1,18 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
-	Work on bug 984:
+	Fixed bug 984:
+	* commands1.el (lyskom-get-marked-texts): New function.
+	(lyskom-review-marked-texts): Use it.
+	(lyskom-unread-marked-texts): New function.
+	(kom-unread-all-marked-texts): New command.
+	(kom-unread-marked-texts): New command.
+
+	* faqs.el (lyskom-unread-faq): New function.
+	(kom-unread-faq): New command.
+	(kom-unread-server-faq): New command.
+
+	* commands1.el (kom-unread-presentation): New command.
+
 	* review.el (kom-unread-all): New command.
 	(kom-unread-first): New command
 
