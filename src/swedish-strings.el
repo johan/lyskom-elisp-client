@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.225 2002-04-14 15:15:50 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.226 2002-04-15 06:17:31 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.225 2002-04-14 15:15:50 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.226 2002-04-15 06:17:31 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1404,7 +1404,7 @@ Uppkopplad sedan %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
-    (there-are-faqs . "Du har %#1d olästa%#1?d%[%]%[%] FAQ%#1?d%[%]%[er%] till %#2?b%[%#1M%]%[servern%]:\n")
+    (there-are-faqs . "Du har %#1d olästa%#1?d%[%]%[%] FAQ%#1?d%[%]%[er%] till %#2?b%[%#2M%]%[servern%]:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.192 2002-04-14 15:15:50 byers Exp $
+;;;;; $Id: english-strings.el,v 44.193 2002-04-15 06:17:32 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.192 2002-04-14 15:15:50 byers Exp $"))
+              "$Id: english-strings.el,v 44.193 2002-04-15 06:17:32 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1405,7 +1405,7 @@ On since %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
-    (there-are-faqs . "You have %#1?d%[is%]%[are%] %#1d unread FAQ%#1?d%[%]%[s%] for %#2?b%[%#1M%]%[the server%]::\n")
+    (there-are-faqs . "You have %#1?d%[is%]%[are%] %#1d unread FAQ%#1?d%[%]%[s%] for %#2?b%[%#2M%]%[the server%]::\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
