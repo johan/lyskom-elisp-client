@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.122 2001-12-14 00:34:42 qha Exp $
+;;;;; $Id: commands1.el,v 44.123 2002-01-02 14:32:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.122 2001-12-14 00:34:42 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.123 2002-01-02 14:32:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -343,11 +343,12 @@ the other ones."
 (defun lyskom-misc-infos-from-list (type list)
   "Get all the misc-infos from the misc-info-list LIST with the same type
 as TYPE. If no such misc-info, return NIL"
-  (cond ((null list) nil)
-	((equal type (misc-info->type (car list))) 
-	 (cons (car list)
-	       (lyskom-misc-infos-from-list type (cdr list))))
-	(t (lyskom-misc-infos-from-list type (cdr list)))))
+  (let ((result nil))
+    (while list
+      (when (equal type (misc-info->type (car list)))
+        (setq result (cons (car list) result)))
+      (setq list (cdr list)))
+    result))
 
 
 ;;; ================================================================
@@ -1102,12 +1103,31 @@ that text instead."
 	(lyskom-insert-string 'confusion-what-to-answer-to))
     (progn
       (lyskom-tell-internat 'kom-tell-write-reply)
-      (lyskom-edit-text lyskom-proc
-			(lyskom-create-misc-list
-			 'comm-to (text-stat->text-no text-stat)
-			 'recpt (text-stat->author text-stat)
-			 'recpt lyskom-pers-no)
-			subject ""))))
+      (cache-del-conf-stat (text-stat->author text-stat))
+      (let* ((conf-stat (blocking-do 'get-conf-stat
+                                     (text-stat->author text-stat))))
+        (if (if (zerop (conf-stat->msg-of-day conf-stat))
+                t
+              (progn
+                (recenter 1)
+                (lyskom-format-insert 'has-motd 
+                                      conf-stat)
+                (lyskom-view-text (conf-stat->msg-of-day conf-stat))
+                (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
+                    t
+                  nil)))
+            (if (= (text-stat->author text-stat) lyskom-pers-no)
+                (lyskom-edit-text lyskom-proc
+                                  (lyskom-create-misc-list 'recpt 
+                                                           (text-stat->author text-stat))
+                                  "" "")
+              (lyskom-edit-text lyskom-proc
+                                (lyskom-create-misc-list
+                                 'comm-to (text-stat->text-no text-stat)
+                                 'recpt (text-stat->author text-stat)
+                                 'recpt lyskom-pers-no)
+                                subject ""))))
+      )))
 
 
 ;;; ================================================================
@@ -1380,7 +1400,82 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 			  conf-stat))))
 
 
-   
+(def-kom-command kom-set-presentation (arg)
+  "Add a presentation for a person or conference."
+  (interactive "P")
+   (let ((conf-no (lyskom-read-conf-no
+                   (lyskom-get-string 'what-to-set-pres-you)
+                   '(all) t nil t))
+         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
+                                                  lyskom-previous-text)))
+     (when (zerop conf-no)
+         (setq conf-no lyskom-pers-no))
+     (lyskom-set-pres-or-motd-2
+      conf-no
+      text-no
+      'pres)))
+
+(def-kom-command kom-set-motd-text (arg)
+  "Add a presentation for a person or conference."
+  (interactive "P")
+   (let ((conf-no (lyskom-read-conf-no
+                   (lyskom-get-string 'what-to-set-pres-you)
+                   '(all) t nil t))
+         (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
+                                                  lyskom-previous-text)))
+     (when (zerop conf-no)
+         (setq conf-no lyskom-pers-no))
+     (lyskom-set-pres-or-motd-2
+      conf-no
+      text-no
+      'motd)))
+
+(defun lyskom-set-pres-or-motd-2 (conf-no text-no what)
+  (let ((set-pres (eq what 'pres)))
+    (blocking-do-multiple ((conf-stat (get-conf-stat conf-no))
+                           (text-stat (get-text-stat text-no)))
+      (cond ((null conf-stat)
+             (lyskom-format-insert 'no-such-conf-or-pers)) 
+            ((null text-stat)
+             (lyskom-format-insert 'no-such-text-no text-no))
+            (t
+             (let ((existing (if set-pres
+                                 (conf-stat->presentation conf-stat)
+                               (conf-stat->msg-of-day conf-stat))))
+               (when (or (zerop existing)
+                         (progn (lyskom-view-text existing)
+                                (lyskom-j-or-n-p 
+                                 (lyskom-get-string (if set-pres
+                                                        'conf-already-has-pres
+                                                      'conf-already-has-motd)))))
+                 (cache-del-conf-stat conf-no)
+                 (cache-del-text-stat text-no)
+                 (lyskom-format-insert (if set-pres
+                                           'setting-conf-pres
+                                         'setting-conf-motd)
+                                       conf-stat text-no)
+                 (lyskom-report-command-answer 
+                  (cond ((eq what 'pres)
+                         (blocking-do 'set-presentation conf-no text-no))
+                        ((eq what 'motd)
+                         (blocking-do 'set-conf-motd conf-no text-no)))))))))))
+
+(def-kom-command kom-remove-presentation ()
+  "Removes a presentation for a person or a conference."
+  (interactive)
+  (let ((conf-stat (or (lyskom-read-conf-stat
+                        (lyskom-get-string 'who-to-remove-pres-for)
+                        '(all) t nil t)
+                       (blocking-do 'get-conf-stat lyskom-pers-no))))
+    (cond ((null conf-stat)
+           (lyskom-insert-string 'cant-get-conf-stat))
+          ((zerop (conf-stat->presentation conf-stat))
+           (lyskom-format-insert 'has-no-presentation conf-stat))
+          (t
+           (lyskom-format-insert 'removing-pres-for-conf conf-stat 
+                                 (conf-stat->presentation conf-stat))
+           (lyskom-report-command-answer
+            (blocking-do 'set-presentation (conf-stat->conf-no conf-stat) 0))))))
 
 ;;; ================================================================
 ;;;           Ta bort lapp p} d|rren - delete conf-motd

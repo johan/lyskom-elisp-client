@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.100 2001-12-09 11:55:07 ceder Exp $
+ ;;;;; $Id: commands2.el,v 44.101 2002-01-02 14:32:41 byers Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.100 2001-12-09 11:55:07 ceder Exp $\n"))
+               "$Id: commands2.el,v 44.101 2002-01-02 14:32:41 byers Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -1531,18 +1531,19 @@ on one line."
  ;;; Author: Inge Wallin
 
 
- (def-kom-command kom-force-logout ()
-   "Force another user to log out."
-   (interactive)
-   (let ((session (car-safe (lyskom-read-session-no
-                             (lyskom-get-string 'who-to-throw-out)
-                             nil nil t))))
-     (if session
-         (progn
+(def-kom-command kom-force-logout ()
+  "Force another user to log out."
+  (interactive)
+  (let ((session (car-safe (lyskom-read-session-no
+                            (lyskom-get-string 'who-to-throw-out)
+                            nil nil t))))
+    (cond ((> session 0)
            (lyskom-format-insert 'throwing-out session)
            (lyskom-report-command-answer
-            (blocking-do 'disconnect session))))))
-
+            (blocking-do 'disconnect session)))
+          ((< session 0)
+           (lyskom-format-insert 'person-not-logged-in-r (- session)))
+          (t nil))))
 
  ;;; ================================================================
  ;;;                  Skjut upp l{sning - postpone
@@ -2537,3 +2538,4 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
 configurable variable `kom-review-marks-texts-as-read' in the current buffer."
   (interactive)
   (setq kom-review-marks-texts-as-read nil))
+
