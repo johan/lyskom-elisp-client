@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.156 2002-09-15 22:08:19 byers Exp $
+;;;;; $Id: commands1.el,v 44.157 2002-10-16 20:22:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.156 2002-09-15 22:08:19 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.157 2002-10-16 20:22:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1786,7 +1786,7 @@ Those that you are not a member in will be marked with an asterisk."
 (defun lyskom-list-conf-print (conf-z)
   "Print a line of info about CONF-NO.
 If you are not member in the conference it will be flagged with an asterisk."
-  (lyskom-format-insert "%[%#1@%4#2:m %#3c %#2M%]\n"
+  (lyskom-format-insert "%[%#1@%5#2:m %#3c %#2M%]\n"
 			(lyskom-default-button 'conf (conf-z-info->conf-no conf-z))
 			conf-z
                         (lyskom-list-conf-membership-char (conf-z-info->conf-no conf-z))))
@@ -1960,22 +1960,25 @@ If it is 'conf, only conferences will be listed."
                     t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
-      (if (string-match "^\\(.*\\)(\\(.*\\))\\(.*\\)$" (conf-stat->name conf-stat))
-	  (let* ((pre-paren (match-string 1 (conf-stat->name conf-stat)))
-                 (post-paren (match-string 3 (conf-stat->name conf-stat)))
-		 (old-paren (match-string 2 (conf-stat->name conf-stat)))
-		 (paren (lyskom-read-string (lyskom-get-string 'new-paren)
-					    old-paren))
-		 (name (concat pre-paren "(" paren ")" post-paren)))
-	    (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
-                (progn
-                  (lyskom-format-insert 'change-name-done name
-                                        (lyskom-default-button 'conf conf-stat))
-                  (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
-	      (lyskom-format-insert 'change-name-nope name
-				    (lyskom-get-error-text lyskom-errno)
-				    lyskom-errno)))
-	(lyskom-insert-string 'no-paren-in-name)))))
+      (cond 
+       ((string-match ".*(.*).*(.*)" (conf-stat->name conf-stat))
+        (lyskom-insert-string 'too-many-parens-in-name))
+       ((string-match "^\\(.*\\)(\\(.*\\))\\(.*\\)$" (conf-stat->name conf-stat))
+        (let* ((pre-paren (match-string 1 (conf-stat->name conf-stat)))
+               (post-paren (match-string 3 (conf-stat->name conf-stat)))
+               (old-paren (match-string 2 (conf-stat->name conf-stat)))
+               (paren (lyskom-read-string (lyskom-get-string 'new-paren)
+                                          old-paren))
+               (name (concat pre-paren "(" paren ")" post-paren)))
+          (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
+              (progn
+                (lyskom-format-insert 'change-name-done name
+                                      (lyskom-default-button 'conf conf-stat))
+                (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
+            (lyskom-format-insert 'change-name-nope name
+                                  (lyskom-get-error-text lyskom-errno)
+                                  lyskom-errno))))
+       (t (lyskom-insert-string 'no-paren-in-name))))))
 	    
 
 

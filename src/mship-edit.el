@@ -998,13 +998,13 @@ START and END are the starting and ending points of the region."
   (let ((entry-list (lp--map-region start end 'identity)))
     (lp--select-entries entry-list (not current-prefix-arg))))
 
-(defun lp--select-prioriy (priority)
+(defun lp--select-priority (priority)
   "Select all entries with a priority PRIORITY.
 With numeric prefix argument select entries with that priority."
   (interactive "P")
   (lp--do-select-priority priority t))
 
-(defun lp--deselect-prioriy (priority)
+(defun lp--deselect-priority (priority)
   "Deselect all entries with a priority PRIORITY.
 With numeric prefix argument deselect entries with that priority."
   (interactive "P")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.239 2002-09-19 19:57:30 byers Exp $
+;;;;; $Id: english-strings.el,v 44.240 2002-10-16 20:22:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.239 2002-09-19 19:57:30 byers Exp $"))
+              "$Id: english-strings.el,v 44.240 2002-10-16 20:22:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -413,6 +413,7 @@ and you have finished reading. Please come back later.
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
     (new-paren . "New parenthesis: ")
+    (too-many-parens-in-name . "Multiple parentheses in name. Use \"Change name\" instead.\n")
     (no-paren-in-name . "The name doesn't contain a parenthesis.\n")
     (who-to-change-supervisor-for . "Change supervisor of whom/what? ")
     (new-supervisor . "New supervisor: ")
