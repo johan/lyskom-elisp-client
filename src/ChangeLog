@@ -1,5 +1,21 @@
 2002-04-14  David Byers  <david.byers@swipnet.se>
 
+	Handle conference recommendations:
+	* lyskom-rest.el (lyskom-reject-recommendation): Renamed from
+	lyskom-reject-invitation.
+	(lyskom-recommendation-already-rejected): Renamed from
+	lyskom-invitation-already-rejected.
+	(lyskom-update-rejected-recommendations): Renamed from
+	lyskom-update-rejected-invitations.
+	(lyskom-check-go-to-conf): Don't record rejected invitations.
+	(lyskom-startup-check-recommended-memberships): Renamed from
+	lyskom-startup-check-recommended-memberships. Interactively ask
+	whether the user wants to become a member of recommended
+	conferences instead of creating invitations.
+
+	* commands1.el (lyskom-try-add-member): Removed use-priority and
+	use-position again. Added default-priority instead.
+
 	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
 	New function.
 

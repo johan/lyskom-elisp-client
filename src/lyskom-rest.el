@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.149 2002-04-13 22:38:18 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.150 2002-04-14 15:15:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.149 2002-04-13 22:38:18 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.150 2002-04-14 15:15:50 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -591,9 +591,7 @@ If CONF is nil, check the first conf on the to-do list."
           (progn
             (let ((kom-unsubscribe-makes-passive nil))
               (lyskom-sub-member (blocking-do 'get-pers-stat lyskom-pers-no)
-                                 conf-stat)
-              (lyskom-reject-invitation (conf-stat->conf-no conf-stat)
-                                        (membership->created-by mship)))
+                                 conf-stat))
             (setq continue nil)
             )))
 
@@ -621,11 +619,12 @@ If CONF is nil, check the first conf on the to-do list."
     ;;; Return the result
     continue))
 
-(defun lyskom-reject-invitation (conf-no pers-no)
-  "Record that we have rejected an invitation to CONF-NO by PERS-NO"
-  (unless (lyskom-invitation-already-rejected conf-no pers-no)
-    (setq lyskom-rejected-invitations (cons (cons conf-no pers-no)
-                                            lyskom-rejected-invitations))
+(defun lyskom-reject-recommendation (conf-no)
+  "Record that we have rejected an invitation to CONF-NO 
+by PERS-NO"
+  (unless (lyskom-recommendation-already-rejected conf-no)
+    (setq lyskom-rejected-recommendations
+          (cons conf-no lyskom-rejected-recommendations))
     (initiate-modify-conf-info 
      'background
      nil
@@ -635,39 +634,37 @@ If CONF is nil, check the first conf on the to-do list."
                                    (lyskom-create-aux-item-flags nil nil t nil
                                                                  nil nil nil nil)
                                    0
-                                   (format "%d %d" conf-no pers-no))))))
+                                   (format "%d" conf-no))))))
 
-(defun lyskom-invitation-already-rejected (conf-no pers-no)
-  "Return non-nil if we have rejected an invitation to CONF-NO from PERS-NO."
-  (member (cons conf-no pers-no) lyskom-rejected-invitations))
+(defun lyskom-recommendation-already-rejected (conf-no)
+  "Return non-nil if we have rejected recommendation for CONF-NO"
+  (member conf-no lyskom-rejected-recommendations))
 
-(defun lyskom-update-rejected-invitations ()
-  "Update the list of rejected invitations"
-  (setq lyskom-rejected-invitations nil)
+(defun lyskom-update-rejected-recommendations ()
+  "Update the list of rejected recommendations"
+  (setq lyskom-rejected-recommendations nil)
   (let* ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no))
          (aux-list (and conf-stat (lyskom-get-aux-item
                                    (conf-stat->aux-items conf-stat) 
                                    10001))))
     (lyskom-traverse item aux-list
-      (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
-        (setq lyskom-rejected-invitations
-              (cons (cons (string-to-int (match-string 1 (aux-item->data item)))
-                          (string-to-int (match-string 2 (aux-item->data item))))
-                    lyskom-rejected-invitations))))))
+      (when (string-match "^\\([0-9]+\\)" (aux-item->data item))
+        (setq lyskom-rejected-recommendations
+              (cons (string-to-int (match-string 1 (aux-item->data item)))
+                    lyskom-rejected-recommendations))))))
 
 (defun lyskom-startup-check-recommended-memberships ()
   "Create invitations for new membership recommendations"
   (let ((recommendations 
          (filter-list
           (lambda (rec)
-            (not (lyskom-invitation-already-rejected (car rec)
-                                                     lyskom-pers-no)))
+            (not (lyskom-recommendation-already-rejected (car rec))))
           (mapcar (lambda (aux)
                     (when (string-match "^\\([0-9]+\\)\\( [0-9]+\\)?\\( [01]+\\)?" (aux-item->data aux))
                       (let* ((conf-no (string-to-int (match-string 1 (aux-item->data aux))))
                              (priority (and conf-no (match-string 2) (string-to-int (match-string 2 (aux-item->data aux)))))
                              (mship-type (and priority (match-string 3) (match-string 3 (aux-item->data aux)))))
-                        (list conf-no priority mship-type))))
+                        (list conf-no priority mship-type (aux-item->creator aux)))))
                   (lyskom-get-aux-item (server-info->aux-item-list
                                         lyskom-server-info) 29))))
         (collector (make-collector)))
@@ -695,15 +692,31 @@ If CONF is nil, check the first conf on the to-do list."
     ;; that we have not rejected and that we are not already members
     ;; of.
 
-    (blocking-do-multiple ((pers-stat (get-pers-stat lyskom-pers-no))
-                           (pers-conf-stat (get-conf-stat lyskom-pers-no)))
+    (blocking-do-multiple ((pers-conf-stat (get-conf-stat lyskom-pers-no))
+                           (pers-stat (get-pers-stat lyskom-pers-no)))
       (lyskom-traverse rec recommendations
-        (lyskom-try-add-member 
-         (blocking-do 'get-conf-stat (car rec))
-         pers-conf-stat
-         pers-stat
-         (lyskom-create-membership-type t nil nil nil nil nil nil nil)
-         nil nil 255 0)))))
+        (let ((conf-stat (blocking-do 'get-conf-stat (elt rec 0))))
+          (when conf-stat
+            (lyskom-format-insert 'has-recommended-conf
+                                  (elt rec 3)
+                                  (elt rec 0))
+            (if (lyskom-j-or-n-p
+                 (lyskom-format 'accept-recommendation (elt rec 0)))
+                (let ((kom-membership-default-priority
+                       (if (elt rec 1) 'ask kom-membership-default-priority)))
+                  (lyskom-add-member-answer
+                   (lyskom-try-add-member conf-stat
+                                          pers-conf-stat
+                                          pers-stat
+                                          (lyskom-create-membership-type
+                                           nil nil nil nil nil nil nil nil)
+                                          'accepting-recommendation
+                                          t
+                                          (elt rec 1))
+                   conf-stat
+                   pers-conf-stat))
+              (lyskom-reject-recommendation (elt rec 0)))))))))
+
 
 
 (defun lyskom-enter-conf (conf-stat read-info)

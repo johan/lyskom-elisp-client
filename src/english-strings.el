@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.191 2002-04-13 22:38:18 byers Exp $
+;;;;; $Id: english-strings.el,v 44.192 2002-04-14 15:15:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.191 2002-04-13 22:38:18 byers Exp $"))
+              "$Id: english-strings.el,v 44.192 2002-04-14 15:15:50 byers Exp $"))
 
 
 ;;; ================================================================
@@ -602,7 +602,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
-    (status-rejected-invitation-aux-item . "Rejected invitation to:                 %#2M %#1?z%[%by #1M%]%[created automatically%] %#3s\n")
+    (status-rejected-recommendation-aux-item . "Rejected recommendation for:             %#1M %#2s\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1679,6 +1679,9 @@ Number of sessions:  %21#1d (total)
     (recommend-set-priority-q . "Recommend a priority? ")
     (recommend-set-mship-type-q . "Recommend a membership type? ")
     (recommending-conf . "Recommending %#1M%#2?b%[ (priority %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
+    (has-recommended-conf . "%#1P has recommended conference %#2M. Do you want to become a member?\n")
+    (accept-recommendation . "Join conference %#1M? ")
+    (accepting-recommendataion . "Joining recommended conference %#1M...")
     ))
 
 
