@@ -1,3 +1,17 @@
+Fri Nov 14 09:35:02 1997  David Byers  <dbyers@atp>
+
+	* lyskom-rest.el (kom-next-command): Hajlajta raden med
+	lyskom-last-viewed om den inte är i början av fönstret.
+
+	* vars.el.in (lyskom-face-schemes): Lade till kom-mark-face. 
+	(lyskom-faces): Dito.
+
+Thu Nov 13 09:37:24 1997  David Byers  <dbyers@atp>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Kolla att man
+	får skriva innan klienten frågar om man vill lägga till
+	kommenterad författare som mottagare.
+
 Wed Nov 12 09:03:26 1997  David Byers  <dbyers@atp>
 
 	* review.el (lyskom-get-texts-to): Fixade skrivfel. 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.52 1997-11-12 14:10:45 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.53 1997-11-14 21:37:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.52 1997-11-12 14:10:45 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.53 1997-11-14 21:37:27 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -206,7 +206,18 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
       (lyskom-next-command)
     (move-to-window-line -1)
     (lyskom-set-last-viewed)
-    (lyskom-scroll)))
+    (lyskom-scroll)
+    (if (< (window-start) lyskom-last-viewed)
+        (let ((overlay (make-overlay 
+                        lyskom-last-viewed
+                        (save-excursion (goto-char lyskom-last-viewed)
+                                        (end-of-line)
+                                        (forward-char 1)
+                                        (point)))))
+          (overlay-put overlay 'face 'kom-mark-face)
+          (run-at-time 2 nil
+                       'delete-overlay
+                       overlay)))))
 
   
 (defun kom-line-next-command ()
