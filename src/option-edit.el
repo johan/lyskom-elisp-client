@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.58 2001-07-30 22:20:29 qha Exp $
+;;;;; $Id: option-edit.el,v 44.59 2001-11-04 21:57:03 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.58 2001-07-30 22:20:29 qha Exp $\n"))
+	      "$Id: option-edit.el,v 44.59 2001-11-04 21:57:03 jhs Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -159,6 +159,7 @@
     [kom-created-texts-are-read]
     [kom-created-texts-are-saved]
     [kom-review-uses-cache]
+    [kom-review-marks-texts-as-read]
     "\n"
     [kom-saved-file-name]
     [kom-default-mark]
@@ -495,6 +496,7 @@ customize buffer but do not save them to the server."
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
     (kom-review-uses-cache (toggle (yes no)))
+    (kom-review-marks-texts-as-read (toggle (yes no)))
     (kom-created-texts-are-saved (choice ((const (no nil))
                                           (file nil :tag to-file))))
     (kom-default-mark (choice ((number (0 255) 
@@ -686,6 +688,7 @@ customize buffer but do not save them to the server."
                                                       :tag name) :indent 4))
     (kom-print-relative-dates (toggle (yes no)))
     (kom-print-seconds-in-time-strings (toggle (yes no)))
+    ()
 ))
 
 (defvar lyskom-widget-functions 

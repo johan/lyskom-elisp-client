@@ -1,3 +1,26 @@
+2001-11-04  Johan Sundström  <jhs@lysator.liu.se>
+
+	* vars.el.in (kom-review-marks-texts-as-read): New variable.
+
+	* view-text.el (lyskom-view-text): Honour the above; when
+ 	reviwing, the texts read are always marked as red when the
+ 	variable is non-nil.
+
+	* option-edit.el (lyskom-custom-variables,
+	lyskom-customize-buffer-format): User configurable default too.
+
+	* commands2.el (kom-make-review-mark-as-read,
+	kom-make-review-not-mark-as-read): Change the review behaviour.
+	"Återse läsmarkerar" and "Återse läsmarkerar inte" now choose
+	review mode, effectively overriding the configured mode for the
+	lifetime of the current kom buffer.
+
+	* swedish-strings.el (lyskom-custom-strings, lyskom-command):
+ 	Variable docs, method names and assorted strings.
+
+	* english-strings.el (lyskom-custom-strings, lyskom-command):
+ 	Ditto.
+
 2001-10-18  Kent Engström  <kent@ceres.unit.liu.se>
 
  	* vars.el.in (kom-server-aliases): change dskom.studkar.hj.se to

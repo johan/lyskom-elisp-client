@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.185 2001-10-13 13:17:56 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.186 2001-11-04 21:57:01 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.185 2001-10-13 13:17:56 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.186 2001-11-04 21:57:01 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1740,6 +1740,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (kom-is-person-member-of-conference . "Kontrollera (om person är) medlem (i möte)")
     (kom-change-conf-faq      . "Ändra FAQ")
+
+    (kom-make-review-mark-as-read . "Återse läsmarkerar")
+    (kom-make-review-not-mark-as-read . "Återse läsmarkerar inte")
     ))
 
 (lyskom-language-strings lyskom-help-strings sv
@@ -3721,6 +3724,10 @@ i servern. Annars sparas det i din .emacs.")
   använda sparade kopior av inläggen om de finns. Det gör att kommandona
   går lite snabbare, men det finns en viss risk för att ett inlägg kan
   ha ändrats sedan kopian sparades.")
+    (kom-review-marks-texts-as-read-doc . "\
+  Om detta är påslaget så kommer kommandon som återser inlägg att 
+  läsmarkera de inlägg som visas. I annat fall lämnar återsekommandona
+  din läshistorik orörd, precis som vanligt.")
 
 
     ;;
@@ -3885,6 +3892,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-print-relative-dates-tag . "Visa relativa datumangivelser:")
     (kom-print-seconds-in-time-strings-tag . "Inkludera sekunder i tidsangivelser:")
     (kom-review-uses-cache-tag . "Återsekommandon använder sparade inlägg:")
+    (kom-review-marks-texts-as-read-tag . "Återsekommandon läsmarkerar visade texter:")
     )
 )
 

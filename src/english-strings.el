@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.153 2001-10-13 13:17:53 qha Exp $
+;;;;; $Id: english-strings.el,v 44.154 2001-11-04 21:57:00 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.153 2001-10-13 13:17:53 qha Exp $"))
+              "$Id: english-strings.el,v 44.154 2001-11-04 21:57:00 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1741,6 +1741,9 @@ You must become an active member of the conference to enter it.\n")
 
     (kom-is-person-member-of-conference . "Check (if person is a) member (of conference)")
     (kom-change-conf-faq      . "Change FAQ")
+
+    (kom-make-review-mark-as-read . "Review marks as read")
+    (kom-make-review-not-mark-as-read . "Review does not mark as read")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -3277,6 +3280,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   commands run significantly faster, but in some cases the texts may 
   have changed since they were copied, and you will not see those 
   changes.")
+    (kom-review-marks-texts-as-read-doc . "\
+  If this is turned on, commands that review texts will also mark them
+  as read. Otherwise, the review commands will leave your reading history
+  untouched, as usual.")
 
     ;;
     ;; Tags for variables
@@ -3440,6 +3447,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-print-relative-dates-tag . "Show relative dates:")
     (kom-print-seconds-in-time-strings-tag . "Include seconds in time strings:")
     (kom-review-uses-cache-tag . "Review commands use cached texts:")
+    (kom-review-marks-texts-as-read-tag . "Review commands mark texts as read:")
     )
 )
 

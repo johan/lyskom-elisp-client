@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.97 2001-08-23 22:36:49 ceder Exp $
+ ;;;;; $Id: commands2.el,v 44.98 2001-11-04 21:56:58 jhs Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.97 2001-08-23 22:36:49 ceder Exp $\n"))
+               "$Id: commands2.el,v 44.98 2001-11-04 21:56:58 jhs Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -2517,3 +2517,15 @@ the text on one line."
                  (flags (and (> (length item) 2)
                              (elt item 2))))
              (lyskom-display-help-category category flags))))))
+
+(def-kom-command kom-make-review-mark-as-read ()
+  "Makes all review commands mark texts as read. Overrides the value of the
+configurable variable `kom-review-marks-texts-as-read' in the current buffer."
+  (interactive)
+  (setq kom-review-marks-texts-as-read t))
+
+(def-kom-command kom-make-review-not-mark-as-read ()
+  "Makes all review commands not mark texts as read. Overrides the value of the
+configurable variable `kom-review-marks-texts-as-read' in the current buffer."
+  (interactive)
+  (setq kom-review-marks-texts-as-read nil))
