@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.15 1996-01-08 08:18:42 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.16 1996-01-13 06:50:44 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.15 1996-01-08 08:18:42 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.16 1996-01-13 06:50:44 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -90,6 +90,11 @@
      '(error lyskom-error lyskom-internal-error))
 (put 'lyskom-internal-error 'error-message
      "Internal LysKOM error.")
+
+(put 'lyskom-format-error 'error-conditions
+     '(error lyskom-error lyskom-format-error))
+(put 'lyskom-internal-error 'error-message
+     "Internal LysKOM format error.")
 
 
 ;;; ================================================================
@@ -849,11 +854,15 @@ Args: FORMAT-STRING &rest ARGS"
         (if (and (boundp 'lyskom-buffer)
 		 lyskom-buffer)
             (set-buffer lyskom-buffer))
-        (setq state (lyskom-format-aux (make-format-state
-                                        fmt
-                                        0
-                                        argl
-                                        "")))))
+	(condition-case error
+	    (setq state (lyskom-format-aux (make-format-state
+					    fmt
+					    0
+					    argl
+					    "")))
+	  (lyskom-format-error
+	   (error "LysKOM internal error formatting %s: %s%s"
+		  format-string (nth 1 error) (nth 2 error))))))
     (format-state->result state)))
 
 
@@ -978,7 +987,7 @@ Args: FORMAT-STRING &rest ARGS"
                           (t pad-length))))
     (if (and arg-no 
              (< (format-state->args-length format-state) arg-no))
-        (signal 'lyskom-internal-error (list 'lyskom-format
+        (signal 'lyskom-format-error (list 'lyskom-format
                                              ": too few arguments")))
     (if arg-no
         (setq arg (nth (1- arg-no) (format-state->args format-state))))
@@ -996,7 +1005,7 @@ Args: FORMAT-STRING &rest ARGS"
      ((= format-letter ?s)
       (setq result (cond ((stringp arg) arg)
                          ((symbolp arg) (symbol-name arg))
-                         (t (signal 'lyskom-internal-error
+                         (t (signal 'lyskom-format-error
                                     (list 'lyskom-format
                                           ": argument error"))))))
      ;;
@@ -2052,6 +2061,8 @@ Other objects are converted correctly."
 	      (lyskom-format-misc-list (cdr object)))
 	     ((eq (car object) 'CONF-TYPE)
 	      (lyskom-format-conf-type object))
+	     ((eq (car object) 'PRIVS)
+	      (lyskom-format-privs object))
 	     ((eq (car object) 'LIST)
 	      (lyskom-format-simple-list (cdr object)))
 	     (t
@@ -2073,6 +2084,26 @@ Other objects are converted correctly."
    (lyskom-format-bool (conf-type->secret conf-type))
    (lyskom-format-bool (conf-type->letterbox conf-type))))
 
+
+(defun lyskom-format-privs (privs)
+  "Format PRIVS for output to the server."
+  (concat
+   (lyskom-format-bool (privs->wheel privs))
+   (lyskom-format-bool (privs->admin privs))
+   (lyskom-format-bool (privs->statistic privs))
+   (lyskom-format-bool (privs->create_pers privs))
+   (lyskom-format-bool (privs->create_conf privs))
+   (lyskom-format-bool (privs->change_name privs))
+   (lyskom-format-bool (privs->flg7 privs))
+   (lyskom-format-bool (privs->flg8 privs))
+   (lyskom-format-bool (privs->flg9 privs))
+   (lyskom-format-bool (privs->flg10 privs))
+   (lyskom-format-bool (privs->flg11 privs))
+   (lyskom-format-bool (privs->flg12 privs))
+   (lyskom-format-bool (privs->flg13 privs))
+   (lyskom-format-bool (privs->flg14 privs))
+   (lyskom-format-bool (privs->flg15 privs))
+   (lyskom-format-bool (privs->flg16 privs))))
 
 (defun lyskom-format-bool (bool)
   "Format a BOOL for output to the server."

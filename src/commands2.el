@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.8 1996-01-08 08:18:19 davidk Exp $
+;;;;; $Id: commands2.el,v 38.9 1996-01-13 06:50:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.8 1996-01-08 08:18:19 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.9 1996-01-13 06:50:20 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1319,23 +1319,24 @@ current conference to another session."
   "Change type of a conference"
   (interactive)
   (lyskom-start-of-command 'kom-change-conf-type)
-  (let* ((conf-no (lyskom-read-conf-no
-		   (lyskom-get-string 'what-conf-to-change)
-		   'conf nil ""))
-	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
-         (secret (if (not open) (j-or-n-p (lyskom-get-string 'secret-conf))))
-         (orig (j-or-n-p (lyskom-get-string 'comments-allowed))))
-    (cache-del-conf-stat conf-no)
-    (if (not (blocking-do 'set-conf-type
-			  conf-no
-			  (lyskom-create-conf-type (not open)
-						   (not orig)
-						   secret
-						   nil)))
-	(progn (lyskom-insert-string 'nope)
-	       (lyskom-format-insert 'error-code
-				     (lyskom-get-error-text lyskom-errno)
-				     lyskom-errno))))
-  (lyskom-end-of-command))
+  (unwind-protect
+      (let* ((conf-no (lyskom-read-conf-no
+		       (lyskom-get-string 'what-conf-to-change)
+		       'confs nil ""))
+	     (open (j-or-n-p (lyskom-get-string 'anyone-member)))
+	     (secret (if (not open) (j-or-n-p (lyskom-get-string 'secret-conf))))
+	     (orig (j-or-n-p (lyskom-get-string 'comments-allowed))))
+	(cache-del-conf-stat conf-no)
+	(if (not (blocking-do 'set-conf-type
+			      conf-no
+			      (lyskom-create-conf-type (not open)
+						       (not orig)
+						       secret
+						       nil)))
+	    (progn (lyskom-insert-string 'nope)
+		   (lyskom-format-insert 'error-code
+					 (lyskom-get-error-text lyskom-errno)
+					 lyskom-errno))))
+    (lyskom-end-of-command)))
 
 
