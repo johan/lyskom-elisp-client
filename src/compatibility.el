@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.37 2000-05-23 12:06:41 byers Exp $
+;;;;; $Id: compatibility.el,v 44.38 2000-05-23 15:40:00 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.37 2000-05-23 12:06:41 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.38 2000-05-23 15:40:00 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -304,7 +304,7 @@ string to search in."
   (setq enable-multibyte-characters arg))
 
 (lyskom-provide-function set-process-coding-system (proc &optional encoding decoding)
-  )
+  ) 
 
 (lyskom-provide-function encode-coding-string (str coding-system) (copy-sequence str))
 (lyskom-provide-function decode-coding-string (str coding-system) (copy-sequence str))
@@ -317,6 +317,26 @@ string to search in."
 (lyskom-provide-function string-make-unibyte (str) str)
 (lyskom-provide-function string-make-multibyte (str) str)
 (lyskom-provide-function multibyte-string-p (str) nil)
+
+;;; Decode buggy versions of encode-coding-string and decode-coding-string
+;;; such as those provided by APEL (part of TM and often included in XEmacs)
+
+(defun buggy-encode-coding-string (str coding-system) str)
+(eval-and-compile
+  (if (let ((test "TEM")) (eq (encode-coding-string test 'raw-text) test))
+      (progn (fset 'buggy-encode-coding-string
+                   (symbol-function 'encode-coding-string))
+             (defun encode-coding-string (str coding-system)
+               (copy-sequence (buggy-encode-coding-string str coding-system))))))
+
+(defun buggy-decode-coding-string (str coding-system) str)
+(eval-and-compile
+  (if (let ((test "TEM")) (eq (decode-coding-string test 'raw-text) test))
+      (progn (fset 'buggy-decode-coding-string
+                   (symbol-function 'decode-coding-string))
+             (defun decode-coding-string (str coding-system)
+               (copy-sequence (buggy-decode-coding-string str coding-system))))))
+
 
 (eval-and-compile
   (lyskom-xemacs-or-gnu
