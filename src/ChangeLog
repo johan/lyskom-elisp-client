@@ -1,3 +1,8 @@
+2002-04-24  David Kågedal  <david@virtutech.se>
+
+	* commands2.el (kom-change-language): Added prefix parameter to
+	make global changes.
+
 2002-04-23  David Byers  <david.byers@swipnet.se>
 
 	Alternate text background color:
