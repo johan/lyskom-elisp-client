@@ -857,7 +857,8 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    ((null conf-stat)			;+++ annan felhantering
       (lyskom-insert-string 'cant-get-conf-stat)
       (lyskom-end-of-command))
-   ((lyskom-member-p (conf-stat->supervisor conf-stat))
+   ((or lyskom-is-administrator
+	(lyskom-member-p (conf-stat->supervisor conf-stat)))
       (initiate-get-text 'main 'lyskom-change-pres-or-motd-3
 			 (cond
 			  ((eq type 'pres)
@@ -922,7 +923,8 @@ conf-stat."
     (lyskom-end-of-command))
    ((numberp conf)
     (initiate-get-conf-stat 'main 'lyskom-unset-conf-motd conf))
-   ((lyskom-member-p (conf-stat->supervisor conf))   
+   ((or lyskom-is-administrator
+	(lyskom-member-p (conf-stat->supervisor conf)))
     (lyskom-set-conf-motd 0 (conf-stat->conf-no conf))
     (lyskom-end-of-command))
    (t
