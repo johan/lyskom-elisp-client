@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.2 1996-10-10 13:59:23 davidk Exp $
+;;;;; $Id: async.el,v 44.3 1996-10-11 11:01:59 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.2 1996-10-10 13:59:23 davidk Exp $\n"))
+	      "$Id: async.el,v 44.3 1996-10-11 11:01:59 nisse Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -259,9 +259,7 @@ this function shall be with current-buffer the BUFFER."
 			  (concat (char-to-string (downcase
 						   (string-to-char doing)))
 				  (substring doing 1))))
-		     (if kom-emacs-knows-iso-8859-1
-			 string
-		       (iso-8859-1-to-swascii string))))))
+		     string))))
 	(cond
 	 ((and (eq kom-presence-messages-in-buffer t)
 	       (or (= 0 conf-num)
@@ -394,9 +392,7 @@ converted, before insertion."
       (t
        (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
        (goto-char (point-max))
-       (lyskom-insert (if kom-emacs-knows-iso-8859-1
-                          string
-                        (iso-8859-1-to-swascii string)))))
+       (lyskom-insert string )))
      (if kom-pop-personal-messages
          (display-buffer (current-buffer))))))
   
