@@ -124,6 +124,41 @@
 *** Defaultspråk har ändrats från svenska till engelska.
 
 
+** Ändringar i alla inläggsrelaterade kommandon
+
+*** De flesta inläggsrelaterade kommandona (till exempel Kommentera
+    inlägget, Addera mottagare och Personligt svar) arbetar nu på
+    inlägget som markören står i eller närmast efter, och inte
+    inlägget sist i bufferten.
+
+*** Betydelsen av prefixargument till inläggsrelaterade kommandon har
+    ändrats som följer:
+
+        Inget prefixargument        Kommandoberoende; oftast inlägget
+                                    under markören (inte senast lästa
+                                    inlägg). 
+        Positivt prefixargument     Inlägget N steg nedåt i bufferten.
+        Negativt prefixargument     Inlägget N steg uppåt i bufferten.
+        Noll                        Prompta efter inlägg.
+        N upprepningar av C-u       Arbeta på inlägget N steg upp i
+                                    kommentarskedjan.
+
+    Betydelsen kan konfigureras för varje enskilt kommando genom
+    variabeln lyskom-pick-text-no-strategy. Beteendet som gäller i
+    0.46.2 går att få genom att sätta lyskom-pick-text-no-strategy
+    till värdet av lyskom-old-farts-text-prompt-strategy. Stoppa helt
+    enkelt in följande i din .emacs:
+
+        (add-hook 'lyskom-after-load-hook
+                  (lambda ()
+                      (setq lyskom-pick-text-no-strategy
+                            lyskom-old-farts-text-prompt-strategy)))
+
+*** Man kan fortfarande konfigurera vilka kommandon som *alltid*
+    promptar efter inläggsnummer på samma sätt som i 0.46.2.
+
+
+
 ** Diverse
 
 *** Inlägg och andra texter har numera en egen bakgrundsfärg. Färgen
@@ -132,6 +167,11 @@
 
 *** Status (för) session visar nu information även för utloggade
     personer.
+
+*** Gå till nästa möte tar prefixargument på samma sätt som Lista
+    nyheter. Positivt prefixargument betyder gå till nästa möte med
+    minst så många olästa. Negativt betyder gå till nästa möte med
+    högst så många olästa.
 
 *** Om man ger prefixargument till Status (för) session så visar
     elispklienten status för den person som har skrivit inlägget man
@@ -573,14 +613,9 @@
 ** Elispklienten gnäller nu om man har variabler i user-arean som inte
    borde finnas där.
 
+** URLer som inte är uppmärkta kan inte längre sluta med klamrar eller
+   semikolon.
 
+** Klienten är bättre på att välja teckenkodning i Gnu Emacs.
 
-
-* Ytterligare förändringar sedan 0.47-BETA-2
-
-  Detta avsnitt innehåller detaljförändringar som ingår i andra saker
-  som står ovanför men som kan vara intressanta för den som kör en
-  betaversion.
-
-** Tunnling av KOM genom SSH integrerat. Se ovan.
 
