@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 38.7 1996-02-23 12:29:28 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 38.8 1996-02-27 23:15:18 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -113,7 +113,12 @@ on such functions see the documentation for lyskom-add-button-action."
   (interactive "@e")
   (let ((start (event-start event)))
     (lyskom-mouse-3 (car (cdr start)) event)))
-  
+
+(defun kom-mouse-null (event)
+  "Do nothing."
+  ;; This is here to pervent unwanted events when clicking mouse-3
+  (interactive "e"))
+
 (defun lyskom-mouse-3 (pos event)
   "Internal function used by kom-mouse-3"
   (let* ((type  (get-text-property pos 'lyskom-button-type))
@@ -144,8 +149,11 @@ on such functions see the documentation for lyskom-add-button-action."
 
            (let* ((menu (cons title (cons (cons "" actl) nil)))
                   (result (x-popup-menu event menu)))
-	     ;; The menu code seems to leave a mouse event behind
-	     (read-event)
+	     ;; If mouse-3 is bound to its default
+	     ;; mouse-save-than-kill, we will get an extra mouse event
+	     ;; when the user clicks to get a menu that stays up. So
+	     ;; we bind mouse-3 to a dummy function. Unfortunately it
+	     ;; doesn't work completely.
              (if result
                  (funcall result buf arg text)))))))
          
