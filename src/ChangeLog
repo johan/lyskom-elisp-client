@@ -1,7 +1,9 @@
 2002-10-16  David Byers  <david.byers@swipnet.se>
 
+	* doc/NEWS-0.47.1: Updated to here.
+
 	* menus.el (lyskom-menu-template): Applied patch from Per Starbäck
-	to add more commands to the menus.
+	to add more commands to the menus (bug 727).
 
 	* commands1.el (kom-change-parenthesis): Print error message if
 	name contains more than one parenthesis.
@@ -31,7 +33,6 @@
 	"triangle".
 	(lyskom-fill-message): Updated for the above change.
 
->>>>>>> 44.630
 2002-09-19  David Byers  <davby@metzengerstein.dyndns.org>
 
 	* Release of 0.47.1-BETA-2
