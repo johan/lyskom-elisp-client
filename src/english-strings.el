@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.54 1999-06-30 09:01:02 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.55 1999-07-02 15:03:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.54 1999-06-30 09:01:02 ceder Exp $"))
+              "$Id: english-strings.el,v 44.55 1999-07-02 15:03:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1816,35 +1816,38 @@ You must become an active member of the conference to enter it.\n")
 (if lyskom-en-filter-edit-map ()
   (setq lyskom-en-filter-edit-map (make-keymap))
   (suppress-keymap lyskom-en-filter-edit-map)
-  (define-key lyskom-en-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-en-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-en-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-en-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-en-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
-  (define-key lyskom-en-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-en-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-en-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
-  (define-key lyskom-en-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-en-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-en-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-en-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-en-filter-edit-map "q" 'lyskom-filter-edit-quit)
-  (define-key lyskom-en-filter-edit-map "x" 'lyskom-filter-edit-expunge)
-  (define-key lyskom-en-filter-edit-map "s" 'lyskom-filter-edit-save)
-  (define-key lyskom-en-filter-edit-map "g" 'lyskom-filter-edit-revert)
-  (define-key lyskom-en-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
-  (define-key lyskom-en-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
-  (define-key lyskom-en-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
-  (define-key lyskom-en-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
+  (define-prefix-command 'lyskom-en-filter-edit-prefix)
+  (define-key lyskom-sv-filter-edit-map (kbd "C-c")  'lyskom-en-filter-edit-prefix)
+  (define-key lyskom-en-filter-edit-map (kbd "p") 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "P") 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "n") 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "N") 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "C-p") 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "C-n") 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "C-b") 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "C-f") 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "M-p") 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "M-n") 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "d") 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "M-d") 'lyskom-filter-edit-delete-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "D") 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "C-d") 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "i") 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "I") 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map (kbd "M-i") 'lyskom-filter-edit-insert-entry)
+  (define-key lyskom-en-filter-edit-map (kbd "<") 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map (kbd ">") 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map (kbd "M-<") 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map (kbd "M->") 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map (kbd "q") 'lyskom-filter-edit-quit)
+  (define-key lyskom-sv-filter-edit-map (kbd "C-c C-c")   'lyskom-filter-edit-quit)
+  (define-key lyskom-en-filter-edit-map (kbd "x") 'lyskom-filter-edit-expunge)
+  (define-key lyskom-en-filter-edit-map (kbd "s") 'lyskom-filter-edit-save)
+  (define-key lyskom-en-filter-edit-map (kbd "g") 'lyskom-filter-edit-revert)
+  (define-key lyskom-en-filter-edit-map (kbd "t") 'lyskom-filter-edit-toggle-permanent)
+  (define-key lyskom-en-filter-edit-map (kbd "a") 'lyskom-filter-edit-toggle-action)
+  (define-key lyskom-en-filter-edit-map (kbd "?") 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-en-filter-edit-map (kbd "h") 'lyskom-filter-edit-brief-help)
   )
 
 
