@@ -1,3 +1,12 @@
+2002-06-14  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* distribution-Makefile.in (LANGUAGE-EL): Include the compiled
+	help-files in "lyskom.el".
+
+	* Makefile (EXTRA-SRCVERBATIM): Distribute the help-xml-files and
+	help-compile in the source packages as they don't include a
+	"lyskom.el".
+
 2002-06-13  David Byers  <david.byers@swipnet.se>
 
 	Hopefully did the right thing to Debian packages wrt bug 575:
