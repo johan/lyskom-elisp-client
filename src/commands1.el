@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.19 1992-06-13 21:13:40 linus Exp $
+;;;;; $Id: commands1.el,v 35.20 1992-07-05 03:28:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.19 1992-06-13 21:13:40 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.20 1992-07-05 03:28:37 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -721,7 +721,7 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
       (progn
 	(lyskom-insert-string 'confusion-what-to-comment)
 	(lyskom-end-of-command))
-    (progn
+    (let ((ccrep))
       (lyskom-tell-internat (if (eq type 'comment)
 				'kom-tell-write-comment
 			      'kom-tell-write-footnote))
@@ -731,18 +731,26 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
        (cond
 	((eq 'RECPT (misc-info->type misc-info))
 	 (initiate-get-conf-stat 'edit nil (misc-info->recipient-no 
+					    misc-info)))
+	((and (eq type 'footnote)
+	      (eq 'CC-RECPT (misc-info->type misc-info)))
+	 (setq ccrep (cons (misc-info->recipient-no misc-info) ccrep))
+	 (initiate-get-conf-stat 'edit nil (misc-info->recipient-no
 					    misc-info)))))
       (lyskom-list-use 'edit 'lyskom-comment-recipients lyskom-proc text-stat
-		       subject type))))
+		       subject type ccrep))))
 
 
-(defun lyskom-comment-recipients (data lyskom-proc text-stat subject type)
+(defun lyskom-comment-recipients (data lyskom-proc text-stat
+				       subject type ccrep)
   "Compute recipients to a comment to a text.
-Args: DATA, LYSKOM-PROC TEXT-STAT SUBJECT TYPE.
+Args: DATA, LYSKOM-PROC TEXT-STAT SUBJECT TYPE CCREP.
 DATA is a list of all the recipients that should receive this text.
 If DATA contains more than one conference the user is asked (using y-or-n-p)
 if all conferences really should receive the text.
-The call is continued to the lyskom-edit-text."
+The call is continued to the lyskom-edit-text.
+TYPE is info whether this is going to be a comment of footnote.
+CCREP is a list of all recipients that are going to be cc-recipients."
 
   (condition-case x
       ;; Catch any quits and run lyskom-end-of-command.
@@ -778,7 +786,10 @@ The call is continued to the lyskom-edit-text."
 		(setq recver
 		      (append recver
 			      (list
-			       (cons 'recpt
+			       (cons (if (memq (conf-stat->conf-no conf-stat)
+					       ccrep)
+					 'cc-recpt
+				       'recpt)
 				     (conf-stat->comm-conf conf-stat)))))
 		(if (lyskom-member-p (conf-stat->conf-no conf-stat))
 		    (setq member t))
