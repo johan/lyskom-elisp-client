@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.141 2002-09-08 11:13:13 byers Exp $
+;;;;; $Id: commands2.el,v 44.142 2002-09-08 15:18:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.141 2002-09-08 11:13:13 byers Exp $\n"))
+              "$Id: commands2.el,v 44.142 2002-09-08 15:18:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1883,7 +1883,9 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 (defun lyskom-switch-to-kom-buffer (buffer &optional current)
   (when buffer
-    (when (and kom-bury-buffers (eq current (current-buffer)))
+    (when (and kom-bury-buffers
+               (or (null current)
+                   (eq current (current-buffer))))
       (kom-bury))
 
     ;; Switch to the new buffer
