@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.243 2003-04-06 21:07:38 byers Exp $
+;;;;; $Id: vars.el.in,v 44.244 2003-04-13 22:29:17 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.243 2003-04-06 21:07:38 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.244 2003-04-13 22:29:17 ceder Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1794,7 +1794,7 @@ conference and person buttons are not expected.")
 (def-kom-var lyskom-text-buttons
   '(
     ;; Text numbers
-    ("\\(\\<[0-9][0-9][0-9][0-9]\\([0-9]\\)?\\([0-9]\\)?\\([0-9]\\)?\\>\\)" 
+    ("\\(\\<[0-9][0-9][0-9][0-9]\\([0-9]\\)?\\([0-9]\\)?\\([0-9]\\)?\\([0-9]\\)?\\([0-9]\\)?\\>\\)" 
                                         ; Match
      text                               ; Button type
      0                                  ; Portion that's a button
