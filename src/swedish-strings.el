@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.181 2001-08-23 22:49:12 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.182 2001-08-23 23:13:15 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.181 2001-08-23 22:49:12 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.182 2001-08-23 23:13:15 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1895,6 +1895,8 @@ Visa vilka personer som är inloggade i LysKOM-systemet.")
     (kom-who-is-on-in-conference . "\
 Visa vilka personer som är inloggade i LysKOM-systemet och som är
 medlemmar i ett visst möte.") 
+    (kom-who-is-on	      . "\
+Visa vilka vänner som är inloggade i LysKOM-systemet.") 
     (kom-who-am-i             . "\
 Visa information om din egen session.")
     (kom-list-clients	      . "\
