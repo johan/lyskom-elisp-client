@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.63 2000-08-29 17:09:34 joel Exp $
+# $Id: Makefile,v 44.64 2000-08-31 12:29:41 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.63 2000-08-29 17:09:34 joel Exp $
+# $Id: Makefile,v 44.64 2000-08-31 12:29:41 byers Exp $
 #
 
 
@@ -64,6 +64,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		clienttypes.el \
 		deferred-insert.el \
 		utilities.el \
+		completing-read.el \
 		command.el \
 		buffers.el \
 		aux-items.el \
@@ -85,7 +86,6 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		lyskom-buttons.el \
 		view-text.el \
 		async.el \
-		completing-read.el \
 		mship-edit.el \
 		prioritize.el \
 		flags.el \

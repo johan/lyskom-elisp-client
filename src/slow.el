@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.9 1999-11-21 17:59:38 byers Exp $
+;;;;; $Id: slow.el,v 44.10 2000-08-31 12:29:50 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,15 +41,14 @@
   (make-sparse-keymap)
   "Mode map for the `slow' lyskom command mode.")
 
-(define-key lyskom-slow-mode-map "\r" 'kom-parse-command-and-execute)
-(define-key lyskom-slow-mode-map "\t" 'kom-expand-slow-command)
-(define-key lyskom-slow-mode-map " " 'kom-expand-slow-or-next-command)
+(define-key lyskom-slow-mode-map (kbd "RET") 'kom-parse-command-and-execute)
+(define-key lyskom-slow-mode-map (kbd "TAB") 'kom-expand-slow-command)
+(define-key lyskom-slow-mode-map (kbd "SPC") 'kom-expand-slow-or-next-command)
+(define-key lyskom-slow-mode-map (kbd "C-a") 'kom-slow-start-of-line)
+(define-key lyskom-slow-mode-map (kbd "?")   'kom-slow-list-completions)
 
-(defun lyskom-get-entered-slow-command ()
-  "Get the text that the user has entered after the last prompt.
-Note that this function leaves point at the end of the prompt.
-
-If no text is entered, nil is returned."
+(defun lyskom-slow-start-of-line ()
+  "Move point to start of command, after LysKOM prompt."
   (goto-char (point-max))
   (save-restriction
     (when (> lyskom-last-viewed (point-max))
@@ -60,10 +59,71 @@ If no text is entered, nil is returned."
       (goto-char (point-max))
       (beginning-of-line))
     (when (looking-at "\\(\\s-+\\)")
-      (goto-char (match-end 0))))
+      (goto-char (match-end 0)))))
+
+
+(defun lyskom-get-entered-slow-command ()
+  "Get the text that the user has entered after the last prompt.
+Note that this function leaves point at the end of the prompt.
+
+If no text is entered, nil is returned."
+  (lyskom-slow-start-of-line)
   (if (= (point) (point-max))
       nil
     (buffer-substring (point) (point-max))))
+
+(defun kom-slow-start-of-line ()
+  (interactive)
+  (lyskom-slow-start-of-line))
+
+(defun lyskom-expand-slow-command (try-exact eager-completion)
+  (let* ((saved-point (point-marker))
+         (text (lyskom-get-entered-slow-command))
+         (exact (and text try-exact (lyskom-complete-command text nil 'lambda)))
+         (completes (and text (all-completions text 'lyskom-complete-command)))
+	 (command nil))
+    (cond
+     ((null text)
+      (lyskom-beep t))
+     ((null completes)
+      (goto-char saved-point)
+      (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command))
+      (lyskom-beep t))
+     (exact
+      (setq command (cons (lyskom-lookup-command-by-name text) (point))))
+     ((= (length completes) 1)
+      (setq command (cons (lyskom-lookup-command-by-name text) (point)))
+      (delete-region (point) (point-max))
+      (insert (car completes)))
+     ((> (length completes) 1)
+      (let ((longest (try-completion text 'lyskom-complete-command)))
+	(cond
+	 ((eq longest 't)
+	  (delete-region (point) (point-max))
+	  (insert (car completes)))
+	 ((stringp longest)
+	  (delete-region (point) (point-max))
+	  (insert longest)
+
+          ;; If the completion is the same as the entered string
+          ;; then we either add a space if there was none at the
+          ;; end or list all possible completions *and* add a 
+          ;; space (since it has been killed).
+
+          (let* ((have-space (string-match "\\s-+$" text))
+                 (text (if have-space (substring text 0 (match-beginning 0)) text))
+                 (longest (if (string-match "\\s-+$" longest)
+                              (substring longest 0 (match-beginning 0))
+                            longest)))
+	  (when (lyskom-string= (lyskom-unicase longest) (lyskom-unicase text))
+            (if (or have-space eager-completion)
+                (lyskom-format-insert-before-prompt
+                 'command-completions
+                 (mapconcat 'identity completes "\n ")))
+            (unless (or eager-completion (eq ?\  (char-before (point))) (insert " "))))
+          ))
+	 (t (signal 'lyskom-internal-error '()))))))
+    command))
 
 (defun kom-expand-slow-command (&optional try-exact)
   "Tries to complete the command at point.
@@ -75,54 +135,16 @@ starts.
 
 If the completion was not exact it returns nil."
   (interactive)
-  (let* ((text (lyskom-get-entered-slow-command))
-	 (completion-ignore-case t)
-	 (alternatives (mapcar (function (lambda (pair)
-					   (cons (cdr pair) (car pair))))
-			       (lyskom-get-strings
-				lyskom-commands 'lyskom-command)))
-         (exact (and try-exact text (lyskom-string-assoc text alternatives)))
-	 (completes (and text (all-completions text alternatives)))
-	 (command nil))
-    (cond
-     ((null text)
-      (lyskom-beep t))
-     ((null completes)
-      (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command))
-      (lyskom-beep t))
-     (exact
-      (setq command (cons (cdr exact) (point))))
-     ((= (length completes) 1)
-      (setq command (cons (cdr (assq (car completes) alternatives))
-			  (point)))
-      (delete-region (point) (point-max))
-      (insert (car completes)))
-     ((> (length completes) 1)
-      (let ((longest (try-completion text alternatives)))
-	(cond
-	 ((eq longest 't)
-	  (delete-region (point) (point-max))
-	  (insert (car completes)))
-	 ((stringp longest)
-	  (if (lyskom-string= (upcase longest) (upcase text))
-	      (lyskom-format-insert-before-prompt
-	       'command-completions
-	       (mapconcat 'identity completes "\n ")))
-	  (delete-region (point) (point-max))
-	  (insert longest))
-	 (t (signal 'lyskom-internal-error '()))))))
-    command))
-
+  (lyskom-expand-slow-command try-exact t))
 
 (defun kom-expand-slow-or-next-command (&optional try-exact)
   "If any part of a slow command has been entered, call
 `kom-expand-slow-command'. Otherwise, do `kom-next-command'."
   (interactive)
-  (if (lyskom-get-entered-slow-command)
-      (kom-expand-slow-command try-exact)
+  (if (save-excursion (lyskom-get-entered-slow-command))
+      (lyskom-expand-slow-command try-exact nil)
     (buffer-disable-undo)
     (kom-next-command)))
-
 
 (defun kom-parse-command-and-execute ()
   "Reads a command from the last line in the buffer and executes it."
@@ -136,6 +158,16 @@ If the completion was not exact it returns nil."
      (command
       (delete-region (cdr command) (point-max))
       (call-interactively (car command))))))
+
+(defun kom-slow-list-completions ()
+  (interactive)
+  (save-excursion
+    (let* ((text (lyskom-get-entered-slow-command))
+           (completes (and text (all-completions text 'lyskom-complete-command))))
+      (cond (completes (lyskom-format-insert-before-prompt
+                        'command-completions
+                        (mapconcat 'identity completes "\n ")))
+            (t (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command)))))))
 
 
 (defun kom-slow-mode ()

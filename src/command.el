@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.30 2000-08-23 10:43:34 byers Exp $
+;;;;; $Id: command.el,v 44.31 2000-08-31 12:29:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.30 2000-08-23 10:43:34 byers Exp $\n"))
+	      "$Id: command.el,v 44.31 2000-08-31 12:29:42 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -240,6 +240,41 @@
                                                     lyskom-is-administrator))
                                         t nil 'lyskom-command-history)))
     (cdr (lyskom-string-assoc name alternatives))))
+
+
+(defun lyskom-update-command-completion ()
+  "Build a list of alternatives for completion of LysKOM commands.
+FIXME: Do this only when changing the language or logging in."
+  (setq lyskom-command-alternatives
+        (mapcar (lambda (el) 
+                  (vector (cdr el)
+                          (car el)
+                          (lyskom-completing-strip-name 
+                           (lyskom-unicase (cdr el)))))
+                (lyskom-get-strings lyskom-commands 'lyskom-command))))
+
+(defun lyskom-lookup-command-by-name (string &optional predicate)
+  "Look up the command that corresponds to a certain string."
+  (lyskom-complete-command string predicate 'lyskom-lookup))
+
+(defun lyskom-complete-command (string predicate all)
+  "Completion function for LysKOM commands."
+  (let ((alternatives nil)
+        (string (lyskom-completing-match-string-regexp string)))
+    (lyskom-traverse el lyskom-command-alternatives
+      (when (and (string-match string (elt el 2))
+                 (or (null predicate) (funcall predicate el)))
+        (setq alternatives (cons (if (eq all 'lyskom-lookup) el (elt el 0))
+                                 alternatives))))
+    (cond 
+     ((eq all 'lyskom-lookup) (elt (car alternatives) 1))
+     ((eq all 'lambda) (= (length alternatives) 1))
+     (all alternatives)
+     ((null alternatives) nil)
+     ((eq (length alternatives) 1) t)
+     (t (lyskom-complete-string alternatives)))))
+
+
 
 (defun lyskom-start-of-command (function &optional may-interrupt)
   "This function is run at the beginning of every LysKOM command.

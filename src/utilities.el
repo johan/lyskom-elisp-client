@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.72 2000-08-30 09:49:45 byers Exp $
+;;;;; $Id: utilities.el,v 44.73 2000-08-31 12:29:55 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.72 2000-08-30 09:49:45 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.73 2000-08-31 12:29:55 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -347,7 +347,7 @@ is non-nil."
 (defun lyskom-unicase (s)
   "Smash case and diacritical marks of all chars in s." 
   (lyskom-save-excursion
-   (set-buffer lyskom-buffer)
+   (and lyskom-buffer (set-buffer lyskom-buffer))
    (let ((l (length s))
 	 (s2 (string-to-vector 
               (encode-coding-string s lyskom-server-coding-system))))
