@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.80 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: view-text.el,v 44.81 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.80 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: view-text.el,v 44.81 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -353,6 +353,20 @@ Note that this function must not be called asynchronously."
 		   (if kom-reading-puts-comments-in-pointers-last
 		       (lyskom-view-text-handle-saved-comments text-stat))
 
+		   ; Show footnotes if we should do that directly
+ 
+		   (if kom-show-footnotes-immediately
+		       (lyskom-traverse misc
+			   (text-stat->misc-info-list text-stat)
+			 (if (eq (misc-info->type misc) 'FOOTN-IN)
+			     ;; Show the footnote
+			     (progn
+			       (lyskom-view-text (misc-info->footn-in misc)
+						 mark-as-read t conf-stat priority)
+			       ; Mark as read (internally) så follow-comments won't add 
+			       ; it to the read list.
+			       (lyskom-is-read (misc-info->footn-in misc))))))
+
                    ;; Prefetch commented texts.
 
 		   (if (or follow-comments
@@ -456,7 +470,6 @@ If MARK-AS-READ is non-nil the texts will be marked as read.
 PRIORITY the priority of the reading.
 If REVIEW-TREE is non-nil then build an entry of type 'REVIEW-TREE in the 
 lyskom-reading-list."
-  ;; . Find footnotes and show them.
   ;; . Fix the reading-list
   ;; . Issue cache-filling initiate-calls for everything left comments.
   
@@ -465,13 +478,6 @@ lyskom-reading-list."
         (mx-attachments-in (lyskom-get-text-attachments text-stat)))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
       (cond
-       ((and (eq (misc-info->type misc) 'FOOTN-IN)
-	     (> (misc-info->footn-in misc) (text-stat->text-no text-stat))
-	     kom-show-footnotes-immediately)
-	;; Show the footnote
-	(lyskom-view-text (misc-info->footn-in misc)
-			  mark-as-read t conf-stat priority review-tree)
-	(lyskom-is-read (misc-info->footn-in misc)))
        ((eq (misc-info->type misc) 'FOOTN-IN)
 	(setq flist (cons (misc-info->footn-in misc) flist)))
        ((eq (misc-info->type misc) 'COMM-IN)
