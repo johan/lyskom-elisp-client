@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 43.0 1996-08-07 16:40:49 davidk Exp $
+;;;;; $Id: prioritize.el,v 43.1 1996-08-27 15:15:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 43.0 1996-08-07 16:40:49 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 43.1 1996-08-27 15:15:45 byers Exp $\n"))
 
 
 
@@ -57,9 +57,6 @@
                                       "--"
                                       (-3 . "%p")
                                       "-%-"))
-
-(defvar lyskom-prioritize-get-conf-stat-hack nil
-  "Can't touch this...")
 
 (defvar lyskom-prioritize-entry-list nil
   "List of entries to be prioritized.")
@@ -590,7 +587,8 @@ of conferences you are a member of."
   (lyskom-start-of-command 'kom-prioritize)
   (let* ((buffer (current-buffer))
          (tmp-buffer (get-buffer-create (concat (buffer-name buffer)
-                                               "-prioritize"))))
+                                                "-prioritize")))
+         (collector (make-collector)))
     (unwind-protect
         (progn
           (if lyskom-membership-is-read
@@ -619,70 +617,42 @@ of conferences you are a member of."
                      (setq mode-line-buffer-identification string)
 
                      (lyskom-prioritize-mode)
-
                      (set-buffer buffer)
 
-
-                     (setq lyskom-prioritize-get-conf-stat-hack nil)
-
                      (lyskom-traverse memb-ship membership-list
-                       (initiate-get-conf-stat
-                        'prioritize
-                        'lyskom-prioritize-handle-get-conf-stat
-                        (membership->conf-no memb-ship)
-                        tmp-buffer))
-                       (lyskom-run 
-                        'prioritize
-                        'lyskom-prioritize-handle-get-conf-stat-done)
-                       
-                       ;;
-                       ;;   Wait until all conf-stats have been handled
-                       ;;
+                                      (initiate-get-conf-stat
+                                       'prioritize
+                                       'lyskom-prioritize-handle-get-conf-stat
+                                       (membership->conf-no memb-ship)
+                                       collector))
 
-                       (while (and (null lyskom-prioritize-get-conf-stat-hack)
-                                   (not lyskom-quit-flag))
-                         (accept-process-output nil
-                                                lyskom-apo-timeout-s
-                                                lyskom-apo-timeout-ms))
-                       (if lyskom-quit-flag
-                           (progn
-                             (setq lyskom-quit-flag nil)
-                             (lyskom-insert-before-prompt
-                              (lyskom-get-string 'interrupted))
-                             (signal 'quit nil))))
-
-
+                     (lyskom-wait-queue 'prioritize)
+                     
                      (lyskom-save-excursion
                       (switch-to-buffer tmp-buffer)
                       (setq lyskom-prioritize-entry-list
-                            (nreverse lyskom-prioritize-entry-list))
+                            (nreverse (collector->value
+                                       collector)))
                       (lyskom-prioritize-sort-entries)
                       (lyskom-prioritize-redraw-buffer)
                       (goto-char (point-max))
                       (let ((buffer-read-only nil))
                         (insert "  "))
                       (lyskom-prioritize-goto-entry
-                       (lyskom-prioritize-get-entry-from-no 1)))))))
+                       (lyskom-prioritize-get-entry-from-no 1))))))))
       (progn
         (set-buffer buffer)
         (lyskom-end-of-command)))))
 
 
-(defun lyskom-prioritize-handle-get-conf-stat (conf-stat buffer)
+(defun lyskom-prioritize-handle-get-conf-stat (conf-stat collector)
   (let ((tmp (make-prioritize-entry
               (membership->priority 
                (lyskom-get-membership-in-conf 
                 (conf-stat->conf-no 
                  conf-stat)))
               conf-stat)))
-    (save-excursion
-      (set-buffer buffer)
-      (setq lyskom-prioritize-entry-list 
-            (cons tmp lyskom-prioritize-entry-list)))))
-
-(defun lyskom-prioritize-handle-get-conf-stat-done ()
-  (setq lyskom-prioritize-get-conf-stat-hack t))
-          
+    (collector-push tmp collector)))
 
 
 (defun lyskom-prioritize-sort-entries ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.11 1996-08-27 10:52:32 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.12 1996-08-27 15:15:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.11 1996-08-27 10:52:32 davidk Exp $"))
+              "$Id: english-strings.el,v 43.12 1996-08-27 15:15:26 byers Exp $"))
 
 
 
@@ -383,7 +383,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-is-active-all . "Showing all sessions.\n")
     (who-is-active-last-minutes . "Showing all sessions active tha last %#1d minutes.\n")
     (showing-invisibles . "Showing invisible sessions.\n")
-    (null-who-info . "No one (active) is logged in.\n")
+    (null-who-info . "No one (active) is logged on.\n")
 
     ; From commands2.el:
 
@@ -713,6 +713,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     ; From completing-read.el:
 
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
+    (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
 
     ; From prioritize.el:
 
@@ -938,6 +939,9 @@ Text:
     (who-i-am-client . "The programs is lyskom.el, version %#1s.\n")
     (who-i-am-server . "This is %#1s, version %#2s.\n")
     (who-i-am-emacs . "Running under %#1s.\n")
+
+    (no-such-session-r . "That session does not exist. Perhaps the user is not logged on.\n")
+    (person-not-logged-in-r . "%#1P is not logged on.\n")
     (session-status . "Session %#1d is %#2P <%#2p>
 %#5s %#7s %#4M
 Using %#6D from %#3s\n")

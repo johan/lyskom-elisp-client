@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.8 1996-08-27 10:52:22 davidk Exp $
+;;;;; $Id: commands1.el,v 43.9 1996-08-27 15:14:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.8 1996-08-27 10:52:22 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.9 1996-08-27 15:14:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -879,15 +879,19 @@ that text instead."
 If optional argument is non-nil then dont ask for confirmation."
   (interactive "P")
   (lyskom-start-of-command 'kom-quit t)
-  (cond
-   ((and (lyskom-count-down-edits)
-	 (display-buffer (car lyskom-list-of-edit-buffers))
-	 (not (lyskom-ja-or-nej-p
-	       (lyskom-get-string 'quit-in-spite-of-unsent))))
-    (lyskom-end-of-command))
-   ((or arg (lyskom-ja-or-nej-p (lyskom-get-string 'really-quit)))
-    (lyskom-quit))
-   (t (lyskom-end-of-command))))
+  (let ((do-end-of-command t))
+    (unwind-protect
+        (setq do-end-of-command
+              (cond
+               ((and (lyskom-count-down-edits)
+                     (display-buffer (car lyskom-list-of-edit-buffers))
+                     (not (lyskom-ja-or-nej-p
+                           (lyskom-get-string 'quit-in-spite-of-unsent))))
+                t)
+               ((or arg (lyskom-ja-or-nej-p (lyskom-get-string 'really-quit)))
+                (lyskom-quit) nil)
+               (t t)))
+      (if do-end-of-command (lyskom-end-of-command)))))
 
 
 (defun lyskom-quit ()
@@ -1818,21 +1822,32 @@ Uses Protocol A version 9 calls"
   "Show status for all sessions a person has. Asks for person name.
 Optional argument ARG should be a list of sessions to get information
 about or a single session number."
-  (interactive)
+  (interactive "P")
   (let ((sessions (or (cond ((listp arg) arg)
                             ((numberp arg) (list arg)))
                       (lyskom-read-session-no 
                        (lyskom-get-string 'status-for-session))))
 	who-info)
-    (if lyskom-dynamic-session-info-flag
-	(progn
-	  (setq who-info (listify-vector
-			  (blocking-do 'who-is-on-dynamic t t 0)))
-	  (mapcar (function (lambda (x) (lyskom-status-session-9 x who-info)))
-		  sessions))
-      (setq who-info (listify-vector (blocking-do 'who-is-on)))
-      (mapcar (function (lambda (x) (lyskom-status-session-8 x who-info)))
-	      sessions))))
+    (cond ((null sessions)
+           (lyskom-insert-string 'no-such-session-r))
+          ((and (numberp (car sessions))
+                (<= (car sessions) 0))
+           (lyskom-format-insert
+            (lyskom-get-string 'person-not-logged-in-r)
+            (- (car sessions))))
+          (t
+           (if lyskom-dynamic-session-info-flag
+               (progn
+                 (setq who-info (listify-vector
+                                 (blocking-do 'who-is-on-dynamic t t 0)))
+                 (mapcar (function
+                          (lambda (x) (lyskom-status-session-9 x 
+                                                               who-info)))
+                         sessions))
+             (setq who-info (listify-vector (blocking-do 'who-is-on)))
+             (mapcar (function 
+                      (lambda (x) (lyskom-status-session-8 x who-info)))
+                     sessions))))))
 
 
 (defun lyskom-status-session-8 (sid who-info-list)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 43.1 1996-08-22 06:57:37 byers Exp $
+;;;;; $Id: completing-read.el,v 43.2 1996-08-27 15:15:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 43.1 1996-08-22 06:57:37 byers Exp $\n"))
+       "$Id: completing-read.el,v 43.2 1996-08-27 15:15:16 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -198,7 +198,11 @@ persons who are logged on."
           (lyskom-completing-who-is-on)))
 
 
-(defun lyskom-read-conf-expand-specials (string predicate login-list x-list)
+(defun lyskom-read-conf-expand-specials (string
+                                         predicate
+                                         login-list
+                                         x-list
+                                         &optional return-cs)
   "Used internally by lyskom-read-conf-internal to expand person and
 conference number specifications to something useful."
   (cond ((string-match (lyskom-get-string 'person-or-conf-no-regexp) string)
@@ -211,24 +215,34 @@ conference number specifications to something useful."
                      predicate 
                      login-list
                      x-list))
-               (list string))))))
+               (if return-cs
+                   cs
+                 (list string)))))
+        ((string-match (lyskom-get-string 'session-no-regexp) string)
+         (let* ((no (string-to-int (match-string 1 string)))
+                (si (blocking-do 'get-session-info no))
+                (cs (and si
+                         (blocking-do 'get-conf-stat
+                                      (session-info->pers-no si)))))
+           (if (and cs
+                    (lyskom-read-conf-internal-verify-type
+                     (conf-stat->conf-no cs)
+                     (conf-stat->conf-type cs)
+                     predicate 
+                     login-list
+                     x-list))
+               (if return-cs
+                   cs
+                 (list string)))))))
 
 (defun lyskom-read-conf-lookup-specials (string predicate login-list x-list)
   "Used internally by lyskom-read-conf-internal to look up conf-stats
 from person and conference number specifications."
-  (if (string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                    string)
-      (progn
-        (let* ((no (string-to-int (match-string 1 string)))
-               (cs (blocking-do 'get-conf-stat no)))
-          (if (and cs
-                   (lyskom-read-conf-internal-verify-type
-                    (conf-stat->conf-no cs)
-                    (conf-stat->conf-type cs)
-                    predicate 
-                    login-list
-                    x-list))
-              cs)))))
+  (lyskom-read-conf-expand-specials string
+                                    predicate
+                                    login-list
+                                    x-list
+                                    t))
 
 (defun lyskom-lookup-conf-by-name (string predicate)
   "Return the conf-z-info associated with STRING that also satisfies
@@ -327,6 +341,8 @@ function work as a name-to-conf-stat translator."
                                                             candidate-list))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
+                ((string-match (lyskom-get-string 'session-no-regexp)
+                               string) nil)
                 ((lyskom-read-conf-internal-verify-type nil
                                                         nil
                                                         predicate
@@ -350,6 +366,8 @@ function work as a name-to-conf-stat translator."
                 ((= (length specials) 1) t)
                 (specials nil)
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((string-match (lyskom-get-string 'session-no-regexp)
                                string) nil)
                 (t (lyskom-read-conf-internal-verify-type nil
                                                           nil
@@ -377,6 +395,8 @@ function work as a name-to-conf-stat translator."
                 (names names)
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
+                ((string-match (lyskom-get-string 'session-no-regexp)
+                               string) nil)
                 ((lyskom-read-conf-internal-verify-type nil
                                                         nil
                                                         predicate
@@ -397,8 +417,10 @@ function work as a name-to-conf-stat translator."
                                                           predicate
                                                           login-list
                                                           candidate-list)))
-          (cond (specials specials)
+          (cond (specials (car specials))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((string-match (lyskom-get-string 'session-no-regexp)
                                string) nil)
                 ((lyskom-read-conf-internal-verify-type nil
                                                         nil
@@ -427,6 +449,8 @@ function work as a name-to-conf-stat translator."
           (cond ((lyskom-completing-member string name-list) t) ; Exact match
                 ((= (length name-list) 1) (car name-list))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((string-match (lyskom-get-string 'session-no-regexp)
                                string) nil)
                 (t (or (lyskom-completing-cache-completion
                         (lyskom-complete-string name-list)
@@ -759,28 +783,31 @@ the LysKOM rules of string matching."
         (char nil)
         (xchar nil))
 
-    (mapcar
-     (function 
-      (lambda (x)
-        (cond ((>= (aref x 0) (aref x 1))
-               (setq eofp t)
-               (setq matchp nil))
-              ((eq (aref (aref x 2) (aref x 0)) ?\()
-               (setq open-paren-p t))
-              ((eq (aref (aref x 2) (aref x 0)) ?\))
-               (setq close-paren-p t))
-              ((eq (aref (aref x 2) (aref x 0)) ?\ )
-               (setq spacep t)))
+    (lyskom-save-excursion
+     (set-buffer (process-buffer lyskom-blocking-process))
+     (mapcar
+      (function 
+       (lambda (x)
+         (cond ((>= (aref x 0) (aref x 1))
+                (setq eofp t)
+                (setq matchp nil))
+               ((eq (aref (aref x 2) (aref x 0)) ?\()
+                (setq open-paren-p t))
+               ((eq (aref (aref x 2) (aref x 0)) ?\))
+                (setq close-paren-p t))
+               ((eq (aref (aref x 2) (aref x 0)) ?\ )
+                (setq spacep t)))
 
-        (setq matchp (and matchp
-                          (if (null char)
-                              (progn
-                                (setq xchar (aref (aref x 2)
-                                                  (aref x 0)))
-                                (setq char (lyskom-unicase-char xchar)))
-                            (eq char (lyskom-unicase-char (aref (aref x 2)
-                                                     (aref x 0)))))))))
-     data-list)
+         (setq matchp (and matchp
+                           (if (null char)
+                               (progn
+                                 (setq xchar (aref (aref x 2)
+                                                   (aref x 0)))
+                                 (setq char (lyskom-unicase-char xchar)))
+                             (eq char (lyskom-unicase-char
+                                       (aref (aref x 2)
+                                             (aref x 0)))))))))
+      data-list))
 
     (aset state 1 xchar)
     (cond (eofp (aset state 0 'eof))
@@ -814,30 +841,31 @@ the LysKOM rules of string matching."
 
 
 (defun lyskom-read-session-no (prompt &optional empty initial only-one)
-  "Returns a list of session numbers of a session by reading either 
-the number of the session or a name. 
+  (let ((possible-matches
+         (lyskom-session-from-conf
+          (lyskom-read-conf-no prompt
+                               (if kom-permissive-completion
+                                   '(pers)
+                                 '(login))
+                               empty
+                               initial
+                               t))))
+    (if (and (> (length possible-matches) 1)
+             only-one)
+        (lyskom-read-session-resolve-ambiguity possible-matches)
+      possible-matches)))
 
-The question is prompted with PROMPT.
-If EMPTY is non-nil then the empty string is allowed (returns 0).
-INITIAL is the initial contents of the input field.
-If ONLY-ONE is non-nil only one session number will be returned."
-  (lyskom-completing-clear-cache)
-  (let (result data done
-               (lyskom-blocking-process lyskom-proc))
 
-    (while (not done)
-      (setq data (lyskom-read-session-no-aux prompt t initial))
-      (cond ((and (string= data "") (not empty)))
-            ((string= data "") (setq done t result nil))
-            (t (setq result
-                     (lyskom-read-session-internal data '(login)
-                                                   'lyskom-lookup)
-                     done t))))
-    (if (and only-one (> (length result) 1))
-        (setq result
-              (lyskom-read-session-resolve-ambiguity result)))
-    result))
-             
+(defun lyskom-session-from-conf (conf-no)
+  (let ((who-list (lyskom-completing-who-is-on))
+        (sessions nil))
+    (while who-list
+      (if (eq (who-info->pers-no (car who-list)) conf-no)
+          (setq sessions (cons (who-info->connection (car who-list))
+                               sessions)))
+      (setq who-list (cdr who-list)))
+    (cond ((and (null sessions) kom-permissive-completion) (list (- conf-no)))
+          (t sessions))))
 
 
 (defun lyskom-read-session-resolve-ambiguity (sessions)
@@ -902,74 +930,6 @@ If ONLY-ONE is non-nil only one session number will be returned."
 				    (car (car who-info))
 				    nil))))
       (list (session-info->connection (cdr (assoc result who-info)))))))
-    
 
 
-(defun lyskom-read-session-no-aux (prompt 
-                                   &optional mustmatch 
-                                   initial)
-  "Read a LysKOM name or session number, prompting with PROMPT.
-The third argument MUSTMATCH makes the function always return the conf-no and 
-never the read string.
-The fourth argument INITIAL is the initial contents of the input-buffer.
 
-Returns the name."
-  (lyskom-completing-clear-cache)
-  (let* ((completion-ignore-case t)
-	 ; When lyskom-read-conf-name-internal is called the current-buffer
-	 ; is the minibuffer and the buffer-local variable lyskom-proc is not
-	 ; correct. Then the variable lyskom-blocking-process must be set
-	 ; instead. It is not buffer-local but scopes the let.
-         (lyskom-blocking-process lyskom-proc)
-         (minibuffer-local-completion-map 
-          lyskom-minibuffer-local-completion-map)
-         (minibuffer-local-must-match-map 
-          lyskom-minibuffer-local-must-match-map))
-    (completing-read prompt 
-                     'lyskom-read-session-internal
-                     '(login)
-                     mustmatch
-                     initial
-                     'lyskom-name-hist)))
-
-
-(defun lyskom-read-session-internal (string predicate all)
-  (let* ((result nil)
-         (partial (lyskom-read-conf-internal string predicate all))
-         (who-list (if (or (null partial)
-                           (eq all 'lyskom-lookup))
-                       (mapcar (function 
-                                (lambda (el)
-                                  (cons 
-                                   (number-to-string (who-info->connection el))
-                                   el)))
-                               (lyskom-completing-who-is-on))))
-         (result (cond
-                  ((and (null who-list)
-                        (not (eq 'lyskom-lookup all))) nil)
-                  ((eq all nil)         ; try-completion
-                   (try-completion string who-list nil))
-                  ((eq all t)           ; all-completions
-                   (all-completions string who-list nil))
-                  ((eq all 'lambda)	; exact match
-                   (and (assoc string who-list) t))
-		  ((eq all 'lyskom-lookup)	; get number
-		   (car-safe (assoc string who-list))))))
-    (cond ((eq all 'lyskom-lookup)
-           (if partial
-               (let* ((output nil)
-                      (list who-list)
-                      (num (string-to-number string))
-                      (conf-no 
-                       (if (= 0 num)  ; Dont lookup unless necessary
-                           (conf-z-info->conf-no partial))))
-                 (while list
-                   (if (or (eq conf-no (who-info->pers-no (cdr (car list))))
-			   (eq num (who-info->connection (cdr (car list)))))
-                       (setq output (cons
-                                     (who-info->connection (cdr (car list)))
-                                     output)))
-                   (setq list (cdr list)))
-                 output)
-             (list (string-to-number result))))
-           (t (or partial result)))))
