@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.20 1992-07-30 19:49:22 linus Exp $
+# $Id: Makefile,v 35.21 1993-02-04 04:00:48 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.20 1992-07-30 19:49:22 linus Exp $
+# $Id: Makefile,v 35.21 1993-02-04 04:00:48 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.20  1992-07-30 19:49:22  linus
+# Revision 35.21  1993-02-04 04:00:48  linus
+# Removed the import.make dependencie of the Makefile.
+#
+# Revision 35.20  1992/07/30  19:49:22  linus
 # Moved around functions to the new reading.el file.
 #
 # Revision 35.19  1992/07/26  23:14:02  linus
@@ -88,11 +91,12 @@
 # Lagt till lyskom-clientversion-long
 #
 
-include Topdir.make
-include $(TOPDIR)/scripts/import.make
+GENERIC-CLEAN = *~ *.o core
+GENERIC-DIST-CLEAN = TAGS
+MKDIR = /bin/mkdir
 
 RM = /usr/gnu/bin/rm -vf
-EMACS-BATCH = emacs -batch -l /usr/local/lib/elisp/bytecomp
+EMACS-BATCH = emacs -batch -l /usr/local/var/elisp/bytecomp
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el startup.el \
