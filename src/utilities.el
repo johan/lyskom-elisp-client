@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 40.2 1996-04-04 11:55:08 byers Exp $
+;;;;; $Id: utilities.el,v 41.0 1996-05-02 19:28:49 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 40.2 1996-04-04 11:55:08 byers Exp $\n"))
+	      "$Id: utilities.el,v 41.0 1996-05-02 19:28:49 davidk Exp $\n"))
 
 
 ;;;
