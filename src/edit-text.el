@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.100 2002-05-25 18:22:39 byers Exp $
+;;;;; $Id: edit-text.el,v 44.101 2002-07-23 18:28:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.100 2002-05-25 18:22:39 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.101 2002-07-23 18:28:40 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -899,7 +899,7 @@ Cannot be called from a callback."
                                'conf-stat->conf-no))
 
         ;;
-        ;; Filter the list. Remote all authors that are direct recipients
+        ;; Filter the list. Remove all authors that are direct recipients
         ;; or whose send-comments-to is a direct recipient or who are
         ;; listed in kom-dont-check-commented-authors
         ;;
@@ -907,14 +907,21 @@ Cannot be called from a callback."
         (lyskom-traverse author raw-author-list
           (let ((send-comments-to
                  (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
-            (if (and send-comments-to
-                     (string-match "^\\([0-9]+\\)"
-                                   (aux-item->data send-comments-to)))
-                (setq send-comments-to
-                      (string-to-number
-                       (match-string 1 (aux-item->data send-comments-to))))
-              (setq send-comments-to nil))
 
+            (when send-comments-to
+              (cond ((string-match "^\\([0-9]+\\)\\s-+\\([0-9]+\\)" (aux-item->data send-comments-to))
+                     (setq send-comments-to 
+                           (cons (string-to-number
+                                  (match-string 1 (aux-item->data send-comments-to)))
+                                 (string-to-number
+                                  (match-string 2 (aux-item->data send-comments-to))))))
+                    ((string-match "^\\([0-9]+\\)"
+                                   (aux-item->data send-comments-to))
+                     (setq send-comments-to
+                           (cons (string-to-number
+                                  (match-string 1 (aux-item->data send-comments-to)))
+                                 0)))
+                    (t (setq send-comments-to nil))))
 
             (cond
 
@@ -929,7 +936,7 @@ Cannot be called from a callback."
 
              ;; Author has a zero send-comments-to
 
-             ((and send-comments-to (zerop send-comments-to)))
+             ((and send-comments-to (zerop (car send-comments-to))))
 
              ;; We don't have permission to send stuff to the author's
              ;; send-comments-to or to the author if there is no
@@ -937,7 +944,7 @@ Cannot be called from a callback."
 
              ((or (and send-comments-to
                        (not (lyskom-is-permitted-author
-                             (blocking-do 'get-conf-stat send-comments-to))))
+                             (blocking-do 'get-conf-stat (car send-comments-to)))))
                   (and (not send-comments-to)
                        (not (lyskom-is-permitted-author author)))))
 
@@ -986,29 +993,40 @@ Cannot be called from a callback."
         (lyskom-traverse author authors-to-ask-about
           (let ((send-comments-to
                  (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
-            (if (and send-comments-to
-                     (string-match "^\\([0-9]+\\)"
-                                   (aux-item->data send-comments-to)))
-                (setq send-comments-to
-                      (string-to-number
-                       (match-string 1 (aux-item->data send-comments-to))))
-              (setq send-comments-to nil))
+            (when send-comments-to
+              (cond ((string-match "^\\([0-9]+\\)\\s-+\\([0-9]+\\)" (aux-item->data send-comments-to))
+                     (setq send-comments-to 
+                           (cons (string-to-number
+                                  (match-string 1 (aux-item->data send-comments-to)))
+                                 (string-to-number
+                                  (match-string 2 (aux-item->data send-comments-to))))))
+                    ((string-match "^\\([0-9]+\\)"
+                                   (aux-item->data send-comments-to))
+                     (setq send-comments-to
+                           (cons (string-to-number
+                                  (match-string 1 (aux-item->data send-comments-to)))
+                                 0)))
+                    (t (setq send-comments-to nil))))
 
             (when (lyskom-j-or-n-p 
                    (lyskom-format 'add-recipient-p 
                                   author
-                                  send-comments-to))
+                                  (car send-comments-to)))
               (setq extra-headers
-                    (nconc (list (if (lyskom-j-or-n-p
-                                      (lyskom-format
-                                       'really-add-as-recpt-q
-                                       (or send-comments-to author)))
-                                     'RECPT
-                                   'CC-RECPT)
-                                 (or send-comments-to 
-                                     (conf-stat->conf-no author)))
-                           extra-headers)))))))
-
+                    (nconc
+                     (list
+                      (cond ((and send-comments-to
+                                  (eq (cdr send-comments-to) 0)) 'RECPT)
+                            ((and send-comments-to
+                                  (eq (cdr send-comments-to) 1)) 'CC-RECPT)
+                            ((and send-comments-to
+                                  (eq (cdr send-comments-to) 15)) 'BCC-RECPT)
+                            (t (if (lyskom-j-or-n-p
+                                    (lyskom-format 'really-add-as-recpt-q author))
+                                   'RECPT
+                                 'CC-RECPT)))
+                            (conf-stat->conf-no author))
+                     extra-headers)))))))
     extra-headers))
     
 (defun lyskom-send-enriched (message)

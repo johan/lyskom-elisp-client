@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: tree-edit.el,v 44.1 2001-05-02 07:57:06 byers Exp $
+;;;;; $Id: tree-edit.el,v 44.2 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 2001 David Byers
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs lisp client
@@ -34,28 +34,135 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: tree-edit.el,v 44.1 2001-05-02 07:57:06 byers Exp $\n"))
+	      "$Id: tree-edit.el,v 44.2 2002-07-23 18:28:41 byers Exp $\n"))
 
 ;;;;
 ;;;; TODO
 ;;;;
+;;;; Cache hanging-indent-strings 'cos it'll be expensive to do
+;;;; make-string so many times.
+;;;;
+;;;; Compile tree styles?
+;;;;
+;;;; Have a link from each child to the root, and store tree
+;;;; style in the root (or perhaps let tree-get-property 
+;;;; traverse the parent links so we can do inherited 
+;;;; properties).
+;;;;
+;;;; Make it possible to collapse all but the first line of a
+;;;; multiline item (with minimal redrawing, please).
+;;;;
+;;;; Optimize drawing a bit. Right now, if we attach a node, we
+;;;; redraw the parent (and therefore all the children). This is
+;;;; easy, but some trees are really deep (we hit max-specpdl-size
+;;;; in one example), so doing this is needlessly expensive.
+;;;;
+;;;; Allow us to set a prefix length for the entire tree and have
+;;;; prefixes to the items. These are text snippets to display to
+;;;; the far left of the tree.
+;;;;
+;;;; Make it possible to collapse the parent of a node. Doing this
+;;;; means that we don't display the entire path to the node, just
+;;;; a marker saying that this node is underneath something else.
+;;;;
+;;;; Implement incremental computation of children, so that we can
+;;;; set the prune attribute of a node and register a callback to
+;;;; compute children of the node.
+;;;;
+;;;; Implement incremental computation of parent nodes.
+;;;;
 ;;;; Document tree node properties
-;;;; - prune
-;;;; - leaf
+;;;; - prune (don't draw the subtree)
+;;;; - leaf (don't allow move-up and friends to attach a subtree)
+;;;; - hanging-indent (hanging indent of multiline items, string or int)
 ;;;;
 
 
-(defvar tree-edit-indent-level 3
-  "*Number of characters to indent each level in the tree editor.")
-
-(defvar tree-edit-indent-a (concat "|" (make-string (1- tree-edit-indent-level) ?\ )))
-(defvar tree-edit-indent-b (make-string tree-edit-indent-level ?\ ))
-(defvar tree-edit-item-header (concat "+"
-                                      (make-string 
-                                       (- tree-edit-indent-level 2) ?-)
-                                      " "))
 (defvar tree-edit-kill-buffer nil
   "Buffer containing the most recently killed tree.")
+
+
+;;; ============================================================
+;;; Drawing styles
+
+(defvar tree-edit-current-style 'compact)
+(defvar tree-edit-styles
+  '((default . ((indent-a . "|  ")
+                (indent-b . "   ")
+                (before-children . "|\n")
+                (after-children . "\n")
+                (item-header . tree-edit-item-header)
+                (last-item-header . tree-edit-last-item-header)))
+
+    (compact . ((indent-a . "|  ")
+                (indent-b . "   ")
+                (before-children . nil)
+                (after-children . nil)
+                (item-header . tree-edit-item-header)
+                (last-item-header . tree-edit-last-item-header)))
+
+    (semi-compact . ((indent-a . "|  ")
+                     (indent-b . "   ")
+                     (before-children . nil)
+                     (after-children . "\n")
+                     (item-header . tree-edit-item-header)
+                     (last-item-header . tree-edit-last-item-header)))
+
+    (very-compact . ((indent-a . "|")
+                     (indent-b . " ")
+                     (before-children . nil)
+                     (after-children . nil)
+                     (item-header . "+")
+                     (last-item-header . "`")))
+    "Definitions of tree styles.
+Each item in this list is a definition of a tree style. A 
+definition is a cons whose car is the name of the style (a 
+symbol) and the cdr is an alist specifying the style.
+
+The following keys must be present in the alist defining the
+style:
+
+indent-a        The string to print to the right of items
+                that is used to connect children of a node,
+                when there are additional children at this
+                level. Normally a vertical bar and some
+                whitespace.
+
+indent-b        The string to print to the right of items
+                to indent them when there are no additional
+                children at this level. Normally some 
+                whitespace.
+
+before-children The string to print before the first child of
+                a node. This string will be prefixed as the 
+                parent node.
+
+after-children  The string to print after the last child of
+                a node. This string will be prefixed as the 
+                parent node.
+
+item-header     The header of an item. Normally this connects
+                the indent-a printed on the prevous line with
+                the current item and the indent-a below.
+
+last-item-header   The header used for the last child of a 
+                node. This item usually connects the indent-a
+                printed on the previous line with the indent-b
+                printed on the next line.
+
+IMPORTANT: The lenghts of indent-a, indent-b and last-item-header
+           must be the same for all nodes at the same level in
+           the tree.
+
+The cdrs of each item in the defining alist is either a string;
+the name of a function (a symbol) that returns a string or nil; 
+or nil (in which case nothing is printed).
+"
+    ))
+
+(defun tree-edit-get-style-data (item &optional style)
+  (cdr (assq item (cdr (assq (or style tree-edit-current-style)
+                             tree-edit-styles)))))
 
 
 ;;; ============================================================
@@ -195,44 +302,79 @@ If there is no property PROPERTY for NODE, return DEFAULT."
 ;;; Basic drawing
 
 
+(defun tree-edit-insert-part (part tree prefix)
+  (let ((fn (tree-edit-get-style-data part)))
+    (cond ((functionp fn) (setq fn (funcall fn tree)))
+          ((and (symbolp fn) (boundp fn)) 
+           (setq fn (symbol-value fn))))
+    (cond ((null fn))
+          ((stringp fn) 
+           (insert (tree-edit-prefix-string prefix))
+           (insert fn)))))
+
 (defun tree-edit-prefix-string (prefix)
   "Return a string of spaces and bars according to values in PREFIX.
 Used to draw the spaces and bars before a tree entry. Any strings
 in PREFIX are included verbatim."
   (apply 'concat (mapcar (lambda (x) 
                            (cond ((stringp x) x)
-                                 (x tree-edit-indent-a)
-                                 (t tree-edit-indent-b))) prefix)))
+                                 (x (tree-edit-get-style-data 'indent-a))
+                                 (t (tree-edit-get-style-data 'indent-b)))) 
+                         prefix)))
 
 (defun tree-edit-compute-prefix (tree)
   "Compute the prefix for subtree TREE.
 Returns a list of nil and non-nil values specifying where to draw
 vertical lines and where to not draw vertical lines."
-  (when tree
-    (nreverse (tree-edit-compute-prefix-internal (tree-node->parent tree)))))
-
-(defun tree-edit-compute-prefix-internal (tree)
-  "Compute the prefix for TREE.
-Returns a list of non-nil and nil that specifies the indentation for
-TREE when drawn in the buffer."
-  (when tree
-    (cons (tree-node-next-sibling tree)
-          (tree-edit-compute-prefix-internal (tree-node->parent tree)))))
-
+  (let ((result nil)
+        (tree (tree-node->parent tree)))
+    (while tree
+      (setq result (cons (tree-node-next-sibling tree) result))
+      (setq tree (tree-node->parent tree)))
+    result))
 
 (defun tree-edit-adjust-markers (tree)
-  (cond ((null tree) nil)
-        ((null (tree-node->end tree)))
-        ((tree-node->children tree)
-         (let ((kids (tree-node->children tree)))
-           (while kids
-             (when (and (tree-node->end (car kids))
-                        (> (tree-node->end (car kids))
-                           (tree-node->end tree)))
-               (set-marker (tree-node->end tree)
-                           (tree-node->end (car kids))))
-             (setq kids (cdr kids))))
-         (tree-edit-adjust-markers (tree-node->parent tree)))))
+  (while (and tree
+              (tree-node->end tree)
+              (tree-node->children tree))
+    (let ((kids (tree-node->children tree)))
+      (while kids
+        (when (and (tree-node->end (car kids))
+                   (> (tree-node->end (car kids))
+                      (tree-node->end tree)))
+          (set-marker (tree-node->end tree)
+                      (tree-node->end (car kids))))
+        (setq kids (cdr kids))))
+    (setq tree (tree-node->parent tree))))
+
+(defun tree-edit-hanging-indent-prefix (tree indent prefix)
+  (let* ((spc-len nil)
+         (next-prefix (if (tree-node->children tree)
+                          (tree-edit-get-style-data 'indent-a)
+                        (tree-edit-get-style-data 'indent-b)))
+         (pfx-len (length next-prefix)))
+    (cond ((stringp indent)
+           (setq spc-len
+                 (if (string-match "^\\s-*" indent)
+                     (match-end 0)
+                   0)))
+          ((numberp indent)
+           (setq spc-len indent)))
+
+    ;; If spc-len is less than next-prefix, get a bit of next-prefix
+    
+    (if (> pfx-len spc-len)
+        (setq next-prefix (substring next-prefix 0 spc-len)
+              pfx-len spc-len)
+      (setq spc-len pfx-len))
+
+    (concat next-prefix (cond ((stringp indent)
+                               (substring indent pfx-len))
+                              ((numberp indent)
+                               (make-string (- indent pfx-len) ?\ ))
+                              (t "")))))
+
+
 
 (defun tree-edit-draw (tree &optional prefix dont-adjust)
   "Draw the tree TREE in the current buffer at point.
@@ -242,43 +384,77 @@ to the buffer specifying which tree nodes are where.
 Optional argument PREFIX is a prefix to add to every line.
 If optional argument DONT-ADJUST is non-nil, don't adjust end markers
 of parent nodes."
-  (unless prefix (setq prefix (tree-edit-compute-prefix tree)))
-  (let ((start (point-marker)))
-    (insert (tree-edit-prefix-string prefix))
-    (insert tree-edit-item-header)
-    (set-tree-node->text-start tree (point-marker))
-    (insert (tree-node->text tree))
-    (insert "\n");
-    (set-tree-node->text-end tree (point-marker))
-    (cond 
+  (let ((worklist nil))
+    (setq worklist (list (list tree prefix (point-marker))))
+    
+    (while worklist
+      (let* ((el (car worklist))
+             (tree (elt el 0))
+             (prefix (elt el 1))
+             (marker (elt el 2)))
+        (setq worklist (cdr worklist))
+        (goto-char marker)
+        (set-marker marker nil)
+        (unless prefix (setq prefix (tree-edit-compute-prefix tree)))
+        (let ((start (point-marker)))
 
-     ((tree-node-property tree 'prune)
-      (save-excursion (forward-char -1) (insert-before-markers " [...]")))
+          ;; Insert the tree item without prefixes
+          (set-tree-node->text-start tree (point-marker))
+          (insert (tree-node->text tree))
+          (insert "\n")
+          (set-tree-node->text-end tree (point-marker))
 
-     ((tree-node->children tree)
-      (let ((prefix (append prefix (list (tree-node-next-sibling tree)))))
-        (insert (tree-edit-prefix-string prefix))
-        (insert "|\n")
-        (mapcar (lambda (child) (tree-edit-draw child prefix t))
-                (tree-node->children tree))
-        (when (tree-node-next-sibling tree)
-          (insert (tree-edit-prefix-string prefix))
-          (insert "\n")))))
+          ;; We have inserted the item, so now insert the item header
+          ;; and prefixes for all following lines
 
-    (set-tree-node->start tree start)
-    (set-tree-node->end tree (point-marker))
-    (set-marker-insertion-type (tree-node->text-start tree) t)
-    (set-marker-insertion-type (tree-node->text-end tree) nil)
-    (set-marker-insertion-type (tree-node->start tree) t)
-    (set-marker-insertion-type (tree-node->end tree) nil)
-    (add-text-properties (tree-node->start tree)
-                         (tree-node->text-end tree)
-                         (list 'tree-node tree))
-    (add-text-properties (tree-node->start tree)
-                         (tree-node->end tree)
-                         (list 'tree tree))
-    (unless dont-adjust (tree-edit-adjust-markers (tree-node->parent tree)))
-    ))
+          (save-excursion
+            (goto-char (tree-node->text-start tree))
+            (if (tree-node-next-sibling tree)
+                (tree-edit-insert-part 'item-header tree prefix)
+              (tree-edit-insert-part 'last-item-header tree prefix))
+            (forward-line 1)
+
+            ;; From here on we need the prefix for children
+
+            (setq prefix (append prefix (list (tree-node-next-sibling tree))))
+
+            (when (tree-node-property tree 'hanging-indent)
+              (let* ((indent (tree-node-property tree 'hanging-indent))
+                     (extra-prefix (tree-edit-hanging-indent-prefix 
+                                    tree indent prefix)))
+                (while (< (point) (tree-node->text-end tree))
+                  (insert (tree-edit-prefix-string prefix))
+                  (insert extra-prefix)
+                  (forward-line 1)))))
+
+          (cond 
+           ((tree-node-property tree 'prune)
+            (save-excursion (forward-char -1) (insert-before-markers " [...]")))
+
+           ((tree-node->children tree)
+            (tree-edit-insert-part 'before-children tree prefix)
+            (mapcar (lambda (child) 
+                      (setq worklist (cons (list child prefix (point-marker))
+                                           worklist)))
+                    ;;                  (tree-edit-draw child prefix t))
+                    (tree-node->children tree))
+            (when (tree-node-next-sibling tree)
+              (tree-edit-insert-part 'after-children tree prefix))))
+
+          (set-tree-node->start tree start)
+          (set-tree-node->end tree (point-marker))
+          (set-marker-insertion-type (tree-node->text-start tree) t)
+          (set-marker-insertion-type (tree-node->text-end tree) nil)
+          (set-marker-insertion-type (tree-node->start tree) t)
+          (set-marker-insertion-type (tree-node->end tree) nil)
+          (add-text-properties (tree-node->start tree)
+                               (tree-node->text-end tree)
+                               (list 'tree-node tree))
+          (add-text-properties (tree-node->start tree)
+                               (tree-node->end tree)
+                               (list 'tree tree))
+          (unless dont-adjust (tree-edit-adjust-markers (tree-node->parent tree)))
+          )))))
 
 
 (defun tree-edit-delete-tree (tree)
@@ -774,14 +950,14 @@ level and make it the next sibling of its currrent parent."
 ;;; (local-set-key (kbd "C-c -") 'tree-edit-collapse)
 ;;; (local-set-key (kbd "C-c k") 'tree-edit-kill)
 ;;; (local-set-key (kbd "C-c y") 'tree-edit-yank)
-;;; (tree-edit-draw
-;;;  (setq foo (tree-edit-compile-tree '("and" nil and (("and" nil and (("a" (leaf t) a nil)
-;;;                                                             ("b" (leaf t) b nil)
-;;;                                                             ("or" nil or (("x" (leaf t) x nil)
-;;;                                                                           ("not" nil not (("z" (leaf t) z nil)))))
-;;;                                                             ("X" (leaf t) x nil)
-;;;                                                             ))
-;;;                                                 ("v" (leaf nil) v nil))))))
+(tree-edit-draw
+ (setq foo (tree-edit-compile-tree '("and" nil and (("and\nthis" nil and (("a" (leaf t) a nil)
+                                                            ("b" (leaf t) b nil)
+                                                            ("or" nil or (("x" (leaf t) x nil)
+                                                                          ("not" nil not (("z" (leaf t) z nil)))))
+                                                            ("X" (leaf t) x nil)
+                                                            ))
+                                                ("v" (leaf nil) v nil))))))
 ;;; +- and
 ;;;    |
 ;;;    +- and

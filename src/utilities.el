@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.110 2002-07-15 08:14:46 ceder Exp $
+;;;;; $Id: utilities.el,v 44.111 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.110 2002-07-15 08:14:46 ceder Exp $\n"))
+	      "$Id: utilities.el,v 44.111 2002-07-23 18:28:41 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -696,6 +696,8 @@ non-negative integer and 0 means the given text-no."
 (defvar lyskom-pick-text-no-strategy-alist
       '((kom-comment-previous . ((t   . lyskom-get-previous-text)
 				 (nil . lyskom-get-previous-text)))
+        (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
+                                        (nil . lyskom-get-previous-text)))
 	(t . ((t   . lyskom-get-text-at-point) ; default for prompts
 	      (nil . lyskom-get-text-at-point) ; no prefix arg
 	      (0   . lyskom-prompt-for-text-no)
@@ -790,59 +792,62 @@ its first argument and remaining list items appended to the argument list."
 	(constraint-func constraint)
 	(constraint-args '())
 	(text-no nil))
-    (if (and (null current-prefix-arg)
-	     (or always-prompt
-		 (lyskom-read-text-no-prompt-p lyskom-current-command)))
-	(lyskom-read-number prompt default)
-      (when (listp constraint)
-	(setq constraint-func (car constraint))
-	(setq constraint-args (cdr constraint)))
-      (let* ((strategies lyskom-pick-text-no-strategy-alist)
-	     (how (append (cdr (assq lyskom-current-command strategies))
-			  (cdr (assq t strategies)))))
-	(while (and how (null text-no))
-	  (let* ((strategy-pred nil) ;; when a predicate to test the prefix
-		 (compare-value nil) ;; when a value to compare the prefix to
-		 (applies-p (caar how)) ;; either one of the above
-		 (what-text (cdar how))
-		 (constraint-not-met nil))
-	    (if (or (eq applies-p '-) (not (functionp applies-p)))
-		(setq compare-value applies-p)
-	      (setq strategy-pred applies-p))
-	    
-	    (cond
-	     ((eq compare-value t) ;; provided a default value for the prompt
-	      (let ((new-default (lyskom-evaluate-text-no-strategy
-				  what-text prompt default constraint)))
-		(when (and (lyskom-plusp new-default))
-		  (setq default (or default new-default)))))
+    (when (listp constraint)
+      (setq constraint-func (car constraint))
+      (setq constraint-args (cdr constraint)))
+    (let* ((strategies lyskom-pick-text-no-strategy-alist)
+           (how (append (cdr (assq lyskom-current-command strategies))
+                        (cdr (assq t strategies)))))
+      (while (and how (null text-no))
+        (let* ((strategy-pred nil) ;; when a predicate to test the prefix
+               (compare-value nil) ;; when a value to compare the prefix to
+               (applies-p (caar how)) ;; either one of the above
+               (what-text (cdar how))
+               (constraint-not-met nil))
+          (if (or (eq applies-p '-) (not (functionp applies-p)))
+              (setq compare-value applies-p)
+            (setq strategy-pred applies-p))
 
-	     ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
-		  (and (functionp strategy-pred)
-		       (funcall strategy-pred current-prefix-arg)))
-	      (setq text-no (lyskom-evaluate-text-no-strategy
-			     what-text prompt default constraint))
-;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
-;				     compare-value strategy-pred text-no))
-	      (when (and (not (stringp text-no)) text-no constraint)
-		(setq constraint-not-met
-		      (apply constraint-func text-no constraint-args))
-		(when constraint-not-met
-		  (lyskom-format-insert constraint-not-met text-no)
-		  (lyskom-format-insert
-		   (lyskom-get-string 'prefix-arg-try-again))
-		  (setq text-no (lyskom-read-number prompt default))))))
-	    (setq how (cdr how)))))
-      (cond
-       ((stringp text-no) ;; a strategy failure error message
-	(lyskom-error text-no))
-       ((and (lyskom-plusp text-no)) ;; a proper text-no
-	text-no)
-       ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
-	(lyskom-read-number prompt default))
-       (t
-	(lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-		      current-prefix-arg))))))
+          (cond
+           ((eq compare-value t) ;; provided a default value for the prompt
+            (let ((new-default (lyskom-evaluate-text-no-strategy
+                                what-text prompt default constraint)))
+              (when (and (lyskom-plusp new-default))
+                (setq default (or default new-default)))))
+
+           ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
+                (and (functionp strategy-pred)
+                     (funcall strategy-pred current-prefix-arg)))
+            (setq text-no (lyskom-evaluate-text-no-strategy
+                           what-text prompt default constraint))
+                                        ;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
+                                        ;				     compare-value strategy-pred text-no))
+            (when (and (not (stringp text-no)) text-no constraint)
+              (setq constraint-not-met
+                    (apply constraint-func text-no constraint-args))
+              (when constraint-not-met
+                (lyskom-format-insert constraint-not-met text-no)
+                (lyskom-format-insert
+                 (lyskom-get-string 'prefix-arg-try-again))
+                (setq text-no (lyskom-read-number prompt default))))))
+          (setq how (cdr how)))))
+    (cond
+     ((stringp text-no) ;; a strategy failure error message
+      (lyskom-error text-no))
+     ((and (null current-prefix-arg)
+           (or always-prompt
+               (lyskom-read-text-no-prompt-p lyskom-current-command)))
+      (lyskom-read-number prompt 
+                          (if (lyskom-plusp text-no) 
+                              text-no
+                            (lyskom-default-value 'lyskom-current-text))))
+     ((and (lyskom-plusp text-no)) ;; a proper text-no
+      text-no)
+     ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
+      (lyskom-read-number prompt default))
+     (t
+      (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+                    current-prefix-arg)))))
 
 (defun lyskom-evaluate-text-no-strategy (strategy prompt default constraint)
   (let ((prefix current-prefix-arg)

@@ -1,3 +1,59 @@
+2002-07-23  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-rest.el (lyskom-limited-make-overlay): New function
+	limits the number of overlays created.
+	(lyskom-special-insert-overlay): Use it.
+	(lyskom-format-insert-overlays): Use it.
+
+	* vars.el.in (kom-max-overlays): New variable.
+	(lyskom-overlay-pool): New variable.
+
+2002-07-22  David Byers  <david.byers@swipnet.se>
+
+	* mime.el (lyskom-mime-string-charset): Smarter selection of
+	coding system for Gnu Emacs. We still use our list whenever
+	possible, but if we can't find a coding system, we fall back on
+	Emacs' list of coding systems. Not done for XEmacs (yet).
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Prompt only after
+	computing a suitable default. That way we get a default value in
+	the prompt (which is a good thing).
+
+2002-07-21  David Byers  <david.byers@swipnet.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Support
+	recipient type in send-comments-to.
+
+2002-07-20  David Byers  <david.byers@swipnet.se>
+
+	* english-strings.el,swedish-strings.el: Add "Mozilla" in all
+	places where we say "Netscape".
+
+	* vars.el.in (kom-netscape-command): Clarify that mozilla and
+	netscape use the same settings.
+	(kom-url-managers): Say "Mozilla" in netscape manager.
+
+2002-07-18  David Byers  <david.byers@swipnet.se>
+
+	* tree-edit.el (tree-edit-compute-prefix): Made nonrecursive.
+	(tree-edit-compute-prefix-internal): Removed.
+	(tree-edit-adjust-markers): Made nonrecursive.
+	(tree-edit-draw): Made nonrecursive.
+
+	* vars.el.in (lyskom-text-buttons): Eliminate brackets and semis
+	at end of URLs.
+
+	* utilities.el (lyskom-pick-text-no-strategy-alist): Correct
+	strategy for kom-private-answer-previous.
+
+2002-06-30  David Byers  <david.byers@swipnet.se>
+
+	Temporary fix:
+	* commands1.el (lyskom-list-pers-print): Allocate five characters
+	for person numbers.
+	(lyskom-list-created-conferences-2): Same.
+	(kom-list-re): Same.
+
 2002-07-16  Johan Sundström  <jhs@lysator.liu.se>
 
 	* lyskom-rest.el (kom-go-to-next-conf): Treat prefix arguments as

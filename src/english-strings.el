@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.223 2002-07-11 14:25:54 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.224 2002-07-23 18:28:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.223 2002-07-11 14:25:54 jhs Exp $"))
+              "$Id: english-strings.el,v 44.224 2002-07-23 18:28:40 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1794,6 +1794,7 @@ have been removed, you can fix the problem by giving the command
 
     (keyboard-cancel . "Cancel")
     (keyboard-menu-help . "(choose: C-n, C-p; confirm: RET)")
+    (customize-help . "See the beginning of the buffer for more information")
     ))
 
 
@@ -1902,7 +1903,7 @@ have been removed, you can fix the problem by giving the command
     (kom-review-all-marked-texts . "Review all marked (texts)")
     (kom-add-recipient        . "Add recipient")
     (kom-add-copy             . "Add (recipient of) carbon copy")
-    (kom-add-bcc	      . "Addera (recipient of) blind carbon copy")
+    (kom-add-bcc	      . "Add (recipient of) blind carbon copy")
     (kom-sub-recipient        . "Remove recipient")
     (kom-move-text            . "Move text")
     (kom-move-text-tree       . "Move tree")
@@ -2632,8 +2633,8 @@ Select whether to execute command or keyboard macro.")
     (viewer-program . "Web browser")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (all)")
-    (netscape-viewer . "Netscape Navigator (all)")
-    (windows-viewer       . "Windows default or Netscape (all)")
+    (netscape-viewer . "Netscape/Mozilla (all)")
+    (windows-viewer       . "Windows default or Netscape/Mozilla (all)")
     (emacs-w3-viewer . "Emacs W3 mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer . "Emacs Dired (FTP)")
@@ -3280,7 +3281,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This setting specifies the command to use to start NCSA Mosaic.")
 
     (kom-netscape-command-doc . "\
-  This setting specifies the command to use to start Netscape.")
+  This setting specifies the command to use to start Netscape or Mozilla.")
 
     (kom-galeon-command-doc . "\
   This setting specifies the command to use to start Galeon.")
@@ -3686,7 +3687,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-windows-browser-command-tag . "Command to start a web browser on Windows:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
-    (kom-netscape-command-tag . "Command to start Netscape Navigator:")
+    (kom-netscape-command-tag . "Command to start Netscape/Mozilla:")
     (kom-galeon-command-tag . "Command to start Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symbolic mark types:")

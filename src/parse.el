@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.41 2002-06-02 15:12:51 byers Exp $
+;;;;; $Id: parse.el,v 44.42 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.41 2002-06-02 15:12:51 byers Exp $\n"))
+	      "$Id: parse.el,v 44.42 2002-07-23 18:28:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1229,7 +1229,8 @@ functions and variables that are connected with the lyskom-buffer."
                (signal 'lyskom-protocol-error err))
               (lyskom-parse-incomplete (signal (car err) (cdr err)))
               (error (delete-region (point-min) lyskom-parse-pos)
-                     (signal (car err) (cdr err))))
+                     (signal (car err) (cdr err)))
+)
             (goto-char (point-min))
             (if (looking-at "[ \n]+")
                 (delete-region (match-beginning 0) (match-end 0)))

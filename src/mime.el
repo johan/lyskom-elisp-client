@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.6 2002-06-09 21:47:16 byers Exp $
+;;;;; $Id: mime.el,v 44.7 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.6 2002-06-09 21:47:16 byers Exp $\n"))
+	      "$Id: mime.el,v 44.7 2002-07-23 18:28:41 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -66,14 +66,23 @@
 
 
 (defun lyskom-mime-string-charset (data)
-  (let ((cs (find-charset-string data))
-        (tmp lyskom-charset-alist)
-        (system lyskom-server-coding-system))
-    (while (and tmp cs)
-      (if (lyskom-subset-p cs (car (car tmp)))
-          (setq system (cdr (car tmp)) tmp nil)
-        (setq tmp (cdr tmp))))
-    system))
+  (let* ((cs (find-charset-string data))
+         (tmp lyskom-charset-alist)
+         (best-guess (let ((system nil))
+                       (while (and tmp cs)
+                         (if (lyskom-subset-p cs (car (car tmp)))
+                             (setq system (cdr (car tmp)) tmp nil)
+                           (setq tmp (cdr tmp))))
+                       system)))
+    (or
+     best-guess
+     (lyskom-xemacs-or-gnu
+      lyskom-server-coding-system
+      (let ((coding (find-coding-systems-for-charsets cs)))
+        (while (null (coding-system-get (car coding) 'mime-charset))
+          (setq coding (cdr coding)))
+        (coding-system-get (car coding) 'mime-charset)))
+    lyskom-server-coding-system)))
 
 (defun lyskom-mime-charset-coding-system (charset)
   (condition-case nil
