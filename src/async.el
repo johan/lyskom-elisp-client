@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 41.4 1996-07-23 13:16:34 byers Exp $
+;;;;; $Id: async.el,v 41.5 1996-08-01 23:45:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 41.4 1996-07-23 13:16:34 byers Exp $\n"))
+	      "$Id: async.el,v 41.5 1996-08-01 23:45:29 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -405,14 +405,7 @@ converted, before insertion."
   "Print a message if the user was waiting. Change the prompt. run hooks."
   (if (and (not lyskom-dont-change-prompt) ;We shall change it
 	   (not lyskom-executing-command)) ;We have time to do it.
-      ;; Alter the prompt.
-      (let ((buffer-read-only nil))
-	(save-excursion
-	 (goto-char (point-max))
-	 (beginning-of-line)
-	 (delete-region (point) (point-max)))
-	(lyskom-run 'async 'lyskom-print-prompt)))
-
+	(lyskom-update-prompt))
 
   (let ((no-message nil))
     (run-hooks 'lyskom-new-text-hook)

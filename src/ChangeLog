@@ -1,6 +1,33 @@
+Fri Aug  2 00:00:23 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Ersatte
+ 	lyskom-print-prompt, och fick en omskrivning, så att den inte
+ 	uppdaterar prompten om det inte behövs.
+	(lyskom-start-of-command): Justerad därefter.
+	(lyskom-end-of-command): Dito.
+
+	* vars.el.in (lyskom-current-prompt): Ersatte lyskom-no-prompt.
+
+	* lyskom-rest.el (lyskom-prefetch-and-print-prompt): Justerad
+ 	därefter.
+	
+	* startup.el (lyskom-clear-vars): Dito.
+
+	* lyskom-rest.el (lyskom-update-prompt): Bytte namn från
+ 	lyskom-print-prompt.
+	(lyskom-prefetch-and-print-prompt): Justerad därefter.
+
+	* async.el (lyskom-default-new-text-hook): Ta inte bort
+ 	prompten. Låt lyskom-update-prompt göra det själv istället.
+
 Thu Aug  1 22:33:32 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* async.el (lyskom-default-new-text-hook): Använd
+ 	inhibit-read-only istället för buffer-read-only.
+	(lyskom-default-new-text-hook): Gör inte (lyskom-run 'async ...)
+
 	* lyskom-rest.el (lyskom-insert-before-prompt): Skrev om.
+	(kom-page-next-command): Hoppa till slutet först, om det syns.
 
 Wed Jul 31 10:11:01 1996  David Byers  <davby@sen2.ida.liu.se>
 
