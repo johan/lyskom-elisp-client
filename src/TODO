@@ -42,6 +42,9 @@ Buggar
 
 Allmänna förbättringar
 
+    När man skickar in en kommentar borde klienten kolla att inga nya
+    kommentarer till texten har skrivits under tiden.
+
     Inför en membership-cache.
 
     Skriv inte ut stora fonoter på en gång.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.9 1996-08-06 21:33:58 davidk Exp $
+;;;;; $Id: services.el,v 41.10 1996-08-07 09:10:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.9 1996-08-06 21:33:58 davidk Exp $\n"))
+	      "$Id: services.el,v 41.10 1996-08-07 09:10:07 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -747,6 +747,21 @@ Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
   (lyskom-send-packet kom-queue
 		      (lyskom-format-objects 40 conf-no no-of-unread))))
+
+(defun initiate-accept-async (kom-queue handler list &rest data)
+  "Request asynchronous messages in LIST
+Args: KOM-QUEUE HANDLER LIST &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 80
+                                                       (cons 'LIST
+                                                             list))))
+
+(defun initiate-query-async (kom-queue handler &rest data)
+  "Request information on which async messages are being sent.
+Args: KOM-QUEUE HANDLER &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data 
+               'lyskom-parse-number-array)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 81)))
                                  
 
 
