@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 35.2 1991-09-15 10:06:09 linus Exp $
+;;;;; $Id: completing-read.el,v 35.3 1991-11-27 22:24:06 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 35.2 1991-09-15 10:06:09 linus Exp $\n"))
+	      "$Id: completing-read.el,v 35.3 1991-11-27 22:24:06 ceder Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -258,7 +258,7 @@ When C-G is pressed then lyskom-end-of-command is evaled."
 
 ;;; The problem:
 ;;;    When getting a list of possible completions, C-M-v scrolls
-;;;    the wrong window (the LysKOM buffer in stead of the
+;;;    the wrong window (the LysKOM buffer instead of the
 ;;;    *Completions* buffer, as from M-x and other commands).
 
 ;;; Cause:
@@ -288,7 +288,6 @@ When C-G is pressed then lyskom-end-of-command is evaled."
   (setq minibuffer-scroll-window
 	(and completion-buffer
 	     (get-buffer-window completion-buffer)))
-  (setq foo minibuffer-scroll-window)
   (use-local-map lyskom-completing-map)
   (setq unread-command-char last-command-char))
 
