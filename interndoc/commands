@@ -1,0 +1,214 @@
+
+
+                       DEFINING LYSKOM COMMANDS
+                             David Byers
+
+
+    This file describes how to define user-level LysKOM commands.
+    Every developer should know this.
+
+
+    User-level commands are normally defined using def-kom-command or
+    def-kom-emacs command. They take care of housekeeping required for 
+    LysKOM commands.
+
+
+
+    DEFINING A COMMAND: STEP-BY-STEP GUIDE
+    -----------------------------------------------------------------------
+
+    Write the function in the appropriate file (lyskom-rest.el is
+    never the appropriate file). If the command only makes sense in a
+    LysKOM session, use def-kom-command. If the command might make
+    sense in a regular buffer (such as kom-next-kom) use
+    def-kom-emacs-command instead.
+
+    Test the command.
+
+    Add the command to lyskom-commands in vars.el.in. This is a list
+    of all commands available in non-privileged mode. If the command
+    should be unavailable in non-privileged mode (for example
+    kom-sync-database), add it to lyskom-noadmin-removed-commands. If
+    it should be unavailable in privileged mode, add it to
+    lyskom-admin-removed-commands (such as kom-enable-adm-caps).
+
+    Add the command and its name to the lyskom-command string list in
+    swedish-strings.el and in english-strings.el (and of course in
+    hindi-strings.el if you have one).
+
+    You're done.
+
+
+
+    VARIABLES    
+    -----------------------------------------------------------------------
+
+    If you use def-kom-command or def-kom-emacs-command, the following 
+    variables are bound automatically. Sometimes they are useful.
+
+    lyskom-current-command
+
+    Bound to the name (a symbol) of the command that is currently
+    executing. If a command is not executing it is unbound. Don't use
+    this in code shared between handlers for asynchronous messages
+    and commands, since the variable might be bound even if the code
+    is called by the async message handler rather than the command
+    (the user may be executing the command and a message may come in
+    at the same time).
+
+    If you think you need to use this variable, think again. You
+    probably don't.
+
+
+    lyskom-executing-command
+
+    Non-nil if the client is currently executing a command (i.e. if
+    lyskom-start-of-command has been called but lyskom-end-of-command
+    has not been called).
+
+
+    COMMAND-start-buffer
+
+    The buffer in which the command was started. COMMAND is actually
+    the name of the command (so the variable name would in reality be
+    something like kom-write-text-start-buffer).
+
+
+    COMMAND-running-as-kom-command
+
+    This is only bound if you use def-kom-emacs-command. If you use
+    def-kom-command it will not be bound. If this is non-nil, a
+    function defined as a LysKOM or Emacs command is running as a
+    LysKOM command (i.e. lyskom-start-of-command has been called).
+    COMMAND is actually the name of the command, so the variable would
+    be named something like kom-next-kom-running-as-kom-command.
+
+
+
+
+    STRUCTURE OF A LYSKOM COMMAND
+    -----------------------------------------------------------------------
+
+    All user-level command follow a similar pattern. This is
+    implemented by def-kom-command and def-kom-emacs command, but it
+    is useful to know what and why.
+
+
+    The structure created by def-kom-command looks like this:
+
+        (defun command ()
+          "Documentation"
+          (interactive)
+          (lyskom-start-of-command 'command)
+          (let ((command-start-buffer (current-buffer)))
+             (unwind-protect
+                (condition-case nil
+                    ;; Body
+                  (quit (ding)
+                        (lyskom-insert-before-prompt 
+                                  (lyskom-get-string 'interrupted))))
+                (lyskom-save-excursion
+                  (when (buffer-live-p command-start-buffer)
+                     (set-buffer command-start-buffer)
+                     (lyskom-end-of-command)))))
+
+    Step-by-step then...
+
+    (lyskom-start-of-command 'command)
+    
+    This starts the command. The parameter is the command symbol (same
+    as in defun).
+
+    (let ((command-start-buffer (current-buffer))) ...)
+
+    Save the current buffer. This is needed when finishing the command 
+    since the command may switch to another buffer. The symbol bound
+    to the current buffer is COMMAND-start-buffer, where COMMAND is
+    the function name.
+
+    (unwind-protect ... (lyskom-save-excursion ...))
+
+    Ensure that lyskom-end-of-command is called no matter how the
+    command is terminated. Also make sure that lyskom-end-of-command
+    is executed in the same buffer that the command was started in (if 
+    it still exists).
+
+    (condition-case nil ... (quit ...))
+
+    If the user interrupts the command with C-g, beep and print a
+    message since this is not done elsewhere.
+
+
+    The structure created by def-kom-emacs-command is slightly
+    different. It looks like this:
+
+        (defun command ()
+          "Documentation"
+          (interactive)
+          (let ((command-running-as-kom-command nil))
+            (condition-case nil
+                (progn (lyskom-start-of-command 'command)
+                       (setq command-running-as-kom-command))
+              (error nil))
+        
+            (let ((command-start-buffer (current-buffer)))
+               (unwind-protect
+                  (condition-case nil
+                      ;; Body
+                    (quit (ding)
+                          (lyskom-insert-before-prompt 
+                              (lyskom-get-string 'interrupted)))) 
+                  (and command-running-as-kom-command
+                       (lyskom-save-excursion
+                         (when (buffer-live-p command-start-buffer)
+                           (set-buffer command-start-buffer)
+                           (lyskom-end-of-command))))))))
+
+
+    Let's walk through this step-by-step too...
+
+
+    (let ((command-running-as-kom-command nil)) ...)
+
+    The variable command-running-as-kom-command specifies if the
+    command is running as a LysKOM command or as an Emacs command. It
+    is initially set to nil.
+
+    (condition-case nil ... (error nil))
+
+    This tries to do lyskom-start-of-command and then sets
+    command-running-as-kom-command to t, but if this causes an error
+    (a command is already executing or the current buffer is not a
+    LysKOM buffer), command-running-as-kom-command will not be set.
+    The error is ignored. This is the bit that checks if we can run as 
+    a LysKOM command or not.
+
+    (let ((command-start-buffer ...)) ...)
+
+    This bit is like def-kom-command, but lyskom-end-of-command is
+    only called if command-running-as-kom-command if non-nil.
+
+
+
+    STARTING AND ENDING COMMANDS
+    -----------------------------------------------------------------------
+
+    All command must start with lyskom-start-of-command and end with
+    lyskom-end-of-command. The current buffer must be the same in both 
+    cases. These functions are housekeeping functions that *must* be
+    executed for each command, or the client will probably stop
+    working.
+
+    lyskom-start-of-command does some basic error checking to make
+    sure that LysKOM is active, terminates the wait command (if
+    active), inserts the command name in the buffer, modifies the
+    prompt, updates the mode line, sets parameters for scrolling, sets
+    some internal variables (more later) and runs hooks.
+
+    lyskom-end-of-command clears the minibuffer, cleans the buffer
+    lists (removing dead sessions from the list of sessions, sessions
+    with no unreads and so on). It prints any messages queued to be
+    printed before the prompt, scrolls the buffer, updates the mode
+    line, runs the prefetch, runs after-command hooks, sends an
+    is-active message to the server, discards typeahead (if requested
+    to), runs commands that are queued to run automatically.

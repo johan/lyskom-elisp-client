@@ -165,11 +165,9 @@
     The low-level code depends on kill-buffer-query-functions and
     kill-buffer-hooks. If you modify these, make sure you do *not*
     remove the functions added by these low-level functions.
+    
 
-
-    MID-LEVEL FUNCTIONS
-
-    The mid-level functions handle LysKOM buffer categories. The code
+    The following functions handle LysKOM buffer categories. The code
     is fairly independent of the elisp client itself. You should not
     have to call these functions directly since they are called for
     you when you create or remove buffers.
