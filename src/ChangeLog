@@ -1,3 +1,28 @@
+Sun May 26 03:01:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-strings): La in en radbrytning i
+ 	message-from-to.
+
+	* english-strings.el (lyskom-strings): Dito.
+
+Fri May 24 03:24:37 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-send-message): Skriv ut vart meddelandet
+ 	skickas.
+
+Wed May 22 06:27:46 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (lyskom-update-lyskom-buffer-list): Satte in nya
+	buffertar på fel ställe ibland.
+
+Tue May 21 23:45:56 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-status-conf): Fråga om medlemslistan ska vara
+	snabb eller fullständig (ungefär).
+
+	* swedish-strings.el (lyskom-strings): La till strängen
+ 	show-membership-info-q.
+
 Mon May 20 11:29:39 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands2.el: En bunt ändringar från Bellman.

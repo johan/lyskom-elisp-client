@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.6 1996-05-20 16:28:47 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.7 1996-05-27 20:35:52 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.6 1996-05-20 16:28:47 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.7 1996-05-27 20:35:52 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -396,6 +396,7 @@ i svensk datorhistoria. L\344s mer på http://www.lysator.liu.se/history/")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan ocks\345? ")
+    (show-membership-info-q . "Visa antalet olästa? ")
     (conf-has-these-members . "\n%#1M har f\366ljande medlemmar:\n")
     (member-list-header . "Senast inne         Osett  Namn\n\n")
     (secret-membership . "*** Hemlig rad ***\n")
@@ -444,6 +445,8 @@ Ditt allm\344nna meddelande l\366d:
 %#1t
 ----------------------------------------------------------------
 ")
+    (message-all-info . "S\344nd allm\345nt meddelande\n")
+    (message-recipient-info . "S\344nd meddelande till %#1M\n")
     (message-nope .
   "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
 Meddelandet du f\366rs\366kte s\344nda till %#1M var:
@@ -683,7 +686,7 @@ Personligt meddelande fr\345n %#1P (%#3s):
 ")
     (message-from-to .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
+Gruppmeddelande till %#3M\nfr\345n %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------

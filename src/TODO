@@ -39,6 +39,9 @@ Buggar
 
 Allmänna förbättringar
 
+    Definiera faces när man startar klienten istället för när den
+    laddas.
+
     Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
     ett inläggs eget nummer, alltså det som står precis innan datumet
     och det som står inom parentesen precis efter inläggstexten, så
