@@ -1,5 +1,14 @@
 2004-01-01  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1237:
+	* vars.el.in (lyskom-commands-not-in-menu): New variable.
+
+	* check-strings.el (lyskom-check-strings): Check main menu to
+	ensure that all commands are in menus.
+	(lcs-check-menu-template): New function.
+	(lcs-extract-commands-from-menu-template): New function.
+
+	Improve display of accelerators in menus:
 	* menus.el (lyskom-define-menu-xemacs): Try to use swedish
 	characters rather than brackets and braces for bindings that have
 	both.
