@@ -1,3 +1,12 @@
+Thu Aug  8 12:33:03 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
+ 	till no-changes.
+
+	* flags.el (kom-edit-options-send): Bugga inte ur om inga
+ 	ändringar har gjorts genom att sätta bufferten rätt. Fixade en
+ 	kosmesisk bug som dök upp när den riktiga blev rättad.
+
 Wed Aug  7 20:35:59 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Makefile: Förbättrade ännu mer.
