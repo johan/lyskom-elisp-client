@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.197 2003-12-07 16:38:50 byers Exp $
+;;;;; $Id: commands2.el,v 44.198 2003-12-16 21:26:25 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.197 2003-12-07 16:38:50 byers Exp $\n"))
+              "$Id: commands2.el,v 44.198 2003-12-16 21:26:25 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2176,8 +2176,8 @@ the exception of the letterbox flag (which cannot be modified)."
 
 (def-kom-command kom-change-language (&optional global)
   "Change the current language in the current LysKOM session.
-Also changes key bindings in all sessions, unless given an
-integer prefix argument.
+With a prefix argument, also make changes that would affect all 
+sessions, such as key bindings.
 
 The selected language is not saved between sessions. To permanently
 set and save language settings. use `kom-customize' instead.
@@ -2185,7 +2185,7 @@ set and save language settings. use `kom-customize' instead.
 See `kom-default-language'.
 
 Lisp documentation:
-If the optional argument GLOBAL is 0, the change will have a
+The optional argument GLOBAL indicates that the change should have a
 global effect, including changes to key binding."
   (interactive "P")
   (let* ((completion-ignore-case t)
@@ -2199,7 +2199,7 @@ global effect, including changes to key binding."
                     'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table)) 'local)
-      (when (listp global)
+      (when global
         (lyskom-set-language (cdr (lyskom-string-assoc language table)) 'global))
 
       (lyskom-format-insert 
