@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.42 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: command.el,v 44.43 2002-06-23 11:34:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.42 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: command.el,v 44.43 2002-06-23 11:34:55 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -189,6 +189,8 @@
 
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
+  (when (vectorp alternative) 
+    (setq alternative (cons (elt alternative 0) (elt alternative 1))))
   (if administrator
       (not (memq (cdr alternative) lyskom-admin-removed-commands))
     (not (memq (cdr alternative) lyskom-noadmin-removed-commands))))
@@ -200,6 +202,22 @@
     (cond
      (fnc (call-interactively fnc))
      (t (kom-next-command)))) )
+
+(defvar lyskom-command-minibuffer-local-completion-map
+  (let ((map (copy-keymap minibuffer-local-completion-map)))
+    (define-key map " " (lookup-key map (kbd "TAB")))
+    map)
+  "Keymap used for reading LysKOM names.")
+
+(defvar lyskom-command-minibuffer-local-must-match-map
+  (let ((map (copy-keymap minibuffer-local-must-match-map)))
+    (lyskom-xemacs-or-gnu 
+     (progn (set-keymap-parent map lyskom-minibuffer-local-completion-map)
+	    (define-key map " " 
+	      (lookup-key lyskom-minibuffer-local-completion-map (kbd "TAB"))))
+     (define-key map " " (lookup-key map (kbd "TAB"))))
+    map)
+  "Keymap used for reading LysKOM names.")
 
 (defun lyskom-read-extended-command (&optional prefix-arg prompt)
   "Reads and returns a command"
@@ -229,18 +247,23 @@
                      (concat prefix-text base-prompt)
                    base-prompt)))
 
-    (lyskom-with-lyskom-minibuffer
-     (setq name (lyskom-completing-read prompt
-                                        (lyskom-maybe-frob-completion-table
-                                         alternatives)
-                                        ;; lyskom-is-administrator is buffer-local and
-                                        ;; must be evalled before the call to 
-                                        ;; completing-read
-                                        ;; Yes, this is not beautiful
-                                        (list 'lambda '(alternative)	     
-                                              (list 'lyskom-ok-command 'alternative
-                                                    lyskom-is-administrator))
-                                        t nil 'lyskom-command-history)))
+    (let ((minibuffer-local-completion-map 
+           lyskom-command-minibuffer-local-completion-map)
+          (minibuffer-local-must-match-map 
+           lyskom-command-minibuffer-local-must-match-map))
+      (lyskom-with-lyskom-minibuffer
+       (setq name (lyskom-completing-read prompt
+                                          'lyskom-complete-command
+                                        ;                                        (lyskom-maybe-frob-completion-table
+                                        ;                                         alternatives)
+                                          ;; lyskom-is-administrator is buffer-local and
+                                          ;; must be evalled before the call to 
+                                          ;; completing-read
+                                          ;; Yes, this is not beautiful
+                                          (list 'lambda '(alternative)	     
+                                                (list 'lyskom-ok-command 'alternative
+                                                      lyskom-is-administrator))
+                                          t nil 'lyskom-command-history))))
     (cdr (lyskom-string-assoc name alternatives))))
 
 
