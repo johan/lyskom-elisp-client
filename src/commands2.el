@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.187 2003-08-24 21:12:44 byers Exp $
+;;;;; $Id: commands2.el,v 44.188 2003-08-25 09:10:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.187 2003-08-24 21:12:44 byers Exp $\n"))
+              "$Id: commands2.el,v 44.188 2003-08-25 09:10:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -593,25 +593,25 @@ This command accepts text number prefix arguments \(see
 
 
 (defun lyskom-default-conference-for-send-message (&rest args)
-  (list
-   (cond
-    ((eq kom-default-message-recipient 'everybody) nil)
-    ((and (eq kom-default-message-recipient 'group)
-          lyskom-last-group-message-recipient)
-     lyskom-last-group-message-recipient)
-    ((or (and (eq kom-default-message-recipient 'group)
-              (null lyskom-last-group-message-recipient))
-         (and (eq kom-default-message-recipient 'sender)
-              lyskom-last-personal-message-sender))
-     lyskom-last-personal-message-sender)
-    ((and (eq kom-default-message-recipient 'last-recipient)
-          lyskom-last-message-recipient
-          (not (eq 0 lyskom-last-message-recipient))
-          lyskom-last-message-recipient))
-    (t
-     (if lyskom-last-personal-message-sender
-         lyskom-last-personal-message-sender
-       nil)))))
+  (let ((tmp (cond
+              ((eq kom-default-message-recipient 'everybody) nil)
+              ((and (eq kom-default-message-recipient 'group)
+                    lyskom-last-group-message-recipient)
+               lyskom-last-group-message-recipient)
+              ((or (and (eq kom-default-message-recipient 'group)
+                        (null lyskom-last-group-message-recipient))
+                   (and (eq kom-default-message-recipient 'sender)
+                        lyskom-last-personal-message-sender))
+               lyskom-last-personal-message-sender)
+              ((and (eq kom-default-message-recipient 'last-recipient)
+                    lyskom-last-message-recipient
+                    (not (eq 0 lyskom-last-message-recipient))
+                    lyskom-last-message-recipient))
+              (t
+               (if lyskom-last-personal-message-sender
+                   lyskom-last-personal-message-sender
+                 nil)))))
+    (and tmp (list tmp))))
 
 (def-kom-command kom-send-message (&optional who message)
   "Send a message to another user or all members of a conference.

@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.110 2003-08-24 18:41:35 byers Exp $
+# $Id: Makefile,v 44.111 2003-08-25 09:10:57 byers Exp $
 
 # Useful targets:
 #
@@ -44,7 +44,7 @@ CLIENTVERSION = 0.47.1
 EMACS = xemacs
 
 # The available languages.
-LANGUAGES = english swedish
+LANGUAGES = swedish english
 
 # These files are included in all distribution archives.
 DOCFILES = ../doc/NEWS-0.47 ../doc/NEWS-0.47.1
