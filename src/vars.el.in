@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.294 2004-06-23 18:24:29 byers Exp $
+;;;;; $Id: vars.el.in,v 44.295 2004-06-26 13:32:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.294 2004-06-23 18:24:29 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.295 2004-06-26 13:32:33 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4517,25 +4517,6 @@ the order of this list.")
                                             REVIEW-FAQ-TREE))
 
 ;;; ============================================================
-
-(defvar lyskom-swedish-bindings 
-  `((å . (aring Aring ,(elt (kbd "å") 0) ,(elt (kbd "Å") 0)
-                   å Å 229 197 2277 2245 3909 3941))
-    (ä . (adiaeresis Adiaeresis ,(elt (kbd "ä") 0) ,(elt (kbd "Ä") 0)
-                        ä Ä 228 196 2276 2244 3908 3940)))
-  "Hack to deal with binding swedish characters")
-
-(defvar lyskom-swedish-bindings-reverse
-  (let ((tmp nil)
-        (seq lyskom-swedish-bindings))
-    (while seq
-      (let ((el (car seq)))
-        (setq tmp (nconc tmp (mapcar (lambda (x)
-                                       (cons x (car el)))
-                                     (cdr el)))))
-      (setq seq (cdr seq)))
-    tmp)
-  "Hack to deal with binding swedish characters")
 
 
 (eval-and-compile (provide 'lyskom-vars))

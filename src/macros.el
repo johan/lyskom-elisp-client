@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.36 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: macros.el,v 44.37 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.36 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: macros.el,v 44.37 2004-06-26 13:32:32 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -236,28 +236,29 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
 
 
 (defmacro lyskom-end-of-compilation ()
-  (` 
-   (eval-when-compile
-     (progn
-       (if (and (boundp 'byte-compile-unresolved-functions)
-                (consp (car-safe byte-compile-unresolved-functions))
-                (symbolp (car-safe (car-safe 
-                                    byte-compile-unresolved-functions))))
-           (progn
-             (mapcar (function (lambda (x)
-                                 (setq byte-compile-unresolved-functions
-                                       (delq
-                                        (assq x
-                                              byte-compile-unresolved-functions)
-                                        byte-compile-unresolved-functions))))
-                     lyskom-expected-unresolved-functions)
-             ))
-       (if lyskom-compatibility-definitions
-           (message "Compatibility definitions: %s"
-                    (mapconcat '(lambda (sym)
-                                  (symbol-name sym))
-                               lyskom-compatibility-definitions
-                               ", ")))))))
+  `(progn 
+     (eval-when-compile
+       (progn
+         (if (and (boundp 'byte-compile-unresolved-functions)
+                  (consp (car-safe byte-compile-unresolved-functions))
+                  (symbolp (car-safe (car-safe 
+                                      byte-compile-unresolved-functions))))
+             (progn
+               (mapcar (function (lambda (x)
+                                   (setq byte-compile-unresolved-functions
+                                         (delq
+                                          (assq x
+                                                byte-compile-unresolved-functions)
+                                          byte-compile-unresolved-functions))))
+                       lyskom-expected-unresolved-functions)
+               ))
+
+         (if lyskom-compatibility-definitions
+             (message "Compatibility definitions: %s"
+                      (mapconcat '(lambda (sym)
+                                    (symbol-name sym))
+                                 lyskom-compatibility-definitions
+                                 ", ")))))))
 
 ;;; ============================================================
 ;;; Keymap handling

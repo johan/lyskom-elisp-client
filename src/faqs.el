@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.19 2003-12-05 00:04:21 byers Exp $
+;;;;; $Id: faqs.el,v 44.20 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.19 2003-12-05 00:04:21 byers Exp $\n"))
+              "$Id: faqs.el,v 44.20 2004-06-26 13:32:32 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -457,8 +457,7 @@ create a new FAQ."
     (when kom-auto-list-faqs
       (lyskom-format-insert 'unread-faqs-header (length faq-list) 
                             (and conf-stat (conf-stat->conf-no conf-stat)))
-      (lyskom-do-list-summary faq-list))
-
+      (lyskom-list-text-summary faq-list nil))
     (when kom-auto-review-faqs
       (lyskom-do-review-faq faq-list t))))
 
@@ -490,5 +489,5 @@ create a new FAQ."
          (lyskom-format-insert 'all-faqs-header 
                                (and conf-stat
                                     (conf-stat->conf-no conf-stat)))
-         (lyskom-do-list-summary faq-list))
+         (lyskom-list-text-summary faq-list nil))
         (t (lyskom-format-insert 'conf-has-no-faq conf-stat))))
