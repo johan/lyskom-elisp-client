@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.256 2002-06-22 18:07:46 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.257 2002-06-26 20:19:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.256 2002-06-22 18:07:46 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.257 2002-06-26 20:19:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1381,9 +1381,7 @@ Uppkopplad sedan %#8s%#9s")
     (doing-nowhere-conn . "men är")
     (waiting-for-membership . "Väntar på att medlemskapslistan ska läsas in...%d/%d")
 
-    (keyboard-menu-help . "Nästa: SPC  Föreg: DEL  Utför: RET  Avbryt: ESC")
-    
-	   ;; From slow.el
+    ;; From slow.el
     (no-such-command . "Det finns inget sådant kommando.\n")
     (command-completions . "Du kan mena någon av följande:\n %#1s\n")
     (which-language . "Ändra språk till: ")
@@ -1392,7 +1390,6 @@ Uppkopplad sedan %#8s%#9s")
     (language-set-to . "Språket är %#1_s.\n")
     (language-not-loaded . "%#1s finns inte tillgängligt.\n")
 
-;;    (reformat-generic . "(%#1s)")
     (reformat-html . "HTML")
     (reformat-enriched . "enriched")
     (reformat-filled . "ombruten")
@@ -1803,6 +1800,9 @@ kommandot \"Spara variabler\".\n\n")
     (ssh-cant-connect . "Kan inte göra ssh-uppkopplingen: %s")
     (ssh-closnig . "Stänger ssh-uppkopplingen till %#1s")
     (ssh-unknown-host . "okänd värd")
+
+    (keyboard-cancel . "Avbryt")
+    (keyboard-menu-help . "(välj: C-n, C-p; bekräfta: RET)")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -3644,6 +3644,10 @@ i servern. Annars sparas det i din .emacs.")
     (kom-format-html-authors-doc . "\
   Den här inställningen styr vilka författares HTML-meddelanden som
   elispklienten kommer att försöka formattera.")
+    (kom-keyboard-menu-immediate-selection-doc . "\
+  Den här inställningen styr huruvida snabbtangenter automatiskt bekräftar
+  val i textbaserade menyer eller inte. Om detta är påslaget så måste man
+  alltid trycka retur för att välja i textbaserade menyer.")
 
 
     ;;
@@ -3820,6 +3824,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-async-highlight-text-body-tag . "Annorlunda bakgrundsfärg på meddelanden:")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
+    (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
     )
 )
 
