@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.10 1999-10-09 16:54:40 byers Exp $
+;;;;; $Id: reading.el,v 44.11 1999-11-08 14:39:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.10 1999-10-09 16:54:40 byers Exp $\n"))
+	      "$Id: reading.el,v 44.11 1999-11-08 14:39:52 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -174,7 +174,7 @@ reasonable guess."
         ;; Both are confs of equal priority; check position in mship
         ((and (eq (read-info->type a) 'CONF) 
               (eq (read-info->type b) 'CONF))
-         (>= (lyskom-membership-position 
+         (< (lyskom-membership-position 
              (conf-stat->conf-no (read-info->conf-stat a)))
             (lyskom-membership-position 
              (conf-stat->conf-no (read-info->conf-stat b)))))

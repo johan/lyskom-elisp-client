@@ -3,6 +3,13 @@
 Att göra i elisp-klienten
 =========================
 
+Bli av med lyskom-is-parsing, gör parsern reentrant, installera
+reentrant blocking-do. Se över alla användningar av lyskom-wait-queue
+eftersom den just nu inte kan användas i svar på asynkront anrop.
+
+* Den parsade strängen måste bort innan man anropar callback-funktionen.
+
+
 Någon form at reply till importerade brev som använder mx-reply-to
 eller mx-to, mx-cc om de finns.
 
