@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.10 1993-08-09 11:32:33 linus Exp $
+;;;;; $Id: commands1.el,v 36.11 1993-08-11 09:48:09 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.10 1993-08-09 11:32:33 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.11 1993-08-11 09:48:09 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -729,7 +729,6 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
       (lyskom-tell-internat (if (eq type 'comment)
 				'kom-tell-write-comment
 			      'kom-tell-write-footnote))
-      (lyskom-collect 'edit)
       (let (data)
 	(mapcar 
 	 (function
@@ -744,8 +743,8 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
 		   (eq 'CC-RECPT (misc-info->type misc-info)))
 	      (setq ccrep (cons (misc-info->recipient-no misc-info) 
 				ccrep))
-	      (setq data (cons (bloking-do 'get-conf-stat
-					   (misc-info->recipient-no misc-info))
+	      (setq data (cons (blocking-do 'get-conf-stat
+					    (misc-info->recipient-no misc-info))
 			       data))))))
 	 (text-stat->misc-info-list text-stat))
 	(lyskom-comment-recipients data lyskom-proc text-stat
