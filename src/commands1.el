@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.120 2001-08-23 22:49:09 qha Exp $
+;;;;; $Id: commands1.el,v 44.121 2001-08-25 19:12:10 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.120 2001-08-23 22:49:09 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.121 2001-08-25 19:12:10 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3099,7 +3099,7 @@ Uses Protocol A version 9 calls"
 (defun lyskom-select-friends-from-who-list (who-list)
   "Returns a list of friends in WHO-LIST"
   (let ((result nil))
-    (while (not (endp who-list))
+    (while (not (null who-list))
       (when (memq (dynamic-session-info->person (car who-list))
 		  kom-friends)
 	(setq result (cons (car who-list) result)))
