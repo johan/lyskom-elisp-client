@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.4 1996-10-08 03:25:51 davidk Exp $
+;;;;; $Id: menus.el,v 44.5 1996-10-08 12:22:37 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -61,38 +61,53 @@
 		       (item kom-list-persons))))))
   "The menus used in LysKOM.")
 
-(defvar lyskom-menu-names
-  '((lyskom . "LysKOM")
-    (read . "Läs")
-    (dont-read . "Hoppa")
-    (write . "Skriv")
-    (move . "Gå")
-    (info . "Om"))
-  "The titles of the menus and submenus in LysKOM.")
+(defvar lyskom-edit-menus
+  '((menu lyskom
+	  ((menu send ((item kom-edit-send)
+		       (item kom-edit-send-anonymous)))
+	   (item kom-edit-quit)
+	   hline
+	   (menu recievers ((item kom-edit-add-recipient)
+			    (item kom-edit-add-copy)))
+	   (menu commented ((item kom-edit-show-commented)
+			    (item kom-edit-insert-commented))))))
+  "The menus for editing LysKOM messages.")
 
 (defvar lyskom-menu-map nil
-  "A keyamp describing the LysKOM top menu.")
+  "A keymap describing the LysKOM top menu.")
 
 (when (not lyskom-menu-map) 
   (setq lyskom-menu-map (make-sparse-keymap)))
 
+(defvar lyskom-edit-menu-map nil
+  "A keymap the LysKOM menu in the edit buffer.")
+
+(when (not lyskom-edit-menu-map)
+  (setq lyskom-edit-menu-map (make-sparse-keymap)))
 
 (defun lyskom-build-menus ()
+  "Create menus from according to LYSKOM-MENUS"
+  (interactive)
+  ;; Menu in lyskom-mode
   (define-key lyskom-mode-map [menu-bar]
     lyskom-menu-map)
   (define-key lyskom-mode-map [menu-bar edit]
     'undefined)
-  (lyskom-define-menu lyskom-menu-map lyskom-menus))
+  (lyskom-define-menu lyskom-menu-map lyskom-menus)
+  ;; Menu in lyskom-edit-mode
+  (define-key lyskom-edit-mode-map [menu-bar]
+    lyskom-edit-menu-map)
+  (lyskom-define-menu lyskom-edit-menu-map lyskom-edit-menus))
+  
 
 (defun lyskom-define-menu (map menus)
   (when menus
     (lyskom-define-menu map (cdr menus))
     (cond ((eq 'hline (car menus))
-	   ; ignore
-	   t)
+	   (define-key map [separator] '("--")))
 	  ((eq 'menu (car (car menus)))
 	   (let* ((symbol (car (cdr (car menus))))
-		  (name (lyskom-get-string symbol lyskom-menu-names))
+		  (name (lyskom-get-string symbol 'menu))
 		  (submenu (car (cdr (cdr (car menus)))))
 		  (submap (make-sparse-keymap name)))
 	     (define-key map (vector symbol)
@@ -100,7 +115,7 @@
 	     (lyskom-define-menu submap submenu)))
 	  ((eq 'item (car (car menus)))
 	   (let* ((symbol (car (cdr (car menus))))
-		  (name (lyskom-get-string symbol lyskom-commands)))
+		  (name (lyskom-get-string symbol 'menu)))
 	     (define-key map (vector symbol)
 	       (cons name symbol))))
 	  (t (error "Menu description invalid in lyskom-define-menu")))))
