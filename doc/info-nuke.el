@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: info-nuke.el,v 39.0 1996-03-14 18:15:11 davidk Exp $
+;;;;; $Id: info-nuke.el,v 40.0 1996-03-26 08:28:14 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

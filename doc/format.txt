@@ -75,17 +75,18 @@ c - Interpret and insert an integer as a single character.
 
 ] - Exit subformat. This directive does not use an argument.
 
-M - The argument must be a conf-stat or character string. The
-    directive inserts the name of the conference (or the character
-    string) and adds text properties as appropriate.
+M - The argument must be a conf-stat, conf-no or character string.
+    This directive inserts the name of the conference or the character
+    string. If the argument is a conf-stat or integer, text properties
+    appropriate for conferences are added.
 
 m - The argument must be a conf-stat or an integer. The directive
     inserts the conference number or the integer in decimal format and 
-    adds text properties as appropriate.
+    adds text properties as appropriate for conferences.
 
 P - The argument must be a conf-stat or a character string. This
-    direcive works similarly to %M, but assums the conf-stat or string
-    represents a LysKOM user, not a regular conference.
+    direcive works similarly to %M, but assums the conf-stat, conf-no
+    or string represents a LysKOM user, not a regular conference.
 
 p - The argument must be a conf-stat or integer. This directive works
     similarly to %m, but assumes the conf-stat or integer representes
@@ -118,13 +119,11 @@ The %[ direcive also accepts format-props structures as its (optional)
 argument, but ignores the regular argument part of the structure, but
 applies the text properties to the entire subformat result. Thus,
 
-	(lyskom-format-insert "%#1[From: %#2P]\n" 
+	(lyskom-format-insert "%[%#1@From: %#2P]\n" 
 		(make-format-props nil '(face blue))
 		pers-conf-stat)
 
-would format the entire line blue. The same effect can be achieved by
-using the %@ directive as the first directive in the subformat string.
-
+would format the entire line blue.
 
 
 2.3 Format Flags
@@ -132,185 +131,5 @@ using the %@ directive as the first directive in the subformat string.
 The M, m, P, p, r and n directives accept the : character as a flag.
 If it is supplied, the regular text properties are not inserted.
 
-
-
-
-
-3. FORMATTING FUNCTIONS
-
-The functions used for string formatting can be divided into main
-functions, auxiliary functions and related functions. Main functions
-are those that are commonly called to format strings. Auxiliary
-functions are those that are used by the main functions. Related
-functions are those that accept the private data types of the string
-formatting functions.
-
-3.1 Main Functions
-
-(lyskom-format FORMAT-STRING &rest ARGL)
-
-	Format arguments according to FORMAT-STRING and ARGL. This
-	function is similar to the elisp function format, but uses
-	LysKOM's extended formatting strings. Note that since this
-	function returns a string, text properties will be lost.
-
-
-(lyskom-format-insert FORMAT-STRING &rest ARGL)
-	
-        Format and insert a string at point according to FORMAT-STRING
-	and ARGL. The result of this function is similar to inserting
-	the result of lyskom-format, but also inserts text properties.
-
-(lyskom-format-insert-before-prompt FORMAT-STRING &rest ARGL)
-
-	Same as lyskom-format-insert, but the text is inserted before
-	the LysKOM prompt, no matter where point is.
-
-(insert-state STATE CONVERT-ISO)
-
-        Insert the format state STATE at point. If CONVERT-ISO is
-	non-nil and kom-emacs-knows-iso-8859-1 is nil the result
-	string will be converted to swascii before insertion. This
-	function calls lyskom-do-insert-before-prompt to do most of
-	the work.
-
-(lyskom-insert-state-before-prompt STATE)
-
-        Insert the format state STATE before the prompt in the current
-	buffer. This function calls lyskom-do-insert-before-state to
-	do most of the work.
-
-(lyskom-insert-state STATE)
-
-        Insert the format state STATE at point in the current
-	buffer. This function calls insert and lyskom-insert-props to
-	do most of the work.
-
-(lyskom-do-format FORMAT-STRING &rest ARGL)
-
-        Generates and returns a format state according to
-	FORMAT-STRING and ARGL. This function is used by other
-	lyskom-format functions to create their results.
-
-
-3.2 Auxiliary Functions
-
-(lyskom-format-aux FORMAT-STATE)
-
-        Same as lyskom-do-format, but does less error checking and
-	requires a format state as its argument. lyskom-format-aux can
-	be, and is, called recursively.
-
-(lyskom-format-aux-help FORMAT-STATE PAD-LENGTH ARG-NO
-			FORMAT-LETTER EQUALS-FLAG COLON-FLAG 
-			PAD-LETTER)
-
-        From a parsed format directive, augment the format state. This
-        function is used exclusively by lyskom-format-aux. UTSL.
-
-(lyskom-format-tweak-format-state FORMAT-STATE)
-
-        If the format state FORMAT-STATE has any unterminated property
-        bounds in the text property list, modify them to terminate at
-        the end of the current result. This function is what makes
-        subformat strings possible.
-
-
-
-3.3 Related Functions
-
-(lyskom-insert-props START PROPL)
-
-        Starting at START in the current buffer, insert the text
-	properties indicated in PROPL. PROPL is the text properties
-	part of a format state, described elsewhere.
-
-(lyskom-do-insert-before-prompt STRING PROPL)
-
-	Insert the string STRING with the text properties in PROPL
-        before the prompt in the current buffer. PROPL should either
-        be NULL or the text property list from a format state.
-
-
-
-
-
-4. FORMAT STATES
-
-The extended string formatting is based on a format state. The format
-state encodes information about the format string, the format
-arguments, the format results and the text properties of the results.
-
-Format states contain the following fields:
-
-start - The position to start looking at the format string. This is
-        incremented successively as the format string is parsed.
-
-argl  - The format argument list. This is the argument list passed to
-        all format functions.
-
-parts - Parts is a list of strings that together represent the result
-        of the formatting. For reasons of efficiency they are stored
-	in reverse order. For instance, a parts field of ("A" "BC"
-	"D") would represent a format result of "DBCA".
-
-output-length - This is an integer that is equal to the total number
-	of characters that have been ouput to the parts list up to
-	now. It is used primarily for creating the text property
-	list.
-
-propl - The text properties list. This is a list of elements of the
-        following format: (START END PROPERTIES). Start is the
-	starting position in the output of the properties. End is the
-	end position in the output of the properties. Properties is a
-	property list, identical to what is used for
-	add-text-properties. 
-
-Format states are manipulated using the following functions defined in
-clienttypes.el.
-
-(make-format-state FORMAT-STRING START ARGL PARTS OUTPUT-LENGTH PROPL)
-        Creates a new format state based on its arguments.
-		   
-(format-state-p ARG)
-        Tests if ARG is a format state.
-
-(format-state->format-string ARG)
-        Extracts the format string from the format state ARG
-
-(set-format-stat->format-string ARG STR)
-	Sets the format string in state ARG to STR.
-
-(format-state->start ARG)
-	Extracts the starting position of format state ARG.
-
-(set-format-state->start ARG POS)
-        Set the starting point of format string parsing for the format
-	state ARG to POS.
-
-(format-state->args ARG)
-        Returns the ARGL field of the format state ARG.
-
-(set-format-state->args ARG ARGL)
-	Set the ARGL field of format state ARG to ARGL.
-
-(format-state->args-length ARG)
-        Returns the length of the argl field of the format state ARG.
-
-(format-state->parts ARG)
-        Returns the parts field of format state ARG.
-
-(set-format-state->parts ARG OUTPUT-LIST)
-        Sets the parts field of format state ARG to OUTPUT-LIST.
-
-(format-state->output-length ARG)
-        Returns the output-length field of format state ARG.
-
-(set-format-state->output-length ARG LEN)
-        Sets the output-length field of format state ARG to LEN.
-
-(format-state->propl ARG)
-        Returns the propl field of format state ARG.		     
-
-(set-format-state->propl ARG PROPL)
-        Sets the propl field of format state ARG to PROPL.
+All format directives accept the = character as a flag. Using this
+flag ensures that the result will be truncated to the field width.
