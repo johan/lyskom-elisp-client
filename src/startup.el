@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.43 1999-11-19 13:38:55 byers Exp $
+;;;;; $Id: startup.el,v 44.44 1999-12-03 10:55:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.43 1999-11-19 13:38:55 byers Exp $\n"))
+	      "$Id: startup.el,v 44.44 1999-12-03 10:55:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -74,7 +74,7 @@ See lyskom-mode for details."
 	(or password (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (let* ((env-kom (getenv "KOMSERVER"))
-	     (canon (rassoc env-kom kom-server-aliases)))
+	     (canon (lyskom-string-rassoc env-kom kom-server-aliases)))
 	(setq host (or (car canon)
 		       env-kom
 		       lyskom-default-server))))
@@ -673,7 +673,7 @@ alias name is entered, the corresponding address is returned."
 	(completion-ignore-case t)
 	server)
     (setq server (completing-read prompt known-servers nil nil))
-    (or (cdr (assoc server known-servers))
+    (or (cdr (lyskom-string-assoc server known-servers))
 	server)))
       
 
