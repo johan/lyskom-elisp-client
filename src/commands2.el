@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.8 1993-07-28 18:28:47 linus Exp $
+;;;;; $Id: commands2.el,v 36.9 1993-08-11 09:48:35 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.8 1993-07-28 18:28:47 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.9 1993-08-11 09:48:35 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -486,9 +486,13 @@ Args: MEMBERSHIP-LIST CONF-STAT."
   "Send a message to one of the users in KOM right now."
   (interactive)
   (lyskom-start-of-command 'kom-send-message)
-  (lyskom-send-message 
-   (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
-			'logins t)))
+  (condition-case error
+      (lyskom-send-message 
+       (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
+			    'logins t))
+    (quit (lyskom-end-of-command)
+	  (signal 'quit "Quitting in kom-send-message"))))
+  
 
 (defun kom-send-alarm ()
   "Send a message to all of the users in KOM right now."
