@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.176 2002-09-15 14:52:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.177 2002-09-22 07:53:12 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.176 2002-09-15 14:52:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.177 2002-09-22 07:53:12 ceder Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2175,7 +2175,7 @@ in lyskom-messages."
 ;;; constant.
 ;;;
 
-(defconst lyskom-minimum-triagle-size 3
+(defconst lyskom-minimum-triangle-size 3
   "Minimum number of lines in a triangle or suchlike.")
 
 (defconst lyskom-minimum-brick-size 2
@@ -2281,7 +2281,7 @@ in lyskom-messages."
                                (and (eq 0 length-difference)
                                     (< paragraph-length lyskom-minimum-brick-size))
                                (and (not (eq 0 length-difference))
-                                    (< paragraph-length lyskom-minimum-triagle-size))))
+                                    (< paragraph-length lyskom-minimum-triangle-size))))
                   (lyskom-fill-region start (1- (match-beginning 0)) nil t)
                   (lyskom-signal-reformatted-text 'reformat-filled))
                 (setq start (match-end 0)
@@ -2314,7 +2314,7 @@ in lyskom-messages."
                            (or (and (eq 0 length-difference)
                                     (< paragraph-length lyskom-minimum-brick-size))
                                (and (not (eq 0 length-difference))
-                                    (< paragraph-length lyskom-minimum-triagle-size))
+                                    (< paragraph-length lyskom-minimum-triangle-size))
                                (null constant-length)))
                   (lyskom-fill-region start (match-beginning 0) nil t)
                   (lyskom-signal-reformatted-text 'reformat-filled))
@@ -2338,7 +2338,7 @@ in lyskom-messages."
                            (or (and (eq 0 length-difference)
                                     (< paragraph-length lyskom-minimum-brick-size))
                                (and (not (eq 0 length-difference))
-                                    (< paragraph-length lyskom-minimum-triagle-size))
+                                    (< paragraph-length lyskom-minimum-triangle-size))
                                (null constant-length)))
                   (lyskom-fill-region start (match-beginning 0) nil t)
                   (lyskom-signal-reformatted-text 'reformat-filled))
@@ -2476,7 +2476,7 @@ in lyskom-messages."
                    (or (and (eq 0 length-difference)
                             (< paragraph-length lyskom-minimum-brick-size))
                        (and (not (eq 0 length-difference))
-                            (< paragraph-length lyskom-minimum-triagle-size))
+                            (< paragraph-length lyskom-minimum-triangle-size))
                        (not (eq constant-length t))))
           (lyskom-fill-region start (point) nil t)
           (lyskom-signal-reformatted-text 'reformat-filled)))
