@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.282 2003-04-25 22:24:37 qha Exp $
+;;;;; $Id: english-strings.el,v 44.283 2003-05-09 22:02:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.282 2003-04-25 22:24:37 qha Exp $"))
+              "$Id: english-strings.el,v 44.283 2003-05-09 22:02:30 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1910,7 +1910,13 @@ environment to one that uses \"%#2s\" to encode text.
     (no-comment-to-to-unread . "There is no commented text to mark as unread.\n")
 
     (mx-refuse-import-spam . "Spam")
-    (mx-refuse-import-all . "All imported texts")
+    (mx-refuse-import-all . "All texts")
+    (abc-spam . "sSpam")
+    (abc-everything . "aAll texts")
+    (limit-import-to-conf . "Limit import to which conference? ")
+    (limit-import-of-what . "Limit import of what? ")
+    (limit-import-not-super . "You do not seem to be the supervisor of the conference. Try anyway? ")
+    (limiting-import . "Limiting import of  %#1s to %#2M...")
     ))
 
 
@@ -2140,6 +2146,7 @@ environment to one that uses \"%#2s\" to encode text.
 
     (kom-join-all-conferences . "Join all conferences")
     (kom-leave-all-conferences . "Leave (almost) all conferences")
+    (kom-limit-import         . "Limit imported texts")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -4248,8 +4255,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (lyskom-language-strings local lyskom-error-texts en
   '((error-0 . "No error")
-    (error-2 . "Not yet implemented")
-    (error-3 . "No longer implemented")
+    (error-2 . "Not yet implemented by the server")
+    (error-3 . "No longer implemented by the server")
     (error-4 . "Wrong password")
     (error-5 . "String too long")
     (error-6 . "You have not logged on")
