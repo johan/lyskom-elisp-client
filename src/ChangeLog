@@ -1,5 +1,8 @@
-1999-11-19  David Byers  <davby@anton9.ida.liu.se>
+1999-11-19  David Byers  <davby@sen2.ida.liu.se>
 
+	* lyskom-rest.el (lyskom-filter): Explicitly insert unibyte string
+	representation. Gnu Emacs 20.3 compat kluge.
+	
 	* utilities.el (lyskom-looking-at): New function (Gnu Emacs 20.3
 	bug workaround.)
 
