@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 41.5 1996-05-07 13:37:34 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 41.6 1996-05-08 12:31:04 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -132,8 +132,23 @@ The insertion will be at (point)."
 	   replacement-data)
     (let ((inhibit-read-only t))
       (delete-char (defer-info->del-chars defer-info)))
-    (set-marker (defer-info->pos defer-info) nil)))
-	
+    (set-marker (defer-info->pos defer-info) nil))
+  (if lyskom-executing-command
+      nil
+    (let ((window (get-buffer-window lyskom-buffer)))
+      (if (pos-visible-in-window-p (point-max) window)
+	  nil
+	;; This means that this insertion moved point out of the
+	;; window. The scrolling becomes tricky. One big problem is
+	;; that we can't use lyskom-last-viewed, because it has been
+	;; updated to the new prompt. Until that is solved we make
+	;; sure that we never scroll.
+	(move-to-window-line -1)
+	(vertical-motion 1)
+	(if (not (pos-visible-in-window-p))
+	    (forward-char -1))
+	))))
+
 
 (defun lyskom-deferred-insert-conf (conf-stat defer-info)
   "Insert the name of a conference at a previously reserved place."
@@ -142,7 +157,9 @@ The insertion will be at (point)."
    (if (null conf-stat)
        (lyskom-format 
 	(or (defer-info->data defer-info)
-	    (if (conf-type->letterbox (conf-stat->conf-type conf-stat))
+	    (if (= (aref (defer-info->format defer-info)
+			 (1- (length (defer-info->format defer-info))))
+		   ?P)
 		(if (= (defer-info->call-par defer-info) 0)
 		    'person-is-anonymous
 		  'person-does-not-exist)

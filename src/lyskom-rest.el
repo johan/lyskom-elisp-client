@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.5 1996-05-07 13:37:38 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.6 1996-05-08 12:31:10 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.5 1996-05-07 13:37:38 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.6 1996-05-08 12:31:10 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -896,7 +896,7 @@ The string is inserted at point."
   (lyskom-insert-before-prompt (format-state->result (lyskom-do-format format-string argl))))
 
 
-(defun lyskom-do-format (format-string &optional argl accept-delay)
+(defun lyskom-do-format (format-string &optional argl allow-defer)
   "Do the actual formatting and return the resulting format-state."
   (let ((fmt (cond ((stringp format-string) format-string)
 		   ((symbolp format-string) (lyskom-get-string 
@@ -915,7 +915,7 @@ The string is inserted at point."
 					    0
 					    argl
 					    "")
-					   accept-delay))
+					   allow-defer))
 	  (lyskom-format-error
 	   (error "LysKOM internal error formatting %s: %s%s"
 		  format-string (nth 1 error) (nth 2 error))))))
@@ -925,7 +925,7 @@ The string is inserted at point."
 
 
 
-(defun lyskom-format-aux (format-state accept-delay)
+(defun lyskom-format-aux (format-state allow-defer)
   (let ((format-length (length (format-state->format-string format-state)))
         (arg-no nil)
         (pad-length nil)
@@ -1022,7 +1022,7 @@ The string is inserted at point."
                           ?0))
                  ?0
                ? )
-	     accept-delay))))))
+	     allow-defer))))))
   (lyskom-tweak-format-state format-state))
 
 
@@ -1033,7 +1033,7 @@ The string is inserted at point."
                                equals-flag
                                colon-flag
                                pad-letter
-			       accept-delay)
+			       allow-defer)
   (let ((arg nil)
         (result nil)
         (propl nil)
@@ -1111,8 +1111,16 @@ The string is inserted at point."
      ;;  Format a subformat list by recursively formatting the contents
      ;;  of the list, augmenting the result and format state
      ;;
+     ;;  Idea: If this code used lyskom-do-format instead, we could
+     ;;  use it to truncate a complex format by using a format string
+     ;;  such as:  "%17[ %#1s will be truncated %]"
+     ;;
+     ;;  This could be useful for faster response when deferring
+     ;;  printing. But this function would become more complex and
+     ;;  slower.
+     ;;
      ((= format-letter ?\[)
-      (setq format-state (lyskom-format-aux format-state accept-delay)
+      (setq format-state (lyskom-format-aux format-state allow-defer)
             result nil))
      ;;
      ;;  Format a conference or person name by retreiving information
@@ -1138,7 +1146,7 @@ The string is inserted at point."
 	      )
 
              ;; Delay the printing
-             ((and accept-delay
+             ((and allow-defer
                    kom-deferred-printing
                    (integerp arg))
               (let ((tmp (cache-get-conf-stat arg)))
@@ -1392,7 +1400,9 @@ The string is inserted at point."
             (kill-buffer tmpbuf))))
        (t (lyskom-button-transform-text text)
 	))
-    (lyskom-button-transform-text text)))
+    (if kom-text-properties
+	(lyskom-button-transform-text text)
+      text)))
     
 
 
@@ -1583,9 +1593,8 @@ chosen according to this"
            ;; (= (point) (point-max))
 	   ) 
       (progn
-	;; The following line is necessary for people who use
-	;; kom-page-before-command.
-        ;;(beginning-of-line 0) 
+	(if (pos-visible-in-window-p (1- (point-max)))
+	    (goto-char (point-max)))
         (sit-for 0))) 
                                         ;  (lyskom-scroll)
   (run-hooks 'lyskom-before-command-hook)
