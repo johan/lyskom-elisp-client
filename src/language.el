@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.5 1996-10-21 00:59:20 davidk Exp $
+;;;;; $Id: language.el,v 44.6 1996-10-22 03:05:44 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,14 +32,11 @@
 
 (require 'lyskom-vars "vars")
 
-;;(defconst lyskom-category-properties		    
-;;  '((command . lyskom-command)			    
-;;    (menu    . lyskom-menu)			    
-;;    (message . lyskom-message))			    
-;;  "Property names for saving different categories.")
+;;(defvar lyskom-language-symbols nil
+;;  "Symbols with language data bound to them")
 
-(defvar lyskom-language-symbols nil
-  "Symbols with language data bound to them")
+(defvar lyskom-language-categories nil
+  "Categories used")
 
 ;;; Variables
 
@@ -117,9 +114,6 @@
 
 ;;; String catalogs
 
-(defvar lyskom-language-categories nil
-  "Categories used")
-
 (defun lyskom-language-strings-internal (category language alist)
   "Associates names to symbols.
 
@@ -129,20 +123,22 @@ create. ALIST is a mapping from symbols to strings."
   (or (memq category lyskom-language-categories)
       (setq lyskom-language-categories
 	    (cons category lyskom-language-categories)))
-  (mapcar (function (lambda (pair)
-		      (let* ((symbol (car pair))
-			     (string (cdr pair))
-			     (llist (get symbol category))
-			     (entry (assq language llist)))
-			;; Record symbol
-			(or (memq symbol lyskom-language-symbols)
-			    (setq lyskom-language-symbols
-				  (cons symbol lyskom-language-symbols)))
-			(if entry
-			    (setcdr entry string)
-			  (put symbol category
-			       (cons (cons language string) llist))))))
-	  alist))
+  (let ((record (get category 'lyskom-langauge-symbols)))
+    (mapcar (function (lambda (pair)
+			(let* ((symbol (car pair))
+			       (string (cdr pair))
+			       (llist (get symbol category))
+			       (entry (assq language llist)))
+			  ;; Record symbol
+			  (or (memq symbol record)
+			      (setq record
+				    (cons symbol record)))
+			  (if entry
+			      (setcdr entry string)
+			    (put symbol category
+				 (cons (cons language string) llist))))))
+	    alist)
+    (put category 'lyskom-language-symbols record)))
 
 (defmacro lyskom-language-strings (category language alist)
   (list 'lyskom-language-strings-internal
@@ -185,19 +181,13 @@ if 'lyskom-menu is not found."
         (lyskom-get-string-internal symbol 'lyskom-command)
         (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu)))
 
-;;(defun nisse-filter (pred list)
-;;  (cond ((null list) nil)
-;;	  ((funcall pred (car list))
-;;	   (cons (car list) (nisse-filter pred (cdr list))))
-;;	  (t (nisse-filter pred (cdr list)))))
-    
 (defun lyskom-string-check-category (category)
-  "Returns list of names for the cetegory, and their supported languages"
-  (delq nil (mapcar (function
-		     (lambda (symbol)
-		       (let ((info (get symbol category)))
-			 (if info (cons symbol (mapcar 'car info))))))
-		    lyskom-language-symbols)))
+  "Returns list of names for the category, and their supported languages"
+  (mapcar (function
+	   (lambda (symbol)
+	     (let ((info (get symbol category)))
+	       (if info (cons symbol (mapcar 'car info))))))
+	  (get category 'lyskom-language-symbols)))
 
 
 (defun lyskom-define-language (language name)
