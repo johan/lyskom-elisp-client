@@ -14,7 +14,12 @@ Checklista för att göra en ny release
 
  * Se till att allt är incheckat
 
- * Uppdatera revisionsnumret och tagga med en symbol
+ * Gör make check i src/ för att kontrollera att alla strängar finns med
+   i alla språk.
+
+ * Uppdatera revisionsnumret och tagga med en symbol. Symbolen skall vara
+   `v-<version>' där <version> är versionsnumret med alla punkter bytta
+   mot minustecken.
 
 	$ cd elisp-client
 	$ cvs commit -r 17.0
