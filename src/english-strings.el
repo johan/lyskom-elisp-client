@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.228 2002-08-05 18:14:40 byers Exp $
+;;;;; $Id: english-strings.el,v 44.229 2002-08-15 17:14:46 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.228 2002-08-05 18:14:40 byers Exp $"))
+              "$Id: english-strings.el,v 44.229 2002-08-15 17:14:46 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1185,10 +1185,10 @@ You should set it to a better value.\n")
     (yes-or-no-nag . "Answer yes or no.")
     (yes-or-no . "(yes or no) ")
 
-    (y-or-n-instring . "yYnN")
+    (y-or-n-instring . "yYnN ")
     (j-or-n-nag . "Answer y or n. ")
     (j-or-n . "(y or n) ")
-    (y-instring . "yY")
+    (y-instring . "yY ")
 
     (person-does-not-exist . "User %#1d (does not exist).")
     (conference-does-not-exist . "Conference %#1d (does not exist).")
