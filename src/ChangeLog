@@ -1,3 +1,7 @@
+Wed Mar 27 16:19:57 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * Version 0.40.1 release
+
 Tue Mar 26 15:54:22 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * edit-text.el: Bättre hantering av okända headrar.
