@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.18 1996-02-21 19:47:53 davidk Exp $
+;;;;; $Id: commands2.el,v 38.19 1996-03-02 21:38:05 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.18 1996-02-21 19:47:53 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.19 1996-03-02 21:38:05 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -628,28 +628,43 @@ to be read, give the priority as a prefix argument.
 When a text is received the new text is displayed."
   (interactive "P")
   (lyskom-start-of-command 'kom-busy-wait)
-  (if (not (read-list-isempty lyskom-reading-list))
-      (set-read-list-empty lyskom-reading-list))
-  (let ((waitfor (or (cond
-		      ((integerp arg) arg)
-		      ((listp arg) (car arg)))
-		     (read-info->priority
-		      (read-list->first lyskom-to-do-list))
-		     -2)))
-    (lyskom-tell-server kom-mercial)
-    (if (= waitfor -2)
-	(lyskom-insert-string 'waiting-for-anything)
-      (lyskom-format-insert 'waiting-higher-than waitfor))
-    (lyskom-scroll)
-    (setq lyskom-is-waiting
-	  (list '>
-		'(or (read-info->priority
-		      (read-list->first lyskom-reading-list))
-		     (read-info->priority
-		      (read-list->first lyskom-to-do-list))
-		     257)
-		waitfor))))
-
+  (unwind-protect
+      (let ((waitfor (or (cond
+			  ((integerp arg) arg)
+			  ((listp arg) (car arg)))
+			 (read-info->priority
+			  (read-list->first lyskom-to-do-list))
+			 -2)))
+	(lyskom-tell-server kom-mercial)
+	(if (not (read-list-isempty lyskom-reading-list))
+	    (set-read-list-empty lyskom-reading-list))
+	(if (= waitfor -2)
+	    (lyskom-insert-string 'waiting-for-anything)
+	  (lyskom-format-insert 'waiting-higher-than waitfor))
+	(lyskom-scroll)
+	(setq lyskom-is-waiting
+	      (list '>
+		    '(or (read-info->priority
+			  (read-list->first lyskom-reading-list))
+			 (read-info->priority
+			  (read-list->first lyskom-to-do-list))
+			 257)
+		    waitfor))
+	(while lyskom-is-waiting
+	  ;; This is a bit trial-and-error stuff at the momemt.
+	  ;; o How to make personal messages appear *fast*
+	  ;; o How to enable C-g with a quick response
+	  (accept-process-output nil 1)
+	  (sit-for 0)
+	  (if lyskom-quit-flag
+	      (signal 'quit nil))))
+    (lyskom-end-of-command))
+  ;; We are done waiting
+  (ding)
+  (if (read-list-isempty lyskom-reading-list)
+      (kom-go-to-next-conf))
+  (kom-next-command))
+  
 
 
 (defun lyskom-time-greater (time1 time2)
@@ -1298,8 +1313,8 @@ membership info."
   (interactive)
   (let ((session-name (buffer-name (current-buffer)))
 	(buffer (current-buffer)))
-    (if lyskom-debug-communications-to-buffer
-	(bury-buffer lyskom-debug-communications-to-buffer))
+;;;    (if lyskom-debug-communications-to-buffer
+;;;	(bury-buffer lyskom-debug-communications-to-buffer-buffer))
     (if lyskom-who-info-buffer
 	(bury-buffer lyskom-who-info-buffer))
     (bury-buffer)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 38.0 1994-01-06 01:58:01 linus Exp $
+;;;;; $Id: internal.el,v 38.1 1996-03-02 21:38:13 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 38.0 1994-01-06 01:58:01 linus Exp $\n"))
+	      "$Id: internal.el,v 38.1 1996-03-02 21:38:13 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -357,15 +357,17 @@ with big strings."
 		 nil)
 	(file-error
 	 (if lyskom-debug-communications-to-buffer
-	     (save-excursion
-	       (set-buffer (get-buffer-create
-			    lyskom-debug-communications-to-buffer-buffer))
-	       (save-excursion
-		 (goto-char (point-max))
-		 (insert "\n" 
-			 (format "%s" process)
-			 (concat "Error: " (format "%s" err))))
-	       (set-buffer (process-buffer process))))
+	     (lyskom-debug-insert process "Error: " (format "%s" err))
+;;;	     (save-excursion
+;;;	       (set-buffer (get-buffer-create
+;;;			    lyskom-debug-communications-to-buffer-buffer))
+;;;	       (save-excursion
+;;;		 (goto-char (point-max))
+;;;		 (insert "\n" 
+;;;			 (format "%s" process)
+;;;			 (concat "Error: " (format "%s" err))))
+;;;	       (set-buffer (process-buffer process)))
+	   )
 	 (cond
 	  ((and (string= "writing to process" (car (cdr err)))
 		(or (string= "message too long" (car (cdr (cdr err))))
@@ -401,15 +403,16 @@ is sent with each packet. If STRING is longer it is splitted."
      process
      (progn
        (if lyskom-debug-communications-to-buffer
-	   (save-excursion
-	     (set-buffer (get-buffer-create 
-			  lyskom-debug-communications-to-buffer-buffer))
-	     (save-excursion
-	       (goto-char (point-max))
-	       (insert "\n"
-		       (format "%s" process)
-		       (concat ">>>>>> " string)))
-	     (set-buffer (process-buffer process))))
+	   (lyskom-debug-insert process ">>>>>> " string))
+;;;       (save-excursion
+;;;	 (set-buffer (get-buffer-create 
+;;;		      lyskom-debug-communications-to-buffer-buffer))
+;;;	 (save-excursion
+;;;	   (goto-char (point-max))
+;;;	   (insert "\n"
+;;;		   (format "%s" process)
+;;;		   (concat ">>>>>> " string)))
+;;;	 (set-buffer (process-buffer process)))
        string)))
    (t
     (let ((i 0))

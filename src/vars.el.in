@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.23 1996-02-27 23:15:46 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.24 1996-03-02 21:38:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.23 1996-02-27 23:15:46 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.24 1996-03-02 21:38:26 davidk Exp $\n"))
 
 
 
@@ -114,6 +114,9 @@ This is used when executing the kom-display-who-buffer command.")
 If the value is 'express then texts are allowed to break in the middle of a
 comment chain.  Otherwise we dont let them in until the end of the comment
 tree.")
+
+(defvar kom-after-load-hook nil
+  "Hook to run once after lyskom is loaded.")
 
 (defvar kom-login-hook nil
   "*What to do when logged in.

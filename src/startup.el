@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.19 1996-02-27 23:15:31 davidk Exp $
+;;;;; $Id: startup.el,v 38.20 1996-03-02 21:38:22 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.19 1996-02-27 23:15:31 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.20 1996-03-02 21:38:22 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -136,11 +136,13 @@ See lyskom-mode for details."
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."
   (if lyskom-debug-communications-to-buffer
-      (save-excursion
-	(set-buffer
-	 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
-	(goto-char (point-max))
-	(insert "\n" (format "%s" proc) "-----> " output)))
+      (lyskom-debug-insert proc "-----> " output)
+;;;      (save-excursion
+;;;	(set-buffer
+;;;	 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
+;;;	(goto-char (point-max))
+;;;	(insert "\n" (format "%s" proc) "-----> " output))
+    )
   (cond
    ((string-match "^LysKOM\n" output)
     (set-process-filter proc 'lyskom-filter))))
@@ -564,4 +566,5 @@ to see, set of call."
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
     (setq lyskom-list-of-edit-buffers nil)
+    (setq lyskom-pending-calls nil)
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))

@@ -1,3 +1,33 @@
+Sat Mar  2 00:11:02 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-busy-wait): Skrev om synkron.
+
+	* lyskom-rest.el (lyskom-prefetch-and-print-prompt): Flyttade kod
+ 	till kom-busy-wait.
+
+	* commands2.el (kom-bury): Lämna debug-bufferten ifred.
+
+	* view-text.el (lyskom-view-text): Markera filterade texter som
+	lästa.
+
+Fri Mar  1 01:29:14 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom-clear-vars): Sätt lyskom-pending-calls till
+ 	nil.
+
+	* lyskom-rest.el (lyskom-debug-insert): Ny funktion.
+	(lyskom-filter): Använd den.	
+
+	* internal.el (lyskom-process-send-string): Använd den.
+
+	* edit-text.el (lyskom-create-text-handler): Återställ
+ 	lyskom-dont-change-prompt även när kom-created-texts-are-read är
+ 	nil.
+
+	* vars.el.in (kom-after-load-hook): Ny variabel.
+
+	* lyskom-rest.el: Kör lyskom-after-load-hook.
+
 Tue Feb 27 03:26:01 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom-clear-vars): Gjorde lyskom-last-group-message
