@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.15 1996-10-24 09:48:22 byers Exp $
+;;;;; $Id: vars.el.in,v 44.16 1996-10-28 18:06:56 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.15 1996-10-24 09:48:22 byers Exp $\n"
+  "$Id: vars.el.in,v 44.16 1996-10-28 18:06:56 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -1065,6 +1065,15 @@ lyskom-server-features for more information.")
 TCP/IP connection. This should be unlimited, but in practise there
 are systems that limits this. This variable is automatically adjusted
 if any problems are detected.")
+
+(defvar lyskom-pending-commands nil
+  "Commands pending to be executed.
+When a command finishes, it checks this variable to see if another command
+should be run.
+
+It should be a lest where each element should be either a symbol or an
+expression. If it is a symbol it is invoked with `call-interactively', and
+an expression is evaluated with `eval'.")
 
 (defvar lyskom-do-when-done nil
   "Internal of kom-do-when-done.")
