@@ -1,3 +1,12 @@
+Fri Oct 11 02:52:14 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-prefetch-all-confs): Gör
+ 	lyskom-wait-for-membership.
+	(lyskom-wait-for-membership): Skriv ut det totala antalet möten
+ 	också.
+
+	* vars.el.in (lyskom-fetched-texts): Tog bort.
+
 Thu Oct 10 00:32:38 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Makefile (PARTS-EL,SRC-ELC): Flyttade upp prefetch.el.
