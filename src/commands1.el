@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.5 1996-08-11 10:44:27 byers Exp $
+;;;;; $Id: commands1.el,v 43.6 1996-08-12 14:45:34 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.5 1996-08-11 10:44:27 byers Exp $\n"))
+	      "$Id: commands1.el,v 43.6 1996-08-12 14:45:34 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -233,12 +233,12 @@ as TYPE. If no such misc-info, return NIL"
         (lyskom-tell-internat 'kom-tell-write-letter)
 	;; If there was a motd, which is now removed we have to
 	;; refetch the conf-stat to know that.
-	(cache-del-conf-stat pers-no)
         (let* ((tono (or pers-no
                          (lyskom-read-conf-no
                           (lyskom-get-string 'who-letter-to)
                           '(all) nil nil t)))
                (conf-stat (blocking-do 'get-conf-stat tono)))
+	  (cache-del-conf-stat tono)
           (if (if (zerop (conf-stat->msg-of-day conf-stat))
                   t
                 (progn
