@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.6 1993-08-31 10:27:06 linus Exp $
+;;;;; $Id: completing-read.el,v 36.7 1993-12-14 02:22:04 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.6 1993-08-31 10:27:06 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.7 1993-12-14 02:22:04 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -215,6 +215,10 @@ to conf-no translator."
 Where every word matches the corresponding word in the car part of ALIST.
 parst matching ([^)]) in string and alist are disgarded."
   (let* ((a-whitespace "\\([ \t]\\|([^)]*)\\)+")
+	 (string (let ((initwhite (concat "\\`" a-whitespace)))
+		   (if (string-match initwhite string)
+		       (substring string (match-end 0))
+		     string)))
 	 (endfirstword (string-match a-whitespace string))
 	 (firstword (substring string 0 endfirstword))
 	 (reststring (and endfirstword

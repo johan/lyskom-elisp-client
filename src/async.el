@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 36.5 1993-08-20 21:55:49 linus Exp $
+;;;;; $Id: async.el,v 36.6 1993-12-14 02:21:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 36.5 1993-08-20 21:55:49 linus Exp $\n"))
+	      "$Id: async.el,v 36.6 1993-12-14 02:21:38 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -187,6 +187,7 @@ this function shall be with current-buffer the BUFFER."
 	(lyskom-save-excursion
 	  (set-buffer buffer)
 	  (if (and (not (zerop lyskom-pers-no))
+		   (/= lyskom-pers-no pers-no)
 		   (or kom-presence-messages
 		       kom-presence-messages-in-buffer))
 	      (initiate-get-conf-stat 'follow 
@@ -358,26 +359,26 @@ The text is converted, before insertion."
   (cache-del-pers-stat (text-stat->author text-stat)) ;+++Borde {ndra i cachen i st{llet.
   
   (lyskom-traverse
-   misc-info (text-stat->misc-info-list text-stat)
-   (let ((type (misc-info->type misc-info)))
-     (cond
-      ((or (eq type 'RECPT)
-	   (eq type 'CC-RECPT))
-       ;; add on lyskom-reading-list and lyskom-to-do-list if
-       ;; this recipient is a recipient that has been checked.
-       (initiate-get-conf-stat 'async 'lyskom-add-new-text
-			       (misc-info->recipient-no misc-info)
-			       (text-stat->text-no text-stat)
-			       (misc-info->local-no misc-info)))
-      ((eq type 'COMM-TO)
-       (cache-del-text-stat (misc-info->comm-to misc-info)))
-      ((eq type 'FOOTN-TO)
-       (cache-del-text-stat (misc-info->footn-to misc-info)))
-      (t
-       (signal 'lyskom-internal-error
-	       (list 'lyskom-async-new-text
-		     "Unexpected misc-info in new text "
-		     type))))))
+      misc-info (text-stat->misc-info-list text-stat)
+    (let ((type (misc-info->type misc-info)))
+      (cond
+       ((or (eq type 'RECPT)
+	    (eq type 'CC-RECPT))
+	;; add on lyskom-reading-list and lyskom-to-do-list if
+	;; this recipient is a recipient that has been checked.
+	(initiate-get-conf-stat 'async 'lyskom-add-new-text
+				(misc-info->recipient-no misc-info)
+				(text-stat->text-no text-stat)
+				(misc-info->local-no misc-info)))
+       ((eq type 'COMM-TO)
+	(cache-del-text-stat (misc-info->comm-to misc-info)))
+       ((eq type 'FOOTN-TO)
+	(cache-del-text-stat (misc-info->footn-to misc-info)))
+       (t
+	(signal 'lyskom-internal-error
+		(list 'lyskom-async-new-text
+		      "Unexpected misc-info in new text "
+		      type))))))
 
   ;; Give a message if the user is waiting. Update the prompt.
   (lyskom-run 'async 'lyskom-default-new-text-hook text-stat)
@@ -437,3 +438,8 @@ In that case, just discard this call."
 	      (read-list-enter-first info lyskom-reading-list))))
 
     (lyskom-set-mode-line))))
+
+
+;;; Local Variables: 
+;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; end: 

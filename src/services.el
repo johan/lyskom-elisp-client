@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 36.2 1993-07-28 18:30:16 linus Exp $
+;;;;; $Id: services.el,v 36.3 1993-12-14 02:22:44 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 36.2 1993-07-28 18:30:16 linus Exp $\n"))
+	      "$Id: services.el,v 36.3 1993-12-14 02:22:44 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -43,6 +43,16 @@
 Args: KOM-QUEUE HANDLER PERS-NO PASSWORD &rest DATA."
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
   (lyskom-send-packet kom-queue (lyskom-format-objects 0 pers-no password)))
+
+
+(defun initiate-login-new (kom-queue handler pers-no password status 
+				     &rest data)
+  "Log in on server.
+Args: KOM-QUEUE HANDLER PERS-NO PASSWORD STATUS &rest DATA.
+Status is 0 for visible login and 1 for invisible login."
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 62 pers-no
+						       password status)))
 
 
 (defun initiate-logout (kom-queue handler &rest data)
@@ -545,6 +555,9 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
 Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
   (let ((conf-stat (cache-get-conf-stat conf-no)))
     (cond
+     ((zerop conf-no)			;No real user.
+      (lyskom-call-add kom-queue 'PARSED nil handler data)
+      (lyskom-check-call kom-queue))
      ((null conf-stat)			;Cached info?
       (lyskom-call kom-queue		;No, ask the server.
 		   lyskom-ref-no
@@ -641,7 +654,7 @@ or get-text-stat."
 	       'blocking 'blocking-return
 	       data)
 	(while (eq lyskom-blocking-return 'not-yet-gotten)
-	  (accept-process-output lyskom-proc))
+	  (accept-process-output))
 	lyskom-blocking-return)))))
 
 

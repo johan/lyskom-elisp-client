@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.15 1993-09-21 23:17:09 linus Exp $
+;;;;; $Id: commands1.el,v 36.16 1993-12-14 02:21:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.15 1993-09-21 23:17:09 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.16 1993-12-14 02:21:49 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -242,7 +242,8 @@ as TYPE. If no such misc-info, return NIL"
       (progn
 	(lyskom-start-of-command 'kom-send-letter)
 	(lyskom-tell-internat 'kom-tell-write-letter)
-	(let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to) 'all))
+	(let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to)
+					  'all))
 	       (conf-stat (blocking-do 'get-conf-stat tono)))
 	  (if (if (zerop (conf-stat->msg-of-day conf-stat))
 		  t
@@ -590,9 +591,11 @@ user so instead."
   "Deal with the answer from an attempt to create a conference.
 Add the person creating and execute lyskom-end-of-command."
   (if (null conf-no)
-      (lyskom-format-insert 'could-not-create-conf
-			    conf-name
-			    lyskom-errno)
+      (progn
+	(lyskom-format-insert 'could-not-create-conf
+			      conf-name
+			      lyskom-errno)
+	(lyskom-end-of-command))
     (progn
       (lyskom-format-insert 'created-conf-no-name 
 			    conf-no
@@ -1753,6 +1756,7 @@ MY-SESSION-NO is the session number of the running session.
 
 (defun kom-jump (&optional text-no)
   "Jumps all comments to the current text. Descends recursively in comment tree.
+The three is truncated if we encounter an older text.
 If optional arg TEXT-NO is present then jump all comments to that text instead."
   (interactive (list
 		(cond
@@ -1788,17 +1792,24 @@ footnotes) to it as read in the server."
     (if mark-as-read
 	(lyskom-mark-as-read text-stat))
     (lyskom-is-read (text-stat->text-no text-stat))
-    (lyskom-traverse misc (text-stat->misc-info-list text-stat)
-		     (cond
-		      ((or (eq (misc-info->type misc) 'COMM-IN)
-			   (eq (misc-info->type misc) 'FOOTN-IN))
-		       (initiate-get-text-stat 'main
-					       'lyskom-jump
-					       (if (eq (misc-info->type misc)
-						       'COMM-IN)
-						   (misc-info->comm-in misc)
-						 (misc-info->footn-in misc))
-					       mark-as-read)))))))
+    (lyskom-traverse 
+	misc
+	(text-stat->misc-info-list text-stat)
+      (cond
+       ((and (or (eq (misc-info->type misc) 'COMM-IN)
+		 (eq (misc-info->type misc) 'FOOTN-IN))
+	     (> (if (eq (misc-info->type misc)
+			'COMM-IN)
+		    (misc-info->comm-in misc)
+		  (misc-info->footn-in misc))
+		(text-stat->text-no text-stat)))
+	(initiate-get-text-stat 'main
+				'lyskom-jump
+				(if (eq (misc-info->type misc)
+					'COMM-IN)
+				    (misc-info->comm-in misc)
+				  (misc-info->footn-in misc))
+				mark-as-read)))))))
 
 
 ;;; ================================================================
@@ -1957,3 +1968,6 @@ DO-ADD: NIL if a comment should be subtracted.
 
 
 ;;; ================================================================
+;;; Local Variables: 
+;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; end: 
