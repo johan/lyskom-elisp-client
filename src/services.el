@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.44 2004-01-26 21:51:10 byers Exp $
+;;;;; $Id: services.el,v 44.45 2004-02-12 21:07:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.44 2004-01-26 21:51:10 byers Exp $\n"))
+	      "$Id: services.el,v 44.45 2004-02-12 21:07:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -408,7 +408,7 @@ Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
                                                              0 lyskom-max-int)))
        (t
                                         ;Cached info. 
-        (lyskom-call-add kom-queue 'PARSED text handler data)
+        (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) text handler data)
         (lyskom-check-call kom-queue))))))
 
 
@@ -434,7 +434,7 @@ Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
                             text-no)))
       (t
                                         ;Cached info. 
-       (lyskom-call-add kom-queue 'PARSED text-stat handler data)
+       (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) text-stat handler data)
        (lyskom-check-call kom-queue))))))
 
 
@@ -775,7 +775,7 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
         (lyskom-send-packet kom-queue (lyskom-format-objects 49 pers-no)))
        (t
                                         ;Cached info. 
-        (lyskom-call-add kom-queue 'PARSED pers-stat handler data)
+        (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) pers-stat handler data)
         (lyskom-check-call kom-queue))))))
 
 (defun initiate-get-conf-stat (kom-queue handler conf-no &rest data)
@@ -785,7 +785,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
    (let ((conf-stat (cache-get-conf-stat conf-no)))
      (cond
       ((zerop conf-no)			;No real user.
-       (lyskom-call-add kom-queue 'PARSED nil handler data)
+       (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) nil handler data)
        (lyskom-check-call kom-queue))
       ((null conf-stat)			;Cached info?
        (lyskom-call kom-queue		;No, ask the server.
@@ -803,7 +803,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
                             conf-no)))
       (t
                                         ;Cached info. 
-       (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
+       (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) conf-stat handler data)
        (lyskom-check-call kom-queue))))))
 
 
@@ -1108,7 +1108,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
   (lyskom-server-call
     (let ((conf-stat (cache-get-uconf-stat conf-no)))
       (cond ((zerop conf-no)
-             (lyskom-call-add kom-queue 'PARSED nil handler data)
+             (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) nil handler data)
              (lyskom-check-call kom-queue))
             ((null conf-stat)
              (lyskom-call kom-queue
@@ -1117,7 +1117,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
                           'lyskom-parse-uconf-stat conf-no)
              (lyskom-send-packet kom-queue (lyskom-format-objects 78 conf-no)))
             (t
-             (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
+             (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) conf-stat handler data)
              (lyskom-check-call kom-queue))))))
 
 (defun initiate-set-info (kom-queue handler 
@@ -1190,7 +1190,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
        (lyskom-send-packet kom-queue (lyskom-format-objects
                                       84 session-no)))
       (t                                ; Cached
-       (lyskom-call-add kom-queue 'PARSED info handler data)
+       (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) info handler data)
        (lyskom-check-call kom-queue)))))) ;This might call the handler.
 
 
@@ -1329,7 +1329,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
 (defun initiate-get-stats-description (kom-queue handler &rest data)
   (lyskom-server-call
     (if lyskom-stats-description
-        (progn (lyskom-call-add kom-queue 'PARSED lyskom-stats-description
+        (progn (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) lyskom-stats-description
                                 handler data)
           (lyskom-check-call kom-queue))
       (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-stats-description)
@@ -1343,7 +1343,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
 (defun initiate-get-boottime-info (kom-queue handler &rest data)
   (lyskom-server-call
     (if lyskom-static-server-info
-        (progn (lyskom-call-add kom-queue 'PARSED lyskom-static-server-info
+        (progn (lyskom-call-add kom-queue 'PARSED (lyskom-ref-no) lyskom-static-server-info
                                 handler data)
           (lyskom-check-call kom-queue))
       (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-static-server-info)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.10 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: internal.el,v 44.11 2004-02-12 21:07:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.10 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: internal.el,v 44.11 2004-02-12 21:07:52 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -87,7 +87,7 @@ KOM-QUEUE is a kom-queue.")
 ;;; 	('CALL REF-NO PARSER PARSER-DATA HANDLER HANDLER-DATA)
 ;;; 		A call that has not yet returned.
 ;;; 
-;;; 	('PARSED RESULT HANDLER HANDLER-DATA)
+;;; 	('PARSED REF-NO RESULT HANDLER HANDLER-DATA)
 ;;; 		A call that has returned, but the result can not be
 ;;; 		handled until all previous calls has returned.
 ;;; 
@@ -120,7 +120,8 @@ KOM-QUEUE is a kom-queue.")
 ;;; 
 ;;; 	('RUN FUNCTION FUNCTION-ARGS)
 ;;; 		Run FUNCTION when all calls before this have been handled.
-;;; 
+;;;
+;;;
 
 
 (defun kom-queue-create ()
@@ -279,6 +280,44 @@ lyskom-fake-call, or the parser might get confused."
           (lyskom-check-call kom-queue)))))
 
 
+(defun lyskom-cancel-calls (ref-nos)
+  "Cancel the calls in the list REF-NOS.
+Calls that have been sent to the server will have their callbacks
+canceled, but as they have been sent, the client must wait for them
+to complete in some way."
+  (let ((unsent nil))
+    (lyskom-traverse queue lyskom-output-queues
+      (lyskom-traverse ref-no ref-nos
+        (when (assq ref-no (car (cdr queue)))
+          (setq unsent (cons ref-no unsent)))))
+
+    ;;    (lyskom-format-insert "REF-NOS\n")
+    ;;    (lyskom-format-insert "    %#1s\n" (format "%S" ref-nos))
+    ;;    (lyskom-format-insert "UNSENT\n")
+    ;;    (lyskom-format-insert "    %#1s\n" (format "%S" unsent))
+
+    (lyskom-traverse queue lyskom-output-queues
+      (lyskom-queue-remove-matching queue
+                                    (lambda (el) (memq (car el) unsent))))
+
+    (lyskom-traverse queue lyskom-call-data
+      (lyskom-queue-remove-matching (kom-queue->pending (cdr queue))
+                                    (lambda (el) 
+                                      (or (and (eq (car el) 'CALL)
+                                               (memq (car (cdr el)) unsent))
+                                          (and (eq (car el) 'PARSED)
+                                               (memq (car (cdr el)) ref-nos)))))
+      (lyskom-traverse call-data (car (cdr (kom-queue->pending (cdr queue))))
+        (when (and (eq (car call-data) 'CALL)
+                   (memq (car (cdr call-data)) ref-nos))
+          ;;          (lyskom-format-insert "Canceling callback %#1d\n" (car (cdr call-data)))
+          (setcdr call-data
+                  (list (elt (cdr call-data) 0) ; ref-no
+                        (elt (cdr call-data) 1) ; parser
+                        (elt (cdr call-data) 2) ; parser-data
+                        nil             ; handler, then handler-data
+                        nil)))))
+    (lyskom-check-output-queues)))
 
 
 ;;;; ================================================================
@@ -324,8 +363,9 @@ Args: KOM-QUEUE STRING."
   (setq lyskom-pending-calls
 	(cons (cons lyskom-ref-no kom-queue)
 	      lyskom-pending-calls))
-  (++ lyskom-ref-no)
-  
+  (setq lyskom-ref-no (1+ lyskom-ref-no))
+  (when (< lyskom-ref-no 0) (setq lyskom-ref-no 1))
+
   ;; Send something from the output queues
   (lyskom-check-output-queues))
 
@@ -473,9 +513,9 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
 	  (kom-queue-resume queue))
         (if (or (eq (kom-queue->collect-flag queue) 'COLLECT)
                 (and (eq (kom-queue->collect-flag queue) 'COLLECT-IGNORE)
-                     (car (cdr first-pending))))
+                     (car (cdr (cdr first-pending)))))
             (lyskom-queue-enter (kom-queue->collect-queue queue)
-                                (car (cdr first-pending)))))
+                                (car (cdr (cdr first-pending))))))
 
        ((eq type 'COLLECT)
         (if (kom-queue->collect-flag queue)
@@ -539,10 +579,10 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
 PENDING is an entry of the list as described in documentation for the variable
 lyskom-call-data. The car on the list must be a PARSED:
 	('PARSED RESULT HANDLER HANDLER-DATA)"
-  (if (car (cdr (cdr pending)))
-      (apply (car (cdr (cdr pending)))	;Handler
-	     (car (cdr pending))	;Result
-	     (car (cdr (cdr (cdr pending))))))) ;Handler-data
+  (if (car (cdr (cdr (cdr pending))))
+      (apply (car (cdr (cdr (cdr pending))))	;Handler
+	     (car (cdr (cdr pending)))	;Result
+	     (car (cdr (cdr (cdr (cdr pending)))))))) ;Handler-data
 
 (defun lyskom-apply-multi-handler (pending result-list)
   "Apply a handler for a lyskom-collect - lyskom-use construct."

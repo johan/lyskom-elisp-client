@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.152 2004-01-26 21:51:10 byers Exp $
+;;;;; $Id: utilities.el,v 44.153 2004-02-12 21:07:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.152 2004-01-26 21:51:10 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.153 2004-02-12 21:07:53 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1301,6 +1301,41 @@ car of each element is the recipient number and the cdr is the type."
     (nreverse result)))
 
 
+(defun lyskom-find-conf-by-date (target-date)
+  "Search all conferences for a conference created on or about TARGET-DATE.
+Returns the conf-stat of the conference."
+  (blocking-do-multiple ((lowest (find-next-conf-no 0))
+                         (highest (first-unused-conf-no)))
+
+    (let* ((index (+ lowest (/ (- highest lowest) 2)))
+           (last-index (1- index))
+           (result nil))
+      (while (/= last-index index)
+
+        ;; Get the first conf-stat after index
+
+        (let ((conf-stat nil)
+              (conf-no index))
+          (while (and (null conf-stat)
+                      (<= conf-no highest))
+            (setq conf-stat (blocking-do 'get-conf-stat conf-no))
+            (unless conf-stat
+              (setq conf-no (blocking-do 'find-next-conf-no conf-no))))
+
+          ;; If we were unable to find a conf-stat, then set highest
+          ;; equal to index -- there are no conf-stats in that area,
+          ;; so we might as well start looking below index
+
+          (cond ((null conf-stat) (setq highest index))
+                ((lyskom-time-greater (conf-stat->creation-time conf-stat)
+                                      target-date)
+                 (setq highest (1+ conf-no)))
+                (t (setq lowest conf-no)))
+          (setq last-index index result conf-stat)
+          (setq index (+ lowest (/ (- highest lowest) 2)))))
+      result)))
+
+
 (defun lyskom-find-text-by-date (conf-stat target-date)
   "Search texts in CONF-STAT for a text added on or about TARGET-DATE.
 Returns a cons of (LOCAL . GLOBAL)"
@@ -1362,7 +1397,7 @@ The value returned does not include the parens before at either ends of the expr
       (setq result (cons (substring s 0 i) result) i (1+ i)))
     (mapconcat 'regexp-quote result "\\|")))
 
-(defun lyskom-read-date (prompt)
+(defun lyskom-read-date (prompt &optional empty)
   "Read a date from the minibuffer. 
 Returns a list (YEAR MONTH DATE) corresponding to the user's input."
   (let ((result nil)
@@ -1373,13 +1408,14 @@ Returns a list (YEAR MONTH DATE) corresponding to the user's input."
                   date
                   (lambda (data)
                     (condition-case nil
-                        (progn (lyskom-parse-date data)
-                               nil)
+                        (cond ((and empty (string-equal data "")) nil)
+                              (t (lyskom-parse-date data) nil))
                       (lyskom-error (lyskom-get-string 'invalid-date-entry))))))
       (condition-case nil
-          (setq result (lyskom-parse-date date))
+          (cond ((and empty (string-equal date "")) (setq result t))
+                (t (setq result (lyskom-parse-date date))))
         (lyskom-error nil)))
-    result))
+    (and (listp result) result)))
 
 (defun lyskom-parse-date (arg)
   "Parse ARG (a string) as a date.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.361 2004-01-28 23:26:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.362 2004-02-12 21:07:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.361 2004-01-28 23:26:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.362 2004-02-12 21:07:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2032,6 +2032,7 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (mark-confs-as-known . "Markera dessa  %#2d %#1s som kända? ")
     (no-new-conferences . "Inga nya %#2s%#1?b%[ sedan %#1s%]%[%].\n")
     (new-conferences-since . "Nya %#2s%#1?b%[ sedan %#1s%]%[%]:\n")
+    (list-confs-from-date . "Lista %#1s skapade sedan vilket datum (tomt för alla)? ")
 
     (privs-wheel . "operatör")
     (privs-admin . "administratör")
@@ -2073,6 +2074,8 @@ Nuvarande rättigheter för %#1P (%#1p):
     (set-flg14-priv-q . "Aktivera okänd rättighet 14? ")
     (set-flg15-priv-q . "Aktivera okänd rättighet 15? ")
     (set-flg16-priv-q . "Aktivera okänd rättighet 16? ")
+
+    (canceling-command . "Abryter kommandot...")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
