@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.7 1996-07-27 11:39:30 byers Exp $
+;;;;; $Id: completing-read.el,v 41.8 1996-07-29 08:44:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.7 1996-07-27 11:39:30 byers Exp $\n"))
+       "$Id: completing-read.el,v 41.8 1996-07-29 08:44:00 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -117,6 +117,7 @@ See lyskom-read-conf for a description of the parameters."
   (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
     (cond ((null conf-z-info) 0)
           ((stringp conf-z-info) 0)
+	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->conf-no conf-z-info))
           (t (conf-z-info->conf-no conf-z-info)))))
 
 (defun lyskom-read-conf-stat (prompt type &optional empty initial mustmatch)
@@ -127,6 +128,7 @@ See lyskom-read-conf for a description of the parameters."
   (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
     (cond ((null conf-z-info) nil)
           ((stringp conf-z-info) nil)
+	  ((lyskom-conf-stat-p conf-z-info) conf-z-info)
           (t (blocking-do 'get-conf-stat 
                           (conf-z-info->conf-no conf-z-info))))))
 
@@ -138,6 +140,7 @@ See lyskom-read-conf for a description of the parameters."
   (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
     (cond ((null conf-z-info) "")
           ((stringp conf-z-info) conf-z-info)
+	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->name conf-z-info)
           (t (conf-z-info->name conf-z-info)))))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
