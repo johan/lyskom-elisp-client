@@ -10,8 +10,12 @@ Filen heter lyskom-0.46.tar.gz, och en kopia av den text du läser just
 nu finns under namnet NEWS-0.46 samt under namnet NEWS-0.46 i
 tar-arkivet.
 
+Det här är sista releasen av elispklienten som jag planerar att göra.
+Det vore väldigt bra om några intresserade personer tog över ansvaret
+för projektet så att det fortsätter att utvecklas. 
+
                                 David Byers   <byers@lysator.liu.se>
-                                David Kågedal <davidk@lysator.liu.se>
+
 
 
 * Försämringar
@@ -23,12 +27,36 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Det går mycket fortare att logga in än tidigare, speciellt om man
+   är med i många möten och bara har olästa i en liten del av dem.
+   Klienten belastar även servern i mycket mindre utsträckning
+   underinloggningsfasen.
+
+** Återsefunktionerna är lite mer robusta. Om man återser inlägg och
+   blir avbruten av ett prioriterat möte så kommer klienten att återgå 
+   till återseendet när man har läst ut mötet. Man kan även styra vad
+   som kan avbryta återseende genom att sätta variabeln
+   kom-review-priority till något lämpligt (255 eller högre om man
+   aldrig vill att återse skall avbrytas av prioriterade inlägg eller
+   möten.)
+
+** Det går att filtrera personliga, grupp- och alarmmeddelanden. 
+   Variabeln kom-ignore-message-senders är en lista av avsändare vars
+   meddelanden inte skall visas. kom-ignore-message-recipients är en
+   lista av mottagare som man inte vill se meddelanden till.
+
+** Man kan styra hur klienten skall pipa när det kommer personliga,
+   eller alarmmeddelanden från specifika avsändare och
+   gruppmeddelanden till specifika mottagare. Se dokumentationen för
+   kom-ding-on-personal-messages, kom-ding-on-group-messages och
+   kom-ding-on-common-messages för mer information.
+
 ** Möten med prioritet noll betraktas inte längre som passiva
    medlemskap eftersom den senaste servern har riktigt stöd för
    passiva medlemskap. Det går att simulera det gamla beteendet genom
    att sätta läsnivå till ett eller högre. Använd variabeln
    kom-default-session-priority för att sätta grundnivån i nya
-   sessioner.
+   sessioner. 
 
 ** Om man gillar långa streckade linjer kan man få det på de flesta
    håll. Slå på kom-long-lines och sätt kom-text-header-dash-length
@@ -152,6 +180,17 @@ LysKOM-bufferten och i inläggsbufferten.
     skall bekräfta läsning så frågar elispklienten om man vill
     bekräfta varje gång inlägget visas (tills man har bekräftat det
     förstås.)
+
+*** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ och Återse
+    FAQ (bunden till åq) används för att manipulera och läsa FAQer.
+    Servern raderar aldrig en FAQ automatiskt, oavsett hur gammal den
+    är.
+
+*** Man kan skriva korta repliker till inlägg. Dessa är tänkta att
+    ersätta vissa typer av "adderingsmöten" som finns i flera
+    KOM-system. Kommandona "Hålla med" (rh) och "Kort replik" (rr) är 
+    till för att skriva repliker. Se även dokumentationen av variabeln 
+    kom-agree-text för mer information.
 
 
 ** Tilläggsinformation i inläggsbufferten
