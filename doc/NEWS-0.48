@@ -1,0 +1,116 @@
+
+* New features
+
+** Changes to key bindings
+
+*** A large number of key bindings have been changed in the english
+    version of the client. These changes make the bindings slightly
+    more consistent and open up keys for future use.
+
+*** The key `a' is now a prefix for add comments (bug 834).
+
+*** The sequence `s u' is now a prefix for subtract commands (bug
+    834).
+
+*** The binding for kom-review-backward is now under the prefix for
+    review commands (bug 834).
+
+
+** Typefaces and colors
+
+   The code for handling faces has been completely overhauled. The
+   concept of face schemes has been removed. Instead, there is a
+   variable for each face role that contains the face to use in that
+   role. This makes it possible to have different faces in differnt
+   buffers, makes it easier to define custom faces and to customize
+   face use.
+
+   Faces can now be selected in the settings buffer.
+
+   This fixes bugs 486, 498, and 499.
+
+** When running against a 2.1.0 server or later, settings made in one
+   session will be copied to other sessions with the same user.
+
+** kom-set-unread now accepts a date as well as a number of texts (bug
+   291).
+
+** The client can transform URLs according to user-defined rules
+   before sending them to the web browser. Rules are stored in 
+   kom-url-transformation-rules and can be set in the settings
+   buffer (bug 923).
+
+** There are multiple user-selectable lists of namedays. The variable
+   kom-show-namedays can now indicate which list to use. Use the
+   settings buffer to select a list (bug 924).
+
+** The variable kom-server-aliases no longer contains the builtin
+   server list; those are in kom-builtin-server-aliases instead. Users
+   may now modify kom-server-aliases to add server aliases without
+   affecting the builtin list (bug 915).
+
+** Copy settings/Kopiera inställningar copies settings from one
+   session to another (bug 753).
+
+** It is possible to specify patterns used to generate clickable links
+   in texts. Patterns can be specified on a per-conference or on a
+   global bases in the settings buffer.
+
+** List summary/Lista ärenden now lists texts in comment order with
+   indentation to indicate comment level.
+
+** kom-write-text asks for a recipient by default (bug 823).
+
+** kom-write-letter only accepts letterboxes as initial recipients.
+
+
+* Minor improvements
+
+** The prompt timestamp format obeys standard options, and can now
+   include seconds (bug XXX).
+
+** Lucia is indicated in lyskom-times (bug 928).
+
+** When running a command that reads text numbers, and the prefix
+   argument indicates the parent of a text (typically when the user
+   hits C-u before the command), and there are multiple parents,
+   provide completion when asking which one to use (bug 701).
+
+** kom-super-jump is smarter about selecting recipients. The order is
+   now current conference first, the first recipient of the text that
+   the user is a member of, then similar for CC and BCC recipients.
+   Finally the first recipient, CC or BCC recipient is chosen if the
+   user is not a member of any recipients (bug 677).
+
+* Bug fixes
+
+** kom-compare-texts does not signal an error if one of the texts is
+   unreadable.
+
+** Whitespace around numeric input is now ignored (bug 880).
+
+** Key bindings of swedish characters are now more portable. Differnt
+   versions of Emacs have different conventions. Even within a single
+   Emacs version, conventions are different depending on window
+   system. The client now binds a large number of variants in order to
+   hopefully bind one that works (bug XXX)
+
+** kom-change-faq now creates a FAQ if there isn't one already (bug
+   919).
+
+** When calling lyskom-ispell-message from kom-send-text-hook,
+   corrections to the subject line are retained (bug 817).
+
+** The default text for kom-write-footnote now follows standard rules
+   for text numbers as prefix arguments (bug 879).
+
+** kom-jump uses the standard text number prefix argument (bug 921).
+
+** Server FAQs are only displayed once (bug 961).
+
+** kom-who-is-on-in-conference does not list passive members (bug
+   927).
+
+** When scrolling, position point far enough to the left that
+   automatic horizontal scrolling in Gnu Emacs doesn't take place (bug
+   831).
