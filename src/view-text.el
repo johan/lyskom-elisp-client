@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.83 2005-01-26 10:34:01 jhs Exp $
+;;;;; $Id: view-text.el,v 44.84 2005-01-26 10:58:20 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.83 2005-01-26 10:34:01 jhs Exp $\n"))
+	      "$Id: view-text.el,v 44.84 2005-01-26 10:58:20 jhs Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -448,7 +448,7 @@ unless we are reviewing without conversion. More precisely, the latin
 useful function to put in your `kom-view-text-hook'."
   (let* ((cti (lyskom-get-aux-item
 	       (text-stat->aux-items lyskom-view-text-text-stat) 1))
-         (content-type (and cti (aux-item->data (car cti)))))
+         (content-type (if cti (aux-item->data (car cti)) "")))
     (when (and (string-match "charset\\s-*=\\s-*utf-?8" content-type)
 	       (not (lyskom-viewing-noconversion)))
       (let* ((was (aref (cdr lyskom-view-text-text) 1)) ; original text version
