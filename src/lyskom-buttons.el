@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.99 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $
+;;;; $Id: lyskom-buttons.el,v 44.100 2005-02-14 18:21:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.99 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.100 2005-02-14 18:21:50 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -847,7 +847,10 @@ This is a LysKOM button action."
   "In the LysKOM buffer buf, add self to conference ARG."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
-           (kom-add-self arg))))
+           (let ((conf (blocking-do 'get-conf-stat arg)))
+             (if conf
+                 (kom-add-self conf)
+               (lyskom-insert-before-prompt 'somebody-deleted-that-conf))))))
 
 (defun lyskom-button-sub-self (buf arg text)
   "In the LysKOM buffer buf, sub self from conference ARG."

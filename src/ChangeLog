@@ -1,5 +1,9 @@
 2005-02-14  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1519:
+	* lyskom-buttons.el (lyskom-button-add-self): Pass conf-stat, not
+	conf-no to kom-add-self.
+
 	Fix bug 1533:
 	* commands2.el (lyskom-list-summary): Copy the read-list before
 	passing it to lyskom-list-text-summary.
