@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.5 1996-10-06 05:18:36 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.6 1996-10-08 02:07:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.5 1996-10-06 05:18:36 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.6 1996-10-08 02:07:27 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1545,7 +1545,7 @@ is generated while the command COMMAND is being executed, HINT is used as a
 hint for a new default action. The user has the option to ignore or used the 
 hint.
 
-Also see the function \"kom-add-button-action\".
+Also see the function \"lyskom-add-button-action\".
 
 This variable is not saved in the LysKOM server.")
         
