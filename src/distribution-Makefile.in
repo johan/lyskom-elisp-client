@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile.in,v 44.2 2000-09-09 11:59:27 byers Exp $
+# $Id: distribution-Makefile.in,v 44.3 2000-09-14 08:07:54 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -111,7 +111,7 @@ install: lyskom-@@CLIENTVERSION@@.elc
 	cp lyskom-@@CLIENTVERSION@@.el lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)
 	rm -f $(LISPDIR)/lyskom.el
 	ln -s $(LISPDIR)/lyskom-@@CLIENTVERSION@@.el $(LISPDIR)/lyskom.el
-	ln -s $(LISPDIR)/lyskom.elc
+	rm -s $(LISPDIR)/lyskom.elc
 	ln -s $(LISPDIR)/lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)/lyskom.elc
 
 clean:

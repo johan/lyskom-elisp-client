@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.113 2000-09-09 12:38:46 byers Exp $
+;;;;; $Id: english-strings.el,v 44.114 2000-09-14 08:07:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.113 2000-09-09 12:38:46 byers Exp $"))
+              "$Id: english-strings.el,v 44.114 2000-09-14 08:07:55 byers Exp $"))
 
 
 ;;; ================================================================
@@ -88,8 +88,9 @@
   (define-key lyskom-en-edit-prefix (kbd "C-r C-c") 'kom-edit-show-commented)
   (define-key lyskom-en-edit-prefix (kbd "C-i ?") 'lyskom-help)
   (define-key lyskom-en-edit-prefix (kbd "C-i C-c") 'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-prefix (kbd "C-y") 'kom-edit-insert-commented)
   (define-key lyskom-en-edit-prefix (kbd "C-i C-y") 'kom-edit-insert-commented)
-  (define-key lyskom-sv-edit-prefix (kbd "C-b")     'kom-edit-insert-buglist)
+  (define-key lyskom-en-edit-prefix (kbd "C-b")     'kom-edit-insert-buglist)
   (define-key lyskom-en-edit-prefix (kbd "C-i 1") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 2") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 3") 'kom-edit-insert-digit-text)
@@ -99,7 +100,7 @@
   (define-key lyskom-en-edit-prefix (kbd "C-i 7") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 8") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 9") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i ") 'kom-edit-insert-text)
+  (define-key lyskom-en-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
   (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-r") 'kom-edit-add-recipient)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)
@@ -2031,8 +2032,8 @@ You must become an active member of the conference to enter it.\n")
 
   (define-key lyskom-en-mode-map (kbd "M-p") 'backward-text)
   (define-key lyskom-en-mode-map (kbd "M-n") 'forward-text)
-  (define-key lyskom-sv-mode-map (kbd "C-M-p") 'kom-prev-prompt)
-  (define-key lyskom-sv-mode-map (kbd "C-M-n") 'kom-next-prompt)
+  (define-key lyskom-en-mode-map (kbd "C-M-p") 'kom-prev-prompt)
+  (define-key lyskom-en-mode-map (kbd "C-M-n") 'kom-next-prompt)
   (define-key lyskom-en-mode-map (kbd "s a") 'kom-save-text)
 
   (define-key lyskom-en-mode-map (kbd "C-?") 'scroll-down)
@@ -2052,7 +2053,7 @@ You must become an active member of the conference to enter it.\n")
   (setq lyskom-en-filter-edit-map (make-keymap))
   (suppress-keymap lyskom-en-filter-edit-map)
   (define-prefix-command 'lyskom-en-filter-edit-prefix)
-  (define-key lyskom-sv-filter-edit-map (kbd "C-c")  'lyskom-en-filter-edit-prefix)
+  (define-key lyskom-en-filter-edit-map (kbd "C-c")  'lyskom-en-filter-edit-prefix)
   (define-key lyskom-en-filter-edit-map (kbd "p") 'lyskom-filter-edit-prev-pattern)
   (define-key lyskom-en-filter-edit-map (kbd "P") 'lyskom-filter-edit-prev-entry)
   (define-key lyskom-en-filter-edit-map (kbd "n") 'lyskom-filter-edit-next-pattern)
@@ -2075,7 +2076,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-filter-edit-map (kbd "M-<") 'lyskom-filter-edit-beginning-of-list)
   (define-key lyskom-en-filter-edit-map (kbd "M->") 'lyskom-filter-edit-end-of-list)
   (define-key lyskom-en-filter-edit-map (kbd "q") 'lyskom-filter-edit-quit)
-  (define-key lyskom-sv-filter-edit-map (kbd "C-c C-c")   'lyskom-filter-edit-quit)
+  (define-key lyskom-en-filter-edit-map (kbd "C-c C-c")   'lyskom-filter-edit-quit)
   (define-key lyskom-en-filter-edit-map (kbd "x") 'lyskom-filter-edit-expunge)
   (define-key lyskom-en-filter-edit-map (kbd "s") 'lyskom-filter-edit-save)
   (define-key lyskom-en-filter-edit-map (kbd "g") 'lyskom-filter-edit-revert)
@@ -2165,23 +2166,23 @@ You must become an active member of the conference to enter it.\n")
 (if lyskom-en-customize-map
     nil
   (setq lyskom-en-customize-map (make-sparse-keymap))
-  (define-key lyskom-sv-customize-map (kbd "TAB") 'widget-forward)
-  (define-key lyskom-sv-customize-map (kbd "M-TAB") 'widget-backward)
-  (define-key lyskom-sv-customize-map (kbd "C-i") 'widget-forward)
-  (define-key lyskom-sv-customize-map (kbd "M-C-i") 'widget-backward)
-  (define-key lyskom-sv-customize-map (kbd "C-m") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'kom-mouse-null)
+  (define-key lyskom-en-customize-map (kbd "TAB") 'widget-forward)
+  (define-key lyskom-en-customize-map (kbd "M-TAB") 'widget-backward)
+  (define-key lyskom-en-customize-map (kbd "C-i") 'widget-forward)
+  (define-key lyskom-en-customize-map (kbd "M-C-i") 'widget-backward)
+  (define-key lyskom-en-customize-map (kbd "C-m") 'widget-button-press)
+  (define-key lyskom-en-customize-map (kbd "C-j") 'widget-button-press)
+  (define-key lyskom-en-customize-map (kbd "<RET>") 'widget-button-press)
+  (define-key lyskom-en-customize-map (kbd "<LFD>") 'widget-button-press)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button3)) 'kom-mouse-null)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
-  (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
-  (define-key lyskom-sv-customize-map (kbd "C-c C-k") 'lyskom-customize-quit)
-  (define-key lyskom-sv-customize-map (kbd "C-c C-s") 'lyskom-customize-save)
-  (define-key lyskom-sv-customize-map (kbd "C-c C-a") 'lyskom-customize-apply)
-  (define-key lyskom-sv-customize-map (kbd "?") 'lyskom-customize-help)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
+  (define-key lyskom-en-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
+  (define-key lyskom-en-customize-map (kbd "C-c C-k") 'lyskom-customize-quit)
+  (define-key lyskom-en-customize-map (kbd "C-c C-s") 'lyskom-customize-save)
+  (define-key lyskom-en-customize-map (kbd "C-c C-a") 'lyskom-customize-apply)
+  (define-key lyskom-en-customize-map (kbd "?") 'lyskom-customize-help)
 )
 
 (lyskom-language-strings lyskom-custom-strings en

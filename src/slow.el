@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.12 2000-09-02 13:23:02 byers Exp $
+;;;;; $Id: slow.el,v 44.13 2000-09-14 08:07:56 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -127,15 +127,17 @@ Currently the prompt is assumed to be on the last line of the buffer."
 	 (command nil))
     (cond
      ((null text)
-      (lyskom-beep t))
+      (lyskom-beep t)
+      nil)
      ((null completes)
       (goto-char saved-point)
       (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command))
-      (lyskom-beep t))
+      (lyskom-beep t)
+      nil)
      (exact
-      (setq command (cons (lyskom-lookup-command-by-name text) (point))))
+      (setq command (cons (lyskom-lookup-command-by-name (elt exact 0)) (point))))
      ((= (length completes) 1)
-      (setq command (cons (lyskom-lookup-command-by-name text) (point)))
+      (setq command (cons (lyskom-lookup-command-by-name (car completes)) (point)))
       (delete-region (point) (point-max))
       (insert (car completes)))
      ((> (length completes) 1)
@@ -199,7 +201,7 @@ If the completion was not exact it returns nil."
   "Reads a command from the last line in the buffer and executes it."
   (interactive)
   (let* ((text (lyskom-get-entered-slow-command))
-	 (command (and text (kom-expand-slow-command t))))
+	 (command (and text (lyskom-expand-slow-command t nil))))
     (buffer-disable-undo)
     (cond
      ((null text)
