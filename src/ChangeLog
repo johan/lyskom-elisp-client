@@ -1,3 +1,11 @@
+Fri Feb  7 16:20:49 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* prefetch.el (lyskom-prefetch-text-list): Ny funktion.
+	(lyskom-prefetch-text-list-continue): Ny funktion.
+	(lyskom-prefetch-one-item): Hantera TEXT-LIST.
+	(lyskom-prefetch-one-request): Hanter TEXT-LIST
+	(lyskom-prefetch-text-list-handler): Ny funktion.
+
 Thu Feb  6 00:41:34 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* async.el (lyskom-async-new-text): Prefetch all the information.
