@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.343 2003-08-24 14:34:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.344 2003-08-24 22:05:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.343 2003-08-24 14:34:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.344 2003-08-24 22:05:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -890,22 +890,18 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (review-how-many-more . "Återse ytterligare hur många?")
     (latest-n . "senaste %#1d")
     (first-n . "första %#1d")
-    (info-by-whom . "%#1s av vem: ")
-    (info-to-conf . "%#1s till möte: ")
+
+    (review-by-whom . "Återse %#1s av vem: ")
+    (review-to-conf . "Återse %#1s till möte: ")
+    (unread-by-whom . "Oläsmarkera %#1s av vem: ")
+    (unread-to-conf . "Oläsmarkera %#1s till möte: ")
     (all-confs . "alla möten")
-    ;; +++ not used?
-    (info-by-to . "%#1s av %#2P till %#3M framåt.")
-    (no-get-conf . "Du får inte hämta mötet.\n")
-    (no-get-pers . "Du får inte hämta personen.\n")
-    (no-review-info . "Ej tillåtet återse %#1s\n")
-    ;; +++
-    (unread-info . "Oläsmarkera %#1s")
+
     (unread-info-by-to . "Oläsmarkera %#1s av %#2P till %#3M.\n")
     (unread-more-info-by-to . "Oläsmarkera %#1s av %#2P till %#3M.\n")
     (unread-rest . "resten")
     (unread-more . "nästa %#1d")
 
-    (review-info . "Återse %#1s")
     (review-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
     (review-more-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
     (review-rest . "resten")

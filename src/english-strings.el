@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.303 2003-08-24 14:34:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.304 2003-08-24 22:05:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.303 2003-08-24 14:34:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.304 2003-08-24 22:05:34 byers Exp $"))
 
 
 ;;; ================================================================
@@ -858,21 +858,18 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-how-many-more . "Review how many more?")
     (latest-n . "last %#1d")
     (first-n . "first %#1d")
-    (info-by-whom . "%#1s by whom: ")
-    (info-to-conf . "%#1s to conference: ")
-    (info-by-to . "%#1s by %#2P to %#3M forward.")
-    (all-confs . "all conferences")
-    (no-get-conf . "You are not allowed to access that conference.\n")
-    (no-get-pers . "You are not allowed to access that user.\n")
-    (no-review-info . "You are not allowed to review %#1s\n")
 
-    (unread-info . "Unread %#1s")
+    (review-by-whom . "Review %#1s by whom: ")
+    (review-to-conf . "Review %#1s to conference: ")
+    (unread-by-whom . "Unread %#1s by whom: ")
+    (unread-to-conf . "Unread %#1s to conference: ")
+    (all-confs . "all conferences")
+
     (unread-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
     (unread-more-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
     (unread-rest . "the rest")
     (unread-more . "%#1d more")
 
-    (review-info . "Review %#1s")
     (review-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
     (review-more-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
     (review-rest . "the rest")
