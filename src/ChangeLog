@@ -1,5 +1,9 @@
 1999-08-25  David Byers  <davby@ida.liu.se>
 
+	* edit-text.el (lyskom-edit-send-check-recipients): When checking
+	commented author, actually check all the recipients, not just the
+	first one.
+
 	* reading.el (lyskom-sort-to-do-list): New function.
 	(lyskom-read-info-<): New function.
 
