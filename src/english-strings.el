@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.336 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.337 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.336 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.337 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3663,6 +3663,13 @@ up menus.")
   If this is on, the list of active users will include the connection time
   and the inactivity period for each user.")
 
+    (kom-remember-password-doc . "\
+  When this setting is active the password used to login to LysKOM will
+  be saved in a local variable in the session buffer. This makes it 
+  possible to relogin automatically if the session is lost. Note that the
+  password is saved in clear text so it can be read by anyone who gains 
+  access to your LysKOM session buffer (even disconnected).")
+
     (kom-idle-hide-doc . "\
   The listing of active users normally only shows those users who have been
   active recently. This setting determines how many minutes a user may be
@@ -4309,6 +4316,7 @@ up menus.")
 "Presence messages in the LysKOM buffer:")
     (kom-page-before-command-tag . "Clear the screen:")
 
+    (kom-remember-password-tag . "Remember LysKOM session password:")
     (kom-idle-hide-tag . 
 "Number of minutes of inactivity before session is hidden:      ")
     (kom-show-where-and-what-tag . 

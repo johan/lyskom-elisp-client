@@ -1,5 +1,22 @@
 2004-10-19  Pontus Freyhult  <pont@soua.net>
 
+	Clean up lyskom-default-password, enable password storing:
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-custom-strings): Added kom-remember-password-tag
+	and kom-remember-password-doc.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-remember-password.
+	(lyskom-custom-variables): Dito.
+
+	* vars.el.in (kom-remember-password): New variable.
+
+	* startup.el (lyskom): Use lyskom-default-user-name and
+	lyskom-default-password if set (with higher priority than
+	environment variables).
+	(kom-start-anew): Store the password used to login in 
+	lyskom-default-password if kom-remember-password is true.
+
 	Handle texts with content-type image/something:
 	* english-strings.el, swedish-strings.el: 
 	(lyskom-message): Added reformat-image and image-no-show.
