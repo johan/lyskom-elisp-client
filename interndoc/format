@@ -149,7 +149,7 @@ columns.
 The "?" format letter introduces a conditional in the format string.
 The letter-options component of a format directive specifies the type
 of conditional. The formatter then chooses between a set of subformat
-strings (surrounded by "%[ %]") depending no the type of conditional
+strings (surrounded by "%[ %]") depending on the type of conditional
 and the argument. For a binary condition the format direcive will have
 the following general form:
 
