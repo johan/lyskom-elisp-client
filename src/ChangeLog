@@ -1,3 +1,8 @@
+2003-08-04  David Byers  <byers@lysator.liu.se>
+
+	* commands2.el (kom-status-server): Show ascent and descent rates
+	for statistics.
+
 2003-08-04  Johan Sundström  <jhs@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-fcc-text): Fix for bug 1073.
