@@ -1,3 +1,10 @@
+2004-10-26  Pontus Freyhult  <pont@soua.net>
+
+	Fix XEmacs problems with kom-prioritize:
+	* compatibility.el (lyskom-face-background): Changed to a wrapper
+	function that returns a string (not a color-specifier) or nil.
+	(lyskom-face-foreground): Dito.
+
 2004-10-25  Pontus Freyhult  <pont@soua.net>
 
 	* review.el (kom-review-noconversion): Use nil for 
