@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.15 2003-07-30 19:34:50 byers Exp $
+;;;;; $Id: reading.el,v 44.16 2004-06-26 19:27:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.15 2003-07-30 19:34:50 byers Exp $\n"))
+	      "$Id: reading.el,v 44.16 2004-06-26 19:27:16 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -84,6 +84,7 @@ lyskom-membership list then this item is not entered."
                   (mapcar (function membership->conf-no) lyskom-membership))
             nil
           (setq lyskom-membership (append lyskom-membership (list (car list)))))
+        (lyskom-membership-table-add (car list))
         (setq list (cdr list))))))
 
 (defun lyskom-insert-memberships-in-membership (memberships)
@@ -95,6 +96,7 @@ lyskom-membership list then this item is not entered."
         (if (memq (membership->conf-no (car list))
                   (mapcar (function membership->conf-no) lyskom-membership))
             nil
+          (lyskom-membership-table-add (car list))
           (setq lyskom-membership (cons (car list) lyskom-membership)))
         (setq list (cdr list))))
     (lyskom-sort-membership)))
@@ -125,7 +127,10 @@ lyskom-membership list then this item is not entered."
                 found t))
         (setq mship-list (cdr mship-list)))
       (unless found (setq lyskom-membership
-                          (nconc lyskom-membership (list membership)))))))
+                          (nconc lyskom-membership (list membership))))))
+
+  (lyskom-membership-table-add membership))
+
 
 (defun lyskom-insert-membership (membership)
   "Add MEMBERSHIP into lyskom-membership, sorted by priority."
@@ -157,7 +162,9 @@ replace it with MEMBERSHIP into lyskom-membership."
 	    (setcar list nil)
 	    (setq list nil))
 	(setq list (cdr list)))))
-  (setq lyskom-membership (delq nil lyskom-membership)))
+  (setq lyskom-membership (delq nil lyskom-membership))
+
+  (lyskom-membership-table-del conf-no))
 
 (defun lyskom-remove-membership (conf-no)
   "Remove the membership for CONF-NO from lyskom-membership."

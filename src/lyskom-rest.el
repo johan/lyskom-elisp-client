@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.238 2004-05-30 16:59:54 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.239 2004-06-26 19:27:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.238 2004-05-30 16:59:54 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.239 2004-06-26 19:27:16 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -956,6 +956,26 @@ CONF can be a a conf-stat or a string."
 
 ;;; +++Where should this be moved???
 
+(def-kom-var lyskom-membership-table nil 
+  "Association list mapping conferences to memberships."
+  local)
+
+
+(defun lyskom-membership-table-add (membership)
+  (let ((tmp (assq (membership->conf-no membership) lyskom-membership-table)))
+    (if tmp
+        (setcdr tmp membership)
+      (setq lyskom-membership-table 
+            (cons (cons (membership->conf-no membership) membership)
+                  lyskom-membership-table)))))
+
+(defun lyskom-membership-table-del (conf-no)
+  (setq lyskom-membership-table
+        (delq (assq conf-no lyskom-membership-table)
+              lyskom-membership-table)))
+
+
+
 (defun lyskom-try-get-membership (conf-no &optional want-passive)
   "Returns non-nil if conference CONF-NO is present on lyskom-membership.
 The value is actually the membership for the conference.
@@ -969,7 +989,7 @@ Optional argument mship-list is the membership list to look in."
   (save-excursion
     (set-buffer lyskom-buffer)
     (let ((list lyskom-membership)
-          (found nil))
+          (found (cdr (assq conf-no lyskom-membership-table))))
       (while (and (not found) (not (null list)))
         (if (= conf-no (membership->conf-no (car list)))
             (setq found (car list)))

@@ -1,5 +1,17 @@
 2004-06-26  David Byers  <byers@lysator.liu.se>
 
+	* reading.el (lyskom-add-memberships-to-membership): Use
+	lyskom-membership-table.
+	(lyskom-insert-memberships-in-membership): Ditto.
+	(lyskom-do-insert-membership): Ditto.
+	(lyskom-do-remove-membership): Ditto.
+
+	Speed up lyskom-get-membership (a lot):
+	* lyskom-rest.el (lyskom-membership-table): New variable
+	(lyskom-membership-table-add): New function.
+	(lyskom-membership-table-del): New function.
+	(lyskom-try-get-membership): Use lyskom-membership-table. 
+
 	Fix Emacs 19.34 compatibility problems:
 	* compatibility.el (map-keymap): Bug fix-
 
