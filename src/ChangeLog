@@ -1,3 +1,8 @@
+Sun Sep  1 18:03:44 1991  Linus Tolke Y  (linus at robin)
+
+	* commands1.el (kom-write-comment): Lagt till s} att vi visar
+	  vilken text vi kommenterar i bufferten.
+
 Wed Aug 28 22:06:21 1991  Linus Tolke Y  (linus at lysator)
 
 	* edit-text.el (lyskom-edit-mode): paragraph-separate initierades

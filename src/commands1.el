@@ -9,7 +9,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.1 1991-08-21 15:44:53 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.2 1991-09-01 16:24:45 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -614,7 +614,12 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 		  (car current-prefix-arg))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
-  (lyskom-start-of-command 'kom-write-comment)
+  (lyskom-start-of-command (concat 
+			    (car (cdr (assoc 'kom-write-comment
+					     lyskom-commands)))
+			    (if text-no 
+				(format " (%d)" text-no)
+			      "")))
   (if text-no
       (progn
 	(lyskom-collect 'main)
