@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.1 1996-09-24 16:24:30 byers Exp $
+;;;;; $Id: check-strings.el,v 44.2 1996-09-24 22:00:19 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -93,13 +93,13 @@
       (setq tmp (cdr tmp))
       (setq missing nil)
       (mapcar '(lambda (lang)
-                 (if (and (not (assq (car check)
+		 (if (and (not (assq (car check)
 				     (language-value (car lang) sym)))
 			  (not (memq (car check)
 				     (language-value 
 				      (car lang)
 				      (missing-sym sym)))))
-                     (setq missing (cons lang missing))
+		     (setq missing (cons lang missing))
 		   (if (and (stringp (cdr check))
 			    (assq (car check)
 				  (language-value (car lang) sym)))
@@ -116,15 +116,15 @@
 				    (format-string 
 				     (cdr (assq (car check)
 						(language-value (car lang) sym))))
-)))))
-              language-files)
+				    )))))
+	      language-files)
       (if missing
-          (message "    Missing %S in %s"
-                   (car check)
-                   (mapconcat
-                    '(lambda (x) (format "%s" (cdr x)))
-                    missing
-                    ", "))))))
+	  (message "    Missing %S in %s"
+		   (car check)
+		   (mapconcat
+		    '(lambda (x) (format "%s" (cdr x)))
+		    missing
+		    ", "))))))
 
 
 
@@ -171,6 +171,6 @@
 (defun check-language (file-spec)
   (message "Checking %S in %s" (car file-spec) (cdr file-spec))
   (mapcar (function
-           (lambda (x) (check-language-value (car file-spec)
-                                             x)))
+           (lambda (x)
+	     (check-language-value (car file-spec) x)))
 	  language-variables))
