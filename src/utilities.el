@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.128 2003-01-07 21:17:12 byers Exp $
+;;;;; $Id: utilities.el,v 44.129 2003-01-08 18:50:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.128 2003-01-07 21:17:12 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.129 2003-01-08 18:50:21 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1605,7 +1605,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
                               30        ; Apr
                               31        ; May
                               30        ; Jun
-                              30        ; Jul
+                              31        ; Jul
                               31        ; Aug
                               30        ; Sep
                               31        ; Oct
