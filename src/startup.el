@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.44 1999-12-03 10:55:43 byers Exp $
+;;;;; $Id: startup.el,v 44.45 2000-01-10 23:26:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.44 1999-12-03 10:55:43 byers Exp $\n"))
+	      "$Id: startup.el,v 44.45 2000-01-10 23:26:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -556,8 +556,8 @@ This is called at login and after prioritize and set-unread."
 (defun lyskom-set-membership (membership)
   "Sets lyskom-membership to a new value.
 Args: MEMBERSHIP."
-  (setq lyskom-membership (sort (listify-vector membership)
-				'lyskom-membership-<))
+  (setq lyskom-membership (listify-vector membership))
+  (lyskom-sort-membership)
   (setq lyskom-membership-is-read t))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.35 1999-12-02 23:44:29 byers Exp $
+;;;;; $Id: option-edit.el,v 44.36 2000-01-10 23:26:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.35 1999-12-02 23:44:29 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.36 2000-01-10 23:26:56 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -249,14 +249,15 @@ customize buffer but do not save them to the server."
       (while tmp
         (set (car (car tmp))
              (widget-value (cdr (car tmp))))
-        (when (and (listp kom-dont-read-saved-variables)
-                   (not (widget-value (widget-get (cdr (car tmp)) 
-                                                  ':lyskom-storage-widget)))
-                   (or (memq (car (car tmp)) lyskom-elisp-variables)
-                       (memq (car (car tmp)) lyskom-global-boolean-variables)
-                       (memq (car (car tmp)) lyskom-global-non-boolean-variables)))
-          (setq kom-dont-read-saved-variables 
-                (cons (car (car tmp)) kom-dont-read-saved-variables)))
+        (when (not (widget-value (widget-get (cdr (car tmp)) 
+                                             ':lyskom-storage-widget)))
+          (set-default (car (car tmp)) (widget-value (cdr (car tmp))))
+          (when (and (listp kom-dont-read-saved-variables)
+                     (or (memq (car (car tmp)) lyskom-elisp-variables)
+                         (memq (car (car tmp)) lyskom-global-boolean-variables)
+                         (memq (car (car tmp)) lyskom-global-non-boolean-variables)))
+            (setq kom-dont-read-saved-variables 
+                  (cons (car (car tmp)) kom-dont-read-saved-variables))))
         (setq tmp (cdr tmp))))))
 
 (eval-when-compile (defvar save-options-init-file nil))
@@ -319,15 +320,15 @@ customize buffer but do not save them to the server."
     (let ((standard-output init-output-marker))
       (princ ";;; LysKOM Settings\n")
       (princ ";;; =====================\n")
-      (mapcar
-       (function 
-        (lambda (x)
-          (princ (format "(setq %S %s%S)\n" 
-                         (car x)
-                         (cond ((symbolp (cdr x)) "'")
-                               ((listp (cdr x)) "'")
-                               (t ""))
-                         (cdr x)))))
+      (mapcar (lambda (x)
+                (princ (format "(setq-default %S %s%S)\n" 
+                               (car x)
+                               (cond ((eq (cdr x) t) "")
+                                     ((null (cdr x)) "")
+                                     ((symbolp (cdr x)) "'")
+                                     ((listp (cdr x)) "'")
+                                     (t ""))
+                               (cdr x))))
        var-list)
       (princ ";;; ============================\n")
       (princ ";;; End of LysKOM Settings\n"))
@@ -747,7 +748,7 @@ customize buffer but do not save them to the server."
     (nconc (funcall (cdr convertfn)
                     (car spec)
                     (car (cdr spec))
-                    (car (cdr (cdr spec))))
+                    (cdr (cdr spec)))
            (lyskom-widget-convert-props spec))))
 
 (defun lyskom-widget-convert-props (spec)
@@ -773,301 +774,345 @@ customize buffer but do not save them to the server."
     (nreverse result)))
 
 
+(defun lyskom-build-simple-widget-spec (type defaults propl)
+  (let (new-props)
+    (while defaults
+      (unless (plist-member propl (car defaults))
+        (setq new-props (cons (car defaults)
+                              (cons (car (cdr defaults)) new-props))))
+      (setq defaults (cdr (cdr defaults))))
+    (cons type new-props)))
+
+
 (defun lyskom-file-widget (type &optional args propl)
-  (list 'file ':format "%[%t%] %v" ':size 0))
+  (lyskom-build-simple-widget-spec 'file
+                                   '(:format "%[%t%] %v" ':size 0)
+                                   propl))
 
 (defun lyskom-person-widget (type &optional args propl)
-  (list 'lyskom-name))
+  (lyskom-build-simple-widget-spec 'lyskom-name nil propl))
 
 (defun lyskom-command-widget (type &optional args propl)
-  (list 'lyskom-command))
+  (lyskom-build-simple-widget-spec 'lyskom-command nil propl))
 
 (defun lyskom-kbd-macro-widget (type &optional args propl)
-  (list 'lyskom-kbd-macro ':macro-buffer lyskom-buffer))
+  (lyskom-build-simple-widget-spec 'lyskom-kbd-macro
+                                   (list ':macro-buffer lyskom-buffer)
+                                   propl))
 
 (defun lyskom-item-widget (type &optional args propl)
-  (list 'item
-        ':format "%t"
-        ':tag (lyskom-custom-string (elt args 0))
-        ':value (elt args 1)))
+  (lyskom-build-simple-widget-spec 'item
+                                   (list ':format "%t"
+                                         ':tag (lyskom-custom-string 
+                                                (elt args 0))
+                                         ':value (elt args 1))
+                                   propl))
 
 (defun lyskom-language-widget (type &optional args propl)
-  (list 'menu-choice
-        ':format "%[%t%] %v"
-        ':case-fold t
-        ':args
-        (mapcar
-         (function
-          (lambda (x)
-            (list 'item
-                  ':tag (lyskom-language-name (car x))
-                  ':format "%t"
-                  ':value (elt x 0))))
-         lyskom-languages)))
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':format "%[%t%] %v"
+         ':case-fold t
+         ':args
+         (mapcar
+          (function
+           (lambda (x)
+             (list 'item
+                   ':tag (lyskom-language-name (car x))
+                   ':format "%t"
+                   ':value (elt x 0))))
+          lyskom-languages))
+   propl))
 
 (defun lyskom-ispell-dictionary-widget (type &optional args propl)
   (require 'ispell)
-  (list 'menu-choice
-        ':format "%[%t%] %v"
-        ':case-fold nil
-        ':args
-        (cons (list 'item
-                    ':tag "ispell-dictionary"
-                    ':format "%t"
-                    ':value nil)
-              (delq nil
-                    (mapcar 
-                     (function
-                      (lambda (x)
-                        (and (car x)
-                             (list 'item
-                                   ':tag (car x)
-                                   ':format "%t"
-                                   ':value (car x)))))
-                     ispell-dictionary-alist)))))
+  (lyskom-build-simple-widget-spec 
+   'menu-choice
+   (list ':format "%[%t%] %v"
+         ':case-fold nil
+         ':args
+         (cons (list 'item
+                     ':tag "ispell-dictionary"
+                     ':format "%t"
+                     ':value nil)
+               (delq nil
+                     (mapcar 
+                      (function
+                       (lambda (x)
+                         (and (car x)
+                              (list 'item
+                                    ':tag (car x)
+                                    ':format "%t"
+                                    ':value (car x)))))
+                      ispell-dictionary-alist))))
+   propl))
 
 (defun lyskom-url-viewer-widget (type &optional args propl)
-  (list 'menu-choice 
-        ':format "%[%v%]\n"
-        ':case-fold t
-        ':help-echo (lyskom-custom-string 'select-url-viewer)
-        ':args
-        (list (list 'item
-                    ':tag (lyskom-custom-string 'no-viewer)
-                    ':format "%t"
-                    ':value nil)
-              (list 'item 
-                    ':tag (lyskom-custom-string 'default-viewer)
-                    ':format "%t"
-                    ':value "default")
-              (list 'item
-                    ':tag (lyskom-custom-string 'netscape-viewer)
-                    ':format "%t"
-                    ':value "netscape")
-              (list 'item
-                    ':tag (lyskom-custom-string 'emacs-w3-viewer)
-                    ':format "%t"
-                    ':value "w3")
-              (list 'item 
-                    ':tag (lyskom-custom-string 'emacs-general-viewer)
-                    ':format "%t"
-                    ':value "emacs")
-              (list 'item
-                    ':tag (lyskom-custom-string 'emacs-dired-viewer)
-                    ':format "%t"
-                    ':value "dired")
-              (list 'item 
-                    ':tag (lyskom-custom-string 'emacs-mail-viewer)
-                    ':format "%t"
-                    ':value "mail-mode")
-              (list 'item
-                    ':tag (lyskom-custom-string 'emacs-telnet-viewer)
-                    ':format "%t"
-                    ':value "telnet-mode")
-              (list 'item
-                    ':tag (lyskom-custom-string 'mosaic-viewer)
-                    ':format "%t"
-                    ':value "mosaic")
-              (list 'item
-                    ':tag (lyskom-custom-string 'lynx-viewer)
-                    ':format "%t"
-                    ':value "lynx"))))
+  (lyskom-build-simple-widget-spec
+   'menu-choice 
+   (list ':format "%[%v%]\n"
+         ':case-fold t
+         ':help-echo (lyskom-custom-string 'select-url-viewer)
+         ':args
+         (list (list 'item
+                     ':tag (lyskom-custom-string 'no-viewer)
+                     ':format "%t"
+                     ':value nil)
+               (list 'item 
+                     ':tag (lyskom-custom-string 'default-viewer)
+                     ':format "%t"
+                     ':value "default")
+               (list 'item
+                     ':tag (lyskom-custom-string 'netscape-viewer)
+                     ':format "%t"
+                     ':value "netscape")
+               (list 'item
+                     ':tag (lyskom-custom-string 'emacs-w3-viewer)
+                     ':format "%t"
+                     ':value "w3")
+               (list 'item 
+                     ':tag (lyskom-custom-string 'emacs-general-viewer)
+                     ':format "%t"
+                     ':value "emacs")
+               (list 'item
+                     ':tag (lyskom-custom-string 'emacs-dired-viewer)
+                     ':format "%t"
+                     ':value "dired")
+               (list 'item 
+                     ':tag (lyskom-custom-string 'emacs-mail-viewer)
+                     ':format "%t"
+                     ':value "mail-mode")
+               (list 'item
+                     ':tag (lyskom-custom-string 'emacs-telnet-viewer)
+                     ':format "%t"
+                     ':value "telnet-mode")
+               (list 'item
+                     ':tag (lyskom-custom-string 'mosaic-viewer)
+                     ':format "%t"
+                     ':value "mosaic")
+               (list 'item
+                     ':tag (lyskom-custom-string 'lynx-viewer)
+                     ':format "%t"
+                     ':value "lynx")))
+   propl))
 
 (defun lyskom-open-window-widget (type &optional args propl)
-  (list 'menu-choice
-        ':case-fold t
-        ':format "%[%t%] %v"
-        ':args
-        (list (list 'item
-                    ':tag (lyskom-custom-string 'other-window)
-                    ':format "%t"
-                    ':value 'other)
-              (list 'item 
-                    ':tag (lyskom-custom-string 'other-frame)
-                    ':format "%t"
-                    ':value 'other-frame)
-              (list 'item 
-                    ':tag (lyskom-custom-string 'new-frame)
-                    ':format "%t"
-                    ':value 'new-frame)
-              (list 'item
-                    ':tag (lyskom-custom-string 'lyskom-window)
-                    ':format "%t"
-                    ':value nil)
-              (list 'editable-field
-                    ':tag (lyskom-custom-string 'window-on-buffer)
-                    ':format "%[%t%]: `%v'"
-                    ':value ""
-                    ':size 0))))
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':case-fold t
+         ':format "%[%t%] %v"
+         ':args
+         (list (list 'item
+                     ':tag (lyskom-custom-string 'other-window)
+                     ':format "%t"
+                     ':value 'other)
+               (list 'item 
+                     ':tag (lyskom-custom-string 'other-frame)
+                     ':format "%t"
+                     ':value 'other-frame)
+               (list 'item 
+                     ':tag (lyskom-custom-string 'new-frame)
+                     ':format "%t"
+                     ':value 'new-frame)
+               (list 'item
+                     ':tag (lyskom-custom-string 'lyskom-window)
+                     ':format "%t"
+                     ':value nil)
+               (list 'editable-field
+                     ':tag (lyskom-custom-string 'window-on-buffer)
+                     ':format "%[%t%]: `%v'"
+                     ':value ""
+                     ':size 0)))
+   propl))
 
 (defun lyskom-ding-widget (type &optional args propl)
-  (list 'menu-choice
-        ':case-fold t
-        ':format "%[%t%] %v"
-        ':args
-        (list (list 'item 
-                    ':tag (lyskom-custom-string 'turned-off)
-                    ':value 0
-                    ':format "%t"
-                    ':match '(lambda (w v) (eq v 0)))
-              (list 'lyskom-number
-                    ':tag (lyskom-custom-string 'number-of-times)
-                    ':help-echo (lyskom-custom-string 'select-number)
-                    ':value "1"
-                    ':format "%[%t%]: (%v)"
-                    ':size 0
-                    ':min-value 1
-                    ':max-value 255)
-              (list 'lyskom-string
-                    ':tag (lyskom-custom-string 'sound-file)
-                    ':help-echo (lyskom-custom-string 'select-audio-file)
-                    ':size 0)
-              (list 'editable-list
-                    ':format "%[%t%]\n%v%i"
-                    ':indent 4
-                    ':tag (lyskom-custom-string 'specific-spec)
-                    ':menu-tag (lyskom-custom-string 'specific-spec)
-                    ':args
-                    `((cons :format "%v" 
-                            :value (1 0)
-                            :args
-                            ((menu-choice
-                              :case-fold t
-                              :format "%[%t%]: %v"
-                              :tag ,(lyskom-custom-string 'conf-or-person)
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list  ':case-fold t
+          ':format "%[%t%] %v"
+          ':args
+          (list (list 'item 
+                      ':tag (lyskom-custom-string 'turned-off)
+                      ':value 0
+                      ':format "%t"
+                      ':match '(lambda (w v) (eq v 0)))
+                (list 'lyskom-number
+                      ':tag (lyskom-custom-string 'number-of-times)
+                      ':help-echo (lyskom-custom-string 'select-number)
+                      ':value "1"
+                      ':format "%[%t%]: (%v)"
+                      ':size 0
+                      ':min-value 1
+                      ':max-value 255)
+                (list 'lyskom-string
+                      ':tag (lyskom-custom-string 'sound-file)
+                      ':help-echo (lyskom-custom-string 'select-audio-file)
+                      ':size 0)
+                (list 'editable-list
+                      ':format "%[%t%]\n%v%i"
+                      ':indent 4
+                      ':tag (lyskom-custom-string 'specific-spec)
+                      ':menu-tag (lyskom-custom-string 'specific-spec)
+                      ':args
+                      `((cons :format "%v" 
+                              :value (1 0)
                               :args
-                              ((lyskom-name :lyskom-predicate (pers conf)
-                                            :tag ,(lyskom-custom-string 'conf-or-person))
-                               (item :tag ,(lyskom-custom-string 'other-persons)
-                                     :value t
-                                     :format "%t\n")))
-                             (menu-choice
-                              :case-fold t
-                              :format "%[%t%]: %v\n"
-                              :tag ,(lyskom-custom-string 'ding)
-                              :args
-                              ((item :tag ,(lyskom-custom-string 'turned-off)
-                                     :value nil
-                                     :format "%t"
-                                     :match (lambda (w v) (or (null v) (eq v 0))))
-                               (lyskom-number :tag ,(lyskom-custom-string 'number-of-times)
-                                              :help-echo ,(lyskom-custom-string 'select-number)
-                                              :value "1"
-                                              :format "%[%t%]: (%v)"
-                                              :size 0
-                                              :min-value 1
-                                              :max-value 255)
-                               (lyskom-string :tag ,(lyskom-custom-string 'sound-file)
-                                              :help-echo ,(lyskom-custom-string 'select-audio-file)
-                                              :size 0))))))
-                    )
-              )))
+                              ((menu-choice
+                                :case-fold t
+                                :format "%[%t%]: %v"
+                                :tag ,(lyskom-custom-string 'conf-or-person)
+                                :args
+                                ((lyskom-name :lyskom-predicate (pers conf)
+                                              :tag ,(lyskom-custom-string 'conf-or-person))
+                                 (item :tag ,(lyskom-custom-string 'other-persons)
+                                       :value t
+                                       :format "%t\n")))
+                               (menu-choice
+                                :case-fold t
+                                :format "%[%t%]: %v\n"
+                                :tag ,(lyskom-custom-string 'ding)
+                                :args
+                                ((item :tag ,(lyskom-custom-string 'turned-off)
+                                       :value nil
+                                       :format "%t"
+                                       :match (lambda (w v) (or (null v) (eq v 0))))
+                                 (lyskom-number :tag ,(lyskom-custom-string 'number-of-times)
+                                                :help-echo ,(lyskom-custom-string 'select-number)
+                                                :value "1"
+                                                :format "%[%t%]: (%v)"
+                                                :size 0
+                                                :min-value 1
+                                                :max-value 255)
+                                 (lyskom-string :tag ,(lyskom-custom-string 'sound-file)
+                                                :help-echo ,(lyskom-custom-string 'select-audio-file)
+                                                :size 0))))))
+                      )
+                ))
+   propl))
 
 (defun lyskom-toggle-widget-inverse (type &optional args propl)
-  (list 'menu-choice
-        ':case-fold t
-        ':format "%[%t%] %v"
-        ':args
-        (list (list 'item ':tag (lyskom-custom-string (elt args 0))
-                    ':value nil
-                    ':format "%t")
-              (list 'item 
-                    ':tag (lyskom-custom-string (elt args 1))
-                    ':value t
-                    ':match '(lambda (w v) v)
-                    ':format "%t"))))
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':case-fold t
+         ':format "%[%t%] %v"
+         ':args
+         (list (list 'item ':tag (lyskom-custom-string (elt args 0))
+                     ':value nil
+                     ':format "%t")
+               (list 'item 
+                     ':tag (lyskom-custom-string (elt args 1))
+                     ':value t
+                     ':match '(lambda (w v) v)
+                     ':format "%t")))
+   propl))
 
 (defun lyskom-toggle-widget (type &optional args propl)
-  (list 'menu-choice
-        ':case-fold t
-        ':format "%[%t%] %v"
-        ':args
-        (list (list 'item
-                    ':tag (lyskom-custom-string (elt args 0))
-                    ':value t
-                    ':format "%t"
-                    ':match '(lambda (w v) v))
-              (list 'item ':tag (lyskom-custom-string (elt args 1))
-                    ':value nil
-                    ':format "%t"))))
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':case-fold t
+         ':format "%[%t%] %v"
+         ':args
+         (list (list 'item
+                     ':tag (lyskom-custom-string (elt args 0))
+                     ':value t
+                     ':format "%t"
+                     ':match '(lambda (w v) v))
+               (list 'item ':tag (lyskom-custom-string (elt args 1))
+                     ':value nil
+                     ':format "%t")))
+   propl))
 
 
 (defun lyskom-repeat-widget (type &optional args propl)
-  (list 'editable-list 
-        ':format "%[%t%]\n%v%i"
-        ':args
-        (list (lyskom-widget-convert-specification args))))
+  (lyskom-build-simple-widget-spec
+   'editable-list 
+   (list ':format "%[%t%]\n%v%i"
+         ':args
+         (list (lyskom-widget-convert-specification args)))
+   propl))
 
 (defun lyskom-choice-widget (type &optional args propl)
-  (list 'menu-choice
-        ':case-fold t
-        ':format "%[%t%] %v"
-        ':args
-        (mapcar 'lyskom-widget-convert-specification args)))
+  (lyskom-build-simple-widget-spec
+   'menu-choice
+   (list ':case-fold t
+         ':format "%[%t%] %v"
+         ':args
+         (mapcar 'lyskom-widget-convert-specification args))
+   propl))
 
 
 (defun lyskom-string-widget (type &optional args propl)
-  (list 'lyskom-string ':size 0 ':format "%[%t%] `%v'"))
+  (lyskom-build-simple-widget-spec
+   'lyskom-string 
+   (list ':size 0 
+         ':format "%[%t%] `%v'")
+   propl))
 
 
 (defun lyskom-number-widget (type &optional args propl)
   (if args
-      (list 'lyskom-number
-            ':min-value (elt args 0)
-            ':max-value (elt args 1)
-            ':size 0)
-    (list 'lyskom-number
-          ':size 0)))
+      (lyskom-build-simple-widget-spec
+       'lyskom-number
+       (list ':min-value (elt args 0)
+             ':max-value (elt args 1)
+             ':size 0)
+       propl)
+    (lyskom-build-simple-widget-spec
+     'lyskom-number
+     (list ':size 0)
+     propl)))
 
 ;;;
 ;;; The ansaphone reply widget (whew!)
 
 (defun lyskom-ansaphone-reply-widget (type &optional args propl)
-  (list 'editable-list
-        :format "%t:\n%v%i\n"
-        :args
-        `((group
-           :args ((menu-choice :tag ,(lyskom-custom-string 'ar-message-type)
-                               :format "%[%t%]: %v"
-                               :args
-                               ((item :value personal :tag ,(lyskom-custom-string 'ar-personal))
-                                (item :value group :tag ,(lyskom-custom-string 'ar-group))
-                                (item :value common :tag ,(lyskom-custom-string 'ar-alarm))
-                                (item :value nil :tag ,(lyskom-custom-string 'ar-any-type))))
-                  (menu-choice :tag ,(lyskom-custom-string 'ar-sender)
-                               :args
-                               ((item :value nil :tag ,(lyskom-custom-string 'ar-any-sender))
-                                (editable-list :tag ,(lyskom-custom-string 'ar-specified-sender)
-                                               :menu-tag ,(lyskom-custom-string 'ar-specified-sender)
-                                               :format "%t:\n%v%i\n"
-                                               :indent 14
-                                               :args
-                                               ((lyskom-name 
-                                                 :format "%[%t%]: %v"
-                                                 :tag ,(lyskom-custom-string 'ar-person))))))
-                  (menu-choice :tag ,(lyskom-custom-string 'ar-recipient)
-                               :args
-                               ((item :value nil :tag ,(lyskom-custom-string 'ar-any-recipient))
-                                (editable-list :tag ,(lyskom-custom-string 'ar-specified-recipient)
-                                               :menu-tag ,(lyskom-custom-string 'ar-specified-recipient)
-                                               :format "%t:\n%v%i\n"
-                                               :indent 14
-                                               :args
-                                               ((lyskom-name :tag ,(lyskom-custom-string 'ar-pers-or-conf)
-                                                             :format "%[%t%]: %v"
-                                                             :lyskom-predicate (pers conf))))))
-                  (menu-choice :tag ,(lyskom-custom-string 'ar-message-text)
-                               :args
-                               ((item :value nil :tag ,(lyskom-custom-string 'ar-any-message))
-                                (lyskom-string :tag ,(lyskom-custom-string 'ar-matching-regexp)
-                                               :size 0
-                                               :format "%[%t%] `%v'\n")))
-                  (menu-choice :tag ,(lyskom-custom-string 'ar-reply)
-                               :args
-                               ((item :value nil :tag ,(lyskom-custom-string 'ar-no-reply))
-                                (lyskom-string :tag ,(lyskom-custom-string 'ar-reply-text)
-                                               :size 0
-                                               :format "%[%t%] `%v'\n"))))))))
+  (lyskom-build-simple-widget-spec
+   'editable-list
+   (list ':format "%t:\n%v%i\n"
+         ':args
+         `((group
+            :args ((menu-choice :tag ,(lyskom-custom-string 'ar-message-type)
+                                :format "%[%t%]: %v"
+                                :args
+                                ((item :value personal :tag ,(lyskom-custom-string 'ar-personal))
+                                 (item :value group :tag ,(lyskom-custom-string 'ar-group))
+                                 (item :value common :tag ,(lyskom-custom-string 'ar-alarm))
+                                 (item :value nil :tag ,(lyskom-custom-string 'ar-any-type))))
+                   (menu-choice :tag ,(lyskom-custom-string 'ar-sender)
+                                :args
+                                ((item :value nil :tag ,(lyskom-custom-string 'ar-any-sender))
+                                 (editable-list :tag ,(lyskom-custom-string 'ar-specified-sender)
+                                                :menu-tag ,(lyskom-custom-string 'ar-specified-sender)
+                                                :format "%t:\n%v%i\n"
+                                                :indent 14
+                                                :args
+                                                ((lyskom-name 
+                                                  :format "%[%t%]: %v"
+                                                  :tag ,(lyskom-custom-string 'ar-person))))))
+                   (menu-choice :tag ,(lyskom-custom-string 'ar-recipient)
+                                :args
+                                ((item :value nil :tag ,(lyskom-custom-string 'ar-any-recipient))
+                                 (editable-list :tag ,(lyskom-custom-string 'ar-specified-recipient)
+                                                :menu-tag ,(lyskom-custom-string 'ar-specified-recipient)
+                                                :format "%t:\n%v%i\n"
+                                                :indent 14
+                                                :args
+                                                ((lyskom-name :tag ,(lyskom-custom-string 'ar-pers-or-conf)
+                                                              :format "%[%t%]: %v"
+                                                              :lyskom-predicate (pers conf))))))
+                   (menu-choice :tag ,(lyskom-custom-string 'ar-message-text)
+                                :args
+                                ((item :value nil :tag ,(lyskom-custom-string 'ar-any-message))
+                                 (lyskom-string :tag ,(lyskom-custom-string 'ar-matching-regexp)
+                                                :size 0
+                                                :format "%[%t%] `%v'\n")))
+                   (menu-choice :tag ,(lyskom-custom-string 'ar-reply)
+                                :args
+                                ((item :value nil :tag ,(lyskom-custom-string 'ar-no-reply))
+                                 (lyskom-string :tag ,(lyskom-custom-string 'ar-reply-text)
+                                                :size 0
+                                                :format "%[%t%] `%v'\n")))))))
+   propl))
 
 
 ;;; ======================================================================
