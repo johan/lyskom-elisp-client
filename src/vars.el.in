@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.244 2003-04-13 22:29:17 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.245 2003-04-25 07:38:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.244 2003-04-13 22:29:17 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.245 2003-04-25 07:38:32 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1659,8 +1659,8 @@ Values other than `t' and `nil' are reserved for future use."
   '((kom-friends . kom-friends-face)
     (kom-morons  . kom-morons-face)
     (lyskom-highlight-has-no-presentation . kom-active-strikethrough-face)
-    (lyskom-highlight-i-am-supervisor . kom-active-highlight-face)
-    (lyskom-pers-no . kom-me-face))
+    (lyskom-pers-no . kom-me-face)
+    (lyskom-highlight-i-am-supervisor . kom-active-highlight-face))
   "**How to highlight conference an person names.
 
 The value of this variable is an alist whose keys are matched against
