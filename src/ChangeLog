@@ -1,3 +1,7 @@
+2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
+
+	* mship-edit.el (lyskom-read-time): Don't subtract 1900 from year.
+
 2001-04-25  David Byers  <davby@ida.liu.se>
 
 	* english-strings.el (lyskom-filter-actions): Add string for read
