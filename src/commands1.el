@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.126 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: commands1.el,v 44.127 2002-03-03 16:22:43 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.126 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.127 2002-03-03 16:22:43 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -603,6 +603,7 @@ is the position where the membership was placed."
         (progn
           (lyskom-insert-string 'nope)
           (let* ((errno lyskom-errno)
+                 (err-stat lyskom-err-stat)
                  (is-supervisor (lyskom-is-supervisor (conf-stat->conf-no conf-conf-stat)
                                                       lyskom-pers-no))
                  (is-member (lyskom-is-member (conf-stat->conf-no conf-conf-stat)
@@ -615,7 +616,7 @@ is the position where the membership was placed."
                                          pers-conf-stat
                                          conf-conf-stat))
                   ((and rd-prot is-supervisor)
-                   (lyskom-format-insert 'error-code (lyskom-get-error-text errno)))
+                   (lyskom-insert-error errno err-stat))
 
                   (rd-prot (let ((supervisorconf (blocking-do
                                                   'get-conf-stat
@@ -627,9 +628,7 @@ is the position where the membership was placed."
                                (lyskom-format-insert 'cant-find-supervisor
                                                      conf-conf-stat))))
 
-                  (t (lyskom-format-insert 'error-code
-                                           (lyskom-get-error-text lyskom-errno)
-                                           lyskom-errno)))))
+                  (t (lyskom-insert-error errno err-stat)))))
 
       ;;+++Borde {ndra i cachen i st{llet.
       (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
@@ -802,9 +801,7 @@ of the person."
 	(progn
 	  (lyskom-format-insert 'could-not-create-conf
 				conf-name)
-	  (lyskom-format-insert 'error-code
-				(lyskom-get-error-text lyskom-errno)
-				lyskom-errno))
+	  (lyskom-insert-error))
       (progn
 	(let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
 	  (lyskom-format-insert 'created-conf-no-name 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.141 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: lyskom-rest.el,v 44.142 2002-03-03 16:22:42 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.141 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.142 2002-03-03 16:22:42 ceder Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -136,15 +136,25 @@
   (if answer 
       (lyskom-insert-string 'done)
     (lyskom-insert-string 'nope)
-    (lyskom-format-insert 'error-code
-			  (lyskom-get-error-text (or errno lyskom-errno))
-			  (or errno lyskom-errno)
-                          (if errno "" lyskom-err-stat)))
+    (lyskom-insert-error errno))
   answer)
+
+(defun lyskom-insert-error (&optional errno err-stat)
+  "Insert an error message describing ERRNO and ERR-STAT.
+If ERRNO and ERR-STAT are not supplied, use lyskom-errno and
+lyskom-err-stat instead.  If only ERRNO is supplied, use the empty
+string for ERR-STAT."
+  (lyskom-format-insert 'error-code
+			(lyskom-get-error-text (or errno lyskom-errno))
+			(or errno lyskom-errno)
+			(or err-stat (if errno "" lyskom-err-stat))))
 
 (defun lyskom-current-error ()
   "Return a string describing the current error"
-  (lyskom-format 'error-code (lyskom-get-error-text lyskom-errno) lyskom-errno))
+  (lyskom-format 'error-code
+		 (lyskom-get-error-text lyskom-errno)
+		 lyskom-errno
+		 lyskom-err-stat))
 
 
 ;;; ----------------------------------------------------------------

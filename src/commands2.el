@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.107 2002-03-02 22:49:08 joel Exp $
+;;;;; $Id: commands2.el,v 44.108 2002-03-03 16:22:42 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.107 2002-03-02 22:49:08 joel Exp $\n"))
+              "$Id: commands2.el,v 44.108 2002-03-03 16:22:42 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1955,9 +1955,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                                          (conf-type->rsv3
                                           (uconf-stat->conf-type uconf-stat)))))
           (progn (lyskom-insert-string 'nope)
-                 (lyskom-format-insert 'error-code
-                                       (lyskom-get-error-text lyskom-errno)
-                                       lyskom-errno))))))
+                 (lyskom-insert-error))))))
 
 
 ;;; ============================================================

@@ -1,3 +1,22 @@
+2002-03-03  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Fix bug 406:
+	* lyskom-rest.el (lyskom-report-command-answer): Factor out some
+	code to lyskom-insert-error.
+	(lyskom-insert-error): New function.
+	(lyskom-current-error): Call lyskom-insert-error instead of
+	issuing a broken call to lyskom-format-insert
+
+	* commands1.el (lyskom-add-member-answer): Save err-stat as well
+	as errno.  Use lyskom-insert-error instead of a broken call to
+	lyskom-format-insert.  Use the saved errno in all cases, not just
+	some.
+	(kom-create-conf): Use lyskom-insert-error instead of a broken
+	call to lyskom-format-insert.
+
+	* commands2.el (kom-change-conf-type): Use lyskom-insert-error
+	instead of a broken call to lyskom-format-insert.
+
 2002-03-03  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* utilities.el (lyskom-current-time): Removed obsolete function.
