@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.34 1997-07-09 14:41:21 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.35 1997-07-10 08:58:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.34 1997-07-09 14:41:21 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.35 1997-07-10 08:58:42 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1363,7 +1363,7 @@ Note that it is not allowed to use deferred insertions in the text."
 
 (defun lyskom-format-html (text)
   (condition-case e (require 'w3) (error nil))
-  (let ((tmpbuf (generate-new-buffer "lyskom-html")))
+  (let ((tmpbuf (lyskom-get-buffer-create 'lyskom-html " lyskom-html" t)))
     (unwind-protect
         (save-excursion
           (set-buffer tmpbuf)
@@ -1383,9 +1383,7 @@ Note that it is not allowed to use deferred insertions in the text."
                nil))
             (setq tmp (buffer-string))
             (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
-            tmp))
-      (kill-buffer tmpbuf)
-)))
+            tmp)))))
 
 
 (defun lyskom-format-enriched (text)
@@ -1611,6 +1609,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	      ;; Insert the new prompt
 	      (goto-char (point-max))
 	      (beginning-of-line)
+              (when lyskom-slow-mode
+                (add-text-properties 0 (length prompt-text)
+                                     '(read-only t) prompt-text))
 	      (insert-string prompt-text)
 	      ;; Delete the old prompt
 	      (if lyskom-current-prompt

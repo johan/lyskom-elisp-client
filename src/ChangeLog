@@ -1,3 +1,25 @@
+Thu Jul 10 10:16:35 1997  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-set-face-scheme): Testa att console-type
+ 	inte är tty. Det är antagligen marginellt bättre än att testa
+ 	explicit för x eller win32.
+
+	* slow.el (kom-expand-slow-or-next-command): Slå av undo vid
+ 	exekvering av kommando.
+	(lyskom-get-entered-slow-command): Försök hantera att prompten
+ 	saknas.
+	(kom-parse-command-and-execute): Disabla undo medan man kör
+ 	kommandot.
+
+	* command.el (lyskom-end-of-command): Slå på undo efter prompten
+ 	är utskriven.
+
+	* lyskom-rest.el (lyskom-update-prompt): Gör prompten read-only om
+ 	man har långsamma kommandon på.
+
+	* vars.el.in (lyskom-saved-read-only): Ny variabel.
+	(lyskom-slow-mode): Ny variabel.
+
 Wed Jul  9 11:55:47 1997  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-default-collate-table): Rättat strängen som

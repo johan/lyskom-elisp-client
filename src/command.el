@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.5 1997-07-02 17:45:51 byers Exp $
+;;;;; $Id: command.el,v 44.6 1997-07-10 08:58:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -240,7 +240,9 @@ chosen according to this"
       (setq lyskom-pending-commands (cdr lyskom-pending-commands))
       (if (symbolp command)
 	  (call-interactively command)
-	(eval command)))))
+	(eval command))))
+  (when lyskom-slow-mode
+    (buffer-enable-undo)))
 
 (provide 'lyskom-command)
 
