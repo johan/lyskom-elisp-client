@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.325 2003-07-20 22:12:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.326 2003-07-23 15:54:50 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.325 2003-07-20 22:12:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.326 2003-07-23 15:54:50 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -830,7 +830,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (Unknown-number . "Okänt antal")
     (text-to-check-will-read-for . "...för medlemskap i mottagare till inlägg: ")
     (pers-to-check-will-read-for . "Vilken person vill du kontrollera: ")
-    (pers-is-member-of-rcpt . "Ja, %#1P är medlem i minst en mottagare till inlågg %#2n.\n")
+    (pers-is-member-of-rcpt . "Ja, %#1P är medlem i minst en mottagare till inlägg %#2n.\n")
     (pers-is-passive-member-of-rcpt . "Nja, %#1P är bara passiv medlem någon mottagare till %#2n.\n")
     (pers-is-not-member-of-rcpt . "Nej, %#1P är inte medlem i någon mottagare till %#2n.\n")
 
