@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.299 2003-03-13 21:11:52 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.300 2003-03-15 18:25:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.299 2003-03-13 21:11:52 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.300 2003-03-15 18:25:23 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1882,6 +1882,10 @@ teckenkodning.
 
     (super-jump-q . "Superhoppa vilket inlägg? ")
     (conf-list-legend . "* Ej medlem; - Passiv medlem\n")
+
+    (unread-text-q . "Gör vilket inlägg oläst? ")
+    (marking-text-unread . "Markerar inlägg %#1n oläst...")
+
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2087,6 +2091,7 @@ teckenkodning.
     (kom-move-text-tree       . "Flytta träd")
 
     (kom-copy-options         . "Kopiera inställningar")
+    (kom-mark-unread          . "Oläsmarkera inlägg")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -2308,6 +2313,7 @@ teckenkodning.
 (defvar lyskom-sv-filter-get-prefix)
 (defvar lyskom-sv-who-prefix)
 (defvar lyskom-sv-A-prefix)
+(defvar lyskom-sv-unread-prefix)
 
 (if lyskom-sv-mode-map
     nil
@@ -2322,6 +2328,7 @@ teckenkodning.
   (define-prefix-command 'lyskom-sv-filter-get-prefix)
   (define-prefix-command 'lyskom-sv-who-prefix)
   (define-prefix-command 'lyskom-sv-A-prefix)
+  (define-prefix-command 'lyskom-sv-unread-prefix)
 
   (define-key lyskom-sv-mode-map (kbd "f") 'lyskom-sv-filter-get-prefix)
   (define-key lyskom-sv-mode-map (kbd "n") 'lyskom-sv-next-prefix)
@@ -2330,6 +2337,7 @@ teckenkodning.
   (define-key lyskom-sv-mode-map (kbd "r") 'lyskom-sv-fast-reply-prefix)
   (define-key lyskom-sv-mode-map (kbd "v") 'lyskom-sv-who-prefix)
   (define-key lyskom-sv-mode-map (kbd "a") 'lyskom-sv-A-prefix)
+  (define-key lyskom-sv-mode-map (kbd "o") 'lyskom-sv-unread-prefix)
 
   (lyskom-try-define-key lyskom-sv-mode-map (kbd "ä")    'lyskom-sv-change-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map (kbd "{")    'lyskom-sv-change-prefix)
@@ -2475,6 +2483,19 @@ teckenkodning.
   (define-key lyskom-sv-change-prefix (kbd "q") 'kom-change-conf-faq)
   (define-key lyskom-sv-change-prefix (kbd "f") 'kom-filter-edit)
   (define-key lyskom-sv-change-prefix (kbd "m") 'kom-change-auto-reply)
+
+  (define-key lyskom-sv-unread-prefix (kbd "SPC") 'kom-mark-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "0") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "1") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "2") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "3") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "4") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "5") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "6") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "7") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "8") 'kom-initial-digit-unread)
+  (define-key lyskom-sv-unread-prefix (kbd "9") 'kom-initial-digit-unread)
+
   (define-key lyskom-sv-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-sv-review-prefix (kbd "0") 'kom-initial-digit-view)
   (define-key lyskom-sv-review-prefix (kbd "1") 'kom-initial-digit-view)

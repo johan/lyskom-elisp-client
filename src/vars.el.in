@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.232 2003-03-13 21:11:53 byers Exp $
+;;;;; $Id: vars.el.in,v 44.233 2003-03-15 18:25:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.232 2003-03-13 21:11:53 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.233 2003-03-15 18:25:23 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2932,6 +2932,7 @@ Users are encouraged to use their best sense of humor."
     kom-recommend-conference
     kom-redirect-comments
     kom-copy-options
+    kom-mark-unread
     ))
 
 ;;; ================================================================
@@ -3470,6 +3471,7 @@ This is currently not implemented.")
     kom-add-private-answer
     kom-add-request-confirm
     kom-add-server-faq
+    kom-mark-unread
     )
   "Commands that prompt for a text number rather than assume a default."
   inherited)

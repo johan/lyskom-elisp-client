@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.261 2003-03-13 21:11:52 byers Exp $
+;;;;; $Id: english-strings.el,v 44.262 2003-03-15 18:25:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.261 2003-03-13 21:11:52 byers Exp $"))
+              "$Id: english-strings.el,v 44.262 2003-03-15 18:25:22 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1847,6 +1847,9 @@ environment to one that uses \"%#2s\" to encode text.
 
     (super-jump-q . "Super jump which text? ")
     (conf-list-legend . "* Not member; - Passive member\n")
+
+    (unread-text-q . "Make which text unread? ")
+    (marking-text-unread . "Marking text %#1n as unread...")
     ))
 
 
@@ -2052,6 +2055,7 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-recommend-conference . "Recommend conference")
     (kom-redirect-comments    . "Redirect comments")
     (kom-copy-options         . "Copy options")
+    (kom-mark-unread          . "Unread text")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -2271,6 +2275,7 @@ environment to one that uses \"%#2s\" to encode text.
 (defvar lyskom-en-who-prefix)
 (defvar lyskom-en-A-prefix)
 (defvar lyskom-en-B-prefix)
+(defvar lyskom-en-unread-prefix)
 
 (if lyskom-en-mode-map
     nil
@@ -2285,6 +2290,7 @@ environment to one that uses \"%#2s\" to encode text.
   (define-prefix-command 'lyskom-en-who-prefix)
   (define-prefix-command 'lyskom-en-A-prefix)
   (define-prefix-command 'lyskom-en-B-prefix)
+  (define-prefix-command 'lyskom-en-unread-prefix)
 
   (define-key lyskom-en-mode-map (kbd "h") 'lyskom-en-change-prefix)
   (define-key lyskom-en-mode-map (kbd "r") 'lyskom-en-review-prefix)
@@ -2295,6 +2301,7 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-mode-map (kbd "w") 'lyskom-en-who-prefix)
   (define-key lyskom-en-mode-map (kbd "a") 'lyskom-en-A-prefix)
   (define-key lyskom-en-mode-map (kbd "b") 'lyskom-en-B-prefix)
+  (define-key lyskom-en-mode-map (kbd "u") 'lyskom-en-unread-prefix)
 
   (define-key lyskom-en-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
 
@@ -2377,6 +2384,18 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-change-prefix (kbd "m") 'kom-change-auto-reply)
   (define-key lyskom-en-change-prefix (kbd "t") 'kom-move-text)
   (define-key lyskom-en-change-prefix (kbd "T") 'kom-move-text-tree)
+
+  (define-key lyskom-en-unread-prefix (kbd "SPC") 'kom-mark-unread)
+  (define-key lyskom-en-unread-prefix (kbd "0") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "1") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "2") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "3") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "4") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "5") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "6") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "7") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "8") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "9") 'kom-initial-digit-unread)
 
   (define-key lyskom-en-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-en-review-prefix (kbd "0") 'kom-initial-digit-view)
