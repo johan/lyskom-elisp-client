@@ -1,6 +1,6 @@
-kom-emacs-knows-iso-8859-1		t	nil	t		
-kom-bury-buffers		t	t	t		
-kom-write-texts-in-window		nil	t	t		
+kom-emacs-knows-iso-8859-1		t	nil	t		Icke-nil betyder att Emacs förväntas förstå ISO-8859-1. nil innebär attswascii accepteras i kommandonamn med mera. Skall vara påslaget.
+kom-bury-buffers		t	t	t		Bestämmer hur bufferten hanteras när man går till ett annat KOM med NästaLysKOM och liknande funktioner. Icke-nil innebär att den aktuella buffertenläggs sist i buffertlistan när man byter LysKOM.
+kom-write-texts-in-window		nil	t	t	kom-write-textkom-write-commentkom-comment-previouskom-private-answerkom-private-answer-previouskom-prioritize-in-windowkom-edit-filters-in-windowkom-customize-in-windowkom-view-commented-in-windowkom-list-membership-in-window	Bestämmer i vilket fönster man skriver inlägg. Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
 kom-prompt-format		"%s"	t	t		
 kom-cite-string		">"	t	t		
 kom-created-texts-are-read		t	t	t		
@@ -225,9 +225,9 @@ kom-lynx-terminal-command		"lynx"	nil	t
 kom-check-for-new-comments		t	t	t		
 kom-default-language		sv	t	t		
 kom-ispell-dictionary		nil	t	t		
-kom-dont-read-saved-variables		(lyskom-login-hook)	nil	t		
+kom-dont-read-saved-variables		nil	nil	t		
 lyskom-change-conf-hook		nil	nil	t		
 kom-autowrap		t	nil	t		
-kom-show-namedays		nil	nil	t		
+kom-show-namedays		t	nil	t		
 kom-www-proxy		nil	nil	t		
 iso-8859-1-table		" 	 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"	nil	t		
