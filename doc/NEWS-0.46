@@ -112,8 +112,8 @@
     Det går fortfarande att kommentera vanligt, men upplysta klienter
     kommer att gnälla lite extra om saken.
 
-*** Det går inte att ens försöka skicka in inlägg med dublettmotagare
-    eller helt utan mottagare.
+*** Det går inte att ens försöka skicka in inlägg med
+    dubblettmottagare eller helt utan mottagare.
 
 *** Om man adderar en mottagare som redan finns men är av en annan typ
     så konverteras den existerande mottagar-raden.
@@ -156,13 +156,13 @@
 *** Man kan tala om för klienten att inte bry sig om färger satta i
     <body> i HTML-kod. Variabeln kom-w3-simplify-body heter variabeln.
 
-** Defaultvärdet för Uppskjuta är inte längre hårdkodat, utan
-   definieras av variabeln kom-postpone-default.
+*** Defaultvärdet för Uppskjuta är inte längre hårdkodat, utan
+    definieras av variabeln kom-postpone-default.
 
-** Man kan tala om hur långa streckrader man vill ha före och efter
-   inläggstexten med variablerna kom-text-footer-dash-length och
-   kom-text-header-dash-length. Se även variabeln kom-long-lines på
-   annat håll i den här filen.
+*** Man kan tala om hur långa streckrader man vill ha före och efter
+    inläggstexten med variablerna kom-text-footer-dash-length och
+    kom-text-header-dash-length. Se även variabeln kom-long-lines på
+    annat håll i den här filen.
 
 *** Den initiala läsnivån för en session definieras av variabeln
     kom-default-session-priority.
@@ -195,7 +195,7 @@
     iso-8859-3, iso-8859-4, iso-8859-5, koi8-r, iso-8859-6,
     iso-8859-7, iso-8859-8, iso-8859-9, iso-2022-jp, shift_jis,
     euc-kr, gb2312, big5 och iso-2022-jp-2. Inläggen måste förstås
-    vara markerad med MIME content type.
+    vara markerade med MIME content type.
 
 *** Elispklienten är lite mer Gnus-kompatibel. Om man råkar köra
     XEmacs har kom-smileys satt till t och har rätt version av Gnus
@@ -226,7 +226,7 @@
     utan även alla andra kommandon.
 
 *** De flesta återse-kommandon försöker nu inte återse inlägg som inte
-    kan kan läsas.
+    kan läsas.
 
 ** Markeringar
 
@@ -270,7 +270,7 @@
 
 *** Riktiga passiva medlemskap fungerar. Detta innebär att man kan
     sätta prioritet noll på möten om man vill. Notera dock att
-    läsnivån är normalt satt till 1.
+    läsnivån normalt är satt till 1.
 
 *** När man utträder ur ett möte så blir man först passiv medlem.
     Utträder man igen utträder man på riktigt.
@@ -342,7 +342,7 @@
     är ju given).
 
 *** Om man sätter kom-show-personal-message-date till t så får man
-    dautm på personliga meddelanden.
+    datum på personliga meddelanden.
 
 *** Man kan sätta kom-default-message-recipient till 'last-recipient
     om man vill att defaultmottagaren för ett meddelande skall vara
@@ -410,14 +410,14 @@
 ** Föregående och nästa LysKOM fungerar bättre. Man kan till och med
    använda dem från buffertar som inte är LysKOM-buffertar.
 
-** Om man kör XEmacs så kan man klickan på olästamarkeringen i
+** Om man kör XEmacs så kan man klicka på olästamarkeringen i
    statusraden för att hoppa till första session med olästa
    (mittenknapp) eller få upp en meny av sessioner med olästa (höger).
 
 ** Man kan få Gå till nästa LysKOM som defaultkommando. Genom att
    pilla på variablerna kom-server-priority och
    kom-server-priority-breaks (leta efter "Sessionsprioritet" i
-   inställningsbufferten) sp kan man få elispklienten att automatiskt
+   inställningsbufferten) så kan man få elispklienten att automatiskt
    gå till ett annat LysKOM som defaultkommando.
 
    Variabeln kom-server-priority ger en prioritet till LysKOM-servern.
@@ -450,8 +450,8 @@
     textnumret direkt.
 
 *** Precis som man kan markera personer man gillar med variabeln
-    kom-friends så kan man markera idioter med variebln kom-morons. De
-    får ett annat utseende än personer markerade med kom-friends.
+    kom-friends så kan man markera idioter med variabeln kom-morons. 
+    De får ett annat utseende än personer markerade med kom-friends.
 
 *** Variabeln kom-long-lines styr om man får långa streckrader
     överallt.
@@ -586,7 +586,7 @@
    till ett möte. Specifikt så får man under vissa omständigheter veta
    om personen redan var medlem.
 
-** Addering av BCC-mottagare i efterhand fungerar.
+** Addering av för kännedom-mottagare i efterhand fungerar.
 
 ** Fördröjningen i formatteringen av inläggsfoten är borta (om den
    inte behövs).
