@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.310 2005-01-09 22:09:01 byers Exp $
+;;;;; $Id: vars.el.in,v 44.311 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.310 2005-01-09 22:09:01 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.311 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1827,6 +1827,16 @@ command is accepted from the keyboard. It is called immediately before
 This hook is called after the session is logged in but before any
 command is accepted from the keyboard. Unlike `lyskom-login-hook' it
 can be stored in the server."
+  server)
+
+(def-kom-var kom-relogin-inhibit-commands '(kom-next-kom 
+					    kom-previous-kom 
+					    kom-where-is 
+					    kom-next-unread-kom)
+  "**Commands for which relogin is disabled.
+
+This should be set to a list of commands for which relogin should not
+be offered or used."
   server)
 
 (def-kom-var kom-relogin-behaviour 'ask

@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.390 2005-01-09 22:09:01 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.391 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.390 2005-01-09 22:09:01 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.391 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -4046,6 +4046,10 @@ ta fram menyer.")
   kommando ges i en nedkopplad session. På betyder att det sker 
   automatiskt, av att klienten inte frågar om man vill återansluta.")
 
+    (kom-relogin-inhibit-commands-doc . "\
+  Kommandon som inte skall orsaka någon återanslutning. Dessa kommandon
+  kommer inte att orsaka att en nedkopplad klient återansluter.")
+
     (kom-membership-default-placement-doc . "\
   Denna inställning styr var nya medlemskap hamnar. Först betyder att nya
   medlemskap hamnar före gamla med samma prioritet. Sist betyder att nya 
@@ -4579,6 +4583,7 @@ ta fram menyer.")
     (kom-show-week-number-tag . "Visa veckonummer:")
 
     (kom-relogin-behaviour-tag . "Återanslut automatiskt:")
+    (kom-relogin-inhibit-commands-tag . "Kommandon för vilka återanslutning aldrig sker automatiskt:")
     (kom-membership-default-placement-tag . "Placering av nya medlemskap:")
     (kom-show-imported-importer-tag . "Visa importör av importerade inlägg:")
     (kom-show-imported-envelope-sender-tag . "Visa avsändare av importerade inlägg:")
