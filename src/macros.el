@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 39.2 1996-03-18 15:43:22 byers Exp $
+;;;;; $Id: macros.el,v 39.3 1996-03-20 13:15:17 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,8 +31,9 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 39.2 1996-03-18 15:43:22 byers Exp $\n"
-  "Version for every file in the client.")
+(setq lyskom-clientversion-long
+      (concat lyskom-clientversion-long
+	      "$Id: macros.el,v 39.3 1996-03-20 13:15:17 davidk Exp $\n"))
 
 
 
@@ -135,13 +136,6 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-(defmacro when (expr &rest body)
-  "Execute BODY if EXPR evaluates to non-nil"
-  (list 'if expr (cons 'progn body)))
-
-(put 'when lisp-indent-function 1)
-(put 'when 'edebug-form-spec t)
-
 (defsubst listify-vector (vector)
   "Turn VECTOR into a list"
   (append vector nil))
@@ -156,10 +150,6 @@ Value returned is always nil."
   list)
 
 ;; Multiple blocking read from server
-
-(defvar lyskom-quit-flag nil
-  "A flag indicating if the filter was interrupted by C-g.
- It is set to the same value as quit-flag on filter exit.")
 
 (defvar lyskom-multiple-blocking-return nil
   "Return from blocking-do-multiple")

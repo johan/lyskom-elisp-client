@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 39.3 1996-03-18 23:34:07 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 39.4 1996-03-20 13:15:22 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 39.3 1996-03-18 23:34:07 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 39.4 1996-03-20 13:15:22 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -571,7 +571,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (still-want-to-add . "Vill du fortfarande addera m\366tet? ")
     (could-not-create-text . "\nTexten kunde ej skapas. Felet: %#2s.\n")
     (no-get-text . "Du fick inte h\344mta texten.")
-
+    (unknown-header . "Okänd information på raden")
 
     ; From view-text.el:
     (line . " /1 rad/ ")
