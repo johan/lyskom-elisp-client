@@ -1,3 +1,17 @@
+2000-07-28  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-read-conf-lookup-specials): Return
+	conf-z-info, not uconf-stat.
+
+2000-07-27  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el: Go to point-max in relevant button actions.
+
+2000-07-25  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-keyboard-menu): Couldn't handle
+	symbols for menu items in lyskom-button-actions. Fixed.
+
 2000-07-17  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (lyskom-add-sub-recipients-hook): Renamed function
