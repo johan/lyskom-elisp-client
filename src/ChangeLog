@@ -1,3 +1,20 @@
+Sun Aug 11 12:32:14 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands2.el (kom-set-garb-nice): Sätt MUSTMATCH till t i anrop
+ 	till lyskom-read-conf-stat.
+	(kom-set-permitted-submitters): Dito.
+	(kom-set-super-conf): Dito.
+
+	* commands1.el (kom-review-presentation): Sätt MUSTMATCH till t i
+ 	anrop till lyskom-read-conf-stat.
+	(kom-add-member): Dito.
+	(kom-sub-member): Dito.
+	(kom-sub-self): Dito.
+	(kom-unset-conf-motd): Dito.
+	(kom-change-name): Dito.
+	(kom-change-supervisor): Dito.
+	(lyskom-add-sub-recipient): Dito.
+
 Sat Aug 10 12:24:22 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* commands1.el (lyskom-status-session-9): Snyggare utskrivt av
