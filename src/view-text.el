@@ -10,7 +10,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 35.1 1991-08-21 15:45:23 linus Exp $\n"))
+	      "$Id: view-text.el,v 35.2 1991-09-05 14:03:35 linus Exp $\n"))
 
 
 (defun lyskom-view-text (queue text-no &optional mark-as-read
@@ -301,6 +301,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
 	    (cache-add-text 
 	     (lyskom-create-textpointers (text->text-no text)
 					 s1 s2 t1 t2)))
+	(sit-for 0)
 	(lyskom-insert (format
 			(if kom-dashed-lines
 			    "\n(%d) -----------------------------------\n"
