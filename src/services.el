@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.3 1996-05-20 16:28:41 davidk Exp $
+;;;;; $Id: services.el,v 41.4 1996-07-17 09:00:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.3 1996-05-20 16:28:41 davidk Exp $\n"))
+	      "$Id: services.el,v 41.4 1996-07-17 09:00:06 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -695,8 +695,37 @@ Args: KOM-QUEUE HANDLER REGEXP WANT-PERSONS WANT-CONFS &rest DATA."
   "Tell the server to set the highest unread article in conference CONF-NO
 to TEXT-NO
 Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
+  (if lyskom-set-last-read-flag
+      (progn
+        (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+        (lyskom-send-packet kom-queue (lyskom-format-objects 77
+                                                             conf-no text-no)))
+    (initiate-get-conf-stat kom-queue 
+                            'initiate-set-last-read-2 
+                            conf-no
+                            kom-queue
+                            handler 
+                            conf-no
+                            text-no
+                            data)))
+
+(defun initiate-set-last-read-2 (conf-stat 
+                                 kom-queue
+                                 handler
+                                 conf-no
+                                 text-no
+                                 data)
+  (let ((no-of-unread (- (1- (+ (conf-stat->first-local-no conf-stat)
+                                (conf-stat->no-of-texts conf-stat)))
+                         text-no)))
+    (if (< no-of-unread 0)
+        (setq no-of-unread 0))
+
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-  (lyskom-send-packet kom-queue (lyskom-format-objects 77 conf-no text-no)))
+  (lyskom-send-packet kom-queue
+		      (lyskom-format-objects 40 conf-no no-of-unread))))
+                                 
+
 
 
 

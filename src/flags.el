@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 41.0 1996-05-02 19:26:58 davidk Exp $
+;;;;; $Id: flags.el,v 41.1 1996-07-17 08:59:48 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 41.0 1996-05-02 19:26:58 davidk Exp $\n"))
+	      "$Id: flags.el,v 41.1 1996-07-17 08:59:48 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -56,6 +56,15 @@
 
 (defvar lyskom-options-text nil
   "Text mass when reading options.")
+
+(def-kom-command kom-save-options ()
+  "Save options that have been set somewhere."
+  (interactive)
+  (lyskom-save-options (or lyskom-buffer 
+                           (current-buffer))
+                       (lyskom-get-string 'saving-settings)
+                       (lyskom-get-string 'saving-settings-done)
+                       (lyskom-get-string 'could-not-save-options)))
 
 
 (defun kom-edit-options ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.12 1996-07-09 08:28:32 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.13 1996-07-17 08:59:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.12 1996-07-09 08:28:32 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.13 1996-07-17 08:59:52 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2144,14 +2144,16 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
     (not (string-match (lyskom-get-string 'no-regexp) answer))))
 
 
-(defun j-or-n-p (prompt)
+(defun j-or-n-p (prompt &optional quittable)
   "Same as y-or-n-p but language-dependent.
 Uses lyskom-message, lyskom-read-string to do interaction and
 lyskom-get-string to retrieve regexps for answer and string for repeated query."
-  (let ((input-char ?a)
+  (let ((input-char 0)
 	(cursor-in-echo-area t)
 	(nagging nil))
-    (while (not (char-in-string input-char (lyskom-get-string 'y-or-n-instring)))
+    (while (or (not (char-in-string input-char
+                                    (lyskom-get-string 'y-or-n-instring)))
+               (and (eq input-char 7) quittable))
 	(lyskom-message "%s" (concat (if nagging 
 					 (lyskom-get-string 'j-or-n-nag)
 				       "") 
@@ -2161,27 +2163,26 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 	    (beep))
 	(setq input-char (read-char))
 	(setq nagging t))
+    (if (and quittable (eq input-char 7)) (keyboard-quit))
     (char-in-string input-char (lyskom-get-string 'y-instring))))
 
   
 ;;; lyskom-j-or-n-p, lyskom-ja-or-no-p
-;;; These versions perform lyskom-end-of-command if quit is signalled
+;;; These versions no longer perform lyskom-end-of-command
 ;; Author: Linus Tolke
 
-(defun lyskom-j-or-n-p (prompt)
+(defun lyskom-j-or-n-p (prompt &optional quittable)
   "Same as j-or-n-p but performs lyskom-end-of-command if quit."
   (condition-case error
-      (j-or-n-p prompt)
-    (quit (lyskom-end-of-command)
-	  (signal 'quit "In lyskom-j-or-n-p"))))
+      (j-or-n-p prompt quittable)
+    (quit (signal 'quit "In lyskom-j-or-n-p"))))
 
 
 (defun lyskom-ja-or-nej-p (prompt &optional initial-input)
   "Same as ja-or-nej-p but performs lyskom-end-of-command if quit."
   (condition-case error
       (ja-or-nej-p prompt initial-input)
-    (quit (lyskom-end-of-command)
-	  (signal 'quit "In lyskom-j-or-n-p"))))
+    (quit (signal 'quit "In lyskom-ja-or-nej-p"))))
 
 
 
@@ -2370,10 +2371,13 @@ Other objects are converted correctly."
    (lyskom-format-bool (conf-type->original conf-type))
    (lyskom-format-bool (conf-type->secret conf-type))
    (lyskom-format-bool (conf-type->letterbox conf-type))
-   (lyskom-format-bool (conf-type->anarchy conf-type))
-   (lyskom-format-bool (conf-type->rsv1 conf-type))
-   (lyskom-format-bool (conf-type->rsv2 conf-type))
-   (lyskom-format-bool (conf-type->rsv3 conf-type))))
+   (if lyskom-long-conf-types-flag
+       (progn
+         (lyskom-format-bool (conf-type->anarchy conf-type))
+         (lyskom-format-bool (conf-type->rsv1 conf-type))
+         (lyskom-format-bool (conf-type->rsv2 conf-type))
+         (lyskom-format-bool (conf-type->rsv3 conf-type)))
+     "")))
 
 
 (defun lyskom-format-privs (privs)

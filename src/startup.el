@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.7 1996-07-09 08:28:38 byers Exp $
+;;;;; $Id: startup.el,v 41.8 1996-07-17 09:00:10 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.7 1996-07-09 08:28:38 byers Exp $\n"))
+	      "$Id: startup.el,v 41.8 1996-07-17 09:00:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -111,26 +111,31 @@ See lyskom-mode for details."
 					 "lyskom.el" lyskom-clientversion)
 
 	    (setq lyskom-server-info (blocking-do 'get-server-info))
+            (setq lyskom-server-version
+                  (list (/ (server-info->version lyskom-server-info) 10000)
+                        (/ (% (server-info->version lyskom-server-info) 10000)
+                           100)
+                        (% (server-info->version lyskom-server-info) 100)))
+            (lyskom-setup-client-for-server-version)
 	    (lyskom-format-insert 
 	     'connection-done
-	     (if (zerop (% (server-info->version lyskom-server-info) 100))
+	     (if (zerop (elt lyskom-server-version 2))
 		 (format "%d.%d"
-			 (/ (server-info->version lyskom-server-info) 10000)
-			 (/ (% (server-info->version lyskom-server-info) 10000) 
-			    100))
+                         (elt lyskom-server-version 0)
+                         (elt lyskom-server-version 1))
 	       (format "%d.%d.%d"
-		       (/ (server-info->version lyskom-server-info) 10000)
-		       (/ (% (server-info->version lyskom-server-info) 10000)
-			  100)
-		       (% (server-info->version lyskom-server-info) 100))))
-	    (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
+                         (elt lyskom-server-version 0)
+                         (elt lyskom-server-version 1)
+                         (elt lyskom-server-version 2))))
+            (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
 		(let ((text (blocking-do 'get-text 
 					 (server-info->motd-of-lyskom
 					  lyskom-server-info))))
 		  (lyskom-insert 
 		   (if text
 		       (text->text-mass text)
-		     (lyskom-get-string 'lyskom-motd-was-garbed)))))
+		     (lyskom-get-string 'lyskom-motd-was-garbed)))
+                  (lyskom-insert "\n")))
 	    ;; Can't use lyskom-end-of-command here.
 	    (setq lyskom-executing-command nil) 
 	    ;; Log in
@@ -142,6 +147,50 @@ See lyskom-mode for details."
 	  (if proc (delete-process proc))
 	  (kill-buffer buffer))))))
 
+
+(defun lyskom-setup-client-check-version (spec version)
+  (let ((relation (elt spec 0))
+        (major (elt spec 1))
+        (minor (elt spec 2))
+        (revision (elt spec 3)))
+    (cond ((eq relation '=)
+           (and (or (null major) (= major (elt version 0)))
+                (or (null minor) (= minor (elt version 1)))
+                (or (null revision) (= revision (elt version 2)))))
+          ((eq relation '>=)
+           (or (and (= (elt version 0) major)
+                    (= (elt version 1) minor)
+                    (>= (elt version 2) revision))
+               (and (= (elt version 0) major)
+                    (> (elt version 1) minor))
+               (and (> (elt version 0) major)))))))               
+
+
+(defun lyskom-setup-client-for-server-version ()
+ "Set up the supports list and flags for the current server. See
+variable documentation for lyskom-server-feautres"
+  (let ((result nil)
+        (flags nil))
+    (mapcar (function
+             (lambda (spec)
+               (let ((spec-version (elt spec 0))
+                     (plist (elt spec 1)))
+                 (if (and (lyskom-setup-client-check-version 
+                           spec-version
+                           lyskom-server-version))
+                     (mapcar
+                      (function
+                       (lambda (x)
+                         (cond ((consp x) (setq result (cons x result)))
+                               ((symbolp x) (setq flags (cons x flags)))
+                               (t (setq result (cons (cons x t) 
+                                                     result))))))
+                      plist)))))
+            lyskom-server-features)
+    (mapcar (function (lambda (x) (set x t))) flags)
+    (setq lyskom-server-supports result)))
+                                             
+                                                                 
 
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."
@@ -230,7 +279,9 @@ See lyskom-mode for details."
                      (/= (conf-stat->msg-of-day conf-stat) 0))
                 (progn
                   (lyskom-insert-string 'you-have-motd)
-                  (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
+                  (let ((lyskom-show-comments ; +++SOJGE
+                         (not kom-no-comments-to-motd)))
+                    (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
             (if (and conf-stat
                      (zerop (conf-stat->presentation conf-stat))
                      (not (zerop (conf-stat->no-of-texts conf-stat))))
@@ -564,6 +615,13 @@ to see, set of call."
     (make-local-variable 'lyskom-reading-list)
     (make-local-variable 'lyskom-server-info)
     (make-local-variable 'lyskom-server-name)
+    (make-local-variable 'lyskom-server-version)
+    (make-local-variable 'lyskom-server-supports)
+    (make-local-variable 'lyskom-long-conf-types-flag)
+    (make-local-variable 'lyskom-set-last-read-flag)
+    (make-local-variable 'lyskom-uconf-stats-flag)
+    (make-local-variable 'lyskom-z-lookup-flag)
+    (make-local-variable 'lyskom-accept-async-flag)
     (make-local-variable 'lyskom-session-no)
     (make-local-variable 'lyskom-session-priority)
     (make-local-variable 'lyskom-text-cache)

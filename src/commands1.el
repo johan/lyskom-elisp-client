@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.8 1996-07-08 09:45:57 byers Exp $
+;;;;; $Id: commands1.el,v 41.9 1996-07-17 08:59:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.8 1996-07-08 09:45:57 byers Exp $\n"))
+	      "$Id: commands1.el,v 41.9 1996-07-17 08:59:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -731,7 +731,8 @@ CCREP is a list of all recipients that are going to be cc-recipients."
       ;; Catch any quits
       (progn
 	;; Filter multiple recipients through y-or-n-p.
-	(if (and kom-confirm-multiple-recipients (> (length data) 1)
+	(if (and (eq kom-confirm-multiple-recipients 'before)
+                 (> (length data) 1)
 		 (not (and (= (length data) 2)
 			   (or (= lyskom-pers-no (conf-stat->conf-no
 						  (car data)))
@@ -1665,6 +1666,65 @@ If MARK-NO == 0, review all marked texts."
 	    (concat name "@" sent " (" gott rest ")")))
       username)))
   
+
+;;; ================================================================
+;;;            Status (för) Session - Status (for a) session
+;;;
+;;; Author: David Byers
+
+(def-kom-command kom-status-session (&optional arg)
+  "Show status for all sessions a person has. Asks for person name.
+Optional argument ARG should be a list of sessions to get information
+about or a single session number."
+  (interactive)
+  (let ((sessions (or arg
+                      (lyskom-read-session-no 
+                       (lyskom-get-string 'status-for-session))))
+        (who-info (listify-vector (blocking-do 'who-is-on))))
+    (cond ((listp arg))
+          ((numberp arg) (list arg))
+          (t (setq arg (lyskom-read-session-no 
+                        (lyskom-get-string 'status-for-session)))))
+    (mapcar (function (lambda (x) (lyskom-status-session x who-info)))
+            sessions)))
+
+(defun lyskom-status-session (sid who-info)
+  "Show session status for session SID. WHO-INFO is a list of
+WHO-INFOS that are potential sessions."
+  (while who-info
+    (if (eq sid (who-info->connection (car who-info)))
+        (lyskom-status-session-2 (car who-info)))
+    (setq who-info (cdr who-info))))
+
+(defun lyskom-status-session-2 (info)
+  "Internal to lyskom-status-session"
+  (let ((client (if kom-deferred-printing
+                    (lyskom-create-defer-info 'get-client-name
+                                              (who-info->connection info)
+                                              'lyskom-deferred-client-1
+                                              nil nil nil
+                                              (who-info->connection info))
+                  (blocking-do-multiple
+                      ((name (get-client-name
+                              (who-info->connection info)))
+                       (version (get-client-version
+                                 (who-info->connection info))))
+                    (concat name " " version)))))
+  (lyskom-format-insert (lyskom-get-string 'session-status)
+                        (who-info->connection info)
+                        (who-info->pers-no info)
+                        (lyskom-return-username info)
+                        (if (not (eq (who-info->working-conf info) 0))
+                            (who-info->working-conf info)
+                          (lyskom-get-string 'not-present-anywhere))
+                        (if (string-match "^\\(.*[^.]\\)\\.*$"
+                                          (who-info->doing-what info))
+                            (match-string 1 (who-info->doing-what info))
+                          (who-info->doing-what info))
+                        client
+                        (if (not (eq (who-info->working-conf info) 0))
+                            (lyskom-get-string 'doing-where-conn)
+                          (lyskom-get-string 'doing-nowhere-conn)))))
 	
 
 ;;; ================================================================
