@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.115 2000-08-21 12:29:23 byers Exp $
+;;;;; $Id: vars.el.in,v 44.116 2000-08-21 14:21:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,11 +33,11 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.115 2000-08-21 12:29:23 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.116 2000-08-21 14:21:02 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
-  (eval-when-compile (and (boundp 'enable-multibyte-characters)
-                          enable-multibyte-characters))
+  (eval-when-compile (and (fboundp 'multibyte-string-p)
+                          (multibyte-string-p "ÅÄÖ")))
   "Non-nil if the client was compiled with multibyte characters enabled")
 
 (provide 'lyskom)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.48 2000-08-11 15:00:54 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.49 2000-08-21 14:20:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.48 2000-08-11 15:00:54 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.49 2000-08-21 14:20:54 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -161,14 +161,14 @@ If there is no active area, then do something else."
   ;; Use the command as the event for simplicity.  Note that the menu
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
-  (let ((title (encode-coding-string title 'iso-8859-1)))
+  (let ((title (lyskom-maybe-recode-string title 'iso-8859-1)))
     (when (> (length title) 44) (setq title (concat (substring title 0 40)
                                                     " ...")))
     (cond ((string-match "XEmacs" (emacs-version))
-           (cons (encode-coding-string title 'iso-8859-1)
+           (cons (lyskom-maybe-recode-string title 'iso-8859-1)
                  (mapcar (function
                           (lambda (entry)
-                            (vector (encode-coding-string
+                            (vector (lyskom-maybe-recode-string
                                      (lyskom-get-string (car entry)) 'iso-8859-1)
                                     (list (cdr entry)
                                           buf
@@ -181,7 +181,7 @@ If there is no active area, then do something else."
           (t (append (list 'keymap title)
                      (mapcar (function (lambda (entry)
                                          (let ((tmp (copy-tree entry)))
-                                           (setcar tmp (encode-coding-string 
+                                           (setcar tmp (lyskom-maybe-recode-string
                                                         (lyskom-get-string (car tmp))
                                                         'iso-8859-1))
                                            (cons (` ((, (cdr entry)) 

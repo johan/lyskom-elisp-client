@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.13 2000-05-26 14:35:13 byers Exp $
+;;;;; $Id: buffers.el,v 44.14 2000-08-21 14:20:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.13 2000-05-26 14:35:13 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.14 2000-08-21 14:20:52 byers Exp $\n"))
 
 
 ;;;;
@@ -342,14 +342,6 @@ categories")
 
 (add-hook 'kill-buffer-query-functions 'lyskom-quit-query)
 (add-hook 'kill-emacs-query-functions 'lyskom-quit-query)
-
-(defun lyskom-fix-buffer-name (name)
-  "Encode NAME according to the language coding system if we have
-no multibyte character support"
-  (if enable-multibyte-characters 
-      name
-    (encode-coding-string name (or (lyskom-language-coding lyskom-language)
-                                   'raw-text))))
 
 (defun lyskom-generate-new-buffer (name)
   (setq name (lyskom-maybe-recode-string name))

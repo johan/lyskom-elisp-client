@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.49 2000-06-05 11:04:22 byers Exp $
+;;;;; $Id: startup.el,v 44.50 2000-08-21 14:20:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.49 2000-06-05 11:04:22 byers Exp $\n"))
+	      "$Id: startup.el,v 44.50 2000-08-21 14:20:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -172,6 +172,7 @@ See lyskom-mode for details."
                        (setq proc (open-network-stream name buffer
                                                        proxy-host
                                                        proxy-port))
+                       ;; We do explicit coding
                        (set-process-coding-system proc 'no-conversion 'no-conversion)
 
 		       ;; Install our filter.
@@ -207,6 +208,7 @@ See lyskom-mode for details."
 		       )
                       (t (setq proc (open-network-stream name buffer
                                                          host port))
+                         ;; We do explicit coding
                          (set-process-coding-system proc 'no-conversion 'no-conversion))))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...

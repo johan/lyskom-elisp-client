@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.67 2000-08-16 14:21:24 byers Exp $
+;;;;; $Id: utilities.el,v 44.68 2000-08-21 14:21:00 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.67 2000-08-16 14:21:24 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.68 2000-08-21 14:21:00 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -307,13 +307,14 @@ TYPE should be `list' or `vector'."
   "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
-(defsubst lyskom-maybe-recode-string (s)
+(defsubst lyskom-maybe-recode-string (s &optional coding)
   "Change the encoding of S when multibyte characters are not supported"
-  (if enable-multibyte-characters
-      s
-    (encode-coding-string s (or (and lyskom-language
-                                     (lyskom-language-coding lyskom-language))
-                                'raw-text))))
+  (if (multibyte-string-p s)
+      (encode-coding-string s (or coding
+                                  (and lyskom-language
+                                       (lyskom-language-coding lyskom-language))
+                                  'raw-text))
+    s))
 
 (defsubst lyskom-unicase-char (c)
   "Smash case and diacritical marks on c." 
