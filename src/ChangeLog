@@ -1,3 +1,16 @@
+2003-08-13  David Byers  <byers@lysator.liu.se>
+
+	Delete initial value on change:
+	* completing-read.el (lyskom-read-from-minibuffer-clear-initial):
+	New function.
+	(lyskom-read-conf): Put it into before-change-functions in
+	minibuffer-setup-hook.
+
+2003-08-12  David Byers  <byers@lysator.liu.se>
+
+	* async.el (lyskom-parse-async): Handle async 20.
+	(lyskom-parse-async): Handle async 21.
+
 2003-08-05  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* completing-read.el (lyskom-read-conf): Typographic doc fix.
