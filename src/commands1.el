@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.184 2003-07-27 14:17:23 byers Exp $
+;;;;; $Id: commands1.el,v 44.185 2003-07-27 22:31:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.184 2003-07-27 14:17:23 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.185 2003-07-27 22:31:56 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3998,8 +3998,11 @@ hard to understand.
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-comment-from)))
-  (lyskom-add-sub-comment text-no-arg
-			  nil))
+  (if (lyskom-misc-infos-from-list 
+       'COMM-IN (text-stat->misc-info-list
+                 (blocking-do 'get-text-stat text-no-arg)))
+      (lyskom-add-sub-comment text-no-arg nil)
+    (lyskom-format-insert 'text-has-no-comments text-no-arg)))
 
 (defun lyskom-add-sub-comment (text-no do-add)
   "Get the number of the text that is going to have a comment added to it or
@@ -4062,8 +4065,12 @@ hard to understand.
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-footnote-from)))
-  (lyskom-add-sub-footnote text-no-arg
-			  nil))
+  (if (lyskom-misc-infos-from-list 
+       'FOOTN-IN (text-stat->misc-info-list
+                 (blocking-do 'get-text-stat text-no-arg)))
+      (lyskom-add-sub-footnote text-no-arg nil)
+    (lyskom-format-insert 'text-has-no-footnotes text-no-arg)))
+
 
 (defun lyskom-add-sub-footnote (text-no do-add)
   "Get the number of the text that is going to have a footnote added to it or

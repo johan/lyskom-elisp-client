@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.289 2003-07-27 20:40:41 byers Exp $
+;;;;; $Id: english-strings.el,v 44.290 2003-07-27 22:31:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.289 2003-07-27 20:40:41 byers Exp $"))
+              "$Id: english-strings.el,v 44.290 2003-07-27 22:31:57 byers Exp $"))
 
 
 ;;; ================================================================
@@ -920,7 +920,7 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
 Post: \\[kom-edit-send], \
 Kill: \\[kom-edit-quit], \
 Help: \\[describe-mode] ---")
-    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]\n%#3s")
+    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]%[%#6@\n%]%#3s")
     (comment-to-by . "%#1s to text %#2n%#3s.\n")
     (already-sent . "You have already posted this text. Post it anyway? ")
     (subject . "Subject: ")
@@ -1929,6 +1929,9 @@ environment to one that uses \"%#2s\" to encode text.
     (set-message-flag-for-conf . "Sett message flag for which conference? ")
     (set-message-flag-to-what . "Receive grupp messages to %#1M? ")
     (setting-message-flag . "%#1?b%[Enabling%]%[Disabling%] reception of group messages to %#2M...")
+
+    (text-has-no-comments . "Text %#1n has no comments\n")
+    (text-has-no-footnotes . "Text %#1n has no footnotes\n")
     ))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.110 2003-07-27 14:17:24 byers Exp $
+;;;;; $Id: edit-text.el,v 44.111 2003-07-27 22:31:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.110 2003-07-27 14:17:24 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.111 2003-07-27 22:31:57 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -251,7 +251,8 @@ nil             -> Ingenting."
 				  (lyskom-get-string 'header-separator))
 				 body 
 				 (lyskom-get-string 'header-subject)
-                                 `(read-only t))
+                                 `(read-only t)
+                                 `(read-only t rear-nonsticky t end-open t))
 		  where-put-misc)
     (set-buffer edit-buffer)
     (goto-char where-put-misc)
@@ -1513,6 +1514,7 @@ to lyskom-edit-replace-headers"
   "Replace all headers with SUBJECT and MISC-LIST"
   (save-excursion
     (let ((start nil)
+          (inhibit-read-only t)
           (end nil))
       (goto-char (point-min))
       (setq start (point-marker))
