@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.12 1996-01-17 11:50:42 davidk Exp $
+;;;;; $Id: commands1.el,v 38.13 1996-01-19 18:49:37 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.12 1996-01-17 11:50:42 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.13 1996-01-19 18:49:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -477,8 +477,8 @@ of the person."
 	       (lyskom-format-insert 'unsubscribe-failed
 				     (if self
 					 (lyskom-get-string 'You)
-				       (conf-stat->conf-name pers))
-				     (conf-stat->conf-name conf))
+				       (conf-stat->name pers))
+				     (conf-stat->name conf))
 	     (lyskom-insert-string 'done)
 	     (if (and self
 		      (= (conf-stat->conf-no conf)
@@ -993,7 +993,6 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 
 ;;; Author: ???
 
-
 (def-kom-command kom-go-to-conf ()
   "Select a certain conference.
 The user is prompted for the name of the conference.
@@ -1003,31 +1002,36 @@ back on lyskom-to-do-list."
   (let ((conf (lyskom-read-conf-stat
 	       (lyskom-get-string 'go-to-conf-p)
 	       'all "")))
-    ;; "Go to the conference in CONF. CONF can be conf-no of conf-stat.
-    ;; Allowed conferences are conferences and the mailboxes you are 
-    ;; member of."
-    (let ((membership (lyskom-member-p
-		       (conf-stat->conf-no conf))))
-      (lyskom-format-insert 'go-to-conf
-			    conf)
-      (cond
-       (membership
-	(lyskom-do-go-to-conf conf membership))
-       ((conf-type->letterbox (conf-stat->conf-type conf))
-	(lyskom-format-insert 'cant-go-to-his-mailbox
-			      conf))
-       (t
-	(progn
-	  (lyskom-format-insert 'not-member-of-conf
-				conf)
-	  (lyskom-scroll)
-	  (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
-	      (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
-					   lyskom-pers-no)
-		  (lyskom-fixup-and-go-to-conf (conf-stat->conf-no conf))
-		(lyskom-insert-string 'nope))
-	    (lyskom-insert-string 'no-ok))))))))
+    (lyskom-go-to-conf conf)))
 
+
+(defun lyskom-go-to-conf (conf)
+  "Go to the conference in CONF. CONF can be conf-no of conf-stat.
+Allowed conferences are conferences and the mailboxes you are 
+member of."
+  (if (numberp conf) (setq conf (blocking-do 'get-conf-stat conf)))
+  (let ((membership (lyskom-member-p
+		     (conf-stat->conf-no conf))))
+    (lyskom-format-insert 'go-to-conf
+			  conf)
+    (cond
+     (membership
+      (lyskom-do-go-to-conf conf membership))
+     ((conf-type->letterbox (conf-stat->conf-type conf))
+      (lyskom-format-insert 'cant-go-to-his-mailbox
+			    conf))
+     (t
+      (progn
+	(lyskom-format-insert 'not-member-of-conf
+			      conf)
+	(lyskom-scroll)
+	(if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
+	    (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
+					 lyskom-pers-no)
+		(lyskom-fixup-and-go-to-conf (conf-stat->conf-no conf))
+	      (lyskom-insert-string 'nope))
+	  (lyskom-insert-string 'no-ok)))))))
+  
 
 
 (defun lyskom-fixup-and-go-to-conf (conf-no)
@@ -1632,33 +1636,39 @@ footnotes) to it as read in the server."
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-recipient)
-  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
-    (lyskom-add-sub-recipient text-no-arg
-			      (lyskom-get-string 'text-to-add-recipient)
-			      'add-rcpt
-			      conf)))
+  (unwind-protect
+      (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
+	(lyskom-add-sub-recipient text-no-arg
+				  (lyskom-get-string 'text-to-add-recipient)
+				  'add-rcpt
+				  conf))
+    (lyskom-end-of-command)))
 
 (defun kom-add-copy (text-no-arg)
   "Add a cc recipient to a text. If the argument TEXT-NO-ARG is non-nil,
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-copy)
-  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
-    (lyskom-add-sub-recipient text-no-arg
-			      (lyskom-get-string 'text-to-add-copy)
-			      'add-copy
-			      conf)))
+  (unwind-protect
+      (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
+	(lyskom-add-sub-recipient text-no-arg
+				  (lyskom-get-string 'text-to-add-copy)
+				  'add-copy
+				  conf))
+    (lyskom-end-of-command)))
 
 (defun kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-sub-recipient)
-  (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
-    (lyskom-add-sub-recipient text-no-arg
-			      (lyskom-get-string 'text-to-delete-recipient)
-			      'sub
-			      conf)))
+  (unwind-protect
+      (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
+	(lyskom-add-sub-recipient text-no-arg
+				  (lyskom-get-string 'text-to-delete-recipient)
+				  'sub
+				  conf))
+    (lyskom-end-of-command)))
 
 (defun lyskom-add-sub-recipient (text-no-arg
 				 prompt
@@ -1710,7 +1720,7 @@ the user has used a prefix command argument."
 		
 		(t (lyskom-error "internal error"))))
     (cache-del-text-stat text-no)
-    (lyskom-handle-command-answer result)))
+    (lyskom-report-command-answer result)))
 
 
 
@@ -1759,7 +1769,7 @@ DO-ADD: NIL if a comment should be subtracted.
 			  text-no)
     (cache-del-text-stat text-no)
     (cache-del-text-stat comment-text-no)
-    (lyskom-handle-command-answer 
+    (lyskom-report-command-answer 
      (blocking-do (if do-add 'add-comment 'sub-comment)
 		  comment-text-no
 		  text-no))))

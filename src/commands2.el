@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.10 1996-01-17 11:50:47 davidk Exp $
+;;;;; $Id: commands2.el,v 38.11 1996-01-19 18:49:41 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.10 1996-01-17 11:50:47 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.11 1996-01-19 18:49:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -465,19 +465,18 @@ otherwise: the conference is read with lyskom-completing-read."
 	    (lyskom-get-string 'everybody))
     'all t
     ;; Initial string:
-    (cond ((null kom-send-message-to-last-sender)
-	   nil)
-	  ((and (not (eq kom-send-message-to-last-sender 'always))
-		lyskom-last-group-message-recipient)
-	   (if (string-match "^19" emacs-version)
-	       (cons lyskom-last-group-message-recipient 0)
-	     lyskom-last-group-message-recipient))
-	  (lyskom-last-personal-message-sender
-	   (if (string-match "^19" emacs-version)
-	       (cons lyskom-last-personal-message-sender 0)
-	     lyskom-last-personal-message-sender))
-	  (t
-	   "")))))
+    (cond
+     ((null kom-send-message-to-last-sender) nil)
+     ((and (not (eq kom-send-message-to-last-sender 'always))
+           lyskom-last-group-message-recipient)
+      (if (string-match "^19" emacs-version)
+          (cons lyskom-last-group-message-recipient 0)
+        lyskom-last-group-message-recipient))
+     (lyskom-last-personal-message-sender
+      (if (string-match "^19" emacs-version)
+          (cons lyskom-last-personal-message-sender 0)
+        lyskom-last-personal-message-sender))
+     (t "")))))
   
 
 (def-kom-command kom-send-alarm ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 38.3 1996-01-13 06:50:39 davidk Exp $
+;;;;; $Id: komtypes.el,v 38.4 1996-01-19 18:49:54 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 38.3 1996-01-13 06:50:39 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 38.4 1996-01-19 18:49:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -88,6 +88,49 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 	    (setq yes t)
 	  (setq r (1+ r))))
       yes)))
+
+;;; ================================================================
+;;;                            uconf-stat
+
+;;; Constructor:
+
+(defsubst lyskom-create-uconf-stat (conf-no 
+				    name
+				    conf-type 
+				    highest-local-no
+				    nice)
+  "Create an uconf-stat from all parameters."
+  (cons 'UCONF-STAT
+	(vector conf-no name conf-type highest-local-no nice)))
+
+
+;;; Selectors:
+
+
+(defsubst uconf-stat->conf-no (conf)
+  "Get the conf-no from an uconf-stat"
+  (elt (cdr conf) 0))
+
+(defsubst uconf-stat->name (conf)
+  "Get the name of a conference."
+  (elt (cdr conf) 1))
+
+(defsubst uconf-stat->conf-type (conf)
+  "Get the type of a conference."
+  (elt (cdr conf) 2))
+
+(defsubst uconf-stat->highest-local-no (conf)
+  "Get the highest local number in a conference"
+  (elt (cdr conf) 3))
+
+(defsubst uconf-stat->garb-nice (conf)
+  "Get garb-nice from a conference."
+  (elt (cd conf) 4))
+
+
+;;; Modifiers
+
+;;; You shouldn't need modifiers
 
 
 ;;; ================================================================

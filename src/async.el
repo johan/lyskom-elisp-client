@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.6 1996-01-17 11:50:39 davidk Exp $
+;;;;; $Id: async.el,v 38.7 1996-01-19 18:49:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.6 1996-01-17 11:50:39 davidk Exp $\n"))
+	      "$Id: async.el,v 38.7 1996-01-19 18:49:31 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -254,7 +254,7 @@ this function shall be with current-buffer the BUFFER."
 	       (/= 0 (length doing)))
 	  (lyskom-format-insert-before-prompt
 	   "%#1M %#2s\n"
-	   persconfstat
+	   personconfstat
 	   (concat (char-to-string (downcase (string-to-char doing)))
 		   (substring doing 1))))))))
 
@@ -272,11 +272,14 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
                  of the recipient.
       MESSAGE: A string containing the message."
   (lyskom-insert-personal-message sender recipient message)
-  (setq lyskom-last-personal-message-sender (if (stringp sender) sender
-					      (conf-stat->name sender)))
-  (setq lyskom-last-group-message-recipient (if recipient
-						(conf-stat->name recipient)
-					      nil))
+  (setq lyskom-last-personal-message-sender 
+        (if (stringp sender) sender (conf-stat->name sender)))
+  (setq lyskom-last-group-message-recipient 
+        (if (and recipient
+                 (not (eq (conf-stat->conf-no recipient)
+                          lyskom-pers-no)))
+            (conf-stat->name recipient)
+          nil))
   (run-hooks 'lyskom-personal-message-hook))
 
 
