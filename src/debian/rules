@@ -1,0 +1,64 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	-$(MAKE) clean
+
+	dh_clean
+
+# Build architecture-independent files here.
+binary-indep: build
+#	dh_testversion
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	$(MAKE) lyskom.el
+	cp lpath.el debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/
+	gzip -c lyskom.el > debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/lyskom.el.gz
+
+	install -m 644 debian/50lyskom-elisp-client.el debian/tmp/etc/emacs/site-start.d
+	install -m 755 debian/emacsen-common-install debian/tmp/usr/lib/emacsen-common/packages/install/lyskom-elisp-client
+	install -m 755 debian/emacsen-common-remove debian/tmp/usr/lib/emacsen-common/packages/remove/lyskom-elisp-client
+
+	dh_installdocs
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installinit
+#	dh_installcron
+#	dh_installmanpages
+#	dh_undocumented
+	dh_installchangelogs
+#	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_suidregister
+	dh_installdeb
+#	dh_shlibdeps
+	dh_gencontrol
+#	dh_makeshlibs
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture-dependent files here.
+binary-arch: build
+# We have nothing to do by default.
+
+source diff:                                                                  
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary

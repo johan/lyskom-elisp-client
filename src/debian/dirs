@@ -1,0 +1,4 @@
+usr/share/emacs/site-lisp/lyskom-elisp-client
+usr/lib/emacsen-common/packages/install
+usr/lib/emacsen-common/packages/remove
+etc/emacs/site-start.d
