@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 41.5 1996-08-06 21:33:14 davidk Exp $
+# $Id: Makefile,v 41.6 1996-08-07 15:50:52 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 41.5 1996-08-06 21:33:14 davidk Exp $
+# $Id: Makefile,v 41.6 1996-08-07 15:50:52 davidk Exp $
 #
 
 CLIENTVERSION = 0.42-beta
@@ -30,6 +30,7 @@ CLIENTVERSION = 0.42-beta
 SHELL = /bin/sh
 
 LISPDIR = /usr/gnu/share/emacs/site-lisp
+FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
@@ -146,11 +147,6 @@ TAGS: $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 doc:
 	(cd ../doc ; $(MAKE) elisp-client elisp-client.txt ; )
 
-install: installnodoc installdoc
-
-installatlysator: lyskom.elc lyskom.el
-	cp lyskom.el lyskom.elc $(LISPDIR)
-
 lyskom-$(CLIENTVERSION).elc: lyskom.elc
 	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
 
@@ -164,11 +160,15 @@ lyskom-$(CLIENTVERSION).el.gz: lyskom.el
 lyskom-$(CLIENTVERSION).elc.gz: lyskom-$(CLIENTVERSION).elc
 	gzip -9 < lyskom-$(CLIENTVERSION).elc > lyskom-$(CLIENTVERSION).elc.gz
 
-installatftp: lyskom-$(CLIENTVERSION).el.gz
-	mv lyskom-$(CLIENTVERSION).el.gz /usr/ftp/pub/lyskom/elisp-client
+install: installatlysator installatftp installdoc
 
-.PHONY: installnodoc
-installnodoc: installatlysator installatftp
+installatlysator: lyskom.elc lyskom.el
+	cp lyskom.el lyskom.elc $(LISPDIR)
+
+installatftp: lyskom-$(CLIENTVERSION).el.gz english-lyskom-$(CLIENTVERSION).el.gz
+	mv lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
+	mv english-lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
+	cp ../doc/NEWS-$(CLIENTVERSION) $(FTPDIR)
 
 # This is now the responsability of the Makefile in the doc-dir.
 installdoc: doc
