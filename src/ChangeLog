@@ -1,4 +1,22 @@
+2002-05-28  David Byers  <david.byers@swipnet.se>
+
+	* help-compile.el (lyskom-help-parse-string): Fixed search for end
+	tag so it doesn't cause a stack overflow in the 20.7 regexp
+	mathcher.
+
 2002-05-27  David Byers  <david.byers@swipnet.se>
+
+	* commands2.el (kom-change-language): Show which language we just
+	set.
+
+	Fix bug 491:
+	* swedish-strings.el (lyskom-messages): Use downcase in
+	language-set-to.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Added support for
+	downcasing from the format string.
+	(lyskom-format-aux): Same.
+	(lyskom-format-format): Added _ as downcase flag.
 
 	* check-strings.el: Added checking of matching sections for all
 	languages in new help.
