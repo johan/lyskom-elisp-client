@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.12 1991-10-23 19:21:42 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.13 1991-10-25 15:24:54 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.12 1991-10-23 19:21:42 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.13 1991-10-25 15:24:54 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1054,14 +1054,16 @@ list."
 	(let ((command (car lyskom-do-when-starting))
 	      (lyskom-executing-command nil))
 	  (setq lyskom-do-when-starting (cdr lyskom-do-when-starting))
-	  (cond
-	   ((stringp command)
-	    (execute-kbd-macro command))
-	   ((commandp command)
-	    (call-interactively command))
-	   (t 
-	    (lyskom-insert
-	     (lyskom-format 'error-in-do-when-starting command))))))))
+	  (save-window-excursion
+	    (switch-to-buffer (current-buffer))
+	    (cond
+	     ((stringp command)
+	      (execute-kbd-macro command))
+	     ((commandp command)
+	      (call-interactively command))
+	     (t 
+	      (lyskom-insert
+	       (lyskom-format 'error-in-do-when-starting command)))))))))
 
 
 (defun lyskom-what-to-do ()
