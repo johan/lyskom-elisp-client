@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: slow.el,v 44.4 1997-02-07 18:08:12 byers Exp $
+;;;;; $Id: slow.el,v 44.5 1997-07-10 08:58:46 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -51,11 +51,15 @@ Note that this function leaves point at the end of the prompt.
 If no text is entered, nil is returned."
   (goto-char (point-max))
   (save-restriction
+    (when (> lyskom-last-viewed (point-max))
+      (setq lyskom-last-viewed (point-max)))
     (narrow-to-region lyskom-last-viewed (point-max))
-    (search-backward lyskom-current-prompt-text))
-  (forward-char (length lyskom-current-prompt-text))
-  (while (looking-at "\\s-")
-    (forward-char 1))
+    (if (search-backward lyskom-current-prompt-text nil t)
+        (forward-char (length lyskom-current-prompt-text))
+      (goto-char (point-max))
+      (beginning-of-line))
+    (when (looking-at "\\(\\s-+\\)")
+      (goto-char (match-end 0))))
   (if (= (point) (point-max))
       nil
     (buffer-substring (point) (point-max))))
@@ -110,6 +114,7 @@ If the completion was not exact it returns nil."
   (interactive)
   (if (lyskom-get-entered-slow-command)
       (kom-expand-slow-command)
+    (buffer-disable-undo)
     (kom-next-command)))
 
 
@@ -118,6 +123,7 @@ If the completion was not exact it returns nil."
   (interactive)
   (let* ((text (lyskom-get-entered-slow-command))
 	 (command (and text (kom-expand-slow-command))))
+    (buffer-disable-undo)
     (cond
      ((null text)
       (call-interactively 'kom-next-command))
@@ -130,14 +136,21 @@ If the completion was not exact it returns nil."
   "Starts the slow-command-mode."
   (interactive)
   (lyskom-start-of-command 'kom-slow-mode)
-  (use-local-map lyskom-slow-mode-map)
+  (unless lyskom-slow-mode
+    (setq lyskom-saved-read-only buffer-read-only)
+    (setq lyskom-slow-mode t)
+    (setq buffer-read-only nil)
+    (use-local-map lyskom-slow-mode-map))
   (lyskom-end-of-command))
 
 (defun kom-quick-mode ()
   "Starts the quick-command-mode."
   (interactive)
   (lyskom-start-of-command 'kom-quick-mode)
-  (use-local-map lyskom-mode-map)
+  (when lyskom-slow-mode
+    (setq buffer-read-only lyskom-saved-read-only)
+    (setq lyskom-slow-mode nil)
+    (use-local-map lyskom-mode-map))
   (lyskom-end-of-command))
 
 

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.16 1997-07-09 14:41:31 byers Exp $
+;;;;; $Id: utilities.el,v 44.17 1997-07-10 08:58:47 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.16 1997-07-09 14:41:31 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.17 1997-07-10 08:58:47 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -375,9 +375,8 @@ under XEmacs."
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
 in lyskom-face-schemes."
   (let ((tmp (assoc scheme lyskom-face-schemes)))
-    ;; This test is NOT good
-    (if (and tmp (or (eq (console-type) 'x)
-		     (eq (console-type) 'win32)
+    ;; This test is NOT good, but now it's better...
+    (if (and tmp (or (not (eq (console-type) 'tty))
 		     (not (eq (device-class) 'mono))))
         (progn
           (mapcar 
