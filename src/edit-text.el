@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $
+;;;;; $Id: edit-text.el,v 38.2.2.1 1995-01-07 12:32:53 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $\n"))
+	      "$Id: edit-text.el,v 38.2.2.1 1995-01-07 12:32:53 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -76,7 +76,8 @@ Does lyskom-end-of-command."
   (lyskom-end-of-command)
   (let ((buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
-	(config (current-window-configuration)))
+	(config (current-window-configuration))
+	(the-dedicated-frame nil))
     (setq lyskom-list-of-edit-buffers (cons buffer 
 					    lyskom-list-of-edit-buffers))
     (condition-case emacs-18\.55
@@ -95,15 +96,20 @@ Does lyskom-end-of-command."
       (switch-to-buffer-other-window buffer))
      ((and (eq kom-write-texts-in-window 'other-frame)
 	   (not (eq (selected-frame) (next-frame))))
-      (select-frame (next-frame)))
+      (select-frame (next-frame))
+      (switch-to-buffer buffer))
      ((eq kom-write-texts-in-window 'new-frame)
-      (make-local-variable 'lyskom-is-dedicated-edit-window)
-      (setq lyskom-is-dedicated-edit-window t)
-      (switch-to-buffer-other-frame buffer))
+      (switch-to-buffer-other-frame buffer)
+      (setq the-dedicated-frame
+	    (window-frame (get-buffer-window (current-buffer) nil))))
      (t
       (switch-to-buffer buffer)))
     (lyskom-edit-mode)
     (setq lyskom-proc proc)
+    (if the-dedicated-frame
+	(progn
+	  (make-local-variable 'lyskom-is-dedicated-edit-window)
+	  (setq lyskom-is-dedicated-edit-window the-dedicated-frame)))
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
     (make-local-variable 'lyskom-edit-return-to-configuration)
@@ -346,7 +352,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	(if kom-dont-restore-window-after-editing
 	    (bury-buffer)
 	  (save-excursion
-	    (if (boundp 'lyskom-is-dedicated-edit-window)
+	    (if (and (boundp 'lyskom-is-dedicated-edit-window)
+		     (eq lyskom-is-dedicated-edit-window
+			 (window-frame (get-buffer-window (current-buffer) nil))))
 		(condition-case error
 		    (delete-frame)
 		  (error))))
@@ -363,7 +371,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	(bury-buffer)
       ;; Select the old configuration.
       (save-excursion
-	(if (boundp 'lyskom-is-dedicated-edit-window)
+	(if (and (boundp 'lyskom-is-dedicated-edit-window)
+		 (eq lyskom-is-dedicated-edit-window
+		     (window-frame (get-buffer-window (current-buffer) nil))))
 	    (condition-case error
 		(delete-frame)
 	      (error))))

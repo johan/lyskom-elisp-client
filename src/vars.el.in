@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $
+;;;;; $Id: vars.el.in,v 38.2.2.1 1995-01-07 12:37:29 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $\n"))
+	      "$Id: vars.el.in,v 38.2.2.1 1995-01-07 12:37:29 linus Exp $\n"))
 
 
 
@@ -59,7 +59,11 @@ This variable is not saved. It should be set in your .emacs")
 'other means edit in another window. Creating that window if necessary.
 A buffer or buffer name means use the first window displaying that buffer.
 If no window is displaying that buffer or the buffer does not exits then it
-uses the same window.")
+uses the same window.
+'other-frame means choose another frame. 'new-frame means create a frame
+exclusively for this purpose.
+The choices 'other-frame and 'new-frame requires you to have an emacs running
+under a window-system.")
 
 (defvar kom-created-texts-are-read t
   "*Non-nil means automatically mark texts that you create as read.")
@@ -172,8 +176,12 @@ nonexistent) buffer in which the message is inserted.")
 kom-show-personal-messages-in-buffer decides which buffer to pop.")
 
 (defvar kom-ding-on-personal-messages t
-  "*Non-nil means ding as personal messages arrive.
-Non-nil and non-t means only ding when they really are personal.")
+  "*Controls ding as personal messages arrive.
+nil -> always silent
+t   -> always ding
+'personal -> only when really personal messages are recieved
+'group -> only when messages to groups are recieved
+otherwize undefined.")
 
 (defvar kom-confirm-multiple-recipients t
   "*Non-nil means ask the user for confirmation about recipients.
