@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.297 2003-08-14 20:50:47 byers Exp $
+;;;;; $Id: english-strings.el,v 44.298 2003-08-15 06:24:03 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.297 2003-08-14 20:50:47 byers Exp $"))
+              "$Id: english-strings.el,v 44.298 2003-08-15 06:24:03 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1471,7 +1471,8 @@ On since %#8s%#9s")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     (fast-reply-too-long . "Can't create remarks that consist of more than one line.\n")
 
-    (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
+    (conf-to-faq . "List FAQ for what conference: ")
+    (faq-for-conf-aux . "FAQ for %#1M <%#1m>")
     (faq-for-server-aux . "FAQ for the LysKOM-server") 
     (faq-in-text-aux . "FAQ in text:                 %10#1n %#2D")
     (conf-to-add-faq . "Which conference do you want to add an FAQ for? ")
