@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.207 2003-12-11 22:39:00 byers Exp $
+;;;;; $Id: commands1.el,v 44.208 2004-01-01 22:49:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.207 2003-12-11 22:39:00 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.208 2004-01-01 22:49:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3255,7 +3255,11 @@ prefix argument \(C-u -), list all sessions."
 
 (defun lyskom-return-username (who-info)
   "Takes the username from the WHO-INFO and returns it on a better format."
-  (let* ((username (who-info->username who-info))
+  (let* ((username (cond ((lyskom-static-session-info-p who-info)
+                          (static-session-info->username who-info))
+                         ((lyskom-session-info-p who-info)
+                          (session-info->username who-info))
+                         (t (who-info->username who-info))))
 	 (type (or 
 		(string-match "\\([^%@.]+\\)%\\(.+\\)@\\([^%@.]+\\)" username)
 		(string-match "\\([^%@.]+\\)@\\([^%@.]+\\)" username))))
