@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.0 1996-08-30 14:46:47 davidk Exp $
+;;;;; $Id: komtypes.el,v 44.1 1997-02-13 11:31:40 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.0 1996-08-30 14:46:47 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 44.1 1997-02-13 11:31:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1607,6 +1607,14 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get texts from text-list."
   (cdr text-list))
 
+(defsubst text-list->empty (text-list)
+  "Return t if TEXT-LIST is empty."
+  (null (cdr text-list)))
+
+(defsubst text-list->length (text-list)
+  "Return the length of TEXT-LIST."
+  (length (cdr text-list)))
+
 
 ;;; Modifier:
 
@@ -1614,6 +1622,13 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Set texts in TEXT-LIST to NEWVAL."
   (setcdr text-list newval))
 
+(defsubst text-list->delq (text-list no)
+  "Remove text NO from TEXT-LIST."
+  (setcdr text-list (delq no (cdr text-list))))
+
+(defsubst text-list->append (text-list texts)
+  "Destructively append TEXTS to the end of TEXT-LIST."
+  (setcdr text-list (nconc (cdr text-list) texts)))
 
 ;;; Predicate:
 
