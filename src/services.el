@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.17 1998-06-14 14:15:58 byers Exp $
+;;;;; $Id: services.el,v 44.18 1999-06-10 13:36:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.17 1998-06-14 14:15:58 byers Exp $\n"))
+	      "$Id: services.el,v 44.18 1999-06-10 13:36:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -91,7 +91,7 @@ from being called in the wrong buffer."
 ;;;                     Requests for services
 
 
-(defun initiate-login (kom-queue handler pers-no password &rest data)
+(defun initiate-login-old (kom-queue handler pers-no password &rest data)
   "Log in on server.
 Args: KOM-QUEUE HANDLER PERS-NO PASSWORD &rest DATA."
   (lyskom-server-call
@@ -99,8 +99,8 @@ Args: KOM-QUEUE HANDLER PERS-NO PASSWORD &rest DATA."
     (lyskom-send-packet kom-queue (lyskom-format-objects 0 pers-no password))))
 
 
-(defun initiate-login-new (kom-queue handler pers-no password status 
-				     &rest data)
+(defun initiate-login (kom-queue handler pers-no password status 
+                                 &rest data)
   "Log in on server.
 Args: KOM-QUEUE HANDLER PERS-NO PASSWORD STATUS &rest DATA.
 Status is 0 for visible login and 1 for invisible login."
@@ -145,16 +145,19 @@ WHAT is a string."
     (lyskom-send-packet kom-queue (lyskom-format-objects 4 what))))
   
 
-(defun initiate-create-person (kom-queue handler name password aux-items 
-                                         &rest data)
+(defun initiate-create-person (kom-queue handler name 
+                                         password pers-flags
+                                         aux-items 
+                                             &rest data)
   "Create a new person.
 Args: KOM-QUEUE HANDLER NAME PASSWORD &rest DATA."
   (lyskom-server-call
    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-   (if lyskom-extended-types-flag
+   (if (lyskom-have-call 89)
        (lyskom-send-packet kom-queue (lyskom-format-objects 89
                                                             name
                                                             password
+                                                            pers-flags
                                                             (cons 'LIST 
                                                                   aux-items)))
      (lyskom-send-packet kom-queue (lyskom-format-objects 5 name password)))))
@@ -192,13 +195,13 @@ Args: KOM-QUEUE HANDLER PERS-NO OLD-PW NEW-PW &rest DATA."
 Args: KOM-QUEUE HANDLER PERS-NO CONF-NO &rest DATA"
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 
-                 (if lyskom-extended-types-flag
+                 (if (lyskom-have-call 98)
                      'lyskom-parse-membership
                    'lyskom-parse-membership-old))
     (lyskom-send-packet kom-queue 
                         (lyskom-format-objects
-                         (if lyskom-extended-types-flag
-                             98 9) pers-no conf-no))))
+                         (if (lyskom-have-call 98) 98 9)
+                         pers-no conf-no))))
 
 
 (defun initiate-create-conf (kom-queue handler
@@ -208,7 +211,7 @@ Args: KOM-QUEUE HANDLER PERS-NO CONF-NO &rest DATA"
 Args: KOM-QUEUE HANDLER CONF-NAME CONF-TYPE &rest DATA."
   (lyskom-server-call
    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-   (if lyskom-extended-types-flag
+   (if (lyskom-have-call 88)
        (lyskom-send-packet kom-queue
                            (lyskom-format-objects 88 conf-name conf-type
                                                   (cons 'LIST aux-items)))
@@ -249,7 +252,7 @@ Args: KOM-QUEUE HANDLER NAME &rest DATA."
 Args: KOM-QUEUE HANDLER CONF-NO PERS-NO PRIORITY WHERE &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (if lyskom-extended-types-flag
+    (if (lyskom-have-call 100)
         (lyskom-send-packet kom-queue
                             (lyskom-format-objects 100 conf-no pers-no 
                                                    priority where type))
@@ -286,14 +289,6 @@ Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
     (lyskom-send-packet kom-queue (lyskom-format-objects 17 conf-no text-no))))
-
-
-(defun initiate-set-user-area (kom-queue handler pers-no text-no &rest data)
-  "Set user-area of a person.
-Args: KOM-QUEUE HANDLER PERS-NO TEXT-NO &rest DATA."
-  (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 57 pers-no text-no))))
 
 
 (defun initiate-set-supervisor (kom-queue handler conf-no admin
@@ -353,18 +348,6 @@ Args: KOM-QUEUE HANDLER &rest DATA."
     (lyskom-send-packet kom-queue (lyskom-format-objects 23))))
 
 
-(defun initiate-mark-text-old (kom-queue handler
-                                         text-no mark-type	
-                                         &rest data)
-  "Mark a text.
-Args: KOM-QUEUE HANDLER TEXT-NO MARK-TYPE &rest DATA.
-MARK-TYPE is currently a number, but this should maybe be
-changed (internally in the elisp-klient) to something similar to
-a conf-type (with several bits that are 't' or 'nil' that is)."
-  (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 24 text-no mark-type))))
-
 (defun initiate-mark-text (kom-queue handler
                                      text-no mark-type
                                      &rest data)
@@ -375,7 +358,10 @@ changed (internally in the elisp-klient) to something similar to
 a conf-type (with several bits that are 't' or 'nil' that is)."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 72 text-no mark-type))))
+    (lyskom-send-packet kom-queue
+                        (lyskom-format-objects 
+                         (if (lyskom-have-call 72) 72 24) 
+                         text-no mark-type))))
 
 (defun initiate-unmark-text (kom-queue handler
                                      text-no
@@ -384,20 +370,10 @@ a conf-type (with several bits that are 't' or 'nil' that is)."
 Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 73 text-no))))
+    (if (lyskom-have-call 73)
+        (lyskom-send-packet kom-queue (lyskom-format-objects 73 text-no)))
+      (lyskom-send-packet kom-queue (lyskom-format-objects 24 text-no 0))))
 
-
-(defun initiate-find-next-text-no (kom-queue handler text-no &rest data)
-  "Find the text following the text TEXT-NO"
-  (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 60 text-no))))
-
-(defun initiate-find-previous-text-no (kom-queue handler text-no &rest data)
-  "Find the text preceding the text TEXT-NO"
-  (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 61 text-no))))
 
 (defun initiate-get-text (kom-queue handler text-no &rest data)
   "Get text from LysKOM server.
@@ -430,7 +406,7 @@ Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
        (lyskom-call kom-queue		;No, ask the server.
                     lyskom-ref-no
                     handler data
-                    (if lyskom-extended-types-flag
+                    (if (lyskom-have-call 90)
                         'lyskom-parse-text-stat
                       'lyskom-parse-text-stat-old)
                     text-no)
@@ -438,7 +414,7 @@ Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
        ;;(terpri (get-buffer-create "text-stat"))
        (lyskom-send-packet kom-queue
                            (lyskom-format-objects
-                            (if lyskom-extended-types-flag 90 26)
+                            (if (lyskom-have-call 90) 90 26)
                             text-no)))
       (t
                                         ;Cached info. 
@@ -466,7 +442,7 @@ Args: KOM-QUEUE HANDLER MESSAGE MISC-LIST AUX-ITEMS &rest DATA.
 MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
   (lyskom-server-call
    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-   (if lyskom-extended-types-flag
+   (if (lyskom-have-call 86)
        (lyskom-send-packet kom-queue
                            (lyskom-format-objects 86
                                                   message
@@ -474,26 +450,6 @@ MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
                                                   (cons 'LIST aux-items)))
      (lyskom-send-packet kom-queue
                          (lyskom-format-objects 28 message misc-list)))))
-
-(defun initiate-create-anonymous-text (kom-queue 
-                                       handler
-                                       message 
-                                       misc-list
-                                       aux-items
-                                       &rest data)
-  "Create a new anonymous text.
-Args: KOM-QUEUE HANDLER MESSAGE MISC-LIST AUX-ITEMS &rest DATA.
-MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
-  (lyskom-server-call
-   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-   (if lyskom-extended-types-flag
-       (lyskom-send-packet kom-queue
-                           (lyskom-format-objects 87
-                                                  message
-                                                  misc-list
-                                                  (cons 'LIST aux-items)))
-     (lyskom-send-packet kom-queue
-                         (lyskom-format-objects 59 message misc-list)))))
 
 				     
 (defun initiate-delete-text (kom-queue handler text-no &rest data)
@@ -512,11 +468,14 @@ Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
 Args: KOM-QUEUE HANDLER TEXT-NO CONF-NO TYPE &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packet kom-queue
-                        (lyskom-format-objects 30 text-no conf-no
-                                               (cond ((eq type 'recpt) 0)
-                                                     ((eq type 'cc-recpt) 1)
-                                                     ((eq type 'bcc-recpt) (if lyskom-bcc-flag 15 1)))))))
+    (lyskom-send-packet 
+     kom-queue
+     (lyskom-format-objects 30 text-no conf-no
+                            (cond ((eq type 'recpt) 0)
+                                  ((eq type 'cc-recpt) 1)
+                                  ((eq type 'bcc-recpt) 
+                                   (if (lyskom-have-feature bcc-misc)
+                                       15 1)))))))
 
 (defun initiate-sub-recipient (kom-queue handler
 					 text-no conf-no 
@@ -559,8 +518,7 @@ Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS DATA-LIST.
 Use initiate-get-map instead. This function has severe performance losses
 with big maps."
   (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data-list
-                 'lyskom-parse-map)
+    (lyskom-call kom-queue lyskom-ref-no handler data-list 'lyskom-parse-map)
     (lyskom-send-packet kom-queue 
                         (lyskom-format-objects 34 conf-no
                                                first-local no-of-texts))))
@@ -619,12 +577,12 @@ Args: KOM-QUEUE HANDLER &rest DATA."
    (lyskom-call kom-queue lyskom-ref-no
                 handler
                 data
-                (if lyskom-extended-types-flag
+                (if (lyskom-have-call 94)
                     'lyskom-parse-server-info
                   'lyskom-parse-server-info-old))
    (lyskom-send-packet kom-queue
                        (lyskom-format-objects
-                        (if lyskom-extended-types-flag 94 36)))))
+                        (if (lyskom-have-call 94) 94 36)))))
 
 
 (defun initiate-add-footnote (kom-queue handler
@@ -649,7 +607,7 @@ Args: KOM-QUEUE HANDLER FOOTNOTE-TEXT-NO TEXT-NO &rest DATA."
                         (lyskom-format-objects 38 footnote-text-no text-no))))
 
 
-;;; Call 39, who-is-on-old, is obsoleted by call 51.
+;;; Call 39, who-is-on-old, is obsoleted by call 63.
 
 
 (defun initiate-set-unread (kom-queue handler conf-no no-of-unread &rest data)
@@ -710,12 +668,11 @@ Args: KOM-QUEUE HANDLER MESSAGE &rest DATA."
 Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data
-                 (if lyskom-extended-types-flag 
+                 (if (lyskom-have-call 99)
                      'lyskom-parse-membership-list
                    'lyskom-parse-membership-list-old))
     (lyskom-send-packet kom-queue (lyskom-format-objects
-                                   (if lyskom-extended-types-flag
-                                       99 46)
+                                   (if (lyskom-have-call 99) 99 46)
                                    pers-no
                                    0 lyskom-max-int ;all confs.
                                    1)))) ;want read texts.
@@ -727,11 +684,11 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
 Args: KOM-QUEUE HANDLER PERS-NO FIRST-IN-LIST LENGHT &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data
-                 (if lyskom-extended-types-flag
+                 (if (lyskom-have-call 99)
                      'lyskom-parse-membership-list
                    'lyskom-parse-membership-list-old))
     (lyskom-send-packet kom-queue (lyskom-format-objects 
-                                   (if lyskom-extended-types-flag 99 46)
+                                   (if (lyskom-have-call 99) 99 46)
                                    pers-no
                                    first length ;all confs.
                                    1))))
@@ -744,8 +701,9 @@ Args: KOM-QUEUE HANDLER PERS-NO FIRST-LOCAL NO-OF-TEXTS &rest DATA."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data
                  'lyskom-parse-map)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 47 pers-no
-                                                         first-local no-of-texts))))
+    (lyskom-send-packet kom-queue
+                        (lyskom-format-objects 47 pers-no
+                                               first-local no-of-texts))))
 
 
 (defun initiate-get-members (kom-queue handler conf-no first-local
@@ -755,14 +713,14 @@ Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-MEMBERS &rest DATA.
 Returns a conf-no-list."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data
-                 (if lyskom-extended-types-flag
+                 (if (lyskom-have-call 101)
                      'lyskom-parse-member-list
                    'lyskom-parse-member-list-old))
     (lyskom-send-packet kom-queue
-                        (lyskom-format-objects (if lyskom-extended-types-flag
-                                                   101 48)
-                                               conf-no
-                                               first-local no-of-members))))
+                        (lyskom-format-objects 
+                         (if (lyskom-have-call 101) 101 48)
+                         conf-no
+                         first-local no-of-members))))
 
 
 (defun initiate-get-pers-stat (kom-queue handler pers-no &rest data)
@@ -797,7 +755,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
        (lyskom-call kom-queue		;No, ask the server.
                     lyskom-ref-no
                     handler data
-                    (if lyskom-extended-types-flag
+                    (if (lyskom-have-call 91)
                         'lyskom-parse-conf-stat
                       'lyskom-parse-conf-stat-old)
                     conf-no)
@@ -805,31 +763,12 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
        ;;(terpri (get-buffer-create "conf-stat"))
        (lyskom-send-packet kom-queue 
                            (lyskom-format-objects
-                            (if lyskom-extended-types-flag 91 50)
+                            (if (lyskom-have-call 91) 91 50)
                             conf-no)))
       (t
                                         ;Cached info. 
        (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
        (lyskom-check-call kom-queue))))))
-
-
-(defun initiate-get-uconf-stat (kom-queue handler conf-no &rest data)
-  "Get an uconf-sstat from LysKOM server.
-Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
-  (lyskom-server-call
-    (let ((conf-stat (cache-get-uconf-stat conf-no)))
-      (cond ((zerop conf-no)
-             (lyskom-call-add kom-queue 'PARSED nil handler data)
-             (lyskom-check-call kom-queue))
-            ((null conf-stat)
-             (lyskom-call kom-queue
-                          lyskom-ref-no
-                          handler data
-                          'lyskom-parse-uconf-stat conf-no)
-             (lyskom-send-packet kom-queue (lyskom-format-objects 78 conf-no)))
-            (t
-             (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
-             (lyskom-check-call kom-queue))))))
 
 
 ;; who-is-on is obsoleted by who-is-on-dynamic (83) i protocol version 9
@@ -886,6 +825,98 @@ Args: KOM-QUEUE HANDLER &rest DATA."
                  'lyskom-parse-num)
     (lyskom-send-packet kom-queue (lyskom-format-objects 56))))
 
+(defun initiate-set-user-area (kom-queue handler pers-no text-no &rest data)
+  "Set user-area of a person.
+Args: KOM-QUEUE HANDLER PERS-NO TEXT-NO &rest DATA."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 57 pers-no text-no))))
+
+(defun initiate-get-last-text (kom-queue handler before &rest data)
+  "Get text created before BEFORE.
+Args: KOM-QUEUE HANDLER BEFORE &rest DATA"
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 58 before))))
+
+
+(defun initiate-create-anonymous-text (kom-queue 
+                                       handler
+                                       message 
+                                       misc-list
+                                       aux-items
+                                       &rest data)
+  "Create a new anonymous text.
+Args: KOM-QUEUE HANDLER MESSAGE MISC-LIST AUX-ITEMS &rest DATA.
+MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
+  (lyskom-server-call
+   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+   (if (lyskom-have-call 87)
+       (lyskom-send-packet kom-queue
+                           (lyskom-format-objects 87
+                                                  message
+                                                  misc-list
+                                                  (cons 'LIST aux-items)))
+     (lyskom-send-packet kom-queue
+                         (lyskom-format-objects 59 message misc-list)))))
+
+
+(defun initiate-find-next-text-no (kom-queue handler text-no &rest data)
+  "Find the text following the text TEXT-NO"
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 60 text-no))))
+
+(defun initiate-find-previous-text-no (kom-queue handler text-no &rest data)
+  "Find the text preceding the text TEXT-NO"
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 61 text-no))))
+
+;; Call 62 is above
+
+(defun initiate-who-is-on-ident (kom-queue handler &rest data)
+  "Who is logged on. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-who-info-ident-list)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 63))))
+
+(defun initiate-get-session-info-ident (kom-queue handler 
+                                                  session-no &rest data)
+  "Get session info. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data
+                 'lyskom-parse-session-info-ident)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 64 session-no))))
+
+(defun initiate-re-lookup-person (kom-queue handler regexp &rest data)
+  "Look up person based on regexp. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-number-array)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 65 regexp))))
+
+(defun initiate-re-lookup-conf (kom-queue handler regexp &rest data)
+  "Look up conference based on regexp. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-number-array)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 66 regexp))))
+
+(defun initiate-lookup-person (kom-queue handler regexp &rest data)
+  "Look up person based on abbreviated name. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-number-array)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 67 regexp))))
+
+(defun initiate-lookup-conf (kom-queue handler regexp &rest data)
+  "Look up conference based on abbreviated name. Obsolete."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-number-array)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 68 regexp))))
 
 (defun initiate-set-client-version (kom-queue handler name version &rest data)
   "Tell the server to set the client name and version of this session."
@@ -934,7 +965,7 @@ Args: KOM-QUEUE HANDLER &rest DATA"
   "Perform a z-lookup.
 Args: KOM-QUEUE HANDLER NAME WANT-PERSONS WANT-CONFS &rest DATA"
   (lyskom-server-call
-    (if lyskom-z-lookup-flag
+    (if (lyskom-have-call 76)
         (progn
           (lyskom-call kom-queue lyskom-ref-no handler data 
                        'lyskom-parse-conf-z-info-list)
@@ -997,7 +1028,7 @@ Args: KOM-QUEUE HANDLER NAME WANT-PERSONS WANT-CONFS &rest DATA"
 to TEXT-NO
 Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
   (lyskom-server-call
-    (if lyskom-set-last-read-flag
+    (if (lyskom-have-call 77)
         (progn
           (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
           (lyskom-send-packet kom-queue (lyskom-format-objects 77
@@ -1027,6 +1058,42 @@ Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
       (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
       (lyskom-send-packet kom-queue
                           (lyskom-format-objects 40 conf-no no-of-unread)))))
+
+(defun initiate-get-uconf-stat (kom-queue handler conf-no &rest data)
+  "Get an uconf-stat from LysKOM server.
+Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
+  (lyskom-server-call
+    (let ((conf-stat (cache-get-uconf-stat conf-no)))
+      (cond ((zerop conf-no)
+             (lyskom-call-add kom-queue 'PARSED nil handler data)
+             (lyskom-check-call kom-queue))
+            ((null conf-stat)
+             (lyskom-call kom-queue
+                          lyskom-ref-no
+                          handler data
+                          'lyskom-parse-uconf-stat conf-no)
+             (lyskom-send-packet kom-queue (lyskom-format-objects 78 conf-no)))
+            (t
+             (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
+             (lyskom-check-call kom-queue))))))
+
+(defun initiate-set-info (kom-queue handler 
+                                    conf-pres-conf
+                                    pers-pres-conf
+                                    motd-conf
+                                    kom-news-conf
+                                    motd-of-lyskom &rest data)
+  "Set server info."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packed kom-queue (lyskom-format-objects 79
+                                                         0
+                                                         conf-pres-conf
+                                                         pers-pres-conf
+                                                         motd-conf
+                                                         kom-news-conf
+                                                         motd-of-lyskom))))
+                                                         
 
 (defun initiate-accept-async (kom-queue handler list &rest data)
   "Request asynchronous messages in LIST
@@ -1083,6 +1150,12 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
        (lyskom-call-add kom-queue 'PARSED info handler data)
        (lyskom-check-call kom-queue)))))) ;This might call the handler.
 
+
+(defun initiate-get-collate-table (kom-queue handler &rest data)
+  "Get the collate table from the server."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-string)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 85))))
 
 (defun initiate-modify-text-info (kom-queue handler 
                                             text-no
@@ -1143,8 +1216,43 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
                         (lyskom-format-objects 102 pers-no conf-no type))
     (cache-del-conf-stat conf-no)
     (cache-del-pers-stat pers-no)))
-                      
-  
+
+(defun initiate-local-to-global (kom-queue handler 
+                                           conf-no
+                                           first-local-no
+                                           no-of-texts &rest data)
+  "Send local-to-global to server."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data
+                 'lyskom-parse-text-mapping)
+    (lyskom-send-packet kom-queue
+                        (lyskom-format-objects 103 
+                                               conf-no
+                                               first-local-no
+                                               no-of-texts))))
+
+(defun initiate-map-created-texts (kom-queue handler
+                                             author
+                                             first-local-no
+                                             no-of-texts
+                                             &rest data)
+  "Send map-created-texts to the server."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 
+                 'lyskom-parse-text-mappinng)
+    (lyskom-send-packet kom-queue
+                        (lyskom-format-objects 104
+                                               author
+                                               first-local-no
+                                               no-of-texts))))
+
+
+
+(defun initiate-set-keep-commented (kom-queue handler conf-no keep &rest data)
+  (lyskom-server-call
+   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+   (lyskom-send-packet kom-queue (lyskom-format-objects 105 conf-no keep))
+   (cache-del-conf-stat conf-no)))  
                                                        
 
 ;;; ================================================================

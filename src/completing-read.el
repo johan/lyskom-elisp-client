@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.14 1998-06-02 12:14:30 byers Exp $
+;;;;; $Id: completing-read.el,v 44.15 1999-06-10 13:36:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.14 1998-06-02 12:14:30 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.15 1999-06-10 13:36:07 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -68,7 +68,7 @@
           (listify-vector
 	   (if (or (and (lyskom-is-in-minibuffer) 
                         lyskom-completing-use-dynamic-info)
-		   lyskom-dynamic-session-info-flag)
+		   (lyskom-have-feature dynamic-session-info))
 	       (blocking-do 'who-is-on-dynamic t t 0)
 	     (blocking-do 'who-is-on))))))
 
@@ -127,6 +127,7 @@ See lyskom-read-conf for a description of the parameters."
     (cond ((null conf-z-info) 0)
           ((stringp conf-z-info) 0)
 	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->conf-no conf-z-info))
+	  ((lyskom-uconf-stat-p conf-z-info) (uconf-stat->conf-no conf-z-info))
           (t (conf-z-info->conf-no conf-z-info)))))
 
 (defun lyskom-read-conf-stat (prompt type &optional empty initial mustmatch)
@@ -141,6 +142,21 @@ See lyskom-read-conf for a description of the parameters."
           (t (blocking-do 'get-conf-stat 
                           (conf-z-info->conf-no conf-z-info))))))
 
+(defun lyskom-read-uconf-stat (prompt type &optional empty initial mustmatch)
+  "Read a conference name from the minibuffer with completion and
+return its conf-stat or nil if nothing was matched.
+
+See lyskom-read-conf for a description of the parameters."
+  (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
+    (cond ((null conf-z-info) nil)
+          ((stringp conf-z-info) nil)
+	  ((lyskom-uconf-stat-p conf-z-info) conf-z-info)
+	  ((lyskom-conf-stat-p conf-z-info)
+           (blocking-do 'get-uconf-stat 
+                        (conf-stat->conf-no conf-z-info)))
+          (t (blocking-do 'get-uconf-stat 
+                          (conf-z-info->conf-no conf-z-info))))))
+
 (defun lyskom-read-conf-name (prompt type &optional empty initial mustmatch)
   "Read a conference name from the minibuffer with completion and
 return its name.
@@ -150,6 +166,7 @@ See lyskom-read-conf for a description of the parameters."
     (cond ((null conf-z-info) "")
           ((stringp conf-z-info) conf-z-info)
 	  ((lyskom-conf-stat-p conf-z-info) (conf-stat->name conf-z-info))
+	  ((lyskom-uconf-stat-p conf-z-info) (uconf-stat->name conf-z-info))
 	  (t (conf-z-info->name conf-z-info)))))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
@@ -203,13 +220,10 @@ A string:    A name that matched nothing in the database."
 (defun lyskom-read-conf-get-logins ()
   "Used internally by lyskom-read-conf-internal to get a list of
 persons who are logged on."
-  (let ((lyskom-completing-use-dynamic-info
-	 (cdr-safe (assq 'lyskom-dynamic-session-info-flag
-			 (buffer-local-variables lyskom-buffer)))))
-    (mapcar (if lyskom-completing-use-dynamic-info
-		(function (lambda (el) (dynamic-session-info->person el)))
-	      (function (lambda (el) (who-info->pers-no el))))
-	    (lyskom-completing-who-is-on))))
+  (mapcar (if (lyskom-have-feature dynamic-session-info)
+              (function (lambda (el) (dynamic-session-info->person el)))
+            (function (lambda (el) (who-info->pers-no el))))
+          (lyskom-completing-who-is-on)))
 
 
 (defun lyskom-read-conf-expand-specials (string
@@ -221,11 +235,11 @@ persons who are logged on."
 conference number specifications to something useful."
   (cond ((string-match (lyskom-get-string 'person-or-conf-no-regexp) string)
          (let* ((no (string-to-int (match-string 1 string)))
-                (cs (blocking-do 'get-conf-stat no)))
+                (cs (blocking-do 'get-uconf-stat no)))
            (if (and cs
                     (lyskom-read-conf-internal-verify-type
-                     (conf-stat->conf-no cs)
-                     (conf-stat->conf-type cs)
+                     (uconf-stat->conf-no cs)
+                     (uconf-stat->conf-type cs)
                      predicate 
                      login-list
                      x-list))
@@ -236,12 +250,12 @@ conference number specifications to something useful."
          (let* ((no (string-to-int (match-string 1 string)))
                 (si (blocking-do 'get-session-info no))
                 (cs (and si
-                         (blocking-do 'get-conf-stat
+                         (blocking-do 'get-uconf-stat
                                       (session-info->pers-no si)))))
            (if (and cs
                     (lyskom-read-conf-internal-verify-type
-                     (conf-stat->conf-no cs)
-                     (conf-stat->conf-type cs)
+                     (uconf-stat->conf-no cs)
+                     (uconf-stat->conf-type cs)
                      predicate 
                      login-list
                      x-list))
@@ -875,7 +889,7 @@ the LysKOM rules of string matching."
 (defun lyskom-session-from-conf (conf-no)
   (let ((who-list (lyskom-completing-who-is-on))
         (sessions nil))
-    (if lyskom-dynamic-session-info-flag
+    (if (lyskom-have-feature dynamic-session-info)
 	(while who-list
 	  (if (eq (dynamic-session-info->person (car who-list))
 		  conf-no)
@@ -918,7 +932,7 @@ the LysKOM rules of string matching."
 		    (lambda (el)
 		      (let* ((info (blocking-do 'get-session-info el))
 			     (confconfstat
-			      (blocking-do 'get-conf-stat
+			      (blocking-do 'get-uconf-stat
 					   (session-info->working-conf info))))
 			(lyskom-format-insert
 			 format-string-p
@@ -928,7 +942,7 @@ the LysKOM rules of string matching."
 					 lyskom-session-no)
 				     "*" " "))
 			 (session-info->pers-no info)
-			 (if (conf-stat->name confconfstat)
+			 (if (uconf-stat->name confconfstat)
 			     confconfstat
 			   (lyskom-get-string 'not-present-anywhere)))
 			(lyskom-format-insert

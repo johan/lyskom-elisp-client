@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.15 1998-06-02 12:14:27 byers Exp $
+;;;;; $Id: compatibility.el,v 44.16 1999-06-10 13:36:06 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.15 1998-06-02 12:14:27 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.16 1999-06-10 13:36:06 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -177,45 +177,28 @@ of the lyskom-provide-* functions instead."
      (if tail
          (setcdr tail new-parent))))
 
-(defconst lyskom-xemacs-keysym 
-  '((mouse-1 . (button1))
-    (mouse-2 . (button2))
-    (mouse-3 . (button3))
-    (down-mouse-3 . (button3))
-    (C-å     . (control aring))
-    (C-ä     . (control adiaeresis))
-    (C-Å     . (control Aring))
-    (C-Ä     . (control Adiaeresis))
-    (å       . aring)
-    (Å       . Aring)
-    (ä       . adiaeresis)
-    (Ä       . Adiaeresis)))
-
 (defconst lyskom-gnu-keysym
-  '((C-å     . (control å))
-    (C-ä     . (control ä))
-    (C-Å     . (control Å))
-    (C-Ä     . (control Ä))
-    (å       . ?\å)
-    (Å       . ?\Å)
-    (ä       . ?\ä)
-    (Ä       . ?\Ä)
-    (ö       . ?\ö)
-    (Ö       . ?\Ö)))
+  '((button1   . "<mouse-1>")
+    (button2   . "<mouse-2>")
+    (button3   . "<mouse-3>")
+    (button1up . "<down-mouse-1>")
+    (button2up . "<down-mouse-2>")
+    (button3up . "<down-mouse-3>")))
+
+(defconst lyskom-xemacs-keysym
+  '((button1   . "<button1>")
+    (button2   . "<button2>")
+    (button3   . "<button3>")
+    (button1up . "<button1up>")
+    (button2up . "<button2up>")
+    (button3up . "<button3up>")))
 
 
-(defun lyskom-keys (binding)
-  (cond ((vectorp binding) (apply 'vector (mapcar 'lyskom-keysym binding)))
-        (t binding)))
+(defun lyskom-keys (sym)
+  "Look up the key description for key SYM."
+  (cdr (assq sym (lyskom-xemacs-or-gnu lyskom-xemacs-keysym
+                                       lyskom-gnu-keysym))))
 
-(defun lyskom-keysym (sym)
-  "Look up the proper symbol to bind sym to"
-  (lyskom-xemacs-or-gnu (or (cdr (assq sym lyskom-xemacs-keysym)) sym)
-                        (or (cdr (assq sym lyskom-gnu-keysym))
-                            (let ((name (symbol-name sym)))
-                              (and (= (length name) 1)
-                                   (elt name 0)))
-                            sym)))
 
 ;;; ============================================================
 ;;; Text property and extents stuff

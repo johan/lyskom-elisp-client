@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.5 1998-07-23 15:04:14 petli Exp $
+;;;;; $Id: view-mode.el,v 44.6 1999-06-10 13:36:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.5 1998-07-23 15:04:14 petli Exp $\n"))
+	      "$Id: view-mode.el,v 44.6 1999-06-10 13:36:29 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")
@@ -62,8 +62,8 @@
   (define-key lyskom-view-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-view-mode-map "\t" 'kom-next-link)
   (define-key lyskom-view-mode-map [(meta tab)] 'kom-previous-link)
-  (define-key lyskom-view-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
-  (define-key lyskom-view-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-view-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-view-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-view-mode-map "q" 'lyskom-view-mode-quit))
 
 (defun lyskom-view-mode-quit ()

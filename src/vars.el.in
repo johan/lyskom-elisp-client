@@ -1,6 +1,5 @@
-;;;;; -*-coding: raw-text;-*-
-;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.58 1999-05-05 14:39:15 ceder Exp $
+;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
+;;;;; $Id: vars.el.in,v 44.59 1999-06-10 13:36:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.58 1999-05-05 14:39:15 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.59 1999-06-10 13:36:28 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -546,6 +545,10 @@ to be displayed in the buffer.")
 (def-kom-var kom-default-face-scheme nil  
   "*Face scheme to use per default for new logins.")
 
+(def-kom-var kom-smileys t
+  "*Non-nil means to reformat smileys in text."
+  server)
+
 (def-kom-var kom-text-properties t
   "*Non-nil means to insert text properties in the Emacs buffer for
 various LysKOM elements.")
@@ -772,7 +775,8 @@ part is optional. If it is not specified, port 80 is assumed.")
     ("striterax.medio.mh.se" . "MedioKOM")
     ("kom.mds.mdh.se" . "MdS-KOM")
     ("kom.stacken.kth.se" . "TokKOM")
-    ("com.helsinki.fi" . "HelKOM"))
+    ("com.helsinki.fi" . "HelKOM")
+    ("kom.cd.chalmers.se" . "CD-KOM"))
   "*An alist mapping server names to shorter identification strings")
 
 (def-kom-var kom-ansaphone-on nil
@@ -960,13 +964,9 @@ Users are encouraged to use their best sense of humor."
 ;    '(
 ;      lyskom-buffer
 ;      lyskom-proc
-;      lyskom-accept-async-flag
-;      lyskom-dynamic-session-info-flag
 ;      lyskom-idle-time-flag
-;      lyskom-long-conf-types-flag
 ;      lyskom-set-last-read-flag
 ;      lyskom-uconf-stats-flag
-;      lyskom-z-lookup-flag
 ;      lyskom-server-supports
 ;      lyskom-collate-table
 ;      lyskom-server-name
@@ -1116,6 +1116,10 @@ Users are encouraged to use their best sense of humor."
     kom-next-kom
     kom-previous-kom
     kom-next-unread-kom
+
+    kom-send-alarm
+    kom-agree
+    kom-fast-reply
     ))
 
 ;(defconst lyskom-elisp-variables
@@ -1236,42 +1240,6 @@ arguments to setq, symbols are interpreted as variable names set
   "The version of the server.  A list of three integers, major
 version, minor version and revision."
   local)
-
-(def-kom-var lyskom-idle-time-flag nil
-  "t if idle time calls are supported by the server."
-  inherited)
-
-(def-kom-var lyskom-dynamic-session-info-flag nil
-  "t if dynamic session info is supported by the server."
-  inherited)
-
-(def-kom-var lyskom-long-conf-types-flag nil
-  "t if extended conf types are supported by the server."
-  inherited)
-
-(def-kom-var lyskom-set-last-read-flag nil
-  "t if the set-last-read call is supported by the server."
-  inherited)
-
-(def-kom-var lyskom-uconf-stats-flag nil
-  "t if the server supports the get-uconf-stat call."
-  inherited)
-
-(def-kom-var lyskom-z-lookup-flag nil
-  "t if the server supports regexp name lookups."
-  inherited)
-
-(def-kom-var lyskom-accept-async-flag nil
-  "t if the server supports the accept-async call."
-  inherited)
-
-(def-kom-var lyskom-bcc-flag nil
-  "t if the server supports the bcc misc items."
-  inherited)
-
-(def-kom-var lyskom-extended-types-flag nil
-  "t if the server supports expire and aux items."
-  inherited)
 
 (def-kom-var lyskom-max-packet-size lyskom-max-int
   "The largest possible packet size that can be transmitted to a
@@ -1519,6 +1487,13 @@ The first element is a dummy."
   "A flag indicating if the filter was interrupted by C-g.
  It is set to the same value as quit-flag on filter exit.")
 
+(def-kom-var lyskom-ignoring-async-list nil
+  "A list of async messages we are currently ignoring.
+Each element is a list. The car of the list is the message and the
+remaining elements are whatever is suitable for that type of message.
+See the checks in lyskom-parse-async for details."
+  local)
+
 (def-kom-var lyskom-inhibit-minibuffer-messages nil
   "A flag indicating whether asynchronous minibuffer messages are allowed.
 If this variable is non-nil, no asynchronous messages will appear.")
@@ -1651,6 +1626,13 @@ the text Text 4711 {r skapad! is printed in the message area. And before the
 new prompt is printed.
 If the text: Text 4711 {r skapad! should not be printed then the hook should 
 set the local variable no-message non-nil."
+  server)
+
+(def-kom-var lyskom-deleted-text-hook nil
+  "*Hook to run when a text is deleted.
+This hook is run after the prompt is removed if it shall be changed but before
+the text Text 4711 {r skapad! is printed in the message area. And before the
+new prompt is printed."
   server)
 
 (def-kom-var lyskom-who-info-has-changed-hook nil

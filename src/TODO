@@ -12,6 +12,11 @@ Att göra i elisp-klienten
 
     Hur och var skall man egentligen spara inställningar? .emacs är
     kanske inte det bästa alternativet. 
+
+
+** Manipulera medlemskapstypen
+
+    Lägg till kommandot ändra medlemskapstyp.
  
     Testa lyskom-is-anonymous!
 
@@ -19,14 +24,6 @@ Att göra i elisp-klienten
 * BUGGAR
 
 ** OSORTERADE
-
-    Om man återser senaste av sig själv så kan man råka få se sin
-    user-area.
-
-    LysKOM fungerar inte i XEmacs i tty-mode. No such face:
-    kom-active-face. Antingen är det fixat eller så är det inte fel i
-    20.2. Jag har noterat liknande problem i 19.30 i Sun-consolen.
-    FIX BY: 0.46        
 
     Om förbindelsen bryts så får man args out of range ibland.
     FIX BY: 0.46
@@ -61,19 +58,6 @@ Att göra i elisp-klienten
 
 
 ** VIKTIGA BUGGAR
-
-    Buggar i special-insert gör att eoc inte körs, och man har inte
-    läst inlägget. Man borde få inlägget läsmarkerat och få end of
-    command.
-    FIX BY: 0.46
-
-    lyskom-w3-region får inte krascha. Stoppa condition-case runt.
-    FIX BY: 0.46
-
-    lyskom-format-html får inte försöka formattera som HTML om det
-    inte går att ladda w3.
-    FIX BY: 0.46
-
 
 ** OMBRYTNING
 
@@ -450,7 +434,1249 @@ Att göra i elisp-klienten
 
     Skriv ihop hantera medlemskap (prioritize-new.el.) Den skall
     utnyttja den nya medlemskapsstrukturen.
+
+    Implementera anonyma medlemskap i klienten.
     
+    Implementera re-z-lookup med re-lookup-X så att vi kan återinföra
+    maximal kompatibilitet.
+
+
+** KOLLA ATT DETTA ÄR KLART
+
+    Om man återser senaste av sig själv så kan man råka få se sin
+    user-area.
+
+    LysKOM fungerar inte i XEmacs i tty-mode. No such face:
+    kom-active-face. Antingen är det fixat eller så är det inte fel i
+    20.2. Jag har noterat liknande problem i 19.30 i Sun-consolen.
+    FIX BY: 0.46        
+
+    lyskom-format-html får inte försöka formattera som HTML om det
+    inte går att ladda w3.
+    FIX BY: 0.46
+
+    lyskom-w3-region får inte krascha. Stoppa condition-case runt.
+    FIX BY: 0.46
+
+    Buggar i special-insert gör att eoc inte körs, och man har inte
+    läst inlägget. Man borde få inlägget läsmarkerat och få end of
+    command.
+    FIX BY: 0.46
+
+
+Ett kommando som läser inläggsnumret man står på och gör det till
+prefix-argument vore smidigt rätt ofta.
+
+Synd att 'k' och andra liknande tangenter inte funderar över vilket
+inlägg man har markören på.
+
+
+Jag skrev ett inlägg.  Gjorde sedan snabbt C-c C-c M return.
+Markering försökte göras innan meddelandet om att inlägget skapats
+kommit.  Det verkade låsa sig då och jag fick göra quit och koppla upp
+mig igen.
+
+
+"Vill du bli medlem? (j eller n) 
+Mark set
+ [6 times]
+error in process filter: Wrong type argument: number-or-marker-p, nil
+[20 times]"
+
+Jag tror jag hittat ett sätt att provocera fram det felmeddelandet (om
+det har någon praktisk nytta vet jag inte...)
+
+Utträd ur fritt forum eller något annat högtrafikmöte.
+G mötet
+svara j på att bli medlem
+a utträd ur mötet INNAN det hunnit cachas hos klienten. Modem eller
+att köra från en annan kontinent underlättar nog här ;-)
+
+
+
+Det vore trevligt om vilka-kommandots resultat innehöl en tidsstämpel.
+
+Kanske att slutrad
+    Sammanlagt 87 synliga aktiva användare.
+
+ändrades till att bli
+    Sammanlagt 87 synliga aktiva användare, söndag 18:24.
+
+
+
+Nej.  Ibland kan det finnas skäl att skicka allmänna meddelanden.
+Däremot borde elispklienten dresseras så att man måste använda aSänd
+meddelande inte kan skicka allmänna meddelanden, och kommandot aSända
+alarmmeddelande införas.  Någon frivillig?
+
+Jag funderar på att införa den här regeln, genom att skriva ett
+inlägg i Nyheter om LysKOM:
+
+       Allmänna meddelanden
+
+       Allmänna meddelanden är till för exceptionella händelser som
+       rör LysKOM-systemet.  De används för att förvarna när
+       LysKOM-servern tas ner för planerat underhåll.  Om det
+       föreligger fara för liv eller egendom får de användas även
+       för annat -- om t ex någon upptäcker att kylan i Lysators
+       datorhall inte fungerar, temperaturen har skenat till farliga
+       nivåer, och försök att få tag på en ansvarig person på ett
+       bättre sätt misslyckats är det tillåtet att ropa på hjälp med
+       ett alarmmeddelande.
+
+       Annat bruk är normalt inte tillåtet.  Överträdelse beivras
+       genom utkastning av sessionen.  Upprepat missbruk kan leda till
+       förlust av möjligheten att skicka allmänna meddelanden.
+
+       (Dessa regler gäller ej meddelanden som riktas till ett möte
+       eller en enskild person.)
+
+
+
+
+Det vore trevligt om statusraden rapprterade om olästa endast för de
+läsbuffrar som inte syns.
+
+Exempel: jag står i läsbufferten där lyslyskom finns och jag har även
+csdkom igång, men denna buffert syns inte.
+
+	Olästa i	Olästa i	Status raden
+	lyslys		csdkom		säger "olästa"?
+
+	NEJ		NEJ		NEJ
+	NEJ		JA		JA
+	JA		NEJ		NEJ
+	JA		JA		JA
+
+
+På detta vis ser jag om det har dykt upp olästa i andra lyskomsystem.
+Det just nu aktiva lyskomsystemet ser jag ju ändå statusen för.
+
+Naturligtvis bör beteendet vara valbart.
+
+
+
+
+
+
+
+
+- När man sätter a automatsvar så vore det trevligt om man blev frågad
+  vad för meddelande man vill ha, med det förra meddelandet som
+  default. Typ: Meddelande ("Lunch") ? _
+
+- Det vore kul om man kunde påverka lista nyheter så den listar möten
+  med mer än foo olästa. Då kunde man ju kunna skriva C-u 0 ln för att
+  få se alla möten. Varför? För att status person är plågsamt långsamt
+  (jag förmodar att det frågar lyskomservern i stället för att glo i
+  sin egen cache).
+
+
+
+
+
+
+
+
+Jag har diverse små elips-snuttar knutna till krokar i elisp-klienten.
+Ibland vill jag modifiera namnet på den frame där lyskom kör av lite
+olika anledninger.  Den kod jag f.n. använder modifierar namnet på
+aktiv frame oavsett om lyskom är synlig i den eller ej.  Finns det
+något kanoniskt (eller i vart fall fungerande) sätt att ta reda på
+vilken frame (om någon) som ska manipuleras med från ett
+elisp-program?
+
+Jag vill nedan uppnå att framen heter "<LYSKOMSERVER>" om jag inte har
+några olästa (primitivt detekterat av ifall min klient får meddelande
+om en ny text, att jag inte har olästa avgör jag baserat bara på att
+jag utför *något* kommando i lyskom som framgår nedan) samt
+"<LYSKOMSERVER> *" när det inkommit olästa texter.  Skillnaden mot
+nedanstående kod är att jag just bara vill byta namn på den frame där
+lyskom är synlig (eller inte ändra alls om lyskoms buffer är begravd).
+
+Jag har följande kod i min .emacs (möjligen håller servern reda på
+någon av krokarna utan att jag behöver ha dem med i koden nedan...).
+
+(defun pbn-lyskom-name ()
+  (let ((name (cdr (assoc lyskom-server-name kom-server-aliases))))
+    (if (not name)
+	(concat "Unknown KOM Server (" lyskom-server-name ")")
+      name)))
+(defun pbn-kom-frame-no-unread ()
+  (modify-frame-parameters
+   (selected-frame)
+   (list (cons 'name (pbn-lyskom-name)))))
+
+(defun pbn-kom-frame-unread ()
+  (modify-frame-parameters
+   (selected-frame)
+   (list (cons 'name (concat (pbn-lyskom-name) " *")))))
+
+(defun pbn-lyskom-login-hook ()
+  (pbn-kom-frame-unread)  ; set initial frame string
+  (add-hook 'lyskom-new-text-hook 'pbn-kom-frame-unread)
+  (add-hook 'lyskom-after-command-hook 'pbn-kom-frame-no-unread))
+(add-hook 'lyskom-login-hook 'pbn-lyskom-login-hook)
+
+
+
+
+
+
+
+
+
+Nyligen skapades en ny person som heter "Hans-Erik Persson". Det
+ställer till problem för folk som vill skicka brev till mig "Hans
+Persson" eftersom namnmatchningen tycker att det finns två stycken
+personer som heter "hans persson", så man måste skriva med hela
+parentesen.
+
+Nu undrar jag varför det fungerar så, för mer än en gång när jag tänkt
+skicka texter till Macintoshmötet har jag skrivit in "Mac" och tryckt
+return och då hamnat i "Mac"s brevlåda. Är det för att det matchar
+hela namnet? 
+
+Jag skulle vilja föreslå att det görs skillnad på return och tab i
+kompletteringssammanhang. Om man skriver "hans persson" TAB så bör man
+få två svar, medan "hans persson" RET borde kunna ge bara ett, för det
+matchar mig exakt, men bara halvdant på den andra personen. Är det en
+bra eller dålig idé?
+
+
+
+
+
+
+
+
+LysKOM elisp-klient version 0.45.1.
+Försöker koppla upp mot kom.lysator.liu.se.
+Uppkopplingen klar. Serverns versionsnummer är 1.9.
+
+på Xemacs 20.4
+
+Vid "list möten" utan parametrar (dvs return vid frågan)
+
+Internal Lyskom format error.: lyskom-format, ": argument error"
+
+Inget mera ploppar ut som resultat.
+
+
+
+
+
+
+
+
+Ingen omformattering än, men nu ser det ut så här:
+
+  (defvar lyskom-view-text-hook-hide-inserted-comments-marker " [---]"
+    "The marker shown instead of inserted comment lines")
+
+  (defun lyskom-view-text-hook-hide-inserted-comments ()
+    "Hide junk lines, i.e., lines staring with '>'" 
+    
+    ;; First the hard part - should we patch the text
+    ;; in the text object?
+    ;; Don't rely on lyskom-format-special being non-nil,
+    ;; rather check value of lyskom-current-command to see
+    ;; whether the user asked for review-noconversion, i.e.,
+    ;; "återse omodifierat".
+    
+    (if (not (equal lyskom-current-command
+		    'kom-review-noconversion))
+	
+	;; Yes, modify the text (stored in mod)
+	
+	(let ((mod (aref (cdr text) 1)) ;The text in the text-object
+	      (marker lyskom-view-text-hook-hide-inserted-comments-marker))
+	  
+	  ;; Remove empty lines between junk lines
+	  (while (string-match
+		  (concat "^\\s-*"
+			  kom-cite-string
+			  ".*\n\\(\\s-*\n\\)+\\s-*"
+			  kom-cite-string
+			  ".*")
+		  mod)
+	    (setq mod (concat (substring mod
+					 0 (match-beginning 0))
+			      (substring mod (match-end 0)))))
+	  
+	  ;; Hide, i.e., replace junk lines with value of
+	  ;; lyskom-view-text-hook-hide-inserted-comments-marker
+	  (while (string-match (concat "^\\(\\s-*" kom-cite-string ".*$\\)+")
+			       mod)
+	    (setq mod (concat
+		       (substring mod 0 (match-beginning 0))
+		       (format "\n\n%s\n\n" marker)
+		       (substring mod (match-end 0)))))
+	  
+	  ;; Clean up, remove spurios empty lines
+	  (while (string-match "\n\n\n+" mod)
+	    (setq mod (concat
+		       (substring mod 0 (match-beginning 0))
+		       "\n\n"
+		       (substring mod (match-end 0)))))
+	  
+	  ;; Patch the text-object with the modified text
+	  (aset (cdr text) 1 mod))))
+
+Hur var det man skrev för att ha en variabel i dokumentsträngen så att
+värdet av variabeln används vid visandet av strängen?
+
+
+
+
+
+
+
+
+
+
+Vill man ha hemliga medlemmar så vill man nog minska allt eventuellt
+informationsläckage om att en viss person är eller har varit hemlig
+medlem i ett möte.
+
+Tvinga hemlig till ickehemlig: går det att få så att organisatör kan
+säga att Sune inte får vara hemlig i möte Foo, dvs att det är tupeln
+<person,möte> som hemlighetsprivlegiet ligger på? I så fall kanske
+organisatören kan säga "Sune får endast vara medlem som ickehemlig".
+Är Sune redan medlem och hemlig så är det utkastning (helst med
+ihågkommen mötesstatus vad gäller vilka texter som är lästa) som ger
+minst informationsläckage.
+
+Konvertering av möte till ickehemligt: minst elakt vad gäller
+informationsläckage vid konvertering till ickehemlighet är utkastning,
+men den fd medlemmar vill nog få ett meddelande om att så har skett.
+Automatiskt brev?
+
+Andra reaktioner: jag ogillar tanken på hemliga medlemmar i de möten
+där jag är medlem. Jag vill alltså få en massa varningar när jag blir
+medlem i ett möte eller när ett möte ändrar status till att tillåta
+hemliga medlemmar.
+
+Jag är dessutom nyfiken och tror att det vore trevlig om kommandot
+status möte anger inte bara om hemliga medlemmar är tillåtna utan även
+hur många som är hemliga för tillfället.
+
+
+
+
+
+
+
+
+Det vore trevligt om det funnes kommandon för att lista volka lyskom
+man har olästa i.
+
+Kanske i stil med att "lista lyskom" visade totalt antal olästa inlägg
+man har i de olika lyskomsystemen som man är uppkopplad mot:
+
+       | blahonga - Lista lyskom
+       | 
+       | Olästa Kortnamn        Server
+       |     18 LysKOM          kom.lysator.liu.se
+       |        CSD-KOM         kom.csd.uu.se
+       |  18914 TokKOM          kom.stacken.kth.se
+       | 
+       | blahonga - Lista olästa (i lyskom)
+       | 
+       | Olästa Kortnamn        Server
+       |     18 LysKOM          kom.lysator.liu.se
+       |  18914 TokKOM          kom.stacken.kth.se
+       | 
+       | blahonga -
+
+
+
+
+
+
+
+
+
+
+
+> För alternativa vyer finns för tillfället inget alternativ annat än
+> att använda multipart/alternative eller något liknande. Iofs skulle
+> man kunna tänka sig att man stoppar in information om delarna i en
+> eller flera aux-items och talar om var i texten varje del börjar och
+> slutar. Då skulle en klient kunna hämta bara de delar den vill ha.
+> 
+> Borde man göra så?
+
+Ja, det tycker jag.  Nedan kommer två ogenomtänkta förslag på hur man
+skulle kunna utforma dem.  Som exempel använder jag ett inlägg som har
+den här strukturen:
+
+	Byte	Innehåll
+	0-24	Ärenderaden
+	25-149	Texten i formatet x-kom/basic (dvs omformatterbar text)
+	150-299	Texten i formatet text/html
+	300-399	En liten ikon som används av HTML-versionen
+	400-799	En shockwave-animation som används av HTML-versionen
+	800-999	En stillbild som kan användas i stället för
+		shockwave-animation av klienter som inte förstår shockwave
+
+1.
+
+En aux-item per textdel.  Varje aux-item innehåller en "rubriknivå",
+en MIME-typ, offset och längd.  Ordet "rubriknivå" är dåligt, men jag
+kommer inte på något bättre just nu.  Första siffran i en rubriknivå
+anger vilken del det är; en klient ska normalt visa alla delar.  Andra
+siffran, om den finns, anger olika alternativ inom en del.  Om det
+finns en tredje siffra så består det alternativet i sin tur av en
+sekvens av delar.  En fjärde siffra innebär att en sådan del i sin tur
+finns i flera format, et c.
+
+Exemplet är en sekvens av ärenderaden och texten.  Texten finns i två
+varianter: x-kom/basic och text/html.  text/html-varianten är en
+sekvens av tre delar: själva html-texten, en ikon, och en animation.
+Animationen finns i två varianter: en shockwaveanimation och en
+stillbild.
+
+Nedkodat skulle det kunna bli så här:
+
+	1;x-kom/subject;0;24
+	2.1;x-kom/basic;25;125
+	2.2.1;text/html;150;150
+	2.2.2;image/png;300;100
+	2.2.3.1;image/shockwave;400;400
+	2.2.3.2;image/png;800;200
+
+2.
+
+En enda aux-item som beskriver inläggets struktur med hjälp av en sexp
+eller något liknande.  Exemplet skulle kunna se ut ungefär så här:
+
+	(sequence
+	  (x-kom/subject 0 24)
+	  (alternative
+	    (x-kom/basic 25 125)
+	    (text/html 150 150
+	      (inline
+		(image/png 300 100)
+		(alternative
+		  (image/shockwave 400 400)
+		  (image/png 800 200))))))
+
+--------------------
+
+Man behöver fundera mer på om man behöver kunna namnge bilagor.  Jag
+har inte läst MIME-dokumenten på väldigt länge; det är nog lämpligt
+att göra innan man spikar formatet.
+
+
+
+
+
+
+
+
+
+
+
+I IMAP finns det en typ "body-structure" som är tänkt att beskriva hur
+ett meddelande är uppbyggt i MIME-avseende. Det är inte jättevackert,
+och kanske overkill för KOM, men kanske kan vara värt att ha i
+bakgrunden.
+
+      BODYSTRUCTURE  A parenthesized list that describes the [MIME-IMB]
+                     body structure of a message.  This is computed by
+                     the server by parsing the [MIME-IMB] header fields,
+                     defaulting various fields as necessary.
+
+                     For example, a simple text message of 48 lines
+                     and 2279 octets can have a body structure of:
+                     ("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL
+                     "7BIT" 2279 48)
+
+
+                     Multiple parts are indicated by parenthesis
+                     nesting. Instead of a body type as the first
+                     element of the parenthesized list there is a
+                     nested body. The second element of the
+                     parenthesized list is the multipart subtype
+                     (mixed, digest, parallel, alternative, etc.).
+
+
+                     For example, a two part message consisting of a
+                     text and a BASE645-encoded text attachment can
+                     have a body structure of: (("TEXT" "PLAIN"
+                     ("CHARSET" "US-ASCII") NIL NIL "7BIT" 1152
+                     23)("TEXT" "PLAIN" ("CHARSET" "US-ASCII" "NAME"
+                     "cc.diff")
+                     "<960723163407.20117h@cac.washington.edu>"
+                     "Compiler diff" "BASE64" 4554 73) "MIXED"))
+
+
+                     Extension data follows the multipart subtype.
+                     Extension data is never returned with the BODY
+                     fetch, but can be returned with a BODYSTRUCTURE
+                     fetch. Extension data, if present, MUST be in
+                     the defined order.
+
+
+                     The extension data of a multipart body part are
+                     in the following order:
+
+
+                     body parameter parenthesized list
+                        A parenthesized list of attribute/value pairs
+                        [e.g. ("foo" "bar" "baz" "rag") where "bar" is
+                        the value of "foo" and "rag" is the value of
+
+
+
+Crispin                     Standards Track                    [Page 59]
+
+RFC 2060                       IMAP4rev1                   December 1996
+
+
+                        "baz"] as defined in [MIME-IMB].
+
+                     body disposition
+                        A parenthesized list, consisting of a
+                        disposition type string followed by a
+                        parenthesized list of disposition
+                        attribute/value pairs.  The disposition type and
+                        attribute names will be defined in a future
+                        standards-track revision to [DISPOSITION].
+
+                     body language
+                        A string or parenthesized list giving the body
+                        language value as defined in [LANGUAGE-TAGS].
+
+                     Any following extension data are not yet defined
+                     in this version of the protocol. Such extension
+                     data can consist of zero or more NILs, strings,
+                     numbers, or potentially nested parenthesized
+                     lists of such data. Client implementations that
+                     do a BODYSTRUCTURE fetch MUST be prepared to
+                     accept such extension data. Server
+                     implementations MUST NOT send such extension
+                     data until it has been defined by a revision of
+                     this protocol.
+
+
+                     The basic fields of a non-multipart body part are
+                     in the following order:
+
+                     body type
+                        A string giving the content media type name as
+                        defined in [MIME-IMB].
+
+                     body subtype
+                        A string giving the content subtype name as
+                        defined in [MIME-IMB].
+
+                     body parameter parenthesized list
+                        A parenthesized list of attribute/value pairs
+                        [e.g. ("foo" "bar" "baz" "rag") where "bar" is
+                        the value of "foo" and "rag" is the value of
+                        "baz"] as defined in [MIME-IMB].
+
+                     body id
+                        A string giving the content id as defined in
+                        [MIME-IMB].
+
+                     body description
+                        A string giving the content description as
+                        defined in [MIME-IMB].
+
+
+
+Crispin                     Standards Track                    [Page 60]
+
+RFC 2060                       IMAP4rev1                   December 1996
+
+
+                     body encoding
+                        A string giving the content transfer encoding as
+                        defined in [MIME-IMB].
+
+                     body size
+                        A number giving the size of the body in octets.
+                        Note that this size is the size in its transfer
+                        encoding and not the resulting size after any
+                        decoding.
+
+                     A body type of type MESSAGE and subtype RFC822
+                     contains, immediately after the basic fields, the
+                     envelope structure, body structure, and size in
+                     text lines of the encapsulated message.
+
+                     A body type of type TEXT contains, immediately
+                     after the basic fields, the size of the body in
+                     text lines. Note that this size is the size in
+                     its content transfer encoding and not the
+                     resulting size after any decoding.
+
+
+                     Extension data follows the basic fields and the
+                     type-specific fields listed above. Extension
+                     data is never returned with the BODY fetch, but
+                     can be returned with a BODYSTRUCTURE fetch.
+                     Extension data, if present, MUST be in the
+                     defined order.
+
+
+                     The extension data of a non-multipart body part
+                     are in the following order:
+
+
+                     body MD5
+                        A string giving the body MD5 value as defined in
+                        [MD5].
+
+                     body disposition
+                        A parenthesized list with the same content and
+                        function as the body disposition for a multipart
+                        body part.
+
+                     body language
+                        A string or parenthesized list giving the body
+                        language value as defined in [LANGUAGE-TAGS].
+
+                     Any following extension data are not yet defined
+                     in this version of the protocol, and would be as
+                     described above under multipart extension data.
+
+
+
+
+
+
+Crispin                     Standards Track                    [Page 61]
+
+RFC 2060                       IMAP4rev1                   December 1996
+
+
+
+
+
+
+
+
+
+
+
+
+Finns det någon motsvarighet till "Återse lista" (bundet till ål) fast
+för vanliga olästa?  Det jag skulle vilja se är motsvarande detta
+
+Återse nästa kommentar - Återse lista
+Återse en kommentar till inlägg 3547637.
+Återse en kommentar till inlägg 3547606.
+Återse nästa kommentar -
+
+dvs information om det kommentarsträd jag just håller på att läsa.
+
+
+
+
+
+
+
+
+
+
+
+Jag har ett flertal gånger upplevt att elispklienten gått
+bärsärkagång, och kom just på vad som orsakade problemet; i
+aInställningar (för) LysKOM hade jag angivit en ljudspelare
+som inte existerade, vilket fick följden att hela Emacs
+föreföll tvärdö då jag fick personliga meddelanden sända med
+aSända meddelande (det enda jag valt att få ljud spelade för),
+samtidigt som Emacsprocessen började äta upp all processortid
+den förmådde roffa åt sig.
+
+(Som jag ser det) relevanta data:
+
+lyskom-version:
+"0.45.1"
+emacs-version:
+"GNU Emacs 20.3.1 (i386-redhat-linux, X toolkit)
+ of Mon Oct 26 1998 on lawmaster.bpc.org"
+system-id:
+gnu/linux
+
+Om någon ger sig på att rota efter felet och inte lyckas
+återskapa situationen/tycker sig behöva en
+kom-compile-bug-report, är det bara att säga till.
+
+
+
+
+
+
+
+
+
+
+
+
+Jag fumlade på tangentbordet och kom åt "p" istället för "å" precis
+efter att jag loggat in. Då blev det fult.
+
+> Återse nästa markerade - Personligt svar
+> 
+> Jag förstår inte vems inlägg du vill
+>  skriva ett privat svar till.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Här får du lite diverse småkorrigeringar (ja, några av dem är petiga):
+
+--- swedish-strings.el.orig	Tue Nov 17 21:32:28 1998
++++ swedish-strings.el	Tue Nov 17 22:15:19 1998
+@@ -395,7 +395,7 @@
+ ;    (northward . "norrut")
+ ;    (southward . "s\366derut")
+ ;    (permanent-sundown . "Solen kommer inte att g\345 upp. Flytta %#1s!")
+-;    (permanent-sunup . "Solen kommer inte att g\345 ned. Fytta %#1s!")
++;    (permanent-sunup . "Solen kommer inte att g\345 ned. Flytta %#1s!")
+ ;    (sunup-soon . "Solen g\345r snart upp")
+ ;    (sundown-recently . "Solen gick nyligen ned")
+ ;    (after-sunset . "Solen har g\345tt ned")
+@@ -551,7 +551,7 @@
+ Meddelandet du f\366rs\366kte s\344nda till %#1M var:
+ %#2t\n")
+     (only-last . "Endast l\344sa senaste (0 - %#1d) i %#2s: ")
+-    (only-error . "N\345got gick galet. Sorry.\n")
++    (only-error . "N\345got gick galet. Ledsen.\n")
+ 
+     (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2M\n")
+     (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1M\n")
+@@ -856,7 +856,7 @@
+     (too-high-goto-2 . "Du st\345r f\366r h\366gt upp. G\345 ner till rad 2.")
+     (too-low-go-up . "Du kan inte pusha sista raden. G\345 upp en rad.")
+     (all-confs-popped .  "Alla m\366ten \344r poppade.")
+-    (prio-died . "Flyttningen misslyckades. Sorry. D\366da bufferten.")
++    (prio-died . "Flyttningen misslyckades. Ledsen. D\366da bufferten.")
+     (new-priority . "Ny prioritet? (0 (l\345g) - 255 (h\366g)) ")
+     (new-prio . "%6#1d")
+ 
+@@ -1882,7 +1882,7 @@
+ \\[widget-forward] flyttar till nästa inställning
+ \\[widget-button-press] ändrar värdet
+ 
+-Hälptexter:  [?] Visa hjälptext    [!] Göm hjälptext
++Hjälptexter: [?] Visa hjälptext    [!] Göm hjälptext
+ Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde")
+ 
+     (section . "------------------------------------------------------------------------------\n")
+@@ -1947,14 +1947,14 @@
+ 
+     Något annat fönster 
+         I ett annat fönster i samma frame som LysKOM. Om det bara
+         finns ett
+-        fönster så kommer ett nytt att skapas (och tas bort när man är klar.)
++        fönster så kommer ett nytt att skapas (och tas bort när man är klar).
+ 
+     I en annan frame
+         I en annan frame än LysKOM. Om det bara finns en frame så
+         kommer en
+-        ny frame att skapas, och tas bort när man är klar. 
++        ny frame att skapas (och tas bort när man är klar). 
+ 
+     I en ny frame
+-        En ny frame skapas för ändamålet, och tas bort när man är klar.
++        En ny frame skapas för ändamålet (och tas bort när man är klar).
+ 
+     LysKOM-buffertens fönster 
+         LysKOM-buffertens fönster kommer att användas, och LysKOM kommer
+@@ -2015,7 +2015,7 @@
+     %  - Sätter in mellanslag om det ser ut att behövas.
+     %% - Sätter in ett procenttecken.
+ 
+-  Nägra exempel:
++  Några exempel:
+ 
+     \"%[%c% %m%] - \"             Standardprompt
+     \"%[%s: %c% %m%] - \"         Till exempel \"LysKOM: Se tiden - \"")
+@@ -2036,7 +2036,7 @@
+     %  - Sätter in mellanslag om det ser ut att behövas.
+     %% - Sätter in ett procenttecken.
+ 
+-  Nägra exempel:
++  Några exempel:
+ 
+     \"%[%c% %m%].\"             Standardprompt
+     \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
+@@ -2195,9 +2195,9 @@
+ 
+ 
+     (kom-idle-hide-doc . "\
+- I vilkalistan visas per default enbart de sessioner som har varit
+   aktiva
++ I vilkalistan visas normalt enbart de sessioner som har varit
+   aktiva
+   under den senaste tiden. Denna inställning bestämmer hur många
+   minuter
+-  en session får ha varit stilla och ändå visas i vilkalistan.")
++  en session får ha varit inaktiv och ändå visas i vilkalistan.")
+ 
+ 
+     (kom-show-footnotes-immediately-doc . "\
+@@ -2229,7 +2229,7 @@
+ 
+   Om man läser inläggen i tidsordning kommer de att visas i ordningen
+   1002, 1003, 1004, 1005, 1006 och 1007. I kommentarsordning blir det
+-  i stället 1003, 1003, 1006, 1004, 1005 och 1007.")
++  i stället 1002, 1003, 1006, 1004, 1005 och 1007.")
+ 
+ 
+     (kom-continuous-scrolling-doc . "\
+@@ -2306,16 +2306,16 @@
+ 
+     (kom-default-message-recipient-doc . "\
+   Denna inställning bestämmer vem som kommer att vara
+   defaultmottagare för
+- personliga meddelande man skickar. Alternativen som finns är att
+   meddelanden
++  personliga meddelanden man skickar. Alternativen som finns är att meddelanden
+   per default är allmänna, att avsändaren för det senast mottagna meddelandet
+   skall vara default eller att mottagaren för det senaste
+   gruppmeddelandet
+- (eller avsändaren av det senaste personliga eller almänna
+   meddelandet) skall
++  (eller avsändaren av det senaste personliga eller allmänna meddelandet) skall
+   vara mottagare.")
+ 
+ 
+     (lyskom-filter-outgoing-messages-doc . "\
+   Om denna inställning är påslagen så kommer meddelanden som skickas 
+- automatiskt, till exempel automatiska svar och svar på
+   fjärkontrollförsök
++  automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
+   även att visas som om man hade skickat det manuellt.")
+ 
+     (kom-friends-doc . "\
+@@ -2582,8 +2582,8 @@
+ 
+ ;;;; ================================================================
+ ;;;; Tell phrases should really be configured with the default
+-;;;; language used at the server and not for person reading if they
+-;;;; happens to differ. This is of coarse because they are sent to
+the
++;;;; language used at the server and not for the person reading if
+they
++;;;; happen to differ. This is of course because they are sent to the
+ ;;;; server for everybody else to see.
+ 
+ ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jag satt och försökte komma fram till hur man kunde göra det här igår
+och kom fram till både bra och dåliga saker. Om man bestämmer sig för
+att användare A loggar in först och användare B sedan så är det
+enkelt. Om man vill kunna logga in sina användare i godtycklig ordning
+(och det vill man ju) så blir det lite svårare, för mode-raden sätts
+innan användaren loggar in.
+
+Det finns en funktion som gör om mode-raden varje gång man går till
+ett nytt möte, men såvitt jag kan begripa så ritar den bara om den
+delen som jag inte vill pilla med. Kan jag ändra den andra biten på
+något sätt efter att användaren har loggat in?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jag brukar ofta köra två sessioner i samma Emacs, en för den här
+identiteten och en för min I]M-person. Den som loggar in först får en
+moderad som börjar
+
+    --%*-LysKOM: (47/11) Mötesnamn
+
+medan den andra får
+
+    --%*-LysKOM(kom.lysator.liu.se<2>): (47/11) Annat mötesnamn
+
+Den andra varianten gillar jag inte eftersom den äter upp så mycket av
+moderaden. Jag skulle vilja ha någonting i stil med 
+
+    --%*-LysKOM(main):
+
+och
+
+    --%*-LysKOM(I]M):
+
+Går det att åstakomma på ett rimligt enkelt sätt?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Efter "återse alla markerade" påstår B-kommandot inversen av vad som
+gäller. Ser jag bakåt (färskaste först, gående mot äldsta) påstår den
+att jag ser frammåt, ser jag frammåt påstår den att jag ser bakåt:
+
+
+| Återse alla markerade - Återse alla markerade
+| Återse nästa markerade - (Återse) Baklänges
+| Du återser nu bakåt.
+| Återse nästa markerade - (Återse) Baklänges
+| Du återser nu framåt.
+| Återse nästa markerade.
+| 3487158 1998-11-13  15:23  /1 rad/ (sno)pp
+...
+| (3487158)
+| Kommentar i text 3487169 av Ronny Svedman (desillusionerad, eller nåt)
+| Återse nästa markerade - (Återse) Baklänges
+| Du återser nu bakåt.
+| Återse nästa markerade.
+| 336328 1993-04-02  20:37  /71 rader/ Lars Aronsson (lars@aronsson.se)
+...
+
+Detta skiljer sig från vad som händer vid "återse senaste 10" i ett
+möte.
+
+
+
+| Gå till nästa möte - Återse senaste
+| Återse senaste 10 av vem som helst till PC (IBM PC med efterföljare) erfarenhetsutbyte framåt.
+| Återse nästa text - (Återse) Baklänges
+| Du återser nu bakåt.
+| Återse nästa text.
+| 3493782 idag 13:05 /9 rader/ Magnus K
+...
+| (3493782)
+| Återse nästa text - (Återse) Baklänges
+| Du återser nu framåt.
+| Återse nästa text.
+| 3493466 idag 11:55 /1 rad/ Erland Costyson
+...
+
+
+Vid "återse senaste" kommer jag att få färskaste texten om jag är i
+läget "baklänges", vid "återse alla markerade" om jag är i läget
+"framlänges".
+
+Jag kör LysKOM elisp-klient version 0.45.
+
+
+
+
+
+
+
+
+Om man kommenterar mer än ett inlägg samtidigt, där flera av inläggen
+skrivits av en författare som inte är med i mötet, fick jag nyss två
+frågor om jag ville addera hans brevlåda som mottagare till inlägget.
+Det resulterade i:
+
+> Texten kunde ej skapas. Felet: Otillåtet misc-fält. (Internt fel).
+
+Jag löste det genom att manuellt addera mottagaren innan jag skickade
+in. Jag har inte provat att återskapa felet. Klient: 0.45.1, kanske
+det är något som åtgärdats i senare versioner?
+
+
+
+
+
+
+
+
+
+Jag skulle vilja ha lite mer makt över det som skrivs i statusraden.
+Nu står där "Olästa" eller "Olästa brev". Jag skulle vilja ha
+möjlighet till till exempel följande:
+
+ * Skriv "Olästa" om det är i den aktiva (översta) KOM-bufferten,
+   annars "(Olästa)". Motsvarande för brev.
+
+ * Skriv "Olästa brev" men låt bli att rapportera om olästa inlägg för
+   det har jag alltid.
+
+ * Någon möjlighet att påverka det som skrivs ut beroende på vilken
+   buffert (vilken server/KOMperson) det hör till.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Medan jag kommer ihåg det ska jag förresten rapportera att jag tycker
+att "Fotnot till inlägg" beter sig fel. När den senast lästa texten är
+ett eget inlägg och man därefter skapat en text borde denna, senaste,
+text fotnoteras per default istället för det senast lästa.
+
+Anledningen är enkel - man läser ofta en kommentar till en egen text,
+gör åk, kommenterar föregående text och kommer på att man vill skriva
+en fotnot till den nyss skrivna texten.
+
+Jag inser dock att det kan vara jobbigt att bygga, om klienten inte
+råkar hålla reda på att man skrivit en kommentar senare än man läst en
+text.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vilka typer av markeringar finns det planer på?
+
+Jag skulle åtminstone vilja ha permanent markering, tidsbegränsad (men
+oborttagbar under den tiden), påminnelse (visas automatiskt nästa gång
+jag loggar in), och gärna möjlighet att sätta olika nyckelord på
+texterna jag markerar. Jag vill också ha möjligheten att ersätta
+ärenderaden på texterna jag markerar med något mer informativt så att
+lista ärenden fungerar bättre.
+
+Lista markerade (per) nyckelord
+
+
+
+
+
+
+
+
+
+
+
+
+Ungefär som vilka-listan men med sessionsinfo, typ:
+
+	<num>	<namn>	<klient>	<idle-tid>
+
+Varför? Främst för att se idle-tiden. Kan nog kombineras med Lista
+Klienter.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Det här tycker jag verkar vara en bug i 0.45.1:
+
+Jag kommenterar ett inlägg som ligger i ett möte jag inte är med i.
+Mötet ifråga är ett originalmöte, varför min kommentar får ett annat
+möte som mottagare.  Trots att jag är med i supermötet lägger klienten
+till min brevlåda som mottagare till komentaren.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+När man går med i ett nytt möte så blir man tillfrågad vilken
+prioritet man vill ha på det nya mötet. Det är bra. Problemet är bara
+att jag inte kommer ihåg hur jag sorterat mötena, så varje gång jag
+lagt till nya möten så får jag gå in och prioritera så att det hamnar
+där jag tänkt mig.
+
+Jag kom just på att vad jag skulle vilja ha är möjligheten att ange
+inte bara en prioritet på det nya mötet, utan istället kunna ange
+namnet på ett annat möte vilket i så fall naturligtvis betyder att det
+nya mötet ska ha samma prioritet som det jag anger.
+
+
+
+
+
+
+
+
+
+
+
+Ärende-rad är bra, men i dagens läge beskriver ärende-raden vad som
+skrevs i ursprungsinlägget. Jag föreslår att klienten frågar
+användaren om hon vill byta ärende när hon flyttar en text. Om det
+inte går att enkelt jämföra vilka möten man är på väg att skriva sitt
+svar i med vilka möten föregående inlägg existerar i skulle man kunna
+knyta funktionen till:
+
+C-c C-a C-f runs the command kom-edit-move-text:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Min patch på lyskom-buttons.el: (handgenererad eftersom jag inte har
+diff heller :-)
+
+
+
+  This function attempts to load the URL in a running Netscape, but
+  failing
+  that, starts a new one."
+-   (let* ((proc (apply 'start-process "netscape"
++   (let* ((url-string (if (eq window-system 'win32)
++ 			 (list url)
++ 		       (list "-remote"
++ 			   (format "openUrl(%s)" url))))
++ 	 (proc (apply 'start-process "netscape"
+                        nil
+                        (if (listp kom-netscape-command)
+                            (car kom-netscape-command)
+                          kom-netscape-command)
+                        (if (listp kom-netscape-command)
+                            (append (cdr kom-netscape-command)
+-                                   (list "-remote"
+-                                         (format "openUrl(%s)" url)))
+-                         (list "-remote"
+-                               (format "openUrl(%s)" url)))))
++ 				  url-string)
++ 			url-string)))
+           (status 'run)
+           (exit nil))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jag har tidigare efterlyst möjligheten att kunna skriva en egen text
+att få visad istället för originalärdenderaden på texter jag
+markerat. Allt för ofta har mina markerade texter ärenderader som inte
+har ett skvatt med innehållet att göra.
+
+
+
+
+
+
+
+
+
+
+
+
+Jo, lyskom är ju riktigt trevligt när man börjar lära sig det. Fast
+det är en grej som jag tycker var bättre i NTPro, Nikom. (KOM-system
+för BBS:er på Amiga).
+
+Det är att vem som har skrivit texten står längst ner istället för i
+headern till texten, för oftast läser man ju inte headern. Man läser
+ju texten och sedan är ögonen i slutet av texten. Då kanske man
+undrar vem i hela friden det är som skrivit den här texten, då är det
+smidigare om det står i slutet vem som skrivit den istället för att
+det står uppe i headern, mycket jobbigare att åka upp med ögonen och
+titta där varje gång man vill se vem som skrivit texten.
+
+ex:
+
+(Slut på text 8743175 av Peter Magnusson)
+Kommentar i text 8743257 av gurgelbrännare
+Kommentar i text 8745455 av foo
+Kommentar i text 8745754 av bar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Local variables:

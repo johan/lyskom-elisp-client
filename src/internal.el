@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.6 1998-12-15 12:35:27 byers Exp $
+;;;;; $Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.6 1998-12-15 12:35:27 byers Exp $\n"))
+	      "$Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -370,7 +370,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 	  (++ lyskom-number-of-pending-calls)
 	  (lyskom-process-send-string
 	   lyskom-proc
-	   (concat (car entry) (cdr entry) "\n")))))))
+	   (concat (number-to-string (car entry)) (cdr entry) "\n")))))))
 
 (defun lyskom-decrease-pending-calls ()
   "A reply has come.
@@ -438,7 +438,7 @@ is sent with each packet. If STRING is longer it is splitted."
      process
      (progn
        (if lyskom-debug-communications-to-buffer
-	   (lyskom-debug-insert process ">>>>>> " string))
+	   (lyskom-debug-insert process "To " string))
        string)))
    (t
     (let ((i 0))
@@ -456,8 +456,7 @@ is sent with each packet. If STRING is longer it is splitted."
 		 (save-excursion
 		   (goto-char (point-max))
 		   (insert "\n"
-			   (format "%s" process)
-			   (concat ">>>>>> " string)))
+                           "To " process ": "))
 		 (set-buffer (process-buffer process))))
 	   string))
 	(setq i (+ i lyskom-max-packet-size)))))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.24 1999-02-18 16:29:40 petli Exp $
+;;;; $Id: lyskom-buttons.el,v 44.25 1999-06-10 13:36:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.24 1999-02-18 16:29:40 petli Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.25 1999-06-10 13:36:12 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -190,10 +190,12 @@ If there is no active area, then do something else."
                (mapcar (function
                         (lambda (entry)
                           (vector (car entry)
-                                  (` ((, (cdr entry)) 
-                                      (, buf)
-                                      (, arg)
-                                      (, text)))
+                                  (list (cdr entry)
+                                        buf
+                                        (if (listp arg)
+                                            (list 'quote arg)
+                                          arg)
+                                        text)
                                   ':active t)))
                        entries)))
         (t (append (list 'keymap title)
@@ -241,99 +243,27 @@ If there is no active area, then do something else."
 	       (lyskom-do-popup-menu menu event)))))))
 
 
-(defun lyskom-keyboard-menu-get-event (prompt)
-  "Returns `prev', `next', `select', `cancel' or `help'."
-  (lyskom-xemacs-or-gnu
-   (let ((event (next-command-event nil prompt)))
-     (if (eq (event-type event) 'key-press)
-	 (cdr (assq (event-key event)
-		    '((space . next)
-		      (down . next)
-		      (?n . next)
-		      (?d . next)
-		      (delete . prev)
-		      (backspace . prev)
-		      (up . prev)
-		      (?p . prev)
-		      (?u . prev)
-		      (return . select)
-		      (linefeed . select)
-		      (escape . cancel)
-		      (?q . cancel)
-		      (?h . help))))
-       ))
-   (progn
-     (lyskom-message "%s" prompt)
-     (cdr (assq (read-event)
-		'((32 . next)
-		  (down . next)
-		  (?n . next)
-		  (?\C-n . next)
-		  (?d . next)
-		  (delete . prev)
-		  (backspace . prev)
-		  (up . prev)
-		  (?p . prev)
-		  (?\C-p . prev)
-		  (?u . prev)
-		  (return . select)
-		  (linefeed . select)
-		  (?\C-j . select)
-		  (escape . cancel)
-		  (?q . cancel)
-		  (?\C-h . help))))
-     )))
-		  
 (defun lyskom-keyboard-menu (title entries buf arg text)
   "Do a keyboard menu selection."
-  (let ((cursor-in-echo-area t)
-	(entry entries)
-	(going t)
-	prefix
-	event)
-    (let ((maxlen 0)
-	  (e entries))
-      (while e
-	(if (> (length (car (car e))) maxlen)
-	    (setq maxlen (length (car (car e)))))
-	(setq e (cdr e)))
-      (setq prefix (substring title 0
-			      (min (length title)
-				   (- (window-width (minibuffer-window))
-				      maxlen 3)))))
-    (while going
-      (setq event (lyskom-keyboard-menu-get-event
-		   (format "%s: %s" prefix (car (car entry)))))
-      (cond
-       ;; Next menu item
-       ((eq event 'next)
-	(setq entry (or (cdr entry) entries)))
+  (let ((prompt nil)
+        (maxlen 0)
+        (e entries))
+    (while e
+      (if (> (length (car (car e))) maxlen)
+          (setq maxlen (length (car (car e)))))
+      (setq e (cdr e)))
+    (setq prompt (concat 
+                  (substring title 0
+                             (min (length title)
+                                  (- (window-width (minibuffer-window))
+                                     maxlen 3))) ": "))
 
-       ;; Previous menu item
-       ((eq event 'prev)
-	(let ((e entries)
-	      (l nil))
-	  (while (and e (not (eq (cdr e) entry)))
-	    (setq l e
-		  e (cdr e)))
-	  (setq entry (or e l))))
+    (let ((choice (completing-read prompt entries nil t 
+                                   (cons (car (car entries)) 0) nil)))
+      (when choice
+        (funcall (cdr (lyskom-string-assoc choice entries))
+                 buf arg text)))))
 
-       ;; Select
-       ((eq event 'select)
-	(if entry
-	    (progn
-	      (setq going nil)
-	      (message nil)
-	      (funcall (cdr (car entry)) buf arg text))))
-
-       ;; Help
-       ((eq event 'help)
-	(lyskom-keyboard-menu-get-event
-	 (lyskom-get-string 'keyboard-menu-help)))
-       
-       ;; Escape
-       ((eq event 'cancel)
-	(setq going nil))))))
        
 
 (defun lyskom-button-press (pos)
@@ -1031,7 +961,7 @@ depending on the value of `kom-lynx-terminal'."
 ;;;     aux-item buttons
 ;;;
 
-(defun lyskom-button-delete-aux (bug arg text)
+(defun lyskom-button-delete-aux (buf arg text)
   (let ((aux nil))
     (cond ((aux-item-p arg))
           ((listp arg)
