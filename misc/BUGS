@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 16
+Unused-Bug-Id: 18
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -281,4 +281,60 @@ Associated mails:
 End mails.
 ---
 See also bug 14. This should be fixed first.
+
+Id: 16
+Summary: More options in strings
+Created: linus: Sun Aug 30 20:26:27 1992
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 0
+Last edit: linus: Sun Aug 30 20:35:29 1992
+Reported by: 365000,,000000
+Site: 
+Associated mails:
+End mails.
+---
+175690 1992-02-12  17:06  /11 rader/ Linus Tolke Y
+Mottagare: LysKOM Elispklient; diskussion och id`er <4664>
+Markerad av 1 person.
+[rende: Osnyggt vs Snyggt !
+------------------------------------------------------------
+Det var ett absolut krav fr}n kom-gemenskapen att listan skulle se
+ut p} precis detta s{tt.
+
+G|r
+(setq lyskom-strings 
+      (cons
+	'(you-have-unreads . "Du har %-3#1d ol{sta inl{gg i %#2s\n")
+	(cons
+          '(you-have-an-unread . "Du har 1    ol{st inl{gg i %#1s\n")
+	  lyskom-strings)))
+i din lyskom-mode-hook s} f}r du det som du vill ha det!
+(175690) -----------------------------------
+Kommentar i text 242846 av 365000,,000000 (fort och fel)
+L{sa n{sta text - ]terse alla kommentarer
+]terse text nummer 242846.
+242846 1992-08-30  06:06  /2 rader/ 365000,,000000 (fort och fel)
+Kommentar till text 175690 av Linus Tolke Y
+Mottagare: LysKOM Elispklient; diskussion och id`er <4951>
+[rende: Osnyggt vs Snyggt !
+------------------------------------------------------------
+Kan man f} med namnet p} bufferten eller namnet p} maskinen servern
+k|r p}?
+(242846) -----------------------------------
+
+Id: 17
+Summary: add-comment while prompting for subject
+Created: linus: Wed Sep  2 13:28:35 1992
+Currently handled by: 
+Severity: 2
+Priority: 0
+Difficulty: 0
+Last edit: linus: Wed Sep  2 13:28:35 1992
+Reported by: Uwe
+Site: 
+Associated mails:
+End mails.
+---
 
