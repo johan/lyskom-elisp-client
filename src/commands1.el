@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.11 1993-08-11 09:48:09 linus Exp $
+;;;;; $Id: commands1.el,v 36.12 1993-08-16 17:02:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.11 1993-08-11 09:48:09 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.12 1993-08-16 17:02:48 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -822,6 +822,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 ;;;                Personligt svar - personal answer
 
 ;;; Author: ???
+;;; Rewritten using blocking-do by: Linus Tolke
 
 
 (defun kom-private-answer (&optional text-no)
@@ -834,26 +835,22 @@ that text instead."
 		  lyskom-current-text)
 		 ((integerp current-prefix-arg)
 		  current-prefix-arg)
-		 ((and (listp current-prefix-arg) 
-		       (integerp (car current-prefix-arg)) 
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
+		 ((listp current-prefix-arg) 
+		  (lyskom-read-number (lyskom-get-string 'what-private-no)))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-private-answer))))))
+  (lyskom-start-of-command 'kom-private-answer)
   (if text-no
-      (progn
-	(lyskom-collect 'main)
-	(initiate-get-text-stat 'main nil text-no)
-	(initiate-get-text 'main nil text-no)
-	(lyskom-use 'main 'lyskom-private-answer-soon text-no))
-    (lyskom-start-of-command 'kom-private-answer)
+      (lyskom-private-answer-soon
+       (blocking-do 'get-text-stat text-no)
+       (blocking-do 'get-text text-no)
+       text-no)
     (lyskom-insert-string 'confusion-who-to-reply-to)
     (lyskom-end-of-command)))
 
 
 (defun lyskom-private-answer-soon (text-stat text text-no)
   "Write a private answer to TEXT-STAT, TEXT."
-  (lyskom-start-of-command 'kom-private-answer)
   (if (and text-stat text)
       (if (string-match "\n" (text->text-mass text))
 	  (lyskom-private-answer text-stat
@@ -884,17 +881,16 @@ that text instead."
 ;;;    Personligt svar p} f|reg}ende - kom-private-answer-previous
 
 ;;; Author: ceder
+;;; Rewritten using blocking-do by: Linus Tolke
 
 (defun kom-private-answer-previous ()
   "Write a private answer to previously viewed text."
   (interactive)
   (lyskom-start-of-command 'kom-private-answer-previous)
   (if lyskom-previous-text
-      (progn
-	(lyskom-collect 'main)
-	(initiate-get-text-stat 'main nil lyskom-previous-text)
-	(initiate-get-text 'main nil lyskom-previous-text)
-	(lyskom-use 'main 'lyskom-private-answer-soon-prev))
+      (lyskom-private-answer-soon-prev
+       (blocking-do 'get-text-stat lyskom-previous-text)
+       (blocking-do 'get-text lyskom-previous-text))
     (lyskom-insert-string 'confusion-who-to-reply-to)
     (lyskom-end-of-command)))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.6 1993-07-28 18:20:58 linus Exp $
+;;;;; $Id: vars.el,v 36.7 1993-08-16 17:03:51 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.6 1993-07-28 18:20:58 linus Exp $\n"))
+	      "$Id: vars.el,v 36.7 1993-08-16 17:03:51 linus Exp $\n"))
 
 
 
@@ -500,31 +500,42 @@ unread texts in list-unread.")
   "This variable is t if the user is in administrator mode and nil otherwise.")
 
 
-;;;; The default is a swedish-speaking server.
+;;;; lyskom-tell-phrases-validation-keyword-list
+;;; This is a list of keywords for kom-tell-phrases.
+;;; These are the only keywords that are allowed in kom-tell-phrases.
 
-(defconst kom-tell-phrases-internal
+;;; To coders of the elisp-client:
+;;; If you add/delete a reference to any of these keywords make sure
+;;; you update these changes.
+
+;;; To everyone:
+;;; The kom-tell-phrases list is checked against this list when the
+;;; client is loaded, i.e. by lyskom-tell-phrases-validate that causes
+;;; an error if any keyword is not present or any non-keyword is
+;;; present.
+
+(defconst lyskom-tell-phrases-validation-keyword-list
   '(
-    (kom-tell-silence		"") ; Why ?
-    (kom-tell-send		"F\366rs\366ker l\344gga in en text.")
-    (kom-tell-login		"Loggar in.")
-    (kom-tell-read		"L\344ser.")
-    (kom-tell-1st-pres		"Skriver den f\366rsta presentationen.")
-    (kom-tell-write-comment	"Skriver en kommentar.")
-    (kom-tell-write-footnote	"Skriver en fotnot.")
-    (kom-tell-write-letter	"Skriver ett brev.")
-    (kom-tell-write-reply	"Skriver ett privat svar.")
-    (kom-tell-write-text	"Skriver inl\344gg.")
-    (kom-tell-conf-pres		"Skriver presentation f\366r ett nytt m\366te.")
-    (kom-tell-recover		"Trycker 'r'. Suck.")
-    (kom-tell-wait		"V\344ntar.")
-    (kom-tell-regret		"\305ngrar sig och sl\344nger inl\344gget.")
-    (kom-tell-review		"\305terser.")
-    (kom-tell-change-name       "Ändrar sitt namn till n\345got annat.")
-    (kom-tell-change-supervisor "Ändrar organisat\366r f\366r n\345got.")
-    (kom-tell-next-lyskom       "Hoppar till ett annat LysKOM.")
+    (kom-tell-silence)
+    (kom-tell-send)
+    (kom-tell-login)
+    (kom-tell-read)
+    (kom-tell-1st-pres)
+    (kom-tell-write-comment)
+    (kom-tell-write-footnote)
+    (kom-tell-write-letter)
+    (kom-tell-write-reply)
+    (kom-tell-write-text)
+    (kom-tell-conf-pres)
+    (kom-tell-recover)
+    (kom-tell-wait)
+    (kom-tell-regret)
+    (kom-tell-review)
+    (kom-tell-change-name)
+    (kom-tell-change-supervisor)
+    (kom-tell-next-lyskom)
     )
-  "The variable  kom-tell-phrases  defaults to this value.
-Users must not change this constant, but are encouraged to change
+  "Users must not change this constant, but are encouraged to change
 the value of  kom-tell-phrases  for fun.")
 
 ;;; ================================================================

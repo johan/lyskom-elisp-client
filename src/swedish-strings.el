@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.10 1993-07-26 19:08:27 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.11 1993-08-16 17:03:35 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.10 1993-07-26 19:08:27 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.11 1993-08-16 17:03:35 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -100,7 +100,7 @@ Annat se \\[describe-mode] ---")
   "*String to separate headers from text body.")
 
 
-(defvar lyskom-header-subject "Ärende: "
+(defvar lyskom-header-subject "\304rende: "
   "*String to prompt for subject in the edit buffer.")
 
 
@@ -121,7 +121,7 @@ Annat se \\[describe-mode] ---")
     (you-have-motd . "\nDu har en lapp p\345 d\366rren:\n\n")
     (presentation-encouragement . 
      "Du har ingen presentation. Det skulle vara trevligt om du skrev en.
-Anv\344nd kommandot Äp. Om du inte vill skriva n\345gon presentation tryck fs.\n")
+Anv\344nd kommandot \304p. Om du inte vill skriva n\345gon presentation tryck fs.\n")
 
     (first-greeting . "%#1s
 Det tycks vara f\366rsta g\345ngen du anv\344nder LysKOM. V\344lkommen!
@@ -136,7 +136,7 @@ Om du \344r os\344ker p\345 hur man anv\344nder LysKOM kan du h\344mta en manual
 anonym ftp fr\345n ftp.lysator.liu.se. Fr\345ga din systemadministrat\366r om
 du \344r os\344ker.\n")
 
-    (is-name-correct . "Är namnet %#1s korrekt? ")
+    (is-name-correct . "\304r namnet %#1s korrekt? ")
     (personal-password . "Ange ett personligt l\366sen: ")
     (repeat-password . "Repetera f\366r kontroll: ")
     (repeat-failure . "Du angav inte samma l\366senord b\344gge g\345ngerna.\n")
@@ -229,7 +229,9 @@ Skicka ett brev till %#2s f\366r medlemsskap.\n")
     (confusion-what-to-comment . "Jag f\366rst\345r inte vilken text du vill kommentera.\n")
     (confusion-what-to-footnote . "Jag f\366rst\345r inte vilken text du vill skriva en fotnot till.\n")
 
-    (confusion-who-to-reply-to . "Jag f\366rst\345r inte vems inl\344gg du vill skriva ett privat svar till.\n")
+    (what-private-no . "Personligt svar till text nummer: ")
+    (confusion-who-to-reply-to . "Jag f\366rst\345r inte vems inl\344gg du vill
+ skriva ett privat svar till.\n")
     (confusion-what-to-answer-to . "Jag f\366rst\345r inte vilken text du vill besvara.")
     (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots os\344nt meddelande? ")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
@@ -268,7 +270,7 @@ Lyskom-sessionen \344r avslutad.
     (whos-passwd . "Vem vill du \344ndra l\366senord f\366r (dig sj\344lv)? ")
     (old-passwd . "Mata in ditt l\366senord: ")
     (new-passwd . "Mata in det nya l\366senordet: ")
-    (changing-passwd . "Ändrar l\366senordet...")
+    (changing-passwd . "\304ndrar l\366senordet...")
     (retype-dont-match . "L\366senorden \344r inte samma. G\366r om.\n")
     (palindrome . "(ett palindrom!) ")
     (lyskom-name . "Anv\344ndare")
@@ -302,7 +304,7 @@ Lyskom-sessionen \344r avslutad.
     (not-member-of-conf . "Du \344r inte medlem i %#1s.\n")
     (change-name-done . "\nKlart. Nytt namn: %#1s.\n")
     (change-name-nope . "\nDet gick inte bra att \344ndra till %#1s.\nFelkod %#3d. %#2s.\n")
-    (change-supervisor-from-to . "Ändra organisat\366r f\366r %#1s till %#2s...")
+    (change-supervisor-from-to . "\304ndra organisat\366r f\366r %#1s till %#2s...")
     (change-supervisor-nope . 
      "\nDet gick inte. Kanske du inte f\345r \344ndra organisat\366r f\366r %#1s?\n")
     
@@ -419,7 +421,7 @@ Ditt allm\344nna meddelande l\366d:
     (Date . "Datum")
     (Lines . "Rader")
     (Author . "  F\366rfattare")
-    (Subject . "  Ärende")
+    (Subject . "  \304rende")
     (could-not-read . "Du fick inte l\344sa denna text (%#1d).\n")
     (multiple-choice . "Flera alternativ finns.")
     (does-not-exist . "Detta kommando finns inte.")
@@ -469,15 +471,15 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (conf-to-set-super-conf-q . "Vilket m\366te vill du s\344tta superm\366te f\366r? ")
     (new-super-conf-q . "Vilket m\366te vill du ha som superm\366te? ")
     (new-permitted-submitters-q . "M\366te med till\345tna f\366rfattare till %#1s? (alla) ")
-    (super-conf-for-is . "Ändra superm\366te f\366r %#1s till %#2s...")
+    (super-conf-for-is . "\304ndra superm\366te f\366r %#1s till %#2s...")
     (permitted-submitters-removed-for-conf . "Till\345t alla f\366rfattare i m\366te %#1s...")
     (submitters-conf-for-is . "\304ndra till\345tna f\366rfattare f\366r m\366te %#1s till\nmedlemmarna i %#2s...")
 
     (conf-to-set-garb-nice-q . "Vilket m\366te vill du s\344tta livsl\344ngd f\366r? ")
     (new-garb-nice-q . "Vilket v\344rde vill du s\344tta livsl\344ngden till? ")
-    (garb-nice-for-is . "Ändra livsl\344ngden f\366r %#1s till %#2d...")
+    (garb-nice-for-is . "\304ndra livsl\344ngden f\366r %#1s till %#2d...")
 
-    (really-shutdown . "Är du s\344ker p\345 att du vill st\344nga av servern? ")
+    (really-shutdown . "\304r du s\344ker p\345 att du vill st\344nga av servern? ")
     (closing-server . "St\344nga av servern...")
     (administrator . "administrat\366r")
     (no-longer-administrator . "en normal anv\344ndare igen")
@@ -509,7 +511,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (review-marked . "\305terse %#1d markerade.\n")
     (review-text-no . "\305terse text nummer %#1d")
     (review-one-comment . "\305terse en kommentar till inl\344gg %#1d.\n")
-    (review-many-comments . "Äterse %#2d kommentarer till inl\344gg %#1d.\n")
+    (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1d.\n")
     (read-normally-read . "Hur m\345nga vill du se igen?")
 
     ; From edit-text.el:
@@ -519,7 +521,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (text-mass . "%#4s%#1s\n%#2s\n%#3s")
     (comment-to-by . "%#1s till text %#2d%#3s.\n")
     (already-sent . "Du har redan skickat denna text en g\345ng. S\344nd \344nd\345? ")
-    (subject . "Ärende: ")
+    (subject . "\304rende: ")
     (which-text-include . "Vilken text skall vi inkludera? ")
     (added-recipient . "Mottagare som skall adderas: ")
     (added-carbon-copy . "Extra kopia till m\366te: ")
@@ -548,7 +550,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
     (no-such-text-no . "Det finns ingen s\345dan text. (%#1d)\n")
 
-    (head-Subject . "Ärende: ")
+    (head-Subject . "\304rende: ")
     (Recipient . "Mottagare")
     (Extra-recipient . "Extra kopia")
     (send-at . "    S\344nt:     %#1s\n")
@@ -754,10 +756,10 @@ Felmeddelande: %#1s**************************************************")
     (kom-set-unread		"Endast l\344sa senaste")
     (kom-write-text		"Skriva ett inl\344gg")
     (kom-send-letter		"Skicka brev")
-    (kom-change-name		"Ändra namn")
-    (kom-change-password        "Ändra l\366senord")
-    (kom-change-supervisor	"Ändra organisat\366r")
-    (kom-change-presentation	"Ändra presentation")
+    (kom-change-name		"\304ndra namn")
+    (kom-change-password        "\304ndra l\366senord")
+    (kom-change-supervisor	"\304ndra organisat\366r")
+    (kom-change-presentation	"\304ndra presentation")
     (kom-get-appreciation       "F\345 uppmuntran")
     (kom-get-abuse              "F\345 sk\344ll")
     (kom-mark-text              "Markera (inl\344gg)")
@@ -772,12 +774,12 @@ Felmeddelande: %#1s**************************************************")
     (kom-add-member		"Addera medlem")
     (kom-sub-member             "Uteslut medlem")
     (kom-change-conf-motd	"S\344tt lapp p\345 d\366rren")
-    (kom-set-garb-nice          "Ändra livsl\344ngd")
-    (kom-set-super-conf         "Ändra superm\366te")
+    (kom-set-garb-nice          "\304ndra livsl\344ngd")
+    (kom-set-super-conf         "\304ndra superm\366te")
     (kom-set-permitted-submitters "\304ndra till\345tna f\366rfattare")
     (kom-unset-conf-motd	"Ta bort lapp p\345 d\366rren")
     (kom-save-text		"Spara text (p\345 fil)")
-    (kom-edit-options		"Ändra variabler")
+    (kom-edit-options		"\304ndra variabler")
     (kom-shutdown-server        "St\344ng av servern")
     (kom-enable-adm-caps        "\326verg\345 till administrat\366rsmod")
     (kom-disable-adm-caps       "\326verg\345 till normalmod")
@@ -929,6 +931,7 @@ Cf. paragraph-start.")
 )
 
 
+
 (defvar lyskom-prioritize-mode-map nil
   "Keymap used in lyskom-prioritize-mode.")
 
@@ -950,20 +953,43 @@ Cf. paragraph-start.")
 )
 
 ;;;; ================================================================
-;;;; Tell phrases should be configured with the default language used
-;;;; at the server and not for person reading if they happens to
-;;;; differ. This is of coarse because they are sent to the server for
-;;;; everybody else to see.
+;;;; Tell phrases should really be configured with the default
+;;;; language used at the server and not for person reading if they
+;;;; happens to differ. This is of coarse because they are sent to the
+;;;; server for everybody else to see.
 
 ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
 					; Created *-tell-*
 
 
-;;;; kom-tell-phrases-internal moved to vars.el
-;;; To coders of the elisp-client:
-;;; dont change the kom-tell-phrases here, change it in vars.el.
+;;;; kom-tell-phrases 
 
-(defvar kom-tell-phrases kom-tell-phrases-internal
+;;; To coders of the elisp-client:
+;;; if you change kom-tell-phrases here, make sure the list of valid
+;;; keywords is updated it in vars.el.
+;;; lyskom-tell-phrases-validation-keyword-list, lyskom-tell-phrases-validate
+
+(defvar kom-tell-phrases 
+  '(
+    (kom-tell-silence		"") ; Why ?
+    (kom-tell-send		"F\366rs\366ker l\344gga in en text.")
+    (kom-tell-login		"Loggar in.")
+    (kom-tell-read		"L\344ser.")
+    (kom-tell-1st-pres		"Skriver den f\366rsta presentationen.")
+    (kom-tell-write-comment	"Skriver en kommentar.")
+    (kom-tell-write-footnote	"Skriver en fotnot.")
+    (kom-tell-write-letter	"Skriver ett brev.")
+    (kom-tell-write-reply	"Skriver ett privat svar.")
+    (kom-tell-write-text	"Skriver inl\344gg.")
+    (kom-tell-conf-pres		"Skriver presentation f\366r ett nytt m\366te.")
+    (kom-tell-recover		"Trycker 'r'. Suck.")
+    (kom-tell-wait		"V\344ntar.")
+    (kom-tell-regret		"\305ngrar sig och sl\344nger inl\344gget.")
+    (kom-tell-review		"\305terser.")
+    (kom-tell-change-name       "\304ndrar sitt namn till n\345got annat.")
+    (kom-tell-change-supervisor "\304ndrar organisat\366r f\366r n\345got.")
+    (kom-tell-next-lyskom       "Hoppar till ett annat LysKOM.")
+    )
   "These texts are used as arguments to lyskom-tell-server.
 The variable kom-mercial defaults to kom-tell-wait.
 Users are encouraged to change this dictionary for fun.")
@@ -980,7 +1006,7 @@ Users are encouraged to use their best sense of humor.")
 
 (defconst lyskom-error-texts
   '((0 . "Inget fel har intr\344ffat")
-    (2 . "Ännu ej implementerat")
+    (2 . "\304nnu ej implementerat")
     (3 . "Inte l\344ngre implementerat")
     (4 . "Felaktigt l\366senord")
     (5 . "Str\344ngen f\366r l\345ng")
