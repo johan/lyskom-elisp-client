@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.4 1996-06-30 03:42:33 davidk Exp $
+;;;;; $Id: startup.el,v 41.5 1996-07-08 09:46:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.4 1996-06-30 03:42:33 davidk Exp $\n"))
+	      "$Id: startup.el,v 41.5 1996-07-08 09:46:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -178,15 +178,17 @@ See lyskom-mode for details."
                      lyskom-default-user-name)
                 ;; This is nil if we can't find a unique match.
                 (setq lyskom-pers-no
-                      (lyskom-read-conf-name-internal lyskom-default-user-name
-                                                      'pers 'conf-no)))
+                      (conf-stat->conf-no
+                       (lyskom-lookup-conf-by-name lyskom-default-user-name
+                                                   '(pers)))))
             (if lyskom-pers-no
                 nil
               (let ((name (lyskom-read-conf-name
                            (lyskom-get-string 'what-is-your-name)
-                           'persnone t "")))
+                           '(pers none) t "" t)))
                 (setq lyskom-pers-no
-                      (or (lyskom-read-conf-name-internal name 'pers 'conf-no)
+                      (or (conf-stat->conf-no 
+                           (lyskom-lookup-conf-by-name name '(pers)))
                           (lyskom-create-new-person name)))))
             ;; Now lyskom-pers-no contains a number of a person.
             ;; Lets log him in.
@@ -250,7 +252,9 @@ See lyskom-mode for details."
   ;; Run the hook kom-login-hook. We don't want to hang the
   ;; login, just because something crashed here.
   (condition-case err
-      (run-hooks 'kom-login-hook)
+      (progn
+        (run-hooks 'kom-login-hook)
+        (run-hooks 'lyskom-login-hook))
     (error (lyskom-format-insert-before-prompt
             'error-in-login-hook (format "%s" err)))))
 

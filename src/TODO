@@ -3,7 +3,14 @@ Att göra i elisp-klienten
 
 Buggar
 
-    Completion-koden är ivägen när man vill skapa nya personer.
+    Completion bryr sig inte om MUSTMATCH-parametern.
+
+    Om KOMNAME är satt till "" så kommer completionkoden att försöka
+    komplettera det till alla personer. Det vill man *inte*.
+
+    Completion-koden är ivägen när man vill skapa nya personer. [Nåja,
+    inte så mycket. Det är bara att man inte får skapa namn som är
+    prefix till existerande namn]
 
     Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
     spara det på fil, så blir det bara fotnoten som sparas.  Man vill
@@ -22,11 +29,12 @@ Buggar
     till nil. (FIXAT)
 
     LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
+    (FIXAT)
 
     lyskom-try-complete-partials borde returnera exakta matchar före
     längsta match. Nu blir (lyskom-try-complete-partials "link"
     '(("(foo) link (bar)" . 1) ("linkfoobar" . 2))) "linkfoobar", inte
-    "(foo) link (bar)".
+    "(foo) link (bar)". (FUNKTIONEN ERSATT; FIXAT)
 
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
     så scrollar klienten ibland trots att den inte borde.
