@@ -1,3 +1,10 @@
+Thu Oct 17 04:08:53 1991  Linus Tolke Y  (linus at lysator)
+
+	* async.el (lyskom-parse-async): lyskom-show-logged-in-person
+	  skall anropas {ven om kom-presence-messages {r nil. Det kan
+	  n{mligen vara s} att kom-presence-messages-in-buffer {r
+	  icke-nil.
+
 Wed Oct 16 17:54:19 1991  Per Cederqvist  (ceder at robert)
 
 	* view-text.el (lyskom-is-read) Better doc-string.
