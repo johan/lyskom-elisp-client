@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.119 2000-08-31 15:00:16 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.120 2000-08-31 20:33:38 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.119 2000-08-31 15:00:16 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.120 2000-08-31 20:33:38 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -781,8 +781,6 @@ returns t if it trimmed the buffer, nil otherwise."
     (lyskom-save-excursion
       (let ((lyskom-trim-buffer-delete-to (- (buffer-size)
 					     kom-max-buffer-size))
-	    (old-point (point))
-	    (old-mark (mark))
 	    (inhibit-read-only t))
 	(goto-char (point-min))
 	(while (< (point) lyskom-trim-buffer-delete-to)
@@ -790,11 +788,8 @@ returns t if it trimmed the buffer, nil otherwise."
 	(setq lyskom-trim-buffer-delete-to (point))
 	(run-hooks 'lyskom-trim-buffer-hook)
 	(delete-region (point-min) lyskom-trim-buffer-delete-to)
-	
 	(setq lyskom-last-viewed
-	      (- (+ lyskom-last-viewed 1) lyskom-trim-buffer-delete-to))
-	(set-mark (- (+ old-mark 1) lyskom-trim-buffer-delete-to))
-	(goto-char (- (+ old-point 1) lyskom-trim-buffer-delete-to))))
+	      (- lyskom-last-viewed -1 lyskom-trim-buffer-delete-to))))
       t))
 
 (defun lyskom-garb-lyskom-buffer-to-file ()

@@ -1,8 +1,10 @@
 2000-08-31  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* lyskom-rest.el (lyskom-trim-buffer): saves point and mark and
+	* lyskom-rest.el (lyskom-trim-buffer): Saves point and mark and
 	resets point, mark and lyskom-last-viewed after taking into
 	consideration lyskom-trim-buffer-delete-to.
+	(lyskom-trim-buffer): Except point and mark doesn't need this
+	treatment.
 
 Thu Aug 31 14:38:34 2000  David Byers  <davby@sen2.ida.liu.se>
 
