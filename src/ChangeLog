@@ -1,3 +1,35 @@
+Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* vars.el.in (lyskom-inherited-variables): Lade till
+	lyskom-language
+	
+	* language.el (lyskom-get-string): Bantade cond-konstruktionen,
+	till förmån för uppslagning i lyskom-category-properties
+
+	* menus.el (lyskom-edit-menus): 
+	(lyskom-build-menus): Menyer för edit-bufferten
+
+	* slow.el (kom-expand-slow-command): Fixade argumenten till
+	lyskom-get-string 
+
+	* vars.el.in (lyskom-language): Ny variabel
+
+	* edit-text.el : Använder lyskom-get-string för att få fram
+	header-subject och header-separator
+
+	* Makefile (HEADER-EL): Lade till language.el
+
+	* commands1.el (kom-write-comment): Fixade argumenten till
+	lyskom-get-string 
+
+	* lyskom-rest.el (iso-8859-1-to-swascii) : flyttad till
+	swedish-strings.el
+	lyskom-rest.el: Anpassad till lyskom-get-string
+
+	* swedish-strings.el (iso-8859-1-to-swascii): flyttad hit från
+	swedish-strings.el
+	swedish-strings.el: Anpassad till lyskom-get-string
+
 Tue Oct  8 04:44:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el: Anropa lyskom-build-menus på toppnivån.
