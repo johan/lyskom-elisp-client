@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.12 1998-01-04 14:42:15 davidk Exp $
+;;;;; $Id: services.el,v 44.13 1998-01-04 15:01:03 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.12 1998-01-04 14:42:15 davidk Exp $\n"))
+	      "$Id: services.el,v 44.13 1998-01-04 15:01:03 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1152,14 +1152,14 @@ or get-text-stat."
 	(lyskom-really-serious-bug))
 
     (let ((lyskom-blocking-return 'not-yet-gotten))
+      ;; This should not be necessary, but for robustness sake...
+      ;; There are occasions when it is needed.
+      (setq lyskom-ok-to-send-new-calls t)
+
       (apply (intern-soft (concat "initiate-"
 				  (symbol-name command)))
 	     'blocking 'blocking-return
 	     data)
-
-      ;; This should not be necessary, but for robustness sake...
-      ;; There are occasions when it is needed.
-      (setq lyskom-ok-to-send-new-calls t)
 
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (memq (process-status lyskom-proc) '(open run))
