@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.12 1996-03-02 21:38:10 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.13 1996-03-12 02:17:56 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.12 1996-03-02 21:38:10 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.13 1996-03-12 02:17:56 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -361,7 +361,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (setq mode-name "LysKOM sending")
 	  (save-excursion
 	    (set-buffer (process-buffer lyskom-proc))
-	    (setq lyskom-dont-change-prompt t)
+	    ;; Don't change the prompt if we won't see our own text
+	    (if kom-created-texts-are-read
+		(setq lyskom-dont-change-prompt t))
 	    (setq lyskom-is-writing nil)
 	    (lyskom-tell-internat 'kom-tell-send)
 	    (funcall send-function 'sending 'lyskom-create-text-handler

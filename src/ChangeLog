@@ -1,3 +1,29 @@
+Fri Mar  8 23:02:18 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-send): Sätt bara
+	lyskom-dont-change-prompt om kom-created-texts-are-read är satt.
+
+Thu Mar  7 00:06:19 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* english-strings.el: Försökte byta ut "subscription" mot
+ 	"membership" på ett konsekvent sätt.
+
+Wed Mar  6 00:07:24 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* review.el (lyskom-review-tree): Anropa inte
+	lyskom-end-of-command.
+	(kom-find-root-review): Blockande.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity): Gör
+	lyskom-scroll.
+
+Mon Mar  4 21:54:24 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (lyskom-set-motd-2): Kludge.
+
+	* startup.el (lyskom): Kontrollera att motd-of-lyskom verkligen
+	finns.
+
 Mon Mar  4 11:29:53 1996  David Byers  <byers@lysator.liu.se>
 
 	* filter.el, commands1.el, commands2.el, review.el: Ändrade anrop
