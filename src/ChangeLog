@@ -1,5 +1,8 @@
 2002-04-14  David Byers  <david.byers@swipnet.se>
 
+	* faqs.el (lyskom-check-for-read-faqs): Handle missing FAQ texts
+	better.
+
 	Handle conference recommendations:
 	* lyskom-rest.el (lyskom-reject-recommendation): Renamed from
 	lyskom-reject-invitation.
