@@ -1,5 +1,11 @@
 Sun Jan  4 01:42:08 1998  David Kågedal  <davidk@lysator.liu.se>
 
+	* services.el (lyskom-blocking-do-multiple): Använd
+	lyskom-ok-to-send-new-calls här också.
+
+	* startup.el (kom-start-anew): Sätt aldrig lyskom-pers-no till
+	nil. Sätt lyskom-inhibit-prefetch till t tillfälligt.
+
 	* services.el (lyskom-ok-to-send-new-calls): Ny variabel
 	(blocking-return,blocking-do): Sätt den.
 
