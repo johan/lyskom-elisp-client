@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.217 2003-08-17 15:33:19 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.218 2003-08-25 17:36:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.217 2003-08-17 15:33:19 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.218 2003-08-25 17:36:39 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -4223,33 +4223,20 @@ One parameter - the prompt string."
 (defvar icon-title-format)
 (defvar frame-icon-title-format)
 
-(defun lyskom-language-from-environment (var)
-  (let ((tmp (getenv var)))
-    (and tmp 
-         (string-match "^\\([a-z]+\\)" tmp)
-         (intern (match-string 1 tmp)))))
-
 
 (if lyskom-is-loaded
     nil
 
+  ;; Fix altered format for kom-default-language
+  (when (and kom-default-language (symbolp kom-default-language))
+    (setq kom-default-language (list kom-default-language)))
+
   ;; Set up default language
-  (let ((languages (append
-                    (if (listp kom-default-language)
-                        kom-default-language
-                      (list kom-default-language))
-                    (list
-                         (lyskom-language-from-environment "KOMLANGUAGE")
-                         (lyskom-language-from-environment "LC_ALL")
-                         (lyskom-language-from-environment "LC_MESSAGES")
-                         (lyskom-language-from-environment "LANG")
-                         (car (car (last lyskom-languages)))))))
-    (lyskom-traverse lang languages
-      (when (assq lang lyskom-languages)
-        (setq kom-default-language lang
-              lyskom-language lang
-              lyskom-global-language lang)
-        (lyskom-traverse-break))))
+  (setq lyskom-language (lyskom-default-language))
+  (setq lyskom-global-language lyskom-language)
+  (unless kom-default-language
+    (setq kom-default-language (list lyskom-language)))
+
 
   (setq-default lyskom-collate-table lyskom-default-collate-table)
   ;; We should set lyskom-char-classes to

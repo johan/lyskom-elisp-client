@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.51 2003-08-25 14:08:02 byers Exp $
+;;;;; $Id: completing-read.el,v 44.52 2003-08-25 17:36:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.51 2003-08-25 14:08:02 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.52 2003-08-25 17:36:39 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -497,11 +497,11 @@ function work as a name-to-conf-stat translator."
                        (lyskom-wait-queue 'main)
                        (delq nil
                              (mapcar (lambda (conf-stat)
-                                       (when (lyskom-completing-match-string string (conf-stat->name conf-stat))
+                                       (when (lyskom-completing-match-string string (uconf-stat->name conf-stat))
                                          (lyskom-create-conf-z-info
-                                          (conf-stat->name conf-stat)
-                                          (conf-stat->conf-type conf-stat)
-                                          (conf-stat->conf-no conf-stat))))
+                                          (uconf-stat->name conf-stat)
+                                          (uconf-stat->conf-type conf-stat)
+                                          (uconf-stat->conf-no conf-stat))))
                                (collector->value result))))))
            (candidate-list 
             (append r-list

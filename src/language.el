@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.30 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: language.el,v 44.31 2003-08-25 17:36:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -304,6 +304,32 @@ Returns non-nil on success and nil on failure."
         (when (assq el lyskom-languages)
           (lyskom-traverse-break el)))
       (car (car lyskom-languages))))
+
+(defun lyskom-language-from-environment (var)
+  "Return language name from value of environment variable VAR."
+  (let ((tmp (getenv var)))
+    (and tmp 
+         (string-match "^\\([a-z]+\\)" tmp)
+         (intern (match-string 1 tmp)))))
+
+(defun lyskom-default-language ()
+  "Return the default language for LysKOM"
+  (let ((languages (append
+                    (if (listp kom-default-language)
+                        kom-default-language
+                      (list kom-default-language))
+                    (list
+                     (lyskom-language-from-environment "KOMLANGUAGE")
+                     (lyskom-language-from-environment "LC_ALL")
+                     (lyskom-language-from-environment "LC_MESSAGES")
+                     (lyskom-language-from-environment "LANG")))))
+    (or (lyskom-traverse lang languages
+          (when (assq lang lyskom-languages)
+            (lyskom-traverse-break lang)))
+        (car (car (last lyskom-languages))))))
+
+
+
 
 (eval-and-compile (provide 'lyskom-language))
 

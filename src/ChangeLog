@@ -1,3 +1,21 @@
+2003-08-25  David Byers  <byers@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Use lyskom-default-language instead
+	of kom-default-language to set the initial language for the
+	session.
+
+	* lyskom-rest.el (lyskom-is-loaded): Changed initialization of
+	language variables to use new function in language.el. Also do not
+	alter kom-default-language unless it was nil to begin with.
+	Convert kom-default-language from symbol to list if necessary.
+
+	* language.el (lyskom-language-from-environment): Moved here from
+	lyskom-rest.el.
+	(lyskom-default-language): New function.
+
+	* completing-read.el (lyskom-read-conf-internal): We use
+	uconf-stats internally, so don't use conf-stat accessors.
+
 2003-08-25  David Byers  <davby@ida.liu.se>
 
 	Fix problems entering conferences in the edit buffer:
