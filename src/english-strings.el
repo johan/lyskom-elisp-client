@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.299 2003-08-15 06:32:04 qha Exp $
+;;;;; $Id: english-strings.el,v 44.300 2003-08-15 21:47:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.299 2003-08-15 06:32:04 qha Exp $"))
+              "$Id: english-strings.el,v 44.300 2003-08-15 21:47:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -526,11 +526,20 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-to-add-q . "Add whom/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
+    (add-footnotes-too-q . "Try to add recipient to footnotes? ")
+    (add-attachments-too-q . "Try to add recipient to attachments? ")
+
     (really-add-as-recpt-q . "Send future comments to the text to %#1M too? ") 
     (who-to-sub-q . "Remove whom/what as a recipient? ")
+    (sub-footnotes-too-q . "Try to remove recipient from footnotes? ")
+    (sub-attachments-too-q . "Try to remove recipient from attachments? ")
+
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
     (who-to-move-to-or-sub-q . "Move to where (empty to just remove recipient)? ")
+    (move-footnotes-too-q . "Try to move footnotes? ")
+    (move-attachments-too-q . "Try to move attachments? ")
+    (move-text-not-recipient . "incorrect recipient.\n")
 
     (adding-name-as-recipient . "Adding %#1M as recipient of text %#2n...")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")

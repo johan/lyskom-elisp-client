@@ -1,5 +1,15 @@
 2003-08-15  David Byers  <byers@lysator.liu.se>
 
+	* view-text.el (lyskom-get-text-belongs-to): New function.
+
+	Fix bug 301:
+	* commands1.el (kom-move-text): Move attachments and footnotes
+	together with the text.
+	(kom-sub-recipient): Remove recipient from attachments and
+	footnotes too.
+	(lyskom-add-helper): Add recipients to attachments and footnotes
+	too.
+
 	Fix bug 623:
 	* commands2.el (kom-set-unread): Delete conf-stat from cache
 	before prompting. Fixed error handling.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.74 2003-06-01 19:01:47 byers Exp $
+;;;;; $Id: view-text.el,v 44.75 2003-08-15 21:47:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.74 2003-06-01 19:01:47 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.75 2003-08-15 21:47:01 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -524,6 +524,13 @@ lyskom-reading-list."
    (lambda (el)
      (string-to-number (aux-item->data el)))
    (lyskom-get-aux-item (text-stat->aux-items text-stat) 10101)))
+
+(defun lyskom-get-text-belongs-to (text-stat)
+  "Return a list of all texts TEXT-STAT is an attachment to."
+  (mapcar
+   (lambda (el) (string-to-number (aux-item->data el)))
+   (lyskom-get-aux-item (text-stat->aux-items text-stat) 10100)))
+
 
 (defun lyskom-skip-attachments (text-no mark-as-read)
   "Skip the hierarchy of attachments starting at text-no"

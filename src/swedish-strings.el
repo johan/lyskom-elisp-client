@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.338 2003-08-15 06:32:04 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.339 2003-08-15 21:47:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.338 2003-08-15 06:32:04 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.339 2003-08-15 21:47:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -540,11 +540,20 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare av en dold kopia? ")
+    (add-footnotes-too-q . "Försök addera mottagare till fotnoter också? ")
+    (add-attachments-too-q . "Försök addera mottagare till bilagor också? ")
+
     (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också skickas till %#1M? ") 
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
+    (sub-footnotes-too-q . "Försök subtrahera mottagare från fotnoter också? ")
+    (sub-attachments-too-q . "Försök subtrahera mottagare från bilagor också? ")
+
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
     (who-to-move-to-q . "Vart vill du flytta texten? ")
     (who-to-move-to-or-sub-q . "Vart vill du flytta texten (tomt för att bara subtrahera)? ")
+    (move-footnotes-too-q . "Försök flytta fotnoter också? ")
+    (move-attachments-too-q . "Försök flytta bilagor också? ")
+    (move-text-not-recipient . "har ej rätt mottagare.\n")
 
     (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
