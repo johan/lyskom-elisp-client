@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.30 2000-07-03 10:50:08 byers Exp $
+;;;;; $Id: review.el,v 44.31 2000-08-10 12:01:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.30 2000-07-03 10:50:08 byers Exp $\n"))
+	      "$Id: review.el,v 44.31 2000-08-10 12:01:50 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -459,7 +459,7 @@ Cannot be called from a callback."
           (progn
             (setq lyskom-last-review-saved-result-list 
                   (nfirst (- (length result) num) result))
-            (nthcdr (- (length result) num) result))
+            (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
@@ -740,7 +740,7 @@ Args: persno confno num &optional again pstart cstart"
               (setq lyskom-last-review-saved-result-list
                     (cons lyskom-last-review-saved-result-list
                           (make-list (- (length by-list) 1) nil)))
-              (nthcdr (- (length result-list) num) result-list))
+              (nthcdr (max 0 (- (length result-list) num)) result-list))
 
           (progn
             (setq lyskom-last-review-saved-result-list 
@@ -862,7 +862,7 @@ Cannot be called from a callback."
           (progn
             (setq lyskom-last-review-saved-result-list 
                   (nfirst (- (length result) num) result))
-            (nthcdr (- (length result) num) result))
+            (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
@@ -929,7 +929,7 @@ Cannot be called from a callback."
           (progn
             (setq lyskom-last-review-saved-result-list 
                   (nfirst (- (length result) num) result))
-            (nthcdr (- (length result) num) result))
+            (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))

@@ -1,9 +1,18 @@
 2000-08-10  David Byers  <davby@ida.liu.se>
 
+	Fix review many to conferences with few texts:
+	* review.el (lyskom-get-letters-to): Protect nthcdr from negative
+	arguments. 
+	(lyskom-get-texts-by-and-to): Ditto.
+	(lyskom-get-texts-by-generic): Ditto.
+	(lyskom-get-texts-to): Ditto.
+
+	Fix kom-super-jump on empty subject:
 	* filter.el (kom-super-jump): Protect empty subject with ^$.
 
 2000-08-01  David Byers  <davby@ida.liu.se>
 
+	Menus were sometimes very wide:
 	* lyskom-buttons.el (lyskom-make-button-menu): Truncate menu title
 	to 43 characters.
 
