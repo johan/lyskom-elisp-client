@@ -1,3 +1,26 @@
+2004-07-12  David Byers  <byers@lysator.liu.se>
+
+	* clienttypes.el (read-list-enter-read-info): When checking
+	whether to append texts to an existing read-list item, don't check
+	that conf-stats are eq. Just check that the conf-nos are the same.
+
+	* prefetch.el (lyskom-prefetch-read-texts-handler): There was a
+	race condition here which could cause unread texts never to be
+	read properly.
+
+	Provide hash-table-like functions in Emacs 19 and 20:
+	* reading.el (lyskom-mship-cache-create): Use
+	lyskom-make-hash-table instead of make-hash-table so compatibility
+	defun is used when needed.
+	(lyskom-mship-cache-get): Ditto for gethash.
+	(lyskom-mship-cache-put): Ditto for puthash.
+	(lyskom-mship-cache-del): Ditto for remhash.
+
+	* compatibility.el (make-hash-table): Provide compatibility defun.
+	(gethash): Ditto.
+	(puthash): Ditto.
+	(remhash): Ditto.
+
 2004-07-11  David Byers  <byers@lysator.liu.se>
 
 	Performance improvements:

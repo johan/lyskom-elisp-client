@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.39 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: komtypes.el,v 44.40 2004-07-12 13:14:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.39 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.40 2004-07-12 13:14:00 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -770,6 +770,11 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   (when (eq no (car (text-list->tail text-list)))
     (set-text-list->tail text-list (last (text-list->texts text-list))))
   (set-text-list->length-internal text-list nil))
+
+;;; FIXME: It would be useful if text-list->append would only append
+;;; FIXME: unique numbers and not blindnly concatenate the two lists.
+;;; FIXME: That would probably take care of any remaining problems
+;;; FIXME: where some texts are listed twice in the to do list.
 
 (defsubst text-list->append (text-list texts)
   "Destructively append TEXTS to the end of TEXT-LIST."

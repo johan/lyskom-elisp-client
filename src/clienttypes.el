@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.21 2004-02-12 21:07:51 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.22 2004-07-12 13:14:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.21 2004-02-12 21:07:51 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.22 2004-07-12 13:14:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -222,7 +222,9 @@ will be inserted before it."
        ;; should become more efficient.
        ((and (eq type 'CONF)
 	     (eq (read-info->type (car (cdr rlist))) 'CONF)
-	     (eq conf-stat (read-info->conf-stat (car (cdr rlist)))))
+	     (eq (conf-stat->conf-no conf-stat)
+                 (conf-stat->conf-no (read-info->conf-stat
+                                      (car (cdr rlist))))))
 	(read-info-append-text-list
 	 (car (cdr rlist))
 	 (text-list->texts (read-info->text-list read-info)))
