@@ -1,5 +1,9 @@
 Mon Aug 19 01:08:49 1991  Linus Tolke Y  (linus at robin)
 
+	* commands2.el, swedish-strings.el (lyskom-set-motd-2,
+	  lyskom-set-motd-3, lyskom-remove-motd): Nu s{tter den
+	  lyskom-server-info ocks} om det gick bra.
+
 	* swedish-strings.el (lyskom-strings): Klarare n{r det g{ller
 	  {ndra l|senord.
 
