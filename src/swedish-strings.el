@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.384 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.385 2004-11-12 07:57:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.384 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.385 2004-11-12 07:57:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -775,7 +775,7 @@ Meddelandet du försökte sända till %#1M var:
     (lp--only-last . "Antal texter att läsa: ")
 
     (session-list-unreads-in-confs . 
-			      "Du har %#2?z%[%#2d olästa brev och totalt %]%[%]%#3d oläst%#3?d%[%]%[a%] i %#4d möte%#4?d%[%]%[n%] i %#1s.\n")
+			      "Du har %#2?z%[%#2d oläst%#2?d%[%]%[a%] brev och totalt %]%[%]%#3d oläst%#3?d%[%]%[a%] i %#4d möte%#4?d%[%]%[n%] i %#1s.\n")
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")
     (you-have-unreads-special . "Du har %#1d okommentera%#1?d%[t%]%[de%] inlägg i %#2M\n")

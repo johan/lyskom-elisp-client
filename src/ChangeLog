@@ -1,3 +1,12 @@
+2004-11-12  Pontus Freyhult  <pont@soua.net>
+
+	* commands2.el (kom-list-sessions): Sort first on priority, 
+	then on session name. Corrected bad usage of sort.
+	Handle nil entries in lyskom-list-news result.
+	
+	* swedish-strings.el (local): Corrected singular form for 
+	unread letters in session-list-unreads-in-conf.
+
 2004-11-11  Pontus Freyhult  <pont@soua.net>
 
 	Fix bug 279, implement list sessions (with extras):
