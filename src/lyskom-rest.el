@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.75 1999-08-21 22:07:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.76 1999-08-22 16:04:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.75 1999-08-21 22:07:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.76 1999-08-22 16:04:52 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2771,9 +2771,7 @@ to return nil."
 
 (defun lyskom-read-string (prompt &optional initial history)
   "Read a string from the minibuffer. Arguments: PROMPT INITIAL"
-  (read-string prompt
-	       initial
-               history))
+  (read-string prompt initial history))
 
 
 
@@ -2800,6 +2798,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 ;;; non-nil C-g will abort. 
 ;;;
 
+
 (defun j-or-n-p (prompt &optional quittable)
   "Same as y-or-n-p but language-dependent.
 Uses lyskom-message, lyskom-read-string to do interaction and
@@ -2808,6 +2807,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (let ((input-char 0)
 	(cursor-in-echo-area t)
 	(nagging nil))
+
     (while (and (not (char-in-string input-char
                                      (lyskom-get-string 'y-or-n-instring)))
                 (not (and (or (eq input-char ?\C-g)
@@ -2829,7 +2829,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 
 	(setq input-char 
               (let ((inhibit-quit t))
-                (prog1 (read-char)
+                (prog1 (read-char-exclusive)
                   (setq quit-flag nil))))
 
         ;;
@@ -2843,7 +2843,12 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
             (setq nagging nil)
           (setq nagging t)))
 
-    (if (and quittable (eq input-char ?\C-g)) (keyboard-quit))
+    (when (and (or (eq input-char ?\C-g)
+                   (eq 'keyboard-quit (lyskom-lookup-key (current-local-map)
+                                                         input-char
+                                                         t)))
+                          quittable)
+      (signal 'quit nil))
     (char-in-string input-char (lyskom-get-string 'y-instring))))
 
   
@@ -2855,14 +2860,14 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
   "Same as j-or-n-p but performs lyskom-end-of-command if quit."
   (condition-case nil
       (j-or-n-p prompt quittable)
-    (quit (signal 'quit "In lyskom-j-or-n-p"))))
+    (quit (signal 'quit nil))))
 
 
 (defun lyskom-ja-or-nej-p (prompt &optional initial-input)
   "Same as ja-or-nej-p but performs lyskom-end-of-command if quit."
   (condition-case nil
       (ja-or-nej-p prompt initial-input)
-    (quit (signal 'quit "In lyskom-ja-or-nej-p"))))
+    (quit (signal 'quit nil))))
 
 
 
@@ -3221,7 +3226,7 @@ One parameter - the prompt string."
     (set-buffer-multibyte nil)
     (while (not (or (eq (setq input-char 
 			      (condition-case err
-				  (read-char)
+				  (read-char-exclusive)
 				(error (if (string= "Non-character input-event"
 						    (car (cdr err)))
 					   ?\r

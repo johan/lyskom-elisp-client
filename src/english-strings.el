@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.56 1999-07-12 16:49:48 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.57 1999-08-22 16:04:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.56 1999-07-12 16:49:48 ceder Exp $"))
+              "$Id: english-strings.el,v 44.57 1999-08-22 16:04:49 byers Exp $"))
 
 
 ;;; ================================================================
@@ -145,7 +145,7 @@
     (password . "Your Password? ")
     (wrong-password . "Incorrect password.\n")
     (are-logged-in . "You have entered LysKOM. Please wait...\n")
-    (you-have-motd . "\nYou have a note on your door:\n\n")
+    (you-have-motd . "\nYou have a notice on your mailbox:\n\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
 The message that was supposed to be shown after login has disappeared.
 Please contact the LysKOM administrator.\n")
@@ -245,7 +245,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
 
     (who-letter-to . "Send a letter to whom? ")
     (who-send-text-to . "Send article to which conference? ")
-    (has-motd . "%#1P has a note on the door:\n\n")
+    (has-motd . "%#1P has a notice on his/her mailbox:\n\n")
     (motd-persist-q . "Send the letter? ")
 
     (who-to-add . "Whom do you want to add? ")
@@ -310,14 +310,14 @@ and you have finished reading. Please come back later.
 ===============================================================================
 \n")
     (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
-    (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
+    (who-to-put-motd-for . "Post notice on who/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
     (go-to-conf-p . "Go to conference: ")
     (want-become-member . "Do you want to join? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
-    (who-to-remove-motd-for . "Remove note from the door of who/what: ")
+    (who-to-remove-motd-for . "Remove notice from who/what: ")
 
     (conf-all-read . "%#1M - no unread articles.\n")
     (no-in-conf . "You are not present in any conference.\n")
@@ -493,12 +493,12 @@ Read all about it at http://www.lysator.liu.se/history/")
     (highest-local-no . "Highest local number: %20#1d\n")
     (last-text-time . 
      "Time of last article: %20#1s (accordning to your cache)\n")
-    (no-of-motd . "Note on the door in article: %13#1n\n")
+    (no-of-motd . "Notice in article: %13#1n\n")
     (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
     (supervisor-is-no-name . "Supervisor: %30#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
-    (conf-has-motd . "\n%#1M has a note on the door:\n")
+    (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (status-conf-generic . "%-40#1s %#2s\n")
 
     (Everybody . "Everyone")
@@ -746,7 +746,7 @@ Help: \\[describe-mode] ---")
     (added-carbon-copy . "Carbon copy to conference: ")
     (added-blank-carbon-copy . "Blind carbon copy to conference: ")
     (text-to-comment-q . "Which article to you want to comment? ")
-    (conf-has-motd-no . "The conference has a note on the door. (%#1d)\n\n%#2s")
+    (conf-has-motd-no . "The conference has a notice. (%#1d)\n\n%#2s")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
     (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
     (no-get-text . "You were not allowed to retrieve the article.")
@@ -1402,11 +1402,11 @@ You must become an active member of the conference to enter it.\n")
     (kom-sub-comment          . "Remove comment")
     (kom-add-member           . "Add (a) member")
     (kom-sub-member           . "Remove (a) member")
-    (kom-change-conf-motd     . "(Post) note (on the) door")
+    (kom-change-conf-motd     . "(Post) notice (on the)")
     (kom-set-garb-nice        . "Change expiration")
     (kom-set-super-conf       . "Change superconference")
     (kom-set-permitted-submitters . "Change allowed authors")
-    (kom-unset-conf-motd      . "Remove note (from the door)")
+    (kom-unset-conf-motd      . "Remove notice")
     (kom-save-text            . "Save article (in file)")
     (kom-edit-options         . "Change options")
     (kom-save-options         . "Save options")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.50 1999-08-18 20:24:06 byers Exp $
+;;;;; $Id: commands1.el,v 44.51 1999-08-22 16:04:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.50 1999-08-18 20:24:06 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.51 1999-08-22 16:04:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -306,7 +306,7 @@ as TYPE. If no such misc-info, return NIL"
                                        'recpt tono
                                        'recpt lyskom-pers-no))
                                   "" "")))))
-    (quit (signal 'quit "Quitting in letter"))))
+    (quit (signal 'quit nil))))
 
 
 ;;; ================================================================
@@ -934,7 +934,7 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 			    recver
 			    subject "")))
 
-    (quit (signal 'quit "quit in lyskom-comment-recipients"))))
+    (quit (signal 'quit nil))))
 
 
 ;;; ================================================================
