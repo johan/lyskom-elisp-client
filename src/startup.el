@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.83 2002-12-13 22:37:32 byers Exp $
+;;;;; $Id: startup.el,v 44.84 2002-12-16 23:50:23 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.83 2002-12-13 22:37:32 byers Exp $\n"))
+	      "$Id: startup.el,v 44.84 2002-12-16 23:50:23 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -822,8 +822,9 @@ WANT-PERSONS is t for persons, nil for confs."
 
 (defun lyskom-read-server-name (prompt)
   "Read the name of a LysKOM server.
-Copmpletion is done on the servers i kom-server-aliases. If an
-alias name is entered, the corresponding address is returned."
+Copmpletion is done on the servers i kom-server-aliases and
+kom-builtin-server-aliases. If an alias name is entered, the
+corresponding address is returned."
   ;; Create a completion table like
   ;; (("kom.lysator.liu.se" . "kom.lysator.liu.se")
   ;;  ("LysKOM" . "kom.lysator.liu.se"))

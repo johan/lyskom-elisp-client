@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.181 2002-12-16 22:59:15 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.182 2002-12-16 23:50:22 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.181 2002-12-16 22:59:15 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.182 2002-12-16 23:50:22 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2745,8 +2745,10 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                 (save-excursion
                   (set-buffer (lyskom-get-prioritized-session))
                   (list
-                   (or (cdr (lyskom-string-assoc lyskom-server-name 
-                                                 kom-server-aliases))
+                   (or (cdr (lyskom-string-assoc
+                             lyskom-server-name
+                             (append kom-server-aliases
+                                     kom-builtin-server-aliases)))
                        lyskom-server-name)))))
 
          ((eq to-do 'next-pri-text)
@@ -2941,8 +2943,10 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                              lyskom-current-conf)))
                          ((eq format-letter ?S) lyskom-server-name)
                          ((eq format-letter ?s)
-                          (or (cdr (assoc lyskom-server-name 
-                                          kom-server-aliases))
+                          (or (cdr (assoc
+                                    lyskom-server-name
+                                    (append kom-server-aliases
+                                            kom-builtin-server-aliases)))
                               lyskom-server-name))
                          ((eq format-letter ?p)
                           (or (conf-stat->name
@@ -3978,7 +3982,9 @@ One parameter - the prompt string."
 (defun lyskom-mode-name-from-host ()
   "Calculate what to identify the buffer with."
   (let ((server  (process-name (get-buffer-process (current-buffer)))))
-    (or (cdr (assoc server kom-server-aliases))
+    (or (cdr (assoc server
+                    (append kom-server-aliases
+                            kom-builtin-server-aliases)))
 	(format "LysKOM(%s)" server))))
 
 
