@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.2 1996-09-03 18:42:53 davidk Exp $
+;;;;; $Id: completing-read.el,v 44.3 1996-09-08 20:14:51 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.2 1996-09-03 18:42:53 davidk Exp $\n"))
+       "$Id: completing-read.el,v 44.3 1996-09-08 20:14:51 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -64,7 +64,8 @@
       lyskom-completing-who-info-cache
     (setq lyskom-completing-who-info-cache
           (listify-vector
-	   (if use-dynamic-info
+	   (if (or (and (lyskom-is-in-minibuffer) use-dynamic-info)
+		   lyskom-dynamic-session-info-flag)
 	       (blocking-do 'who-is-on-dynamic t t 0)
 	     (blocking-do 'who-is-on))))))
 

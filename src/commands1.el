@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.1 1996-09-03 18:42:50 davidk Exp $
+;;;;; $Id: commands1.el,v 44.2 1996-09-08 20:14:48 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.1 1996-09-03 18:42:50 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.2 1996-09-08 20:14:48 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1205,7 +1205,8 @@ If you are not member in the conference it will be flagged with an asterisk."
 
 (def-kom-command kom-list-re (regexp)
   "List all persons and conferences whose name matches REGEXP."
-  (interactive "sSearch regexp: ")
+  (interactive (list (lyskom-read-string
+		      (lyskom-get-string 'search-re))))
   (lyskom-format-insert 'matching-regexp regexp)
   (let ((conf-list (blocking-do 're-z-lookup regexp 1 1)))
     (mapcar
