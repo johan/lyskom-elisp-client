@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.0 1994-01-06 01:56:09 linus Exp $
+# $Id: Makefile,v 38.1 1994-01-10 18:07:53 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,13 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.0 1994-01-06 01:56:09 linus Exp $
+# $Id: Makefile,v 38.1 1994-01-10 18:07:53 linus Exp $
 # $Log: Makefile,v $
-# Revision 38.0  1994-01-06 01:56:09  linus
+# Revision 38.1  1994-01-10 18:07:53  linus
+# The installation method changed (again).
+# The version is now contained in the Makefile.
+#
+# Revision 38.0  1994/01/06  01:56:09  linus
 # New version
 #
 # Revision 36.9  1994/01/06  00:55:12  linus
@@ -124,14 +128,16 @@
 # Lagt till lyskom-clientversion-long
 #
 
+CLIENTVERSION = 0.38.1
+
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
 MKDIR = /bin/mkdir
 
 RM = /usr/gnu/bin/rm -vf
-EMACS-BATCH = emacs -batch -l /usr/local/var/elisp/bytecomp
+
 # for compiling using emacs 19!
-EMACS-BATCH = emacs -batch -l ./compatibility.el
+EMACS-BATCH = emacs -batch
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el startup.el \
@@ -164,12 +170,9 @@ PARTS-ELC = $(SRC-ELC)
 
 all: lyskom.elc
 
-LEX = flex -8
-SWEDISH-ALFA-VERSION = /usr/local/src/2kom/lyskom.elc
-ENGLISH-ALFA-VERSION = /usr/local/src/2kom/english-lyskom.elc
-alfa: lyskom.elc makealfa english-lyskom.elc
-	./makealfa < lyskom.elc > $(SWEDISH-ALFA-VERSION)
-	./makealfa < english-lyskom.elc > $(ENGLISH-ALFA-VERSION)
+# influenced by autoconf? Yes.
+vars.el: vars.el.in Makefile
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 
 lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
@@ -179,9 +182,6 @@ english-lyskom.elc: $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC)
 
 lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
-
-makealfa: makealfa.c
-	$(CC) -o makealfa $(CFLAGS) makealfa.c -ll
 
 $(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 
@@ -209,25 +209,43 @@ doc:
 
 install: installnodoc installdoc
 
-installnodoc: lyskom.elc lyskom.el
-	cp lyskom.elc /usr/local/var/elisp/lyskom.elc
-	cp lyskom.elc $(SWEDISH-ALFA-VERSION)
-	(VER=`grep "lyskom-clientversion " vars.el | \
-	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
-	 cp lyskom.elc lyskom-$${VER}.elc;\
-	 gzip lyskom-$${VER}.elc;\
-	 mv lyskom-$${VER}.elc.gz /usr/ftp/pub/lyskom/elisp-client;\
-	 cp lyskom.el lyskom-$${VER}.el;\
-	 gzip lyskom-$${VER}.el;\
-	 cp lyskom-$${VER}.el.gz /usr/ftp/pub/lyskom/elisp-client;)
+installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
+	# Lysator
+	cp lyskom.el /usr/local/lib/emacs/site-lisp/lyskom.el
+	cp lyskom-$(CLIENTVERSION).elc /usr/local/lib/emacs/site-lisp/lyskom.elc
 
+lyskom-$(CLIENTVERSION).elc: lyskom.el
+	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
+	mv lyskom.elc lyskom-$(CLIENTVERSION).elc
+
+lyskom.elc-compatibility: lyskom.el
+	$(EMACS-BATCH) -l ./compatibility.el -f batch-byte-compile lyskom.el
+	mv lyskom.elc lyskom.elc-compatibility
+
+lyskom-$(CLIENTVERSION).el.gz: lyskom.el
+	gzip -9 < lyskom.el > lyskom-$(CLIENTVERSION).el.gz
+
+lyskom-$(CLIENTVERSION).elc.gz: lyskom-$(CLIENTVERSION).elc
+	gzip -9 < lyskom-$(CLIENTVERSION).elc > lyskom-$(CLIENTVERSION).elc.gz
+
+installatftp: lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz
+	touch lyskom-$(CLIENTVERSION).elc.gz # Do we have confidence problems?
+	mv lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz \
+		/usr/ftp/pub/lyskom/elisp-client
+
+.PHONY: installnodoc
+installnodoc: installatlysator installatftp
 
 # This is now the responsability of the Makefile in the doc-dir.
 installdoc: doc
 	( cd ../doc; make install )
 
-clean:
-	$(RM) *~ *.elc $(GENERIC-CLEAN) makealfa.c
+smallclean:
+	$(RM) lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz
+	$(RM) lyskom-$(CLIENTVERSION).elc lyskom.el
+
+clean: smallclean
+	$(RM) *~ *.elc $(GENERIC-CLEAN)
 
 distclean: clean
-	$(RM) $(GENERIC-DIST-CLEAN) makealfa Topdir.make */Topdir.make
+	$(RM) $(GENERIC-DIST-CLEAN) Topdir.make */Topdir.make vars.el
