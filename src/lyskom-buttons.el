@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.69 2002-05-25 18:22:39 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.70 2002-06-22 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.69 2002-05-25 18:22:39 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.70 2002-06-22 17:13:03 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1096,36 +1096,17 @@ that, starts a new one."
   (let* ((url-string (if (memq window-system '(win32 mswindows w32))
                          (list url)
                        (list "-n"
-                             (format "%s" url))))
-         
-         (proc (apply 'start-process "galeon"
-                      nil
-                      (if (listp kom-galeon-command)
-                          (car kom-galeon-command)
-                        kom-galeon-command)
-                      (if (listp kom-galeon-command)
-                          (append (cdr kom-galeon-command)
-                                  url-string)
-                        url-string)))
-         (status 'run)
-         (exit nil))
+                             (format "%s" url)))))
     (lyskom-url-manager-starting manager)
-    (while (eq status 'run)
-      (accept-process-output)
-      (setq status (process-status proc)))
-    (setq exit (process-exit-status proc))
-    (cond ((and (eq status 'exit) 
-                (eq exit 1))
-           (apply 'start-process "galeon"
-                          nil
-                          (if (listp kom-galeon-command)
-                              (car kom-galeon-command)
-                            kom-galeon-command)
-                          (if (listp kom-galeon-command)
-                              (append (cdr kom-galeon-command)
-                                      (list url))
-                            (list url))))
-          (t nil))))
+    (apply 'start-process "galeon"
+           nil
+           (if (listp kom-galeon-command)
+               (car kom-galeon-command)
+             kom-galeon-command)
+           (if (listp kom-galeon-command)
+               (append (cdr kom-galeon-command)
+                       url-string)
+             url-string))))
 
 ;; Added by Peter Liljenberg
 (defun lyskom-view-url-lynx (url manager)

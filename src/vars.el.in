@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.201 2002-06-12 21:21:52 byers Exp $
+;;;;; $Id: vars.el.in,v 44.202 2002-06-22 17:13:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.201 2002-06-12 21:21:52 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.202 2002-06-22 17:13:04 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1110,6 +1110,18 @@ time in some places. If nil, only include minutes and hours."
   "*Non-nil means display namedays when running in Swedish.
 This variable will eventually be replaced with something else."
   server)
+
+(def-kom-var kom-ssh-relay-host nil
+  "*Host to which the session is to be tunneled through ssh through.
+For this to work, ssh to the host must succeed without asking for a
+password or passphrase.
+
+Note: Storing this variable in the LysKOM server makes no sense.")
+
+(def-kom-var lyskom-ssh-proxy nil
+  "When non-nil, the ssh proxy used for this buffer."
+  local
+  protected)
 
 (def-kom-var kom-www-proxy nil
   "*Non-nil indicates a WWW proxy to use for the connection.
