@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.173 2002-04-11 18:49:10 byers Exp $
+;;;;; $Id: vars.el.in,v 44.174 2002-04-12 22:54:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.173 2002-04-11 18:49:10 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.174 2002-04-12 22:54:37 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1183,6 +1183,14 @@ appear more than once"
   "*Dictionary to use for spell checking."
   server
   inherited)
+
+(def-kom-var lyskom-unread-mode-line nil
+  "This variable will become part of mode-line-format"
+  language-force)
+
+(def-kom-var lyskom-unread-title-format nil
+  "This variable will become part of frame-title-format"
+  language-force)
 
 (def-kom-var lyskom-button-actions
   '((text

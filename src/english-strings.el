@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.185 2002-04-11 21:57:29 byers Exp $
+;;;;; $Id: english-strings.el,v 44.186 2002-04-12 22:54:36 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.185 2002-04-11 21:57:29 byers Exp $"))
+              "$Id: english-strings.el,v 44.186 2002-04-12 22:54:36 qha Exp $"))
 
 
 ;;; ================================================================
@@ -3716,8 +3716,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-54 . "Invalid membership type")
 ))
 
+(lyskom-language-var lyskom-unread-mode-line en
+  (lyskom-make-lyskom-unread-mode-line))
 
-     
+(lyskom-language-var lyskom-unread-title-format en
+  (lyskom-make-lyskom-unread-title-format))
+
 (provide 'lyskom-strings)
 
 ;;; english-strings ends here

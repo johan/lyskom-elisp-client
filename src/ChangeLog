@@ -1,3 +1,19 @@
+2002-04-13  Ulrik Haugen  <qha@lysator.liu.se>
+
+	Fix bug 447:
+	
+	* vars.el.in (lyskom-unread-mode-line) 
+	(lyskom-unread-title-format): Set langage-force.
+
+	* lyskom-rest.el (lyskom-make-lyskom-unread-mode-line)
+	(lyskom-make-lyskom-unread-title-format): New functions. They both
+	return what used to be in lyskom-unread-mode-line and
+	lyskom-unread-title-format respectively.
+
+	* swedish-strings.el, english-strings.el (lyskom-unread-mode-line)
+	(lyskom-unread-title-format): Made these variables language
+	dependent.
+
 2002-04-11  David Byers  <david.byers@swipnet.se>
 
 	* aux-items.el (lyskom-print-faq-for-conf): Show FAQ for server
