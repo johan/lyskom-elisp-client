@@ -1,5 +1,9 @@
 Mon Oct  7 16:29:42 1991  Linus Tolke Y  (linus at lysator)
 
+	* commands1.el (lyskom-change-pres-or-motd-3): Now we get the
+ 	  empty form if we are changing  presentation and we didn't have
+	  any before. 
+
 	* commands1.el, swedish-string.el (lyskom-go-to-empty-conf): when
 	  going to an empty conf the conf-name will be shown.
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.8 1991-10-07 15:34:24 linus Exp $
+;;;;; $Id: commands1.el,v 35.9 1991-10-07 17:18:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.8 1991-10-07 15:34:24 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.9 1991-10-07 17:18:37 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -893,7 +893,8 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
       (lyskom-insert-string 'cant-get-conf-stat)
       (lyskom-end-of-command))
    ((or lyskom-is-administrator
-	(lyskom-member-p (conf-stat->supervisor conf-stat)))
+	(lyskom-member-p (conf-stat->supervisor conf-stat))
+	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
       (initiate-get-text 'main 'lyskom-change-pres-or-motd-3
 			 (cond
 			  ((eq type 'pres)
@@ -910,7 +911,8 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 (defun lyskom-change-pres-or-motd-3 (text-mass conf-stat type)
   "Edit the presentation or motd for CONF-STAT.
 Args: TEXT-MASS CONF-STAT TYPE.
-TEXT-MASS is the old presentation or motd, or nil.
+TEXT-MASS is the old presentation or motd, or nil. If nil and writing a
+presentationen an empty presentation is entered.
 TYPE is either 'pres or 'motd, depending on what should be changed."
   (lyskom-edit-text
    lyskom-proc
@@ -926,7 +928,9 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    (if (and text-mass
 	    (string-match "\n" (text->text-mass text-mass)))
        (substring (text->text-mass text-mass) (match-end 0))
-     "")
+     (if (eq type 'pres)
+	 (lyskom-get-string 'presentation-form)
+       ""))
    (cond
     ((eq type 'pres) 'lyskom-set-presentation)
     ((eq type 'motd) 'lyskom-set-conf-motd))
