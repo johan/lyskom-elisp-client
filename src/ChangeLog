@@ -1,3 +1,11 @@
+Sun Jan  4 01:42:08 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* utilities.el (lyskom-next-apo-timeout): Gjorde om till en defun.
+	(lyskom-reset-apo-timeout): Dito.
+	(lyskom-accept-process-output): Dito.
+
+	* lyskom-rest.el (options): Satte prioriteten för options till 9.
+
 Sat Jan  3 22:25:51 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* internal.el (lyskom-halt,lyskom-resume): Använd assq istället
