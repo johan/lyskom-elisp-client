@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.13 1998-01-04 15:01:03 davidk Exp $
+;;;;; $Id: services.el,v 44.14 1998-01-04 17:47:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.13 1998-01-04 15:01:03 davidk Exp $\n"))
+	      "$Id: services.el,v 44.14 1998-01-04 17:47:14 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1160,16 +1160,16 @@ or get-text-stat."
 				  (symbol-name command)))
 	     'blocking 'blocking-return
 	     data)
-
-      (while (and (eq lyskom-blocking-return 'not-yet-gotten)
-		  (memq (process-status lyskom-proc) '(open run))
-		  ;; The following test should probably be removed
-		  (not lyskom-quit-flag))
-        (lyskom-accept-process-output))
-
-      ;; OK to continue with prefetch and stuff again
-      (setq lyskom-ok-to-send-new-calls t)
-      (lyskom-check-output-queues)
+      (unwind-protect
+	  (while (and (eq lyskom-blocking-return 'not-yet-gotten)
+		      (memq (process-status lyskom-proc) '(open run))
+		      ;; The following test should probably be removed
+		      (not lyskom-quit-flag))
+	    (lyskom-accept-process-output))
+	
+	;; OK to continue with prefetch and stuff again
+	(setq lyskom-ok-to-send-new-calls t)
+	(lyskom-check-output-queues))
       
       (if (or lyskom-quit-flag quit-flag)
           (signal 'quit nil))
@@ -1208,6 +1208,7 @@ or get-text-stat."
 	(lyskom-really-serious-bug))
     
     (let ((lyskom-multiple-blocking-return 'not-yet-gotten))
+      (setq lyskom-ok-to-send-new-calls t)
       (lyskom-collect 'blocking)
       (while call-list
 	(apply (intern-soft (concat "initiate-"
@@ -1216,10 +1217,14 @@ or get-text-stat."
 	       (cdr (car call-list)))
 	(setq call-list (cdr call-list)))
       (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
-      (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
-		  (memq (process-status lyskom-proc) '(open run))
-		  (not lyskom-quit-flag))
-	(lyskom-accept-process-output))
+      (unwind-protect
+	  (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+		      (memq (process-status lyskom-proc) '(open run))
+		      (not lyskom-quit-flag))
+	    (lyskom-accept-process-output))
+	;; OK to continue with prefetch and stuff again
+	(setq lyskom-ok-to-send-new-calls t)
+	(lyskom-check-output-queues))
       (if lyskom-quit-flag
 	  (progn
 	    (setq lyskom-quit-flag nil)
@@ -1228,7 +1233,8 @@ or get-text-stat."
       lyskom-multiple-blocking-return)))
 
 (defun lyskom-blocking-do-multiple-1 (&rest data)
-  (setq lyskom-multiple-blocking-return data))
+  (setq lyskom-multiple-blocking-return data
+	lyskom-ok-to-send-new-calls nil))
 
 
 
