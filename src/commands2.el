@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.1 1993-04-26 19:36:00 linus Exp $
+;;;;; $Id: commands2.el,v 36.2 1993-04-27 00:01:07 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.1 1993-04-26 19:36:00 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.2 1993-04-27 00:01:07 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -565,15 +565,19 @@ means send the message to everybody."
 ;;; Rehacked: Inge Wallin
 
 
-(defun kom-list-news ()
+(defun kom-list-news (num)
   "Runs lyskom-start-of-command and then gets all conferences using 
 lyskom-prefetch-all-confs."
-  (interactive)
+  (interactive "P")
   (lyskom-start-of-command 'kom-list-news)
-  (lyskom-prefetch-all-confs 'lyskom-list-news))
+  (lyskom-prefetch-all-confs (cond
+			      ((numberp num) num)
+			      ((and (listp num)
+				    (numberp (car num))) (car num))
+			      (t nil)) 'lyskom-list-news))
 
 
-(defun lyskom-list-news ()
+(defun lyskom-list-news (num-arg)
   "Print the number of unread articles to the user."
   (interactive)
   (let ((sum 0))
@@ -584,10 +588,12 @@ lyskom-prefetch-all-confs."
 	      (name (conf-stat->name (read-info->conf-stat info))))
 	  (cond
 	   ((eq (read-info->type info) 'CONF)
-	    (lyskom-insert 
-	     (if (/= un 1)
-		 (lyskom-format 'you-have-unreads un name)
-	       (lyskom-format 'you-have-an-unread name)))
+	    (if (or (not num-arg)
+		    (>= (-- num-arg) 0))
+		(lyskom-insert 
+		 (if (/= un 1)
+		     (lyskom-format 'you-have-unreads un name)
+		   (lyskom-format 'you-have-an-unread name))))
 	    (setq sum (+ sum un)))))))
      (read-list->all-entries lyskom-to-do-list))
     (if (= 0 sum)
@@ -736,7 +742,7 @@ on one line."
   (lyskom-start-of-command 'kom-list-summary)
   (if (read-list-isempty lyskom-reading-list)
       (progn 
-	(lyskom-insert-string 'have-to-be-in-conf)
+	(lyskom-insert-string 'have-to-be-in-conf-with-unread)
 	(lyskom-end-of-command))
     (initiate-get-time 'main 'lyskom-list-summary-all 
 		       (text-list->texts 

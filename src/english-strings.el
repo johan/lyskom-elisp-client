@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 36.1 1993-04-26 19:36:43 linus Exp $
+;;;;; $Id: english-strings.el,v 36.2 1993-04-27 00:01:17 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 36.1 1993-04-26 19:36:43 linus Exp $\n"))
+	      "$Id: english-strings.el,v 36.2 1993-04-27 00:01:17 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -393,7 +393,7 @@ Your public message:
     (waiting-higher-than . 
      "You are waiting for an article in any conference with a priority higher than %#1d.\n")
     
-    (have-to-be-in-conf . "You must go to the conference first.\n")
+    (have-to-be-in-conf-with-unread . "You must go to a non-empty conference first.\n")
     (Texts . "Article")
     (Date . "Date")
     (Lines . "Lines")
@@ -532,6 +532,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
     (name-has-changed-to-name . "%#1s has changed name to %#2s")
     (name-has-changed-to-name-r . "%#1s has changed name to %#2s\n")
+    (you-changed-name-to . "You have now changed name to %#1s.\n")
     (database-sync . "Synching database.")
     (lyskom-is-full . "\
 ===========================================================
