@@ -1,3 +1,9 @@
+Mon Nov  9 00:15:04 1992  Linus Tolke Y  (linus@ruben)
+
+	* startup.el (lyskom-clear-vars): lyskom-default-password shall
+	  not be buffer-local. It is used to move information from one
+	  buffer to another across process calls.
+
 Wed Nov  4 22:35:51 1992  Linus Tolke Y  (linus@robin)
 
 	* internal.el (lyskom-process-send-string): Errors are logged in
