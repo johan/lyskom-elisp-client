@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.116 2004-07-19 20:11:57 byers Exp $
+# $Id: Makefile,v 44.117 2005-01-23 17:24:29 byers Exp $
 
 # Useful targets:
 #
@@ -36,7 +36,7 @@
 # Version of the client.
 #
 # Also remember to change version number in ../doc/Makefile!
-CLIENTVERSION = 0.47.1
+CLIENTVERSION = 0.48
 
 ######################################################################
 

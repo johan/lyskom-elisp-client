@@ -1,5 +1,9 @@
 2005-01-23  David Byers  <byers@lysator.liu.se>
 
+	* Release of 0.48.
+
+2005-01-23  David Byers  <byers@lysator.liu.se>
+
 	* utilities.el (lyskom-check-configuration): Don't print a warning
 	about the coding system when using UTF-8.
 
