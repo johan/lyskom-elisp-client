@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.121 2002-10-20 13:20:01 byers Exp $
+;;;;; $Id: utilities.el,v 44.122 2002-12-16 22:59:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.121 2002-10-20 13:20:01 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.122 2002-12-16 22:59:15 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -665,7 +665,11 @@ non-negative integer and 0 means the given text-no."
      ((eq txts 1)
       (car cnos))
      (t
-      (lyskom-read-number (lyskom-get-string 'what-ancestor) (car cnos))))))
+      (lyskom-read-number (lyskom-get-string 'what-ancestor) 
+                          (car cnos)
+                          nil
+                          nil
+                          cnos)))))
 
 (defun lyskom-prompt-for-text-no (arg prompt default &optional constraint)
   (lyskom-read-number prompt default))
