@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.175 2003-03-16 19:48:59 byers Exp $
+;;;;; $Id: commands1.el,v 44.176 2003-03-16 19:59:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.175 2003-03-16 19:48:59 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.176 2003-03-16 19:59:22 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -578,39 +578,38 @@ See `kom-membership-default-priority' and
   (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
                     (lyskom-read-conf-stat 
                      (lyskom-get-string 'where-to-add-self)
-                     '(all) nil "" t)))
-         (who (blocking-do 'get-conf-stat lyskom-pers-no))
-         (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
-         (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
-         (no-of-unread
-          (unless (and mship (not (membership-type->passive
-                                   (membership->type mship))))
-            (lyskom-read-num-range-or-date 
-             0 
-             (conf-stat->no-of-texts whereto)
-             (lyskom-format 'initial-unread)
-             nil
-             t
-             nil))))
+                     '(all) nil "" t))))
+    (if (lyskom-is-member (conf-stat->conf-no whereto)
+                          lyskom-pers-no)
+        (lyskom-format-insert 'you-already-member whereto)
+      (let* ((who (blocking-do 'get-conf-stat lyskom-pers-no))
+             (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
+             (mship (lyskom-get-membership (conf-stat->conf-no whereto) t))
+             (no-of-unread
+              (unless (and mship (not (membership-type->passive
+                                       (membership->type mship))))
+                (lyskom-read-num-range-or-date 
+                 0 
+                 (conf-stat->no-of-texts whereto)
+                 (lyskom-format 'initial-unread)
+                 nil
+                 t
+                 nil)))
+             (kom-membership-default-priority
+              (if (and mship (membership-type->passive (membership->type mship)))
+                  (membership->priority mship)
+                kom-membership-default-priority)))
 
-    ;; Fake kom-membership-default-priority if this is a passive membership
-    ;; This will suppress the normal "which priority" question. Ugly hack.
-
-    (let ((kom-membership-default-priority
-           (if (and mship (membership-type->passive (membership->type mship)))
-               (membership->priority mship)
-             kom-membership-default-priority)))
-
-      (lyskom-add-member-answer (lyskom-try-add-member whereto
-                                                       who
-                                                       pers-stat
-                                                       nil
-                                                       nil
-                                                       t
-                                                       nil
-                                                       no-of-unread)
-                                whereto who
-                                no-of-unread))))
+        (lyskom-add-member-answer (lyskom-try-add-member whereto
+                                                         who
+                                                         pers-stat
+                                                         nil
+                                                         nil
+                                                         t
+                                                         nil
+                                                         no-of-unread)
+                                  whereto who
+                                  no-of-unread)))))
 
 
 (def-kom-command kom-change-priority (&optional conf)

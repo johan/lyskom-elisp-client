@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.271 2003-03-16 19:49:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.272 2003-03-16 19:59:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.271 2003-03-16 19:49:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.272 2003-03-16 19:59:22 byers Exp $"))
 
 
 ;;; ================================================================
@@ -294,6 +294,7 @@ instead of removing it.")
     (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")
     (add-already-member . "%#1P is already a member of %#2M.\n")
+    (you-already-member . "You are already a member of %#1M.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
     (is-read-protected-contact-supervisor . "%#1M is closed.

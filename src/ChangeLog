@@ -1,5 +1,8 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 839:
+	* commands1.el (kom-add-self): Don't re-add self.
+
 	Fix bug 854:
 	* commands2.el (kom-join-all-conferences): New command.
 	(kom-leave-all-conferences): New command.
