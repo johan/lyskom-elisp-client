@@ -1,36 +1,61 @@
+
 		       Nyheter i lyskom.el 0.45
 		       ========================
 
 Version 0.45 av elispklienten finns nu tillgänglig på följande URL.
 
-       <URL:ftnp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
 Filen heter lyskom-0.45.tar.gz, och en kopia av den text du läser just
 nu finns under namnet NEWS-0.45 samt under namnet NEWS-0.45 i
 tar-arkivet.
 
+Se även MIGRATION-0.44-0.45 för information som är av intresse när man
+byter från 0.44 till 0.45 (samma information finns här, men är mer
+detaljerad i den andra filen.)
+
 Frivilliga sökes som är intresserade av att försöka få elispklienten
-att fungera bättre tillsammans med XEmacs. Till exempel vore det
+att fungera ännu bättre tillsammans med XEmacs. Till exempel vore det
 trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 
 * Fitjurs och förbättringar
+
+** Det går att köra elispklienten under XEmacs. Man behöver minst
+   version 19.14 av XEmacs för att det skall fungera, men på grund av
+   buggar i XEmacs 19.14 så kan LysKOM ibland dra förskräckligt mycket
+   CPU, och fönsterhanteringen kan bli galen. Dessa buggar skall vara
+   fixade i 19.15 och 20.0.
+
+** Man kan byta språk under körning. För tillfället finns engelska och
+   svenska att tillgå, men om någon känner för att översätta klienten
+   till något annat språk, till exempel esperanto, swahili, urdu eller
+   japanska så tar vi tacksamt emot hjälpen.
+
+** I variabeln som väljer hur URLer hanteras kan man lägga in symbolen
+   "default". Då kommer LysKOM att använda browse-url för att visa
+   URLen. Ett lämpligt värde för kom-url-viewer-preferences är således
+   '(emacs default). Då kommer ftp, file och mailto-URLer att visas i
+   Emacs och allt annat visas beroende på hur
+   browse-url-browser-function är satt.
+
+** Numera går det alldeles utmärkt att gå med och gå ur möten medan
+   mötesprioriteringsbufferten är uppe. Den hålls synkroniserad med
+   LysKOM-sessionen.
 
 ** En nygammal prefetch har börjat användas. Detta gör att allting går
    mycket fortare, men har sidoeffekten att det kan se ut som om man
    har läst ut LysKOM innan klienten har läst in alla information från
    servern.
 
-** Det går hjälpligt att köra elispklienten under XEmacs.
-
 ** Färgläggning av KOM-bufferten sker även under Windows-versionen av
    Emacs.
 
-** Kommandot "Återse fler inlägg", bunder till "åy" fortsätter ett
-   återsekommando från den plats det slutade, med samma kriterier. Det
-   innebär att Återse senaste 10 av XX till YY följt av Återse 10 fler
-   inlägg kommer att visa de senaste 20 inläggen av XX till YY i två
-   omgångar (10 per kommando.)
+** Kommandot "Återse fler inlägg", bunder till "åy" (som i Återse
+   Ytterligare) fortsätter ett återsekommando från den plats det
+   slutade, med samma kriterier. Det innebär att Återse senaste 10 av
+   XX till YY följt av Återse 10 fler inlägg kommer att visa de
+   senaste 20 inläggen av XX till YY i två omgångar (10 per kommando.)
 
 ** Man kan numera stoppa in vektorer som tangentbordsmakron i
    kom-do-when-done. 
@@ -40,18 +65,28 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 ** LysKOM-bufferten är skrivskyddad (igen), och har undo-information
    avslagen.
 
-** En experimentell Ändra Variabler har inkluderats. För att den skall
-   fungera krävs det att Emacs kan hitta Per Abrahamsens widget-paket
-   (kan hämtas på http://www.dina.kvl.dk/~abraham/custom), minst
-   version 0.991. Kommandot heter "Inställningar (för) LysKOM".
+** Variablerna kom-prompt-format, lyskom-prompt-text och
+   lyskom-prompt-executing-default-command-text har ersatts av
+   kom-user-prompt-format och kom-user-prompt-format-executing.
+
+** Vid körning i administratörsmod så styr variablerna
+   kom-enabled-prompt-format och kom-enabled-prompt-format-executing
+   promptens utseende.
+
+** Ändra Variabler använder inte längre Emacs inbyggda edit-options,
+   utan en mode som bygger på Per Abrahamsens widget-paket (som även
+   används av Red Gnus och W3 3.0). Nu kommer det förhoppningsvis att
+   vara enklare att ställa in LysKOM precis som man vill ha den.
 
 ** kom-edit-texts-in-window kan numera vara new-frame eller
-   other-frame för att skriva texter i ett nött fönster eller i ett
+   other-frame för att skriva texter i ett nytt fönster eller i ett
    annat (men existerande) fönster.
 
 ** Variablerna kom-prioritize-in-window styr var man prioriterar möten
    och kom-customize-in-window styr var man gör inställningar i
    LysKOM. Båda fungerar helt analogt med kom-edit-texts-in-window.
+   Analogt finns kom-list-membership-in-window och
+   kom-view-commented-in-window.
 
 ** Delar av bufferthanteringen har skrivits om så att den är enklare
    att använda. Detta kan leda till att inläggsskrivarfönstret beter
@@ -64,8 +99,20 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    Hanteringen är dock något primitiv eftersom man inte kan välja
    vilket program som skall användas för att skicka mail.
 
+** Textnummer, författarnamn och liknande i inläggsskrivarbufferten är
+   aktiva och har samma menyer som i LysKOM-bufferten.
+
 ** Kommandona Medlem, Utträd och Endast har blivit både snabbare och
    mer robusta.
+
+** Om kom-check-for-new-comments inte är nil kommer klienten att
+   kontrollera att man inte har olästa kommentarer till en text man
+   håller på kommentera.
+
+
+** Elispklienten är snabbare överlag.
+
+
 
 * Bugfixar
 
@@ -74,16 +121,19 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    med flera utlästa trådar.
 
 ** Completion fungerar bättre. Numera borde completion avslutas med SPC
-   bara när det verkligen passar.
+   bara när det verkligen passar, och matchningen av namn med nästlade
+   parenteser skall fungera bättre.
 
 ** Helt kompatibel med protokollversion 9.
-
-** De engelska strängarna är översedda och genomgågna och stämmer nu
-   väl överens med de svenska.
 
 ** Chanserna att man får klienten att tappa orineteringen när man
    trycker C-g har minskat. Nackdelen med detta är att C-g kan ge lite
    sämre responstid, men det borde inte inte bli så mycket längre.
+
+** Koden för att hitta urinlägg bör numera klara även mycket långa
+   kommentarskedjor.
+
+
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
@@ -94,8 +144,15 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    texter) så fort som jag har tid över. Don't hold your breath, med
    andra ord.
 
-** Elispklienten fungerar inte under XEmacs eller Emacs 18. Frivilliga
-   att anpassa klienten får gärna anmäla sitt intresse till
-   davidk@lysator.liu.se eller byers@lysator.liu.se eller skicka brev
-   till Elispklientutvecklarnas interna möte i LysKOM på
-   kom.lysator.liu.se
+** Under XEmacs verkar interaktion med klienten gå trögt när det
+   kommer mycket data från servern. Såvitt vi kan avgöra kan vi inte
+   göra något åt saken utan massiv omskrivning av hur XEmacs
+   prioriterar indata från olika källor.
+
+** Under XEmacs visas ibland inte prompten. Detta är förmodligen en
+   bug i XEmacs.
+
+** Under XEmacs, om man öppnar en ikonifierad Emacs och omedelbart
+   trycker SPC verkar Emacs hänga sig. Tryck C-g ett par gånger så
+   hämtar den sig. Detta beror förmodligen på en bug i XEmacs
+   event-hantering.
