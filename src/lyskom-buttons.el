@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.73 2002-09-11 19:05:45 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.74 2002-09-14 21:28:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.73 2002-09-11 19:05:45 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.74 2002-09-14 21:28:06 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -100,7 +100,14 @@ on such functions see the documentation for lyskom-add-button-action."
 (defun kom-button-press ()
   "Simulate a mouse button press at point."
   (interactive)
-  (lyskom-button-press (point)))
+  (let* ((type  (get-text-property (point) 'lyskom-button-type))
+         (data  (assq type lyskom-button-actions))
+         (hint (get-text-property (point) 'lyskom-button-hint))
+         (act  (or (and kom-use-button-hints hint)
+                   (and data (elt data 2)))))
+    (cond ((null data) (lyskom-button-press (point)))
+          ((null act) (lyskom-button-menu (point) 'key))
+          (t (lyskom-button-press (point))))))
 
 (defun kom-menu-button-press-or-self-insert-command ()
   "Simulate a menu mouse button press at point, if there is a button."
