@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.112 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.113 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.112 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.113 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -75,6 +75,7 @@
     "\n"
     [kom-idle-hide]
     [kom-relogin-behaviour]
+    [kom-relogin-inhibit-commands]
     [kom-remember-password]
     [kom-show-where-and-what]
     [kom-show-since-and-when]
@@ -676,6 +677,9 @@ All key bindings:
 				   (string nil 
 					   :tag given-session-name
 					   :help-echo select-buffer))))			 
+
+    (kom-relogin-inhibit-commands (repeat (command nil :tag command)
+					  :indent 4))
 
     (kom-login-hook (repeat (command nil :tag command)
                             :indent 4))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.346 2005-01-09 22:09:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.347 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.346 2005-01-09 22:09:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.347 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3922,6 +3922,10 @@ up menus.")
   in a disconnected session. On means the client tries to reattach
   automatically, Off that it doesn't even ask.")
 
+    (kom-relogin-inhibit-commands-doc . "\
+  Commands for which reattachment is disabled. These commands will never
+  cause the client to reattach.")
+
     (kom-membership-default-placement-doc . "\
   This controls where new memberships are placed. First means before
   all existing memberships of the same priority. Last means after all
@@ -4456,6 +4460,7 @@ up menus.")
 
     (kom-show-week-number-tag . "Show week number:")
     (kom-relogin-behaviour-tag . "Reattach automatically:")
+    (kom-relogin-inhibit-commands-tag . "Commands for which reattachment is inhibited:")
     (kom-membership-default-placement-tag . "Placement of new memberships:")
     (kom-show-imported-importer-tag . "Show importer of imported messages:")
     (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")

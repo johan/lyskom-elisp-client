@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.54 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: command.el,v 44.55 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.54 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: command.el,v 44.55 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ======================================================================
@@ -587,7 +587,8 @@ chosen according to this"
              (and (null lyskom-proc) (null lyskom-buffer)))
          (lyskom-error "%s" (lyskom-get-string 'not-lyskom-buffer)))
 
-        ((and (not dead-ok)
+        ((and (not (or dead-ok
+		       (memq function kom-relogin-inhibit-commands)))
               (or (not lyskom-proc)
                   (memq (process-status lyskom-proc) '(closed signal exited nil))))
 	 (if (or (eq t kom-relogin-behaviour)

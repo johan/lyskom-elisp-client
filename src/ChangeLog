@@ -1,3 +1,18 @@
+2005-01-11  Pontus Freyhult  <pont@soua.net>
+
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-custom-strings): Added kom-relogin-inhibit-commands-tag
+	and kom-relogin-inhibit-commands-doc.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-relogin-inhibit-commands.
+	(lyskom-custom-variables): Dito.
+
+	* vars.el.in (kom-relogin-inhibit-commands): New variable.
+
+	* command.el (lyskom-start-of-command): Treat commands in
+	kom-relogin-inhibit-commands as having dead-ok.
+
 2005-01-09  David Byers  <byers@lysator.liu.se>
 
 	* commands1.el (kom-move-text-tree): Handle missing text in the
