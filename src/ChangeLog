@@ -1,3 +1,35 @@
+2001-04-25  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lyskom-read-time): Don't use lyskom-client-date.
+
+	* slow.el (lyskom-slow-start-of-line-pos): New function.
+	(kom-slow-click-or-yank): Use it.
+
+2001-03-20  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-netscape): Use
+	lyskom-accept-process-output instead of accept-process-output to
+	minimize the likelyhood of an infinite resource-consuming loop.
+
+2001-02-01  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--create-buffer): Set initial state according
+	to who added the membership.
+	(lp--update-buffer): Same here.
+	(lp--format-insert-entry): Draw expanded only according to state,
+	no matter who added the membership.
+	(lp--expand-all): New command.
+	(lp--contract-all): New command.
+
+	* compatibility.el (lyskom-face-foreground-name): New function.
+
+	* mship-edit.el (lp--entry-set-background): Operate in the correct
+	buffer. Make sure endpoints of extent are non-nil.
+	(lp--entry-set-foreground): New function.
+	(lp--format-entry): Color passive entries gray.
+
+	* vars.el.in (lyskom-face-schemes): Added kom-dim-face.
+
 2001-04-24  Johan Sundström  <jhs@lysator.liu.se>
 
 	* utilities.el (lyskom-set-alist): New function.

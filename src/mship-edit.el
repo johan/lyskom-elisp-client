@@ -180,33 +180,70 @@ This function does not tell the server about the change."
 
 (defun lp--entry-set-background (entry color)
   "Use extents or overlays to set the background of ENTRY to COLOR."
-  (if (null color)
-      (let* ((extent (assq 'color (lp--entry->extents entry))))
-        (when extent
-          (lyskom-xemacs-or-gnu
-           (delete-extent (cdr extent))
-           (delete-overlay (cdr extent)))
-          (set-lp--entry->extents entry 
-                                  (delq extent (lp--entry->extents entry)))))
+  (save-excursion
+    (set-buffer (marker-buffer (lp--entry->start-marker entry)))
+    (if (null color)
+        (let* ((extent (assq 'color (lp--entry->extents entry))))
+          (when extent
+            (lyskom-xemacs-or-gnu
+             (delete-extent (cdr extent))
+             (delete-overlay (cdr extent)))
+            (set-lp--entry->extents entry 
+                                    (delq extent (lp--entry->extents entry)))))
 
-    (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
-           (facename (intern (format "lyskom-%s-background" color)))
-           (face (or (find-face facename) (lyskom-make-face facename t))))
-      (unless extent
-        (lyskom-xemacs-or-gnu
-         (setq extent (make-extent (lp--entry->start-marker entry)
-                                   (lp--entry->end-marker entry)))
-         (setq extent (make-overlay (lp--entry->start-marker entry)
-                                    (lp--entry->end-marker entry) nil t)))
-        (set-lp--entry->extents entry (cons (cons 'color extent)
-                                            (lp--entry->extents entry))))
-      (set-face-background face color)
-      (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
-                                   (set-extent-property extent 'start-open t)
-                                   (set-extent-property extent 'priority 1000)
-                                   (set-extent-property extent 'face face))
-                            (progn (overlay-put extent 'priority 1000)
-                                   (overlay-put extent 'face face))))))
+      (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
+             (facename (intern (format "lyskom-%s-background" color)))
+             (face (or (find-face facename) (lyskom-make-face facename t))))
+        (unless extent
+          (lyskom-xemacs-or-gnu
+           (setq extent (make-extent (or (lp--entry->start-marker entry) 0)
+                                     (or (lp--entry->end-marker entry) 0)))
+           (setq extent (make-overlay (or (lp--entry->start-marker entry) 0)
+                                      (or (lp--entry->end-marker entry) 0)
+                                      nil t)))
+          (set-lp--entry->extents entry (cons (cons 'color extent)
+                                              (lp--entry->extents entry))))
+        (set-face-background face color)
+        (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
+                                     (set-extent-property extent 'start-open t)
+                                     (set-extent-property extent 'priority 1000)
+                                     (set-extent-property extent 'face face))
+                              (progn (overlay-put extent 'priority 1000)
+                                     (overlay-put extent 'face face)))))))
+
+(defun lp--entry-set-foreground (entry color)
+  "Use extents or overlays to set the foreground of ENTRY to COLOR."
+  (save-excursion 
+    (set-buffer (marker-buffer (lp--entry->start-marker entry)))
+    (if (null color)
+        (let* ((extent (assq 'fcolor (lp--entry->extents entry))))
+          (when extent
+            (lyskom-xemacs-or-gnu
+             (delete-extent (cdr extent))
+             (delete-overlay (cdr extent)))
+            (set-lp--entry->extents entry 
+                                    (delq extent (lp--entry->extents entry)))))
+
+      (let* ((extent (cdr (assq 'fcolor (lp--entry->extents entry))))
+             (facename (intern (format "lyskom-%s-foreground" color)))
+             (face (or (find-face facename) (lyskom-make-face facename t))))
+        (unless extent
+          (lyskom-xemacs-or-gnu
+           (setq extent (make-extent (or (lp--entry->start-marker entry) 0)
+                                     (or (lp--entry->end-marker entry) 0)))
+           (setq extent (make-overlay (or (lp--entry->start-marker entry) 0)
+                                      (or (lp--entry->end-marker entry) 0)
+                                      nil t)))
+          (set-lp--entry->extents entry (cons (cons 'fcolor extent)
+                                              (lp--entry->extents entry))))
+        (set-face-foreground face color)
+        (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
+                                     (set-extent-property extent 'start-open t)
+                                     (set-extent-property extent 'priority 1000)
+                                     (set-extent-property extent 'face face))
+                              (progn (overlay-put extent 'priority 1000)
+                                     (overlay-put extent 'face face)))))))
+
 
 
 (defmacro lp--save-excursion (&rest body)
@@ -258,10 +295,7 @@ only recomputed if the window width changes."
                                    entry))
       (lp--format-entry mship-conf-stat entry))
 
-    (when (or (eq (lp--entry->state entry) 'expanded)
-              (not (memq (membership->created-by
-			    (lp--entry->membership entry))
-                            (list lyskom-pers-no 0 'contracted))))
+    (when (eq (lp--entry->state entry) 'expanded)
       (lyskom-insert-at-point "\n        ")
       (if (null adder-conf-stat)
           (lyskom-format-insert-at-point 
@@ -330,8 +364,13 @@ only recomputed if the window width changes."
           (lyskom-replace-deferred defer-info string)
         (lyskom-insert-at-point string))
 
+      (if (membership-type->passive
+           (membership->type (lp--entry->membership entry)))
+          (lp--entry-set-foreground entry (lyskom-face-foreground-name 'kom-dim-face))
+        (lp--entry-set-foreground entry nil))
+
       (if (lp--entry->selected entry)
-          (lp--entry-set-background entry (face-background-name 'kom-mark-face))
+          (lp--entry-set-background entry (lyskom-face-background-name 'kom-mark-face))
         (lp--entry-set-background entry nil)))))
       
 
@@ -394,9 +433,10 @@ The start and end markers of the entry are adjusted"
      (goto-char (lp--entry->start-marker entry))
      (insert (if (lp--entry->selected entry) ?* ?\ ))
      (if (lp--entry->selected entry)
-         (lp--entry-set-background entry (face-background-name 'kom-mark-face))
+         (lp--entry-set-background entry (lyskom-face-background-name 'kom-mark-face))
        (lp--entry-set-background entry nil))
-     (delete-char 1))))
+     (delete-char 1)
+     (lp--entry-update-extents entry))))
 
 (defun lp--redraw-entry (entry)
   "Redraw the entry ENTRY."
@@ -606,7 +646,10 @@ entry priority"
                                    (membership->priority mship)
                                    mship
                                    nil
-                                   'normal
+                                   (if (memq (membership->created-by mship)
+                                             (list lyskom-pers-no 0))
+                                       'contracted
+                                     'expanded)
                                    t
                                    nil)))
                       (when pos
@@ -948,11 +991,11 @@ size of the list."
       (lp--select-entries (list entry) (not (lp--entry->selected entry))))))
 
 (defun lp--select-region (start end)
-  "Select all entries in the region.
+  "Select all entries in the region. With prefix arg, deselect.
 START and END are the starting and ending points of the region."
   (interactive "r")
   (let ((entry-list (lp--map-region start end 'identity)))
-    (lp--select-entries entry-list t)))
+    (lp--select-entries entry-list (not current-prefix-arg))))
 
 (defun lp--select-prioriy (priority)
   "Select all entries with a priority PRIORITY.
@@ -1257,6 +1300,36 @@ entry with an adjacent priority."
        (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
       (lp--redraw-entry entry))))
 
+(defun lp--expand-all (arg)
+  "Expand all entries. 
+With prefix arg, expand only those that were created by someone else."
+  (interactive "P")
+  (let ((hidden-list (list lyskom-pers-no 0)))
+    (mapcar (lambda (entry)
+              (when (and (or (null arg)
+                             (not (memq (membership->created-by
+                                         (lp--entry->membership entry))
+                                        hidden-list)))
+                         (not (eq (lp--entry->state entry) 'expanded)))
+                (set-lp--entry->state entry 'expanded)
+                (lp--redraw-entry entry)))
+            (lp--all-entries))))
+
+(defun lp--contract-all (arg)
+  "Contract all entries.
+With prefix arg, contract only those that were created by self."
+  (interactive "P")
+  (let ((hidden-list (list lyskom-pers-no 0)))
+    (mapcar (lambda (entry)
+              (when (and (or (null arg)
+                             (memq (membership->created-by
+                                    (lp--entry->membership entry))
+                                   hidden-list))
+                         (not (eq (lp--entry->state entry) 'contracted)))
+                (set-lp--entry->state entry 'contracted)
+                (lp--redraw-entry entry)))
+            (lp--all-entries))))
+
 (defun lp--quit ()
   "Remove the membership buffer and quit"
   (interactive)
@@ -1310,6 +1383,7 @@ entry with an adjacent priority."
   (define-key lp--mode-map (kbd "C-w") 'lp--select-region)
   (define-key lp--mode-map (kbd "C-y") 'lp--yank)
   (define-key lp--mode-map (kbd "#")   'lp--select-priority)
+  (define-key lp--mode-map (kbd "M-#")   'lp--select-priority)
   (define-key lp--mode-map (kbd "M-DEL") 'lp--deselect-all)
   (define-key lp--mode-map (kbd "C-p") 'lp--previous-entry)
   (define-key lp--mode-map (kbd "<up>") 'lp--previous-entry)
@@ -1376,6 +1450,7 @@ entry with an adjacent priority."
   "Pop up a buffer to manage memberships in"
   (interactive)
   (set-buffer (lp--create-buffer))
+  (lyskom-wait-queue 'deferred)
   (lp--mode)
   (lp--first-entry))
 
@@ -1450,7 +1525,10 @@ Medlemskap för %#1M på %#2s
                                                 (membership->priority mship)
                                                 mship
                                                 nil
-                                                'normal
+                                                (if (memq (membership->created-by mship)
+                                                          (list lyskom-pers-no 0))
+                                                    'contracted
+                                                  'expanded)
                                                 t
                                                 nil)))
             (lp--print-entry entry)
@@ -1468,6 +1546,49 @@ Medlemskap för %#1M på %#2s
         ))))
 
 
+(defun lyskom-read-time (prompt)
+  (let ((data nil)
+        (time nil))
+    (while (not time)
+      (setq data (read-from-minibuffer prompt data))
+      (setq time (parse-time-string data))
+      (if (not (or (elt time 4) (elt time 5)))
+          (setq time nil)
+        (setq time
+              (lyskom-create-time (or (elt time 0) 0)
+                                  (or (elt time 1) 0)
+                                  (or (elt time 2) 0)
+                                  (or (elt time 3) 1)
+                                  (or (elt time 4) 1)
+                                  (- (or (elt time 5) (elt (decode-time (current-time)) 5)) 1900)
+                                  nil
+                                  nil
+                                  nil))))
+    time))
+
+(defun lp--hide-memberships-by-date (arg)
+  (interactive "P")
+  (let ((old-entries nil)
+        (old-time (lyskom-read-time (if arg
+                                        "Hide memberships read after: "
+                                      "Hide memberships not read since: "))))
+    (mapcar (lambda (entry) 
+              (cond ((and arg
+                          (not (lyskom-time-greater
+                                old-time 
+                                (membership->last-time-read
+                                 (lp--entry->membership entry)))))
+                     (setq old-entries (cons entry old-entries)))
+                    ((and (not arg) 
+                          (lyskom-time-greater old-time 
+                                               (membership->last-time-read
+                                                (lp--entry->membership entry))))
+                     (setq old-entries (cons entry old-entries)))
+                    ))
+            (lp--all-entries))
+    (lp--entry-set-visible old-entries nil)))
+
+
 (defun lp--hide-entry ()
   (interactive)
   (let ((entry (lp--entry-at (point))))
@@ -1475,7 +1596,11 @@ Medlemskap för %#1M på %#2s
 
 (defun lp--show-all ()
   (interactive)
-  (lp--entry-set-visible (lp--all-entries) t))
+  (let ((elements nil))
+    (mapcar (lambda (entry) (unless (lp--entry->visible entry)
+                              (setq elements (cons entry elements))))
+            (lp--all-entries))
+    (lp--entry-set-visible elements t)))
 
 (provide 'mship-edit)
 

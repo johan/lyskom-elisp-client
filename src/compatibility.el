@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.46 2000-12-02 15:09:11 ceder Exp $
+;;;;; $Id: compatibility.el,v 44.47 2001-04-25 11:48:36 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.46 2000-12-02 15:09:11 ceder Exp $\n"))
+	      "$Id: compatibility.el,v 44.47 2001-04-25 11:48:36 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -457,8 +457,12 @@ property and a property with the value nil."
 (lyskom-provide-function reset-face (face &optional locale tag-set exact-p)
   )
 
-(lyskom-provide-function face-background-name (face)
+(lyskom-provide-function lyskom-face-background-name (face)
   (face-background face))
+
+(lyskom-provide-function lyskom-face-foreground-name (face)
+  (face-foreground face))
+
 
 (lyskom-provide-function find-face (face)
   (and (facep face) face))

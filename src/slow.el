@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.13 2000-09-14 08:07:56 byers Exp $
+;;;;; $Id: slow.el,v 44.14 2001-04-25 11:48:37 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -51,10 +51,9 @@
 (define-key lyskom-slow-mode-map (kbd "M-TAB") 'kom-previous-link)
 (define-key lyskom-slow-mode-map (kbd "C-i")   'kom-expand-slow-command-or-next-link)
 (define-key lyskom-slow-mode-map (kbd "M-C-i") 'kom-previous-link)
-(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button2)) 'kom-slow-click-or-yank)
-(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
-(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button2up)) 'kom-slow-click-or-yank)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button3up)) 'kom-popup-menu)
+
 
 
 (defun lyskom-slow-start-of-line ()
@@ -70,6 +69,10 @@
       (beginning-of-line))
     (when (looking-at "\\(\\s-+\\)")
       (goto-char (match-end 0)))))
+
+(defun lyskom-slow-start-of-line-pos ()
+  "Return the starting position for entry text on the current line."
+  (save-excursion (lyskom-slow-start-of-line) (point)))
 
 
 (defun lyskom-get-entered-slow-command ()
@@ -93,10 +96,10 @@ Currently the prompt is assumed to be on the last line of the buffer."
   (interactive "@e")
   (let ((pos (event-closest-point event)))
     (if (and (lyskom-slow-on-prompt-line pos)
-             (<= (lyskom-slow-start-of-line) pos)))
+             (<= (lyskom-slow-start-of-line-pos) pos))
         (let ((fn (lookup-key global-map (this-command-keys))))
           (when (commandp fn) (call-interactively fn)))
-      (kom-button-click event)))
+      (kom-button-click event))))
 
 (defun kom-slow-button-press ()
   "Run kom-button-press unless on the prompt line."

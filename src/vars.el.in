@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.133 2001-04-23 21:39:51 joel Exp $
+;;;;; $Id: vars.el.in,v 44.134 2001-04-25 11:48:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.133 2001-04-23 21:39:51 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.134 2001-04-25 11:48:37 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2284,7 +2284,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face bold "blue3" "lavender")
      (kom-warning-face bold "red" nil)
-     (kom-first-line-face default nil nil))
+     (kom-first-line-face default nil nil)
+     (kom-dim-face default "gray" nil))
     (inverse
      (kom-active-face default "lightblue" nil)
      (kom-url-face default "Moccasin" nil)
@@ -2298,7 +2299,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face italic "grey" nil)
      (kom-mark-face default "gold" "black")
      (kom-warning-face bold "red" nil)
-     (kom-first-line-face default nil nil))
+     (kom-first-line-face default nil nil)
+     (kom-dim-face default "gray" nil))
     (monochrome
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
@@ -2312,7 +2314,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face italic nil nil)
      (kom-mark-face bold nil "black")
      (kom-warning-face bold nil nil)
-     (kom-first-line-face default nil nil))
+     (kom-first-line-face default nil nil)
+     (kom-dim-face default nil nil))
     (minimal
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
@@ -2326,7 +2329,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face italic "dim gray" nil)
      (kom-mark-face default nil "black")
      (kom-warning-face bold nil nil)
-     (kom-first-line-face default nil nil))
+     (kom-first-line-face default nil nil)
+     (kom-dim-face default nil nil))
     (highlight
      (kom-active-face    default   nil          "aliceblue")
      (kom-url-face       default   nil          "yellow")
@@ -2340,7 +2344,9 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face  italic    "dim gray"   nil)
      (kom-mark-face      bold      "darkblue"   "thistle")
      (kom-warning-face   bold      "yellow"     "red")
-     (kom-first-line-face default  nil          "lavender")))
+     (kom-first-line-face default  nil          "lavender")
+     (kom-dim-face       default   "gray"       nil)
+     ))
   "Face schemes for LysKOM.
 
 This variable is an association list that defines the face and color
