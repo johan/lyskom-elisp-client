@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.205 2004-05-03 15:11:59 byers Exp $
+;;;;; $Id: commands2.el,v 44.206 2004-06-23 18:24:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.205 2004-05-03 15:11:59 byers Exp $\n"))
+              "$Id: commands2.el,v 44.206 2004-06-23 18:24:29 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3387,7 +3387,8 @@ is probably not what you really want to do."
                        (not (lyskom-j-or-n-p (lyskom-format 'confirm-join 
                                                             (car conf-nos))))))
         (lyskom-add-member-by-no (car conf-nos) lyskom-pers-no 
-                                 no-of-unread mship-type))
+                                 no-of-unread mship-type)
+        (sit-for 0))
       (setq conf-nos (cdr conf-nos)))))
 
 
@@ -3493,6 +3494,7 @@ that this command could take a very long time to complete."
                              t)
 
           ))
+      (sit-for 0)
       (setq confs (cdr confs)))
     ))
 

@@ -1,3 +1,21 @@
+2004-06-23  David Byers  <byers@lysator.liu.se>
+
+	Make kom-join-all-conferences more responsive:
+	* commands2.el (kom-leave-all-conferences): Update display after
+	each conf.
+	(kom-join-all-conferences): Same here.
+
+	Improve startup performance:
+	* vars.el.in (lyskom-fetch-membership-length): Changed default to
+	100 and updated the documentation. We no longer fetch the map this
+	way, and a large value cuts down on the number of calls the client
+	has to make to the server.
+
+2004-06-13  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-set-connection-time-format): Refuse to set
+	UTC if encode-time is broken (i.e. XEmacs 21.4 under Windows).
+
 2004-06-09  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (kom-builtin-server-aliases): Added MysKOM.
