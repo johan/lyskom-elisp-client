@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.38 1997-09-27 11:41:45 byers Exp $
+;;;;; $Id: vars.el.in,v 44.39 1997-09-28 11:38:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.38 1997-09-27 11:41:45 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.39 1997-09-28 11:38:47 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -427,6 +427,9 @@ nonexistent) buffer in which the message is inserted."
   "*Non-nil means pop up a buffer with personal messages as they arrive.
 kom-show-personal-messages-in-buffer decides which buffer to pop."
   server)
+
+(def-kom-var kom-ding-pause-amount 0.1
+  "*Amount of time to wait between successive beeps.")
 
 (def-kom-var kom-ding-on-new-letter nil
   "*Non-nil means ding if a message arrives in the letter box. See 
