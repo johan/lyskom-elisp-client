@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.34 1998-06-02 12:14:20 byers Exp $
+;;;;; $Id: commands1.el,v 44.35 1998-06-14 14:15:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.34 1998-06-02 12:14:20 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.35 1998-06-14 14:15:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -330,7 +330,7 @@ Ask for the name of the person, the conference to add him/her to."
 	 (whereto (lyskom-read-conf-stat (lyskom-get-string 'where-to-add)
 					 '(all) nil nil t))
 	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
-    (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
+    (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat nil)
 			      whereto who)))
 
 
@@ -346,7 +346,7 @@ Ask for the name of the person, the conference to add him/her to."
                     '(all) nil "" t)))
         (who (blocking-do 'get-conf-stat lyskom-pers-no))
         (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
-    (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
+    (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat nil)
                               whereto who)))
 
 
@@ -361,14 +361,15 @@ for person PERS-NO and send them into lyskom-try-add-member."
   (blocking-do-multiple ((whereto (get-conf-stat conf-no))
                          (who (get-conf-stat pers-no))
                          (pers-stat (get-pers-stat pers-no)))
-    (let ((result (lyskom-try-add-member whereto who pers-stat)))
+    (let ((result (lyskom-try-add-member whereto who pers-stat nil)))
       (lyskom-add-member-answer result whereto who)
       (if thendo
           (apply thendo data))
       result)))
 
 
-(defun lyskom-try-add-member (conf-conf-stat pers-conf-stat pers-stat)
+(defun lyskom-try-add-member (conf-conf-stat pers-conf-stat 
+                                             pers-stat membership-type)
   "Add a member to a conference.
 Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
 CONF-CONF-STAT: the conf-stat of the conference the person is being added to
@@ -405,6 +406,11 @@ Returns t if it was possible, otherwise nil."
 		(lyskom-format 'where-on-list-q
 			       (length lyskom-membership))))))))
 
+      (when (null membership-type)
+        (setq membership-type 
+              (lyskom-create-membership-type nil nil nil nil
+                                             nil nil nil nil)))
+
       (if (= (conf-stat->conf-no pers-conf-stat)
 	     lyskom-pers-no)
 	  (lyskom-format-insert 'member-in-conf
@@ -415,7 +421,8 @@ Returns t if it was possible, otherwise nil."
       (blocking-do 'add-member 
 		   (conf-stat->conf-no conf-conf-stat)
 		   (conf-stat->conf-no pers-conf-stat)
-		   priority where))))
+		   priority where
+                   membership-type))))
 
 
 (defun lyskom-add-member-answer (answer conf-conf-stat pers-conf-stat)
@@ -2282,7 +2289,7 @@ Uses Protocol A version 9 calls"
 (defun lyskom-who-is-on-check-membership-8 (who-info-list conf-stat)
   "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
   (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
-			      0 (conf-stat->no-of-members conf-stat)))
+                              0 (conf-stat->no-of-members conf-stat)))
 	(len (length who-info-list))
 	(i 0)
 	(res nil))

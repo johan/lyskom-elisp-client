@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.43 1998-06-02 12:15:24 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.44 1998-06-14 14:16:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.43 1998-06-02 12:15:24 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.44 1998-06-14 14:16:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -469,7 +469,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-has-these-members . "\n%#1M har följande medlemmar:\n")
     (member-list-header . "Senast inne         Osett  Namn\n\n")
     (secret-membership . "*** Hemlig rad ***\n")
-    (conf-membership-line . "%#1s%#2M\n")
+    (conf-membership-line . "%#1s%#2M %#3s\n")
+    (conf-membership-line-2 . "                          Adderad %#1s av %#2P\n")
     (pers-for-status . "Vem vill du se statusen för? ")
     (no-such-pers . "Det finns ingen sådan person.\n")
     (pers-status-record . "Status för person %#1P (%#2p)\n")
@@ -495,7 +496,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (not-allowed-see-confs . "Du får inte se vilka möten %#1P är medlem i.\n")
     (is-member-of . "\n%#1P är medlem i följande möten:\n")
     (membership-list-header . "Senast inne         Osett  Namn\n\n")
-    (pers-membership-line . "%#1s%#2s%#3M\n")
+    (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
+    (pers-membership-line-2 . "                          Adderad %#1s av %#2P\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
@@ -1147,6 +1149,12 @@ Innehåll:    \"%#9s\"
     (conference-no . "möte <%#1m> %#1M")
     (text-no . "inlägg %#1n")
 
+    (what-fast-reply-no . "Snabb replik till vilket inlägg? ")
+    (fast-reply-prompt . "Replik: ")
+    (agree-prompt . "Text: ")
+    (defaut-agree-string . "Håller med")
+    (what-agree-no . "Håll med vilket inlägg? ")
+
     ;; Aux-item stuff from edit-text
 
     (person . "Person")
@@ -1161,6 +1169,14 @@ Innehåll:    \"%#9s\"
 
     (no-comments-q . "Författaren vill inte ha kommentarer. Kommentera ändå? ")
     (private-answer-q . "Författaren har bett om personliga svar. Skriv personligt svar? ")
+
+    (your-invited . "Du har bjudits in till %#1M av %#2P.\n")
+    (accept-invitation . "Vill du acceptera inbjudan nu? ")
+    (enter-passive . "Du är passiv medlem i %#1M.\n")
+
+    (invitation-mt-type . "inbjuden")
+    (passive-mt-type . "passiv")
+    (secret-mt-type . "hemlig")
 ))
 
 
@@ -1301,6 +1317,10 @@ Innehåll:    \"%#9s\"
     (kom-change-language      . "Ändra språk")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
+
+    (kom-fast-reply           . "Snabb replik")
+    (kom-agree                . "Hålla med")
+
     ))
 
 (lyskom-language-var lyskom-language-codes sv
@@ -2789,7 +2809,9 @@ i servern. Annars sparas det i din .emacs.")
     (error-50 . "Okänt asynkront meddelande")
     (error-51 . "Internt fel i servern")
     (error-52 . "Funktionen avstängd i servern")
-    (error-53 . "Meddelandet kunde inte sändas")))
+    (error-53 . "Meddelandet kunde inte sändas")
+    (error-54 . "Otillåten typ på medlemskap")
+))
 
 
 (provide 'lyskom-language-sv)

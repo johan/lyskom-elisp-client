@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.20 1998-06-02 12:14:52 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.21 1998-06-14 14:15:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.20 1998-06-02 12:14:52 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.21 1998-06-14 14:15:49 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -171,8 +171,9 @@ If there is no active area, then do something else."
   
 (defun kom-mouse-null (event)
   "Do nothing."
+  (interactive "@e")
   ;; This is here to pervent unwanted events when clicking mouse-3
-  (interactive "e"))
+  )
 
 (defun lyskom-make-button-menu (title entries buf arg text)
   "Create a menu keymap from a list of button actions."

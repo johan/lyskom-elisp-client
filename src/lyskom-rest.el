@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.58 1998-06-02 12:14:54 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.59 1998-06-14 14:15:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.58 1998-06-02 12:14:54 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.59 1998-06-14 14:15:51 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -505,6 +505,33 @@ reading list then the conf is inserted last in the to do list."
 Prints the name and amount of unread in the conference we just went to 
 according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
+  ;;
+  ;; Deal with special membership types
+  ;;
+  (let ((mship (lyskom-get-membership (conf-stat->conf-no conf-stat))))
+    (when mship
+
+      ;; Check for invitation
+
+      (when (membership-type->invitation (membership->type mship))
+        (lyskom-format-insert 'your-invited
+                              conf-stat
+                              (membership->created-by mship))
+        (when (lyskom-j-or-n-p (lyskom-get-string 'accept-invitation))
+          (set-membership-type->invitation (membership->type mship)
+                                           nil)
+          (initiate-set-membership-type
+           'main
+           nil
+           lyskom-pers-no
+           (conf-stat->conf-no conf-stat)
+           (membership->type mship))))
+
+      ;; Check for going to passive membership
+
+      (when (membership-type->passive (membership->type mship))
+        (lyskom-format-insert 'enter-passive conf-stat))))
+
   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
                              lyskom-current-conf
                              (conf-stat->conf-no conf-stat))
@@ -641,7 +668,7 @@ This function does not use blocking-do."
 CONF-NO.
 
 If the membership list is not fully prefetched and the membership can't be
-found inlyskom-membership, a blocking call to the server is made."
+found in lyskom-membership, a blocking call to the server is made."
   (or (lyskom-try-get-membership conf-no)
       (and (not (lyskom-membership-is-read))
 	   (let ((membership
@@ -709,25 +736,26 @@ The position lyskom-last-viewed will always remain visible."
 ;;;
 
 
-(defsubst lyskom-do-insert (string)
+(defun lyskom-do-insert (string)
   (let ((start (point)))
-  (insert string)
-      (let ((bounds (next-text-property-bounds 1 (max 1 (1- start))
-                                               'special-insert))
-            (next (make-marker))
-            (fn nil))
-        (while bounds
-          (set-marker next (cdr bounds))
-          (setq fn (get-text-property (car bounds) 'special-insert))
-          (remove-text-properties (car bounds) (cdr bounds)
-                                  '(special-insert))
-          (condition-case val
-              (funcall fn (car bounds) (cdr bounds))
-            (error (apply 'message (cdr val))))
-          (setq start next)
-          (setq bounds (next-text-property-bounds 1 start
-                                                  'special-insert)))))
-)
+    (insert string)
+    (let ((bounds (next-text-property-bounds 1 (max 1 (1- start))
+                                             'special-insert))
+          (next (make-marker))
+          (fn nil))
+      (while bounds
+        (set-marker next (cdr bounds))
+        (setq fn (get-text-property (car bounds) 'special-insert))
+        (remove-text-properties (car bounds) (cdr bounds)
+                                '(special-insert))
+        (condition-case val
+            (funcall fn (car bounds) (cdr bounds))
+          (error (apply 'message (cdr val))))
+        (setq start next)
+        (setq bounds (next-text-property-bounds 1 start
+                                                'special-insert))))
+    ))
+
 
 
 (defun lyskom-insert (string)
@@ -1207,10 +1235,15 @@ Note that it is not allowed to use deferred insertions in the text."
                   (setq arg tmp)
                   (let ((aux (conf-stat-find-aux arg
                                                  10 
-                                                 lyskom-pers-no)))
-                    (if aux
-                        (concat (aux-item->data (car aux)) " *")
-                      (conf-stat->name arg))))))
+                                                 lyskom-pers-no))
+                        (face (conf-stat-find-aux arg
+                                                  9)))
+                    (lyskom-maybe-add-face-to-string
+                     face
+                     (if aux
+                         (concat (aux-item->data (car aux)) " *")
+                      (conf-stat->name arg))))
+                  )))
 	     
              ;; Find the name and return it
              ((integerp arg)
@@ -2241,7 +2274,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
     'next-text)
    ((not (read-list-isempty lyskom-to-do-list))
     'next-conf)
-   ;; This is not really true. The pretech may still be fetching the
+   ;; This is not really true. The prefetch may still be fetching the
    ;; membership. One possible way is to test for a non-numeric,
    ;; non-nil value. Or even better, introduce a test function to
    ;; isolate the test.
@@ -2696,8 +2729,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                   (if (not lyskom-debug-what-i-am-doing)
                       (if (not (and (eq ?: (elt output 0))
                                     (eq ?5 (elt output 1))))
-                          (lyskom-debug-insert proc "-----> " output))
-                    (lyskom-debug-insert proc "-----> " output)))
+                          (lyskom-debug-insert proc "<- " output))
+                    (lyskom-debug-insert proc "<- " output)))
 	      
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker)
@@ -2821,6 +2854,8 @@ Other objects are converted correctly."
 	      (lyskom-format-conf-type object))
 	     ((eq (car object) 'PRIVS)
 	      (lyskom-format-privs object))
+             ((eq (car object) 'MEMBERSHIP-TYPE)
+              (lyskom-format-membership-type object))
 	     ((eq (car object) 'LIST)
 	      (lyskom-format-simple-list (cdr object)))
 	     (t
@@ -2834,6 +2869,18 @@ Other objects are converted correctly."
 			    ": no support for object "
 			    object))))))
 
+
+(defun lyskom-format-membership-type (membership-type)
+  "Format a MEMBERSHIP-TYPE for output to the server."
+  (concat
+   (lyskom-format-bool (membership-type->invitation membership-type))
+   (lyskom-format-bool (membership-type->passive membership-type))
+   (lyskom-format-bool (membership-type->secret membership-type))
+   (lyskom-format-bool (membership-type->rsv1 membership-type))
+   (lyskom-format-bool (membership-type->rsv2 membership-type))
+   (lyskom-format-bool (membership-type->rsv3 membership-type))
+   (lyskom-format-bool (membership-type->rsv4 membership-type))
+   (lyskom-format-bool (membership-type->rsv5 membership-type))))
 
 (defun lyskom-format-conf-type (conf-type)
   "Format a CONF-TYPE for output to the server."

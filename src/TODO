@@ -18,11 +18,6 @@ Att göra i elisp-klienten
 
 ** OSORTERADE
 
-    LysKOM fungerar inte i XEmacs i tty-mode. No such face:
-    kom-active-face. Antingen är det fixat eller så är det inte fel i
-    20.2. Jag har noterat liknande problem i 19.30 i Sun-consolen.
-    FIX BY: 0.46        
-
     Om förbindelsen bryts så får man args out of range ibland.
     FIX BY: 0.46
 
@@ -404,10 +399,6 @@ Att göra i elisp-klienten
     med den här flaggan som inte borde ha den eller nåt sånt.
     FIX BY: 0.46
 
-    Implementera aux-items på medlemskap. En iten skulle vara att
-    medlemskapet egentligen är en inbjudan.
-    FIX BY: 0.46/2.0
-
 
 ** MARKERINGAR
 
@@ -444,7 +435,12 @@ Att göra i elisp-klienten
     att kom-friends används, så man får närvaromeddelanden enbart om
     sina vänner. Uppdatera även inställningsbufferten.
 
-    Det finns rester av den gamla vilkabufferten kvar i koden i cache.el.
+    Det finns rester av den gamla vilkabufferten kvar i koden i
+    cache.el.
+
+    Skriv ihop hantera medlemskap (prioritize-new.el.) Den skall
+    utnyttja den nya medlemskapsstrukturen.
+    
 
 
 Local variables:
