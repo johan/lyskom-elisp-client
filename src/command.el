@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.9 1997-09-21 11:42:49 byers Exp $
+;;;;; $Id: command.el,v 44.10 1997-09-21 15:55:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -58,21 +58,79 @@
 ;;;   ...)
 
 (defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
-  (list 'defun cmd args doc interactive-decl
-	(list 'lyskom-start-of-command (list 'quote cmd))
-	(list 'unwind-protect
-	      (list 'condition-case nil
-		    (cons 'progn
-			  forms)
-		    (list 'quit
-			  (list 'ding)
-			  (list 'lyskom-insert-before-prompt
-				(list 'lyskom-get-string
-				      (list 'quote 'interrupted)))))
-	      (list 'lyskom-end-of-command))))
+  (`
+   (defun (, cmd) (, args)
+     (, doc)
+     (, interactive-decl)
+     (lyskom-start-of-command (quote (, cmd)))
+     (unwind-protect
+         (condition-case nil
+             (progn (,@ forms))
+           (quit (ding)
+                 (lyskom-insert-before-prompt
+                  (lyskom-get-string 'interrupted))))
+       (lyskom-end-of-command)))))
+
+
+
+;;
+;; def-kom-emacs-command works like def-kom-command, but the template 
+;; is different. Commands defined this way will run as regular Emacs
+;; commands when invoked outside of a LysKOM buffer. 
+;;
+;; The variable <cmd>-running-as-kom-command is non-nil when running
+;; as a LysKOM command and nil otherwise.
+;;
+;; Note: this function catches *all* errors in lyskom-start-of-command
+;;       which may not be what you want, so be careful.
+;;
+;; 
+;; (defun kom-cmd (args)
+;;   "Documentation"
+;;   (interactive "...")
+;;   (let ((kom-cmd-running-as-kom-command nil))
+;;     (condition-case nil
+;;         (progn (lyskom-start-of-command 'kom-cmd)
+;;                (setq kom-cmd-running-as-kom-command t))
+;;       (error nil))
+;;     (unwind-protect
+;;         (condition-case nil
+;;             (progn ...)
+;;           (quit (ding)
+;;                 (lyskom-insert-before-prompt
+;;                  (lyskom-get-string 'interrupted))))
+;;       (and kom-cmd-running-as-kom-command (lyskom-end-of-command)))))
+;; 
+
+(defmacro def-kom-emacs-command (cmd args doc interactive-decl &rest forms)
+  (let ((rsym (intern (concat (format "%S-running-as-kom-command"
+                                      cmd)))))
+    (`
+     (defun (, cmd) (, args)
+       (, doc)
+       (, interactive-decl)
+       (let (((, rsym) nil))
+         (condition-case nil
+             (progn (lyskom-start-of-command (quote (, cmd)))
+                    (setq (, rsym) t))
+           (error nil))
+         (unwind-protect
+             (condition-case nil
+                 (progn (,@ forms))
+               (quit (ding)
+                     (lyskom-insert-before-prompt
+                      (lyskom-get-string 'interrupted))))
+           (and (, rsym) (lyskom-end-of-command))))))))
+
 
 
 (put 'def-kom-command 'edebug-form-spec
+     '(&define name lambda-list
+	       [&optional stringp]	; Match the doc string, if present.
+	       ("interactive" interactive)
+	       def-body))
+
+(put 'def-kom-emacs-command 'edebug-form-spec
      '(&define name lambda-list
 	       [&optional stringp]	; Match the doc string, if present.
 	       ("interactive" interactive)
