@@ -1,3 +1,8 @@
+2002-01-21  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): Changed the regexps for conf-,
+	text- and pers-pointers to accept descriptions with numbers.
+
 2002-01-13  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (lyskom-misc-infos-from-list): Make sure that the
