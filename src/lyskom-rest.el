@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.246 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.247 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.246 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.247 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -956,7 +956,9 @@ CONF can be a a conf-stat or a string."
       (if (zerop letters)
           (lyskom-remove-unread-buffer lyskom-buffer t)
         (lyskom-add-unread-buffer lyskom-buffer t))
-    (force-mode-line-update)))
+
+      (lyskom-mode-name-from-host)
+      (force-mode-line-update)))
 
 
 
@@ -4208,16 +4210,23 @@ One parameter - the prompt string."
     (message "")
     input-string))
 
+
+(defun lyskom-session-nickname ()
+  "Return the nickname to use for this LysKOM session."
+  (if kom-session-nickname
+      kom-session-nickname
+    (let ((server (process-name (get-buffer-process (current-buffer)))))
+      (or (cdr (assoc server
+		      (append kom-server-aliases
+			      kom-builtin-server-aliases)))
+	  (format "LysKOM(%s)" server)))))
+   
 ;;; This really is a strange thing to do but...
 ;;
 (defun lyskom-mode-name-from-host ()
   "Calculate what to identify the buffer with."
-  (let ((server  (process-name (get-buffer-process (current-buffer)))))
-    (or (cdr (assoc server
-                    (append kom-server-aliases
-                            kom-builtin-server-aliases)))
-	(format "LysKOM(%s)" server))))
-
+  (setq mode-line-server-name 
+	(lyskom-session-nickname)))
 
 (defvar lyskom-modeline-keymap nil)
 (if lyskom-modeline-keymap

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.305 2004-11-03 12:48:05 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.306 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.305 2004-11-03 12:48:05 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.306 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1599,6 +1599,16 @@ may result in unpredictible behavior.
 
 See `kom-server-priority' for information on setting the server
 priority."
+  server)
+
+
+(def-kom-var kom-session-nickname nil
+  "**Nickname for the current LysKOM session.
+
+This variable contains the name of the current LysKOM session (a string)
+or `nil'. If set, it will be used as the nickname for this LysKOM session.
+
+See also `kom-server-aliases' and `kom-builtin-server-aliases'."
   server)
 
 (def-kom-var kom-view-text-hook nil
@@ -4537,6 +4547,10 @@ environment variable for this, but it shouldn't be used if there is."
 
 (def-kom-var mode-line-conf-name nil
   "Conf name that is present on the mode-line."
+  local)
+
+(def-kom-var mode-line-server-name nil
+  "Server name that is present on the mode-line."
   local)
 
 
