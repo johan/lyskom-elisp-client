@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.3 1996-09-25 17:29:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.4 1996-09-30 23:39:03 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.3 1996-09-25 17:29:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.4 1996-09-30 23:39:03 davidk Exp $"))
 
 
 
@@ -355,7 +355,12 @@ and you have finished reading. Please come back later.
 On this day, in 1973, the Lysator Academic Computer Society was
 formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
-    (total-users . "    A total of %#1d active users.\n")
+
+    (total-users . "    A total of %#1d users.\n")
+    (total-visible-users . "    A total of %#1d visible users.\n")
+    (total-active-users . "    A total of %#1d active users.\n")
+    (total-visible-active-users
+     . "    A total of %#1d visible active users.\n")
     (who-to-add-q . "Add who/what as a recipient: ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
     (who-to-sub-q . "Remove who/what as a recipient: ")

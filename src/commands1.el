@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.4 1996-09-29 15:18:23 davidk Exp $
+;;;;; $Id: commands1.el,v 44.5 1996-09-30 23:38:59 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.4 1996-09-29 15:18:23 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.5 1996-09-30 23:38:59 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -902,9 +902,9 @@ If optional argument is non-nil then dont ask for confirmation."
 Don't ask for confirmation."
     (initiate-logout 'main nil)
     (setq lyskom-sessions-with-unread
-	  (delq lyskom-proc lyskom-sessions-with-unread))
+	  (delq lyskom-buffer lyskom-sessions-with-unread))
     (setq lyskom-sessions-with-unread-letters
-	  (delq lyskom-proc lyskom-sessions-with-unread-letters))
+	  (delq lyskom-buffer lyskom-sessions-with-unread-letters))
     (set-process-sentinel lyskom-proc nil)
     (delete-process lyskom-proc)
     (setq lyskom-proc)
@@ -1572,7 +1572,7 @@ Uses Protocol A version 8 calls"
       
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			     "\n"))
-      (lyskom-insert (lyskom-format 'total-users total-users))))
+      (lyskom-insert (lyskom-format 'total-visible-users total-users))))
 
 
 (defun lyskom-who-is-on-9 (arg)
@@ -1673,7 +1673,16 @@ Uses Protocol A version 9 calls"
     
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			   "\n"))
-    (lyskom-insert (lyskom-format 'total-users total-users))))
+    (lyskom-insert (lyskom-format
+		    (cond ((and wants-invisibles (zerop idle-hide))
+			   'total-users)
+			  (wants-invisibles
+			   'total-active-users)
+			  ((zerop idle-hide)
+			   'total-visible-users)
+			  (t
+			   'total-visible-active-users))
+		    total-users))))
 
 (defun lyskom-insert-deferred-session-info (session-info defer-info)
   (if session-info
@@ -1739,7 +1748,7 @@ Uses Protocol A version 9 calls"
 
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			   "\n"))
-    (lyskom-insert (lyskom-format 'total-users total-users))))
+    (lyskom-insert (lyskom-format 'total-visible-users total-users))))
 
 
 (defun lyskom-deferred-client-1 (name defer-info)
