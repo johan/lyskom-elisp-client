@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.9 1997-07-06 14:27:39 byers Exp $
+;;;;; $Id: option-edit.el,v 44.10 1997-07-11 08:54:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,15 +33,11 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.9 1997-07-06 14:27:39 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.10 1997-07-11 08:54:03 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
 ;;;
-
-(require 'widget)
-(autoload 'widget-at "wid-edit")
-
 
 ;;; ======================================================================
 ;;; Global variables
@@ -130,6 +126,7 @@
     section
     "\n"
     [kom-cite-string]
+    [kom-ispell-dictionary]
     "\n"
     sending-doc
     "\n\n"
@@ -483,7 +480,7 @@ customize buffer but do not save them to the server."
     (kom-remote-control (toggle (on off)))
     (kom-remote-controllers (repeat (person nil :tag name)))
     (kom-self-control (toggle (yes no)))
-
+    (kom-ispell-dictionary (ispell-dictionary))
 ))
 
 (defvar lyskom-widget-functions 
@@ -497,6 +494,7 @@ customize buffer but do not save them to the server."
     (repeat . lyskom-repeat-widget)
     (kbd-macro . lyskom-kbd-macro-widget)
     (url-viewer . lyskom-url-viewer-widget)
+    (ispell-dictionary . lyskom-ispell-dictionary-widget)
     (open-window . lyskom-open-window-widget)
     (command . lyskom-command-widget)
     (person . lyskom-person-widget)
@@ -611,6 +609,27 @@ customize buffer but do not save them to the server."
                   ':format "%t"
                   ':value (elt x 0))))
          lyskom-languages)))
+
+(defun lyskom-ispell-dictionary-widget (type &optional args propl)
+  (require 'ispell)
+  (list 'menu-choice
+        ':format "%[%t%] %v"
+        ':case-fold nil
+        ':args
+        (cons (list 'item
+                    ':tag "ispell-dictionary"
+                    ':format "%t"
+                    ':value nil)
+              (delq nil
+                    (mapcar 
+                     (function
+                      (lambda (x)
+                        (and (car x)
+                             (list 'item
+                                   ':tag (car x)
+                                   ':format "%t"
+                                   ':value (car x)))))
+                     ispell-dictionary-alist)))))
 
 (defun lyskom-url-viewer-widget (type &optional args propl)
   (list 'menu-choice 

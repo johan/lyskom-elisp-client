@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.20 1997-07-07 09:14:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.21 1997-07-11 08:53:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.20 1997-07-07 09:14:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.21 1997-07-11 08:53:55 byers Exp $"))
 
 
 ;;; ================================================================
@@ -74,6 +74,7 @@
   (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-button-press)
   (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-s" 'kom-ispell-message)
   (define-key lyskom-en-edit-mode-map "\C-ck"	'kom-edit-quit)
   (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
   (define-key lyskom-en-edit-mode-map "\C-cr?"	'lyskom-help)
@@ -1301,6 +1302,7 @@ On since %#8s%#9s")
     (kom-edit-send . "Send")
     (kom-edit-send-anonymous . "Send anonymously")
     (kom-edit-quit . "Throw away") 
+    (kom-ispell-message . "Check spelling")
     (kom-edit-add-recipient . "Add recipient")
     (kom-edit-add-copy . "Add carbon copy")
     (kom-edit-show-commented . "Review commented")
@@ -2188,6 +2190,11 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
   language will not be applied to the current setting. Use the Change
   language command to do that.")
 
+    (kom-ispell-dictionary-doc . "\
+  This specifies the dictionary ispell is to use for spell checking. If set
+  to ispell-dictionary, then the variable ispell-dictionary will be used
+  instead.")
+
     ;;
     ;; Tags for variables
     ;;
@@ -2291,6 +2298,7 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 
     (kom-customize-format-tag . "Show documentation for all settings:")
     (kom-default-language-tag . "Default language:")
+    (kom-ispell-dictionary-tag . "Spelling dictionary:")
     )
 )
 
