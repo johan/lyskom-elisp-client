@@ -1,0 +1,226 @@
+<html><head><title>LysKOM-lathund</title></head>
+
+<body>
+Det här är en översikt av de kommandon man kan använda i elispklienten
+till LysKOM. Observera att det är skillnad på versaler och
+gemener. Nedan kan du också hitta <a href="#akomm">långa
+kommandon</a>, så kallade "a-kommandon"..
+<a name="kort" ><h3>Kortkommandon</h3></a>
+<h4>Läsa KOM</h4>
+<dl>
+<dt><strong>SPC, RET, LFD</strong> - utför kommando
+    <dd>utför det kommando som föreslås i prompten
+<dt><strong>j</strong> - rensa sidan	<dd>rensar sidan och utför det
+    föreslagna kommandot
+<dt><strong>g</strong> - gå till möte	<dd>gå till ett möte (kan
+    också användas för att bli medlem i ett möte)
+<dt><strong>m</strong> - bli medlem i möte
+<dt><strong>n m</strong> - nästa möte	<dd>gå till nästa möte där det
+    finns olästa inlägg
+<dt><strong>n i</strong> - nästa inlägg	<dd>visar nästa inlägg från
+    listan med olästa
+<dt><strong>e</strong> - endast läsa senaste	<dd>gör att man endast
+    har de n senaste i mötet icke läsmarkerade (dvs man "slipper" läsa
+    allt för gamla inlägg). Av många betraktat som ett "fuskkommando"
+<dt><strong>h</strong> - hoppa över kommentarer	<dd>hoppar över alla
+    nu skrivna kommentarer till inlägget (och resten av den kedjan)
+<dt><strong>H</strong> - hoppa över inläggskedjan, superhoppa	<dd>hoppar över alla
+    kommentarer med denna ärenderad
+<dt><strong>V</strong> - vänta	<dd>väntar på ett inlägg i ett möte med högre
+    prioritet än dem man har olästa inlägg i
+<dt><strong>M</strong> - markera ett inlägg
+<dt><strong>A</strong> - avmarkera ett inlägg
+</dl>
+<h4>Skriva KOM</h4>
+<dl>
+<dt><strong>i</strong> - skriva ett inlägg	<dd>startar en ny
+    buffert där man kan skriva ett nytt inlägg. När det är
+    färdigskrivet skickas det in med C-c C-c
+<dt><strong>k</strong> - kommentera ett inlägg	<dd>kommenterar det
+    senast lästa inlägget. En buffert likadan som ovan startas
+<dt><strong>K</strong> - kommentera föregående inlägg
+<dd>kommenterar det näst senast lästa inlägget. En buffert startas som ovan
+<dt><strong>F</strong> - skriva fotnot	<dd>skriver en fotnot till det
+    senast lästa inlägget
+<dt><strong>b</strong> - skicka brev	<dd>skickar ett brev till
+    någon person eller något möte
+<dt><strong>p</strong> - personligt svar	<dd>skriver ett
+    personligt svar till författaren till det senast lästa inlägget,
+    dvs inlägget hamnar i författarens brevlåda
+<dt><strong>P</strong> - personligt svar	<dd>skriver ett
+    personligt svar till det näst senast lästa inlägget
+<dt><strong>ä p</strong> - ändra presentation	<dd>ändra presentation
+    för en person eller ett möte. Man får bara ändra presentationen
+    för personer och möten man är organisatör för.
+<dt><strong>r h</strong> - hålla med	<dd>lägger till en kort rad
+    till det senast lästa inlägget. Detta visas samtidigt som inlägget
+    och blir inte ett nytt eget inlägg.
+</dl>
+<h4>Lista saker</h4>
+<dl>
+<dt><strong>l p</strong> - lista personer	<dd>ger en lista på
+    alla personer, eller alla personer som börjar på angiven
+    bokstav/bokstäver (ange gärna några bokstäver i början av namnet,
+    så går det fortare att få fram listan)
+<dt><strong>l m</strong> - lista möten 	<dd>ger en lista på alla
+    möten, eller alla möten som börjar på angiven bokstav/bokstäver
+    (ange gärna några bokstäver i början av mötesnamnet, så går det
+    fortare att få fram listan)
+<dt><strong>l s</strong> - lista medlemskap
+    <dd>öppnar ett nytt fönster där en lista visas över de möten man
+	är medlem i
+<dt><strong>l ä</strong> - lista ärenden
+<dd>ger en lista på
+    alla ärenden för de inlägg i det aktuella mötet man ännu inte har
+    läst, eller för de inlägg man har valt att återse
+<dt><strong>l n</strong> - lista nyheter	<dd>listar antalet
+    olästa man har, uppdelade per möte
+</dl>
+<h4>Titta bakåt</h4>
+En del av nedanstående kommandon tar ett nummer som prefixargument,
+dvs innan man skriver själva kommandot anger man för vilket antal
+inlägg man vill att det ska gälla. De går också att använda utan
+argument, och då gäller det bara för ett inlägg.
+<dl>
+<dt><strong>å SPC</strong> - återse inlägg	<dd>visar ett inlägg,
+    som specificeras med inläggsnumret
+<dt><strong>å s</strong> - återse senaste
+    <dd> visar de n senast skrivna inlägget av en viss person eller i
+	ett visst möte (eller både och). Det går att ange hur många
+	man vill se, och det är valfritt att ange person och möte. Om
+	man inte anger en person/ett möte visas tester av alla
+	författare/till alla möten.
+<dt><strong>å k</strong> - återse det kommenterade	<dd>visar
+    det/de inlägg som det senast lästa inlägget är kommentar till
+<dt><strong>å a k</strong> - återse alla kommentarer	<dd>visar alla
+    kommentarer och fotnoter till det senast lästa inlägget
+<dt><strong>å a r</strong> - återse alla rekursivt	<dd>visar alla
+    kommentarer rekursivt, dvs om en kommentar har kommentarer visas
+    även dessa, och om några av <em>dessa</em> har kommentarer visas
+    även dessa, och om några av <em>dessa</em> har ... ja, du fattar
+    säkert resten
+<dt><strong>å t</strong> - återse träd	<dd>visar ett helt
+    kommentarsträd, dvs börjar med rotinlägget och visar sedan alla
+    kommentarer rekursivt
+<dt><strong>å r, å u</strong> - återse rotinlägg	<dd>visar det
+    första inlägget (rotinlägget) i kommentarsträdet, dvs ett inlägg
+    som inte är kommentar till något annat inlägg
+<dt><strong>å m</strong> - återse markerade inlägg	<dd>visar alla
+    inlägg med en viss markering
+<dt><strong>å a m</strong> - återse alla markerade	<dd>visar alla
+    inlägg man har markerat
+<dt><strong>B</strong> - baklänges	<dd>visar de inlägg
+    man håller på att återse i omvänd ordning. Detta fungerar bara med
+    inlägg som återses med något av kommandona å s, å m och å a m
+<dt><strong>å i</strong> - återse igen	<dd>visar de n senast nya
+    lästa inläggen (alltså inte sådana som man återsett)
+<dt><strong>å o</strong> - återse omodifierat	<dd>visar det senast
+    lästa inlägget utan eventuella modifieringar
+<dt><strong>å l</strong> - återse lista	<dd>visar en lista över de
+    inläggsomgångar man håller på att återse
+<dt><strong>å h</strong> - återse hoppa	<dd>hoppar över resten av de
+    inlägg man tidigare angivit att man ville återse
+</dl>
+<h4>Ta reda på mer om...</h4>
+<dl>
+<dt><strong>?</strong> - hjälp
+    <dd>skapar ett fönster med alla kortkommandon i
+<dt><strong>å p</strong> - återse presentation	<dd>visar
+    presentationen för en person eller ett möte
+<dt><strong>J</strong> - var är jag	<dd>visar fakta om KOM-systemet
+<dt><strong>s m</strong> - status för möte	<dd>visar diverse
+    fakta om ett möte
+<dt><strong>s p</strong> - status för person	<dd>visar diverse
+    fakta om en person
+<dt><strong>s s</strong> - status för session	<dd>visar fakta om en
+    persons KOM-sessioner (uppkopplingar)
+<dt><strong>v</strong> - vilka	<dd>visar vilka som är inloggade (och aktiva)
+</dl>
+<h4>Övrigt</h4>
+<dl>
+<dt><strong>q, S</strong> - sluta	<dd>avslutar KOM-sessionen
+<dt><strong>R</strong> - återstarta KOM	<dd>återstartar
+    KOM-sessionen. Bra kommando om något verkar ha hakat upp sig.
+<dt><strong>a</strong> - annat kommando <dd>ger en kommandoprompt i
+    minibufferten, där ett <a href="#akomm">långt kommando</a> kan
+    skrivas in
+<dt><strong>f s</strong> - få skäll	<dd>levererar en utskällning
+<dt><strong>f u</strong> - få uppmuntran	<dd>levererar några
+    uppmuntrande ord
+<dt><strong>t</strong> - se tiden	<dd>visar datum och tid
+<dt><strong>s t</strong> - spara text	<dd>sparar den senast visade
+    texten till fil
+<dt><strong>z</strong> - nästa buffert	<dd>hoppar till nästa buffert
+<dt><strong>n l</strong> - nästa lyskom	<dd>hoppar till nästa lyskom-buffert
+<dt><strong>C-g</strong> - avbryt kommando	<dd>avbryter i de
+    flesta fall det kommando som utförs
+</dl>
+<h4>I inläggsbufferten</h4>
+<dl>
+<dt><strong>C-c C-å C-k</strong> - återse det kommenterade	<dd>visar det
+    kommenterade inlägget i ett eget fönster
+<dt><strong>C-c C-y</strong> - citera det kommenterade	<dd>lägger in
+    det kommenterade inlägget i inläggsbufferten (med citatmarkering)
+<dt><strong>C-c C-a C-m</strong> - addera mottagare	<dd>lägger till en
+    mottagare till inlägget
+<dt><strong>C-c C-a C-e, C-c a k</strong> - addera (extra) kopiemottagare
+<dd>lägger till en kopiemottagare till inlägget
+<dt><strong>C-c C-k</strong> - släng inlägget	<dd>stänger bufferten
+    utan att skicka in inlägget
+<dt><strong>C-c C-c</strong> - skicka in inlägget	<dd>stänger
+    bufferten och skickar in inlägget
+</dl>
+<hr><p>
+<a name="akomm">
+<h3>a-kommandon</h3>
+Alla a-kommandon utförs genom att man skriver a följt av det kommando
+man vill ha. Många av dessa kommandon finns även som
+<a href="#kort" >kortkommandon</a>. Man behöver bara skriva in så
+mycket att kommandot är unikt definierat. Här följer en lista över
+samtliga a-kommandon.
+<p>
+(Återse) Baklänges,	Addera extra kopiemottagare<br>
+Addera kommentar,	Addera medlem<br>
+Addera mottagare,	Avmarkera (inlägg)<br>
+Bli medlem i möte,	Börja med nytt namn<br>
+Endast läsa senaste,	Fotnot till inlägg<br>
+Få skäll,	Få uppmuntran<br>
+Gå till möte,	Gå till nästa möte<br>
+Hjälp,	Hoppa över alla kommentarer<br>
+Kasta ut en session,	Kommentera föregående inlägg<br>
+Kommentera inlägget,	Lista (med) regexpar<br>
+Lista medlemsskap,	Lista möten<br>
+Lista nyheter,	Lista personer<br>
+Lista ärenden,	Läsa nästa inlägg<br>
+Långsamma kommandon,	Markera (inlägg)<br>
+Personligt svar,	Personligt svar på föregående inlägg<br>
+Prioritera möten,	Radera inlägg<br>
+Se tiden,	Skapa möte<br>
+Skicka brev,	Skriva ett inlägg<br>
+Sluta,	Snabba kommandon<br>
+Spara text (på fil),	Status (för) möte<br>
+Status (för) person,	Subtrahera kommentar<br>
+Subtrahera mottagare,	Sända meddelande<br>
+Sätt lapp på dörren,	Ta bort lapp på dörren<br>
+Uppskjuta läsning,	Uteslut medlem<br>
+Utplåna,	Utträda ur möte<br>
+Vilka är inloggade,	Visa vilkalistan<br>
+Vänta på ett inlägg,	Ändra livslängd<br>
+Ändra lösenord,	Ändra namn<br>
+Ändra organisatör,	Ändra presentation<br>
+Ändra supermöte,	Ändra tillåtna författare<br>
+Ändra variabler,	Återse alla kommentarer<br>
+Återse alla kommentarer rekursivt,	Återse alla markerade<br>
+Återse det kommenterade,	Återse hoppa<br>
+Återse igen,	Återse inlägg<br>
+Återse lista,	Återse markerade<br>
+Återse nästa,	Återse omodifierat<br>
+Återse presentation,	Återse senaste<br>
+Återse träd,	Återse urinlägget<br>
+Återstarta kom,	Övergå till administratörsmod<br>
+Övergå till normalmod
+
+<hr>
+<p>Denna sida underhålls av <a href="mailto:lisa@lysator.liu.se" >Lisa
+Hallingström</a>.
+</body></html>

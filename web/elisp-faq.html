@@ -1,0 +1,634 @@
+<html>
+<!-- $Id: elisp-faq.html,v 1.1 2002-07-28 18:15:07 byers Exp $ -->
+<head>
+<link rev=made href="mailto:linus@lysator.liu.se">
+<title>Ofta ställda frågor för LysKOM emacslispklienten.</title>
+</head>
+<body>
+<h1>Ofta ställda frågor för LysKOM emacslispklienten.</h1>
+</body>
+Version 2.0.
+<p>
+Författare: <a href="mailto:linus@lysator.liu.se">Linus Tolke</a>
+<p>
+Inspirationskälla: Lyskom, Lyskom frågor (&) svar; Elispklienten.
+Detta möte heter från 31 juni 1992: Lyskom frågor (och) svar.
+<p>
+Uppläggningen är, först en 
+<a href="#listaöverområden">lista över olika områden</a>
+som behandlas i denna faq.
+Sedan en 
+<a href="#listaöverfrågor">lista över alla frågor</a>
+numrerade från <a href="#Fa1">a1</a> till <a href="#Fö1">ö1</a>
+och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
+<p>
+<a name="listaöverområden"><h2>Lista över områden:</h2></a>
+<menu>
+<li><a href="#Allmännafrågor">Allmänna frågor</a>
+<li><a href="#Konfigurering">Konfigurering</a>
+<li><a href="#Videditering">Vid editering</a>
+<li><a href="#Möten">Möten</a>
+<li><a href="#Frågorominlägg">Frågor om inlägg</a>
+<li><a href="#Konstigheter">Konstigheter</a>
+<li><a href="#Lapparpådörrar">Lappar på dörrar</a>
+<li><a href="#Markering">Markering</a>
+<li><a href="#Personer">Personer</a>
+<li><a href="#Sessionen">Sessionen</a>
+<li><a href="#Systemet">Systemet</a>
+<li><a href="#Maskinspecifikasaker">Maskinspecifika saker</a>
+<li><a href="#VadhändermedLysKOM i framtiden">Vad händer med LysKOM i framtiden</a>
+<li><a href="#Historia">Historia</a>
+</menu>
+<p>
+<a name="listaöverfrågor"><h2>Frågor sammanställning:</h2></a>
+
+<a name="Allmännafrågor"><h3>Allmänna frågor:</h3></a>
+<menu>
+<li><a href="#a1"><a name="Fa1">a1: Vad är LysKOM?</a></a>
+<li><a href="#a2">a2: Vad är elispklienten?</a>
+<li><a href="#a3">a3: Var finns den att hitta?</a>
+<li><a href="#a4">a4: Vad finns det för typ av dokumentation?</a>
+<li><a href="#a5">a5: Var hittar jag protokoll-specen för lyskomprotokollet.</a>
+<li><a href="#a6">a6: Vem är Guran?</a>
+</menu>
+
+<a name="Konfigurering"><h3>Konfigurering:</h3></a>
+<menu>
+<li><a href="#c1">c1: Varför står det att vissa Läser, Väntar, Återser?</a>
+<li><a href="#c2">c2: Varför står det att vissa Ögnar igenom inläggen, Rättar tentor, Äter pizza, Hade glömt vad som skrivits tidigare?</a>
+<li><a href="#c3">c3: Hur ändrar man sin kom-mercial?</a>
+<li><a href="#c4">c4: Hur ändrar man de andra meddelandena?</a>
+<p>
+<li><a href="#d1">d1: Kan jag få saker att hända automatiskt när jag startar lyskom?</a>
+<li><a href="#d2">d2: Kan jag få saker att hända automatiskt när jag loggat in?</a>
+<li><a href="#d3">d3: Hur kan jag sätta vilka default-promptar jag skall få när jag har läst ut allt. </a>
+<li><a href="#d4">d4: Hur gör man för att ändra variabler i lyskom?</a>
+</menu>
+
+<a name="Videditering"><h3>Vid editering:</h3></a>
+<menu>
+<li><a href="#e1">e1: Kan jag få saker att hända automatiskt när jag börjar skriva en kommentar?</a>
+<li><a href="#e2">e2: Hur gör jag för att binda speciella tangenter för att skriva en kommentar?</a>
+<li><a href="#e3">e3: Jag får upp en tom buffert och ett pip när jag skall till att editera. Vad har jag gjort för fel?</a>
+<p>
+<li><a href="#f1">f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
+</menu>
+
+<a name="Möten"><h3>Möten:</h3></a>
+<menu>
+<li><a href="#g1">g1: Hur gör man för att ändra typen på ett möte?</a>
+<li><a href="#g2">g2: Hur ändrar man hur många dagar artiklar i ett visst möte sparas?</a>
+</menu>
+
+<a name="Frågorominlägg"><h3>Frågor om inlägg:</h3></a>
+<menu>
+<li><a href="#i1">i1: Hur anger man För kännedomsmottagare?</a>
+<li><a href="#i2">i2: Hur flyttar man inlägg?</a>
+</menu>
+
+<a name="Konstigheter"><h3>Konstigheter:</h3></a>
+<menu>
+<li><a href="#k1">k1: Varför tar det så lång tid att logga in?</a>
+<li><a href="#k2">k2: Varför tar det så lång tid att göra endast?</a>
+<li><a href="#k3">k3: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
+<li><a href="#k4">k4: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
+<li><a href="#k5">k5: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
+</menu>
+
+<a name="Lapparpådörrar"><h3>Lappar på dörrar:</h3></a>
+<menu>
+<li><a href="#l1">l1: Varför får jag Du har en lapp på dörren, det finns ingen sådan text när jag loggar in?</a>
+</menu>
+
+<a name="Markering"><h3>Markering:</h3></a>
+<menu>
+<li><a href="#m1">m1: Vad innebär markering?</a>
+<li><a href="#m2">m2: Kan man markera inlägg på olika sätt?</a>
+<li><a href="#m3">m3: Hur gör jag för att markera inlägg på ett annat sätt?</a>
+<li><a href="#m4">m4: Hur gör jag för att återse inlägg markerade på ett visst sätt?</a>
+<li><a href="#m5">m5: Vilken markering använder sig elispklienten normalt av?</a>
+</menu>
+
+<a name="Personer"><h3>Personer:</h3></a>
+<menu>
+<li><a href="#p1">p1: Varför finns det två statuskommandon: Status möte och status person?</a>
+</menu>
+
+<a name="Sessionen"><h3>Sessionen:</h3></a>
+<menu>
+<li><a href="#s1">s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?</a>
+</menu>
+
+<a name="Systemet"><h3>Systemet:</h3></a>
+<menu>
+<li><a href="#t1">t1: Hur och till vem skickar jag buggrapporter?</a>
+<li><a href="#t2">t2: Varför sparas databasen så ofta?</a>
+</menu>
+
+<a name="Maskinspecifikasaker"><h3>Maskinspecifika saker:</h3></a>
+<menu>
+<li><a href="#u1">u1: Varför kan jag inte köra elisplienten på en dec-station.</a>
+</menu>
+
+<a name="VadhändermedLysKOMiframtiden"><h3>Vad händer med LysKOM i framtiden:</h3></a>
+<menu>
+<li><a href="#v1">v1: Protokoll B, vad är det?</a>
+<li><a href="#v2">v2: Vad kommer att ingå i protokoll B?</a>
+</menu>
+
+<a name="Historia"><h3>Historia:</h3></a>
+<menu>
+<li><a href="#ö1"><a name="Fö1">ö1: Varför skrevs elisp-klienten?</a></a>
+</menu>
+
+<a name="medsvar"><h2>Frågor och svar:</h2></a>
+
+<h3>Allmänna frågor:</h3>
+<dl>
+<dt>
+<a name="a1">a1: Vad är LysKOM?</a>
+<dd>
+
+LysKOM är ett konferenssystem som är inspirerat av KOM, det
+konferenssystem som skapades av QZ i Stockholm. Orsaken till att
+LysKOM skrevs var att det KOMsystem Lysators medlemmar hade tillgång
+till lades ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och
+den sista DEC-20-maskinen på LiTH som studenterna hade tillgång till
+såldes och försvann. KOM hade blivit vanebildande för en del och det
+bedömdes att en ersättning var nödvändig.
+
+<dt>
+<a name="a2">a2: Vad är elispklienten?</a>
+<dd>
+
+Elispklienten är den första fungerande klienten till lyskom, det är
+dessutom den för tillfället mest kompletta. Den är skriven helt i
+elisp och kör under gnu-emacs (testad minst i versionerna 18.51,
+18.55, 18.57 och 18.58, epoch 4.0, lucid-emacs 19.1 och 19.2).
+
+<dt>
+<a name="a3">a3: Var finns den att hitta?</a>
+<dd>
+
+Elispklienten kan du hämta med anonym ftp från lysator:
+host: ftp.lysator.liu.se
+dir: /pub/lyskom/elisp-client/
+filnamn: lyskom-0.34.6.el.Z (vanliga klienten)
+filnamn: lyskom-0.34.6.elc.Z (byte-kompilerad version av klienten)
+filnamn: englist-lyskom-0.34.6.elc.Z
+
+<dt>
+<a name="a4">a4: Vad finns det för typ av dokumentation?</a>
+<dd>
+
+Dokumentation finns på latexinfo format. Eftersom jag inte fått den
+igenom latex så har jag inte lagt upp den för anonym ftp. Däremot har
+den gått igenom info-genereringsprogrammet och du kan alltså hämta den
+antingen som info-fil: elisp-client-0.34.6.info eller som ren textfil
+elisp-client-0.34.6.txt från samma dir som du hämtar klienten.
+
+<dt>
+<a name="a5">a5: Var hittar jag protokoll-specen för lyskomprotokollet.</a>
+<dd>
+
+Protokollspecen kan du hämta med anonym ftp från lysator:
+host: ftp.lysator.liu.se
+dir: /pub/lyskom/
+filnamn: prot-A.txt
+
+<dt>
+<a name="a6">a6: Vem är Guran?</a>
+<dd>
+
+Fantomens vän, bandarernas hövding.
+
+</dl>
+
+<h3>Konfigurering:</h3>
+(Om du inte förstår beskrivningarna av hur du skall göra olika saker så skall du inte göra dem.)
+<dl>
+
+<dt>
+<a name="c1">c1: Varför står det att vissa Läser, Väntar, Återser?</a>
+<dd>
+
+Specifikationen för LysKOM säger att klienten kan tala om för servern
+vad den tror att användaren gör. Detta kan vara en godtycklig text.
+<p>
+Elispklienten har valt att tala om att användaren Läser när hon läser,
+Väntar när hon väntar och Återser när hon återser mm.
+<p>
+Elispklienten har dessutom valt att hela tiden skriva ut på
+message-raden vad personer i samma möte just nu sysslar med. (dvs när
+deras klienter skickar meddelanden.)
+
+<dt>
+<a name="c2">c2: Varför står det att vissa Ögnar igenom inläggen, Rättar tentor, Äter pizza, Hade glömt vad som skrivits tidigare?</a>
+<dd>
+
+Eftersom det står klienten fritt att sända in vilket meddelande som
+helst har vi gjort så att meddelandet som talar om vad man gör när man
+läst ut alla möten är väldigt lätt att ändra. Det ligger i variabeln
+kom-mercial och det är en sträng.
+
+<dt>
+<a name="c3">c3: Hur ändrar man sin kom-mercial?</a>
+<dd>
+
+M-x set-variable RET kom-mercial RET "Rättar tentor." RET
+
+<dt>
+<a name="c4">c4: Hur ändrar man de andra meddelandena?</a>
+<dd>
+
+Det finns en assoc-lista i variabeln kom-tell-phrases som består av
+symboler och texter som klienten skickar till servern när kommandona
+med samma namn som symbolen utförs. Det är bara att ändra denna.
+<p>
+Varning: Om du tar bort saker ur denna lista kan det bli problem om
+inte klienten hittar symbolen den söker efter.
+
+<dt>
+<a name="d1">d1: Kan jag få saker att hända automatiskt när jag startar lyskom?</a>
+<dd>
+
+Ja, lyskomklienten skapar en emacsmode med de flesta vanliga
+defaulten. Bl.a. körs lyskom-mode-hook när man startar lyskom.
+
+<dt>
+<a name="d2">d2: Kan jag få saker att hända automatiskt när jag loggat in?</a>
+<dd>
+
+Ja, läs dokumentationen för kom-do-when-starting.
+
+<dt>
+<a name="d3">d3: Hur kan jag sätta vilka default-promptar jag skall få när jag har läst ut allt.</a>
+<dd>
+
+Default är att först få prompten Återse alla markerade - och sedan 
+Se tiden.
+<p>
+Läs dokumentationen för kom-do-when-done.
+
+<dt>
+<a name="d4">d4: Hur gör man för att ändra variabler i lyskom?</a>
+<dd>
+
+Vissa variabler lagras i din user-area i LysKOM-servern. Det är de som
+finns listade i variabelerna lyskom-elisp-variables,
+lyskom-global-boolean-variables och lyskom-global-non-boolean-variables.
+Du kan ändra dessa och andra kom-variabler mha. kommandot Ändra
+variabler. När du ger kommandot Ändra variabler kommer en speciell
+buffert upp. Den fungerar precis som emacs *List Options* buffert
+förutom när du trycker C-c C-c. Då sparar den nämligen dina variabler
+i servern.
+<p>
+Ändra aldrig på variablerna lyskom-global-*-variables! Om de är fel så
+är det en bugg i klienten.
+</dl>
+
+
+<h3>Vid editering:</h3>
+<dl>
+
+<dt>
+<a name="e1">e1: Kan jag få saker att hända automatiskt när jag börjar skriva en kommentar?</a>
+<dd>
+
+Ja, editeringsmoden är en vanlig emacs-mode så tillvida att den kör
+lyskom-edit-mode-hook när man startar den.
+
+<dt>
+<a name="e2">e2: Hur gör jag för att binda speciella tangenter för att skriva en kommentar?</a>
+<dd>
+
+Eftersom lyskom-edit-mode gör vissa speciella tangentbortsbindningar
+och har en hel del buffertlokala variabler kan man inte välja en helt
+ny mode i lyskom-edit-mode-hook (i princip alla moder rensar ju alla
+lokala variabler). Vill man att lyskom-edit-mode skall få andra
+grundinställningar som byggs på skall man sätta
+lyskom-edit-mode-mode-hook som körs innan de speciella bindningarna
+görs.
+
+
+<dt>
+<a name="e3">e3: Jag får upp en tom buffert och ett pip när jag skall till att editera. Vad har jag gjort för fel?</a>
+<dd>
+
+Din lyskom-edit-mode-mode-hook har evaluerat ett lisp-uttryck som har
+misslyckats. Kolla vad den försöker göra och fixa så att den inte
+misslyckas.
+
+<dt>
+<a name="f1">f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
+<dd>
+
+Du talar om för elisp-klienten att du vill att den skall använda det
+andra fönstret/skapa ett nytt fönster för att skriva i genom att sätta
+variabeln kom-write-texts-in-window till other.
+<p>
+(setq kom-write-texts-in-window 'other) i din .emacs till exempel.
+</dl>
+
+<h3>Möten:</h3>
+<dl>
+
+<dt>
+<a name="g1">g1: Hur gör man för att ändra typen på ett möte?</a>
+<dd>
+
+Det gör du inte med elisp-klienten.
+
+<dt>
+<a name="g2">g2: Hur ändrar man hur många dagar artiklar i ett visst möte sparas?</a>
+<dd>
+
+Använd kommandot ändra livslängd.
+</dl>
+
+<h3>Frågor om inlägg:</h3>
+<dl>
+
+<dt>
+<a name="i1">i1: Hur anger man För kännedomsmottagare?</a>
+<dd>
+
+Det finns inte någon sådan möjlighet. Använd Mottagare eller Extra
+kopiemottagare:
+
+<dt>
+<a name="i2">i2: Hur flyttar man inlägg?</a>
+<dd>
+
+Det finns ingen sådan möjlighet. Använd kommandona Addera mottagare
+eller Addera extra kopiemottagare resp. Subtrahera mottagare för vart
+och ett av inläggen du vill flytta. Om du vill skriva kommandona
+Flytta inlägg, eller flytta kommentarsträd så får du.
+</dl>
+
+<h3>Konstigheter:</h3>
+<dl>
+<dt>
+<a name="k1">k1: Varför tar det så lång tid att logga in?</a>
+<dd>
+
+Lokalt på din maskin sparas ingen som helst information om vilka
+texter du läst eller vilka möten du är medlem i. Allt detta hämtas
+nytt varje gång du loggar in. Dessutom hämtas en lista på alla texter
+du har markerat (för att du skall kunna få fram texten Markerat av
+dig. eller Markerat av dig och 5 andra. när du läser).
+<p>
+Det som tar längst tid är antabligen vilka möten du är medlem i och
+listan över olästa inlägg i dessa mötena.
+
+<dt>
+<a name="k2">k2: Varför tar det så lång tid att göra endast?</a>
+<dd>
+Se <a href="#k3">nästa fråga</a>.
+
+<dt>
+<a name="k3">k3: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
+<dd>
+
+Endast är för tillfället lite korkat implementerat. Det finns nämligen
+ett anrop till servern som gör just endast. Detta använder sig
+klienten av och sedan gör den det som är lättast: Hämtar om all din
+information från början igen (som när du loggade in).
+
+<dt>
+<a name="k4">k4: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
+<dd>
+
+Antalet olästa du får fram med lista nyheter är det antal som klienten
+känner till. (Alla dessa ligger som nummer i listor.)
+<p>
+Antalet olästa när du gör status person beräknas ur en ganska simpel
+formel: Det sista skrivna inlägget i mötet - Det sista du läste i
+mötet. Har du gått med i ett möte efter det att inlägg plockats bort
+därifrån och sedan inte läst något där så har det sista du läste i
+mötet mycket lägre nummer än det sista skrivna inlägget i mötet.
+
+<dt>
+<a name="k5">k5: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
+<dd>
+
+Antalet olästa när du gör status person beräknas ur en ganska simpel
+formel: Det sista skrivna inlägget i mötet - Det sista du läste i
+mötet. Har du gått med i ett möte efter det att inlägg plockats bort
+därifrån och sedan inte läst något där så har det sista du läste i
+mötet mycket lägre nummer än det sista skrivna inlägget i mötet.
+<p>
+Informationen om vilket som är det sista skrivna inlägget i ett visst
+möte ligger i klienten sparad hos mötet och uppdateras för varje
+inlägg som skrivs. Informationen om vilket det sista inlägg du läste
+ligger i klienten sparad hos personen och uppdateras bara om du ändrar
+namn.
+</dl>
+
+<h3>Lappar på dörrar:</h3>
+<dl>
+<dt>
+<a name="l1">l1: Varför får jag Du har en lapp på dörren, det finns ingen sådan text när jag loggar in?</a>
+<dd>
+
+Du har tagit bort lappen på fel sätt. Du skall använda kommandot 
+"Ta bort lapp på dörren" för att ta bort en lapp. Det du måste göra
+för att fixa detta är att använda kommandot "Ta bort lapp på dörren"
+och ta bort den obefintliga lappen.
+</dl>
+
+<h3>Markering:</h3>
+<dl>
+
+<dt>
+<a name="m1">m1: Vad innebär markering?</a>
+<dd>
+
+Markering är ett sätt för dig att spara inlägget. Markerade inlägg
+rensas inte bort av systemet.
+
+<dt>
+<a name="m2">m2: Kan man markera inlägg på olika sätt?</a>
+<dd>
+
+Ja.
+
+<dt>
+<a name="m3">m3: Hur gör jag för att markera inlägg på ett annat sätt?</a>
+<dd>
+
+Sätt variabeln kom-default-mark till nil så får du en fråga varje
+gång du markerar ett inlägg. Alternativen är heltalen 1-255.
+
+<dt>
+<a name="m4">m4: Hur gör jag för att återse inlägg markerade på ett visst sätt?</a>
+<dd>
+
+Använd kommandot Återse markerade (åm) istället för Återse alla
+markerade (åam).
+
+<dt>
+<a name="m5">m5: Vilken markering använder sig elispklienten normalt av?</a>
+<dd>
+
+100.
+</dl>
+
+
+<h3>Personer:</h3>
+<dl>
+
+<dt>
+<a name="p1">p1: Varför finns det två statuskommandon: Status möte och status person?</a>
+<dd>
+
+Om du tittar noggrannare ser du att de ger helt olika information.
+Status möte för en person talar om när personen skapades, när någon
+sist skickade ett brev till denne medan Status person talar om hur
+mycket inlägg personen skrivit, hur länge han har varit inne i LysKOM.
+
+</dl>
+
+<h3>Sessionen:</h3>
+<dl>
+
+<dt>
+<a name="s1">s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?</a>
+<dd>
+
+Nej.
+</dl>
+
+<h3>Systemet:</h3>
+<dl>
+
+<dt>
+<a name="t1">t1: Hur och till vem skickar jag buggrapporter?</a>
+<dd>
+
+Buggrapporter skickas till bug-lyskom@lysator.liu.se. Se till att få
+med all vital information, enklast genom att köra funktionen
+kom-compile-bug-report och skicka den bufferten.
+<p>
+Ifall buggen är reproducerbar och du har tid så gör dessutom följande:
+<menu>
+<li>Gå till läget precis innan du gav kommandot som orsakade buggen.
+<li>Sätt variabeln: lyskom-debug-communications-to-buffer till t.
+<li>Sätt variabeln: debug-on-error till t.
+<li>Provocera fram buggen.
+<li>Kör kom-compile-bug-report. Det skall gå bra att göra i *Backtrace*
+  bufferten ifall du fick en sådan.
+<li>Skicka in denna nya bufferten istället. Den kan innehålla lite mer
+  information.
+</menu>
+
+<dt>
+<a name="t2">t2: Varför sparas databasen så ofta?</a>
+<dd>
+
+Ursprungligen sparade servern allting på en gång. Den sade, jag sparar
+nu och sedan sparade den om hela databasen (vilket tog flera minuter).
+Detta skrev ceder om så att den istället sparar efter hand, dvs den kan
+ta emot anrop och svara på dem samtidigt som den sparar.
+<p>
+Att du får ett "Nu sparar jag" meddelande är att den antingen börjar
+spara eller slutar spara. Det är då den gör de saker i samband med
+sparandet som den inte kan göra medan den svarar på andra anrop
+(markera vilken data som den i värsta fall måste ha 2 kopior av ända
+tills den har sparat klart, resp slänga den data den har haft 2 kopior
+av.) Själva sparandet kan sedan mycket väl ta mer än en kvart.
+
+</dl>
+
+<h3>Maskinspecifika saker:</h3>
+<dl>
+
+<dt>
+<a name="u1">u1: Varför kan jag inte köra elisplienten på en dec-station.</a>
+<dd>
+
+Denna bugg är fixad i senare versioner av klienten (från och med 0.37).
+<p>
+string-to-int fungerar inte på samma sätt. (Antagligen beroende på att
+atoi inte fungerar på samma sätt).
+<p>
+Här är en patch som kan läggas i .emacs eller liknande:
+<pre>
+;;;; fix to make string-to-int behave the same on DECstation as on sun
+(if (= 0 (string-to-int "\n17"))
+    (progn
+      (fset 'string-to-int-orig (symbol-function 'string-to-int))
+      (defun string-to-int (string)
+        "Convert STRING to an integer by parsing it as a decimal number.
+Skip leading spaces and newlines."
+        (if (length string)
+            (let ((i 0)
+                  (c (aref string 0)))
+              (while (or (= c ?\n) (= c ?\ ))
+                (setq i (1+ i))
+		(setq c (aref string i)))
+              (string-to-int-orig (substring string i)))
+          0))))
+</pre>
+</dl>
+
+<h3>Vad händer med LysKOM i framtiden:</h3>
+<dl>
+<dt>
+<a name="v1">v1: Protokoll B, vad är det?</a>
+<dd>
+
+LysKOM jobbar som sagt med server-klient modell. Protokollet är enkelt
+men innehåller en del speciella saker typ asynkrona anrop från båda
+hållen... Den ursprungliga specen gjordes snabbt eftersom vi snabbt
+ville få ett fungerande system. Tyvärr fick det en del brister och vi
+bestämde oss för att göra om allt från scratch. Detta omgjorda
+protokoll är protokoll B. Tyvärr så är det ursprungliga protokollet så
+pass bra att det går långsamt med utvecklingen.
+
+<dt>
+<a name="v2">v2: Vad kommer att ingå i protokoll B?</a>
+<dd>
+
+* Textdelar (Lars Aronsson Lysator inlägg 58964):
+<br>
+I Protokoll B mellan klient och server kommer varje INLÄGG att bestå
+av det vanliga HUVUDET och av en INLÄGGSKROPP. Den senare kommer att
+bestå av en följd av KROPPSDELAR. Varje kroppsdel har en datatyp och
+en dataarea. Typerna kan vara t.ex. ISO 8859-1 text, Sun SPARC ljudfil
+eller en grafisk bild. I Protokoll B blir det i de flesta fall fel att
+tala om "text", "textstatus", "textnummer" etc. Ordet "text" bör då
+ersättas med ordet "inlägg".
+
+</dl>
+
+<h3>Historia:</h3>
+<dl>
+<dt>
+<a name="ö1">ö1: Varför skrevs elisp-klienten?</a>
+<dd>
+
+Ur: En slö implementatörs bekännelser av ceder (Per Cederqvist)
+<p>
+En gång i tidernas begynnelse (för lite drygt ett år sen) (Detta
+skrevs ursprungligen i november 1991) behövde jag testa
+LysKOM-servern. Jag hade kört rått med telnet direkt mot porten, men
+det blev jobbigt efter ett tag. Jag bestämde mig för att skriva ett
+litet elispprogram för att kunna testa servern.
+<p>
+Mitt mål var från början att testa servern (och att programmera något
+annat än servern - det hade blivit många rader C-kod under våren och
+sommaren, och nästan alla hörde till servern). Jag skrev elispkoden
+med målet att få det att fungera hjälpligt så fort som möjligt, inte
+att göra den korrekt och komplett.
+<p>
+---
+<p>
+När klienten väl fungerade var det alldeles för kul att skriva nya
+funktioner till den för att man skulle kunna låta bli så sedan dess
+har det bara blivit mer och mer och för tillfället är det den mest
+kompletta LysKOMklient som finns. Nackdelen: långsamhet kan lätt
+åtgärdas genom att köra på en snabbare maskin. 
+</dl>
+
+</body>
