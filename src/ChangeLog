@@ -1,5 +1,10 @@
 Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
 
+	* edit-text.el (kom-edit-send): Nu f}r vi inte med de speciella
+	  inl{ggshanterande kommandona n{r vi l{ser in {rendet. Bara det
+	  ombindningar som man g|r f|r moden.
+	  Ny intern variabel: lyskom-edit-mode-mode-map
+
 	* edit-text.el (lyskom-edit-extract-text): Ny och omskriven s} att
 	  den kollar lyskom-header-separator. Detta kr{vdes f|r att man
 	  skall kunna {ndra texten efter: C-c C-c C-x o

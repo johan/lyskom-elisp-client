@@ -14,6 +14,9 @@
 (defvar lyskom-edit-mode-map nil
   "Mode map for LysKOM edit.")
 
+(defvar lyskom-edit-mode-mode-map nil
+  "Mode map for the mode LysKOM edites in.")
+
 (defvar lyskom-edit-mode-name "LysKOM edit"
   "Name of the mode.")
 
@@ -234,10 +237,11 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (lyskom-clear-vars)
   (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
   (run-hooks 'lyskom-edit-mode-mode-hook)
+  (setq lyskom-edit-mode-mode-map (copy-keymap (current-local-map)))
   (setq major-mode 'lyskom-edit-mode)
   (setq mode-name lyskom-edit-mode-name)
   (setq buffer-offer-save t)
-  (use-local-map (overlay-map (current-local-map)
+  (use-local-map (overlay-map lyskom-edit-mode-mode-map
 			      lyskom-edit-mode-map))
   (auto-save-mode 1)
   (auto-fill-mode 1)
@@ -267,7 +271,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (save-excursion
 	    (setq misc-list (lyskom-edit-read-misc-list)
 		  subject (lyskom-edit-extract-subject)))
-	  (let ((minibuffer-local-map (overlay-map (current-local-map)
+	  (let ((minibuffer-local-map (overlay-map lyskom-edit-mode-mode-map
 						   minibuffer-local-map)))
 	    (setq subject (read-string (lyskom-get-string 'subject)
 				       subject)))
