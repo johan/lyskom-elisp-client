@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.41 1999-08-22 16:04:47 byers Exp $
+;;;;; $Id: edit-text.el,v 44.42 1999-08-25 19:50:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.41 1999-08-22 16:04:47 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.42 1999-08-25 19:50:04 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -867,10 +867,7 @@ text is a member of some recipient of this text."
           ;;
 
           (lyskom-traverse misc (cdr misc-list)
-            (cond ((eq (car misc) 'comm-to)
-                   (setq comm-to-list (cons (cdr misc)
-                                            comm-to-list)))
-                  ((or (eq (car misc) 'recpt)
+            (cond ((or (eq (car misc) 'recpt)
                        (eq (car misc) 'bcc-recpt)
                        (eq (car misc) 'cc-recpt))
                    (if (or (memq (cdr misc) author-list)
@@ -895,14 +892,20 @@ text is a member of some recipient of this text."
                             author-number conference-number
                             collector)))
                         recipient-list)
-
                        (lyskom-wait-queue 'sending)
-                       (setq author-is-member
-                             (and (car (collector->value collector))
-                                  (not (membership-type->passive
-                                        (membership->type
-                                         (car (collector->value collector)))))))
 
+                       ;; Now collector contains all the memberships for
+                       ;; author-number in the recipients.
+
+                       (let ((tmp (collector->value collector)))
+                         (while tmp
+                           (when (and (lyskom-membership-p (car tmp))
+                                      (not (membership-type->passive
+                                        (membership->type (car tmp)))))
+                             (setq author-is-member t
+                                   tmp nil))
+                           (setq tmp (cdr tmp))))
+                             
                        (if (and (not author-is-member)
 				(not (zerop author-number))
                                 (lyskom-is-permitted-author
