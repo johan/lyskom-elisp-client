@@ -1,3 +1,8 @@
+2002-03-25  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* distribution-configure.in: Corrected help text for
+	--with-default-language.
+
 2002-03-23  Joel Rosdahl  <joel@lysator.liu.se>
 
 	Fix bug 422:

@@ -29,7 +29,7 @@ The language must be one of swedish or english.]) ;;
 
 
 AC_ARG_WITH(default-language,
-[ --with-default-language=LANG  set default language to LANG (default swedish)],
+[ --with-default-language=LANG  set default language to LANG (default english)],
 [ case "${withval}" in
     sv|swedish) val="swedish" ;;
     en|english) val="english" ;;
