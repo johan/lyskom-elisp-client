@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.61 2000-08-29 16:15:00 byers Exp $
+# $Id: Makefile,v 44.62 2000-08-29 16:59:31 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.61 2000-08-29 16:15:00 byers Exp $
+# $Id: Makefile,v 44.62 2000-08-29 16:59:31 joel Exp $
 #
 
 
@@ -198,7 +198,8 @@ debian-package: release-files debian-build release-cleanup
 debian-build: release-files
 	cp -R debian lyskom-$(CLIENTVERSION)
 	$(RM) -rf lyskom-$(CLIENTVERSION)/debian/CVS
-	perl -pi -e 's/\((.+)\)/($(DEBIANCLIENTVERSION)-1)/ if (1..1)' lyskom-$(CLIENTVERSION)/debian/changelog
+	sed '1s/(.*)/($(DEBIANCLIENTVERSION))/' <debian/changelog >lyskom-$(CLIENTVERSION)/debian/changelog
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >lyskom-$(CLIENTVERSION)/debian/rules
 	mv lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 	cp lyskom-$(CLIENTVERSION).tar.gz lyskom-elisp-client_$(DEBIANCLIENTVERSION).orig.tar.gz
 	cd lyskom-elisp-client-$(DEBIANCLIENTVERSION) && dpkg-buildpackage
@@ -209,6 +210,7 @@ redhat-build: release-files
 	cp lyskom-$(CLIENTVERSION).tar.gz $(RPMROOT)/SOURCES/
 	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" <lyskom-elisp-client.spec >$(RPMROOT)/SPECS/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
 	rpm -ba $(RPMROOT)/SPECS/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
+
 clean:
 	$(RM) *.el.gz *.elc.gz $(TARGET-EL)
 	$(RM) -rf lyskom-$(CLIENTVERSION) \
