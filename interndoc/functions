@@ -46,7 +46,7 @@
     use-local-map                     * lyskom-use-local-map
     ignore-errors                     * lyskom-ignore-errors
     save-excursion                      lyskom-save-excursion
-    generate-new-buffer               * lyskom-generate-new-buffer [2]
+    generate-new-buffer               * lyskom-generate-new-buffer
     get-buffer-create                 * lyskom-get-buffer-create [2]
     display-buffer                    * lyskom-display-buffer [2]
     delete-window                     * lyskom-undisplay-buffer [2]
