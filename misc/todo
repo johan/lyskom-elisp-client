@@ -51,6 +51,10 @@ Linus: R{cker inte ceders uppdelning av anropen?
 0.35
 ================================================================
 
+* N{r man skriver inl{gg och har kom-emacs-knows-iso-8859-1 nil s}
+  borde den st{lla om lyskom-header-separator och [rende: till att
+  anv{nda swascii.
+
 * lyskom-end-of-command-hook.
 
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
