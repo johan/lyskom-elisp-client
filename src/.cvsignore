@@ -3,8 +3,10 @@ TODO-dk
 build-stamp
 comments.dk
 distribution-README-src
+english-help.el
 english-lyskom.el
 lyskom.el
 makealfa
 makealfa.c
+swedish-help.el
 vars.el
