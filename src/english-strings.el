@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.11 1991-11-24 02:49:18 ceder Exp $
+;;;;; $Id: english-strings.el,v 35.12 1991-12-08 17:02:18 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.11 1991-11-24 02:49:18 ceder Exp $\n"))
+	      "$Id: english-strings.el,v 35.12 1991-12-08 17:02:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -592,10 +592,10 @@ use. Please try later.
     (yes-or-no-nag . "Answer yes or no.")
     (yes-or-no . "(yes or no) ")
 
-    (y-or-n-instring . "yYnN ")
+    (y-or-n-instring . "yYnN")
     (j-or-n-nag . "Answer y or n. ")
     (j-or-n . "(y or n) ")
-    (y-instring . "yY ")
+    (y-instring . "yY")
 
     (person-does-not-exist . "User %#1d (does not exist).")
     (conf-does-not-exist . "Conference %#1d (does not exist).")
