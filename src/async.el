@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.10 1991-11-12 22:44:08 linus Exp $
+;;;;; $Id: async.el,v 35.11 1991-12-16 00:40:44 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.10 1991-11-12 22:44:08 linus Exp $\n"))
+	      "$Id: async.el,v 35.11 1991-12-16 00:40:44 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -379,29 +379,34 @@ to update the no-of-texts field in the cache.
 
 Also add this info in lyskom-to-do-list if info about RECIPIENT as been
 fetched. Does not try to print prompt or do any prefetch. That will be
-done after all the confs has been handled."
+done after all the confs has been handled.
 
-  ;; Update the cache.
+If recipient is nil this means we are crossposting to a protected conference.
+In that case, just discard this call."
 
-  (set-conf-stat->no-of-texts
-   recipient
-   (max (conf-stat->no-of-texts recipient)
-	(+ local-no -1
-	   (- (conf-stat->first-local-no recipient)))))
+  (cond
+   (recipient				;+++ Annan felhantering.
+    ;; Update the cache.
 
-  ;; Update the read-lists.
+    (set-conf-stat->no-of-texts
+     recipient
+     (max (conf-stat->no-of-texts recipient)
+	  (+ local-no -1
+	     (- (conf-stat->first-local-no recipient)))))
 
-  (if (and (lyskom-conf-fetched-p (conf-stat->conf-no recipient))
-	   (not (read-list-enter-text text-no recipient lyskom-to-do-list)))
-      ;; If we have already read all texts in the conference...
-      (let ((info (lyskom-create-read-info
-		   'CONF
-		   recipient
-		   (membership->priority
-		    (lyskom-member-p (conf-stat->conf-no recipient)))
-		   (lyskom-create-text-list (list text-no)))))
-	(read-list-enter-read-info info lyskom-to-do-list)
-	(if (= lyskom-current-conf (conf-stat->conf-no recipient))
-	    (read-list-enter-first info lyskom-reading-list))))
+    ;; Update the read-lists.
 
-  (lyskom-set-mode-line))
+    (if (and (lyskom-conf-fetched-p (conf-stat->conf-no recipient))
+	     (not (read-list-enter-text text-no recipient lyskom-to-do-list)))
+	;; If we have already read all texts in the conference...
+	(let ((info (lyskom-create-read-info
+		     'CONF
+		     recipient
+		     (membership->priority
+		      (lyskom-member-p (conf-stat->conf-no recipient)))
+		     (lyskom-create-text-list (list text-no)))))
+	  (read-list-enter-read-info info lyskom-to-do-list)
+	  (if (= lyskom-current-conf (conf-stat->conf-no recipient))
+	      (read-list-enter-first info lyskom-reading-list))))
+
+    (lyskom-set-mode-line))))
