@@ -41,6 +41,11 @@ Mon Oct 28 00:03:12 1996  David Kågedal  <davidk@lysator.liu.se>
 	* commands1.el (kom-write-comment): Gör textnumret som skrivs ut
  	till en knapp.
 
+Sun Oct 27 16:30:54 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* english-strings.el (lyskom-custom-strings): Använd inte ', och
+ 	specifiera rätt språk.
+
 Sun Oct 27 02:21:42 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (kom-delete-conf): Släng upp en inloggningsprompt

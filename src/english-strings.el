@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.12 1996-10-28 18:04:25 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.13 1996-11-12 22:44:21 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.12 1996-10-28 18:04:25 davidk Exp $"))
+              "$Id: english-strings.el,v 44.13 1996-11-12 22:44:21 davidk Exp $"))
 
 
 
@@ -1438,7 +1438,7 @@ On since %#8s%#9s")
   (define-key lyskom-customize-map "\C-c\C-a" 'lyskom-customize-apply)
 )
 
-(lyskom-language-strings lyskom-custom-strings sv
+(lyskom-language-strings lyskom-custom-strings en
   '(
     ;;
     ;; Widget strings
