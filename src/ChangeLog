@@ -1,3 +1,23 @@
+Thu Jul 30 03:54:50 1992  Linus Tolke Y  (linus@lysator)
+
+        * startup.el (lyskom-start-anew-login-3): Started the prefetch
+	  *after* stacking all entry prefetch-defaults.
+
+	* prefetch.el (lyskom-prefetch-map-handler): Bugfix when entering
+	  new read-infos.
+
+	* prefetch.el (lyskom-prefetch-who-is-on, lyskom-prefetch-mark):
+	  Rewritten to be suspended in the prefetch-stack.
+
+	* prefetch.el, startup.el (lyskom-prefetch-membership-handler,
+	  lyskom-append-to-membership): Now we check if we have already
+	  gotten this one and if so, don't enter it and correct the count.
+	  Defensive programming!
+
+	* prefetch.el (lyskom-prefetch-text, lyskom-prefetch-textall,
+	  lyskom-prefetch-text, lyskom-prefetch-texttree,
+	  lyskom-prefetch-pers): Bug-fix.
+
 Mon Jul 27 01:14:24 1992  Linus Tolke Y  (linus@lysator)
 
         * lyskom-rest.el: Removed obsolete lyskom-prefetch-* functions.
