@@ -1,5 +1,8 @@
 Mon Aug  3 05:55:46 1992  Linus Tolke Y  (linus@robin)
 
+	* swedish-string.el (lyskom-mode-map): ]terse urinl{gget added on
+	  ] u.
+
 	* async.el (lyskom-conf-fetched-p): required function.
 
 	* lyskom-rest.el (lyskom-go-to-next-conf): Prefetch of all
