@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.105 2000-08-28 15:07:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.106 2000-08-28 15:12:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.105 2000-08-28 15:07:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.106 2000-08-28 15:12:30 byers Exp $"))
 
 
 ;;; ================================================================
@@ -442,7 +442,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
     (client-statistics . "    Distribution of clients:\n")
-    (client-statistics-line . "    %=-25#1s: %#2d")
+    (client-statistics-line . "    %=-35#1s: %4#2d")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
