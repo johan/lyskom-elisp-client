@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.146 2002-04-10 19:50:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.147 2002-04-12 22:54:36 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.146 2002-04-10 19:50:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.147 2002-04-12 22:54:36 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3607,6 +3607,34 @@ One parameter - the prompt string."
          (define-key lyskom-modeline-keymap [mode-line mouse-3] 'kom-modeline-select-unread-kom))))
 
 
+(defun lyskom-make-lyskom-unread-mode-line ()
+  (lyskom-xemacs-or-gnu
+   (list (list 'lyskom-sessions-with-unread 
+               (lyskom-get-string 'mode-line-unread))
+         (list 'lyskom-sessions-with-unread-letters
+               (lyskom-get-string 'mode-line-letters))
+         " ")
+   `((lyskom-sessions-with-unread 
+      ,(lyskom-format "%#1@%#2s"
+                      (list 'local-map lyskom-modeline-keymap)
+                      (lyskom-get-string 'mode-line-unread)))
+     (lyskom-sessions-with-unread-letters
+      ,(lyskom-format "%#1@%#2s"
+                      (list 'local-map lyskom-modeline-keymap)
+                      (lyskom-get-string 'mode-line-letters)))
+     " ")))
+
+(defun lyskom-make-lyskom-unread-title-format ()
+  `(kom-show-unread-in-frame-title
+    (lyskom-session-has-unreads 
+     (" (" ((lyskom-session-has-unreads
+             ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread)
+                                          'iso-8859-1 t))
+            (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string
+                                                 (lyskom-get-string 'frame-title-letters)
+                                                 'iso-8859-1 t)))
+      ")"))))
+
 (defvar icon-title-format)
 (defvar frame-icon-title-format)
 (if lyskom-is-loaded
@@ -3642,50 +3670,7 @@ One parameter - the prompt string."
       (setq frame-icon-title-format (list ""
                                           frame-icon-title-format
                                           'lyskom-unread-title-format)))
-
-  (lyskom-xemacs-or-gnu
-   ;;; XXX this doesn't allow "Unread" to be changed when the language changes
-   (setq lyskom-unread-mode-line
-         (list (list 'lyskom-sessions-with-unread 
-                     (lyskom-get-string 'mode-line-unread))
-               (list 'lyskom-sessions-with-unread-letters
-                     (lyskom-get-string 'mode-line-letters))
-               " "))
-   (setq lyskom-unread-mode-line
-         (list (list 'lyskom-sessions-with-unread 
-                     (list ':eval
-                           '(let ((tmp (lyskom-get-string 'mode-line-unread)))
-                              (add-text-properties 0 (length tmp)
-                                                   (list 'local-map lyskom-modeline-keymap)
-                                                   tmp)
-                              tmp)))
-               (list 'lyskom-sessions-with-unread-letters
-                     (list ':eval
-                           '(let ((tmp (lyskom-get-string 'mode-line-letters)))
-                              (add-text-properties 0 (length tmp)
-                                                   (list 'local-map lyskom-modeline-keymap)
-                                                   tmp)
-                              tmp)))
-               " ")))
-
-
-  (lyskom-xemacs-or-gnu
-   ;;; XXX this doesn't allow "Unread" to be changed when the language changes
-   (setq lyskom-unread-title-format
-         `(kom-show-unread-in-frame-title
-           (lyskom-session-has-unreads 
-            (" ("
-             ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t))
-              (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t)))
-             ")"))))
-   (setq lyskom-unread-title-format
-         '(kom-show-unread-in-frame-title
-           (lyskom-session-has-unreads 
-            (" ("
-             ((lyskom-session-has-unreads (:eval (lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t)))
-              (lyskom-session-has-unread-letters (:eval (lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t))))
-             ")")))))
-
+  
   (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)
 
 
