@@ -1,3 +1,8 @@
+Mon Jul 29 11:14:55 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* swedish-strings.el,english-strings.el (lyskom-error-texts): Lade
+ 	till strängar för felkoderna 43-47.
+
 Mon Jul 29 04:30:11 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* completing-read.el (lyskom-read-conf-no): Hantera även en
