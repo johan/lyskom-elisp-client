@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.18 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: slow.el,v 44.19 2004-02-27 18:55:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -228,28 +228,24 @@ If the completion was not exact it returns nil."
 		      'lyskom-complete-command))))
 
 
-(defun kom-slow-mode ()
+(def-kom-command kom-slow-mode ()
   "Starts the slow-command-mode. In this mode you write commands in the
 main LysKOM buffer instead of using keyboard shortcuts."
   (interactive)
-  (lyskom-start-of-command 'kom-slow-mode)
   (unless lyskom-slow-mode
     (setq lyskom-saved-read-only buffer-read-only)
     (setq lyskom-slow-mode t)
     (setq buffer-read-only nil)
-    (use-local-map lyskom-slow-mode-map))
-  (lyskom-end-of-command))
+    (use-local-map lyskom-slow-mode-map)))
 
-(defun kom-quick-mode ()
+(def-kom-command kom-quick-mode ()
   "Starts the quick command mode. This is the standard mode for LysKOM,
 where you use keyboard shortcuts for most commands, and the \"x\" prefix
 for all other commands."
   (interactive)
-  (lyskom-start-of-command 'kom-quick-mode)
   (when lyskom-slow-mode
     (setq buffer-read-only lyskom-saved-read-only)
     (setq lyskom-slow-mode nil)
-    (use-local-map lyskom-mode-map))
-  (lyskom-end-of-command))
+    (use-local-map lyskom-mode-map)))
 
 

@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.367 2004-02-23 19:37:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.368 2004-02-27 18:55:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.367 2004-02-23 19:37:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.368 2004-02-27 18:55:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2174,7 +2174,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-who-am-i             . "Var (är) jag")
     (kom-list-clients	      . "Lista klienter")
     (kom-busy-wait	      . "Vänta på ett inlägg")
-    (kom-write-comment	      . "Kommentera inlägget")
+    (kom-write-comment	      . "Kommentera inlägg")
     (kom-comment-previous     . "Kommentera föregående inlägg")
     (kom-write-footnote       . "Fotnot till inlägg")
     (kom-private-answer       . "Personligt svar")

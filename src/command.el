@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.51 2004-01-01 22:01:38 byers Exp $
+;;;;; $Id: command.el,v 44.52 2004-02-27 18:55:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.51 2004-01-01 22:01:38 byers Exp $\n"))
+	      "$Id: command.el,v 44.52 2004-02-27 18:55:42 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -65,33 +65,62 @@
 
 
 
-(defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
-  (if (not (stringp doc))
-      (progn (message "!! No docstring for command %S" cmd)
-             (setq forms (cons interactive-decl forms))
-             (setq interactive-decl doc)
-             (setq doc "")))
-  (if (not (eq (car interactive-decl) 'interactive))
-      (progn (message "!! Missing interactive declaration for %S; assuming \(interactive\)" cmd)
-             (setq forms (cons interactive-decl forms))
-             (setq interactive-decl '(interactive))))
-  (let ((bufsym (intern (format "%S-start-buffer" cmd))))
-    `(defun ,cmd ,args
-       ,doc
-       ,(lyskom-fix-interactive-decl interactive-decl cmd)
-       (let ((lyskom-command-point (point)))
-         (lyskom-start-of-command ',cmd)
-         (let ((,bufsym (current-buffer)))
-           (unwind-protect
-               (condition-case nil
-                   (progn ,@forms)
-                 (quit (ding)
-                       (lyskom-insert-before-prompt
-                        (lyskom-get-string 'interrupted))))
-             (lyskom-save-excursion
-               (when (buffer-live-p ,bufsym)
-                 (set-buffer ,bufsym))
-               (lyskom-end-of-command))))))))
+(defmacro def-kom-command (cmd args doc &rest forms)
+  "Define a LysKOM command CMD with args ARGS and docstring DOC.
+
+This is like a defun for LysKOM commands. After the docstring you may
+have a series of keywords that alter the behavior of the command,
+followed by an interactive declaration (required) and the body of the
+command.
+
+The following keywords are recognized:
+
+:dead-ok        See the DEAD-OK paramter to lyskom-start-of-command
+:may-interrupt  See the MAY-INTERRUPT parameter to lyskom-start-of-command
+:prompt-format  See the PROMPT-FORMAT parameter to lyskom-start-of-command
+
+Note that :prompt-format requires an argument."
+  (let (interactive-decl may-interrupt dead-ok prompt-format)
+    (while (memq (car forms) '(:prompt-format :dead-ok :may-interrupt))
+      (cond ((eq (car forms) :prompt-format)
+             (setq prompt-format (car (cdr forms)))
+             (setq forms (cdr forms)))
+            ((eq (car forms) :dead-ok)
+             (setq dead-ok t))
+            ((eq (car forms) :may-interrupt)
+             (setq may-interrupt t)))
+      (setq forms (cdr forms)))
+
+    (when (and (listp (car forms))
+               (eq 'interactive (car (car forms))))
+      (setq interactive-decl (car forms) forms (cdr forms)))
+
+    (if (not (stringp doc))
+        (progn (message "!! No docstring for command %S" cmd)
+               (setq forms (cons interactive-decl forms))
+               (setq interactive-decl doc)
+               (setq doc "")))
+    (if (not (eq (car interactive-decl) 'interactive))
+        (progn (message "!! Missing interactive declaration for %S; assuming \(interactive\)" cmd)
+               (setq forms (cons interactive-decl forms))
+               (setq interactive-decl '(interactive))))
+    (let ((bufsym (intern (format "%S-start-buffer" cmd))))
+      `(defun ,cmd ,args
+         ,doc
+         ,(lyskom-fix-interactive-decl interactive-decl cmd)
+         (let ((lyskom-command-point (point)))
+           (lyskom-start-of-command ',cmd ,may-interrupt ,dead-ok ,prompt-format)
+           (let ((,bufsym (current-buffer)))
+             (unwind-protect
+                 (condition-case nil
+                     (progn ,@forms)
+                   (quit (ding)
+                         (lyskom-insert-before-prompt
+                          (lyskom-get-string 'interrupted))))
+               (lyskom-save-excursion
+                 (when (buffer-live-p ,bufsym)
+                   (set-buffer ,bufsym))
+                 (lyskom-end-of-command)))))))))
 
 ;;
 ;; def-kom-emacs-command works like def-kom-command, but the template 
@@ -122,39 +151,54 @@
 ;;       (and kom-cmd-running-as-kom-command (lyskom-end-of-command)))))
 ;; 
 
-(defmacro def-kom-emacs-command (cmd args doc interactive-decl &rest forms)
-  (if (not (stringp doc))
-      (progn (message "!! No docstring for command %S" cmd)
-             (setq forms (cons interactive-decl forms))
-             (setq interactive-decl doc)
-             (setq doc "")))
-  (if (not (eq (car interactive-decl) 'interactive))
-      (progn (message "!! Missing interactive declaration for %S; assuming \(interactive\)" cmd)
-             (setq forms (cons interactive-decl forms))
-             (setq interactive-decl '(interactive))))
+(defmacro def-kom-emacs-command (cmd args doc &rest forms)
+  (let (interactive-decl may-interrupt dead-ok prompt-format)
+    (while (memq (car forms) '(:prompt-format :dead-ok :may-interrupt))
+      (cond ((eq (car forms) :prompt-format)
+             (setq prompt-format (car (cdr forms)))
+             (setq forms (cdr forms)))
+            ((eq (car forms) :dead-ok)
+             (setq dead-ok t))
+            ((eq (car forms) :may-interrupt)
+             (setq may-interrupt t)))
+      (setq forms (cdr forms)))
 
-  (let ((rsym (intern (format "%S-running-as-kom-command" cmd)))
-        (bufsym (intern (format "%S-start-buffer" cmd))))
-    `(defun ,cmd ,args
-       ,doc
-       ,(lyskom-fix-interactive-decl interactive-decl cmd)
-       (let ((,rsym nil))
-         (condition-case nil
-             (progn (lyskom-start-of-command ',cmd)
-                    (setq ,rsym t))
-           (error nil))
-         (let ((,bufsym (current-buffer)))
-           (unwind-protect
-               (condition-case nil
-                   (progn ,@forms)
-                 (quit (ding)
-                       (lyskom-insert-before-prompt
-                        (lyskom-get-string 'interrupted))))
-             (and ,rsym
-                  (lyskom-save-excursion
-                   (when (buffer-live-p ,bufsym)
-                     (set-buffer ,bufsym))
-                   (lyskom-end-of-command)))))))))
+    (when (and (listp (car forms))
+               (eq 'interactive (car (car forms))))
+      (setq interactive-decl (car forms) forms (cdr forms)))
+
+    (if (not (stringp doc))
+        (progn (message "!! No docstring for command %S" cmd)
+               (setq forms (cons interactive-decl forms))
+               (setq interactive-decl doc)
+               (setq doc "")))
+    (if (not (eq (car interactive-decl) 'interactive))
+        (progn (message "!! Missing interactive declaration for %S; assuming \(interactive\)" cmd)
+               (setq forms (cons interactive-decl forms))
+               (setq interactive-decl '(interactive))))
+
+    (let ((rsym (intern (format "%S-running-as-kom-command" cmd)))
+          (bufsym (intern (format "%S-start-buffer" cmd))))
+      `(defun ,cmd ,args
+         ,doc
+         ,(lyskom-fix-interactive-decl interactive-decl cmd)
+         (let ((,rsym nil))
+           (condition-case nil
+               (progn (lyskom-start-of-command ',cmd ,may-interrupt ,dead-ok ,prompt-format)
+                      (setq ,rsym t))
+             (error nil))
+           (let ((,bufsym (current-buffer)))
+             (unwind-protect
+                 (condition-case nil
+                     (progn ,@forms)
+                   (quit (ding)
+                         (lyskom-insert-before-prompt
+                          (lyskom-get-string 'interrupted))))
+               (and ,rsym
+                    (lyskom-save-excursion
+                      (when (buffer-live-p ,bufsym)
+                        (set-buffer ,bufsym))
+                      (lyskom-end-of-command))))))))))
 
 
 
@@ -488,7 +532,7 @@ and back of the string."
 ;;;  (minibuffer-complete-word))
 
 
-(defun lyskom-start-of-command (function &optional may-interrupt dead-ok)
+(defun lyskom-start-of-command (function &optional may-interrupt dead-ok prompt-format)
   "This function is run at the beginning of every LysKOM command.
 It moves the cursor one line down, and +++ later it will tell the server
 that the previous text has been read.
@@ -502,6 +546,10 @@ don't signal an error if this call is interrupting another command.
 
 If optional DEAD-OK is non-nil, don't signal an error if the session 
 has been closed.
+
+If optional PROMPT-FORMAT is non-nil, this will be used to format the prompt.
+It should be a format string suitable for lyskom-format. Argument one is the
+command name (a symbol or string).
 
 Special: if lyskom-is-waiting then we are allowed to break if we set 
 lyskom-is-waiting nil.
@@ -534,9 +582,10 @@ chosen according to this"
       (cond
        (lyskom-first-time-around)
        ((stringp function) (lyskom-insert function))
-       ((and function (symbolp function))
-        (let ((name (lyskom-command-name function)))
-          (if name (lyskom-insert name)))))
+       ((lyskom-command-name function)
+        (if prompt-format 
+            (lyskom-format-insert prompt-format function)
+          (lyskom-insert (lyskom-command-name function)))))
     (save-excursion
       (if lyskom-current-prompt
           (let ((inhibit-read-only t))
