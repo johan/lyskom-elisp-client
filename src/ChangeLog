@@ -1,7 +1,3 @@
-Tue Aug 13 23:21:30 1991  Per Cederqvist  (ceder at ruben)
-
-	* Inga {ndringar gjorda. (Testar CVS).
-
 Tue Aug 13 03:05:27 1991  Linus Tolke Y  (linus at lysator)
 
 	* commands1.el: lyskom-sub-member-answer, nu r{knar den bara ner
