@@ -1,5 +1,7 @@
 Wed Dec 18 04:33:02 1991  Linus Tolke Y  (linus at robert)
 
+	* Distribuerat version 0.34.3		   05:12
+
 	* vars.el (lyskom-who-info-buffer-is-on): Default on.
 
 	* cache.el, startup.el (lyskom-who-info-buffer): Nu skapas
