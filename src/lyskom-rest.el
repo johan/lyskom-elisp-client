@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.186 2003-01-02 17:12:26 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.187 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.186 2003-01-02 17:12:26 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.187 2003-01-05 21:37:07 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -424,7 +424,7 @@ by design."
 	      
 	(progn
 	  (let* ((tri (read-list->first lyskom-reading-list))
-		 (text-no (car (cdr (read-info->text-list tri))))
+		 (text-no (car (text-list->texts (read-info->text-list tri))))
 		 (type (read-info->type tri))
 		 (priority (read-info->priority
 			    (read-list->first lyskom-reading-list)))
@@ -433,7 +433,10 @@ by design."
 				is-review-tree))
 		 (mark-as-read (not is-review)))
 	    (when is-review
-              (delq text-no (read-info->text-list tri)) ;First entry only
+              (set-text-list->texts
+               (read-info->text-list tri)
+               (delq text-no (text-list->texts 
+                              (read-info->text-list tri)))) ;First entry only
               (unless kom-review-uses-cache
                 (cache-del-text-stat text-no)))
 	    (setq action
@@ -855,17 +858,6 @@ CONF is the conference and NUM is the number of unread in the conference."
 
 ;;;================================================================
 
-;;; in vars.el:
-;(defvar lyskom-sessions-with-unread nil
-;  "Global variable. List of lyskom-sessions with unread articles.")
-;;;Must be called after lyskom-get-string is defined. Also after running 
-;;;load hooks.
-;;;(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
-;;;    (setq minor-mode-alist (cons (list 'lyskom-sessions-with-unread 
-;;;			       		  (lyskom-get-string 'mode-line-unread))
-;;;				 minor-mode-alist)))
-
-
 (defun lyskom-set-mode-line (&optional conf)
   "Sets mode-line-conf-name to the name of the optional argument conf CONF.
 CONF can be a a conf-stat or a string."
@@ -1008,6 +1000,7 @@ returns t if it trimmed the buffer, nil otherwise."
 	(delete-region (point-min) lyskom-trim-buffer-delete-to)))
       t))
 
+;;USER-HOOK: lyskom-garb-lyskom-buffer-to-file
 (defun lyskom-garb-lyskom-buffer-to-file ()
   "Appends the deleted initial portions of the buffer to a file.
 Put this function in your lyskom-trim-buffer-hook and set
@@ -1472,10 +1465,6 @@ Deferred insertions are not supported."
                                              ": too few arguments")))
     (if arg-no
         (setq arg (nth (1- arg-no) (format-state->argl format-state))))
-
-    (if (format-props-p arg)        
-        (setq propl (format-props->propl arg)
-              arg (format-props->arg arg)))
 
     (cond
      ;;
@@ -1982,7 +1971,7 @@ Deferred insertions are not supported."
 
 (defun lyskom-format-text-body (text &optional text-stat)
   "Format a text for insertion. Does parsing of special markers in the text."
-  (let* ((ct-item (car (text-stat-find-aux text-stat 1)))
+  (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))
          (content-type (cond (ct-item (aux-item->data ct-item))
                              ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
                                    (match-beginning 1))
@@ -2690,18 +2679,6 @@ calls use the most recently specified file name."
 
 
 
-
-
-;;; ================================================================
-;;;                Some useful abstractions
-
-(defsubst lyskom-membership-highest-index ()
-  "Return the number of conferences the user is a member of minus 1.
-This is the highest index in lyskom-membership that contains data, if
-positions are counted from 0, as they are."
-  (1- (length lyskom-membership)))
-
-
 ;;; ================================================================
 ;;;                             To-do
 
@@ -2905,23 +2882,6 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
     text))
            
 
-
-;(defun lyskom-modify-prompt (s)
-;  "Modify the LysKOM prompt to reflect the current state of LysKOM."
-;  (let ((format-string (or kom-prompt-format "%s")))
-;    (if (symbolp s) (setq s (lyskom-get-string s)))
-;    (if lyskom-ansaphone-messages
-;        (if (> (length lyskom-ansaphone-messages) 0)
-;            (setq format-string 
-;                  (format (lyskom-get-string 'prompt-modifier-messages)
-;                          format-string
-;                          (length lyskom-ansaphone-messages)))))
-;    (if kom-ansaphone-on
-;        (setq format-string
-;              (format (lyskom-get-string 'prompt-modifier-ansaphone)
-;                      format-string)))
-
-;    (format format-string s)))
 
 (defun lyskom-format-prompt (fmt command)
   (let ((start 0)
@@ -3147,58 +3107,17 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 
 (defun lyskom-prefetch-and-print-prompt ()
   "Prefetch info if needed. Print prompt if not already printed."
-  ;; (if (< (lyskom-known-texts)
-  ;; 	    lyskom-prefetch-conf-tresh)
-  ;; 	 (lyskom-prefetch-conf))
-  ;; (lyskom-prefetch-text)
-  (if (and lyskom-is-waiting
-	   (listp lyskom-is-waiting)
-           (eval lyskom-is-waiting))
-      (progn
-        (setq lyskom-is-waiting nil)
-        ;;(beep)
-        ;;(lyskom-end-of-command)
-        ;;(if (read-list-isempty lyskom-reading-list)
-        ;;    (kom-go-to-next-conf))
-        ;;(kom-next-command)
-	))
+  (when (and lyskom-is-waiting
+             (listp lyskom-is-waiting)
+             (eval lyskom-is-waiting))
+      (setq lyskom-is-waiting nil))
   (lyskom-update-prompt))
 
 
 (defun lyskom-known-texts ()
   "Count how many unread texts the user have, that the client knows about."
-  (apply '+ (mapcar '(lambda (x) (1- (length (read-info->text-list x))))
+  (apply '+ (mapcar '(lambda (x) (text-list->length (read-info->text-list x)))
 		    (read-list->all-entries lyskom-to-do-list))))
-
-
-;;
-;; Called from among others kom-list-news.
-;;
-
-;;(defun lyskom-prefetch-all-confs (num-arg continuation)
-;;  "Gets all conferences using prefetch. Calls itself recursively.
-;;When all confs are fetched then the function in the argument
-;;CONTINUATION is called."
-;;  ;; If all conf-stats are fetched, run the continuation function
-;;  (if (>= lyskom-last-conf-fetched
-;;	  (1- (length lyskom-membership)))
-;;      (lyskom-run 'main 'lyskom-run 'prefetch continuation num-arg)
-
-;;    ;; ...otherwise fetch next conf-stat.
-;;    (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
-;;	  (lyskom-prefetch-confs lyskom-max-int))
-;;      (lyskom-prefetch-conf))
-;;    (lyskom-run 'main 'lyskom-prefetch-all-confs num-arg continuation)))
-
-;; (defun lyskom-prefetch-all-confs ()
-;;   "Gets all conferences using prefetch."
-;;   (while (not (lyskom-prefetch-done))
-;;     (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
-;; 	     (lyskom-prefetch-confs lyskom-max-int))
-;; 	 (lyskom-prefetch-conf))
-;;     (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms)))
-
-;; +++PREFETCH
 
 
 (defun lyskom-wait-for-membership ()
@@ -3219,49 +3138,6 @@ If the full membership hase been read do nothing."
   "Gets all conferences using prefetch."
   (lyskom-wait-for-membership))
 
-
-
-;; (defun lyskom-list-unread (map membership)
-;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
-;; The list consists of text-nos."
-;;   (let ((res nil)
-;; 	   (last-read (membership->last-text-read membership))
-;; 	   (read (membership->read-texts membership))
-;; 	   (first (map->first-local map))
-;; 	   (i (length (map->text-nos map)))
-;; 	   (the-map (map->text-nos map)))
-;;     (while (> i 0)
-;; 	 (-- i)
-;; 	 (cond
-;; 	  ((zerop (elt the-map i)))	;Deleted text - do nothing.
-;; 	  ((<= (+ first i) last-read))	;Already read - do nothing.
-;; 	  ((lyskom-vmemq  (+ i first) read)) ;Already read - do nothing.
-;; 	  (t				;Unread - add to list.
-;; 	   (setq res (cons
-;; 		      (elt the-map i)
-;; 		      res)))))
-;;     res))
-
-;; (defun lyskom-list-unread (map membership)
-;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
-;; The list consists of text-nos."
-;;   (let ((read (membership->read-texts membership))
-;; 	   (first (map->first-local map))
-;; 	   (i (length (map->text-nos map)))
-;; 	   (the-map (map->text-nos map)))
-;;     (while (> i 0)
-;; 	 (-- i)
-;; 	 ;; The server always send the read texts in sorted order. This
-;; 	 ;; means that we can use binary search to look for read texts.
-;; 	 (when (lyskom-vmemq  (+ i first) read)
-;; 	   (aset the-map i 0)))
-;;     (delq 0 (listify-vector the-map))))
-
-;; (defun lyskom-list-unread (map membership)
-;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
-;; The list consists of text-nos."
-;;   (let ((the-map (map->text-nos map)))
-;;     (delq 0 (listify-vector the-map))))
 
 (defun lyskom-list-unread (map membership)
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
@@ -3285,19 +3161,6 @@ The list consists of text-nos."
 	  (aset the-map i 0))))
     (delq 0 (listify-vector the-map))))
 
-
-
-;; (defun lyskom-conf-fetched-p (conf-no)
-;;   "Return t if CONF-NO has been prefetched."
-;;   (let ((n lyskom-last-conf-received)
-;; 	   (result nil))
-;;     (while (and (not result)
-;; 		   (>= n 0))
-;; 	 (if (= (membership->conf-no (elt lyskom-membership n))
-;; 		conf-no)
-;; 	     (setq result t))
-;; 	 (-- n))
-;;     result))
 
 
 ;;;; ================================================================

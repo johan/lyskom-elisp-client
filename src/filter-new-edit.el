@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-new-edit.el,v 44.3 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: filter-new-edit.el,v 44.4 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-new-edit.el,v 44.3 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: filter-new-edit.el,v 44.4 2003-01-05 21:37:06 byers Exp $\n"))
 
 
 
@@ -49,16 +49,15 @@
 ;;; Datatypes
 
 (def-komtype filter-edit-entry
-  name
-  permanent
-  action
-  start
-  end
-  header-end
-  collapsed
-  pattern
-  tree
-  )
+  (name
+   permanent
+   action
+   start
+   end
+   header-end
+   collapsed
+   pattern
+   tree))
 
 (defun lyskom-filter-edit-entry-from-filter (filter)
   )

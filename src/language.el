@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.26 2002-05-24 12:42:44 davidk Exp $
+;;;;; $Id: language.el,v 44.27 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -128,14 +128,7 @@ sessions."
                                               'lyskom-language-keymap))))))
    lyskom-language-keymaps))
 
-;(defun lyskom-set-language-keymaps (language)
-;  (mapcar
-;   (function
-;    (lambda (map)
-;      (setcdr (symbol-value map)
-;	      (eval (cdr (assq language
-;			       (get map 'lyskom-language-keymap)))))))
-;   lyskom-language-keymaps))
+
 
 ;;; String catalogs
 
@@ -260,14 +253,6 @@ if 'lyskom-menu is not found."
         (lyskom-try-get-string symbol 'lyskom-command)
         (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu))
     'iso-8859-1))
-
-(defun lyskom-string-check-category (category)
-  "Returns list of names for the category, and their supported languages"
-  (mapcar (lambda (symbol)
-            (let ((info (get symbol category)))
-              (if info (cons symbol (mapcar 'car info)))))
-	  (get category 'lyskom-language-symbols)))
-
 
 (defun lyskom-define-language (language coding &rest names)
   (let ((match (assq language lyskom-languages)))

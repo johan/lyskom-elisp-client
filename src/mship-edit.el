@@ -84,15 +84,15 @@
 ;;; Code:
 
 (def-komtype lp--entry
-  start-marker                          ; Where the entry is in the buffer
-  end-marker                            ; Where it ends in the buffer
-  priority                              ; The saved priority of the membership
-  membership                            ; The membership
-  selected                              ; Selected or not
-  state                                 ; Expanded display or not
-  visible                               ; Non-nil when visible
-  extents                               ; Alist of extents/overlays
-  )
+  (start-marker                         ; Where the entry is in the buffer
+   end-marker                           ; Where it ends in the buffer
+   priority                             ; The saved priority of the membership
+   membership                           ; The membership
+   selected                             ; Selected or not
+   state                                ; Expanded display or not
+   visible                              ; Non-nil when visible
+   extents                              ; Alist of extents/overlays
+   ))
 
 (defvar lp--last-format-string nil
   "The cached format string for entries. 
@@ -1549,35 +1549,10 @@ Medlemskap för %#1M på %#2s
     ))
 
 
-(defun lyskom-read-time (prompt)
-  (let ((data nil)
-        (time nil))
-    (while (not time)
-      (setq data (read-from-minibuffer prompt data))
-
-; Removed to avoid a compilation warning.  /Joel
-;      (setq time (parse-time-string data))
-      (error "parse-time-string not defined")
-
-      (if (not (or (elt time 4) (elt time 5)))
-          (setq time nil)
-        (setq time
-              (lyskom-create-time (or (elt time 0) 0)
-                                  (or (elt time 1) 0)
-                                  (or (elt time 2) 0)
-                                  (or (elt time 3) 1)
-                                  (or (elt time 4) 1)
-                                  (or (elt time 5)
-                                      (elt (decode-time (current-time)) 5))
-                                  nil
-                                  nil
-                                  nil))))
-    time))
-
 (defun lp--hide-memberships-by-date (arg)
   (interactive "P")
   (let ((old-entries nil)
-        (old-time (lyskom-read-time (if arg
+        (old-time (lyskom-read-date (if arg
                                         "Hide memberships read after: "
                                       "Hide memberships not read since: "))))
     (mapcar (lambda (entry) 

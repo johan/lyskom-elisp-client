@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.18 2002-12-31 00:22:08 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.19 2003-01-05 21:37:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.18 2002-12-31 00:22:08 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.19 2003-01-05 21:37:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -72,88 +72,17 @@
 
 ;;; read-info
 
-(defsubst lyskom-create-read-info (type
-				conf-stat
-				priority
-				text-list
-				&optional comm-to forward misc)
-  "Create a read-info from all parameters."
-  ;; The last nil is for the unfetched-texts pair (first . last)
-  ;; This field is only applicable in read-infos of type CONF where
-  ;; it shows which part of the map for this conference that has not
-  ;; yet been fetched.
-  (cons
-   'READ-INFO
-   (vector type conf-stat priority text-list comm-to forward nil misc)))
-
-(defsubst read-info->type (read-info)
-  "Get type from read-info."
-  (elt (cdr read-info) 0))
-
-(defsubst read-info->conf-stat (read-info)
-  "Get conf-stat from read-info."
-  (elt (cdr read-info) 1))
-
-(defsubst read-info->priority (read-info)
-  "Get priority from read-info."
-  (elt (cdr read-info) 2))
-
-(defsubst read-info->text-list (read-info)
-  "Get text-list from read-info."
-  (elt (cdr read-info) 3))
-
-(defsubst read-info->comm-to (read-info)
-  "Get comm-to from read-info."
-  (elt (cdr read-info) 4))
-
-(defsubst read-info->forward (read-info)
-  "Get forward from read-info."
-  (elt (cdr read-info) 5))
-
-(defsubst read-info->unfetched-texts (read-info)
-  "Get forward from read-info."
-  (elt (cdr read-info) 6))
-
-(defsubst read-info->misc (read-info)
-  "Get forward from read-info."
-  (elt (cdr read-info) 7))
-
-(defsubst set-read-info->type (read-info newval)
-  "Set type in read-info to NEWVAL."
-  (aset (cdr read-info) 0 newval))
-
-(defsubst set-read-info->conf-stat (read-info newval)
-  "Set conf-stat in read-info to NEWVAL."
-  (aset (cdr read-info) 1 newval))
-
-(defsubst set-read-info->priority (read-info newval)
-  "Set priority in read-info to NEWVAL."
-  (aset (cdr read-info) 2 newval))
-
-(defsubst set-read-info->text-list (read-info newval)
-  "Set text-list in read-info to NEWVAL."
-  (aset (cdr read-info) 3 newval))
-
-(defsubst set-read-info->comm-to (read-info newval)
-  "Set comm-to in read-info to NEWVAL."
-  (aset (cdr read-info) 4 newval))
-
-(defsubst set-read-info->forward (read-info newval)
-  "Set forward in read-info to NEWVAL."
-  (aset (cdr read-info) 5 newval))
-
-(defsubst set-read-info->unfetched-texts (read-info newval)
-  "Set forward in read-info to NEWVAL."
-  (aset (cdr read-info) 6 newval))
-
-(defsubst set-read-info->misc (read-info newval)
-  "Set forward in read-info to NEWVAL."
-  (aset (cdr read-info) 7 newval))
-
-
-(defsubst lyskom-read-info-p (object)
-  "Return t if OBJECT is a read-info."
-  (eq (car-safe object) 'READ-INFO))
+(def-komtype read-info 
+  ((type                :read-only t)
+   (conf-stat           :read-only t)
+   priority 
+   (text-list           :read-only t)
+   &optional 
+   (comm-to             :read-only t)
+   forward 
+   (unfetched-texts     :read-only t :automatic nil)
+   (misc                :read-only t))
+  :nil-safe)
 
 
 (defsubst read-info-append-text-list (read-info texts)
@@ -162,10 +91,13 @@
 (defsubst read-info-enter-text-last (read-info text-no)
   (read-info-append-text-list read-info (list text-no)))
 
-				   
+
 ;;; ================================================================
 ;;;                          read-list
-
+;;;
+;;; We don't use def-komtype here because the code below relies on 
+;;; read-lists being a cons of READ-LIST and the data.
+;;;
 
 ;;; Constructor:
 
@@ -204,7 +136,7 @@ The range of valid values for N is [0, num-entries - 1]."
 
 (defsubst read-list-length (read-list)
   "Return the number of entries in READ-LIST."
-  (1- (length read-list)))
+  (length (read-list->all-entries read-list)))
 
 
 ;;; Modifiers:
@@ -380,6 +312,7 @@ element will be the new first element."
   (car-safe (cdr queue)))
 
 
+;;UNUSED: lyskom-queue->last
 (defsubst lyskom-queue->last (queue)
   "Return the lastelement of QUEUE or nil if it is empty."
   (car-safe (cdr (cdr queue))))
@@ -389,6 +322,7 @@ element will be the new first element."
   "Make the queue QUEUE empty."
   (setcdr queue (cons nil nil)))
 
+;;UNUSED: lyskom-queue-set-data
 (defsubst lyskom-queue-set-data (queue data)
   (lyskom-queue-make-empty queue)
   (setcdr queue (cons data (last data))))
@@ -445,11 +379,12 @@ is empty, return nil"
   (car-safe (cdr stack)))
 
 
+;;UNUSED: lyskom-stack->length
 (defun lyskom-stack->length (stack)
   "Return the number of elements on STACK."
   (length (cdr stack)))
 
-
+;;UNUSED: lyskom-stack->nth
 (defun lyskom-stack->nth (stack n)
   "Return element no (second arg) N of the stack (first arg) STACK.
 N counts from zero. If the length of STACK is less than N, nil is returned."
@@ -467,155 +402,21 @@ The element last pushed is first in the list."
   (not (cdr stack)))
 
 
-;;; ================================================================
-;;;                          who-buffer-info
-
-;;; Author: Inge Wallin
-
-
-;;; Constructor:
-
-(defun lyskom-create-who-buffer-info (info
-				      start-marker
-				      end-marker)
-  "Create a who-buffer-info from all parameters."
-  (cons
-   'WHO-BUFFER-INFO
-   (vector info start-marker end-marker )))
-
-
-;;; Selectors:
-
-(defun who-buffer-info->info (who-buffer-info)
-  "Get info from who-buffer-info."
-  (elt (cdr who-buffer-info) 0))
-
-(defun who-buffer-info->start-marker (who-buffer-info)
-  "Get start-marker from who-buffer-info."
-  (elt (cdr who-buffer-info) 1))
-
-(defun who-buffer-info->end-marker (who-buffer-info)
-  "Get end-marker from who-buffer-info."
-  (elt (cdr who-buffer-info) 2))
-
-
-;;; Modifiers:
-
-(defun set-who-buffer-info->info (who-buffer-info newval)
-  "Set info in who-buffer-info to NEWVAL."
-  (aset (cdr who-buffer-info) 0 newval))
-
-(defun set-who-buffer-info->start-marker (who-buffer-info newval)
-  "Set start-marker in who-buffer-info to NEWVAL."
-  (aset (cdr who-buffer-info) 1 newval))
-
-(defun set-who-buffer-info->end-marker (who-buffer-info newval)
-  "Set end-marker in who-buffer-info to NEWVAL."
-  (aset (cdr who-buffer-info) 2 newval))
-
-
-
-;;; Predicate:
-
-(defun lyskom-who-buffer-info-p (object)
-  "Return t if OBJECT is a who-buffer-info."
-  (eq (car-safe object) 'WHO-BUFFER-INFO))
-
-
-;;; ================================================================
-;;;			format-props
-
-(defun make-format-props (arg propl)
-  (cons 'format-props (vector arg propl)))
-
-(defsubst format-props-p (arg)
-  (eq 'format-props (car-safe arg)))
-
-(defsubst format-props->arg (arg)
-  (elt (cdr arg) 0))
-
-(defsubst format-props->propl (arg)
-  (elt (cdr arg) 1))
-
-;;;
-;;;	Help functions
-;;;
-
-
 
 ;;; ================================================================
 ;;;			format-state
 
 (def-komtype format-state
-  format-string
-  start
-  argl
-  length
-  result
-  delayed-propl
-  delayed-overlays
-  delayed-content
-  depth)
-;; 
-;; 
-;; 
-;; (defun make-format-state (format-string
-;; 			  start
-;; 			  argl
-;; 			  result)
-;;   (cons 'format-state
-;; 	(vector format-string start argl (length argl) result nil nil nil nil)))
-;; 
-;; (defsubst format-state-p (arg)
-;;   (eq 'format-state (car-safe arg)))
-;; 
-;; (defsubst format-state->format-string (arg)
-;;   (elt (cdr arg) 0))
-;; 
-;; (defsubst set-format-state->format-string (arg str)
-;;   (aset (cdr arg) 0 str))
-;; 
-;; (defsubst format-state->start (arg)
-;;   (elt (cdr arg) 1))
-;; 
-;; (defsubst set-format-state->start (arg pos)
-;;   (aset (cdr arg) 1 pos))
-;; 
-;; (defsubst format-state->args (arg)
-;;   (elt (cdr arg) 2))
-;; 
-;; (defsubst set-format-state->args (arg argl)
-;;   (aset (cdr arg) 2 argl)
-;;   (aset (cdr arg) 3 (length argl)))
-;; 
-;; (defsubst format-state->args-length (arg)
-;;   (elt (cdr arg) 3))
-;; 
-;; (defsubst format-state->result (arg)
-;;   (elt (cdr arg) 4))
-;; 
-;; (defsubst set-format-state->result (arg output-list)
-;;   (aset (cdr arg) 4 output-list))
-;; 
-;; (defsubst format-state->delayed-propl (arg)
-;;   (elt (cdr arg) 5))
-;; 
-;; (defsubst set-format-state->delayed-propl (arg propl)
-;;   (aset (cdr arg) 5 propl))
-;; 
-;; (defsubst format-state->delayed-overlays (arg)
-;;   (elt (cdr arg) 7))
-;; 
-;; (defsubst set-format-state->delayed-overlays (arg overlays)
-;;   (aset (cdr arg) 7 overlays))
-;; 
-;; (defsubst format-state->delayed-content (arg)
-;;   (elt (cdr arg) 6))
-;; 
-;; (defsubst set-format-state->delayed-content (arg string)
-;;   (aset (cdr arg) 6 string))
-;; 
-;; (defsubst
+  (format-string
+   start
+   argl
+   length
+   result
+   delayed-propl
+   delayed-overlays
+   delayed-content
+   depth)
+  :nil-safe)
 
 ;;; ================================================================
 
@@ -669,10 +470,6 @@ The element last pushed is first in the list."
 (defsubst set-collector->value (collector value)
   "Set the calue of a collector"
   (setcdr collector value))
-
-(defun set-value-of-collector (value collector)
-  "For use with lyskom handlers. In other cases, use set-collector->value"
-  (set-collector->value collector value))
 
 (defun collector-push (value collector)
   "Push VALUE onto the front of COLLECTOR's value"

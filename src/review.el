@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.43 2002-11-22 17:38:39 byers Exp $
+;;;;; $Id: review.el,v 44.44 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.43 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: review.el,v 44.44 2003-01-05 21:37:08 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -972,7 +972,7 @@ If reading forward then starts reading backward and the other way round."
 	   (list (read-info->text-list info))
 	   (texts (cdr list))
 	   (forward (read-info->forward info)))
-      (setcdr list (nreverse texts))
+      (set-text-list->texts list (nreverse texts))
       (set-read-info->forward info (not forward))
       (lyskom-format-insert 'you-review 
 			    (lyskom-get-string (if (not forward)
@@ -1173,7 +1173,7 @@ end."
       (mapcar
        (function
         (lambda (info)
-          (let ((un (length (cdr (read-info->text-list info))))
+          (let ((un (text-list->length (read-info->text-list info)))
                 (type (read-info->type info))
                 (cto (read-info->comm-to info))
                 (conf (read-info->conf-stat info)))

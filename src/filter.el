@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.22 2003-01-04 23:19:32 byers Exp $
+;;;;; $Id: filter.el,v 44.23 2003-01-05 21:37:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.22 2003-01-04 23:19:32 byers Exp $\n"))
+	      "$Id: filter.el,v 44.23 2003-01-05 21:37:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -565,10 +565,7 @@ the current text"
           (recipients-nonmember nil)
           (cc-recipients-nonmember nil)
           (bcc-recipients-nonmember nil)
-          (filter-recipient nil)
-          (conf-stat (if (and lyskom-current-conf
-                              (not (zerop lyskom-current-conf)))
-                         (blocking-do 'get-conf-stat lyskom-current-conf))))
+          (filter-recipient nil))
 
       ;; Extract recipients into different lists
       (lyskom-traverse misc

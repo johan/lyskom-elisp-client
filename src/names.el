@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: names.el,v 44.3 2002-12-31 00:22:10 byers Exp $
+;;;;; $Id: names.el,v 44.4 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,9 +33,13 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.3 2002-12-31 00:22:10 byers Exp $\n"))
+	      "$Id: names.el,v 44.4 2003-01-05 21:37:07 byers Exp $\n"))
 
-(def-komtype nameday-data code name description data)
+(def-komtype nameday-data
+  ((code            :read-only t)
+   (name            :read-only t)
+   (description     :read-only t)
+   (data            :read-only t)))
 
 (defvar lyskom-namedays nil)
 

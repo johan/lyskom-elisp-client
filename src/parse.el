@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.43 2002-08-08 07:44:21 ceder Exp $
+;;;;; $Id: parse.el,v 44.44 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.43 2002-08-08 07:44:21 ceder Exp $\n"))
+	      "$Id: parse.el,v 44.44 2003-01-05 21:37:07 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -237,6 +237,7 @@ Signal lyskom-protocol-error if the next token is not a string."
             (lyskom-setq-default lyskom-string-bytes-missing 0)
 	    (setq lyskom-parse-pos (+ lyskom-parse-pos len))))))))))
 
+;;UNUSED: lyskom-parse-coded-string
 (defun lyskom-parse-coded-string ()
   "Parse a string with explicit coding."
   (let ((coding (intern (lyskom-parse-coding)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.86 2003-01-02 23:42:53 byers Exp $
+;;;;; $Id: startup.el,v 44.87 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.86 2003-01-02 23:42:53 byers Exp $\n"))
+	      "$Id: startup.el,v 44.87 2003-01-05 21:37:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -625,7 +625,6 @@ shown to other users."
                                        lyskom-current-conf
                                        0)
             (setq lyskom-current-conf 0)
-            ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
             (cache-set-marked-texts (blocking-do 'get-marks))
             ;; What is this variable? It is never used. It is ust to
             ;; fill the cache?
@@ -687,12 +686,8 @@ shown to other users."
 (defun lyskom-refetch ()
   "Resets and fetches all reading info.
 This is called at login and after prioritize and set-unread."
-  ;; +++PREFETCH+++
 
   ;; The whole membership!
-  ;; (lyskom-set-membership (blocking-do 'get-membership lyskom-pers-no))
-  ;; (setq lyskom-membership-is-read t)
-  ;; (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
 
   (setq lyskom-membership nil)
 
@@ -724,43 +719,6 @@ Args: MEMBERSHIP."
   (setq lyskom-membership (listify-vector membership))
   (lyskom-sort-membership)
   (setq lyskom-membership-is-read t))
-
-
-(defun lyskom-print-name (conf-stat)
-  "Print the name of the CONF-STAT, with a trailing \n."
-  (lyskom-insert (concat (conf-stat->name conf-stat) "\n")))
-
-
-(defun lyskom-extract-persons (conf-list)
-  "Extract persons from a conf-list.
-Return a list of pers-nos of all conferences that are persons.
-Args: CONF-LIST."
-  (lyskom-do-extract-persons-or-confs conf-list t))
-
-
-(defun lyskom-extract-confs (conf-list)
-  "Extract conferences from a conf-list.
-Return a list of conf-nos of all conferences that are persons.
-Args: CONF-LIST."
-  (lyskom-do-extract-persons-or-confs conf-list nil))
-
-
-(defun lyskom-do-extract-persons-or-confs (conf-list want-persons)
-  "Extract persons or conferences from CONF-LIST.
-WANT-PERSONS is t for persons, nil for confs."
-  (let* ((result nil)
-	 (i 0)
-	 (nos (conf-list->conf-nos conf-list))
-	 (types (conf-list->conf-types conf-list))
-	 (len (length nos)))
-    (while (< i len)
-      (cond
-       ((eq (conf-type->letterbox (elt types i))
-	    want-persons)
-	(setq result (cons (elt nos i)
-			   result))))
-      (++ i))
-    (nreverse result)))
 
 
 (defun lyskom-create-new-person (name)
@@ -799,26 +757,6 @@ WANT-PERSONS is t for persons, nil for confs."
    (t
     ;; Do not create a new person
     nil)))
-
-
-;;(defun lyskom-start-anew-create-handler (pers-no name password)
-;;  "A new person has been created. Log in as him."
-;;  (cond
-;;   ((null pers-no)
-;;    (lyskom-insert-string 'could-not-create-you)
-;;    (setq lyskom-executing-command nil)
-;;    (kom-start-anew))
-;;   (t
-;;    (initiate-login 'main 'lyskom-add-for-new-person
-;;		    pers-no password pers-no lyskom-pers-no)
-;;    )))
-
-;;(defun lyskom-add-for-new-person (reply pers-no lyskom-pers-no)
-;;  "Add a news person as member in the default presentation conference."
-;;  (initiate-add-member 'main 'lyskom-start-anew-login-2
-;;		       (server-info->conf-pres-conf lyskom-server-info)
-;;		       pers-no 100 1
-;;		       pers-no lyskom-pers-no))
 
 
 (defun lyskom-read-server-name (prompt)

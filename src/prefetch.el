@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.25 2002-12-13 22:16:04 byers Exp $
+;;;;; $Id: prefetch.el,v 44.26 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.25 2002-12-13 22:16:04 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.26 2003-01-05 21:37:07 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -790,7 +790,7 @@ Maps are `cached' in lyskom-to-do-list."
 (defun lyskom-prefetch-whobuffer-handler (who-is-on queue)
   "Handle the who-is-on info. The goal here is to get an updated who-buffer."
   ;+++ should be done later
-  (cache-initiate-who-info-buffer who-is-on lyskom-buffer)
+  ;(cache-initiate-who-info-buffer who-is-on lyskom-buffer)
   (-- lyskom-pending-prefetch)
   )
 

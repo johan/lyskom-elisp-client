@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.25 2002-10-16 20:22:16 byers Exp $
+;;;;; $Id: menus.el,v 44.26 2003-01-05 21:37:07 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.25 2002-10-16 20:22:16 byers Exp $\n"))
+	      "$Id: menus.el,v 44.26 2003-01-05 21:37:07 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -87,9 +87,6 @@
 	   (item kom-write-comment)
 	   (item kom-private-answer)
 	   (item kom-write-footnote)
-	   ;; Mostly confusing for menu users:
-	   ;; (item kom-comment-previous)
-	   ;; (item kom-private-answer-previous)
 	   ;; Sort of logical to have commands for affecting
 	   ;; already written texts here
 	   (hline change-separator)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.126 2003-01-02 23:42:54 byers Exp $
+;;;;; $Id: utilities.el,v 44.127 2003-01-05 21:37:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.126 2003-01-02 23:42:54 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.127 2003-01-05 21:37:08 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -231,12 +231,6 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
          (when message
            (apply 'lyskom-format-insert-before-prompt message (symbol-name feature) args))
          nil))))
-                               
-      
-
-(defun lyskom-emacs-version ()
-  (cond ((string-match "^XEmacs" (emacs-version)) 'xemacs)
-	(t 'emacs)))
 
 
 (defvar lyskom-apo-timeout 0
@@ -924,12 +918,6 @@ comparison. Comparison is done with eq."
       default))
 
 
-;;; XEmacs doesn't seem to have a background-mode frame property
-
-(defun lyskom-background-mode ()
-  (frame-property (selected-frame) 'background-mode 'light))
-
-
 ;;; ======================================================================
 ;;; LysKOM Hooks
 ;;;
@@ -943,53 +931,6 @@ See run-hook-with-args for detailed information."
                   (apply 'run-hook-with-args hook args)))
 
 
-;;;(defun lyskom-set-variable-hook-wrapper (hook-function args)
-;;;  "Wrapper for running HOOK-FUNCTION with ARGS.
-;;;If HOOK returns an alist ((S1 . V1) ...), set value of symbol S1 to V1
-;;;and similarly for each element.
-;;;
-;;;The hook may set hook-function-args to change the arguments to subsequent
-;;;hook functions.
-;;;
-;;;Hook functions that rely on this are totally dependent on the current 
-;;;implementation of all callers. If you think you want to use this feature,
-;;;think again. You probably don't."
-;;;  (lyskom-traverse el (apply hook args)
-;;;    (set (car el) (cdr el))))
-;;;
-;;;
-;;;(defun lyskom-run-hook-with-wrapper (hook wrapper &rest args)
-;;;  "Run HOOK by calling WRAPPER for each function in the LysKOM buffer.
-;;;The wrapper will be called with arguments FUNCTION and ARGS. It
-;;;calls the actual hook function by applying FUNCTION to ARGS.
-;;;
-;;;This function emulates the built-in run-hook-with-args function.
-;;;It is modeled on the XEmacs 21.2 implementation, so there may be
-;;;slight discrepancies with other Emacs versions.
-;;;
-;;;The variable hook-function-args holds the arguments to the hook 
-;;;function (the ARGS parameter for the wrapper)."
-;;;  (save-excursion
-;;;    (set-buffer (or (and (boundp 'lyskom-buffer) lyskom-buffer)
-;;;                    (current-buffer)))
-;;;    (let ((hook-function-args args))
-;;;      (when (and hook (boundp hook))
-;;;        (let ((val (symbol-value hook)))
-;;;          (if (and (consp val) (eq (car val 'lambda)))
-;;;              (funcall wrapper val args)
-;;;            (while (and val (consp val))
-;;;              (if (eq (car val) t)
-;;;                  (let ((globals (default-value hook)))
-;;;                    (if (and (consp globals) (eq (car globals 'lambda)))
-;;;                        (funcall wrapper hook args)
-;;;                      (while (and globals (consp globals))
-;;;                        (unless (eq (car globals t))
-;;;                          (funcall wrapper (car globals) args))
-;;;                        (setq globals (cdr globals)))))
-;;;                (funcall wrapper (car val) args)
-;;;                (setq val (cdr val))))))))))
-
-                                                     
 
 (defun lyskom-add-hook (hook function &optional append)
   "Add to the value of HOOK the function FUNCTION in the LysKOM buffer.
@@ -1061,46 +1002,10 @@ for strings."
 (make-face 'lyskom-weak-highlight-face)
 (make-face 'lyskom-strong-highlight-face)
 
-(defun lyskom-set-face-foreground (face color)
-  (condition-case nil
-      (set-face-foreground face color)
-    (error nil)))
-
-(defun lyskom-set-face-background (face color)
-  (condition-case nil
-      (set-face-background face color)
-    (error nil)))
-
 (defun lyskom-copy-face (old new)
   (lyskom-xemacs-or-gnu (copy-face old new nil nil nil 'remove-all)
                         (copy-face old new)))
 
-
-(defun lyskom-face-resource (face-name attr type)
-  (if (eq (lyskom-emacs-version) 'xemacs)
-      ;; XEmacs style
-      (let ((val (x-get-resource (concat face-name ".attribute" attr)
-				 (concat "Face.Attribute" attr)
-				 type)))
-	(cond ((eq type 'string) val)
-	      ((and (eq type 'boolean) val) (if (car val) 'on 'off))
-	      (t val)))
-    ;; Emacs style
-    (let ((val (x-get-resource (concat face-name ".attribute" attr)
-			       (concat "Face.Attribute" attr))))
-      (cond ((eq type 'string) val)
-	    ((and val
-		  (eq type 'boolean)
-		  (member (downcase val) '("on" "true"))) 'on)
-	    ((and val (eq type 'boolean)) 'off)
-	    (t val)))))
-
-
-(defun lyskom-modify-face (what face)
-  (condition-case nil
-      (funcall (intern (concat "make-face-" (symbol-name what)))
-               face)
-    (error nil)))
 
 
 ;;; ============================================================
@@ -1304,7 +1209,7 @@ return nil."
      (while (and (not found) rlist)
        (when (eq conf-no (conf-stat->conf-no
                           (read-info->conf-stat (car rlist))))
-         (setq found (length (cdr (read-info->text-list (car rlist))))))
+         (setq found (text-list->length (read-info->text-list (car rlist)))))
        (setq rlist (cdr rlist)))
      found)))
 
@@ -1341,19 +1246,6 @@ return nil."
 
 ;;; ============================================================
 ;;; Database stuff
-
-;; Extracted from edit-text.el
-;;(defun lyskom-is-supervisor (conf-stat &optional memo)
-;;  "Return non-nil if lyskom-pers-no is a supervisor of CONF-STAT."
-;;  (cond ((null conf-stat) nil)
-;;        ((memq (conf-stat->conf-no conf-stat) memo) nil)
-;;        ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
-;;        ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
-;;        ((eq 0 (conf-stat->supervisor conf-stat)) nil)
-;;        ((lyskom-get-membership (conf-stat->conf-no conf-stat) t) t)
-;;        ((lyskom-is-supervisor
-;;          (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
-;;          (cons (conf-stat->conf-no conf-stat) memo)))))
 
 (defun lyskom-is-supervisor (conf-no viewer-no)
   "Return non-nil if the supervisor of CONF-NO is VIEWER-NO."
@@ -1461,25 +1353,6 @@ Returns a cons of (LOCAL . GLOBAL)"
       (setq index (+ lowest (/ (- highest lowest) 2))))
     (cons last-index (text-stat->text-no result))))
 
-(defun lyskom-read-date (prompt)
-  "Read a date from the minibuffer. 
-Returns a list (YEAR MONTH DATE) corresponding to the user's input."
-  (let ((result nil)
-        (date nil))
-    (while (null result)
-      (setq date (lyskom-verified-read-from-minibuffer 
-                  prompt 
-                  date
-                  (lambda (data)
-                    (condition-case nil
-                        (progn (lyskom-parse-date data)
-                               nil)
-                      (lyskom-error (lyskom-get-string 'invalid-date-entry))))))
-      (condition-case nil
-          (setq result (lyskom-parse-date date))
-        (lyskom-error nil)))
-    result))
-
 (put 'lyskom-parse-date-invalid 'error-conditions
      '(error lyskom-error))
 (put 'lyskom-parse-date-invalid 'error-message
@@ -1498,6 +1371,25 @@ The value returned does not include the parens before at either ends of the expr
     (while (<= i (length s))
       (setq result (cons (substring s 0 i) result) i (1+ i)))
     (mapconcat 'regexp-quote result "\\|")))
+
+(defun lyskom-read-date (prompt)
+  "Read a date from the minibuffer. 
+Returns a list (YEAR MONTH DATE) corresponding to the user's input."
+  (let ((result nil)
+        (date nil))
+    (while (null result)
+      (setq date (lyskom-verified-read-from-minibuffer 
+                  prompt 
+                  date
+                  (lambda (data)
+                    (condition-case nil
+                        (progn (lyskom-parse-date data)
+                               nil)
+                      (lyskom-error (lyskom-get-string 'invalid-date-entry))))))
+      (condition-case nil
+          (setq result (lyskom-parse-date date))
+        (lyskom-error nil)))
+    result))
 
 (defun lyskom-parse-date (arg)
   "Parse ARG (a string) as a date.
