@@ -315,10 +315,10 @@ Lyskom-sessionen är avslutad.
     (buggreport-unparsed . "\nlyskom-unparsed-buffer:")
     (buggreport-reading-list . "\nlyskom-reading-list:")
     (buggreport-to-do-list . "\nlyskom-to-do-list:")
-    (buggreport-backtrace . "\n*Backtrace*:")
+    (buggreport-backtrace . "\n*Backtrace*:\n%#1s\n")
     (buggreport-communications . "\nlyskom-debug-communications-to-buffer-buffer:")
     (buggreport-instead-of-byte-comp . "byte-code(\"byte-string\"")
-    (buggreport-subject . "Bugg-rapport elisp-klienten version %s%#1s")
+    (buggreport-subject . "Bugg-rapport elisp-klienten version %#1s")
 
 
     (not-logged-in . "Du är inte inloggad.  ")

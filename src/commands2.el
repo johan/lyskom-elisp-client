@@ -908,11 +908,11 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (if (condition-case ()
 	      debugger-old-buffer
 	    (void-variable nil))
-	  (progn
-	    (princ (lyskom-get-string 'buggreport-backtrace))
-	    (print (save-excursion
-		     (set-buffer curbuf)
-		     (buffer-substring (point-min) (point-max))))))
+	  (princ (lyskom-format 'buggreport-backtrace
+				(save-excursion
+				  (set-buffer curbuf)
+				  (buffer-substring (point-min) 
+						    (point-max))))))
       (if lyskom-debug-communications-to-buffer
 	  (progn
 	    (princ (lyskom-get-string 'buggreport-communications))
@@ -922,7 +922,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
     (save-excursion
       (set-buffer repname)
       (goto-char (point-min))
-      (replace-regexp "byte-code(\\\\\".*\\\\\""
+      (replace-regexp "byte-code(\".*\""
 		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
     (lyskom-edit-text lyskom-proc
 		      (lyskom-create-misc-list 'recpt 79 'cc-recpt lyskom-pers-no)
