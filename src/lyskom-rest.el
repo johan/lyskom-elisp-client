@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.94 1999-12-02 22:29:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.95 1999-12-13 10:56:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.94 1999-12-02 22:29:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.95 1999-12-13 10:56:44 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2302,13 +2302,16 @@ positions are counted from 0, as they are."
 ;;;                             To-do
 
 
+(defvar lyskom-recursive-prompt-update nil)
 (defun lyskom-update-all-prompts (&optional force-prompt-update)
   "Update the prompts in all buffers"
-  (save-excursion
-    (lyskom-traverse buffer lyskom-buffer-list
-      (set-buffer buffer)
-      (lyskom-update-prompt force-prompt-update))
-    (lyskom-set-default 'lyskom-need-prompt-update nil)))
+  (unless lyskom-recursive-prompt-update
+    (let ((lyskom-recursive-prompt-update t))
+      (save-excursion
+        (lyskom-traverse buffer lyskom-buffer-list
+          (set-buffer buffer)
+          (lyskom-update-prompt force-prompt-update))
+        (lyskom-set-default 'lyskom-need-prompt-update nil)))))
 
 (defun lyskom-update-prompt (&optional force-prompt-update)
   "Print prompt if the client knows which command will be default.
