@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.36 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: flags.el,v 44.37 2003-07-30 18:15:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.36 2003-07-20 22:12:26 byers Exp $\n"))
+	      "$Id: flags.el,v 44.37 2003-07-30 18:15:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -461,7 +461,8 @@ elisp variable VAR."
 (defun lyskom-flag-write-symbol-list (val)
   (cond ((symbolp val)
          (lyskom-format-objects (symbol-name val)))
-        (t (mapcar (lambda (x) (lyskom-format-objects (symbol-name x))) val))))
+        (t (mapconcat (lambda (x) (lyskom-format-objects (symbol-name x)))
+                      val " "))))
 
 (defun lyskom-flag-read-symbol-list (str)
   (mapcar 'intern (lyskom-get-holerith-list str)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.207 2003-07-28 20:02:34 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.208 2003-07-30 18:15:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.207 2003-07-28 20:02:34 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.208 2003-07-30 18:15:11 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2221,7 +2221,7 @@ in lyskom-messages."
       (setq tmp (lyskom-get-holerith text no-coding))
       (setq result (cons (car tmp) result)
             text (cdr tmp)))
-    result))
+    (nreverse result)))
 
 (defun lyskom-get-holerith-assoc (text &optional no-coding)
   "Assume that TEXT is a list of holerith strings. Return those strings."
@@ -2237,9 +2237,9 @@ in lyskom-messages."
 (defun lyskom-split-user-area (text)
   "Return the user area split into components."
   (let ((tmp (lyskom-get-holerith text t)))
-    (nreverse (mapcar2 'cons  
-                       (lyskom-get-holerith-list (car tmp) t)
-                       (lyskom-get-holerith-list (cdr tmp) t)))))
+    (mapcar2 'cons  
+             (lyskom-get-holerith-list (car tmp) t)
+             (lyskom-get-holerith-list (cdr tmp) t)))))
 
 (defun lyskom-format-x-kom/user-area-data (data)
   (let* ((values (lyskom-get-holerith-assoc data t))

@@ -1,3 +1,11 @@
+2003-07-30  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-get-holerith-list): Return list in
+	original order.
+	(lyskom-split-user-area): Don't reverse the list here.
+
+	* flags.el (lyskom-flag-write-symbol-list): Fixed stupid bug.
+
 2003-07-28  David Byers  <byers@lysator.liu.se>
 
 	Better support for message-flag and no-of unread when joining:
