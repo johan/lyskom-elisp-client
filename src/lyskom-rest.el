@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.110 2000-08-11 15:00:55 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.111 2000-08-15 10:09:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.110 2000-08-11 15:00:55 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.111 2000-08-15 10:09:49 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -593,11 +593,11 @@ If CONF is nil, check the first conf on the to-do list."
         (if (lyskom-j-or-n-p (lyskom-format 'convert-passive conf-stat))
             (progn
               (set-membership-type->passive type nil)
-              (initiate-set-membership-type 'main
-                                            nil 
-                                            lyskom-pers-no
-                                            (conf-stat->conf-no conf-stat)
-                                            (membership->type mship))
+              (blocking-do 'set-membership-type
+                           lyskom-pers-no
+                           (conf-stat->conf-no conf-stat)
+                           (membership->type mship))
+              (lyskom-fetch-start-of-map conf-stat mship)
               (setq continue t))
           (progn
             (setq continue nil))))

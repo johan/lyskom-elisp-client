@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.18 2000-07-03 10:50:08 byers Exp $
+;;;;; $Id: prefetch.el,v 44.19 2000-08-15 10:09:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.18 2000-07-03 10:50:08 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.19 2000-08-15 10:09:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -173,6 +173,32 @@ This is used to prevent the prefetch code to reenter itself.")
 (defsubst lyskom-membership-is-read ()
   "Return t if the while membership list has been fetched, and nil otherwise."
   (eq lyskom-membership-is-read 't))
+
+(defun lyskom-fetch-start-of-map (conf-stat membership)
+  "Block fetching map for MEMBERSHIP until we see a text.
+Start the prefetch for the remainder of the map."
+  (let ((first-local (membership->last-text-read membership))
+        (last-local (1- (+ (conf-stat->no-of-texts conf-stat)
+                           (conf-stat->first-local-no conf-stat))))
+        (done nil))
+    (while (not done)
+      (let ((map (blocking-do 'get-map 
+                              (membership->conf-no membership)
+                              first-local
+                              lyskom-fetch-map-nos)))
+        (setq first-local (+ first-local lyskom-fetch-map-nos))
+        (lyskom-enter-map-in-to-do-list map conf-stat membership)
+        (cond ((and (map->text-nos map)
+                    (< first-local last-local)
+                    (> (length (map->text-nos map)) 0))
+               (setq done t)
+               (lyskom-prefetch-map-using-conf-stat conf-stat
+                                                    first-local
+                                                    membership)
+               )
+
+              ((< first-local last-local))
+              (t (setq done t)))))))
 
 (defun lyskom-prefetch-conf (conf-no &optional queue)
   "Prefetch the conf-stat for the conference with number CONF-NO.
