@@ -64,6 +64,9 @@
         aux                     Aux-item
         aux-edit-menu           Aux-item in edit buffer
         prioritize-flag-menu    Membership flag in mship-edit.el
+        recpt-type              Recipient type in an edit buffer
+        timestamp               Timestamp to show when a prompt
+                                was created 
         --------------------------------------------------------
 
 
@@ -191,6 +194,13 @@
     areas). Use the function lyskom-default-button to add them.
 
 
+    lyskom-button
+
+        Button indicator. Kom-next- and -previous-link look for
+        strings with this property. Without it, a button is less
+        noticeable.
+
+
     lyskom-button-type
 
         The type of button. This is an atom which must be a key in the
@@ -217,6 +227,9 @@
         aux                     Special [1]
         aux-edit-menu           Special [2]
         prioritize-flag-menu    Special [3]
+        recpt-type              Special [4]
+        timestamp               A list of integers as returned by
+                                current-time
         ------------------------------------------------------------
 
         [0] The argument for functions is a list where the car of the
@@ -238,6 +251,8 @@
             TYPE) where ENTRY is the entry the flag applies to and
             TYPE is one of invitation, secret or passive.
 
+        [4] The argument for recpt-type is a list of (RECIPIENT-NO
+            EDIT-BUFFER).
 
     lyskom-button-text
 
