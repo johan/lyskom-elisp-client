@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 43.0 1996-08-07 16:40:30 davidk Exp $
+;;;;; $Id: macros.el,v 43.1 1996-08-22 06:57:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,8 +33,30 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 43.0 1996-08-07 16:40:30 davidk Exp $\n"))
+	      "$Id: macros.el,v 43.1 1996-08-22 06:57:51 byers Exp $\n"))
 
+
+
+
+(defmacro lyskom-provide (definer name rest)
+  (` (progn (eval-when-compile 
+              (if (not (fboundp (quote (, name))))
+                  (message "Compatibility %S for %S"
+                           (quote (, definer))
+                           (quote (, name)))))
+            (eval-and-compile 
+              (if (not (fboundp (quote (, name))))
+                  ((, definer) (, name) (,@ rest)))))))
+
+(defmacro lyskom-provide-macro (name &rest rest)
+  (` (lyskom-provide defmacro (, name) (, rest))))
+
+(defmacro lyskom-provide-function (name &rest rest)
+  (` (lyskom-provide defun (, name) (, rest))))
+
+
+(defmacro lyskom-provide-subst (name &rest rest)
+  (` (lyskom-provide defsubst (, name) (, rest))))
 
 
 ;;; lyskom-traverse - traverse a sequence.
@@ -214,31 +236,29 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 ;;; too many compiler warnings.
 ;;;
 
-(if (not (fboundp 'byte-code-function-p))
-    (defmacro byte-code-function-p (obj) (` (compiled-function-p (, obj)))))
+(lyskom-provide-macro byte-code-function-p (obj)
+  (` (compiled-function-p (, obj))))
 
-(if (not (fboundp 'facep))
-    (progn
-      (defsubst internal-facep (x)
-        (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
-      
-      (defun facep (x)
-        "Return t if X is a face name or an internal face vector."
-        (and (or (and (fboundp 'internal-facep)
-                      (internal-facep x))
-                 (and (symbolp x) 
-                      (boundp 'global-face-data)
-                      (assq x global-face-data)))
-             t))))
+(lyskom-provide-subst internal-facep (x)
+  (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
 
-(if (not (fboundp 'save-selected-window))
-    (defmacro save-selected-window (&rest body)
-      "Execute BODY, then select the window that was selected before BODY."
-      (list 'let
-            '((save-selected-window-window (selected-window)))
-            (list 'unwind-protect
-                  (cons 'progn body)
-                  (list 'select-window 'save-selected-window-window)))))
+(lyskom-provide-function facep (x)
+  "Return t if X is a face name or an internal face vector."
+  (and (or (and (fboundp 'internal-facep)
+                (internal-facep x))
+           (and (symbolp x) 
+                (boundp 'global-face-data)
+                (assq x global-face-data)))
+       t))
+
+
+(lyskom-provide-macro save-selected-window (&rest body)
+  "Execute BODY, then select the window that was selected before BODY."
+  (list 'let
+        '((save-selected-window-window (selected-window)))
+        (list 'unwind-protect
+              (cons 'progn body)
+              (list 'select-window 'save-selected-window-window))))
 
 (if (not (fboundp 'frame-width))
     (fset 'frame-width 'screen-width))
@@ -249,23 +269,36 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 ;;; except that the sort-first argument is ignored.
 ;;;
 
-(if (not (fboundp 'map-keymap))
-    (defun map-keymap (fn keymap &optional sort-first)
-      (let ((lis nil)
-            (r 0))
-        (cond ((vectorp keymap)
-               (while (< r (length keymap))
-                 (if (aref keymap r)
-                     (funcall fn r (aref keymap r)))
-                 (setq r (1+ r))))
-              (t (mapcar (function 
-                          (lambda (x)
-                            (funcall fn (car x) (cdr x))))
-                         (cdr keymap)))))))
+(lyskom-provide-function map-keymap (fn keymap &optional sort-first)
+  (let ((lis nil)
+        (r 0))
+    (cond ((vectorp keymap)
+           (while (< r (length keymap))
+             (if (aref keymap r)
+                 (funcall fn r (aref keymap r)))
+             (setq r (1+ r))))
+          (t (mapcar (function 
+                      (lambda (x)
+                        (funcall fn (car x) (cdr x))))
+                     (cdr keymap))))))
 
+
+(lyskom-provide-function match-string (num &optional string)
+  "Return string of text matched by last search.
+NUM specifies which parenthesized expression in the last regexp.
+ Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
+Zero means the entire text matched by the whole regexp or whole string.
+STRING should be given if the last search was by `string-match' on STRING."
+  (if (match-beginning num)
+      (if string
+	  (substring string (match-beginning num) (match-end num))
+	(buffer-substring (match-beginning num) (match-end num)))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-provide-function 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-provide-subst 'lisp-indent-hook 2)
 ;;; end: 
 
 

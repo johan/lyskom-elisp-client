@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.8 1996-08-14 14:10:17 byers Exp $
+;;;;; $Id: english-strings.el,v 43.9 1996-08-22 06:57:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.8 1996-08-14 14:10:17 byers Exp $"))
+              "$Id: english-strings.el,v 43.9 1996-08-22 06:57:43 byers Exp $"))
 
 
 
@@ -106,6 +106,9 @@ Help: \\[describe-mode] ---")
 
 (defvar lyskom-swascii-header-subject nil
   "The swascii version of lyskom-header-subject.")
+
+(defconst lyskom-missing-strings
+  '(cgdag sixjune holdnose))
 
 (defconst lyskom-strings 
   '(
@@ -391,6 +394,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-for-status . "Get status of which conference: ")
     (no-such-conf . "The conference doesn't exist.\n")
     (status-record . "Status of conference %#1M (%#2m) %#3s\n\n")
+    (change-type-prompt . "Change conference type for %#1M (%#2m) %#3s\n")
     (Mailbox . "Mailbox")
     (Protected . "Protected")
     (no-comments . "No comments")
@@ -501,8 +505,8 @@ The message you were sending to %#1M was:
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
-    (buggrepport-compilestart . "Creating bug report...")
-    (buggrepport-compileend . "Creating bug report...done")
+    (buggreport-compilestart . "Creating bug report...")
+    (buggreport-compileend . "Creating bug report...done")
     (buggreport-description . "This is what I was doing:
 \(Fill in your comments below\)\n================\n\n
 ================
@@ -723,6 +727,11 @@ Group message to %#3M\nfrom %#2P (%#4s):
 
     (cannot-get-membership . "Cannot retrieve your membership list.")
     (cannot-get-pers-stat . "Cannot retrieve your personal status.")
+    (prioritize-help .
+"u,n Move conference, SPC select, p prioritize selection, q quit, C-h m help")
+    (your-priorities . " Priority   Conference
+----------------------------------------------------------------------------
+")
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
     (prio-row . " %5#1d%5#2d  %#3M\n")
@@ -769,6 +778,7 @@ You should set it to a better value.\n")
     (all-conf-unread-s . "You have nothing unread. ")
     (one-unread . "%#1M - one unread article\n")
     (several-unread . "%#1M - %#2d unread articles\n")
+    (enter-conf . "%#1M\n")
 
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
@@ -846,7 +856,7 @@ Error message: %#1s**************************************************")
     (filter-action . "Filter how: ")
     (filter-in-conf . "In which conference (all): ")
     (filter-subject . "Filter which subject: ")
-    (filter-text . "Filter articles containing: ")
+    (filter-which-text . "Filter articles containing: ")
     (filter-author . "Filter which author: ")
     (permanent . "(permanent)")
     (temporary . "(temporary)")
@@ -999,6 +1009,7 @@ On since %#8s%#9s")
     (kom-review-next            "Review next")
     (kom-find-root              "Review original (article)")
     (kom-review-by-to           "Review last")
+    (kom-review-first           "Review first")
     (kom-review-all             "Review all")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-view-previous-commented-text
@@ -1122,6 +1133,8 @@ On since %#8s%#9s")
 Cf. paragraph-start.")
 
 
+(defconst lyskom-missing-bindings nil)
+
 (if lyskom-mode-map
     nil
   (setq lyskom-mode-map (make-keymap))
@@ -1132,12 +1145,14 @@ Cf. paragraph-start.")
   (define-prefix-command 'lyskom-list-prefix)
   (define-prefix-command 'lyskom-filter-get-prefix)
   (define-prefix-command 'lyskom-S-prefix)
+  (define-prefix-command 'lyskom-previous-prefix)
   (define-key lyskom-mode-map "A" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "r" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "f" 'lyskom-filter-get-prefix)
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
   (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
+  (define-key lyskom-mode-map "b" 'lyskom-previous-prefix)
 
   (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
   (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
@@ -1186,8 +1201,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "nc" 'kom-go-to-next-conf)
   (define-key lyskom-mode-map "nl" 'kom-next-kom)
   (define-key lyskom-mode-map "nu" 'kom-next-unread-kom)
-  ;; What key should this be on?
-  ;;(define-key lyskom-mode-map "fl" 'kom-previous-kom)
+  (define-key lyskom-mode-map "bl" 'kom-previous-kom)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
   (define-key lyskom-mode-map "R"  'kom-recover)
@@ -1197,7 +1211,6 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "fs" 'kom-filter-subject)
   (define-key lyskom-mode-map "fa" 'kom-filter-author)
   (define-key lyskom-mode-map "fc" 'kom-filter-text)
-
   (define-key lyskom-mode-map "w"  'kom-who-is-on)
   (define-key lyskom-mode-map "I"  'kom-who-am-i)
   (define-key lyskom-mode-map "W"  'kom-busy-wait)

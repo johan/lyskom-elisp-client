@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 43.0 1996-08-07 16:39:27 davidk Exp $
+;;;;; $Id: completing-read.el,v 43.1 1996-08-22 06:57:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 43.0 1996-08-07 16:39:27 davidk Exp $\n"))
+       "$Id: completing-read.el,v 43.1 1996-08-22 06:57:37 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -66,7 +66,7 @@
           (listify-vector (blocking-do 'who-is-on)))))
 
 (defun lyskom-completing-cache-completion (string data)
-  (let* ((downs (downcase string))
+  (let* ((downs (lyskom-unicase string))
          (tmp (assoc downs lyskom-completing-lookup-name-cache)))
     (if (null tmp)
         (setq lyskom-completing-lookup-name-cache
@@ -76,7 +76,7 @@
 (defun lyskom-completing-lookup-z-name (string want-conf want-pers)
   "Look up STRING as a name. Same as \(blocking-do 'lookup-z-name ...\)
 but first checks a cache."
-  (let* ((downs (downcase string))
+  (let* ((downs (lyskom-unicase string))
          (tmp (assoc downs lyskom-completing-lookup-name-cache)))
     (if tmp
         (cdr tmp)
@@ -445,7 +445,7 @@ function work as a name-to-conf-stat translator."
   "Check case-insensitively if STRING is a member of LIST"
   (let (result)
   (while (and list (not result))
-    (if (string= (downcase string) (downcase (car list)))
+    (if (string= (lyskom-unicase string) (lyskom-unicase (car list)))
         (setq result list)
       (setq list (cdr list))))
   result))
@@ -472,6 +472,22 @@ function work as a name-to-conf-stat translator."
                 (null x-list)))))
 
 
+;(defun lyskom-complete-show-data-list (state data)
+;  (save-excursion
+;    (pop-to-buffer (get-buffer-create "*kom*-complete"))
+;    (erase-buffer)
+;    (while data
+;      (insert
+;       (format "%s\n" (substring (aref (car data) 2)
+;                                 (aref (car data) 0)
+;                                 (aref (car data) 1))))
+;      (setq data (cdr data)))
+;    (insert (format "%S %S: %S" (symbol-value current-state)
+;                    (elt state 0)
+;                    (elt state 1)))
+;    (sit-for 1)))
+      
+
 (defun lyskom-complete-string (string-list)
   "Find the longest common prefix of all strings in STRING-LIST according to
 the LysKOM rules of string matching."
@@ -484,11 +500,14 @@ the LysKOM rules of string matching."
         (done nil)
         (next-char-start nil)
         (paren-depth 0)
+        (have-here nil)
+        (last-event-worth-noting nil)
         (data-list (lyskom-complete-string-munge-input string-list))
         (next-char-state (vector nil nil)))
 
     (while (not done)
       (lyskom-complete-string-next-char next-char-state data-list)
+;      (lyskom-complete-show-data-list next-char-state data-list)
       (cond
 
        ;;
@@ -497,6 +516,7 @@ the LysKOM rules of string matching."
        ;;
 
        ((eq (aref next-char-state 0) 'match)
+        (setq last-event-worth-noting 'match)
         (if (and (eq (aref next-char-state 1) ?\ )
                  (or (eq (symbol-value current-state) 'start-of-word)
                      (eq (symbol-value current-state) 'start-of-string)))
@@ -517,6 +537,7 @@ the LysKOM rules of string matching."
        ;;
 
        ((eq (aref next-char-state 0) 'open-paren-match)
+        (setq last-event-worth-noting 'match)
         (if (zerop paren-depth)
             (progn
               (setq current-accumulator 'tmp-accumulator)
@@ -537,6 +558,7 @@ the LysKOM rules of string matching."
        ;;
 
        ((eq (aref next-char-state 0) 'close-paren-match)
+        (setq last-event-worth-noting 'match)
         (lyskom-complete-string-accumulate current-accumulator
                                     (aref next-char-state 1))
         (if (> paren-depth 0)
@@ -559,6 +581,7 @@ the LysKOM rules of string matching."
              (or (eq (aref next-char-state 0) 'mismatch)
                  (eq (aref next-char-state 0) 'space-mismatch)
                  (eq (aref next-char-state 0) 'open-paren-mismatch)))
+        (setq last-event-worth-noting 'mismatch)
         (setq tmp-accumulator nil)
         (setq tmp-state nil)
         (setq current-state 'main-state)
@@ -572,7 +595,9 @@ the LysKOM rules of string matching."
        ;;
        
        ((and (eq (aref next-char-state 0) 'space-mismatch)
-             (eq (symbol-value current-state) 'start-of-string))
+             (or (eq (symbol-value current-state) 'start-of-string)
+                 (eq (symbol-value current-state) 'start-of-word)))
+        (setq last-event-worth-noting 'nil)
         (lyskom-complete-string-skip-whitespace data-list))
 
        ;;
@@ -587,6 +612,12 @@ the LysKOM rules of string matching."
                 (eq (symbol-value current-state) 'start-of-string))
             (setq done t)
           (progn
+            (if (not have-here)
+                (progn
+                  (lyskom-complete-string-accumulate current-accumulator 
+                                                     'HERE)
+                  (setq have-here t)))
+            (setq last-event-worth-noting 'mismatch)
             (lyskom-complete-string-advance-to-end-of-word data-list)
             (set current-state 'in-a-word))))
 
@@ -595,6 +626,7 @@ the LysKOM rules of string matching."
        ;;
 
        ((eq (aref next-char-state 0) 'open-paren-mismatch)
+        (setq last-event-worth-noting 'mismatch)
         (lyskom-complete-string-skip-parens data-list))
 
 
@@ -616,10 +648,24 @@ the LysKOM rules of string matching."
     ;; string out of it.
     ;;
 
+    (if (eq last-event-worth-noting 'mismatch)
+        (while (and main-accumulator
+                    (eq (car main-accumulator) ?\ ))
+          (setq main-accumulator (cdr main-accumulator))))
+
+    (setq main-accumulator (nreverse main-accumulator))
+
+        (if (memq 'HERE main-accumulator)
+            (let ((backup (length (memq 'HERE main-accumulator))))
+              (setq unread-command-events
+                    (append (cons ? (make-list (1- backup) 2))
+                            unread-command-events))
+              (setq main-accumulator (delq 'HERE main-accumulator))))
+
     (let ((tmp (make-string (length main-accumulator) 0))
           (index 0))
       (lyskom-traverse
-       el (nreverse main-accumulator)
+       el main-accumulator
        (aset tmp index el)
        (setq index (1+ index)))
       tmp)))
@@ -731,8 +777,8 @@ the LysKOM rules of string matching."
                               (progn
                                 (setq xchar (aref (aref x 2)
                                                   (aref x 0)))
-                                (setq char (downcase xchar)))
-                            (eq char (downcase (aref (aref x 2)
+                                (setq char (lyskom-unicase-char xchar)))
+                            (eq char (lyskom-unicase-char (aref (aref x 2)
                                                      (aref x 0)))))))))
      data-list)
 
