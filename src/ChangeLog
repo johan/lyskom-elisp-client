@@ -1,3 +1,9 @@
+2004-12-04  Pontus Freyhult  <pont@soua.net>
+
+	Bugfix: Do not leak password from session started in LysKOM buffer.
+	* startup.el (lyskom): Do not send password if host
+	differs from the server it was given for.
+
 2004-11-16  Pontus Freyhult  <pont@soua.net>
 
 	* lyskom-rest.el (lyskom-update-prompt): Use lyskom-session-nickname.
