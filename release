@@ -198,7 +198,7 @@ case $ans in
 esac
 
 echo "Sätter symbolisk tag..."
-if ( set -x ; cvs tag "$tag" ) ; then
+if ( set -x ; cvs tag -F "$tag" ) ; then
     echo "Releasen är symboliskt taggad"
 else
     ask "Forstsätt trots att taggningen inte gick bra" nej
