@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 41.6 1996-08-06 21:33:56 davidk Exp $
+;;;;; $Id: review.el,v 43.0 1996-08-07 16:41:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 41.6 1996-08-06 21:33:56 davidk Exp $\n"))
+	      "$Id: review.el,v 43.0 1996-08-07 16:41:01 davidk Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions

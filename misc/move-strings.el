@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: move-strings.el,v 41.0 1996-05-02 19:23:44 davidk Exp $
+;;;;; $Id: move-strings.el,v 43.0 1996-08-07 16:38:06 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 41.4 1996-08-06 21:33:44 davidk Exp $
+;;;;; $Id: komtypes.el,v 43.0 1996-08-07 16:40:12 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 41.4 1996-08-06 21:33:44 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 43.0 1996-08-07 16:40:12 davidk Exp $\n"))
 
 
 ;;; ================================================================

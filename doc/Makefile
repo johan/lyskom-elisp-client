@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 41.1 1996-08-07 16:22:53 davidk Exp $
+# $Id: Makefile,v 43.0 1996-08-07 16:36:24 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,10 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 41.1  1996-08-07 16:22:53  davidk
+# Revision 43.0  1996-08-07 16:36:24  davidk
+# Nytt revisionsnummer.
+#
+# Revision 41.1  1996/08/07 16:22:53  davidk
 # Uppdaterade copyright.
 # Separerade install och release.
 #

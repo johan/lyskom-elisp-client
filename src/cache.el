@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 41.3 1996-08-06 21:33:19 davidk Exp $
+;;;;; $Id: cache.el,v 43.0 1996-08-07 16:39:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 41.3 1996-08-06 21:33:19 davidk Exp $\n"))
+	      "$Id: cache.el,v 43.0 1996-08-07 16:39:01 davidk Exp $\n"))
 
 
 ;;; ================================================================
