@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.196 2002-02-09 20:31:23 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.197 2002-02-24 14:36:57 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.196 2002-02-09 20:31:23 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.197 2002-02-24 14:36:57 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -277,7 +277,7 @@ Skicka ett brev till %#2P för medlemskap.\n")
     (what-comment-no . "Kommentera text nummer: ")
     (what-footnote-no . "Fotnotera text nummer: ")
     (what-private-no . "Personligt svar till text nummer: ")
-    (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots osänt meddelande? ")
+    (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots oinskickat inlägg? ")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
     (session-ended . "
 *****************************

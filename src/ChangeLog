@@ -1,3 +1,8 @@
+2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* swedish-strings.el: Corrected terminology in
+	quit-in-spite-of-unsent.
+
 2002-02-18  Per Cederqvist  <ceder@moria>
 
 	* commands2.el (lyskom-create-text-buffer): New helper function.
