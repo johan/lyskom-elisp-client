@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.87 2001-11-23 22:46:37 qha Exp $
+;;;;; $Id: edit-text.el,v 44.88 2001-12-14 00:27:03 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.87 2001-11-23 22:46:37 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.88 2001-12-14 00:27:03 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -212,7 +212,7 @@ nil             -> Ingenting."
     (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
                                  (lyskom-default-button 'add-recipient
                                                         edit-buffer)
-                                 (lyskom-get-string 'add-recipient))
+                                 (lyskom-get-string 'add-recpt-button-text))
                   where-put-misc)
     (mapcar (function
              (lambda (item)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.190 2001-11-27 10:41:05 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.191 2001-12-14 00:27:03 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.190 2001-11-27 10:41:05 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.191 2001-12-14 00:27:03 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1256,6 +1256,7 @@ Text:
     (aux-popup-title  . "Tilläggsinformation")
     (timestamp-popup-title . "Tidsstämpel %#1s")
     (recpt-type-popup-title . "Mottagartyp: %#1s")
+    (add-recpt-button-text . "[Addera mottagare]")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
@@ -1911,7 +1912,7 @@ Visa vilka personer som är inloggade i LysKOM-systemet.")
     (kom-who-is-on-in-conference . "\
 Visa vilka personer som är inloggade i LysKOM-systemet och som är
 medlemmar i ett visst möte.") 
-    (kom-who-is-on	      . "\
+    (kom-who-is-on-and-friend	      . "\
 Visa vilka vänner som är inloggade i LysKOM-systemet.") 
     (kom-who-am-i             . "\
 Visa information om din egen session.")

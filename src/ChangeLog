@@ -1,3 +1,18 @@
+2001-12-14  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* swedish-strings.el, english-strings.el (lyskom-message): new
+	string: add-recpt-button-text 
+
+	* edit-text.el (lyskom-edit-insert-miscs): use
+	add-recpt-button-text for the add recipient-button.
+
+2001-11-24  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* ChangeLog: fixed spelling and formatting for a few old entries.
+
+	* swedish-strings.el (lyskom-help-strings): really added help on
+	kom-who-is-on-and-friend.
+
 2001-12-09  Per Cederqvist  <ceder@moria>
 
 	* commands2.el (kom-is-person-member-of-conference): When the
@@ -989,7 +1004,7 @@
 
 2001-01-02  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* All files changed when I replaced
+	All files changed when I replaced
 	(or (eq foo 'a) (eq foo 'b) ...) with (member foo '(a b ...)):
 	Replaced member with memq which compares with `eq', and
 	substituted lyskom-comment-types-list & c. where apropriate.
@@ -1332,7 +1347,7 @@
 2000-09-03  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* buffers.el (kill-buffer-hook): Moved the adding to kill-buffer-hook
-	here and added a check for the major-moded; this should keep it from
+	here and added a check for the major-mode; this should keep it from
 	affecting all buffers.
 
 	* english-strings.el (lyskom-custom-strings): Fixed a spelling error.
@@ -1420,7 +1435,7 @@
 	* lyskom-rest.el (lyskom-trim-buffer): Saves point and mark and
 	resets point, mark and lyskom-last-viewed after taking into
 	consideration lyskom-trim-buffer-delete-to.
-	(lyskom-trim-buffer): Except point and mark doesn't need this
+	(lyskom-trim-buffer): Except point and mark don't need this
 	treatment.
 
 Thu Aug 31 14:38:34 2000  David Byers  <davby@sen2.ida.liu.se>
@@ -1474,13 +1489,8 @@ Thu Aug 31 14:38:34 2000  David Byers  <davby@sen2.ida.liu.se>
 	
 2000-08-30  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* english-strings.el (lyskom-custom-strings)
-	(lyskom-custom-strings): Added
-	lyskom-trim-buffer-minimum.
-
-	* swedish-strings.el (lyskom-custom-strings)
-	(lyskom-custom-strings): Added
-	lyskom-trim-buffer-minimum.
+	* swedish-strings.el, english-strings.el (lyskom-custom-strings)
+	(lyskom-custom-strings): Added lyskom-trim-buffer-minimum.
 
 	* vars.el.in (kom-trim-buffer-minimum): Added this variable.
 
