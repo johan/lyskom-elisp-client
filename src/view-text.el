@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.46 2001-01-03 22:03:06 qha Exp $
+;;;;; $Id: view-text.el,v 44.47 2001-01-18 21:19:42 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.46 2001-01-03 22:03:06 qha Exp $\n"))
+	      "$Id: view-text.el,v 44.47 2001-01-18 21:19:42 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -325,6 +325,8 @@ Note that this function must not be called asynchronously."
 			 (lyskom-follow-comments text-stat
 						 conf-stat mark-as-read
 						 priority build-review-tree)))
+                   (if (lyskom-text-p (cache-get-text text-no))
+                       (cache-del-text text-no))
 		   ))
 	       (lyskom-format-insert 'no-such-text-no text-no))
              (let ((aux-items (text-stat->aux-items text-stat)))
@@ -841,8 +843,6 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           (lyskom-insert "\n")
           (lyskom-format-insert "%#1t\n" (cons text-stat str))
           (setq lyskom-current-subject "")))
-        (if (lyskom-text-p (cache-get-text (text->text-no text)))
-            (cache-del-text (text->text-no text)))
         (sit-for 0)
         (let* ((lyskom-current-function-phase 'footer)
                (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
