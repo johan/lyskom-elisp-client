@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.12 1993-09-21 23:17:20 linus Exp $
+;;;;; $Id: commands2.el,v 36.13 1993-12-17 14:23:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.12 1993-09-21 23:17:20 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.13 1993-12-17 14:23:43 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -489,7 +489,7 @@ Args: MEMBERSHIP-LIST CONF-STAT."
   (condition-case error
       (lyskom-send-message 
        (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
-			    'logins t))
+			    'pers t))
     (quit (lyskom-end-of-command)
 	  (signal 'quit "Quitting in kom-send-message"))))
   
