@@ -179,7 +179,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 			  (int-to-string lyskom-number-of-pending-calls))
 	  (lyskom-process-send-string
 	   lyskom-proc
-	   (concat (car entry) (cdr entry) "\n"))
+	   (concat (number-to-string (car entry)) (cdr entry) "\n"))
 	  (++ lyskom-prof-sent)
 	  (fields-replace lyskom-prof-fields 'sent
 			  (int-to-string lyskom-prof-sent))))))
