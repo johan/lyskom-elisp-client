@@ -1,7 +1,55 @@
+Tue Aug 27 08:49:11 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands1.el (kom-quit): Fånga C-g.
+
+	* swedish-strings.el, english-strings.el (lyskom-strings): Lade
+ 	till person-not-logged-in-r och no-such-session-r
+
+	* macros.el: Lade till kommentarer.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Flytta
+ 	markören till inläggshuvudet medan man frågar om mottagarna är
+ 	relevanta.
+
+	* clienttypes.el (collector-push): Ny funktion.
+	(set-value-of-collector): Ny funktion.
+	(set-collector->value): Ny funktion.
+	(collector->value): Ny funktion.
+	(make-collector): Ny funktion.
+
+	* review.el (lyskom-get-texts-by): Använd collectors istf skumma
+ 	kombinationer av initiate och cache-funktioner.
+
+	* prioritize.el: Använd lyskom-wait-queue här.
+	(lyskom-prioritize-handle-get-conf-stat): Använd
+ 	collector-strukturen istf en global variabel.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Fixade bugen
+ 	som gjorde att man slapp skriva texter som var kommentarer till
+ 	många texter. (lyskom-edit-send-check-recipients): Använd
+ 	collector-strukturen istf dynamiska variabler.
+
 Tue Aug 27 00:51:35 1996  David Kågedal  <kg@infovav.se>
 
 	* startup.el (lyskom): Använd prefix-argumentet som startvärde på
  	lyskom-session-priority.
+
+Mon Aug 26 13:04:07 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-session-from-conf): Ny funktion.
+	(lyskom-read-session-no): Omskriven att använda lyskom-read-conf.
+	(lyskom-read-conf-internal): Hantera sessionsnummer.
+
+	* vars.el.in (kom-permissive-completion): Ny variabel.
+	(lyskom-elisp-variables): Lade till kom-permissive-completion.
+
+	* commands2.el (kom-send-message): Använd
+ 	kom-permissive-completion för att styra lyskom-read-conf-no.
+
+	* commands1.el (kom-status-session): Hantera prefixargument.
+
+	* completing-read.el (lyskom-complete-string-next-char): Sätt
+ 	buffert så lyskom-unicase-char säkert fungerar.
 
 Sat Aug 24 23:54:55 1996  Per Cederqvist  <ceder@lysator.liu.se>
 

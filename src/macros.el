@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 43.1 1996-08-22 06:57:51 byers Exp $
+;;;;; $Id: macros.el,v 43.2 1996-08-27 15:15:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,10 +33,18 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 43.1 1996-08-22 06:57:51 byers Exp $\n"))
+	      "$Id: macros.el,v 43.2 1996-08-27 15:15:42 byers Exp $\n"))
 
 
-
+;;; ======================================================================
+;;; Use lyskom-provide to supply a definition that is only to be used
+;;; if no definition already exists. The definition will be evaluated at
+;;; both compile and run time.
+;;;
+;;; lyskom-provide-macros behaves like defmacro
+;;; lyskom-provide-function behaves like defun
+;;; lyskom-provide-subst behaves like defsubst
+;;;
 
 (defmacro lyskom-provide (definer name rest)
   (` (progn (eval-when-compile 
@@ -59,7 +67,9 @@
   (` (lyskom-provide defsubst (, name) (, rest))))
 
 
+;;; ======================================================================
 ;;; lyskom-traverse - traverse a sequence.
+;;;
 
 (defmacro lyskom-traverse (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
@@ -83,7 +93,9 @@ Value returned is always nil."
      '(sexp form body))
 
 
-;;;; lyskom-save-excursion Does not save point and mark.
+;;; ======================================================================
+;;; lyskom-save-excursion Does not save point and mark.
+;;;
 
 (defmacro lyskom-save-excursion (&rest forms)
   "Save-excursion without saving point and mark."
@@ -93,30 +105,26 @@ Value returned is always nil."
 		    forms)
 	      '(set-buffer __buffer__))))
 
-;; The following is equal to this:
-;; (eval-when-compile (require 'edebug))
-;; (def-edebug-spec lyskom-save-excursion t)
 (put 'lyskom-save-excursion 'edebug-form-spec t)
 
-;;;; LysKOM user commands
-
-;; The new, blocking commands have a very similar structure
-;;
-;;  (defun kom-cmd (args)
-;;    "Documentation"
-;;    (interactive "...")
-;;    (lyskom-start-of-command 'kom-cmd)
-;;    (unwind-protect
-;;        (progn ...)
-;;      (lyskom-end-of-command)))
-;;
-;; This can now be written as
-;;
-;; (def-kom-command kom-cmd (args)
-;;   "Documentation"
-;;   (interactive "...")
-;;   ...)
-
+;;; ======================================================================
+;;; LysKOM user commands
+;;; The new, blocking commands have a very similar structure
+;;;
+;;;  (defun kom-cmd (args)
+;;;    "Documentation"
+;;;    (interactive "...")
+;;;    (lyskom-start-of-command 'kom-cmd)
+;;;    (unwind-protect
+;;;        (progn ...)
+;;;      (lyskom-end-of-command)))
+;;;
+;;; This can now be written as
+;;;
+;;; (def-kom-command kom-cmd (args)
+;;;   "Documentation"
+;;;   (interactive "...")
+;;;   ...)
 
 (defmacro def-kom-command (cmd args doc interactive-decl &rest forms)
   (list 'defun cmd args doc interactive-decl
@@ -139,9 +147,9 @@ Value returned is always nil."
 	       def-body))
 
 
-
-
-;;;; Some useful macros to make the code more readable.
+;;; ======================================================================
+;;; Some useful macros to make the code more readable.
+;;;
 
 (defmacro char-in-string (char string)
   "Return t if the character CHAR is member of STRING. Otherwise return nil."
@@ -160,7 +168,10 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-;; Multiple blocking read from server
+
+;;; ======================================================================
+;;; Multiple blocking read from server
+;;;
 
 (defvar lyskom-multiple-blocking-return nil
   "Return from blocking-do-multiple")
@@ -225,6 +236,7 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 (put 'blocking-do-multiple 'lisp-indent-function 1)
 
 
+
 ;;; ============================================================
 ;;; General compatibility macros and functions
 ;;;
@@ -263,8 +275,47 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 (if (not (fboundp 'frame-width))
     (fset 'frame-width 'screen-width))
 
+(lyskom-provide-function match-string (num &optional string)
+  "Return string of text matched by last search.
+NUM specifies which parenthesized expression in the last regexp.
+ Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
+Zero means the entire text matched by the whole regexp or whole string.
+STRING should be given if the last search was by `string-match' on STRING."
+  (if (match-beginning num)
+      (if string
+	  (substring string (match-beginning num) (match-end num))
+	(buffer-substring (match-beginning num) (match-end num)))))
 
+;;; ======================================================================
+;;; These macros do magic things to the compiler to avoid gratuitous
+;;; compiler warnings.
 ;;;
+
+(eval-when-compile (defvar lyskom-expected-unresolved-functions nil))
+
+(defmacro lyskom-external-function (fn)
+  (` (eval-when-compile
+       (setq lyskom-expected-unresolved-functions
+             (cons (quote (, fn))
+                   lyskom-expected-unresolved-functions)))))
+
+(defmacro lyskom-end-of-compilation ()
+  (` 
+   (eval-when-compile
+     (if (and (boundp 'byte-compile-unresolved-functions)
+              (consp (car-safe byte-compile-unresolved-functions))
+              (symbolp (car-safe (car-safe 
+                                  byte-compile-unresolved-functions))))
+         (mapcar (function (lambda (x)
+                             (setq byte-compile-unresolved-functions
+                                   (delq
+                                    (assq x
+                                          byte-compile-unresolved-functions)
+                                    byte-compile-unresolved-functions))))
+                 lyskom-expected-unresolved-functions)))))
+
+
+;;; ======================================================================
 ;;; Definition of map-keymap that hopefully works like the one in XEmacs
 ;;; except that the sort-first argument is ignored.
 ;;;
@@ -282,17 +333,6 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
                         (funcall fn (car x) (cdr x))))
                      (cdr keymap))))))
 
-
-(lyskom-provide-function match-string (num &optional string)
-  "Return string of text matched by last search.
-NUM specifies which parenthesized expression in the last regexp.
- Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
-Zero means the entire text matched by the whole regexp or whole string.
-STRING should be given if the last search was by `string-match' on STRING."
-  (if (match-beginning num)
-      (if string
-	  (substring string (match-beginning num) (match-end num))
-	(buffer-substring (match-beginning num) (match-end num)))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.8 1996-08-23 22:07:11 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.9 1996-08-27 15:15:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.8 1996-08-23 22:07:11 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.9 1996-08-27 15:15:35 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1327,6 +1327,9 @@ Note that it is not allowed to use deferred insertions in the text."
 ;;; This should be considered an experiment
 
 (defvar lyskom-format-experimental nil)
+
+(lyskom-external-function w3-fetch)
+(lyskom-external-function w3-preview-this-buffer)
 
 (defun lyskom-format-text-body (text)
   "Format a text for insertion. Does parsing of special markers in the text."
@@ -2610,6 +2613,8 @@ from the value of kom-tell-phrases-internal."
 ;;; be loaded now, so it's time to run the lyskom-after-load-hook.
 
 (run-hooks 'lyskom-after-load-hook)
+
+(lyskom-end-of-compilation)
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

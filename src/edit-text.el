@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 43.1 1996-08-14 04:18:41 davidk Exp $
+;;;;; $Id: edit-text.el,v 43.2 1996-08-27 15:15:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 43.1 1996-08-14 04:18:41 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 43.2 1996-08-27 15:15:21 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -424,9 +424,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
     (lyskom-abort-edit
      (apply 'lyskom-message (cdr-safe err)))
     (lyskom-no-subject
+     (lyskom-beep lyskom-ding-on-no-subject)
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
-     (lyskom-beep lyskom-ding-on-no-subject)
      (lyskom-message "%s" (lyskom-get-string (car (cdr err))))
      (condition-case arg
          (let ((text ""))
@@ -449,6 +449,7 @@ text is a member of some recipient of this text."
          (recipient-list nil)
          (author-list nil)
          (author-is-member nil)
+         (collector (make-collector))
          (extra-headers nil)
          (me (save-excursion (set-buffer (process-buffer lyskom-proc))
                              lyskom-pers-no))
@@ -474,10 +475,15 @@ text is a member of some recipient of this text."
     (if (and kom-confirm-multiple-recipients
              (not (eq kom-confirm-multiple-recipients 'before))
              (> (- (length recipient-list) num-me) 1))
-        (if (not (lyskom-j-or-n-p (lyskom-format 'comment-all-relevant-p) t))
-            (signal 'lyskom-edit-text-abort (list "%s" 
-                                                  (lyskom-get-string 
-                                                   'please-edit-recipients)))))
+        (save-excursion
+          (goto-char (point-min))
+          (if (not 
+               (lyskom-j-or-n-p
+                (lyskom-format 'comment-all-relevant-p) t))
+              (signal 'lyskom-edit-text-abort 
+                      (list "%s" 
+                            (lyskom-get-string 
+                             'please-edit-recipients))))))
 
     (if (and kom-check-commented-author-membership
              (assq 'comm-to (cdr misc-list)))
@@ -529,15 +535,13 @@ text is a member of some recipient of this text."
                             nil
                             author-number conference-number)))
                         recipient-list)
+
                        (lyskom-list-use 'sending
-                                        (function
-                                         (lambda (x)
-                                           (if (boundp author-is-member)
-                                               (setq author-is-member
-                                                     (memq 
-                                                      nil
-                                                      (mapcar 'not x)))))))
+                                        'collector-push
+                                        collector)
                        (lyskom-wait-queue 'sending)
+                       (setq author-is-member (collector->value collector))
+
                        (if (and (null author-is-member)
 				(not (zerop author-number))
                                 (lyskom-j-or-n-p
