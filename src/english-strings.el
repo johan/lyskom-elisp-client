@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.293 2003-08-04 07:49:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.294 2003-08-13 17:43:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.293 2003-08-04 07:49:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.294 2003-08-13 17:43:57 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2382,7 +2382,7 @@ written a presentation.%]
         (recipient-no . "Recipient (number)")
         (recipient-re . "Recipient (regexp)")
         (text . "Contents")
-        (text . "Contents (regexp)")))
+        (text-re . "Contents (regexp)")))
 
 (lyskom-language-var local lyskom-filter-actions en
       '((skip-text . "Skip")

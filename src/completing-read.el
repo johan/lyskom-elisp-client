@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.41 2003-08-05 06:47:42 ceder Exp $
+;;;;; $Id: completing-read.el,v 44.42 2003-08-13 17:43:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.41 2003-08-05 06:47:42 ceder Exp $\n"))
+       "$Id: completing-read.el,v 44.42 2003-08-13 17:43:57 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -114,6 +114,23 @@ but first checks a cache."
      (define-key map " " nil))
     map)
   "Keymap used for reading LysKOM names.")
+
+(defun lyskom-read-from-minibuffer-clear-initial (&rest args)
+  (condition-case nil
+      (let ((ranges nil)
+            (tmp nil)
+            (start (point-min)))
+        (while (setq tmp (lyskom-next-property-bounds
+                          start (point-max) 'lyskom-initial-mbc))
+          (setq ranges (cons tmp ranges)
+                start (cdr tmp)))
+        (lyskom-traverse range ranges
+          (delete-region (car range) (cdr range)))
+        (when ranges
+          (setq before-change-functions 
+                (delq 'lyskom-read-from-minibuffer-clear-initial
+                      before-change-functions))))
+    (error nil)))
 
 (defsubst lyskom-completing-match-string-regexp (string)
   (concat "^"
@@ -243,6 +260,16 @@ A string:    A name that matched nothing in the database."
                 (blocking-do 'get-uconf-stat lyskom-current-conf)))
               (t nil)))
 
+  (cond ((stringp initial)
+         (setq initial (copy-sequence initial))
+         (add-text-properties 0 (length initial) 
+                              '(lyskom-initial-mbc t) initial))
+        (initial
+	 (setq initial (cons (copy-sequence (car initial)) (cdr initial)))
+	 (add-text-properties 0 (length (car initial)) 
+			      '(lyskom-initial-mbc t) (car initial))))
+
+
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
           lyskom-minibuffer-local-completion-map)
@@ -254,16 +281,23 @@ A string:    A name that matched nothing in the database."
 
     (while keep-going
       (lyskom-with-lyskom-minibuffer
-       (setq read-string (completing-read (cond ((stringp prompt) prompt)
-                                                ((symbolp prompt) (lyskom-get-string prompt))
-                                                (t (lyskom-get-string 'conf-prompt)))
-                                          'lyskom-read-conf-internal
-                                          type
-                                          mustmatch
-                                          (if (listp initial)
-                                              initial
-                                            (cons initial 0))
-                                          'lyskom-name-hist)))
+       (let ((before-change-functions before-change-functions)
+             (minibuffer-setup-hook 
+              (cons (lambda ()
+                      (setq before-change-functions
+                            (cons 'lyskom-read-from-minibuffer-clear-initial
+                                  before-change-functions)))
+                    minibuffer-setup-hook)))
+         (setq read-string (completing-read (cond ((stringp prompt) prompt)
+                                                  ((symbolp prompt) (lyskom-get-string prompt))
+                                                  (t (lyskom-get-string 'conf-prompt)))
+                                            'lyskom-read-conf-internal
+                                            type
+                                            mustmatch
+                                            (if (listp initial)
+                                                initial
+                                              (cons initial 0))
+                                            'lyskom-name-hist))))
       (setq result
             (cond ((null read-string) nil)
                   ((string= "" read-string) nil)

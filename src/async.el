@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.56 2003-04-05 20:41:24 byers Exp $
+;;;;; $Id: async.el,v 44.57 2003-08-13 17:43:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.56 2003-04-05 20:41:24 byers Exp $\n"))
+	      "$Id: async.el,v 44.57 2003-08-13 17:43:57 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -282,6 +282,26 @@ this function shall be with current-buffer the BUFFER."
                                     pers-no
                                     old-user-area
                                     new-user-area)))))
+
+     ((eq msg-no 20)                    ; async-new-presentation
+      (let* ((conf-no (lyskom-parse-num))
+             (old-pres (lyskom-parse-num))
+             (new-pres (lyskom-parse-num)))
+        (lyskom-ignore old-pres)
+        (when (cache-get-conf-stat conf-no)
+          (set-conf-stat->presentation (cache-get-conf-stat conf-no)
+                                       new-pres)
+         (lp--maybe-update-entry-for-conf conf-no))))
+
+     ((eq msg-no 21)                    ; async-new-motd
+      (let* ((conf-no (lyskom-parse-num))
+             (old-motd (lyskom-parse-num))
+             (new-motd (lyskom-parse-num)))
+        (lyskom-ignore old-motd)
+        (when (cache-get-conf-stat conf-no)
+          (set-conf-stat->msg-of-day (cache-get-conf-stat conf-no)
+                                     new-motd))))
+
      (t
       (lyskom-skip-tokens tokens)))))
 
