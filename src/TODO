@@ -6,7 +6,7 @@ Buggar
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
     så scrollar klienten fel ibland.
 
-    åm -> lä -> åh --- Sen får man läsa markerade iaf.
+    åm -> lä -> åh --- Sen får man läsa markerade iaf. (FIXAT?)
 
     Prefetchhanteringen buggar. Om man går ur ett möte, går med i ett
     möte, och går ur det igen, allt utan att göra något annat, så får
@@ -24,8 +24,6 @@ Buggar
     Fotnoter som visas på en gång filtreras inte.
 
     M-> i prioritera-bufferten. Text 1320736.
-
-    Spara text sparar hela bufferten.
 
     Det har hänt att call-info har blivit nil i lyskom-parse-error.
 

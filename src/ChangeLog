@@ -1,5 +1,9 @@
 Sat Apr 27 02:48:51 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* commands1.el (kom-send-letter): Ta bort confstatet ur cachen.
+
+	* lyskom-rest.el (kom-save-text): Tillåt directorynamn.
+
 	* startup.el (kom-start-anew): Töm completion-cachen.
 
 Fri Apr 26 00:01:14 1996  David Kågedal  <davidk@lysator.liu.se>
