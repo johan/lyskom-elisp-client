@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.14 1997-07-02 17:46:27 byers Exp $
+;;;;; $Id: edit-text.el,v 44.15 1997-07-09 14:41:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.14 1997-07-02 17:46:27 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.15 1997-07-09 14:41:15 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -490,6 +490,7 @@ text is a member of some recipient of this text."
     
 
     (set-collector->value collector nil)
+
     (if (and (lyskom-default-value 'kom-confirm-multiple-recipients)
              (not (eq (lyskom-default-value 'kom-confirm-multiple-recipients)
                       'before))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.5 1997-06-29 14:19:50 byers Exp $
+;;;;; $Id: flags.el,v 44.6 1997-07-09 14:41:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.5 1997-06-29 14:19:50 byers Exp $\n"))
+	      "$Id: flags.el,v 44.6 1997-07-09 14:41:18 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -351,7 +351,7 @@ If successful then set the buffer not-modified. Else print a warning."
 		    (setq name (concat "UNK-" gname))
 		    (setq lyskom-global-non-boolean-variables
 			  (cons name lyskom-global-non-boolean-variables))))
-		(lyskom-set-var-from-string name value))))
+		(lyskom-maybe-set-var-from-string name value))))
 	   ;; Note that elisp-no may be nil here, so the comparison
 	   ;; cannot be performed with '=.
 	   ((equal r elisp-no)
@@ -360,7 +360,7 @@ If successful then set the buffer not-modified. Else print a warning."
 	      (while (> (length lyskom-options-text) 2)
 		(setq name (lyskom-read-options-eval-get-holerith))
 		(setq value (lyskom-read-options-eval-get-holerith))
-		(lyskom-set-var-from-string name value))))
+		(lyskom-maybe-set-var-from-string name value))))
 	   (t
 	    (let ((pos lyskom-other-clients-user-areas))
 	      (while (and pos
@@ -393,6 +393,13 @@ If successful then set the buffer not-modified. Else print a warning."
       (setq lyskom-options-text (substring lyskom-options-text
                                            (+ start len)))
       name)))
+
+(defun lyskom-maybe-set-var-from-string (var string)
+  "This is a wrapper around lyskom-set-var-from-string that does nothing
+if the variable is in kom-dont-read-saved-variables."
+  (cond ((eq kom-dont-read-saved-variables t) nil)
+        ((memq (intern var) kom-dont-read-saved-variables) nil)
+        (t (lyskom-set-var-from-string var string))))
 
 (defun lyskom-set-var-from-string (var string)
   "This is a wrapper aroud read-from-string.
