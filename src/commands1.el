@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.150 2002-07-23 18:28:39 byers Exp $
+;;;;; $Id: commands1.el,v 44.151 2002-08-05 18:14:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.150 2002-07-23 18:28:39 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.151 2002-08-05 18:14:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2906,7 +2906,8 @@ Uses Protocol A version 8 calls"
 	     format-string-2
 	     ""
 	     (lyskom-return-username who-info)
-	     (concat "(" (string-replace-match "\n" (who-info->doing-what who-info) " ") ")"))))
+	     (concat "(" (or (string-replace-match "\n" (who-info->doing-what who-info) " " t t)
+                             (who-info->doing-what who-info)")")))))
       (setq who-list (cdr who-list)))
       
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 1) ?-)
@@ -3036,7 +3037,8 @@ Uses Protocol A version 9 calls"
 	       format-string-2
 	       ""
 	       username
-	       (concat "(" (string-replace-match "\n" (dynamic-session-info->what-am-i-doing who-info) " ")
+	       (concat "(" (or (string-replace-match "\n" (dynamic-session-info->what-am-i-doing who-info) " " t t)
+                               (dynamic-session-info->what-am-i-doing who-info))
 		       ")"))))
 	(if kom-show-since-and-when
 	    (let ((active 
@@ -3459,8 +3461,7 @@ WHO-INFOS that are potential sessions."
 					   (who-info->doing-what info))
 			     (match-string 1 (who-info->doing-what info))
 			   (who-info->doing-what info))))
-             (when (string-match "\n" string)
-               (string-replace-match "\n" string " "))
+             (setq string (or (string-replace-match "\n" string " " t t) string))
 	     (if (string= string "")
 		 (lyskom-get-string 'unknown-doing-what)
 	       string))
@@ -3508,8 +3509,7 @@ WHO-INFOS that are potential sessions."
 			       (match-string
 				1 (dynamic-session-info->what-am-i-doing info))
 			     (dynamic-session-info->what-am-i-doing info))))
-               (when (string-match "\n" string)
-                 (string-replace-match "\n" string " "))
+               (setq string (or (string-replace-match "\n" string " " t t ) string))
 	       (if (string= string "")
 		   (lyskom-get-string 'unknown-doing-what)
 		 string))

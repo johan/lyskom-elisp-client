@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.262 2002-07-30 20:11:42 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.263 2002-08-05 18:14:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.262 2002-07-30 20:11:42 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.263 2002-08-05 18:14:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2503,8 +2503,8 @@ Använder standardteckensnittet för dessa inställningar.
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-j") 'kom-prioritize-next-line)
   (define-key lyskom-sv-prioritize-mode-map (kbd "<down>") 'kom-prioritize-next-line)
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-n") 'kom-prioritize-next-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "C-?") 'kom-prioritize-previous-line)
-  (define-key lyskom-sv-prioritize-mode-map (kbd "M-C-?") 'kom-prioritize-deselect-all)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "DEL") 'kom-prioritize-previous-line)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "M-DEL") 'kom-prioritize-deselect-all)
   (define-key lyskom-sv-prioritize-mode-map (kbd "<up>") 'kom-prioritize-previous-line)
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-p") 'kom-prioritize-previous-line)
   (define-key lyskom-sv-prioritize-mode-map (kbd "p") 'kom-prioritize-previous-line)
@@ -3631,8 +3631,8 @@ i servern. Annars sparas det i din .emacs.")
   läsmarkera de inlägg som visas. I annat fall lämnar återsekommandona
   din läshistorik orörd, precis som vanligt.")
     (kom-auto-review-faqs-doc . "\
-  Om detta är påslaget så kommer olästa FAQer som inte att återses
-  automatiskt när du loggar in eller går till ett möte med en oläst FAQ.")
+  Om detta är påslaget så kommer olästa FAQer inte att återses automatiskt
+  när du loggar in eller går till ett möte med en oläst FAQ.")
     (kom-auto-list-faqs-doc . "\
   Om detta är påslaget så kommer olästa FAQer att listas automatiskt när
   du loggar in eller går till ett möte med en oläst FAQ.")
