@@ -1,3 +1,12 @@
+2000-09-15  David Byers  <davby@ida.liu.se>
+
+	* command.el (lyskom-command-complete-word): Prevent multiple
+	spaces at end of a word (you'd get them when you typed a full word
+	and then a space).
+	(lyskom-read-extended-command): Bind last-exact-completion for
+	XEmacs compatibility.
+	(last-exact-completion): New variable.
+
 2000-09-14  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46.1-BETA-2

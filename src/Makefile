@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.70 2000-09-14 08:07:52 byers Exp $
+# $Id: Makefile,v 44.71 2000-09-15 12:16:42 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.70 2000-09-14 08:07:52 byers Exp $
+# $Id: Makefile,v 44.71 2000-09-15 12:16:42 byers Exp $
 #
 
 
@@ -44,7 +44,7 @@ REDHATCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 RPMROOT = /usr/src/redhat
 
 FTPDIR=/home/davby/www-pub
-REMOTEDIR=sanna.lysator.liu.se:/lysator/ftp/pub/lyskom/elisp-client
+#REMOTEDIR=sanna.lysator.liu.se:/lysator/ftp/pub/lyskom/elisp-client
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 LISPDIR = /usr/gnu/share/emacs/site-lisp
 LANGUAGES = swedish english

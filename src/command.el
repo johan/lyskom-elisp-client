@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.37 2000-09-14 08:07:53 byers Exp $
+;;;;; $Id: command.el,v 44.38 2000-09-15 12:16:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.37 2000-09-14 08:07:53 byers Exp $\n"))
+	      "$Id: command.el,v 44.38 2000-09-15 12:16:43 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -208,11 +208,14 @@
   (define-key lyskom-command-completion-map (kbd "SPC")
     'lyskom-command-complete-word))
 
+(defvar last-exact-completion)
+
 (defun lyskom-read-extended-command (&optional prefix-arg)
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
 	 (name nil)
+         (last-exact-completion nil)
          (prefix-text
           (cond ((eq prefix-arg '-) "- ")
                 ((equal prefix-arg '(4)) "C-u ")
@@ -372,8 +375,9 @@ and back of the string."
     (cond ((null completion) (minibuffer-message " [No match]") nil)
 	  ((eq completion t) nil)
 	  (t (let* ((tmp (buffer-string)))
-	       (when (string-equal (lyskom-unicase completion)
-				   (lyskom-unicase tmp))
+	       (when (and (string-equal (lyskom-unicase completion)
+                                        (lyskom-unicase tmp))
+                          (not (string-match "\\s-$" completion)))
 		 (if (stringp (setq tmp (try-completion 
 					 (concat tmp " ")
 					 minibuffer-completion-table
