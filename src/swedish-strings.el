@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.399 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.400 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.399 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.400 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -3294,9 +3294,9 @@ Nuvarande rättigheter för %#1P (%#1p):
     (viewer-program . "WWW-läsare")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (alla)")
-    (netscape-viewer      . "Netscape/Mozilla (alla)")
-    (windows-viewer       . "Windows standard eller Netscape/Mozilla (alla)")
-    (emacs-w3-viewer      . "Emacs W3-mode (HTTP, Goper, FTP)")
+    (netscape-viewer      . "Firefox/Mozilla/Opera/Netscape (alla)")
+    (windows-viewer       . "Windows standard eller Netscape-liknande (alla)")
+    (emacs-w3-viewer      . "Emacs W3-mode (HTTP, Gopher, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer   . "Emacs Dired (FTP)")
     (emacs-mail-viewer    . "Emacs Mail-mode (Mail)")
@@ -4034,7 +4034,8 @@ ta fram menyer.")
   Mosaic.")
 
     (kom-netscape-command-doc . "\
-  Denna inställning anger kommandot för att köra Netscape eller Mozilla.")
+  Denna inställning anger kommandot för att köra Firefox, Mozilla, Opera 
+  eller Netscape.")
 
     (kom-galeon-command-doc . "\
   Denna inställning anger kommandot för att köra Galeon.")
@@ -4502,9 +4503,9 @@ ta fram menyer.")
   kan ett utseende anges. Utseendena är namn på faces i Emacs.")
     (kom-netscape-variant-doc . "\
   Denna inställning styr var elispklienten försöker öppna URLer. Hur
-  bra de olika valen fungerar beror på vilken variant av Netscape eller
-  Mozilla man använder, och till och med vilket operativsystem man
-  använder.")
+  bra de olika valen fungerar beror på vilken variant av Firefox, 
+  Mozilla, Netscape eller Opera man använder, och till och med vilket 
+  operativsystem man använder.")
     (kom-auto-confirm-new-conferences-doc . "\
   Om den här inställningen är påslagen så kommer kommandona \"Lista
   nya möten\" och \"Lista nya personer\" automatiskt markera nya
@@ -4617,7 +4618,7 @@ ta fram menyer.")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-windows-browser-command-tag . "Kommando för att starta en WWW-läsare i Windows:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")
-    (kom-netscape-command-tag . "Kommando för att starta Netscape eller Mozilla:")
+    (kom-netscape-command-tag . "Kommando för att starta Netscape-liknande WWW-läsare:")
     (kom-galeon-command-tag . "Kommando för att starta Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symboliska markeringstyper:")
@@ -4734,7 +4735,7 @@ ta fram menyer.")
     (kom-lynx-xterm-command-tag . "Kommando för Lynx i xterm:")
     (kom-show-sync-messages-tag . "Visa databasen-sparar-meddelanden:")
     (kom-highlight-conferences-tag . "Färgläggning av namn:")
-    (kom-netscape-variant-tag . "Var ska Netscape/Mozilla öppna URLer:")
+    (kom-netscape-variant-tag . "Var ska Netscape-liknande WWW-läsare öppna URLer:")
     (kom-auto-confirm-new-conferences-tag . "Markera alltid nya möten och personer som kända:")
     (kom-text-properties-tag . "Använd typsnitt och färger:")
     (kom-fontify-text-tag . "Visa fetstil och kursiv text i inlägg:")

@@ -1,3 +1,20 @@
+2005-02-25  Pontus Freyhult  <pont@soua.net>
+
+	* swedish-strings.el, english-string.el (lyskom-custom-strings): 
+	Fixed spelling of Gopher in emacs-w3-viewer.
+	
+	Fix bug 297:
+	
+	* vars.el.in (kom-netscape-command): Added Firefox and Opera to 
+	variable description.
+	(kom-netscape-variant): Dito.
+	(kom-url-viewer-preferences): Dito.
+
+	* swedish-strings.el, english-strings (lyskom-custom-strings): Dito 
+	for kom-netscape-command-doc, kom-netscape-variant-doc,
+	kom-netscape-command-tag, kom-netscape-variant-tag,
+	netscape-viewer and windows-viewer.
+
 2005-02-24  Pontus Freyhult  <pont@soua.net>
 
 	Fix bug 1091:

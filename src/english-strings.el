@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.355 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.356 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.355 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.356 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3145,9 +3145,9 @@ Select whether to execute command or keyboard macro.")
     (viewer-program . "Web browser")
     (no-viewer            . "(none selected)")
     (default-viewer       . "Browse-URL (all)")
-    (netscape-viewer . "Netscape/Mozilla (all)")
-    (windows-viewer       . "Windows default or Netscape/Mozilla (all)")
-    (emacs-w3-viewer . "Emacs W3 mode (HTTP, Goper, FTP)")
+    (netscape-viewer . "Firefox/Mozilla/Netscape or Opera (all)")
+    (windows-viewer       . "Windows default or Netscape-like (all)")
+    (emacs-w3-viewer . "Emacs W3 mode (HTTP, Gopher, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer . "Emacs Dired (FTP)")
     (emacs-mail-viewer . "Emacs Mail mode (Mail)")
@@ -3877,7 +3877,8 @@ up menus.")
   This setting specifies the command to use to start NCSA Mosaic.")
 
     (kom-netscape-command-doc . "\
-  This setting specifies the command to use to start Netscape or Mozilla.")
+  This setting specifies the command to use to start Firefox, Mozilla,
+  Netscape or Opera.")
 
     (kom-galeon-command-doc . "\
   This setting specifies the command to use to start Galeon.")
@@ -4348,8 +4349,9 @@ up menus.")
   the name of a variable that contains a face.")
     (kom-netscape-variant-doc . "\
   This setting controls where the client opens URLs. How well the
-  settings work depends on which variant of Netscape or Mozilla you
-  are using, and even on which operating system you are on.")
+  settings work depends on which variant of Firefox, Mozilla, Opera 
+  or Netscape you are using, and even on which operating system you 
+  are on.")
     (kom-auto-confirm-new-conferences-doc . "\
   If this setting is on, the commands \"List new conferences\" and
   \"List new users\" will automatically mark new conferences and
@@ -4461,7 +4463,7 @@ up menus.")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-windows-browser-command-tag . "Command to start a web browser on Windows:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
-    (kom-netscape-command-tag . "Command to start Netscape/Mozilla:")
+    (kom-netscape-command-tag . "Command to start Netscape-like browsers:")
     (kom-galeon-command-tag . "Command to start Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symbolic mark types:")
@@ -4579,7 +4581,7 @@ up menus.")
     (kom-lynx-xterm-command-tag . "Command to run lynx in xterm:")
     (kom-show-sync-messages-tag . "Show database-saving message:")
     (kom-highlight-conferences-tag . "Display of names::")
-    (kom-netscape-variant-tag . "Where Netscape/Mozilla opens URLs:")
+    (kom-netscape-variant-tag . "Where Netscape-like browsers opens URLs:")
     (kom-auto-confirm-new-conferences-tag . "Always mark new conferences as known:")
     (kom-text-properties-tag . "Use fonts and colors:")
     (kom-fontify-text-tag . "Bold and italic fonts in texts:")
