@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.50 1998-02-23 21:58:36 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.51 1998-05-08 13:58:50 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.50 1998-02-23 21:58:36 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 44.51 1998-05-08 13:58:50 petli Exp $\n"))
 
 (provide 'lyskom)
 
@@ -921,6 +921,27 @@ Users are encouraged to use their best sense of humor."
   server)
 
 
+;;; =================================================================
+;;;
+;;; Email import variables
+;;; 
+
+(def-kom-var kom-mail-importer-persons nil
+  "*List of persons (numbers) which are mail importers.
+Texts by these persons are formatted as email texts, rather than
+ordinary LysKOM texts."
+  server)
+
+(def-kom-var kom-mail-address
+  (concat user-full-name " <" user-mail-address ">")
+  "*Email address to use in From:-header."
+  server)
+
+(def-kom-var kom-mail-visible-headers
+  '("to" "cc" "reply-to")
+  "*List of headers to show when displaying an email text."
+  server)
+
 
 ;;; =================================================================
 ;;;
@@ -1010,7 +1031,8 @@ Users are encouraged to use their best sense of humor."
     kom-review-presentation
     kom-review-backward
     kom-view-next-text
-    kom-who-is-on 
+    kom-who-is-on
+    kom-who-is-on-in-conference
     kom-who-am-i
     ;;   kom-display-who-buffer
     kom-list-clients

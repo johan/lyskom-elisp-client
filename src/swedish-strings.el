@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.41 1998-05-06 18:05:28 petli Exp $
+;;;;; $Id: swedish-strings.el,v 44.42 1998-05-08 13:58:57 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.41 1998-05-06 18:05:28 petli Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.42 1998-05-08 13:58:57 petli Exp $\n"))
 
 
 ;;; ================================================================
@@ -1224,7 +1224,7 @@ Innehåll:    \"%#9s\"
     (kom-view-next-text	      . "Läsa nästa inlägg")
     (kom-who-is-on	      . "Vilka är inloggade") 
     (kom-who-is-on-in-conference
-     			      . "Vilka (är inloggade) i möte") 
+     			      . "Vilka är inloggade i möte") 
     (kom-who-am-i             . "Var (är) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")

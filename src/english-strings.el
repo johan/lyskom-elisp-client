@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.37 1998-05-06 18:05:25 petli Exp $
+;;;;; $Id: english-strings.el,v 44.38 1998-05-08 13:58:53 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.37 1998-05-06 18:05:25 petli Exp $"))
+              "$Id: english-strings.el,v 44.38 1998-05-08 13:58:53 petli Exp $"))
 
 
 ;;; ================================================================
@@ -1207,7 +1207,7 @@ Contents:     \"%#9s\"
     (kom-view-next-text       . "(Read) next article")
     (kom-who-is-on            . "Who is on") 
     (kom-who-is-on-in-conference
-                              . "Who (is on) in conference") 
+                              . "Who is on in conference") 
     (kom-who-am-i             . "Where (am) i")
 ;    (kom-display-who-buffer   .  "Display who (list)")
     (kom-list-clients	      . "List clients")
