@@ -1,5 +1,7 @@
 2000-03-15  David Byers  <davby@ida.liu.se>
 
+	* Release av 0.46-BETA-H
+
 	* view-text.el (lyskom-format-mx-author): Make mx-from clickable.
 
 	* lyskom-buttons.el (lyskom-default-button): URLs and e-mail get
