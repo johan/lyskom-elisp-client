@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.13 1996-10-08 03:25:46 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.14 1996-10-08 12:24:06 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.13 1996-10-08 03:25:46 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.14 1996-10-08 12:24:06 nisse Exp $\n"))
 
 
 ;;;; ================================================================
@@ -154,17 +154,13 @@ assoc list."
 
 (defun lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (lyskom-get-string command 
-		     (if kom-emacs-knows-iso-8859-1
-			 lyskom-commands
-		       lyskom-swascii-commands)))
-
+  (lyskom-get-string command 'command)) 
 
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
   (if administrator
-      (not (memq (car (cdr alternative)) lyskom-admin-removed-commands))
-    (not (memq (car (cdr alternative)) lyskom-noadmin-removed-commands))))
+      (not (memq (cdr alternative) lyskom-admin-removed-commands))
+    (not (memq (cdr alternative) lyskom-noadmin-removed-commands))))
 
 
 (defun kom-extended-command ()
@@ -179,10 +175,8 @@ assoc list."
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (alternatives (mapcar (function (lambda (pair)
-					   (list (cdr pair) (car pair))))
-			       (if kom-emacs-knows-iso-8859-1
-				   lyskom-commands
-				 lyskom-swascii-commands)))
+					   (cons (cdr pair) (car pair))))
+			       (lyskom-get-strings lyskom-commands 'command)))
 	 (name (completing-read (lyskom-get-string 'extended-command)
 				alternatives 
 				;; lyskom-is-administrator is buffer-local and
@@ -196,12 +190,8 @@ assoc list."
 				     (lyskom-ok-command
 				      alternative
 				      (, lyskom-is-administrator))))
-				t nil))
-	 (fnc (rassq (car (all-completions name alternatives)) 
-		     (if kom-emacs-knows-iso-8859-1
-			 lyskom-commands
-		       lyskom-swascii-commands))))
-    (car fnc)))
+				t nil)))
+    (cdr (assq name alternatives))))
 
 ;;; Resume operation after a crash.
 
@@ -809,16 +799,16 @@ Args: FORMAT-STRING &rest ARGS"
  "Find the string corresponding to ATOM and insert it into the LysKOM buffer." 
   (lyskom-insert (lyskom-get-string atom)))
 
-(defun lyskom-get-string (atom &optional assoc-list)
-  "Get the string corresponding to ATOM and return it."
-  (if (stringp atom)
-      atom
-    (let ((format-pair (assoc atom (or assoc-list lyskom-strings))))
-      (if (null format-pair)
-	  (signal 'lyskom-internal-error 
-		  (list 'lyskom-get-string
-			(list atom ": string not found")))
-	(cdr format-pair)))))
+;;(defun lyskom-get-string (atom &optional assoc-list)
+;;  "Get the string corresponding to ATOM and return it."
+;;  (if (stringp atom)
+;;	atom
+;;    (let ((format-pair (assoc atom (or assoc-list lyskom-strings))))
+;;	(if (null format-pair)
+;;	    (signal 'lyskom-internal-error 
+;;		    (list 'lyskom-get-string
+;;			  (list atom ": string not found")))
+;;	  (cdr format-pair)))))
 
 
 (defun lyskom-format (format-string &rest argl)
@@ -1077,8 +1067,9 @@ Note that it is not allowed to use deferred insertions in the text."
                           (mapconcat 'single-key-description
                                      (append arg nil) " "))
                          ((symbolp arg)
-                          (or (cdr (assq arg lyskom-commands))
-                              (princ arg)))
+                          (if (memq arg lyskom-commands)
+			      (lyskom-get-string arg)
+			    (princ arg)))
                          (t (format "%S" arg)))))
 
      ;;
@@ -1436,35 +1427,6 @@ A symbol other than t means call it as a function."
   (or (not (facep f1))
       (face-equal f1 'default)))
 		  
-
-;;; ================================================================
-;;;                      Iso-8859-1 converting
-
-;;; Author: Linus Tolke Y
-
-
-(defvar iso-8859-1-table 
-  " 	
-
- !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	
-
-  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"
-  "*This is a table of the chars corresponding value in SWASCII.
-Used by the function iso-8859-1-to-swascii function.")
-
-
-(defun iso-8859-1-to-swascii (string)
-  "Returns a string without characters with code > 127.
-What chars are converted to is controlled by the iso-8859-1-table."
-  (let ((tmp (copy-sequence string))
-        (i 0)
-        (len (length string)))
-    (while (< i len)
-      (aset tmp i (aref iso-8859-1-table
-                        (aref tmp i)))
-      (setq i (1+ i)))
-    tmp))
-
 
 ;;;; ================================================================
 ;;;;                         Running in buffer 
@@ -2683,15 +2645,17 @@ from the value of kom-tell-phrases-internal."
 		 
 
 
-(setq lyskom-swascii-commands
-      (mapcar 
-       (function (lambda (pair)
-		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-       lyskom-commands))
-(setq lyskom-swascii-header-separator 
-      (iso-8859-1-to-swascii lyskom-header-separator))
-(setq lyskom-swascii-header-subject
-      (iso-8859-1-to-swascii lyskom-header-subject))
+;;; Formely lyskom-swascii-commands
+(lyskom-define-language 'command 'swascii
+  (mapcar 
+   (function (lambda (pair)
+	       (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+   (lyskom-get-strings lyskom-commands 'command)))
+
+;;(setq lyskom-swascii-header-separator 
+;;	(iso-8859-1-to-swascii lyskom-header-separator))
+;;(setq lyskom-swascii-header-subject
+;;	(iso-8859-1-to-swascii lyskom-header-subject))
 
 (setq lyskom-swascii-filter-actions
       (mapcar 
