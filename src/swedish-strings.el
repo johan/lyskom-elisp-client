@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.26 1992-01-25 14:46:17 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.27 1992-02-28 23:39:41 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.26 1992-01-25 14:46:17 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.27 1992-02-28 23:39:41 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -715,6 +715,8 @@ Felmeddelande: %#1s**************************************************")
     (kom-comment-previous	"Kommentera föregående inlägg")
     (kom-write-footnote         "Fotnot till inlägg")
     (kom-private-answer         "Personligt svar")
+    (kom-private-answer-previous
+     "Personligt svar på föregående inlägg")
     (kom-set-unread		"Endast läsa senaste")
     (kom-write-text		"Skriva ett inlägg")
     (kom-send-letter		"Skicka brev")
@@ -810,6 +812,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "K"  'kom-comment-previous)
   (define-key lyskom-mode-map "F"  'kom-write-footnote)
   (define-key lyskom-mode-map "p"  'kom-private-answer)
+  (define-key lyskom-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-mode-map "h"  'kom-jump)
   (define-key lyskom-mode-map "lm" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
