@@ -1,3 +1,12 @@
+2002-02-04  Johan Sundström  <jhs@lysator.liu.se>
+
+	* view-text.el
+	(lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1):
+	Also, don't convert texts created by a mail importer. (The theory
+	here is that all ol'e farts writing swedish in swascii pursue this
+	practice only in kom, and that few people writing on mailing lists
+	imported to kom do.)
+
 2002-01-30  Johan Sundström  <jhs@lysator.liu.se>
 
 	* view-text.el
