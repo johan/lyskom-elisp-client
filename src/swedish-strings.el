@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.20 1991-12-01 01:50:33 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.21 1991-12-13 18:26:02 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.20 1991-12-01 01:50:33 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.21 1991-12-13 18:26:02 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -425,6 +425,11 @@ M{rk kuvertet LysKOM buggrapport.\n\n")
     (name-is-not-in-conf . "%#1s är inte närvarande i något möte.\n")
     (name-is-in-conf . "%#1s är närvarande i\n%#2s\n")
     (connected-during . "Uppkopplingstid: %#1d sekunder.\n")
+
+    (conf-to-set-super-conf-q . "Vilket möte vill du sätta supermöte för? ")
+    (new-super-conf-q . "Vilket möte vill du ha som supermöte? ")
+    (super-conf-for-is . "Ändra supermöte för %#1s till %#2s...")
+
     (conf-to-set-garb-nice-q . "Vilket möte vill du sätta livslängd för? ")
     (new-garb-nice-q . "Vilket värde vill du sätta livslängden till? ")
     (garb-nice-for-is . "Ändra livslängden för %#1s till %#2d...")
@@ -704,6 +709,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-sub-member             "Uteslut medlem")
     (kom-change-conf-motd	"Sätt lapp på dörren")
     (kom-set-garb-nice          "Ändra livslängd")
+    (kom-set-super-conf         "Ändra supermöte")
     (kom-unset-conf-motd	"Ta bort lapp på dörren")
     (kom-save-text		"Spara text (på fil)")
     (kom-edit-options		"Ändra variabler")
