@@ -1,3 +1,19 @@
+2002-04-28  David Byers  <david.byers@swipnet.se>
+
+	* header.el: When detecting a buggy read-kbd-macro, attempt to
+	load good definitions from known libraries rather than just bail.
+
+	* vars.el.in (lyskom-face-schemes): Added scheme "bark".
+
+2002-04-28  David Byers  <david.byers@swipnet.se>
+
+	* edit-text.el (lyskom-edit-fcc-text): Delete the add button when
+	fcc-ing texts.
+
+	* services.el (initiate-set-pers-flags): New function.
+
+	* commands1.el (kom-who-is-on): Improve documentation.
+
 2002-04-27  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* commands2.el (kom-obsolete-extended-command-binding): Use ding

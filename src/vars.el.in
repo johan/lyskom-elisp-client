@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.188 2002-04-27 18:30:33 byers Exp $
+;;;;; $Id: vars.el.in,v 44.189 2002-04-28 11:50:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.188 2002-04-27 18:30:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.189 2002-04-28 11:50:35 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2829,6 +2829,24 @@ the value of  kom-tell-phrases for fun.")
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#e8e8ff")
      )
+    (bark
+     (kom-active-face default "Gold" "Black")
+     (kom-mark-face default "White" nil)
+     (kom-url-face default "Gold" "Black")
+     (kom-me-face default "Gold" "Black")
+     (kom-highlight-face default "PaleGreen" nil)
+     (kom-text-face default nil nil)
+     (kom-subject-face default "Gold" nil)
+     (kom-text-no-face default nil nil)
+     (kom-presence-face default "Gold" nil)
+     (kom-first-line-face bold nil nil)
+     (kom-dashed-lines-face nil nil "#0a0a0a")
+     (kom-text-body-face nil nil "#181818")
+     (kom-dim-face nil "DarkSlateGray")
+     (kom-friends-face nil "Gold" "Black")
+     (kom-morons-face nil "Gold" "Black")
+     (kom-warning-face 'bold "Red" nil)
+     )
     (black-and-tan
       (kom-text-body-face nil nil "#f8f8f0")
       (kom-active-face default "#602000" nil)
@@ -2926,9 +2944,9 @@ schemes in LysKOM. The car of each element is the scheme key, a
 symbol, and the cdr is a list of face definitions. Each face
 definition in turn is a list of four elements: the face name, the base
 face, foreground color and background color. When LysKOM defines a
-face from such a specification, the base face is first copied and then
-the foreground and background colors are set. If it permissible to
-substitute nil for any element except the face name.
+face from such a specification, the base face is first copied (unless
+it is nil) and then the foreground and background colors are set. If
+it permissible to substitute nil for any element except the face name.
 
 For instance, (kom-me-face bold \"yellow\" \"red\") will cause kom-me-face
 to be bold with yellow text on a red background."
