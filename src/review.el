@@ -13,7 +13,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 35.1 1991-08-21 15:45:16 linus Exp $\n"))
+	      "$Id: review.el,v 35.2 1991-09-01 22:29:10 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -337,7 +337,7 @@ If reading forward then starts reading backward and the other way round."
       (setcdr list (nreverse (cdr list)))
       (set-read-info->forward info (not forward))
       (lyskom-insert
-       (lyskom-format 'you-review (lyskom-get-string (if forward
+       (lyskom-format 'you-review (lyskom-get-string (if (not forward)
 							 'forward
 						       'backward))))))
    (t
