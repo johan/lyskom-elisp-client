@@ -1,3 +1,13 @@
+2002-04-08  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* english-strings.el (lyskom-message):
+	add-recpt-button-text-regex: updated the regex to reflect the
+	change to add-recpt-button-text some time ago.
+
+	* swedish-strings.el (lyskom-message):
+	add-recpt-button-text-regex: bug-fix: the backslashes must be
+	escaped by backslashes.
+
 2002-04-03  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* Makefile (debian-packages): new target.

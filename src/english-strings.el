@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.177 2002-03-23 19:54:52 joel Exp $
+;;;;; $Id: english-strings.el,v 44.178 2002-04-07 22:22:10 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.177 2002-03-23 19:54:52 joel Exp $"))
+              "$Id: english-strings.el,v 44.178 2002-04-07 22:22:10 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1280,7 +1280,7 @@ Text:
     (timestamp-popup-title . "Timestamp %#1s")
     (recpt-type-popup-title . "Recipient type: %#1s")
     (add-recpt-button-text . "[Add...]")
-    (add-recpt-button-text-regex . "\\[Add recipient\\]")
+    (add-recpt-button-text-regex . "\\[Add\\.\\.\\.\\]")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
