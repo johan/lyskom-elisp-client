@@ -1,3 +1,10 @@
+2000-12-06  Joel Rosdahl  <joel@rosdahl.net>
+
+	* distribution-configure.in: Ignore stderr output from Emacs.
+
+	* autoconf.el (extract-autoconf-data): Print autoconf data to
+	stdout.
+
 2000-12-03  Per Cederqvist  <ceder@moria>
 
 	* macros.el (blocking-do-multiple): Fixed typo in docstring.
