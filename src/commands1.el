@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.169 2003-03-13 21:11:51 byers Exp $
+;;;;; $Id: commands1.el,v 44.170 2003-03-15 23:00:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.169 2003-03-13 21:11:51 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.170 2003-03-15 23:00:49 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -344,6 +344,17 @@ See `kom-review-uses-cache'."
 	 (blocking-do 'get-text-stat text-no)))
     (lyskom-insert-string 'confusion-what-to-view)))
 
+(def-kom-command kom-unread-commented-text (text-no)
+  "MArkes the texts that the selected text is a comment to as unread.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-commented-q)))
+  (if text-no
+      (lyskom-unread-commented-text 
+       (blocking-do 'get-text-stat text-no))
+    (lyskom-insert-string 'confusion-what-to-mark-unread)))
+
 
 (def-kom-command kom-view-previous-commented-text (text-no)
   "Views the text that the selected text is a comment to. If the
@@ -365,8 +376,25 @@ See `kom-review-uses-cache'."
         (unless kom-review-uses-cache
           (cache-del-text-stat text-no))
          (lyskom-view-commented-text
-          (blocking-do 'get-text-stat lyskom-previous-text)))
+          (blocking-do 'get-text-stat text-no)))
         (t (lyskom-insert-string 'confusion-what-to-view))))
+
+
+(def-kom-command kom-unread-previous-commented-text (text-no)
+  "Marks the texts that the selected text is a comment to as unread.
+
+Without a prefix argument this will display the text that the
+next-to-last text in the buffer is a comment to. With a prefix
+argument this command is identical to `kom-unread-commented-text'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')"
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q nil
+                                                     lyskom-previous-text)))
+  (if text-no
+      (lyskom-unread-commented-text
+       (blocking-do 'get-text-stat text-no))
+    (lyskom-insert-string 'confusion-what-to-mark-unread)))
 
 
 (defun lyskom-text-stat-commented-texts (text-stat)
@@ -410,6 +438,15 @@ See `kom-review-uses-cache'."
 			    nil nil nil
 			    t))
       (lyskom-insert-string 'no-comment-to))))
+
+(defun lyskom-unread-commented-text (text-stat)
+  "Marks the texts that TEXT-STAT is a comment to as unread."
+  (let ((text-nos (lyskom-text-stat-commented-texts text-stat)))
+    (if text-nos
+        (lyskom-traverse text-no text-nos
+          (lyskom-format-insert 'marking-text-unread text-no)
+          (lyskom-report-command-answer (lyskom-mark-unread text-no)))
+      (lyskom-insert-string 'no-comment-to-to-unread))))
 
 
 (defun lyskom-misc-infos-from-list (type list)

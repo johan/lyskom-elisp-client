@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.262 2003-03-15 18:25:22 byers Exp $
+;;;;; $Id: english-strings.el,v 44.263 2003-03-15 23:00:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.262 2003-03-15 18:25:22 byers Exp $"))
+              "$Id: english-strings.el,v 44.263 2003-03-15 23:00:50 byers Exp $"))
 
 
 ;;; ================================================================
@@ -803,8 +803,11 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-session-priority . "Set reading level: ")
 
     ; From review.el:
+    (no-unread-done . "You need to unread something before you can unread more.\n")
     (no-review-done . "You need to review something before you can review more.\n")
     (not-reviewing . "You are currently not reviewing anything.\n")
+    (unread-how-many . "Unread how many?")
+    (unread-how-many-more . "Unread how many more?")
     (review-how-many . "Review how many?")
     (review-how-many-more . "Review how many more?")
     (latest-n . "last %#1d")
@@ -816,6 +819,13 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (no-get-conf . "You are not allowed to access that conference.\n")
     (no-get-pers . "You are not allowed to access that user.\n")
     (no-review-info . "You are not allowed to review %#1s\n")
+
+    (unread-info . "Unread %#1s")
+    (unread-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
+    (unread-more-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
+    (unread-rest . "the rest")
+    (unread-more . "%#1d more")
+
     (review-info . "Review %#1s")
     (review-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
     (review-more-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
@@ -1120,7 +1130,7 @@ Send a bug report.\n")
 
     (bad-text-no-prefix . "Unable to translate prefix `%s' to a text number")
     (prefix-arg-try-again . "Specify another text or press control-g to abort.\n")
-    (error-code . "Error code %#2d/%#3S: %#1s.\n")
+    (error-code . "%#2?+%[Error code %#2d/%#3S: %]%[%]%#1s.\n")
     (error-in-kom-do-when-done . "The variable kom-do-when-done has an erroneous value.
 You should set it to a better value.\n")
     (extended-command . "LysKOM: ")
@@ -1604,12 +1614,17 @@ You must become an active member of the conference to enter it.\n")
 
     (review-converted-q . "Review which text converted?")
     (review-noconversion-q . "Review which text unconverted?")
+    (unread-commented-q . "Mark the commented for which text as unread?")
     (review-commented-q . "Review the commented for which text?")
 
     (review-tree-q . "Review all comments recursively for which text?")
     (find-root-q . "Review original text for text?")
     (find-root-review-q . "Review tree of which text?")
     (review-comments-q . "Review all comments to which text?")
+    (unread-tree-q . "Unread all comments recursively for which text?")
+    (unread-root-q . "Unread original text for text?")
+    (unread-root-review-q . "Unread tree of which text?")
+    (unread-comments-q . "Unread all comments to which text?")
 
     (confusion-who-to-reply-to . "I can't figure out which text you want to write a private reply to.\n")
     (confusion-what-to-answer-to . "I can't figure out which text you want to write a reply to.\n")
@@ -1639,6 +1654,8 @@ You must become an active member of the conference to enter it.\n")
     (confusion-what-to-save . "I can't figure out which text you want to save.\n")
 
     (confusion-what-to-review-mail-headers . "I can't figure out which text's mail headers you want to see.\n")
+    (confusion-what-to-unread-root . "I can't figure out which text's root you want to mark as unread.\n")
+    (confusion-what-to-unread-root-review . "I can't figure out which tree you want to mark as unread.\n")
     (confusion-what-to-find-root . "I can't figure out which text's root you want to see.\n")
     (confusion-what-to-find-root-review . "I can't figure out which tree you want to review.\n")
 
@@ -1850,6 +1867,9 @@ environment to one that uses \"%#2s\" to encode text.
 
     (unread-text-q . "Make which text unread? ")
     (marking-text-unread . "Marking text %#1n as unread...")
+    (cant-mark-text-unread . "Couldn't mark %#1n as unread (%#2s)\n")
+    (confusion-what-to-mark-unread . "I can't figure out what text you want to mark as unread.\n")
+    (no-comment-to-to-unread . "There is no commented text to mark as unread.\n")
     ))
 
 
@@ -2056,6 +2076,16 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-redirect-comments    . "Redirect comments")
     (kom-copy-options         . "Copy options")
     (kom-mark-unread          . "Unread text")
+    (kom-unread-by-to         . "Unread last")
+    (kom-unread-more          . "Unread more")
+    (kom-unread-commented-text . "Unread (the) commented (text)")
+    (kom-unread-previous-commented-text . "Unread (the) previously commented (text)")
+    (kom-unread-comments      . "Unread all comments")
+    (kom-unread-tree          . "Unread all comments recursively")
+    (kom-unread-root          . "Unread original (text)")
+    (kom-unread-root-review   . "Unread tree")
+    (kom-unread-last-normally-read
+     			      . "Unread again")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -2396,6 +2426,16 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-unread-prefix (kbd "7") 'kom-initial-digit-unread)
   (define-key lyskom-en-unread-prefix (kbd "8") 'kom-initial-digit-unread)
   (define-key lyskom-en-unread-prefix (kbd "9") 'kom-initial-digit-unread)
+  (define-key lyskom-en-unread-prefix (kbd "c") 'kom-unread-commented-text)
+  (define-key lyskom-en-unread-prefix (kbd "C") 'kom-unread-previous-commented-text)
+  (define-key lyskom-en-unread-prefix (kbd "a ?") 'lyskom-help)
+  (define-key lyskom-en-unread-prefix (kbd "a c") 'kom-unread-comments)
+  (define-key lyskom-en-unread-prefix (kbd "a r") 'kom-unread-tree)
+  (define-key lyskom-en-unread-prefix (kbd "g") 'kom-unread-last-normally-read)
+  (define-key lyskom-en-unread-prefix (kbd "o") 'kom-unread-root)
+  (define-key lyskom-en-unread-prefix (kbd "l") 'kom-unread-by-to)
+  (define-key lyskom-en-unread-prefix (kbd "M") 'kom-unread-more)
+  (define-key lyskom-en-unread-prefix (kbd "r") 'kom-unread-root-review)
 
   (define-key lyskom-en-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-en-review-prefix (kbd "0") 'kom-initial-digit-view)
@@ -4183,6 +4223,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-52 . "Feature disabled in the server")
     (error-53 . "Unable to send message")
     (error-54 . "Invalid membership type")
+
+    (error--1 . "You are not a member of any recipient")
 ))
 
 (lyskom-language-var global lyskom-unread-mode-line en
