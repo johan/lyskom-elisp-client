@@ -1,3 +1,8 @@
+2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* utilities.el (lyskom-find-text-by-date): Removed unused local
+	variable.
+
 2002-02-24  David Byers  <davby@sen2.ida.liu.se>
 
 	* utilities.el (lyskom-find-text-by-date): Fixed assignment to
@@ -4972,5 +4977,5 @@ Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 Local Variables:
 outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
 eval: (ispell-change-dictionary "british")
-eval: (set-language-environment 'Latin-1)
+eval: (if (boundp 'set-language-environment) (set-language-environment 'Latin-1))
 End:
