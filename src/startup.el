@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.102 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: startup.el,v 44.103 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.102 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: startup.el,v 44.103 2004-07-11 23:01:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -709,8 +709,7 @@ This is called at login and after prioritize and set-unread."
 
   ;; The whole membership!
 
-  (setq lyskom-membership nil)
-
+  (lyskom-init-membership)
   (setq lyskom-to-do-list (lyskom-create-read-list))
   (setq lyskom-reading-list (lyskom-create-read-list))
 
@@ -731,15 +730,6 @@ This is called at login and after prioritize and set-unread."
              (lyskom-startup-check-recommended-memberships))
     (error nil)
     (quit nil)))
-
-
-(defun lyskom-set-membership (membership)
-  "Sets lyskom-membership to a new value.
-Args: MEMBERSHIP."
-  (setq lyskom-membership (listify-vector membership))
-  (lyskom-sort-membership)
-  (setq lyskom-membership-is-read t))
-
 
 (defun lyskom-create-new-person (name)
   "A new user named NAME (or an old that mis-spelled his name)."
@@ -915,8 +905,6 @@ to see, set of call."
   "Set up buffer-local vars."
   (lyskom-save-variables (lyskom-proc
                           lyskom-pers-no
-                          lyskom-membership
-                          lyskom-membership-is-read
                           lyskom-last-viewed
                           lyskom-unparsed-buffer
                           lyskom-unparsed-marker

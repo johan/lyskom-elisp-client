@@ -1,3 +1,76 @@
+2004-07-11  David Byers  <byers@lysator.liu.se>
+
+	Performance improvements:
+	* prefetch.el: Completely new implementation.
+
+	New implementation of lyskom-membership using AVL trees:
+	* commands2.el (kom-list-news): Use lyskom-traverse-membership
+	instead of mapping over lyskom-membership.
+	(lyskom-update-membership-buffer): Use lyskom-traverse-membership
+	instead of traversing lyskom-membership
+
+	* stack-m.el: New file. Copied from elib with modifications.
+
+	* elib-node.el: New file. Copied from elib with modifications.
+
+	* avltree.el: New file. Copied from elib with modifications.
+
+	* prefetch.el (lyskom-prefetch-membership-handler): Use
+	lyskom-add-memberships-to-membership since this function now
+	maintains a sorted membership list.
+
+	* reading.el (lyskom-membership-<): Moved here from lyskom-rest.el.
+	(lyskom-membership-length): New function.
+	(lyskom-init-membership): New function.
+	(lyskom-membership-position): New implementation.
+	(lyskom-remove-membership): New implementation.
+	(lyskom-replace-membership): New implementation.
+	(lyskom-insert-membership): New implementation.
+	(lyskom-add-memberships-to-membership): New implementation.
+	(lyskom-update-membership-positions): New implementation.
+	(lyskom-mship-cache-del): New function.
+	(lyskom-mship-cache-put): New function.
+	(lyskom-mship-cache-get): New function.
+	(lyskom-mship-cache-create): New function.
+	(lyskom-mship-cache-data): New function.
+	(lyskom-mship-cache-index): New function.
+	(lyskom-mship-cache): New variable.
+	(lyskom-get-membership): Moved here from lyskom-rest.el. New
+	implementation.
+	(lyskom-try-get-membership): Ditto.
+
+	* commands1.el (lyskom-add-member): Reimplement position
+	calculation using lyskom-traverse-membership and possibly fixing a
+	bug along the way.
+
+	* macros.el (lyskom-traverse): New implementation using catch and
+	no hard-coded variable names.
+	(lyskom-traverse-break): New implementation using throw.
+	(lyskom-traverse-aux): New implementation using catch and
+	new-style backqoutes.
+	(lyskom-traverse-membership): New macro.
+
+	* commands1.el (kom-delete-conf): Don't manipulate
+	lyskom-membership directly.
+	(lyskom-add-member): Ditto.
+
+	* startup.el (lyskom-set-membership): Removed. Not used.
+	(lyskom-clear-vars): Don't save lyskom-membership or
+	lyskom-membership-is read. They're overwritten anyway.
+
+	* macros.el (lyskom-with-lyskom-buffer): New macro.
+
+2004-06-28  David Byers  <byers@lysator.liu.se>
+
+	Fix a bug where texts were not marked as read when they got a new
+	recipient and also weren't placed in the read-list:
+	* view-text.el (lyskom-mark-as-read): Use lyskom-recpt-types-list
+	instead of hard-coding the list.
+
+	* async.el (lyskom-async-new-recipient): When processing a new
+	recipient, call mark-as-read with the text's local number, not
+	it's global number.
+
 2004-07-03  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* Makefile (DPKG_BUILDPACKAGE_OPTIONS): Buggfix, don't set

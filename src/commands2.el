@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.207 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.208 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.207 2004-06-26 13:32:32 byers Exp $\n"))
+              "$Id: commands2.el,v 44.208 2004-07-11 23:01:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -79,7 +79,7 @@ See `kom-list-membership-in-window'."
       (let ((inhibit-read-only t))
         (save-excursion (set-buffer buf)
                         (erase-buffer))
-        (lyskom-traverse x lyskom-membership
+        (lyskom-traverse-membership x
           (initiate-get-conf-stat 'membership 'lyskom-memb-received-1
                                   (membership->conf-no x)
                                   x buf))))))
@@ -924,14 +924,14 @@ See `kom-allow-incompleteness'."
     (when num-arg
       (cond
        ((= num-arg 0)
+        (lyskom-traverse-membership el
+          (when (not (membership-type->passive (membership->type el)))
+            (setq lyskom-iter-list-news-mship-confs
+                  (cons (membership->conf-no el)
+                        lyskom-iter-list-news-mship-confs))))
         (setq at-least nil
-              lyskom-iter-list-news-mship-confs 
-              (delq nil
-                    (mapcar (lambda (el)
-                              (when (not (membership-type->passive
-                                          (membership->type el)))
-                                (membership->conf-no el)))
-                            lyskom-membership))))
+              lyskom-iter-list-news-mship-confs (nreverse lyskom-iter-list-news-mship-confs)))
+
        ((> num-arg 0)
         (lyskom-format-insert 'list-unread-with-n-unread
                               (setq at-least num-arg)))

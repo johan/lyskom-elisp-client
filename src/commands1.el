@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.215 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: commands1.el,v 44.216 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.215 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.216 2004-07-11 23:01:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -95,8 +95,8 @@ eventually be permanently deleted."
 			   lyskom-pers-no)
 		    (lyskom-insert (lyskom-get-string
 				    'you-have-deleted-yourself))
+                    (lyskom-init-membership)
 		    (setq lyskom-pers-no nil
-			  lyskom-membership nil
 			  lyskom-to-do-list (lyskom-create-read-list)
 			  lyskom-reading-list (lyskom-create-read-list)
 			  lyskom-pending-commands (cons
@@ -667,11 +667,11 @@ be called from a callback."
                                          (>= kom-membership-default-placement 0))
                                     kom-membership-default-placement)
                                    ((eq kom-membership-default-placement 'first) 0)
-                                   ((eq kom-membership-default-placement 'last) (length lyskom-membership))
+                                   ((eq kom-membership-default-placement 'last) (lyskom-membership-length))
                                    (t (lyskom-read-num-range
                                        0 (pers-stat->no-of-confs pers-stat)
                                        (lyskom-format 'where-on-list-q
-                                                      (length lyskom-membership)))))))
+                                                      (lyskom-membership-length)))))))
                (message-flag (if mship-type
                                  (membership-type->message-flag mship-type)
                                (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q whereto))))
@@ -699,24 +699,20 @@ be called from a callback."
           ;; the membership lsit sorted.
 
           (when (eq lyskom-pers-no (conf-stat->conf-no who))
-            (let ((mship-list lyskom-membership)
-                  (mship nil)
-                  (index 0)
-                  (found nil))
-              (while mship-list
-                (setq mship (car mship-list)
-                      mship-list (cdr mship-list))
-                (cond ((> (membership->priority mship) priority))
-                      ((< (membership->priority mship) priority) 
-                       (setq position index mship-list nil found t))
-                      ((and (= (membership->priority mship) priority)
-                            (= index position))
-                       (setq mship-list nil found t))
-                      ((and (= (membership->priority mship) priority)
-                            (> index position))
-                       (setq position index mship-list nil found t)))
-                (setq index (1+ index))
-                (unless found (setq position (1+ index))))))
+            (setq position
+                  (let ((index 0))
+                    (lyskom-traverse-membership mship
+                      (cond ((> (membership->priority mship) priority))
+                            ((< (membership->priority mship) priority)
+                             (lyskom-traverse-break index))
+                            ((and (= (membership->priority mship) priority)
+                                  (= index position))
+                             (lyskom-traverse-break position))
+                            ((and (= (membership->priority mship) priority)
+                                  (> index position))
+                             (lyskom-traverse-break index)))
+                      (setq index (1+ index))))))
+
 
           ;; Print the prompt
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.16 2004-06-26 19:27:16 byers Exp $
+;;;;; $Id: reading.el,v 44.17 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.16 2004-06-26 19:27:16 byers Exp $\n"))
+	      "$Id: reading.el,v 44.17 2004-07-11 23:01:04 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -54,135 +54,6 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
 	(lyskom-create-text-list
 	 list))
        lyskom-to-do-list))))
-
-
-(defun lyskom-sort-membership ()
-  "Sort the internal membership list."
-  (setq lyskom-membership (sort lyskom-membership 'lyskom-membership-<))
-  (lyskom-update-membership-positions))
-
-(defun lyskom-update-membership-positions ()
-  "Update all the position fields in the memberships in the membership list."
-  (let ((mship lyskom-membership)
-        (num 0))
-    (while mship 
-      (set-membership->position (car mship) num)
-      (setq num (1+ num) mship (cdr mship)))
-  ;; FIXME: If something changed, tell the server.
-    (lyskom-sort-to-do-list)))
-
-(defun lyskom-add-memberships-to-membership (memberships)
-  "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.
-If an item of the membership is already read and entered in the
-lyskom-membership list then this item is not entered."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (let ((list (listify-vector memberships)))
-      (while list
-        ;; If membership is already added or passive, don't add it
-        (if (memq (membership->conf-no (car list))
-                  (mapcar (function membership->conf-no) lyskom-membership))
-            nil
-          (setq lyskom-membership (append lyskom-membership (list (car list)))))
-        (lyskom-membership-table-add (car list))
-        (setq list (cdr list))))))
-
-(defun lyskom-insert-memberships-in-membership (memberships)
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (let ((list (listify-vector memberships)))
-      (while list
-        ;; If membership is already added or passive, don't add it
-        (if (memq (membership->conf-no (car list))
-                  (mapcar (function membership->conf-no) lyskom-membership))
-            nil
-          (lyskom-membership-table-add (car list))
-          (setq lyskom-membership (cons (car list) lyskom-membership)))
-        (setq list (cdr list))))
-    (lyskom-sort-membership)))
-
-
-(defun lyskom-do-insert-membership (membership)
-  (if (membership->position membership)
-      (setq lyskom-membership
-            (cond ((elt lyskom-membership (membership->position membership))
-                   (lyskom-insert-in-list 
-                    membership
-                    lyskom-membership
-                    (elt lyskom-membership
-                         (membership->position membership))))
-                  ((>= (membership->position membership) 0)
-                   (nconc lyskom-membership (list membership)))
-                  (t (cons membership lyskom-membership))))
-    (let ((mship-list lyskom-membership)
-          (found nil))
-      (while mship-list
-        (when (<= (membership->priority (car mship-list))
-                  (membership->priority membership))
-          (setq lyskom-membership
-                (lyskom-insert-in-list membership
-                                       lyskom-membership
-                                       (car mship-list))
-                mship-list nil
-                found t))
-        (setq mship-list (cdr mship-list)))
-      (unless found (setq lyskom-membership
-                          (nconc lyskom-membership (list membership))))))
-
-  (lyskom-membership-table-add membership))
-
-
-(defun lyskom-insert-membership (membership)
-  "Add MEMBERSHIP into lyskom-membership, sorted by priority."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (lyskom-do-insert-membership membership)
-    (lyskom-update-membership-positions)
-    (lp--update-buffer (membership->conf-no membership))))
-
-(defun lyskom-replace-membership (membership)
-  "Find the membership for the same conference as MEMBERSHIP, and
-replace it with MEMBERSHIP into lyskom-membership."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (when (lyskom-try-get-membership (membership->conf-no membership) t)
-      (lyskom-do-remove-membership (membership->conf-no membership))
-      (lyskom-do-insert-membership membership)
-      (lp--update-buffer (membership->conf-no membership))
-      (lyskom-run-hook-with-args 'lyskom-replace-membership-hook
-                                 membership
-                                 lyskom-membership))))
-
-(defun lyskom-do-remove-membership (conf-no)
-  "Remove the membership for CONF-NO from lyskom-membership."
-  (let ((list lyskom-membership))
-    (while list
-      (if (= conf-no (membership->conf-no (car list)))
-	  (progn
-	    (setcar list nil)
-	    (setq list nil))
-	(setq list (cdr list)))))
-  (setq lyskom-membership (delq nil lyskom-membership))
-
-  (lyskom-membership-table-del conf-no))
-
-(defun lyskom-remove-membership (conf-no)
-  "Remove the membership for CONF-NO from lyskom-membership."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (lyskom-do-remove-membership conf-no)
-    (lp--update-buffer conf-no)
-    (lyskom-run-hook-with-args 'lyskom-remove-membership-hook
-                               conf-no lyskom-membership)))
-  
-(defun lyskom-membership-position (conf-no)
-  "Return the position of the membership for CONF-NO."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (let ((mship (lyskom-get-membership conf-no t)))
-      (or (membership->position mship)
-          (- (length (memq mship lyskom-membership))
-             (length lyskom-membership))))))
 
 
 (defun lyskom-sort-to-do-list ()
@@ -231,3 +102,136 @@ reasonable guess."
 
         ;; Both are not CONF, so A is not less than B
         (t t)))
+
+
+
+;;; ================================================================
+;;; Fundamental membership cache functions
+
+;;; (require 'lyskom-avltree)
+
+(def-kom-var lyskom-mship-cache nil
+  "Membership cache. Do not alter directly."
+  local)
+
+(defsubst lyskom-mship-cache-index () (aref lyskom-mship-cache 0))
+(defsubst lyskom-mship-cache-data  () (aref lyskom-mship-cache 1))
+
+(defun lyskom-mship-cache-create ()
+  "Initialize the membership cache to empty."
+  (vector (make-hash-table :size 300 :test 'eq) 
+          (lyskom-avltree-create 'lyskom-membership-<)))
+
+(defun lyskom-mship-cache-get (conf-no)
+  "Get the membership for CONF-NO from the membership cache."
+  (gethash conf-no (lyskom-mship-cache-index)))
+
+(defun lyskom-mship-cache-put (mship)
+  "Add MSHIP to the membership cache."
+  (lyskom-avltree-enter (lyskom-mship-cache-data) mship)
+  (puthash (membership->conf-no mship) mship (lyskom-mship-cache-index)))
+
+(defun lyskom-mship-cache-del (conf-no)
+  "Delete CONF-NO from the membership cache."
+  (let ((mship (lyskom-mship-cache-get conf-no)))
+    (when mship
+      (lyskom-avltree-delete (lyskom-mship-cache-data) mship)
+      (remhash conf-no (lyskom-mship-cache-index)))))
+
+(defun lyskom-update-membership-positions ()
+  "Update the position field of all memberships."
+  (let ((num 0))
+    (lyskom-avltree-traverse (lambda (mship)
+                               (set-membership->position mship num)
+                               (setq num (1+ num)))
+                             (lyskom-mship-cache-data))))
+
+(defun lyskom-add-memberships-to-membership (memberships)
+  "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.
+If an item of the membership is already read and entered in the
+lyskom-membership list then this item is not entered."
+  (lyskom-with-lyskom-buffer
+    (lyskom-traverse mship memberships
+      (unless (lyskom-mship-cache-get (membership->conf-no mship))
+        (lyskom-mship-cache-put mship)))))
+
+(defun lyskom-insert-membership (mship)
+  "Add MSHIP into lyskom-membership, sorted by priority."
+  (lyskom-with-lyskom-buffer
+    (lyskom-mship-cache-put mship)
+    (lyskom-update-membership-positions)
+    (lp--update-buffer (membership->conf-no mship))))
+
+(defun lyskom-replace-membership (mship)
+  "Find the membership for the same conference as MSHIP, and
+replace it with MSHIP into lyskom-membership."
+  (lyskom-with-lyskom-buffer
+    (when (lyskom-mship-cache-get (membership->conf-no mship))
+      (lyskom-mship-cache-del (membership->conf-no mship)))
+    (lyskom-mship-cache-put mship)
+    (lyskom-update-membership-positions)
+    (lp--update-buffer (membership->conf-no mship))))
+
+(defun lyskom-remove-membership (conf-no)
+  "Remove the membership for CONF-NO from lyskom-membership."
+  (lyskom-with-lyskom-buffer
+    (lyskom-mship-cache-del conf-no)
+    (lyskom-update-membership-positions)
+    (lp--update-buffer conf-no)))
+
+(defun lyskom-membership-position (conf-no)
+  "Return the position of the membership for CONF-NO."
+  (lyskom-with-lyskom-buffer
+    (membership->position (lyskom-get-membership conf-no t))))
+
+
+(defun lyskom-init-membership ()
+  "Initialize membership cache and information."
+  (setq lyskom-mship-cache
+        (lyskom-mship-cache-create)))
+
+(defun lyskom-membership-length ()
+  "Return the size of the membership list."
+  (lyskom-avltree-size (lyskom-mship-cache-data)))
+
+(defun lyskom-membership-< (a b)
+  "Retuns t if A has a higher priority than B. A and B are memberships."
+  (cond ((> (membership->priority a)
+            (membership->priority b)) t)
+        ((and (= (membership->priority a)
+                 (membership->priority b))
+              (numberp (membership->position a))
+              (numberp (membership->position b)))
+         (< (membership->position a)
+            (membership->position b)))
+        (t nil)))
+
+(defun lyskom-get-membership (conf-no &optional want-passive)
+  "Return membership for conference CONF-NO.
+If optional WANT-PASSIVE is non-nil, also return passive memberships.
+
+If the membership has not been cached, a blocking call is made to the
+server to attempt to get it, so this function should not be used from
+a callback function."
+  (lyskom-with-lyskom-buffer
+    (or (lyskom-try-get-membership conf-no want-passive)
+        (and (not (lyskom-membership-is-read))
+             (let ((mship (blocking-do 'query-read-texts lyskom-pers-no conf-no t 0)))
+               (when (and mship (lyskom-visible-membership mship))
+                 (lyskom-add-membership mship conf-no))
+               (when (or want-passive
+                         (not (membership-type->passive (membership->type mship))))
+                 mship))))))
+
+
+(defun lyskom-try-get-membership (conf-no &optional want-passive)
+  "Return membership for conference CONF-NO.
+If optional WANT-PASSIVE is non-nil, also return passive memberships.
+
+This call does not block. If the membership has not been cached, this
+call will return nil." 
+  (lyskom-with-lyskom-buffer
+    (let ((mship (lyskom-mship-cache-get conf-no)))
+      (when (or want-passive (not (membership-type->passive (membership->type mship))))
+        mship))))
+

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.239 2004-06-26 19:27:16 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.240 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.239 2004-06-26 19:27:16 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.240 2004-07-11 23:01:04 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -942,7 +942,7 @@ CONF can be a a conf-stat or a string."
 			  name
 			  (make-string 27 ? ))
 			 0 27)))
-      
+
       (if (zerop total-unread)
           (lyskom-remove-unread-buffer lyskom-buffer)
         (lyskom-add-unread-buffer lyskom-buffer))
@@ -952,74 +952,6 @@ CONF can be a a conf-stat or a string."
     (force-mode-line-update)))
 
 
-;;; ================================================================
-
-;;; +++Where should this be moved???
-
-(def-kom-var lyskom-membership-table nil 
-  "Association list mapping conferences to memberships."
-  local)
-
-
-(defun lyskom-membership-table-add (membership)
-  (let ((tmp (assq (membership->conf-no membership) lyskom-membership-table)))
-    (if tmp
-        (setcdr tmp membership)
-      (setq lyskom-membership-table 
-            (cons (cons (membership->conf-no membership) membership)
-                  lyskom-membership-table)))))
-
-(defun lyskom-membership-table-del (conf-no)
-  (setq lyskom-membership-table
-        (delq (assq conf-no lyskom-membership-table)
-              lyskom-membership-table)))
-
-
-
-(defun lyskom-try-get-membership (conf-no &optional want-passive)
-  "Returns non-nil if conference CONF-NO is present on lyskom-membership.
-The value is actually the membership for the conference.
-
-For foreground functions, lyskom-get-membership should probably be used
-instead.
-
-This function does not use blocking-do.
-
-Optional argument mship-list is the membership list to look in."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (let ((list lyskom-membership)
-          (found (cdr (assq conf-no lyskom-membership-table))))
-      (while (and (not found) (not (null list)))
-        (if (= conf-no (membership->conf-no (car list)))
-            (setq found (car list)))
-        (setq list (cdr list)))
-      (if (and found
-               (or want-passive
-                   (not (membership-type->passive (membership->type found)))))
-          found
-        nil))))
-
-(defun lyskom-get-membership (conf-no &optional want-passive)
-  "Get the membership for CONF-NO, or nil if the user is not a member of
-CONF-NO.
-
-If the membership list is not fully prefetched and the membership can't be
-found in lyskom-membership, a blocking call to the server is made."
-  (save-excursion
-    (set-buffer lyskom-buffer)
-    (or (lyskom-try-get-membership conf-no want-passive)
-        (and (not (lyskom-membership-is-read))
-             (let ((membership
-                    (blocking-do 'query-read-texts lyskom-pers-no conf-no t 0)))
-               (if (and membership (lyskom-visible-membership membership))
-                   (lyskom-add-membership membership conf-no))
-               (if (and membership
-                        (or want-passive
-                            (not (membership-type->passive
-                                  (membership->type membership)))))
-                   membership
-                 nil))))))
 
 
 ;;;; ================================================================
@@ -3847,19 +3779,6 @@ Returns the selected alternative (a symbol)"
     (if (eq input-char ?\C-m)
         default
       (elt (assq input-char alts) 2))))
-
-
-(defun lyskom-membership-< (a b)
-  "Retuns t if A has a higher priority than B. A and B are memberships."
-  (cond ((> (membership->priority a)
-            (membership->priority b)) t)
-        ((and (= (membership->priority a)
-                 (membership->priority b))
-              (numberp (membership->position a))
-              (numberp (membership->position b)))
-         (< (membership->position a)
-            (membership->position b)))
-        (t nil)))
 
 
 (defun impl ()
