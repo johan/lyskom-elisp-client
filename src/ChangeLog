@@ -1,5 +1,7 @@
 2002-03-02  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* commands2.el: Removed some erroneous indentation.
+
 	* lyskom-buttons.el (lyskom-view-url-windows): Rewritten (based on
 	work by Klaus Zeuge).
 
