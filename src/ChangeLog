@@ -1,3 +1,11 @@
+2004-04-13  Johan Sundström  <jhs@lysator.liu.se>
+
+	* english-strings.el, swedish-strings.el (global): Give a name for
+	kom-review-cross-references too.
+
+	* menus.el (lyskom-menu-template): Add kom-review-cross-references
+	here too.
+
 2004-04-12  Johan Sundström  <jhs@lysator.liu.se>
 
 	* vars.el.in (lyskom-commands): Add kom-review-cross-references.
