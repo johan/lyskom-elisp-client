@@ -32,6 +32,8 @@ Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
 
 Tue Oct  8 04:44:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* lyskom-buttons.el (lyskom-make-button-menu): Kopiera listorna.
+
 	* lyskom-rest.el: Anropa lyskom-build-menus på toppnivån.
 
 	* menus.el (lyskom-background-menu): Ny funktion.

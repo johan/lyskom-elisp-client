@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.4 1996-10-08 02:57:55 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.5 1996-10-08 17:00:33 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -123,9 +123,11 @@ on such functions see the documentation for lyskom-add-button-action."
 
 (defun lyskom-make-button-menu (title entries)
   "Create a menu keymap from a list of button actions."
-  ;; Use the command as the event for simplicity.
+  ;; Use the command as the event for simplicity.  Note that the menu
+  ;; function alters the menu, so we copy the entries to prevent it
+  ;; from fiddling with lyskom-button-actions.
   (append (list 'keymap title)
-	  (mapcar '(lambda (entry) (cons (cdr entry) entry))
+	  (mapcar '(lambda (entry) (cons (cdr entry) (copy-tree entry)))
 		  entries)))
 
 (defun lyskom-button-menu (pos event)
