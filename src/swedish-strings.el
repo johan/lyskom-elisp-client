@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.119 2000-06-02 13:51:18 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.120 2000-06-02 14:40:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.119 2000-06-02 13:51:18 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.120 2000-06-02 14:40:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -996,7 +996,10 @@ Du bör sätta den till ett bättre värde.\n")
     (several-unread . "%#1M - %#2d olästa\n")
     (enter-conf . "%#1M\n")
 
-    (save-on-file-q . "Arkivera inlägg till fil: (%#1s) ")
+    (save-one-on-file-q . "Arkivera inlägg %#1n till fil: ")
+    (save-many-on-file-q . "Arkivera %#1d inlägg till fil: ")
+    (saving-one-on-file . "Arkiverar inlägg %#1n i %#2s.\n")
+    (saving-many-on-file . "Arkivera %#1d inlägg i %#2s.\n")
     (save-text-to-file-q . "Spara inläggstext %#1n på fil: ")
     (save-text-confirm . "Filen %#1s finns redan. Vill du skriva över den? ")
     (saving-text . "Sparar inlägg %#1n som %#2s...")
@@ -3112,6 +3115,9 @@ i servern. Annars sparas det i din .emacs.")
   Dessa kommandon kommer alltid att fråga efter textnummer om man inte 
   anger något explicit med prefixargument. Kommaondon som inte står med 
   här kommer att gissa ett textnummer och inte fråga.")
+    (kom-saved-file-name-doc . "\
+  Anger vilken fil som inlägg skall arkiveras till. Klienten kommer ändå
+  att fråga, men detta blir det förifyllda svaret.")
 
     ;;
     ;; Tags for variables
@@ -3262,6 +3268,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång")
     (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer")
+    (kom-saved-file-name-tag . "Fil att arkivera inlägg i")
     )
 )
 
@@ -3300,7 +3307,9 @@ i servern. Annars sparas det i din .emacs.")
       ("Kommentera texten" . lyskom-button-comment-text)
       ("Personligt svar" . lyskom-button-private-comment-text)
       ("Markera texten" . lyskom-button-mark-text)
-      ("Avmarkera texten" . lyskom-button-unmark-text))
+      ("Avmarkera texten" . lyskom-button-unmark-text)
+      ("Arkivera" . lyskom-button-save-text)
+      )
      nil
 ;     ((nil lyskom-print-text footer lyskom-button-comment-text))
      )

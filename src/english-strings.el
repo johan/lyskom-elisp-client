@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.90 2000-05-31 15:35:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.91 2000-06-02 14:40:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.90 2000-05-31 15:35:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.91 2000-06-02 14:40:49 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1509,7 +1509,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-set-super-conf       . "Change superconference")
     (kom-set-permitted-submitters . "Change allowed authors")
     (kom-unset-conf-motd      . "Remove notice")
-    (kom-save-text            . "Archive text (in file)")
+    (kom-save-text            . "Archive (copy of) text (in file)")
     (kom-save-text-body       . "Save text body (in file)")
     (kom-save-options         . "Save options")
     (kom-shutdown-server      . "Shut down (server)")
@@ -3216,7 +3216,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
       ("Write commend" . lyskom-button-comment-text)
       ("Write personal reply" . lyskom-button-private-comment-text)
       ("Mark text" . lyskom-button-mark-text)
-      ("Unmark text" . lyskom-button-unmark-text))
+      ("Unmark text" . lyskom-button-unmark-text)
+      ("Save archive copy" . lyskom-button-save-text)
+      )
      nil
 ;     ((nil lyskom-print-text footer lyskom-button-comment-text))
      )

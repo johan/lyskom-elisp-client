@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.41 2000-05-19 02:22:27 jhs Exp $
+;;;; $Id: lyskom-buttons.el,v 44.42 2000-06-02 14:40:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.41 2000-05-19 02:22:27 jhs Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.42 2000-06-02 14:40:51 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -608,6 +608,14 @@ This is a LysKOM button action."
                  (lyskom-start-of-command 'kom-unmark-text)
                  (lyskom-unmark-text arg))
              (lyskom-end-of-command)))))
+
+(defun lyskom-button-save-text (buf arg text)
+  "In the LysKOM buffer BUF, save the text ARG. Last argument TEXT is ignored.
+This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (unwind-protect
+               (progn (pop-to-buffer buf)
+                      (kom-save-text nil (list arg)))))))
   
 
 (defun lyskom-button-view-conf-presentation (buf arg text)

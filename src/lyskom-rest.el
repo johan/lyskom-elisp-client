@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.105 2000-06-02 13:51:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.106 2000-06-02 14:40:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.105 2000-06-02 13:51:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.106 2000-06-02 14:40:53 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2216,7 +2216,7 @@ A list of pairs means OPTARG will be used as a key to look up the real
   (lyskom-next-area (or arg 1) 'lyskom-text-start))
 
 
-(def-kom-command kom-save-text (&optional arg)
+(def-kom-command kom-save-text (arg &optional list-of-texts)
   "Saves/appends the article before point to a file.
 The article is determined by a search-backward the same as backward-text 
 and then a forward-text.
@@ -2225,41 +2225,49 @@ The name of the file is read using the minibuffer and the default is kom-text."
   (interactive "p")
   (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text" t))
         (lyskom-print-complex-dates nil)
-        (list-of-texts nil)
         (kom-deferred-printing nil)
         (name nil))
-    (unwind-protect
-        (save-excursion
-          (while (> arg 0)
-            (backward-text 1)
-            (if (looking-at "\\([0-9]+\\)\\s-")
-                (setq list-of-texts (cons (string-to-int (match-string 1))
-                                          list-of-texts)
-                      arg (1- arg))
-              (setq arg 0)))
-          (set-buffer buf)
-          (setq kom-deferred-printing nil)
-          (erase-buffer)
-          (mapcar (function
-                   (lambda (n)
-                     (lyskom-view-text n)
-                     (goto-char (point-max))
-                     (insert "\n")))
-                  list-of-texts)
-          (setq name (read-file-name
-                      (lyskom-format 'save-on-file-q
-                                     (file-name-nondirectory
-                                      lyskom-saved-file-name))
-                      (file-name-directory lyskom-saved-file-name)
-                      lyskom-saved-file-name
-                      nil))
-          (when (file-directory-p name)
-            (setq name (concat (file-name-as-directory name)
-                               (file-name-nondirectory 
-                                lyskom-saved-file-name))))
-          (append-to-file (point-min) (point-max) (expand-file-name name))
-          (setq lyskom-saved-file-name name))
-      )))
+    (save-excursion
+      (while (and arg (> arg 0))
+        (backward-text 1)
+        (if (looking-at "\\([0-9]+\\)\\s-")
+            (setq list-of-texts (cons (string-to-int (match-string 1))
+                                      list-of-texts)
+                  arg (1- arg))
+          (setq arg 0)))
+      (set-buffer buf)
+      (setq kom-deferred-printing nil)
+      (erase-buffer)
+      (mapcar (function
+               (lambda (n)
+                 (lyskom-view-text n)
+                 (goto-char (point-max))
+                 (insert "\n")))
+              list-of-texts)
+      (setq name (expand-file-name
+                  (read-file-name
+                   (if (eq 1 (length list-of-texts))
+                       (lyskom-format 'save-one-on-file-q (car list-of-texts))
+                     (lyskom-format 'save-many-on-file-q (length list-of-texts)))
+                   (file-name-directory (or lyskom-saved-file-name kom-saved-file-name))
+                   nil
+                   nil
+                   (file-name-nondirectory (or lyskom-saved-file-name kom-saved-file-name)))))
+      (cond ((file-directory-p name)
+             (lyskom-format-insert 'cant-save-to-directory name))
+            (t 
+             (set-buffer lyskom-buffer)
+             (if (eq 1 (length list-of-texts))
+                 (lyskom-format-insert-before-prompt 'saving-one-on-file 
+                                       (car list-of-texts)
+                                       name)
+               (lyskom-format-insert-before-prompt 'saving-many-on-file
+                                     (length list-of-texts)
+                                     name))
+             (set-buffer buf)
+             (append-to-file (point-min) (point-max) name)
+             (setq lyskom-saved-file-name name))
+            ))))
 
 (def-kom-command kom-save-text-body (text-no &optional filename)
   "Save the body of text TEXT-NO to file FILENAME."
