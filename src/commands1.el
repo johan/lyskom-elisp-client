@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.170 2003-03-15 23:00:49 byers Exp $
+;;;;; $Id: commands1.el,v 44.171 2003-03-16 11:05:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.170 2003-03-15 23:00:49 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.171 2003-03-16 11:05:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -198,6 +198,35 @@ This command accepts text number prefix arguments (see
             '(all)
             nil "" t))))
     (lyskom-review-presentation conf-stat)))
+
+(def-kom-command kom-unread-presentation (&optional text-or-conf-no)
+  "Marks the presentation for a person or a conference as unread. If
+you give a prefix argument it is treated as a text number prefix
+argument (see `lyskom-read-text-no-prefix-arg'), and this command
+unreads the presentation of the author of that text.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
+		    (list (lyskom-read-text-no-prefix-arg
+			   'text-to-unread-author-of))))
+  (let ((conf-stat
+         (if text-or-conf-no
+             (blocking-do 'get-conf-stat
+                          (if (interactive-p)
+                              (text-stat->author
+                               (blocking-do 'get-text-stat text-or-conf-no))
+                            text-or-conf-no))
+           (lyskom-read-conf-stat
+            (lyskom-get-string 'unread-presentation-for-whom)
+            '(all)
+            nil "" t))))
+    (if (zerop (conf-stat->presentation conf-stat))
+        (lyskom-format-insert 'has-no-presentation conf-stat)
+      (lyskom-format-insert 'marking-text-unread
+                            (conf-stat->presentation conf-stat))
+      (lyskom-report-command-answer
+       (lyskom-mark-unread (conf-stat->presentation conf-stat))))))
 
 (defun lyskom-review-presentation (conf-stat)
   "Review the presentation of conference CONF-STAT."
@@ -2353,21 +2382,40 @@ increasing number of marks per mark type (and, when equal, by mark type)."
   (interactive)
   (lyskom-review-marked-texts nil))
 
+(def-kom-command kom-unread-marked-texts ()
+  "Mark all texts you have marked with a particular mark as unread."
+  (interactive)
+  (lyskom-unread-marked-texts
+   (lyskom-read-mark-type (lyskom-get-string 'what-mark-to-unread) t)))
+
+
+(def-kom-command kom-unread-all-marked-texts ()
+  "Mark all texts you have marked, regardless of mark, as unread."
+  (interactive)
+  (lyskom-unread-marked-texts nil))
+  
+
+(defun lyskom-unread-marked-texts (mark-no)
+  "Mark all marked texts with the mark equal to MARK-NO unread. 
+If MARK-NO is nil, review all marked texts."
+  (let ((text-list (lyskom-get-marked-texts mark-no)))
+    (if (null text-list)
+	(lyskom-insert (if (null mark-no)
+			   (lyskom-get-string 'no-marked-texts)
+			 (lyskom-format 'no-marked-texts-mark
+                                        (lyskom-symbolic-mark-type-string
+                                         mark-no))))
+      (lyskom-traverse text-no text-list
+        (lyskom-format-insert 'marking-text-unread text-no)
+        (lyskom-report-command-answer
+         (lyskom-mark-unread text-no))))))
+  
 
 (defun lyskom-review-marked-texts (mark-no)
   "Review all marked texts with the mark equal to MARK-NO. 
 If MARK-NO is nil, review all marked texts."
-  (let ((mark-list (cache-get-marked-texts))
-	(text-list nil))
-    (while (not (null mark-list))
-      (let ((mark (car mark-list)))
-	(if (and mark
-		 (or (null mark-no)
-		     (eq mark-no (mark->mark-type mark))))
-	    (setq text-list (cons (mark->text-no mark)
-				  text-list))))
-      (setq mark-list (cdr mark-list)))
-    (if (eq (length text-list) 0)
+  (let ((text-list (lyskom-get-marked-texts mark-no)))
+    (if (null text-list)
 	(lyskom-insert (if (null mark-no)
 			   (lyskom-get-string 'no-marked-texts)
 			 (lyskom-format 'no-marked-texts-mark
@@ -2380,6 +2428,18 @@ If MARK-NO is nil, review all marked texts."
 			nil t)))
 	(read-list-enter-read-info read-info lyskom-reading-list t)
 	(read-list-enter-read-info read-info lyskom-to-do-list t)))))
+
+(defun lyskom-get-marked-texts (mark-no)
+  "Return a list of all texts marked with MARK-NO."
+  (let ((mark-list (cache-get-marked-texts))
+	(text-list nil))
+    (lyskom-traverse mark (cache-get-marked-texts)
+      (if (and mark
+               (or (null mark-no)
+                   (eq mark-no (mark->mark-type mark))))
+          (setq text-list (cons (mark->text-no mark)
+                                text-list))))
+    text-list))
 
 
 ;;; ================================================================

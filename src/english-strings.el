@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.264 2003-03-15 23:14:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.265 2003-03-16 11:05:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.264 2003-03-15 23:14:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.265 2003-03-16 11:05:41 byers Exp $"))
 
 
 ;;; ================================================================
@@ -266,8 +266,10 @@ instead of removing it.")
     (really-delete-commented-text . "Removing a commented text may annoy many readers. Remove anyway?")
     (deleting-text . "Removing text %#1:n...")
 
-    (presentation-for-whom . "Which conference/user? ")
+    (presentation-for-whom . "View presentation for which conference/user? ")
     (text-to-see-author-of . "Review presentation of author of which text? ")
+    (unread-presentation-for-whom . "Unread presentation for which conference/user? ")
+    (text-to-unread-author-of . "Mark presentation of author of which text as unread? ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
     (review-presentation-of . "Review presentation of %#1M.\n")
     (has-no-presentation . "%#1:M has no presentation.\n")
@@ -413,6 +415,7 @@ and you have finished reading. Please come back later.
     (list-which-mark . "List texts with which mark type (name or 0-255, RET for all)? ")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
+    (what-mark-to-unread . "Mark which mark type as unread (name or 0-255, RET for all)? ")
     (what-mark-to-view . "Review which mark type (name or 0-255, RET for all)? ")
     (whos-passwd . "Change password for whom? (yourself) ")
     (old-passwd . "Your current password: ")
@@ -1447,6 +1450,7 @@ On since %#8s%#9s")
     (text-to-del-as-faq . "Which text do you want to remove as FAQ? ")
     (deleting-faq . "Removing text %#1n as FAQ for %#2?b%[%#2M%]%[the server%]...")
     (conf-has-no-faq . "%#1?b%[%#1M%]%[The server%] has no FAQ\n")
+    (unread-which-faq . "Mark FAQ for which conference as unread? ")
     (view-which-faq . "View FAQ for which conference? ")
     (review-faq-for-r . "View FAQ for %#1?b%[%#1M%]%[the server%].\n")
     (set-faq-for-conf-done . "FAQ for %#1?b%[%#1M%]%[the server%] set to text %#3n.\n")
@@ -2088,6 +2092,12 @@ environment to one that uses \"%#2s\" to encode text.
      			      . "Unread again")
     (kom-unread-first         . "Unread first")
     (kom-unread-all           . "Unread all")
+
+    (kom-unread-presentation  . "Unread presentation")
+    (kom-unread-server-faq    . "Unread server FAQ")
+    (kom-unread-faq           . "Unread FAQ")
+    (kom-unread-marked-texts  . "Unread marked (texts)")
+    (kom-unread-all-marked-texts . "Unread all markeed (texts)")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -2440,6 +2450,13 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-unread-prefix (kbd "r") 'kom-unread-root-review)
   (define-key lyskom-en-unread-prefix (kbd "f") 'kom-unread-first)
   (define-key lyskom-en-unread-prefix (kbd "A") 'kom-unread-all)
+  (define-key lyskom-en-unread-prefix (kbd "f") 'kom-unread-first)
+  (define-key lyskom-en-unread-prefix (kbd "p") 'kom-unread-presentation)
+  (define-key lyskom-en-unread-prefix (kbd "q") 'kom-unread-faq)
+  (define-key lyskom-en-unread-prefix (kbd "Q") 'kom-unread-server-faq)
+  (define-key lyskom-en-unread-prefix (kbd "m") 'kom-unread-marked-texts)
+  (define-key lyskom-en-unread-prefix (kbd "a m") 'kom-unread-all-marked-texts)
+  (define-key lyskom-en-unread-prefix (kbd "a SPC") 'kom-unread-all)
 
   (define-key lyskom-en-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-en-review-prefix (kbd "0") 'kom-initial-digit-view)

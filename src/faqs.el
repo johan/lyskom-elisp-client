@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.9 2003-01-09 00:43:26 byers Exp $
+;;;;; $Id: faqs.el,v 44.10 2003-03-16 11:05:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.9 2003-01-09 00:43:26 byers Exp $\n"))
+              "$Id: faqs.el,v 44.10 2003-03-16 11:05:41 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -188,6 +188,12 @@ do this. To add a FAQ, use `kom-add-server-faq'."
   (lyskom-review-faq nil (server-info->aux-item-list
                           (blocking-do 'get-server-info))))
 
+(def-kom-command kom-unread-server-faq ()
+  "Mark the FAQs for the server as unread."
+  (interactive)
+  (lyskom-unread-faq nil (server-info->aux-item-list
+                          (blocking-do 'get-server-info))))
+
 (def-kom-command kom-review-faq (&optional conf-no)
   "View the FAQs for a particular conference."
   (interactive 
@@ -203,6 +209,32 @@ do this. To add a FAQ, use `kom-add-server-faq'."
           (lyskom-review-faq conf-stat (conf-stat->aux-items conf-stat))
         (lyskom-format-insert 'conf-no-does-not-exist-r conf-no)))))
 
+(def-kom-command kom-unread-faq (&optional conf-no)
+  "Marks the FAQs for a particular conference as unread."
+  (interactive 
+   (list 
+    (let* ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
+           (initial (and conf-stat (cons (conf-stat->name conf-stat) 0))))
+      (lyskom-read-conf-no 'unread-which-faq '(conf pers) t initial t))))
+  (if (zerop conf-no)
+      (lyskom-unread-faq nil (server-info->aux-item-list
+                              (blocking-do 'get-server-info)))
+    (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
+      (if conf-stat
+          (lyskom-unread-faq conf-stat (conf-stat->aux-items conf-stat))
+        (lyskom-format-insert 'conf-no-does-not-exist-r conf-no)))))
+
+
+(defun lyskom-unread-faq (conf-stat aux-list)
+  (let ((faq-list (mapcar (lambda (aux)
+                            (string-to-int (aux-item->data aux)))
+                          (lyskom-get-aux-item aux-list 14))))
+    (if (null faq-list) 
+        (lyskom-format-insert 'conf-has-no-faq conf-stat)
+      (lyskom-traverse text-no faq-list
+        (lyskom-format-insert 'marking-text-unread text-no)
+        (lyskom-report-command-answer 
+         (lyskom-mark-unread text-no))))))
 
 (defun lyskom-review-faq (conf-stat aux-list)
   (let ((faq-list (mapcar (lambda (aux)

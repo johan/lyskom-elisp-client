@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.302 2003-03-15 23:14:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.303 2003-03-16 11:05:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.302 2003-03-15 23:14:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.303 2003-03-16 11:05:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -262,8 +262,10 @@ för att radera det.")
     (really-delete-commented-text . "Att radera kommenterade inlägg irriterar många läsare. Radera ändå?")
     (deleting-text . "Radering av text %#1:n...")
 
-    (presentation-for-whom . "Vilket möte/person? ")
+    (presentation-for-whom . "Se presentation för vilket möte/person? ")
+    (unread-presentation-for-whom . "Oläsmarkera presentation för vilket möte/person? ")
     (text-to-see-author-of . "Se presentation för vilket inläggs författare? ")
+    (text-to-unread-author-of . "Oläsmarkera presentation för vilket inläggs författare? ")
     (somebody-deleted-that-conf . "Någon tog precis bort mötet.\n")
     (review-presentation-of . "Återse presentation av %#1M.\n")
     (has-no-presentation . "%#1:M har ingen presentation.\n")
@@ -405,6 +407,7 @@ du har läst klart allting. Kom tillbaks senare.
     (list-which-mark . "Lista vilken markeringstyp (namn eller 0-255, RET för alla)? ")
 
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
+    (what-mark-to-unread . "Oläsmarkera vilken markeringstyp (namn eller 0-255, RET för alla)? ")
     (what-mark-to-view . "Återse vilken markeringstyp (namn eller 0-255, RET för alla)? ")
     (whos-passwd . "Vem vill du ändra lösenord för? (dig själv) ")
     (old-passwd . "Mata in ditt nuvarande lösenord: ")
@@ -1482,6 +1485,7 @@ Uppkopplad sedan %#8s%#9s")
     (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
     (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2?b%[%#2M%]%[servern%]...")
     (conf-has-no-faq . "%#1?b%[%#1M%]%[Servern%] har ingen FAQ\n")
+    (unread-which-faq . "Återse FAQ för vilket möte? ")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1?b%[%#1M%]%[servern%].\n")
     (set-faq-for-conf-done . "Text %#3n är nu FAQ för %#1?b%[%#1M%]%[servern%].\n")
@@ -2122,6 +2126,11 @@ teckenkodning.
      			      . "Oläsmarkera igen")
     (kom-unread-all           . "Oläsmarkera alla")
     (kom-unread-first         . "Oläsmarkera första")
+    (kom-unread-presentation  . "Oläsmarkera presentation")
+    (kom-unread-server-faq    . "Oläsmarkera server-FAQ")
+    (kom-unread-faq           . "Oläsmarkera FAQ")
+    (kom-unread-marked-texts  . "Oläsmarkera markerade")
+    (kom-unread-all-marked-texts . "Oläsmarkera alla markerade")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -2538,6 +2547,12 @@ teckenkodning.
   (define-key lyskom-sv-unread-prefix (kbd "t") 'kom-unread-root-review)
   (define-key lyskom-sv-unread-prefix (kbd "A") 'kom-unread-all)
   (define-key lyskom-sv-unread-prefix (kbd "f") 'kom-unread-first)
+  (define-key lyskom-sv-unread-prefix (kbd "p") 'kom-unread-presentation)
+  (define-key lyskom-sv-unread-prefix (kbd "q") 'kom-unread-faq)
+  (define-key lyskom-sv-unread-prefix (kbd "Q") 'kom-unread-server-faq)
+  (define-key lyskom-sv-unread-prefix (kbd "m") 'kom-unread-marked-texts)
+  (define-key lyskom-sv-unread-prefix (kbd "a m") 'kom-unread-all-marked-texts)
+  (define-key lyskom-sv-unread-prefix (kbd "a SPC") 'kom-unread-all)
 
   (define-key lyskom-sv-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-sv-review-prefix (kbd "0") 'kom-initial-digit-view)
