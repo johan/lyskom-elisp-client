@@ -1,5 +1,10 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 1002:
+	* vars.el.in (kom-pick-text-no-strategy-alist): Set correct
+	default for kom-view-previous-commented-text.
+	(kom-old-farts-text-prompt-strategy): Ditto.
+
 	Fix bug 1006:
 	* commands2.el (kom-is-person-member-of-conference): Show number
 	of unread (only when deferred printing is on).

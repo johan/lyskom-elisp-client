@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.238 2003-03-16 19:49:01 byers Exp $
+;;;;; $Id: vars.el.in,v 44.239 2003-04-05 18:25:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.238 2003-03-16 19:49:01 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.239 2003-04-05 18:25:05 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -193,6 +193,10 @@ the priority among links that match the same text is undefined."
 (defconst kom-old-farts-text-prompt-strategy
   '((kom-comment-previous . ((t   . lyskom-get-previous-text)
 			     (nil . lyskom-get-previous-text)))
+    (kom-view-previous-commented-text . ((t   . lyskom-get-previous-text)
+                                         (nil . lyskom-get-previous-text)))
+    (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
+                                    (nil . lyskom-get-previous-text)))
     (t . ((t   . lyskom-get-last-read-text)
 	  (nil . lyskom-get-last-read-text)
 	  (0   . lyskom-get-text-at-point)
@@ -215,6 +219,8 @@ the priority among links that match the same text is undefined."
 (def-kom-var kom-pick-text-no-strategy-alist
   '((kom-comment-previous . ((t   . lyskom-get-previous-text)
                              (nil . lyskom-get-previous-text)))
+    (kom-view-previous-commented-text . ((t   . lyskom-get-previous-text)
+                                         (nil . lyskom-get-previous-text)))
     (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
                                     (nil . lyskom-get-previous-text)))
     (t . ((t   . lyskom-get-text-at-point) ; default for prompts
