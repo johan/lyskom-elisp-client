@@ -1,3 +1,7 @@
+1999-11-23  Per Hedbor	 <per@idonex.se>
+	* services.el (initiate-create-text): Fixed support for old lyskom
+	servers without call 86.
+	
 1999-11-22  David Byers  <davby@ida.liu.se>
 
 	* completing-read.el (lyskom-complete-string): Use character space
