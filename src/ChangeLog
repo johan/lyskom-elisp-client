@@ -1,3 +1,13 @@
+2003-02-13  Per Cederqvist  <ceder@ingate.com>
+
+	Fix kom-postpone, which has been broken a while.
+
+	* komtypes.el (text-list->trim-head): New function.
+
+	* commands2.el (kom-postpone): Use text-list->trim-head instead of
+	accessing internals of the text-list type in a way that no longer
+	works.
+
 2003-02-05  Hans Persson  <hans@localhost.localdomain>
 
 	* swedish-strings.el (local): Spelling fix.

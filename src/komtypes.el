@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.24 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: komtypes.el,v 44.25 2003-02-13 19:09:09 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.24 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.25 2003-02-13 19:09:09 ceder Exp $\n"))
 
 
 ;;; ============================================================
@@ -638,6 +638,12 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   (set-text-list->texts text-list
                         (nconc (text-list->texts text-list)
                                texts)))
+
+(defun text-list->trim-head (tlist n)
+  "Destructively remove all but the N last elements from TLIST.
+Do nothing if the TLIST is less than N elements long."
+  (set-text-list->texts tlist (nthcdr (max (- (text-list->length tlist) n) 0)
+				      (text-list->texts tlist))))
 
 
 ;;; ================================================================
