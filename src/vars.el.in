@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.140 2001-07-11 19:25:37 byers Exp $
+;;;;; $Id: vars.el.in,v 44.141 2001-07-30 22:20:31 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.140 2001-07-11 19:25:37 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.141 2001-07-30 22:20:31 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -843,7 +843,11 @@ to some URL viewers."
 			   ("lynx"
 			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
 			    "Lynx"
-			    lyskom-view-url-lynx))
+			    lyskom-view-url-lynx)
+			   ("galeon"
+			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+			    "Galeon"
+			    lyskom-view-url-galeon))
 
   "List of URL managers. Each element is a list consisting of
 (MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
@@ -866,6 +870,17 @@ Netscape. The remaining elements are used as arguments to Netscape.
 
 For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
 is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)"
+  server)
+
+(def-kom-var kom-galeon-command "galeon"
+  "*Command to run to start Galeon.
+
+If a string, it should be a command that starts Galeon with no
+arguments. If a list, the first element must be a command that starts
+Galeon. The remaining elements are used as arguments to Galeon.
+
+For instance, a value of \"galeon\" is valid, but \"galeon --display host:0\"
+is not. Instead, the latter should be \(\"galeon\" \"--display\" \"host:0\"\)"
   server)
 
 (def-kom-var kom-lynx-terminal 'xterm

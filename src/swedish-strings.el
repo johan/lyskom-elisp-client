@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.174 2001-07-11 20:10:15 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.175 2001-07-30 22:20:30 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.174 2001-07-11 20:10:15 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.175 2001-07-30 22:20:30 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -2797,6 +2797,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
     (emacs-telnet-viewer  . "Emacs Telnet-mode (telnet)")
     (mosaic-viewer        . "NCSA Mosaic (alla)")
     (lynx-viewer          . "Lynx (alla)")
+    (galeon-viewer        . "Galeon (alla)")
 
     (dont-check . "Ingen bekräftelse")
     (check-before-open . "Bekräfta innan inlägget skrivs")
@@ -3436,6 +3437,9 @@ i servern. Annars sparas det i din .emacs.")
     (kom-netscape-command-doc . "\
   Denna inställning anger kommandot för att köra Netscape.")
 
+    (kom-galeon-command-doc . "\
+  Denna inställning anger kommandot för att köra Galeon.")
+
     (kom-inhibit-typeahead-doc . "\
   Normalt sparas tangenttryckningar som görs medan klienten är upptagen, och
   utförs när det blir möjligt. Om denna inställning är avslagen så kommer
@@ -3795,6 +3799,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")
     (kom-netscape-command-tag . "Kommando för att starta Netscape Navigator:")
+    (kom-galeon-command-tag . "Kommando för att starta Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symboliska markeringstyper:")
 

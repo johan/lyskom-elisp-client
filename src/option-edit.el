@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.57 2001-05-30 13:02:18 byers Exp $
+;;;;; $Id: option-edit.el,v 44.58 2001-07-30 22:20:29 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.57 2001-05-30 13:02:18 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.58 2001-07-30 22:20:29 qha Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -213,6 +213,7 @@
     [kom-url-viewer-preferences]
     [kom-mosaic-command]
     [kom-netscape-command]
+    [kom-galeon-command]
 
     "\n\n"
     section
@@ -604,6 +605,7 @@ customize buffer but do not save them to the server."
                                         :indent 4))
     (kom-mosaic-command (file))
     (kom-netscape-command (file))
+    (kom-galeon-command (file))
     (kom-confirm-multiple-recipients
      (choice ((const (dont-check nil))
               (const (check-before-open before))
@@ -961,7 +963,11 @@ customize buffer but do not save them to the server."
                (list 'item
                      ':tag (lyskom-custom-string 'lynx-viewer)
                      ':format "%t"
-                     ':value "lynx")))
+                     ':value "lynx")
+	       (list 'item
+                     ':tag (lyskom-custom-string 'galeon-viewer)
+                     ':format "%t"
+                     ':value "galeon")))
    propl))
 
 (defun lyskom-open-window-widget (type &optional args propl)

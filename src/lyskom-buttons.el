@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.54 2001-04-25 11:48:36 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.55 2001-07-30 22:20:29 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.54 2001-04-25 11:48:36 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.55 2001-07-30 22:20:29 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -972,6 +972,49 @@ existing Mosaic process. Failing that, it starts a new Mosaic."
                            (list url))
                  (list url)))
 	(lyskom-url-manager-starting manager)))))
+
+(defun lyskom-view-url-galeon (url manager)
+  "View the URL URL using Galeon. The second argument MANAGER is the URL
+manager that started Galeon.
+
+This function attempts to load the URL in a running Galeon, but failing
+that, starts a new one."
+  (setq url (replace-in-string url "," "%2C"))
+  (setq url (replace-in-string url "(" "%28"))
+  (setq url (replace-in-string url ")" "%29"))
+  (let* ((url-string (if (memq window-system '(win32 mswindows w32))
+                         (list url)
+                       (list "-n"
+                             (format "%s" url))))
+         
+         (proc (apply 'start-process "galeon"
+                      nil
+                      (if (listp kom-galeon-command)
+                          (car kom-galeon-command)
+                        kom-galeon-command)
+                      (if (listp kom-galeon-command)
+                          (append (cdr kom-galeon-command)
+                                  url-string)
+                        url-string)))
+         (status 'run)
+         (exit nil))
+    (lyskom-url-manager-starting manager)
+    (while (eq status 'run)
+      (accept-process-output)
+      (setq status (process-status proc)))
+    (setq exit (process-exit-status proc))
+    (cond ((and (eq status 'exit) 
+                (eq exit 1))
+           (apply 'start-process "galeon"
+                          nil
+                          (if (listp kom-galeon-command)
+                              (car kom-galeon-command)
+                            kom-galeon-command)
+                          (if (listp kom-galeon-command)
+                              (append (cdr kom-galeon-command)
+                                      (list url))
+                            (list url))))
+          (t nil))))
 
 ;; Added by Peter Liljenberg
 (defun lyskom-view-url-lynx (url manager)
