@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.2 1996-10-05 20:58:27 davidk Exp $
+;;;;; $Id: view-text.el,v 44.3 1996-10-06 05:18:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.2 1996-10-05 20:58:27 davidk Exp $\n"))
+	      "$Id: view-text.el,v 44.3 1996-10-06 05:18:44 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -380,31 +380,33 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
       (setq lyskom-current-text text-no))
      (t
       (let* ((str (text->text-mass text))
-             s1 s2 t1 t2 body)
+             ;; s1 s2 t1 t2
+	     body)
         (cond
          ((string-match "\n" str)
           (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
           (setq body (substring str (match-end 0)))
           (lyskom-insert-string 'head-Subject)
-          (setq s1 (point-max))
+          ;; (setq s1 (point-max))
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
                                   (copy-sequence lyskom-current-subject)))
-          (setq s2 (point-max))
+          ;; (setq s2 (point-max))
           (if kom-dashed-lines
               (lyskom-insert 
                "------------------------------------------------------------\n")
             (lyskom-insert "\n"))
-          (setq t1 (point-max))
+          ;; (setq t1 (point-max))
           (let ((lyskom-current-function-phase 'body))
             (lyskom-format-insert "%#1t" body))
-          (setq t2 (point-max)))
+          ;; (setq t2 (point-max))
+	  )
          (t                             ;No \n found. Don't print header.
-          (setq s1 (point-max))
+          ;; (setq s1 (point-max))
           (lyskom-format-insert "%#1t" str)
-          (setq s2 (point-max))
-          (setq t1 (point-max)
-                t2 (point-max))
+          ;; (setq s2 (point-max))
+          ;; (setq t1 (point-max)
+          ;;       t2 (point-max))
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))
@@ -434,7 +436,10 @@ the client. That is done by lyskom-is-read."
      misc-info misc-info-list
      (if (and (or (eq (misc-info->type misc-info) 'RECPT)
 		  (eq (misc-info->type misc-info) 'CC-RECPT))
-	      (lyskom-member-p (misc-info->recipient-no misc-info)))
+	      ;; The whole membership list might not be fetched
+	      ;; yet. So we better mark it as read in all conferences.
+	      ;; (lyskom-member-p (misc-info->recipient-no misc-info))
+	      )
 	 (initiate-mark-as-read 'background nil
 				(misc-info->recipient-no misc-info)
 				(list (misc-info->local-no misc-info)))))))
@@ -480,8 +485,7 @@ Args: TEXT-STAT of the text being read."
 
 (defun lyskom-print-header-comm (text misc)
   "Get author of TEXT-NO and print a header line."
-  (let ((type (misc-info->type misc))
-	(text-stat (if kom-deferred-printing
+  (let ((text-stat (if kom-deferred-printing
 		       (cache-get-text-stat text)
 		     (blocking-do 'get-text-stat text))))
 

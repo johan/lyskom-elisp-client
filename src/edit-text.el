@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.1 1996-09-25 17:29:27 byers Exp $
+;;;;; $Id: edit-text.el,v 44.2 1996-10-06 05:18:13 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.1 1996-09-25 17:29:27 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.2 1996-10-06 05:18:13 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -89,8 +89,7 @@ Does lyskom-end-of-command."
 (defun lyskom-dispatch-edit-text (proc misc-list subject body
 				       &optional handler &rest data)
   "Same as lyskom-edit-text except that it doesn't set lyskom-is-writing."
-  (let ((buf (process-buffer proc))
-	(buffer (generate-new-buffer
+  (let ((buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
@@ -438,7 +437,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
      (lyskom-message "%s" (lyskom-get-string (car (cdr err))))
-     (condition-case arg
+     (condition-case nil
          (let ((text ""))
            (save-excursion
              (set-buffer lyskom-buffer)
@@ -571,7 +570,7 @@ text is a member of some recipient of this text."
 
 (defun lyskom-send-transform-text (message)
   (if lyskom-format-experimental
-      (condition-case err
+      (condition-case nil
           (let ((buf (generate-new-buffer "lyskom-enriched")))
             (unwind-protect
                 (save-excursion
@@ -600,7 +599,7 @@ text is a member of some recipient of this text."
       (save-excursion
 	(if (and (boundp 'lyskom-is-dedicated-edit-window)
 		 lyskom-is-dedicated-edit-window)
-	    (condition-case error
+	    (condition-case nil
 		(delete-frame)
 	      (error))))
       (set-window-configuration lyskom-edit-return-to-configuration)
@@ -655,7 +654,7 @@ text is a member of some recipient of this text."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
-             (headers (condition-case err
+             (headers (condition-case nil
                           (cdr (lyskom-edit-parse-headers))
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
@@ -699,8 +698,7 @@ text is a member of some recipient of this text."
 
 (defun lyskom-edit-add-recipient/copy (prompt string)
   "Adds a new recipient or a cc-recipient to the text which is being edited."
-  (let ((marker (point-min-marker))
-	(edit-buffer (current-buffer))
+  (let ((edit-buffer (current-buffer))
 	(insert-at (point-min-marker))
 	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
     (lyskom-save-excursion

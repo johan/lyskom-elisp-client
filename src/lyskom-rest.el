@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.9 1996-10-05 20:58:18 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.10 1996-10-06 05:18:22 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.9 1996-10-05 20:58:18 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.10 1996-10-06 05:18:22 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1417,7 +1417,7 @@ A symbol other than t means call it as a function."
                         arg))
         ((and (symbolp arg)
               (fboundp arg))
-         (condition-case err
+         (condition-case nil
              (funcall arg)
            (error (message "Error in beep function")
                   (beep))))
@@ -1782,7 +1782,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 (defun lyskom-what-to-do-when-done (&optional nochange)
   "Returns a command, the next command to do from the kom-do-when-done.
 If optional argument NOCHANGE is non-nil then the list wont be altered."
-  (condition-case err
+  (condition-case nil
       (let* ((now (cdr lyskom-do-when-done))
 	     (all (car lyskom-do-when-done))
 	     (next (cond
@@ -2191,10 +2191,8 @@ If quit is typed it executes lyskom-end-of-command."
 			  ((listp default) (car default))
 			  (t nil)))
 	(number nil)
-	(numstr nil)
-	(quit nil))
+	(numstr nil))
     (while (not number)
-      (setq quit t)
       (setq numstr
 	    (prog1
 		(lyskom-read-string
@@ -2203,8 +2201,7 @@ If quit is typed it executes lyskom-end-of-command."
 			   (lyskom-get-string 'give-a-number))
 			 (if numdefault 
 			     (format " (%d) " numdefault)
-			   " ")))
-	      (setq quit nil)))
+			   " ")))))
       (cond ((and (string= numstr "") 
 		  numdefault)
 	     (setq number numdefault))
@@ -2300,14 +2297,14 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 
 (defun lyskom-j-or-n-p (prompt &optional quittable)
   "Same as j-or-n-p but performs lyskom-end-of-command if quit."
-  (condition-case error
+  (condition-case nil
       (j-or-n-p prompt quittable)
     (quit (signal 'quit "In lyskom-j-or-n-p"))))
 
 
 (defun lyskom-ja-or-nej-p (prompt &optional initial-input)
   "Same as ja-or-nej-p but performs lyskom-end-of-command if quit."
-  (condition-case error
+  (condition-case nil
       (ja-or-nej-p prompt initial-input)
     (quit (signal 'quit "In lyskom-ja-or-nej-p"))))
 
@@ -2361,7 +2358,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	;; in function lyskom-edit-text.
 	(lyskom-filter-old-buffer (current-buffer)))
     (unwind-protect
-	(condition-case error
+	(condition-case nil
 	    (progn
 	      (setq lyskom-quit-flag nil)
 	      
@@ -2393,7 +2390,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
 		(let ((lyskom-is-parsing t))
 		  (unwind-protect
-		      (condition-case error-type
+		      (condition-case nil
 			  (lyskom-parse-unparsed)
 			;; Incomplete answers are normal.
 			(lyskom-parse-incomplete))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.6 1996-10-05 20:58:23 davidk Exp $
+;;;;; $Id: startup.el,v 44.7 1996-10-06 05:18:32 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.6 1996-10-05 20:58:23 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.7 1996-10-06 05:18:32 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -590,7 +590,7 @@ to see, set of call."
   (lyskom-count-down-edits)
   (run-hooks 'lyskom-mode-hook)
   (lyskom-tell-phrases-validate)
-  (buffer-disable-undo)
+  (buffer-disable-undo (current-buffer))
   (setq buffer-read-only t))
 
 (defun lyskom-clear-vars ()

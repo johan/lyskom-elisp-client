@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.1 1996-09-25 17:29:50 byers Exp $
+;;;;; $Id: review.el,v 44.2 1996-10-06 05:18:29 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.1 1996-09-25 17:29:50 byers Exp $\n"))
+	      "$Id: review.el,v 44.2 1996-10-06 05:18:29 davidk Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -797,7 +797,7 @@ If reading forward then starts reading backward and the other way round."
 	   (list (read-info->text-list info))
 	   (texts (cdr list))
 	   (forward (read-info->forward info)))
-      (setcdr list (nreverse (cdr list)))
+      (setcdr list (nreverse texts))
       (set-read-info->forward info (not forward))
       (lyskom-format-insert 'you-review 
 			    (lyskom-get-string (if (not forward)
