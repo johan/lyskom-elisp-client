@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.5 1996-05-08 12:31:19 davidk Exp $
+;;;;; $Id: view-text.el,v 41.6 1996-07-15 19:31:57 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.5 1996-05-08 12:31:19 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.6 1996-07-15 19:31:57 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -268,7 +268,7 @@ lyskom-reading-list."
 recipients to it that the user is a member in."
   (let* ((misc-info-list (text-stat->misc-info-list text-stat))
 	 (i (length misc-info-list))
-	 (res t))
+	 (res 'not-member))
     (while (and res (not (zerop i)))
       (setq i (1- i))
       (let* ((misc-info (elt misc-info-list i))
@@ -278,12 +278,19 @@ recipients to it that the user is a member in."
 	  (let ((membership (lyskom-member-p
 			     (misc-info->recipient-no misc-info)))
 		(loc-no (misc-info->local-no misc-info)))
+
+	    ;; Make a note that this text really is in a group we are
+	    ;; a member of.
+	    (if (and res membership) (setq res t))
+	    
 	    (if (and membership
 		     (> loc-no (membership->last-text-read membership))
 		     (not (lyskom-vmemq loc-no
 				       (membership->read-texts membership))))
 		(setq res nil)))))))
-    res))
+    (if (eq res 'not-member)
+	(not kom-follow-comments-outside-membership)
+      res)))
 
 
 (defun lyskom-subtract-one-day (x)
