@@ -1,5 +1,10 @@
 2003-08-28  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1117:
+	* commands2.el (kom-set-garb-nice): Moved kom-set-keep-commented
+	into this function. It makes more sense that way.
+	(kom-set-keep-commented): Deleted this command.
+
 	Fix bug 1128:
 	* commands2.el (kom-limit-import): Support refusing HTML import.
 
@@ -13,7 +18,7 @@
 
 	* compatibility.el (string-to-vector): Don't just compute the
  	result. Return it too...
-	
+
 	* utilities.el (lyskom-completing-read): Protect the value of
 	this-command from alteration.
 	(lyskom-read-from-minibuffer): Same here.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.307 2003-08-28 19:28:15 byers Exp $
+;;;;; $Id: english-strings.el,v 44.308 2003-08-28 19:45:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.307 2003-08-28 19:28:15 byers Exp $"))
+              "$Id: english-strings.el,v 44.308 2003-08-28 19:45:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -825,7 +825,6 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (submitters-conf-for-is . "Changing authors admitted to conference %#1M to the members of %#2M...") 
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference? ")
-    (conf-to-set-keep-commented-q . "Set minimum expiration time for commented texts in which conference? ")
     (new-keep-commented-q . "How many days shall new comments protect texts from removal? ")
     (new-garb-nice-q . "After how many days shall texts be removed? ")
     (garb-nice-for-is . "Changing expiration for %#1M to %#2d day%#2?d%[%]%[s%]...")
@@ -2225,7 +2224,6 @@ written a presentation.%]
     (kom-list-server-faqs     . "List server-FAQs")
     (kom-list-new-conferences . "List new conferences")
     (kom-list-new-persons     . "List new users")
-    (kom-set-keep-commented   . "Change minimum expiration (for commented texts)")
     ))
 
 (lyskom-language-var global lyskom-language-codes en

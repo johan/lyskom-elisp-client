@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.190 2003-08-28 19:28:14 byers Exp $
+;;;;; $Id: commands2.el,v 44.191 2003-08-28 19:45:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.190 2003-08-28 19:28:14 byers Exp $\n"))
+              "$Id: commands2.el,v 44.191 2003-08-28 19:45:43 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1474,38 +1474,29 @@ than the garbage collection time of all its recipients."
                                           '(all) nil nil t)))
     (if (not conf-stat)
         (lyskom-insert-string 'somebody-deleted-that-conf)
-      (let ((garb-nice (lyskom-read-number 'new-garb-nice-q)))
-        (lyskom-format-insert 'garb-nice-for-is
-                              conf-stat
-                              garb-nice)
+      (let ((garb-nice (lyskom-read-number 'new-garb-nice-q
+                                           (conf-stat->garb-nice conf-stat)))
+            (keep-commented
+             (lyskom-read-number 'new-keep-commented-q
+                                 (conf-stat->keep-commented conf-stat))))
+        (lyskom-format-insert 'garb-nice-for-is conf-stat garb-nice)
         (if (not (blocking-do 'set-garb-nice
                               (conf-stat->conf-no conf-stat) 
                               garb-nice))
             (lyskom-insert-string 'nope) ;+++lyskom-errno
           (lyskom-insert-string 'done)
-          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+          (cache-del-conf-stat (conf-stat->conf-no conf-stat))
 
-(def-kom-command kom-set-keep-commented ()
-  "Set the minimum number of days a commented text is kept in conference
-after the most recent comment was written. Texts in a conference will
-eventually be deleted automatically \(this process is called garbage
-collection). This can only happen when a text is older than the
-garbage collection time of all its recipients."
-  (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat 'conf-to-set-keep-commented-q
-                                          '(all) nil nil t)))
-    (if (not conf-stat)
-        (lyskom-insert-string 'somebody-deleted-that-conf)
-      (let ((keep-commented (lyskom-read-number 'new-keep-commented-q)))
-        (lyskom-format-insert 'keep-commented-for-is
-                              conf-stat
-                              keep-commented)
-        (if (not (blocking-do 'set-keep-commented
-                              (conf-stat->conf-no conf-stat) 
-                              keep-commented))
-            (lyskom-insert-string 'nope) ;+++lyskom-errno
-          (lyskom-insert-string 'done)
-          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+          (sit-for 0)
+          (lyskom-format-insert 'keep-commented-for-is
+                                conf-stat
+                                keep-commented)
+          (if (not (blocking-do 'set-keep-commented
+                                (conf-stat->conf-no conf-stat) 
+                                keep-commented))
+              (lyskom-insert-string 'nope) ;+++lyskom-errno
+            (lyskom-insert-string 'done)
+            (cache-del-conf-stat (conf-stat->conf-no conf-stat))))))))
 
 
 ;;; ================================================================

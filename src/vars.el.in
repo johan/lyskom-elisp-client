@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.272 2003-08-25 20:02:21 byers Exp $
+;;;;; $Id: vars.el.in,v 44.273 2003-08-28 19:45:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.272 2003-08-25 20:02:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.273 2003-08-28 19:45:44 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -382,7 +382,6 @@ the priority among links that match the same text is undefined."
     (kom-status-conf (conf-for-status))
     (kom-status-session (session-for-status))
     (kom-status-person (pers-for-status))
-    (kom-set-keep-commented (conf-to-set-keep-commented-q))
     (kom-set-garb-nice (conf-to-set-garb-nice-q))
     (kom-set-super-conf (conf-to-set-super-conf-q) (new-super-conf-q))
     (kom-set-personal-label (label-what-pers) (label-what-conf))
@@ -3306,7 +3305,6 @@ Users are encouraged to use their best sense of humor."
     kom-list-server-faqs
     kom-list-new-conferences
     kom-list-new-persons
-    kom-set-keep-commented
     ))
 
 ;;; ================================================================

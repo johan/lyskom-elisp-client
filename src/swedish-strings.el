@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.347 2003-08-28 19:28:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.348 2003-08-28 19:45:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.347 2003-08-28 19:28:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.348 2003-08-28 19:45:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -857,7 +857,6 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (submitters-conf-for-is . "Ändra tillåtna författare för möte %#1M till\nmedlemmarna i %#2M...")
 
     (conf-to-set-garb-nice-q . "Vilket möte vill du sätta livslängd för? ")
-    (conf-to-set-keep-commented-q . "För vilket möte vill du sätta minsta livslängd för kommenterade texter? ")
     (new-garb-nice-q . "Efter hur många dagar ska inlägg utplånas? ")
     (new-keep-commented-q . "Hur många dagar nya kommentarer skydda det kommenterade? ")
     (garb-nice-for-is . "Ändrar livslängden för %#1M till %#2d dag%#2?d%[%]%[ar%]...")
@@ -2254,7 +2253,6 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (kom-list-server-faqs     . "Lista server-FAQ")
     (kom-list-new-conferences . "Lista nya möten")
     (kom-list-new-persons     . "Lista nya personer")
-    (kom-set-keep-commented   . "Ändra minsta livslängd (för kommenterade inlägg)")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
