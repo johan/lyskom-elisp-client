@@ -15,16 +15,16 @@
   (set var val))
 
 
-(defmacro lyskom-doc-defvar-macro (var &optional val doc)
+(defmacro lyskom-doc-defvar-macro (var &optional val doc &rest junk)
   (list 'lyskom-doc-defvar (list 'quote var) val doc))
 
 
 (defun lyskom-update-documentation ()
   (unwind-protect
       (progn
-        (fset 'defvar 'lyskom-doc-defvar-macro)
+        (fset 'def-kom-var 'lyskom-doc-defvar-macro)
         (load-file "../src/lyskom.el"))
-    (fset 'defvar (symbol-function 'tmpfn-1)))
+    (fset 'def-kom-var (symbol-function 'tmpfn-1)))
   (find-file "lyskom-commands.data")
   (lyskom-check-cmd-doc)
   (find-file "lyskom-variables.data")
@@ -82,8 +82,8 @@
     (setq doc-list (lyskom-check-doc-find-keys 0 'intern))
     (mapcar (function
              (lambda (x)
-               (if (not (memq (car x) doc-list))
-                   (setq new-list (cons (car x) new-list)))))
+               (if (not (memq x doc-list))
+                   (setq new-list (cons x new-list)))))
             lyskom-commands)
 
     (goto-char (point-min))
