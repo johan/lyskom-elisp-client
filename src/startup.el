@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.12 1996-08-01 23:45:35 davidk Exp $
-;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;; $Id: startup.el,v 41.13 1996-08-06 21:34:00 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.12 1996-08-01 23:45:35 davidk Exp $\n"))
+	      "$Id: startup.el,v 41.13 1996-08-06 21:34:00 davidk Exp $\n"))
 
 
 ;;; ================================================================

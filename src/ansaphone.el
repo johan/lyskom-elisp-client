@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: ansaphone.el,v 41.1 1996-07-08 09:45:52 byers Exp $
-;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;; $Id: ansaphone.el,v 41.2 1996-08-06 21:33:16 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 41.1 1996-07-08 09:45:52 byers Exp $\n"))
+	      "$Id: ansaphone.el,v 41.2 1996-08-06 21:33:16 davidk Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 

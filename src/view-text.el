@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.8 1996-07-19 16:55:26 davidk Exp $
-;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;; $Id: view-text.el,v 41.9 1996-08-06 21:34:09 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.8 1996-07-19 16:55:26 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.9 1996-08-06 21:34:09 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
