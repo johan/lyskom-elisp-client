@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 36.1 1993-04-26 19:37:48 linus Exp $
+;;;;; $Id: prioritize.el,v 36.2 1993-05-05 03:14:01 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -28,7 +28,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 36.1 1993-04-26 19:37:48 linus Exp $\n"))
+	      "$Id: prioritize.el,v 36.2 1993-05-05 03:14:01 linus Exp $\n"))
 
 
 
@@ -178,9 +178,9 @@ column, and can be inserted at another line with \\[kom-prioritize-yank]."
   (beginning-of-line)
   (cond
    ((< (count-lines (point-min) (point)) 2) 		;In header?
-    (lyskom-error (lyskom-get-string 'too-high-goto-2)))
+    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
    ((< (count-lines (point) (point-max)) 2)
-    (lyskom-error (lyskom-get-string 'too-low-go-up)))
+    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
    ((null count)			;Take care of interactive argument.
     (setq count 1))
    ((numberp count))
@@ -213,9 +213,9 @@ conferences (or as many as is on the stack, whichever is less)."
   (interactive "P")
   (cond
    ((null lyskom-prioritize-stack)
-    (lyskom-error (lyskom-get-string 'all-confs-popped)))
+    (lyskom-error "%s" (lyskom-get-string 'all-confs-popped)))
    ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error (lyskom-get-string 'too-high-goto-2)))
+    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
    ((null count)			;Interactive...
     (setq count 1))
    ((numberp count))
@@ -279,7 +279,7 @@ on the lines. Leaves point at the beginning of the moved line."
 
 (defun lyskom-prioritize-handler (res)
   "Arg: RES. Barf if RES is nil."
-  (or res (lyskom-error (lyskom-get-string 'prio-died))))
+  (or res (lyskom-error "%s" (lyskom-get-string 'prio-died))))
 
 
 (defun kom-prioritize-quit ()
@@ -302,9 +302,9 @@ on the lines. Leaves point at the beginning of the moved line."
   (beginning-of-line)
   (cond
    ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error (lyskom-get-string 'too-high-goto-2)))
+    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
    ((zerop (count-lines (point) (point-max)))
-    (lyskom-error (lyskom-get-string 'too-low-go-up)))
+    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
    (t
     (save-excursion
       (let
@@ -337,9 +337,9 @@ If optional argument REVERSE is non-nil move line down instead."
   (beginning-of-line)
   (cond
    ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error (lyskom-get-string 'too-high-goto-2)))
+    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
    ((zerop (count-lines (point) (point-max)))
-    (lyskom-error (lyskom-get-string 'too-low-go-up)))
+    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
    ((null count)
     (setq count 1))
    ((numberp count))

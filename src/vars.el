@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.2 1993-04-27 00:01:47 linus Exp $
+;;;;; $Id: vars.el,v 36.3 1993-05-05 03:14:26 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.2 1993-04-27 00:01:47 linus Exp $\n"))
+	      "$Id: vars.el,v 36.3 1993-05-05 03:14:26 linus Exp $\n"))
 
 
 
@@ -486,7 +486,7 @@ kom-go-to-next-conf might go to the same conference again.)")
   "Non-nil means all communications with the server is stored in a buffer.
 The name is stored in lyskom-debug-communications-to-buffer-buffer.")
   
-(defvar lyskom-debug-communications-to-buffer-buffer nil
+(defvar lyskom-debug-communications-to-buffer-buffer "*kom*-debugs"
   "Name of the buffer to insert the communications with the server into if
 lyskom-debug-communications-to-buffer is non-nil.")
 

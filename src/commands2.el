@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.2 1993-04-27 00:01:07 linus Exp $
+;;;;; $Id: commands2.el,v 36.3 1993-05-05 03:11:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.2 1993-04-27 00:01:07 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.3 1993-05-05 03:11:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -505,7 +505,7 @@ means send the message to everybody."
 	 (lyskom-format 'message-sent-to-all string))
        lyskom-pers-no)
     (lyskom-insert-before-prompt
-     (lyskom-get-string 'message-nope)))
+     (lyskom-get-string 'message-nope))) ;+++ lyskom-errno
   (lyskom-end-of-command))
 
 
@@ -939,7 +939,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    debugger-old-buffer
 			  (void-variable (current-buffer))))
 	 (repname "*lyskom-bugreport*"))
-    (lyskom-message (lyskom-get-string 'buggreport-compilestart))
+    (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
     (set-buffer old-buf)
     (cond
      ((eq old-buf (process-buffer lyskom-proc)))
@@ -1008,7 +1008,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (goto-char (point-min))
       (replace-regexp "byte-code(\".*\""
 		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
-    (lyskom-message (lyskom-get-string 'buggreport-compileend))))
+    (lyskom-message "%s" (lyskom-get-string 'buggreport-compileend))))
 
 
 ; ;;; ================================================================
@@ -1088,7 +1088,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 (defun lyskom-set-garb-nice-2 (answer conf-stat)
   "Get the answer from lyskom-set-garb-nice and report the result."
   (if (not answer)
-      (lyskom-insert-string 'nope)
+      (lyskom-insert-string 'nope)	;+++lyskom-errno
     (lyskom-insert-string 'done)
     (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
   (lyskom-end-of-command))
@@ -1172,7 +1172,7 @@ Args: SUPER-CONF CONF_STAT TYPE"
 (defun lyskom-set-conf-for-conf-3 (answer conf-stat type)
   "Get the answer from lyskom-set-conf-for-conf and report the result."
   (if (not answer)
-      (lyskom-insert-string 'nope)
+      (lyskom-insert-string 'nope)	;+++ lyskom-errno
     (lyskom-insert-string 'done)
     (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
   (lyskom-end-of-command))
@@ -1224,7 +1224,7 @@ Args: SUPER-CONF CONF_STAT TYPE"
       (progn
 	(lyskom-format-insert 'you-are-now string)
 	(setq lyskom-is-administrator is-administrator))
-    (lyskom-insert-string 'nope))
+    (lyskom-insert-string 'nope))	;+++ lyskom-errno
   (lyskom-end-of-command))
 
 

@@ -1,3 +1,16 @@
+Wed May  5 04:47:30 1993  Linus Tolke Y  (linus@bodil)
+
+	* async.el, commands1.el, commands2.el, completing-read.el,
+	  edit-text.el, internal.el, lyskom-rest.el, prioritize.el
+          (lyskom-message, lyskom-error): rewritten all the calls to
+	  lyskom-message and lyskom-error with explicit format-strings.
+	* parse.el, startup.el, lyskom-rest.el, vars.el (debug): rewritten
+	  the debug-on-communications format. We now log the process.
+	  We also log all lyskom-processes in the same debug-buffert, the
+	  replies-buffer becomes visible if debugging.
+	* startup.el (lyskom-clear-vars, lyskom): Rewritten the
+	  login-procedure. 
+
 Thu Apr 29 00:07:36 1993  Linus Tolke Y  (linus@bodil)
 
 	* edit-text.el (lyskom-create-text-handler): Better error message.

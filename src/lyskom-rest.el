@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.2 1993-04-27 00:01:28 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.3 1993-05-05 03:13:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.2 1993-04-27 00:01:28 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.3 1993-05-05 03:13:23 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -946,7 +946,7 @@ lyskom-is-waiting nil.
 	(setq lyskom-is-waiting nil)
 	(lyskom-end-of-command)))
   (if (and lyskom-executing-command (not may-interrupt))
-      (lyskom-error (lyskom-get-string 'wait-for-prompt)))
+      (lyskom-error "%s" (lyskom-get-string 'wait-for-prompt)))
   (if (not (and (boundp 'doing-default-command)
 		doing-default-command))
       (cond
@@ -1430,7 +1430,7 @@ If quit is typed it executes lyskom-end-of-command."
 		    (string-match (lyskom-get-string 'no-regexp) answer)))
       (if nagging
 	  (progn
-	    (lyskom-message (lyskom-get-string 'yes-or-no-nag))
+	    (lyskom-message "%s" (lyskom-get-string 'yes-or-no-nag))
 	    (sit-for 2)))
       (setq answer (lyskom-read-string (concat prompt (lyskom-get-string 'yes-or-no))
 				       initial-input))
@@ -1444,11 +1444,11 @@ If quit is typed it executes lyskom-end-of-command."
 	(cursor-in-echo-area t)
 	(nagging nil))
     (while (not (char-in-string input-char (lyskom-get-string 'y-or-n-instring)))
-	(lyskom-message (concat (if nagging 
-			     (lyskom-get-string 'j-or-n-nag)
-			   "") 
-			 prompt
-			 (lyskom-get-string 'j-or-n)))
+	(lyskom-message "%s" (concat (if nagging 
+					 (lyskom-get-string 'j-or-n-nag)
+				       "") 
+				     prompt
+				     (lyskom-get-string 'j-or-n)))
 	(if nagging 
 	    (beep))
 	(setq input-char (read-char))
@@ -1539,7 +1539,9 @@ then a newline is printed after the name instead."
 			 lyskom-debug-communications-to-buffer-buffer))
 	    (save-excursion
 	      (goto-char (point-max))
-	      (insert "-----> "  output " <-----\n"))))
+	      (insert "\n"
+		      (format "%s" proc)
+		      "-----> "  output))))
 
 	  (set-buffer (process-buffer proc))
 	  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
@@ -1671,7 +1673,7 @@ Other objects are converted correctly."
   "Read a string in the minibuffer without echoing.
 One parameter - the prompt string."
   (interactive "sPrompt string: ")
-  (lyskom-message prompt-str)
+  (lyskom-message "%s" prompt-str)
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
@@ -1679,7 +1681,7 @@ One parameter - the prompt string."
 			?\r)
 		    (eq input-char ?\n)))
       (progn
-	(lyskom-message prompt-str)
+	(lyskom-message "%s" prompt-str)
 	(setq input-string
 	      (cond
 	       ((eq input-char ?\C-?)
