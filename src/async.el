@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.22 1999-08-25 07:17:34 byers Exp $
+;;;;; $Id: async.el,v 44.23 1999-10-09 16:13:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.22 1999-08-25 07:17:34 byers Exp $\n"))
+	      "$Id: async.el,v 44.23 1999-10-09 16:13:17 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -278,10 +278,7 @@ this function shall be with current-buffer the BUFFER."
     (lyskom-format-insert-before-prompt 'no-longer-member-n conf-no))
   (lyskom-remove-membership conf-no lyskom-membership)
   (when (eq conf-no lyskom-current-conf)
-    (set-read-list-empty lyskom-reading-list)
-    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                               lyskom-current-conf 0)
-    (setq lyskom-current-conf 0))
+    (lyskom-leave-current-conf))
   (read-list-delete-read-info conf-no lyskom-to-do-list)
   (lyskom-update-prompt))
 
@@ -303,10 +300,7 @@ this function shall be with current-buffer the BUFFER."
     (cond ((membership-type->passive (membership->type membership))
            (lyskom-replace-membership membership lyskom-membership)
            (when (eq conf-no lyskom-current-conf)
-             (set-read-list-empty lyskom-reading-list)
-             (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                                        lyskom-current-conf 0)
-             (setq lyskom-current-conf 0))
+             (lyskom-leave-current-conf))
            (read-list-delete-read-info conf-no lyskom-to-do-list)
            (lyskom-update-prompt))
 

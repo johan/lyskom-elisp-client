@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.58 1999-08-23 11:04:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.59 1999-10-09 16:13:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.58 1999-08-23 11:04:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.59 1999-10-09 16:13:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -760,6 +760,7 @@ Help: \\[describe-mode] ---")
     (no-get-text . "You were not allowed to retrieve the text.")
     (unknown-header . "Unknown header")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
+    (cant-find-info-node . "Can't find the info buffer")
 
     ; From view-text.el:
     (line . " /1 line/ ")

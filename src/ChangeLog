@@ -1,3 +1,18 @@
+1999-10-09  David Byers  <davby@ida.liu.se>
+
+	* view-text.el: Updated all functions to format imported e-mail
+	properly
+
+1999-09-29  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (kom-insert-last-info-nodename): New command.
+	(kom-yank-info-nodename): New command.
+
+1999-08-28  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity): Bug
+	fix in printing session list.
+
 Tue Sep 28 14:56:43 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Released 0.46-BETA-7

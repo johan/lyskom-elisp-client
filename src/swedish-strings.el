@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.73 1999-08-22 16:04:55 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.74 1999-10-09 16:13:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.73 1999-08-22 16:04:55 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.74 1999-10-09 16:13:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -768,6 +768,7 @@ Annat se \\[describe-mode] ---")
     (no-get-text . "Du fick inte hämta texten.")
     (unknown-header . "Okänd information på raden")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
+    (cant-find-info-node . "Hittar inte info-bufferten")
 
     ;; From view-text.el:
     (line . " /1 rad/ ")
@@ -791,11 +792,17 @@ Annat se \\[describe-mode] ---")
     (yesterday . "igår")
     (no-such-text-no . "Det finns inget sådant inlägg. (%#1:n)\n")
     (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
+    (text-created-at . "Skapad: %#1s\n")
+    (text-imported-at . "Importerad: %#1s\n")
+    (text-imported-at-by . "Importerad: %#1s av %#2P\n")
 
     (head-Subject . "Ärende: ")
     (Recipient . "Mottagare")
     (Extra-recipient . "Extra kopia")
     (Hidden-recipient . "För kännedom")
+    (mx-Recipient . "Extern mottagare")
+    (mx-Extra-recipient . "Extern kopiemottagare")
+    (mx-Extern-reply-to . "Externa svar till")
     (Strange-recipient . "Underlig mottagare")
     (send-at . "    Sänt:     %#1s\n")
     (sent-by . "    Sänt av %#1P\n")
@@ -810,6 +817,12 @@ Annat se \\[describe-mode] ---")
     (footnote-to-text-by . "Fotnot till text %#1n av %#2P")
     (comment-in-text-by . "Kommentar i text %#1n av %#2P")
     (footnote-in-text-by . "Fotnot i text %#1n av %#2P")
+
+    (attachment-to-text . "Bilaga till text %#1n")
+    (attachment-in-text . "Bilaga i text %#1n")
+    
+    (envelope-sender . "Sänt av: %#1s\n")
+    (attachment-filename . "Bilagans filnamn: \"%#1s\"\n")
 
     (written-by . " av %#1P\n")
 
@@ -1338,6 +1351,12 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (what-request-confirm-no . "Vilken text vill du ha läsbekräftelse till: ")
     (adding-request-confirm . "Begär läsbekräftelse till inlägg %#1n...")
     (already-request-confirm . "Inlägg %#1n har redan begäran om läsbekräftelse.\n")
+
+    (review-mail-headers-to-what . "Vilken texts mailhuvuden vill du se? ")
+    (no-mail-headers . "Inlägg %#1n har inga mailhuvuden\n")
+    (mail-headers-for . "Mailheaders för inlägg %#1n:\n")
+    (email-name-prefix . "")
+    (email-name-suffix . "")
 ))
 
 
@@ -1493,6 +1512,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-add-no-comments      . "Förhindra kommentarer")
     (kom-add-private-answer   . "Begär personligt svar")
     (kom-add-request-confirm  . "Begär läsbekräftelse")
+
+    (kom-review-mail-headers  . "Återse mailhuvuden")
     ))
 
 (lyskom-language-var lyskom-language-codes sv

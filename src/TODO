@@ -3,8 +3,17 @@
 Att göra i elisp-klienten
 =========================
 
+Någon form at reply till importerade brev som använder mx-reply-to
+eller mx-to, mx-cc om de finns.
+
+
             Om du fixar någonting som står med på den här
             listan, glöm inte att ta bort det från listan!
+
+Testa vad som händer om man har en ogiltig misc-item eller aux-item i
+headersarna när man adderar en mottagare eller flyttar ett inlägg
+eller adderar en aux-item eller tar bord en aux-item.
+
 
 initiate-get-membership skulle kunna fylla i positionen för
 medlemskapet automatiskt. Tyvärr går det inte att göra så i
