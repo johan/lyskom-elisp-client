@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.94 2002-04-11 18:49:10 byers Exp $
+;;;;; $Id: utilities.el,v 44.95 2002-04-13 16:15:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.94 2002-04-11 18:49:10 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.95 2002-04-13 16:15:13 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -129,10 +129,11 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 
 
 (defun filter-list (test list)
-  (cond ((null list) '())
-	((apply test (car list) nil)
-	 (cons (car list) (filter-list test (cdr list))))
-	(t (filter-list test (cdr list)))))
+  (let ((result nil))
+    (lyskom-traverse el list
+      (when (funcall test el)
+        (setq result (cons el result))))
+    (nreverse result)))
 
 ;;;============================================================
 ;;;
@@ -671,6 +672,15 @@ The order of the list a is kept."
               (setq list (cons (car a) list)))
           (setq a (cdr a)))
         (nreverse list))))
+
+(defun lyskom-union (a b)
+  "Returns a list containing the union of list A and list B.
+The list may contain list A or list B as its tail. This means that
+destructive operations on the result may affect either operand."
+  (let ((result nil))
+    (lyskom-traverse x a
+      (unless (memq x b) (setq result (cons x result))))
+    (nconc (nreverse result) b)))
 
 
 

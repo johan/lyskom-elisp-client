@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.221 2002-04-13 15:01:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.222 2002-04-13 16:15:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.221 2002-04-13 15:01:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.222 2002-04-13 16:15:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1400,6 +1400,7 @@ Uppkopplad sedan %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
+    (there-are-server-faqs . "Det finns %#1d (%#1d ej läsmarkerad%#1?d%[%]%[e%]) FAQ%#1?d%[%]%[er%] för denna server:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
@@ -3863,6 +3864,9 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är påslaget så kommer kommandon som återser inlägg att 
   läsmarkera de inlägg som visas. I annat fall lämnar återsekommandona
   din läshistorik orörd, precis som vanligt.")
+    (kom-auto-review-faqs-doc . "\
+  Om detta är påslaget så kommer server-FAQer som inte är läsmarkerade
+  att återses automatiskt när du loggar in.")
 
 
     ;;
@@ -4029,6 +4033,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-print-seconds-in-time-strings-tag . "Inkludera sekunder i tidsangivelser:")
     (kom-review-uses-cache-tag . "Återsekommandon använder sparade inlägg:")
     (kom-review-marks-texts-as-read-tag . "Återsekommandon läsmarkerar visade texter:")
+    (kom-auto-review-faqs-tag . "Visa FAQer vid inloggning:")
     )
 )
 

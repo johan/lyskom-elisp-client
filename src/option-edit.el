@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.62 2002-03-03 19:59:05 joel Exp $
+;;;;; $Id: option-edit.el,v 44.63 2002-04-13 16:15:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.62 2002-03-03 19:59:05 joel Exp $\n"))
+	      "$Id: option-edit.el,v 44.63 2002-04-13 16:15:13 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -62,6 +62,7 @@
     section
     "\n"
     [kom-default-language]
+    [kom-auto-review-faqs]
     [kom-show-namedays]
     [kom-show-week-number]
     [kom-print-relative-dates]
@@ -515,6 +516,7 @@ customize buffer but do not save them to the server."
     (kom-autowrap (choice ((const (on t))
                            (const (off nil))
                            (number nil :tag max-text-length))))
+    (kom-auto-review-faqs (toggle on off))
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
 
