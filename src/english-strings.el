@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.8 1991-10-26 16:20:04 byers Exp $
+;;;;; $Id: english-strings.el,v 35.9 1991-10-31 10:22:56 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.8 1991-10-26 16:20:04 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.9 1991-10-31 10:22:56 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -386,6 +386,8 @@ Email-address:\n\nOther:\t")
     (does-not-exist . "Unknown command.")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
+    (buggreport-compilestart . "Compiling...")
+    (buggreport-compileend . "Compiling...done")
     (buggreport-description . "This is what I was doing:
 (Fill in your comments below)\n\n\n
 When you have completed writing this, send you r bug report to the LysKOM
@@ -396,13 +398,14 @@ Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
 Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-internals . "LysKOM's internal information:\n\n")
     (buggreport-version . "lyskom-version:")
-    (buggreport-pending-calls . "lyskom-pending-calls:")
-    (buggreport-call-data . "\nlyskom-call-data:")
+    (buggreport-emacs-version . "emacs-version:")
+    (buggreport-system-id . "system-id:")
+    (buggreport-ctl-arrow-doc . "ctrl-doc:")
     (buggreport-unparsed . "\nlyskom-unparsed-buffer:")
-    (buggreport-reading-list . "\nlyskom-reading-list:")
-    (buggreport-to-do-list . "\nlyskom-to-do-list:")
+    (buggreport-command-keys . "Recently pressed keys:")
     (buggreport-backtrace . "\n*Backtrace*:\n%#1s\n")
     (buggreport-communications . "\nlyskom-debug-communications-to-buffer-buffer:")
+    (buggreport-all-kom-variables . "\n\nOther variables:\n***** *********")
     (buggreport-instead-of-byte-comp . "byte-code(\"byte-string\"")
     (buggreport-subject . "Bugreport elisp-client version %#1s")
 
