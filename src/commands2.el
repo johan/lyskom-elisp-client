@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.4 1991-10-02 22:03:42 linus Exp $
+;;;;; $Id: commands2.el,v 35.5 1991-10-23 22:19:53 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.4 1991-10-02 22:03:42 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.5 1991-10-23 22:19:53 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -276,15 +276,17 @@ is the one we are interested in."
 	  (null membership))
       (lyskom-insert-string 'secret-membership)
     (lyskom-print-date-and-time (membership->last-time-read membership))
-    (lyskom-insert (concat (format "%7d  "
-				   (- (+ (conf-stat->first-local-no conf-stat)
-					 (conf-stat->no-of-texts conf-stat))
-				      (membership->last-text-read membership)
-				      (length (membership->read-texts
-					       membership))
-				      1))
-			   (conf-stat->name member-conf-stat)
-			   "\n"))))
+    (let ((unread (- (+ (conf-stat->first-local-no conf-stat)
+			(conf-stat->no-of-texts conf-stat))
+		     (membership->last-text-read membership)
+		     (length (membership->read-texts
+			      membership))
+		     1)))
+      (lyskom-insert (concat (if (zerop unread)
+				 "         "
+			       (format "%7d  " unread))
+			     (conf-stat->name member-conf-stat)
+			     "\n")))))
 
 
 ;;; ================================================================
