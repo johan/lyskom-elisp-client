@@ -6,14 +6,272 @@
 
   %fnc;   <!-- LysKOM functions -->
   %var;   <!-- LysKOM variables -->
+
+  <!ENTITY editcmd.ent SYSTEM "editcmd.ent">
 ]>
 
 <book lang="en">
-  <chapter>
+  <chapter id="chapter:texts">
     <title>Texts in LysKOM</title>
 
     <para>
+      Texts are the heart of LysKOM. The whole point of the system is
+      to write and read texts. Every text in LysKOM has a few
+      important properties: there are always one or more recipient(s),
+      there is an author, a subject line and text body (technically,
+      the subject line is part of the text body).
     </para>
+
+
+    <section id="texts:recipients">
+      <title>Recipients</title>
+
+      <para>
+        Every text has one or more recipients (it is possible to
+        create a text with no recipients, but generally not a very
+        good idea since only the author is able to read them and the
+        server may delete them at any time). The recipient list
+        determines which conferences the text appears in. The text
+        will be presented to members of those conferences as they use
+        LysKOM. Note that users who are not members of the recipients
+        may also be able to read the text, if at least one of the
+        recipients is an open conference.
+      </para>
+
+      <para>
+        There are three kinds of recipients: regular recipients,
+        carbon copy (cc) recipients (known as "extra-kopiemottagare"
+        in Swedish) and blind carbon copy (bcc) recipients (known as
+        "dold kopia" in Swedish).
+      </para>
+
+      <formalpara>
+        <title>Regular recipients</title>
+        <para>
+          Regular recipients are the normal case. When a text is
+          commented, the regular recipients of the commented text will
+          be copied to the comment.
+        </para>
+      </formalpara>
+
+      <formalpara>
+        <title>Carbon copy recipients</title>
+
+        <para>
+          Carbon copy recipients are used when a single text, but not
+          its comments, are relevant to the topic of a conference. For
+          example, marker conferences ("adderingsmöten" in Swedish),
+          should be made carbon copy recipients, not regular
+          recipients, so that future comments do not appear in the
+          marker conferences. Carbon copy recipients are also useful
+          if you want to notify the members of a conference, or a
+          particular user, about the existence of the text.
+        </para>
+      </formalpara>
+
+      <formalpara>
+        <title>Blind Carbon Copy Recipients</title>
+
+        <para>
+          Blind carbon copy recipients are invisible recipients. Only
+          those who have access to the recipient conference will even
+          know that a BCC recipient exists. BCC recipients are useful
+          when you want to copy a message to a closed conference
+          without anyone else knowing.
+        </para>
+      </formalpara>
+    </section>
+
+    <section id="texts:comments">
+      <title>Comments and Footnotes</title>
+
+      <para>
+        A text may be a comment to another text, and may have one or
+        more comments (in fact, <emphasis>most</emphasis> texts are
+        comments to something else). A text without any comments at
+        all is referred to as a <firstterm>root</firstterm>. All the
+        comments that can be reached from a text by reading comments
+        and comments-to-comments (and so on) are collectively known as
+        a <firstterm>comment tree</firstterm>. The text a comment is a
+        comment to is known as the <firstterm>commented</firstterm>
+        text.
+      </para>
+
+      <para>
+        A footnote is a special kind of comment. Only the author of a
+        text can add a footnote to it. In the elisp client, footnotes
+        are shown before any other comments; in other clients,
+        footnotes are shown together with the original texts.
+        Typically, footnotes are used when the author wants to correct
+        or add to the information in an existing text.
+      </para>
+
+      <para>
+        Anyone can write a comment to any text they can read, and the
+        comment can have any recipients (they are usually the same as
+        the recipients of the commented text, but not always). It is
+        possible for the author of a text to request that nobody write
+        a comment to it, but such a request does not
+        <emphasis>prevent</emphasis> comments.
+      </para>
+
+      <para>
+        A comment whose recipients are the author of the commented
+        text and the author of the comment is referred to as a
+        <firstterm>personal comment</firstterm> or <firstterm>private
+        reply</firstterm>.
+      </para>
+
+      <para>
+        When writing a comment, check that the recipients suggested by
+        the client are appropriate. In general, peoples mailboxes are
+        always appropriate, but if the topic of the discussion strays,
+        one or more of the open conferences may no longer be
+        appropriate. Sometimes the client will ask if you want to add
+        the author of the commented text as a recipient to a comment
+        you write. This happens when the author of the commented text
+        is not a member of any of the recipients. In general, it is
+        appropriate to answer "yes" to this question.
+      </para>
+
+      <para>
+        From time to time you may find that entire comment trees are
+        being sent to your mailbox. This often happens when someone
+        writes a comment to one of your texts in a conference that you
+        are not a member of. If you are not interested in the
+        discussion, remove your mailbox using one of the commands for
+        manipulating recipients <xref
+        linkend="texts:manip:recipients"/>. You may also consider
+        joining the conference in question if you are participating in
+        the discussion.
+      </para>
+
+      <para>
+        If discussions keep ending up in your mailbox because you tend
+        to participate in discussions that are in conferences you are
+        not a member of, you can request that comments be sent to an
+        alternate conference instead by using the
+        &fn:kom-redirect-comments; command. Not all clients obey this
+        instruction, but more and more do.
+      </para>
+    </section>
+
+
+
+    <section id="texts:writing">
+      <title>Writing texts</title>
+
+      <para>
+        To write a new text, use &fn:kom-write-text;. To write a new
+        comment, use &fn:kom-write-comment;. To write a new footnote,
+        use &fn:kom-write-footnote;. There are also a few specialized
+        commands for writing texts such as &fn:kom-private-answer; for
+        writing a private reply to a text; and
+        &fn:kom-comment-previous; and &fn:kom-private-answer-previous;
+        for writing a comment (or private reply) to the next-to-last
+        text (useful when you read a text and a comment to that text,
+        and decide you also want to write a comment). See the command
+        reference for more.
+      </para>
+
+      <para>
+        When you issue a command to write a text, you will be
+        presented with an <firstterm>edit buffer</firstterm>. This is
+        the Emacs buffer in which you compose your text. The edit
+        buffer is divided into two sections: the header and the body.
+        These sections are separated with a dashed line. Within the
+        header, the TAB and M-TAB keys move the cursor between
+        "interesting" positions; the M-TAB key works in the text body
+        as well, but the TAB key does not (it just inserts a tab, as
+        you would expect).
+      </para>
+
+      <para>
+        You can edit any header line by hand, but you may not get the
+        results you expect, so be careful. If you are unsure, use the
+        commands that manipulate the header instead. Before the
+        subject line, there is a field labeled "Add". Right-click this
+        to bring up a menu of headers to add.
+      </para>
+
+      <para>
+        Editing works just like in Emacs. In fact, the major mode of
+        the edit buffer is text-mode, so if you're used to editing
+        text files with Emacs, everything should be familiar. The
+        LysKOM menu (in the menu bar) contains all LysKOM-specific
+        commands available in this buffer.
+      </para>
+
+      &editcmd.ent;
+    </section>
+
+
+    <section>
+      <title>Manipulating existing texts</title>
+
+      <para>
+        You can't change a text in LysKOM once it's been sent. Even
+        the administrator can't. You can, however, change the
+        recipients, the comment links and features like requesting no
+        comments or read confirmation at any time.
+      </para>
+
+      <section id="texts:manip:deleting">
+        <title>Deleting texts</title>
+
+        <para>
+          It is possible to delete texts, but you really shouldn't do
+          it. In particular you should never delete a text that has a
+          comment. If you do, that comment will no longer be a comment
+          to anything, and making sense of it might be impossible once
+          your text is gone. This annoys not only the person who wrote
+          the comment, but also the people who read it afterwards. If
+          you need to make a correction or retraction to a text, write
+          a footnote to it instead.
+        </para>
+
+        <para>
+          If you really feel you have to delete a text, there is a
+          command for it, and it's in the command reference.
+        </para>
+      </section>
+
+      <section id="texts:manip:comments">
+        <title>Manipulating comments</title>
+
+        <para>
+          The comment links between texts can be changed after the
+          fact. To make an existing text a comment to another existing
+          text, use &fn:kom-add-comment;. To remove a comment from an
+          existing text, use &fn:kom-sub-comment;.
+        </para>
+      </section>
+
+      <section id="texts:manip:recipients">
+        <title>Manipulating recipients</title>
+
+        <para>
+          The initial list of recipients is determined when a text is
+          created, but recipients can be added, removed, or converted
+          at any time after that. Use &fn:kom-add-recipient; to add a
+          recipient or convert an existing recipient to a new type
+          (e.g. from regular to carbon copy or vice versa). Use
+          &fn:kom-sub-recipient; to remove an existing recipient. Note
+          that only the person who added a recipient in the first
+          place, or the supervisor of the recipient, may remove a
+          recipient from a text.
+        </para>
+
+        <para>
+          The command &fn:kom-move-text; is helpful when moving a text
+          from one conference to another, and &fn:kom-move-text-tree; is
+          useful when moving a text and all its comments.
+        </para>
+      </section>
+    </section>
+
+
+
 
     <section id="texts:special">
       <title>Special Texts</title>
@@ -33,10 +291,12 @@
 
         <para>
           Keeping with the tradition of openness, presentations of
-          persons in LysKOM are fairly detailed, almost always
-          including the real name and location of the person, and
-          frequently including telephone number, address, interests,
-          job details and more.
+          persons in most LysKOM systems are fairly detailed, almost
+          always including the real name and location of the person,
+          and frequently including telephone number, address,
+          interests, job details and more. Check what the tradition is
+          in your system by looking at the presentations of some of
+          the regulars.
         </para>
 
         <para>
@@ -68,6 +328,12 @@
         <para>
           Presentations are protected from automatic deletion, but can
           be deleted manually. Don't do that.
+        </para>
+
+        <para>
+          By default, the names of users without presentations are
+          displayed with a line through the name. You can change this
+          by altering the value of &var:kom-highlight-conferences;.
         </para>
       </section>
 
@@ -195,7 +461,7 @@
           for manipulating server FAQs; these can only be used by
           users with administrative rights to the LysKOM server.
         </para>
-        
+
         <para>
           There are a number of settings that affect FAQs.
           &var:kom-auto-list-faqs; controls automatic listing of FAQs
