@@ -1,3 +1,33 @@
+2004-05-25  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-format-aux-help): Handle non-integer
+	(i.e. floating point) numbers somewhat more gracefully.
+
+2004-05-23  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-buttons.el (kom-button-click): Support w3m links.
+
+	Support w3m; fontify urls when not rendering html:
+	* lyskom-rest.el (lyskom-w3m-region): New function.
+	(lyskom-w3-region): Use lyskom-render-html-region.
+	(lyskom-render-html-region): New function.
+	(lyskom-format-htmal-plaintext): New function.
+	(lyskom-format-html): Made generic.
+	(lyskom-format-html-w3): New function.
+	(lyskom-format-html-w3m): New function.
+
+	* vars.el.in (lyskom-format-special): When HTML formatting is off,
+	fontify URLs and stuff.
+
+	* lyskom-rest.el (w3-fetch): Don't call w3-finish-drawing. It used
+	to be necessary, but now it causes the client to hang.
+	(smiley-region): Support a stack of formatting functions.
+
+2004-05-12  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1320:
+	* lyskom-rest.el (lyskom-is-loaded): Seed the randomizer.
+
 2004-05-04  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (kom-old-farts-text-prompt-strategy): Corrected
