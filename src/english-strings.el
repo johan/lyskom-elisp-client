@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.272 2003-03-16 19:59:22 byers Exp $
+;;;;; $Id: english-strings.el,v 44.273 2003-03-16 21:51:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.272 2003-03-16 19:59:22 byers Exp $"))
+              "$Id: english-strings.el,v 44.273 2003-03-16 21:51:36 byers Exp $"))
 
 
 ;;; ================================================================
@@ -283,7 +283,7 @@ instead of removing it.")
     (who-letter-to . "Send a letter to whom? ")
     (who-send-text-to . "Send text to which conference? ")
     (has-motd . "%#1P has a notice on his/her mailbox:\n\n")
-    (motd-persist-q . "Send the letter? ")
+    (motd-persist-q . "Do you still want to write the text? ")
 
     (who-to-add . "Whom do you want to add? ")
     (where-to-add . "To which conference? ")
