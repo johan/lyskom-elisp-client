@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.146 2001-01-01 22:48:31 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.147 2001-01-27 17:57:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.146 2001-01-01 22:48:31 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.147 2001-01-27 17:57:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -70,8 +70,8 @@
   (define-prefix-command 'lyskom-sv-edit-aux-prefix)
   (define-prefix-command 'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-mode-map (kbd "C-c")   'lyskom-sv-edit-prefix)
-  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click-or-yank)
-  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click-or-yank)
+  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button3up))     'kom-mouse-null)
   (define-key lyskom-sv-edit-prefix (kbd "C-x")     'lyskom-sv-edit-aux-prefix)
@@ -1933,9 +1933,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map [Å] 'lyskom-sv-review-prefix)
   (define-key lyskom-sv-mode-map [å] 'lyskom-sv-review-prefix)
 
-  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
-  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)
+  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd "*")     'kom-button-press)
   (define-key lyskom-sv-mode-map (kbd "=")     'kom-menu-button-press)
@@ -2144,9 +2144,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     nil
   (setq lyskom-sv-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-sv-prioritize-mode-map)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
-  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map (kbd "*") 'kom-button-press)
   (define-key lyskom-sv-prioritize-mode-map (kbd "=") 'kom-menu-button-press)
@@ -2214,10 +2214,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'kom-mouse-null)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
-  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'widget-button-click)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'lyskom-widget-click)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
   (define-key lyskom-sv-customize-map (kbd "C-c C-k") 'lyskom-customize-quit)
   (define-key lyskom-sv-customize-map (kbd "C-c C-s") 'lyskom-customize-save)

@@ -1,3 +1,10 @@
+2001-01-07  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el: Changed useful bindings of button2up to
+	button2. Changed useful bindings of button3up to button3. In a fit
+	of paranoia bound button2up and button3up in corresponding places
+	to kom-mouse-null.
+
 2001-01-18  Joel Rosdahl  <joel@rosdahl.net>
 
 	* view-text.el (lyskom-print-text): Keep viewed text in cache a
