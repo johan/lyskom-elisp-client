@@ -28,17 +28,26 @@ ut en session i ett ikonifierat f</indent>ö<indent>nster. Eller kanske till och 
 bara i en g</indent>ö<indent>md buffert.
 
 
+kom-url-viewer-prefences saknas i lyskom-elisp-variables.
+
+
 Det verkar inte hj</indent>älpa att göra aBörja för att få se texter man
 
 <indent>missat.
 
+
+    </indent>Funktionen lyskom-format-filter-pattern med underfunktioner
+<indent>använder insert i stället för lyskom-insert.  Det gör att man inte
+kan lista sina filter om man har en skrivskyddad kom-buffer.
+
 </indent>
+<bold><x-color><param>white</param><x-bg-color><param>DarkSlateGray</param>Allmänna förbättringar</x-bg-color></x-color></bold>
+
 
     Lista ärenden formaterar fel.<indent>
 
 
 </indent><bold><x-color><param>white</param><x-bg-color><param>DarkSlateGray</param>Allmänna förbättringar</x-bg-color></x-color></bold>
-
 <indent>Det verkar behövas dynamisk anpassning av sessionsfältsbredden i
 vilkalistan, vid sessionsnummer över 9999 ser det inte så snyggt
 ut.

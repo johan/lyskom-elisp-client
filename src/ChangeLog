@@ -1,3 +1,10 @@
+Sun Mar 17 00:10:47 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* flags.el (lyskom-read-options-eval): Överlev trasiga variabler.
+	(lyskom-set-var-from-string): Ny funktion.
+
+	* view-text.el (lyskom-view-text): Hämta bara texten en gång.
+
 Sat Mar 16 04:41:13 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-debug-insert): Fungerade inte särskilt
