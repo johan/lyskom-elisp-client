@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.387 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.388 2005-01-04 20:46:15 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.387 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.388 2005-01-04 20:46:15 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -2930,7 +2930,10 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-mode-map (kbd "<DEL>") 'scroll-down)
   (define-key lyskom-sv-mode-map (kbd "<delete>") 'scroll-down)
   (define-key lyskom-sv-mode-map (kbd "<BS>") 'scroll-down)
-)
+
+  (define-key lyskom-sv-mode-map (kbd "<") 'beginning-of-buffer)
+  (define-key lyskom-sv-mode-map (kbd ">") 'end-of-buffer)
+  )
 
 
 ;;; ================================================================
