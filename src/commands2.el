@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.91 2001-04-23 21:39:42 joel Exp $
+;;;;; $Id: commands2.el,v 44.92 2001-04-25 12:31:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.91 2001-04-23 21:39:42 joel Exp $\n"))
+	      "$Id: commands2.el,v 44.92 2001-04-25 12:31:37 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2230,7 +2230,7 @@ Return-value: 'no-session if there is no suitable session to switch to
       (read-list-enter-read-info
        (lyskom-create-read-info 'REVIEW
                                 nil
-                                (lyskom-get-current-priority)
+                                (lyskom-review-get-priority)
                                 (lyskom-create-text-list faq-list)
                                 nil t)
        lyskom-reading-list t)))))

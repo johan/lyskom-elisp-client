@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.104 2001-04-24 20:55:28 jhs Exp $
+;;;;; $Id: commands1.el,v 44.105 2001-04-25 12:31:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.104 2001-04-24 20:55:28 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.105 2001-04-25 12:31:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -231,7 +231,7 @@ the other ones."
           (if (cdr text-nos)
               (read-list-enter-read-info
                (lyskom-create-read-info
-                'REVIEW nil (lyskom-get-current-priority)
+                'REVIEW nil (lyskom-review-get-priority)
                 (lyskom-create-text-list (cdr text-nos))
                 lyskom-current-text)
                lyskom-reading-list t))
@@ -2029,7 +2029,7 @@ If MARK-NO is nil, review all marked texts."
                                          mark-no))))
       (let ((read-info (lyskom-create-read-info
 			'REVIEW-MARK nil 
-			(lyskom-get-current-priority)
+			(lyskom-review-get-priority)
 			(lyskom-create-text-list text-list)
 			nil t)))
 	(read-list-enter-read-info read-info lyskom-reading-list t)
@@ -2772,10 +2772,15 @@ Uses Protocol A version 9 calls"
 	       (concat "(" (dynamic-session-info->what-am-i-doing who-info)
 		       ")"))))
 	(if kom-show-since-and-when
-	    (let ((active (if (< (dynamic-session-info->idle-time who-info) 60)
-			      (lyskom-get-string 'active)
-			    (lyskom-format-secs
-			     (dynamic-session-info->idle-time who-info))))
+	    (let ((active 
+                   (if (session-flags->user_active_used 
+                        (dynamic-session-info->flags who-info))
+                       (if (< (dynamic-session-info->idle-time who-info) 60)
+                           (lyskom-get-string 'active)
+                         (lyskom-format-secs
+                          (dynamic-session-info->idle-time who-info)))
+                     (lyskom-get-string 'Unknown2))
+                     )
 		  defer-info
 		  static
 		  since)

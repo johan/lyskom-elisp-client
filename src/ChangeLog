@@ -1,5 +1,21 @@
 2001-04-25  David Byers  <davby@ida.liu.se>
 
+	* english-strings.el (lyskom-filter-actions): Add string for read
+	filter action.
+
+	* swedish-strings.el (lyskom-filter-actions): Add string for read
+	filter action.
+
+	* view-text.el (lyskom-view-text): Support "read" filter action.
+
+	* commands1.el (lyskom-review-marked-texts): Use
+	lyskom-review-get-priority to set priority of review operation.
+	(lyskom-view-commented-text): Ditto.
+	(lyskom-who-is-on-9): If user-active has not been used, do not
+	show an idle time (say "Unknown" instead).
+
+	* commands2.el (kom-review-faq): Ditto.
+
 	* mship-edit.el (lyskom-read-time): Don't use lyskom-client-date.
 
 	* slow.el (lyskom-slow-start-of-line-pos): New function.

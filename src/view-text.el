@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.51 2001-04-23 21:39:52 joel Exp $
+;;;;; $Id: view-text.el,v 44.52 2001-04-25 12:31:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.51 2001-04-23 21:39:52 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.52 2001-04-25 12:31:41 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -83,6 +83,7 @@ Note that this function must not be called asynchronously."
 	   'next-text)
 	  (t
 	   (if (not (or (null filter) 
+                        (eq filter 'read)
 			(eq filter 'dontshow)))
 	       (lyskom-message "%s" (lyskom-get-string 'invalid-filter-list)))
 	   (if (eq filter 'dontshow)

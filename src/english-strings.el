@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.132 2001-04-23 21:39:44 joel Exp $
+;;;;; $Id: english-strings.el,v 44.133 2001-04-25 12:31:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.132 2001-04-23 21:39:44 joel Exp $"))
+              "$Id: english-strings.el,v 44.133 2001-04-25 12:31:38 byers Exp $"))
 
 
 ;;; ================================================================
@@ -905,6 +905,7 @@ for a text.
     (has-left-r . "%#2@%#1P has left %#3s.\n")
     (Unknown . "Unknown")
     (unknown . "unknown")
+    (Unknown2 . "Unknown")
 
     (no-longer-member . "You are no longer a member of %#1M.\n")
     (no-longer-member-n . "You are no longer a member of %#1m (conference is gone).\n")
@@ -1906,6 +1907,7 @@ You must become an active member of the conference to enter it.\n")
 (lyskom-language-var lyskom-filter-actions en
       '((skip-text . "Skip")
         (dontshow . "Don't show")
+        (read . "Exclude from filter")
         (skip-tree . "Skip comments")))
                                
 (defconst lyskom-keybindings-missing nil)
