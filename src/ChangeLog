@@ -1,3 +1,12 @@
+Mon Mar  4 11:29:53 1996  David Byers  <byers@lysator.liu.se>
+
+	* filter.el, commands1.el, commands2.el, review.el: Ändrade anrop
+	av lyskom-read-conf-no till mustmatch så den inte returnerar nil
+	till oförberedda funktioner.
+
+	* swedish-strings.el, english-strings.el: Ändrade memberships-line
+	så datumet skrivs ut med fix bredd.
+
 Sat Mar  2 00:11:02 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* commands2.el (kom-busy-wait): Skrev om synkron.
