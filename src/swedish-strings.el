@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.70 1999-08-14 19:16:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.71 1999-08-18 20:24:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.70 1999-08-14 19:16:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.71 1999-08-18 20:24:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -330,7 +330,7 @@ du har läst klart allting. Kom tillbaks senare.
     (new-passwd . "Mata in det nya lösenordet: ")
     (changing-passwd . "Ändrar lösenordet...")
     (retype-dont-match . "Lösenorden är inte samma. Gör om.\n")
-    (palindrome . "(en palindrom!) ")
+    (palindrome . " (en palindrom!)")
     (lyskom-name . "Användare")
     (is-in-conf . "Närvarande i möte")
     (from-machine . "Kör från")
@@ -395,7 +395,8 @@ du har läst klart allting. Kom tillbaks senare.
     (weekdays . ["söndag" "måndag" "tisdag" "onsdag" "torsdag"
 		 "fredag" "lördag" "söndag"])
     (weekdays-short . ["sön" "mån" "tis" "ons" "tor" "fre" "lör" "sön"])
-    (time-is . "Det är %#1s %#2s(enligt servern).")
+    (time-is . "Det är %#1s%#2s (enligt servern).")
+    (time-is-week . "Det är %#1s%#2s, vecka %#3d (enligt servern).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "\nJulafton! Har du öppnat dina julklappar än?")
