@@ -1,4 +1,4 @@
-;;;; $Id: elib-string.el,v 38.1 1996-02-17 05:41:47 davidk Exp $
+;;;; $Id: elib-string.el,v 39.0 1996-03-14 18:17:23 davidk Exp $
 ;;;; This file contains some miscellaneous string functions
 
 ;; Copyright (C) 1991-1995 Free Software Foundation

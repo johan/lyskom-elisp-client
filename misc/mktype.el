@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: mktype.el,v 38.0 1994-01-06 01:49:00 linus Exp $
+;;;;; $Id: mktype.el,v 39.0 1996-03-14 18:16:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
