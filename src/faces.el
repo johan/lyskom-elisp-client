@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.5 2003-03-16 14:03:01 byers Exp $
+;;;;; $Id: faces.el,v 44.6 2003-05-04 17:23:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.5 2003-03-16 14:03:01 byers Exp $\n"))
+	      "$Id: faces.el,v 44.6 2003-05-04 17:23:29 byers Exp $\n"))
 
 
 
@@ -298,10 +298,10 @@ This is a LysKOM face variable."
 
 (defun lyskom-setup-faces-for-buffer ()
   "Set up faces for the current buffer."
-    (setq lyskom-default-text-body-face 'default)
-    (setq lyskom-default-dashed-lines-face 'default)
-    (setq lyskom-default-async-text-body-face 'default)
-    (setq lyskom-default-async-dashed-lines-face 'default)
+    (setq lyskom-default-text-body-face nil)
+    (setq lyskom-default-dashed-lines-face nil)
+    (setq lyskom-default-async-text-body-face nil)
+    (setq lyskom-default-async-dashed-lines-face nil)
     (condition-case nil
 	(let ((faces (lyskom-generate-faces-for-background
 		      (or (face-background 'default)

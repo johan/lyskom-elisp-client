@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.6 2003-04-05 21:35:12 byers Exp $
+;;;;; $Id: names.el,v 44.7 2003-05-04 17:23:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.6 2003-04-05 21:35:12 byers Exp $\n"))
+	      "$Id: names.el,v 44.7 2003-05-04 17:23:29 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -2583,7 +2583,7 @@ Namnsdagar enligt någon finlandssvenskt namnlängd."
                                 (22 . ("Alina"))
                                 (23 . ("Georg" "Gäran" "Örjan" "Jöran" "Jörgen" "Jörn"))
                                 (24 . ("Albert" "Albertina"))
-                                (25 . ("mArkus"))
+                                (25 . ("Markus"))
                                 (26 . ("Teresia" "Teresa" "Terese"))
                                 (27 . ("Engelbrekt" "Engelbert"))
                                 (28 . ("Ture"))
