@@ -1,3 +1,17 @@
+Fri Jan 19 19:21:25 1996  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el: Rewrote ISO conversion to work in-place.
+
+	* lyskom-buttons.el: Fixed to URLs work in non-windowed emacses.
+	  Removes lyskom-button-match-data from the props and added
+	  lyskom-button-string which is the entire match (the button
+	  title, basically.)
+
+	* filter.el: Fixed bug in kom-list-filters
+
+	* async.el: Fixed small bugs.
+	
+
 Wed Jan 17 07:12:03 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* commands2.el
@@ -117,6 +131,38 @@ Mon Nov 20 01:47:47 1995  David K}gedal  <davidk@lysator.liu.se>
 	* vars.el.in (lyskom-elisp-variables): La till
 	   kom-ding-on-personal-messages.
 
+Sun Nov 19 14:58:59 1995  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-read-num-range): Allow default.
+
+Sat Nov 18 12:13:59 1995  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-read-number): Don't call
+	  lyskom-end-of-command.
+
+	* commands2.el (kom-set-unread): Fixed bug in handling prefix arg.
+	  Explicitly unwind-protect functions that call lyskom-read-number
+	  to they call lyskom-end-of-command on C-g
+
+	* flags.el (lyskom-read-options-eval): Read filters correctly.
+
+	* commands1.el (kom-go-to-conf) split in two since other functions
+	  may need to go to a conference without user interaction.
+	  Explicitly unwind-protect functions that call lyskom-read-number
+	  to they call lyskom-end-of-command on C-g
+
+	* startup.el (kom-start-anew): Changed assignment to free variable
+	  lyskom-who-am-i to a let statement. I still don't know if it's
+	  necessary at all.
+
+	* services.el (z-initiate-get-map): changed
+	  lyskom-do-initiate-get-map to initiate-get-map since the former
+	  does not exits. Added initiate-get-uconf-stat
+
+	* cache.el: Handle uconf-stats
+
+	* filter-edit.el: Changed names of local variables
+		
 Fri Nov 17 00:40:47 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-prefetch-all-confs): Försökt göra

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 38.2 1995-10-29 06:41:22 davidk Exp $
+;;;;; $Id: cache.el,v 38.3 1996-01-19 18:49:34 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,8 +35,42 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 38.2 1995-10-29 06:41:22 davidk Exp $\n"))
+	      "$Id: cache.el,v 38.3 1996-01-19 18:49:34 byers Exp $\n"))
 
+
+;;; ================================================================
+;;;			UConf-stat cache
+
+(defun cache-get-uconf-stat (conf-no)
+  "Get uconf-stat for conference CONF-NO, or nil if nothing is cached.
+If full conf-stat is cached, construct an uconf-stat from that data and
+cache it."
+  (or (cache-assoc conf-no lyskom-uconf-cache)
+      (cache-construct-uconf-stat (cache-get-conf-stat conf-no))))
+
+(defun cache-construct-uconf-stat (conf)
+  "If conf is non-nil, create an uconf-stat from conf and cache it.
+Return the new uconf-stat or nil"
+  (and conf
+       (cache-add-uconf-stat 
+	(lyskom-create-uconf-stat (conf-stat->conf-no conf)
+				  (conf-stat->name conf)
+				  (conf-stat->conf-type conf)
+				  (+
+				   (conf-stat->first-local-no conf)
+				   (conf-stat->no-of-texts conf))
+				  (conf-stat->garb-nice conf)))))
+
+(defun cache-add-uconf-stat (uconf-stat)
+  "Insert a UCONF-STAT in the cache."
+  (cache-add (uconf-stat->conf-no uconf-stat)
+	     uconf-stat
+	     'lyskom-uconf-cache))
+
+(defun cache-del-uconf-stat (conf-no)
+  "Delete a conf-stat from the cache. Args: CONF-NO."
+  (cache-del conf-no 'lyskom-uconf-cache)
+  (cache-del conf-no 'lyskom-conf-cache))
 
 
 ;;; ================================================================
@@ -47,7 +81,6 @@
   "Get conf-stat for conference CONF-NO, or nil if nothing is cached."
   (cache-assoc conf-no lyskom-conf-cache))
 
-  
 (defun cache-add-conf-stat (conf-stat)
   "Insert a CONF-STAT in the cache."
   (cache-add (conf-stat->conf-no conf-stat) conf-stat 'lyskom-conf-cache))
@@ -55,7 +88,8 @@
 
 (defun cache-del-conf-stat (conf-no)
   "Delete a conf-stat from the cache. Args: CONF-NO."
-  (cache-del conf-no 'lyskom-conf-cache))
+  (cache-del conf-no 'lyskom-conf-cache)
+  (cache-del conf-no 'lyskom-uconf-cache))
 
 
 

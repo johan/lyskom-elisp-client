@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.10 1995-11-16 23:46:35 davidk Exp $
+;;;;; $Id: startup.el,v 38.11 1996-01-19 18:50:11 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.10 1995-11-16 23:46:35 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.11 1996-01-19 18:50:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -211,7 +211,7 @@ See lyskom-mode for details."
 	  (cache-set-marked-texts (blocking-do 'get-marks))
 	  ;; What is this variable? It is never used. It is ust to
 	  ;; fill the cache?
-	  (setq lyskom-who-am-i (blocking-do 'who-am-i)))
+	  (let ((lyskom-who-am-i (blocking-do 'who-am-i)))))
 
       ;; If something failed, make sure we are someone
       (if (null lyskom-pers-no) (setq lyskom-pers-no old-me))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.4 1996-01-08 08:18:37 davidk Exp $
+;;;;; $Id: filter.el,v 38.5 1996-01-19 18:49:48 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -645,6 +645,7 @@ the current text"
             (progn
               (lyskom-insert (lyskom-get-string 'view-filters-header))
               (while filters
+                (goto-char (point-max))
                 (lyskom-format-filter-pattern (car filters))
                 (setq filters (cdr filters)))
               (lyskom-insert (lyskom-get-string 'view-filters-footer)))))
