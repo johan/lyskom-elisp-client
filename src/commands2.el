@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.116 2002-04-13 22:38:18 byers Exp $
+;;;;; $Id: commands2.el,v 44.117 2002-04-14 21:52:58 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.116 2002-04-13 22:38:18 byers Exp $\n"))
+              "$Id: commands2.el,v 44.117 2002-04-14 21:52:58 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2500,6 +2500,9 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
   (let ((buf (generate-new-buffer (format "%d" text-no))))
     (set-buffer buf)
     (insert (text->decoded-text-mass text text-stat))
+    ;; Add a terminating newline.  Ediff works better that way, and it
+    ;; should not harm any other applications of this function.
+    (insert "\n")
     (set-buffer-modified-p nil)
     buf))
 

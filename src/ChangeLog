@@ -1,3 +1,13 @@
+2002-04-14  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	Improve "Compare two texts".
+	* commands2.el (lyskom-create-text-buffer): Add a trailing newline
+	in the temporary buffer, so that ediff behaves if new lines were
+	added at the end of one of the texts to compare.
+
+	* vars.el.in (kom-server-aliases): Changed "CSD-KOM" to "UppKOM",
+	as requested by Thorild Selén.
+
 2002-04-14  David Byers  <david.byers@swipnet.se>
 
 	* faqs.el (lyskom-check-for-read-faqs): Handle missing FAQ texts
@@ -300,6 +310,7 @@
 
 	* Makefile (debian-packages): new target.
 
+>>>>>>> 44.514
 2002-03-25  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* distribution-configure.in: Corrected help text for
