@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: messages.el,v 44.9 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: messages.el,v 44.10 2003-08-25 08:07:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 44.9 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: messages.el,v 44.10 2003-08-25 08:07:22 byers Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
   "A list of personal message handlers.
@@ -153,10 +153,12 @@ kom-ignore-message-senders for more information."
   (condition-case nil
       (or (memq (cond ((lyskom-conf-stat-p sender) (conf-stat->conf-no sender))
                       ((lyskom-uconf-stat-p sender) (uconf-stat->conf-no sender))
-                      (t sender)) kom-ignore-message-senders)
-          (memq (cond ((lyskom-conf-stat-p sender) (conf-stat->conf-no recipient))
-                      ((lyskom-uconf-stat-p sender) (uconf-stat->conf-no recipient))
-                      (t recipient)) kom-ignore-message-recipients))
+                      (t sender)) 
+                kom-ignore-message-senders)
+          (memq (cond ((lyskom-conf-stat-p recipient) (conf-stat->conf-no recipient))
+                      ((lyskom-uconf-stat-p recipient) (uconf-stat->conf-no recipient))
+                      (t recipient)) 
+                kom-ignore-message-recipients))
     (error nil)))
 
 
