@@ -1,3 +1,23 @@
+2002-03-03  Joel Rosdahl  <joel@lysator.liu.se>
+
+	Fixed bug 392 and cleaned up printing of text summaries in
+	kom-list-summary and kom-list-marks:
+
+	* commands2.el (lyskom-max-text-no-width): New function.
+	(lyskom-construct-summary-format-string): New function.
+	(lyskom-do-list-summary): Use lyskom-construct-summary-format-string.
+	(lyskom-print-summary-line): Get format string as an argument
+	instead of building it at each call.
+	(kom-list-marks): Use lyskom-construct-summary-format-string.
+	(lyskom-print-mark-summary-line): Get format string as an argument
+	instead of building it at each call.
+	(lyskom-max-mark-width): Added doc string.
+
+	* swedish-strings.el (lyskom-message): Don't abbreviate Lines.
+
+	* english-strings.el (lyskom-message): Don't abbreviate Lines and
+	mark-type.  Trimmed whitespace from Author and Subject.
+
 2002-03-03  Per Cederqvist  <ceder@lysator.liu.se>
 
 	Fix bug 406:
