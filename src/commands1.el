@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.3 1996-04-04 11:54:39 byers Exp $
+;;;;; $Id: commands1.el,v 40.4 1996-04-14 23:39:08 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.3 1996-04-04 11:54:39 byers Exp $\n"))
+	      "$Id: commands1.el,v 40.4 1996-04-14 23:39:08 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -521,45 +521,38 @@ of the person."
 ;;; Author: ???
 
 
-(defun kom-create-conf (conf-name)
+(def-kom-command kom-create-conf (&optional name)
   "Create a conference."
-  (interactive (list (lyskom-read-string (lyskom-get-string 'name-of-conf))))
-  (let* ((open (j-or-n-p (lyskom-get-string 'anyone-member)))
+  (interactive)
+  (let* ((conf-name (or name (lyskom-read-string (lyskom-get-string 'name-of-conf))))
+	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))
-	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed))))
-    (lyskom-start-of-command 'kom-create-conf)
-    (unwind-protect
-	(lyskom-create-conf-handler
-	 (blocking-do 'create-conf 
-		      conf-name
-		      (lyskom-create-conf-type (not open) 
-					       (not orig)
-					       secret
-					       nil))
-	 conf-name)
-      (lyskom-end-of-command))))
-
-
-(defun lyskom-create-conf-handler (conf-no conf-name)
-  "Deal with the answer from an attempt to create a conference.
-Add the person creating and execute lyskom-end-of-command."
-  (if (null conf-no)
-      (lyskom-format-insert 'could-not-create-conf
-			    conf-name
-			    lyskom-errno)
-    (progn
-      (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
-	(lyskom-format-insert 'created-conf-no-name 
-			      (or conf-stat conf-no)
-			      (or conf-stat conf-name)
-			      (if conf-stat
-				  (lyskom-default-button 'conf conf-stat)
-				nil)))
-      (lyskom-scroll)
-      (lyskom-add-member-by-no conf-no lyskom-pers-no
-			       'lyskom-create-conf-handler-2
-			       conf-no conf-name))))
+	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed)))
+	 (conf-no (blocking-do 'create-conf 
+			       conf-name
+			       (lyskom-create-conf-type (not open) 
+							(not orig)
+							secret
+							nil))))
+    (if (null conf-no)
+	(lyskom-format-insert 'could-not-create-conf
+			      conf-name
+			      lyskom-errno)
+      (progn
+	(let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
+	  (lyskom-format-insert 'created-conf-no-name 
+				(or conf-stat conf-no)
+				(or conf-stat conf-name)
+				(if conf-stat
+				    (lyskom-default-button 'conf conf-stat)
+				  nil)))
+	(lyskom-scroll)
+	(lyskom-add-member-by-no conf-no lyskom-pers-no
+				 (if secret
+				     nil ; Don't write a presentation
+				   'lyskom-create-conf-handler-2)
+				 conf-no conf-name)))))
 
 
 (defun lyskom-create-conf-handler-2 (conf-no conf-name)
@@ -567,8 +560,7 @@ Add the person creating and execute lyskom-end-of-command."
 This does lyskom-end-of-command"
   (lyskom-tell-internat 'kom-tell-conf-pres)
   (let ((conf (blocking-do 'get-conf-stat conf-no)))
-    (if (and conf
-             (not (conf-type->secret (conf-stat->conf-type conf))))
+    (if conf
         (lyskom-dispatch-edit-text lyskom-proc
                                    (lyskom-create-misc-list
                                     'recpt

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.2 1996-04-04 11:54:58 byers Exp $
+;;;;; $Id: review.el,v 40.3 1996-04-14 23:39:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.2 1996-04-04 11:54:58 byers Exp $\n"))
+	      "$Id: review.el,v 40.3 1996-04-14 23:39:21 davidk Exp $\n"))
 
 
 
@@ -626,13 +626,8 @@ If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
-  (lyskom-review-comments
-   (blocking-do 'get-text-stat lyskom-current-text)))
-
-
-(defun lyskom-review-comments (text-stat)
-  "Handles the return from the initiate-get-text-stat, displays and builds list."
-  (let* ((misc-info-list (and text-stat
+  (let* ((text-stat (blocking-do 'get-text-stat lyskom-current-text))
+	 (misc-info-list (and text-stat
 			      (text-stat->misc-info-list text-stat)))
 	 (misc-infos (and misc-info-list
 			  (append (lyskom-misc-infos-from-list 
