@@ -1,8 +1,8 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.80 2001-05-22 10:01:44 byers Exp $
-# Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+# $Id: Makefile,v 44.81 2002-02-24 20:28:27 joel Exp $
+# Copyright (C) 1991-2002  Lysator Academic Computer Association.
 #
-# This file is part of the LysKOM server.
+# This file is part of the LysKOM Emacs LISP client.
 # 
 # LysKOM is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by 
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.80 2001-05-22 10:01:44 byers Exp $
+# $Id: Makefile,v 44.81 2002-02-24 20:28:27 joel Exp $
 #
 
 
