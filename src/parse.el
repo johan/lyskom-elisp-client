@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.2 1995-02-23 20:42:04 linus Exp $
+;;;;; $Id: parse.el,v 38.3 1995-10-30 15:42:07 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.2 1995-02-23 20:42:04 linus Exp $\n"))
+	      "$Id: parse.el,v 38.3 1995-10-30 15:42:07 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -668,7 +668,7 @@ Args: TEXT-NO. Value: text-stat."
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info))
   
 
-(defun lyskom-init-parse ()
+(defun lyskom-init-parse (buffer)
   "Does all initialization of the parsing routines.
 i.e creates the buffer, sets all markers and pointers."
   (setq lyskom-is-parsing nil)
@@ -681,9 +681,11 @@ i.e creates the buffer, sets all markers and pointers."
 	(lyskom-save-excursion
 	 (let ((proc lyskom-proc))
 	   (set-buffer lyskom-unparsed-buffer)
-	   (make-local-variable 'lyskom-proc)
+ 	   (make-local-variable 'lyskom-proc)
 	   (make-local-variable 'lyskom-string-bytes-missing)
 	   (setq lyskom-proc proc)
+	   (make-local-variable 'lyskom-buffer)
+	   (setq lyskom-buffer buffer)
 	   (goto-char (point-max))
 	   (point-marker)))))
 
