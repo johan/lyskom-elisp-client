@@ -1,5 +1,14 @@
 Mon May 11 03:50:07 1992  Linus Tolke Y  (linus@robin)
 
+	* swedish-strings.el (kom-slow-mode, kom-quick-mode,
+	  kom-slow-mode-map, lyskom-parse-command-and-execute): New
+	  command-giving mode for the swedish-client. Commands can be
+	  typed in and are parsed when return is pressed. No arguments can
+	  yet be given in this way!
+
+	* startup.el (lyskom-mode): LysKOM-buffer no longer in read-only
+	  mode.
+
 	* clienttypes.el, cache.el, view-text.el (textpointers): removed
 	  the special pointer-representation of the texts. They are now
 	  deleted from the cache when read.
