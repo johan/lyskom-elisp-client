@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.155 2001-03-31 08:44:00 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.156 2001-04-01 13:18:37 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.155 2001-03-31 08:44:00 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.156 2001-04-01 13:18:37 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -340,13 +340,14 @@ du har läst klart allting. Kom tillbaks senare.
     (new-supervisor . "Ny organisatör: ")
     (text-to-mark . "Vilket inlägg vill du markera? ")
     (text-to-unmark . "Vilket inlägg vill du avmarkera? ")
-    (what-mark . "Vilken markering vill du sätta? ")
+    (what-mark . "Vilken typ av markering vill du sätta (namn eller 0-255)? ")
+    (erroneous-mark . "Felaktig markeringstyp.\n")
     (unmarking-textno . "Avmarkering av text %#1n...")
     (marking-textno . "Markering av text %#1n...")
-    (list-which-mark . "Lista vilken markering (0-255, RET för alla)? ")
+    (list-which-mark . "Lista vilken markeringstyp (namn eller 0-255, RET för alla)? ")
 
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
-    (what-mark-to-view . "Vilken markering vill du återse? ")
+    (what-mark-to-view . "Återse vilken markeringstyp (namn eller 0-255, RET för alla)? ")
     (whos-passwd . "Vem vill du ändra lösenord för? (dig själv) ")
     (old-passwd . "Mata in ditt nuvarande lösenord: ")
     (new-passwd . "Mata in det nya lösenordet: ")
@@ -403,7 +404,7 @@ du har läst klart allting. Kom tillbaks senare.
     
     (no-marked-texts . "Du har inga markerade inlägg.\n")
     (no-marked-texts-mark . 
-			  "Du har inga markerade inlägg med markeringen %#1d.\n")
+			  "Du har inga markerade inlägg med markeringstypen \"%#1s\".\n")
 
 ;;; For later
 ;    (northward . "norrut")
@@ -645,10 +646,6 @@ Meddelandet du försökte sända till %#1M var:
     (does-not-exist . "Detta kommando finns inte.")
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
-    (what-mark-to-list . "Vilken markering vill du lista? ")
-    (you-have-marks . "Du har %#1d inlägg markerade markerade med %#2d.\n")
-    (you-have-marks-all . "Du har %#1d markerade inlägg.\n")
-
 
     ;; Only people fixing bugs or receiving bug reports should
     ;; change these:
@@ -824,8 +821,8 @@ Annat se \\[describe-mode] ---")
     (line . " /1 rad/ ")
     (lines ." /%#1d rader/ ")
 
-    (marked-by-you . "Markerad av dig (%#1d).\n")
-    (marked-by-you-and-others . "Markerad av dig (%#2d) och %#1?d%[någon annan%]%[%#1d andra%].\n")
+    (marked-by-you . "Markerad av dig (typ: %#1s).\n")
+    (marked-by-you-and-others . "Markerad av dig (typ: %#2s) och %#1?d%[någon annan%]%[%#1d andra%].\n")
     (marked-by-several . "Markerad av %#1d person%#1?d%[%]%[er%].\n")
 
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
@@ -2396,7 +2393,11 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (a-string . "En text")
     (some-string . "En slumpmässig text")
     (unspecified . "Ospecificerat")
-    
+
+    (symbolic-mark-association . "Associering")
+    (symbolic-mark-name . "Symboliskt namn: ")
+    (mark-type-to-assoc . "Markeringstyp att associera till: ")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -2700,10 +2701,19 @@ i servern. Annars sparas det i din .emacs.")
 
 
     (kom-default-mark-doc . "\
-  Det markeringsvärde som används för nya markeringar. Om inget markerings-
-  värde är valt frågar LysKOM varje gång man markerar en text. Värden mellan
-  1 och 255 är tillåtna.")
+  Den markeringstyp som används för nya markeringar. En markeringstyp är ett
+  heltal mellan 0 och 255 (inklusive). Om ingen defaultmarkeringstyp är vald
+  frågar LysKOM efter markeringstyp varje gång man markerar en text. Detta
+  kan användas för att hålla isär olika sorters markeringar. Till exempel
+  kan man markera inlägg som innehåller intressant information med ett visst
+  tal och inlägg som man ska komma ihåg att kommentera vid ett senare
+  tillfälle med ett annat tal.")
 
+    (kom-symbolic-marks-alist-doc . "\
+  För att slippa behöva memorera vad man tänkte sig att de heltaliga
+  markeringstyperna ska innebära kan man definiera en lista med symboliska
+  markeringstyper. En symbolisk markeringstyp är en beskrivande sträng som
+  associeras med en heltalig markeringstyp.")
 
     (kom-reading-puts-comments-in-pointers-last-doc . "\
   Bestämmer om kommentarslänkar visas före eller efter en text. Normalt brukar
@@ -3340,6 +3350,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")
     (kom-netscape-command-tag . "Kommando för att starta Netscape Navigator:")
+
+    (kom-symbolic-marks-alist-tag . "Symboliska markeringstyper:")
 
     (kom-cite-string-tag . "Citatmarkering: ")
     (kom-confirm-multiple-recipients-tag . 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.89 2001-02-25 16:26:40 joel Exp $
+;;;;; $Id: commands2.el,v 44.90 2001-04-01 13:18:33 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.89 2001-02-25 16:26:40 joel Exp $\n"))
+	      "$Id: commands2.el,v 44.90 2001-04-01 13:18:33 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1023,22 +1023,29 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;;; ============================================================
 ;;; kom-list-marks                      Lista markeringar
 ;;; Author: David Byers
+;;; Modified by: Joel Rosdahl
 
 (def-kom-command kom-list-marks (&optional which-mark)
   "List texts marked with a particular mark number."
   (interactive "P")
   (when (not (numberp which-mark))
-    (setq which-mark (lyskom-read-num-range 
-                      0 255
-                      (lyskom-get-string 'list-which-mark) nil nil nil t)))
+    (setq which-mark (lyskom-read-mark-type
+                      (lyskom-get-string 'list-which-mark)
+                      t)))
   (let ((marks
          (sort (listify-vector (blocking-do 'get-marks))
-               (lambda (a b) (< (mark->mark-type a) (mark->mark-type b))))))
-  (let ((time (blocking-do 'get-time))
-	(author-width (/ (- (lyskom-window-width) 26) 3)))
-    
+               (lambda (a b) (< (mark->mark-type a) (mark->mark-type b)))))
+        (time (blocking-do 'get-time))
+        (author-width (max 0
+                           (/ (- (lyskom-window-width)
+                                 23
+                                 (lyskom-max-mark-width))
+                              3))))
+
     ;; Start fetching all text-stats and text to list them.
-    (lyskom-format-insert (concat "%-4#6s%-8#1s%-6#2s%-4#3s %-"
+    (lyskom-format-insert (concat "%-"
+                                  (int-to-string (1+ (lyskom-max-mark-width)))
+                                  "#6s%-8#1s%-6#2s%-4#3s %-"
 				  (int-to-string author-width)
 				  "#4s  %#5s\n")
 			  (lyskom-get-string 'Texts)
@@ -1064,22 +1071,27 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
           (sit-for 0))))
 ;    (lyskom-insert (make-string (1- (window-width)) ?-))
 ;    (lyskom-insert "\n")
-    )))
-                           
+    ))
+
 (defun lyskom-print-mark-summary-line (mark text-stat text text-no year day)
   "Handle the info, fetch the author and print it.
 Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
 The year and day is there to be able to choose format on the day.
 Format is 23:29 if the text is written today. Otherwise 04-01."
-  (lyskom-format-insert "%3#1d " (mark->mark-type mark))
+  (lyskom-format-insert (format "%%-%d#1s " (lyskom-max-mark-width))
+                        (mark->symbolic-mark-type mark))
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
 	   (txt (text->decoded-text-mass text text-stat))
 	   (eos (string-match (regexp-quote "\n") txt))
 	   (subject (substring txt 0 eos))
-	   ;; length of the number %%%%%% :8
-	   ;; length for time is: 6
+           (author-and-subj-width (max 0
+                                       (- (lyskom-window-width)
+                                          23
+                                          (lyskom-max-mark-width))))
+	   ;; length of the number: 8
+	   ;; length for time: 6
 	   (time (text-stat->creation-time text-stat))
 	   (time (if (and (= year (time->year time))
 			  (= day (time->yday time)))
@@ -1087,10 +1099,10 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			     		 (time->min time))
 		   (format "%02d-%02d" (1+ (time->mon time))
 			   	       (time->mday time))))
-	   ;; length for lines is: 4
+	   ;; length for lines: 5
 	   ;; We split the rest between author and subject
-	   (namelen (/ (- (lyskom-window-width) 26) 3))
-	   (subjlen (/ (* (- (lyskom-window-width) 26) 2) 3))
+	   (namelen (/ author-and-subj-width 3))
+	   (subjlen (- author-and-subj-width namelen))
 	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
 				  (int-to-string namelen)
 				  "#4P  %[%#5@%=-"
@@ -1105,6 +1117,16 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 						   text-no)
 			    subject))))
 
+(defun lyskom-symbolic-mark-type-string (mark-no)
+  "Return a symbolic name string for the mark-type of MARK."
+  (or (car-safe (rassoc mark-no kom-symbolic-marks-alist))
+      (int-to-string mark-no)))
+
+(defun lyskom-max-mark-width ()
+  (max 3
+       (apply 'max
+              (mapcar (function (lambda (x) (length (car x))))
+                      kom-symbolic-marks-alist))))
 
 ;;; ============================================================
 ;;;     kom-who-am-i - Vem är jag
