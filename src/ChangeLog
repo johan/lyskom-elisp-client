@@ -1,3 +1,9 @@
+Sat Aug 17 00:50:34 1991  Linus Tolke Y  (linus at lysator)
+
+	* edit-text.el (lyskom-edit-read-misc-list): Internationaliserad.
+	  Vi anv{nder f|rsta bokstaven av recipient, carbon-copy, comment
+	  och footnote elementen fr}n lyskom-string.
+
 Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
 
 	* edit-text.el (kom-edit-send): Nu f}r vi inte med de speciella

@@ -438,31 +438,32 @@ to the text in BUFFER."
   (let ((result (cons 'MISC-LIST nil)))
     (while (and (< (point) (point-max))
 		(not (equal "Ä" (buffer-substring (point) (1+ (point))))))
-      (let ((char (upcase (buffer-substring (point) (1+ (point))))))
+      (let ((char (string-to-char
+		   (upcase (buffer-substring (point) (1+ (point)))))))
 	(nconc 
 	 result
 	 (cons
 	  (cond
-	   ((equal char "M")		;recpt
-	      (re-search-forward "<\\([0-9]+\\)>")
-	      (cons 'recpt (string-to-int (buffer-substring
+	   ((eq char (elt (lyskom-get-string 'recipient) 0)) ;recpt
+	    (re-search-forward "<\\([0-9]+\\)>")
+	    (cons 'recpt (string-to-int (buffer-substring
+					 (match-beginning 1)
+					 (match-end 1)))))
+	   ((eq char (elt (lyskom-get-string 'carbon-copy) 0)) ;cc-recpt
+	    (re-search-forward "<\\([0-9]+\\)>")
+	    (cons 'cc-recpt (string-to-int (buffer-substring
+					    (match-beginning 1)
+					    (match-end 1)))))
+	   ((eq char (elt (lyskom-get-string 'comment) 0)) ;comm-to
+	    (re-search-forward "\\([0-9]+\\)")
+	    (cons 'comm-to (string-to-int (buffer-substring
 					   (match-beginning 1)
 					   (match-end 1)))))
-	   ((equal char "E")		;cc-recpt
-	      (re-search-forward "<\\([0-9]+\\)>")
-	      (cons 'cc-recpt (string-to-int (buffer-substring
-					      (match-beginning 1)
-					      (match-end 1)))))
-	   ((equal char "K")		;comm-to
-	      (re-search-forward "\\([0-9]+\\)")
-	      (cons 'comm-to (string-to-int (buffer-substring
-					     (match-beginning 1)
-					     (match-end 1)))))
-	   ((equal char "F")		;footn-to
-	      (re-search-forward "\\([0-9]+\\)")
-	      (cons 'footn-to (string-to-int (buffer-substring
-					      (match-beginning 1)
-					      (match-end 1)))))
+	   ((eq char (elt (lyskom-get-string 'footnote) 0)) ;footn-to
+	    (re-search-forward "\\([0-9]+\\)")
+	    (cons 'footn-to (string-to-int (buffer-substring
+					    (match-beginning 1)
+					    (match-end 1)))))
 	   (t 
 	    (signal 'lyskom-internal-error 
 		    (list "Unknown header line: "
