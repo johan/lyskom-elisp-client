@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.259 2003-03-03 08:45:07 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.260 2003-03-03 13:06:42 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.259 2003-03-03 08:45:07 ceder Exp $"))
+              "$Id: english-strings.el,v 44.260 2003-03-03 13:06:42 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -783,7 +783,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference? ")
     (new-garb-nice-q . "After how many days shall texts be removed? ")
-    (garb-nice-for-is . "Changing expiration for %#1M to %#2d...")
+    (garb-nice-for-is . "Changing expiration for %#1M to %#2d days...")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
     (closing-server . "Shutting down the server...")
