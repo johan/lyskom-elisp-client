@@ -1,3 +1,8 @@
+2001-05-15  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (kom-jump): Probably works in tree review mode, at
+	least without prefix arg. There may be bugs.
+
 2001-05-11  Johan Sundström  <jhs@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-fcc-text): Bugfix; don't swarm the
