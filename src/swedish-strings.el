@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.351 2003-11-17 22:25:34 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.352 2003-11-17 22:56:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.351 2003-11-17 22:25:34 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.352 2003-11-17 22:56:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -401,7 +401,7 @@ du har läst klart allting. Kom tillbaks senare.
     (creating-symbolic-mark-type . "Skapar markeringstypen \"%#1s\" (%#2d).\n")
     (no-mark-types-left . "Ledsen, det finns inga lediga markeringstyper. Rensa bland de gamla först.")
     (unmarking-textno . "Avmarkering av text %#1n...")
-    (marking-textno . "Markering av text %#1n...")
+    (marking-textno . "Markering av text %#1n med markering %#2?b%[\"%#2s\" (%#3d)%]%[%#3d%]...")
     (list-which-mark . "Lista vilken markeringstyp (namn eller 0-255, RET för alla)? ")
 
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")

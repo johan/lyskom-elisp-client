@@ -1,5 +1,12 @@
 2003-11-17  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1142:
+	* commands1.el (lyskom-mark-text): Print the mark type in the
+	marking message.
+
+	* commands2.el (lyskom-symbolic-mark-type-string): Added argument
+	STRICT. 
+
 	Minor bug fixes:
 	* commands2.el (kom-is-person-member-of-conference): When reading
 	pers-to-check-mship-for, only read persons.

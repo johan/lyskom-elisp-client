@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.310 2003-11-17 22:25:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.311 2003-11-17 22:56:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.310 2003-11-17 22:25:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.311 2003-11-17 22:56:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -410,7 +410,7 @@ and you have finished reading. Please come back later.
     (creating-symbolic-mark-type . "Creating mark type \"%#1s\" (%#2d).\n")
     (no-mark-types-left . "Sorry, there are no free mark types. Remove an old one first.")
     (unmarking-textno . "Unmarking text %#1n...")
-    (marking-textno . "Marking text %#1n...")
+    (marking-textno . "Marking text %#1n with mark %#2?b%[\"%#2s\" (%#3d)%]%[%#3d%]...")
     (list-which-mark . "List texts with which mark type (name or 0-255, RET for all)? ")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
