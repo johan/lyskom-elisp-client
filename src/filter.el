@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.25 2003-01-09 00:43:26 byers Exp $
+;;;;; $Id: filter.el,v 44.26 2003-06-10 07:38:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.25 2003-01-09 00:43:26 byers Exp $\n"))
+	      "$Id: filter.el,v 44.26 2003-06-10 07:38:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -178,8 +178,7 @@ invalid-value until a filter action has been selected.")
       (lyskom-use 'filter 'lyskom-filter-text-p-3 text-stat))))
     
 (defun lyskom-filter-text-p-3 (author text &rest data)
-  (if (or (null text)
-	  (null author))
+  (if (null text)
       (setq lyskom-filter-hack nil)
     (let (subject text-stat)
       
@@ -302,17 +301,17 @@ invalid-value until a filter action has been selected.")
               (cond 
                ((eq key 'author)
                 (lyskom-filter-check-args 'stringp args)
-                (` (string-match (, (regexp-quote args))
-                                 (conf-stat->name author))))
+                (` (and author (string-match (, (regexp-quote args))
+                                             (conf-stat->name author)))))
 
                ((eq key 'author-re)
                 (lyskom-filter-check-args 'regexpp args)
-                (` (string-match (, args)
-                                 (conf-stat->name author))))
+                (` (and author (string-match (, args)
+                                             (conf-stat->name author)))))
 
                ((eq key 'author-no)
                 (lyskom-filter-check-args 'integerp args)
-                (` (= (, args) (conf-stat->conf-no author))))
+                (` (and author (= (, args) (conf-stat->conf-no author)))))
 
                ((eq key 'recipient)
                 (lyskom-filter-check-args 'stringp args)

@@ -1,3 +1,10 @@
+2003-06-04  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1054:
+	* filter.el (lyskom-create-filter-function-body): Handle a null
+	author.
+	(lyskom-filter-text-p-3): Allow a null author.
+
 2003-06-01  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 587:
