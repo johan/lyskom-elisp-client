@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.81 2001-04-24 20:55:30 jhs Exp $
+;;;;; $Id: utilities.el,v 44.82 2001-04-25 19:41:53 joel Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.81 2001-04-24 20:55:30 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.82 2001-04-25 19:41:53 joel Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -977,11 +977,11 @@ interpreted as follows:
     is used instead of the standard date format.
 
 If FORMAT is a symbol but not one of the symbols listed above, the
-format string will be lookup up with lyskom-get-string.  The
+format string will be looked up with lyskom-get-string.  The
 timeformat-* strings are tailored to be used as formats for this
 function.
 
-The arguments to the format string is (in order): year, month number
+The arguments to the format string are (in order): year, month number
 (starting with one for January), day-of-month number, hour, minute,
 second, full name of the day of the week, abbreviated name of the day
 of the week.
