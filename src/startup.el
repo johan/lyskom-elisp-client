@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.0 1994-01-06 01:59:13 linus Exp $
+;;;;; $Id: startup.el,v 38.1 1994-01-10 15:37:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.0 1994-01-06 01:59:13 linus Exp $\n"))
+	      "$Id: startup.el,v 38.1 1994-01-10 15:37:49 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -578,8 +578,5 @@ Entry to this mode runs lyskom-mode-hook."
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
     (setq lyskom-list-of-edit-buffers nil)
-    (condition-case emacs-18.55
-	(setq lyskom-time-last-command (current-time))
-      (error ; No function current-time
-       ))
+    (setq lyskom-time-last-command (lyskom-current-time))
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))
