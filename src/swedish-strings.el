@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.79 1999-10-13 15:50:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.80 1999-10-13 16:42:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.79 1999-10-13 15:50:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.80 1999-10-13 16:42:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -821,8 +821,8 @@ Annat se \\[describe-mode] ---")
     (comment-in-text-by . "Kommentar i text %#1n av %#2P")
     (footnote-in-text-by . "Fotnot i text %#1n av %#2P")
 
-    (attachment-to-text . "Bilaga till text %#1n")
-    (attachment-in-text . "Bilaga i text %#1n")
+    (attachment-to-text . "Bilaga %#3still text %#1n")
+    (attachment-in-text . "Bilaga %#3si text %#1n")
     
     (envelope-sender . "Sänt av: %#1s\n")
     (attachment-filename . "Bilagans filnamn: \"%#1s\"\n")
