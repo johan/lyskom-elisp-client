@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.42 2003-08-13 17:43:57 byers Exp $
+;;;;; $Id: completing-read.el,v 44.43 2003-08-13 19:23:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.42 2003-08-13 17:43:57 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.43 2003-08-13 19:23:35 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -115,6 +115,8 @@ but first checks a cache."
     map)
   "Keymap used for reading LysKOM names.")
 
+(defvar lyskom-minibuffer-point)
+
 (defun lyskom-read-from-minibuffer-clear-initial (&rest args)
   (condition-case nil
       (let ((ranges nil)
@@ -127,10 +129,22 @@ but first checks a cache."
         (lyskom-traverse range ranges
           (delete-region (car range) (cdr range)))
         (when ranges
-          (setq before-change-functions 
-                (delq 'lyskom-read-from-minibuffer-clear-initial
-                      before-change-functions))))
+          (lyskom-read-from-minibuffer-cancel-magic)))
     (error nil)))
+
+(defun lyskom-read-from-minibuffer-cancel-magic ()
+  (setq pre-command-hook (delq 'lyskom-read-from-minibuffer-pre-command pre-command-hook)
+        post-command-hook (delq 'lyskom-read-from-minibuffer-post-command post-command-hook)
+        before-change-functions (delq 'lyskom-read-from-minibuffer-clear-initial before-change-functions)))
+
+(defun lyskom-read-from-minibuffer-pre-command (&rest args)
+  (setq lyskom-minibuffer-point (point)))
+
+(defun lyskom-read-from-minibuffer-post-command (&rest args)
+  (unless (or (null lyskom-minibuffer-point)
+              (eq lyskom-minibuffer-point (point)))
+    (lyskom-read-from-minibuffer-cancel-magic)))
+
 
 (defsubst lyskom-completing-match-string-regexp (string)
   (concat "^"
@@ -282,11 +296,16 @@ A string:    A name that matched nothing in the database."
     (while keep-going
       (lyskom-with-lyskom-minibuffer
        (let ((before-change-functions before-change-functions)
+             (pre-command-hook pre-command-hook)
+             (post-command-hook post-command-hook)
+             (lyskom-minibuffer-point nil)
              (minibuffer-setup-hook 
               (cons (lambda ()
                       (setq before-change-functions
                             (cons 'lyskom-read-from-minibuffer-clear-initial
-                                  before-change-functions)))
+                                  before-change-functions)
+                            pre-command-hook (cons 'lyskom-read-from-minibuffer-pre-command pre-command-hook)
+                            post-command-hook (cons 'lyskom-read-from-minibuffer-post-command post-command-hook)))
                     minibuffer-setup-hook)))
          (setq read-string (completing-read (cond ((stringp prompt) prompt)
                                                   ((symbolp prompt) (lyskom-get-string prompt))
