@@ -52,7 +52,7 @@ du är osäker.\n")
     (could-not-create-you .  "Det gick inte att skapa personen.\n")
     (presentation-subject . "%#1s")
     (presentation-form . "Namn:\t\nAdress:\t\n\t\nTelefon:
-Email-adress:\n\nAnnat:")
+Email-adress:\n\nAnnat:\t")
     (not-present-anywhere . "Ej närvarande i något möte.")
 
 
