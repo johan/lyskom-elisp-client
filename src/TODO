@@ -64,8 +64,6 @@ Allmänna förbättringar
 
     Klickbara kommandon.
 
-    Återinför Olästa
-
     Reentrant blocking-do
 
 
@@ -109,4 +107,6 @@ Fixade saker
     Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
 
     Ändra variabler klarar inte att hantera buffertlokala variabler. FIXAT.
+
+    Återinför Olästa
 
