@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.44 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: parse.el,v 44.45 2003-01-06 14:08:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.44 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: parse.el,v 44.45 2003-01-06 14:08:47 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -379,7 +379,9 @@ Each element is parsed by PARSER, a function that takes no arguments."
         (while (> len 0)
           (setq result (cons (funcall parser) result))
           (setq len (1- len)))
-        (nreverse result)))))
+        (prog1
+            (nreverse result)
+          (lyskom-expect-char ?}))))))
 
 
 (defun lyskom-fill-vector (vector parser)
@@ -1021,7 +1023,7 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-parse-local-to-global-block (block-type)
   "Parse a Local-To-Global-Block"
   (cond ((eq block-type 'sparse)
-         (let ((len (lyskom-parse-string)))
+         (let ((len (lyskom-parse-num)))
            (lyskom-parse-list len 'lyskom-parse-text-number-pair)))
         ((eq block-type 'dense)
          (lyskom-parse-map))))

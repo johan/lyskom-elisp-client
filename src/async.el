@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.52 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: async.el,v 44.53 2003-01-06 14:08:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.52 2003-01-05 21:37:05 byers Exp $\n"))
+	      "$Id: async.el,v 44.53 2003-01-06 14:08:47 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -269,8 +269,32 @@ this function shall be with current-buffer the BUFFER."
                 (lyskom-use 'follow 'lyskom-async-new-membership pers-no conf-no))
             ))))
 
+     ((eq msg-no 19)                    ; async-new-user-area
+      (let* ((pers-no (lyskom-parse-num))
+             (old-user-area (lyskom-parse-num))
+             (new-user-area (lyskom-parse-num)))
+        (lyskom-save-excursion
+          (set-buffer buffer)
+          (when (eq pers-no lyskom-pers-no)
+            (initiate-get-pers-stat 'follow 
+                                    'lyskom-async-new-user-area
+                                    pers-no
+                                    old-user-area
+                                    new-user-area)))))
      (t
       (lyskom-skip-tokens tokens)))))
+
+(defun lyskom-async-new-user-area (pers-stat old-user-area new-user-area)
+  (when pers-stat
+    (let ((need-reread (and (eq lyskom-pers-no (pers-stat->pers-no pers-stat))
+                            (not (eq lyskom-current-user-area new-user-area)))))
+  ;; Update the cache
+  (set-pers-stat->user-area pers-stat new-user-area)
+  ;; Re-read
+  (when (and need-reread
+             new-user-area
+             (not (zerop new-user-area)))
+    (initiate-get-text 'follow 'lyskom-read-options-eval new-user-area)))))
 
 
 (defun lyskom-async-forced-leave-conf (conf-stat conf-no)
