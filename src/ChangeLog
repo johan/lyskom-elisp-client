@@ -1,7 +1,26 @@
 Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* commands1.el (kom-list-re): Sätt knapp på raderna.
+	
+	* commands1.el (kom-send-letter): Gör (recenter 1) istället för
+ 	(recenter 0).
+
+	* lyskom-rest.el (kom-page-next-command): Dito.
+	(kom-view,lyskom-start-of-command): Dito.
+
+
+	* lyskom-rest.el (lyskom-insert): Försökte göra så att den inte
+ 	hoppar ner så ofta.
+
+	* commands1.el (kom-list-clients): Uppskjut utskrift av
+ 	klientnamn.
+	(lyskom-deferred-client-1): Ny funktion.
+	(lyskom-deferred-client-2): Ny funktion.
+
 	* lyskom-rest.el (lyskom-format-aux-help): Liten ändring av
  	formatsträngen för uppskjutna mötesnamn.
+	(lyskom-format-aux-help): Nytt format-element "D" som tar en
+ 	sträng eller defer-info som argument.
 
 	* deferred-insert.el (lyskom-deferred-insert-conf): Använd redan
  	satta properties.
