@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.329 2004-04-11 21:53:47 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.330 2004-04-13 14:39:51 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.329 2004-04-11 21:53:47 jhs Exp $"))
+              "$Id: english-strings.el,v 44.330 2004-04-13 14:39:51 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -2139,6 +2139,8 @@ Change privileges for %#1P (%#1p)...")
     (kom-review-clear         . "Review and skip")
     (kom-review-last-normally-read
      			      . "Review again")
+    (kom-review-cross-references
+     			      . "Review all cross references")
     (kom-review-converted     . "Review converted")
     (kom-review-noconversion  . "Review unconverted")
     (kom-review-next          . "Review next")
