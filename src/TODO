@@ -12,11 +12,21 @@ Att göra i elisp-klienten
 
     Hur och var skall man egentligen spara inställningar? .emacs är
     kanske inte det bästa alternativet. 
+ 
+    Testa lyskom-is-anonymous!
 
 
 * BUGGAR
 
 ** OSORTERADE
+
+    Om man återser senaste av sig själv så kan man råka få se sin
+    user-area.
+
+    LysKOM fungerar inte i XEmacs i tty-mode. No such face:
+    kom-active-face. Antingen är det fixat eller så är det inte fel i
+    20.2. Jag har noterat liknande problem i 19.30 i Sun-consolen.
+    FIX BY: 0.46        
 
     Om förbindelsen bryts så får man args out of range ibland.
     FIX BY: 0.46

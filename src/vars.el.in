@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.53 1998-06-14 14:16:15 byers Exp $
+;;;;; $Id: vars.el.in,v 44.54 1998-12-15 12:35:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.53 1998-06-14 14:16:15 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.54 1998-12-15 12:35:45 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -169,6 +169,14 @@ for more information."
 (def-kom-var kom-enabled-prompt-format-executing "%[%c% %m%]."
   "*Format of LysKOM prompt when executing a default command in 
 enabled mode."
+  server)
+
+(def-kom-var kom-anonymous-prompt-format "%[%c% %m%] (%a) - "
+  "*Format of the LysKOM prompt when running anonymously."
+  server)
+
+(def-kom-var kom-anonymous-prompt-format-executing "%[%c% %m%] (%a)."
+  "*Format of the LysKOM prompt when executing a command anonymously."
   server)
 
 
@@ -571,9 +579,9 @@ A number means wrap articles shorter than the number (in bytes)."
 
     ;; JySKom enhancements
 
-    ("<(?m[|ö]te *\\([0-9]+\\)[^0-9]*)?>" conf 0 1 nil)
-    ("<(?text *\\([0-9]+\\)[^0-9]*)?>" text 0 1 nil)
-    ("<(?person *\\([0-9]+\\)[^0-9]*)?>" pers 0 1 nil)
+    ("<(?m[|ö]te *\\([0-9]+\\)[^0-9>]*)?>" conf 0 1 nil)
+    ("<(?text *\\([0-9]+\\)[^0-9>]*)?>" text 0 1 nil)
+    ("<(?person *\\([0-9]+\\)[^0-9>]*)?>" pers 0 1 nil)
 
     ;; Info node reference
 
@@ -1695,7 +1703,13 @@ kom-go-to-next-conf might go to the same conference again.)")
 The name is stored in lyskom-debug-communications-to-buffer-buffer.")
   
 (def-kom-var lyskom-debug-what-i-am-doing t
-  "Non-nil means asynchronous message 5 will be logged to the debug buffer. ")
+  "Non-nil means asynchronous message 5 will be logged to the debug
+  buffer. ")
+
+(def-kom-var lyskom-is-anonymous nil
+  "Non-nil means be a bit secretive about things. Not totally
+  secretive of course, since the server doesn't allow that yet."
+  local)
 
 (def-kom-var lyskom-debug-communications-to-buffer-buffer "*kom*-debugs"
   "Name of the buffer to insert the communications with the server into if

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.46 1998-08-17 15:42:08 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.47 1998-12-15 12:35:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.46 1998-08-17 15:42:08 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.47 1998-12-15 12:35:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1087,6 +1087,10 @@ Uppkopplad sedan %#8s%#9s")
     
     (need-library . "Paketet \"%#1s\" behövs för att utföra detta kommando.\n")
     (calc-expression . "Uttryck: ")
+
+    (do-send-anonymous . "Skicka in texten anonymt? ")
+    (anonymous . "anonym")
+    (Anonymous . "Anonym")
 
     ;; From aux-items.el
 
@@ -2734,7 +2738,8 @@ i servern. Annars sparas det i din .emacs.")
    (kom-tell-review		. "Återser.")
    (kom-tell-change-name       . "Ändrar sitt namn till något annat.")
    (kom-tell-change-supervisor . "Ändrar organisatör för något.")
-   (kom-tell-next-lyskom       . "Hoppar till ett annat LysKOM.")))
+   (kom-tell-next-lyskom       . "Hoppar till ett annat LysKOM.")
+   (kom-tell-is-anonymous      . "Är hemlighetsfull")))
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)

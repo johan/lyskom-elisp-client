@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.22 1998-07-23 15:04:09 petli Exp $
+;;;; $Id: lyskom-buttons.el,v 44.23 1998-12-15 12:35:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.22 1998-07-23 15:04:09 petli Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.23 1998-12-15 12:35:30 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -899,6 +899,7 @@ MANAGER is the URL manager that started Netscape.
 
 This function attempts to load the URL in a running Netscape, but failing
 that, starts a new one."
+  (setq url (replace-in-string url "," "%2C"))
   (let* ((url-string (if (eq window-system 'win32)
                          (list url)
                        (list "-remote"

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.5 1998-06-14 14:15:45 byers Exp $
+;;;;; $Id: internal.el,v 44.6 1998-12-15 12:35:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.5 1998-06-14 14:15:45 byers Exp $\n"))
+	      "$Id: internal.el,v 44.6 1998-12-15 12:35:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -438,7 +438,7 @@ is sent with each packet. If STRING is longer it is splitted."
      process
      (progn
        (if lyskom-debug-communications-to-buffer
-	   (lyskom-debug-insert process "-> " string))
+	   (lyskom-debug-insert process ">>>>>> " string))
        string)))
    (t
     (let ((i 0))
@@ -457,8 +457,7 @@ is sent with each packet. If STRING is longer it is splitted."
 		   (goto-char (point-max))
 		   (insert "\n"
 			   (format "%s" process)
-			   "-> "
-                           string))
+			   (concat ">>>>>> " string)))
 		 (set-buffer (process-buffer process))))
 	   string))
 	(setq i (+ i lyskom-max-packet-size)))))))
