@@ -1,0 +1,49 @@
+
+		       Nyheter i lyskom.el 0.42
+		       ========================
+
+Version 0.42 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.42.el.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.42.
+
+* Fitjurs och förbättringar
+
+** Kommandot "Lista (med) regexpar" har återuppstått. Det finns bundet
+   till 'lr'.
+
+** Kommandot "Lista klienter" är nytt, och visar den information som
+   LysKOM-klienter lämnar om vilket klient och version de är.
+
+** Sessionsfältet i (bl.a.) vilkalistan anpassar sin bredd efter hur
+   mycket plats som behövs.
+
+** +++ Förändringar i prioritera möten? +++
+
+** Kommandot "Återse senaste" med vänner har optimerats så att den går
+   snabbare i vissa fall.
+
+** Den experimentella variabeln 'kom-delayed-printing' har bytt
+   namn. Den heter numera 'kom-deferred-printing'.
+
+** Fler kommandon, till exempel vilkalistan, använder fördröjd
+   utskrift om man slår på det.
+
+** Texter läsmarkeras nu efter att de har skrivits ut, istället för
+   före, som det var tidigare.
+
+** Man kan nu ange utseende på faces i X-resurser. Följande rad i
+   ~/.Xdefaults ger t.ex. en grå bakgrund på kom-first-line-face:
+
+	Emacs.kom-first-line-face.attributeBackground: gray
+
+* Bugfixar
+
+** Inga större buggar har fixats, men vi har säkert infört några nya,
+   skojiaga buggar.
+
+Local variables:
+mode: outline
+End:
