@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.44 1999-06-22 14:54:31 byers Exp $
+;;;;; $Id: commands1.el,v 44.45 1999-06-25 20:17:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.44 1999-06-22 14:54:31 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.45 1999-06-25 20:17:09 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -140,15 +140,10 @@
 			    (if is-marked-by-me
 				(if (= num-marks 1)
 				    (lyskom-get-string 'delete-marked-by-you)
-				  (if (= num-marks 2)
-				      (lyskom-get-string 
-				       'marked-by-you-and-one)
-				    (lyskom-format 'delete-marked-by-you-and-several
-						   (1- num-marks))))
-			      (if (= num-marks 1)
-				  (lyskom-get-string 'delete-marked-by-one)
-				(lyskom-format 'delete-marked-by-several
-					       num-marks)))))))))
+                                  (lyskom-format 'delete-marked-by-you-and-others
+                                                 (1- num-marks)))
+                              (lyskom-format 'delete-marked-by-several
+                                             num-marks))))))))
       (when do-delete
         (lyskom-format-insert 'deleting-text text-no)
         (when (lyskom-report-command-answer 
@@ -687,7 +682,8 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 		 ((null current-prefix-arg) lyskom-current-text)
 		 ((integerp current-prefix-arg) current-prefix-arg)
 		 ((listp current-prefix-arg) 
-		  (lyskom-read-number (lyskom-get-string 'what-comment-no)))
+		  (lyskom-read-number (lyskom-get-string 'what-comment-no) 
+                                      (lyskom-text-at-point)))
 		 (t (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
@@ -741,7 +737,8 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
                  current-prefix-arg)
                 
                 ((listp current-prefix-arg)
-                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)))
+                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)
+                                     (lyskom-text-at-point)))
 
                 (t (signal 'lyskom-internal-error '(kom-write-footnote)))))
 
@@ -923,7 +920,8 @@ that text instead."
 		 ((null current-prefix-arg) lyskom-current-text)
 		 ((integerp current-prefix-arg) current-prefix-arg)
 		 ((listp current-prefix-arg) 
-                  (lyskom-read-number (lyskom-get-string 'what-private-no)))
+                  (lyskom-read-number (lyskom-get-string 'what-private-no)
+                                      (lyskom-text-at-point)))
 		 (t (signal 'lyskom-internal-error '(kom-private-answer))))))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
@@ -2235,7 +2233,9 @@ Uses Protocol A version 8 calls"
       
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			     "\n"))
-      (lyskom-insert (lyskom-format 'total-visible-users total-users))))
+      (lyskom-insert (lyskom-format 'total-visible-users total-users
+                                    (lyskom-client-date-string 
+                                     'time-format-exact)))))
 
 
 (defun lyskom-who-is-on-9 (arg &optional conf-stat)
@@ -2395,7 +2395,8 @@ Uses Protocol A version 9 calls"
 			   'total-visible-users)
 			  (t
 			   'total-visible-active-users))
-		    total-users))))
+		    total-users
+                    (lyskom-client-date-string 'time-format-exact)))))
 
 (defun lyskom-who-is-on-check-membership-8 (who-info-list conf-stat)
   "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."

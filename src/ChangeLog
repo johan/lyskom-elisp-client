@@ -1,3 +1,23 @@
+1999-06-25  David Byers  <davby@ida.liu.se>
+
+	* review.el (kom-review-stack): Print information about all kinds
+	of things on the stack, not just review commands.
+
+	* completing-read.el (lyskom-completing-strip-name): New function.
+	(lyskom-completing-member): Ignore parens.
+
+	* lyskom-rest.el: lyskom-format has capability to use embedded
+	predicates. Wohoo!
+
+	* utilities.el (lyskom-client-date-string): New function.
+
+	* lyskom-rest.el (lyskom-current-text): New function.
+
+1999-06-24  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-insert-string): Allow literal strings in
+	calls to lyskom-insert-string.
+
 1999-06-23  David Byers  <davby@ida.liu.se>
 
 	* english-strings.el: Synched up with Swedish.

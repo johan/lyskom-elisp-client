@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.27 1999-06-20 06:31:39 byers Exp $
+;;;;; $Id: utilities.el,v 44.28 1999-06-25 20:17:23 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.27 1999-06-20 06:31:39 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.28 1999-06-25 20:17:23 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -480,6 +480,29 @@ also reads the proper X resources."
 	    (if ul (set-face-underline-p face (eq ul 'on))))))
        lyskom-faces)))
 
+
+;;; ============================================================
+;;; Date and time utilities
+
+(defun lyskom-client-date-string (&optional fmt)
+  "Format the current client time as a string.
+The optional format string FMT specifies the format. If no format string
+is supplied time-yyyy-mm-dd-hh-mm is used. The arguments to the format
+string are the following: the year, the month, the day, the hour, the 
+minutes, the seconds, the full name of the day of week, the abbreviated
+name of the day of week."
+  (let ((now (decode-time)))
+    (lyskom-format (or fmt 'time-yyyy-mm-dd-hh-mm)
+                   (elt now 5)
+                   (elt now 4)
+                   (elt now 3)
+                   (elt now 2)
+                   (elt now 1)
+                   (elt now 0)
+                   (elt (lyskom-get-string 'weekdays)
+                        (elt now 6))
+                   (elt (lyskom-get-string 'weekdays-short)
+                        (elt now 6)))))
 
 ;;; ============================================================
 ;;; Keymap utilities
