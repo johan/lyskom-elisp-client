@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: slow.el,v 43.1 1996-08-30 03:57:03 davidk Exp $
+;;;;; $Id: slow.el,v 44.0 1996-08-30 14:48:00 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

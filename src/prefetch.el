@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 43.0 1996-08-07 16:40:45 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.0 1996-08-30 14:47:33 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 43.0 1996-08-07 16:40:45 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.0 1996-08-30 14:47:33 davidk Exp $\n"))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 43.0 1996-08-07 16:40:17 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.0 1996-08-30 14:46:53 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 43.2 1996-08-27 15:15:16 byers Exp $
+;;;;; $Id: completing-read.el,v 44.0 1996-08-30 14:45:52 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 43.2 1996-08-27 15:15:16 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.0 1996-08-30 14:45:52 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
