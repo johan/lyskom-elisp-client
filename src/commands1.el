@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.220 2004-07-21 11:14:38 byers Exp $
+;;;;; $Id: commands1.el,v 44.221 2004-11-03 06:22:28 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.220 2004-07-21 11:14:38 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.221 2004-11-03 06:22:28 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -360,14 +360,14 @@ This command accepts text number prefix arguments (see
 
 See `kom-review-uses-cache'."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
-  (if text-no
-      (progn
-	(lyskom-tell-internat 'kom-tell-read)
-        (unless kom-review-uses-cache
-          (cache-del-text-stat text-no))
-	(lyskom-view-commented-text
-	 (blocking-do 'get-text-stat text-no)))
-    (lyskom-insert-string 'confusion-what-to-view)))
+  (if (not text-no)
+      (lyskom-insert-string 'confusion-what-to-view)      
+    (lyskom-tell-internat 'kom-tell-read)
+    (unless kom-review-uses-cache
+      (cache-del-text-stat text-no))
+    (let ((kom-show-footnotes-immediately nil))
+      (lyskom-view-commented-text
+       (blocking-do 'get-text-stat text-no)))))
 
 (def-kom-command kom-unread-commented-text (text-no)
   "MArkes the texts that the selected text is a comment to as unread.
