@@ -1,3 +1,19 @@
+Sat Mar 16 04:41:13 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-debug-insert): Fungerade inte särskilt
+	bra.
+	(lyskom-filter): Tog bort testet efter newline, eftersom det fick
+	emacs att hänga.
+
+	* macros.el (lyskom-blocking-do-multiple): Signalera 'quit när
+ 	lyskom-quit-flag är satt.
+	(lyskom-quit-flag): Flyttade deklaration från vars.el.in.
+
+Fri Mar 15 22:53:55 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom): Slå även upp $KOMSERVER i
+ 	kom-server-aliases.
+
 Thu Mar 14 09:01:48 1996  David Byers  <byers@lysator.liu.se>
 
 	* filter-edit.el: filter-edit-save now recompiles filters when

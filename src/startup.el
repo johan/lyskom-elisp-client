@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 39.0 1996-03-14 18:18:38 davidk Exp $
+;;;;; $Id: startup.el,v 39.1 1996-03-16 11:32:35 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 39.0 1996-03-14 18:18:38 davidk Exp $\n"))
+	      "$Id: startup.el,v 39.1 1996-03-16 11:32:35 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -60,8 +60,11 @@ See lyskom-mode for details."
   (setq password
 	(or password (getenv "KOMPASSWORD")))
   (if (zerop (length host))
-      (setq host (or (getenv "KOMSERVER")
-		     lyskom-default-server)))
+      (let* ((env-kom (getenv "KOMSERVER"))
+	     (canon (rassoc env-kom kom-server-aliases)))
+	(setq host (or (car canon)
+		       env-kom
+		       lyskom-default-server))))
   (let ((port 4894)
 	(init-done nil))
     (cond				;Allow "nanny:4892" to use port 4892.
