@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.15 1997-08-18 12:27:37 byers Exp $
+;;;;; $Id: menus.el,v 44.16 1997-10-12 10:31:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.15 1997-08-18 12:27:37 byers Exp $\n"))
+	      "$Id: menus.el,v 44.16 1997-10-12 10:31:48 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -338,6 +338,6 @@
 ;;;;Återse urinlägget		   Återstarta kom
 ;;;;Övergå till administratörsmod
 
-(provide 'lyskom-menus)
+(eval-and-compile (provide 'lyskom-menus))
 
 ;;; menus.el ends here
