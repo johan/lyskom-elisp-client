@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.247 2002-12-31 00:22:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.248 2002-12-31 19:15:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.247 2002-12-31 00:22:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.248 2002-12-31 19:15:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2751,6 +2751,14 @@ Select whether to execute command or keyboard macro.")
     (default-namedays . "Namedays for current language")
     (specific-namedays . "Specific name list:")
 
+    (link-pattern-for . "Link patterns for")
+    (all-conferences . "All recipients")
+    (link-specific-rcpt . "Specific recipient")
+    (link-pattern . "Link pattern")
+    (link-replace . "Link substitution")
+    (link-highlight-match . "Highlight group")
+    (link-fold-case . "Case insensitive")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3686,6 +3694,23 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
       \\N means substitute match for (...) number N,
       \\\\ means insert one \\.")
 
+    (kom-text-links-doc . "\
+  Text link definitions. Each line defines one link for texts with a
+  particular recipient. All occurrences of the link pattern will be shown
+  as URL links. The URL pointed to by the link is generated from the text
+  matching the link pattern, by substituting according to the link
+  substitution. The text that is highlighted is determined by the 
+  \"Highlight group\" setting: zero means highlight the entire match. A
+  number 1-9 indicated the parenthesized group to highlight (and if that
+  makes no sense to you, stick with zero). If \"Case insensitive\" is
+  on, text will be matched without recard for character case.
+
+  The link substitution can contain the following special sequences:
+
+      \\& means substitute original matched text,
+      \\N means substitute match for (...) number N,
+      \\\\ means insert one \\.")
+
     ;;
     ;; Tags for variables
     ;;
@@ -3864,6 +3889,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-max-overlays-tag . "Maximum number of overlays:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")
     (kom-url-transformation-rules-tag . "Transformation of URLs:")
+    (kom-text-links-tag . "Text links:")
     )
 )
 
