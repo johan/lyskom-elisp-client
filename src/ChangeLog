@@ -1,3 +1,8 @@
+2000-09-02  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* startup.el (lyskom-mode): kill-buffer-hook runs the
+	lyskom-trim-buffer-hook on the whole buffer.
+
 2000-09-02  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46
