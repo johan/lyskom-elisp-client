@@ -8,6 +8,8 @@
 	* english-strings.el, swedish-strings.el (lyskom-message): Added
 	personal-comment-to-anonymous string.
 
+	* swedish-strings.el (lyskom-message): Spelling tweak.
+
 	* commands1.el (lyskom-private-answer-soon-prev): Removed unused
 	function.
 
