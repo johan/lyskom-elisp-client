@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.18 1992-06-16 11:33:32 linus Exp $
+# $Id: Makefile,v 35.19 1992-07-26 23:14:02 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.18 1992-06-16 11:33:32 linus Exp $
+# $Id: Makefile,v 35.19 1992-07-26 23:14:02 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.18  1992-06-16 11:33:32  linus
+# Revision 35.19  1992-07-26 23:14:02  linus
+# Added prefetch.el
+#
+# Revision 35.18  1992/06/16  11:33:32  linus
 # Alfa-version is replaced upon installation also.
 #
 # Revision 35.17  1992/05/11  01:55:38  linus
@@ -95,7 +98,7 @@ PARTS-EL = komtypes.el clienttypes.el startup.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el \
 	elib-string.el \
-	lyskom-rest.el
+	prefetch.el lyskom-rest.el
 HEADER-EL = macros.el vars.el
 HEADER-ELC = macros.elc vars.elc
 SWEDISH-EL = swedish-strings.el
@@ -108,7 +111,7 @@ SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc \
 	elib-string.elc \
-	lyskom-rest.elc
+	prefetch.elc lyskom-rest.elc 
 PARTS-ELC = $(SRC-ELC)
 
 .SUFFIXES : .el .elc
