@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.73 2000-12-12 11:12:48 byers Exp $
+# $Id: Makefile,v 44.74 2001-01-28 21:20:53 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.73 2000-12-12 11:12:48 byers Exp $
+# $Id: Makefile,v 44.74 2001-01-28 21:20:53 joel Exp $
 #
 
 
@@ -36,7 +36,7 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.46.1-BETA-4
+CLIENTVERSION = 0.46.1-BETA-5
 DOCFILES=NEWS-0.46 NEWS-0.46.1
 DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
