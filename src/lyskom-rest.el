@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.123 2000-09-02 20:08:51 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.124 2000-10-01 19:52:28 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.123 2000-09-02 20:08:51 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.124 2000-10-01 19:52:28 ceder Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3555,6 +3555,11 @@ One parameter - the prompt string."
     nil
 
   (setq-default lyskom-collate-table lyskom-default-collate-table)
+  ;; We should set lyskom-char-classes to
+  ;;     (lyskom-compute-char-classes lyskom-collate-table))
+  ;; but that currently fails under Emacs 20.7, because
+  ;; lyskom-default-collate-table isn't set properly.
+  (setq-default lyskom-char-classes nil)
   (lyskom-set-language lyskom-language)
   (unless (or (memq 'lyskom-unread-mode-line global-mode-string)
               (rassq 'lyskom-unread-mode-line global-mode-string))

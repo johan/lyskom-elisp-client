@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.89 2000-09-09 11:59:23 byers Exp $
+;;;;; $Id: commands1.el,v 44.90 2000-10-01 19:52:25 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.89 2000-09-09 11:59:23 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.90 2000-10-01 19:52:25 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1630,10 +1630,78 @@ If you are not member in the conference it will be flagged with an asterisk."
 ;;; ================================================================
 ;;;                Lista med regexpar - List regexp
 
-(def-kom-command kom-list-re (regexp)
-  "List all persons and conferences whose name matches REGEXP."
+
+(defun lyskom-make-re-case-insensitive (re)
+  "Convert the regexp RE to a case insensitive regexp."
+  (unless lyskom-char-classes
+    (setq lyskom-char-classes 
+	  (lyskom-compute-char-classes lyskom-collate-table)))
+  (let ((res nil)
+	(input (split-string re ""))
+	val)
+    (while input
+      (cond
+
+       ;; Copy "[]" character sets literally.
+       ((string= (car input) "[")
+	(setq res (cons "[" res))
+	(setq input (cdr input))
+	(when input			;Handle "[]asdf]" properly.
+	  (setq res (cons (car input) res))
+	  (setq input (cdr input)))
+	(while (and input (not (string= (car input) "]")))
+	  (setq res (cons (car input) res))
+	  (setq input (cdr input)))
+	(when input			;Don't forget the terminating "]".
+	  (setq res (cons (car input) res))
+	  (setq input (cdr input))))
+
+       ;; Copy backslashed sequences literally.
+       ((string= (car input) "\\")
+	(setq res (cons "\\" res))
+	(setq input (cdr input))
+	(when input
+	  (setq res (cons (car input) res))
+	  (setq input (cdr input))))
+
+       ;; Copy special characters literally.
+       ((member (car input) '("(" ")" "|" "+" "*" "?"))
+	(setq res (cons (car input) res))
+	(setq input (cdr input)))
+
+       ;; Create "[]" character sets for equivalent characters.
+       ((setq val (cdr-safe (assoc (aref (car input) 0) lyskom-char-classes)))
+	(setq res (cons "[" res))
+	(if (member "]" val)		;"]" must come first.
+	    (setq res (cons "]" res)))
+	(while val
+	  (cond
+	   ((string= "]" (car val)))		;already handled
+	   ((string= "-" (car val))
+	    (setq res (cons "---" res)))
+	   (t
+	    (setq res (cons (car val) res))))
+	  (setq val (cdr val)))
+	(setq res (cons "]" res))
+	(setq input (cdr input)))
+
+       ;; Copy other characters literally.
+       (t
+	(setq res (cons (car input) res))
+	(setq input (cdr input)))))
+
+    (apply 'concat (nreverse res))))
+
+
+(def-kom-command kom-list-re (regexp &optional case-insensitive)
+  "List all persons and conferences whose name matches REGEXP.
+If the optional argument CASE-INSENSITIVE is true, the regexp will be
+converted so that the search is case insensitive."
   (interactive (list (lyskom-read-string
-		      (lyskom-get-string 'search-re))))
+		      (lyskom-get-string 'search-re))
+		     current-prefix-arg))
+  (if case-insensitive
+      (setq regexp (lyskom-make-re-case-insensitive regexp)))
   (lyskom-format-insert 'matching-regexp regexp)
   (let ((conf-list (blocking-do 're-z-lookup regexp 1 1)))
     (if conf-list

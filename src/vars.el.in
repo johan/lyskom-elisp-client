@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.125 2000-09-14 08:08:00 byers Exp $
+;;;;; $Id: vars.el.in,v 44.126 2000-10-01 19:52:32 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.125 2000-09-14 08:08:00 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.126 2000-10-01 19:52:32 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2086,7 +2086,12 @@ an unknown person.")
   "Microseconds timeout for accept-process-output.")
 
 (def-kom-var lyskom-collate-table nil
-  "Table mapping characters to equivalent characters."
+  "Table mapping characters to an equivalence class."
+  inherited)
+
+(def-kom-var lyskom-char-classes nil
+  "An assoc list from character to a list of equivalent strings.
+See lyskom-compute-char-classes."
   inherited)
 
 (def-kom-var lyskom-dont-read-user-area nil
