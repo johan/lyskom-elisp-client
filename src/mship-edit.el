@@ -1,5 +1,18 @@
 ;;; mship-edit.el --- Summary
 ;; TO DO
+;;
+;; Change priority in the main buffer doesn't move the conference
+;; unless its priority is higher than the session priority. I think
+;; the solution is to do not use lyskom-try-add-member there.
+;;
+;; Sometimes the buffer contents are corrupted when entries are
+;; printed above the legend (below the === line). Don't know when it
+;; happens, but I had it happen when changing priorities in the main
+;; buffer. The start and end markers seem to be unaffected.
+;;
+;;
+;;
+;;
 ;; see tmp.el
 ;;
 ;; When showing hidden entries they are not put in the right position
@@ -634,7 +647,8 @@ entry priority"
 
 
 (defun lp--update-buffer (conf-no)
-  "Update the entry for CONF-NO in the buffer."
+  "Update the entry for CONF-NO in the buffer.
+If optional NEW-MSHIP is non-nil, then get the membership again."
   (lp--save-excursion
     (let ((buffers (lyskom-buffers-of-category 'prioritize)))
       (mapcar (lambda (buffer)
@@ -686,8 +700,12 @@ entry priority"
                             (membership->priority mship))
                         (/= (lp--entry-position entry)
                             (membership->position mship)))
-                    ;; FIXME: Move the entry
-                    )
+                    (let ((new-pos (lp--entry-position
+                                    (lp--find-new-position 
+                                     entry (membership->priority mship)))))
+                      (lp--set-entry-pri-and-pos
+                       entry (membership->priority mship) new-pos)
+                      (set-lp--entry->membership entry mship)))
 
                    (t (set-lp--entry->membership entry mship)
                       (lp--redraw-entry entry)))))
@@ -934,9 +952,9 @@ Forces a mode line update"
         (unless (eq old-pos saved-pos)
           (lyskom-change-membership-position (membership->conf-no mship)
                                              saved-pos))
-        (unless (eq old-pri (lp--entry->priority mship))
+        (unless (eq old-pri (lp--entry->priority entry))
           (lyskom-change-membership-priority (membership->conf-no mship)
-                                             (lp--entry->priority mship)))
+                                             (lp--entry->priority entry)))
         (cond ((and (>= old-pri lyskom-session-priority)
                     (< (membership->priority mship) lyskom-session-priority))
                (when (eq lyskom-current-conf (membership->conf-no mship))
@@ -1404,6 +1422,7 @@ With prefix arg, contract only those that were created by self."
   (setq lp--mode-map (make-keymap))
   (suppress-keymap lp--mode-map)
   (define-key lp--mode-map (kbd "SPC") 'lp--toggle-membership-selection)
+  (define-key lp--mode-map (kbd "C-k") 'lp--toggle-membership-selection)
   (define-key lp--mode-map (kbd "p")   'lp--set-priority)
   (define-key lp--mode-map (kbd "C-w") 'lp--select-region)
   (define-key lp--mode-map (kbd "C-y") 'lp--yank)
@@ -1483,13 +1502,13 @@ bugs and is somewhat fragile. Handle with care."
   (lp--first-entry))
 
 (defun lp--mode ()
-  "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
+  "\\<lp--mode-map>Mode for prioritizing conferences in LysKOM.
 
 Commands:
 TBD.
 
 All bindings:
-\\{lyskom-prioritize-mode-map}
+\\{lp--mode-map}
 Entry to this mode runs lyskom-prioritize-mode-hook."
   (interactive)
   (setq major-mode 'lp--mode)
