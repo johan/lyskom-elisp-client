@@ -1,3 +1,41 @@
+2002-04-26  David Byers  <david.byers@swipnet.se>
+
+	* option-edit.el (lyskom-custom-variables): Added
+	kom-edit-hide-add-button. 
+	(lyskom-customize-buffer-format): Added kom-edit-hide-add-button.
+
+	* vars.el.in (kom-edit-hide-add-button): New variable.
+
+	* edit-text.el (lyskom-edit-insert-aux-item): Number of lines to
+	back up depends on kom-edit-hide-add-button.
+	(lyskom-edit-insert-miscs): Insert add button only if
+	kom-edit-hide-add-button is nil.
+
+	Fix bug 475:
+	* edit-text.el (kom-ispell-message): Don't search for
+	ispell-message-start-skip unless it is a string.
+	New command.
+	(kom-edit-prev-button): New command.
+	(lyskom-edit-find-separator): New function. Extracted code that
+	finds the separator line.
+	(kom-ispell-message): Use it.
+	(lyskom-edit-insert-aux-item): Use it.
+	(lyskom-edit-replace-headers): Use it.
+	(lyskom-edit-parse-headers): Use it.
+	(lyskom-edit-extract-text): Use it.
+	(lyskom-edit-on-aux-item): Use it.
+	(lyskom-edit-fcc-text): Use it.
+
+	* english-strings.el, swedish-strings.el: Bind * and = in
+	lyskom-edit-mode-map to kom-button-click-or-self-insert and
+	kom-button-press-or-self-insert respectively. Bind TAB and M-TAB
+	to kom-edit-next-button-or-self-insert and kom-edit-prev-button
+	respectively.
+
+	* lyskom-buttons.el (kom-button-press-or-self-insert-command): New
+	function.
+	(kom-menu-button-press-or-self-insert-command): New function.
+
 2002-04-25  David Byers  <david.byers@swipnet.se>
 
 	* view-text.el (lyskom-print-text): Use kom-highlight-text-body to

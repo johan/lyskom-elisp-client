@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.95 2002-04-24 21:20:37 byers Exp $
+;;;;; $Id: edit-text.el,v 44.96 2002-04-26 21:16:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.95 2002-04-24 21:20:37 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.96 2002-04-26 21:16:12 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -170,6 +170,22 @@ Does lyskom-end-of-command."
   )
 
 
+(defun lyskom-edit-find-separator (&optional move-point)
+  "Return the end position of the separator line.
+If MOVE-POINT is non-nil, move point to the start of the separator."
+  (prog1
+      (save-excursion
+        (goto-char (point-min))
+        (and (re-search-forward
+              (concat "^"
+                      (regexp-quote
+                       (substitute-command-keys
+                        (lyskom-get-string 'header-separator)))
+                      "$")
+              nil t)))
+    (when (and move-point (match-beginning 0))
+      (goto-char (match-beginning 0)))))
+
 
 (defun lyskom-edit-insert-miscs (misc-list subject body &optional aux-list)
   "Insert MISC-LIST into header of text.
@@ -224,11 +240,12 @@ nil             -> Ingenting."
                             (lyskom-get-string 'aux-item-prefix))
                     where-put-misc)))))
             aux-list)
-    (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
-                                 (lyskom-default-button 'add-recipient-or-xref
-                                                        edit-buffer)
-                                 (lyskom-get-string 'add-recpt-button-text))
-                  where-put-misc)
+    (unless kom-edit-hide-add-button
+      (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
+                                   (lyskom-default-button 'add-recipient-or-xref
+                                                          edit-buffer)
+                                   (lyskom-get-string 'add-recpt-button-text))
+                    where-put-misc))
     (lyskom-princ (lyskom-format 'text-mass subject 
 				 (substitute-command-keys
 				  (lyskom-get-string 'header-separator))
@@ -341,71 +358,6 @@ to enter the text in the correct lyskom-process.
 
 This one differs from lyskom-edit-mode-hook in that it is called before
 the lyskom-special key bindings are added.")
-
-
-;;;(defun lyskom-edit-mode ()
-;;;  "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
-;;;Commands:
-;;;\\[kom-edit-send]   sends the text when you are ready. The buffer will be
-;;;          deleted if (and only if) the server accepts the text.
-;;;\\[kom-edit-quit]   aborts the editing. You will get back to the LysKOM buffer.
-;;;
-;;;\\[kom-edit-show-commented]   shows the commented text in a temporary buffer.
-;;;
-;;;\\[kom-edit-add-recipient]   asks for another recipient and adds him to the header.
-;;;\\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
-;;;
-;;;\\[kom-edit-insert-commented]   inserts the commented of footnoted text.
-;;;\\[kom-edit-insert-text]   inserts the shown text, you tell the number."
-;;;  (interactive)
-;;;  (let ((tmp-keymap nil))
-;;;    (kill-all-local-variables)
-;;;    (text-mode)
-;;;
-;;;    (run-hooks 'lyskom-edit-mode-mode-hook)
-;;;
-;;;    (setq tmp-keymap (and (current-local-map)
-;;;                          (copy-keymap (current-local-map))))
-;;;
-;;;    (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
-;;;    (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
-;;;    (setq major-mode 'lyskom-edit-mode)
-;;;    (setq mode-name lyskom-edit-mode-name)
-;;;
-;;;    (if tmp-keymap
-;;;        (let ((new-keymap (make-sparse-keymap)))
-;;;          (make-local-variable 'lyskom-edit-mode-map)
-;;;          (setq lyskom-edit-mode-map 
-;;;                (lyskom-default-value 'lyskom-edit-mode-map))
-;;;
-;;;          (lyskom-xemacs-or-gnu
-;;;           (set-keymap-parents new-keymap
-;;;                               (list lyskom-edit-mode-map
-;;;                                     tmp-keymap))
-;;;           (progn (set-keymap-parent new-keymap lyskom-edit-mode-map)
-;;;                  (lyskom-overlay-keymap lyskom-edit-mode-map
-;;;                                         tmp-keymap
-;;;                                         new-keymap)))
-;;;          (use-local-map new-keymap))
-;;;
-;;;      (lyskom-use-local-map lyskom-edit-mode-map))
-;;;    
-;;;
-;;;    (auto-save-mode 1)
-;;;    (auto-fill-mode 1)
-;;;    (make-local-variable 'paragraph-start)
-;;;    (make-local-variable 'paragraph-separate)
-;;;    (setq paragraph-start (concat "^" 
-;;;                                  (regexp-quote 
-;;;                                   (substitute-command-keys
-;;;                                    (lyskom-get-string 'header-separator)))
-;;;                                  "$\\|" paragraph-start))
-;;;    (setq paragraph-separate (concat "^" 
-;;;                                     (regexp-quote 
-;;;                                      (substitute-command-keys
-;;;                                       (lyskom-get-string 'header-separator)))
-;;;                                     "$\\|" paragraph-separate))
-;;;    (run-hooks 'lyskom-edit-mode-hook)))
 
 
 (defun lyskom-edit-mode (&optional arg)
@@ -708,15 +660,7 @@ Based on ispell-message."
 
     (save-excursion
       (goto-char (point-min))
-      (let* ((internal-messagep 
-              (save-excursion
-                (re-search-forward
-                 (concat "^"
-                         (regexp-quote
-                          (substitute-command-keys
-                           (lyskom-get-string 'header-separator)))
-                         "$")
-                 nil t)))
+      (let* ((internal-messagep (lyskom-edit-find-separator t))
              (limit 
               (copy-marker
                (cond ((not ispell-message-text-end) (point-max))
@@ -760,6 +704,7 @@ Based on ispell-message."
                                  (match-beginning 0)))
                      (end-fwd (and (goto-char start)
                                    (boundp 'ispell-message-start-skip)
+                                   (stringp ispell-message-start-skip)
                                    (re-search-forward ispell-message-start-skip
                                                       limit 'end)))
                      (end (or (and end-c end-fwd (min end-c end-fwd))
@@ -1420,16 +1365,8 @@ RECPT-TYPE is the type of recipient to add."
 (defun lyskom-edit-insert-aux-item (item)
   "Insert the aux item ITEM in the current buffer"
   (save-excursion
-    (goto-char (point-min))
-    (re-search-forward
-     (concat "^"
-             (regexp-quote
-              (substitute-command-keys
-               (lyskom-get-string 'header-separator)))
-             "$")
-     nil t)
-    (beginning-of-line)
-    (forward-line -2)
+    (lyskom-edit-find-separator t)
+    (forward-line (if kom-edit-hide-add-button -1 -2))
     (insert
      (concat (lyskom-format
               (format "%%#1@%%[%s%%] %%#2s" (lyskom-get-string 'aux-item-prefix))
@@ -1550,11 +1487,7 @@ to lyskom-edit-replace-headers"
       (goto-char (point-min))
       (setq start (point-marker))
       (set-marker-insertion-type start t)
-      (re-search-forward (concat "^"
-                                 (regexp-quote
-                                  (substitute-command-keys
-                                   (lyskom-get-string 'header-separator)))
-                                  "$"))
+      (lyskom-edit-find-separator t)
       (end-of-line)
       (setq end (point-marker))
       (goto-char (point-min))
@@ -1595,12 +1528,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
         (aux nil))
     (save-restriction
       ;; Narrow to headers
-      (re-search-forward (concat "^"
-                                 (regexp-quote
-                                  (substitute-command-keys
-                                   (lyskom-get-string 'header-separator)))
-                                 "$"))
-      (beginning-of-line)
+      (lyskom-edit-find-separator t)
       (narrow-to-region (point-min) (point))
       (goto-char (point-min))
       (while (< (point) (point-max))
@@ -1687,20 +1615,15 @@ Point must be located on the line where the subject is."
 (defun lyskom-edit-extract-text ()
   "Get text as a string."
   (save-excursion
-    (goto-char (point-min))
-    (if (not (re-search-forward (concat "^"
-                                        (regexp-quote
-                                         (substitute-command-keys
-                                          (lyskom-get-string 'header-separator)))
-                                         "$")
-                                nil (point-max)))
+    (if (not (lyskom-edit-find-separator t))
 	(signal 'lyskom-internal-error
 		"Altered lyskom-header-separator line.")
+      (end-of-line)
       (buffer-substring (1+ (point))
 			(progn
 			  (goto-char (1- (point-max)))
-			  (while (lyskom-looking-at "\\s-")	; remove trailing
-			    (backward-char 1))		; whitespace
+			  (while (lyskom-looking-at "\\s-") ; remove trailing
+			    (backward-char 1)) ; whitespace
 			  (forward-char 1)
 			  (point))))))
 
@@ -1710,12 +1633,7 @@ Point must be located on the line where the subject is."
   (save-excursion
     (beginning-of-line)
     (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
-         (re-search-forward (concat "^"
-                                    (regexp-quote
-                                     (substitute-command-keys
-                                      (lyskom-get-string 'header-separator)))
-                                    "$")
-          nil (point-max)))))
+         (> (lyskom-edit-find-separator) (point)))))
 
 
 (defun lyskom-create-text-handler (text-no edit-buffer 
@@ -1816,14 +1734,7 @@ Point must be located on the line where the subject is."
           (erase-buffer)
           (insert text)
           (goto-char (point-min))
-          (when (re-search-forward
-                 (concat "^"
-                         (regexp-quote
-                          (substitute-command-keys
-                           (lyskom-get-string 'header-separator)))
-                         "$")
-                 nil t)
-            (goto-char (match-beginning 0))
+          (when (lyskom-edit-find-separator t)
             (delete-region (match-beginning 0) (match-end 0))
             (insert (make-string kom-text-header-dash-length ?-))
             (forward-line 1)
@@ -1977,61 +1888,42 @@ buglist style, automating the removal of closed subjects and change-marks."
 
 
 ;;; ================================================================
-;;;        Maphanteringsfunktion - keymap handling.
-;;;
-;;; Author: Linus Tolke
-;;;
+;;; Tab between buttons in the header
 
-(defun overlay-map (oldmap newmap)
-  "Returns a map that is the union of OLDMAP and NEWMAP. NEW-MAP has priority.
-This function chooses whether the returned map is a list or an array.
-Currently always same type as oldmap.
-BUG: does not descend in the maps."
-  (cond
-   ((not (keymapp oldmap))
-    newmap)
-   ((not (keymapp newmap))
-    oldmap)
-   (t
-    (let ((map (copy-keymap oldmap))
-	  (r 0))
-      (cond
-       ((fboundp 'map-keymap)		;Special for lucid-emacs
-	(map-keymap
-	 (function
-	  (lambda (event function)
-	    (define-key map (vector event) function)))
-	 newmap))
-       ((and (string-match "^19" emacs-version)
-	     (arrayp (car (cdr newmap))))
-	(while (< r (length (car (cdr newmap))))
-	  (if (aref (car (cdr newmap)) r)
-	      (define-key map (char-to-string r) (aref (car (cdr newmap)) r)))
-	  (setq r (1+ r)))
-	(mapcar
-	 (function
-	  (lambda (ele)
-	    (define-key map 
-	      (cond
-	       ((integerp (car ele))
-		(char-to-string (car ele)))
-	       ((vector (car ele))))
-	      (cdr ele))))
-	 (cdr (cdr newmap))))
-       ((arrayp newmap)
-	(while (< r (length newmap))
-	  (if (aref newmap r)
-	      (define-key map (char-to-string r) (aref newmap r)))
-	  (setq r (1+ r))))
-       (t
-	(mapcar
-	 (function
-	  (lambda (ele)
-	    (define-key map 
-	      (cond
-	       ((integerp (car ele))
-		(char-to-string (car ele)))
-	       ((vector (car ele))))
-	      (cdr ele))))
-	 (cdr newmap))))
-      map))))
+(defun kom-edit-next-button-or-self-insert (num)
+  (interactive "p")
+  (let ((header-end (lyskom-edit-find-separator))
+        (start (point))
+        (next-pos nil))
+    (if (> (point) header-end)
+        (call-interactively 'self-insert-command)
+      (while (> num 0)
+        (lyskom-next-area 1 'lyskom-button)
+        (if (eq start (point))
+            (setq next-pos nil)
+          (setq next-pos (point)))
+        (cond ((or (null next-pos)
+                   (> next-pos header-end))
+               (goto-char start)
+               (unless (re-search-forward (regexp-quote (lyskom-get-string
+                                                         'header-subject))
+                                          header-end
+                                          t)
+                 (goto-char (point-max))
+                 (setq num 0)))
+              (t (goto-char next-pos)))
+        (setq num (1- num) start (point))))))
+
+(defun kom-edit-prev-button (num)
+  (interactive "p")
+  (let ((header-end (lyskom-edit-find-separator)))
+    (while (> num 0)
+      (cond ((and (> (point) header-end)
+                  (progn (goto-char (point-min))
+                         (re-search-forward (regexp-quote (lyskom-get-string
+                                                           'header-subject))
+                                            header-end
+                                            t)))
+             (setq num (1- num)))
+            (t (lyskom-prev-area num 'lyskom-button)
+               (setq num 0))))))

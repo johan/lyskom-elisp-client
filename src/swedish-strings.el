@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.232 2002-04-25 20:56:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.233 2002-04-26 21:16:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.232 2002-04-25 20:56:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.233 2002-04-26 21:16:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -69,6 +69,10 @@
   (define-prefix-command 'lyskom-sv-edit-insert-prefix)
   (define-prefix-command 'lyskom-sv-edit-aux-prefix)
   (define-prefix-command 'lyskom-sv-edit-add-prefix)
+  (define-key lyskom-sv-edit-mode-map (kbd "*")     'kom-button-press-or-self-insert-command)
+  (define-key lyskom-sv-edit-mode-map (kbd "=")     'kom-menu-button-press-or-self-insert-command)
+  (define-key lyskom-sv-edit-mode-map (kbd "TAB")   'kom-edit-next-button-or-self-insert)
+  (define-key lyskom-sv-edit-mode-map (kbd "M-TAB") 'kom-edit-prev-button)
   (define-key lyskom-sv-edit-mode-map (kbd "C-c")   'lyskom-sv-edit-prefix)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
@@ -3914,6 +3918,9 @@ i servern. Annars sparas det i din .emacs.")
     (kom-highlight-text-body-doc . "\
   Om detta är påslaget så visas inläggstexter med ett annorlunda utseende
   än normal text.")
+    (kom-edit-hide-add-button-doc . "\
+  Om detta är påslaget så kommer knappen [Addera...] att visas efter
+  mottagare och tilläggsinformation när man skriver inlägg.")
 
 
     ;;
@@ -4086,6 +4093,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-highlight-first-line-tag . "Annorlunda bakgrundsfärg på första raden:")
     (kom-highlight-dashed-lines-tag . "Annorlunda bakgrundsfärg före och efter inläggstexten:")
     (kom-highlight-text-body-tag . "Annorlunda bakgrundsfärg på inläggstexten:")
+    (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     )
 )
 
