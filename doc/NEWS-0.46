@@ -23,6 +23,9 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Man kan lägga till och ta bort fotnoter med kommandona Addera
+   fotnot och Subtrahera fotnot.
+
 ** När man går ur ett möte blir man först passiv medlem. För att gå ur 
    mötet på riktigt så måste man upprepa utträdet. Detta beteende går
    att styra med variabeln kom-unsubscribe-makes-passive.
