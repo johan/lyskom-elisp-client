@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.0 1996-08-30 14:46:20 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.1 1996-09-08 20:14:54 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.0 1996-08-30 14:46:20 davidk Exp $"))
+              "$Id: english-strings.el,v 44.1 1996-09-08 20:14:54 davidk Exp $"))
 
 
 
@@ -281,6 +281,7 @@ and you have finished reading. Please come back later.
 
     (search-for-pers . "Enter search key (RETURN for all users) ")
     (search-for-conf . "Enter search key (RETURN for all conferences) ")
+    (search-re . "Enter search regexp: ")
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
