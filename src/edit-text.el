@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.5 1993-05-26 17:58:38 linus Exp $
+;;;;; $Id: edit-text.el,v 36.6 1993-06-01 19:39:59 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.5 1993-05-26 17:58:38 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.6 1993-06-01 19:39:59 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -340,7 +340,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun kom-edit-insert-digit-text ()
   (interactive)
-  (if (fboundp 'map-keymap)		;Special for lucid-emacs
+  (if (boundp 'unread-command-event)	;Special for lucid-emacs
       (setq unread-command-event last-command-event)
     (setq unread-command-char last-command-char))
   (call-interactively 'kom-edit-insert-text nil))
@@ -744,7 +744,7 @@ BUG: does not descend in the maps."
 	(map-keymap
 	 (function
 	  (lambda (event function)
-	    (define-key map event function)))
+	    (define-key map (vector event) function)))
 	 newmap))
        ((and (string-match "^19" emacs-version)
 	     (arrayp (car (cdr newmap))))
