@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.9 1997-02-19 08:35:37 byers Exp $
+;;;;; $Id: edit-text.el,v 44.10 1997-03-08 02:56:51 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.9 1997-02-19 08:35:37 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.10 1997-03-08 02:56:51 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -221,7 +221,7 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
                                  ""))
                 stream))
 
-			  
+
 
 
 (defun lyskom-create-misc-list (&rest misc-pairs)

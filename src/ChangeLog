@@ -1,3 +1,14 @@
+Sat Mar  8 03:55:07 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (lyskom-list-summary): Gör (sit-for 0).
+
+Wed Mar  5 17:22:48 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-get-recipients-from-misc-list): Ny
+ 	funktion.
+	(lyskom-change-pres-or-motd-2): Använd samma mottagare som den
+ 	förra presentationen som default.
+
 Mon Mar  3 20:43:28 1997  David Kågedal  <kg@infovav.se>
 
 	* compatibility.el (lyskom-gnu-keysym): Använd tecken istället för
@@ -8,6 +19,10 @@ Sat Mar  1 10:55:04 1997  David Kågedal  <kg@infovav.se>
 	* async.el (lyskom-handle-as-personal-message): Använd rätt värde
  	på kom-pop-personal-messages och se till att meddelande-bufferten
  	scrollar till slutet.
+
+Sat Feb 22 13:54:02 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-wait-for-membership): La till (sit-for 0).
 
 Tue Feb 18 13:30:34 1997  David Byers  <davby@sen22.ida.liu.se>
 
@@ -42,6 +57,13 @@ Thu Feb 13 14:25:51 1997  David Byers  <davby@sen22.ida.liu.se>
  	radera whitespace. Använd match-data itsället.
 
 Thu Feb 13 12:28:55 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* prefetch.el (lyskom-prefetch-text-list-continue): Kommenterade
+ 	bort.
+	(lyskom-prefetch-texts): Bytte namn från
+ 	lyskom-prefetch-text-list.
+	(lyskom-prefetch-texts-handler): Bytte namn från
+ 	lyskom-prefetch-text-list-handler.
 
 	* komtypes.el (text-list->empty): Ny funktion.
 	(text-list->length): Ny funktion.
