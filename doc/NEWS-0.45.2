@@ -1,0 +1,58 @@
+
+                      Nyheter i lyskom.el 0.45.2
+                      ==========================
+
+Version 0.45.2 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.45.2.tar.gz, och en kopia av den text du läser
+just nu finns under namnet NEWS-0.45.2 samt under namnet NEWS-0.45.2 i
+tar-arkivet.
+
+Detta är en mindre uppgradering av 0.45.1 som i första hand åtgärdar
+en del kompatibilitetsproblem med Gnu Emacs 20.3 och 20.4, och med
+senare versioner av XEmacs. Om du använder Gnu Emacs 19.34 är det inte
+nödvändigt att uppgradera. Den här versionen är inte testad lika noga
+som 0.45.1 var.
+
+Det behövs folk som jobbar med LysKOM-projektet. Om du är intresserad
+av att hjälpa till med (eller ta över) utvecklingen av elispklienten
+så säg bara till. Jag har inte tid.
+
+                                David Byers   <byers@lysator.liu.se>
+
+
+
+
+* Se NEWS-0.45 och NEWS-0.45.1 för information om 0.45 i största
+  allmänhet. 
+
+
+* Fitjurs och förbättringar
+
+** Bättre kompatibilitet med version 20.3 och 20.4 av Gnu Emacs.
+   Bättre kompatibilitet med sena versioner av XEmacs.
+
+** Det borde gå att ladda lyskom.elc mer än en gång utan att förstöra
+   sina inställningar.
+
+** Om man skriver in ett namn som matchar mer än ett i databasen, och
+   matchar det ena exakt utan parentes så kommer det att accepteras
+   som unikt. Förr var man tvungen att skriva in parentesen också.
+
+** Om man inte har w3 installerat så försöker klienten inte längre
+   anropa w3 för att formattera HTML.
+
+** Textfärger och bakgrundsfärger i HTML ignoreras.
+
+
+* Kända buggar
+
+** För att alls fungera i Gnu Emacs 20.1 så stänger elispklienten
+   explicit av stödet för multibytetecken i sina buffertar. Det kan
+   hända att vi har missat något ställe. Säg till om du upptäcker
+   något som verkar underligt.
+
+** Det kan vara problem att prata med lyskomd 1.7.0 eller äldre. I
+   Nästa version kommer det garanterat inte att fungera alls.
