@@ -310,39 +310,6 @@ De flesta kommandon kan avbrytas med @kbd{C-g}.
 
 @table @asis
 
-@item @key{SPC}
-@itemx (mellanslag)
-@itemx @key{RET}
-@ifinfo
-@kindex @key{ }
-@end ifinfo
-@kindex SPC
-@kindex mellanslag
-@kindex rymdkrogen
-@kindex space
-@kindex RETURN
-Utför defaulthandlingen, dvs det som står i prompten.
-
-
-@item @key{LFD}
-@itemx (eller @key{NEWLINE})
-@itemx @kbd{j}
-@kindex NEWLINE
-@kindex LINEFEED
-@kindex j
-Samma som mellanslag eller @key{RET}, men placera först markören
-överst på skärmen.
-
-
-@item @kbd{ni}
-@itemx @code{Läsa nästa inlägg}
-@findex Läsa nästa inlägg
-@kindex ni
-Gå till nästa inlägg och visa det. Om du håller på att återse sparas
-informationen om vad du återser undan. Med @kbd{ån} kan du sedan
-återse nästa inlägg.
-
-
 @item @kbd{nm}
 @itemx @code{Gå till nästa möte}
 @findex Gå till nästa möte
@@ -370,24 +337,6 @@ och söker klienten bara rekursivt vidare om kommentaren i varje steg
 Skapa ett filter som hoppar över alla texter i det aktuella mötet med
 samma ärenderad som den senast lästa texten. Detta kommando är bra om
 man vill hoppa över alla grenar i en gammal diskussion.
-
-@item @kbd{e}
-@itemx @code{Endast läsa senaste}
-@findex Endast läsa senaste
-@kindex e
-Man får ange ett antal inlägg som man vill läsa i det nuvarande
-mötet. Alla andra inlägg i mötet markeras såsom lästa. 
-
-
-@item 
-@itemx @code{Uppskjuta läsning}
-@findex Uppskjuta läsning
-Man får ange hur många inlägg i mötet man vill läsa nu.
-Klienten kommer att "glömma bort" att du borde få läsa alla utom
-de sista N inläggen i det möte du befinner dig i. Nästa gång du
-startar klienten kommer du att få läsa de "bortglömda" inläggen.
-De glöms bara tillfälligt.
-
 
 @item @kbd{M-p}
 @itemx @code{(Spring till) början av texten}
