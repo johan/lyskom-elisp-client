@@ -14,12 +14,72 @@ Att göra i elisp-klienten
 
 * BUGGAR
 
+** CACHE
+
+    Det kan hända att inläggstexter kastas ur cachen så fort man har
+    läst dem. Om det är så, så är det *inte* bra, för att om man
+    kommenterar så måste inlägget hämtas igen. [DET VERKAR INTE VARA
+    SÅ]
+
+** HOOKAR
+
+    Det verkar som om ens lapp på dörren visas innan lyskom-login-hook
+    har körts. Det är inte så bra. Den verkar köras innan user-arean
+    har lästs in. Det är för tidigt. Alla inställningar för
+    inläggsformattering blir default, inte vad man har i sin
+    user-area.
+
+
+** MULE-RELATERAT SKRÄP
+
+    Vi har nog inte satt enable-multibyte-characters till nil i
+    minibufferten.
+
+    Alla bakslaskade tecken skall bytas mot sina riktiga tecken, för
+    annars kan skrotet som läser in dem bli förvirrad. Kanske. De
+    svenska tecknen är nämligen ogiltiga enligt MULE.
+
+
 ** VIKTIGA BUGGAR
+
+    Buggar i special-insert gör att eoc inte körs, och man har inte
+    läst inlägget. Man borde få inlägget läsmarkerat och få end of
+    command.
+
+    lyskom-w3-region får inte krascha. Stoppa condition-case runt.
+
+    lyskom-format-html får inte försöka formattera som HTML om det
+    inte går att ladda w3.
+
+    Komplettering av "Link" i LysKOM ofungerar. Alternativen skall
+    vara "(lokalt) Linköping (och övriga) Östergötland" och "Linköpings
+    Science Fiction-Förening (info och stuff)". Det går bra att lista
+    completions, men inte att trycka på TAB.
+
+    ** Observationer
+       
+       Det bidde fel på RST, men kanske inte hemma. Det verkar ha att
+       göra med att ö betraktas som whitespace. Det hänger när
+       completion har kommit fram till "ötland" vs.
+       "Fiction-Förening". 
+
+       Workaround: (require 'iso-syntax)
+       Snabbfix:   Byt ut `\\s' mot `[ \t]' och `\\S' mot `[^ \t]'.
+
+       Minitestfall: (lyskom-complete-string '("L\t" "L s")).
+       Problem uppstår om man får space-mismatch pga att två olika
+       tecken med spacesemantik mismatchar (fin svenska, eller hur.)
+       Man borde få match när det inträffar.
+
+       Man skulle kunna tänka sig att lyskom-complete-string upptäcker
+       om den itererar över samma tecken mer än en gång och i så fall
+       avbryta och ta vad den har som completion (och skicka
+       bugrapport.)
 
     Ingen av initiate-funktionerna fungerar i något annat än LysKOMs
     huvudbuffert. De borde alla undersöka om det finns några köer i
     den aktuella bufferten, och om det inte gör det, försöka hitta en
-    LysKOM-buffert att göra anropet i.
+    LysKOM-buffert att göra anropet i. [KANSKE FIXAT]
 
 
 ** OMBRYTNING
@@ -102,7 +162,16 @@ Att göra i elisp-klienten
 
 
 
-* FöRBäTTRINGAR
+* FÖRBÄTTRINGAR
+
+** SKRIVA INLÄGG
+
+    Skicka Brev skall inte lägga till författaren som mottagare om
+    författaren är medlem i någon av mottagarena.
+
+    C-u i borde fråga efter mottagare, och alltså fungera på samma
+    sätt som Skicka Brev efter ovanstående ändring.
+
 
 ** EDIT-BUFFERTEN
 
@@ -181,6 +250,10 @@ Att göra i elisp-klienten
 
 ** ANVäNDARVäNLIGHET
 
+    Man skulle kunna låta fönstrets titelrad indikera om man har
+    olästa i någon session. Det skulle vara praktiskt för oss som har
+    KOM igång ikonifierad i en separat Emacs större delen av tiden.
+
     Klickbara kommandon, vad nu det är.
 
     Det behövs dokumentation: fråmst användarhandledning, men det
@@ -198,6 +271,9 @@ Att göra i elisp-klienten
     presentationer.
 
     Sortera vilkaslistan efter t.ex. idletid.
+
+    Lista nyheter borde göra start of command innan den pratar om att
+    vänta på medlemskapslistan. Den gör rätt ibland, men inte alltid.
 
 
 
