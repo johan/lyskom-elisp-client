@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.4 1996-01-17 11:51:08 davidk Exp $
+;;;;; $Id: parse.el,v 38.5 1996-01-19 18:50:05 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.4 1996-01-17 11:51:08 davidk Exp $\n"))
+	      "$Id: parse.el,v 38.5 1996-01-19 18:50:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -591,6 +591,21 @@ Retuns the conf-stat. Args: CONF-NO."
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
      (cache-add-conf-stat conf-stat))
+    conf-stat))
+
+
+
+(defun lyskom-parse-uconf-stat (conf-no)
+  "Parse a uconf-stat, and add it to the cache.
+Returns the conf-stat. Args CONF-NO."
+  (let ((conf-stat (lyskom-create-uconf-stat conf-no
+					     (lyskom-parse-string)
+					     (lyskom-parse-conf-type)
+					     (lyskom-parse-num)
+					     (lyskom-parse-num))))
+    (lyskom-save-excursion
+     (set-buffer lyskom-buffer)
+     (cache-add-uconf-stat conf-stat))
     conf-stat))
 
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.7 1996-01-17 11:51:14 davidk Exp $
+;;;;; $Id: services.el,v 38.8 1996-01-19 18:50:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.7 1996-01-17 11:51:14 davidk Exp $\n"))
+	      "$Id: services.el,v 38.8 1996-01-19 18:50:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -402,13 +402,13 @@ protocol B."
   (cond
    ((lyskom-kom-queue-collect-p kom-queue)
     ;; Use oldstyle single big map. Sorry.
-    (lyskom-do-initiate-get-map kom-queue handler conf-no
-				first-local no-of-texts data))
+    (initiate-get-map kom-queue handler conf-no
+		      first-local no-of-texts data))
    (t
     ;; You win.
     (lyskom-collect-ignore-err kom-queue)
     (while (> no-of-texts 0)
-      (lyskom-do-initiate-get-map kom-queue nil conf-no
+      (initiate-get-map kom-queue nil conf-no
 				  first-local lyskom-fetch-map-nos data)
       (setq first-local (+ lyskom-fetch-map-nos first-local))
       (setq no-of-texts (- no-of-texts lyskom-fetch-map-nos)))
@@ -581,6 +581,24 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
       (lyskom-check-call kom-queue))))) ;This might call the handler.
 
 
+(defun initiate-get-uconf-stat (kom-queue handler conf-no &rest data)
+  "Get an uconf-sstat from LysKOM server.
+Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
+  (let ((conf-stat (cache-get-uconf-stat conf-no)))
+    (cond ((zerop conf-no)
+	   (lyskom-call-add kom-queue 'PARSED nil handler data)
+	   (lyskom-check-call kom-queue))
+	  ((null conf-stat)
+	   (lyskom-call kom-queue
+			lyskom-ref-no
+			handler data
+			'lyskom-parse-uconf-stat conf-no)
+	   (lyskom-send-packet kom-queue (lyskom-format-objects 78 conf-no)))
+	  (t
+	   (lyskom-call-add kom-queue 'PARSED conf-stat handler data)
+	   (lyskom-check-call kom-queue)))))
+
+
 (defun initiate-who-is-on (kom-queue handler &rest data)
   "Ask server who is on.
 Args: KOM-QUEUE HANDLER &rest DATA"
@@ -627,6 +645,14 @@ Args: KOM-QUEUE HANDLER &rest DATA."
   (lyskom-call kom-queue lyskom-ref-no handler data
 	       'lyskom-parse-num)
   (lyskom-send-packet kom-queue (lyskom-format-objects 56)))
+
+(defun initiate-set-last-read (kom-queue handler conf-no text-no &rest data)
+  "Tell the server to set the highest unread article in conference CONF-NO
+to TEXT-NO
+Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 77 conf-no text-no)))
+
 
 
 ;;; ================================================================

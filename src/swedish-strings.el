@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.9 1996-01-17 11:51:18 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.10 1996-01-19 18:50:15 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.9 1996-01-17 11:51:18 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.10 1996-01-19 18:50:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -646,6 +646,9 @@ Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
     ; From prioritize.el:
     (cannot-get-membership . "Kan ej h\344mta medlemsskap f\366r dig.")
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
+    (your-priorities . " Prioritet  M\366tesnamn
+----------------------------------------------------------------------------
+")
     (your-membship . "Ditt medlemsskap i olika KOM-m\366ten:
   Prio M\366tesnr M\366tesnamn\n")
     (prio-row . " %5#1d%5#2m  %#3M\n")
@@ -1124,7 +1127,6 @@ Cf. paragraph-start.")
 (defvar lyskom-prioritize-mode-map nil
   "Keymap used in lyskom-prioritize-mode.")
 
-
 (if lyskom-prioritize-mode-map
     nil
   (setq lyskom-prioritize-mode-map (make-keymap))
@@ -1141,6 +1143,8 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
   (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
 )
+  
+        
 
 ;;;; ================================================================
 ;;;; Tell phrases should really be configured with the default

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.17 1996-01-17 11:51:00 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.18 1996-01-19 18:50:01 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.17 1996-01-17 11:51:00 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.18 1996-01-19 18:50:01 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1133,7 +1133,7 @@ Args: FORMAT-STRING &rest ARGS"
      ;;  properties and the subject to the result list
      ;;
      ((= format-letter ?r)
-      (setq result (cond ((stringp arg) arg)
+      (setq result (cond ((stringp arg) (lyskom-button-transform-text arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error")))))
@@ -1256,10 +1256,14 @@ Used by the function iso-8859-1-to-swascii function.")
 (defun iso-8859-1-to-swascii (string)
   "Returns a string without characters with code > 127.
 What chars are converted to is controlled by the iso-8859-1-table."
-  (mapconcat
-   (function (lambda (char)
-	       (substring iso-8859-1-table char (1+ char))))
-   string ""))
+  (let ((tmp (copy-sequence string))
+        (i 0)
+        (len (length string)))
+    (while (< i len)
+      (aset tmp i (aref iso-8859-1-table
+                        (aref tmp i)))
+      (setq i (1+ i)))
+    tmp))
 
 
 ;;;; ================================================================
@@ -1786,9 +1790,9 @@ lyskom-fetched-texts are not fetched."
     found))
 
       
-(defun lyskom-read-num-range (low high &optional prompt show-range)
+(defun lyskom-read-num-range (low high &optional prompt show-range default)
   "Read a number from the minibuffer.
-Args: LOW HIGH &optional PROMPT SHOW-RANGE.
+Args: LOW HIGH &optional PROMPT SHOW-RANGE with default value DEFAULT.
 The read number must be within the range [LOW HIGH].
 If SHOW-RANGE is non-nil, the prompt will include the range for information
 to the user."
@@ -1801,7 +1805,8 @@ to the user."
 			      (lyskom-get-string 'give-a-number))
 			    (if show-range
 				(format "(%d-%d) " low high)
-			      "")))))
+			      ""))
+		    default)))
     number))
 
 
@@ -1820,17 +1825,14 @@ If quit is typed it executes lyskom-end-of-command."
     (while (not number)
       (setq quit t)
       (setq numstr
-	    (unwind-protect
-		(prog1
-		  (lyskom-read-string
-		   (concat (if prompt 
-			       prompt
-			     (lyskom-get-string 'give-a-number))
-			   (if numdefault 
-			       (format " (%d) " numdefault))))
-		  (setq quit nil))
-	      (if quit
-		  (lyskom-end-of-command))))
+	    (prog1
+		(lyskom-read-string
+		 (concat (if prompt 
+			     prompt
+			   (lyskom-get-string 'give-a-number))
+			 (if numdefault 
+			     (format " (%d) " numdefault))))
+	      (setq quit nil)))
       (cond ((and (string= numstr "") 
 		  numdefault)
 	     (setq number numdefault))
@@ -2246,7 +2248,6 @@ from the value of kom-tell-phrases-internal."
 (or (memq 'lyskom-unread-mode-line global-mode-string)
     (nconc global-mode-string (list 'lyskom-unread-mode-line)))
 (setq lyskom-unread-mode-line
-
       (list (list 'lyskom-sessions-with-unread 
 		  (let ((str (lyskom-get-string 'mode-line-unread)))
 		    (if kom-emacs-knows-iso-8859-1

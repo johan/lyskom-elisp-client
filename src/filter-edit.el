@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 38.3 1995-10-28 11:07:46 byers Exp $
+;;;;; $Id: filter-edit.el,v 38.4 1996-01-19 18:49:45 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,6 +33,10 @@
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
   "List of filters currently being edited in a filter editor")
+(defvar filter-edit-change-flag nil)
+(defvar filter-edit-filter-list nil)
+(defvar filter-edit-list-start nil)
+(defvar filter-edit-list-end nil)
 
 ;;;
 ;;; Utility functions
@@ -287,46 +291,48 @@ If NEG is non-nil, the first line will be negated."
 (defun lyskom-format-filter-pattern-insert (pat neg)
   "Format and insert the first pattern in PAT.
 If NEG is non-nil, format the negation."
-  (insert
-   (format (if lyskom-emacs19-p
-               "    %s %s %S"
-             (if (stringp (cdr (car pat)))
-                 "    %s %s \"%s\""
-               "    %s %s %s"))
-           (cdr (assoc (car (car pat)) 
-                       (if kom-emacs-knows-iso-8859-1
-                           lyskom-filter-what
-                         lyskom-swascii-filter-what)))
-           (if neg
-               " != "
-             " = ")
-           (cdr (car pat))))
-  (cond ((or (eq (car (car pat)) 'recipient-no)
-	     (eq (car (car pat)) 'author-no))
-	 (save-excursion
-	   (if (boundp 'lyskom-buffer)
-	       (set-buffer lyskom-buffer))
-	   (setq tmp (blocking-do 'get-conf-stat (cdr (car pat)))))
-	 (insert (format "   <%s>" (conf-stat->name tmp)))))
-  (insert "\n"))
+  (let (tmp)
+    (insert
+     (format (if lyskom-emacs19-p
+		 "    %s %s %S"
+	       (if (stringp (cdr (car pat)))
+		   "    %s %s \"%s\""
+		 "    %s %s %s"))
+	     (cdr (assoc (car (car pat)) 
+			 (if kom-emacs-knows-iso-8859-1
+			     lyskom-filter-what
+			   lyskom-swascii-filter-what)))
+	     (if neg
+		 " != "
+	       " = ")
+	     (cdr (car pat))))
+    (cond ((or (eq (car (car pat)) 'recipient-no)
+	       (eq (car (car pat)) 'author-no))
+	   (save-excursion
+	     (if (boundp 'lyskom-buffer)
+		 (set-buffer lyskom-buffer))
+	     (setq tmp (blocking-do 'get-conf-stat (cdr (car pat)))))
+	   (insert (format "   <%s>" (conf-stat->name tmp)))))
+    (insert "\n")))
 	
 
 
 (defun lyskom-filter-format-entry-header (filter &optional newline action)
   "Format the header of a filter entry. FILTER is the filter to format. 
 If NEWLINE is non-nil, insert a newline after the header."
-  (setq action (filter->attribute filter 'action)
-        permanent (null (filter->attribute filter 'expire)))
-  (insert 
-   (format "--- %s %s"
-           (cdr 
-            (assq action 
-                  (if kom-emacs-knows-iso-8859-1
-                      lyskom-filter-actions
-                    lyskom-swascii-filter-actions)))
-           (lyskom-get-string
-            (if permanent 'permanent 'temporary))))
-  (if newline (insert "\n")))
+  (let (permanent)
+    (setq action (filter->attribute filter 'action)
+	  permanent (null (filter->attribute filter 'expire)))
+    (insert 
+     (format "--- %s %s"
+	     (cdr 
+	      (assq action 
+		    (if kom-emacs-knows-iso-8859-1
+			lyskom-filter-actions
+		      lyskom-swascii-filter-actions)))
+	     (lyskom-get-string
+	      (if permanent 'permanent 'temporary))))
+    (if newline (insert "\n"))))
 
 
 ;;;========================================
@@ -500,7 +506,7 @@ If NEWLINE is non-nil, insert a newline after the header."
           (goto-char (filter-entry->end (elt filter-edit-currently-edited-filter-entry-list
                                              (1- (length filter-edit-currently-edited-filter-entry-list)))))
           (insert "\n"))
-      (goto-char list-end))
+      (goto-char filter-edit-list-end))
       
       (setq action (completing-read (lyskom-get-string 'filter-edit-filter-how)
                                     rev-actions
@@ -521,7 +527,7 @@ If NEWLINE is non-nil, insert a newline after the header."
           (setcdr (nthcdr (1- (length filter-edit-currently-edited-filter-entry-list)) filter-edit-currently-edited-filter-entry-list)
                   (cons entry nil))
         (setq filter-edit-currently-edited-filter-entry-list (cons entry nil)))
-      (setq change-flag t)
+      (setq filter-edit-change-flag t)
       (goto-char start)))
 
 
@@ -651,7 +657,7 @@ If NEWLINE is non-nil, insert a newline after the header."
                      (cons (point-marker)
                            (nthcdr lineno 
                                    (filter-entry->lines entry))))))
-    (setq change-flag t)))
+    (setq filter-edit-change-flag t)))
 
 
 
@@ -686,7 +692,7 @@ Only lines in the current entry will be deleted."
                         (set-filter->pattern 
                          filter
                          (cdr (filter->pattern filter)))
-                        (setq change-flag t))
+                        (setq filter-edit-change-flag t))
                     (progn
                       (setcdr (nthcdr (1- lineno) 
                                       (filter-entry->lines entry))
@@ -698,7 +704,7 @@ Only lines in the current entry will be deleted."
                               (nthcdr (1+ lineno)
                                       (filter->pattern
                                        (filter-entry->filter entry))))
-                      (setq change-flag t))))
+                      (setq filter-edit-change-flag t))))
               (lyskom-error (lyskom-get-string 'filter-edit-end-of-pattern)))))))))
 
 
@@ -724,10 +730,10 @@ If NOERROR is non-nil, return nil instead of signaling an error."
                         (1+ (filter-entry->end entry)))
          (cond ((= 0 entry-no)
                 (setq filter-edit-currently-edited-filter-entry-list (cdr filter-edit-currently-edited-filter-entry-list))
-                (setq change-flag t))
+                (setq filter-edit-change-flag t))
                (t (setcdr (nthcdr (1- entry-no) filter-edit-currently-edited-filter-entry-list)
                           (nthcdr (1+ entry-no) filter-edit-currently-edited-filter-entry-list))
-                  (setq change-flag t)))
+                  (setq filter-edit-change-flag t)))
          (if (= entry-no (length filter-edit-currently-edited-filter-entry-list))
              (progn (if (lyskom-filter-edit-prev-entry 1 t)
                         (setq arg 0)
@@ -738,7 +744,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   "Quit filter edit mode and ask to save changes (if any)"
   (interactive)
   (let ((save nil))
-    (if change-flag
+    (if filter-edit-change-flag
         (setq save (lyskom-j-or-n-p 
                     (lyskom-get-string 'filter-edit-save-p))))
     (if save
@@ -796,7 +802,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
             (append
              (setq kom-permanent-filter-list (nreverse xpermanent-list))
              (setq kom-session-filter-list (nreverse xtemporary-list))))))
-  (setq change-flag nil)
+  (setq filter-edit-change-flag nil)
   (lyskom-message (lyskom-get-string 'filter-edit-saving))
   (lyskom-save-options lyskom-buffer
                        (lyskom-get-string 'filter-edit-saving)
@@ -807,16 +813,16 @@ If NOERROR is non-nil, return nil instead of signaling an error."
 (defun lyskom-filter-edit-revert ()
   "Discard changes and restart editing"
   (interactive)
-  (if (or (not change-flag)
-          (and change-flag
+  (if (or (not filter-edit-change-flag)
+          (and filter-edit-change-flag
                (lyskom-j-or-n-p (lyskom-get-string 'filter-edit-restart-p))))
       (let ((buffer-read-only nil))
         (setq filter-edit-currently-edited-filter-entry-list nil)
-        (delete-region list-start list-end)
-        (goto-char list-start)
+        (delete-region filter-edit-list-start filter-edit-list-end)
+        (goto-char filter-edit-list-start)
         (insert "\n")
         (lyskom-format-filter-list (copy-filter-list lyskom-filter-list))
-        (setq change-flag nil)
+        (setq filter-edit-change-flag nil)
         (lyskom-filter-edit-beginning-of-list))))
 
 
@@ -833,7 +839,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
                              (not (filter->attribute 
                                    (filter-entry->filter entry)
                                    'expire)))
-      (setq change-flag t)
+      (setq filter-edit-change-flag t)
       (save-excursion
         (goto-char (filter-entry->start entry))
         (delete-region (point) (save-excursion (end-of-line) (point)))
@@ -859,7 +865,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
                            action-list)
                           action-list))))
            (new-action (or action (car action-list))))
-      (setq change-flag t)
+      (setq filter-edit-change-flag t)
       (set-filter->attribute (filter-entry->filter entry)
                              'action
                              (car new-action))
@@ -903,14 +909,14 @@ All key bindings:
   (interactive)
   (kill-all-local-variables)
   (make-local-variable 'filter-edit-currently-edited-filter-entry-list)
-  (make-local-variable 'change-flag)
-  (make-local-variable 'filter-list)
-  (make-local-variable 'list-start)
-  (make-local-variable 'list-end)
+  (make-local-variable 'filter-edit-change-flag)
+  (make-local-variable 'filter-edit-filter-list)
+  (make-local-variable 'filter-edit-list-start)
+  (make-local-variable 'filter-edit-list-end)
   (make-local-variable 'lyskom-buffer)
   (make-local-variable 'lyskom-edit-return-to-configuration)
   (setq buffer-read-only t)
-  (setq change-flag nil)
+  (setq filter-edit-change-flag nil)
   (buffer-flush-undo (current-buffer))
   (use-local-map lyskom-filter-edit-map)
   (setq mode-name "LysKOM Filter Edit")
@@ -936,13 +942,13 @@ All key bindings:
     (lyskom-filter-edit-mode)
     (setq lyskom-buffer buf)
     (let ((buffer-read-only nil))
-      (setq filter-list filters)
+      (setq filter-edit-filter-list filters)
       (insert (format (lyskom-get-string 'filter-edit-header)
                       server-name))
-      (setq list-start (point-marker))
+      (setq filter-edit-list-start (point-marker))
       (insert "\n")
-      (lyskom-format-filter-list (copy-filter-list filter-list))
-      (setq list-end (point-max-marker)))
+      (lyskom-format-filter-list (copy-filter-list filter-edit-filter-list))
+      (setq filter-edit-list-end (point-max-marker)))
     (setq lyskom-edit-return-to-configuration curwin)
     (lyskom-filter-edit-beginning-of-list)))
 

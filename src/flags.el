@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 38.4 1995-11-16 23:46:24 davidk Exp $
+;;;;; $Id: flags.el,v 38.5 1996-01-19 18:49:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 38.4 1995-11-16 23:46:24 davidk Exp $\n"))
+	      "$Id: flags.el,v 38.5 1996-01-19 18:49:51 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -318,6 +318,8 @@ If successful then set the buffer not-modified. Else print a warning."
 		  (setcdr (car pos) working)))))
 	  (++ r))
 
+	(setq lyskom-filter-list (append kom-permanent-filter-list
+					 kom-session-filter-list))
 	(setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
 	;; Remove not found user-areas
 	(let ((pos lyskom-other-clients-user-areas))

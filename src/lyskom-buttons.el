@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 38.3 1995-10-30 15:41:58 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 38.4 1996-01-19 18:49:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -75,15 +75,16 @@
 
 
 (defun lyskom-mouse-2 (pos window)
-  (let* ((action nil)
-         (arg nil))
-    (select-window window)
-    (goto-char pos)
-    (if (setq action (get-text-property pos 'mouse-2-action))
-        (funcall action pos (get-text-property pos 'mouse-2-arg)))))
-
-
-
+  (select-window window)
+  (goto-char pos)
+  (let* ((action (get-text-property pos 'mouse-2-action))
+         (arg (get-text-property pos 'mouse-2-arg))
+	 (buf (get-text-property pos 'mouse-2-buffer)))
+    (cond ((null action) nil)
+	  ((and buf (null (get-buffer buf)))
+	   (lyskom-message (lyskom-get-string 'no-such-buffer)))
+	  (t (and buf (set-buffer buf))
+	     (funcall action pos arg)))))
 
 
 (defun lyskom-button-transform-text (text)
@@ -103,13 +104,15 @@
 				    (match-beginning 1)
 				    (match-end 1))))
 	  (setq props
+
 		(append (list 'mouse-2-action
 			      (elt el 2)
 			      'mouse-2-arg 
 			      (elt el 3)
-			      ;; Experiment /davidk
-			      'lyskom-button-match-data
-			      (match-data))
+			      'lyskom-button-string
+                  (substring text (match-beginning 0) (match-end 0))
+			      'mouse-2-buffer
+			      lyskom-buffer)
 			(elt el 4))))
 	(add-text-properties (match-beginning 0)
 			     (match-end 0)
@@ -143,6 +146,7 @@
 				lyskom-buffer)
 			   lyskom-buffer
 			 (current-buffer)))
+		 'mouse-2-buffer lyskom-buffer
 		 'mouse-face 'kom-highlight-face)))
 	((eq type 'text) (list 'mouse-face 'kom-highlight-face
 			       'mouse-2-action 'lyskom-button-view-text
@@ -155,6 +159,7 @@
 					      lyskom-buffer)
 					 lyskom-buffer
 				       (current-buffer)))
+			       'mouse-2-buffer lyskom-buffer
 			       'face 'kom-active-face))
 	((eq type 'pers) 
 	 (let ((persno (if (and (boundp 'lyskom-buffer)
@@ -170,6 +175,7 @@
 			     (= (conf-stat->conf-no arg) persno)) 'kom-me-face)
 		       (t 'kom-active-face))
 		 'mouse-2-action 'lyskom-button-view-pres
+		 'mouse-2-buffer lyskom-buffer
 		 'mouse-2-arg 
 		 (cons (if (stringp arg) (string-to-int arg) arg)
 		       (if (and (boundp 'lyskom-buffer)
@@ -209,7 +215,7 @@
       (pop-to-buffer buf)
       (lyskom-start-of-command 'kom-button-goto-conf)
       (unwind-protect
-	  (lyskom-go-to-conf-handler arg)
+	  (lyskom-go-to-conf arg)
 	(lyskom-end-of-command)))))
 
 (defun lyskom-button-stat-conf (pos args)
@@ -249,13 +255,14 @@ The conferens is in the car of ARGS as either a conf-stat or an integer."
 ;;; Create buttons
 ;;;
 
-(defun lyskom-make-button (start end action arg)
+(defun lyskom-make-button (start end action buffer arg)
   "Create a text button from START to END with action ACTION and 
 argument ARG. If END is nil, assume (point-max)."
   (add-text-properties start
                        (or end (point-max))
                        (list 'mouse-face 'highlight
                              'mouse-2-action action
+			     'mouse-2-buffer buffer
                              'mouse-2-arg arg)))
 
 ;;;
@@ -263,7 +270,7 @@ argument ARG. If END is nil, assume (point-max)."
 ;;; Most LysKOM functions do this on their own and don't come here.
 ;;;
 
-(defun lyskom-insert-text-no (no)
+(defun lyskom-insert-text-no (no buffer)
   "Insert a text number and add a button to the text."
   (let ((start (point-max))            ; See lyskom-insert in lyskom-rest.el
         (string (format "%d" no)))
@@ -273,6 +280,7 @@ argument ARG. If END is nil, assume (point-max)."
                              (+ start (length string))
                              (list 'mouse-face 'highlight
                                    'mouse-2-action 'lyskom-button-view-text
+				   'mouse-2-buffer buffer
                                    'mouse-2-arg no)))))
 
 (defun lyskom-insert-button (string action arg)
@@ -287,7 +295,7 @@ Add a button with action ACTION and argument ARG."
                                    'mouse-2-arg arg)))))
 
 
-(defun lyskom-add-buttons (start end args)
+(defun lyskom-add-buttons (start end args buffer)
   "Add buttons to the buffer from START to END. ARGS is a list of pattern, action and argument"
   (if lyskom-emacs19-p
       (let (arg bstart bend
@@ -304,12 +312,13 @@ Add a button with action ACTION and argument ARG."
                                    bend
                                    (list 'mouse-face 'highlight
                                          'mouse-2-action (car (cdr arg))
+					 'mouse-2-buffer buffer
                                          'mouse-2-arg (car (cdr (cdr arg)))))
               (goto-char (match-end 0))))))))
                
 
 
-(defun lyskom-insert-with-button (string &rest args)
+(defun lyskom-insert-with-button (string buffer &rest args)
   "lyskom-insert STRING
 The first occurrence of TEXT will have a mouse-2 button with action
 ACTION and argument ARG added."
@@ -329,9 +338,10 @@ ACTION and argument ARG added."
                (+ start (match-end 0))
                (list 'mouse-face 'highlight
                      'mouse-2-action action
+		     'mouse-2-buffer buffer
                      'mouse-2-arg arg)))))))
 
-(defun lyskom-insert-before-prompt-with-buttons (string &rest args)
+(defun lyskom-insert-before-prompt-with-buttons (string buffer &rest args)
   "Insert STRING just before the prompt of if no prompt then just buffers.
 If prompt on screen then do the scroll if necessary.
 The strings buffered are printed before the prompt by lyskom-print-prompt."
@@ -368,6 +378,7 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
                    (+ start (match-end 0))
                    (list 'mouse-face 'highlight
                          'mouse-2-action action
+			 'mouse-2-buffer buffer
                          'mouse-2-arg arg))))))
       (goto-char (point-max))
       (if (and pv
@@ -381,7 +392,7 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
               (end-of-line (1- (window-height window)))))))))
 
 
-(defun insert-with-button (string text action arg)
+(defun insert-with-button (string text action arg buffer)
   "Insert STRING at point.
 The first occurrence of TEXT will have a mouse-2 button with action
 ACTION and argument ARG added."
@@ -396,6 +407,7 @@ ACTION and argument ARG added."
                (+ start (match-end 0))
                (list 'mouse-face 'highlight
                      'mouse-2-action action
+		     'mouse-2-buffer buffer
                      'mouse-2-arg arg)))))))
 
 
@@ -423,16 +435,14 @@ ACTION and argument ARG added."
 
 
 (defun lyskom-button-follow-url (pos arg)
-  (let* ((url (buffer-substring 
-	       (previous-single-property-change pos 'mouse-face)
-	       (next-single-property-change pos 'mouse-face)))
-	 protocol
-	 url-manager)
+  (let* ((url (get-text-property pos 'lyskom-button-string))
+         protocol
+         url-manager)
     (string-match ":" url)
     (setq protocol (substring url 0 (match-beginning 0)))
     (setq url-manager (lyskom-get-url-manager protocol))
     (if (null url-manager)
-	(lyskom-error "Can't find URL viewer"))
+        (lyskom-error "Can't find URL viewer"))
     (goto-char (point-max))
     (funcall (elt url-manager 3) url url-manager)))
 
@@ -500,7 +510,7 @@ ACTION and argument ARG added."
                    kom-netscape-command
                    "-remote" 
                    (format "openUrl(%s)" url))
-    lyskom-url-manager-starting manager))
+    (lyskom-url-manager-starting manager)))
 
 
 (defun lyskom-view-url-mosaic (url manager)
