@@ -25,7 +25,7 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    version 19.14 av XEmacs för att det skall fungera, men på grund av
    buggar i XEmacs 19.14 så kan LysKOM ibland dra förskräckligt mycket
    CPU, och fönsterhanteringen kan bli galen. Dessa buggar skall vara
-   fixade i 19.15 och 20.0.
+   fixade i 19.15 och 20.2.
 
 ** Man kan byta språk under körning. För tillfället finns engelska och
    svenska att tillgå, men om någon känner för att översätta klienten
@@ -38,6 +38,20 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    '(emacs default). Då kommer ftp, file och mailto-URLer att visas i
    Emacs och allt annat visas beroende på hur
    browse-url-browser-function är satt.
+
+** Elispklienten förstår numera ett antal felaktiga URLer.
+
+** Elispklienten kodar ajtomagiskt av HTML och enriched text in
+   inlägg. Inläggen måste vara markerade på ett speciellt för att det
+   skall fungera, och för HTML så måste man ha en rätt färsk version
+   av w3 installerad.
+
+** En ny hook, lyskom-send-text-hook har skapats. Se
+   variabeldokumentationen för detaljer. För att få automagisk
+   stavningskontroll (kräver ispell), gör (add-hook
+   'lyskom-send-text-hook 'lyskom-ispell-text) och se till att
+   kom-ispell-dictionary är satt vettigt (notera att
+   kom-ispell-dictionary sparas i servern.)
 
 ** Numera går det alldeles utmärkt att gå med och gå ur möten medan
    mötesprioriteringsbufferten är uppe. Den hålls synkroniserad med
@@ -115,6 +129,11 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 
 * Bugfixar
+
+** Funktionerna lyskom-send-message-resize-minibuffer och
+   lyskom-send-message-auto-fill är bra att stoppa in i
+   lyskom-minibuffer-send-message-setup-hook fungerar numera. 
+
 
 ** Koden för att läsa in textmappar har optimerats rejält. Det,
    tillsammans med den nya prefetchen gör att man kan läsa I]M, även
