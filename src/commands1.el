@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.30 1997-11-30 17:18:59 byers Exp $
+;;;;; $Id: commands1.el,v 44.31 1997-11-30 17:28:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.30 1997-11-30 17:18:59 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.31 1997-11-30 17:28:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1273,7 +1273,7 @@ Args: CONF-STAT MEMBERSHIP"
   "write a text."
   (interactive "P")
   (let ((recpt nil))
-    (cond ((listp arg) (setq recpt
+    (cond ((consp arg) (setq recpt
                          (lyskom-read-conf-no
                           (lyskom-get-string 'who-send-text-to)
                           '(all) nil nil t)))

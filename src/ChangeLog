@@ -1,3 +1,10 @@
+Sun Nov 30 12:20:49 1997  David Byers  <dbyers@atp>
+
+	* completing-read.el (lyskom-complete-string-advance): Fixade
+	buggen.
+
+	* commands1.el (kom-write-text): Använd consp, inte listp.
+
 Fri Nov 28 15:47:23 1997  David Byers  <dbyers@atp>
 
 	* commands2.el (lyskom-print-mark-summary-line): Ny funktion.
