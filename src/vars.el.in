@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.156 2001-11-27 10:41:05 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.157 2002-01-02 14:32:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.156 2001-11-27 10:41:05 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.157 2002-01-02 14:32:42 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1200,7 +1200,8 @@ each time ."
       (lyskom-button-view-pers-status-action . lyskom-button-view-pers-status)
       (lyskom-button-mail-action . lyskom-button-mail)
       (lyskom-button-send-message-action . lyskom-button-send-message))
-     nil)
+     ((kom-list-news . lyskom-button-goto-conf)
+      (kom-membership . lyskom-button-goto-conf)))
     (url 
      url-popup-title
      lyskom-button-open-url
@@ -1745,6 +1746,9 @@ is a list of vectors, where each vector specifies an item.
 
     kom-make-review-mark-as-read
     kom-make-review-not-mark-as-read
+    kom-set-presentation
+    kom-set-motd-text
+    kom-remove-presentation
     ))
 
 ;;; ================================================================

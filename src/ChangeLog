@@ -1,3 +1,30 @@
+2002-01-02  David Byers  <davby@ida.liu.se>
+
+	Work on bug 280
+	* commands1.el (kom-remove-presentation): New command.
+
+	* vars.el.in (lyskom-commands): Added kom-set-presentation and
+	kom-set-motd-text.
+
+	* swedish-strings.el (lyskom-command): Added kom-set-presentation
+	and kom-set-motd.
+
+	* commands1.el (kom-set-presentation): New command.
+	(kom-set-motd): New command
+	(lyskom-set-pres-or-motd-2): New function.
+
+	Various bugs
+	* vars.el.in (lyskom-button-actions): Set pers actions for
+	kom-list-news and kom-membership to the values they have for conf
+	(bug 293).
+
+	* commands2.el (kom-force-logout): Reindented.
+	(kom-force-logout): Handle negative answer from
+	lyskom-read-session-no (bug 224).
+
+	* commands1.el (lyskom-misc-infos-from-list): Made this function
+	nonrecursive (bug 345)
+
 2001-12-15  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-parse-headers): handle the brackets in

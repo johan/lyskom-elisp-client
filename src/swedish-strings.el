@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.192 2001-12-15 13:57:41 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.193 2002-01-02 14:32:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.192 2001-12-15 13:57:41 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.193 2002-01-02 14:32:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -302,6 +302,18 @@ du har läst klart allting. Kom tillbaks senare.
     (what-to-change-pres-you . "Vilket möte/person vill du ändra presentationen för (dig själv): ")
     (what-to-change-faq-you . "Vilket möte vill du ändra FAQ för: ")
     (who-to-put-motd-for . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
+
+    (what-to-set-pres-you . "Vilket möte/person vill du sätta presentationen för (dig själv): ")
+    (what-text-to-set-as-pres-no . "Vilket inlägg vill du ska vara den nya presentationen: ")
+    (what-to-set-motd-you . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
+    (what-text-to-set-as-motd-no . "Vilket inlägg vill du ska vara den nya lappen: ")
+    (conf-already-has-pres . "Mötet/personen har redan en presentation. Fortsätt ändå? ")
+    (conf-already-has-motd . "Mötet/personen har redan en lapp på dörren. Fortsätt ändå? ")
+    (setting-conf-pres . "Sätter presentation för %#1M till text %#2n...")
+    (setting-conf-motd . "Sätter lapp på dörren för %#1M till text %#2n...")
+
+    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från (dig själv): ")
+    (removing-pres-for-conf . "Tar bort presentation (text %#2n) från %#1M...")
 
     (cant-get-conf-stat . "Kan ej hämta mötesstatus för mötet.\n")
     (go-to-conf-p . "Gå till möte: ")
@@ -1755,6 +1767,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (kom-make-review-mark-as-read . "Återse läsmarkerar")
     (kom-make-review-not-mark-as-read . "Återse läsmarkerar inte")
+
+    (kom-set-presentation     . "Addera presentation")
+    (kom-remove-presentation  . "Ta bort presentation")
+    (kom-set-motd-text        . "Addera lapp på dörren")
     ))
 
 (lyskom-language-strings lyskom-help-strings sv

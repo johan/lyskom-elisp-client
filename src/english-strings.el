@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.160 2001-12-15 13:57:40 qha Exp $
+;;;;; $Id: english-strings.el,v 44.161 2002-01-02 14:32:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.160 2001-12-15 13:57:40 qha Exp $"))
+              "$Id: english-strings.el,v 44.161 2002-01-02 14:32:41 byers Exp $"))
 
 
 ;;; ================================================================
@@ -335,6 +335,18 @@ and you have finished reading. Please come back later.
     (what-to-change-pres-you . "Change presentation of whom/what (yourself): ")
     (what-to-change-faq-you . "Change FAQ for which conference: ")
     (who-to-put-motd-for . "Post notice on whom/what (yourself): ")
+
+    (what-to-set-pres-you . "Set presentation for whom/what (yourself): ")
+    (what-text-to-set-as-pres-no . "Which text do you want as the new presentation: ")
+    (what-to-set-motd-you . "Set notice on whom/what (yourself): ")
+    (what-text-to-set-as-motd-no . "Which text do you want as the new notice: ")
+    (conf-already-has-pres . "The conference/person already has a presentation. Continue anyway? ")
+    (conf-already-has-motd . "The conference/person already has a notice. Continue anyway? ")
+    (setting-conf-pres . "Setting presentation of %#1M to text %#2n...")
+    (setting-conf-motd . "Setting notice for %#1M to text %#2n...")
+
+    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från (dig själv): ")
+    (removing-pres-for-conf . "Tar bort presentation (text %#2n) från %#1M...")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
     (go-to-conf-p . "Go to conference: ")
@@ -1756,6 +1768,10 @@ You must become an active member of the conference to enter it.\n")
 
     (kom-make-review-mark-as-read . "Review marks as read")
     (kom-make-review-not-mark-as-read . "Review does not mark as read")
+
+    (kom-set-presentation     . "Add presentation")
+    (kom-remove-presentation  . "Remove presentation")
+    (kom-set-motd-text        . "Add notice")
     ))
 
 (lyskom-language-var lyskom-language-codes en
