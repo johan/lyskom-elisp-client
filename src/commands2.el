@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.186 2003-08-24 18:41:36 byers Exp $
+;;;;; $Id: commands2.el,v 44.187 2003-08-24 21:12:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.186 2003-08-24 18:41:36 byers Exp $\n"))
+              "$Id: commands2.el,v 44.187 2003-08-24 21:12:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1738,9 +1738,8 @@ You can log out any sessions logged on as users you are the
 supervisor of. With administrative rights you can log out any
 user."
   (interactive)
-  (let ((session (car-safe (lyskom-read-session-no
-                            (lyskom-get-string 'who-to-throw-out)
-                            nil nil t))))
+  (let ((session (car-safe (lyskom-read-session-no 'who-to-throw-out
+                                                   nil nil t))))
     (cond ((> session 0)
            (lyskom-format-insert 'throwing-out session)
            (lyskom-report-command-answer
