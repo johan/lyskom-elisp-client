@@ -1,8 +1,66 @@
+Thu Aug 22 08:50:20 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* startup.el (lyskom-clear-vars): Lade till lyskom-collate-table
+ 	som buffertlokal variabel i väntan på serveranrop för att hämta
+ 	tabellen.
+
+Wed Aug 21 09:52:47 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el, swedish-strings.el
+ 	(lyskom-missing-commands): Ny variabel
+	(lyskom-mode-map): Bind b till lyskom-previous-prefix. Bind bl
+ 	till kom-previous-lyskom.
+
+	* english-strings.el (lyskom-missing-strings): Ny konstant.
+	(lyskom-strings): Fixade felstavning av "report", lade till
+ 	prioritize-help, change-type-prompt, filter-which-text,
+ 	enter-conf, your-priorities och andra som saknades.
+
+
+	* completing-read.el (lyskom-complete-string-next-char): Använd
+ 	lyskom-unicase istf downcase.
+	(lyskom-completing-cache-completion): Dito.
+	(lyskom-completing-lookup-z-name): Dito.
+	(lyskom-completing-member): Dito.
+
+	* utilities.el (lyskom-collate-table): Ny variabel, tagen från
+ 	lyskomd-såsen. (lyskom-unicase): Ny funktion.
+ 	(lyskom-unicase-char): Ny funktion.
+
+Tue Aug 20 10:11:11 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* macros.el (match-string): Ny kompatibilitetsdefinition.
+	(map-keymap): Definiera med lyskom-provide-macro.
+	(lyskom-provide-function): Definiera med lyskom-provide.
+ 	(lyskom-provide-subst): Nytt makro, definierat med lyskom-provide.
+ 	(facep): Definiera med lyskom-provide-function. (internal-facep):
+ 	Definiera med lyskom-provide-subst. (lyskom-provide): Ny funktion.
+
+	* startup.el (lyskom): Lade in ;;;###autoload före.
+
+Mon Aug 19 15:10:50 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* vars.el.in (lyskom-view-text-hook): Ny variabel.
+
+	* view-text.el (lyskom-view-text): Anropa lyskom-view-text-hook
+
+	* macros.el (lyskom-provide-macro): Nytt makro
+	(lyskom-provide-function): Nytt makro
+	(byte-code-function-p): Definiera med lyskom-provide-macro
+	(save-selected-window): Definiera med lyskom-provide-macro
+
 Thu Aug 15 21:15:10 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Version 0.43.2 släppt.
 
 	* startup.el (lyskom): Återanvänd inte levande sessioner.
+
+Thu Aug 15 10:08:21 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-complete-string): Kanske lite
+ 	smartare expansion av strängar (mindre oönskade SPC i slutet av
+ 	expansionen.) Backa markören till position för första mismatch.
+ 	Expandera strängar med "Foofum X, Foobar (b) X" rätt.
 
 Wed Aug 14 17:03:17 1996  David Kågedal  <davidk@lysator.liu.se>
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 43.3 1996-08-15 19:20:46 davidk Exp $
+;;;;; $Id: startup.el,v 43.4 1996-08-22 06:57:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,13 +35,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 43.3 1996-08-15 19:20:46 davidk Exp $\n"))
+	      "$Id: startup.el,v 43.4 1996-08-22 06:57:55 byers Exp $\n"))
 
 
 ;;; ================================================================
 ;;;                         Start kom.
 
 
+;;;###autoload
 (defun lyskom (&optional host username password)
   "Start a LysKOM session.
 Optional arguments: HOST, USERNAME and PASSWORD.
@@ -668,6 +669,7 @@ to see, set of call."
     (make-local-variable 'lyskom-who-info-buffer)
     (make-local-variable 'lyskom-who-info-buffer-is-on)
     (make-local-variable 'lyskom-who-info-cache)
+    (make-local-variable 'lyskom-collate-table)
     (make-local-variable 'mode-line-conf-name)
     (setq lyskom-proc proc)
     (setq lyskom-pers-no pers-no)
@@ -680,6 +682,7 @@ to see, set of call."
     (setq lyskom-server-name server-name)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queues (make-vector 10 nil))
+    (setq lyskom-collate-table lyskom-default-collate-table)
     (let ((i 0))
       (while (< i 10)
 	(aset lyskom-output-queues i (lyskom-queue-create))
