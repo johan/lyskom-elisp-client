@@ -2,6 +2,8 @@
 
 ;; (provide 'fields)
 
+(require 'lyskom)
+
 (defun fields-new (string)
   (let ((fields nil))
     (while (string-match "\\[" string)
@@ -85,13 +87,26 @@
     (format "%d hits, %d misses (%d%%)   prefetch: %d/%d"
 	    hits misses hitrate phits pmisses)))
 
+
+(defvar max-pending-calls 0)
+(defadvice lyskom-check-output-queues (before stat activate)
+  (fields-replace cache-info-fields
+		  'pending-calls
+		  (int-to-string lyskom-number-of-pending-calls))
+  (when (> lyskom-number-of-pending-calls max-pending-calls)
+    (setq max-pending-calls lyskom-number-of-pending-calls)
+    (fields-replace cache-info-fields
+		    'max-pending-calls
+		    (int-to-string max-pending-calls))))
+
 (defvar cache-info-template "\
   text:       	       [text]
   text-stat:  	       [text-stat]
   conf-stat:  	       [conf-stat]
   uconf-stat: 	       [uconf-stat]
   pers-stat:           [pers-stat]
-  static-session-info: [static-session-info]")
+  static-session-info: [static-session-info]
+  pending calls:       [pending-calls]   (max [max-pending-calls])")
 
 (defvar cache-info-buffer nil)
 (defvar cache-info-fields nil)
@@ -102,6 +117,6 @@
   (erase-buffer)
   (setq cache-info-fields (fields-new cache-info-template))
   (let ((w (selected-window)))
-    (split-window nil 7)
+    (split-window nil 8)
     (set-window-buffer w cache-info-buffer)
     (select-window w)))
