@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 44.1 1996-10-06 05:18:16 davidk Exp $
+;;;;; $Id: filter.el,v 44.2 1996-10-11 11:16:32 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.1 1996-10-06 05:18:16 davidk Exp $\n"))
+	      "$Id: filter.el,v 44.2 1996-10-11 11:16:32 nisse Exp $\n"))
 
 
 ;;;============================================================
@@ -419,18 +419,12 @@ invalid-value until a filter action has been selected.")
      (rassoc
       (completing-read (lyskom-get-string 'filter-action)
                        (lyskom-reverse-pairs 
-                        (if kom-emacs-knows-iso-8859-1
-                            lyskom-filter-actions
-                          lyskom-swascii-filter-actions))
+                        lyskom-filter-actions)
                        nil
                        nil
-                       (cdr (car (if kom-emacs-knows-iso-8859-1
-                                     lyskom-filter-actions
-                                   lyskom-swascii-filter-actions)))
+                       (cdr (car lyskom-filter-actions))
                        t)
-      (if kom-emacs-knows-iso-8859-1
-          lyskom-filter-actions
-        lyskom-swascii-filter-actions)))))
+      lyskom-filter-actions))))
 
 
 (defun lyskom-filter-read-permanent ()
