@@ -1284,16 +1284,16 @@ till en text skrivs ut f|re alla kommentarer).
 Klienten litar blint p} det nummer man anger. Ingen kontroll g|rs att
 det st{mmer med det som st}r efter klamrarna.
 
-Man kan blanda rader av typ `M', `E', `K' och `F' i vilken ordning som helst,
-men det f}r inte finnas n}gra andra rader f|re {renderaden. (Inte ens
-en blankrad).
+Man kan blanda rader av typ `M', `E', `K' och `F' i vilken ordning som
+helst, men det f}r inte finnas n}gra andra rader f|re {renderaden. (Inte
+ens en blankrad).
 
 Om man vill skicka texten till ett annat m|te {n dem som st}r s} m}ste
 man allts} veta numret p} m|tet. Det kan man ta reda p} genom att byta
-buffert till LysKOM-bufferten (som normalt heter `*laila*' eller
-`*obel18*') och d{r skriva `lm' eller `lp' (`Lista m|ten' resp. `Lista
-personer'). De nummer som skrivs ut {r de m|tesnummer som skall
-anv{ndas.
+buffert till LysKOM-bufferten (som normalt heter `*kom*' om du {r kopplad
+mot lysators LysKOM-server) och d{r skriva `lm' eller `lp' (`Lista m|ten'
+resp. `Lista personer'). De nummer som skrivs ut {r de m|tesnummer
+som skall anv{ndas.
 
 Efter alla `M', `E', `K' och `F'-rader skall det komma en {renderad. Den skall
 se ut s} h{r:
@@ -1318,8 +1318,8 @@ Om du n{r du skall skriva [rendet ser stavfel i texten trycker du `C-g' s}
 kommer du tillbaka i editerings-mode.
 
 Om man }ngrar sig och vill sl{nga texten man h}ller p} att skriva
-trycker man `C-c k'. D} tas bufferten bort, och man kommer tillbaks till
-LysKOM-bufferten.
+trycker man `C-c C-k' eller `C-c k'. D} tas bufferten bort, och man kommer
+tillbaks till LysKOM-bufferten.
 
 Skulle du vilja ha med delar av den text du kommenterar i ditt eget
 inl{gg kan du trycka `C-c i k' och d} kommer hela den kommenterade
@@ -1327,11 +1327,12 @@ texten att l{ggas in d{r du var. Vill du i st{llet plocka in n}gon
 annan text s} skall du ist{llet trycka `C-c i' f|ljt av textnumret p}
 den text du vill ha med.
 
-Om du bara vill titta p} den text du kommenterar (t ex om du inte har
-satt flaggan `kom-write-texts-in-window', se nedan), men inte ha in den i
-inl{ggsbufferten s} kan du trycka `C-c } k' s} delas sk{rmen i tv}
-f|nster och den kommenterade texten visas i det andra f|nstret.  F|r
-att spara plats s} visas endast texten och inte texthuvudet.
+Om du bara vill titta p} den text du kommenterar eller fotnoterar
+(t ex om du inte har satt flaggan `kom-write-texts-in-window', se
+nedan), men inte ha in den i inl{ggsbufferten s} kan du trycka `C-c
+} k' s} delas sk{rmen i tv} f|nster och den kommenterade eller
+fotnoterade texten visas i det andra f|nstret.  F|r att spara plats
+s} visas endast texten och inte texthuvudet.
 
 Om du vill l{gga till n}gon extra mottagare eller kopiemottagare till
 texten trycker du `C-c a m' resp. `C-c a k' och s} f}r du ange vem eller
@@ -1369,8 +1370,11 @@ funktionen `[ndra variabler'. Man kan ocks} anv{nda emacsfunktionen
 `M-X set-variable' men d} f}r man se till att spara variabelns
 v{rde efter}t.
 
+De flaggor som sparas i `common'-delen av user-arean {r markerade med
+`common', de som per default sparas i `elisp'-delen med `elisp'.
 
-`kom-page-before-command'		`nil'     
+
+`kom-page-before-command'		`nil' (`elisp')     
      
      
      Om denna flagga {r icke-nil kommer klienten att g|ra en 
@@ -1379,7 +1383,7 @@ v{rde efter}t.
      sk{rmen.
      
      
-`kom-write-texts-in-window'		`nil'     
+`kom-write-texts-in-window'		`nil' (`elisp')     
      
      
      Om nil s} anv{nds LysKOM-f|nstret {ven som edit-f|nster. Om det {r en
@@ -1388,14 +1392,14 @@ v{rde efter}t.
      annat f|nster eller skapa ett nytt f|nster f|r denna editering.
      
      
-`kom-created-texts-are-read'		`t'     
+`kom-created-texts-are-read'		`t' (`common')     
      
      
      Om icke-nil s} markeras alla texter som skapas av anv{ndaren som
      l{sta. 
      
      
-`kom-reading-puts-comments-in-pointers-last'		`t'     
+`kom-reading-puts-comments-in-pointers-last'	`t' (`common')     
      
      
      Om nil s} skrivs rader av typen
@@ -1410,7 +1414,7 @@ v{rde efter}t.
      anv{ndaren g}r in i ett m|te.
      
      
-`kom-higher-priority-breaks'		`nil'     
+`kom-higher-priority-breaks'		`nil' (`elisp')     
      
      
      Denna flagga avg|r hur ett nytt inl{gg i ett m|te med h|gre
@@ -1431,7 +1435,7 @@ v{rde efter}t.
           kommentarkedjan. 
      
      
-`kom-default-mark'		`100'     
+`kom-default-mark'		`100' (`common')     
      
      
      Om denna flagga {r icke-nil s} m}ste den vara ett nummer mellan 1
@@ -1439,14 +1443,14 @@ v{rde efter}t.
      d{remot s} fr}gar klienten efter vilken markering vi skall ha.
      
      
-`kom-presence-messages'		`t'     
+`kom-presence-messages'		`t' (`common')     
      
      
      Om icke-nil s} skriver klienten ut fortl|pande rapporter om vilka
      som g}r in i och ut ur LysKOM.
      
      
-`kom-presence-messages-in-buffer'		`presence'     
+`kom-presence-messages-in-buffer'		`presence' (`elisp')     
      
      
      Denna flagga reglerar vilka av LysKOMs meddelanden som skrivs in i
@@ -1466,7 +1470,7 @@ v{rde efter}t.
           som {r i samma m|te som du g|r.
      
      
-`kom-show-where-and-what'		`t'     
+`kom-show-where-and-what'		`t' (`elisp')     
      
      
      Om icke-nil s} skriver klienten ut vilken maskin varje anv{ndare
@@ -1474,12 +1478,19 @@ v{rde efter}t.
      inloggade' ges. (*Note Vilka {r inloggade: Lista.)
      
      
-`kom-read-depth-first'		`t'     
+`kom-read-depth-first'		`t' (`common')     
      
      
      Om icke-nil s} l{ses kommentarer och fotnoter f|re nya inl{gg.
      Detta g|r att kommentartr{d s|ks av djup-f|rst. Om flaggan s{tts
      till nil s} g|rs s|kningen bredd-f|rst.
+     
+     
+`kom-dashed-lines'			`t' (`common')     
+     
+     
+     Om denna variabel {r icke-`nil' s} ramar klienten in 
+     alla inl{gg med l}nga rader av `-'.
      
      
 `kom-emacs-knows-iso-8859-1'		`nil'     
@@ -1508,7 +1519,12 @@ kan anta ett av flera f|rdefinierade v{rden, utan kan anta n{stan
 vilka v{rden som helst. Variabler i emacs s{tts p} samma s{tt och
 sparas p} samma s{tt som flaggor.
 
-`kom-mercial'				Default: `"V{ntar.'"     
+De variabler som sparas i `common'-delen av user-arean {r markerade
+med `common', de som per default sparas i `elisp'-delen med `elisp'.
+
+     
+     
+`kom-mercial'				Default: `"V{ntar.'" (`elisp')     
      
      
      Denna variabel inneh}ller den str{ng som skrivs ut varje g}ng man
@@ -1516,7 +1532,7 @@ sparas p} samma s{tt som flaggor.
      humor och kvickhet i anv{ndandet av den.
      
      
-`kom-membership-default-priority'	Default: `100'     
+`kom-membership-default-priority'	Default: `100' (`elisp')     
      
      
      Defaultprioritet som anv{nds n{r man blir medlem i ett m|te. Om
@@ -1524,7 +1540,7 @@ sparas p} samma s{tt som flaggor.
      prioritet varje g}ng ist{llet.
      
      
-`kom-membership-default-placement'	Default: `last'     
+`kom-membership-default-placement'	Default: `last' (`elisp')     
      
      
      Den h{r variabeln styr var m|ten som man blir medlem i placeras i
@@ -1544,28 +1560,35 @@ sparas p} samma s{tt som flaggor.
      
      
      
-`lyskom-prompt-text'			Default: `" - "'     
+`lyskom-header-separator'		Default: `"--- Skriv texten nedanf|r denna rad ---"' (`elisp')     
+     
+     
+     Detta {r den str{ng som skilljer textern fr}n huvudet
+     n{r man skriver texter.
+     
+     
+`lyskom-prompt-text'			Default: `" - "' (`elisp')     
      
      
      Prompten slutar med texten i denna variabel n{r LysKOM {r redo att
      ta emot kommandon.
      
      
-`lyskom-prompt-executing-default-command-text'Default: `"."'     
+`lyskom-prompt-executing-default-command-text'Default: `"."' (`elisp')     
      
      
      N{r man ger defaultkommandot med SPC, LFP eller RET
      s} bytas slutet av prompten till denna text.
      
      
-`kom-who-buffer-size-when-displaying'	Default: `10'     
+`kom-who-buffer-size-when-displaying'	Default: `10' (elisp)     
      
      
      Antalet rader som Vilkabufferten skall visas med n{r man ger kommandot
      `Visa vilkalistan'.
      
      
-`kom-do-when-starting'			Default: `nil'     
+`kom-do-when-starting'			Default: `nil' (`elisp')     
      
      
      Denna variabel inneh}ller kommandon som skall utf|ras automatiskt
@@ -1583,7 +1606,7 @@ sparas p} samma s{tt som flaggor.
      
      
      
-`kom-do-when-done'			Default: `("}am" "t")'     
+`kom-do-when-done'			Default: `("}am" "t")' (`elisp')     
      
      
      Denna variabel inneh}ller kommandon som utf|rs d} man har l{st
@@ -1621,6 +1644,32 @@ sparas p} samma s{tt som flaggor.
      
      Elementen m}ste vara kommandon i LysKOM, dvs de m}ste kunna tolkas
      som tangentbordsmakron eller som emacs-funktioner.
+     
+     
+lyskom-fetch-map-nos			Default: `50' (`elisp')     
+     
+     
+     Anger hur stora mappar vi skall h{mta i taget.
+     
+     
+lyskom-prefetch-conf-tresh		Default: `50' (`elisp')     
+     
+     
+     Avg|r om vi skall fr}ga efter fler m|ten fr}n servern.
+     Om de ol{sta inl{ggen i de hittills h{mtade m|tena 
+     {r f{rre {n detta v{rde s} h{mtar vi en bunt till.
+     
+     
+lyskom-prefetch-confs			Default: `10' (`elisp')     
+     
+     
+     Avg|r hur m}nga m|ten vi skall fr}ga efter i taget.
+     
+     
+lyskom-prefetch-texts			Default: `3' (`elisp')     
+     
+     
+     Avg|r hur m}nga texter som skall h{mtas i f|rv{g.
 
 
 
@@ -1636,6 +1685,9 @@ speciell f|reteelse som elisp-klienten g|r. Om hooken {r satt s}
 exekveras funktionen som den {r satt till n{r detta h{nder. F|r
 n{rmare information om vad en hook {r kan du l{sa emacs-
 dokumentationen. (*Note Hookar: (elisp)Hooks.)
+
+De hookar som sparas i `common'-delen av user-arean {r markerade med
+`common', de som per default sparas i `elisp'-delen med `elisp'.
 
      
 `lyskom-init-hook'     
@@ -1654,7 +1706,7 @@ dokumentationen. (*Note Hookar: (elisp)Hooks.)
      bufferten.
      
      
-`lyskom-new-text-hook'     
+`lyskom-new-text-hook' (`elisp')     
      
      
      Denna anropas n{r klienten f}r meddelande om att en ny text har
@@ -1670,7 +1722,7 @@ dokumentationen. (*Note Hookar: (elisp)Hooks.)
      till text-status f|r den text som f|rorsakar att hooken k|rs.
      
      
-`lyskom-who-info-has-changed-hook'     
+`lyskom-who-info-has-changed-hook' (`elisp')     
      
      
      Denna anropas varje g}ng n}gonting i vilkabufferten har {ndrats.
@@ -1694,6 +1746,10 @@ dokumentationen. (*Note Hookar: (elisp)Hooks.)
      
      Detta exempel f|ruts{tter dock att du har en swedish-mode
      definierad.
+     
+     Om du binder om tangenter till att generera andra bokst{ver i 
+     denna mode s} kommer de inte bara att g{lla i edit-bufferten
+     utan {ven i minibufferten n{r du {ndrar {rendet.
      
      
 `lyskom-edit-mode-hook'     
@@ -1950,6 +2006,7 @@ Variabelindex
 * Menu:
 
 * kom-created-texts-are-read: Flaggor.
+* kom-dashed-lines: Flaggor.
 * kom-default-mark: Flaggor.
 * kom-do-when-done: Variabler.
 * kom-do-when-starting: Variabler.
@@ -1972,9 +2029,14 @@ Variabelindex
 * KOMSERVER: Environmentvariabler.
 * lyskom-edit-mode-hook: Hookar.
 * lyskom-edit-mode-mode-hook: Hookar.
+* lyskom-fetch-map-nos: Variabler.
+* lyskom-header-separator: Variabler.
 * lyskom-init-hook: Hookar.
 * lyskom-mode-hook: Hookar.
 * lyskom-new-text-hook: Hookar.
+* lyskom-prefetch-conf-tresh: Variabler.
+* lyskom-prefetch-confs: Variabler.
+* lyskom-prefetch-texts: Variabler.
 * lyskom-prioritize-mode-hook: Hookar.
 * lyskom-prompt-executing-default-command-text: Variabler.
 * lyskom-prompt-text: Variabler.
@@ -2020,16 +2082,16 @@ Node: Prioritera32631
 Node: [ndra inst{llningarna34453
 Node: Namn35874
 Node: Skriva inl{gg36838
-Node: Vilkabufferten40904
-Node: Flaggor41248
-Node: Variabler46287
-Node: Hookar50689
-Node: Environmentvariabler53789
-Node: Buggrapporter54657
-Node: Filer55153
-Node: Happy hacking55379
-Node: Index55512
-Node: Tangenterna57731
-Node: Variabelindex58708
+Node: Vilkabufferten40980
+Node: Flaggor41324
+Node: Variabler46768
+Node: Hookar52252
+Node: Environmentvariabler55701
+Node: Buggrapporter56569
+Node: Filer57065
+Node: Happy hacking57291
+Node: Index57424
+Node: Tangenterna59643
+Node: Variabelindex60620
 
 End tag table
