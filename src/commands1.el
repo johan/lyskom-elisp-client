@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.18 1997-03-08 02:53:17 davidk Exp $
+;;;;; $Id: commands1.el,v 44.19 1997-04-15 22:31:04 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.18 1997-03-08 02:53:17 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.19 1997-04-15 22:31:04 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1310,8 +1310,10 @@ If you are not member in the conference it will be flagged with an asterisk."
 ;;; [ndrad av: Linus Tolke
 
 (def-kom-command kom-mark-text (text-no-arg)
-  "Mark a text. If the argument TEXT-NO-ARG is non-nil, the user has used
-a prefix command argument."
+  "Mark a text.
+If the argument TEXT-NO-ARG is non-nil, the user has used a prefix
+command argument. If kom-defaul-mark is a number it is used as the
+mark. If it is nil the user is prompted for the mark to use."
   (interactive "P")
   (lyskom-mark-text text-no-arg (lyskom-get-string 'text-to-mark) 1))
 
