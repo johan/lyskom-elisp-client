@@ -1,3 +1,8 @@
+Wed Nov  4 22:35:51 1992  Linus Tolke Y  (linus@robin)
+
+	* internal.el (lyskom-process-send-string): Errors are logged in
+	  the lyskom-debug-communications-to-buffer.
+
 Sun Sep  6 23:17:50 1992  Per Cederqvist  (ceder@robert)
 
 	* ChangeLog: The last part of this file was lost between
