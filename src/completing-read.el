@@ -7,6 +7,11 @@
 ;;;; or a person name with completion and other help.
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: completing-read.el,v 35.1 1991-08-21 15:44:58 linus Exp $\n"))
+
+
 ;;; Author: Linus Tolke
 
 

@@ -6,6 +6,11 @@
 ;;;; This file contains the code for some high level commands.
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: commands2.el,v 35.1 1991-08-21 15:44:56 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;              Lista medlemsskap - List membership
 

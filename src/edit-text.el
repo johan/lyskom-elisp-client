@@ -8,6 +8,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: edit-text.el,v 35.1 1991-08-21 15:44:59 linus Exp $\n"))
+
+
 ;;;; ================================================================
 
 

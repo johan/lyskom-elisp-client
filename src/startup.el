@@ -9,6 +9,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: startup.el,v 35.1 1991-08-21 15:45:18 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                         Start kom.
 

@@ -8,6 +8,11 @@
 ;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: view-text.el,v 35.1 1991-08-21 15:45:23 linus Exp $\n"))
+
+
 (defun lyskom-view-text (queue text-no &optional mark-as-read
 			       follow-comments conf-stat priority
 			       build-review-tree)

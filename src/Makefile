@@ -1,4 +1,8 @@
-# Senast {ndrad Mon May 13 20:50:35 1991
+# $Id: Makefile,v 35.1 1991-08-21 15:44:47 linus Exp $
+# $Log: Makefile,v $
+# Revision 35.1  1991-08-21 15:44:47  linus
+# Lagt till lyskom-clientversion-long
+#
 
 RM = /usr/gnu/bin/rm -vf
 EMACS-BATCH = emacs -batch -l /usr/local/lib/elisp/bytecomp

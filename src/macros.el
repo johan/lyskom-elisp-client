@@ -7,6 +7,10 @@
 ;;;; be compiled.
 ;;;;
 
+(defconst lyskom-clientversion-long "$Id: macros.el,v 35.1 1991-08-21 15:45:09 linus Exp $\n"
+  "Version for every file in the client.")
+
+
 
 ;;; lyskom-traverse - traverse a sequence.
 

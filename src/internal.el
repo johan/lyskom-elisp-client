@@ -11,6 +11,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: internal.el,v 35.1 1991-08-21 15:45:02 linus Exp $\n"))
+
+
 ;;;; ================================================================
 ;;;;                          Variables.
 

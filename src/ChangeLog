@@ -1,3 +1,8 @@
+Wed Aug 21 17:43:13 1991  Linus Tolke Y  (linus at lysator)
+
+	* Alla filer (lyskom-clientversion-long): Lagt till rcs
+	 identifierare.
+
 Wed Aug 21 02:15:04 1991  Linus Tolke Y  (linus at lysator)
 
 	* Distribuerat version 0.34		02:10
