@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 43.3 1996-08-29 20:52:29 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 44.0 1996-08-30 14:45:57 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
