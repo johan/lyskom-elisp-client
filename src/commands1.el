@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.136 2002-04-14 15:15:50 byers Exp $
+;;;;; $Id: commands1.el,v 44.137 2002-04-14 21:39:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.136 2002-04-14 15:15:50 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.137 2002-04-14 21:39:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1044,7 +1044,7 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 		 (not (and (= (length data) 2)
 			   (or (= lyskom-pers-no (conf-stat->conf-no
 						  (car data)))
-			       (= lyskom-pers-no (conf-stat->conf-no
+x			       (= lyskom-pers-no (conf-stat->conf-no
 						  (car (cdr data))))))))
 	    (let ((new-data nil))
 	      (while data
@@ -1085,7 +1085,7 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 	    (setq data (cdr data)))
 	  ;; Add the user to the list of recipients if he isn't a member in
 	  ;; any of the recipients.
-	  (if (not member)
+	  (when (not member)
 	      (setq recver (append recver
 				   (list (cons 'recpt lyskom-pers-no)))))
 	  (lyskom-edit-text lyskom-proc 

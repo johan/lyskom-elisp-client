@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.1 2002-04-13 21:08:00 byers Exp $
+;;;;; $Id: faqs.el,v 44.2 2002-04-14 21:39:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.1 2002-04-13 21:08:00 byers Exp $\n"))
+              "$Id: faqs.el,v 44.2 2002-04-14 21:39:54 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless (lyskom-faq-is-read conf-no text-no)
@@ -371,6 +371,22 @@ The text to add is passed in TEXT-NO"
                       (mapcar (lambda (aux)
                                 (string-to-int (aux-item->data aux)))
                               (lyskom-get-aux-item aux-list 14)))))
+
+    ;; Filter out FAQs that don't exist
+    (let ((collector (make-collector)))
+      (lyskom-traverse faq faq-list
+        (initiate-get-text-stat 'background 
+                                (lambda (text-stat faq conf-no collector)
+                                  (if text-stat
+                                      (collector-push faq collector)
+                                    (lyskom-register-read-faq conf-no faq)))
+                                faq
+                                faq
+                                conf-no
+                                collector))
+      (lyskom-wait-queue 'background)
+      (setq faq-list (nreverse (collector->value collector))))
+
     (when faq-list
       (when kom-auto-list-faqs
         (lyskom-format-insert 'there-are-faqs (length faq-list) conf-no)
