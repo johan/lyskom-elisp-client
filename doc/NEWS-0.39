@@ -1,0 +1,228 @@
+Nu finns version 0.39 av elispklienten till allmänt beskådande. Vi har
+inte fått med alla finesser eller alla fixar vi ville, men en del hann
+det i alla fall bli. Det verkar som om klienten är mer stabil än
+0.38.2, men vi garanterar ingenting.
+
+Det finns en diger lista på sådant som skall vara fixat till nästa
+version av klienten, både i form av bugfixar, omskrivningar och
+features. 
+
+
+* Inget stöd för Lucid Emacs, XEmacs eller GNU Emacs 18
+
+** Stöd för åtminstone XEmacs kan komma att läggas till i en senare
+   version av elispklienten. Stöd för GNU Emacs 18 är förmodligen borta
+   för gott.
+
+
+* Bugfixar
+
+** Många rapporterade och orapporterade buggar har rättats.
+
+
+* Antibugfixar
+
+** Nya spännande buggar har införts.
+
+
+* Interna omskrivningar
+
+** Anrop till servern inte längre asynkrona
+   Detta innebär att Emacs låser sig när man utför ett interaktivt
+   kommando i elispklienten. Denna förändring har förenklat
+   elispklientens interna struktur avsevärt. 
+
+** Loginfasen är helt omskriven
+
+** "Symbols function definition is void: nil" skall inte inträffa
+   längre. Fixen är långt ifrån perfekt men verkar fungera för det
+   mesta. 
+
+** Bättre hantering av C-g. Numera fungerar det nästan bra, men det
+   kan orsaka fel i parsning av kommunikation från servern.
+
+** Smartare parsning gör att inloggning och att gå med i möten går
+   mycket snabbare.
+
+** Flera utskriftsrutiner klarar 8 teckens inläggsnummer. Det finns
+   nog några kvar som inte klarar det snyggt.
+
+** Funktioner som läser in sessionsnummer från användaren klarar att
+   läsa in namnet på den person som är inloggad på sessionen också.
+
+** De flesta kommandon definieras på ett enhetligt sätt.
+
+
+
+* Stöd för färger och mus
+
+** Vissa typer av objekt skrivs ut med en egen färg. kom-active-face
+   är default för sådant som går att klicka på. kom-url-face används
+   för URLer i texter och meddelanden. kom-me-face används för den
+   egna personen. kom-highlight-face används när musen är ovanför
+   någonting som går att klicka på. kom-text-face används för inlägg
+   och meddenanden. kom-subject-face används för ärenderaden.
+   kom-text-no-face används för textnummer kom-presence-face används
+   för in- och utloggningsmeddelanden i bufferten.
+
+** Det går att klicka med mittenknappen på mötesnamn, mötesnummer,
+   textnummer, personer, personnummer, URLer och speciella texter.
+
+*** URLer kan visas på ett stort antal sätt. Se dokumentationen för
+    kom-url-managers och kom-url-viewer-preferences.
+
+*** Parsning av textmassan styrs av variabeln lyskom-text-buttons.
+    Notera att formatet på denna lista kan ändras till nästa version
+    av klienten.
+
+*** Vad som händer vid mucklick på en aktiv yta styrs av variabeln
+    lyskom-button-actions. 
+
+** JySKoms speciella "textknappar" fungerar.
+
+** Högerknapp på en aktiv yta ger en meny med vanliga operationer.
+
+** M-f, M-b hoppar mellan aktiva ytor. * simulerar musklick.
+
+
+* Fjärrkontroll
+
+** Det går att fjärrkontrollera en session. Se kommandona som börjar
+   med "Fjärrkontrollera" samt variabeln kom-remote-controllers och
+   kom-remote-control. 
+
+
+* Telefonsvarare
+
+** Det går att slå på automatiskt svar på personliga meddelanden. Se
+   kommandona "Automatsvar", "Ändra svarsmeddelande", "Lista
+   meddelanden" och "Radera meddelanden".
+
+
+* Filtrering av inlägg
+
+** Man kan filtrera inlägg enligt ett antal kriterier. Pröva "Ändra
+   filter" samt "Superhoppa". Filter skrivs om till lisp-funktioner
+   som bytekompileras för att få maximal prestanda.
+
+
+* Några mindra finnesser tillagda
+
+** Sända meddelande har defaultmottagare. Default är att mottagaren
+   skall vara avsändaren av det senast mottagna personliga eller
+   almänna meddelandet eller mottagaren av det senast mottagna
+   gruppmeddelandet. Beteendet styrs av variabeln
+   kom-default-message-recipient.
+
+** Pip vid mottagande av asynkrona meddenalden kontrolleras på ett
+   nytt sätt. kom-ding-on-common-messages styr pip vid mottagande av
+   allmänna meddelanden. kom-ding-on-personal-messages styr pip vid
+   mottagande av personliga meddelanden. kom-ding-on-group-messages
+   styr pip vid mottagande av gruppmeddelanden.
+   kom-ding-on-priority-break styr pip när ett inlägg eller möte med
+   högre prioritet dyker upp. Variablerna kan sättas till t, nil, en
+   siffra eller en sträng. t betyder pip en gång, nil betyder pip
+   inte, en siffra anger antalet pip och en sträng används som
+   argument till programmet vars namn finns i kom-audio-player (per
+   default "audioplay").
+
+** Status person visar antal markerade inlägg för den egna personen. 
+
+** Anonyma avsändare till inlägg hanteras i utskrifter.
+
+** Vid inloggning får man completion på kända LysKOM-servrar. Se
+   variabeln lyskom-server-aliases.
+
+** Endast accepterar prefixargument.
+
+** Utskrift av tid kan skriva ut "idag" och "igår" för relevanta
+   datum. Funktioner kontrolleras av variabeln
+   lyskom-print-complex-dates. Inga garantier av korrekt funktion ges
+   kring midnatt, månadsskifte eller årsskifte.
+
+** Då man skriver inlägg så ställs markören i ärenderaden om inget
+   ärende finns. Man får ingen fråga om ärende när man skickar in
+   texten. 
+
+** Variabeln lyskom-session-priority innehåller sessionens
+   läsnivå. Inlägg från möten med lägre prioritet kommer inte att
+   visas. Se kommandot "Sätt Läsnivå".
+
+** Asynkrona meddelanden visas inte i minibufferten under
+   lösenordsinmatning.
+
+** Hooken kom-login-hook körs en gång precis efter att lyskom.el har
+   laddats in.
+
+
+* Förändrad hantering av personliga meddelanden
+
+** Personliga meddelanden skickas numera genom en lista av hanterare
+   som kan välja att skicka meddelandet vidare, hantera det och
+   förändra det. Se funktionen lyskom-add-personal-message-handler och
+   variabeln lyskom-personal-message-handlers för mer information.
+
+** Hantering av ^I^N^F^O är omgjord till en hanterare.
+
+** Hanterare för fjärrkontroll och telefonsvarare inlagda. 
+
+
+* Nya kommandon
+
+** Ändra mötestyp tillåter att man ändrar flaggorna på ett möte. 
+
+** Visa user-arean visar användarens user-area. Mest till nytta för
+   klienthackare. 
+
+** Sätt läsnivå sätter läsnivån på sessionen.
+
+** Kommandon som har med fjärrkontroll att göra
+
+*** Fjärrkontrollera lista meddelanden listar meddelanden samlade i en
+    annan session
+ 
+*** Fjärrkontrollera avsluta avslutar en annan session.
+
+*** Fjärrkontrollera automatsvar kontrollerar automatsvar i en annan
+    session. 
+
+*** Fjärrkontrollera ändra svarsmeddelande ändrar svarsmeddelande i
+    en annan session.
+
+*** Fjärrkontrollera radera meddelanden raderar sparade meddelanden i
+    en annan session.
+
+** Kommandon som har med telefonsvararen att göra
+
+*** Automatsvar sättre på och stänger av telefonsvararen
+
+*** Ändra svarsmeddelande ändrar svarsmeddelande
+
+*** Lista meddelanden listar meddelanden som samlats
+
+*** Radera meddelanden raderar insamlade meddelanden
+
+** Kommandon som har med filter att göra
+
+*** Lista filter listar alla filter
+
+*** Ändra filter editerar alla filter i en speciell buffert
+
+*** Superhoppa filtrerar aktuellt ärende i aktuellt möte
+
+*** Filtrera författare filtrerar författare
+
+*** Filtrera ärende filtrerar ärende
+
+*** Filtrera innehåll filtrerar textens innehåll
+
+
+
+
+* Borttagen eller förändrad funktionalitet
+
+** Vilka-bufferten är borttagen
+
+** kom-login-hook ersätter kom-do-when-starting och lyskom-login-hook.
+
+** Passiva sessioner görs inte osynliga.
