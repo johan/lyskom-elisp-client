@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.8 1996-10-10 13:59:53 davidk Exp $
+;;;;; $Id: startup.el,v 44.9 1996-10-11 01:08:21 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.8 1996-10-10 13:59:53 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.9 1996-10-11 01:08:21 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -636,7 +636,6 @@ to see, set of call."
     (make-local-variable 'lyskom-dont-change-prompt)
     (make-local-variable 'lyskom-errno)
     (make-local-variable 'lyskom-executing-command)
-    (make-local-variable 'lyskom-fetched-texts)
     (make-local-variable 'lyskom-filter-list)
     (make-local-variable 'lyskom-idle-time-flag)
     (make-local-variable 'lyskom-is-administrator)
