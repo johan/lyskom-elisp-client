@@ -1,3 +1,15 @@
+2001-11-13  David Byers  <davby@ida.liu.se>
+
+	List unique subjects when prefix is given to kom-list-summary
+	* commands2.el: (kom-list-summary): Prefix argument sets "unique"
+	flag to lyskom-list-summary.
+	(lyskom-list-summary): Added "unique" argument.
+	(lyskom-do-list-summary): Aded "unique" argument.
+	(kom-list-summary): List unique subjects when a prefix argument is
+	given.
+
+	* utilities.el (lyskom-string-member): New function
+
 2001-11-13  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (lyskom-button-actions): added button-type:

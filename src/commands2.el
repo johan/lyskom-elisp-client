@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.98 2001-11-04 21:56:58 jhs Exp $
+ ;;;;; $Id: commands2.el,v 44.99 2001-11-13 17:10:30 byers Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.98 2001-11-04 21:56:58 jhs Exp $\n"))
+               "$Id: commands2.el,v 44.99 2001-11-13 17:10:30 byers Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -932,18 +932,19 @@
  ;;; Author: Linus Tolke
 
 
- (def-kom-command kom-list-summary ()
+ (def-kom-command kom-list-summary (prefix)
    "List a summary of the unread in the current conf.
  The summary contains the date, number of lines, author and subject of the text
  on one line."
-   (interactive)
+   (interactive "P")
    (if (read-list-isempty lyskom-reading-list)
        (lyskom-insert-string 'have-to-be-in-conf-with-unread)
-     (lyskom-list-summary nil)))
+     (lyskom-list-summary nil prefix)))
 
-(defun lyskom-list-summary (conf-no)
+(defun lyskom-list-summary (conf-no &optional unique)
   "List a summary of unread texts in conference CONF-NO.
 If CONF-NO is nil, list the first text-list element in lyskom-reading-list.
+If UNIQUE is non-nil, list only the first text with a particular subject.
 
 The summary contains the date, number of lines, author and subject of 
 the text on one line."
@@ -965,37 +966,45 @@ the text on one line."
     (setq read-info (read-list->nth read-list r))
     (when read-info
       (lyskom-do-list-summary
-       (text-list->texts (read-info->text-list read-info))))
+       (text-list->texts (read-info->text-list read-info))
+       unique))
     ))
 
-(defun lyskom-do-list-summary (texts)
-   "List a summary of the texts in TEXTS.
- The summary contains the date, number of lines, author and subject of the text
- on one line."
-   (let ((time (lyskom-current-server-time))
-         (author-width (/ (- (lyskom-window-width) 27) 3)))
+(defun lyskom-do-list-summary (texts &optional unique)
+  "List a summary of the texts in TEXTS.
+The summary contains the date, number of lines, author and subject of the text
+on one line."
+  (let ((time (lyskom-current-server-time))
+        (author-width (/ (- (lyskom-window-width) 27) 3))
+        (unique-subjects nil))
 
-     ;; Start fetching all text-stats and text to list them.
-     (lyskom-format-insert (concat "%-7#1s %-10#2s %-4#3s %-"
-                                   (int-to-string author-width)
-                                   "#4s  %#5s\n")
-                           (lyskom-get-string 'Texts)
-                           (lyskom-get-string 'Date)
-                           (lyskom-get-string 'Lines)
-                           (lyskom-get-string 'Author)
-                           (lyskom-get-string 'Subject))
-     (lyskom-traverse
-         text-no texts
-       (let ((text-stat (blocking-do 'get-text-stat text-no))
-             (text (blocking-do 'get-text text-no))
-             ;; We could do som optimization here. 
-             ;; We really don't need the whole text.
-             )
-         (lyskom-print-summary-line text-stat text text-no 
-                                    (time->year time)
-                                    (time->mon time)
-                                    (time->mday time))
-         (sit-for 0)))))
+    ;; Start fetching all text-stats and text to list them.
+    (lyskom-format-insert (concat "%-7#1s %-10#2s %-4#3s %-"
+                                  (int-to-string author-width)
+                                  "#4s  %#5s\n")
+                          (lyskom-get-string 'Texts)
+                          (lyskom-get-string 'Date)
+                          (lyskom-get-string 'Lines)
+                          (lyskom-get-string 'Author)
+                          (lyskom-get-string 'Subject))
+    (lyskom-traverse
+        text-no texts
+      (let ((text-stat (blocking-do 'get-text-stat text-no))
+            (text (blocking-do 'get-text text-no))
+            ;; We could do som optimization here. 
+            ;; We really don't need the whole text.
+            )
+        (when (or (not unique)
+                  (let* ((txt (text->decoded-text-mass text text-stat))
+                         (eos (string-match (regexp-quote "\n") txt))
+                         (subject (substring txt 0 eos)))
+                    (and (not (lyskom-string-member subject unique-subjects))
+                         (setq unique-subjects (cons subject unique-subjects)))))
+          (lyskom-print-summary-line text-stat text text-no 
+                                     (time->year time)
+                                     (time->mon time)
+                                     (time->mday time)))
+        (sit-for 0)))))
 
 
  (defun lyskom-print-summary-line (text-stat text text-no year mon mday)
