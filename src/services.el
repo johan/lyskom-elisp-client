@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.1 1996-05-04 01:04:08 davidk Exp $
+;;;;; $Id: services.el,v 41.2 1996-05-12 12:28:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.1 1996-05-04 01:04:08 davidk Exp $\n"))
+	      "$Id: services.el,v 41.2 1996-05-12 12:28:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -260,6 +260,18 @@ changed (internally in the elisp-klient) to something similar to
 a conf-type (with several bits that are 't' or 'nil' that is)."
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
   (lyskom-send-packet kom-queue (lyskom-format-objects 24 text-no mark-type)))
+
+
+(defun initiate-find-next-text-no (kom-queue handler text-no &rest data)
+  "Find the text following the text TEXT-NO"
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 60 text-no)))
+
+(defun initiate-find-previous-text-no (kom-queue handler text-no &rest data)
+  "Find the text preceding the text TEXT-NO"
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 61 text-no)))
+
 
 
 (defun initiate-get-text (kom-queue handler text-no &rest data)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 41.1 1996-05-03 16:52:17 byers Exp $
+;;;;; $Id: review.el,v 41.2 1996-05-12 12:28:27 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 41.1 1996-05-03 16:52:17 byers Exp $\n"))
+	      "$Id: review.el,v 41.2 1996-05-12 12:28:27 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -130,9 +130,10 @@ The defaults for this command is the conference that you are in."
               (lyskom-format 'review-info
                              (lyskom-format 'info-to-conf info))
               'all 
+              t
               ;; If person is not given we must give
-              ;; conf
-              (not (zerop by))
+              ;; conf  -- Not anymore!
+              ;; (not (zerop by))
               (if (zerop lyskom-current-conf)
                   ""
                 (conf-stat->name
@@ -144,16 +145,17 @@ The defaults for this command is the conference that you are in."
         (cache-del-conf-stat to))
     (if (not (zerop by)) 
         (cache-del-pers-stat by))
-    (let* ((info-by (if (zerop by) 
-                        (lyskom-get-string 'anybody)
-                      (blocking-do 'get-conf-stat by)))
-           (info-to (if (zerop to)
-                        (lyskom-get-string 'all-confs)
-                      (blocking-do 'get-conf-stat to))))
+
+    (blocking-do-multiple ((info-by (get-conf-stat by))
+                           (info-to (get-conf-stat to)))
       (lyskom-format-insert 'review-info-by-to
                             info
-                            info-by
-                            info-to))
+                            (if (zerop by)
+                                (lyskom-get-string 'anybody)
+                              info-by)
+                            (if (zerop to)
+                                (lyskom-get-string 'all-confs)
+                              info-to)))
 
     (condition-case arg
         (let ((list (lyskom-get-texts-by-to by to count)))
@@ -185,7 +187,7 @@ The defaults for this command is the conference that you are in."
   "Get NUM texts writteb by person number BY in conference number TO
 Args: BY TO NUM"
   (cond ((and (zerop by) 
-              (zerop to)) nil)
+              (zerop to)) (lyskom-get-texts-globally num))
         ((zerop to) (lyskom-get-texts-by by num))
         ((zerop by) (lyskom-get-texts-to to num))
         (t (lyskom-get-texts-by-and-to by to num))))
@@ -226,6 +228,33 @@ This function signals an error if review is impossible"
                 (signal 'lyskom-cant-review-error t))))))
 
 
+
+;;; ============================================================
+;;; lyskom-get-texts-globally
+;;; Author: Per Cederquist, David Byers
+;;;
+
+(defun lyskom-get-texts-globally (num)
+  "Get the last NUM texts created in LysKOM"
+  (if (null num)
+      (progn
+        (lyskom-format-insert 'cant-review-everything)
+        (signal 'lyskom-cant-review-error t)))
+  (let ((result nil)
+        (textno (if (< num 0)
+                    1
+                  (lyskom-maxint)))
+        (op (if (< num 0)
+                'find-next-text-no
+              'find-previous-text-no)))
+
+    (while (and (not (eq textno 0))
+                (< (length result) (abs num)))
+      (setq textno (blocking-do op textno))
+      (setq result (cons textno result)))
+    (if (< num 0)
+        (nreverse result)
+      result)))
 
 
 ;;; ================================================================
@@ -291,8 +320,8 @@ This function signals an error if review is impossible"
   "Get NUM texts written by person PERSNO with conference CONFNO as a
 recipient. 
 Args: persno confno num"
-  (let ((persstat (blocking-do 'get-pers-stat persno))
-        (confstat (blocking-do 'get-conf-stat confno)))
+  (blocking-do-multiple ((persstat (get-pers-stat persno))
+                         (confstat (get-conf-stat confno)))
     (lyskom-check-review-access confstat persstat)
 
     (let* ((result-list nil)

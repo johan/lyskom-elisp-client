@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.4 1996-05-06 14:58:15 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.5 1996-05-12 12:28:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.4 1996-05-06 14:58:15 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.5 1996-05-12 12:28:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -345,6 +345,9 @@ du har l\344st klart allting. Kom tillbaks senare.
     (cgdag . "Konungens födelsedag")
     (sixjune . "Sveriges nationaldag och svenska flaggans dag")
     (holdnose . "Håll för näsan...")
+    (lysbday . "
+P\345 denna dag, \345r 1973, grundades Lysator, och det var en stor dag
+i svensk datorhistoria. L\344s mer på http://www.lysator.liu.se/history/")
 
 
     (total-users . "    Sammanlagt %#1d anv\344ndare.\n")
@@ -580,6 +583,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (review-cant-read-conf . "Du kan inte \345terse inl\344gg till ett slutet m\366te du inte \345r med i.\n")
     (review-cant-read-letterbox . "Du kan inte \345terse in\344gg till n\345gon annans brevl\345da.\n")
     (review-cant-read-empty . "M\366tet är tomt.\n")
+    (cant-review-everything . "Du kan inte \345terse alla texter i LysKOM.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c f\366r att skicka in texten.")
