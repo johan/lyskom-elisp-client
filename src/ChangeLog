@@ -1,3 +1,7 @@
+2001-10-16  Kent Engström  <kent@lysator.liu.se>
+
+ 	* vars.el.in (kom-server-aliases): add dskom.studkar.hj.se as DSKOM.
+
 2001-10-14  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-buttons.el (kom-previous-link, kom-next-link): look
