@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.378 2004-10-17 14:24:14 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.379 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.378 2004-10-17 14:24:14 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.379 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1475,6 +1475,8 @@ Uppkopplad sedan %#8s%#9s")
     (reformat-html . "HTML")
     (reformat-enriched . "enriched")
     (reformat-filled . "ombruten")
+    (reformat-image . "bild")
+    (image-no-show . "< Bilden kan inte visas. >")
 
     (reformat-truncated . "nedkortad")
 
@@ -4217,6 +4219,9 @@ ta fram menyer.")
     (kom-format-html-authors-doc . "\
   Den här inställningen styr vilka författares HTML-meddelanden som
   elispklienten kommer att försöka formattera.")
+    (kom-format-show-images-doc . "\
+  Den här inställningen styr om inlägg uppmärkta som bilder specialhanteras
+  eller visas som traditionella inlägg.")
     (kom-keyboard-menu-immediate-selection-doc . "\
   Den här inställningen styr huruvida snabbtangenter automatiskt bekräftar
   val i textbaserade menyer eller inte. Om detta är påslaget så måste man
@@ -4530,6 +4535,7 @@ ta fram menyer.")
     (kom-async-highlight-text-body-tag . "Annorlunda bakgrundsfärg på meddelanden:")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
+    (kom-format-show-images-tag . "Visa bildinlägg som bilder:")
     (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
     (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")

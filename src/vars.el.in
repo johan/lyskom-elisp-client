@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.299 2004-07-19 20:11:58 byers Exp $
+;;;;; $Id: vars.el.in,v 44.300 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.299 2004-07-19 20:11:58 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.300 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4209,6 +4209,10 @@ idea.
 Values other than `t' and `nil' are reserved for future use."
   server)
 
+(def-kom-var kom-format-show-images t "**Control image display
+
+nil means inhibit special image handling." server)
+
 (def-kom-var kom-format-html-authors '((t . t))
   "**Determines from which authors we accept HTML.
 
@@ -4223,6 +4227,7 @@ Values other than those listed are reserved for future use."
 (def-kom-var lyskom-format-special 
   '(("html"               . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
     ("enriched"           . lyskom-format-enriched)
+    ("^image/"            . lyskom-format-image)
     ("^text/html"          . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
     ("^text/enriched"      . lyskom-format-enriched)
     ("^text/"             . lyskom-format-plaintext)
@@ -4230,6 +4235,7 @@ Values other than those listed are reserved for future use."
     ("^x-kom/basic"        . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
     ("^x-kom/user-area"    . lyskom-format-x-kom/user-area)
     ("^x-kom/ö\\."         . lyskom-format-ö))
+  
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")
