@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.50 1999-10-16 22:49:01 byers Exp $
+;;;;; $Id: commands2.el,v 44.51 1999-10-19 13:11:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.50 1999-10-16 22:49:01 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.51 1999-10-19 13:11:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -938,7 +938,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    text-no
 			    time
 			    lines
-                            (if mx-from
+                            (if (or mx-from mx-author)
                                 (lyskom-format-mx-author mx-from mx-author)
                               (text-stat->author text-stat))
 			    (lyskom-default-button 'text
