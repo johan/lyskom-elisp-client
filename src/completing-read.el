@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 40.0 1996-03-26 08:30:58 byers Exp $
+;;;;; $Id: completing-read.el,v 40.1 1996-03-26 14:13:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 40.0 1996-03-26 08:30:58 byers Exp $\n"))
+	      "$Id: completing-read.el,v 40.1 1996-03-26 14:13:51 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -48,6 +48,39 @@
 ;;; Completing-function
 
 (defvar lyskom-name-hist nil)
+
+(defvar lyskom-completing-who-info-cache nil
+  "Temporary cache of who-info data")
+
+(defvar lyskom-completing-lookup-name-cache nil
+  "Temporary cache of server queries")
+
+
+(defun lyskom-completing-clear-cache ()
+  (setq lyskom-completing-who-info-cache nil)
+  (setq lyskom-completing-lookup-name-cache nil))
+
+(defun lyskom-completing-who-is-on ()
+  "Get information about who is on, first checking the cache. Returns what 
+\(blocking-do 'who-is-on\) would, but as a list, not a vector"
+  (if lyskom-completing-who-info-cache
+      lyskom-completing-who-info-cache
+    (setq lyskom-completing-who-info-cache
+          (listify-vector (blocking-do 'who-is-on)))))
+
+(defun lyskom-completing-lookup-name (string)
+  "Look up STRING as a name. Same as \(blocking-do 'lookup-name ...\)
+but first checks a cache."
+  (let ((tmp (assoc string lyskom-completing-lookup-name-cache)))
+    (if tmp
+        (cdr tmp)
+      (progn
+        (setq tmp (blocking-do 'lookup-name string))
+        (setq lyskom-completing-lookup-name-cache
+              (cons (cons string tmp)
+                    lyskom-completing-lookup-name-cache))
+        tmp))))
+
 
 (defvar lyskom-minibuffer-local-completion-map
   (let ((map (copy-keymap minibuffer-local-completion-map)))
@@ -73,6 +106,7 @@ The TYPE allows for subsets of the entire Lyskom-name space:
 * logins only persons that are logged in right now.
 If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field."
+  (lyskom-completing-clear-cache)
   (let (read)
     (while (and
             (string= 
@@ -95,6 +129,7 @@ The TYPE allows for subsets of the entire Lyskom-name space:
 * logins only persons that are logged in right now.
 
 If EMPTY is non-nil then the empty string is allowed (returns nil)."
+  (lyskom-completing-clear-cache)
   (let ((no (lyskom-read-conf-no prompt type empty initial t)))
     (if (or (null no) (zerop no))
 	nil
@@ -114,6 +149,7 @@ never the read string.
 The fourth argument INITIAL is the initial contents of the input-buffer.
 
 Returns the name."
+  (lyskom-completing-clear-cache)
   (let* ((completion-ignore-case t)
          ;; When lyskom-read-conf-name-internal is called the current-buffer
          ;; is the minibuffer and the buffer-local variable lyskom-proc is not
@@ -168,7 +204,7 @@ to conf-no translator."
   (let* ((alllogins (and (string= string "")
                          (eq predicate 'logins)))
          (list (if (not alllogins)
-                   (blocking-do 'lookup-name string)))
+                   (lyskom-completing-lookup-name string)))
          (nos (listify-vector (conf-list->conf-nos list)))
          (parlist (if (memq predicate '(pers confs))
                       (let ((nos nos)
@@ -184,7 +220,7 @@ to conf-no translator."
                       (mapcar
                        (function (lambda (ele)
                                    (who-info->pers-no ele)))
-                       (listify-vector (blocking-do 'who-is-on)))))
+                       (lyskom-completing-who-is-on))))
          (mappedlist (cond
                       (alllogins
                        logins)
@@ -383,6 +419,7 @@ The question is prompted with PROMPT.
 If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field.
 If ONLY-ONE is non-nil only one session number will be returned."
+  (lyskom-completing-clear-cache)
   (let (result data done)
     (while (not done)
       (setq data (lyskom-read-session-no-aux prompt t initial))
@@ -413,7 +450,8 @@ If ONLY-ONE is non-nil only one session number will be returned."
   (lyskom-insert
    (concat (make-string (- (lyskom-window-width) 2) ?-)
            "\n"))
-  (let ((who-info
+  (let ((result nil)
+        (who-info
          (mapcar (function
                   (lambda (el)
                     (let* ((info (blocking-do 'get-session-info el))
@@ -469,6 +507,7 @@ never the read string.
 The fourth argument INITIAL is the initial contents of the input-buffer.
 
 Returns the name."
+  (lyskom-completing-clear-cache)
   (let* ((completion-ignore-case t)
 	 ; When lyskom-read-conf-name-internal is called the current-buffer
 	 ; is the minibuffer and the buffer-local variable lyskom-proc is not
@@ -502,7 +541,7 @@ Returns the name."
                                   (cons 
                                    (number-to-string (who-info->connection el))
                                    el)))
-                               (append (blocking-do 'who-is-on) nil))))
+                               (lyskom-completing-who-is-on))))
          (result (cond
                   ((and (null who-list)
                         (not (eq 'session-no all))) nil)
@@ -520,8 +559,8 @@ Returns the name."
                      (list who-list)
 		     (num (string-to-number string))
                      (conf-no (lyskom-read-conf-name-internal string
-							      predicate
-							      'conf-no)))
+                                                              predicate
+                                                              'conf-no)))
                  (while list
                    (if (or (eq conf-no (who-info->pers-no (cdr (car list))))
 			   (eq num (who-info->connection (cdr (car list)))))

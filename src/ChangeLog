@@ -1,3 +1,14 @@
+Tue Mar 26 12:22:34 1996  David Byers  <byers@lysator.liu.se>
+
+	* Makefile: Satte versionsnumret till 0.40.1
+
+	* Gjorde kompatibilitetsdefinitioner av facep och
+ 	save-selected-window så klienten fungerar med emacs 19.28 också.
+
+	* completing-read.el: Viss cachning av who-info när man läser in
+ 	namn på inloggade personer. Samma med anrop till lookup-name. Det
+ 	går mycket snabbare.
+
 Tue Mar 26 08:21:18 1996  David Byers  <byers@lysator.liu.se>
 
 	* Satte cvs-version till 40.0 och symbolisk tag till v0-40
