@@ -1,3 +1,26 @@
+2000-01-06  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (j-or-n-p): Output the answer in the minibuffer
+	like y-or-n-p in XEmacs (and probably Emacs) does.
+
+	* swedish-strings.el (lyskom-message): Added yes-string and
+	no-string.
+
+	* services.el (blocking-do-multiple): Added edebug-form-spec for
+	blocking-do-multiple.
+
+	* commands1.el (lyskom-add-sub-recipient): Confirm adding as full
+	recipient. 
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Removed duplicate
+	calls to lyskom-edit-do-add-recipient/copy. Confirm adding as full
+	recipient.
+
+1999-12-29  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-add-sub-recipient): Point at start of
+	minibuffer when reading target conference.
+
 1999-12-13  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-recursive-prompt-update): New variable.

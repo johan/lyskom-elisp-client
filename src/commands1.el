@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.61 1999-12-10 11:35:52 byers Exp $
+;;;;; $Id: commands1.el,v 44.62 2000-01-06 12:47:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.61 1999-12-10 11:35:52 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.62 2000-01-06 12:47:08 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2990,7 +2990,7 @@ actual text to do whatever on."
 				 (lyskom-get-string 'who-to-move-from-q)
 				 '(all)
 				 nil
-				 (if conf2 (conf-stat->name conf2) "")
+				 (cons (if conf2 (conf-stat->name conf2) "") 0)
                                  t)))
 
 	 (conf-to-add-to (lyskom-read-conf-stat
@@ -3003,9 +3003,17 @@ actual text to do whatever on."
 				 (t (lyskom-error "internal error"))))
 			  '(all)
 			  nil
-			  (if conf (conf-stat->name conf) "")
+			  (cons (if conf (conf-stat->name conf) "") 0)
                           t))
 	 (result nil))
+
+    ;; Confirm add a full recipient
+
+    (when (and (eq action 'add-rcpt)
+               conf-to-add-to
+               (not (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q conf-to-add-to) t)))
+      (setq action 'add-copy))
+
     (setq result
 	  (cond ((eq action 'add-rcpt)
 		 (lyskom-format-insert 'adding-name-as-recipient 

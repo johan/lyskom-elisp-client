@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.99 1999-12-10 11:35:55 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.100 2000-01-06 12:47:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.99 1999-12-10 11:35:55 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.100 2000-01-06 12:47:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -426,6 +426,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
+    (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också hamna i %#1M? ") 
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
     (who-to-move-to-q . "Vart vill du flytta texten? ")
@@ -1027,6 +1028,8 @@ Du bör sätta den till ett bättre värde.\n")
 
     (yes-regexp . "\\`[jJ][aA]\\'")
     (no-regexp . "\\`[nN][eE][jJ]\\'")
+    (yes-string . "Ja")
+    (no-string . "Nej")
     (yes-or-no-nag . "Svara bara ja eller nej.")
     (yes-or-no . "(ja eller nej) ")
 
