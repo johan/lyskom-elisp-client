@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.142 2001-08-09 22:06:18 qha Exp $
+;;;;; $Id: vars.el.in,v 44.143 2001-08-21 22:03:50 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.142 2001-08-09 22:06:18 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.143 2001-08-21 22:03:50 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -771,9 +771,9 @@ conference and person buttons are not expected.")
 
     ;; JySKom enhancements
 
-    ("<(?m[|ö]te *\\([0-9]+\\)[^0-9>]*)?>" conf 0 1 nil)
-    ("<(?text *\\([0-9]+\\)[^0-9>]*)?>" text 0 1 nil)
-    ("<(?person *\\([0-9]+\\)[^0-9>]*)?>" pers 0 1 nil)
+    ("<(?m[|ö]te[ \t\n]*\\([0-9]+\\)[^0-9>]*)?>" conf 0 1 nil)
+    ("<(?text[ \t\n]*\\([0-9]+\\)[^0-9>]*)?>" text 0 1 nil)
+    ("<(?person[ \t\n]*\\([0-9]+\\)[^0-9>]*)?>" pers 0 1 nil)
 
     ;; Info node reference
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.146 2001-08-16 15:29:29 qha Exp $
+;;;;; $Id: english-strings.el,v 44.147 2001-08-21 22:03:46 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.146 2001-08-16 15:29:29 qha Exp $"))
+              "$Id: english-strings.el,v 44.147 2001-08-21 22:03:46 qha Exp $"))
 
 
 ;;; ================================================================
@@ -102,12 +102,12 @@
   (define-key lyskom-en-edit-prefix (kbd "C-i 8") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i 9") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
+  (define-key lyskom-en-edit-prefix (kbd "C-i C-l") 'kom-edit-insert-link)
   (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-r") 'kom-edit-add-recipient)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)
   (define-key lyskom-en-edit-prefix (kbd "C-a <RET>") 'kom-edit-move-text)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-l") 'kom-edit-insert-link)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
   (define-key lyskom-en-edit-prefix (kbd "C-x C-r") 'kom-edit-add-read-confirm-request)
