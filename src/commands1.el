@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.39 1999-06-10 13:36:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.40 1999-06-12 16:53:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.39 1999-06-10 13:36:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.40 1999-06-12 16:53:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2371,8 +2371,6 @@ Uses Protocol A version 9 calls"
 	(len (length who-info-list))
 	(i 0)
 	(res nil))
-    (setq members (mapcar 'member->conf-no
-			  (append (member-list->members members))))
     (while (< i len)
       (if (lyskom-member-list-find-member
            (who-info->pers-no (aref who-info-list i))
@@ -2388,8 +2386,6 @@ Uses Protocol A version 9 calls"
 	(len (length who-info-list))
 	(i 0)
 	(res nil))
-    (setq members (mapcar 'member->conf-no
-			  (append (member-list->members members))))
     (while (< i len)
       (if (lyskom-member-list-find-member 
            (dynamic-session-info->person (aref who-info-list i))

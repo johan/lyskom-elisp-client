@@ -1,3 +1,16 @@
+1999-06-12  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-who-is-on-check-membership-9): Don't
+	extract pers-nos from member list.
+	(lyskom-who-is-on-check-membership-8): Same here.
+
+	Speed up parsing:
+	* parse.el (lyskom-parse-string): Reset lyskom-string-bytes-missing after
+	successful parse. Set lyskom-string-bytes-missing in the lyskom
+	buffer, not the parse buffer.
+	(lyskom-parse-unparsed): Do not reset lyskom-string-bytes-missing.
+	(lyskom-init-parse): Reset lyskom-string-bytes-missing.
+
 1999-04-01  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (kom-postpone-default): Ny variabel.

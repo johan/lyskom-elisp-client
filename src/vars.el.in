@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.60 1999-06-11 12:56:18 byers Exp $
+;;;;; $Id: vars.el.in,v 44.61 1999-06-12 16:53:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.60 1999-06-11 12:56:18 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.61 1999-06-12 16:53:13 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1445,7 +1445,9 @@ This is used to prevent parallell parsing since the parser is not reentrant."
 Set when parsing a string and there were not enough bytes in the buffer
 with the unparsed bytes. This variable is used to prevent reparsing before 
 the string is complete.
-This variable is buffer-local in the unparsed-buffer.")
+This variable is buffer-local in the unparsed-buffer."
+  local
+  inherited)
 
 (def-kom-var lyskom-last-viewed 0       ;
   "Postition of the first char of the last line that the user has had

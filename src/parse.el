@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.19 1999-06-11 12:56:14 byers Exp $
+;;;;; $Id: parse.el,v 44.20 1999-06-12 16:53:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.19 1999-06-11 12:56:14 byers Exp $\n"))
+	      "$Id: parse.el,v 44.20 1999-06-12 16:53:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -152,13 +152,14 @@ Signal lyskom-protocol-error if the next token is not a string."
 	(setq lyskom-parse-pos (+ lyskom-parse-pos end))
 	(cond
 	 ((< (point-max) (+ lyskom-parse-pos len))
-	  (setq lyskom-string-bytes-missing
+	  (lyskom-setq-default lyskom-string-bytes-missing
 		(- (+ lyskom-parse-pos len)
 		   (point-max)))
 	  (signal 'lyskom-parse-incomplete nil))
 	 (t
 	  (prog1 (buffer-substring lyskom-parse-pos 
 				   (+ lyskom-parse-pos len))
+            (lyskom-setq-default lyskom-string-bytes-missing 0)
 	    (setq lyskom-parse-pos (+ lyskom-parse-pos len))))))))))
 
 
@@ -987,6 +988,7 @@ i.e creates the buffer, sets all markers and pointers."
 	   (setq lyskom-proc proc)
 	   (make-local-variable 'lyskom-buffer)
 	   (setq lyskom-buffer buffer)
+           (lyskom-setq-default lyskom-string-bytes-missing 0)
 	   (goto-char (point-max))
 	   (point-marker)))))
 
@@ -1105,7 +1107,6 @@ functions and variables that are connected with the lyskom-buffer."
 	      (message ""))))
     (lyskom-save-excursion
      (set-buffer lyskom-unparsed-buffer)
-     (setq lyskom-string-bytes-missing 0)
      (while (not (zerop (1- (point-max)))) ;Parse while replies.
        (let* ((lyskom-parse-pos 1)
 	      (key (lyskom-parse-nonwhite-char)))
