@@ -1469,12 +1469,12 @@ args: TIME."
 (defun lyskom-print-who-is-on (who-info-list)
   "Print a list of all on who-info-list."
   (lyskom-insert
-   (lyskom-return-who-info-line "    "
+   (lyskom-return-who-info-line "     "
 				(lyskom-get-string 'lyskom-name)
 				(lyskom-get-string 'is-in-conf)))
   (if kom-show-where-and-what
       (lyskom-insert
-       (lyskom-return-who-info-line "    "
+       (lyskom-return-who-info-line "     "
 				    (lyskom-get-string 'from-machine)
 				    (lyskom-get-string 'is-doing))))
 
@@ -1510,7 +1510,7 @@ WORKING is the conf-stat of his current working conference.
 WHO-INFO is the who-info.
 MY-SESSION-NO is the session number of the running session."
   (lyskom-insert
-   (lyskom-return-who-info-line (format "%3d%s" 
+   (lyskom-return-who-info-line (format "%4d%s" 
 					(who-info->connection who-info)
 					(if (= my-session-no
 					       (who-info->connection who-info))
@@ -1519,11 +1519,12 @@ MY-SESSION-NO is the session number of the running session."
 				(conf-stat->name conf-stat)
 				(cond
 				 ((conf-stat->name working))
-				 (t (lyskom-get-string 'not-present-anywhere)))))
+				 (t (lyskom-get-string
+				     'not-present-anywhere)))))
   (cond
    (kom-show-where-and-what
     (lyskom-insert
-     (lyskom-return-who-info-line "    "
+     (lyskom-return-who-info-line "     "
 				  (lyskom-return-username who-info)
 				  (concat "(" 
 					  (who-info->doing-what who-info)
@@ -1543,10 +1544,10 @@ MY-SESSION-NO is the session number of the running session."
   "Return a formatted line (with reference to the current window width."
   (concat
    prefix
-   (lyskom-fix-str (/ (* 38 (- (lyskom-window-width) 6)) 74)
+   (lyskom-fix-str (/ (* 37 (- (lyskom-window-width) 7)) 73)
 		   string1)
    " "
-   (lyskom-fix-str (/ (* 35 (- (lyskom-window-width) 6)) 74)
+   (lyskom-fix-str (/ (* 36 (- (lyskom-window-width) 7)) 73)
 		   string2)
    "\n"))
 
