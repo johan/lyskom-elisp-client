@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.5 1991-10-08 14:30:08 byers Exp $
+;;;;; $Id: english-strings.el,v 35.6 1991-10-12 10:19:53 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.5 1991-10-08 14:30:08 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.6 1991-10-12 10:19:53 byers Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Text follows this line, Post: C-c C-c, Kill: C-c C-k, Help: C-h m ---"
@@ -70,7 +70,7 @@ full name and organization, eg. \"Joe Hacker, MIT\". If you spelled your name
 incorrectly, or you wish to change it, answer 'no' to the question below.
 
 For the time being the LysKOM server stores most of the information so that
-anybody can read it. Only passwords are currently encrypted.
+anybody can read it. Only passwords are encrypted.
 
 If you ar uncertain about how to use LysKOM, you can retreive a manual by
 anonymous ftp to ftp.lysator.liu.se. Ask your system administrator for help
