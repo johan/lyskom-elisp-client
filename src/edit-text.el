@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.28 1997-11-12 09:31:22 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.29 1997-11-14 21:37:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.28 1997-11-12 09:31:22 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.29 1997-11-14 21:37:24 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -684,6 +684,23 @@ Based on ispell-message."
     (when kill-ispell (ispell-kill-ispell t))
     result))
 
+(defun lyskom-is-permitted-author (conf-stat)
+  (and conf-stat
+       (or (eq 0 (conf-stat->permitted-submitters conf-stat))
+           (lyskom-is-supervisor conf-stat))))
+
+(defun lyskom-is-supervisor (conf-stat &optional memo)
+  "Return non-nil if lyskom-pers-no is a supervisor of CONF-STAT."
+  (cond ((null conf-stat) nil)
+        ((memq (conf-stat->conf-no conf-stat) memo) nil)
+        ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
+        ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
+        ((eq 0 (conf-stat->supervisor conf-stat)) nil)
+        ((lyskom-get-membership (conf-stat->conf-no conf-stat)) t)
+        ((lyskom-is-supervisor
+          (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
+          (cons (conf-stat->conf-no conf-stat) memo)))))
+
 
 (defun lyskom-edit-send-check-recipients (misc-list subject) 
   "Check that the recipients of this text are OK. Ask the user to
@@ -840,6 +857,8 @@ text is a member of some recipient of this text."
 
                        (if (and (null (delq nil author-is-member))
 				(not (zerop author-number))
+                                (lyskom-is-permitted-author
+                                 (blocking-do 'get-conf-stat author-number))
                                 (lyskom-j-or-n-p
                                  (let ((kom-deferred-printing nil))
                                    (lyskom-format

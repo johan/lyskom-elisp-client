@@ -164,6 +164,35 @@ Att göra i elisp-klienten
 
 * FÖRBÄTTRINGAR
 
+** LÄSA INLÄGG
+
+    Problem: När ett inlägg är längre än en skärm så är det jobbigt
+    att tappa bort sig när inlägget är slut och man scrollar mindre än
+    en skärmlängd. Lösningsförslag: Använd Emacs' kod för att blinka
+    parentesmatchning (finns i simple.el(blink-matching-open)) för att
+    blinka på första kolumnen i raden som var längst ner på skärmen
+    innan man tryckte space. Från Teddy (inlägg 2495321.)
+
+        * En testimplementation av detta finns nu.
+
+
+    Det vore skoj om lyskom.el kunde, som jag har för mig att någon
+    föreslog en gång, parsa fotnoter av det där slaget (^s/) och
+    applicera dem på texten. Det korrigerade inlägget skulle ha
+    formatmarkeringen (korrigerad av 123455) i foten. Återse
+    omodifierat skulle visa inlägget okorrigerat. Den korrigerande 
+    fotnoten visas inte i den normala läsordningen och markeras 
+    som läst automatiskt.
+
+        * Krävs inkrokningar view-text.el för att inte skriva ut att
+          det finns en fotnot.
+
+        * Krävs mer flexibel formatmarkering.
+
+        * Krävs att man hämtar fotnoter innan man visar inlägget.
+
+
+
 ** SKRIVA INLÄGG
 
     Skicka Brev skall inte lägga till författaren som mottagare om
@@ -176,6 +205,13 @@ Att göra i elisp-klienten
 ** EDIT-BUFFERTEN
 
     Defaultplaceringen av nya mottagare i editbufferten är fånig.
+
+    Borde kolla efter dublettmottagare innan man skickar in inlägget.
+    Annars så får man ett tråkigt felmeddelande från servern.
+
+    Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
+    ploppa upp edit-bufferten, alternativt ha ett kommando för att
+    göra det (och göra det till defaultkommandot.)
 
 
 ** FILTER
