@@ -1,5 +1,11 @@
 1999-10-14  David Byers  <davby@ida.liu.se>
 
+	* english-strings.el (lyskom-text-start): Updated to work with
+	imported texts.
+
+	* swedish-strings.el (lyskom-text-start): Updated to work with
+	imported texts.
+
 	* option-edit.el (lyskom-ansaphone-reply-widget): New widget type.
 	(lyskom-customize-buffer-format): Added ansaphone replies.
 	(lyskom-custom-variables): Added kom-ansaphone-replies.

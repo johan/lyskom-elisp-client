@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.64 1999-10-13 22:32:21 byers Exp $
+;;;;; $Id: english-strings.el,v 44.65 1999-10-14 09:29:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.64 1999-10-13 22:32:21 byers Exp $"))
+              "$Id: english-strings.el,v 44.65 1999-10-14 09:29:50 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1728,7 +1728,7 @@ You must become an active member of the conference to enter it.\n")
 
 
 (lyskom-language-var lyskom-text-start en
-  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ line\\(s\\)?/ ")
+  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +\\([-+][0-9][0-9][0-9][0-9] +\\)?/[0-9]+ line\\(s\\)?/ ")
 
 
 (defconst lyskom-keybindings-missing nil)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.81 1999-10-13 22:32:29 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.82 1999-10-14 09:29:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.81 1999-10-13 22:32:29 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.82 1999-10-14 09:29:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1740,7 +1740,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 ;;  "The swascii version of lyskom-filter-what")
 
 (lyskom-language-var lyskom-text-start sv
-  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|idag\\|igår\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ rad\\(er\\)?/ ")
+  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|idag\\|igår\\) +[0-2][0-9]:[0-5][0-9] +\\([-+][0-9][0-9][0-9][0-9] +\\)?/[0-9]+ rad\\(er\\)?/ ")
 
 
 (defconst lyskom-keybindings-missing '(lyskom-previous-prefix))
