@@ -46,7 +46,7 @@ The default language must be one of \`swedish' or \`english'.]);
 if test -z "${lispdir}"
 then
 
-   eval `${emacs} -batch -l ./autoconf.el -f extract-autoconf-data 2>&1`
+   eval `${emacs} -batch -l ./autoconf.el -f extract-autoconf-data 2>/dev/null`
    if test -z "${xlispdir}"
    then
        AC_MSG_ERROR([No Lisp directory was found or specified with --with-lispdir.])
