@@ -1,3 +1,9 @@
+2005-03-08  David Byers  <byers@lysator.liu.se>
+
+	* compatibility.el (lyskom-encode-coding-string): Renamed
+	functions used when detecting copy bug. Detect multibyte bug. 
+	This hopefully fixes bug 1524.
+
 2005-03-07  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-face-default-p): New implementation since

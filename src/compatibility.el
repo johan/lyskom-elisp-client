@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.74 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: compatibility.el,v 44.75 2005-03-08 14:55:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.74 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: compatibility.el,v 44.75 2005-03-08 14:55:56 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -240,13 +240,30 @@ KEYS should be a string in the format used for saving keyboard macros
 ;; decode-coding-string such as those provided by APEL (part of TM and
 ;; often included in XEmacs)
 
-(defun lyskom-buggy-encode-coding-string (str coding-system) str)
+(defun lyskom-encode-coding-string-with-copy-bug (str coding-system) str)
 (eval-and-compile
   (if (let ((test "TEM")) (eq (lyskom-encode-coding-string test 'raw-text) test))
-      (progn (fset 'lyskom-buggy-encode-coding-string
+      (progn (fset 'lyskom-encode-coding-string-with-copy-bug
                    (symbol-function 'lyskom-encode-coding-string))
              (defun lyskom-encode-coding-string (str coding-system)
-               (copy-sequence (lyskom-buggy-encode-coding-string str coding-system))))))
+               (copy-sequence (lyskom-encode-coding-string-with-copy-bug
+                               str coding-system))))))
+
+;; Emacs 20.7, 21.2, 21.3 and CVS versions before 2005-02-14 have a bug
+;; where the result of encode-coding-string is sometimes a multibyte
+;; string. Detect this problem.
+
+(defun lyskom-encode-coding-string-with-multibyte-bug (str coding-system) str)
+(eval-and-compile
+  (if (lyskom-multibyte-string-p
+       (lyskom-encode-coding-string
+        (substring (concat "å" (make-string 1025 ?x)) 1) 'iso-8859-1))
+      (progn (fset 'lyskom-encode-coding-string-with-multibyte-bug
+                   (symbol-function 'lyskom-encode-coding-string))
+             (defun lyskom-encode-coding-string (str coding-system)
+               (string-make-unibyte
+                (lyskom-encode-coding-string-with-multibyte-bug str coding-system))))))
+
 
 (defun lyskom-buggy-decode-coding-string (str coding-system) str)
 (eval-and-compile
