@@ -1,5 +1,11 @@
 Mon Jul  8 10:37:48 1996  David Byers  <davby@sen2.ida.liu.se>
 
+	* vars.el.in (lyskom-login-hook): Defvarade denna.
+	(kom-login-hook): Uppdaterade dokumentationen.
+
+	* startup.el (kom-start-anew): Bytte ordningen mellan
+ 	kom-login-hook och lyskom-login-hook.
+
 	* filter.el (kom-super-jump): Väljer mottagare att filtrera som
  	aktuellt möte om inlägget har aktuellt möte som mottagare, annars
  	inläggets första mottagare.
