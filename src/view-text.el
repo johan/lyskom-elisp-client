@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.1 1996-05-03 22:41:52 davidk Exp $
+;;;;; $Id: view-text.el,v 41.2 1996-05-04 17:55:47 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.1 1996-05-03 22:41:52 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.2 1996-05-04 17:55:47 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -82,7 +82,7 @@ Note that this function must not be called asynchronously."
 	     (if (and text-stat
 		      text)
 		 (progn
-           (setq start (point-max))
+		   (setq start (point-max))
 		   (lyskom-format-insert "%#1n " 
 					 text-stat)
 		   (lyskom-print-date-and-time (text-stat->creation-time
@@ -100,16 +100,16 @@ Note that this function must not be called asynchronously."
 		   
 		   (if (eq filter 'dontshow)
 		       (lyskom-format-insert "%#1P %#2s\n"
-                                     (text-stat->author text-stat)
-                                     (lyskom-get-string 'filtered))
+					     (text-stat->author text-stat)
+					     (lyskom-get-string 'filtered))
 		     (lyskom-format-insert "%#1P\n"
-                                   (text-stat->author text-stat)))
+					   (text-stat->author text-stat)))
 		   
-           (setq end (point-max))
+		   (setq end (point-max))
 
-           (if (and (null filter)
-                    (not (lyskom-face-default-p 'kom-first-line-face)))
-               (add-text-properties start end '(face kom-first-line-face)))
+		   (if (and (null filter)
+			    (not (lyskom-face-default-p 'kom-first-line-face)))
+		       (add-text-properties start end '(face kom-first-line-face)))
 
 		   ;; All recipients and other header lines.
 
@@ -445,7 +445,8 @@ Args: TEXT-STAT of the text being read."
 		     (blocking-do 'get-text-stat text))))
     (if text-stat
 	(progn
-	  (lyskom-insert-header-comm text-stat misc))
+	  (lyskom-insert-header-comm text-stat misc
+				     'lyskom-format-insert))
       (let ((defer-info (lyskom-create-defer-info
 			 'initiate-get-text-stat
 			 text
@@ -461,14 +462,15 @@ Args: TEXT-STAT of the text being read."
 (defun lyskom-insert-deferred-header-comm (text-stat defer-info)
   (save-excursion
     (goto-char (defer-info->pos defer-info))
-    (lyskom-insert-header-comm text-stat (defer-info->data defer-info))
+    (lyskom-insert-header-comm text-stat (defer-info->data defer-info)
+			       'lyskom-format-insert-at-point)
     (let ((inhibit-read-only t))
       (delete-char (defer-info->del-chars defer-info)))
     (set-marker (defer-info->pos defer-info) nil)))
 
 
 
-(defun lyskom-insert-header-comm (text-stat misc)
+(defun lyskom-insert-header-comm (text-stat misc insertfun)
   "Get author of TEXT-NO and print a header line."
   ;;+++ error kommer att se annorlunda ut.
   (let ((author (if text-stat
@@ -477,29 +479,23 @@ Args: TEXT-STAT of the text being read."
 	(type (misc-info->type misc)))
     (cond
      ((eq type 'COMM-TO)
-      (lyskom-format-insert-at-point 'comment-to-text
-				     (misc-info->comm-to misc)))
+      (funcall insertfun 'comment-to-text (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
-      (lyskom-format-insert-at-point 'footnote-to-text
-				     (misc-info->footn-to misc)))
+      (funcall insertfun 'footnote-to-text (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
-      (lyskom-format-insert-at-point 'comment-in-text
-				     (misc-info->comm-in misc)))
+      (funcall insertfun 'comment-in-text (misc-info->comm-in misc)))
      ((eq type 'FOOTN-IN)
-      (lyskom-format-insert-at-point 'footnote-in-text
-				     (misc-info->footn-in misc))))
+      (funcall insertfun 'footnote-in-text (misc-info->footn-in misc))))
     (if author
-	(lyskom-format-insert-at-point 'written-by author)
+	(funcall insertfun 'written-by author)
       (lyskom-insert-at-point "\n"))
     
     ;; Print information about who added the link
     (if (misc-info->sent-at misc)
-	(lyskom-format-insert-at-point 'send-at
-				       (lyskom-return-date-and-time 
-					(misc-info->sent-at misc))))
+	(funcall insertfun 'send-at (lyskom-return-date-and-time 
+				     (misc-info->sent-at misc))))
     (if (misc-info->sender misc)
-	(lyskom-format-insert-at-point 'sent-by
-				       (misc-info->sender misc)))))
+	(funcall insertfun 'sent-by (misc-info->sender misc)))))
 
 
 

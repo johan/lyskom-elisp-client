@@ -1,5 +1,8 @@
 Sat May  4 00:07:06 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* view-text.el (lyskom-insert-header-comm): Ta insert-funktionen
+ 	som parameter.
+
 	* Jag plockade koden för "Lista (med) regexpar" från 0.38.2.
 
 	* parse.el (lyskom-parse-conf-z-info-list): Ny funktion.
