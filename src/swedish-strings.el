@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.386 2004-11-12 14:24:17 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.387 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.386 2004-11-12 14:24:17 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.387 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -3194,6 +3194,9 @@ Nuvarande rättigheter för %#1P (%#1p):
     (automatic-session-name . "Automatiskt")
     (given-session-name . "Använd angivet:")
 
+    (simple-unread-mode-line . "Enkel")
+    (explicit-unread-mode-line . "Visa alla sessioner med olästa")
+
     (everybody-rcpt .       "Alla                              ")
     (group-rcpt .           "Senaste gruppmeddelandes mottagare")
     (sender-rcpt .          "Senaste meddelandes avsändare     ")
@@ -4192,7 +4195,22 @@ ta fram menyer.")
   Om detta är påslaget så visas \"(Olästa)\" i titelraden för de
   fönster vars valda buffert hör till en LysKOM-session med olästa. 
   Det är inte säkert att titelraden ändras om fönstret inte är öppet.")
-    (kom-created-texts-are-saved-doc . "\
+    (kom-unread-mode-line-type-doc . "\
+  Denna inställning bestämmer hur olästa indikeras i mode-raden. `Enkel'
+  betyder en gemensam indikering för samtliga sessioner ifall du har 
+  olästa texter eller brev. 
+
+  `Visa alla sessioner med olästa' betyder att alla sessioner med olästa 
+  texter indikeras separat. Förekomst med brev indikeras genom att 
+  sessionsnamnet visas med stora bokstäver (till exempel LYSLYS istället 
+  för LysLys). Om sessionsnamnet bara innehåller versaler (exempelvis 
+  LYSLYS) visas det mellan asterisker (*LYSLYS*).
+
+  Notera att denna inställning bör vara samma för alla aktiva 
+  LysKom-sessioner varför det troligen är bäst att spara den i
+  din .emacs.")
+
+   (kom-created-texts-are-saved-doc . "\
   Om detta är ett filnamn så sparas alla inlägg man skriver till den
   filen i ungefär samma format som de har när man läser dem. Inlägg
   som inte kan skapas sparas inte.")
@@ -4560,6 +4578,7 @@ ta fram menyer.")
     (kom-saved-file-name-tag . "Fil att arkivera inlägg i:")
     (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt:")
     (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden:")
+    (kom-unread-mode-line-type-tag . "Typ av olästaindikering i mode-raden:")
     (kom-created-texts-are-saved-tag . "Spara författade inlägg:")
     (kom-confirm-add-recipients-tag . "Fråga om kommentarer skall sändas till nya mottagare:")
     (kom-trim-buffer-minimum-tag . "Minsta storlek av LysKOM-bufferten som tas bort:")

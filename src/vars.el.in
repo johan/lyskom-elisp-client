@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.307 2004-11-12 08:22:24 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.308 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.307 2004-11-12 08:22:24 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.308 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1366,6 +1366,20 @@ If you want the messages in the buffer, set the variable
 
 Values other than those listed are reserved for future use."
   server)
+
+(def-kom-var kom-unread-mode-line-type nil
+  "**Controls how information about unread sessions is given in the mode line.
+
+If this variable is `nil', there will be a single field of information 
+stating whatever you have unread texts or letters in any active session.
+
+If this variable is `t', the mode line will instead include all sessions with
+unread texts. Unread letters will be demonstrated by upper casing the session 
+name or (if the session name is in upper case already) surrounding it with
+asterisks.
+
+All other values are reserved for future use."
+  )
 
 
 

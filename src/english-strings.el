@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.342 2004-11-12 14:24:18 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.343 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.342 2004-11-12 14:24:18 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.343 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3090,6 +3090,9 @@ Select whether to execute command or keyboard macro.")
     (automatic-session-name . "Automatic")
     (given-session-name . "Use specified:")
 
+    (simple-unread-mode-line . "Simple")
+    (explicit-unread-mode-line . "Show all sessions with unread")
+
     (everybody-rcpt . "Everybody                                ")
     (group-rcpt .     "The recipient of the last group message  ")
     (sender-rcpt .    "The sender of the most recent message    ")
@@ -4082,6 +4085,19 @@ up menus.")
   bar of all windows whose active buffer belongs to a LysKOM session
   with unread texts. The title bar may not be updated unless the
   window is open.")
+    (kom-unread-mode-line-type-doc . "\
+  This settings controls how unread texts are indicated in the mode line.
+  `Simple' meand there is a single indication for all active sessions that
+  shows if there are any unread texts or letters.
+
+  `Show all sessions with unread' means all sessions with unread texts 
+  will be listed in the mode line. If there are unread letters in a 
+  session it will be indicated by uppercasing the session name (e.g. 
+  LysLys becomes LYSLYS). If the session name is upper cased already
+  (e.g. LYSLYS) it will be marked with asterisks (e.g. *LYSLYS*).
+
+  Note that this setting should be the same for all active LysKom
+  sessions. That means it's probably wise to save it in your .emacs.")
     (kom-created-texts-are-saved-doc . "\
   If this variable is set to a file name, all texts you write will be 
   saved to that file. Texts that could not be created are not saved.")
@@ -4448,6 +4464,7 @@ up menus.")
     (kom-saved-file-name-tag . "File to archive texts in:")
     (kom-follow-attachments-tag . "Read imported attachments as texts:")
     (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar:")
+    (kom-unread-mode-line-type-tag . "How unread texts are indicated in the mode line:")
     (kom-created-texts-are-saved-tag . "Save created texts:")
     (kom-confirm-add-recipients-tag . "Ask if comments should be sent to new recipients:")
     (kom-trim-buffer-minimum-tag . "How small parts of the LysKOM buffer are trimmed:")

@@ -1,3 +1,28 @@
+2004-11-15  Pontus Freyhult  <pont@soua.net>
+
+	Implement alternate unread mode line:
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-unread-mode-line-type.
+	(lyskom-custom-variables): Dito.	
+
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-custom-strings): Added kom-unread-mode-line-type-tag
+	and kom-unread-mode-line-type-doc. Added simple-unread-mode-line
+	and explicit-unread-mode-line.
+
+	* lyskom-rest.el (lyskom-make-alternate-unread-mode-line): New 
+	function.
+	(lyskom-make-lyskom-unread-mode-line): Use 
+	lyskom-make-alternate-unread-mode-line if applicable.
+
+	* buffers.el (lyskom-update-unread-mode-line): New function.
+	(lyskom-clean-all-buffer-lists): Call lyskom-update-unread-mode-line.
+	(lyskom-remove-buffer-from-lists): Dito.
+	(lyskom-remove-unread-buffer): Dito.
+	(lyskom-add-unread-buffer): Dito.
+
+	* vars.el.in (kom-unread-mode-line-type): New global variable.
+
 2004-11-12  Pontus Freyhult  <pont@soua.net>
 
         * commands2.el (kom-list-sessions): Use session-list-no-unread-in

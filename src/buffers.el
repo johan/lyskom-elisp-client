@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.27 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: buffers.el,v 44.28 2004-11-15 17:27:17 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.27 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.28 2004-11-15 17:27:17 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;;
@@ -192,7 +192,11 @@ the children object"
 (add-hook 'kill-buffer-query-functions
           'lyskom-buffer-hierarchy-query-kill-function)
 
+;;;; ======================================================================
 
+(defun lyskom-update-unread-mode-line ()
+  (setq lyskom-unread-mode-line 
+	(lyskom-make-lyskom-unread-mode-line)))
 
 ;;;; ======================================================================
 ;;;; ======================================================================
@@ -205,6 +209,7 @@ the children object"
         (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
         lyskom-buffer-list
         (lyskom-clean-buffer-list lyskom-buffer-list))
+  (lyskom-update-unread-mode-line)
   (lyskom-set-default 'lyskom-need-prompt-update t))
 
 (defun lyskom-clean-buffer-list (buffers)
@@ -226,6 +231,7 @@ If BUFFER is not specified, assume the current buffer"
   (lyskom-remove-unread-buffer buffer)  
   (setq lyskom-buffer-list
         (delq buffer lyskom-buffer-list))
+  (lyskom-update-unread-mode-line)
   (lyskom-set-default 'lyskom-need-prompt-update t))
 
 (defun lyskom-remove-unread-buffer (buffer &optional letters-only)
@@ -244,6 +250,7 @@ If BUFFER is not specified, assume the current buffer"
    buffer)
   (setq lyskom-sessions-with-unread-letters
         (delq buffer lyskom-sessions-with-unread-letters))
+  (lyskom-update-unread-mode-line)
   (lyskom-set-default 'lyskom-need-prompt-update t))
   
 
@@ -265,6 +272,7 @@ If BUFFER is not specified, assume the current buffer"
      buffer)
     (setq lyskom-sessions-with-unread-letters
           (cons buffer lyskom-sessions-with-unread-letters)))
+  (lyskom-update-unread-mode-line) 
   (lyskom-set-default 'lyskom-need-prompt-update t))
 
 (defvar lyskom-associated-buffer-list nil
