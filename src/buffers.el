@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.12 1999-12-03 15:33:17 byers Exp $
+;;;;; $Id: buffers.el,v 44.13 2000-05-26 14:35:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.12 1999-12-03 15:33:17 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.13 2000-05-26 14:35:13 byers Exp $\n"))
 
 
 ;;;;
@@ -127,6 +127,21 @@ a child of some buffer, reparent it."
       (setq buffer buffer-parent))
     buffer))
 
+(defun lyskom-traverse-buffer-hierarchy (function buffer)
+  "Apply FUNCTION to each descendent of BUFFER. Results are discarded."
+  (let ((queue (list buffer))
+        (done nil)
+        (current nil))
+    (while queue
+      (setq current (car queue))
+      (setq queue (cdr queue))
+      (unless (or (memq current done)
+                  (not (buffer-live-p buffer)))
+        (setq done (cons current done))
+        (setq queue (append queue (lyskom-get-buffer-children current)))
+        (funcall function current)))))
+        
+
 (defun lyskom-map-buffer-children (function buffer)
   "Apply FUNCTION to each child of BUFFER and make a list of the results."
   (cond ((null buffer) nil)
@@ -189,8 +204,11 @@ the children object"
   "Remove all dead buffers from BUFFERS"
   (let ((result nil))
     (while buffers
-      (when (lyskom-buffer-p (car buffers))
-        (setq result (cons (car buffers) result)))
+      (if (lyskom-buffer-p (car buffers))
+        (setq result (cons (car buffers) result))
+        (save-excursion (set-buffer (car buffers))
+                        (setq lyskom-session-has-unread-letters nil)
+                        (setq lyskom-session-has-unreads nil)))
       (setq buffers (cdr buffers)))
     (nreverse result)))
 
@@ -205,8 +223,18 @@ If BUFFER is not specified, assume the current buffer"
 
 (defun lyskom-remove-unread-buffer (buffer &optional letters-only)
   (unless letters-only
-    (setq lyskom-sessions-with-unread
+    (lyskom-traverse-buffer-hierarchy 
+     (lambda (x)
+       (save-excursion (set-buffer x)
+                       (setq lyskom-session-has-unreads nil)))
+     buffer)
+    (setq lyskom-sessions-with-unread 
           (delq buffer lyskom-sessions-with-unread)))
+  (lyskom-traverse-buffer-hierarchy 
+   (lambda (x)
+     (save-excursion (set-buffer x)
+                     (setq lyskom-session-has-unread-letters nil)))
+   buffer)
   (setq lyskom-sessions-with-unread-letters
         (delq buffer lyskom-sessions-with-unread-letters))
   (lyskom-set-default 'lyskom-need-prompt-update t))
@@ -214,10 +242,20 @@ If BUFFER is not specified, assume the current buffer"
 
 (defun lyskom-add-unread-buffer (buffer &optional letters)
   (unless (memq buffer lyskom-sessions-with-unread)
+    (lyskom-traverse-buffer-hierarchy 
+     (lambda (x)
+       (save-excursion (set-buffer x)
+                       (setq lyskom-session-has-unreads t)))
+     buffer)
     (setq lyskom-sessions-with-unread
           (cons buffer lyskom-sessions-with-unread)))
   (unless (or (null letters)
               (memq buffer lyskom-sessions-with-unread-letters))
+    (lyskom-traverse-buffer-hierarchy 
+     (lambda (x)
+       (save-excursion (set-buffer x)
+                       (setq lyskom-session-has-unread-letters t)))
+     buffer)
     (setq lyskom-sessions-with-unread-letters
           (cons buffer lyskom-sessions-with-unread-letters)))
   (lyskom-set-default 'lyskom-need-prompt-update t))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.101 2000-05-23 12:06:44 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.102 2000-05-26 14:35:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.101 2000-05-23 12:06:44 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.102 2000-05-26 14:35:19 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -113,6 +113,7 @@
 ;;;
 
 (defvar lyskom-unread-mode-line nil)
+(defvar lyskom-unread-title-format nil)
 
 ;;; ================================================================
 ;;;             Error reporting from a number of commands.
@@ -3509,13 +3510,29 @@ One parameter - the prompt string."
              (append (list "" (cons extent 'lyskom-unread-mode-line))
                      global-mode-string)))
      (setq global-mode-string
-            (append '("" lyskom-unread-mode-line) global-mode-string))))
+           (append '("" lyskom-unread-mode-line) global-mode-string))))
+
+  (setq frame-title-format (list ""
+                                 frame-title-format
+                                 'lyskom-unread-title-format))
+
+  (setq frame-icon-title-format (list ""
+                                      frame-icon-title-format
+                                      'lyskom-unread-title-format))
+
   (setq lyskom-unread-mode-line
         (list (list 'lyskom-sessions-with-unread 
                     (lyskom-get-string 'mode-line-unread))
               (list 'lyskom-sessions-with-unread-letters
                     (lyskom-get-string 'mode-line-letters))
               " "))
+  (setq lyskom-unread-title-format
+        `(kom-show-unread-in-frame-title
+          (lyskom-session-has-unreads 
+           (" ("
+            ((lyskom-session-has-unreads ,(lyskom-get-string 'frame-title-unread))
+             (lyskom-session-has-unread-letters ,(lyskom-get-string 'frame-title-letters)))
+            ")"))))
 
   (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)
 

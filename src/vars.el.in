@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.100 2000-05-19 10:35:48 byers Exp $
+;;;;; $Id: vars.el.in,v 44.101 2000-05-26 14:35:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.100 2000-05-19 10:35:48 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.101 2000-05-26 14:35:24 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -300,6 +300,11 @@ used."
 (def-kom-var kom-print-number-of-unread-on-entrance t
   "*If Non-nil then print automatically the number of unread articles when
 entering a conference."
+  server)
+
+(def-kom-var kom-show-unread-in-frame-title t
+  "*If non-nil, then show an unread indicator in the frame title of each
+LysKOM session."
   server)
 
 (def-kom-var kom-presence-messages t
@@ -1367,6 +1372,18 @@ This is not buffer-local.")
 (def-kom-var lyskom-sessions-with-unread-letters nil
   "List of lyskom-sessions with unread letters.
 This is not buffer-local.")
+
+(def-kom-var lyskom-session-has-unread-letters nil
+  "Non-nil if this session has unread letters."
+  local
+  protected
+  inherited)
+
+(def-kom-var lyskom-session-has-unreads nil
+  "Non-nil if this session has unread texts."
+  local
+  protected
+  inherited)
 
 (def-kom-var lyskom-buffer nil
   "What is the lyskom-buffer we are connected to."

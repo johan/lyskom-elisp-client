@@ -1,5 +1,23 @@
 2000-05-26  David Byers  <davby@ida.liu.se>
 
+
+ 	Unread marker in title bar
+	* vars.el.in (kom-show-unread-in-frame-title): New variable.
+	
+	* lyskom-rest.el (lyskom-is-loaded): Set
+	lyskom-unread-title-format, frame-title-format and
+	frame-icon-title-format.
+	(lyskom-unread-title-format): New variable.
+
+	* buffers.el (lyskom-traverse-buffer-hierarchy): New function.
+	(lyskom-remove-unread-buffer): Clear flags in the buffer saying
+	that the buffer has unreads.
+	(lyskom-add-unread-buffer): Set flags in the buffer saying that
+	the buffer has unreads.
+
+	* commands1.el (lyskom-quit): Use lyskom-remove-unread-buffer.
+
+ 	Bind lyskom-executing-command in interactive forms
 	* command.el (lyskom-fix-interactive-decl): New function puts a
 	let around evaluated arguments to interactive that binds
 	lyskom-executing-command to the current command.

@@ -8,48 +8,47 @@ Att göra i elisp-klienten
 Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
 meningsfullt. Följande är relevanta:
 
-        Radera inlägg
-        Återse inlägg
-        Återse omodifierat
-        Återse urinlägget
-        Återse det kommenterade
-        Återse det föregående kommenterade
-        Kommentera inlägget
-        Kommentera föregående inlägg
-        Fotnot till inlägg
-        Personligt svar
-        Personligt svar på föregående inlägg
-        Markera (inlägg)
-        Avmarkera (inlägg)
-        Addera mottagare
-        Addera extra kopiemottagare
-        Addera för kännedom
-        Subtrahera mottagare
-        Flytta inlägg
-        Addera kommentar
-        Subtrahera kommentar
-        Arkivera inlägg (till fil)
-        Spara inläggstext (på fil)
-        Sätt loginmeddelande
-        Kort replik
-        Hålla med
-        Addera FAQ
-        Addera fotnot
-        Subtrahera fotnot
-        Förhindra kommentarer
-        Begär personligt svar
-        Begär läsbekräftelse
-        Återse brevhuvud
+        Kommando                            Default     Prompt
+        ------------------------------------------------------
+        Radera inlägg                       ?           Alltid
+        Återse inlägg                       Inget       Ja
+        Återse omodifierat                  SL          Nej
+        Återse urinlägget                   SL          Nej
+        Återse det kommenterade             SL          Nej
+        Återse det föregående kommen        NSL         Nej
+        Kommentera inlägget                 SL          Nej
+        Kommentera föregående inlägg        NSL         Nej
+        Fotnot till inlägg                  SS          ?
+        Personligt svar                     SL          Nej
+        Personligt svar på föregåend        NSL         Nej
+        Markera (inlägg)                    SL          ?
+        Avmarkera (inlägg)                  ?           ?
+        Addera mottagare                    SL          ?
+        Addera extra kopiemottagare         SL          ?
+        Addera för kännedom                 SL          ?
+        Subtrahera mottagare                SL          ?
+        Flytta inlägg                       SL          Ja
+        Addera kommentar                    SL          ?
+        Subtrahera kommentar                SL          ?
+        Arkivera inlägg (till fil)          SL          ?
+        Spara inläggstext (på fil)          SL          ?
+        Sätt loginmeddelande                SS          Ja
+        Kort replik                         SL          Nej
+        Hålla med                           SL          Nej
+        Addera FAQ                          SS          Ja
+        Addera fotnot                       SS          ?
+        Subtrahera fotnot                   SS          ?
+        Förhindra kommentarer               SS          ?
+        Begär personligt svar               SS          ?
+        Begär läsbekräftelse                SS          ?
+        Återse brevhuvud                    SL          Ja
+        ------------------------------------------------------
+        SL  Senast lästa
+        NSL Näst senast lästa
+        SS  Senast skrivna/eget läst
 
 Bestäm vettig default och om kommandot skall fråga efter nummer eller
 bara anta default om man inte ger prefixargument.
-
-
-Gör så att lyskom-read-text-no-prefix-arg vet vilket kommando som
-håller på köras. Ge det ett extra argument för kommandot och fixa
-def-kom-command så att den patchar interactive-specen om den
-innehåller ett anrop till lyskom-read-text-no-arg.
-
 
 
 Det vore trevligt om "Arkivera inlägg (till fil)" fanns i kontextmenyn
