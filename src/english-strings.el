@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.188 2002-04-13 15:01:28 byers Exp $
+;;;;; $Id: english-strings.el,v 44.189 2002-04-13 16:15:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.188 2002-04-13 15:01:28 byers Exp $"))
+              "$Id: english-strings.el,v 44.189 2002-04-13 16:15:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -265,7 +265,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (deleting-text . "Removing text %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")
-    (text-to-see-author-of . "See presentation for the author of which text? ")
+    (text-to-see-author-of . "Review presentation of author of which text? ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
     (review-presentation-of . "Review presentation of %#1M.\n")
     (has-no-presentation . "%#1:M has no presentation.\n")
@@ -813,7 +813,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-cant-read-conf . "You can't review texts to a closed conference you are not a member of.\n")
     (review-cant-read-letterbox . "You can't review texts to somebody else's mailbox.\n")
     (review-cant-read-empty . "The conference is empty.\n")
-    (cant-review-everything . "You cannot review every article in LysKOM.\n")
+    (cant-review-everything . "You cannot review every text in LysKOM.\n")
 
     (more-than-one-root . "Text %#1n has more than one root.\n")
     (more-than-one-root-review . "\
@@ -1401,6 +1401,7 @@ On since %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
+    (there-are-server-faqs . "There %#1?d%[is%]%[are%] %#1d (%#1d not marked as read) FAQ%#1?d%[%]%[s%] for this server:\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
@@ -1443,8 +1444,8 @@ On since %#8s%#9s")
     (label-secret    . "Should others to be able to see the label? ")
 
     (creating-software-aux . "Created with %#1s")
-    (world-readable-text-aux . "The article can be read without logging on")
-    (world-readable-text-edit-aux . "Make the article readable without logging on")
+    (world-readable-text-aux . "The text can be read without logging on")
+    (world-readable-text-edit-aux . "Make the text readable without logging on")
 
     (cant-get-aux-item . "Can't find auxiliary information\n")
     (aux-item-no-info . "No information available\n")
@@ -1479,7 +1480,7 @@ Contents:     \"%#9s\"
 
     (what-kind-to-add-aux-to . "Attach information to what? ")
     (which-conf-to-add-aux-to . "Which conference to you want to attach information to? ")
-    (which-text-to-add-aux-to . "Which article to you want to attach information to? ")
+    (which-text-to-add-aux-to . "Which text to you want to attach information to? ")
     (which-aux-item-tag . "Information tag: ")
     (which-aux-item-inherit . "Set the  inherit-flag? ")
     (which-aux-item-secret . "Set the secret-flag? ")
@@ -1662,8 +1663,8 @@ Number of sessions:  %21#1d (total)
                      %21#4d unknown activity
                      %21#5d invisible sessions
                      %21#6d not logged on/secret/zombies\n")
-    (server-status-first-text . "Oldest existing article:   %15#1n\n")
-    (server-status-last-text  . "Youngest existing argicle: %15#1n\n")
+    (server-status-first-text . "Oldest existing text:      %15#1n\n")
+    (server-status-last-text  . "Youngest existing text:    %15#1n\n")
     (server-status-has-motd . "\nThe server has a notice:\n")
     (server-status-time . "Serverns tid:                   %#1s\n")
     ))
@@ -3414,6 +3415,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   If this is turned on, commands that review texts will also mark them
   as read. Otherwise, the review commands will leave your reading history
   untouched, as usual.")
+    (kom-auto-review-faqs-doc . "\
+  If this is turned on, server FAQs that are not marked as read will be
+  reviewed automatically when you log on.")
+
 
     ;;
     ;; Tags for variables
@@ -3579,6 +3584,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-print-seconds-in-time-strings-tag . "Include seconds in time strings:")
     (kom-review-uses-cache-tag . "Review commands use cached texts:")
     (kom-review-marks-texts-as-read-tag . "Review commands mark texts as read:")
+    (kom-auto-review-faqs-tag . "Review FAQs when logging on:")
     )
 )
 
@@ -3723,12 +3729,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-54 . "Invalid membership type")
 ))
 
-(lyskom-language-var lyskom-unread-mode-line en
-  (lyskom-make-lyskom-unread-mode-line))
 
-(lyskom-language-var lyskom-unread-title-format en
-  (lyskom-make-lyskom-unread-title-format))
-
+     
 (provide 'lyskom-strings)
 
 ;;; english-strings ends here

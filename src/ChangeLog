@@ -1,5 +1,18 @@
 2002-04-13  David Byers  <david.byers@swipnet.se>
 
+	Fix language consistency:
+	* english-strings.el: Changed "article" to "text" in a bunch of
+	strings.
+
+	Check for server FAQs when logging on:
+	* startup.el (lyskom): Do get-version-info before get-server-info,
+	because otherwise we won't get the aux-items.
+	(kom-start-anew): Check for new FAQs when logging on.
+	(lyskom-startup-check-faqs): New function.
+
+	* utilities.el (lyskom-union): New function.
+	(filter-list): New non-recursive implementation.
+
 	More stringent format-string check (each arg needs to appear the
 	same number of times in all strings):
 	* check-strings.el (lcs-delete-format-arg): New function.

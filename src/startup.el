@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.61 2002-02-28 18:43:13 joel Exp $
+;;;;; $Id: startup.el,v 44.62 2002-04-13 16:15:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.61 2002-02-28 18:43:13 joel Exp $\n"))
+	      "$Id: startup.el,v 44.62 2002-04-13 16:15:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -269,14 +269,14 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      (initiate-set-client-version 'background nil
 					   "lyskom.el" lyskom-clientversion)
 
-	      (setq lyskom-server-info (blocking-do 'get-server-info))
               (setq lyskom-server-version-info (blocking-do 'get-version-info))
               (when (or (null lyskom-server-version-info)
                         (<= (version-info->protocol-version 
                              lyskom-server-version-info) 7))
                 (lyskom-error 'too-old-server))
-
 	      (lyskom-setup-client-for-server-version)
+
+	      (setq lyskom-server-info (blocking-do 'get-server-info))
 	      (lyskom-format-insert 
 	       'connection-done
 	       (version-info->software-version lyskom-server-version-info))
@@ -298,8 +298,9 @@ clients of the event. See lyskom-mode for details on lyskom."
 			 (text->decoded-text-mass text text-stat)
 		       (lyskom-get-string 'lyskom-motd-was-garbed)))
 		    (lyskom-insert "\n")))
+
 	      ;; Can't use lyskom-end-of-command here.
-	      (setq lyskom-executing-command nil) 
+	      (setq lyskom-executing-command nil)
 	      ;; Log in
 	      (kom-start-anew t session-priority invisiblep)
 	      (if (memq lyskom-buffer lyskom-buffer-list)
@@ -309,7 +310,9 @@ clients of the event. See lyskom-mode for details on lyskom."
 				 (list (car lyskom-buffer-list)))))
 		(setq lyskom-buffer-list
 		      (cons lyskom-buffer lyskom-buffer-list)))
-	      (setq init-done t))
+              ;; We're done
+	      (setq init-done t)
+              )
 	  ;; Something went wrong. Lets cleanup everything. :->
 	  (if init-done
 	      nil
@@ -572,6 +575,12 @@ shown to other users."
             (lyskom-insert-string 'presentation-encouragement)))
 
       (setq lyskom-is-new-user nil)
+
+      ;; Check FAQs (and don't croak if there is a bug!)
+      (unwind-protect
+          (lyskom-startup-check-faqs)
+        nil)
+
       (lyskom-end-of-command)))
 
   ;; Run the hook kom-login-hook. We don't want to hang the
@@ -870,124 +879,53 @@ to see, set of call."
     (lyskom-set-mode-line
      (lyskom-get-string 'not-present-anywhere)))
 
+;;; ================================================================
+;;; Special login stuff
+;;;
 
+(defun lyskom-startup-check-faqs ()
+  (let ((faq-list (mapcar (lambda (aux)
+                            (string-to-int (aux-item->data aux)))
+                          (lyskom-get-aux-item 
+                           (server-info->aux-item-list lyskom-server-info) 
+                           14))))
+    (when faq-list
+      (let ((collector (make-collector))
+            (mship-list nil))
+        ;; Get all text-stats
+        (lyskom-traverse faq faq-list
+          (initiate-get-text-stat 'main
+                                  'collector-push
+                                  faq
+                                  collector))
+        (lyskom-wait-queue 'main)
 
-  
-;  (let ((proc lyskom-proc)
-;	(pers-no lyskom-pers-no)
-;	(membership lyskom-membership)
-;	(membership-is-read lyskom-membership-is-read)
-;	(last-viewed lyskom-last-viewed)
-;	(replies-buffer lyskom-unparsed-buffer)
-;	(replies-marker lyskom-unparsed-marker)
-;	(server-info lyskom-server-info)
-;	(server-name lyskom-server-name)
-;	)
-;    (kill-all-local-variables)
-;    (make-local-variable 'kom-ansaphone-show-messages)
-;    (make-local-variable 'kom-ansaphone-record-messages)
-;    (make-local-variable 'kom-ansaphone-on)
-;    (make-local-variable 'kom-ansaphone-default-reply)
-;    (make-local-variable 'kom-friends)
-;    (make-local-variable 'kom-login-hook)
-;    (make-local-variable 'kom-membership-default-priority)
-;    (make-local-variable 'kom-permanent-filter-list)
-;    (make-local-variable 'kom-user-prompt-format)
-;    (make-local-variable 'kom-user-prompt-format-executing)
-;    (make-local-variable 'kom-enabled-prompt-format)
-;    (make-local-variable 'kom-enabled-prompt-format-executing)
-;    (make-local-variable 'kom-remote-control)
-;    (make-local-variable 'kom-remote-controllers)
-;    (make-local-variable 'kom-session-filter-list)
-;    (make-local-variable 'lyskom-blocking-return)
-;    (make-local-variable 'lyskom-buffer)
-;    (make-local-variable 'lyskom-command-to-do)
-;    (make-local-variable 'lyskom-conf-cache)
-;    (make-local-variable 'lyskom-count-var)
-;    (make-local-variable 'lyskom-current-conf)
-;    (make-local-variable 'lyskom-current-subject)
-;    (make-local-variable 'lyskom-current-text)
-;    (make-local-variable 'lyskom-default-password)
-;    (make-local-variable 'lyskom-default-user-name)
-;    (make-local-variable 'lyskom-do-when-done)
-;    (make-local-variable 'lyskom-dynamic-session-info-flag)
-;    (make-local-variable 'lyskom-errno)
-;    (make-local-variable 'lyskom-executing-command)
-;    (make-local-variable 'lyskom-filter-list)
-;    (make-local-variable 'lyskom-is-administrator)
-;    (make-local-variable 'lyskom-is-parsing)
-;    (make-local-variable 'lyskom-is-waiting)
-;    (make-local-variable 'lyskom-is-writing)
-;    (make-local-variable 'lyskom-language)
-;    (make-local-variable 'lyskom-last-group-message-recipient)
-;    (make-local-variable 'lyskom-last-personal-message-sender)
-;    (make-local-variable 'lyskom-last-viewed)
-;    (make-local-variable 'lyskom-list-of-edit-buffers)
-;    (make-local-variable 'lyskom-marked-text-cache)
-;    (make-local-variable 'lyskom-membership)
-;    (make-local-variable 'lyskom-membership-is-read)
-;    (make-local-variable 'lyskom-current-prompt)
-;    (make-local-variable 'lyskom-normally-read-texts)
-;    (make-local-variable 'lyskom-number-of-pending-calls)
-;    (make-local-variable 'lyskom-options-done)
-;    (make-local-variable 'lyskom-other-clients-user-areas)
-;    (make-local-variable 'lyskom-output-queues)
-;    (make-local-variable 'lyskom-pending-calls)
-;    (make-local-variable 'lyskom-pending-prefetch)
-;    (make-local-variable 'lyskom-pers-cache)
-;    (make-local-variable 'lyskom-pers-no)
-;    (make-local-variable 'lyskom-prefetch-conf-tresh)
-;    (make-local-variable 'lyskom-prefetch-confs)
-;    (make-local-variable 'lyskom-prefetch-in-action)
-;    (make-local-variable 'lyskom-prefetch-pending-prefetch)
-;    (make-local-variable 'lyskom-prefetch-stack)
-;    (make-local-variable 'lyskom-prefetch-texts)
-;    (make-local-variable 'lyskom-previous-text)
-;    (make-local-variable 'lyskom-prioritize-buffer)
-;    (make-local-variable 'lyskom-proc)
-;    (make-local-variable 'lyskom-reading-list)
-;    (make-local-variable 'lyskom-server-info)
-;    (make-local-variable 'lyskom-server-name)
-;    (make-local-variable 'lyskom-server-version)
-;    (make-local-variable 'lyskom-server-supports)
-;    (make-local-variable 'lyskom-set-last-read-flag)
-;    (make-local-variable 'lyskom-uconf-stats-flag)
-;    (make-local-variable 'lyskom-session-no)
-;    (make-local-variable 'lyskom-session-priority)
-;    (make-local-variable 'lyskom-text-cache)
-;    (make-local-variable 'lyskom-text-mass-cache)
-;    (make-local-variable 'lyskom-to-be-printed-before-prompt)
-;    (make-local-variable 'lyskom-to-do-list)
-;    (make-local-variable 'lyskom-unparsed-buffer)
-;    (make-local-variable 'lyskom-unparsed-marker)
-;    (make-local-variable 'lyskom-unread-confs)
-;    (make-local-variable 'lyskom-what-i-am-doing)
-;    (make-local-variable 'lyskom-who-info-buffer)
-;    (make-local-variable 'lyskom-who-info-buffer-is-on)
-;    (make-local-variable 'lyskom-who-info-cache)
-;    (make-local-variable 'lyskom-collate-table)
-;    (make-local-variable 'mode-line-conf-name)
-;    (make-local-variable 'lyskom-mode-map)
-;    (make-local-variable 'lyskom-edit-mode-map)
-;    (make-local-variable 'lyskom-filter-edit-map)
-;    (make-local-variable 'lyskom-prioritize-mode-map)
-;    (make-local-variable 'lyskom-customize-map)
-;    (setq lyskom-proc proc)
-;    (setq lyskom-pers-no pers-no)
-;    (setq lyskom-membership membership)
-;    (setq lyskom-last-viewed last-viewed)
-;    (setq lyskom-membership-is-read membership-is-read)
-;    (setq lyskom-unparsed-buffer replies-buffer)
-;    (setq lyskom-unparsed-marker replies-marker)
-;    (setq lyskom-server-info server-info)
-;    (setq lyskom-server-name server-name)
-;    (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
-;    (setq lyskom-output-queues (make-vector 10 nil))
-;    (setq lyskom-collate-table lyskom-default-collate-table)
-;    (let ((i 0))
-;      (while (< i 10)
-;	(aset lyskom-output-queues i (lyskom-queue-create))
-;	(++ i)))
-;    (setq lyskom-list-of-edit-buffers nil)
-;    (setq lyskom-pending-calls nil)
-;    (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))
+        ;; Get the memberships that we need
+        (lyskom-traverse text-stat (collector->value collector)
+          (setq mship-list (lyskom-union (lyskom-text-recipients text-stat)
+                                         mship-list)))
+        (lyskom-traverse conf-no mship-list
+          (lyskom-get-membership conf-no t))
+
+        ;; Now we are ready
+        (let ((texts-to-view
+               (filter-list (lambda (text-stat)
+                              (not (lyskom-text-read-at-least-once-p
+                                    text-stat)))
+                            (collector->value collector))))
+          (lyskom-format-insert 'there-are-server-faqs 
+                                (length faq-list)
+                                (length texts-to-view))
+          (lyskom-do-list-summary faq-list)
+
+          (when (and texts-to-view kom-auto-review-faqs)
+            (lyskom-review-enter-read-info 
+             (lyskom-create-read-info 'REVIEW
+                                      nil
+                                      256
+                                      (lyskom-create-text-list 
+                                       (mapcar 'text-stat->text-no
+                                               texts-to-view))
+                                      nil t)
+             nil)
+            ))))))
