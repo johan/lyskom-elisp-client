@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.7 1997-07-12 13:11:28 byers Exp $
+;;;;; $Id: review.el,v 44.8 1997-07-15 10:23:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.7 1997-07-12 13:11:28 byers Exp $\n"))
+	      "$Id: review.el,v 44.8 1997-07-15 10:23:31 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -845,10 +845,20 @@ instead. In this case the text TEXT-NO is first shown."
    (lyskom-current-text 
     (let* ((ts (blocking-do 'get-text-stat (or text-no 
 					       lyskom-current-text)))
-	   (r (lyskom-find-root ts)))
-      (if r
-	  (lyskom-view-text r)
-	(signal 'lyskom-internal-error "Could not find root"))
+	   (r (lyskom-find-root ts t)))
+      (cond ((> (length r) 1)
+             (lyskom-format-insert-before-prompt
+              (lyskom-get-string 'more-than-one-root)
+              ts)
+             (read-list-enter-read-info (lyskom-create-read-info
+                                         'REVIEW
+                                         nil
+                                         (lyskom-get-current-priority)
+                                         (lyskom-create-text-list r)
+                                         nil t)
+                                        lyskom-reading-list t))
+            (r (lyskom-view-text (car r)))
+            (t (signal 'lyskom-internal-error "Could not find root")))
       )
     )
    (t
@@ -862,10 +872,15 @@ reviews the whole tree in deep-first order."
   (lyskom-tell-internat 'kom-tell-review)
   (cond
    (lyskom-current-text
-    (lyskom-review-tree
-     (lyskom-find-root (blocking-do 'get-text-stat lyskom-current-text))))
-   (t
-    (lyskom-insert-string 'read-text-first))))
+    (let* ((ts (blocking-do 'get-text-stat lyskom-current-text))
+           (start (lyskom-find-root ts t)))
+      (cond ((> (length start) 1)
+             (lyskom-format-insert-before-prompt
+              (lyskom-get-string 'more-than-one-root-review) ts)
+             (lyskom-review-tree (car start)))
+            (start (lyskom-review-tree (car start)))
+            (t (signal 'lyskom-internal-error "Could not find root")))))
+   (t (lyskom-insert-string 'read-text-first))))
 
 
 (defun lyskom-find-root (text-stat &optional all)

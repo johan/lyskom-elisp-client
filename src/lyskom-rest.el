@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.38 1997-07-13 10:35:45 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.39 1997-07-15 10:23:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.38 1997-07-13 10:35:45 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.39 1997-07-15 10:23:19 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1450,6 +1450,8 @@ in lyskom-messages."
 ;;; paragraph and starts a new one. An indented line followed by the
 ;;; end of the buffer is also considered a paragraph if we have
 ;;; started a new paragraph based on indentation at least once before.
+;;;
+;;; A line that starts with a minus or plus starts a new paragraph.
 ;;; 
 ;;; An indented line followed by another line indented the same way
 ;;; starts a new paragraph if we're not already scanning a paragraph.
@@ -1476,6 +1478,9 @@ in lyskom-messages."
 ;;; difference in line lengths from paragraph to paragraph is
 ;;; constant.
 ;;;
+
+(defconst lyskom-minimum-triagle-size 3
+  "Minimum number of lines in a triangle or suchlike.")
 
 (defconst lyskom-minimum-brick-size 2
   "Minimum number of lines in a brick.")
@@ -1510,7 +1515,10 @@ in lyskom-messages."
             (paragraph-length 0)
             (eol-point nil)
             (have-indented-paragraphs nil)
-            (fill-column (1- (window-width)))
+            (fill-column 
+             (cond ((not (integerp fill-column)) (- (window-width) 5))
+                   ((> fill-column (- (window-width) 5)) (- (window-width) 5))
+                   (t fill-column)))
             (fill-prefix nil)
             (single-line-regexp "\\(\\S-\\)"))
 
@@ -1547,18 +1555,22 @@ in lyskom-messages."
            ((looking-at "^\\s-*$")
             (when (and in-paragraph 
                        (eq wrap-paragraph t)
-                       (or (< paragraph-length lyskom-minimum-brick-size)
-                           (null constant-length)))
+                       (or (null constant-length)
+                           (and (eq 0 length-difference)
+                                (< paragraph-length lyskom-minimum-brick-size))
+                           (and (not (eq 0 length-difference))
+                                (< paragraph-length lyskom-minimum-triagle-size))))
               (save-match-data
-                (fill-region start (match-beginning 0) nil t))
-              (lyskom-signal-reformatted-text 'reformat-filled))
+                (let ((fill-column (1- fill-column)))
+                  (fill-region start (match-beginning 0) nil t))
+              (lyskom-signal-reformatted-text 'reformat-filled)))
             (setq start (match-end 0)
                   in-paragraph nil
                   wrap-paragraph 'maybe))
 
            ;;
-           ;; We're in a paragraph, but we see indentation. This has
-           ;; to mean something...
+           ;; We're in a paragraph, but we see indentation or a dash. 
+           ;; This has to mean something...
            ;;
 
            ((and in-paragraph
@@ -1567,10 +1579,14 @@ in lyskom-messages."
                      have-indented-paragraphs))
             (setq have-indented-paragraphs t)
             (when (and (eq wrap-paragraph t)
-                       (or (< paragraph-length lyskom-minimum-brick-size)
+                       (or (and (eq 0 length-difference)
+                                (< paragraph-length lyskom-minimum-brick-size))
+                           (and (not (eq 0 length-difference))
+                                (< paragraph-length lyskom-minimum-triagle-size))
                            (null constant-length)))
               (save-match-data
-                (fill-region start (match-beginning 0) nil t))
+                (let ((fill-column (1- fill-column)))
+                  (fill-region start (match-beginning 0) nil t)))
               (lyskom-signal-reformatted-text 'reformat-filled))
             (setq start (match-beginning 0)
                   in-paragraph t
@@ -1583,6 +1599,31 @@ in lyskom-messages."
                   start (match-beginning 0)
                   wrap-paragraph (lyskom-fill-message-initial-wrap
                                   current-line-length (match-beginning 1))))
+
+           ((and in-paragraph
+                 (looking-at "^\\s-*\\(-+\\|\\++\\)\\s-*\\S-"))
+            (when (and (eq wrap-paragraph t)
+                       (or (and (eq 0 length-difference)
+                                (< paragraph-length lyskom-minimum-brick-size))
+                           (and (not (eq 0 length-difference))
+                                (< paragraph-length lyskom-minimum-triagle-size))
+                           (null constant-length)))
+              (save-match-data
+                (let ((fill-column (1- fill-column)))
+                  (fill-region start (match-beginning 0) nil t)))
+              (lyskom-signal-reformatted-text 'reformat-filled))
+            (setq start (match-beginning 0)
+                  in-paragraph t
+                  paragraph-length 0
+                  constant-length t
+                  length-difference nil
+                  last-line-length nil
+                  single-line-regexp "\\(\\S-\\)"
+                  fill-prefix nil
+                  start (match-beginning 0)
+                  wrap-paragraph (lyskom-fill-message-initial-wrap
+                                  current-line-length (match-beginning 1))))
+
 
            ;;
            ;; Here's a tricky one... We're not in a paragraph, and we
@@ -1682,10 +1723,14 @@ in lyskom-messages."
 
         (when (and in-paragraph 
                    (eq wrap-paragraph t)
-                   (or (< paragraph-length lyskom-minimum-brick-size)
+                   (or (and (eq 0 length-difference)
+                            (< paragraph-length lyskom-minimum-brick-size))
+                       (and (not (eq 0 length-difference))
+                            (< paragraph-length lyskom-minimum-triagle-size))
                        (not (eq constant-length t))))
           (save-match-data
-            (fill-region start (point) nil t))
+            (let ((fill-column (1- fill-column)))
+              (fill-region start (point) nil t)))
           (lyskom-signal-reformatted-text 'reformat-filled)))
       
       ;;
@@ -1752,7 +1797,8 @@ A symbol other than t means call it as a function."
 (defun backward-text (&optional arg)
   "Searches backwards for a text start and recenters with that text at the top."
   (interactive "p")
-  (let ((paragraph-start lyskom-text-start))
+  (let ((paragraph-start lyskom-text-start)
+        (paragraph-ignore-fill-prefix t))
     (backward-paragraph arg))
   (beginning-of-line))
 
@@ -1760,7 +1806,8 @@ A symbol other than t means call it as a function."
 (defun forward-text (&optional arg)
   "Searches forward for a text start and recenters with that text at the top."
   (interactive "p")
-  (let ((paragraph-start lyskom-text-start))
+  (let ((paragraph-start lyskom-text-start)
+        (paragraph-ignore-fill-prefix t))
     (forward-paragraph arg)))
 
 
@@ -2778,6 +2825,21 @@ One parameter - the prompt string."
 	    (list 'lyskom-sessions-with-unread-letters
 		  (lyskom-get-string 'mode-line-letters))
 	    " "))
+
+;;;
+;;; Set up lyskom-line-start-chars. The reason we do it here is that
+;;; char-to-int may not be defined until compatibility.el has been
+;;; loaded.
+;;;
+
+(setq lyskom-line-start-chars
+      (let ((tmp (make-vector 256 nil)))
+        (mapcar 
+         (function
+          (lambda (x)
+            (aset tmp (char-to-int x) t)))
+         lyskom-line-start-chars-string)
+        tmp))
 		 
 
 

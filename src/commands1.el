@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.24 1997-07-12 13:10:55 byers Exp $
+;;;;; $Id: commands1.el,v 44.25 1997-07-15 10:22:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.24 1997-07-12 13:10:55 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.25 1997-07-15 10:22:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -348,7 +348,7 @@ Returns t if it was possible, otherwise nil."
 		      (> kom-membership-default-priority 0))
 		 kom-membership-default-priority
 	       (lyskom-read-num-range
-		1 255 (lyskom-get-string 'priority-q)))))
+		0 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
@@ -1536,8 +1536,10 @@ If MARK-NO == 0, review all marked texts."
 						 (time->sec  time))))
 		       (error nil))))))
             lyskom-times)
+;;;
 ;;; +++ FIXME specialhack för svenska. Borde det generaliseras?
-    (when (eq lyskom-language 'sv)
+;;;   
+    (when (and (eq lyskom-language 'sv) kom-show-namedays)
       (let ((tmp (lyskom-nameday time)))
         (when tmp
           (lyskom-insert "\n")
@@ -2146,19 +2148,22 @@ Uses Protocol A version 9 calls"
 ;;; =====================================================================
 ;;;                 Lista klienter - List clients
 ;;; Author: David Kågedal
+;;; Modified: Daivd Byers
 
 		 
-(def-kom-command kom-list-clients ()
+(def-kom-command kom-list-clients (prefix)
   "Display a list of all connected users."
-  (interactive)
-  (let* ((who-info-list (blocking-do 'who-is-on))
-	 (who-list (sort (listify-vector who-info-list)
-			 (function (lambda (who1 who2)
-				     (< (who-info->connection who1)
-					(who-info->connection who2))))))
+  (interactive "P")
+  (let* ((want-invisible (if prefix t nil))
+         (who-info-list (blocking-do 'who-is-on-dynamic t want-invisible nil))
+         (who-list (sort (listify-vector who-info-list)
+                         (function
+                          (lambda (who1 who2)
+                            (< (dynamic-session-info->session who1)
+                               (dynamic-session-info->session who2))))))
 	 (total-users (length who-list))
 	 (s-width (1+ (length (int-to-string
-			       (who-info->connection
+			       (dynamic-session-info->session
 				(nth (1- total-users) who-list))))))
 	 (format-string (lyskom-info-line-format-string
 			 s-width "P" (if kom-deferred-printing "D" "s"))))
@@ -2171,34 +2176,36 @@ Uses Protocol A version 9 calls"
 
     (while who-list
       (let* ((who-info (car who-list))
-	     (session-no (int-to-string (who-info->connection who-info)))
+	     (session-no (int-to-string (dynamic-session-info->session who-info)))
 	     (my-session (if (= lyskom-session-no
-				(who-info->connection who-info))
+				(dynamic-session-info->session who-info))
 			     "*"
 			   " "))
 	     (client (if kom-deferred-printing
 			 (lyskom-create-defer-info
 			  'get-client-name
-			  (who-info->connection who-info)
+			  (dynamic-session-info->session who-info)
 			  'lyskom-deferred-client-1
 			  nil nil nil	; Filled in later
-			  (who-info->connection who-info))
+			  (dynamic-session-info->session who-info))
 		       (blocking-do-multiple
 			   ((name (get-client-name
-				   (who-info->connection who-info)))
+				   (dynamic-session-info->session who-info)))
 			    (version (get-client-version
-				      (who-info->connection who-info))))
+				      (dynamic-session-info->session who-info))))
 			 (concat name " " version)))))
 	(lyskom-format-insert
 	 format-string
 	 (concat session-no my-session)
-	 (who-info->pers-no who-info)
+	 (dynamic-session-info->person who-info)
 	 client))
       (setq who-list (cdr who-list)))
 
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
 			   "\n"))
-    (lyskom-insert (lyskom-format 'total-visible-users total-users))))
+    (lyskom-insert (lyskom-format (if want-invisible
+                                      'total-users
+                                    'total-visible-users) total-users))))
 
 
 (defun lyskom-deferred-client-1 (name defer-info)

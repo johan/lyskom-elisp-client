@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.7 1997-07-09 14:41:25 byers Exp $
+;;;;; $Id: prioritize.el,v 44.8 1997-07-15 10:23:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.7 1997-07-09 14:41:25 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.8 1997-07-15 10:23:28 byers Exp $\n"))
 
 
 
@@ -136,9 +136,11 @@
 
 (defun lyskom-prioritize-current-entry ()
   "Get the entry on the line containing point."
-  (lyskom-prioritize-get-entry-from-no
-   (- (1+ (count-lines 1 (point)))
-      lyskom-prioritize-header-lines)))
+  (save-excursion
+    (beginning-of-line)
+    (lyskom-prioritize-get-entry-from-no
+     (- (1+ (count-lines 1 (point)))
+        lyskom-prioritize-header-lines))))
 
 (defun lyskom-prioritize-get-entry-from-no (no)
   "Get entry number NO from the prioritize list."
@@ -395,7 +397,8 @@ Non-nil optional FORCEUP means force update of entry."
 If ARG is null, toggle selection. Positive arg means always select and
 negative arg means always deselect"
   (interactive "P")
-  (let ((entry (lyskom-prioritize-current-entry)))
+  (let ((entry (lyskom-prioritize-current-entry))
+        (start (point)))
     (cond ((or (not (integerp arg))
                (= arg 0))
            (if (prioritize-entry->selected entry)
@@ -412,7 +415,8 @@ negative arg means always deselect"
            (if (prioritize-entry->selected entry)
                (progn
                  (lyskom-prioritize-select entry nil)
-                 (lyskom-prioritize-redraw-entry entry)))))))
+                 (lyskom-prioritize-redraw-entry entry)))))
+    (goto-char start)))
 
 
 

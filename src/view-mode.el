@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.1 1997-02-07 18:09:19 byers Exp $
+;;;;; $Id: view-mode.el,v 44.2 1997-07-15 10:23:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,21 +33,24 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.1 1997-02-07 18:09:19 byers Exp $\n"))
-
-(defun lyskom-view-base-mode ()
-  (if (fboundp 'view-major-mode)
-      (view-major-mode)
-    (view-mode)))
-
-(define-derived-mode lyskom-view-mode 
-  lyskom-view-base-mode
-  "LysKOM View"
-  "Major mode for viewing buffers")
-
+	      "$Id: view-mode.el,v 44.2 1997-07-15 10:23:45 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")
+
+(eval-when-compile (defvar view-mode-map nil))
+
+(defun lyskom-view-base-mode ()
+  (cond ((fboundp 'view-major-mode) (view-major-mode))
+        ((assq 'view-mode minor-mode-alist)
+         (let* ((keymap (copy-keymap lyskom-view-mode-map)))
+           (make-variable-buffer-local 'minor-mode-map-alist)
+           (set-keymap-parent keymap view-mode-map)
+           (setq minor-mode-map-alist (cons (cons 'view-mode keymap)
+                                            minor-mode-map-alist))
+           (view-mode)))
+        (t (view-mode))))
+
 
 (if lyskom-view-mode-map
     nil
@@ -56,7 +59,7 @@
   (define-key lyskom-view-mode-map "\t" 'kom-next-link)
   (define-key lyskom-view-mode-map [(meta tab)] 'kom-previous-link)
   (define-key lyskom-view-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
-  (define-key lyskom-view-mode-map (lyskom-keys [mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-view-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
   (define-key lyskom-view-mode-map "q" 'lyskom-view-mode-quit))
 
 (defun lyskom-view-mode-quit ()
@@ -64,3 +67,9 @@
   (let ((buf (current-buffer)))
     (lyskom-undisplay-buffer buf)
     (kill-buffer buf)))
+
+(define-derived-mode lyskom-view-mode 
+  lyskom-view-base-mode
+  "LysKOM View"
+  "Major mode for viewing buffers")
+
