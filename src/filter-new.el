@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-new.el,v 44.1 2001-05-02 07:57:05 byers Exp $
+;;;;; $Id: filter-new.el,v 44.2 2002-02-24 16:59:19 byers Exp $
 ;;;;; Copyright (C) 2001  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-new.el,v 44.1 2001-05-02 07:57:05 byers Exp $\n"))
+	      "$Id: filter-new.el,v 44.2 2002-02-24 16:59:19 byers Exp $\n"))
 
 ;;; ================================================================
 ;;; Sections
@@ -168,6 +168,10 @@
 ;;; ================================================================
 ;;; Filter predicates
 ;;;
+;;; FIXME: Predicates to add:
+;;; FIXME:     Filter by who added a text to a conference
+;;; FIXME:     Filter mx-author, mx-from etc.
+;;; FIXME:     Filter on aux-items in general
 
 (defvar lyskom-filter-datatypes nil)
 (defvar lyskom-filter-predicates nil)
