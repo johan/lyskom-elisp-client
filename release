@@ -1,0 +1,184 @@
+#!/bin/sh
+
+ask ()
+{
+    if [ "$2" = "yes" -o "$2" = "ja" ] ; then
+        yes="X"
+        no=""
+    else
+        yes=""
+        no="X"
+    fi
+    
+    ask1=""
+    while [ ! "$ask1" ] ; do
+        echo $1 "(y/n)? [$2] \c"
+        read ans
+        case "$ans" in
+            [yYjJ]*) yes="X"; no=""; ask1="X" ;;
+            [nN]*)   yes=""; no="X"; ask1="X" ;;
+            "")      ask1="X";;
+            *)       echo "Please enter yes, no or return" ;;
+        esac
+    done
+}
+
+askedit ()
+{
+    ask "Vill du editera $1" ja
+    if [ "$yes" ] ; then
+        emacs -nw -q $1
+    fi
+}
+
+
+echo "Versionsnummer: \c"
+read version
+echo "Förbereder release av elispklient version $version"
+
+q1=""
+while [ ! "$q1" ] ; do
+    ask "Är doc/NEWS-$version uppdaterad" nej
+    if [ "$no" ] ; then
+        askedit doc/NEWS-$version
+    else
+        q1="X"
+    fi
+done
+
+
+q2=""
+while [ ! "$q2" ] ; do
+    v1=`grep "^CLIENTVERSION" doc/Makefile | \
+             sed "s/.*CLIENTVERSION.*=[ \t]*\(.*\)$/\1/"`
+    if [ "$v1" = "$version" ] ; then
+        echo "Versionsnummer i doc/Makefile är OK ($v1)."
+        q2="X"
+    else
+        echo "Versionsnumret i doc/Makefile är $v1 (borde vara $version)"
+        askedit doc/Makefile
+    fi
+done
+
+q2=""
+while [ ! "$q2" ] ; do
+    v2=`grep "^CLIENTVERSION" src/Makefile | \
+             sed "s/.*CLIENTVERSION.*=[ \t]*\(.*\)$/\1/"`
+    if [ "$v2" = "$version" ] ; then
+        echo "Versionsnummer i src/Makefile är OK ($v2)."
+        q2="X"
+    else
+        echo "Versionsnumret i src/Makefile är $v2 (borde vara $version)"
+        askedit src/Makefile
+    fi
+done
+
+
+echo "Kontrollerar strängar å sånt..."
+if ( cd src; set -x; make check ) ; then
+    ask "Gick det bra" ja
+else
+    ask "Gick det bra" nej
+fi
+if [ "$no" ] ; then
+    echo "Då avbryter vi releasen"
+    exit 1
+fi
+
+
+echo "Vi försöker kompilera..."
+if ( cd src; set -x; make ) ; then
+    ask "Gick kompileringen bra" ja
+else
+    ask "Gick kompileringen bra" nej
+fi
+if [ "$no" ] ; then
+    echo "Då avbryter vi releasen"
+    exit 1
+fi
+
+q1=""
+while [ ! "$q1" ] ; do
+    ask "Har du skrivit ett ChangeLog-entry för releasen" nej
+    if [ "$no" ] ; then
+        askedit src/ChangeLog
+    else
+        q1="X"
+    fi
+done
+
+tag=`echo v$version | tr "." "-"`
+
+cat <<EOF
+cvs revision blir $version
+cvs symboliska tag blir $tag
+
+Du står i begrepp att börja checka in, ändra revisioner och tagga 
+filer. När det väl har kommit igång finns det ingen återvändo. När
+du gör en release kommer det att bli massor av jobb och gnäll och
+tjafs, för att inte tala om buggrapporter som har med allt annat än 
+LysKOM att göra (till exempel att externa program inte fungerar som
+de ska i Windows NT, eller att Netscape får fel bakgrundsfärg.)
+
+EOF
+
+ask "Vill du trots det fortfarande göra en release" nej
+if [ "$no" ] ; then
+    echo "Det var nog lika bra att låta bli..."
+    exit 1
+fi
+
+
+echo "Checkar in för säkerhets skull..."
+if ( set -x; cvs commit -m "Synkning inför release av $version" ) ; then
+    ;
+else
+    echo "Fortsätt trots att incheckningen inte gick bra" nej
+    if [ "$no" ] ; then
+        exit 1
+    fi
+fi
+
+echo "Uppdaterar revisionsnumret..."
+if ( set -x; cvs commit -r $version ) ; then
+    ;
+else
+    echo "Fortsätt trots att revisionsändringen inte gick bra" nej
+    if [ "$no" ] ; then
+        exit 1
+    fi
+fi
+
+echo "Revisionens symboliska tag: [$tag] \c"
+reas ans
+case $ans in
+    "") ;;
+    *) tag="$ans" ;;
+esac
+
+echo "Sätter symbolisk tag..."
+if ( set -x ; cvs tag "$tag" ) ; then
+    ;
+else
+    echo "Forstsätt trots att taggningen inte gick bra" nej
+    if [ "$no" ] ; then
+        exit 1
+    fi
+fi
+
+echo "Bygger release i src/"
+if ( cr src; set -x; make release) ; then
+    echo "Det gick inte att göra release. Någonting är galet."
+    echo "Se till att göra make release manuellt istället."
+fi
+
+cat <<EOF
+
+Följande saker måste fortfarande göras:
+
+* Installera klienten på Lysator
+* Kopiera releasen till ftp.lysator.liu.se (om inte make release gör det.)
+* Annonsera i LysKOM
+EOF
+
+exit 0
