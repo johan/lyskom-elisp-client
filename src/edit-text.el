@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.11 1997-03-11 13:48:47 byers Exp $
+;;;;; $Id: edit-text.el,v 44.12 1997-04-15 22:32:06 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.11 1997-03-11 13:48:47 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.12 1997-04-15 22:32:06 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -418,7 +418,7 @@ text is a member of some recipient of this text."
       (save-excursion
         (set-buffer lyskom-buffer)
         (set-collector->value collector nil)
-
+	
         (mapcar (function (lambda (text-stat)
                             (cache-del-text-stat text-stat)
                             (initiate-get-text-stat 'sending 
@@ -428,23 +428,27 @@ text is a member of some recipient of this text."
                 comm-to-list)
         (lyskom-wait-queue 'sending)
                                              
-        (lyskom-traverse text-stat (collector->value collector)
-          (when text-stat
-            (lyskom-traverse misc-item (text-stat->misc-info-list text-stat)
-              (when (and (eq (misc-info->type misc-item) 'COMM-IN)
-                         (not (lyskom-text-read-at-least-once-p 
-                               (blocking-do 'get-text-stat
-                                            (misc-info->comm-in misc-item))))
-                         (not (lyskom-j-or-n-p
-                               (lyskom-format 'have-unread-comment
-                                              text-stat))))
-                (signal 'lyskom-edit-text-abort
-                        (list "%s"
-                              (lyskom-get-string 
-                               'please-check-commented-texts))))))))
+	(lyskom-traverse
+	 text-stat (collector->value collector)
+	 (when text-stat
+	   (when (catch 'unread
+		   (lyskom-traverse
+		    misc-item (text-stat->misc-info-list text-stat)
+		    (when (and (eq (misc-info->type misc-item) 'COMM-IN)
+			       (not (lyskom-text-read-at-least-once-p 
+				     (blocking-do
+				      'get-text-stat
+				      (misc-info->comm-in misc-item)))))
+		      (throw 'unread t))))
+	     (unless (lyskom-j-or-n-p
+		      (lyskom-format 'have-unread-comment text-stat))
+	       (signal 'lyskom-edit-text-abort
+		       (list "%s"
+			     (lyskom-get-string 
+			      'please-check-commented-texts))))))))
       (lyskom-message (lyskom-format 'checking-comments-done)))
-
-
+    
+    
     ;;
     ;; Confirm multiple recipients
     ;;
