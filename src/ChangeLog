@@ -1,3 +1,11 @@
+2002-05-24  David Kågedal  <davidk@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Don't reset the default
+	kom-default-language if the user set it in .emacs.
+
+	* vars.el.in (lyskom-maybe-setq, lyskom-maybe-setq-default): New
+	macros to facilitate using kom-dont-read-saved-variables.
+
 2002-05-24  Per Cederqvist  <ceder@ingate.com>
 
 	* Makefile: Force re-creation of $(VARS-EL) when lyskom.el is
