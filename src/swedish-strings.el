@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.287 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.288 2003-01-02 17:12:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.287 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.288 2003-01-02 17:12:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -718,7 +718,7 @@ Ditt alarmmeddelande löd:
      . "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
 Meddelandet du försökte sända till %#1M var:
 %#2t\n")
-    (only-last . "Endast läsa senaste (0 - %#1d) i %#2s: ")
+    (only-last . "Endast läsa senaste i %#1s: ")
     (only-error . "Något gick galet. Ledsen.\n")
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")

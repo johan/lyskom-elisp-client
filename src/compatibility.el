@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.62 2002-11-22 17:38:39 byers Exp $
+;;;;; $Id: compatibility.el,v 44.63 2003-01-02 17:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.62 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.63 2003-01-02 17:12:26 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -424,9 +424,16 @@ string to search in."
 				   read
 				   hist)))))
 
+(if (fboundp 'minibuffer-contents)
+    (defalias 'lyskom-minibuffer-contents 'minibuffer-contents)
+  (defalias 'lyskom-minibuffer-contents 'buffer-string))
+
 (lyskom-external-function temp-minibuffer-message)
 (lyskom-provide-function minibuffer-message (message)
   (temp-minibuffer-message message))
+
+
+
 
 
 (lyskom-provide-function last (x &optional n)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.1 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: faces.el,v 44.2 2003-01-02 17:12:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.1 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: faces.el,v 44.2 2003-01-02 17:12:26 byers Exp $\n"))
 
 
 
@@ -389,10 +389,10 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--active-face
   '((((background light))
-     :foreground "blue4"
+     (:foreground "blue4")
      )
     (((background dark))
-     :foreground "lightblue"
+     (:foreground "lightblue")
      )
     )
   "Face used for most \"clickable\" areas."
@@ -402,10 +402,10 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--url-face
   '((((background light))
-     :foreground "blueviolet"
+     (:foreground "blueviolet")
      )
     (((background dark))
-     :foreground "moccasin"
+     (:foreground "moccasin")
      )
     )
   "Face used for URLs."
@@ -415,14 +415,14 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--me-face
   '((((background light))
-     :foreground "blue3"
+     (:foreground "blue3"
      :background "lavender"
-     :weight bold
+     :weight bold)
      )
     (((background dark))
-     :foreground "gold"
+     (:foreground "gold"
      :background "black"
-     :weight bold
+     :weight bold)
      )
     )
   "Face used to show your own name."
@@ -432,10 +432,10 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--highlight-face
   '((((background light))
-     :background "seagreen"
+     (:background "seagreen")
      )
     (((background dark))
-     :background "darkblue"
+     (:background "darkblue")
      )
     )
   "Face used for various highlights."
@@ -456,10 +456,10 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--text-no-face
   '((((background light))
-     :foreground "blue4"
+     (:foreground "blue4")
      )
     (((background dark))
-     :foreground "lightblue"
+     (:foreground "lightblue")
      )
     )
   "Face used for text numbers."
@@ -468,11 +468,11 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--friends-face
   '((((background light))
-     :foreground "blue3"
-     :background "lavender"
+     (:foreground "blue3"
+     :background "lavender")
      )
     (((background dark))
-     :foreground "red"
+     (:foreground "red")
      )
     )
   "Face used for people in kom-friends."
@@ -481,11 +481,11 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--morons-face
   '((((background light))
-     :foreground "blue3"
-     :background "yellow"
+     (:foreground "blue3"
+     :background "yellow")
      )
     (((background dark))
-     :foreground "yellow"
+     (:foreground "yellow")
      )
     )
   "Face used for people in kom-morons."
@@ -494,12 +494,12 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--presence-face
   '((((background light))
-     :foreground "dim gray"
-     :slant italic
+     (:foreground "dim gray"
+     :slant italic)
      )
     (((background dark))
-     :foreground "gray"
-     :slant italic
+     (:foreground "gray"
+     :slant italic)
      )
     )
   "Face used for presence messages."
@@ -509,12 +509,12 @@ for `lyskom-background-colors' for more information."
 
 (defface kom-face--plain--mark-face
   '((((background light))
-     :foreground "blue3"
-     :background "lavender"
+     (:foreground "blue3"
+     :background "lavender")
      )
     (((background dark))
-     :foreground "gold"
-     :background "black"
+     (:foreground "gold"
+     :background "black")
      )
     )
   "Face used for temporary marks."
@@ -523,19 +523,19 @@ for `lyskom-background-colors' for more information."
 
 
 (defface kom-face--plain--first-line-face
-  '((t :weight bold))
+  '((t (:weight bold)))
   "Face used for the first line header of each text."
   :group 'lyskom-faces
   )
 
 (defface kom-face--plain--warning-face
-  '((t :weight bold :foreground "red"))
+  '((t (:weight bold :foreground "red")))
   "Face used to display important warnings."
   :group 'lyskom-faces
   )
 
 (defface kom-face--plain--dim-face
-  '((t :foreground "gray"))
+  '((t (:foreground "gray")))
   "Face used to display dimmed items, such as passive memberships."
   :group 'lyskom-faces
   )

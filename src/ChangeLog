@@ -1,3 +1,20 @@
+2003-01-02  David Byers  <david.byers@swipnet.se>
+
+	Cosmetics:
+	* commands2.el (kom-set-unread): Don't include range in prompt. It
+	will be included by lyskom-read-num-range-or-date.
+
+	Compatibility issues with date reading:
+	* compatibility.el (lyskom-minibuffer-contents): Provide an alias
+	for minibuffer-contents.
+
+	* lyskom-rest.el (lyskom-verified-read-enter): Use
+	lyskom-minibuffer-contents instead of minibuffer-contents.
+
+	Work on new face code:
+	* faces.el: Fixed bug in call to defface that worked in Gnu Emacs
+	but not in XEmacs.
+
 2003-01-01  David Byers  <david.byers@swipnet.se>
 
 	Work on new face code:
