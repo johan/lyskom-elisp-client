@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.3 1996-04-02 16:20:13 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.4 1996-04-04 11:54:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.3 1996-04-02 16:20:13 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.4 1996-04-04 11:54:51 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -735,24 +735,23 @@ The position lyskom-last-viewed will always remain visible."
 
 (defun lyskom-insert (string)
   "Insert STRING last in current buffer.
-Never scrolls but leaves the point at the end of the buffer if possible without
-scrolling. Leaves the point at the end of the window if not possible.
-If buffer is not on screen then doesn't move point.
+Scrolls as long as the last viewed line (lyskom-last-viewed) remains
+on screen. Leaves the point at the end of the buffer if possible,
+otherwise the point is left at the end of the window. If buffer is not
+on screen then doesn't move point.
 The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   (goto-char (point-max))
   (let ((buffer-read-only nil))
     (insert (if kom-emacs-knows-iso-8859-1
-		string
-	      (iso-8859-1-to-swascii string))))
+                string
+              (iso-8859-1-to-swascii string))))
   (lyskom-trim-buffer)
   (let ((window (get-buffer-window (current-buffer))))
     (if window
-	(if (pos-visible-in-window-p (point) window)
-	    nil
-	  (move-to-window-line -1)
-	  (vertical-motion 1)
-	  (if (not (pos-visible-in-window-p))
-	      (forward-char -1))))))
+        (if (pos-visible-in-window-p (point) window)
+            nil
+          (and kom-continuous-scrolling (lyskom-scroll))))))
+
 
 
 (defun lyskom-insert-before-prompt (string)

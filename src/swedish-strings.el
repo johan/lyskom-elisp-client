@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.1 1996-04-02 16:20:36 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.2 1996-04-04 11:55:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.1 1996-04-02 16:20:36 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.2 1996-04-04 11:55:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -244,7 +244,8 @@ Skicka ett brev till %#2P f\366r medlemsskap.\n")
     (what-private-no . "Personligt svar till text nummer: ")
     (confusion-who-to-reply-to . "Jag f\366rst\345r inte vems inl\344gg du vill
  skriva ett privat svar till.\n")
-    (confusion-what-to-answer-to . "Jag f\366rst\345r inte vilken text du vill besvara.")
+    (confusion-what-to-answer-to . "Jag f\366rst\345r inte vilken text du vill besvara.\n")
+    (confusion-what-to-view . "Jag f\366rst\345r inte vilken text du vill \345terse.\n")
     (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots os\344nt meddelande? ")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
     (session-ended . "
@@ -532,6 +533,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (set-session-priority . "S\344tt l\344sniv\345: ")
 
     ; From review.el:
+    (review-how-many . "\305terse hur m\345nga: ")
     (latest-n . "senaste %#1d")
     (first-n . "f\366rsta %#1d")
     (info-by-whom . "%#1s av vem: ")
@@ -542,8 +544,8 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (no-get-conf . "Du f\345r inte h\344mta m\366tet.\n")
     (no-get-pers . "Du f\345r inte h\344mta personen.\n")
     (no-review-info . "Ej till\345tet \345terse %#1s\n")
-    (review-info . "\305terse %#1s\n")
 ;; +++
+    (review-info . "\305terse %#1s")
     (review-info-by-to . "\305terse %#1s av %#2P till %#3M fram\345t.\n")
     (you-review . "Du \345terser nu %#1s.\n")
     (read-text-first . "Du m\345ste l\344sa en text f\366rst.\n")
@@ -914,6 +916,7 @@ Text:
     (kom-review-next            "\305terse n\344sta")
     (kom-find-root		"\305terse urinl\344gget")
     (kom-review-by-to           "\305terse senaste")
+    (kom-review-first           "\305terse f\366rsta")
     (kom-view-commented-text    "\305terse det kommenterade")
     (kom-review-stack           "\305terse lista")
     (kom-review-presentation    "\305terse presentation")
@@ -1153,6 +1156,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}8" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "}9" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "}k" 'kom-view-commented-text)
+  (define-key lyskom-mode-map "}K" 'kom-view-previous-commented-text)
   (define-key lyskom-mode-map "}a?" 'lyskom-help)
   (define-key lyskom-mode-map "}ak" 'kom-review-comments)
   (define-key lyskom-mode-map "}ar" 'kom-review-tree)
@@ -1163,6 +1167,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}r" 'kom-find-root)
   (define-key lyskom-mode-map "}u" 'kom-find-root)
   (define-key lyskom-mode-map "}s" 'kom-review-by-to)
+  (define-key lyskom-mode-map "}f" 'kom-review-first)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "}l" 'kom-review-stack)
   (define-key lyskom-mode-map "}p" 'kom-review-presentation)

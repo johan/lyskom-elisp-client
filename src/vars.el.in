@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 40.3 1996-04-02 16:20:46 byers Exp $
+;;;;; $Id: vars.el.in,v 40.4 1996-04-04 11:55:11 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 40.3 1996-04-02 16:20:46 byers Exp $\n"
+  "$Id: vars.el.in,v 40.4 1996-04-04 11:55:11 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -139,6 +139,12 @@ This variable is stored in the LysKOM server.")
 
 (defvar kom-read-depth-first t
   "*Non-nil means read comments and footnotes to a text before other texts.
+
+This variable is stored in the LysKOM server.")
+
+(defvar kom-continuous-scrolling t
+  "*Non-nil means scroll LysKOM window as text is inserted. The last viewed
+position (generally the most recent prompt) will alsways be visisble.
 
 This variable is stored in the LysKOM server.")
 
@@ -543,6 +549,7 @@ This variable is not saved in the LysKOM server.")
     kom-membership-default-priority
     kom-mercial 
     kom-page-before-command 
+    kom-continuous-scrolling
     kom-permanent-filter-list
     kom-presence-messages-in-buffer
     kom-quit-hook

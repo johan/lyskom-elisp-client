@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.2 1996-04-02 16:19:08 byers Exp $
+;;;;; $Id: commands1.el,v 40.3 1996-04-04 11:54:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.2 1996-04-02 16:19:08 byers Exp $\n"))
+	      "$Id: commands1.el,v 40.3 1996-04-04 11:54:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -162,36 +162,49 @@ text is shown and a REVIEW list is built to shown the other ones."
     (lyskom-insert-string 'have-to-read)))
 
 
+(def-kom-command kom-view-previous-commented-text ()
+ "View the text the previous text commented.
+If the previously viewed text is a comment to (footnote to) several
+texts then the first text is shown and a REVIEW list is built to show
+the other ones."
+	      (interactive)
+	      (if lyskom-previous-text
+		  (progn
+		    (lyskom-tell-internat 'kom-tell-read)
+		    (lyskom-view-commented-text
+		     (blocking-do 'get-text-stat lyskom-previous-text)))
+		(lyskom-insert-string 'confusion-what-to-view)))
+
 (defun lyskom-view-commented-text (text-stat)
   "Handles the return from the initiate-get-text-stat, displays and builds list."
   (let* ((misc-info-list (and text-stat
-			      (text-stat->misc-info-list text-stat)))
-	 (misc-infos (and misc-info-list
-			  (append (lyskom-misc-infos-from-list
-				   'COMM-TO misc-info-list)
-				  (lyskom-misc-infos-from-list
-				   'FOOTN-TO misc-info-list))))
-	 (text-nos (and misc-infos
-			(mapcar
-			 (function
-			  (lambda (misc-info)
-			    (if (equal (misc-info->type misc-info)
-				       'COMM-TO)
-				(misc-info->comm-to misc-info)
-			      (misc-info->footn-to misc-info))))
-			 misc-infos))))
+                              (text-stat->misc-info-list text-stat)))
+         (misc-infos (and misc-info-list
+                          (append (lyskom-misc-infos-from-list
+                                   'COMM-TO misc-info-list)
+                                  (lyskom-misc-infos-from-list
+                                   'FOOTN-TO misc-info-list))))
+         (text-nos (and misc-infos
+                        (mapcar
+                         (function
+                          (lambda (misc-info)
+                            (if (equal (misc-info->type misc-info)
+                                       'COMM-TO)
+                                (misc-info->comm-to misc-info)
+                              (misc-info->footn-to misc-info))))
+                         misc-infos))))
     (if text-nos
-	(progn
-	  (lyskom-format-insert 'review-text-no 
-				(car text-nos))
-	  (if (cdr text-nos)
-	      (read-list-enter-read-info
-	       (lyskom-create-read-info
-		'REVIEW nil (lyskom-get-current-priority)
-		(lyskom-create-text-list (cdr text-nos))
-		lyskom-current-text)
-	       lyskom-reading-list t))
-	  (lyskom-view-text (car text-nos)))
+        (progn
+          (lyskom-format-insert 'review-text-no 
+                                (car text-nos))
+          (if (cdr text-nos)
+              (read-list-enter-read-info
+               (lyskom-create-read-info
+                'REVIEW nil (lyskom-get-current-priority)
+                (lyskom-create-text-list (cdr text-nos))
+                lyskom-current-text)
+               lyskom-reading-list t))
+          (lyskom-view-text (car text-nos)))
       (lyskom-insert-string 'no-comment-to))))
 
 
