@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.85 1999-11-12 14:30:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.86 1999-11-17 12:53:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.85 1999-11-12 14:30:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.86 1999-11-17 12:53:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -967,6 +967,8 @@ Skicka en bugrapport.\n")
 		
     (mode-line-unread . " Olästa ")
     (mode-line-letters . "brev ")
+    (sessions-with-unreads . "Sessioner med olästa")
+    (unread-letters . "olästa brev")
 
     (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
     (error-code . "Felkod %#2d: %#1s.\n")

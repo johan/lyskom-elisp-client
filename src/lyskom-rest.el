@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.84 1999-10-16 22:49:07 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.85 1999-11-17 12:53:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.84 1999-10-16 22:49:07 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.85 1999-11-17 12:53:00 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3334,14 +3334,28 @@ One parameter - the prompt string."
 	(format "LysKOM(%s)" server))))
 
 
+(defvar lyskom-modeline-keymap nil)
+(if lyskom-modeline-keymap
+    nil
+  (setq lyskom-modeline-keymap (make-sparse-keymap))
+  (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button2)) 'kom-modeline-next-unread-kom)
+  (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button3)) 'kom-modeline-select-unread-kom))
+
 
 (if lyskom-is-loaded
     nil
 
   (lyskom-set-language lyskom-language)
-  (or (memq 'lyskom-unread-mode-line global-mode-string)
-      (setq global-mode-string
-            (append '("" lyskom-unread-mode-line) global-mode-string)))
+  (unless (or (memq 'lyskom-unread-mode-line global-mode-string)
+              (rassq 'lyskom-unread-mode-line global-mode-string))
+    (lyskom-xemacs-or-gnu
+     (let ((extent (make-extent nil nil nil)))
+       (set-extent-keymap extent lyskom-modeline-keymap)
+       (setq global-mode-string
+             (append (list "" (cons extent lyskom-unread-mode-line))
+                     global-mode-string)))
+     (setq global-mode-string
+            (append '("" lyskom-unread-mode-line) global-mode-string))))
   (setq lyskom-unread-mode-line
         (list (list 'lyskom-sessions-with-unread 
                     (lyskom-get-string 'mode-line-unread))

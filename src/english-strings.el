@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.67 1999-10-16 22:49:05 byers Exp $
+;;;;; $Id: english-strings.el,v 44.68 1999-11-17 12:52:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.67 1999-10-16 22:49:05 byers Exp $"))
+              "$Id: english-strings.el,v 44.68 1999-11-17 12:52:58 byers Exp $"))
 
 
 ;;; ================================================================
@@ -424,7 +424,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
     (who-to-add-q . "Add who/what as a recipient? ")
-    (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy? ")
+    (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
+    (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
     (who-to-sub-q . "Remove who/what as a recipient? ")
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
@@ -957,6 +958,8 @@ Send a bug report.\n")
 
     (mode-line-unread . " Unread ")
     (mode-line-letters . "letters ")
+    (sessions-with-unreads . "Sessions with unread texts")
+    (unread-letters . "unread letters")
 
     (bad-text-no-prefix . "Unable to translate prefix `%s' to a text number")
     (error-code . "Error code %#2d: %#1s.\n")
