@@ -1,4 +1,6 @@
-<!doctype book public "-//OASIS//DTD DocBook V3.1//EN">
+<!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
+<!ENTITY genindex.sgm SYSTEM "genindex.sgm">
+]>
 <!-- ?stylesheet href="/local/sgml/style/dsssl/ldp.dsl" type="text/dsssl" -->
 
 <book>
@@ -161,6 +163,12 @@
     </comment>
 
     <para>
+      <indexterm id="history-1">
+        <primary>Linus</primary>
+      </indexterm>
+      <indexterm id="history-2">
+        <primary>LinusKOM</primary>
+      </indexterm>
       Det var en gång en teknisk högskola som hette LiTH. Där gick
       många studenter och läste en massa klokskap i diverse kurser.
       Ibland ägnade de sig även åt att diskutera med varandra med
@@ -170,6 +178,9 @@
     </para>
 
     <para>
+      <indexterm id="history-3">
+        <primary>QZ-KOM</primary>
+      </indexterm>
       LinusKOM var ett QZ-KOM, vilket betyder att det var skapat av QZ
       i Stockholm. QZ-KOM kunde köra på DEC-10 och DEC-20-maskiner, en
       maskintyp som fanns i drift på LiTH fram till slutet av
@@ -243,7 +254,7 @@
 
     <para>
       För den som är intresserad av att utvecka LysKOM-systemet finns
-      det ett fleratal möten i LysLysKOM som är intressanta.
+      det ett flertal möten i LysLysKOM som är intressanta.
     </para>
 
     <itemizedlist>
@@ -300,11 +311,26 @@
       <title>tty-klienten</title>
 
       <para>
-        tty-klienten (även kallad C-klienten) är skriven i C med det
-        ursprungliga målet att så troget som möjligt likna QZ-KOM.
-        Avvikelser från detta mål har skett dels beroende på de
-        olika förutsättningar som LysKOM har jämfört med QZ-KOM och
-        dels beroende på personlig smak hos utvecklarna.
+        <indexterm id="tty-1">
+          <primary>Klienter</primary>
+          <secondary>tty-klienten</secondary>
+        </indexterm>
+        <indexterm id="tty-2">
+          <primary>Klienter</primary>
+          <secondary>C-klienten</secondary>
+        </indexterm>
+        <indexterm id="tty-3">
+          <primary>tty-klienten</primary>
+        </indexterm>
+        <indexterm id="tty-4">
+          <primary>C-klienten</primary>
+        </indexterm>
+        tty-klienten (även kallad C-klienten) är skriven i
+        <command>C</command> med det ursprungliga målet att så troget
+        som möjligt likna QZ-KOM.  Avvikelser från detta mål har skett
+        dels beroende på de olika förutsättningar som LysKOM har
+        jämfört med QZ-KOM och dels beroende på personlig smak hos
+        utvecklarna.
       </para>
 
       <para>
@@ -326,29 +352,60 @@
     </sect2>
 
     <sect2>
-      <title>tkom och nilkom (och kom++)</title>
+      <title>kom++, nilkom och tkom</title>
+      <comment>
+        Informationen OK med Per Cederqvist 2002-03-28.
+      </comment>
 
       <para>
-        tkom och nilkom är två olika klienter som bygger på samma
-        grundstomme, nämligen klassbiblioteket kom++. Grundprogrammet
-        som pratar med LysKOM-servern är skrivet i C++ och sedan finns
-        det två olika användargränssnitt som är skrivna i
-        <command>TCL</command>. Nilkom kör mot en terminal medan tkom
-        öppnar X-fönster.
-        
-        Målet med denna klient är att erbjuda ett gränssnitt till
-        LysKOM-servern som är bättre än protokollet och det finns
-        redan nu rutiner för cachning av personer och möten.
-        
-        tkom, nilkom och kom++-paketet kräver att C++ och TCL/Tk finns
-        installerat på maskinen men om man vill använda paketet för
-        att bygga en helt egen klient kan man klara sig utan TCL.
-        
-        Den senaste versionen av kom++-klienten finns att hämta från
-        <ulink
+        <indexterm id="tkom-1">
+          <primary>Klienter</primary>
+          <secondary>tkom</secondary>
+        </indexterm>
+        <indexterm id="tkom-2">
+          <primary>Klienter</primary>
+          <secondary>nilkom</secondary>
+        </indexterm>
+        <indexterm id="tkom-3">
+          <primary>Klienter</primary>
+          <secondary>kom++</secondary>
+        </indexterm>
+        <indexterm id="tkom-4">
+          <primary>tkom</primary>
+        </indexterm>
+        <indexterm id="tkom-5">
+          <primary>nilkom</primary>
+        </indexterm>
+        <indexterm id="tkom-6">
+          <primary>kom++</primary>
+        </indexterm>
+        kom++ är ett klassbibliotek som erbjuder ett gränssnitt till
+        LysKOM-servern som är bättre än det som LysKOM-protokollet
+        erbjuder.  Det finns redan nu rutiner för cachning av personer
+        och möten. kom++ är skrivet i <command>C++</command> och har
+        bindningar mot <command>Python</command> och (av historiska
+        skäl) <command>TCL</command>.
+      </para>
+
+      <para>
+        nilkom är en terminalbaserad klient skriven i
+        <command>TCL</command> med hjälp av kom++.
+      </para>
+
+      <para>
+        tkom är en X-baserad klient skriven i <command>TCL</command>
+        med hjälp av kom++.  Den har inte underhållits på flera år och
+        fungerar inte idag.
+      </para>
+
+      <para>
+        Den senaste versionen av kom++ finns att hämta från <ulink
         url="ftp://ftp.lysator.liu.se/pub/lyskom/">ftp://ftp.lysator.liu.se/pub/lyskom/</ulink>.
+        nilkom och tkom ingår i samma distributionsarkiv som kom++.
+      </para>
         
-        tkom, nilkom och kom++ är skrivna av Per Cederqvist
+      <para>
+        kom++, nilkom och tkom är skrivna av Per Cederqvist
         <email>ceder@lysator.liu.se</email> och Inge Wallin
         <email>inge@lysator.liu.se</email>.
       </para>
@@ -356,8 +413,18 @@
 
     <sect2>
       <title>WinKOM</title>
+      <comment>
+        Informationen OK med Peter Zander 2002-03-28.
+      </comment>
 
       <para>
+        <indexterm id="winkom-1">
+          <primary>Klienter</primary>
+          <secondary>WinKOM</secondary>
+        </indexterm>
+        <indexterm id="winkom-2">
+          <primary>WinKOM</primary>
+        </indexterm>
         WinKOM är en LysKOM-klient för <productname>Microsoft
         Windows</productname>. Den är nog, efter elispklienten, den
         mest kompletta klienten som finns tillgänglig.
@@ -370,12 +437,24 @@
         diskussion och idéer</quote> i LysLysKOM är avsett för
         diskussion om WinKOM.
       </para>
+
+      <para>
+        WinKOM är skrivet av Peter Zander
+        <email>zander@lysator.liu.se</email>. 
+      </para>
     </sect2>
 
     <sect2>
       <title>JySKom</title>
 
       <para>
+        <indexterm id="jyskom-1">
+          <primary>Klienter</primary>
+          <secondary>JySKom</secondary>
+        </indexterm>
+        <indexterm id="jyskom-2">
+          <primary>JySKom</primary>
+        </indexterm>
         JysKOM är en server skriven i <command>Perl</command> som gör
         det möjligt att köra LysKOM via en webbläsare.
       </para>
@@ -392,11 +471,21 @@
 
     <sect2>
       <title>WebKOM</title>
+      <comment>
+        Informationen OK med Peter Åstrand 2002-03-28.
+      </comment>
 
       <para>
+        <indexterm id="webkom-1">
+          <primary>Klienter</primary>
+          <secondary>WebKOM</secondary>
+        </indexterm>
+        <indexterm id="webkom-2">
+          <primary>WebKOM</primary>
+        </indexterm>
         WebKOM är, liksom JySKom, en server för att kunna läsa LysKOM
-        via en webbläsare. WebKOM är skriven i
-        <command>Python</command>.  
+        via en webbläsare (via HTTP eller HTTPS). WebKOM är skriven i
+        <command>Python</command>.
       </para>
 
       <para>
@@ -409,7 +498,7 @@
 
       <para>
         WebKOM är skrivet av Peter Åstrand
-        <email>peter@student.liu.se</email>.
+        <email>astrand@lysator.liu.se</email>.
       </para>
     </sect2>
   </sect1>
@@ -419,6 +508,9 @@
     <subtitle>Vad är en LysKOM-server, egentligen?</subtitle>
 
     <para>
+      <indexterm ID="server-1">
+        <primary>LysKOM-server</primary>
+      </indexterm>
       LysKOM-servern är en databashanterare specialskriven i C för
       ändamålet. Varje LysKOM har en egen LysKOM-server som klienter
       kan koppla upp sig mot. Lysators egen LysKOM-server,
@@ -451,6 +543,9 @@
     <title>Att installera elispklienten</title>
 
     <para>
+      <indexterm id="installation-1">
+        <primary>Installation</primary>
+      </indexterm>
       För att kunna installera elispklienten måste du först ha
       tillgång till den. Den senaste versionen finns alltid
       tillgänglig från <ulink
@@ -496,12 +591,10 @@
   <sect1>
     <title>Användbara versioner av Emacs</title>
 
-    <comment>
-      Se till att lista ut hur man klämmer fram svenska ur
-      stylesheetet.
-    </comment>
-
     <para>
+      <indexterm id="emacs-1">
+        <primary>Emacsversioner</primary>
+      </indexterm>
       Eftersom <command>Emacs</command> vid det här laget är ett
       program som varit med ett tag så finns det ett flertal versioner
       i drift. Det finns dessutom två olika smaker som är nästan, men
@@ -568,6 +661,13 @@
     <title>Personer</title>
 
     <para>
+      <indexterm id="personer-1">
+        <primary>Begrepp</primary>
+        <secondary>Personer</secondary>
+      </indexterm>
+      <indexterm id="personer-2">
+        <primary>Personer</primary>
+      </indexterm>
       För att du ska kunna köra LysKOM behöver du en
       <wordasword>person</wordasword>, en användaridentitet. Det
       första du måste göra för att kunna använda LysKOM är att skapa
@@ -575,6 +675,9 @@
     </para>
 
     <para>
+      <indexterm id="lyslyskom-1">
+        <primary>LysLysKOM</primary>
+      </indexterm>
       Börja med att starta klienten genom att skriva <userinput>M-x
       lyskom RET</userinput> och ange vilken server du vill köra mot.
       Det finns ett antal fördefinierade publika servrar tillgängliga
@@ -650,6 +753,13 @@
     <title>Möten och brevlådor</title>
 
     <para>
+      <indexterm id="conf-1">
+        <primary>Begrepp</primary>
+        <secondary>Möten</secondary>
+      </indexterm>
+      <indexterm id="conf-2">
+        <primary>Brevlådor</primary>
+      </indexterm>
       Diskussionerna i LysKOM förs i olika
       <wordasword>möten</wordasword>. Alla inlägg läggs i ett eller
       flera sådana möten och för att man ska se de inlägg som skapas
@@ -677,6 +787,13 @@
     </para>
       
     <para>
+      <indexterm id="conf-3">
+        <primary>Begrepp</primary>
+        <secondary>Organisatör</secondary>
+      </indexterm>
+      <indexterm id="conf-4">
+        <primary>Organisatör</primary>
+      </indexterm>
       Det finns inga som helst mekanismer eller garantier för att
       kontrollera att medlemmarna i ett möte skickar sina inlägg till
       rätt möte. Det finns möjligheter för
@@ -698,6 +815,20 @@
     </para>
 
     <para>
+      <indexterm id="conf-5">
+        <primary>Begrepp</primary>
+        <secondary>Originalmöte</secondary>
+      </indexterm>
+      <indexterm id="conf-6">
+        <primary>Originalmöte</primary>
+      </indexterm>
+      <indexterm id="conf-7">
+        <primary>Begrepp</primary>
+        <secondary>Supermöte</secondary>
+      </indexterm>
+      <indexterm id="conf-8">
+        <primary>Supermöte</primary>
+      </indexterm>
       Ett <wordasword>originalmöte</wordasword> är ett möte där man
       inte får skriva kommentarer, bara originalinlägg. Om man
       försöker kommentera ett inlägg i ett originalmöte så kommer
@@ -714,6 +845,20 @@
     <title>Olika sorters texter</title>
 
     <para>
+      <indexterm id="text-1">
+        <primary>Begrepp</primary>
+        <secondary>Inlägg</secondary>
+      </indexterm>
+      <indexterm id="text-2">
+        <primary>Inlägg</primary>
+      </indexterm>
+      <indexterm id="text-3">
+        <primary>Begrepp</primary>
+        <secondary>Brev</secondary>
+      </indexterm>
+      <indexterm id="text-4">
+        <primary>Brev</primary>
+      </indexterm>
       All diskussion i LysKOM förs med
       <wordasword>inlägg</wordasword>.  Ett inlägg är en text som
       består av en <wordasword>ärenderad</wordasword> som talar om vad
@@ -727,6 +872,13 @@
     </para>
 
     <para>
+      <indexterm id="text-5">
+        <primary>Begrepp</primary>
+        <secondary>Inläggsnummer</secondary>
+      </indexterm>
+      <indexterm id="text-6">
+        <primary>Inläggsnummer</primary>
+      </indexterm>
       Diverse andra uppgifter är också associerade med ett inlägg. Vem
       som har skrivit det, när det skrevs, vilket/vilka möten det har
       som mottagare och så vidare. De hittills nämnda uppgifterna
@@ -743,10 +895,22 @@
       möten</quote>. 
     </para>
 
+    <para>
+      Ett brev är helt enkelt ett inlägg som ligger i någons
+      brevlåda. 
+    </para>
+
     <sect2>
       <title>Originalinlägg</title>
 
       <para>
+        <indexterm id="originaltext-1">
+          <primary>Begrepp</primary>
+          <secondary>Originalinlägg</secondary>
+        </indexterm>
+        <indexterm id="originaltext-2">
+          <primary>Originalinlägg</primary>
+        </indexterm>
         Ett <wordasword>originalinlägg</wordasword> är ett inlägg som
         skrivs i ett möte utan att referera till något tidigare
         existerande inlägg. Det nedanstående inlägget är ett exempel på
@@ -780,6 +944,13 @@
       <title>Kommentarer</title>
 
       <para>
+        <indexterm id="kommentar-1">
+          <primary>Begrepp</primary>
+          <secondary>Kommentarer</secondary>
+        </indexterm>
+        <indexterm id="kommentar-2">
+          <primary>Kommentarer</primary>
+        </indexterm>
         Normalt förs diskussionen i LysKOM genom att en person läser
         något intressant i ett inlägg och tycker att det är värt att
         kommentera. Han kan då skriva en
@@ -823,6 +994,13 @@
       <title>Fotnoter</title>
 
       <para>
+        <indexterm id="fotnot-1">
+          <primary>Begrepp</primary>
+          <secondary>Fotnoter</secondary>
+        </indexterm>
+        <indexterm id="fotnot-2">
+          <primary>Fotnoter</primary>
+        </indexterm>
         En fotnot är, precis som en kommentar, ett inlägg som är
         knutet till ett tidigare inlägg genom en länk. En kommentar
         till ett inlägg kan vem som helst, men en fotnot kan endast
@@ -849,6 +1027,13 @@
       <title>Anmärkningar</title>
 
       <para>
+        <indexterm id="anm-1">
+          <primary>Begrepp</primary>
+          <secondary>Anmärkningar</secondary>
+        </indexterm>
+        <indexterm id="anm-2">
+          <primary>Anmärkningar</primary>
+        </indexterm>
         En <wordasword>anmärkning</wordasword> är, liksom en fotnot,
         en text man kan hänga på en existerande text för att korrigera
         den. En anmärkning är däremot inte ett inlägg i sig självt
@@ -882,6 +1067,20 @@
       <title>Garbning och markering</title>
 
       <para>
+        <indexterm id="garb-1">
+          <primary>Begrepp</primary>
+          <secondary>Garbning</secondary>
+        </indexterm>
+        <indexterm id="garb-2">
+          <primary>Garbning</primary>
+        </indexterm>
+        <indexterm id="markering-1">
+          <primary>Begrepp</primary>
+          <secondary>Markering</secondary>
+        </indexterm>
+        <indexterm id="markering-2">
+          <primary>Markering</primary>
+        </indexterm>
         <wordasword>Garbning</wordasword> är inte något som användaren
         av LysKOM kan utföra själv, utan en automatisk process (som
         kan slås på eller av för varje LysKOM-server).  Garbning
@@ -916,6 +1115,34 @@
       <title>Meddelanden</title>
   
       <para>
+        <indexterm id="meddelanden-1">
+          <primary>Begrepp</primary>
+          <secondary>Meddelanden</secondary>
+        </indexterm>
+        <indexterm id="meddelanden-2">
+          <primary>Meddelanden</primary>
+        </indexterm>
+        <indexterm id="meddelanden-3">
+          <primary>Begrepp</primary>
+          <secondary>Alarmmeddelanden</secondary>
+        </indexterm>
+        <indexterm id="meddelanden-4">
+          <primary>Alarmmeddelanden</primary>
+        </indexterm>
+        <indexterm id="meddelanden-5">
+          <primary>Begrepp</primary>
+          <secondary>Gruppmeddelanden</secondary>
+        </indexterm>
+        <indexterm id="meddelanden-6">
+          <primary>Gruppmeddelanden</primary>
+        </indexterm>
+        <indexterm id="meddelanden-7">
+          <primary>Begrepp</primary>
+          <secondary>Personliga meddelanden</secondary>
+        </indexterm>
+        <indexterm id="meddelanden-8">
+          <primary>Personliga meddelanden</primary>
+        </indexterm>
         Ett <wordasword>meddelande</wordasword> är en text som skickas
         ut synkront till alla avsedda mottagare som är inloggade, till
         skillnad från inlägg som snällt ligger och väntar tills man
@@ -1024,15 +1251,16 @@
       <title>Bli medlem i möte - m</title>
 
       <para>
-        <indexterm><primary>Bli medlem i möte</primary></indexterm>
+        <indexterm id="kom-add-self-1">
+          <primary>Möten</primary>
+          <secondary>Bli medlem i möte</secondary>
+        </indexterm>
+        <indexterm id="kom-add-self-2">
+          <primary>Bli medlem i möte</primary>
+        </indexterm>
         För att kunna börja delta i diskussionen i LysKOM måste man se
         till att bli medlem i några möten som ser intressanta ut. 
       </para>
-
-      <comment>
-        Hur ska indexterm fungera, egentligen? Det här verkar inte ha
-        någon effekt.
-      </comment>
 
       <para>
         Kommandot <userinput>Bli medlem i möte</userinput>
@@ -1089,6 +1317,13 @@
       <title>Gå till möte - g</title>
 
       <para>
+        <indexterm id="kom-go-to-conf-1">
+          <primary>Möten</primary>
+          <secondary>Gå till möte</secondary>
+        </indexterm>
+        <indexterm id="kom-go-to-conf-2">
+          <primary>Gå till möte</primary>
+        </indexterm>
         Kommandot <userinput>Gå till möte</userinput> (snabbkommando
         <userinput>g</userinput>) låter användaren gå till ett nytt
         möte för att börja läsa inlägg där istället för där läsningen
@@ -1123,6 +1358,13 @@
       <title>Utträda ur möte</title>
 
       <para>
+        <indexterm id="kom-sub-self-1">
+          <primary>Möten</primary>
+          <secondary>Utträda ur möte</secondary>
+        </indexterm>
+        <indexterm id="kom-sub-self-2">
+          <primary>Utträda ur möte</primary>
+        </indexterm>
         Kommandot <userinput>Utträda ur möte</userinput> (inget
         snabbkommando) låter användaren sluta vara medlem i ett möte.
         Klienten frågar efter vilket möte man vill utträda ur (med det
@@ -1160,6 +1402,13 @@
       <title>Skapa möte</title>
 
       <para>
+        <indexterm id="kom-create-conf-1">
+          <primary>Möten</primary>
+          <secondary>Skapa möte</secondary>
+        </indexterm>
+        <indexterm id="kom-create-conf-2">
+          <primary>Skapa möte</primary>
+        </indexterm>
         Kommandot <userinput>Skapa möte</userinput> (inget
         snabbkommando) låter användaren skapa ett nytt möte. Klienten
         ställer sedan ett antal frågor om det nya mötet: vad det ska
@@ -1185,10 +1434,19 @@
       <title>Utplåna (möte/person)</title>
 
       <para>
+        <indexterm id="kom-delete-conf-1">
+          <primary>Möten</primary>
+          <secondary>Utplåna (möte/person)</secondary>
+        </indexterm> 
+        <indexterm id="kom-delete-conf-2">
+          <primary>Utplåna (möte/person)</primary>
+        </indexterm> 
         Kommandot <userinput>Utplåna (möte/person)</userinput> (inget
         snabbkommando) tar bort ett möte eller en person. Klienten
         frågar först vilket möte man vill ta bort och ber sedan
-        användaren att bekräfta innan mötet tas bort.
+        användaren att bekräfta innan mötet tas bort. För att kunna ta
+        bort ett möte eller en person måste man vara organisatör för
+        det som ska tas bort.
       </para>
 
       <screen>
@@ -1205,19 +1463,242 @@
       <title>Ändra mötesuppgifter</title>
 
       <para>
-        <comment>
-          Här borde det vara rimligt att beskriva Ändra FAQ, Ändra
-          livslängd, Ändra mötestyp, Ändra organisatör, Ändra
-          presentation, Ändra supermöte och Ändra tillåtna
-          författare. 
-        </comment>
+        Det finns ett antal olika funktioner man kan använda för att
+        ändra egenskapar hos ett redan skapat möte som man är
+        organisatör för.
       </para>
+
+      <sect3>
+        <title>Ändra FAQ</title>
+
+        <para>
+          <indexterm id="conf-change-faq-1">
+            <primary>Möten</primary>
+            <secondary>Ändra FAQ</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-faq-2">
+            <primary>Ändra FAQ</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra FAQ</userinput> (inget
+          snabbkommando) används för att ändra i ett mötes FAQ.
+          Klienten frågar efter vilket möte man vill ändra FAQ för,
+          och öppnar sedan en edit-buffert så att man kan ändra den. 
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>Addera FAQ</title>
+
+        <para>
+          <indexterm id="conf-add-faq-1">
+            <primary>Möten</primary>
+            <secondary>Addera FAQ</secondary>
+          </indexterm>
+          <indexterm id="conf-add-faq-2">
+            <primary>Addera FAQ</primary>
+          </indexterm>
+          Kommandot <userinput>Addera FAQ</userinput> (inget
+          snabbkommando) används för att sätta ett existerande inlägg
+          som FAQ för ett möte. Klienten frågar efter vilket möte man
+          vill addera en FAQ för och sedan vilket inlägg man vill
+          addera som FAQ.
+        </para>
+
+        <screen>
+          Gå till nästa möte - Addera FAQ
+          
+          Lägger till inlägg 8212575 som FAQ för Min dagbok...klart.
+          
+          Gå till nästa möte - 
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra livslängd</title>
+
+        <para>
+          <indexterm id="conf-change-life-1">
+            <primary>Möten</primary>
+            <secondary>Ändra livslängd</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-life-2">
+            <primary>Ändra livslängd</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra livslängd</userinput> (inget
+          snabbkommando) ändrar livslängden på inlägg i ett möte. När
+          ett inlägg blivit äldre än livslängden för mötet så kan det
+          komma i fråga för garbning. Klienten frågar först efter
+          vilket möte man vill ändra livslängden för, sedan hur många
+          dagar man vill att livslängden ska vara.
+        </para>
+
+        <screen>
+          Gå till nästa möte - Ändra livslängd
+          
+          Ändra livslängden för Min dagbok till 17...klart.
+          
+          Gå till nästa möte - 
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra mötestyp</title>
+
+        <para>
+          <indexterm id="conf-change-type-1">
+            <primary>Möten</primary>
+            <secondary>Ändra mötestyp</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-type-2">
+            <primary>Ändra mötestyp</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra mötestyp</userinput> (inget
+          snabbkommando) ändrar några inställningar för mötet. Efter
+          att man talat om vilket möte man vill ändra inställningarna
+          för så får man svara på frågorna <guilabel>Får vem som helst
+          bli medlem</guilabel>, <guilabel>Får man skriva
+          kommentarer</guilabel>, <guilabel>Får man skriva anonyma
+          texter</guilabel> och <guilabel>Får man gå med som hemlig
+          medlem</guilabel>. 
+        </para>
+
+        <screen>
+          Gå till nästa möte - Ändra mötestyp
+          
+          Ändra mötestyp för möte Min dagbok (10842) anonymt ok
+          
+          Gå till nästa möte - 
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra organisatör</title>
+
+        <para>
+          <indexterm id="conf-change-org-1">
+            <primary>Möten</primary>
+            <secondary>Ändra organisatör</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-org-2">
+            <primary>Ändra organisatör</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra organisatör</userinput> (inget
+          snabbkommando) ändrar organisatören för ett möte. Klienten
+          frågar först efter vad som organisatören ska ändras för,
+          sedan vem som ska bli den nya organisatören. 
+        </para>
+
+        <para>
+          Genom att sätta organisatören för ett möte till mötet självt
+          så kan man låta alla medlemmar i mötet fungera som
+          organisatör.
+        </para>
+
+        <screen>
+          Läsa nästa text - Ändra organisatör
+          
+          Ändra organisatör för Min dagbok till Hans Persson (Oook!)...klart.
+          
+          Läsa nästa text - 
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra presentation</title>
+
+        <para>
+          <indexterm id="conf-change-pres-1">
+            <primary>Möten</primary>
+            <secondary>Ändra presentation</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-pres-2">
+            <primary>Ändra presentation</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra organisatör</userinput> (inget
+          snabbkommando) ändrar presentationen för ett möte (eller
+          skapar en, om det inte finns någon). Klienten frågar först
+          efter vad presentationen ska ändras för, och öppnar sedan en
+          vanlig edit-buffert.
+        </para>
+
+        <screen>
+          Läsa nästa text - Ändra presentation
+          
+          
+          Text nummer 8212575 är skapad.
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra supermöte</title>
+
+        <para>
+          <indexterm id="conf-change-super-1">
+            <primary>Möten</primary>
+            <secondary>Ändra supermöte</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-super-2">
+            <primary>Ändra supermöte</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra supermöte</userinput> (inget
+          snabbkommando) ändrar supermöte för något. Om man inte får
+          skriva kommentarer i ett möte så hamnar de istället i
+          supermötet. Klienten frågar efter vilket möte man vill ändra
+          supermöte för.
+        </para>
+
+        <screen>
+          Gå till nästa möte - Ändra supermöte
+          
+          Ändra supermöte för Min dagbok till /dev/null...klart.
+          
+          Gå till nästa möte - 
+        </screen>
+      </sect3>
+
+      <sect3>
+        <title>Ändra tillåtna författare</title>
+
+        <para>
+          <indexterm id="conf-change-allowed-1">
+            <primary>Möten</primary>
+            <secondary>Ändra tillåtna författare</secondary>
+          </indexterm>
+          <indexterm id="conf-chance-allowed-2">
+            <primary>Ändra tillåtna författare</primary>
+          </indexterm>
+          Kommandot <userinput>Ändra tillåtna författare</userinput>
+          (inget snabbkommando) ändrar vilka som får skriva i ett
+          möte. Klienten frågar först efter vilket möte som ska
+          påverkas och sedan vilka som ska få skriva i mötet. Det kan
+          anges antingen genom att svara <guilabel>alla</guilabel>
+          (vilket är standardsvaret) eller genom att svara med namnet
+          på ett annat möte. Om man anger ett möte så betyder det att
+          alla som är medlemmar i det andra mötet får skriva i det
+          möte man ändrar.
+        </para>
+
+        <screen>
+          Läsa nästa text - Ändra tillåtna författare
+          
+          Tillåt alla författare i möte Min dagbok...klart.
+          
+          Läsa nästa text - 
+        </screen>
+      </sect3>
     </sect2>
 
     <sect2>
       <title>Addera medlem</title>
 
       <para>
+        <indexterm id="kom-add-member-1">
+          <primary>Möten</primary>
+          <secondary>Addera medlem</secondary>
+        </indexterm> 
+        <indexterm id="kom-add-member-2">
+          <primary>Addera medlem</primary>
+        </indexterm> 
         Kommandot <userinput>Addera medlem</userinput> (inget
         snabbkommando) används för att addera en person som medlem
         till ett möte. Detta är det enda sättet som finns för att låta
@@ -1243,6 +1724,13 @@
       <title>Uteslut medlem</title>
 
       <para>
+        <indexterm id="kom-sub-member-1">
+          <primary>Möten</primary>
+          <secondary>Uteslut medlem</secondary>
+        </indexterm>  
+        <indexterm id="kom-sub-member-2">
+          <primary>Uteslut medlem</primary>
+        </indexterm>  
         Kommandot <userinput>Uteslut medlem</userinput> (inget
         snabbkommando) används för att ta bort en person som medlem
         från ett möte. Klienten frågar först efter vem man vill
@@ -1403,5 +1891,7 @@ Struktur
 </comment>
   </para>  
 </chapter>
+
+&genindex.sgm;
 
 </book>
