@@ -1,3 +1,8 @@
+2002-06-19  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* swedish-strings.el (lyskom-message): Removed a spurious % in
+	conf-has-no-faq.
+
 2002-06-14  Per Cederqvist  <ceder@ingate.com>
 
 	* Makefile (vars.el): Shorten the version string for the CVS
