@@ -1,6 +1,59 @@
+Tue Mar 11 11:35:35 1997  David Byers  <davby@sen21.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-face-default-p): Skrev så den fungerar i
+ 	XEmacs.
+
+Mon Mar 10 16:42:18 1997  David Byers  <davby@sen21.ida.liu.se>
+
+	* option-edit.el (lyskom-custom-variables): Bytte ut
+ 	lyskom-ding-on-no-subject mot kom-ding-on-no-subject.
+
+	* swedish-strings.el (lyskom-custom-strings): Uppdaterade strängar
+ 	för customize.
+
+	* vars.el.in (kom-show-author-at-end): Ny variabel.
+	Flyttade om lite definitioner.
+	(lyskom-commands): Lade till kom-customize
+
+Mon Mar 10 16:19:29 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* view-text.el (lyskom-print-text): Skriv ut författaren i slutet
+ 	av texten om kom-show-author-at-end är satt till t.
+
+Sat Mar  8 16:46:54 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* defvar.el (def-kom-var): Hantera medlemmar i lyskom-global-boolean-a
+
+	* edit-text.el (lyskom-edit-send): Använd kom-ding-on-no-subject.
+
+	* vars.el.in (kom-ding-on-no-subject): Bytte namn från
+ 	lyskom-ding-on-no-subject.
+
 Sat Mar  8 03:55:07 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands2.el (lyskom-list-summary): Gör (sit-for 0).
+
+Fri Mar  7 10:40:35 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Hackade om
+ 	kommentarskontrollen. Tog bort lyskom-add-comments-list.
+
+	* view-text.el (lyskom-text-read-at-least-once-p): Ny funktion.
+
+Thu Mar  6 13:43:42 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Kontrollera
+ 	kommenterade texter för nya kommentarer. Använd
+ 	lyskom-symbol-value på rätt ställen.
+	(lyskom-dispatch-edit-text): Håll reda på vilka kommentarer som
+ 	finns till den kommenterade texten.
+	(lyskom-edit-add-comments-list): Ny funktion.
+	(top level): Tog bord lyskom-is-dedicated-edit-window
+
+	* vars.el.in (kom-check-for-new-comments): Ny variabel.
+
+	* english-strings.el, swedish-strings.el (lyskom-message): Lade
+ 	till texter för kontroll av kommentarer.
 
 Wed Mar  5 17:22:48 1997  David Kågedal  <davidk@lysator.liu.se>
 
@@ -8,6 +61,13 @@ Wed Mar  5 17:22:48 1997  David Kågedal  <davidk@lysator.liu.se>
  	funktion.
 	(lyskom-change-pres-or-motd-2): Använd samma mottagare som den
  	förra presentationen som default.
+
+Wed Mar  5 15:10:38 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* edit-text.el (lyskom-dispatch-edit-text): Tog bort
+ 	process-kill-qithout-query.
+
+	* buffers.el (lyskom-quit-query): Ny funktion.
 
 Mon Mar  3 20:43:28 1997  David Kågedal  <kg@infovav.se>
 
@@ -19,6 +79,10 @@ Sat Mar  1 10:55:04 1997  David Kågedal  <kg@infovav.se>
 	* async.el (lyskom-handle-as-personal-message): Använd rätt värde
  	på kom-pop-personal-messages och se till att meddelande-bufferten
  	scrollar till slutet.
+
+Fri Feb 28 14:45:04 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* utilities.el (functionp): Ny definition.
 
 Sat Feb 22 13:54:02 1997  David Kågedal  <davidk@lysator.liu.se>
 

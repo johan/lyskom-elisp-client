@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.17 1997-02-07 18:08:26 byers Exp $
+;;;;; $Id: vars.el.in,v 44.18 1997-03-11 13:49:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,11 +33,33 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.17 1997-02-07 18:08:26 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.18 1997-03-11 13:49:13 byers Exp $\n"))
 
 (provide 'lyskom)
 
 (require 'lyskom-defvar "defvar")
+
+(defconst lyskom-global-boolean-variables '(
+  kom-created-texts-are-read
+  kom-dashed-lines
+  kom-presence-messages
+  kom-print-number-of-unread-on-entrance
+  kom-read-depth-first
+  kom-reading-puts-comments-in-pointers-last
+  kom-confirm-multiple-recipients
+)
+  "List of flags that are to be saved as booleans in the common block.
+
+Dont change this. These are defined by the protocol.")
+				  
+(defconst lyskom-global-non-boolean-variables '(
+  kom-default-mark
+)
+  "List of flags that are to be saved in the common block.
+These are the non-boolean ones. See: lyskom-global-boolean-variables.
+
+Dont change these. These are defined by the protocol.")
+
 
 
 (defun lyskom-protect-variable (sym) 
@@ -164,6 +186,10 @@ enabled mode."
 
 (def-kom-var kom-dashed-lines t
   "*If Non-nil then all texts will be surrounded by lines of dashes."
+  server)
+
+(def-kom-var kom-show-author-at-end t
+  "*If non-nil then the author will be shown at the end of each text."
   server)
 
 (def-kom-var kom-print-number-of-unread-on-entrance t
@@ -389,11 +415,12 @@ to call."
   server)
 
 
-(def-kom-var lyskom-ding-on-no-subject 2
+(def-kom-var kom-ding-on-no-subject 2
   "*How to ding if the user has not entered a subject line.
 A number means the number of times to ding. A string is an argument for the
 program named by kom-audio-player. A symbol is interpreted as a function 
-to call.")
+to call."
+  server)
 
 
 (def-kom-var kom-audio-player "audioplay"
@@ -551,6 +578,14 @@ When the user writes a comment to a text with more than one recipient
 he gets a y-or-n-p question for all recipients. 'before means check
 before opening the edit buffer. Anything else means check before
 sending the article."
+  server)
+
+(def-kom-var kom-check-for-new-comments t
+  "*Non-nil means check that no new comments have been written to a commented
+texts since the last check. A list means check in all conferences except
+those listed. A function means call the function and check if non-nil is
+returned. The function is called with the commented text's text-stat as
+an argument."
   server)
 
 (def-kom-var kom-check-commented-author-membership t
@@ -899,6 +934,7 @@ Users are encouraged to use their best sense of humor."
     kom-remote-quit
 
     kom-status-session
+    kom-customize
     ))
 
 ;(defconst lyskom-elisp-variables
@@ -957,27 +993,6 @@ Users are encouraged to use their best sense of humor."
 ;    lyskom-language)
 ;  "Tells the client what flags and hooks that are to be saved in the server.
 ;These are the flags that are saved in the elisp-client part of the server.")
-
-(defconst lyskom-global-boolean-variables '(
-  kom-created-texts-are-read
-  kom-dashed-lines
-  kom-presence-messages
-  kom-print-number-of-unread-on-entrance
-  kom-read-depth-first
-  kom-reading-puts-comments-in-pointers-last
-  kom-confirm-multiple-recipients
-)
-  "List of flags that are to be saved as booleans in the common block.
-
-Dont change this. These are defined by the protocol.")
-				  
-(defconst lyskom-global-non-boolean-variables '(
-  kom-default-mark
-)
-  "List of flags that are to be saved in the common block.
-These are the non-boolean ones. See: lyskom-global-boolean-variables.
-
-Dont change these. These are defined by the protocol.")
 
 
 ;;; ================================================================

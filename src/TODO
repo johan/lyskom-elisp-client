@@ -4,10 +4,6 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-    Trycka C-g medan man loggar in kan göra att man inte kan logga in
-    igen. (Rapporterat av Tommy Persson.) Felmeddelandet blir "Illegal
-    nånting: listp not-yet-gotten"
-
     När man har utplånat sig själv, och tryckt C-g vid loginprompten
     som följer blir vissa kommandon förvirrade. [ÄR MAN SÅ DUM FÅR MAN
     VÄL SKYLLA SIG SJÄLV. JU!]
@@ -78,7 +74,8 @@ Att göra i elisp-klienten
 
 -------- Allmänna förbättringar
 
-Visa i prompten om man är i administratörsläge.
+    Färgläggning av meddelanden baserat på varifrån de kommer, och
+    vart det går. John Olsson efterfrågar.
 
     1385671
 
@@ -106,9 +103,6 @@ Visa i prompten om man är i administratörsläge.
 
     Sortera vilkaslistan efter t.ex. idletid.
     
-    När man skickar in en kommentar borde klienten kolla att inga nya
-    kommentarer till texten har skrivits under tiden.
-
     Inför en membership-cache.
 
     Skriv inte ut stora fonoter på en gång.
@@ -131,6 +125,17 @@ Visa i prompten om man är i administratörsläge.
 
     Reentrant blocking-do
 
+    kom-customize skall nog inte ta med alla variabler, bara sådana
+    som många vill ändra på. Annars blir det svåröverskådligt.
+
+    Det behövs dokumentation: fråmst användarhandledning, men det
+    skulle inte skada med en kortfattad beskrivning av stabila delar
+    av systemet för presumtiva kommandoskribenter.
+
+    Den engelska översättningen behöver ses över. Den är garanterat ur
+    sync, och verktyget för att kolla den fungerar inte längre.
+    Verktyget måste repareras så vi kan kolla att alla strängar finns
+    på plats, men en språkgranskning behövs också.
 
 -------- Fixade saker
 
@@ -241,4 +246,13 @@ Visa i prompten om man är i administratörsläge.
 
     Läsningen av user-arean buggade i XEmacs av någon anledning. Det
     såg ut som en XEmacs-bug. Jag *tror* jag har gjort en workaround.
+
+    När man skickar in en kommentar borde klienten kolla att inga nya
+    kommentarer till texten har skrivits under tiden. [FIXAT]
+
+    Trycka C-g medan man loggar in kan göra att man inte kan logga in
+    igen. (Rapporterat av Tommy Persson.) Felmeddelandet blir "Illegal
+    nånting: listp not-yet-gotten"
+
+    Visa i prompten om man är i administratörsläge.
 

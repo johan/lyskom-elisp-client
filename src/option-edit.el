@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.5 1997-02-07 18:07:57 byers Exp $
+;;;;; $Id: option-edit.el,v 44.6 1997-03-11 13:49:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,14 +33,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.5 1997-02-07 18:07:57 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.6 1997-03-11 13:49:01 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
 ;;;
 
 (require 'widget)
-(require 'widget-edit)
+(require 'wid-edit)
 
 ;;; ======================================================================
 ;;; Global variables
@@ -49,52 +49,77 @@
   "List of widgets in the customize buffer.")
 
 (defvar lyskom-customize-buffer-format
-  '((lyskom bold centered)
+  '("\n"
+    (lyskom bold centered)
     "\n\n"
     lyskom-doc
+    "\n\n"
+    [kom-customize-format]
     "\n\n"
     section
     (look-and-feel-misc bold centered)
     section
     "\n"
-    [kom-friends]
-    [kom-deferred-printing]
-    [kom-user-prompt-format]
-    [kom-user-prompt-format-executing]
-    [kom-dashed-lines]
-    [kom-continuous-scrolling]
-    [kom-permissive-completion]
-    [kom-inhibit-typeahead]
-    [kom-max-buffer-size]
-    [kom-page-before-command]
-    [kom-audio-player]
     [kom-idle-hide]
+    [kom-show-where-and-what]
+    "\n"
+    [kom-friends]
+    "\n"
     [kom-presence-messages]
     [kom-presence-messages-in-buffer]
-    [kom-show-where-and-what]
+    "\n"
+    [kom-page-before-command]
+    "\n\n"
+    section
+    (window-locations bold centered)
+    section
+    "\n"
+    (windows-where bold centered)
+    "\n"
+    windows-doc
+    "\n\n"
     [kom-customize-in-window]
-    [kom-customize-format]
-;    [kom-list-membership-in-window]
-;    [kom-edit-filters-in-window]
+    [kom-edit-filters-in-window]
+    [kom-prioritize-in-window]
+    [kom-list-membership-in-window]
+    [kom-write-texts-in-window]
+    [kom-view-commented-in-window]
     
+    "\n\n"
+    section
+    (audio-cues bold centered)
+    section
+    "\n"
+    [kom-audio-player]
+    "\n"
+    (audio-cues-when bold centered)
+    "\n"
+    audio-cues-doc
+    "\n\n"
+    [kom-ding-on-priority-break]
+    [kom-ding-on-new-letter]
+    [kom-ding-on-wait-done]
+    [kom-ding-on-common-messages]
+    [kom-ding-on-group-messages]
+    [kom-ding-on-personal-messages]
+    [kom-ding-on-no-subject]
+
     "\n\n"
     section
     (reading bold centered)
     section
     "\n"
-    [kom-read-depth-first]
-    [kom-higher-priority-breaks]
-    [kom-ding-on-priority-break]
-    [kom-ding-on-new-letter]
     [kom-created-texts-are-read]
+    [kom-higher-priority-breaks]
     [kom-show-footnotes-immediately]
     [kom-follow-comments-outside-membership]
-    [kom-reading-puts-comments-in-pointers-last]
-    [kom-print-number-of-unread-on-entrance]
-    [kom-ding-on-wait-done]
+    "\n"
     [kom-default-mark]
     [kom-membership-default-priority]
-    [kom-prioritize-in-window]
+    "\n"
+    [kom-print-number-of-unread-on-entrance]
+    [kom-dashed-lines]
+    [kom-show-author-at-end]
 
     "\n\n"
     section
@@ -102,10 +127,12 @@
     section
     "\n"
     [kom-cite-string]
-    [kom-write-texts-in-window]
+    "\n"
+    sending-doc
+    "\n\n"
     [kom-confirm-multiple-recipients]
     [kom-check-commented-author-membership]
-    [lyskom-ding-on-no-subject]
+    [kom-check-for-new-comments]
 
     "\n\n"
     section
@@ -125,30 +152,22 @@
     [kom-pop-personal-messages]
     [kom-default-message-recipient]
     "\n"
-    (audio-cues bold centered)
-    "\n"
-    [kom-ding-on-common-messages]
-    [kom-ding-on-group-messages]
-    [kom-ding-on-personal-messages]
-
-    "\n"
     (automatic-replies bold centered)
     "\n"
     [kom-ansaphone-record-messages]
     [kom-ansaphone-show-messages]
+    "\n"
     [kom-ansaphone-default-reply]
 
-    [lyskom-filter-outgoing-messages]
-    
     "\n\n"
     section
     (remote-control bold centered)
     section
     "\n"
     [kom-remote-control]
-    [kom-remote-controllers]
     [kom-self-control]
-
+    "\n"
+    [kom-remote-controllers]
     "\n\n"
     section
     (hooks bold centered)
@@ -221,10 +240,10 @@ customize buffer but do not save them to the server."
              (setq lyskom-widgets nil)
              (let ((inhibit-read-only t))
                (erase-buffer))
+             (use-local-map lyskom-customize-map)
              (condition-case err
                  (copy-face 'kom-active-face 'widget-button-face))
              (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
-             (use-local-map lyskom-customize-map)
              (widget-setup)
              (mapcar (function
                       (lambda (variable)
@@ -291,6 +310,9 @@ customize buffer but do not save them to the server."
     (kom-edit-filters-in-window (open-window))
     (kom-prioritize-in-window (open-window))
     (kom-customize-in-window (open-window))
+    (kom-view-commented-in-window (open-window))
+    (kom-edit-filters-in-window (open-window))
+    (kom-list-membership-in-window (open-window))
     (kom-customize-format (choice ((const (long-format long))
                                    (const (short-format short)))))
     (kom-user-prompt-format (string))
@@ -304,6 +326,7 @@ customize buffer but do not save them to the server."
                                (const (ask nil)))))
     (kom-reading-puts-comments-in-pointers-last (toggle (before after)))
     (kom-dashed-lines (toggle (on off)))
+    (kom-show-author-at-end (toggle (on off)))
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
     (kom-presence-messages      (choice ((const (on t))
               (repeat (person nil :tag name)
@@ -335,8 +358,9 @@ customize buffer but do not save them to the server."
                                                        :tag command)
                                               :tag page-some
                                               :menu-tag page-some
+                                              :format "%[%t%] %v"
                                               :value (kom-view-next-text)))
-                                     :format "%[%t%]: %v"))
+                                     :format "%[%t%] %v"))
     (kom-permissive-completion (noggle (on off)))
     (kom-membership-default-priority
      (choice ((const (ask-every-time nil))
@@ -355,7 +379,7 @@ customize buffer but do not save them to the server."
     (kom-ding-on-common-messages (ding))
     (kom-ding-on-group-messages (ding))
     (kom-ding-on-personal-messages (ding))
-    (lyskom-ding-on-no-subject (ding))
+    (kom-ding-on-no-subject (ding))
     (kom-audio-player (file))
     (kom-default-message-recipient 
      (choice ((const (everybody-rcpt everybody))
@@ -372,13 +396,14 @@ customize buffer but do not save them to the server."
               (const (check-before-send after)
                      :match (lambda (w v) (and v (not (eq v 'before))))))))
     (kom-check-commented-author-membership (toggle (yes no)))
+    (kom-check-for-new-comments (toggle (yes no)))
     (kom-inhibit-typeahead (noggle (yes no)))
     (kom-max-buffer-size (choice ((const (no-size-limit nil))
                                   (number nil :tag max-size-in-bytes))))
 
     (kom-ansaphone-record-messages (toggle (yes no)))
     (kom-ansaphone-show-messages (toggle (yes no)))
-    (kom-ansaphone-default-reply (string nil :format "%[%t%]:\n%v"))
+    (kom-ansaphone-default-reply (string nil :format "%[%t%]\n%v"))
     (kom-remote-control (toggle (on off)))
     (kom-remote-controllers (repeat (person nil :tag name)))
     (kom-self-control (toggle (yes no)))
@@ -423,20 +448,24 @@ customize buffer but do not save them to the server."
                        )
                  (cdr spec))))
     (let ((widget (apply 'widget-create spec)))
-      (widget-insert "  ")
-      (widget-create 'lyskom-widget-help
-                     ':value kom-customize-format
-                     ':args
-                     (list (list 'long
-                                 "\n%s\n\n"
-                                 (lyskom-custom-string doc-sym)
-                                 "!")
-                           (list 'short 
-                                 "%s"
-                                 ""
-                                 "?"))
-                     :format "%[[%T]%]\n%D")
-      widget)))
+      (condition-case nil
+          (progn
+            (lyskom-custom-string doc-sym)
+            (widget-insert "  ")
+            (widget-create 'lyskom-widget-help
+                           ':value (lyskom-default-value 'kom-customize-format)
+                           ':args
+                           (list (list 'long
+                                       "\n%s\n\n"
+                                       (lyskom-custom-string doc-sym)
+                                       "!")
+                                 (list 'short 
+                                       "%s"
+                                       ""
+                                       "?"))
+                           :format "%[[%T]%]\n%D"))
+        (error (widget-insert "\n")))
+        widget)))
 
 
 (defun lyskom-widget-convert-specification (spec)
@@ -474,7 +503,7 @@ customize buffer but do not save them to the server."
 
 
 (defun lyskom-file-widget (type &optional args propl)
-  (list 'file ':format "%[%t%]: %v" :size 0))
+  (list 'file ':format "%[%t%] %v" :size 0))
 
 (defun lyskom-person-widget (type &optional args propl)
   (list 'lyskom-name))
@@ -493,10 +522,14 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-url-viewer-widget (type &optional args propl)
   (list 'menu-choice 
-        ':format "%v\n"
+        ':format "%[%v%]\n"
         ':case-fold t
         ':args
-        (list (list 'item 
+        (list (list 'item
+                    :tag (lyskom-custom-string 'no-viewer)
+                    :format "%t"
+                    :value nil)
+              (list 'item 
                     ':tag (lyskom-custom-string 'default-viewer)
                     ':format "%t"
                     ':value "default")
@@ -532,11 +565,16 @@ customize buffer but do not save them to the server."
 (defun lyskom-open-window-widget (type &optional args propl)
   (list 'menu-choice
         ':case-fold t
+        ':format "%[%t%] %v"
         ':args
         (list (list 'item
                     ':tag (lyskom-custom-string 'other-window)
                     ':format "%t"
                     ':value 'other)
+              (list 'item 
+                    ':tag (lyskom-custom-string 'other-frame)
+                    ':format "%t"
+                    ':value 'other-frame)
               (list 'item 
                     ':tag (lyskom-custom-string 'new-frame)
                     ':format "%t"
@@ -547,7 +585,6 @@ customize buffer but do not save them to the server."
                     ':value nil)
               (list 'editable-field
                     ':tag (lyskom-custom-string 'window-on-buffer)
-                    ':format "%t"
                     ':format "%[%t%]: `%v'"
                     ':value ""
                     ':size 0))))
@@ -555,6 +592,7 @@ customize buffer but do not save them to the server."
 (defun lyskom-ding-widget (type &optional args propl)
   (list 'menu-choice
         ':case-fold t
+        ':format "%[%t%] %v"
         ':args
         (list (list 'item 
                     ':tag (lyskom-custom-string 'turned-off)
@@ -575,6 +613,7 @@ customize buffer but do not save them to the server."
 (defun lyskom-toggle-widget-inverse (type &optional args propl)
   (list 'menu-choice
         ':case-fold t
+        ':format "%[%t%] %v"
         ':args
         (list (list 'item ':tag (lyskom-custom-string (elt args 0))
                     ':value nil
@@ -588,6 +627,7 @@ customize buffer but do not save them to the server."
 (defun lyskom-toggle-widget (type &optional args propl)
   (list 'menu-choice
         ':case-fold t
+        ':format "%[%t%] %v"
         ':args
         (list (list 'item
                     ':tag (lyskom-custom-string (elt args 0))
@@ -601,20 +641,20 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-repeat-widget (type &optional args propl)
   (list 'editable-list 
-        ':format "%[%t%]:\n%v%i"
+        ':format "%[%t%]\n%v%i"
         ':args
         (list (lyskom-widget-convert-specification args))))
 
 (defun lyskom-choice-widget (type &optional args propl)
   (list 'menu-choice
         ':case-fold t
-        ':format "%[%t%]: %v"
+        ':format "%[%t%] %v"
         ':args
         (mapcar 'lyskom-widget-convert-specification args)))
 
 
 (defun lyskom-string-widget (type &optional args propl)
-  (list 'lyskom-string ':size 0 ':format "%[%t%]: `%v'"))
+  (list 'lyskom-string ':size 0 ':format "%[%t%] `%v'"))
 
 
 (defun lyskom-number-widget (type &optional args propl)
@@ -788,7 +828,7 @@ customize buffer but do not save them to the server."
 
 (define-widget 'lyskom-command 'default
   "A LysKOM command"
-  ':format "%[%t%]: %v"
+  ':format "%[%t%] %v"
   ':value 'kom-display-time
   ':action 'lyskom-widget-command-action
   ':value-create 'lyskom-widget-command-value-create
@@ -820,7 +860,7 @@ customize buffer but do not save them to the server."
 
 (define-widget 'lyskom-string 'editable-field
   "A string"
-  ':format "%[%t%]: %v"
+  ':format "%[%t%] %v"
   ':action 'lyskom-widget-string-action)
 
 
@@ -846,7 +886,7 @@ customize buffer but do not save them to the server."
   (string-to-int value))
 
 (defun lyskom-widget-number-value-to-internal (widget value)
-  (int-to-string value))
+  (format "% 4d " value))
 
 (defun lyskom-widget-number-validate (widget)
   (if (numberp (widget-value widget))
@@ -864,7 +904,7 @@ customize buffer but do not save them to the server."
 
 (define-widget 'lyskom-number 'editable-field
   "A number"
-  ':format "%[%t%]: %v"
+  ':format "%[%t%] %v"
   ':action 'lyskom-widget-number-action
   ':value-to-external 'lyskom-widget-number-value-to-external
   ':value-to-internal 'lyskom-widget-number-value-to-internal
@@ -951,7 +991,7 @@ customize buffer but do not save them to the server."
   "A Keyboard Macro"
   ':action 'lyskom-widget-kbd-macro-action
   ':value ""
-  ':format "%[%t%]: %v"
+  ':format "%[%t%] %v"
   ':validate 'lyskom-widget-kbd-macro-validate
   ':value-create 'lyskom-widget-kbd-macro-value-create
   ':value-delete 'lyskom-widget-value-delete
