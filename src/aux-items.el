@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.23 2001-05-22 10:01:44 byers Exp $
+;;;;; $Id: aux-items.el,v 44.24 2002-01-07 22:33:52 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.23 2001-05-22 10:01:44 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.24 2002-01-07 22:33:52 qha Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -361,7 +361,9 @@ return non-nil if the item is to be included in the list."
            (concat "P" (match-string 1)))))
 
 (defun lyskom-edit-insert-cross-reference (item pers)
-  (lyskom-print-cross-reference item nil pers))
+  (concat
+   (lyskom-print-cross-reference item nil pers)
+   (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
 
 (defun lyskom-print-cross-reference (item &optional obj pers)
   (let ((pers (if (and (zerop (aux-item->creator item))
@@ -431,7 +433,9 @@ return non-nil if the item is to be included in the list."
           (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-edit-insert-no-comments (item &optional obj)
-  (lyskom-format 'no-comments-edit-aux))
+  (concat
+   (lyskom-format 'no-comments-edit-aux)
+   (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
 
 (defun lyskom-parse-personal-comments ()
   (and (looking-at (lyskom-get-string 'personal-comment-regexp))
@@ -442,7 +446,9 @@ return non-nil if the item is to be included in the list."
           (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-edit-insert-personal-comments (item &optional obj)
-  (lyskom-format 'personal-comment-edit-aux))
+  (concat
+   (lyskom-format 'personal-comment-edit-aux)
+   (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
 
 (defun lyskom-parse-request-confirmation ()
   (and (looking-at (lyskom-get-string 'request-confirmation-regexp))
@@ -454,7 +460,9 @@ return non-nil if the item is to be included in the list."
           (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-edit-insert-request-confirmation (item &optional obj)
-  (lyskom-format 'request-confirmation-edit-aux))
+  (concat
+   (lyskom-format 'request-confirmation-edit-aux)
+   (lyskom-edit-generate-aux-item-flags (aux-item->flags item))))
 
 (defun lyskom-request-confirmation-action (text-stat)
   (let ((confirmations (text-stat-find-aux text-stat 7))
