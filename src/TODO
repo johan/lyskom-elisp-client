@@ -3,6 +3,12 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Nu när lyskom-bufferten återanvänds så kanske M-x lyskom inte ska
+    döda bufferten om den misslyckas med att koppla upp sig...
+    
+    Det är knepigt att avmarkera raderade texter, eftersom man inte
+    får se textnumret.
+    
     lyskom-read-session-no hittar inte osynliga sessioner.
 
     Den försöker fortfarande följa hemliga kommentarer om
@@ -44,6 +50,11 @@ Buggar
 
 Allmänna förbättringar
 
+    När det frågas om alla mottagare av ett inlägg är relevanta så
+    vore det bra om bufferten scrollades upp så att man fick se dem...
+
+    Sortera vilkaslistan efter t.ex. idletid.
+    
     Fixa klart z-initiate-get-map.
 
     När man skickar in en kommentar borde klienten kolla att inga nya
