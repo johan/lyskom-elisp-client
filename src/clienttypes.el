@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 38.1 1995-10-23 11:55:18 byers Exp $
+;;;;; $Id: clienttypes.el,v 38.2 1995-10-28 07:36:25 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 38.1 1995-10-23 11:55:18 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 38.2 1995-10-28 07:36:25 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -68,7 +68,7 @@
 
 ;;; read-info
 
-(defun lyskom-create-read-info (type
+(defsubst lyskom-create-read-info (type
 				conf-stat
 				priority
 				text-list
@@ -82,64 +82,64 @@
    'READ-INFO
    (vector type conf-stat priority text-list comm-to forward nil)))
 
-(defun read-info->type (read-info)
+(defsubst read-info->type (read-info)
   "Get type from read-info."
   (elt (cdr read-info) 0))
 
-(defun read-info->conf-stat (read-info)
+(defsubst read-info->conf-stat (read-info)
   "Get conf-stat from read-info."
   (elt (cdr read-info) 1))
 
-(defun read-info->priority (read-info)
+(defsubst read-info->priority (read-info)
   "Get priority from read-info."
   (elt (cdr read-info) 2))
 
-(defun read-info->text-list (read-info)
+(defsubst read-info->text-list (read-info)
   "Get text-list from read-info."
   (elt (cdr read-info) 3))
 
-(defun read-info->comm-to (read-info)
+(defsubst read-info->comm-to (read-info)
   "Get comm-to from read-info."
   (elt (cdr read-info) 4))
 
-(defun read-info->forward (read-info)
+(defsubst read-info->forward (read-info)
   "Get forward from read-info."
   (elt (cdr read-info) 5))
 
-(defun read-info->unfetched-texts (read-info)
+(defsubst read-info->unfetched-texts (read-info)
   "Get forward from read-info."
   (elt (cdr read-info) 6))
 
-(defun set-read-info->type (read-info newval)
+(defsubst set-read-info->type (read-info newval)
   "Set type in read-info to NEWVAL."
   (aset (cdr read-info) 0 newval))
 
-(defun set-read-info->conf-stat (read-info newval)
+(defsubst set-read-info->conf-stat (read-info newval)
   "Set conf-stat in read-info to NEWVAL."
   (aset (cdr read-info) 1 newval))
 
-(defun set-read-info->priority (read-info newval)
+(defsubst set-read-info->priority (read-info newval)
   "Set priority in read-info to NEWVAL."
   (aset (cdr read-info) 2 newval))
 
-(defun set-read-info->text-list (read-info newval)
+(defsubst set-read-info->text-list (read-info newval)
   "Set text-list in read-info to NEWVAL."
   (aset (cdr read-info) 3 newval))
 
-(defun set-read-info->comm-to (read-info newval)
+(defsubst set-read-info->comm-to (read-info newval)
   "Set comm-to in read-info to NEWVAL."
   (aset (cdr read-info) 4 newval))
 
-(defun set-read-info->forward (read-info newval)
+(defsubst set-read-info->forward (read-info newval)
   "Set forward in read-info to NEWVAL."
   (aset (cdr read-info) 5 newval))
 
-(defun set-read-info->unfetched-texts (read-info newval)
+(defsubst set-read-info->unfetched-texts (read-info newval)
   "Set forward in read-info to NEWVAL."
   (aset (cdr read-info) 6 newval))
 
 
-(defun lyskom-read-info-p (object)
+(defsubst lyskom-read-info-p (object)
   "Return t if OBJECT is a read-info."
   (eq (car-safe object) 'READ-INFO))
 
@@ -151,58 +151,58 @@
 
 ;;; Constructor:
 
-(defun lyskom-create-read-list ()
+(defsubst lyskom-create-read-list ()
   "Create an empty read-list."
   (cons 'READ-LIST nil))
 
 
 ;;; Predicates:
 
-(defun read-list-isempty (read-list)
+(defsubst read-list-isempty (read-list)
   "Return t if READ-LIST is empty, otherwise return nil."
   (null (cdr read-list)))
 
 
 ;;; Selectors:
 
-(defun read-list->first (read-list)
+(defsubst read-list->first (read-list)
   "Return the first entry in READ-LIST, or nil if empty."
   (car-safe (cdr read-list)))
 
 
-(defun read-list->nth (read-list n)
+(defsubst read-list->nth (read-list n)
   "Args: READ-LIST N
 Return element N in READ-LIST or nil if outside the range.
 The range of valid values for N is [0, num-entries - 1]."
   (elt (cdr read-list) n))
 
 
-(defun read-list->all-entries (read-list)
+(defsubst read-list->all-entries (read-list)
   "Return a list of all entries in READ-LIST."
   (cdr read-list))
 
 
 ;;; Other functions:
 
-(defun read-list-length (read-list)
+(defsubst read-list-length (read-list)
   "Return the number of entries in READ-LIST."
   (1- (length read-list)))
 
 
 ;;; Modifiers:
 
-(defun set-read-list-empty (read-list)
+(defsubst set-read-list-empty (read-list)
   "Empty READ-LIST destructively."
   (setcdr read-list nil))
 
 
-(defun set-read-list-del-first (read-list)
+(defsubst set-read-list-del-first (read-list)
   "Delete the first entry of READ-LIST if there is one."
   (if (cdr read-list)
       (setcdr read-list (cdr (cdr read-list)))))
 
 
-(defun read-list-enter-first (read-info read-list)
+(defsubst read-list-enter-first (read-info read-list)
   "Enter READ-INFO first into READ-LIST."
   (setcdr read-list (cons read-info (cdr read-list))))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.2 1995-02-23 20:41:33 linus Exp $
+;;;;; $Id: completing-read.el,v 38.3 1995-10-28 07:36:27 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.2 1995-02-23 20:41:33 linus Exp $\n"))
+	      "$Id: completing-read.el,v 38.3 1995-10-28 07:36:27 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -74,7 +74,7 @@ If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field."
   (let (read)
     (while (and (string= (setq read
-				(lyskom-read-conf-name prompt type t initial))
+			       (lyskom-read-conf-name prompt type t initial))
 			 "")
 		(not empty)))
     (if (string= read "")
