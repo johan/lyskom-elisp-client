@@ -1,3 +1,12 @@
+Mon Sep 16 18:10:59 1991  Linus Tolke Y  (linus at lysator)
+
+	* prioritize.el (lyskom-prioritize-1,lyskom-prioritize-2): Fixat
+	  s} att ledtexterna l{ggs in med lyskom-insert (blir
+	  iso->swascii-konverterade.
+
+	* edit-text.el (lyskom-edit-read-misc-list): Buggfix. Det jag
+	  gjorde ig}r. Nu funkar det att l{gga in texter ocks}.
+
 Sun Sep 15 18:17:11 1991  Linus Tolke Y  (linus at robin)
 
 	* lyskom-rest.el, edit-text.el, swedish-strings.el
