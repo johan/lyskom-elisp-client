@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.3 1996-10-20 02:57:01 davidk Exp $
+;;;;; $Id: review.el,v 44.4 1997-02-07 18:08:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.3 1996-10-20 02:57:01 davidk Exp $\n"))
+	      "$Id: review.el,v 44.4 1997-02-07 18:08:06 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -845,7 +845,7 @@ instead. In this case the text TEXT-NO is first shown."
    (lyskom-current-text 
     (let* ((ts (blocking-do 'get-text-stat (or text-no 
 					       lyskom-current-text)))
-	   (r (lyskom-find-root ts ts)))
+	   (r (lyskom-find-root ts)))
       (if r
 	  (lyskom-view-text r)
 	(signal 'lyskom-internal-error "Could not find root"))
@@ -863,47 +863,59 @@ reviews the whole tree in deep-first order."
   (cond
    (lyskom-current-text
     (lyskom-review-tree
-     (lyskom-find-root (blocking-do 'get-text-stat lyskom-current-text)
-		       nil)))
+     (lyskom-find-root (blocking-do 'get-text-stat lyskom-current-text))))
    (t
     (lyskom-insert-string 'read-text-first))))
 
 
-(defun lyskom-find-root (text-stat old-text-stat)
+(defun lyskom-find-root (text-stat &optional all)
   "Finds the root text of the tree containing the text TEXT-STAT.
-Args: TEXT-STAT OLD-TEXT-STAT THENDO
-If TEXT-STAT is nil and OLD-TEXT-STAT contains a text-stat
-then this means that the parent of the text in OLD-TEXT-STAT is not readable
-and the text in OLD-TEXT-STAT is to be used instead.
-If both TEXT-STAT and OLD-TEXT-STAT is nil then this means we are not allowed
-to read the text we are trying to find the root of. This just returns with a
-message."
-  (let* ((ts text-stat)
-	 (misclist (and ts (text-stat->misc-info-list ts)))
-	 (res nil))
-    (cond
-     (ts				;+++ Smartare errorhantering hit.
-      (setq res 'noparents)
-      (while misclist
-	(let* ((type (misc-info->type (car misclist)))
-	       (comm (eq type 'COMM-TO))
-	       (yes (or comm
-			(eq type 'FOOTN-TO)))
-	       (parent-no (if comm
-			      (misc-info->comm-to (car misclist))
-			    (misc-info->footn-to (car misclist)))))
-	  (cond
-	   (yes
-	    (let* ((pts (blocking-do 'get-text-stat parent-no)))
-	      (if (setq res (lyskom-find-root pts ts))
-		  (setq misclist nil))))
-	   (t
-	    (setq misclist (cdr misclist))))))
-      (if (eq res 'noparents) (text-stat->text-no ts) res))
-     (old-text-stat
-      (text-stat->text-no old-text-stat))
-     (t
-      nil))))
+Args: TEXT-STAT &optional ALL
+If ALL is set, return a list of all root texts."  
+  (cond (text-stat
+         (let ((queue (list text-stat))
+               (head nil)
+               (misclist nil)
+               (tmp nil)
+               (result nil))
+           (while queue
+             (setq head (car queue))
+             (setq queue (cdr queue))
+             (setq tmp nil)
+             
+             ;;
+             ;; For each parent, add it to the queue
+             ;;
+               
+             (setq misclist (text-stat->misc-info-list head))
+             (while misclist
+               (cond ((eq (misc-info->type (car misclist)) 'COMM-TO)
+                      (setq tmp
+                            (cons
+                             (blocking-do 'get-text-stat
+                                          (misc-info->comm-to (car misclist)))
+                             tmp)))
+                     ((eq (misc-info->type (car misclist)) 'FOOTN-TO)
+                      (setq tmp 
+                            (cons
+                             (blocking-do 'get-text-stat
+                                          (misc-info->footn-to (car misclist)))
+                             tmp)))) 
+               (setq misclist (cdr misclist)))
+             
+             ;;
+             ;; If no parents were found, this is is a top-level text
+             ;;
+
+             (when (null tmp)
+               (setq result (cons head result))
+               (if (not all) (setq queue nil)))
+             (setq queue (nconc tmp queue)))
+           (if all (mapcar 'text-stat->text-no result)
+             (text-stat->text-no (car result)))))
+        (t nil)))
+
+
 
 
 (defun lyskom-review-tree (text)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.6 1996-10-24 09:48:00 byers Exp $
+;;;;; $Id: macros.el,v 44.7 1997-02-07 18:07:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.6 1996-10-24 09:48:00 byers Exp $\n"))
+	      "$Id: macros.el,v 44.7 1997-02-07 18:07:54 byers Exp $\n"))
 
 
 
@@ -123,8 +123,8 @@ Value returned is always nil."
 
 (defun lyskom-blocking-do-multiple (call-list)
   (save-excursion
-    (set-buffer (process-buffer (or lyskom-proc
-				    lyskom-blocking-process)))
+    (set-buffer (or lyskom-buffer
+                    (process-buffer lyskom-proc)))
     ;; If this happens, we're in trouble
     (if lyskom-is-parsing
 	(lyskom-really-serious-bug))
@@ -228,6 +228,28 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
 (provide 'lyskom-macros)
+
+
+;;; ============================================================
+;;; Keymap handling
+;;;
+
+(defmacro lyskom-use-local-map (keymap)
+  "Use keymap KEYMAP as local map in this buffer. KEYMAP is made local in
+the current buffer, and its value is copied from the LysKOM buffer."
+  (` (progn (make-local-variable (quote (, keymap)))
+            (setq (, keymap)
+                  (lyskom-default-value (quote (, keymap))))
+            (use-local-map (, keymap)))))
+
+;;; ============================================================
+;;; Local variables
+;;;
+
+(defmacro lyskom-setq-default (name value)
+  (` (lyskom-set-default (quote (, name))
+                         (, value))))
+
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

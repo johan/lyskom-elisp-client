@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.16 1997-01-31 15:45:42 davidk Exp $
+;;;;; $Id: commands1.el,v 44.17 1997-02-07 18:07:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.16 1997-01-31 15:45:42 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.17 1997-02-07 18:07:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -423,7 +423,9 @@ Also adds to lyskom-to-do-list."
       (progn
 	(lyskom-insert-membership membership lyskom-membership)
 	(lyskom-prefetch-map conf-no
-			     membership))
+			     membership)
+        (lyskom-run-hook-with-args 'lyskom-add-membership-hook
+                                   membership))
     (lyskom-insert-string 'conf-does-not-exist)))
 
 
@@ -864,8 +866,9 @@ If optional argument is non-nil then dont ask for confirmation."
     (unwind-protect
         (setq do-end-of-command
               (cond
-               ((and (lyskom-count-down-edits)
-                     (display-buffer (car lyskom-list-of-edit-buffers))
+               ((and (lyskom-buffers-of-category 'write-texts)
+                     (display-buffer 
+                      (car (lyskom-buffers-of-category 'write-texts)))
                      (not (lyskom-ja-or-nej-p
                            (lyskom-get-string 'quit-in-spite-of-unsent))))
                 t)
@@ -1522,7 +1525,8 @@ Uses Protocol A version 8 calls"
 			   session-width "P" "M"))
 	 (format-string-2 (lyskom-info-line-format-string
 			   session-width "s" "s"))
-	 (lyskom-default-conf-string 'not-present-anywhere))
+	 (lyskom-default-conf-string 'not-present-anywhere)
+         (lyskom-default-pers-string 'secret-person))
     (lyskom-format-insert format-string-2
 			  ""
 			  (lyskom-get-string 'lyskom-name)
@@ -1589,7 +1593,8 @@ Uses Protocol A version 9 calls"
 			   session-width "P" "M"))
 	 (format-string-2 (lyskom-info-line-format-string
 			   session-width "D" "s"))
-	 (lyskom-default-conf-string 'not-present-anywhere))
+	 (lyskom-default-conf-string 'not-present-anywhere)
+         (lyskom-default-pers-string 'secret-person))
 
     (if (zerop idle-hide)
 	(lyskom-insert (lyskom-get-string 'who-is-active-all))
@@ -1621,7 +1626,7 @@ Uses Protocol A version 9 calls"
 	(lyskom-format-insert
 	 format-string-1
 	 (concat session-no-s my-session)
-	 (dynamic-session-info->person who-info)
+         (dynamic-session-info->person who-info)
 	 (or (dynamic-session-info->working-conference who-info)
 	     (lyskom-get-string 'not-present-anywhere)))
 	(if kom-show-where-and-what

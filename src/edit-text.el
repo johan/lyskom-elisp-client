@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.7 1996-10-28 18:03:42 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.8 1997-02-07 18:07:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.7 1996-10-28 18:03:42 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.8 1997-02-07 18:07:31 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -86,17 +86,17 @@ Does lyskom-end-of-command."
 (defun lyskom-dispatch-edit-text (proc misc-list subject body
 				       &optional handler &rest data)
   "Same as lyskom-edit-text except that it doesn't set lyskom-is-writing."
-  (let ((buffer (generate-new-buffer
-		 (concat (buffer-name (process-buffer proc)) "-edit")))
+  (let ((buffer (lyskom-get-buffer-create 'write-texts
+                                          (concat 
+                                           (buffer-name (process-buffer proc))
+                                           "-edit")))
 	(config (current-window-configuration)))
-    (setq lyskom-list-of-edit-buffers (cons buffer 
-					    lyskom-list-of-edit-buffers))
+
     (process-kill-without-query (get-buffer-process (current-buffer)) t)
 
-    (lyskom-associate-buffer buffer)
-    (lyskom-display-buffer buffer
-                           'kom-write-texts-in-window
-                           'kom-dont-restore-window-after-editing)
+    (lyskom-display-buffer buffer)
+;;;                           'kom-write-texts-in-window
+;;;                           'kom-dont-restore-window-after-editing)
     
 
 ;;;    (cond
@@ -118,8 +118,7 @@ Does lyskom-end-of-command."
 ;;;     (t
 ;;;      (switch-to-buffer buffer)))
 
-    (lyskom-protect-environment
-     (lyskom-edit-mode))
+    (lyskom-edit-mode)
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
     (make-local-variable 'lyskom-edit-return-to-configuration)
@@ -198,18 +197,11 @@ CONF-STAT is the conf-stat of the conference that is about to be put in,
 STRING is the string that is inserted.
 STREAM is the buffer or a marker telling the position.
 NUMBER is the number of the person. Used if the conf-stat is nil."
-  (save-excursion
-    (let ((buf (cond
-		((bufferp stream) stream)
-		((markerp stream) (marker-buffer stream)))))
-      (set-buffer buf)
-      (save-excursion
-	(if (markerp stream) (goto-char stream))
-	(princ (lyskom-format "%#1s <%#2m> %#3M\n" 
-                              string
-                              (or conf-stat number)
-                              (or conf-stat ""))
-	       stream)))))
+  (lyskom-princ  (lyskom-format "%#1s <%#2m> %#3M\n" 
+                                string
+                                (or conf-stat number)
+                                (or conf-stat ""))
+                 stream))
 
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
@@ -221,13 +213,14 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 
 
 (defun lyskom-edit-insert-commented-author (conf-stat string stream number)
-  (princ (lyskom-format 'comment-to-by
-			string
-                        number
-			(if conf-stat
-			    (lyskom-format 'by conf-stat)
-			  ""))
-	 stream))
+  (lyskom-princ (lyskom-format 'comment-to-by
+                               string
+                               number
+                               (if conf-stat
+                                   (lyskom-format 'by conf-stat)
+                                 ""))
+                stream))
+
 			  
 
 
@@ -282,13 +275,13 @@ Commands:
 \\[kom-edit-insert-commented]   inserts the commented of footnoted text.
 \\[kom-edit-insert-text]   inserts the shown text, you tell the number."
   (interactive)
-  (lyskom-clear-vars)
+  (kill-all-local-variables)
   (text-mode)
+  (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
   (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
   (setq major-mode 'lyskom-edit-mode)
   (setq mode-name lyskom-edit-mode-name)
-  ;; (setq buffer-offer-save t)
-  (use-local-map lyskom-edit-mode-map)
+  (lyskom-use-local-map lyskom-edit-mode-map)
   (auto-save-mode 1)
   (auto-fill-mode 1)
   (make-local-variable 'paragraph-start)
@@ -501,23 +494,20 @@ text is a member of some recipient of this text."
             (set-buffer lyskom-buffer)
             (mapcar (function
                      (lambda (author-number)
-                       (lyskom-collect 'sending)
                        (mapcar
                         (function
                          (lambda (conference-number)
                            (initiate-query-read-texts 
                             'sending
-                            nil
-                            author-number conference-number)))
+                            'collector-push
+                            author-number conference-number
+                            collector)))
                         recipient-list)
 
-                       (lyskom-list-use 'sending
-                                        'collector-push
-                                        collector)
                        (lyskom-wait-queue 'sending)
                        (setq author-is-member (collector->value collector))
 
-                       (if (and (null author-is-member)
+                       (if (and (null (apply 'append author-is-member))
 				(not (zerop author-number))
                                 (lyskom-j-or-n-p
                                  (let ((kom-deferred-printing nil))
@@ -559,25 +549,13 @@ text is a member of some recipient of this text."
   "Kill the text (if any) written so far and continue reading."
   (interactive)
   (let ((edit-buffer (current-buffer)))
-    (if kom-dont-restore-window-after-editing
-	(bury-buffer)
-      ;; Select the old configuration.
-      (save-excursion
-	(if (and (boundp 'lyskom-is-dedicated-edit-window)
-		 lyskom-is-dedicated-edit-window)
-	    (condition-case nil
-		(delete-frame)
-	      (error))))
-      (set-window-configuration lyskom-edit-return-to-configuration)
-      (set-buffer (window-buffer (selected-window))))
     (goto-char (point-max))
     (setq lyskom-is-writing nil)
     (lyskom-tell-internat 'kom-tell-regret)
-    (lyskom-save-excursion
-     (set-buffer edit-buffer)
-     (delete-auto-save-file-if-necessary))
-    (kill-buffer edit-buffer)
-    (lyskom-count-down-edits))
+    (lyskom-save-excursion (set-buffer edit-buffer)
+                           (delete-auto-save-file-if-necessary))
+    (lyskom-undisplay-buffer edit-buffer)
+    (kill-buffer edit-buffer))
   (garbage-collect))			;Take care of the garbage.
 
 
@@ -837,8 +815,7 @@ Point must be located on the line where the subject is."
     (lyskom-save-excursion
      (set-buffer edit-buffer)
      (delete-auto-save-file-if-necessary))
-    (kill-buffer edit-buffer)
-    (lyskom-count-down-edits))))
+    (kill-buffer edit-buffer))))
 
 
 (defun lyskom-edit-show-commented (text editing-buffer)
@@ -850,8 +827,14 @@ the with-output-to-temp-buffer command is issued to make them both apear."
        (get-buffer-window editing-buffer)
        (progn
 	 (set-buffer editing-buffer)
-	 (with-output-to-temp-buffer "*Commented*"
-	   (princ (text->text-mass text))))))
+         (let ((buf (lyskom-get-buffer-create 'view-commented "*Commented*"))
+               (kom-deferred-printing nil))
+           (lyskom-display-buffer buf)
+           (save-excursion (set-buffer buf)
+                           (erase-buffer)
+                           (lyskom-view-text (text->text-no text))
+                           (set-buffer-modified-p nil)
+                           (lyskom-view-mode))))))
 
 
 (defun lyskom-edit-insert-commented (text editing-buffer)
@@ -876,29 +859,6 @@ The text is inserted in the buffer with '>' first on each line."
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 
-(defun lyskom-count-down-edits ()
-  "Counts down the number of edit sessions.
-Returns non-nil if there are sessions left.
-
-Can be called from any of the lyskom-associated buffers. At least the main
-buffer and edit buffers."
-  (save-excursion
-    (let ((proc (or (get-buffer-process (current-buffer))
-                    (and (boundp 'lyskom-proc)
-                         (processp lyskom-proc)
-                         lyskom-proc)
-                    (signal 'lyskom-internal-error
-                            (list "lyskom-count-down-edits called from "
-				  (current-buffer))))))
-      (set-buffer (process-buffer proc))
-      (while (and lyskom-list-of-edit-buffers
-                  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
-        (setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
-	  (if lyskom-list-of-edit-buffers
-	      (process-kill-without-query proc t)
-	    (process-kill-without-query proc nil)))
-    lyskom-list-of-edit-buffers))
-      
 
 ;;; ================================================================
 ;;;        Maphanteringsfunktion - keymap handling.

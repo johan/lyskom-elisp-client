@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 44.2 1996-10-10 13:59:49 davidk Exp $
+;;;;; $Id: reading.el,v 44.3 1997-02-07 18:08:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.2 1996-10-10 13:59:49 davidk Exp $\n"))
+	      "$Id: reading.el,v 44.3 1997-02-07 18:08:04 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -84,7 +84,10 @@ replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
 	  (progn
 	    (setcar list membership)
 	    (setq list nil))
-	(setq list (cdr list))))))
+	(setq list (cdr list)))))
+  (lyskom-run-hook-with-args 'lyskom-replace-membership-hook
+                             membership
+                             membership-list))
 
 (defun lyskom-remove-membership (conf-no membership-list)
   "Remove the membership for CONF-NO from MEMBERSHIP-LIST."
@@ -95,5 +98,7 @@ replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
 	    (setcar list nil)
 	    (setq list nil))
 	(setq list (cdr list)))))
-  (setq lyskom-membership (delq nil lyskom-membership)))
+  (setq lyskom-membership (delq nil lyskom-membership))
+  (lyskom-run-hook-with-args 'lyskom-remove-membership-hook
+                             conf-no membership-list))
   

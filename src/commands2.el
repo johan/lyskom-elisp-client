@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.7 1996-10-24 09:47:36 byers Exp $
+;;;;; $Id: commands2.el,v 44.8 1997-02-07 18:07:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.7 1996-10-24 09:47:36 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.8 1997-02-07 18:07:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -47,61 +47,46 @@
   "Show memberships last visited, priority, unread and name."
   (interactive)
   (let ((buf (current-buffer))
-	(buffer (get-buffer-create (concat (buffer-name (current-buffer))
-					   "-membership"))))
+	(buffer (lyskom-get-buffer-create 'list-membership
+                                          (concat (buffer-name 
+                                                   (current-buffer))
+                                                  "-membership")
+                                          t)))
     (save-window-excursion
       (set-buffer buffer)
-      (make-local-variable 'lyskom-buffer)
-      (local-set-key [mouse-2] 'kom-mouse-2)
-      (setq lyskom-buffer buf)
-      (erase-buffer)
-      (insert (lyskom-get-string 'your-memberships))
-      (insert (lyskom-get-string 'memberships-header)))
-    (display-buffer buffer)
-    (lyskom-traverse
-     x lyskom-membership
-     (initiate-get-conf-stat 'membership 'lyskom-memb-received-1
-			     (membership->conf-no x)
-			     x buffer))))
+      (lyskom-view-mode)
+      (lyskom-add-hook 'lyskom-new-membership-list-hook
+                       'lyskom-update-membership-when-changed t)
+      (setq truncate-lines t)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (lyskom-get-string 'your-memberships))
+        (insert (lyskom-get-string 'memberships-header))))
+    (save-selected-window
+      (lyskom-display-buffer buffer))
+    (lyskom-update-membership-buffer)))
 
-;;;(defun lyskom-memb-received-1 (conf-stat membership buffer)
-;;;  "Part of kom-membership.
-;;;Get maps for the conference CONF-STAT. MEMBERSHIP is the users
-;;;membership in that conference. Call lyskom-memb-received with
-;;;the resulting MAP, CONF-STAT, MEMBERSHIP and BUFFER.
-;;;Args: CONF-STAT MEMBERSHIP BUFFER."
-;;;  (if (/= (conf-stat->conf-no conf-stat)
-;;;	  (membership->conf-no membership))
-;;;      (signal 'lyskom-internal-error '("lyskom-memb-received-1")))
-;;;  (let ((first-wanted (1+ (membership->last-text-read membership)))
-;;;	(last-existing  (+ (conf-stat->first-local-no conf-stat)
-;;;			   (conf-stat->no-of-texts conf-stat)
-;;;			   -1)))
-;;;    (if (> first-wanted last-existing)
-;;;	(lyskom-run 'membership 'lyskom-memb-received
-;;;		    nil conf-stat membership buffer)
-;;;      (initiate-get-map 'membership 'lyskom-memb-received
-;;;			(membership->conf-no membership)
-;;;			first-wanted
-;;;			(+ 1 last-existing
-;;;			   (- first-wanted))
-;;;			conf-stat membership buffer))))
+(defun lyskom-update-membership-buffer ()
+  (let ((buf (car (lyskom-buffers-of-category 'list-membership))))
+    (when (buffer-live-p buf)
+      (let ((inhibit-read-only t))
+        (save-excursion (set-buffer buf)
+                        (erase-buffer))
+        (lyskom-traverse x lyskom-membership
+          (initiate-get-conf-stat 'memberhsip 'lyskom-memb-received-1
+                                  (membership->conf-no x)
+                                  x buf))))))
 
-;;;(defun lyskom-memb-received (map conf-stat membership buffer)
-;;;  "Args: MAP CONF-STAT MEMBERSHIP BUFFER.
-;;;Prints membership in a conferences.
-;;;MAP may be nil if there are no new texts."
-;;;  (save-window-excursion
-;;;    (set-buffer buffer)
-;;;    (goto-char (point-max))
-;;;    (lyskom-format-insert 'memberships-line
-;;;			  (lyskom-return-date-and-time  (membership->last-time-read
-;;;						membership))
-;;;			  (membership->priority membership)
-;;;			  (if map
-;;;			      (length (lyskom-list-unread map membership))
-;;;			    0)
-;;;			  conf-stat)))
+(defun lyskom-update-membership-when-changed ()
+  (let ((buffer (car (lyskom-buffers-of-category 'list-membership))))
+    (if (buffer-live-p buffer)
+        (save-excursion (set-buffer buffer)
+                        (lyskom-update-membership-buffer))
+      (lyskom-remove-hook 
+       'lyskom-new-membership-list-hook
+       'lyskom-update-membership-when-changed))))
+
+
 
 (defun lyskom-memb-received-1 (conf-stat membership buffer)
   "Part of kom-membership.
@@ -137,20 +122,23 @@ MAP may be nil if there are no new texts."
   (save-window-excursion
     (set-buffer buffer)
     (goto-char (point-max))
-    (lyskom-format-insert 'memberships-line
-			  (lyskom-return-date-and-time
-			   (membership->last-time-read
-						membership))
-			  (membership->priority membership)
-			  (cond
-			   ((null map) 0)
-			   ((numberp map) map)
-			   ((listp map)
-			    (length (lyskom-list-unread map membership)))
-			   (t (signal
-			       'lyskom-internal-error
-			       '("Erroneous map in lyskom-memb-received"))))
-			  conf-stat)))
+    (let ((lyskom-executing-command 'kom-membership)
+          (lyskom-current-command 'kom-membership)
+          (inhibit-read-only t))
+      (lyskom-format-insert 'memberships-line
+                            (lyskom-return-date-and-time
+                             (membership->last-time-read
+                              membership))
+                            (membership->priority membership)
+                            (cond
+                             ((null map) 0)
+                             ((numberp map) map)
+                             ((listp map)
+                              (length (lyskom-list-unread map membership)))
+                             (t (signal
+                                 'lyskom-internal-error
+                                 '("Erroneous map in lyskom-memb-received"))))
+                            conf-stat))))
 
 
 ;;; ================================================================
@@ -592,7 +580,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 
 (defun lyskom-send-message-auto-fill ()
   "Temporarily turn on auto fill in minibuffer"
-  (setq fill-column 78)
+  (setq fill-column 78)                 ;+++ Ta bort?
   (auto-fill-mode 1))
 
 

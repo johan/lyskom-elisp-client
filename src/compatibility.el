@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.1 1996-10-24 09:47:39 byers Exp $
+;;;;; $Id: compatibility.el,v 44.2 1997-02-07 18:07:24 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.1 1996-10-24 09:47:39 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.2 1997-02-07 18:07:24 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -122,116 +122,29 @@ of the lyskom-provide-* functions instead."
   (` (lyskom-provide defsubst (, name) (, rest))))
 
 
+;;; ============================================================
+;;; lyskom-xemacs-or-gnu
+;;;
+
+(defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
+  "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
+  (` (if (string-match "XEmacs" (emacs-version))
+         (, xemacs-form)
+       (, gnu-form))))
+
+
 ;;; ======================================================================
 ;;; ======================================================================
 ;;; ======================================================================
 
 ;;;
-;;; Dummy definitions
-;;;
 
-(defun add-hook-org (x y z))
-(defun remove-hook-org (x y))
-
-;;;
-;;; Real functions
-;;;
-
-(lyskom-provide-function rassoc (key list)
-  "Return non-nil if KEY is `equal' to the cdr of an element of LIST.
-The value is actually the element of LIST whose cdr is KEY."
-  (catch 'rassoc
-    (while list
-      (if (equal key (cdr (car list)))
-          (throw 'rassoc (car list))
-        (setq list (cdr list))))
-    (throw 'rassoc nil)))
-
-
-(lyskom-provide-function rassq (key list)
-  "Return non-nil if KEY is `eq' to the cdr of an element of LIST.
-The value is actually the element of LIST whose cdr is KEY."
-  (catch 'rassq
-    (while list
-      (if (eq key (cdr (car list)))
-          (throw 'rassq (car list))
-        (setq list (cdr list))))
-    (throw 'rassq nil)))
-
-
-;;;
-;;; Functions for limited simulation of local hooks
-;;;
-
-(lyskom-compatibility-forms (fboundp 'make-local-hook)
-    (fset 'add-hook-org (symbol-function 'add-hook))
-  (fset 'remove-hook-org (symbol-function 'remove-hook)))
-
-(lyskom-compatibility-definition (fboundp 'make-local-hook)
-    (defun add-hook (hook function &optional append local)
-      (add-hook-org hook function append)))
-
-(lyskom-compatibility-definition (fboundp 'make-local-hook)
- (defun remove-hook (hook function &optional local)
-   (remove-hook-org hook function)))
-
-(lyskom-provide-function make-local-hook (hook)
-  "Poor man's definition of make-local-hook. Better'n nothing..."
-  (make-variable-buffer-local hook))
-
-
-
-(lyskom-provide-function buffer-live-p (buf)
-   (and (bufferp buf) (buffer-name buf)))                         
-
-(lyskom-provide-function get-buffer-window-list (buffer
-                                                 &optional minibuf frame)
-  "Return windows currently displaying BUFFER, or nil if none.
-See `walk-windows' for the meaning of MINIBUF and FRAME."
-  (let ((buffer (if (bufferp buffer) buffer (get-buffer buffer))) windows)
-    (walk-windows (function (lambda (window)
-			      (if (eq (window-buffer window) buffer)
-				  (setq windows (cons window windows)))))
-		  minibuf frame)
-    windows))
 
 (lyskom-provide-macro byte-code-function-p (obj)
   (` (compiled-function-p (, obj))))
 
-(lyskom-provide-subst internal-facep (x)
-  (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
-
-(lyskom-provide-function facep (x)
-  "Return t if X is a face name or an internal face vector."
-  (and (or (and (fboundp 'internal-facep)
-                (internal-facep x))
-           (and (symbolp x) 
-                (boundp 'global-face-data)
-                (assq x global-face-data)))
-       t))
-
-(lyskom-provide-macro save-selected-window (&rest body)
-  "Execute BODY, then select the window that was selected before BODY."
-  (list 'let
-        '((save-selected-window-window (selected-window)))
-        (list 'unwind-protect
-              (cons 'progn body)
-              (list 'select-window 'save-selected-window-window))))
-
 (lyskom-compatibility-forms (fboundp 'frame-width)
     (fset 'frame-width 'screen-width))
-
-(lyskom-provide-function match-string (num &optional string)
-  "Return string of text matched by last search.
-NUM specifies which parenthesized expression in the last regexp.
- Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
-Zero means the entire text matched by the whole regexp or whole string.
-STRING should be given if the last search was by `string-match' on STRING."
-  (if (match-beginning num)
-      (if string
-	  (substring string (match-beginning num) (match-end num))
-	(buffer-substring (match-beginning num) (match-end num)))))
-
 
 
 ;;; ======================================================================
@@ -260,6 +173,134 @@ STRING should be given if the last search was by `string-match' on STRING."
      (if tail
          (setcdr tail new-parent))))
 
+(defconst lyskom-xemacs-keysym 
+  '((mouse-1 . (button1))
+    (mouse-2 . (button2))
+    (mouse-3 . (button3))
+    (down-mouse-3 . (button3))
+    (å       . aring)
+    (Å       . Aring)
+    (ä       . adiearesis)
+    (Ä       . Adiearesis)))
+
+(defconst lyskom-gnu-keysym nil)
+
+
+(defun lyskom-keys (binding)
+  (cond ((vectorp binding) (apply 'vector (mapcar 'lyskom-keysym binding)))
+        (t binding)))
+
+(defun lyskom-keysym (sym)
+  "Look up the proper symbol to bind sym to"
+  (or (cdr (assq sym (lyskom-xemacs-or-gnu lyskom-xemacs-keysym
+                                           lyskom-gnu-keysym)))
+      sym))
+
+
+;;; ======================================================================
+;;; Event stuff
+
+(lyskom-provide-function event-point (e)
+  "Return the character position of the given mouse event.
+If the event did not occur over a window, or did not occur over text,
+then this returns nil.  Otherwise, it returns an index into the buffer
+visible in the event's window."
+  (car (cdr (event-start e))))
+
+(lyskom-provide-function popup-menu (menu-desc &optional event)
+  (let* ((result (x-popup-menu (or event t)
+                               (list menu-desc)))
+         (command (car result)))
+    (if command
+        (apply (car command)
+               (cdr command)))))
+
+(defun lyskom-get-buffer-window-list (buffer &optional minibuf frame)
+  "Return windows currently displaying BUFFER, or nil if none.
+See `walk-windows' for the meaning of MINIBUF and FRAME."
+  (let ((buffer (if (bufferp buffer) buffer (get-buffer buffer))) windows)
+    (walk-windows (function (lambda (window)
+			      (if (eq (window-buffer window) buffer)
+				  (setq windows (cons window windows)))))
+		  minibuf frame)
+    windows))
+
+(lyskom-provide-function window-list (&optional frame minibuf window)
+  "Return a list of windows on FRAME, beginning with WINDOW.
+FRAME and WINDOW default to the selected ones.  
+Optional second arg MINIBUF t means count the minibuffer window
+even if not active.  If MINIBUF is neither t nor nil it means
+not to count the minibuffer even if it is active."
+  (setq window (or window (selected-window))
+	frame (or frame (selected-frame)))
+  (if (not (eq (window-frame window) frame))
+      (error "Window must be on frame."))
+  (let ((current-frame (selected-frame))
+	list)
+    (unwind-protect
+	(save-window-excursion
+	  (select-frame frame)
+	  (walk-windows
+	   (function (lambda (cur-window)
+		       (if (not (eq window cur-window))
+			   (setq list (cons cur-window list)))))
+	   minibuf)
+	  (setq list (cons window list)))
+      (select-frame current-frame))))
+
+
+
+(lyskom-provide-function 
+ replace-in-string (str regexp newtext &optional literal)
+  "Replaces all matches in STR for REGEXP with NEWTEXT string.
+Optional LITERAL non-nil means do a literal replacement.
+Otherwise treat \\ in NEWTEXT string as special:
+  \\& means substitute original matched text,
+  \\N means substitute match for \(...\) number N,
+  \\\\ means insert one \\."
+  (if (not (stringp str))
+      (error "(replace-in-string): First argument must be a string: %s" str))
+  (if (stringp newtext)
+      nil
+    (error "(replace-in-string): 3rd arg must be a string: %s"
+	   newtext))
+  (let ((rtn-str "")
+	(start 0)
+	(special)
+	match prev-start)
+    (while (setq match (string-match regexp str start))
+      (setq prev-start start
+	    start (match-end 0)
+	    rtn-str
+	    (concat
+	      rtn-str
+	      (substring str prev-start match)
+	      (cond (literal newtext)
+		    (t (mapconcat
+			 (function
+			   (lambda (c)
+			     (if special
+				 (progn
+				   (setq special nil)
+				   (cond ((eq c ?\\) "\\")
+					 ((eq c ?&)
+					  (substring str
+						     (match-beginning 0)
+						     (match-end 0)))
+					 ((and (>= c ?0) (<= c ?9))
+					  (if (> c (+ ?0 (length
+							   (match-data))))
+					      ;; Invalid match num
+					      (error "(replace-in-string) Invalid match num: %c" c)
+					    (setq c (- c ?0))
+					    (substring str
+						       (match-beginning c)
+						       (match-end c))))
+					 (t (char-to-string c))))
+			       (if (eq c ?\\) (progn (setq special t) nil)
+				 (char-to-string c)))))
+			 newtext ""))))))
+    (concat rtn-str (substring str start))))
 
 ;;; Local Variables:
 ;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.7 1996-10-24 09:47:41 byers Exp $
+;;;;; $Id: completing-read.el,v 44.8 1997-02-07 18:07:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.7 1996-10-24 09:47:41 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.8 1997-02-07 18:07:26 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -107,7 +107,9 @@ but first checks a cache."
 
 (defvar lyskom-minibuffer-local-must-match-map
   (let ((map (copy-keymap minibuffer-local-must-match-map)))
-    (define-key map " " nil)
+    (lyskom-xemacs-or-gnu 
+     (set-keymap-parent map lyskom-minibuffer-local-completion-map)
+     (define-key map " " nil))
     map)
   "Keymap used for reading LysKOM names.")
 
@@ -172,7 +174,6 @@ A string:    A name that matched nothing in the database."
 
   (lyskom-completing-clear-cache)
   (let* ((completion-ignore-case t)
-         (lyskom-blocking-process lyskom-proc)
          (minibuffer-local-completion-map 
           lyskom-minibuffer-local-completion-map)
          (minibuffer-local-must-match-map 
@@ -182,12 +183,13 @@ A string:    A name that matched nothing in the database."
          (keep-going t))
 
     (while keep-going
-      (setq read-string (completing-read prompt
-                                         'lyskom-read-conf-internal
-                                         type
-                                         mustmatch
-                                         initial
-                                         'lyskom-name-hist))
+      (lyskom-with-lyskom-minibuffer
+       (setq read-string (completing-read prompt
+                                          'lyskom-read-conf-internal
+                                          type
+                                          mustmatch
+                                          initial
+                                          'lyskom-name-hist)))
       (setq result
             (cond ((null read-string) nil)
                   ((string= "" read-string) nil)
@@ -202,8 +204,7 @@ A string:    A name that matched nothing in the database."
 persons who are logged on."
   (let ((lyskom-completing-use-dynamic-info
 	 (cdr-safe (assq 'lyskom-dynamic-session-info-flag
-			 (buffer-local-variables
-			  (process-buffer lyskom-blocking-process))))))
+			 (buffer-local-variables lyskom-buffer)))))
     (mapcar (if lyskom-completing-use-dynamic-info
 		(function (lambda (el) (dynamic-session-info->person el)))
 	      (function (lambda (el) (who-info->pers-no el))))
@@ -260,11 +261,9 @@ from person and conference number specifications."
   "Return the conf-z-info associated with STRING that also satisfies
 PREDICATE or nil if no name matches. See lyskom-read-conf-internal for
 a documentation of PREDICATE."
-  (let ((lyskom-blocking-process (or lyskom-blocking-process
-                                     lyskom-proc)))
-    (if (string= string "")
-        nil
-      (lyskom-read-conf-internal string predicate 'lyskom-lookup))))
+  (if (string= string "")
+      nil
+    (lyskom-read-conf-internal string predicate 'lyskom-lookup)))
 
 
 (defun lyskom-read-conf-internal (string predicate all)
@@ -806,7 +805,7 @@ the LysKOM rules of string matching."
         (xchar nil))
 
     (lyskom-save-excursion
-     (set-buffer (process-buffer lyskom-blocking-process))
+     (set-buffer lyskom-buffer)
      (mapcar
       (function 
        (lambda (x)
@@ -953,13 +952,14 @@ the LysKOM rules of string matching."
       (lyskom-insert (lyskom-format 'total-users (length who-info)))
       (lyskom-scroll)
       (while (string= ""
-		      (setq result (completing-read
+                      (lyskom-with-lyskom-minibuffer
+                       (setq result (completing-read
 				    (lyskom-get-string 'resolve-session)
 				    who-info
 				    nil
 				    t
 				    (car (car who-info))
-				    nil))))
+				    nil)))))
       (list (session-info->connection (cdr (assoc result who-info)))))))
 
 
