@@ -1,3 +1,25 @@
+Sun Sep 29 04:26:52 1991  Per Cederqvist  (ceder at ruben)
+
+	* vars.el (kom-show-personal-message-in-buffer,
+	  kom-pop-personal-message, kom-ding-on-personal-messages,
+	  lyskom-personal-messages-hook): added.
+
+	* async.el (lyskom-insert-personal-message): Beeps only if
+	  kom-ding-on-personal-messages is non-nil.
+
+	* async.el (lyskom-insert-personal-message): Pops to the buffer if
+	  kom-pop-personal-message is set.
+
+	* async.el (lyskom-insert-personal-message): Created. Does the
+	  acual job that lyskom-show-personal-message used to do.
+
+	* async.el (lyskom-show-personal-message): Run
+	  lyskom-personal-message-hook when a message arrives.
+
+	* async.el (lyskom-show-personal-message): Insert the message in
+	  the normal buffer, or a special buffer, or not at all depending
+	  on how kom-show-personal-messages-in-buffer is set.
+
 Sat Sep 28 21:33:38 1991  Per Cederqvist  (ceder at ruben)
 
 	* async.el (lyskom-parse-async): Removed the "info" backdoor.

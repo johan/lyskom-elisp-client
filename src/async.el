@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.6 1991-09-28 19:34:38 ceder Exp $
+;;;;; $Id: async.el,v 35.7 1991-09-29 03:37:45 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.6 1991-09-28 19:34:38 ceder Exp $\n"))
+	      "$Id: async.el,v 35.7 1991-09-29 03:37:45 ceder Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -263,9 +263,33 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
       RECIPIENT: 0 if this message is for everybody, otherwise the pers-no 
                  of the user.
       MESSAGE: A string containing the message."
-  (lyskom-insert-before-prompt
+  (cond
+   ((eq kom-show-personal-messages-in-buffer t)
+    (lyskom-insert-personal-message sender recipient message
+				    'lyskom-insert-before-prompt))
+   ((null kom-show-personal-messages-in-buffer))
+   (t
+    (lyskom-save-excursion
+     (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
+     (goto-char (point-max))
+     (lyskom-insert-personal-message sender recipient message 'insert))))
+  (run-hooks 'lyskom-personal-message-hook))
+
+(defun lyskom-insert-personal-message (sender recipient message
+					      insert-function)
+  "Insert a personal message in the current buffer.
+Arguments: SENDER RECIPIENT MESSAGE INSERT-FUNCTION.
+SENDER is a pers-stat (possibly nil) or a string.
+RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
+MESSAGE is a string containing the message.
+INSERT-FUNCTION is a function that given a string inserts it into the
+current buffer."
+     
+  (funcall
+   insert-function
    "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (lyskom-insert-before-prompt 
+  (funcall
+   insert-function
    (if (= recipient 0)
        (lyskom-format 'message-broadcast
 		      (cond
@@ -281,9 +305,12 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
 		       (t (lyskom-get-string 'unknown)))
 		      message
 		      (substring (current-time-string) 11 19))))
-  (lyskom-insert-before-prompt
+  (funcall insert-function
    "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
-  (beep))
+  (if kom-pop-personal-messages
+      (pop-to-buffer (current-buffer)))
+  (if kom-ding-on-personal-messages
+      (beep)))
 
 
 ;;; ================================================================
