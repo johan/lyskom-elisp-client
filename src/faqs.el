@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.5 2002-10-16 20:22:16 byers Exp $
+;;;;; $Id: faqs.el,v 44.6 2002-12-16 22:12:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.5 2002-10-16 20:22:16 byers Exp $\n"))
+              "$Id: faqs.el,v 44.6 2002-12-16 22:12:45 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless (lyskom-faq-is-read conf-no text-no)
@@ -251,51 +251,54 @@ The text to add is passed in TEXT-NO"
 
 (defun  lyskom-change-faq (conf-stat aux-list)
   "Change a FAQ for a conference."
-  (if (null aux-list)
-      (lyskom-format-insert 'conf-has-no-faq conf-stat)
-
-    ;; Get a list of FAQ texts and corresponding aux-item-numbers
-    ;; Get the FAQ to change
-    (let* ((faq-list (mapcar (lambda (x)
+  ;; Get a list of FAQ texts and corresponding aux-item-numbers
+  ;; Get the FAQ to change
+  (let* ((faq-list (mapcar (lambda (x)
                              (cons (aux-item->data x)
                                    (aux-item->aux-no x)))
                            aux-list))
-           (text-no-aux (cond ((= (length faq-list) 1) (car faq-list))
-                              (t (lyskom-string-assoc
-                                  (lyskom-completing-read 
-                                   (lyskom-get-string 'text-to-change-as-faq)
-                                   (lyskom-maybe-frob-completion-table 
-                                    faq-list)
-                                   nil t)
-                                  faq-list))))
-           (text-no (string-to-int (car text-no-aux)))
-           (aux-no (cdr text-no-aux)))
+         (text-no-aux (cond ((= (length faq-list) 1) (car faq-list))
+                            ((null faq-list) nil)
+                            (t (lyskom-string-assoc
+                                (lyskom-completing-read 
+                                 (lyskom-get-string 'text-to-change-as-faq)
+                                 (lyskom-maybe-frob-completion-table 
+                                  faq-list)
+                                 nil t)
+                                faq-list))))
+         (text-no (and text-no-aux (string-to-int (car text-no-aux))))
+         (aux-no (and text-no-aux (cdr text-no-aux))))
 
-      (cond 
+    (cond 
 
-       ;; If conf-stat is null we are changing the FAQ for the server.
-       ;; Don't do this unless we are running enabled and have the right
-       ;; privileges.
-       ((and (null conf-stat)
-             (or (not lyskom-is-administrator)
-                 (not (privs->admin (pers-stat->privileges
-                                     (blocking-do 'get-pers-stat
-                                                  lyskom-pers-no))))))
-        (lyskom-format-insert 'not-supervisor-for-server))
+     ;; If conf-stat is null we are changing the FAQ for the server.
+     ;; Don't do this unless we are running enabled and have the right
+     ;; privileges.
+     ((and (null conf-stat)
+           (or (not lyskom-is-administrator)
+               (not (privs->admin (pers-stat->privileges
+                                   (blocking-do 'get-pers-stat
+                                                lyskom-pers-no))))))
+      (lyskom-format-insert 'not-supervisor-for-server))
 
-       ;; If we have a conf-stat and are not administrator and not
-       ;; supervisor for the conf, then we are not allowed to change
-       ;; the FAQ.
-       ((and conf-stat 
-             (not lyskom-is-administrator)
-             (not (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
-                                        lyskom-pers-no)))
-        (lyskom-format-insert 'not-supervisor-for conf-stat))
+     ;; If we have a conf-stat and are not administrator and not
+     ;; supervisor for the conf, then we are not allowed to change
+     ;; the FAQ.
+     ((and conf-stat 
+           (not lyskom-is-administrator)
+           (not (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
+                                      lyskom-pers-no)))
+      (lyskom-format-insert 'not-supervisor-for conf-stat))
 
-       ;; OK, it looks like we are allowed to change the FAQ.
-       (t
-        (blocking-do-multiple ((text-stat (get-text-stat text-no))
-                               (text-mass (get-text text-no)))
+     ;; OK, it looks like we are allowed to change the FAQ.
+     (t (let ((text-stat nil)
+              (text-mass nil))
+
+          ;; Get the old text (if there is one)
+          (blocking-do-multiple ((ts (get-text-stat text-no))
+                                 (tm (get-text text-no)))
+            (setq text-stat ts text-mass tm))
+
           (let* ((str (and text-mass (text->decoded-text-mass text-mass
                                                               text-stat)))
                  (subject (if (and str (string-match "\n" str))
@@ -317,8 +320,8 @@ The text to add is passed in TEXT-NO"
              body
              'lyskom-change-faq-2
              conf-stat
-             (text-stat->text-no text-stat)
-             aux-no))))))))
+             (and text-stat (text-stat->text-no text-stat))
+             aux-no)))))))
 
 
 (defun lyskom-change-faq-2 (text-no conf-stat old-text-no old-aux-no)
@@ -348,13 +351,18 @@ The text to add is passed in TEXT-NO"
                                    text-no))))
 
 (defun lyskom-change-faq-3 (retval conf-stat old-text-no text-no)
+  (cache-del-text-stat text-no)
   (if retval
-      (lyskom-format-insert-before-prompt 'changed-faq-for-conf-done conf-stat
-                                          old-text-no
-                                          text-no)
-    (lyskom-format-insert-before-prompt 'changed-faq-for-conf-failed conf-stat 
-                                        old-text-no text-no
-                                        (lyskom-current-error))))
+      (lyskom-format-insert-before-prompt 
+       (if old-text-no 'changed-faq-for-conf-done 'set-faq-for-conf-done)
+       conf-stat
+       old-text-no
+       text-no)
+    (lyskom-format-insert-before-prompt 
+     (if old-text-no 'changed-faq-for-conf-failed 'set-faq-for-conf-failed)
+     conf-stat 
+     old-text-no text-no
+     (lyskom-current-error))))
 
 
 
