@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.144 2003-08-17 15:33:19 byers Exp $
+;;;;; $Id: utilities.el,v 44.145 2003-08-24 18:41:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.144 2003-08-17 15:33:19 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.145 2003-08-24 18:41:36 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2147,7 +2147,8 @@ suitable for use as initial input in a magic minibuffer."
   (lyskom-ignore def)
   (lyskom-with-lyskom-minibuffer
    (lyskom-with-magic-minibuffer
-    (or (completing-read prompt table predicate require-match init hist) def))))
+    (let ((res (completing-read prompt table predicate require-match init hist)))
+      (if (or (null res) (equal res "")) def res)))))
 
 (defun lyskom-read-from-minibuffer (prompt 
                                     &optional initial-contents

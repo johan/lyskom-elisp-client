@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.59 2003-08-16 16:58:44 byers Exp $
+;;;;; $Id: async.el,v 44.60 2003-08-24 18:41:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.59 2003-08-16 16:58:44 byers Exp $\n"))
+	      "$Id: async.el,v 44.60 2003-08-24 18:41:35 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -468,7 +468,7 @@ according to the value of FLAG."
       (not (zerop (minibuffer-depth)))))
 
 
-(defun lyskom-show-personal-message (sender recipient message 
+ (defun lyskom-show-personal-message (sender recipient message 
                                             &optional when nobeep)
   "Insert a personal message into the lyskom buffer.
 Args: SENDER: conf-stat for the person sending the message.
@@ -479,13 +479,12 @@ Args: SENDER: conf-stat for the person sending the message.
       NOBEEP: True means don't beep. No matter what."
   (lyskom-insert-personal-message sender recipient message when nobeep)
   (setq lyskom-last-personal-message-sender 
-        (if (stringp sender) sender (conf-stat->name sender)))
+        (if (stringp sender) sender (conf-stat->conf-no sender)))
   (setq lyskom-last-group-message-recipient 
         (if (and recipient
                  (not (eq 0 recipient))
-                 (not (eq (conf-stat->conf-no recipient)
-                          lyskom-pers-no)))
-            (conf-stat->name recipient)
+                 (not (eq (conf-stat->conf-no recipient) lyskom-pers-no)))
+            (conf-stat->conf-no recipient)
           nil))
   (run-hooks 'lyskom-personal-message-hook)
   (run-hooks 'kom-personal-message-hook))
