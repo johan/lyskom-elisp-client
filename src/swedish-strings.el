@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.233 2002-04-26 21:16:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.234 2002-04-27 17:38:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.233 2002-04-26 21:16:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.234 2002-04-27 17:38:37 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -540,6 +540,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (who-is-on-in-what-conference . "Vilka i vilket möte: ")
     (who-is-present-in-what-conference . "Vilka närvarande i vilket möte: ")
+    (who-is-friend . "Visar endast vänner.\n")
     (who-is-active-and-member . "Visar endast medlemmar i %#1M.\n")
     (who-is-active-and-present . "Visar endast medlemmar närvarande i %#1M.\n")
 

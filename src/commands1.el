@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.139 2002-04-21 21:32:15 byers Exp $
+;;;;; $Id: commands1.el,v 44.140 2002-04-27 17:38:36 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.139 2002-04-21 21:32:15 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.140 2002-04-27 17:38:36 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2839,7 +2839,9 @@ Uses Protocol A version 8 calls"
 	 (lyskom-default-conf-string 'not-present-anywhere)
          (lyskom-default-pers-string 'unknown-person))
 
-    (cond (show-present-only
+    (cond (show-friends-only
+           (lyskom-format-insert 'who-is-friend))
+          (show-present-only
 	   (lyskom-format-insert 'who-is-active-and-present conf-stat))
 	  (conf-stat
 	   (lyskom-format-insert 'who-is-active-and-member conf-stat)))
@@ -2936,7 +2938,9 @@ Uses Protocol A version 9 calls"
     (if wants-invisibles
 	(lyskom-insert (lyskom-get-string 'showing-invisibles)))
 
-    (cond (show-present-only
+    (cond (show-friends-only
+           (lyskom-format-insert 'who-is-friend))
+          (show-present-only
 	   (lyskom-format-insert 'who-is-active-and-present conf-stat))
 	  (conf-stat
 	   (lyskom-format-insert 'who-is-active-and-member conf-stat)))
