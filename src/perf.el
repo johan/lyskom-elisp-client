@@ -88,16 +88,58 @@
 	    hits misses hitrate phits pmisses)))
 
 
-(defvar max-pending-calls 0)
-(defadvice lyskom-check-output-queues (before stat activate)
-  (fields-replace cache-info-fields
-		  'pending-calls
-		  (int-to-string lyskom-number-of-pending-calls))
-  (when (> lyskom-number-of-pending-calls max-pending-calls)
-    (setq max-pending-calls lyskom-number-of-pending-calls)
+(defvar queue-sizes (make-vector 10 0))
+
+(defun lyskom-send-packet (kom-queue string)
+  "Send a packet to the server.
+Add info on lyskom-pending-calls. Update lyskom-ref-no.
+Args: KOM-QUEUE STRING."
+
+  ;; Queue it
+  (let* ((pri (lyskom-queue-priority kom-queue))
+	 (sz (1+ (aref queue-sizes pri))))
+    (lyskom-queue-enter (aref lyskom-output-queues pri)
+			(cons lyskom-ref-no string))
+    (aset queue-sizes pri sz)
     (fields-replace cache-info-fields
-		    'max-pending-calls
-		    (int-to-string max-pending-calls))))
+		    (intern (concat "queue" (int-to-string pri)))
+		    (format "%d" sz)))
+  (setq lyskom-pending-calls
+	(cons (cons lyskom-ref-no kom-queue)
+	      lyskom-pending-calls))
+  (++ lyskom-ref-no)
+  
+  ;; Send something from the output queues
+  (lyskom-check-output-queues)
+  (sit-for 0))
+
+(defun lyskom-check-output-queues ()
+  "Check for pending calls to the server.
+Send calls from queues with higher priority first, and make sure that at
+most lyskom-max-pending-calls are sent to the server at the same time."
+  (catch 'done
+    (let ((i 9))
+      (while (< lyskom-number-of-pending-calls
+		lyskom-max-pending-calls)
+	(while (lyskom-queue-isempty (aref lyskom-output-queues i))
+	  (-- i)
+	  (if (< i 0) (throw 'done nil)))
+	(let ((entry (lyskom-queue-delete-first
+		      (aref lyskom-output-queues i)))
+	      (sz (1- (aref queue-sizes i))))
+	  (++ lyskom-number-of-pending-calls)
+	  (aset queue-sizes i sz)
+	  (fields-replace cache-info-fields
+			  (intern (concat "queue" (int-to-string i)))
+			  (format "%d" sz))
+	  (lyskom-process-send-string
+	   lyskom-proc
+	   (concat (car entry) (cdr entry) "\n")))))))
+
+;; (defadvice lyskom-check-output-queues (before stat activate)
+;;   (fields-replace cache-info-fields
+;; 		     'pending-calls
+;; 		     (int-to-string lyskom-number-of-pending-calls)))
 
 (defvar cache-info-template "\
   text:       	       [text]
@@ -106,7 +148,18 @@
   uconf-stat: 	       [uconf-stat]
   pers-stat:           [pers-stat]
   static-session-info: [static-session-info]
-  pending calls:       [pending-calls]   (max [max-pending-calls])")
+  pending calls:       [pending-calls]
+
+ Queues  0: [queue0]
+	 1: [queue1]
+         2: [queue2]
+         3: [queue3]
+         4: [queue4]
+         5: [queue5]
+         6: [queue6]
+         7: [queue7]
+         8: [queue8]
+         9: [queue9]")
 
 (defvar cache-info-buffer nil)
 (defvar cache-info-fields nil)
