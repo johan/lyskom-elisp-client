@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.100 2000-08-16 14:21:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.101 2000-08-16 15:39:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.100 2000-08-16 14:21:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.101 2000-08-16 15:39:34 byers Exp $"))
 
 
 ;;; ================================================================
@@ -333,7 +333,8 @@ and you have finished reading. Please come back later.
     (no-confs-exist . "There are no conferences in the database.\n")
     (no-pers-confs-exist . "There are no persons or conferences in the database.\n")
     (list-confs-created-by . "List conferences administered by: ")
-    (listing-confs-created-by . "Listing conferences administered by %#1P\n")
+    (listing-confs-created-by . "Listing conferences administered by %#1P\
+    C=Created, O=Supervisor, S=Letterbox is super conf; S=Secret, P=Protected\n")
     (list-pers-confs-created-by . "List persons and conferences administered by: ")
     (getting-all-confs . "Retrieving a list of all conferences from the server...")
     (getting-all-pers-confs . "Retrieving a list of all persons and conferences from the server...")

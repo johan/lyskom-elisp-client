@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.128 2000-08-16 14:21:22 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.129 2000-08-16 15:39:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.128 2000-08-16 14:21:22 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.129 2000-08-16 15:39:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -314,7 +314,8 @@ du har läst klart allting. Kom tillbaks senare.
     (no-confs-exist . "Det finns inga möten i databasen.\n")
     (no-pers-confs-exist . "Det finns inga möten eller personer i databasen.\n")
     (list-confs-created-by . "Lista organisatörsskap för: ")
-    (listing-confs-created-by . "Organisatörsskap för %#1P\n")
+    (listing-confs-created-by . "Organisatörsskap för %#1P\n\
+    S=Skapat, O=Organisatör, M=Brevlåda som supermöte; S=Slutet, H=Hemligt\n")
     (list-pers-confs-created-by . "Lista organisatörsskap (med brevlådor) för: ")
     (getting-all-confs . "Hämtar en lista av alla möten från servern...")
     (getting-all-pers-confs . "Hämtar en lista av alla personer och möten från servern...")
@@ -1530,7 +1531,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-slow-mode            . "Långsamma kommandon")
     (kom-quick-mode           . "Snabba kommandon")
     (kom-send-message         . "Sända meddelande")
-    (kom-send-alarm           p. "Skicka alarmmeddelande")
+    (kom-send-alarm           . "Skicka alarmmeddelande")
     (kom-create-conf	      . "Skapa möte")
     (kom-delete-conf          . "Utplåna")
     (kom-delete-text          . "Radera inlägg")
