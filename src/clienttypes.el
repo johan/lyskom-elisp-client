@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 35.5 1992-05-11 01:54:29 linus Exp $
+;;;;; $Id: clienttypes.el,v 35.6 1992-07-26 16:17:00 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 35.5 1992-05-11 01:54:29 linus Exp $\n"))
+	      "$Id: clienttypes.el,v 35.6 1992-07-26 16:17:00 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -277,21 +277,6 @@ will be inserted before it."
 	(setq continue nil))
        (t 
 	(setq rlist (cdr rlist)))))))
-
-;; This is the old recursive version.  It can be removed once it is
-;; established that the iterative version is correct.  /Inge
-;;  (cond
-;;   ((null rlist)
-;;    (cons read-info nil))
-;;   ((or (atom (car rlist))		;The dummy element.
-;;	(<= (read-info->priority read-info)
-;;	    (+ (if before -1 0)
-;;	       (read-info->priority (car rlist)))))
-;;    (setcdr rlist (read-list-enter-read-info read-info (cdr rlist) before))
-;;    rlist)
-;;   (t
-;;    (cons read-info rlist))))
-
 
 (defun read-list-delete-read-info (conf-no rlist)
   "Destructively removes all the entries for the conf CONF-NO in RLIST.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.15 1992-06-13 21:15:54 linus Exp $
+;;;;; $Id: async.el,v 35.16 1992-07-26 16:16:56 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.15 1992-06-13 21:15:54 linus Exp $\n"))
+	      "$Id: async.el,v 35.16 1992-07-26 16:16:56 inge Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -72,8 +72,8 @@ this function shall be with current-buffer the BUFFER."
 ;	      (initiate-get-conf-stat 'follow 
 ;				      'lyskom-show-logged-out-person
 ;				      pno))
-;	  (if (not (zerop lyskom-pers-no))
-;	      (initiate-who-is-on 'who-buffer 'cache-set-who-info-list))))
+;nej:	  (if (not (zerop lyskom-pers-no))
+;nej:	      (initiate-who-is-on 'who-buffer 'cache-set-who-info-list))))
       )
 
      ((eq msg-no 2)			; Login, obsolete.
@@ -148,8 +148,6 @@ this function shall be with current-buffer the BUFFER."
 	      (initiate-get-conf-stat 'follow
 				      'lyskom-show-logged-in-person
 				      pers-no))
-;	  (if (not (zerop lyskom-pers-no))
-;	      (initiate-who-is-on 'who-buffer 'cache-set-who-info-list))
 	  (if (and (not (zerop lyskom-pers-no))
 		   lyskom-who-info-buffer-is-on)
 	      (initiate-get-session-info 'who-buffer 'cache-add-session-info

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 35.2 1991-09-15 10:05:08 linus Exp $
+;;;;; $Id: prefetch.el,v 35.3 1992-07-26 16:17:02 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -23,6 +23,10 @@
 ;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
 ;;;;;
 ;;;; ================================================================
+;;; +++ lyskom-reset-prefetch  to be called on client reset.
+;;;                            must restart everything.
+;;; +++ THIS DOES NOT WORK CURRENTLY
+(defun lyskom-reset-prefetch () nil)
 ;;;; ================================================================
 ;;;;
 ;;;; File: prefetch.el
@@ -36,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 35.2 1991-09-15 10:05:08 linus Exp $\n"))
+	      "$Id: prefetch.el,v 35.3 1992-07-26 16:17:02 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -192,6 +196,32 @@ lyskom-prefetch-stack."
     (lyskom-stack-push lyskom-prefetch-stack (cons 'TEXTTREE conf-no)))
   (lyskom-continue-prefetch))
   
+
+(defun lyskom-prefetch-membership (pers-no &optional queue)
+  "+++"
+  (initiate-get-membership 'main lyskom-set-membership pers-no)
+  ;; h{mtar medlemsskapet i sm} delar 
+  ;; och d{refter conf-stat f|r m|tena
+  nil)
+
+
+(defun lyskom-prefetch-all-conf-stats (&optional queue)
+  "+++"
+  nil)
+
+
+(defun lyskom-prefetch-marks (&optional queue)
+  "+++"
+  (initiate-get-marks 'main 'cache-set-marked-texts)
+  nil)
+
+
+(defun lyskom-prefetch-who-is-on (&optional queue)
+  "+++"
+  ;;(cache-initiate-who-info-buffer)  +++do it later this way
+  (initiate-who-is-on 'prefetch 'cache-initiate-who-info-buffer)
+  nil)
+
 
 ;;; ================================================================
 ;;;           Functions internal to the prefetch package
