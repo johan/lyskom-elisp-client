@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.186 2002-04-12 22:54:36 qha Exp $
+;;;;; $Id: english-strings.el,v 44.187 2002-04-13 09:30:58 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.186 2002-04-12 22:54:36 qha Exp $"))
+              "$Id: english-strings.el,v 44.187 2002-04-13 09:30:58 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -265,6 +265,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (deleting-text . "Removing text %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")
+    (text-to-see-author-of . "See presentation for the author of which text? ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
     (review-presentation-of . "Review presentation of %#1M.\n")
     (has-no-presentation . "%#1:M has no presentation.\n")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.219 2002-04-12 22:54:36 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.220 2002-04-13 09:30:58 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.219 2002-04-12 22:54:36 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.220 2002-04-13 09:30:58 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -237,6 +237,7 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (deleting-text . "Radering av text %#1:n...")
 
     (presentation-for-whom . "Vilket möte/person? ")
+    (text-to-see-author-of . "Se presentation för vilket inläggs författare? ")
     (somebody-deleted-that-conf . "Någon tog precis bort mötet.\n")
     (review-presentation-of . "Återse presentation av %#1M.\n")
     (has-no-presentation . "%#1:M har ingen presentation.\n")
