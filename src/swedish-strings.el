@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.171 2001-05-30 13:02:19 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.172 2001-06-05 11:30:19 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.171 2001-05-30 13:02:19 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.172 2001-06-05 11:30:19 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -367,7 +367,7 @@ du har läst klart allting. Kom tillbaks senare.
     (lyskom-client . "Klient")
     (text-to-add-recipient . "Vilket inlägg vill du addera mottagare till:")
     (text-to-add-copy . "Vilket inlägg vill du addera en extra kopia till:")
-    (text-to-add-bcc . "Vilket inlägg vill du skicka för kännedom:")
+    (text-to-add-bcc . "Vilket inlägg vill du skicka som dold kopia:")
     (text-to-delete-recipient . "Vilket inlägg vill du subtrahera mottagare från:")
     (text-to-move . "Vilket inlägg vill du flytta:")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till:")
@@ -459,7 +459,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (client-statistics-line . "    %4#2d %#1s")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
-    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
+    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare en dold kopia till? ")
     (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också skickas till %#1M? ") 
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
     (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
@@ -793,9 +793,9 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (recipient . "Mottagare:")
     (recipient-prefix . "[Mm]")
     (carbon-copy . "Extra kopia:")
-    (blank-carbon-copy . "För kännedom:")
+    (blank-carbon-copy . "Dold kopia:")
     (carbon-copy-prefix . "[Ee]")
-    (blank-carbon-copy-prefix . "[Ff]")
+    (blank-carbon-copy-prefix . "[Dd]")
 
     (secret-aux-flag . "hemlig")
     (anonymous-aux-flag . "anonym")
@@ -821,7 +821,7 @@ Annat se \\[describe-mode] ---")
     (which-text-include . "Vilken text skall vi inkludera? ")
     (added-recipient . "Mottagare som skall adderas: ")
     (added-carbon-copy . "Extra kopia till möte: ")
-    (added-blank-carbon-copy . "För kännedom till: ")
+    (added-blank-carbon-copy . "Dold kopia till: ")
     (text-to-comment-q . "Vilket inlägg vill du kommentera? ")
     (conf-has-motd-no . "Mötet har en lapp på dörren. (%#1d)\n\n%#2s")
     (still-want-to-add . "Vill du fortfarande addera mötet? ")
@@ -860,7 +860,7 @@ Annat se \\[describe-mode] ---")
     (head-Subject . "Ärende: ")
     (Recipient . "Mottagare")
     (Extra-recipient . "Extra kopia")
-    (Hidden-recipient . "För kännedom")
+    (Hidden-recipient . "Dold kopia")
     (mx-Recipient . "Extern mottagare")
     (mx-Extra-recipient . "Extern kopiemottagare")
     (mx-Extern-reply-to . "Externa svar till")
@@ -1501,7 +1501,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-add-sub-recipient . "Jag förstår inte vilken text du vill %#1s.\n")
     (add-rcpt-action-name . "addera mottagare till")
     (add-copy-action-name . "addera extra-kopiemottagare till")
-    (add-bcc-action-name . "addera mottagare för kännedom till")
+    (add-bcc-action-name . "addera dold kopia till")
     (sub-action-name . "subtrahera mottagare från")
     (move-action-name . "flytta")
 
@@ -1650,7 +1650,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-review-all-marked-texts . "Återse alla markerade")
     (kom-add-recipient        . "Addera mottagare")
     (kom-add-copy	      . "Addera extra kopiemottagare")
-    (kom-add-bcc	      . "Addera för kännedom")
+    (kom-add-bcc	      . "Addera dold kopia")
     (kom-sub-recipient        . "Subtrahera mottagare")
     (kom-move-text            . "Flytta inlägg")
     (kom-add-comment	      . "Addera kommentar")
@@ -2287,7 +2287,7 @@ till ett visst möte.")
     (kom-edit-show-commented . "Återse det kommenterade")
     (kom-edit-insert-commented . "Citera det kommenterade")
     (kom-edit-insert-buglist . "Klistra in kommenterad buglista")
-    (kom-edit-add-bcc . "Addera för kännedom")
+    (kom-edit-add-bcc . "Addera dold kopia")
     (kom-edit-add-cross-reference . "Addera korsreferens")
     (kom-edit-add-no-comments . "Begär inga kommentarer")
     (kom-edit-add-personal-comments . "Begär personliga svar")

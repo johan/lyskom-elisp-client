@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.79 2001-05-21 12:39:22 byers Exp $
+;;;;; $Id: edit-text.el,v 44.80 2001-06-05 11:30:22 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.79 2001-05-21 12:39:22 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.80 2001-06-05 11:30:22 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -175,7 +175,7 @@ Does lyskom-end-of-command."
   "Insert MISC-LIST into header of text.
 recpt		-> Mottagare: <%d> %s.
 cc-recpt	-> Extra kopia: <%d> %s.
-bcc-recpt       -> För kännedom: <%d> %s.
+bcc-recpt       -> Blind kopia: <%d> %s.
 comm-to		-> Kommentar till text %d.
 footn-to	-> Fotnot till text %d."
   (let ((edit-buffer (current-buffer))
