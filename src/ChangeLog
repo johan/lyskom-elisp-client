@@ -1,3 +1,8 @@
+1999-06-30  Per Cederqvist  <ceder@signum.se>
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	missing %-signs in review-many-comments and view-many-comments.
+
 1999-06-29  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (lyskom-face-schemes): Added kom-warning-face.
