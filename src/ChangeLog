@@ -1,5 +1,9 @@
 2002-04-08  Ulrik Haugen  <qha@lysator.liu.se>
 
+	* lyskom-rest.el: When running GNU Emacs let Emacs look up the
+	string for mode-line-unread and frame-title-unread when setting
+	the mode-line or frame-title (fixes bug 447 for GNU Emacs).
+
 	* english-strings.el (lyskom-message):
 	add-recpt-button-text-regex: updated the regex to reflect the
 	change to add-recpt-button-text some time ago.

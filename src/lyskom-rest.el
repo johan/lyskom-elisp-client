@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.143 2002-03-12 20:59:52 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.144 2002-04-07 22:35:21 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.143 2002-03-12 20:59:52 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.144 2002-04-07 22:35:21 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3633,6 +3633,7 @@ One parameter - the prompt string."
                                           'lyskom-unread-title-format)))
 
   (lyskom-xemacs-or-gnu
+   ;;; XXX this doesn't allow "Unread" to be changed when the language changes
    (setq lyskom-unread-mode-line
          (list (list 'lyskom-sessions-with-unread 
                      (lyskom-get-string 'mode-line-unread))
@@ -3641,22 +3642,38 @@ One parameter - the prompt string."
                " "))
    (setq lyskom-unread-mode-line
          (list (list 'lyskom-sessions-with-unread 
-                     (let ((tmp (lyskom-get-string 'mode-line-unread)))
-                       (add-text-properties 0 (length tmp) (list 'local-map lyskom-modeline-keymap) tmp)
-                       tmp))
+                     (list ':eval
+                           '(let ((tmp (lyskom-get-string 'mode-line-unread)))
+                              (add-text-properties 0 (length tmp)
+                                                   (list 'local-map lyskom-modeline-keymap)
+                                                   tmp)
+                              tmp)))
                (list 'lyskom-sessions-with-unread-letters
-                     (let ((tmp (lyskom-get-string 'mode-line-letters)))
-                       (add-text-properties 0 (length tmp) (list 'local-map lyskom-modeline-keymap) tmp)
-                       tmp))
+                     (list ':eval
+                           '(let ((tmp (lyskom-get-string 'mode-line-letters)))
+                              (add-text-properties 0 (length tmp)
+                                                   (list 'local-map lyskom-modeline-keymap)
+                                                   tmp)
+                              tmp)))
                " ")))
 
-  (setq lyskom-unread-title-format
-        `(kom-show-unread-in-frame-title
-          (lyskom-session-has-unreads 
-           (" ("
-            ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t))
-             (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t)))
-            ")"))))
+
+  (lyskom-xemacs-or-gnu
+   ;;; XXX this doesn't allow "Unread" to be changed when the language changes
+   (setq lyskom-unread-title-format
+         `(kom-show-unread-in-frame-title
+           (lyskom-session-has-unreads 
+            (" ("
+             ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t))
+              (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t)))
+             ")"))))
+   (setq lyskom-unread-title-format
+         '(kom-show-unread-in-frame-title
+           (lyskom-session-has-unreads 
+            (" ("
+             ((lyskom-session-has-unreads (:eval (lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t)))
+              (lyskom-session-has-unread-letters (:eval (lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t))))
+             ")")))))
 
   (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)
 
