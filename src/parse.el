@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.6 1997-02-19 08:35:50 byers Exp $
+;;;;; $Id: parse.el,v 44.7 1997-07-29 14:53:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.6 1997-02-19 08:35:50 byers Exp $\n"))
+	      "$Id: parse.el,v 44.7 1997-07-29 14:53:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -112,16 +112,20 @@ first non-white character was not equal to CHAR."
 Signal lyskom-parse-incomplete if the number is not followed by whitespace.
 Signal lyskom-protocol-error if the next token is not a number."
   (goto-char lyskom-parse-pos)
-  (cond
-     ((looking-at "[ \n]*[0-9]+")
-      (setq lyskom-parse-pos (goto-char (match-end 0)))
-      (string-to-int (match-string 0)))
 
-     ((looking-at "[ \n]*\\'") 
-      (goto-char (point-max))
-      (signal 'lyskom-parse-incomplete nil))
-     (t (signal 'lyskom-protocol-error
-                (list "Expected number, got " (lyskom-string-to-parse))))))
+  (cond
+   ((looking-at "[ \n]*[0-9]+")
+    (if (char-after (match-end 0))
+        (progn (setq lyskom-parse-pos (goto-char (match-end 0)))
+               (string-to-int (match-string 0)))
+      (signal 'lyskom-parse-incomplete nil)))
+   ((looking-at "[ \n]*\\'") 
+    (goto-char (point-max))
+    (signal 'lyskom-parse-incomplete nil))
+   (t (signal 'lyskom-protocol-error
+              (list "Expected number, got " (lyskom-string-to-parse)))))
+
+)
 
 
 (defun lyskom-parse-string ()

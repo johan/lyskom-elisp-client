@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.28 1997-07-17 10:34:06 byers Exp $
+;;;;; $Id: vars.el.in,v 44.29 1997-07-29 14:53:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.28 1997-07-17 10:34:06 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.29 1997-07-29 14:53:47 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -475,7 +475,8 @@ various LysKOM elements.")
   "*Non-nil means use button hints for overriding default actions.")
 
 (def-kom-var kom-autowrap t
-  "*Non-nil means auto wrap articles with discretion"
+  "*Non-nil means auto wrap articles with discretion.
+A number means wrap articles shorter than the number (in bytes)."
   server)
 
 
@@ -516,9 +517,10 @@ various LysKOM elements.")
 
     ;; JySKom enhancements
 
-    ("<(m[|ö]te *\\([0-9]+\\)[^0-9]*)>" conf 0 1 nil)
-    ("<(text *\\([0-9]+\\)[^0-9]*)>" text 0 1 nil)
-    ("<(person *\\([0-9]+\\)[^0-9]*)>" pers 0 1 nil)
+    ("<(?m[|ö]te *\\([0-9]+\\)[^0-9]*)?>" conf 0 1 nil)
+    ("<(?text *\\([0-9]+\\)[^0-9]*)?>" text 0 1 nil)
+    ("<(?person *\\([0-9]+\\)[^0-9]*)?>" pers 0 1 nil)
+
     )
   "List of buttons to install in the text mass of LysKOM objects. Each element is
 a list consisting of REGEXP TYPE BUTTON-MATCH BUTTON-ARG-MATCH FACE.
@@ -1014,6 +1016,7 @@ Users are encouraged to use their best sense of humor."
     kom-status-session
     kom-customize
     kom-change-language
+    kom-calculate
     ))
 
 ;(defconst lyskom-elisp-variables
@@ -1839,6 +1842,17 @@ substitute nil for any element except the face name.
 For instance, (kom-me-face bold \"yellow\" \"red\") will cause kom-me-face
 to be bold with yellow text on a red background."
 )
+
+
+;;; ============================================================
+;;; History lists
+;;;
+
+(defvar lyskom-command-history nil)
+(defvar lyskom-expression-history nil)
+(defvar lyskom-message-history nil)
+(defvar lyskom-language-history nil)
+
 
 
 (provide 'lyskom-vars)

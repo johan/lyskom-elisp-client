@@ -1,3 +1,70 @@
+Tue Jul 29 11:30:48 1997  David Byers  <davby@ida.liu.se>
+
+	* parse.el (lyskom-parse-num): FIXADE BUGGEN!
+
+	* lyskom-rest.el (lyskom-fill-message): kom-autowrap kan vara ett
+ 	nummer.
+
+	* option-edit.el (lyskom-custom-variables): Fixade kom-autowrap.
+
+	* vars.el.in (lyskom-text-buttons): JySKom-enhancements tillåter
+ 	vi utan den extra parentesen.
+
+	* filter.el (kom-super-jump): Luddig matching av mellanslag och
+ 	Re:
+
+Fri Jul 25 09:43:04 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el: Definiera några ispell-variabler vid
+ 	kompileringen.
+
+	* commands1.el (lyskom-quit): (setq lyskom-proc nil) är bättre än
+ 	ett felmeddelande.
+
+Wed Jul 23 16:52:42 1997  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el (lyskom-button-actions): Lade till Återse
+ 	omodifierat.
+
+	* lyskom-buttons.el (lyskom-button-review-noconversion): Ny
+ 	funktion.
+
+Sat Jul 19 13:55:29 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-language-history): Ny variabel.
+
+	* commands2.el (kom-change-language): Använd
+ 	lyskom-language-history.
+
+	* lyskom-rest.el (lyskom-read-number): Lade till history-argument.
+	(ja-or-nej-p): Ingen history.
+
+	* commands2.el (lyskom-send-message): Använd lyskom-message-history.
+
+	* lyskom-rest.el (lyskom-read-string): Lade till history-argument.
+
+	* vars.el.in (lyskom-command-history): Ny variabel.
+	(lyskom-expression-history): Dito.
+	(lyskom-message-history): Dito.
+
+	* command.el (lyskom-read-extended-command): Använd
+ 	lyskom-command-history.
+
+	* utilities.el (lyskom-try-require): Ny funktion.
+
+	* commands2.el (lyskom-expr-history): Ny variabel.
+	(kom-calculate): Ny funktion.
+
+	* english-strings.el,swedish-strings.el (lyskom-command): Lade
+ 	till kom-calculate.
+ 	(lyskom-message): Lade till need-library och calc-expression.
+	
+	* vars.el.in (lyskom-commands): Lade till kom-calculate.
+
+Fri Jul 18 13:01:15 1997  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Skicka HTTP/1.0 också.
+
 Thu Jul 17 09:55:37 1997  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-dispatch-edit-text): Kasta undoinformation
