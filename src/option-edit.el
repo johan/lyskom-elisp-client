@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.28 1999-10-16 22:49:09 byers Exp $
+;;;;; $Id: option-edit.el,v 44.29 1999-10-25 09:02:02 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.28 1999-10-16 22:49:09 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.29 1999-10-25 09:02:02 davidk Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -473,7 +473,7 @@ customize buffer but do not save them to the server."
                                        :format "%[%t%] (%v)"
                                        :size 0)
                                (const (ask nil)))))
-    (kom-reading-puts-comments-in-pointers-last (toggle (before after)))
+    (kom-reading-puts-comments-in-pointers-last (toggle (after before)))
     (kom-autowrap (choice ((const (on t))
                            (const (off nil))
                            (number nil :tag max-text-length))))
