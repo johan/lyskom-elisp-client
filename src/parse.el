@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.28 1999-11-19 02:16:23 byers Exp $
+;;;;; $Id: parse.el,v 44.29 1999-11-19 13:38:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.28 1999-11-19 02:16:23 byers Exp $\n"))
+	      "$Id: parse.el,v 44.29 1999-11-19 13:38:33 byers Exp $\n"))
 
 
 ;;; ================================================================

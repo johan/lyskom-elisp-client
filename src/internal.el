@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $
+;;;;; $Id: internal.el,v 44.8 1999-11-19 13:38:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $\n"))
+	      "$Id: internal.el,v 44.8 1999-11-19 13:38:04 byers Exp $\n"))
 
 
 ;;;; ================================================================

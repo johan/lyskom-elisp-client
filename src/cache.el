@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.9 1999-10-13 15:50:25 byers Exp $
+;;;;; $Id: cache.el,v 44.10 1999-11-19 13:37:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.9 1999-10-13 15:50:25 byers Exp $\n"))
+	      "$Id: cache.el,v 44.10 1999-11-19 13:37:20 byers Exp $\n"))
 
 
 ;;; ================================================================

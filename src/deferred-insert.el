@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.1 1998-06-02 12:14:32 byers Exp $
+;;;;; $Id: deferred-insert.el,v 44.2 1999-11-19 13:37:42 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

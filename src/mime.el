@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.1 1999-11-19 02:16:18 byers Exp $
+;;;;; $Id: mime.el,v 44.2 1999-11-19 13:38:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.1 1999-11-19 02:16:18 byers Exp $\n"))
+	      "$Id: mime.el,v 44.2 1999-11-19 13:38:24 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -65,7 +65,7 @@
 
 
 (defun lyskom-mime-string-charset (data)
-  (let ((cs (charsets-in-string data))
+  (let ((cs (find-charset-string data))
         (tmp lyskom-charset-alist)
         (system 'us-ascii))
     (while tmp
@@ -76,7 +76,7 @@
 
 (defun lyskom-mime-charset-coding-system (charset)
   (condition-case nil
-      (get-coding-system charset)
+      (check-coding-system charset)
     (error 'raw-text)))
 
 (defun lyskom-mime-encode-string (data)
