@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.148 2003-12-05 00:04:22 byers Exp $
+;;;;; $Id: utilities.el,v 44.149 2003-12-07 16:38:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.148 2003-12-05 00:04:22 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.149 2003-12-07 16:38:51 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2175,5 +2175,31 @@ It ignores leading spaces and tabs."
               (t nil)))
       (and signal-error
            (signal 'lyskom-integer-conversion-error string))))
+
+(defun lyskom-privilege-string (privs &optional format sep)
+  (setq format (or format "%#1s")
+        sep (or sep ", "))
+  (mapconcat (lambda (x) (lyskom-format format (lyskom-get-string x)))
+             (or (delq nil (list
+                            (and (privs->wheel privs) 'privs-wheel)
+                            (and (privs->admin privs) 'privs-admin)
+                            (and (privs->statistic privs) 'privs-statistic)
+                            (and (privs->create_pers privs) 'privs-create-pers)
+                            (and (privs->create_conf privs) 'privs-create-conf)
+                            (and (privs->change_name privs) 'privs-change-name)
+                            (and (privs->flg7 privs) 'privs-flg7)
+                            (and (privs->flg8 privs) 'privs-flg8)
+                            (and (privs->flg9 privs) 'privs-flg9)
+                            (and (privs->flg10 privs) 'privs-flg10)
+                            (and (privs->flg11 privs) 'privs-flg11)
+                            (and (privs->flg12 privs) 'privs-flg12)
+                            (and (privs->flg13 privs) 'privs-flg13)
+                            (and (privs->flg14 privs) 'privs-flg14)
+                            (and (privs->flg15 privs) 'privs-flg15)
+                            (and (privs->flg16 privs) 'privs-flg16)
+                            ))
+                 '(lyskom-no-privileges))
+             sep))
+
 
 (put 'lyskom-with-magic-minibuffer 'edebug-form-spec '(body))

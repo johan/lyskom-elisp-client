@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.313 2003-12-05 00:04:21 byers Exp $
+;;;;; $Id: english-strings.el,v 44.314 2003-12-07 16:38:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.313 2003-12-05 00:04:21 byers Exp $"))
+              "$Id: english-strings.el,v 44.314 2003-12-07 16:38:51 byers Exp $"))
 
 
 ;;; ================================================================
@@ -651,6 +651,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (highest-local-no . "Highest local number: %20#1d\n")
     (last-text-time . "Time of last text:    %20#1s (according to your cache)\n")
     (no-of-motd . "Notice in text:    %13#1n\n")
+    (pers-has-privileges .  "Privileges:  %#1s\n")
+    (pers-has-privileges-2 .  "%28#1s")
     (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
     (supervisor-is-no-name . "Supervisor: %30#1p %#3s(%#2P)\n")
@@ -1997,6 +1999,47 @@ written a presentation.%]
     (mark-confs-as-known . "Mark these %#2d %#1s as known? ")
     (no-new-conferences . "No new %#2s%#1?b%[ since %#1s%]%[%].\n")
     (new-conferences-since . "New %#2s%#1?b%[ since %#1s%]%[%]:\n")
+
+    (privs-wheel . "wheel")
+    (privs-admin . "administrator")
+    (privs-statistic . "statistics")
+    (privs-create-conf . "create conferences")
+    (privs-create-pers . "create persons")
+    (privs-change-name . "change names")
+    (privs-flg7 . "unknown (7)")
+    (privs-flg8 . "unknown (8)")
+    (privs-flg9 . "unknown (9)")
+    (privs-flg10 . "unknown (10)")
+    (privs-flg11 . "unknown (11)")
+    (privs-flg12 . "unknown (12)")
+    (privs-flg13 . "unknown (13)")
+    (privs-flg14 . "unknown (14)")
+    (privs-flg15 . "unknown (15)")
+    (privs-flg16 . "unknown (16)")
+    (lyskom-no-privileges . "no permissions")
+
+    (what-pers-privs-to-change . "Whose privileges do you want to change? ")
+    (change-pers-privs-prompt . "\
+Current privileges for %#1P (%#1p):
+    %#2s
+Change privileges for %#1P (%#1p)...")
+
+    (set-wheel-priv-q . "Activate wheel privileges? ")
+    (set-admin-priv-q . "Activate administrator privileges? ")
+    (set-statistic-priv-q . "Activate statistics privileges? ")
+    (set-create-conf-priv-q . "Activate right to create conferences? ")
+    (set-create-pers-priv-q . "Activate right to create persons? ")
+    (set-change-name-priv-q . "Activate right to change names? ")
+    (set-flg7-priv-q . "Activate unknown privilege 7? ")
+    (set-flg8-priv-q . "Activate unknown privilege 8? ")
+    (set-flg9-priv-q . "Activate unknown privilege 9? ")
+    (set-flg10-priv-q . "Activate unknown privilege 10? ")
+    (set-flg11-priv-q . "Activate unknown privilege 11? ")
+    (set-flg12-priv-q . "Activate unknown privilege 12? ")
+    (set-flg13-priv-q . "Activate unknown privilege 13? ")
+    (set-flg14-priv-q . "Activate unknown privilege 14? ")
+    (set-flg15-priv-q . "Activate unknown privilege 15? ")
+    (set-flg16-priv-q . "Activate unknown privilege 16? ")
     ))
 
 
@@ -2232,6 +2275,7 @@ written a presentation.%]
     (kom-list-server-faqs     . "List server-FAQs")
     (kom-list-new-conferences . "List new conferences")
     (kom-list-new-persons     . "List new users")
+    (kom-change-privileges    . "Change privileges")
     ))
 
 (lyskom-language-var global lyskom-language-codes en

@@ -1,3 +1,16 @@
+2003-12-07  David Byers  <byers@lysator.liu.se>
+
+	Handle user privileges:
+	* commands2.el (kom-change-privileges): New command.
+	 (kom-status-person): Print privileges.
+
+	* komtypes.el (pers-stat): Make privileges read-write.
+
+	* utilities.el (lyskom-privilege-string): New function.
+
+	* vars.el.in (lyskom-default-conference-strategy): Added
+	change-conf-type, which was missing, to this list.
+
 2003-12-04  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-read-number): Use lyskom-string-to-int so
