@@ -1323,3 +1323,38 @@ Markerad av dig.
 ------------------------------------------------------------
 Nej, tyv{rr inte.
 (207295) -----------------------------------
+
+308373 1993-02-07  02:57  /2 rader/ tempor{r Fredrik Nyman
+Mottagare: LysKOM fr}gor (och) svar <501>
+[rende: Versaler/gemener
+------------------------------------------------------------
+[r det verkligen j{ttelyckat att l}ta LYSkoms "annat"-kommandon vara
+k{nsliga f|r versaler och gemener?  Det k{nns sm}tt irriterande.
+(308373) -----------------------------------
+
+308649 1993-02-07  20:02  /20 rader/ Linus Tolke Y
+Mottagare: LysKOM fr}gor (och) svar <502>
+Kommentar till text 308373 av tempor{r Fredrik Nyman
+[rende: Versaler/gemener
+------------------------------------------------------------
+LysKOM elisp-klienten g|r inget skumt alls med sitt annat-kommando.
+Om du tycker att stora och sm} bokst{ver verkligen skall vara olika
+och har talat om det f|r din emacs s} skiljer den p} stora och sm}
+bokst{ver. Annars betraktar den de som lika.
+
+Det som jag tror {r ditt problem {r antagligen ordinarie gnu-emacs
+of|rm}ga att klara av de europeiska kraven p} att det finns andra
+bokst{ver {n de som anv{nds i amerika. Det finns ingen som helst
+m|jlighet att tala om f|r en ordinarie gnu-emacs att { och [ {r samma
+bokstav fast versal och gemen.
+
+Om du skaffar gayles emacs kan du klara det (jag gjorde det):
+(set-trans-table-to ?\[ ?{ (standard-downcase-table))
+(set-trans-table-to ?\] ?} (standard-downcase-table))
+(set-trans-table-to ?\\ ?| (standard-downcase-table))
+fixade s} att jag klarar av det hela om jag har kom-knows-iso-8859-1
+satt till nil.
+
+F|r att vara riktigt korrekt skall man givetvis trixa till standard-upcase-table
+ocks} men det l{mnar jag som |vning.
+(308649) -----------------------------------

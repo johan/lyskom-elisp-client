@@ -1,5 +1,5 @@
 -*- swedish-iso -*-
-OSF Ofta ställda frågor för elispklienten.
+OSF Ofta ställda frågor för elispklienten. Version 2.0.
 
 Författare: Linus Tolke
 Inspirationskälla: Lyskom, Lyskom frågor (&) svar; Elispklienten.
@@ -12,6 +12,8 @@ a1: Vad är LysKOM?
 a2: Vad är elispklienten?
 a3: Var finns den att hitta?
 a4: Vad finns det för typ av dokumentation?
+a5: Var hittar jag protokoll-specen för lyskomprotokollet.
+a6: Vem är Guran?
 
 Konfigurering:
 c1: Varför står det att vissa Läser, Väntar, Återser?
@@ -24,21 +26,26 @@ d1: Kan jag få saker att hända automatiskt när jag startar lyskom?
 d2: Kan jag få saker att hända automatiskt när jag loggat in?
 d3: Hur kan jag sätta vilka default-promptar jag skall få när jag har
     läst ut allt. 
+d4: Hur gör man för att ändra variabler i lyskom?
 
 Vid editering:
 e1: Kan jag få saker att hända automatiskt när jag börjar skriva en
   : kommentar?
 e2: Hur gör jag för att binda speciella tangenter för att skriva en
     kommentar?
+e3: Jag får upp en tom buffert och ett pip när jag skall till att
+    editera. Vad har jag gjort för fel?
 
 f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag
     skriver en kommentar, ett inlägg eller ett brev?
 
 Möten:
 g1: Hur gör man för att ändra typen på ett möte?
+g2: Hur ändrar man hur många dagar artiklar i ett visst möte sparas?
 
 Frågor om inlägg:
 i1: Hur anger man För kännedomsmottagare?
+i2: Hur flyttar man inlägg?
 
 Konstigheter:
 k1: Varför tar det så lång tid att logga in?
@@ -69,6 +76,7 @@ s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?
 
 Systemet:
 t1: Hur och till vem skickar jag buggrapporter?
+t2: Varför sparas databasen så ofta?
 
 Maskinspecifika saker:
 u1: Varför kan jag inte köra elisplienten på en dec-station.
@@ -117,6 +125,17 @@ igenom latex så har jag inte lagt upp den för anonym ftp. Däremot har
 den gått igenom info-genereringsprogrammet och du kan alltså hämta den
 antingen som info-fil: elisp-client-0.34.6.info eller som ren textfil
 elisp-client-0.34.6.txt från samma dir som du hämtar klienten.
+
+a5: Var hittar jag protokoll-specen för lyskomprotokollet.
+
+Protokollspecen kan du hämta med anonym ftp från lysator:
+host: ftp.lysator.liu.se
+dir: /pub/lyskom/
+filnamn: prot-A.txt
+
+a6: Vem är Guran?
+
+Fantomens vän, bandarernas hövding.
 
 
 Konfigurering: (Om du inte förstår beskrivningarna av hur du skall
@@ -171,6 +190,19 @@ Default är att först få prompten Återse alla markerade - och sedan
 Se tiden.
 Läs dokumentationen för kom-do-when-done.
 
+d4: Hur gör man för att ändra variabler i lyskom?
+
+Vissa variabler lagras i din user-area i LysKOM-servern. Det är de som
+finns listade i variabelerna lyskom-elisp-variables,
+lyskom-global-boolean-variables och lyskom-global-non-boolean-variables.
+Du kan ändra dessa och andra kom-variabler mha. kommandot Ändra
+variabler. När du ger kommandot Ändra variabler kommer en speciell
+buffert upp. Den fungerar precis som emacs *List Options* buffert
+förutom när du trycker C-c C-c. Då sparar den nämligen dina variabler
+i servern.
+
+Ändra aldrig på variablerna lyskom-global-*-variables! Om de är fel så
+är det en bugg i klienten.
 
 Vid editering:
 e1: Kan jag få saker att hända automatiskt när jag börjar skriva en
@@ -191,6 +223,13 @@ lyskom-edit-mode-mode-hook som körs innan de speciella bindningarna
 görs.
 
 
+e3: Jag får upp en tom buffert och ett pip när jag skall till att
+    editera. Vad har jag gjort för fel?
+
+Din lyskom-edit-mode-mode-hook har evaluerat ett lisp-uttryck som har
+misslyckats. Kolla vad den försöker göra och fixa så att den inte
+misslyckas.
+
 f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag
     skriver en kommentar, ett inlägg eller ett brev?
 
@@ -206,12 +245,22 @@ g1: Hur gör man för att ändra typen på ett möte?
 
 Det gör du inte med elisp-klienten.
 
+g2: Hur ändrar man hur många dagar artiklar i ett visst möte sparas?
+
+Använd kommandot ändra livslängd.
 
 Frågor om inlägg:
 i1: Hur anger man För kännedomsmottagare?
 
 Det finns inte någon sådan möjlighet. Använd Mottagare eller Extra
 kopiemottagare:
+
+i2: Hur flyttar man inlägg?
+
+Det finns ingen sådan möjlighet. Använd kommandona Addera mottagare
+eller Addera extra kopiemottagare resp. Subtrahera mottagare för vart
+och ett av inläggen du vill flytta. Om du vill skriva kommandona
+Flytta inlägg, eller flytta kommentarsträd så får du.
 
 Konstigheter:
 k1: Varför tar det så lång tid att logga in?
@@ -329,6 +378,20 @@ Ifall buggen är reproducerbar och du har tid så gör dessutom följande:
   bufferten ifall du fick en sådan.
 - Skicka in denna nya bufferten istället. Den kan innehålla lite mer
   information.
+
+t2: Varför sparas databasen så ofta?
+
+Ursprungligen sparade servern allting på en gång. Den sade, jag sparar
+nu och sedan sparade den om hela databasen (vilket tog flera minuter).
+Detta skrev ceder om så att den istället sparar efter han, dvs den kan
+ta emot anrop och svara på dem samtidigt som den sparar.
+
+Att du får ett "Nu sparar jag" meddelande är att den antingen börjar
+spara eller slutar spara. Det är då den gör de saker i samband med
+sparandet som den inte kan göra medan den svarar på andra anrop
+(markera vilken data som den i värsta fall måste ha 2 kopior av ända
+tills den har sparat klart, resp slänga den data den har haft 2 kopior
+av.) Själva sparandet kan sedan mycket väl ta mer än en kvart.
 
 
 Maskinspecifika saker:
