@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.15 1993-12-17 14:23:58 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.16 1993-12-19 17:58:13 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.15 1993-12-17 14:23:58 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.16 1993-12-19 17:58:13 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -441,7 +441,6 @@ till * * * eller m i t t l \366 s e n eller n\345got annat l\344mpligt.
 N\344r du skrivit klart skall du skicka in din buggrapport till LysKOMs
 elispklientutvecklare. Det sker antingen:
 * med email till bug-lyskom@lysator.liu.se
-* i Lysators LysKOM till m\366tet \"LysKOM; Elispklientens buggrapporter\" 
 * med vanligt brev till:
 \tLysator
 \tc/o ISY
@@ -890,7 +889,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "S"  'kom-quit)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
-  (define-key lyskom-mode-map "r"  'kom-recover)
+  ;; (define-key lyskom-mode-map "r"  'kom-recover)
   (define-key lyskom-mode-map "t"  'kom-display-time)
   (define-key lyskom-mode-map "fu" 'kom-get-appreciation)
   (define-key lyskom-mode-map "fs" 'kom-get-abuse)
@@ -989,7 +988,7 @@ Cf. paragraph-start.")
     (kom-tell-write-reply	"Skriver ett privat svar.")
     (kom-tell-write-text	"Skriver inl\344gg.")
     (kom-tell-conf-pres		"Skriver presentation f\366r ett nytt m\366te.")
-    (kom-tell-recover		"Trycker 'r'. Suck.")
+    (kom-tell-recover		"\305terstartar kom. Suck.")
     (kom-tell-wait		"V\344ntar.")
     (kom-tell-regret		"\305ngrar sig och sl\344nger inl\344gget.")
     (kom-tell-review		"\305terser.")
