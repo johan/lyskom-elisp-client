@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.111 2002-07-23 18:28:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.112 2002-07-24 11:50:13 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.111 2002-07-23 18:28:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.112 2002-07-24 11:50:13 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -820,8 +820,8 @@ its first argument and remaining list items appended to the argument list."
                      (funcall strategy-pred current-prefix-arg)))
             (setq text-no (lyskom-evaluate-text-no-strategy
                            what-text prompt default constraint))
-                                        ;	      (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
-                                        ;				     compare-value strategy-pred text-no))
+;	    (lyskom-insert (format "cmp: %s\npred: %s\ntext-no: %s\n\n"
+;				   compare-value strategy-pred text-no))
             (when (and (not (stringp text-no)) text-no constraint)
               (setq constraint-not-met
                     (apply constraint-func text-no constraint-args))
@@ -923,7 +923,7 @@ added to the result. The comparison is done with eq."
 
 (defun lyskom-minusp (int)
   "Returns t for integers smaller than 0, nil otherwise."
-  (and (integerp int) (> int 0)))
+  (and (integerp int) (< int 0)))
 
 ;;; ======================================================================
 ;;; Display device management

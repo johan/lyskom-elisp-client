@@ -1,3 +1,7 @@
+2002-07-24  Johan Sundström  <jhs@lysator.ida.liu.se>
+
+	* utilities.el (lyskom-minusp): Very significant bugfix. :)
+
 2002-07-24  Johan Sundström  <jhs@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-limited-make-overlay): XEmacs compat fix.
