@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.83 2001-04-25 21:11:34 joel Exp $
+;;;;; $Id: utilities.el,v 44.84 2001-04-26 11:14:12 jhs Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.83 2001-04-25 21:11:34 joel Exp $\n"))
+	      "$Id: utilities.el,v 44.84 2001-04-26 11:14:12 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -266,7 +266,8 @@ of \(current-time\)."
     time))
 
 (defun lyskom-set-alist (alist item value)
-  "Modify an alist ALIST to set item ITEM to the value VALUE."
+  "Modifies (non-destructively) an alist ALIST to set item
+ITEM to the value VALUE."
   (let ((pair (assq item alist)))
      (if pair
          (progn (setcdr pair value) alist)
