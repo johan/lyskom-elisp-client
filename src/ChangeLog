@@ -1,5 +1,8 @@
 2000-12-06  Joel Rosdahl  <joel@rosdahl.net>
 
+	* edit-text.el (lyskom-edit-send-check-recipients): Ask if normal
+	recipient or carbon copy recipient should be added.
+
 	* distribution-configure.in: Ignore stderr output from Emacs.
 
 	* autoconf.el (extract-autoconf-data): Print autoconf data to
