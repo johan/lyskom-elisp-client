@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.201 2002-04-27 18:30:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.202 2002-04-28 14:06:25 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.201 2002-04-27 18:30:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.202 2002-04-28 14:06:25 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -619,6 +619,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-membership-line . "%#1s%#2M %#3s\n")
     (conf-membership-line-2 . "                            Added %#1s by %#2P\n")
     (pers-for-status . "Get status of which user? ")
+    (text-to-see-author-status-of . "Get status of the author of which text? ")
     (no-such-pers . "The user doesn't exist.\n")
     (pers-status-record . "Status of user %#1P (%#1p)\n")
     (created-time .  "Created:%34#1s\n\n")
