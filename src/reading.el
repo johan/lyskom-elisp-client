@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.21 2004-07-18 18:50:48 byers Exp $
+;;;;; $Id: reading.el,v 44.22 2004-07-21 11:14:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.21 2004-07-18 18:50:48 byers Exp $\n"))
+	      "$Id: reading.el,v 44.22 2004-07-21 11:14:39 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -162,7 +162,7 @@ reasonable guess."
                     (membership->position (mship-list-node->data prev)))))))  
 
 
-(defun lyskom-membership-list-insert (mship-list mship)
+(defun lyskom-membership-list-insert (mship-list mship &optional simulate)
   "Insert a new membership MSHP into MSHIP-LIST."
   (if (and (membership-list->head mship-list)
            (membership-list->tail mship-list)
@@ -170,11 +170,34 @@ reasonable guess."
                  (membership->priority (mship-list-node->data (membership-list->head mship-list))))
               (- (membership->priority (mship-list-node->data (membership-list->tail mship-list)))
                  (membership->priority mship))))
-      (lyskom-membership-list-append mship-list mship)
-    (lyskom-membership-list-prepend mship-list mship)))
+      (lyskom-membership-list-append mship-list mship simulate)
+    (lyskom-membership-list-prepend mship-list mship simulate)))
 
 
-(defun lyskom-membership-list-prepend (mship-list mship)
+(defun lyskom-membership-list-insert-position (mship prev next)
+  "Return position MSHIP should have if inserted between PREV and NEXT.
+Internal function for lyskom-membership-list-insert."
+
+  ;; If it already has a position that is between the positions of cur and prev
+  ;; then we do not alter that position. If it has some other position or no
+  ;; position, set its position to the position of cur (which is appropriate
+  ;; when adding a new membership). We do this even if there is room between
+  ;; prev and cur since such a hole probably indicates that we haven't gotten
+  ;; the entire membership from the server -- once we have all memberships there
+  ;; shouldn't be any holes left.
+  
+  (if (or (null (membership->position mship))
+          (<= (membership->position mship)
+              (if prev (membership->position (mship-list-node->data prev)) -1))
+          (>= (membership->position mship)
+              (if next (membership->position (mship-list-node->data next)) 
+                lyskom-max-int)))
+      (cond (next (membership->position (mship-list-node->data next)))
+            (prev (1+ (membership->position (mship-list-node->data prev))))
+            (t 0))
+    (membership->position mship)))
+
+(defun lyskom-membership-list-prepend (mship-list mship &optional simulate)
   "Insert new membership MSHIP into MSHIP-LIST."
   (let ((cur (membership-list->head mship-list))
         (prev nil))
@@ -185,56 +208,42 @@ reasonable guess."
     (while (lyskom-membership-list-compare-next mship cur)
       (setq prev cur cur (mship-list-node->next cur)))
 
-    (let ((new (lyskom-create-mship-list-node prev cur mship)))
 
-      ;; Set the position of the membership
-      ;;
-      ;; If it already has a position that is between the positions of cur and prev
-      ;; then we do not alter that position. If it has some other position or no
-      ;; position, set its position to the position of cur (which is appropriate
-      ;; when adding a new membership). We do this even if there is room between
-      ;; prev and cur since such a hole probably indicates that we haven't gotten
-      ;; the entire membership from the server -- once we have all memberships there
-      ;; shouldn't be any holes left.
+    (if simulate
+        (lyskom-membership-list-insert-position mship prev cur)
 
-      (if (or (null (membership->position mship))
-              (<= (membership->position mship)
-                  (if prev (membership->position (mship-list-node->data prev)) -1))
-              (>= (membership->position mship)
-                  (if cur (membership->position (mship-list-node->data cur)) lyskom-max-int)))
-          (set-membership->position mship
-                                (cond (cur (membership->position (mship-list-node->data cur)))
-                                      (prev (1+ (membership->position (mship-list-node->data prev))))
-                                      (t 0))))
+      (let ((new (lyskom-create-mship-list-node prev cur mship)))
+        (set-membership->position 
+         mship (lyskom-membership-list-insert-position mship prev cur))
 
-      ;; If cur is nil, then we want to insert at the end of the list
-      ;; If prev is nil, then we want to insert at the beginning of the list
-      ;; If both are nil, the list is empty and we are inserting the first element
+        ;; If cur is nil, then we want to insert at the end of the list
+        ;; If prev is nil, then we want to insert at the beginning of the list
+        ;; If both are nil, the list is empty and we are inserting the first element
 
-      (if prev
-          (set-mship-list-node->next prev new)
-        (set-membership-list->head mship-list new))
-      (if cur
-          (set-mship-list-node->prev cur new)
-        (set-membership-list->tail mship-list new))
+        (if prev
+            (set-mship-list-node->next prev new)
+          (set-membership-list->head mship-list new))
+        (if cur
+            (set-mship-list-node->prev cur new)
+          (set-membership-list->tail mship-list new))
 
-      (setq prev new)
+        (setq prev new)
 
-      ;; If the position we chose for the new element collides with the position of
-      ;; the element following it, we adjust the positions of following elements
-      ;; until all elements again have unique positions.
+        ;; If the position we chose for the new element collides with the position of
+        ;; the element following it, we adjust the positions of following elements
+        ;; until all elements again have unique positions.
 
-      (while (and cur (eq (membership->position (mship-list-node->data prev))
-                          (membership->position (mship-list-node->data cur))))
-        (set-membership->position (mship-list-node->data cur)
-                              (1+ (membership->position (mship-list-node->data cur))))
-        (setq prev cur cur (mship-list-node->next cur)))
+        (while (and cur (eq (membership->position (mship-list-node->data prev))
+                            (membership->position (mship-list-node->data cur))))
+          (set-membership->position (mship-list-node->data cur)
+                                    (1+ (membership->position (mship-list-node->data cur))))
+          (setq prev cur cur (mship-list-node->next cur)))
 
-      (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
-      new)))
+        (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
+        new))))
 
 
-(defun lyskom-membership-list-append (mship-list mship)
+(defun lyskom-membership-list-append (mship-list mship &optional simulate)
   "Like lyskom-insert-membership, but searches from the end of the list"
   (let ((cur (membership-list->tail mship-list))
         (prev nil))
@@ -242,16 +251,8 @@ reasonable guess."
     (while (lyskom-membership-list-compare-prev mship cur)
       (setq prev cur cur (mship-list-node->prev cur)))
 
-    (let ((new (lyskom-create-mship-list-node cur prev mship)))
+    (if simulate
 
-      ;; Set the position of the membership
-      ;;
-      ;; If it already has a position that is available and between the
-      ;; positions of the current and previous elements, then use that.
-      ;; If not, use the position of the previous element (after it in
-      ;; the list). If there isn't one, use one plus the position of the
-      ;; last element in the list. If the list is empty, set position to
-      ;; zero.
 
       (if (or (null (membership->position mship))
               (<= (membership->position mship)
@@ -263,34 +264,41 @@ reasonable guess."
                                       (cur (1+ (membership->position (mship-list-node->data cur))))
                                       (t 0))))
 
-      ;; If cur is nil, then we want to insert at the end of the list
-      ;; If prev is nil, then we want to insert at the beginning of the list
-      ;; If both are nil, the list is empty and we are inserting the first element
+    (if simulate
+        (lyskom-membership-list-insert-position mship prev cur)
 
-      (if cur
-          (set-mship-list-node->next cur new)
-        (set-membership-list->head mship-list new))
-      (if prev
-          (set-mship-list-node->prev prev new)
-        (set-membership-list->tail mship-list new))
+      (let ((new (lyskom-create-mship-list-node cur prev mship)))
+        (set-membership->position 
+         mship (lyskom-membership-list-insert-position mship cur prev))
 
-      ;; Set up for scanning back to the end of the list to adjust positions
-      ;; of elements that are after the newly inserted element.
+        ;; If cur is nil, then we want to insert at the end of the list
+        ;; If prev is nil, then we want to insert at the beginning of the list
+        ;; If both are nil, the list is empty and we are inserting the first element
 
-      (setq prev new cur (mship-list-node->next new))
+        (if cur
+            (set-mship-list-node->next cur new)
+          (set-membership-list->head mship-list new))
+        (if prev
+            (set-mship-list-node->prev prev new)
+          (set-membership-list->tail mship-list new))
 
-      ;; If the position we chose for the new element collides with the position of
-      ;; the element following it, we adjust the positions of following elements
-      ;; until all elements again have unique positions.
+        ;; Set up for scanning back to the end of the list to adjust positions
+        ;; of elements that are after the newly inserted element.
 
-      (while (and cur (eq (membership->position (mship-list-node->data prev))
-                          (membership->position (mship-list-node->data cur))))
-        (set-membership->position (mship-list-node->data cur)
-                              (1+ (membership->position (mship-list-node->data cur))))
-        (setq prev cur cur (mship-list-node->next cur)))
+        (setq prev new cur (mship-list-node->next new))
 
-      (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
-      new)))
+        ;; If the position we chose for the new element collides with the position of
+        ;; the element following it, we adjust the positions of following elements
+        ;; until all elements again have unique positions.
+
+        (while (and cur (eq (membership->position (mship-list-node->data prev))
+                            (membership->position (mship-list-node->data cur))))
+          (set-membership->position (mship-list-node->data cur)
+                                    (1+ (membership->position (mship-list-node->data cur))))
+          (setq prev cur cur (mship-list-node->next cur)))
+
+        (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
+        new)))))
 
 
 (defun lyskom-membership-list-delete (mship-list node)
@@ -494,6 +502,14 @@ call will return nil."
                             (mship-list-node->data mship))))))
         (mship-list-node->data mship)))))
 
+
+(defun lyskom-query-membership-position (priority position)
+  "Return the real position of a membership with PRIORITY and POSITION.
+The position returned is the position at which the membership would be
+placed in the membership cache."
+  (let ((mship (lyskom-create-membership position nil nil priority 
+                                         nil nil nil nil nil)))
+    (lyskom-membership-list-insert (lyskom-mship-cache-data) mship t)))
 
 
 

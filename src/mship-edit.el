@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.44 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.45 2004-07-21 11:14:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.44 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.45 2004-07-21 11:14:39 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -695,9 +695,10 @@ If optional NEW-MSHIP is non-nil, then get the membership again."
                     (membership->priority mship))
                 (/= (lp--entry-position entry)
                     (membership->position mship)))
-            (let ((new-pos (lp--entry-position
-                            (lp--find-new-position 
-                             entry (membership->priority mship)))))
+            (let ((new-pos (or (membership->position mship)
+                               (lp--entry-position
+                                (lp--find-new-position 
+                                 entry (membership->priority mship))))))
               (lp--set-entry-pri-and-pos
                entry (membership->priority mship) new-pos)
               (set-lp--entry->membership entry mship)))
