@@ -1,3 +1,9 @@
+2002-08-08  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	The "sparar" marker could be left indefinitely in the mode line.
+	* parse.el (lyskom-parse-unparsed): Force an update of the mode
+	line when the server stops saving.
+
 2002-08-06  David Byers  <david.byers@swipnet.se>
 
 	String "Olästa" in frame title was truncated in Emacs 21:
