@@ -37,10 +37,25 @@ nu finns under namnet NEWS-0.42.
 ** Texter läsmarkeras nu efter att de har skrivits ut, istället för
    före, som det var tidigare.
 
-** Man kan nu ange utseende på faces i X-resurser. Följande rad i
-   ~/.Xdefaults ger t.ex. en grå bakgrund på kom-first-line-face:
+** Man kan nu ange utseende på faces i X-resurser, på samma sätt som
+   för Emacs vanliga faces. Följande rad i ~/.Xdefaults ger t.ex. en
+   grå bakgrund på kom-first-line-face:
 
 	Emacs.kom-first-line-face.attributeBackground: gray
+
+** Kommandot kom-next-kom (bundet till n l) har ändrat sitt beteende.
+   +++ Hur? +++ och kommando kom-previous-kom (bundet till f l) är
+   nytt.
+
+** När man gör "Status möte" kan man lista medlemslistan på ett mycket
+   snabbare sätt, utan att se hur många olästa medlemmarna har.
+
+** Ny variabel: kom-follow-comments-outside-membership.
+   Om den är satt får man beteendet från 0.38 att man får läsa
+   kommentarer i möten man inte är med i.
+
+** Kommandot "Sända meddelande" skriver ut vart meddelandet ska
+   skickas innan man får skriva meddelandet.
 
 * Bugfixar
 
@@ -48,6 +63,15 @@ nu finns under namnet NEWS-0.42.
 
 ** Variabeln kom-text-properties respekteras bättre (om nu någon
    skulle vilja sätta den till nil).
+
+** Klienten kunde bli förvirrad och försöka logga in en som fel person
+   om man kopplade upp sig mot flera LysKOM-system.
+
+** Nu sätts inte faces förrän man loggar in. Förut gjordes det när
+   lyskom.el laddades in, vilket var mindre flexibelt.
+
+** Prefetchningen av texter fungerar bättre, vilket borde ge bättre
+   respons p.g.a. högre cacheträffrekvens.
 
 ** Vi har säkert infört några nya, skojiaga buggar.
 
