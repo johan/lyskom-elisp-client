@@ -1,5 +1,15 @@
 Fri Aug  2 00:00:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* lyskom-rest.el (lyskom-start-of-command): Kolla om sessionen är
+ 	död.
+
+	* english-strings.el, swedish-strings.el (lyskom-strings): La till
+ 	dead-session.
+
+	* lyskom-rest.el (lyskom-sentinel): Gör inte lyskom-clear-vars.
+
+	* commands1.el (lyskom-quit): Dito.
+	
 	* lyskom-rest.el (lyskom-update-prompt): Ersatte
  	lyskom-print-prompt, och fick en omskrivning, så att den inte
  	uppdaterar prompten om det inte behövs.
