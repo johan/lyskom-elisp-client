@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.88 2003-01-09 21:41:43 byers Exp $
+;;;;; $Id: option-edit.el,v 44.89 2003-01-12 22:30:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.88 2003-01-09 21:41:43 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.89 2003-01-12 22:30:43 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -255,6 +255,10 @@
     [kom-mosaic-command]
     [kom-netscape-command]
     [kom-galeon-command]
+    [kom-lynx-terminal]
+    [kom-lynx-xterm-command]
+    [kom-lynx-terminal-command]
+
 
     "\n\n"
     section
@@ -662,9 +666,25 @@ customize buffer but do not save them to the server."
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
                                         :indent 4))
     (kom-windows-browser-command (file))
-    (kom-mosaic-command (file))
-    (kom-netscape-command (file))
-    (kom-galeon-command (file))
+    (kom-mosaic-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+                                             :tag ext-complex-command
+                                             :menu-tag ext-complex-command))))
+    (kom-netscape-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+                                             :tag ext-complex-command
+                                             :menu-tag ext-complex-command))))
+    (kom-galeon-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+                                             :tag ext-complex-command
+                                             :menu-tag ext-complex-command))))
+    (kom-lynx-terminal (choice ((const (lynx-xterm xterm))
+                                (const (lynx-emacs terminal)))))
+    (kom-lynx-terminal-command (file))
+    (kom-lynx-xterm-command  (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+                                             :tag ext-complex-command
+                                             :menu-tag ext-complex-command))))
     (kom-confirm-multiple-recipients
      (choice ((const (dont-check nil))
               (const (check-before-open before))
@@ -807,6 +827,7 @@ customize buffer but do not save them to the server."
     (person . lyskom-person-widget)
     (language-choice . lyskom-language-widget)
     (file . lyskom-file-widget)
+    (ext-command . lyskom-external-command-widget)
     (ansaphone . lyskom-ansaphone-reply-widget)
     (mark-association . lyskom-mark-association-widget)
 ))

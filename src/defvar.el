@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.15 2002-04-13 15:01:28 byers Exp $
+;;;;; $Id: defvar.el,v 44.16 2003-01-12 22:30:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.15 2002-04-13 15:01:28 byers Exp $\n"
+  "$Id: defvar.el,v 44.16 2003-01-12 22:30:43 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -152,6 +152,7 @@ language-force  A language-variable whose value is to be forced."
           (server-doc nil)
           (language-force nil)
           (arglist args))
+;      (message "%S" name)
       (while arglist
         (cond ((stringp (car arglist)) (setq doc-string (car arglist)))
               ((consp (car arglist))

@@ -1,6 +1,13 @@
 2003-01-12  David Byers  <david.byers@swipnet.se>
 
+	* option-edit.el (lyskom-custom-variables): Changed
+	kom-galeon-command, kom-netscape-command and kom-mosaic-command to
+	widget type command. Added Lynx-related variables.
+
 	* vars.el.in: More documentation updates.
+	(kom-lynx-terminal): Added to server-stored variables.
+	(kom-lynx-xterm-command): Ditto.
+	(kom-lynx-terminal-command): Ditto.
 
 	* lyskom-rest.el (lyskom-beep): List arguments were not handled
 	correctly (the default key, t, was not used).
