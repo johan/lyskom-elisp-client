@@ -1,5 +1,24 @@
 2003-08-17  David Byers  <byers@lysator.liu.se>
 
+	Support UTC time in the server:
+	* startup.el (lyskom): Select UTC time format if the server
+	supports it.
+
+	* utilities.el (lyskom-set-connection-format): New function.
+
+	* parse.el (lyskom-parse-time): Use lyskom-create-time-from-utc.
+	Convert day-of-year to starting from one.
+	(lyskom-init-parse): Add the parse buffer as a child of the main
+	buffer so UTC setting is propagated to it.
+
+	* komtypes.el (lyskom-create-time-from-utc): Simplified. It seems
+	that the right thing to do is pass zero in TZ to encode-time. This
+	should speed things up slightly in normal cases. Handle case when
+	server does not use UTC.
+
+	* services.el: (initiate-get-last-text): Commented out since we
+	can't convert local time to UTC, which this function requires.
+
 	Go over EMPTY and MUSTMATCH parameters to lyskom-read-conf-stat:
 	* startup.el (kom-start-anew): Don't allow EMPTY when logging on.
 

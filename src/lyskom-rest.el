@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.216 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.217 2003-08-17 15:33:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.216 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.217 2003-08-17 15:33:19 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3909,8 +3909,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
     (delete-region (point-min) (- (point-max) lyskom-debug-communications-limit))))
 
 (defun lyskom-debug-insert (proc prefix string)
-  (let* ((buf (get-buffer-create
-	       lyskom-debug-communications-to-buffer-buffer))
+  (let* ((buf (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
 	 (win (get-buffer-window buf 'visible)))
     (if win
 	(save-excursion
