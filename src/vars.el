@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.18 1992-01-27 17:45:15 ceder Exp $
+;;;;; $Id: vars.el,v 35.19 1992-03-06 16:01:53 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.18 1992-01-27 17:45:15 ceder Exp $\n"))
+	      "$Id: vars.el,v 35.19 1992-03-06 16:01:53 linus Exp $\n"))
 
 
 
@@ -222,7 +222,7 @@ Dont change this. These are defined by the protocol.")
 ;;;                  Internal variables and constants
 
 
-(defconst lyskom-clientversion "0.34.3"
+(defconst lyskom-clientversion "0.34.4"
   "Version of the LysKOM elisp client.")
 
 (defconst lyskom-max-int 8388607
@@ -421,6 +421,12 @@ This is used by the command kom-busy-wait.")
 
 (defvar lyskom-current-subject ""
   "Current subject.")
+
+(defvar lyskom-last-added-rcpt 0
+  "The default conference when adding a recipient.")
+
+(defvar lyskom-last-added-ccrcpt 0
+  "The default conference when adding a ccrecipient.")
 
 (defvar lyskom-saved-file-name (concat default-directory "kom-text")
   "The default file name when saving a lyskom-text.")

@@ -1,3 +1,11 @@
+Fri Mar  6 16:49:24 1992  Linus Tolke Y  (linus@robert)
+
+	* commands1.el (kom-add-recipient, kom-add-copy,
+	  kom-sub-recipient, lyskom-add-sub-rcpt,
+	  lyskom-add-sub-recipient, lyskom-add-sub-recipient-2):
+	  vars.el (lyskom-last-added-rcpt, lyskom-last-added-ccrcpt):
+	  Added defaults for subtract, add recipient.
+
 Sat Feb 29 00:37:24 1992  Per Cederqvist  (ceder@lysator)
 
 	* swedish-strings.el (lyskom-mode-map): Bound
