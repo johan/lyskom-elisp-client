@@ -100,7 +100,7 @@ tar-arkivet.
 ** Man kan citatmarkera text vid editering av ett inlägg med
    comment-region.
 
-** Man kan simulera högerknapptryckning med + för att kunna använda
+** Man kan simulera högerknapptryckning med "=" för att kunna använda
    menyer med tangentbordet.
 
 ** Med lyskomd 2.0 så är klienten bättre på att hålla sin cache
