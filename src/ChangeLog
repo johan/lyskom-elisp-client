@@ -1,3 +1,7 @@
+Thu Aug  1 22:33:32 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-insert-before-prompt): Skrev om.
+
 Wed Jul 31 10:11:01 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* commands2.el (kom-sync-database): Tillåt inte operationen om
