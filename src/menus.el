@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.13 1997-07-15 10:23:24 byers Exp $
+;;;;; $Id: menus.el,v 44.14 1997-07-29 14:53:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -45,6 +45,8 @@
 	   (item kom-review-comments)
 	   (item kom-review-tree)
 	   (item kom-find-root)
+           (item kom-find-root-review)
+           (item kom-review-clear)
 	   (hline jump-separator)
 	   (item kom-jump)
 	   (item kom-super-jump)

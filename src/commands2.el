@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.13 1997-07-12 13:11:00 byers Exp $
+;;;;; $Id: commands2.el,v 44.14 1997-07-29 14:53:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.13 1997-07-12 13:11:00 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.14 1997-07-29 14:53:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -525,7 +525,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
               'lyskom-send-message-minibuffer-exit-hook)
     (setq lyskom-message-string 
           (or message
-              (lyskom-read-string (lyskom-get-string 'message-prompt))))
+              (lyskom-read-string (lyskom-get-string 'message-prompt)
+                                  nil
+                                  'lyskom-message-history)))
     (setq lyskom-message-recipient (if (zerop pers-no)
                                        nil
                                      (blocking-do 'get-conf-stat 
@@ -1664,7 +1666,9 @@ membership info."
                    (lyskom-get-string 'which-language)
                    table
                    nil
-                   t)))
+                   t
+                   nil
+                   'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table))))))
 
@@ -1693,3 +1697,27 @@ membership info."
          tmp)))
      codes)
     result))
+
+
+;;; ============================================================
+;;; Beräkna
+
+(def-kom-command kom-calculate (&optional exprx)
+  "Calculate optional arg EXPRX, or prompt the user for an expression."
+  (interactive)
+  (when (lyskom-try-require 'calc 
+                            (lyskom-get-string 'need-library))
+    (let* ((expr (or exprx
+                     (lyskom-with-lyskom-minibuffer
+                      (read-from-minibuffer 
+                       (lyskom-get-string 'calc-expression)
+                       nil nil nil 'lyskom-expression-history))))
+           (result (calc-eval expr)))
+      (cond ((stringp result)
+             (lyskom-format-insert-before-prompt
+              "%#1s = \n    %#2s\n" expr result))
+            (t (lyskom-format-insert-before-prompt
+                "%#1s = \n%#2s^ %#3s\n"
+                expr
+                (make-string (car result) ?\ )
+                (car (cdr result))))))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.21 1997-07-17 10:33:55 byers Exp $
+;;;;; $Id: startup.el,v 44.22 1997-07-29 14:53:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.21 1997-07-17 10:33:55 byers Exp $\n"))
+	      "$Id: startup.el,v 44.22 1997-07-29 14:53:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -138,7 +138,9 @@ See lyskom-mode for details."
                                                        proxy-port))
                        (lyskom-process-send-string 
                         proc
-                        (format "connect %s:%d\r\n\r\n"
+                        (format "\
+connect %s:%d HTTP/1.0\r\n\
+\r\n"
                                 host port)))
                       (t (setq proc (open-network-stream name buffer
                                                          host port)))))
@@ -161,7 +163,8 @@ See lyskom-mode for details."
 	       (concat "A"
 		       (lyskom-format-objects
 			(concat (user-login-name)
-				"%" (system-name)))))
+				"%" (system-name)))
+                       "\n"))
 	      (while (eq 'lyskom-connect-filter (process-filter proc))
 		(accept-process-output proc))
 	      ;; Now we have got the correct response.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.40 1997-07-17 10:33:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.41 1997-07-29 14:53:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.40 1997-07-17 10:33:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.41 1997-07-29 14:53:21 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1503,8 +1503,10 @@ in lyskom-messages."
 
 (defun lyskom-fill-message (text)
   "Try to reformat a message."
-  (if (null kom-autowrap)
-      text
+  (cond 
+   ((null kom-autowrap) text)
+   ((and (numberp kom-autowrap) (> kom-autowrap (length text))) text)
+   (t
     (save-excursion
       (set-buffer (lyskom-get-buffer-create 'lyskom-text " lyskom-text" t))
       (erase-buffer)
@@ -1575,7 +1577,17 @@ in lyskom-messages."
                   wrap-paragraph 'maybe))
 
            ;;
-           ;; We're in a paragraph, but we see indentation or a dash. 
+           ;; We're in a paragraph, but wait! This looks like 
+           ;; a LysKOM text!
+           ;;
+
+           ((looking-at (concat "^" (regexp-quote (lyskom-get-string 'subject))
+                                ".*\n----"))
+            (setq wrap-paragraph nil))
+
+           ;;
+           ;; We're in a paragraph, but we see indentation, a dash or
+           ;; something that looks like the end of a LysKOM text.
            ;; This has to mean something...
            ;;
 
@@ -1711,7 +1723,8 @@ in lyskom-messages."
 \\|----\
 \\|/\\*\
 \\|\\*/\
-\\|[^:]//\\)"
+\\|[^:]//\
+\\)"
                        eol-point t)
               (setq wrap-paragraph nil)))
 
@@ -1746,7 +1759,7 @@ in lyskom-messages."
       (let ((tmp (buffer-string)))
         (if (string-match "[ \t\n]+\\'" tmp)
             (substring tmp 0 (match-beginning 0))
-          tmp)))))
+          tmp))))))
 
 (defun lyskom-fill-message-line-length ()
   (- (save-excursion (end-of-line)
@@ -2363,7 +2376,7 @@ to the user."
     number))
 
 
-(defun lyskom-read-number (&optional prompt default)
+(defun lyskom-read-number (&optional prompt default history)
   "Read a number from the minibuffer. Optional arguments: PROMPT DEFAULT
 If DEFAULT is non-nil, it is written within parenthesis after the prompt.
 DEFAULT could also be of the type which (interactive P) generates.
@@ -2383,7 +2396,9 @@ If quit is typed it executes lyskom-end-of-command."
 			   (lyskom-get-string 'give-a-number))
 			 (if numdefault 
 			     (format " (%d) " numdefault)
-			   " ")))))
+			   " "))
+                 nil
+                 history)))
       (cond ((and (string= numstr "") 
 		  numdefault)
 	     (setq number numdefault))
@@ -2393,10 +2408,11 @@ If quit is typed it executes lyskom-end-of-command."
     number))
 
 
-(defun lyskom-read-string (prompt &optional initial)
+(defun lyskom-read-string (prompt &optional initial history)
   "Read a string from the minibuffer. Arguments: PROMPT INITIAL"
   (read-string prompt
-	       initial))
+	       initial
+               history))
 
 
 
@@ -2413,7 +2429,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 	    (lyskom-message "%s" (lyskom-get-string 'yes-or-no-nag))
 	    (sit-for 2)))
       (setq answer (lyskom-read-string (concat prompt (lyskom-get-string 'yes-or-no))
-				       initial-input))
+				       initial-input t))
       (setq nagging t))
     (not (string-match (lyskom-get-string 'no-regexp) answer))))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.24 1997-07-17 10:33:44 byers Exp $
+;;;;; $Id: english-strings.el,v 44.25 1997-07-29 14:53:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.24 1997-07-17 10:33:44 byers Exp $"))
+              "$Id: english-strings.el,v 44.25 1997-07-29 14:53:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1022,6 +1022,9 @@ On since %#8s%#9s")
     (reformat-html . "(HTML)")
     (reformat-enriched . "(Enriched)")
     (reformat-filled . "(Filled)")
+
+    (need-library . "The \"%#1s\" package is required for this command.\n")
+    (calc-expression . "Expression: ")
     ))
 
 
@@ -1151,6 +1154,7 @@ On since %#8s%#9s")
     (kom-status-session . "Status (of a) session")
     (kom-customize      . "Customize LysKOM")
     (kom-change-language . "Change language")
+    (kom-calculate            . "Calculate")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -1664,6 +1668,7 @@ Select whether to execute command or keyboard macro.")
     (off . "Off")
     (yes . "Yes")
     (no . "No ")
+    (max-text-length . "For articles shorter than: ")
 
     (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
@@ -2375,6 +2380,7 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
      text-text
      lyskom-button-view-text
      (("View article" . lyskom-button-view-text)
+      ("Review unconverted" . lyskom-button-review-noconversion)
       ("Review tree" . lyskom-button-review-tree)
       ("Review root article" . lyskom-button-find-root)
       ("Write commend" . lyskom-button-comment-text)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.7 1997-07-15 10:22:55 byers Exp $
+;;;;; $Id: command.el,v 44.8 1997-07-29 14:52:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -144,7 +144,7 @@
                                  (list 'lambda '(alternative)	     
                                        (list 'lyskom-ok-command 'alternative
                                              lyskom-is-administrator))
-                                 t nil)))
+                                 t nil 'lyskom-command-history)))
     (cdr (lyskom-string-assoc name alternatives))))
 
 (defun lyskom-start-of-command (function &optional may-interrupt)
