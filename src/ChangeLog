@@ -1,7 +1,37 @@
+1998-12-14  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-beep): Häng inte om kom-audio-player
+	pekar ut ett program som inte finns. 
+
 Mon Sep 14 19:54:03 1998  David Kagedal  <davidk@lysator.liu.se>
 
 	* prioritize.el (kom-prioritize): Gör
  	(lyskom-wait-for-membership).
+
+1998-08-16  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (kom-edit-send lyskom-edit-send
+	lyskom-create-text-handler): Markera inte den nya texten som läst
+	om man skickar in den anonymt.
+
+1998-08-13  David Byers  <davby@ida.liu.se>
+
+	* language.el (lyskom-tell-string): Flyttade hit från lyskom-rest.el
+
+	* lyskom-rest.el (lyskom-format-prompt): Hantera %A och %a
+
+	* vars.el.in: Ny variabel kom-anonymous-prompt-format,
+	kom-anonymous-prompt-format-executing 
+
+	* edit-text.el (kom-edit-send): Skicka kanske in texten 
+	anonymt om lyskom-is-anonymous är satt
+
+	* vars.el.in: Lade till lyskom-is-anonymous
+
+	* cache.el (lyskom-tell-server): Testa lyskom-is-anonymous
+
+	* swedish-strings.el (kom-tell-phrases): Lade till
+	kom-tell-is-anonymous 
 
 Thu Jul 23 15:03:10 1998  Peter Liljenberg  <petli@lysator.liu.se>
 
