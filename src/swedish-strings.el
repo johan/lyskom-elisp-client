@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.152 2001-02-25 16:26:50 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.153 2001-03-15 20:24:04 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.152 2001-02-25 16:26:50 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.153 2001-03-15 20:24:04 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -442,7 +442,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s).\n")
     (client-statistics . "    Klienternas fördelning:\n")
-    (client-statistics-line . "    %=-35#1s: %3#2d")
+    (client-statistics-line . "    %4#2d %#1s")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
@@ -1456,7 +1456,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (you-are-already-anonymous . "Du är redan någorlunda anonym.\n")
     (you-are-already-nonanonymous . "Du är redan icke-anonym.\n")
 
-    (start-keep-alive . "Sänder data %#1d sekunders mellanrum för att hålla förbindelsen aktiv.")
+    (start-keep-alive . "Sänder data med %#1d sekunders mellanrum för att hålla förbindelsen aktiv.")
     (stop-keep-alive . "Data sänds inte längre för att hålla förbindelsen aktiv.")
 
     (review-noconversion-q . "Återse vilket inlägg omodifierat?")
