@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.20 1996-10-24 09:47:56 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.21 1996-10-28 18:05:36 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.20 1996-10-24 09:47:56 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.21 1996-10-28 18:05:36 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -685,7 +685,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   "Insert STRING in the current buffer at point.
 The text is converted according to the value of
 kom-emacs-knows-iso-8859-1."
-  (let ((buffer-read-only nil))
+  (let ((inhibit-read-only t))
     (insert string))
   (lyskom-trim-buffer))  
 
@@ -1470,7 +1470,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	  (prompt nil))
       (setq lyskom-command-to-do to-do)
       (cond
-     
+
        ((eq to-do 'next-pri-conf)
 	(setq prompt 'go-to-pri-conf-prompt)
 	(or (eq lyskom-current-prompt prompt)
@@ -2057,7 +2057,9 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 		(setq lyskom-string-bytes-missing
 		      (- lyskom-string-bytes-missing (length output))))
 
-	       ;; This test makes e.g. startup a lot faster.
+	       ;; This test makes e.g. startup a lot faster. At least
+	       ;; it does when the maps are read in one chunk, which
+	       ;; they usually aren't anymore.
 	       ((not (string-match "\n" output)))
 	       
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
