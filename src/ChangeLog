@@ -1,5 +1,28 @@
 2002-04-11  David Byers  <david.byers@swipnet.se>
 
+	Show extended server status:
+	* commands2.el (kom-status-server): New command.
+
+	Support aux-items on the server:
+	* aux-items.el (lyskom-aux-item-terminating-button): Support
+	server aux-items.
+
+	* lyskom-buttons.el (lyskom-button-delete-aux): Support server
+	aux-items. 
+	(lyskom-button-info-aux): Support server aux-items.
+
+	Handle more aux-item types:
+	* edit-text.el (kom-edit-add-world-readable): New command.
+
+	* aux-items.el (canonical-name): New aux-item definition·
+	(mx-list-name): Same here.
+	(send-comments-to): Ditto.
+	(world-readable): And once more.
+	(lyskom-print-mx-list-name): New function.
+	(lyskom-print-world-readable): New function.
+	(lyskom-edit-insert-world-readable): New function.
+	(lyskom-parse-world-readable): New function.
+
 	Beter kom-who-is-on-and-friend:
 	* commands1.el (lyskom-select-friends-from-who-list): Show
 	lyskom-pers-no when filtering friends. Perhaps this should be a

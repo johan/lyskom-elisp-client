@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.93 2002-03-03 15:49:10 joel Exp $
+;;;;; $Id: utilities.el,v 44.94 2002-04-11 18:49:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.93 2002-03-03 15:49:10 joel Exp $\n"))
+	      "$Id: utilities.el,v 44.94 2002-04-11 18:49:10 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -988,7 +988,7 @@ timeformat-* strings are tailored to be used as formats for this
 function.
 
 The arguments to the format string are (in order): year, month number
-(starting with one for January), day-of-month number, hour, minute,
+\(starting with one for January), day-of-month number, hour, minute,
 second, full name of the day of the week, abbreviated name of the day
 of the week.
 

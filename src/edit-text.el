@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.92 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: edit-text.el,v 44.93 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.92 2002-02-24 20:23:26 joel Exp $\n"))
+	      "$Id: edit-text.el,v 44.93 2002-04-11 18:49:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1338,6 +1338,14 @@ RECPT-TYPE is the type of recipient to add."
   (interactive)
   (lyskom-edit-insert-aux-item
    (lyskom-create-aux-item 0 5 0 0
+                           (lyskom-create-aux-item-flags
+                            nil nil nil nil nil nil nil nil)
+                           0 "")))
+
+(defun kom-edit-add-world-readable ()
+  (interactive)
+  (lyskom-edit-insert-aux-item
+   (lyskom-create-aux-item 0 34 0 0
                            (lyskom-create-aux-item-flags
                             nil nil nil nil nil nil nil nil)
                            0 "")))

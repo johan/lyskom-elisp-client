@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.183 2002-04-10 22:31:58 byers Exp $
+;;;;; $Id: english-strings.el,v 44.184 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.183 2002-04-10 22:31:58 byers Exp $"))
+              "$Id: english-strings.el,v 44.184 2002-04-11 18:49:09 byers Exp $"))
 
 
 ;;; ================================================================
@@ -596,7 +596,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
-    (status-aux-item . "Auxiliary information:     %15#1s%#3s (skapad av %#2M)\n")
+    (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (skapad av %#2M)\n")
+    (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
+    (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m>\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1438,8 +1440,10 @@ On since %#8s%#9s")
     (label-secret    . "Should others to be able to see the label? ")
 
     (creating-software-aux . "Created with %#1s")
+    (world-readable-text-aux . "The article can be read without logging on")
+    (world-readable-text-edit-aux . "Make the article readable without logging on")
 
-    (cant-get-aux-item . "Can't find auxiliary information")
+    (cant-get-aux-item . "Can't find auxiliary information\n")
     (aux-item-no-info . "No information available\n")
     (aux-item-info . "\
 Number:        %#1d %#6s
@@ -1460,8 +1464,9 @@ Contents:     \"%#9s\"
     (inherit-steps . "%#1d steps")
 
     (aux-item-for . "Auxiliary information for ")
-    (conference-no . "conference <%#1m> %#1M")
-    (text-no . "text %#1n")
+    (aux-item-for-conference-no . "conference <%#1m> %#1M")
+    (aux-item-for-text-no . "text %#1n")
+    (aux-item-for-server . "the server")
 
     (what-fast-reply-no . "Remark to which text? ")
     (fast-reply-prompt . "Remark: ")
@@ -1643,6 +1648,21 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-prioritize-flag-set-action . "Set")
     (lyskom-prioritize-flag-clear-action . "Clear")
 
+    (server-status-header   . "Status for LysKOM-server %#1s%#2?b%[ (%#2s:%#3d)%]%[%]\n\n")
+    (server-status-server   . "Canonical server name:                   %#1s%#2?b%[:%#2s%]%[%]")
+    (server-status-version  . "Software version:                        %#1s %#2s\n")
+    (server-status-protocol . "Protocol version:          %15#1d\n")
+    (server-status-sessions . "\
+Number of sessions:  %21#1d (total)
+                     %21#2d active in the last %#7d minutes
+                     %21#3d inactive sessions
+                     %21#4d unknown activity
+                     %21#5d invisible sessions
+                     %21#6d not logged on/secret/zombies\n")
+    (server-status-first-text . "Oldest existing article:   %15#1n\n")
+    (server-status-last-text  . "Youngest existing argicle: %15#1n\n")
+    (server-status-has-motd . "\nThe server has a notice:\n")
+    (server-status-time . "Serverns tid:                   %#1s\n")
     ))
 
 
@@ -1795,7 +1815,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-remote-erase-messages . "Remote control erase messages")
     (kom-remote-quit          . "Remote control quit")
 
-    (kom-status-session       . "Status (of a) session")
+    (kom-status-session       . "Status (of) session")
     (kom-customize            . "Customize LysKOM")
     (kom-next-kom             . "Next LysKOM")
     (kom-previous-kom         . "Previous LysKOM")
@@ -1837,6 +1857,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-remove-presentation  . "Remove presentation")
     (kom-set-motd-text        . "Add notice")
     (kom-create-aux-item      . "Create auxiliary information")
+    (kom-status-server        . "Status (of) server")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -2175,6 +2196,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "s c") 'kom-status-conf)
   (define-key lyskom-en-mode-map (kbd "s u") 'kom-status-person)
   (define-key lyskom-en-mode-map (kbd "s s") 'kom-status-session)
+  (define-key lyskom-en-mode-map (kbd "s k") 'kom-status-server)
   (define-key lyskom-en-mode-map (kbd "s m") 'kom-send-message)
 
   ;; Running in) buffer

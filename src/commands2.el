@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.112 2002-04-10 22:24:26 byers Exp $
+;;;;; $Id: commands2.el,v 44.113 2002-04-11 18:49:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.112 2002-04-10 22:24:26 byers Exp $\n"))
+              "$Id: commands2.el,v 44.113 2002-04-11 18:49:09 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2641,7 +2641,7 @@ to the first text that NEW is a comment or footnote to."
          (completion-ignore-case t)
          (object-type 
           (cdr (lyskom-string-assoc 
-                (lyskom-completing-read 'what-kind-to-add-aux-to
+                (lyskom-completing-read (lyskom-get-string 'what-kind-to-add-aux-to)
                                         completions
                                         nil t)
                 completions)))
@@ -2663,7 +2663,7 @@ to the first text that NEW is a comment or footnote to."
          (rsv3 (lyskom-j-or-n-p 'which-aux-item-rsv3))
          (rsv4 (lyskom-j-or-n-p 'which-aux-item-rsv4))
          (inherit-limit (lyskom-read-number 'which-aux-item-inherit-limit))
-         (data (lyskom-read-string 'which-aux-item-data))
+         (data (lyskom-read-string (lyskom-get-string 'which-aux-item-data)))
          (flags (lyskom-create-aux-item-flags nil inherit secret anonymous
                                               rsv1 rsv2 rsv3 rsv4))
          (item (lyskom-create-aux-item 0 tag 0 0 flags inherit-limit data)))
@@ -2679,3 +2679,138 @@ to the first text that NEW is a comment or footnote to."
                    (blocking-do 'modify-text-info object-id nil (list item))))))
     (when (eq object-type 'server)
       (setq lyskom-server-info (blocking-do 'get-server-info)))))
+
+
+;;; ================================================================
+;;; Status för LysKOM
+;;;
+;;; Skriv ut:
+;;; * Serverns kanoniska namn (canonical-name eller ud kom-server-alist)
+;;; * Serverns DNS-namn/IP och port
+;;; * Serverns programvara och version
+;;; * Högsta existerande inläggsnummer
+;;; * Antal sessioner
+;;; * Serverns tid
+;;;
+
+(def-kom-command kom-status-server ()
+  "Show status information for the LysKOM server"
+  (interactive)
+  (blocking-do-multiple ((server-info (get-server-info))
+                         (server-version (get-version-info))
+                         (server-time (get-time))
+                         (highest-text (find-previous-text-no lyskom-max-int))
+                         (first-text (find-next-text-no 0))
+                         (session-info (who-is-on-dynamic  t t 0)))
+    (setq lyskom-server-info (blocking-do 'get-server-info))
+    (setq lyskom-server-version-info (blocking-do 'get-version-info))
+
+    (let* ((aux-items (server-info->aux-item-list lyskom-server-info))
+           (e-mail-address (lyskom-get-aux-item aux-items 13))
+           (faqs (lyskom-get-aux-item aux-items 14))
+           (recommended-conf (lyskom-get-aux-item aux-items 29))
+           (canonical-name-aux (car (lyskom-get-aux-item aux-items 31)))
+           (invisible-sessions 0)
+           (anonymous-sessions 0)
+           (active-sessions 0)
+           (inactive-sessions 0)
+           (unknown-activity-sessions 0)
+           (total-sessions (length session-info))
+           (idle-hide (* 60 (if (numberp kom-idle-hide) kom-idle-hide 30))))
+
+      (setq aux-items (delq canonical-name-aux aux-items))
+
+      ;; ----------------------------------------
+      ;; Compute session statistics
+      (lyskom-traverse session session-info
+
+        ;; Record anonymity
+        (when (zerop (dynamic-session-info->person session))
+          (setq anonymous-sessions (1+ anonymous-sessions)))
+
+        ;; Record activity
+        (if (session-flags->user_active_used (dynamic-session-info->flags session))
+            (if (> (dynamic-session-info->idle-time session) idle-hide)
+                (setq inactive-sessions (1+ inactive-sessions))
+              (setq active-sessions (1+ active-sessions)))
+          (setq unknown-activity-sessions (1+ unknown-activity-sessions)))
+
+        ;; Record invisibility
+        (when (session-flags->invisible (dynamic-session-info->flags session))
+          (setq invisible-sessions (1+ invisible-sessions)))
+        )
+
+      ;; ----------------------------------------
+      ;; Print header
+
+      (lyskom-format-insert 'server-status-header 
+                            (cond ((cdr (lyskom-string-assoc lyskom-server-name kom-server-aliases)))
+                                  ((cdr (lyskom-string-rassoc lyskom-server-name kom-server-aliases)))
+                                  (t lyskom-server-name))
+                            (cond ((car (lyskom-string-rassoc lyskom-server-name kom-server-aliases)))
+                                  (t lyskom-server-name))
+                            lyskom-server-port)
+
+      ;; ----------------------------------------
+      ;; Print software name and version
+
+      (lyskom-format-insert 'server-status-version
+                            (version-info->server-software server-version)
+                            (version-info->software-version server-version))
+      (lyskom-format-insert 'server-status-protocol
+                            (version-info->protocol-version server-version))
+
+      ;; ----------------------------------------
+      ;; Print canonical name, if we have one
+
+      (when canonical-name-aux
+        (let ((canonical-name nil)
+              (canonical-port nil))
+          (if (string-match ":" (aux-item->data canonical-name-aux))
+              (setq canonical-name (substring (aux-item->data canonical-name-aux) 0 (match-beginning 0))
+                    canonical-port (substring (aux-item->data canonical-name-aux) (1+ (match-beginning 0))))
+            (setq canonical-name (aux-item->data canonical-name-aux)))
+          (lyskom-format-insert 'server-status-server canonical-name canonical-port)))
+
+      ;; ----------------------------------------
+      ;; Print time
+      (lyskom-format-insert 'server-status-time
+                            (let ((kom-print-relative-dates nil))
+                              (lyskom-format-time 'date-and-time server-time)))
+
+      ;; ----------------------------------------
+      ;; Print session statistics
+      (lyskom-format-insert 'server-status-sessions
+                            total-sessions
+                            active-sessions
+                            inactive-sessions
+                            unknown-activity-sessions
+                            invisible-sessions
+                            anonymous-sessions
+                            (/ idle-hide 60))
+
+      ;; ----------------------------------------
+      ;; Print info on text numbers
+      (lyskom-format-insert 'server-status-first-text first-text)
+      (lyskom-format-insert 'server-status-last-text highest-text)
+
+      ;; ----------------------------------------
+      ;; Print remaining aux-items
+      (lyskom-traverse-aux item aux-items
+        (if (lyskom-aux-item-definition-field item 'status-print)
+            (lyskom-aux-item-call item 'status-print item 'server)
+          (lyskom-format-insert 'status-aux-item
+                                (format "%d/%d" 
+                                        (aux-item->aux-no item)
+                                        (aux-item->tag item))
+                                (aux-item->creator item)
+                                (lyskom-aux-item-terminating-button item 'server))
+          ))
+
+      ;; ----------------------------------------
+      ;; Print MOTD (if there is one)
+      (when (not (zerop (server-info->motd-of-lyskom server-info)))
+        (lyskom-insert 'server-status-has-motd)
+        (lyskom-view-text (server-info->motd-of-lyskom server-info)))
+
+)))
