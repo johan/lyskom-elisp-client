@@ -1,58 +1,64 @@
-;;; TO DO
-;;;
-;;; -------------------------------------------------------------------------
-;;; When prioritizing an entry we need to sort the read lists to put
-;;; the entries in the proper order. It's possible that we'll have to
-;;; change the prompt.
-;;;
-;;; Test cases:
-;;;
-;;; Change the priority of the current conf to lower than one we have
-;;; unreads in. Should trigger prompt change.
-;;;
-;;; Change the priority of the current conf to higher than one that
-;;; was higher previously and had unreads. This should trigger a
-;;; prompt change.
-;;;
-;;; Re-order two confs we are not in by changing their priority. Check
-;;; that we get to read them in the correct order.
-;;;
-;;; Re-order two confs without changing their priority. Check that we
-;;; get to read them in the correct order.
-;;; -------------------------------------------------------------------------
-;;;
-;;; -------------------------------------------------------------------------
-;;; Changing priority might put the conference above or below the
-;;; current session priority. We need to fetch or delete maps.
-;;;
-;;; Test cases:
-;;;
-;;; Prioritize a conf under the session priority to above the session
-;;; priority. Should give us more unreads. Might trigger prompt change.
-;;;
-;;; Prioritize a conf with unreads to under the session priority. 
-;;; Should give us less unreads. Might trigger prompt change.
-;;;
-;;; While prefetching a conf, change its priority to below the session
-;;; priority. The prefetched maps should be discarded automatically.
-;;; -------------------------------------------------------------------------
-;;;          
-;;; What we need is a general function we use to change the priority of a 
-;;; membership. Since we do all the updates in the background it's OK to
-;;; send an update off as soon as we change the priority of a membership.
-;;; 
-;;; This function should... 
-;;; - Change the priority and placement of the membership in the server
-;;; - See if the priority has changed re the session priority and if so
-;;;   either start a prefetch for the conference or remove the unreads
-;;;   for the conference from all read lists.
-;;; - Remove and reinsert the unreads in the reading lists, then update
-;;;   the prompt.
-;;; - Sort the membership list.
-;;;
-;;;
+;;; mship-edit.el --- Summary
+;; TO DO
+;;
+;; -------------------------------------------------------------------------
+;; When prioritizing an entry we need to sort the read lists to put
+;; the entries in the proper order. It's possible that we'll have to
+;; change the prompt.
+;;
+;; Test cases:
+;;
+;; Change the priority of the current conf to lower than one we have
+;; unreads in. Should trigger prompt change.
+;;
+;; Change the priority of the current conf to higher than one that
+;; was higher previously and had unreads. This should trigger a
+;; prompt change.
+;;
+;; Re-order two confs we are not in by changing their priority. Check
+;; that we get to read them in the correct order.
+;;
+;; Re-order two confs without changing their priority. Check that we
+;; get to read them in the correct order.
+;; -------------------------------------------------------------------------
+;;
+;; -------------------------------------------------------------------------
+;; Changing priority might put the conference above or below the
+;; current session priority. We need to fetch or delete maps.
+;;
+;; Test cases:
+;;
+;; Prioritize a conf under the session priority to above the session
+;; priority. Should give us more unreads. Might trigger prompt change.
+;;
+;; Prioritize a conf with unreads to under the session priority.
+;; Should give us less unreads. Might trigger prompt change.
+;;
+;; While prefetching a conf, change its priority to below the session
+;; priority. The prefetched maps should be discarded automatically.
+;; -------------------------------------------------------------------------
+;;          
+;; What we need is a general function we use to change the priority of a
+;; membership. Since we do all the updates in the background it's OK to
+;; send an update off as soon as we change the priority of a membership.
+;; 
+;; This function should...
+;; - Change the priority and placement of the membership in the server
+;; - See if the priority has changed re the session priority and if so
+;;   either start a prefetch for the conference or remove the unreads
+;;   for the conference from all read lists.
+;; - Remove and reinsert the unreads in the reading lists, then update
+;;   the prompt.
+;; - Sort the membership list.
+;;
+;;
 
-(def-komtype lp--entry 
+
+;;; Commentary:
+;; 
+
+;;; Code:
+(def-komtype lp--entry
   start-marker                          ; Where the entry is in the buffer
   end-marker                            ; Where it ends in the buffer
   priority                              ; The saved priority of the membership
@@ -75,51 +81,63 @@
 
 
 ;;; ============================================================
-;;; Entry drawing
+;; Entry drawing
 
 (defmacro lp--save-excursion (&rest body)
+  "Evecute BODY and restore the current location of point.
+The location of point is in relation to the entry it is in.  Point
+will move as the entry moves.  The location of point is restored
+even if the character at point is deleted."
   `(let* ((lp--saved-entry  (lp--entry-at (point)))
           (lp--saved-column (and lp--saved-entry
-                                 (- (point) 
+                                 (- (point)
                                     (lp--entry->start-marker
                                      lp--saved-entry)))))
      (save-excursion ,@body)
      (if (and lp--saved-entry
               (lp--entry->start-marker lp--saved-entry))
-         (goto-char (+ lp--saved-column (lp--entry->start-marker 
+         (goto-char (+ lp--saved-column (lp--entry->start-marker
                                          lp--saved-entry))))))
 
 
 (defun lp--compute-format-string ()
+  "Compute the format string for an entry in the buffer.
+To save time, the format string is cached in `lp--last-format-string'.  It is
+only recomputed if the window width changes."
   (if (and lp--last-format-string
            (eq (window-width) lp--last-window-width))
       lp--last-format-string
     (let ((total (- (window-width) 1 3 3 2 12 2 5 2 3 1)))
       (setq lp--last-window-width (window-width))
       (setq lp--last-format-string
-            (concat "%#1c %=3#2s %#9c %=-" (number-to-string total) 
+            (concat "%#1c %=3#2s %#9c %=-" (number-to-string total)
                     "#3M  %=-12#4s %=5#5s  %[%#10@%#6c%]%[%#11@%#7c%]%[%#12@%#8c%]")))))
           
 
 (defun lp--find-unread (conf-no)
+  "Return the number of unread texts in CONF-NO.
+If this function is unable to calculate the number of unread texts it will
+return nil."
   (save-excursion
    (set-buffer lyskom-buffer)
    (let ((rlist (read-list->all-entries lyskom-to-do-list))
          (found nil))
      (while (and (not found) rlist)
-       (when (eq conf-no (conf-stat->conf-no 
+       (when (eq conf-no (conf-stat->conf-no
                           (read-info->conf-stat (car rlist))))
          (setq found (length (cdr (read-info->text-list (car rlist))))))
        (setq rlist (cdr rlist)))
      found)))
 
 (defun lp--format-entry (entry)
+  "Format ENTRY for insertion in a buffer.
+Returns a string suitable for insertion in a membership list."
   (let ((un (lp--find-unread (membership->conf-no
                               (lp--entry->membership entry))))
         (conf-stat (blocking-do 'get-conf-stat
-                                (membership->conf-no 
+                                (membership->conf-no
                                  (lp--entry->membership entry)))))
-    (concat 
+    (concat
      (lyskom-format (lp--compute-format-string)
                     (if (lp--entry->selected entry) ?* ?\ )
                     (if (zerop (membership->priority
@@ -128,7 +146,7 @@
                       (int-to-string (membership->priority
                                 (lp--entry->membership entry))))
                     conf-stat
-                    (lyskom-return-date-and-time 
+                    (lyskom-return-date-and-time
                      (membership->last-time-read (lp--entry->membership entry))
                      'time-yyyy-mm-dd)
                     (if un (int-to-string un) "")
@@ -139,19 +157,19 @@
                     (if (eq lyskom-pers-no (conf-stat->supervisor conf-stat)) ?O ?\ )
                     (lyskom-default-button 'prioritize-flag-menu
                                            (list entry 'invitation)
-                                           (list "%#1s (%=#2M)" 
+                                           (list "%#1s (%=#2M)"
                                                  "Inbjuden"
                                                  (membership->conf-no
-                                                  (lp--entry->membership entry)))) 
+                                                  (lp--entry->membership entry))))
                     (lyskom-default-button 'prioritize-flag-menu
                                            (list entry 'secret)
-                                           (list "%#1s (%=#2M)" 
+                                           (list "%#1s (%=#2M)"
                                                  "Hemlig"
                                                  (membership->conf-no
                                                   (lp--entry->membership entry))))
                     (lyskom-default-button 'prioritize-flag-menu
                                            (list entry 'passive)
-                                           (list "%#1s (%=#2M)" 
+                                           (list "%#1s (%=#2M)"
                                                  "Passiv"
                                                  (membership->conf-no
                                                   (lp--entry->membership entry)))))
@@ -161,9 +179,9 @@
                   (not (eq (membership->created-by (lp--entry->membership entry)) 0))
                   (not (eq (lp--entry->state entry) 'contracted))))
          (lyskom-format "\n        %#1s %#2s av %#3P"
-                        (if (membership-type->invitation (membership->type (lp--entry->membership entry))) 
+                        (if (membership-type->invitation (membership->type (lp--entry->membership entry)))
                             "Inbjuden" "Adderad")
-                        (lyskom-return-date-and-time 
+                        (lyskom-return-date-and-time
                          (membership->created-at (lp--entry->membership entry)))
                         (membership->created-by (lp--entry->membership entry)))
        ""))))
@@ -179,7 +197,7 @@ The start and end markers of the entry are adjusted"
   (forward-char 1))
 
 (defun lp--erase-entry (entry)
-  "Erase the printed representation of the entry ENTRY in the buffer"
+  "Erase the printed representation of the entry ENTRY in the buffer."
   (delete-region (lp--entry->start-marker entry)
                  (1+ (lp--entry->end-marker entry)))
   (set-lp--entry->start-marker entry nil)
@@ -203,9 +221,10 @@ The start and end markers of the entry are adjusted"
 
 
 ;;; ============================================================
-;;; Buffer functions
+;; Buffer functions
 
 (defun lp--create-buffer ()
+  "Create a buffer for managing memberships."
   (interactive)
   (let ((buf (lyskom-get-buffer-create 'prioritize
                                        (concat (buffer-name) "-prioritize")
@@ -254,10 +273,10 @@ Medlemskap för %#1M på %#2s
 
 
 ;;; ============================================================
-;;; List management
+;; List management
 
 (defun lp--set-entry-list (entries)
-  "Set the list of entries to ENTRIES"
+  "Set the list of entries to ENTRIES."
   (setq lp--entry-list entries))
 
 (defun lp--all-entries ()
@@ -266,11 +285,11 @@ Medlemskap för %#1M på %#2s
 
 
 (defun lp--conf-no-entry (conf-no)
-  "Find the entry for a membership in conf-no"
+  "Find the entry for a membership in CONF-NO."
   (let ((entries (lp--all-entries))
         (found nil))
     (while (and entries (null found))
-      (when (eq conf-no (membership->conf-no (lp--entry->membership 
+      (when (eq conf-no (membership->conf-no (lp--entry->membership
                                               (car entries))))
         (setq found (car entries)))
       (setq entries (cdr entries)))
@@ -279,13 +298,13 @@ Medlemskap för %#1M på %#2s
 (defun lp--find-new-position (entry priority)
   "Find the new position for ENTRY it is were given priority PRIORITY.
 If priority is lower than the entry priority this is the last position
-currently occupied by an entry with a higher priority. If priority is
-higher, then it is the first position with a priority less than the 
+currently occupied by an entry with a higher priority.  If priority is
+higher, then it is the first position with a priority less than the
 entry priority"
   (let ((entries (lp--all-entries))
         (result nil)
         (tmp nil))
-    (cond 
+    (cond
 
      ;; Moving down. Return the last entry spotted with a higher
      ;; than requested priority
@@ -314,7 +333,7 @@ entry priority"
   (elt lp--entry-list pos))
 
 (defun lp--entry-position (entry)
-  "Return the position in the list for entry POS."
+  "Return the position in the list for ENTRY."
   (- (length (lp--all-entries))
      (length (memq entry (lp--all-entries)))))
 
@@ -323,7 +342,7 @@ entry priority"
   "Return the entry at WHERE."
   (let ((entry-list (lp--all-entries))
         (found nil)
-        (pos (save-excursion (goto-char where) 
+        (pos (save-excursion (goto-char where)
                              (beginning-of-line)
                              (point))))
     (while (and (not found) entry-list)
@@ -367,13 +386,13 @@ entry priority"
             (cons data (nthcdr elem l)))
     l))
 
-(defun lp--list-move-element (elem to l)
-  "Move element from position FROM to position TO in list L using side-fx."
-  (lp--add-to-list to elem (lp--remove-from-list elem l)))
+(defun lp--list-move-element (el to list)
+  "Move element EL by side effects so it appears at position TO in LIST."
+  (lp--add-to-list to el (lp--remove-from-list el list)))
 
 
 (defun lyskom-prioritize-update-buffer (conf-no)
-  "Update the entry for conf-no in the buffer"
+  "Update the entry for CONF-NO in the buffer."
   (lp--save-excursion
     (let ((buffers (lyskom-buffers-of-category 'prioritize)))
       (mapcar (lambda (buffer)
@@ -399,7 +418,7 @@ entry priority"
 (defun lp--map-region (start end function &rest args)
   "For each element from START to END, apply FUNCTION.
 Apply FUNCTION to each element in the region from START to END, returning
-a list of results. ARGS will be passed as additional arguments to FUNCTION.
+a list of results.  ARGS will be passed as additional arguments to FUNCTION.
 
 Args: START END FUNCTION ARGS."
   (let ((results nil)
@@ -421,13 +440,15 @@ Args: START END FUNCTION ARGS."
 
 
 ;;; ============================================================
-;;; Menu and button functions
+;; Menu and button functions
 
 ;;; ------------------------------------------------------------
-;;; Flag menu
-;;; Argument is a list of entry and flag
+;; Flag menu
+;; Argument is a list of entry and flag
 
 (defun lp--flag-menu-get (entry flag)
+  "For the membership in ENTRY, return the value of flag FLAG.
+FLAG must be one of 'invitation, 'secret or 'passive."
   (funcall
    (cond ((eq flag 'invitation) 'membership-type->invitation)
          ((eq flag 'secret) 'membership-type->secret)
@@ -435,6 +456,8 @@ Args: START END FUNCTION ARGS."
    (membership->type (lp--entry->membership entry))))
 
 (defun lp--flag-menu-set (entry flag value)
+  "For the membership in ENTRY, set FLAG to VALUE.
+FLAG must be one of 'invitation, 'secret or 'passive."
   (funcall
    (cond ((eq flag 'invitation) 'set-membership-type->invitation)
          ((eq flag 'secret) 'set-membership-type->secret)
@@ -443,6 +466,14 @@ Args: START END FUNCTION ARGS."
    value))
 
 (defun lyskom-prioritize-flag-clear (buf arg text)
+  "Clear the membership flag the user clicked on.
+This function should not be called directly.  It is called in response to
+a mouse click.
+
+BUF is the buffer in which the mouse click took place.  ARG is a list
+of (ENTRY FLAG), where ENTRY is the entry the flag belongs to and FLAG
+is one of invitation, secret or passive.  TEXT is the text that the user
+clicked on."
   (interactive)
   (let ((entry (elt arg 0))
         (flag (elt arg 1)))
@@ -450,6 +481,14 @@ Args: START END FUNCTION ARGS."
       (lyskom-prioritize-flag-toggle buf arg text))))
 
 (defun lyskom-prioritize-flag-set (buf arg text)
+  "Set the membership flag the user clicked on.
+This function should not be called directly.  It is called in response to
+a mouse click.
+
+BUF is the buffer in which the mouse click took place.  ARG is a list
+of (ENTRY FLAG), where ENTRY is the entry the flag belongs to and FLAG
+is one of invitation, secret or passive.  TEXT is the text that the user
+clicked on."
   (interactive)
   (let ((entry (elt arg 0))
         (flag (elt arg 1)))
@@ -457,6 +496,14 @@ Args: START END FUNCTION ARGS."
       (lyskom-prioritize-flag-toggle buf arg text))))
 
 (defun lyskom-prioritize-flag-toggle (buf arg text)
+  "Toggle the membership flag the user clicked on.
+This function should not be called directly.  It is called in response to
+a mouse click.
+
+BUF is the buffer in which the mouse click took place.  ARG is a list
+of (ENTRY FLAG), where ENTRY is the entry the flag belongs to and FLAG
+is one of invitation, secret or passive.  TEXT is the text that the user
+clicked on."
   (interactive)
   (let ((entry (elt arg 0))
         (flag (elt arg 1)))
@@ -465,10 +512,10 @@ Args: START END FUNCTION ARGS."
       (lp--flag-menu-set entry flag (not (lp--flag-menu-get entry flag)))
 
       ;; Attempt to perform the change
-      (save-excursion 
+      (save-excursion
         (set-buffer lyskom-buffer)
-        (let ((result (blocking-do 'set-membership-type 
-                                   lyskom-pers-no 
+        (let ((result (blocking-do 'set-membership-type
+                                   lyskom-pers-no
                                    (membership->conf-no (lp--entry->membership entry))
                                    (membership->type (lp--entry->membership entry)))))
 
@@ -476,10 +523,10 @@ Args: START END FUNCTION ARGS."
             (message "Det gick inte: %s"
                      (lyskom-get-error-text lyskom-errno))))
 
-        ;; Update the display 
+        ;; Update the display
         (let ((mship
-               (blocking-do 'query-read-texts 
-                            lyskom-pers-no 
+               (blocking-do 'query-read-texts
+                            lyskom-pers-no
                             (membership->conf-no (lp--entry->membership entry)))))
           (lyskom-replace-membership mship lyskom-membership)
           (set-lp--entry->membership entry mship)
@@ -503,8 +550,8 @@ Args: START END FUNCTION ARGS."
 
 
 ;;; ============================================================
-;;; Marking and unmarking memberships
-;;; 
+;; Marking and unmarking memberships
+;; 
 
 (defun lp--select-entries (entry-list state)
   "Set the selection value of all entries in ENTRY-LIST to STATE.
@@ -514,21 +561,21 @@ Forces a mode line update"
 
 (defun lp--do-select-entries (entry-list state)
   "Set the selection value of all entries in ENTRY-LIST to STATE."
-  (mapcar (lambda (entry) 
+  (mapcar (lambda (entry)
             (when entry
               (if state
                   (add-to-list 'lp--selected-entry-list entry)
-                (setq lp--selected-entry-list 
+                (setq lp--selected-entry-list
                       (delq entry lp--selected-entry-list)))
               (set-lp--entry->selected entry state)
               (lp--redraw-entry-mark entry))) entry-list))
 
 (defun lp--all-selected-entries ()
-  "Return a list of all selected entries"
+  "Return a list of all selected entries."
   lp--selected-entry-list)
 
 (defun lp--set-selected-entries (entry-list)
-  "Set the selected entries to exactly the entries in entry-list.
+  "Set the selected entries to exactly the entries in ENTRY-LIST.
 Forces a mode line update"
   (lp--do-select-entries (lp--all-selected-entries) nil)
   (lp--do-select-entries entry-list t)
@@ -536,27 +583,27 @@ Forces a mode line update"
 
 
 ;;; ------------------------------------------------------------
-;;; Server update functions
+;; Server update functions
 
-(defun lp--update-membership (entry-list)
-  "Update the server version of all entries in ENTRY-LIST"
+(defun lp--update-membership (entry)
+  "Update the server and local versions of membership in ENTRY."
   (save-excursion
     (set-buffer lyskom-buffer)
-    (mapcar 
-     (lambda (el)
-       (let ((mship (lp--entry->membership el)))
-         (initiate-add-member 'background nil 
-                              (membership->conf-no mship)
-                              lyskom-pers-no
-                              (membership->priority mship)
-                              (lp--entry-position el)
-                              (membership->type mship))))
-     entry-list)
-    (lyskom-sort-membership)))
+    (let ((mship (lp--entry->membership entry)))
+      (lyskom-change-membership-position (membership->conf-no mship)
+                                         (lp--entry-position entry))
+      (lyskom-change-membership-priority (membership->conf-no mship)
+                                         (lp--entry->priority mship))
+      (initiate-add-member 'background nil
+                           (membership->conf-no mship)
+                           lyskom-pers-no
+                           (membership->priority mship)
+                           (membership->position mship)
+                           (membership->type mship)))))
 
 
 ;;; ------------------------------------------------------------
-;;; User-level functions
+;; User-level functions
 
 
 (defun lp--select-membership ()
@@ -574,26 +621,27 @@ Forces a mode line update"
       (lp--select-entries (list entry) nil))))
 
 (defun lp--toggle-membership-selection (where)
-  "Toggle selection of the membership that point is on."
+  "Toggle selection of the membership at WHERE."
   (interactive "d")
   (let ((entry (lp--entry-at where)))
     (when entry
       (lp--select-entries (list entry) (not (lp--entry->selected entry))))))
 
 (defun lp--select-region (start end)
-  "Select all entries in the region"
+  "Select all entries in the region.
+START and END are the starting and ending points of the region."
   (interactive "r")
   (let ((entry-list (lp--map-region start end 'identity)))
     (lp--select-entries entry-list t)))
 
 (defun lp--select-prioriy (priority)
-  "Select all entries with a certain priority.
+  "Select all entries with a priority PRIORITY.
 With numeric prefix argument select entries with that priority."
   (interactive "P")
   (lp--do-select-priority priority t))
 
 (defun lp--deselect-prioriy (priority)
-  "Deselect all entries with a certain priority.
+  "Deselect all entries with a priority PRIORITY.
 With numeric prefix argument deselect entries with that priority."
   (interactive "P")
   (lp--do-select-priority priority nil))
@@ -615,17 +663,17 @@ SELECT specifies new select."
    select))
 
 (defun lp--deselect-all ()
-  "Deselect all memberships"
+  "Deselect all memberships."
   (interactive)
   (lp--set-selected-entries nil))
 
 
 
 ;;; ============================================================
-;;; Reprioritization functions
+;; Reprioritization functions
 
 (defun lp--set-priority (priority)
-  "Set the priority of selected memberships. 
+  "Set the priority of selected memberships to PRIORITY.
 Memberships that must be moved will be moved the shortest distance
 possible in the list."
   (interactive "P")
@@ -633,7 +681,7 @@ possible in the list."
          (entries (or (lp--all-selected-entries)
                       (list (lp--entry-at (point))))))
     (unless entries
-      (error "No entries selected."))
+      (error "No entries selected"))
     (unless (numberp priority)
       (cond ((> (length entries) 1)
              (setq priority
@@ -642,26 +690,26 @@ possible in the list."
             (t
              (setq priority
                    (lyskom-read-num-range
-                    0 255 (lyskom-format 'priority-prompt 
+                    0 255 (lyskom-format 'priority-prompt
                                          (membership->conf-no
-                                          (lp--entry->membership 
+                                          (lp--entry->membership
                                            (car entries)))) t)))))
     (lp--save-excursion
      (mapcar (lambda (entry)
-               (let ((new-pos (lp--entry-position 
+               (let ((new-pos (lp--entry-position
                                (lp--find-new-position entry priority))))
                  (set-lp--entry->priority entry priority)
                  (set-membership->priority
                   (lp--entry->membership entry) priority)
-                 (lp--move-entry entry new-pos)
-                 (lp--update-membership (list entry))))
-             entries))))
+                 (lp--move-entry entry new-pos)))
+             entries)
+     (mapcar 'lp--update-membership entries))))
                               
 
 
 
 ;;; ============================================================
-;;; Motion commands
+;; Motion commands
 
 (defun lp--previous-entry (count)
   "Move the cursor up COUNT lines.
@@ -698,8 +746,8 @@ The cursor will always move to the start of the target entry."
     (error nil)))
 
 (defun lp--goto-priority (priority)
-  "Move to the closest entry with priority ARG.
-If there is no entry with the specified priority, move to the nearest 
+  "Move to the closest entry with priority PRIORITY.
+If there is no entry with the specified priority, move to the nearest
 entry with an adjacent priority."
   (interactive "P")
   (let* ((entry (lp--entry-at (point)))
@@ -733,7 +781,11 @@ entry with an adjacent priority."
   (interactive)
   (let ((entry (lp--entry-at (point))))
     (when entry
-      (set-lp--entry->state 
+      (set-lp--entry->state
        entry
        (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
       (lp--redraw-entry entry))))
+
+(provide 'mship-edit)
+
+;;; mship-edit.el ends here

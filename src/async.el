@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.21 1999-06-29 14:21:08 byers Exp $
+;;;;; $Id: async.el,v 44.22 1999-08-25 07:17:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,12 +37,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.21 1999-06-29 14:21:08 byers Exp $\n"))
+	      "$Id: async.el,v 44.22 1999-08-25 07:17:34 byers Exp $\n"))
 
 
-(defun lyskom-is-ignoring-async (message &rest args)
-  (let ((tmp (assq message lyskom-ignoring-async-list)))
-    (and tmp (equal args (cdr tmp)))))
+(defun lyskom-is-ignoring-async (buffer message &rest args)
+  (save-excursion 
+    (set-buffer buffer)
+    (let ((tmp (assq message lyskom-ignoring-async-list)))
+      (and tmp (equal args (cdr tmp))))))
 
 (defun lyskom-parse-async (tokens buffer)
   "Parse an asynchronous message from the server.
@@ -139,7 +141,7 @@ this function shall be with current-buffer the BUFFER."
      
      ((eq msg-no 8)			; Forced leave conference
       (let ((conf-no (lyskom-parse-num)))
-        (unless (lyskom-is-ignoring-async 8 conf-no)
+        (unless (lyskom-is-ignoring-async buffer 8 conf-no)
           (lyskom-save-excursion
               (set-buffer buffer)
               (initiate-get-conf-stat 'follow
@@ -254,7 +256,7 @@ this function shall be with current-buffer the BUFFER."
      ((eq msg-no 18)                    ; New membership
       (let ((pers-no (lyskom-parse-num))
             (conf-no (lyskom-parse-num)))
-        (unless (lyskom-is-ignoring-async 18 pers-no conf-no)
+        (unless (lyskom-is-ignoring-async buffer 18 pers-no conf-no)
           (lyskom-save-excursion
               (set-buffer buffer)
               (cache-del-pers-stat pers-no)
