@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.6 1996-03-04 15:13:09 byers Exp $
+;;;;; $Id: filter.el,v 38.7 1996-03-14 09:02:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -259,8 +259,8 @@ Returns nil if no such attribute is present."
 
 (defun lyskom-create-compile-filter-function (pattern)
   (if (null pattern)
-      (byte-compile '(lambda (x y) nil)))
-  (byte-compile (lyskom-create-filter-function pattern)))
+      (byte-compile '(lambda (x y) nil))
+    (byte-compile (lyskom-create-filter-function pattern))))
 
 
 (defun lyskom-create-filter-function (pattern)
