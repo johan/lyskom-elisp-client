@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.68 2000-05-27 15:17:33 jhs Exp $
+;;;;; $Id: commands2.el,v 44.69 2000-05-28 17:55:28 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.68 2000-05-27 15:17:33 jhs Exp $\n"))
+	      "$Id: commands2.el,v 44.69 2000-05-28 17:55:28 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -715,74 +715,114 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 ;;;                 Lista Nyheter - List News
 
 ;;; Author:   Linus Tolke
-;;; Rehacked: Inge Wallin
+;;; Rehacked: Inge Wallin, Johan Sundström
 
 
 (defvar lyskom-special-conf-name "\\`\\(Inl.gg .t mig\\|NL:\\)\\'"
   "Regexp to match conf names that are special.")
 
+
+(defun lyskom-iter-list-news (unreads conf-stat)
+  "Callback function used to show the number of unread messages of a
+conference. It heavily relies on (and destructively modifies) its
+environment."
+  (when (and (or (not at-least)
+		 (>= unreads at-least))	; unreads within lower bound
+	     (or (not at-most)
+		 (<= unreads at-most)))	; unreads within upper bound
+    (when mship-confs			; remember all read conferences?
+      (setq mship-confs (delq (conf-stat->conf-no conf-stat) mship-confs)))
+    (cond
+     ((and (boundp 'lyskom-special-conf-name)
+	   (stringp lyskom-special-conf-name)
+	   (string-match lyskom-special-conf-name
+			 (conf-stat->name conf-stat)))
+      (lyskom-format-insert 'you-have-unreads-special unreads conf-stat))
+     (t (lyskom-format-insert 'you-have-unreads unreads conf-stat)))
+    (setq shown-unreads (+ shown-unreads unreads)
+	  shown-confs (1+ shown-confs)))
+  (setq total-unreads (+ total-unreads unreads)
+	total-confs (1+ total-confs)))
+
+
 (def-kom-command kom-list-news (&optional num)
-  "Print the number of unread articles to the user."
+  "Print the number of unread articles to the user. A prefix argument
+of zero lists all conferences, a positive prefix arguments sets a
+lower bound on the number of unread messages, whereas a negative
+prefix argument sets an upper bound on the number of unread messages."
   (interactive "P")
+  (let ((num-arg (cond
+		  ((numberp num) num)
+		  ((and (listp num)
+			(numberp (car num))) (car num))
+		  (t nil)))
+	(mship-confs nil)
+	(at-least 1)
+	(at-most nil)
+	(shown-unreads 0)
+	(total-unreads 0)
+	(shown-confs 0)
+	(total-confs 0))
+    (when num-arg
+      (cond
+       ((= num-arg 0)
+	(setq at-least nil
+	      mship-confs (delq nil
+				(mapcar (lambda (el)
+					  (when (not (membership-type->passive
+						      (membership->type el)))
+					    (membership->conf-no el)))
+					lyskom-membership))))
+       ((> num-arg 0)
+	(lyskom-format-insert 'list-unread-with-n-unread
+			      (setq at-least num-arg)))
+       ((< num-arg 0)
+	(lyskom-format-insert 'list-unread-with-at-most-n-unread
+			      (setq at-most (- num-arg))))))
+
+    (lyskom-list-news 'lyskom-iter-list-news)
+
+    (when mship-confs ; then list all read conferences too
+      (lyskom-traverse conf-no mship-confs
+	(lyskom-format-insert 'you-have-no-unreads conf-no)))
+
+    (if (= 0 total-unreads)
+	(lyskom-insert-string 'you-have-read-everything)
+      (if (= 0 shown-unreads)
+	  (lyskom-insert-string 'no-unreads-shown)
+	(lyskom-insert "\n")) ; separate the shown list from the summary message
+      (when (and
+	     (> shown-unreads 0)
+	     (< shown-unreads total-unreads))
+	(lyskom-format-insert 'shown-unreads shown-unreads shown-confs))
+      (lyskom-format-insert 'total-unreads total-unreads total-confs))))
+
+
+(defun lyskom-list-news (&optional callback &optional callback-args)
+  "With no arguments, returns a list of tuples (unread . conf-stat).
+When called with a CALLBACK function, this function is called
+iteratively as the list is built up. This function should take the two
+arguments `number-of-unread-messages-in-conference' and `conf-stat'
+and optionally any other arguments sent in the list CALLBACK-ARGS, and
+its return value will form the elements of the list returned from
+lyskom-list-news. The callback will only be fed conferences with at
+least one unread message in them."
 
   (unless kom-allow-incompleteness
     (sit-for 0)
     (lyskom-prefetch-all-confs))
 
-  (let* ((num-arg (cond
-                   ((numberp num) num)
-                   ((and (listp num)
-                         (numberp (car num))) (car num))
-                   (t nil)))
-         (sum 0)
-         (mship-confs (and (numberp num-arg)
-                           (= num-arg 0)
-                           (delq nil
-                                 (mapcar (lambda (el)
-                                           (when (not (membership-type->passive
-                                                       (membership->type el)))
-                                             (membership->conf-no el)))
-                                         lyskom-membership))))
-         (nconfs 0))
-    (cond
-     ((not num-arg))
-     ((> num-arg 0)
-      (lyskom-format-insert 'list-unread-with-n-unread num-arg))
-     ((< num-arg 0)
-      (lyskom-format-insert 'list-unread-with-at-most-n-unread (- num-arg))))
-    (mapcar
-     (function
-      (lambda (info)
-        (let ((un (length (cdr (read-info->text-list info))))
-              (name (conf-stat->name (read-info->conf-stat info)))
-              (conf-stat (read-info->conf-stat info)))
-          (setq mship-confs (delq (conf-stat->conf-no conf-stat) mship-confs))
-          (cond
-           ((eq (read-info->type info) 'CONF)
-            (if (or (not num-arg)		; no prefix argument
-                    (and (>= num-arg 0)		; positive numeric argument
-			 (>= un num-arg))	;  less than number of unreads
-		    (and (not (= un 0))		; unreads present,
-			 (<= num-arg -1)	;  negative numeric argument,
-			 (<= un (- num-arg))))	;  at most -argument unreads
-                (lyskom-insert
-                 (if (and (boundp 'lyskom-special-conf-name)
-                          (stringp lyskom-special-conf-name)
-                          (string-match lyskom-special-conf-name name))
-                     (lyskom-format 'you-have-unreads-special un conf-stat)
-                   (lyskom-format 'you-have-unreads un conf-stat))))
-            (setq sum (+ sum un)
-                  nconfs (1+ nconfs)))))))
-     (read-list->all-entries lyskom-to-do-list))
+  (mapcar
+   (function
+    (lambda (info)
+      (let ((unreads (length (cdr (read-info->text-list info))))
+	    (conf-stat (read-info->conf-stat info)))
+	(when (eq (read-info->type info) 'CONF)
+	  (if callback
+	      (apply callback unreads conf-stat callback-args)
+	    (cons unreads conf-stat))))))
+   (read-list->all-entries lyskom-to-do-list)))
 
-    (mapcar
-     (lambda (conf-no)
-       (lyskom-format-insert 'you-have-no-unreads conf-no))
-       mship-confs)
-
-    (if (= 0 sum)
-        (lyskom-insert-string 'you-have-read-everything)
-      (lyskom-format-insert 'total-unreads sum nconfs))))
 
 
 ;;; ================================================================

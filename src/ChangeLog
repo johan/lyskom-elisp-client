@@ -1,5 +1,19 @@
 2000-05-28  Johan Sundström  <jhs@lysator.liu.se>
 
+	* commands2.el (kom-list-news): Rehacked from scratch. Now
+	complies to present-day (..., present-time! Moah-ha-ha! :-)
+	elisp-client coding standards. Also generally faster now.
+	(lyskom-list-news): New function.
+	(lyskom-iter-list-news): [New] support function to kom-list-news.
+
+	* english-strings.el (lyskom-message): Fixed what looked like a
+	bug in total-unreads.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	the strings shown-unreads and no-unreads-shown.
+
+2000-05-28  Johan Sundström  <jhs@lysator.liu.se>
+
 	* edit-text.el (kom-edit-insert-commented): Edit-mode ^C^Y may now
 	be preceded with ^U to insert the text totally unchanged, that is,
 	without prefixing its rows with anything at all.
