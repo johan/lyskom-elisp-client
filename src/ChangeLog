@@ -1,8 +1,21 @@
+2002-04-11  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in (lyskom-commands): Added kom-create-aux-item.
+
+	* swedish-strings.el (lyskom-command): Added kom-cereate-aux-item.
+
+	* english-strings.el (lyskom-command): Added kom-create-aux-item.
+
+	* ChangeLog: Changed Swedish to English.
+
+	* english-strings.el: Changed "extra information" to "auxiliary
+	information".
+
 2002-04-10  David Byers  <david.byers@swipnet.se>
 
-	Implementera kommando för att skapa godtyckliga aux-items:
-	* commands2.el (kom-status-conf): Visa okända aux-items.
-	(kom-create-aux-item): Nytt kommando
+	Implemented command to create arbitrary aux-items:
+	* commands2.el (kom-status-conf): Show unknown aux-items.
+	(kom-create-aux-item): New command.
 
 	* lyskom-buttons.el (lyskom-button-info-aux): Print info even if
 	there is no info handler for the aux-item type (required to handle
@@ -67,7 +80,7 @@
 	doing personal reply to my own texts.
 
 	New filter command:
-	* filter.el (kom-filter-recipient): Nytt kommando.
+	* filter.el (kom-filter-recipient): New command.
 
 	Update aliases:
 	* vars.el.in (kom-server-aliases): Changed sno.pp.se to
