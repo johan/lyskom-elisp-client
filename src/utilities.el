@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.65 2000-07-03 10:50:12 byers Exp $
+;;;;; $Id: utilities.el,v 44.66 2000-07-28 20:23:11 jhs Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.65 2000-07-03 10:50:12 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.66 2000-07-28 20:23:11 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -515,16 +515,17 @@ The value is actually the element of LIST whose car equals KEY."
 
 (defun lyskom-read-text-no-prefix-arg (prompt &optional always-read default)
   "Call in interactive list to read text-no.
-If optional argument ALWAYS-READ is non-nil the user is prompted if
-an explicit prefix argument was not given. A positive prefix argument
-is interpreted as a text-no, whereas a negative prefix argument will
-try to find the text-no of the text `arg' messages above point from
-the current kom buffer. DEFAULT specifies the default text to use. If
-it is nil, the most recently read text is the default. The symbol 
+If optional argument ALWAYS-READ is non-nil the user is prompted if an
+explicit prefix argument was not given. The prefix argument zero
+refers to the text under point. A positive prefix argument is
+interpreted as a text-no, whereas a negative prefix argument will try
+to find the text-no of the text `arg' messages above point from the
+current kom buffer. DEFAULT specifies the default text to use. If it
+is nil, the most recently read text is the default. The symbol
 last-written means use the text most recently written. The symbol
-last-seen-written means use the text in lyskom-last-seen-written. 
-A number means use that text as the default."
-  (let ((default (cond ((or (null default) 
+last-seen-written means use the text in lyskom-last-seen-written. A
+number means use that text as the default."
+  (let ((default (cond ((or (null default)
                             (eq 0 default))
                         (lyskom-default-value 'lyskom-current-text))
                        ((numberp default) default)
@@ -550,7 +551,7 @@ A number means use that text as the default."
              (if (eq '- current-prefix-arg) -1 current-prefix-arg)))
         (cond
 	 ((> current-prefix-arg 0) current-prefix-arg)
-	 ((zerop current-prefix-arg) (lyskom-read-number prompt default))
+	 ((zerop current-prefix-arg) (lyskom-text-at-point))
 	 (t
           (save-excursion
             (backward-text (- 1 current-prefix-arg))
@@ -559,7 +560,7 @@ A number means use that text as the default."
               (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
                             current-prefix-arg)))))))
      ((listp current-prefix-arg)
-      (lyskom-read-number prompt (lyskom-text-at-point)))
+      (lyskom-read-number prompt default))
      (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
                       current-prefix-arg)))))
 

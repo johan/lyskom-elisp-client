@@ -1,3 +1,10 @@
+2000-07-28  Johan Sundström  <jhs@lysator.liu.se>
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Policy change;
+	prefix argument zero means text under point. Empty (C-u) prefix
+	argument now prompts for a text number. This influence compliments
+	of Ulrik Haugen. :-)
+
 Fri Jul 28 14:15:12 2000  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-K
