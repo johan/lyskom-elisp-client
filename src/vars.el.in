@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.205 2002-07-29 18:00:41 byers Exp $
+;;;;; $Id: vars.el.in,v 44.206 2002-07-30 10:53:33 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.205 2002-07-29 18:00:41 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.206 2002-07-30 10:53:33 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1551,22 +1551,22 @@ appear more than once"
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
 	    'RECPT (car recpt-and-buffer)
-	    (cadr recpt-and-buffer))))
+	    (car (cdr recpt-and-buffer)))))
       (lyskom-button-recpt-type-copy
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
 	    'CC-RECPT (car recpt-and-buffer)
-	    (cadr recpt-and-buffer))))
+	    (car (cdr recpt-and-buffer)))))
       (lyskom-button-recpt-type-bcc
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-do-add-recipient/copy
 	    'BCC-RECPT (car recpt-and-buffer)
-	    (cadr recpt-and-buffer))))
+	    (car (cdr recpt-and-buffer)))))
       (lyskom-button-recpt-type-sub
        . (lambda (buffer recpt-and-buffer text)
 	   (lyskom-edit-sub-recipient/copy
 	    (car recpt-and-buffer)
-	    (cadr recpt-and-buffer))))))
+	    (car (cdr recpt-and-buffer)))))))
     (add-recipient-or-xref
      add-recipient-or-xref
      (lambda (buffer argument text) nil)

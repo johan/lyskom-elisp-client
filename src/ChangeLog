@@ -1,3 +1,10 @@
+2002-07-30  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	cadr, caar and cdar are not portable to all Emacsen.
+	* vars.el.in (lyskom-button-actions): Don't use cadr.
+	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use caar or
+	cdar.
+
 2002-07-29  David Byers  <david.byers@swipnet.se>
 
 	* utilities.el: Removed lyskom-pick-text-no-strategy-alist.
