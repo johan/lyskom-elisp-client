@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.3 1996-10-05 20:58:21 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.4 1996-10-10 13:59:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -23,11 +23,6 @@
 ;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
 ;;;;;
 ;;;; ================================================================
-;;; +++ lyskom-reset-prefetch  to be called on client reset.
-;;;                            must restart everything.
-;;; +++ THIS DOES NOT WORK CURRENTLY
-(defun lyskom-reset-prefetch () nil)
-;;;; ================================================================
 ;;;;
 ;;;; File: prefetch.el
 ;;;;
@@ -40,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.3 1996-10-05 20:58:21 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.4 1996-10-10 13:59:44 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -139,6 +134,19 @@ This is used to prevent the prefetch code to reenter itself.")
   (setq lyskom-membership-is-read 0))
 
 
+;;;; ================================================================
+;;; +++ lyskom-reset-prefetch  to be called on client reset.
+;;;                            must restart everything.
+;;; +++ THIS DOES NOT WORK CURRENTLY
+(defun lyskom-reset-prefetch ()
+  "Reset the prefetch system."
+  (lyskom-setup-prefetch))
+
+
+(defsubst lyskom-membership-is-read ()
+  "Return t if the while membership list has been fetched, and nil otherwise."
+  (eq lyskom-membership-is-read 't))
+
 (defun lyskom-prefetch-conf (conf-no &optional queue)
   "Prefetch the conf-stat for the conference with number CONF-NO.
 If QUEUE is non-nil, put the request on it, otherwise put it on 
@@ -221,7 +229,16 @@ lyskom-prefetch-stack."
   (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-map (conf-no first-local membership &optional queue)
+(defun lyskom-prefetch-map (conf-no membership &optional queue)
+  "Prefetches a map for conf CONFNO."
+  (lyskom-prefetch-map-from conf-no
+			    (1+ (membership->last-text-read membership))
+			    membership
+			    queue))
+
+
+(defun lyskom-prefetch-map-from (conf-no first-local membership
+					 &optional queue)
   "Prefetches a map for conf CONFNO starting att FIRST-LOCAL."
   (if queue
       (lyskom-queue-enter queue (list 'CONFSTATFORMAP
@@ -561,13 +578,11 @@ Put the requests on QUEUE."
   (lyskom-stop-prefetch)
   (let ((size (length memberships))
 	(i 0))
-    (lyskom-add-membership-to-membership memberships)
+    (lyskom-add-memberships-to-membership memberships)
     (while (< i size)
       (let ((membership (aref memberships i)))
 	(if (lyskom-visible-membership membership)
 	    (lyskom-prefetch-map (membership->conf-no membership)
-				 (1+ (membership->last-text-read
-				      membership))
 				 membership
 				 queue)))
       (++ i))
@@ -599,13 +614,18 @@ Put the requests on QUEUE."
   "Handle the return of the membership prefetch call.
 Maps are `cached' in lyskom-to-do-list."
   (lyskom-stop-prefetch)
-  (when map
-    (if (not (zerop (length (map->text-nos map))))
-	(lyskom-prefetch-map-using-conf-stat 
-	 conf-stat (+ first-local lyskom-fetch-map-nos)
-	 membership
-	 queue))
-    (lyskom-enter-map-in-to-do-list map conf-stat membership))
+  (let ((next-start (+ first-local lyskom-fetch-map-nos))
+	(last-local (1- (+ (conf-stat->no-of-texts conf-stat)
+		  (conf-stat->first-local-no conf-stat)))))
+    (when map
+      ;; An old version of this function tester if the map contained no
+      ;; texts. That is not a correct termination condition.
+      (when (< next-start last-local)
+	(lyskom-prefetch-map-using-conf-stat conf-stat
+					     next-start
+					     membership
+					     queue))
+      (lyskom-enter-map-in-to-do-list map conf-stat membership)))
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch)

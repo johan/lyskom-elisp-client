@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 44.1 1996-09-29 15:18:50 davidk Exp $
+;;;;; $Id: reading.el,v 44.2 1996-10-10 13:59:49 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.1 1996-09-29 15:18:50 davidk Exp $\n"))
+	      "$Id: reading.el,v 44.2 1996-10-10 13:59:49 davidk Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -49,23 +49,51 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
        (lyskom-create-read-info 
 	'CONF conf-stat
 	(membership->priority 
-	 (lyskom-member-p (conf-stat->conf-no conf-stat)))
+	 (lyskom-try-get-membership (conf-stat->conf-no conf-stat)))
 	(lyskom-create-text-list
 	 list))
        lyskom-to-do-list))))
 
 
-(defun lyskom-add-membership-to-membership (membership)
+(defun lyskom-add-memberships-to-membership (memberships)
   "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.
 If an item of the membership is already read and entered in the
-lyskom-membership list then this item is not entered and the variable
-lyskom-membership-is-read is decreased by 1."
-  (let ((list (listify-vector membership)))
+lyskom-membership list then this item is not entered."
+  (let ((list (listify-vector memberships)))
     (while list
       (if (memq (membership->conf-no (car list))
 		(mapcar (function membership->conf-no) lyskom-membership))
-	  (if (numberp lyskom-membership-is-read)
-	      (-- lyskom-membership-is-read))
+	  nil
 	(setq lyskom-membership (append lyskom-membership (list (car list)))))
-      (setq list (cdr list)))
-    (setq list (listify-vector membership))))
+      (setq list (cdr list)))))
+
+
+(defun lyskom-insert-membership (membership membership-list)
+  "Add MEMBERSHIP into MEMBERSHIP-LIST, sorted by priority."
+  (setq lyskom-membership (sort (cons membership lyskom-membership)
+				'lyskom-membership-<)))  
+
+
+(defun lyskom-replace-membership (membership membership-list)
+  "Find the membership for the same conference as MEMBERSHIP, and
+replaceit with MEMBERSHIP into MEMBERSHIP-LIST."
+  (let ((conf-no (membership->conf-no membership))
+	(list lyskom-membership))
+    (while list
+      (if (= conf-no (membership->conf-no (car list)))
+	  (progn
+	    (setcar list membership)
+	    (setq list nil))
+	(setq list (cdr list))))))
+
+(defun lyskom-remove-membership (conf-no membership-list)
+  "Remove the membership for CONF-NO from MEMBERSHIP-LIST."
+  (let ((list lyskom-membership))
+    (while list
+      (if (= conf-no (membership->conf-no (car list)))
+	  (progn
+	    (setcar list nil)
+	    (setq list nil))
+	(setq list (cdr list)))))
+  (setq lyskom-membership (delq nil lyskom-membership)))
+  

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.1 1996-09-25 17:29:47 byers Exp $
+;;;;; $Id: prioritize.el,v 44.2 1996-10-10 13:59:47 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.1 1996-09-25 17:29:47 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.2 1996-10-10 13:59:47 davidk Exp $\n"))
 
 
 
@@ -565,18 +565,6 @@ the same as the entry above it, but to not move it."
 ;;;
 
 
-(defun lyskom-get-membership-in-conf (conf-no)
-  "Returns membership for a persons membership in CONF-NO."
-  (let ((l lyskom-membership))
-    (while (and l (/= (membership->conf-no (car l)) conf-no))
-      (setq l (cdr l)))
-    (if (not l)
-	(signal 'lyskom-internal-error
-		'(membership-is-corrupt lyskom-get-membership-in-conf)))
-    (car l)))
-
-
-
 (defun kom-prioritize ()
   "Re-prioritize all conferences you are a member in.
 Show memberships last visited, priority, unread and name in a buffer.
@@ -649,7 +637,7 @@ of conferences you are a member of."
 (defun lyskom-prioritize-handle-get-conf-stat (conf-stat collector)
   (let ((tmp (make-prioritize-entry
               (membership->priority 
-               (lyskom-get-membership-in-conf 
+               (lyskom-get-membership 
                 (conf-stat->conf-no 
                  conf-stat)))
               conf-stat)))
@@ -736,7 +724,7 @@ only tell server about that entry."
              (save-excursion
                (set-buffer lyskom-buffer)
                (set-membership->priority 
-                (lyskom-get-membership-in-conf conf-no)
+                (lyskom-get-membership conf-no)
                 (prioritize-entry->priority entry))
                (initiate-add-member 'priority
                                     'lyskom-prioritize-handler

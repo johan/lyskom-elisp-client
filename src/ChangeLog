@@ -1,3 +1,59 @@
+Thu Oct 10 00:32:38 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* Makefile (PARTS-EL,SRC-ELC): Flyttade upp prefetch.el.
+
+	* async.el (lyskom-add-new-text): Använd
+ 	lyskom-try-get-membership.
+
+	* prioritize.el (lyskom-get-membership-in-conf): Tog bort.
+	(lyskom-prioritize-handle-get-conf-stat): Använd
+ 	lyskom-get-membership istället.
+	(lyskom-prioritize-tell-server): Dito.
+
+	* startup.el (lyskom-refetch): Sätt lyskom-membership till nil.
+
+	* swedish-strings.el: (messages) La till waiting-for-membership.
+	* english-strings.el: (messages) Dito.
+
+	* lyskom-rest.el (lyskom-wait-for-membership): Ny funktion.
+	(lyskom-get-membership): Ny funktion.
+	(lyskom-is-read-handler): Använd den
+	(lyskom-try-get-membership): Bytte namn från lyskom-member-p.
+
+	* services.el (blocking-do): Använd lyskom-accept-process-output.
+
+	* utilities.el (lyskom-accept-process-output): Ny funktion.
+
+	* commands2.el (kom-set-unread): Gör inte lyskom-refetch, utan
+ 	hämta bara den information som behövs.
+
+	* commands1.el (lyskom-add-membership): Använd
+ 	lyskom-insert-membership.
+	(lyskom-sub-member): Ändra interna strukturer istället för att
+ 	hämta om medlemskapslistan.
+	(lyskom-comment-recipients): Använd lyskom-get-membership.
+	(lyskom-change-pres-or-motd-2): Dito.
+	(kom-unset-conf-motd): Dito.
+	(lyskom-go-to-conf): Dito.
+	(lyskom-list-conf-print): Dito.
+	(lyskom-add-membership): Ta conf-no som argument istället för
+ 	conf-stat.
+	(lyskom-do-go-to-conf): Skrev om så att den hanterar
+ 	icke-prefetchade möten bättre.
+
+	* reading.el (lyskom-add-memberships-to-membership): Bytte namn
+ 	från lyskom-add-membership-to-membership.
+	(lyskom-insert-membership): Ny funktion.
+	(lyskom-remove-membership): Ny funtion.
+
+	* prefetch.el (lyskom-prefetch-map): Ny funktion.
+	(lyskom-prefetch-map-from): Gamla lyskom-prefetch-map.
+	(lyskom-prefetch-one-request): Använd den nya funktionen.
+	(lyskom-prefetch-map-handler): Nytt termineringsvillkor.
+	(lyskom-reset-prefetch): Anropa lyskom-setup-prefetch, helt
+ 	enkelt.
+	(lyskom-membership-is-read): Ny funktion.
+
 Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* vars.el.in (lyskom-inherited-variables): Lade till

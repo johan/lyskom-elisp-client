@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.3 1996-10-06 05:18:44 davidk Exp $
+;;;;; $Id: view-text.el,v 44.4 1996-10-10 14:00:04 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.3 1996-10-06 05:18:44 davidk Exp $\n"))
+	      "$Id: view-text.el,v 44.4 1996-10-10 14:00:04 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -304,7 +304,9 @@ recipients to it that the user is a member in."
 	     (type (misc-info->type misc-info)))
 	(cond
 	 ((or (eq type 'RECPT) (eq type 'CC-RECPT))
-	  (let ((membership (lyskom-member-p
+	  ;; Is this function ever called asynchronously? If not, we
+	  ;; can use lyskom-get-membership istead.
+	  (let ((membership (lyskom-try-get-membership
 			     (misc-info->recipient-no misc-info)))
 		(loc-no (misc-info->local-no misc-info)))
 
