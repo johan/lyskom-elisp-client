@@ -3,11 +3,6 @@
 
 * Felmeddelandet Mottagaren var kanske inte inloggad skall ers{ttas.
 
-Administrat|rskommandona borde bara vara under a n{r man {r i 
-administrat|rsmode:
-	\verg} till normalmode, Ta bort loginmeddelande, S{tt
-	loginmeddelande, St{ng  av servern.
-
 * Ordningen av argumenten till funktioner som markera, avmarkera,
   subtrahera, addera.
 
@@ -27,12 +22,10 @@ r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
 
 * N{r man skickat in en text s} borde den v{nta tills det {r klart
   innan den accepterar andra kommandon.
+Linus: Fixat p} ett litet annorlunda s{tt. Sojge-s{ttet.
 
 * Lappar p} d|rrar f|r m|ten.
 Linus: Hmm, hur skall de hanteras egentligen?
-
-* klienten skall fr}ga efter en presentation.
-Linus: en sn{ll uppmaning inlagt. R{cker det?
 
 * flags.el: string-to-int sm{ller.
 
