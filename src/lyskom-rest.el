@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.160 2002-05-21 22:05:43 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.161 2002-05-22 21:40:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.160 2002-05-21 22:05:43 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.161 2002-05-22 21:40:50 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -185,8 +185,10 @@ be used to get a description of the corresponding error."
 (defun kom-recover (&optional refetch)
   "Try to recover from an error.
 If the optional argument REFETCH is non-nil, all caches are cleared and
-`lyskom-refetch' is called."
-  (interactive "p")
+`lyskom-refetch' is called. Note that when called interactively, 
+REFETCH is always non-nil, regardless of the prefix argument. This is
+by design."
+  (interactive (list t))
   (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
   (setq lyskom-pending-calls nil)
@@ -744,17 +746,32 @@ Args: CONF-STAT READ-INFO"
       (initiate-pepsi 'main nil to-conf))
     (setq lyskom-current-conf to-conf)
     (let ((num-unread (text-list->length (read-info->text-list read-info))))
-      (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
-                                'enter-conf
-                              (if (= num-unread 1)
-                                  'one-unread
-                                'several-unread))
-                            conf-stat
-                            num-unread)
+      (lyskom-enter-conf-print-unread conf-stat num-unread)
       (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
                                  from-conf
-                                 to-conf)))
-  (lyskom-change-conf-check-faqs conf-stat))
+                                 to-conf))))
+
+(defun lyskom-enter-conf-print-unread (conf num)
+  "Print information about unread (if requested) when entering a conf.
+CONF is the conference and NUM is the number of unread in the conference."
+  (let ((faq-list (lyskom-get-unread-faqs conf)))
+    (lyskom-format-insert "%#1M" conf)
+    (when (or (eq num 0) kom-print-number-of-unread-on-entrance faq-list)
+      (lyskom-insert " - "))
+
+  (cond ((eq num 0) 
+         (lyskom-format-insert 'conf-all-read conf))
+        (kom-print-number-of-unread-on-entrance
+         (lyskom-format-insert 'enter-conf-unread num)))
+
+  (when faq-list
+    (when (or (eq num 0) kom-print-number-of-unread-on-entrance)
+      (lyskom-insert ", "))
+    (lyskom-format-insert 'enter-conf-unread-faq (length faq-list)))
+
+  (lyskom-format-insert ".\n")
+  (lyskom-present-unread-faqs conf faq-list)))
+
 
 (defun lyskom-leave-current-conf ()
   "Leave the current conference without going to another one."

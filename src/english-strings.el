@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.207 2002-05-21 22:05:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.208 2002-05-22 21:40:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.207 2002-05-21 22:05:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.208 2002-05-22 21:40:50 byers Exp $"))
 
 
 ;;; ================================================================
@@ -370,7 +370,7 @@ and you have finished reading. Please come back later.
 
     (who-to-remove-motd-for . "Remove notice from whom/what: ")
 
-    (conf-all-read . "%#1M - no unread texts.\n")
+    (conf-all-read . "no unread texts")
     (no-in-conf . "You are not present in any conference.\n")
 
     (search-for-pers . "Enter search key (RETURN for all users): ")
@@ -1129,9 +1129,8 @@ You should set it to a better value.\n")
 
     (all-conf-unread-r . "You have nothing unread.\n")
     (all-conf-unread-s . "You have nothing unread. ")
-    (one-unread . "%#1M - one unread text\n")
-    (several-unread . "%#1M - %#2d unread texts\n")
-    (enter-conf . "%#1M\n")
+    (enter-conf-unread . "%#1d unread text%#1?d%[%]%[s%]")
+    (enter-conf-unread-faq . "%#1d unread FAQ%#1?d%[%]%[s%]")
 
     (save-one-on-file-q . "Save copy of text %#1n in file: ")
     (save-many-on-file-q . "Save copies of %#1d texts in file: ")
@@ -1415,14 +1414,15 @@ On since %#8s%#9s")
 
     (content-type-aux . "Content type: %#1s")
     (content-type-regexp . "Content type: \\(\\S-+\\)")
-    
+
     (agreeing . "Agreeing with text %#1n...")
     (fast-replying . "Remark to text %#1n...")
     (author-fast-replies . "Remarks by the author:")
     (author-fast-reply-aux . "  \"%#1t\"")
     (other-fast-replies . "Remarks:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
-    
+    (fast-reply-too-long . "Can't create remarks that consist of more than one line.\n")
+
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
     (faq-for-server-aux . "FAQ for the LysKOM-server") 
     (faq-in-text-aux . "FAQ in text:                 %10#1n %#2D")
@@ -1442,7 +1442,8 @@ On since %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
-    (there-are-faqs . "You have %#1?d%[is%]%[are%] %#1d unread FAQ%#1?d%[%]%[s%] for %#2?b%[%#2M%]%[the server%]::\n")
+    (server-has-new-faq . "\nThere %#1?d%[is a new FAQ%]%[are %#1d new FAQs%] for the server.\n")
+    (unread-faqs-header . "\nUnread FAQ%#1?d%[%]%[s%] for %#2?b%[%#2M%]%[the server%]::\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")

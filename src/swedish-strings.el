@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.241 2002-05-21 22:05:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.242 2002-05-22 21:40:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.241 2002-05-21 22:05:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.242 2002-05-22 21:40:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -340,7 +340,7 @@ du har läst klart allting. Kom tillbaks senare.
 
     (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för (dig själv): ")
 
-    (conf-all-read . "%#1M - inga olästa.\n")
+    (conf-all-read . "inga olästa")
     (no-in-conf . "Du är inte närvarande i något möte.\n")
 
     (search-for-pers . "Ange sökvillkor (RETURN för alla personer): ")
@@ -599,9 +599,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
-    (status-read-faq-aux-item . "Läst FAQ:                  %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
-    (status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:             %#1M %#2s\n")
-    (status-send-comments-to . "Dirigera om kommentarer till:            %#1M <%#1m> %#2s\n")
+    (status-read-faq-aux-item . "Läst FAQ:                 %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
+    (status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:            %#1M %#2s\n")
+    (status-send-comments-to . "Dirigera om kommentarer till:           %#1M <%#1m> %#2s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1140,9 +1140,8 @@ Du bör sätta den till ett bättre värde.\n")
 
     (all-conf-unread-r . "Du har läst ut alla möten.\n")
     (all-conf-unread-s . "Du har läst ut alla möten. ")
-    (one-unread . "%#1M - 1 oläst\n")
-    (several-unread . "%#1M - %#2d olästa\n")
-    (enter-conf . "%#1M\n")
+    (enter-conf-unread . "%#1d oläst%#1?d%[%]%[a%]")
+    (enter-conf-unread-faq . "%#1d oläst%#1?d%[%]%[a%] FAQ")
 
     (save-one-on-file-q . "Arkivera inlägg %#1n till fil: ")
     (save-many-on-file-q . "Arkivera %#1d inlägg till fil: ")
@@ -1434,6 +1433,7 @@ Uppkopplad sedan %#8s%#9s")
     (author-fast-reply-aux . "  \"%#1t\"")
     (other-fast-replies . "Anmärkningar:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
+    (fast-reply-too-long . "Kan inte skapa anmärkningar som bestär av mer än en rad.\n")
     
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
     (faq-for-server-aux . "Texten är FAQ för LysKOM-servern") 
@@ -1454,7 +1454,8 @@ Uppkopplad sedan %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
-    (there-are-faqs . "Du har %#1d olästa%#1?d%[%]%[%] FAQ%#1?d%[%]%[er%] till %#2?b%[%#2M%]%[servern%]:\n")
+    (server-has-new-faq . "\nDet finns %#1d ny%#1?d%[%]%[a%] FAQ till servern.\n")
+    (unread-faqs-header . "\nOläst%#1?d%[%]%[a%] FAQ till %#2?b%[%#2M%]%[servern%]:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")

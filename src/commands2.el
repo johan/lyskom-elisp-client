@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.131 2002-05-21 22:05:42 byers Exp $
+;;;;; $Id: commands2.el,v 44.132 2002-05-22 21:40:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.131 2002-05-21 22:05:42 byers Exp $\n"))
+              "$Id: commands2.el,v 44.132 2002-05-22 21:40:50 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -435,16 +435,19 @@ author of that text will be shown."
       (lyskom-format-insert 'presentation
                             (conf-stat->presentation conf-stat))
 
-      (if (not (zerop (conf-stat->msg-of-day conf-stat)))
-          (progn
-            (lyskom-format-insert 'has-motd conf-stat)
-            (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
-
       ;; Show aux items
 
       (lyskom-traverse-aux item
           (conf-stat->aux-items conf-stat)
         (lyskom-aux-item-call item 'status-print item conf-stat))
+
+      ;; Show motd
+
+      (if (not (zerop (conf-stat->msg-of-day conf-stat)))
+          (progn
+            (lyskom-format-insert 'has-motd conf-stat)
+            (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
+
 
       ;; "Show all conferences CONF-STAT is a member of if the user so wishes."
       (lyskom-scroll)
@@ -2204,14 +2207,21 @@ global effect, including changes to key binding."
 (defun lyskom-fast-reply (text-no message)
   "To text TEXT-NO add MESSAGE as a fast reply."
   (cache-del-text-stat text-no)
-  (lyskom-report-command-answer
-   (blocking-do 'modify-text-info
-                text-no
-                nil
-                (list (lyskom-create-aux-item 0 2 0 0 
-                                              (lyskom-create-aux-item-flags
-                                               nil nil nil nil nil nil nil nil)
-                                              0 message)))))
+  (if (lyskom-check-fast-reply-message message)
+      (lyskom-report-command-answer
+       (blocking-do 'modify-text-info
+                    text-no
+                    nil
+                    (list (lyskom-create-aux-item 0 2 0 0 
+                                                  (lyskom-create-aux-item-flags
+                                                   nil nil nil nil nil nil nil nil)
+                                                  0 message))))
+    (lyskom-insert 'nope)
+    (lyskom-insert 'fast-reply-too-long)))
+
+(defun lyskom-check-fast-reply-message (message)
+  "Return non-nil if MESSAGE is a valid fast reply."
+  (not (string-match "\n" message)))
 
 
 ;;; ============================================================
@@ -2445,16 +2455,21 @@ The variable kom-keep-alive-interval controls the frequency of the request."
                           (cons (lyskom-get-string (car x) 'lyskom-help-strings)
                                 (car x)))
                         lyskom-help-categories))
-         (category
-          (lyskom-completing-read (lyskom-get-string 'help-with-what)
-                                  table
-                                  nil
-                                  t
-                                  nil
-                                  'lyskom-help-history)))
-    (lyskom-format-insert "Hjälp för %#1s\n\n" (car (lyskom-string-assoc category table)))
-    (lyskom-display-help-category 
-     (cdr (lyskom-string-assoc category table)))))
+         (category nil))
+
+    (while (null category)
+      (setq category
+            (lyskom-string-assoc
+             (lyskom-completing-read (lyskom-get-string 'help-with-what)
+                                     table
+                                     nil
+                                     t
+                                     nil
+                                     'lyskom-help-history)
+             table)))
+    (lyskom-format-insert "Hjälp för %#1s\n\n" 
+                          (car category))
+    (lyskom-display-help-category (cdr category))))
 
 (defun lyskom-display-help-category (category &optional flags)
   "Display help category CATEGORY."
@@ -2473,13 +2488,25 @@ The variable kom-keep-alive-interval controls the frequency of the request."
   (let ((type (elt item 0)))
     (cond ((eq type 'command)
            (let* ((command (elt item 1))
-                  (command-name (lyskom-get-string command 'lyskom-command)))
-             (lyskom-format-insert "%#1@%[%#2s%]\n"
-                                   '(face italic)
-                                   command-name)
+                  (keys (delq nil
+                              (mapcar (lambda (x)
+                                        (if (and (arrayp x)
+                                                 (eq (elt x 0) 'menu-bar))
+                                            nil
+                                          x))
+                                      (where-is-internal command))))
+                  (command-name (lyskom-get-string command 'lyskom-command))
+                  (heading (lyskom-format "%#1@%[%#2s%]%#3?b%[ (%#3s)%]%[%]\n"
+                                          '(face italic)
+                                          command-name
+                                          (and keys 
+                                               (mapconcat 'key-description
+                                                          keys
+                                                          "; ")))))
+             (lyskom-insert heading)
              (unless (memq 'summary flags)
                (lyskom-format-insert "%#1s\n%#2s\n\n"
-                                     (make-string (length command-name) ?-)
+                                     (make-string (1- (length heading)) ?-)
                                      (lyskom-get-string command
                                                         'lyskom-help-strings))))
            )
@@ -2521,6 +2548,7 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
     buf))
 
 (defvar diff-command)
+(defvar ediff-diff-program)
 (def-kom-command kom-compare-texts (old new)
   "Show differences between text OLD and NEW.
 When called interactively, it will prompt for the NEW text first,
@@ -2544,9 +2572,9 @@ to the first text that NEW is a comment or footnote to."
          (lyskom-create-text-buffer old old-text old-text-stat)
          (lyskom-create-text-buffer new new-text new-text-stat))
       (file-error (lyskom-error (lyskom-get-string 'external-program-missing)
-                                (if (boundp 'diff-command)
-                                    diff-command
-                                  "diff"))))))
+                                (cond ((boundp 'ediff-diff-program) ediff-diff-program)
+                                      ((boundp 'diff-command) diff-command)
+                                      (t "diff (gissningsvis)")))))))
 
 ;;; ================================================================
 ;;;             Se diff - View diff

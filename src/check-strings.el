@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.17 2002-05-21 22:05:42 byers Exp $
+;;;;; $Id: check-strings.el,v 44.18 2002-05-22 21:40:50 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -62,7 +62,7 @@
 (defun lcs-check-face-schemes ()
   "Check that all face schemes seem to be OK."
   (lyskom-traverse scheme lyskom-face-schemes
-    (let ((faces (mapcar 'car (cdr scheme)))
+    (let ((faces (delq 'property (mapcar 'car (cdr scheme))))
           (tmp nil))
       (lyskom-traverse expected-face lyskom-faces
         (if (setq tmp (memq expected-face faces))
