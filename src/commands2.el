@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.17 1997-09-16 15:07:56 byers Exp $
+;;;;; $Id: commands2.el,v 44.18 1997-09-21 15:55:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.17 1997-09-16 15:07:56 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.18 1997-09-21 15:55:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1495,7 +1495,7 @@ membership info."
 
 
 
-(def-kom-command kom-next-kom ()
+(def-kom-emacs-command kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
   (if (lyskom-buffer-p (current-buffer))
@@ -1531,7 +1531,7 @@ membership info."
     (error "No active LysKOM buffers")))
 
 
-(def-kom-command kom-previous-kom ()
+(def-kom-emacs-command kom-previous-kom ()
   "Pop up the previous lyskom-session."
   (interactive)
   (if (lyskom-buffer-p (current-buffer))

@@ -1,5 +1,8 @@
 Sun Sep 21 10:25:51 1997  David Byers  <davby@ida.liu.se>
 
+	* command.el (def-kom-emacs-command): Nytt makro.
+	(def-kom-command): Skrev om med backquote.
+
 	* lyskom-rest.el (silent-read): Sätt enable-multibyte-characters
  	till nil.
 
