@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.93 2003-08-02 22:08:38 byers Exp $
+;;;;; $Id: startup.el,v 44.94 2003-08-13 20:31:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.93 2003-08-02 22:08:38 byers Exp $\n"))
+	      "$Id: startup.el,v 44.94 2003-08-13 20:31:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -356,10 +356,11 @@ clients of the event. See lyskom-mode for details on lyskom."
 
 
 (defun lyskom-accept-async ()
-  (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18 19))
+  (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18 19 20 21))
   (let* ((ans (blocking-do 'query-async)))
     (unless (memq 15 (listify-vector ans))
-      (blocking-do 'accept-async '(0 5 7 8 9 11 12 13 14 16 17 18 19)))))
+      ;; async-new-text is not implemented, so use async-new-text-old
+      (blocking-do 'accept-async '(0 5 7 8 9 11 12 13 14 16 17 18 19 20 21)))))
 
 
 (defun lyskom-www-proxy-connect-filter (proc output)
