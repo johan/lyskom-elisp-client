@@ -1,3 +1,8 @@
+Tue Jul  1 18:26:42 1997  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* check-strings.el: Helt omskriven för att klara det nya
+	strängsystemet. 
+
 Sun Jun 29 12:41:14 1997  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el (lyskom-custom-strings): Lade till Lynx.
