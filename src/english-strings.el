@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.300 2003-08-15 21:47:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.301 2003-08-17 12:48:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.300 2003-08-15 21:47:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.301 2003-08-17 12:48:46 byers Exp $"))
 
 
 ;;; ================================================================
@@ -702,7 +702,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Added %#1s by %#2P\n")
     (is-supervisor-mark . "O ")
-    (who-to-send-message-to . "Send message to whom? (%s) ")
+    (who-to-send-message-to . "Send message to whom? (%#1s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
     (his-total-unread . "\n%#1M has %#2d unread texts (plus %#3d in passive memberships).\n")
     (message-prompt . "Message: ")
