@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.39 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: macros.el,v 44.40 2004-07-18 14:58:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.39 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: macros.el,v 44.40 2004-07-18 14:58:05 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -70,12 +70,20 @@ Value returned is always nil."
              ,@body
              (setq ,idx-sym (1+ ,idx-sym))))))))
 
+
 (defmacro lyskom-traverse-membership (var &rest forms)
   "Traverse the membership list.
 Variable VAR is bound to each membership, in turn, and FORMS are evaluated."
-  `(catch 'lyskom-traverse
-     (lyskom-avltree-traverse
-      (lambda (,var) ,@forms) (lyskom-with-lyskom-buffer (lyskom-mship-cache-data)))))
+  (let ((el-sym (make-symbol "el")))
+    `(catch 'lyskom-traverse
+       (let ((,el-sym (membership-list->head
+                       (lyskom-with-lyskom-buffer (lyskom-mship-cache-data))))
+             (,var nil))
+         (while ,el-sym
+           (setq ,var (mship-list-node->data ,el-sym))
+           ,@forms
+           (setq ,el-sym (mship-list-node->next ,el-sym)))))))
+
 
 (defmacro lyskom-traverse-aux (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.

@@ -1,4 +1,48 @@
+2004-07-18  David Byers  <byers@lysator.liu.se>
+
+	New membership list data structure:
+	* mship-edit.el (lyskom-change-membership-priority): New API for
+	lyskom-replace-membership.
+	(lyskom-change-membership-position): Ditto.
+	(lyskom-prioritize-flag-toggle): Ditto.
+	(lp--set-entry-pri-and-pos): Ditto. Set position correctly.
+
+	* macros.el (lyskom-traverse-membership): New implementation.
+
+	* reading.el: New implementation of the sorted conference list.
+	Using AVL trees ended up causing too much trouble when changing
+	position and priority of memberships.
+	(mship-list-node): New type.
+	(membership-list): New type.
+	(lyskom-membership-list-compare-next): New function (internal)
+	(lyskom-membership-list-compare-prev): New function (internal)
+	(lyskom-membership-list-insert): New function (API)
+	(lyskom-membership-list-prepend): New function (internal)
+	(lyskom-membership-list-append): New function (internal)
+	(lyskom-membership-list-delete): New function (API)
+	(lyskom-membership-list-move): New function (API)
+	(lyskom-mship-cache-create): Don't use AVL trees.
+	(lyskom-mship-cache-get): Now returns mship-list-nodes.
+	(lyskom-mship-cache-put): Don't use AVL trees.
+	(lyskom-mship-cache-append): New function (internal)
+	(lyskom-mship-cache-del): Don't use AVL trees.
+	(lyskom-update-membership-positions): Do nothing.
+	(lyskom-add-memberships-to-membership): Append memberships 
+	(lyskom-try-get-membership): Deal with a cache that returns
+	mship-list-nodes instead of memberships.
+	(lyskom-replace-membership): Function, not macro, again.
+	(lyskom-membership-<): Removed
+
+2004-07-16  David Byers  <byers@lysator.liu.se>
+
+	* reading.el (lyskom-membership-<): If the conf-nos are not the
+	same, always return t.
+
 2004-07-15  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el (lyskom-add-member): Delete the new conference from
+	the to-do-list so we get the correct number of unread when
+	accepting an invitation.
 
 	* startup.el (lyskom-refetch): Prefetch membership *after*
 	prefetching unread confs. This should let us get started reading

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.19 2004-07-12 20:56:34 byers Exp $
+;;;;; $Id: reading.el,v 44.20 2004-07-18 14:58:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.19 2004-07-12 20:56:34 byers Exp $\n"))
+	      "$Id: reading.el,v 44.20 2004-07-18 14:58:05 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -108,7 +108,271 @@ reasonable guess."
 ;;; ================================================================
 ;;; Fundamental membership cache functions
 
-;;; (require 'lyskom-avltree)
+(def-komtype mship-list-node (prev next data))
+(def-komtype membership-list ((head :automatic nil)
+                              (tail :automatic nil)
+                              (size :automatic 0)))
+;;; (def-komtype smship (id priority position))
+
+
+;;; ----------------------------------------------------------------
+;;; INSERTION FUNCTIONS
+;;;
+;;; There are three functions for inserting memberships into a list.
+;;;
+;;; Use lyskom-membership-list-insert when inserting memberships in
+;;; random order. It uses a heuristic based on the priority of the
+;;; membership to determine whether to search from the front of back
+;;; of the list.
+;;;
+;;; Use lyskom-membership-list-append when you know that the position
+;;; of the membership is towards the end of the list.
+;;;
+;;; Use lyskom-membership-list-prepend when you know that the position
+;;; of the membership is towards the front of the list.
+;;;
+;;;
+;;; The heuristic is optimized for randomly inserting memberships. If
+;;; the list is near-full and a single membership is to be inserted,
+;;; other heuristics might perform better. If the approximate position
+;;; of the membership is already known, this heuristic is not the best.
+;;;
+
+(defun lyskom-membership-list-compare-next (mship next &optional after)
+  (and next
+       (or (> (membership->priority (mship-list-node->data next))
+              (membership->priority mship))
+           (and (= (membership->priority (mship-list-node->data next))
+                   (membership->priority mship))
+                (membership->position mship)
+                (if after
+                    (>= (membership->position mship)
+                        (membership->position (mship-list-node->data next)))
+                  (> (membership->position mship)
+                     (membership->position (mship-list-node->data next))))))))
+
+(defun lyskom-membership-list-compare-prev (mship prev)
+  (and prev
+       (or (< (membership->priority (mship-list-node->data prev))
+              (membership->priority mship))
+           (and (= (membership->priority (mship-list-node->data prev))
+                   (membership->priority mship))
+                (membership->position mship)
+                (<= (membership->position mship)
+                    (membership->position (mship-list-node->data prev)))))))  
+
+
+(defun lyskom-membership-list-insert (mship-list mship)
+  "Insert a new membership MSHP into MSHIP-LIST."
+  (if (and (membership-list->head mship-list)
+           (membership-list->tail mship-list)
+           (< (- (membership->priority mship)
+                 (membership->priority (mship-list-node->data (membership-list->head mship-list))))
+              (- (membership->priority (mship-list-node->data (membership-list->tail mship-list)))
+                 (membership->priority mship))))
+      (lyskom-membership-list-append mship-list mship)
+    (lyskom-membership-list-prepend mship-list mship)))
+
+
+(defun lyskom-membership-list-prepend (mship-list mship)
+  "Insert new membership MSHIP into MSHIP-LIST."
+  (let ((cur (membership-list->head mship-list))
+        (prev nil))
+
+    ;; Search for the element in the list at which we want to insert
+    ;; the new membership.
+
+    (while (lyskom-membership-list-compare-next mship cur)
+      (setq prev cur cur (mship-list-node->next cur)))
+
+    (let ((new (lyskom-create-mship-list-node prev cur mship)))
+
+      ;; Set the position of the membership
+      ;;
+      ;; If it already has a position that is between the positions of cur and prev
+      ;; then we do not alter that position. If it has some other position or no
+      ;; position, set its position to the position of cur (which is appropriate
+      ;; when adding a new membership). We do this even if there is room between
+      ;; prev and cur since such a hole probably indicates that we haven't gotten
+      ;; the entire membership from the server -- once we have all memberships there
+      ;; shouldn't be any holes left.
+
+      (if (or (null (membership->position mship))
+              (<= (membership->position mship)
+                  (if prev (membership->position (mship-list-node->data prev)) -1))
+              (>= (membership->position mship)
+                  (if cur (membership->position (mship-list-node->data cur)) lyskom-max-int)))
+          (set-membership->position mship
+                                (cond (cur (membership->position (mship-list-node->data cur)))
+                                      (prev (1+ (membership->position (mship-list-node->data prev))))
+                                      (t 0))))
+
+      ;; If cur is nil, then we want to insert at the end of the list
+      ;; If prev is nil, then we want to insert at the beginning of the list
+      ;; If both are nil, the list is empty and we are inserting the first element
+
+      (if prev
+          (set-mship-list-node->next prev new)
+        (set-membership-list->head mship-list new))
+      (if cur
+          (set-mship-list-node->prev cur new)
+        (set-membership-list->tail mship-list new))
+
+      (setq prev new)
+
+      ;; If the position we chose for the new element collides with the position of
+      ;; the element following it, we adjust the positions of following elements
+      ;; until all elements again have unique positions.
+
+      (while (and cur (eq (membership->position (mship-list-node->data prev))
+                          (membership->position (mship-list-node->data cur))))
+        (set-membership->position (mship-list-node->data cur)
+                              (1+ (membership->position (mship-list-node->data cur))))
+        (setq prev cur cur (mship-list-node->next cur)))
+
+      (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
+      new)))
+
+
+(defun lyskom-membership-list-append (mship-list mship)
+  "Like lyskom-insert-membership, but searches from the end of the list"
+  (let ((cur (membership-list->tail mship-list))
+        (prev nil))
+
+    (while (lyskom-membership-list-compare-prev mship cur)
+      (setq prev cur cur (mship-list-node->prev cur)))
+
+    (let ((new (lyskom-create-mship-list-node cur prev mship)))
+
+      ;; Set the position of the membership
+      ;;
+      ;; If it already has a position that is available and between the
+      ;; positions of the current and previous elements, then use that.
+      ;; If not, use the position of the previous element (after it in
+      ;; the list). If there isn't one, use one plus the position of the
+      ;; last element in the list. If the list is empty, set position to
+      ;; zero.
+
+      (if (or (null (membership->position mship))
+              (<= (membership->position mship)
+                  (if cur (membership->position (mship-list-node->data cur)) -1))
+              (>= (membership->position mship)
+                  (if prev (membership->position (mship-list-node->data prev)) lyskom-max-int)))
+          (set-membership->position mship
+                                (cond (prev (membership->position (mship-list-node->data prev)))
+                                      (cur (1+ (membership->position (mship-list-node->data cur))))
+                                      (t 0))))
+
+      ;; If cur is nil, then we want to insert at the end of the list
+      ;; If prev is nil, then we want to insert at the beginning of the list
+      ;; If both are nil, the list is empty and we are inserting the first element
+
+      (if cur
+          (set-mship-list-node->next cur new)
+        (set-membership-list->head mship-list new))
+      (if prev
+          (set-mship-list-node->prev prev new)
+        (set-membership-list->tail mship-list new))
+
+      ;; Set up for scanning back to the end of the list to adjust positions
+      ;; of elements that are after the newly inserted element.
+
+      (setq prev new cur (mship-list-node->next new))
+
+      ;; If the position we chose for the new element collides with the position of
+      ;; the element following it, we adjust the positions of following elements
+      ;; until all elements again have unique positions.
+
+      (while (and cur (eq (membership->position (mship-list-node->data prev))
+                          (membership->position (mship-list-node->data cur))))
+        (set-membership->position (mship-list-node->data cur)
+                              (1+ (membership->position (mship-list-node->data cur))))
+        (setq prev cur cur (mship-list-node->next cur)))
+
+      (set-membership-list->size mship-list (1+ (membership-list->size mship-list)))
+      new)))
+
+
+(defun lyskom-membership-list-delete (mship-list node)
+  "Remove NODE from MSHIP-LIST"
+  (if (mship-list-node->next node)
+      (set-mship-list-node->prev (mship-list-node->next node)
+                                 (mship-list-node->prev node))
+    (set-membership-list->tail mship-list
+                               (mship-list-node->prev node)))
+
+  (if (mship-list-node->prev node)
+      (set-mship-list-node->next (mship-list-node->prev node)
+                                 (mship-list-node->next node))
+    (set-membership-list->head mship-list (mship-list-node->next node)))
+
+  (setq node (mship-list-node->next node))
+  (while node
+    (set-membership->position (mship-list-node->data node)
+                              (1- (membership->position (mship-list-node->data node))))
+    (setq node (mship-list-node->next node)))
+
+  (set-membership-list->size mship-list (1- (membership-list->size mship-list))))
+
+(defun lyskom-membership-list-move (mship-list node)
+  "Move the node NODE in MSHIP-LIST to its new position."
+  (let* ((prev (mship-list-node->prev node))
+         (next (mship-list-node->next node))
+         (mship (mship-list-node->data node))
+         (new-pos nil))
+
+    (cond
+     ((lyskom-membership-list-compare-next mship next t) ; Move right
+      (setq prev nil)
+      (while (lyskom-membership-list-compare-next mship next t)
+        (setq new-pos (membership->position (mship-list-node->data next)))
+        (set-membership->position (mship-list-node->data next) (1- new-pos))
+        (setq prev next next (mship-list-node->next next)))
+      (set-membership->position mship new-pos))
+
+     ((lyskom-membership-list-compare-prev mship prev) ; Move left
+      (setq next nil)
+      (while (lyskom-membership-list-compare-prev mship prev)
+        (setq new-pos (membership->position (mship-list-node->data prev)))
+        (set-membership->position (mship-list-node->data prev) (1+ new-pos))
+        (setq next prev prev (mship-list-node->prev prev)))
+      (set-membership->position mship new-pos))
+
+     (t                                 ; Stay in the same place
+      (setq prev (mship-list-node->prev node))
+      (setq next (mship-list-node->next node))
+      (setq new-pos (membership->position mship))))
+
+
+    ;; Remove the node from its current position
+
+    (if (mship-list-node->prev node)
+        (set-mship-list-node->next (mship-list-node->prev node)
+                                   (mship-list-node->next node))
+      (set-membership-list->head mship-list (mship-list-node->next node)))
+    (if (mship-list-node->next node)
+        (set-mship-list-node->prev (mship-list-node->next node)
+                                   (mship-list-node->prev node))
+      (set-membership-list->tail mship-list (mship-list-node->prev node)))
+
+    ;; Splice it into the list at the new position
+
+    (set-mship-list-node->prev node prev)
+    (set-mship-list-node->next node next)
+
+    (if prev 
+        (set-mship-list-node->next prev node)
+      (set-membership-list->head mship-list node))
+
+    (if next
+        (set-mship-list-node->prev next node)
+      (set-membership-list->tail mship-list node)))
+  )
+
+
+
+;;; ================================================================
+;;; The following functions are concerned with managing the cache
 
 (def-kom-var lyskom-mship-cache nil
   "Membership cache. Do not alter directly."
@@ -120,7 +384,7 @@ reasonable guess."
 (defun lyskom-mship-cache-create ()
   "Initialize the membership cache to empty."
   (vector (lyskom-make-hash-table :size 300 :test 'eq) 
-          (lyskom-avltree-create 'lyskom-membership-<)))
+          (lyskom-create-membership-list)))
 
 (defun lyskom-mship-cache-get (conf-no)
   "Get the membership for CONF-NO from the membership cache."
@@ -128,68 +392,50 @@ reasonable guess."
 
 (defun lyskom-mship-cache-put (mship)
   "Add MSHIP to the membership cache."
-  (lyskom-avltree-enter (lyskom-mship-cache-data) mship)
-  (lyskom-puthash (membership->conf-no mship) mship (lyskom-mship-cache-index)))
+  (lyskom-puthash (membership->conf-no mship)
+                  (lyskom-membership-list-insert (lyskom-mship-cache-data) mship)
+                  (lyskom-mship-cache-index)))
+
+(defun lyskom-mship-cache-append (mship)
+  "Add MSHIP to the membership cache."
+  (lyskom-puthash (membership->conf-no mship)
+                  (lyskom-membership-list-append (lyskom-mship-cache-data) mship)
+                  (lyskom-mship-cache-index)))
 
 (defun lyskom-mship-cache-del (conf-no)
   "Delete CONF-NO from the membership cache."
-  (let ((mship (lyskom-mship-cache-get conf-no)))
-    (when mship
-      (lyskom-avltree-delete (lyskom-mship-cache-data) mship)
+  (let ((node (lyskom-mship-cache-get conf-no)))
+    (when node
+      (lyskom-membership-list-delete (lyskom-mship-cache-data) node)
       (lyskom-remhash conf-no (lyskom-mship-cache-index)))))
 
-(defun lyskom-update-membership-positions ()
-  "Update the position field of all memberships."
-  (let ((num 0))
-    (lyskom-avltree-traverse (lambda (mship)
-                               (set-membership->position mship num)
-                               (setq num (1+ num)))
-                             (lyskom-mship-cache-data))))
-
 (defun lyskom-add-memberships-to-membership (memberships)
-  "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.
-If an item of the membership is already read and entered in the
-lyskom-membership list then this item is not entered."
+  "Adds newly fetched MEMBERSHIPS to the membership list."
   (lyskom-with-lyskom-buffer
     (lyskom-traverse mship memberships
       (unless (lyskom-mship-cache-get (membership->conf-no mship))
-        (lyskom-mship-cache-put mship)))))
+        (lyskom-mship-cache-append mship)))))
 
 (defun lyskom-insert-membership (mship)
   "Add MSHIP into lyskom-membership, sorted by priority."
   (lyskom-with-lyskom-buffer
     (lyskom-mship-cache-put mship)
-    (lyskom-update-membership-positions)
     (lp--update-buffer (membership->conf-no mship))))
 
-(defmacro lyskom-replace-membership (mship &rest body)
-  "Replace the membership MSHIP while evaluating BODY.
 
-This function should be used when altering the priority or position of
-a membership. The membership is removed from the cache, then BODY is
-evaluated and finally the membership is inserted into the cache again.
-
-Note that altering the priority or position without first removing the
-membership from the cache may render it impossible to remove it later."
-  `(progn
-     (lyskom-with-lyskom-buffer
-       (when (lyskom-mship-cache-get (membership->conf-no ,mship))
-         (lyskom-mship-cache-del (membership->conf-no ,mship))))
-     ,@body
-     (lyskom-with-lyskom-buffer
-       (lyskom-mship-cache-put ,mship)
-       (lyskom-update-membership-positions)
-       (lp--update-buffer (membership->conf-no ,mship)))))
-
-(put 'lyskom-replace-membership 'lisp-indent-hook 1)
-(put 'lyskom-replace-membership 'edebug-form-spec '(sexp body))
-
+(defun lyskom-replace-membership (mship)
+  "Replace the membership MSHIP."
+  (lyskom-with-lyskom-buffer
+    (let ((node (lyskom-mship-cache-get (membership->conf-no mship))))
+      (if node
+          (lyskom-membership-list-move (lyskom-mship-cache-data) node)
+        (lyskom-mship-cache-put mship)))
+    (lp--update-buffer (membership->conf-no mship))))
 
 (defun lyskom-remove-membership (conf-no)
   "Remove the membership for CONF-NO from lyskom-membership."
   (lyskom-with-lyskom-buffer
     (lyskom-mship-cache-del conf-no)
-    (lyskom-update-membership-positions)
     (lp--update-buffer conf-no)))
 
 (defun lyskom-membership-position (conf-no)
@@ -205,19 +451,7 @@ membership from the cache may render it impossible to remove it later."
 
 (defun lyskom-membership-length ()
   "Return the size of the membership list."
-  (lyskom-avltree-size (lyskom-mship-cache-data)))
-
-(defun lyskom-membership-< (a b)
-  "Retuns t if A has a higher priority than B. A and B are memberships."
-  (cond ((> (membership->priority a)
-            (membership->priority b)) t)
-        ((and (= (membership->priority a)
-                 (membership->priority b))
-              (numberp (membership->position a))
-              (numberp (membership->position b)))
-         (< (membership->position a)
-            (membership->position b)))
-        (t nil)))
+  (membership-list->size (lyskom-mship-cache-data)))
 
 (defun lyskom-get-membership (conf-no &optional want-passive)
   "Return membership for conference CONF-NO.
@@ -245,6 +479,85 @@ This call does not block. If the membership has not been cached, this
 call will return nil." 
   (lyskom-with-lyskom-buffer
     (let ((mship (lyskom-mship-cache-get conf-no)))
-      (when (or want-passive (not (membership-type->passive (membership->type mship))))
-        mship))))
+      (when (and mship
+                 (or want-passive
+                     (not (membership-type->passive 
+                           (membership->type
+                            (mship-list-node->data mship))))))
+        (mship-list-node->data mship)))))
 
+
+
+
+
+
+;;; ================================================================
+;;; Testing
+
+
+;;;(defun lps (l)
+;;;  (let ((cur (membership-list->head l))
+;;;        res)
+;;;    (while cur
+;;;      (setq res (cons (cons (smship->id (mship-list-node->data cur))
+;;;                            (smship->position (mship-list-node->data cur)))
+;;;                      res)
+;;;            cur (mship-list-node->next cur)))
+;;;    (nreverse res)))
+;;;
+;;;
+;;;
+;;;(progn (setq l (lyskom-create-membership-list))
+;;;(setq a (lyskom-create-smship 'a 255 0))
+;;;(setq b (lyskom-create-smship 'b 100 1))
+;;;(setq c (lyskom-create-smship 'c 100 2))
+;;;(setq d (lyskom-create-smship 'd 100 3))
+;;;(setq e (lyskom-create-smship 'e  50 4))
+;;;(setq f (lyskom-create-smship 'f  50 5))
+;;;(setq g (lyskom-create-smship 'g  20 6))
+;;;(setq h (lyskom-create-smship 'h   1 7)))
+;;;
+;;;(setq x (lyskom-create-smship 'x 100 nil))
+;;;
+;;;(mapcar (lambda (el) (lyskom-membership-list-insert l el)) (list c g f b d a x))
+
+;; (let ((mx 0)
+;;       (times nil))
+;;   (while (<= mx 500)
+;; ;    (garbage-collect)
+;;     (message "%d" mx)
+;;     (let ((enter-time nil)
+;;           (exit-time nil)
+;;           (l (lyskom-create-membership-list))
+;;           (i 0)
+;;           (x 0)
+;;           (y 0))
+;;       (garbage-collect)
+;;       (setq mx (+ mx 10))
+;;       (setq enter-time (current-time))
+;;       (while (< i mx)
+;;         (let* ((val (random mx))
+;;                (el (lyskom-create-smship i val (- mx val))))
+;;           (lyskom-membership-list-insert l el))
+;;         (setq i (1+ i)))
+;;       (setq exit-time (current-time))
+;;       (princ (format "%05d %.8f %.8f %4d %4d\n"
+;;                      mx 
+;;                      (elp-elapsed-time enter-time exit-time)
+;;                      (/ (elp-elapsed-time enter-time exit-time) mx)
+;;                      x
+;;                      y))
+;;       (sit-for 0)
+;;       (setq times (cons (cons mx
+;;                               (elp-elapsed-time enter-time exit-time)) times))
+;; ))
+;;   times)
+
+
+;; (defun lyskom-map-membership-list (fn list)
+;;   (let ((cur (membership-list->tail list))
+;;         (res nil))
+;;     (while cur
+;;       (setq res (cons (funcall fn (mship-list-node->data cur)) res)
+;;             cur (mship-list-node->prev cur)))
+;;     res))
