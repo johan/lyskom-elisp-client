@@ -198,38 +198,6 @@ Returns t if there was a conference to insert this text into."
     inserted))
 
 
-; (defun read-list-delete-text (text-no rlist)
-;   "Delete all occurances of TEXT-NO from RLIST.
-; RLIST is a list of read-info.
-; Entries of the type REVIEW, REVIEW-TREE or REVIEW-MARK are not changed
-; except if they were empty in which case they are removed."
-;   (cond
-;    ((null rlist) nil)			;We're ready.
-;    ((atom (car rlist))			;Skip the dummy.
-;     (setcdr rlist
-; 	    (read-list-delete-text text-no (cdr rlist)))
-;     rlist)
-;    (t
-;     (cond
-;      ((let ((type (read-info->type (car rlist))))
-; 	(or (eq type 'REVIEW)
-; 	    (eq type 'REVIEW-TREE)
-; 	    (eq type 'REVIEW-MARK)))
-;       (setcdr rlist
-; 	      (read-list-delete-text text-no (cdr rlist))))
-;      (t
-;       (delq text-no (read-info->text-list (car rlist)))))
-;     
-;     ;; Delete this element from RLIST if the text-list became or was empty.
-;     (if (null (cdr (read-info->text-list (car rlist))))
-; 	(read-list-delete-text text-no (cdr rlist))
-;       (setcdr rlist
-; 	      (read-list-delete-text text-no (cdr rlist)))
-;       rlist))))
-
-
-; non-recursive version
-
 (defun read-list-delete-text (text-no rlist)
   "Destructively delete all occurances of TEXT-NO from RLIST.
 RLIST is a list of read-info.
