@@ -1,7 +1,13 @@
+Fri Oct 27 03:36:58 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-print-text): Bugfix för enradare utan \n
+
 Wed Oct 25 05:26:48 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-add-recipient/copy): Blockande
+	
 	* vars.el.in (kom-max-buffer-size): Ny variabel
+
 	* lyskom-rest.el (lyskom-trim-buffer): Ny funktion som använder den
 
 Wed Mar  1 18:42:05 1995  David Byers  <byers@lysator.liu.se>
