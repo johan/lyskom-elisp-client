@@ -2423,3 +2423,27 @@ Dvs tecknena   till . Den avg|r om det skall visas som
 Vad har du f|r patchar? Skicka doc-str{ngen till ctl-arrow till
 mig om den inte st{mmer med detta inl{gget.
 (99517) -----------------------------------
+
+109436 1991-09-19  20:28  /3 rader/ Mort, CD
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <76>
+[rende: Variabler i elisp.
+------------------------------------------------------------
+Hmm....hur skriver man i sin .emacs fil f|r att f} in "v" "ln" i
+kom-do-when-starting? Skall man l{gga in dom i en lista? Hj{lp!
+//Christer
+(109436) -----------------------------------
+Kommentar i text 109441 av Anders Gertz
+
+109444 1991-09-19  20:47  /7 rader/ Anders Gertz
+Fotnot till text 109441 av Anders Gertz
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <78>
+[rende: Variabler i elisp.
+------------------------------------------------------------
+(setq kom-do-when-starting '("v" "ln"))
+
+i .emacs allts}. Annars kan du {ndra i din user-area med:
+
+a [ndra variabler
+
+? ger sedan hj{lp (har jag f|r mig)
+(109444) -----------------------------------
