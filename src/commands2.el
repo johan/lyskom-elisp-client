@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.153 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: commands2.el,v 44.154 2003-01-06 14:08:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.153 2003-01-05 21:37:05 byers Exp $\n"))
+              "$Id: commands2.el,v 44.154 2003-01-06 14:08:47 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -90,6 +90,8 @@
        'lyskom-update-membership-when-changed))))
 
 
+;; This code uses get-map, but I don't think it's worth spending
+;; time on fixing it. Go fix kom-handle-membership instead.
 
 (defun lyskom-memb-received-1 (conf-stat membership buffer)
   "Part of kom-membership.

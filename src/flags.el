@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.32 2003-01-06 11:18:26 byers Exp $
+;;;;; $Id: flags.el,v 44.33 2003-01-06 14:08:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.32 2003-01-06 11:18:26 byers Exp $\n"))
+	      "$Id: flags.el,v 44.33 2003-01-06 14:08:47 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -188,22 +188,24 @@
   (if text-no
       (initiate-set-user-area 'options 'lyskom-save-options-3
                               lyskom-pers-no text-no kombuf 
-                              done-message error-message)
+                              done-message error-message text-no)
     (save-excursion
      (set-buffer kombuf)
      (lyskom-insert-string 'could-not-save-options)
      (lyskom-message "%s" (lyskom-get-string 'could-not-save-options)))))
 
-(defun lyskom-save-options-3 (success kombuf done-message error-message)
+(defun lyskom-save-options-3 (success kombuf done-message
+                                      error-message text-no)
   (save-excursion
     (set-buffer kombuf)
     (if success
-        (progn
-          (cache-del-pers-stat lyskom-pers-no)
+        (let ((pers-stat (cache-get-pers-stat lyskom-pers-no)))
+          (when pers-stat
+            (set-pers-stat->user-area pers-stat text-no))
+          (setq lyskom-current-user-area text-no)
           (lyskom-message "%s" done-message))
       (lyskom-format-insert 'could-not-set-user-area lyskom-errno)
       (lyskom-message "%s" error-message))))
-
 
 (defun lyskom-read-options (&optional buffer)
   "Reads the user-area and sets the variables according to the choises.
@@ -215,7 +217,7 @@ non-nil, read settings in that buffer."
              (save-excursion
                (when buffer (set-buffer buffer))
                (blocking-do 'get-pers-stat lyskom-pers-no))))
-	(if (not pers-stat)  ;+++ Other error handler.
+	(if (not pers-stat)             ;+++ Other error handler.
 	    (progn (lyskom-insert-string 'you-dont-exist)
                    nil)
 	  (setq lyskom-other-clients-user-areas nil)
@@ -326,6 +328,7 @@ Returns a list of variables that were ignored."
                       (setcdr pos nil))))))
       (error (lyskom-message "%s" (lyskom-get-string 'error-in-options-short))))
     (setq lyskom-options-done t)
+    (setq lyskom-current-user-area (if text (text->text-no text) 0))
     ignored-user-area-vars))
 
 

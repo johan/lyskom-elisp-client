@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.225 2003-01-06 11:18:26 byers Exp $
+;;;;; $Id: vars.el.in,v 44.226 2003-01-06 14:08:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.225 2003-01-06 11:18:26 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.226 2003-01-06 14:08:47 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1954,6 +1954,10 @@ version, minor version and revision."
 (def-kom-var lyskom-server-coding-system 'iso-8859-1
   "The default coding system used by the server for all strings."
   inherited)
+
+(def-kom-var lyskom-current-user-area 0
+  "Text-no of the user area last saved or read for lyskom-pers-no."
+  local)
 
 (def-kom-var lyskom-max-packet-size lyskom-max-int
   "The largest possible packet size that can be transmitted to a

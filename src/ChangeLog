@@ -1,5 +1,30 @@
 2003-01-06  David Byers  <david.byers@swipnet.se>
 
+	Handle async-new-user-area message:
+	* startup.el (lyskom-accept-async): Accept async 19.
+
+	* async.el (lyskom-parse-async): Parse async type 19. Update
+	pers-stat based on results.
+	(lyskom-async-new-user-area): New function updates cache and
+	re-reads options if necessary.
+	(lyskom-parse-async): Call it.
+
+	* flags.el (lyskom-read-options-eval): Set
+	lyskom-current-user-area.
+
+	* vars.el.in (lyskom-current-user-area): New variable.
+
+	* flags.el (lyskom-save-options-3): Don't delete the person from
+	the cache; just set the user-area. Set lyskom-current-user-area.
+
+	* komtypes.el (pers-stat): user-area is no longre read-only.
+
+	Fix parse of text-mapping (I thought I did this a year ago):
+	* parse.el (lyskom-parse-list): Read the terminating brace in the
+	list.
+	(lyskom-parse-local-to-global-block): The array length is a
+	number, not a string.
+
 	Clean up :variable assignments:
 	* compatibility.el (lyskom-make-self-evaluating): New macro. Use
 	it to make several :symbols self-evalutaing in Emacs 19.
