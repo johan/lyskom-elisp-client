@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.339 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.340 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.339 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.340 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -768,6 +768,8 @@ The message you were sending to %#1M was:
     (initial-unread . "Initial number of unread (empty for all texts): ")
     (only-error . "Something went wrong. Sorry.\n")
     
+    (lp--only-last . "Number of text to read: ")
+
     (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")
     (you-have-unreads-special . "You have %#1d uncommented text%#1?d%[%]%[s%] in %#2M\n")
     (you-have-no-unreads . "You have read everything in %#1M\n")
@@ -2085,10 +2087,12 @@ Change privileges for %#1P (%#1p)...")
  Select membership:  SPC      Select region:  C-w      Flytta markerade:   C-y
  Set priority:       p        Increase prio:  +        Decrease prio:      -
  Move up:            M-p      Move down:      M-n      Toggle flags:   I,H,P,M
+ Postpone reading:   P        Only last:      o   
  Quit:               C-c C-c                           More help:        C-h m
 ")
     (lp-hide-read-after . "Hide memberships read after: ")
     (lp-hide-read-since . "Hide memberships not read since: ")
+    (lp-skipping-missing-meeting . "Conference %#1M no longer exists, skipping.")
     ))
 
 
@@ -2545,6 +2549,7 @@ Change privileges for %#1P (%#1p)...")
     (lp--toggle-passive . "Toggle passive")
     (lp--toggle-message-flag . "Toggle messages")
     (lp--toggle-secret . "Toggle secret")
+    (lp--set-unread . "Only last") 
     (lp--quit . "Quit")
 ))
 
@@ -2855,6 +2860,8 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-prioritize-mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lyskom-en-prioritize-mode-map (kbd "P") 'lp--toggle-passive)
   (define-key lyskom-en-prioritize-mode-map (kbd "M") 'lp--toggle-message-flag)
+  (define-key lyskom-en-prioritize-mode-map (kbd "o") 'lp--set-unread)
+  (define-key lyskom-en-prioritize-mode-map (kbd "P") 'lp--postpone)
   (define-key lyskom-en-prioritize-mode-map (kbd "C-c C-c") 'lp--quit)
   (define-key lyskom-en-prioritize-mode-map (kbd "q") 'lp--quit)
   (define-key lyskom-en-prioritize-mode-map (kbd "(") 'lp--expand-entry)
