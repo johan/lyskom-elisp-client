@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $
+;;;;; $Id: parse.el,v 38.2 1995-02-23 20:42:04 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $\n"))
+	      "$Id: parse.el,v 38.2 1995-02-23 20:42:04 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -671,6 +671,7 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-init-parse ()
   "Does all initialization of the parsing routines.
 i.e creates the buffer, sets all markers and pointers."
+  (setq lyskom-is-parsing nil)
   (setq lyskom-unparsed-buffer 
 	(generate-new-buffer 
 	 (concat (if lyskom-debug-communications-to-buffer "" " ")
@@ -785,6 +786,15 @@ lyskom-parse-success, lyskom-parse-error and lyskom-parse-async calls
 functions and variables that are connected with the lyskom-buffer."
   (let ((lyskom-buffer (current-buffer))
 	(match-data (match-data)))
+    (if (and mode-line-process
+	     (not (equal mode-line-process '(": %s"))))
+	(progn
+	  (setq mode-line-process '(": %s"))
+	  (if (and (not (lyskom-is-in-minibuffer))
+		   kom-presence-messages)
+	      (message ""))
+	  (set-buffer-modified-p (buffer-modified-p))
+	  (sit-for 0)))
     (lyskom-save-excursion
       (set-buffer lyskom-unparsed-buffer)
       (if (and (> lyskom-string-bytes-missing 0)
@@ -793,35 +803,28 @@ functions and variables that are connected with the lyskom-buffer."
 		(- lyskom-string-bytes-missing (length output)))
 	(setq lyskom-string-bytes-missing 0)
 	(while (not (zerop (1- (point-max)))) ;Parse while replies.
-	  (lyskom-save-excursion
-	   (set-buffer lyskom-buffer)
-	   (if (and mode-line-process
-		    (not (equal mode-line-process '(": %s"))))
-	       (progn
-		 (setq mode-line-process '(": %s"))
-		 (if (and (not (lyskom-is-in-minibuffer))
-			  kom-presence-messages)
-		     (message ""))
-		 (set-buffer-modified-p (buffer-modified-p))
-		 (sit-for 0))))
-
 	  (let* ((lyskom-parse-pos 1)
-		 (key (lyskom-parse-nonwhite-char)))
-	    (cond
-	     ((eq key ?=)		;The call succeeded.
-	      (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-	     ((eq key ?%)		;The call was not successful.
-	      (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-	     ((eq key ?:)		;An asynchronous message.
-	      (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
+		 (key (lyskom-parse-nonwhite-char))
+		 (normal-exit nil))
+	    (unwind-protect
+		(progn
+		  (cond
+		   ((eq key ?=)		;The call succeeded.
+		    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+		   ((eq key ?%)		;The call was not successful.
+		    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+		   ((eq key ?:)		;An asynchronous message.
+		    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
+		  (setq normal-exit t))
 	    ;; In case the command changes buffer.
 	    ;; One reply is now parsed. Check if there is yet
 	    ;; another reply to parse.
-	    (delete-region (point-min) lyskom-parse-pos)
+	      (if normal-exit
+		  (delete-region (point-min) lyskom-parse-pos)))
 	    (goto-char (point-min))
 	    (while (looking-at "[ \t\n\r]")
 	      (delete-char 1))
 	    (setq inhibit-quit nil)	;We are allowed to break here.
-	    (setq inhibit-quit t)))))
+	    ))))
     (store-match-data match-data)))
 

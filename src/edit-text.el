@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $
+;;;;; $Id: edit-text.el,v 38.3 1995-02-23 20:41:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $\n"))
+	      "$Id: edit-text.el,v 38.3 1995-02-23 20:41:38 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -74,6 +74,13 @@ where text-no is the number of the text.
 Does lyskom-end-of-command."
   (setq lyskom-is-writing t)
   (lyskom-end-of-command)
+  (lyskom-dispatch-edit-text proc misc-list subject body
+			     handler data))
+
+
+(defun lyskom-dispatch-edit-text (proc misc-list subject body
+				       &optional handler &rest data)
+  "Same as lyskom-edit-text except that it doesn't call lyskom-end-of-command."
   (let ((buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
 	(config (current-window-configuration)))
@@ -111,6 +118,12 @@ Does lyskom-end-of-command."
     (setq lyskom-edit-handler-data data)
     (setq lyskom-edit-return-to-configuration config)
     (lyskom-edit-insert-miscs misc-list subject body)
+    (goto-char (point-min))
+    (re-search-forward (concat "\\(" (regexp-quote lyskom-header-subject)
+			       "\\|" (regexp-quote lyskom-swascii-header-subject)
+			       "\\)")
+		       (point-max)
+		       'end)
     (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
   (set-buffer (process-buffer lyskom-proc))
   )
@@ -329,10 +342,6 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (save-excursion
 	    (setq misc-list (lyskom-edit-read-misc-list)
 		  subject (lyskom-edit-extract-subject)))
-	  (let ((minibuffer-local-map (overlay-map lyskom-edit-mode-mode-map
-						   minibuffer-local-map)))
-	    (setq subject (lyskom-read-string (lyskom-get-string 'subject)
-					      subject)))
 	  (setq message (lyskom-edit-extract-text))
 	  (setq mode-name "LysKOM sending")
 	  (save-excursion
@@ -346,7 +355,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	(if kom-dont-restore-window-after-editing
 	    (bury-buffer)
 	  (save-excursion
-	    (if (boundp 'lyskom-is-dedicated-edit-window)
+	    (if (and (boundp 'lyskom-is-dedicated-edit-window)
+		     lyskom-is-dedicated-edit-window)
 		(condition-case error
 		    (delete-frame)
 		  (error))))
@@ -363,7 +373,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	(bury-buffer)
       ;; Select the old configuration.
       (save-excursion
-	(if (boundp 'lyskom-is-dedicated-edit-window)
+	(if (and (boundp 'lyskom-is-dedicated-edit-window)
+		 lyskom-is-dedicated-edit-window)
 	    (condition-case error
 		(delete-frame)
 	      (error))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $
+;;;;; $Id: swedish-strings.el,v 38.2 1995-02-23 20:42:32 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.2 1995-02-23 20:42:32 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -310,8 +310,9 @@ Lyskom-sessionen \344r avslutad.
     (go-to-conf . "G\345 till %#1s.\n")
     (cant-go-to-his-mailbox . "Du f\345r inte g\345 till %#1ss brevl\345da.\n")
     (not-member-of-conf . "Du \344r inte medlem i %#1s.\n")
-    (change-name-done . "\nKlart. Nytt namn: %#1s.\n")
-    (change-name-nope . "\nDet gick inte bra att \344ndra till %#1s.\nFelkod %#3d. %#2s.\n")
+    (about-to-change-name-from . "%#1s\n")
+    (change-name-done . "Klart. Nytt namn: %#1s.\n")
+    (change-name-nope . "Det gick inte bra att \344ndra till %#1s.\nFelkod %#3d. %#2s.\n")
     (change-supervisor-from-to . "\304ndra organisat\366r f\366r %#1s till %#2s...")
     (change-supervisor-nope . 
      "\nDet gick inte. Kanske du inte f\345r \344ndra organisat\366r f\366r %#1s?\n")
@@ -410,7 +411,9 @@ Ditt allm\344nna meddelande l\366d:
 ----------------------------------------------------------------
 ")
     (message-nope .
-  "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.\n")
+  "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
+Meddelandet du f\366rs\366kte s\344nda till %#1s var:
+%#2s\n")
     (only-last . "Endast l\344sa senaste (0 - %#1d) i %#2s? ")
     (only-error . "N\345t gick galet. Sorry.\n")
 
@@ -637,6 +640,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
     ; From lyskom-rest.el:
 
     (mode-line-unread . " Ol\344sta")
+    (mode-line-letters . " brev")
 
     (error-code . "Felkod %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")
@@ -883,7 +887,6 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "h"  'kom-jump)
   (define-key lyskom-mode-map "lm" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
-  (define-key lyskom-mode-map "lN" 'kom-list-news-old)
   (define-key lyskom-mode-map "lp" 'kom-list-persons)
   (define-key lyskom-mode-map "ls" 'kom-membership)
   (define-key lyskom-mode-map "l{" 'kom-list-summary)
@@ -1007,8 +1010,6 @@ Cf. paragraph-start.")
     (kom-tell-change-name       "\304ndrar sitt namn till n\345got annat.")
     (kom-tell-change-supervisor "\304ndrar organisat\366r f\366r n\345got.")
     (kom-tell-next-lyskom       "Hoppar till ett annat LysKOM.")
-    (kom-tell-is-back		"\304r tillbaka.")
-    (kom-tell-is-idle		"Har inte r\366rt lyskom p\345 en bra stund.")
     )
   "These texts are used as arguments to lyskom-tell-server.
 The variable kom-mercial defaults to kom-tell-wait.
@@ -1061,7 +1062,7 @@ Users are encouraged to use their best sense of humor.")
     (34 . "F\366r m\345nga kommentarer")
     (35 . "F\366r m\345nga fotnoter")
     (36 . "F\366r m\345nga markeringar")
-    (37 . "Du \344r inte f\366rfattare till den fotnoterade texten")
+    (37 . "Du \344r inte f\366rfattare till texten")
     (38 . "Du kan inte koppla upp dig till servern")
     (39 . "Minnet slut")
     (40 . "Servern har ballat ur")
@@ -1156,11 +1157,9 @@ Users are encouraged to use their best sense of humor.")
 		 (t
 		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
   (lyskom-start-of-command 'kom-review-noconversion)
-  (let ((knows-iso-8859-1 kom-emacs-knows-iso-8859-1))
-    (setq kom-emacs-knows-iso-8859-1 t)
-    (lyskom-view-text 'main text-no)
-    (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
-    (lyskom-run 'main 'lyskom-end-of-command)))
+  (let ((kom-emacs-knows-iso-8859-1 t))
+    (lyskom-view-text text-no))
+  (lyskom-end-of-command))
 
 
 ;; Vars}god sojge, en massa j{ttebra funktioner.

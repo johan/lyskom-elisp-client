@@ -1,3 +1,25 @@
+Thu Feb 23 21:24:25 1995  Linus Tolke Y  <linus@lysator.liu.se>
+
+	* Flera {ndringar gjorda med f|ljande m}l (jag borde ha checkat in
+	det h{r f|r l{nge sedan egentligen...):
+	  - Allt som pratar direkt med anv{ndaren (inklusive
+	    login-proceduren) skall anv{nda sig av blockande read, dvs den
+	    nya blocking-domekanismen i sin kommunikation till servern.
+	  - Loginfasen helt omskriven.
+	  - who-bufferten borttagen.
+	  - Det gamla s{ttet att l{sa personnamn med magiska grejor i
+	    minibufferten borttaget.
+	  F|ljande filer {r (hittills) {ndrade inf|r 0.39:
+	  Makefile, async.el, commands1.el, commands2.el,
+	  completing-read.el, edit-text.el, flags.el, komtypes.el,
+	  lyskom-rest.el, parse.el, review.el, services.el, startup.el,
+	  swedish-strings.el, vars.el.in, view-text.el, dvs alla filerna.
+
+Wed Feb  2 22:59:19 1994  Linus Tolke Y  (linus@astrid)
+
+	* startup.el,lyskom-rest.el,flags.el: Fler anrop till
+	lyskom-tell-phrases-validate, flyttat om anropen till hookarna.
+
 Fri Jan 14 01:07:39 1994  Linus Tolke Y  (linus@bodil)
 
 	* async.el: removed extra function.

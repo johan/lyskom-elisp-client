@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.2 1994-01-14 00:28:38 linus Exp $
+;;;;; $Id: startup.el,v 38.3 1995-02-23 20:42:25 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.2 1994-01-14 00:28:38 linus Exp $\n"))
+	      "$Id: startup.el,v 38.3 1995-02-23 20:42:25 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -53,6 +53,7 @@ See lyskom-mode for details."
 		     nil
 		     nil))
 
+  (run-hooks 'lyskom-init-hook)
   (setq username
 	(if username username (getenv "KOMNAME")))
   (setq password
@@ -60,7 +61,8 @@ See lyskom-mode for details."
   (if (zerop (length host))
       (setq host (or (getenv "KOMSERVER")
 		     lyskom-default-server)))
-  (let ((port 4894))
+  (let ((port 4894)
+	(init-done nil))
     (cond				;Allow "nanny:4892" to use port 4892.
      ((string-match ":" host)
       (setq port (string-to-int (substring host (match-end 0))))
@@ -70,92 +72,76 @@ See lyskom-mode for details."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (let* ((buffer (generate-new-buffer
-		    (concat "*"
-			    (substring
-			     host
-			     (string-match "^[^.]*" host)
-			     (match-end 0))
-			    "*")))
-	   (name (buffer-name buffer))
-	   (proc (open-network-stream name buffer host port)))
-      (switch-to-buffer buffer)
-      (lyskom-mode)			;Clearing lyskom-default...
-      (setq lyskom-default-user-name username)
-      (setq lyskom-default-password password)
-      (setq lyskom-proc proc)
-      (lyskom-insert
-       (lyskom-format 'try-connect lyskom-clientversion host))
-      (set-process-filter proc 'lyskom-connect-filter)
-      (lyskom-process-send-string proc
-				  (concat "A"
-					  (lyskom-format-objects
-					   (concat (user-login-name)
-						   "%" (system-name))))))))
+    (unwind-protect
+	(let* ((buffer (generate-new-buffer host))
+	       (name (buffer-name buffer))
+	       (proc (open-network-stream name buffer host port)))
+	  (switch-to-buffer buffer)
+	  (lyskom-mode)			;Clearing lyskom-default...
+	  (setq lyskom-default-user-name username)
+	  (setq lyskom-default-password password)
+	  (setq lyskom-proc proc)
+	  (lyskom-insert
+	   (lyskom-format 'try-connect lyskom-clientversion host))
+	  (set-process-filter proc 'lyskom-connect-filter)
+	  (lyskom-process-send-string proc
+				      (concat "A"
+					      (lyskom-format-objects
+					       (concat (user-login-name)
+						       "%" (system-name)))))
+	  (while (eq 'lyskom-connect-filter (process-filter proc))
+	    (accept-process-output proc))
+					; Now we have gotten the correct response.
+
+	  (set-process-sentinel proc 'lyskom-sentinel)
+
+	  (save-excursion
+	    (lyskom-init-parse))
+
+	  (setq lyskom-server-info (blocking-do 'get-server-info))
+	  (lyskom-format-insert 
+	   'connection-done
+	   (if (zerop (% (server-info->version lyskom-server-info) 100))
+	       (format "%d.%d"
+		       (/ (server-info->version lyskom-server-info) 10000)
+		       (/ (% (server-info->version lyskom-server-info) 10000) 
+			  100))
+	     (format "%d.%d.%d"
+		     (/ (server-info->version lyskom-server-info) 10000)
+		     (/ (% (server-info->version lyskom-server-info) 10000)
+			100)
+		     (% (server-info->version lyskom-server-info) 100))))
+	  (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
+	      (lyskom-insert 
+	       (text->text-mass 
+		(blocking-do 'get-text 
+			     (server-info->motd-of-lyskom lyskom-server-info)))))
+	  ;; Can't use lyskom-end-of-command here.
+	  (setq lyskom-executing-command nil) 
+	  ;;; B|rja
+	  (kom-start-anew t)
+	  (setq init-done t))
+      ;; Something went wrong. Lets cleanup everything. :->
+      (if init-done
+	  nil
+	(delete-process (get-buffer-process (current-buffer)))
+	(kill-buffer (current-buffer))))))
 
 
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."
-  (sit-for 0)
-  (let ((cur (current-buffer)))
-    (unwind-protect
-	(progn
-	  (set-buffer (process-buffer proc))
-	  (if lyskom-debug-communications-to-buffer
-	      (save-excursion
-		(set-buffer
-		 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
-		(goto-char (point-max))
-		(insert "\n" (format "%s" proc) "-----> " output)))
-	  (cond
-	   ((string-match "^LysKOM\n" output)
-	    (lyskom-init-parse)
-	    (set-process-filter proc 'lyskom-filter)
-	    (set-process-sentinel proc 'lyskom-sentinel)
-	    (setq lyskom-executing-command nil)
-	    (setq lyskom-is-parsing nil)
-	    (initiate-get-server-info 'main 'lyskom-store-server-info))
-	   ((string-match "\\`%%" output)
-	    (lyskom-format-insert 'protocoll-error output)
-	    (error "Protocol error. Servers says: %s" output))
-	   (t)))
-      (set-buffer cur))))
+  (if lyskom-debug-communications-to-buffer
+      (save-excursion
+	(set-buffer
+	 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
+	(goto-char (point-max))
+	(insert "\n" (format "%s" proc) "-----> " output)))
+  (cond
+   ((string-match "^LysKOM\n" output)
+    (set-process-filter proc 'lyskom-filter))))
 
 
-(defun lyskom-store-server-info (server-info)
-  "Receive info about the server, store it in the variable lyskom-server-info
-and tell the user about it."
-  (if (not server-info)
-      (kom-start-anew t)
-    (setq lyskom-server-info server-info)
-    (lyskom-insert
-     (lyskom-format 
-      'connection-done
-      (if (zerop (% (server-info->version server-info) 100))
-	  (format "%d.%d"
-		  (/ (server-info->version server-info) 10000)
-		  (/ (% (server-info->version server-info) 10000) 
-		     100))
-	(format "%d.%d.%d"
-		(/ (server-info->version server-info) 10000)
-		(/ (% (server-info->version server-info) 10000)
-		   100)
-		(% (server-info->version server-info) 100)))))
-    (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
-	(let ((motd-of-lyskom (server-info->motd-of-lyskom
-			       lyskom-server-info)))
-;	  (lyskom-collect 'main)
-;	  (initiate-get-text-stat 'main nil motd-of-lyskom)
-;	  (initiate-get-text 'main nil motd-of-lyskom)
-;	  (lyskom-use 'main 'lyskom-print-text nil motd-of-lyskom)
 
-	  ; Instead of the above.
-	  (initiate-get-text 'main '(lambda (text)
-				      (lyskom-insert
-				       (text->text-mass text)))
-			     motd-of-lyskom)
-	  (lyskom-run 'main 'kom-start-anew t))
-      (kom-start-anew t))))
 
 
 ;;; ================================================================
@@ -163,140 +149,72 @@ and tell the user about it."
 
 
 (defun kom-start-anew (&optional first-time-around)
-  "Start as a new person. If the optional argument FIRST is non-nil,
-this is the initial connection at startup."
+  "Start as a new person."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
   (if first-time-around
       nil
     (lyskom-tell-internat 'kom-tell-login))
-  (if (and first-time-around
-	   lyskom-default-user-name)
-      (initiate-lookup-name 'main 'lyskom-start-anew-handle-conf-list
-			    lyskom-default-user-name
-			    lyskom-default-user-name)
-    (lyskom-completing-read 'main 'lyskom-start-anew-login
-			    (lyskom-get-string 'what-is-your-name)
-			    'person t "")))
+  (setq lyskom-pers-no nil)
+  (while (not lyskom-pers-no)
+    (if (and first-time-around
+	     lyskom-default-user-name)
+	(setq lyskom-pers-no  ;; This is nil if we can't find a unique match.
+	      (lyskom-read-conf-name-internal lyskom-default-user-name
+					      'pers 'conf-no)))
+    (if lyskom-pers-no
+	nil
+      (setq lyskom-pers-no
+	    (lyskom-read-conf-no (lyskom-get-string 'what-is-your-name)
+				 'pers nil "")))
+    ;; Now lyskom-pers-no contains a number of a person.
+    ;; Lets log him in.
+    (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+      (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
+      (setq first-time-around nil)
+      (if (blocking-do 'login lyskom-pers-no
+		       (if lyskom-default-password
+			   (prog1
+			       lyskom-default-password
+			     (setq lyskom-default-password nil)
+			     (set-default 'lyskom-default-password nil))
+			 (silent-read (lyskom-get-string 'password))))
+	  nil
+	(lyskom-insert-string 'wrong-password)
+	(setq lyskom-pers-no nil))))
 
-
-(defun lyskom-start-anew-login (return)
-  "Handle the return of the lyskom-completing-read.
-The return could be a name of a pers-no.
-If it is a name then we shall start a new character.
-If it is a number we shall log that person in."
-  (cond
-   ((stringp return)
-    (lyskom-start-anew-new-person return))
-   ((numberp return)
-    (initiate-get-conf-stat 'main 'lyskom-start-anew-login-1-5
-			    return))
-   (t
-    (signal 'lyskom-internal-error (list 'lyskom-completing-read
-					 " returned " return)))))
-			    
-
-(defun lyskom-start-anew-handle-conf-list (conf-list name)
-  "Check the number of conf-no:s in CONF-LIST. The name was NAME.
-If 0, assume a new user.
-If =1, login with this name.
-If >1, Retry."
-  (let ((len (lyskom-conf-list-length conf-list)))
-    (cond ((eq len 0)
-	   (lyskom-start-anew-new-person name))
-	  ((eq len 1)
-	   (initiate-get-conf-stat 'main 'lyskom-start-anew-login-1-5
-				   (elt (conf-list->conf-nos conf-list) 0)))
-	  (t 
-	   (setq lyskom-executing-command nil)
-	   (kom-start-anew)))))
-
-
-(defun lyskom-start-anew-login-1-5 (conf-stat)
-  "Echo the users name and log in as the person described by conf-stat.
-Prompt user for password."
-  (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
-  (let ((curper lyskom-pers-no))
-    (setq lyskom-pers-no 0)		; Don't handle asynchronous now.
-    (initiate-login 'main 'lyskom-start-anew-login-2 
-		    (conf-stat->conf-no conf-stat)
-		    (if lyskom-default-password
-			(prog1
-			    lyskom-default-password
-			  (setq lyskom-default-password nil)
-			  (set-default 'lyskom-default-password nil))
-		      (silent-read (lyskom-get-string 'password)))
-		    (conf-stat->conf-no conf-stat)
-		    curper
-		    conf-stat)))
-
-
-(defun lyskom-start-anew-login-2 (reply pers-no old-pers-no &optional conf-stat)
-  "Handle the REPLY to a try to login on the server as PERS-NO.
-If not succeeded then reset the person to OLD-PERS-NO.
-Optional argument CONF-STAT is used to check for a msg-of-day on the person."
-  (cond
-   ((null reply)
-    (lyskom-insert-string 'wrong-password)
-    (setq lyskom-executing-command nil)
-    (setq lyskom-pers-no old-pers-no)
-    (kom-start-anew))
-   (t
-    (lyskom-insert-string 'are-logged-in)
-    (lyskom-mode)
-    (setq lyskom-membership nil)
-    (setq lyskom-membership-is-read nil)
-    (setq lyskom-pers-no pers-no)
+  ;; Now we are logged in.
+  (lyskom-insert-string 'are-logged-in)
+  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
     (if (and conf-stat
 	     (/= (conf-stat->msg-of-day conf-stat) 0))
 	(progn
 	  (lyskom-insert-string 'you-have-motd)
-	  (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))))
+	  (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
     (if (and conf-stat
 	     (zerop (conf-stat->presentation conf-stat))
 	     (not (zerop (conf-stat->no-of-texts conf-stat))))
-	(lyskom-insert-string 'presentation-encouragement))
-    (lyskom-read-options) 
-    (lyskom-collect 'main)
-    (initiate-get-membership 'main nil pers-no)
-    (initiate-get-unread-confs 'main nil pers-no)
-    (initiate-get-marks 'main nil)
-    (initiate-who-is-on 'main nil)
-    (initiate-who-am-i 'main nil)
-    (lyskom-use 'main 'lyskom-prefetch nil))))
+	(lyskom-insert-string 'presentation-encouragement)))
+  (lyskom-read-options) 
+  (lyskom-refetch)
+  ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
+  (cache-set-marked-texts (blocking-do 'get-marks))
+  (setq lyskom-who-am-i (blocking-do 'who-am-i))
+  (lyskom-end-of-command))
 
 
 (defun lyskom-refetch ()
-  "Refetch membership-list and dependent structures."
-  (setq lyskom-membership-is-read nil)
-  (setq lyskom-membership nil)
-  (setq lyskom-command-to-do 'unknown)
-  (set-read-list-empty lyskom-reading-list)
-  (lyskom-collect 'main)
-  (initiate-get-membership 'main nil lyskom-pers-no)
-  (initiate-get-unread-confs 'main nil lyskom-pers-no)
-  (lyskom-use 'main 'lyskom-prefetch))
-
-
-(defun lyskom-prefetch (membership conf-no-list 
-			&optional marks who-info-list session-no noend)
-  "Prefetch conf-stats for the first lyskom-prefetch-confs confs.
-Args: MEMBERSHIP, CONF-NO-LIST, MARKS, WHO-INFO-LIST SESSION-NO NOEND
-If optional NOEND is non-nil then do not do lyskom-end-of-command."
-  (lyskom-set-membership membership)
-  (if marks
-      (cache-set-marked-texts marks))
-  (if who-info-list
-      (cache-initiate-who-info-buffer who-info-list))
-  (if session-no
-      (setq lyskom-session-no session-no))
-  (setq lyskom-unread-confs conf-no-list)
+  "Resets and fetches all reading info.
+This is called at login and after prioritize and set-unread."
+  ;; The whole membership!
+  (lyskom-set-membership (blocking-do 'get-membership lyskom-pers-no))
+  (setq lyskom-membership-is-read t)
+  (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
   (setq lyskom-last-conf-fetched -1)
   (setq lyskom-last-conf-received -1)
+  (setq lyskom-last-conf-done -1)
   (setq lyskom-to-do-list (lyskom-create-read-list))
-  (setq lyskom-reading-list (lyskom-create-read-list))
-  (if (not noend)
-      (lyskom-end-of-command)))
+  (setq lyskom-reading-list (lyskom-create-read-list)))
 
 
 (defun lyskom-set-membership (membership)
@@ -491,20 +409,15 @@ to see, set of call."
   (interactive)
   (lyskom-clear-vars)
   (setq mode-line-buffer-identification
-	(append
-	 (mapcar '(lambda (str)
-		    (if (stringp str)
-		        (elib-string-replace-match "%[1-9][0-9]+b" str "%b")
-		      str))
-		 mode-line-buffer-identification)
-	 '(" " mode-line-conf-name)))
+	(list (concat (lyskom-mode-name-from-host) ": ") 'mode-line-conf-name))
 
   (setq major-mode 'lyskom-mode)
   (setq mode-name "LysKOM")
   (setq mode-line-process '(": %s"))
   (use-local-map lyskom-mode-map)
   (lyskom-count-down-edits)
-  (run-hooks 'lyskom-mode-hook))
+  (run-hooks 'lyskom-mode-hook)
+  (lyskom-tell-phrases-validate))
 
 
 (defun lyskom-clear-vars ()
@@ -536,7 +449,6 @@ to see, set of call."
     (make-local-variable 'lyskom-server-info)
     (make-local-variable 'lyskom-default-user-name)
     (make-local-variable 'lyskom-default-password)
-    (make-local-variable 'lyskom-time-last-command)
     (make-local-variable 'lyskom-who-info-cache)
     (make-local-variable 'lyskom-who-info-buffer)
     (make-local-variable 'lyskom-who-info-buffer-is-on)
@@ -548,6 +460,7 @@ to see, set of call."
     (make-local-variable 'lyskom-unread-confs)
     (make-local-variable 'lyskom-last-conf-fetched)
     (make-local-variable 'lyskom-last-conf-received)
+    (make-local-variable 'lyskom-last-conf-done)
     (make-local-variable 'lyskom-membership)
     (make-local-variable 'lyskom-prefetch-texts)
     (make-local-variable 'lyskom-prefetch-conf-tresh)
@@ -586,5 +499,4 @@ to see, set of call."
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
     (setq lyskom-list-of-edit-buffers nil)
-    (setq lyskom-time-last-command (lyskom-current-time))
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.2 1994-01-14 00:28:18 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 38.3 1995-02-23 20:41:57 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.2 1994-01-14 00:28:18 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.3 1995-02-23 20:41:57 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -110,13 +110,18 @@
 
 (defun lyskom-handle-command-answer (answer)
   "Handles a void return from call to the server."
+  (lyskom-report-command-answer answer)
+  (lyskom-end-of-command))
+
+
+(defun lyskom-report-command-answer (answer)
+  "Handles a void return from call to the server."
   (if answer 
       (lyskom-insert-string 'done)
     (lyskom-insert-string 'nope)
     (lyskom-format-insert 'error-code
 			  (lyskom-get-error-text lyskom-errno)
-			  lyskom-errno))
-  (lyskom-end-of-command))
+			  lyskom-errno)))
 
 
 ;;; ----------------------------------------------------------------
@@ -297,23 +302,25 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 (defun kom-view (text-no)
   "View text number TEXT-NO."
   (interactive "P")
-  (let ((kom-page-before-command nil))
-    (lyskom-start-of-command 'kom-view)
-    (lyskom-tell-internat 'kom-tell-review)
-    )
-  (if (setq text-no (cond ((null text-no) nil)
-			  ((listp text-no) (car text-no))
-			  (t text-no)))
-      nil
-    (setq text-no (lyskom-read-number (lyskom-get-string 'review-text-q)
-				      lyskom-current-text)))
-  (if (or (not (listp kom-page-before-command))
-	  (memq 'kom-view kom-page-before-command))
-      (recenter 0))
-  (lyskom-tell-internat 'kom-tell-review)
-  (lyskom-format-insert 'review-text-no text-no)
-  (lyskom-view-text 'main text-no)
-  (lyskom-run 'main 'lyskom-end-of-command))
+  (unwind-protect
+      (progn
+	(let ((kom-page-before-command nil))
+	  (lyskom-start-of-command 'kom-view)
+	  (lyskom-tell-internat 'kom-tell-review)
+	  )
+	(if (setq text-no (cond ((null text-no) nil)
+				((listp text-no) (car text-no))
+				(t text-no)))
+	    nil
+	  (setq text-no (lyskom-read-number (lyskom-get-string 'review-text-q)
+					    lyskom-current-text)))
+	(if (or (not (listp kom-page-before-command))
+		(memq 'kom-view kom-page-before-command))
+	    (recenter 0))
+	(lyskom-tell-internat 'kom-tell-review)
+	(lyskom-format-insert 'review-text-no text-no)
+	(lyskom-view-text text-no))
+    (lyskom-end-of-command)))
 
 
 ;;;; ================================================================
@@ -345,39 +352,40 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 (defun kom-view-next-text ()
   "Display next text (from lyskom-reading-list)."
   (interactive)
-  (lyskom-start-of-command 'kom-view-next-text)
-  (lyskom-tell-internat 'kom-tell-read)
-  (if (read-list-isempty lyskom-reading-list)
+  (unwind-protect
       (progn
-	(if (/= 0 lyskom-current-conf)
-	    (lyskom-insert-string 'completely-read-conf)
-	  (lyskom-insert-string 'not-in-any-conf))
-	(lyskom-end-of-command))
+	(lyskom-start-of-command 'kom-view-next-text)
+	(lyskom-tell-internat 'kom-tell-read)
+	(if (read-list-isempty lyskom-reading-list)
+	    (progn
+	      (if (/= 0 lyskom-current-conf)
+		  (lyskom-insert-string 'completely-read-conf)
+		(lyskom-insert-string 'not-in-any-conf)))
 
-    (progn
-      (let* ((tri             (read-list->first lyskom-reading-list))
-	     (text-no         (car (cdr (read-info->text-list tri))))
-	     (type            (read-info->type tri))
-	     (priority 	      (read-info->priority
-			       (read-list->first lyskom-reading-list)))
-	     (is-review-tree  (eq type 'REVIEW-TREE))
-	     (is-review       (or (eq type 'REVIEW)
-				  (eq type 'REVIEW-MARK)
-				  is-review-tree))
-	     (mark-as-read    (not is-review)))
-	(if is-review
-	    (delq text-no (read-info->text-list tri)))  ;First entry only
-	(if mark-as-read
-	    (lyskom-is-read text-no)
-	  (read-list-delete-text nil lyskom-reading-list)
-	  (read-list-delete-text nil lyskom-to-do-list))
-	(lyskom-view-text 'main text-no mark-as-read (and kom-read-depth-first
+	  (progn
+	    (let* ((tri             (read-list->first lyskom-reading-list))
+		   (text-no         (car (cdr (read-info->text-list tri))))
+		   (type            (read-info->type tri))
+		   (priority 	      (read-info->priority
+				       (read-list->first lyskom-reading-list)))
+		   (is-review-tree  (eq type 'REVIEW-TREE))
+		   (is-review       (or (eq type 'REVIEW)
+					(eq type 'REVIEW-MARK)
+					is-review-tree))
+		   (mark-as-read    (not is-review)))
+	      (if is-review
+		  (delq text-no (read-info->text-list tri))) ;First entry only
+	      (if mark-as-read
+		  (lyskom-is-read text-no)
+		(read-list-delete-text nil lyskom-reading-list)
+		(read-list-delete-text nil lyskom-to-do-list))
+	      (lyskom-view-text text-no mark-as-read (and kom-read-depth-first
 							  (not is-review))
-			  (read-info->conf-stat
-			   (read-list->first lyskom-reading-list))
-			  priority
-			  is-review-tree)
-	(lyskom-run 'main 'lyskom-end-of-command)))))
+				(read-info->conf-stat
+				 (read-list->first lyskom-reading-list))
+				priority
+				is-review-tree)))))
+    (lyskom-end-of-command)))
 
 
 (defun lyskom-view-priority-text ()
@@ -389,7 +397,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 		    (read-list->first lyskom-reading-list)))
 	 (text-no (car (text-list->texts (read-info->text-list tri)))))
     (lyskom-is-read text-no)
-    (lyskom-view-text 'main text-no t nil (read-info->conf-stat tri) 
+    (lyskom-view-text text-no t nil (read-info->conf-stat tri) 
 		      priority nil))
   (lyskom-run 'main 'lyskom-end-of-command))
 
@@ -404,8 +412,7 @@ not mark the text as read in the server. That function is performed by
 lyskom-mark-as-read."
   (read-list-delete-text text-no lyskom-reading-list)
   (read-list-delete-text text-no lyskom-to-do-list)
-  (initiate-get-text-stat 'background 'lyskom-is-read-handler
-			  text-no)
+  (lyskom-is-read-handler (blocking-do 'get-text-stat text-no))
   (setq lyskom-normally-read-texts (cons text-no lyskom-normally-read-texts)))
 
 
@@ -540,9 +547,9 @@ Alter the priority to kom-low-priority if LOW-PRIORITY is non-nil."
 
 ;;;================================================================
 
-;;; Whereto?
-(defvar lyskom-sessions-with-unread nil
-  "Global variable. List of lyskom-sessions with unread articles.")
+;;; in vars.el:
+;(defvar lyskom-sessions-with-unread nil
+;  "Global variable. List of lyskom-sessions with unread articles.")
 ;;;Must be called after lyskom-get-string is defined. Also after running 
 ;;;load hooks.
 ;;;(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
@@ -567,6 +574,7 @@ CONF can be a a conf-stat or a string."
 	       (t "")))
 	(unread -1)
 	(total-unread 0)
+	(letters 0)
 	(len 0)
 	(read-info-list nil))
 
@@ -579,6 +587,7 @@ CONF can be a a conf-stat or a string."
 	    (setq read-info-list 
 		  (read-list->all-entries lyskom-to-do-list))
 
+	    (if 
 	    (while read-info-list
 	      (if (read-info->conf-stat (car read-info-list))
 		  (progn
@@ -589,8 +598,12 @@ CONF can be a a conf-stat or a string."
 			   (conf-stat->conf-no 
 			    (read-info->conf-stat (car read-info-list))))
 			(setq unread len))
+		    (if (= lyskom-pers-no
+			   (conf-stat->conf-no 
+			    (read-info->conf-stat (car read-info-list))))
+			(setq letters len))
 		    (setq total-unread (+ total-unread len))))
-	      (setq read-info-list (cdr read-info-list)))))
+	      (setq read-info-list (cdr read-info-list))))))
       (if (= unread -1)
 	  (setq unread 0))
 
@@ -612,7 +625,13 @@ CONF can be a a conf-stat or a string."
 		(delq lyskom-proc lyskom-sessions-with-unread))
 	(or (assq lyskom-proc lyskom-sessions-with-unread)
 	    (setq lyskom-sessions-with-unread
-		  (cons lyskom-proc lyskom-sessions-with-unread)))))))
+		  (cons lyskom-proc lyskom-sessions-with-unread))))
+      (if (zerop letters)
+	  (setq lyskom-sessions-with-unread-letters
+		(delq lyskom-proc lyskom-sessions-with-unread-letters))
+	(or (assq lyskom-proc lyskom-sessions-with-unread-letters)
+	    (setq lyskom-sessions-with-unread-letters
+		  (cons lyskom-proc lyskom-sessions-with-unread-letters)))))))
 
 
 ;;; ================================================================
@@ -977,11 +996,6 @@ Special: if lyskom-is-waiting then we are allowed to break if we set
 lyskom-is-waiting nil.
 	 This function checks if doing-default-command and first-time-around 
 	 are bound. The text entered in the buffer is chosen according to this"
-  (if (listp lyskom-time-last-command) ;We are visible
-      nil
-    (initiate-login-new 'idle nil lyskom-pers-no "" 0)
-    (lyskom-tell-internat 'kom-tell-is-back))
-  (setq lyskom-time-last-command (lyskom-current-time))
   (if (and lyskom-is-waiting
 	   (listp lyskom-is-waiting))
       (progn
@@ -1241,7 +1255,45 @@ CONTINUATION is called."
 
 
 (defun lyskom-prefetch-conf ()
-  "Fetch conf-stats for next few conferences from lyskom-membership."
+  "Fetch conf-stats for next few conferences from lyskom-membership.
+This is the main prefetch things function.
+
+This is initiated by lyskom-refetch.
+
+The following variables and functions are involved:
+lyskom-last-conf-fetched, lyskom-last-conf-received, lyskom-last-conf-done
+(this functions variables).
+lyskom-membership, lyskom-unread-confs (set at login).
+Functions:
+lyskom-prefetch-conf, starts the ball going, later verifies that everything
+is done.
+lyskom-prefetch-handle-conf, starts the ball for a conf.
+
+Idea:
+This functions fetches one conf from lyskom-unread-confs, creates an empty
+read-list entry and fires away a lyskom-prefetch-handle-conf. The 
+lyskom-prefetch-handle-conf fills the read-list entry with articles to be
+read. When all articles are fetched then lyskom-prefetch-handle-conf
+will increase lyskom-last-conf-done and call lyskom-prefetch-conf that fetches
+the next conf.
+
+If we start reading before everything is fetched then two things will happen.
+For every thing we do (every prompt we get) there will be another 
+lyskom-prefetch-conf started and possibly another thread of 
+lyskom-prefetch-handle-conf. This will not be a problem.
+
+List news and other things that require the correct count of articles will
+have to wait. The correct way of waiting is:
+    (while (not (lyskom-prefetch-done))
+      (lyskom-prefetch-conf)
+      (accept-process-output))
+
+If we just want to know wether we have fetched all info or not we do the test
+(lyskom-prefetch-done)."
+  
+  ;; Algoritm:
+  ;;
+
   (let ((lyskom-prefetch-confs lyskom-prefetch-confs))
     (while (and (< lyskom-last-conf-fetched
 		   (1- (length lyskom-membership)))
@@ -1256,6 +1308,12 @@ CONTINUATION is called."
 				    membership)
 	  (++ lyskom-prefetch-confs)
 	  (++ lyskom-last-conf-received))))))
+
+
+(defun lyskom-prefetch-done ()
+  "Returns t if lyskom has fetched all its info."
+  (> lyskom-last-conf-done
+     (length lyskom-membership)))
 
 
 (defun lyskom-prefetch-handle-conf (conf-stat membership)
@@ -1607,7 +1665,6 @@ then a newline is printed after the name instead."
 	  (set-buffer (process-buffer proc))
 	  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
 	  (setq inhibit-quit nil)	;We are allowed to break here.
-	  (setq inhibit-quit t)
 	  (cond
 	   ((null lyskom-is-parsing)	;Parse one reply at a time.
 	    (setq lyskom-is-parsing t)
@@ -1619,17 +1676,12 @@ then a newline is printed after the name instead."
 	      (set-buffer (process-buffer proc)) ;In case it was changed by
 					;        ;the handler.
 	      (setq lyskom-is-parsing nil))))
-	  (if (listp lyskom-time-last-command)	;We are visible
-	      (if (lyskom-idle-time-is-reached)	;Time to dissapear
-		  (progn
-		    (initiate-login-new 'idle nil lyskom-pers-no "" 1)
-		    (lyskom-tell-internat 'kom-tell-is-idle)
-		    (setq lyskom-time-last-command 0))))
 	  )
 
       ; Restore selected buffer and match data.
 
       (store-match-data old-match-data)
+      (setq inhibit-quit nil)	;We are allowed to break here.
       (set-buffer lyskom-filter-old-buffer))))
       
 
@@ -1647,86 +1699,6 @@ then a newline is printed after the name instead."
   (beep)
   (lyskom-scroll))
 
-
-(defun irc-time-to-int (timestr)
-  "Convert from time in string format as returned by current-time-string
-to a double integer format, as returned by file-attributes.
-
-Written by Stephen Ma <ma_s@maths.su.oz.au>"
-  (let* ((norm+ '(lambda (num1 num2)
-		  (let ((sumh (+ (car num1) (car num2)))
-			(suml (+ (car (cdr num1)) (car (cdr num2)))))
-		    (list (+ sumh (/ suml 65536)) (% suml 65536)))))
-	 (norm* '(lambda (num1 num2)
-		  (let ((prodh (* num1 (car num2)))
-			(prodl (* num1 (car (cdr num2)))))
-		    (list (+ prodh (/ prodl 65536)) (% prodl 65536)))))
-	 (seconds (string-to-int (substring timestr 17 19)))
-	 (minutes (string-to-int (substring timestr 14 16)))
-	 (hours (string-to-int (substring timestr 11 13)))
-	 (partdays (1- (string-to-int (substring timestr 8 10))))
-	 (years (string-to-int (substring timestr 20 24)))
-	 (days (+ partdays
-		  (cond ((and (= (% years 4) 0)
-			      (/= (% years 100) 0))
-			 (cdr (assoc (substring timestr 4 7)
-				     '(("Jan" . 0)
-				       ("Feb" . 31)
-				       ("Mar" . 60)
-				       ("Apr" . 91)
-				       ("May" . 121)
-				       ("Jun" . 152)
-				       ("Jul" . 182)
-				       ("Aug" . 213)
-				       ("Sep" . 244)
-				       ("Oct" . 274)
-				       ("Nov" . 305)
-				       ("Dec" . 335)))))
-			(t (cdr (assoc (substring timestr 4 7)
-				       '(("Jan" . 0)
-					 ("Feb" . 31)
-					 ("Mar" . 59)
-					 ("Apr" . 90)
-					 ("May" . 120)
-					 ("Jun" . 151)
-					 ("Jul" . 181)
-					 ("Aug" . 212)
-					 ("Sep" . 243)
-					 ("Oct" . 273)
-					 ("Nov" . 304)
-					 ("Dec" . 334))))))
-		  (* (- years 1970) 365)
-		  (/ (- years 1969) 4)
-		  (- (/ (- years 1901) 100)))))
-    (funcall norm+
-	     (funcall norm*
-		      60
-		      (funcall norm+
-			       (funcall norm*
-					60
-					(funcall norm+
-						 (funcall norm*
-							  24
-							  (list 0 days))
-						 (list 0 hours)))
-			       (list 0 minutes)))
-	     (list 0 seconds))))
-
-(defun lyskom-current-time ()
-  (condition-case emacs-18
-      (current-time)
-    (error ; No function current-time
-     (irc-time-to-int (current-time-string)))))
-
-(defun lyskom-subtract-times (t1 t2)
-  "Subtracts times and returns the result in seconds."
-  (+ (* (- (car t1) (car t2)) 65526) (- (car (cdr t1)) (car (cdr t2)))))
-
-(defun lyskom-idle-time-is-reached ()
-  "Returns non-nil if we are idle."
-  (> (lyskom-subtract-times (lyskom-current-time) lyskom-time-last-command)
-     600)				;10 minuter
-  )
 
 ;;; ================================================================
 ;;;         Formatting functions for different data types
@@ -1863,6 +1835,17 @@ One parameter - the prompt string."
   (reverse (assoc key (mapcar (function reverse) cache))))
 
 
+;;; This really is a strange thing to do but...
+;;
+(defun lyskom-mode-name-from-host ()
+  "Calculate what to identify the buffer with."
+  (if (string-match "kom\\.ludd\\.luth\\.se.*" 
+		    (process-name (get-buffer-process (current-buffer))))
+      "LuddKOM"
+    "LysKOM"))
+	       
+
+
 ;;; Validation of kom-tell-phrases
 ;;;
 ;;; Author: Roger Mikael Adolfsson
@@ -1895,18 +1878,21 @@ from the value of kom-tell-phrases-internal."
 	   (error "%s should not be in kom-tell-phrases" invalid)))))
 
 
-(run-hooks 'lyskom-init-hook)
+(or (memq 'lyskom-unread-mode-line global-mode-string)
+    (nconc global-mode-string (list 'lyskom-unread-mode-line)))
+(setq lyskom-unread-mode-line
+      (list (list 'lyskom-sessions-with-unread 
+		  (let ((str (lyskom-get-string 'mode-line-unread)))
+		    (if kom-emacs-knows-iso-8859-1
+			str
+		      (iso-8859-1-to-swascii str))))
+	    (list 'lyskom-sessions-with-unread-letters
+		  (let ((str (lyskom-get-string 'mode-line-letters)))
+		    (if kom-emacs-knows-iso-8859-1
+			str
+		      (iso-8859-1-to-swascii str))))))
+		 
 
-(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
-    (setq minor-mode-alist 
-	  (cons (list 'lyskom-sessions-with-unread 
-		      (let ((str (lyskom-get-string 'mode-line-unread)))
-			(if kom-emacs-knows-iso-8859-1
-			    str
-			  (iso-8859-1-to-swascii str))))
-		minor-mode-alist)))
-
-(lyskom-tell-phrases-validate)
 
 (setq lyskom-swascii-commands
       (mapcar 

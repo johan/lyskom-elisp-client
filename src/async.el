@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.1 1994-01-14 00:28:05 linus Exp $
+;;;;; $Id: async.el,v 38.2 1995-02-23 20:41:06 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.1 1994-01-14 00:28:05 linus Exp $\n"))
+	      "$Id: async.el,v 38.2 1995-02-23 20:41:06 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -63,18 +63,7 @@ this function shall be with current-buffer the BUFFER."
 	  (lyskom-async-new-text text-stat)))) ;
 
      ((eq msg-no 1)			; Logout (obsolete)
-;      (let ((pno (lyskom-parse-num)))
-;	(lyskom-save-excursion
-;	  (set-buffer buffer)
-;	  (if (and (not (zerop lyskom-pers-no))
-;		   (or kom-presence-messages
-;		       kom-presence-messages-in-buffer))
-;	      (initiate-get-conf-stat 'follow 
-;				      'lyskom-show-logged-out-person
-;				      pno))
-;nej:	  (if (not (zerop lyskom-pers-no))
-;nej:	      (initiate-who-is-on 'who-buffer 'cache-set-who-info-list))))
-      )
+      (lyskom-skip-tokens tokens))
 
      ((eq msg-no 2)			; Login, obsolete.
       (lyskom-skip-tokens tokens))
@@ -91,7 +80,7 @@ this function shall be with current-buffer the BUFFER."
 	    (new-name (lyskom-parse-string)))
 	(lyskom-save-excursion
 	  (set-buffer buffer)
-	  (if (= conf-no lyskom-pers-no)
+	  (if (and lyskom-pers-no (= conf-no lyskom-pers-no))
 	      (lyskom-insert-before-prompt 
 	       (lyskom-format 'you-changed-name-to new-name)))
 	  (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
@@ -109,20 +98,9 @@ this function shall be with current-buffer the BUFFER."
       (let ((info (lyskom-parse-who-info)))
 	(lyskom-save-excursion
 	  (set-buffer buffer)
-	  (if (zerop lyskom-pers-no)
+	  (if (or (not lyskom-pers-no)
+		  (zerop lyskom-pers-no))
 	      nil
-; This fetches the conf-stats once to much.
-;	    (if (and (/= (who-info->pers-no info) 0)
-;		     (/= (who-info->pers-no info) lyskom-pers-no))
-;					;Don't show myself.
-;		(initiate-get-conf-stat 'follow
-;					'lyskom-show-changed-person
-;					(who-info->pers-no info)
-;					(who-info->working-conf info)
-;					(who-info->doing-what info)))
-;	    (if (/= (who-info->working-conf info) 0)
-;		(initiate-get-conf-stat 'void nil
-;					(who-info->working-conf info)))
 	    (cache-add-who-info info)))))
 
      ((eq msg-no 7)			; Database is syncing.
@@ -145,13 +123,15 @@ this function shall be with current-buffer the BUFFER."
 	    (session-no (lyskom-parse-num)))
 	(lyskom-save-excursion
 	  (set-buffer buffer)
-	  (if (and (not (zerop lyskom-pers-no))
+	  (if (and lyskom-pers-no
+		   (not (zerop lyskom-pers-no))
 		   (/= pers-no lyskom-pers-no))
 					; Don't show myself.
 	      (initiate-get-conf-stat 'follow
 				      'lyskom-show-logged-in-person
 				      pers-no))
-	  (if (and (not (zerop lyskom-pers-no))
+	  (if (and lyskom-pers-no
+		   (not (zerop lyskom-pers-no))
 		   lyskom-who-info-buffer-is-on)
 	      (initiate-get-session-info 'who-buffer 'cache-add-session-info
 					 session-no))
@@ -186,7 +166,8 @@ this function shall be with current-buffer the BUFFER."
 	    (session-no (lyskom-parse-num)))
 	(lyskom-save-excursion
 	  (set-buffer buffer)
-	  (if (and (not (zerop lyskom-pers-no))
+	  (if (and lyskom-pers-no
+		   (not (zerop lyskom-pers-no))
 		   (/= lyskom-pers-no pers-no)
 		   (or kom-presence-messages
 		       kom-presence-messages-in-buffer))
@@ -194,7 +175,7 @@ this function shall be with current-buffer the BUFFER."
 				      'lyskom-show-logged-out-person
 				      pers-no
 				      session-no))
-	  (if (not (zerop lyskom-pers-no))
+	  (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
 	      (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
 
      (t
