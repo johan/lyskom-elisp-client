@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 38.4 1996-01-19 18:49:45 byers Exp $
+;;;;; $Id: filter-edit.el,v 38.5 1996-03-14 09:02:39 byers Exp $
 ;;;;; Copyright (C) 1994  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -786,6 +786,10 @@ If NOERROR is non-nil, return nil instead of signaling an error."
         (xpermanent-list nil)
         (xtemporary-list nil))
     (while e
+      (set-filter->function 
+       (filter-entry->filter (car e))
+       (lyskom-create-compile-filter-function
+	(filter->pattern (filter-entry->filter (car e)))))
       (set (if (filter->attribute (filter-entry->filter (car e))
                                   'expire)
                'xtemporary-list

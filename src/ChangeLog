@@ -1,3 +1,11 @@
+Thu Mar 14 09:01:48 1996  David Byers  <byers@lysator.liu.se>
+
+	* filter-edit.el: filter-edit-save now recompiles filters when
+	saving, thus making the changes actually stick.
+
+	* filter.el: make-filter now does the right thing with empty
+	filters.
+
 Wed Mar 13 14:30:08 1996  David Byers  <byers@lysator.liu.se>
 
 	* view-text.el, vars.el.in: decode-time kommer inte att användas
