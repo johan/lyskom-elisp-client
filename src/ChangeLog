@@ -1,3 +1,12 @@
+1999-11-08  David Byers  <davby@ida.liu.se>
+
+	* reading.el (lyskom-read-info-<): Fixed stupid operator error.
+
+1999-10-27  David Byers  <davby@ida.liu.se>
+
+	* async.el (lyskom-async-new-recipient): Hantera situationen att
+	man inte hittar det lokala textnumret.
+
 1999-10-25  David Byers  <davby@ida.liu.se>
 
 	* startup.el (lyskom): Set process coding system decoding to

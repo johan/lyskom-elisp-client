@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.26 1999-10-15 14:13:05 byers Exp $
+;;;;; $Id: async.el,v 44.27 1999-11-08 14:39:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.26 1999-10-15 14:13:05 byers Exp $\n"))
+	      "$Id: async.el,v 44.27 1999-11-08 14:39:51 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -598,14 +598,14 @@ converted, before insertion."
         (when (and (eq (misc-info->type misc-info) misc-type)
                    (eq (misc-info->recipient-no misc-info) conf-no))
           (setq local-no (misc-info->local-no misc-info))))
-      (if (null local-no) (error "No local no"))
-      (initiate-get-conf-stat 'async 'lyskom-add-new-text
-                              conf-no
-                              text-no
-                              local-no)
-      (lyskom-prefetch-text-all text-no)
-      (lyskom-run 'async 'lyskom-default-new-recipient-hook text-stat)
-      (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))))
+      (when local-no
+        (initiate-get-conf-stat 'async 'lyskom-add-new-text
+                                conf-no
+                                text-no
+                                local-no)
+        (lyskom-prefetch-text-all text-no)
+        (lyskom-run 'async 'lyskom-default-new-recipient-hook text-stat)
+        (lyskom-run 'async 'lyskom-prefetch-and-print-prompt)))))
 
 (defun lyskom-default-new-recipient-hook (text-stat)
   (when (and (not lyskom-dont-change-prompt) ;We shall change it
