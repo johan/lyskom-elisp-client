@@ -1,3 +1,13 @@
+Wed May  1 20:53:30 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* internal.el (lyskom-queue-collect-p): Kommenterade bort denna
+ 	funktion.
+	
+	* services.el (z-initiate-get-map): Dito.
+
+	* commands1.el (lyskom-sub-member): Sänkte inte
+	lyskom-last-conf-fetched som den borde.
+
 Wed May  1 11:34:02 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * english-strings.el,swedish-strings.el (lyskom-strings): Lade till
