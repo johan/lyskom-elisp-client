@@ -15,6 +15,11 @@ Thu Aug 29 22:31:04 1996  David Kågedal  <kg@infovav.se>
  	session-info blir nil. Inte så sannolikt, men det verkar ha hänt
  	Bellman.
 
+Thu Aug 29 11:32:28 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (rassq): Definiera med lyskom-provide-function.
+	(rassoc): Dito.
+
 Wed Aug 28 11:00:40 1996  David Kågedal  <kg@infovav.se>
 
 	* commands2.el (lyskom-memb-received-1,lyskom-memb-received):
