@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.267 2003-03-16 14:29:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.268 2003-03-16 15:57:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.267 2003-03-16 14:29:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.268 2003-03-16 15:57:28 byers Exp $"))
 
 
 ;;; ================================================================
@@ -628,7 +628,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
-    (show-membership-info-q . "Show number of unreads? ")
+    (show-membership-info-q . "Show membership info number of unreads? ")
     (conf-has-these-members . "\n%#1M has the following members:\n")
     (conf-has-no-members . "\n%#1M has no members.\n")
     (member-list-header . "\nLast entered        Unread  Name\n")
@@ -2360,6 +2360,7 @@ environment to one that uses \"%#2s\" to encode text.
 
   ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-en-review-prefix     (kbd "?") 'lyskom-help)
+  (define-key lyskom-en-unread-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-en-change-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-en-next-prefix       (kbd "?") 'lyskom-help)
   (define-key lyskom-en-list-prefix       (kbd "?") 'lyskom-help)

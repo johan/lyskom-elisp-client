@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.26 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: prefetch.el,v 44.27 2003-03-16 15:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.26 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.27 2003-03-16 15:57:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -571,6 +571,7 @@ Return t if an element was prefetched, otherwise return nil."
                                'lyskom-prefetch-read-texts-handler
                                (elt request 2)
                                (elt request 1)
+                               t 0
                                (elt request 1)
                                queue))
 

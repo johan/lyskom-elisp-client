@@ -1,5 +1,47 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 859:
+	* swedish-strings.el,english-string.el (lyskom-messages): Fixed
+	show-membership-info-q.
+
+	Fix bug 591:
+	* feature.el (read-ranges): New feature variable.
+
+	* parse.el (lyskom-parse-membership-11): New function.
+	(lyskom-convert-read-ranges-to-map): New function.
+
+	* startup.el (lyskom-setup-client-for-server-version): Added
+	features for protocol version 11.
+
+	* utilities.el (lyskom-is-member): Pass want-read-ranges nil.
+
+	* user-hooks.el (kom-read-last-text-hook): Pass want-read-ranges
+	t.
+
+	* prefetch.el (lyskom-prefetch-one-request): Pass want-read-ranges
+	t.
+
+	* mship-edit.el (lyskom-prioritize-flag-toggle): Pass
+	want-read-ranges t.
+
+	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
+	Pass want-read-ranges nil.
+	(lyskom-get-membership): Pass want-read-ranges t.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Pass
+	want-read-ranges nil.
+
+	* commands2.el (kom-status-conf): Pass want-read-ranges t.
+	(kom-set-unread): Ditto.
+
+	* async.el (lyskom-parse-async): Pass want-read-ranges t.
+
+	* commands1.el (lyskom-add-member-answer): Pass want-read-ranges
+	t.
+
+	* services.el (initiate-query-read-texts): Use call 107 when
+	possible.
+
 	Fix bug 946:
 	* commands2.el (lyskom-print-summary-line): Can print the number
 	of comments to a text.

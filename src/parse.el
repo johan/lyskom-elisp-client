@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.45 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: parse.el,v 44.46 2003-03-16 15:57:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.45 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: parse.el,v 44.46 2003-03-16 15:57:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -623,6 +623,37 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-vector (lyskom-parse-num)
                         'lyskom-parse-member)))
 
+(defun lyskom-convert-read-ranges-to-map (read-ranges)
+  (let ((result nil)
+        a b)
+    (while read-ranges
+      (setq a (car (car read-ranges))
+            b (cdr (car read-ranges))
+            read-ranges (cdr read-ranges))
+      (while (<= a b) (setq result (cons a result) a (1+ a))))
+    (and result (apply 'vector (nreverse result)))))
+
+(defun lyskom-parse-membership-11 ()
+  "Parse a membership, converting read-ranges to the old style."
+  (let ((read-ranges nil))
+    (lyskom-create-membership
+     (lyskom-parse-num)                 ;position
+     (lyskom-parse-time)                ;last-time-read
+     (lyskom-parse-num)			;conf-no
+     (lyskom-parse-num)			;priority
+     (progn (setq read-ranges 
+                  (listify-vector
+                   (lyskom-parse-vector
+                    (lyskom-parse-num) 'lyskom-parse-read-range)))
+            (if (eq (car (car read-ranges)) 1)
+                (prog1 (cdr (elt read-ranges 0))
+                       (setq read-ranges (cdr read-ranges)))
+              0))
+     (lyskom-convert-read-ranges-to-map read-ranges)
+     (lyskom-parse-num)                 ;added-by
+     (lyskom-parse-time)                ;added-at
+     (lyskom-parse-membership-type))))
+
 (defun lyskom-parse-membership ()
   "Parse a membership."
     (lyskom-create-membership
@@ -1030,6 +1061,10 @@ Args: TEXT-NO. Value: text-stat."
 
 (defun lyskom-parse-text-number-pair ()
   "Parse a Text-Number-Pair"
+  (lyskom-create-text-pair (lyskom-parse-num) (lyskom-parse-num)))
+
+(defun lyskom-parse-read-range ()
+  "Parse a Read-Range"
   (lyskom-create-text-pair (lyskom-parse-num) (lyskom-parse-num)))
 
 ;;; ================================================================

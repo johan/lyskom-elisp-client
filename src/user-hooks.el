@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: user-hooks.el,v 44.2 2002-05-29 20:58:58 byers Exp $
+;;;;; $Id: user-hooks.el,v 44.3 2003-03-16 15:57:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: user-hooks.el,v 44.2 2002-05-29 20:58:58 byers Exp $\n"))
+	      "$Id: user-hooks.el,v 44.3 2003-03-16 15:57:33 byers Exp $\n"))
 
 (def-kom-var kom-list-summary-hook-conf-list nil
   "*This variable controls the behavior of kom-list-summary-hook.
@@ -78,7 +78,7 @@ Not that even unread texts may be read again when usign this function."
          (arg (and spec (if (consp spec) (cdr spec) 1))))
     (when (and arg (blocking-do 'set-unread to-conf arg))
       (let ((membership (blocking-do 'query-read-texts lyskom-pers-no 
-                                     to-conf))
+                                     to-conf t 0))
             (read-info nil))
         (lyskom-replace-membership membership)
         (read-list-delete-read-info to-conf lyskom-to-do-list)

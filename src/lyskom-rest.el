@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.194 2003-03-15 23:00:51 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.195 2003-03-16 15:57:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.194 2003-03-15 23:00:51 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.195 2003-03-16 15:57:29 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -781,6 +781,7 @@ by PERS-NO"
                                  'collector-push
                                  lyskom-pers-no
                                  (car rec)
+                                 nil 0
                                  collector))
     (lyskom-wait-queue 'main)
 
@@ -1020,7 +1021,7 @@ found in lyskom-membership, a blocking call to the server is made."
     (or (lyskom-try-get-membership conf-no want-passive)
         (and (not (lyskom-membership-is-read))
              (let ((membership
-                    (blocking-do 'query-read-texts lyskom-pers-no conf-no)))
+                    (blocking-do 'query-read-texts lyskom-pers-no conf-no t 0)))
                (if (and membership (lyskom-visible-membership membership))
                    (lyskom-add-membership membership conf-no))
                (if (and membership

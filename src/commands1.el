@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.171 2003-03-16 11:05:40 byers Exp $
+;;;;; $Id: commands1.el,v 44.172 2003-03-16 15:57:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.171 2003-03-16 11:05:40 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.172 2003-03-16 15:57:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -784,7 +784,8 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
              lyskom-pers-no)
           (let ((mship (blocking-do 'query-read-texts
                                     lyskom-pers-no 
-                                    (conf-stat->conf-no conf-conf-stat))))
+                                    (conf-stat->conf-no conf-conf-stat)
+                                    t 0)))
             (unless (membership->position mship)
               (set-membership->position mship pos))
             (lyskom-add-membership mship
