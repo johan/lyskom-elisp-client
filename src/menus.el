@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.6 1996-10-11 11:20:47 nisse Exp $
+;;;;; $Id: menus.el,v 44.7 1996-10-20 02:56:59 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -251,3 +251,7 @@
 ;;;;Återse senaste			   Återse träd
 ;;;;Återse urinlägget		   Återstarta kom
 ;;;;Övergå till administratörsmod
+
+(provide 'lyskom-menus)
+
+;;; menus.el ends here

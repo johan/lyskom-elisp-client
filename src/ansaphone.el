@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.0 1996-08-30 14:45:01 davidk Exp $
+;;;;; $Id: ansaphone.el,v 44.1 1996-10-20 02:56:40 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,9 +32,18 @@
 ;;;; It must be loaded after messages.el
 ;;;;
 
+(eval-when-compile
+  (require 'lyskom-vars "vars")
+  (require 'lyskom-macros "macros")
+  (require 'lyskom-command "command")
+  (require 'lyskom-language "language")
+  (require 'lyskom-messages "messages")
+  (require 'lyskom-services "services"))
+
+
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.0 1996-08-30 14:45:01 davidk Exp $\n"))
+	      "$Id: ansaphone.el,v 44.1 1996-10-20 02:56:40 davidk Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -215,3 +224,6 @@ kom-ansaphone-default-reply and kom-ansaphone-replies."
                                      t)
 
 
+(provide 'lyskom-ansaphone)
+
+;;; ansaphone.el ends here

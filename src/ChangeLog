@@ -1,4 +1,59 @@
+Sun Oct 20 03:46:22 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el: Flyttade alla defvar till vars.el.in (med
+ 	nil-värden) och ersatte med lyskom-language-var.
+
+	* startup.el (lyskom-mode): Anropa inte
+ 	lyskom-tell-phrases-validate.
+
+	* review.el (kom-review-noconversion): Flyttade hit.
+
+	* macros.el (lyskom-expected-unresolved-functions): Använd inte
+ 	eval-when-compile.
+	Flyttade ut def-kom-command till command.el.
+
+	* utilities.el (device-class): Hantera icke-X.
+
+	* command.el: Ny fil.
+
+	* lyskom-rest.el (lyskom-tell-string): Använd lyskomg-et-string.
+	Flyttade några funktioner till command.el.
+
+	* english-strings.el (lyskom-menu): Ändrade "Person" till "User".
+
+	* La till en massa provide och require på olika ställen. Inte
+ 	klart.
+
+	* Makefile: Modifierade sättet som enskilda filer byggs. La till
+ 	command.el.
+
+	* flags.el (lyskom-read-options): Anropa inte
+ 	lyskom-tell-phrases-validate.
+
+	* lyskom-rest.el (lyskom-missing-fields): Tog bort.
+	(lyskom-tell-phrases-validate): Tog bort.
+
+	* command.el: Ny fil.
+
+	* language.el (lyskom-language-strings): Bytte namn från
+ 	lyskom-define-language.
+	(lyskom-language-var): Nytt makro.
+	(lyskom-language-var-internal): Ny funktion.
+	(lyskom-language-vars): Ny variabel.
+
+Tue Oct 15 03:30:31 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-do-go-to-conf): Tog bort specialhacket för
+ 	icke-prefetchade möten.
+
 Fri Oct 11 02:52:14 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* review.el (kom-review-noconversion): Flyttade hit från
+ 	swedish-strings.el och english-strings.el.
+
+	* lyskom-rest.el (lyskom-command-name): Använd defsubst.
+
+	* commands1.el (kom-write-comment): Använd lyskom-command-name.
 
 	* vars.el.in (kom-allow-incompleteness): Ny variabel.
 
