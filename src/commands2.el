@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.3 1995-10-23 11:55:26 byers Exp $
+;;;;; $Id: commands2.el,v 38.4 1995-10-25 09:24:45 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.3 1995-10-23 11:55:26 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.4 1995-10-25 09:24:45 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -216,9 +216,9 @@ otherwise: the conference is read with lyskom-completing-read."
 				  "")
 				 ((lyskom-conf-stat-p permitted-submitters)
 				  (if (> (length 
-					 (conf-stat->name 
-					  permitted-submitters))
-					 (- (lyskom-window-width 46)))
+					  (conf-stat->name 
+					   permitted-submitters))
+					 (- (lyskom-window-width) 46))
 				      "\n"
 				    ""))
 				 (t permitted-submitters))))
