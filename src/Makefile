@@ -28,6 +28,9 @@ PARTS-ELC = $(SRC-ELC)
 
 all: lyskom.elc
 
+alfa: lyskom.elc
+	install lyskom.elc /usr/local/src/2kom/lyskom.elc
+
 lyskom.elc: $(HEADER-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
 
