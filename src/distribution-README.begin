@@ -12,8 +12,8 @@
     Lysator, see <URL:http://www.lysator.liu.se/>. For more information
     on LysKOM, see <URL:http://www.lysator.liu.se/lyskom/>.
 
-    The latest version of the Emacs Lisp client for LysKOM is available 
-    from <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>.
+    The latest version of the Emacs Lisp client for LysKOM is available
+    from <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>.
 
     LysKOM is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -38,22 +38,18 @@
 
 1.  REQUIREMENTS
 
-    You need an Emacs. The client appears to work with the following
-    versions of Emacs:
+    You need an Emacs. The client appears to work completely with the
+    following versions of Emacs:
 
-    * XEmacs version 20.4, 21.1 and newer
-    * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.7 and newer [2]
+    * XEmacs version 21.4 and newer
+    * Gnu Emacs version 20.7 and newer
 
-    [1] You'll have to replace the included custom package, and if you 
-        use Gnus, you may have to update that as well.
+    The client may work with earlier versions of Emacs and XEmacs. To
+    compile in Emacs 19.34 you will have to replace the included
+    custom package, and if you use Gnus you may have to update that as
+    well (see below).
 
-    [2] It should be possible to run the client in Gnu Emacs 20.2 and
-        later, but you may experience some additional problems. Column
-        alignment is known to fail in version 20.2.
-
-
-    There are also some requirements on supplemental elisp packages:
+    There are some requirements on supplemental elisp packages:
 
     * custom
 
@@ -75,14 +71,16 @@
       package, it's time to upgrade. The latest version of Gnus is
       available from <URL:http://www.gnus.org/>.
 
-    * You must NOT HAVE macedit.el
+    * You should NOT HAVE macedit.el
 
       Make sure you do not have a file called macedit.el early in your
       load path. This file redefines a function that the client relies
-      heavily on. The redefinition is buggy. You can recognize this
-      problem if your Emacs says something like this: "Key sequence <
-      m o u s e - 2 > uses invalid prefix characters" when you load or
-      compile the elisp client.
+      heavily on. The redefinition is buggy. The client will attempt
+      to detect this situation and fix it by loading edmacro. If you
+      have macedit but not edmacro, you will experience problems. You
+      can recognize this situation if your Emacs says something like
+      this: "Key sequence < m o u s e - 2 > uses invalid prefix
+      characters" when you load or compile the elisp client.
 
     * w3 4.0 or later (optional)
 

@@ -4,7 +4,7 @@
 
     1. Set up autoloading by adding the following line to your .emacs
        or any other file that Emacs loads at startup (such as
-       site-start.el or default.el):
+       ~/.emacs, site-start.el or default.el):
 
             (autoload 'lyskom "lyskom" "Start LysKOM" t)
 
@@ -13,11 +13,11 @@
        your site init file (default.el or site-start.el). For example,
        if you are running a server on kom.domain.org, you might want
        to say something like this in your init file:
-   
+
             (defvar kom-server-aliases 
                     '(("kom.domain.org     . "DomainKOM")
                       ("kom.lysator.liu.se . "LysKOM")))
-   
+
        The first server listed in kom-server-aliases will be the
        default server for new users.
 
@@ -30,7 +30,8 @@
     Before reporting a bug, please check that it is not one of the
     known issues below. Please report bugs by posting them to the
     bugzilla at http://bugzilla.lysator.liu.se/. You can also e-mail
-    bug reports to bug-lyskom@lysator.liu.se. 
+    bug reports to bug-lyskom@lysator.liu.se if you are unable or
+    unwilling to use bugzilla.
 
     To evaluate your bug report we need the following information:
 
@@ -58,8 +59,40 @@
 
 4. Known issues
 
-   Issue:  I see \201 before Swedish characters in the string showing
-           what some other user is doing (e.g. L\201äser).
+   Issue:  Cannot enter conference names containing international
+           characters.
+
+   Reason: You may be using a different character coding from the
+           server, and conversion to the server's coding is not
+           working. For example, many versions of Emacs are unable to
+           convert from iso-8859-15 (latin-9) to iso-8859-1 (latin-1)
+           even though most characters are the same.
+
+           Switching to the character coding used by the server by
+           using set-language-environment (probably to Latin-1) will
+           fix this problem. If you are unwilling to do this, you can
+           try loading the ucs-tables Emacs library (a version of this
+           file is available from <URL:http://www.lysator.liu.se/
+           lyskom/klienter/emacslisp/>).
+
+
+   Issue:  Problems displaying many normal-looking texts.
+
+   Reason: Recent versions of some Linux distributions encourage users
+           to use the latin9 language environment, which results in
+           texts coded using iso-8859-15. If you do not have fonts
+           suitable for displaying this character coding you may
+           experience some problems with such texts. To fix this
+           problem, install fonts suitable for displaying iso-8859-15
+           characters. You may also be able to fix it by loading
+           either the ucs-tables or the latin-unity Emacs library
+           (a version of ucs-tables is available from <URL:http://www.
+           lysator.liu.se/lyskom/klienter/emacslisp/> and latin-unity
+           is available from the XEmacs package system).
+
+
+   Issue:  I see \201 before international characters in the string
+           showing what some other user is doing (e.g. L\201äser).
 
    Reason: The user is probably using an old version of the client in
            a new version of Emacs. You can confirm this by using the
@@ -87,7 +120,8 @@
 
    Reason: If Swedish characters show up as blanks your font probably
            does not support them. If they show up as question marks or
-           numbers your language environment does not support them.
+           numbers your language environment does not support them or
+           you are lacking the fonts to display them.
 
            Make sure that your language environment is set correctly
            with set-language-environment. Just setting the environment
