@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.201 2002-02-25 18:31:45 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.202 2002-02-26 07:37:05 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.201 2002-02-25 18:31:45 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.202 2002-02-26 07:37:05 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -758,7 +758,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (set-motd-failed . "Det gick inte. Du var kanske inte administratör.\n")
     (removing-motd . "Tar bort loginmeddelandet.\n")
     (removed-motd . "Du har tagit bort loginmeddelandet.\n")
-    (who-to-throw-out . "Vilken session vill du kasta ut? ")
+    (who-to-throw-out . "Vems session vill du kasta ut? ")
     (throwing-out . "Kastar nu ut session %#1d... ")
     (postpone-prompt . "Hur lite vill du läsa nu? ")
     (set-session-priority . "Sätt läsnivå: ")
