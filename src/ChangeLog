@@ -1,9 +1,23 @@
-Fri Nov 19 15:00:32 1999  David Byers  <davby@sen2.ida.liu.se>
+1999-11-19  David Byers  <davby@anton9.ida.liu.se>
 
-	* Release av 0.46-BETA-C
+	* utilities.el (lyskom-looking-at): New function (Gnu Emacs 20.3
+	bug workaround.)
+
+	* edit-text.el (kom-ispell-message): Use lyskom-looking-at.
+	(lyskom-edit-parse-headers): Same here.
+	(lyskom-edit-extract-aux-item-flags): Same here.
+	(lyskom-edit-extract-text): Same here.
+	(lyskom-edit-on-aux-item): Same here.
+
+	* lyskom-rest.el (lyskom-prot-a-format-string): string-as-unibyte
+	the string or concat may convert us to multibyte later.
+	(lyskom-prot-a-format-raw-string): Same here.
 
 1999-11-19  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el (check-coding-system): Throw an error instead
+	of returning nil.
+	
 	* parse.el (lyskom-init-parse): Turn off multibyte chars in the
 	parse buffer.
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.26 1999-11-19 13:37:36 byers Exp $
+;;;;; $Id: compatibility.el,v 44.27 1999-11-19 22:00:08 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.26 1999-11-19 13:37:36 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.27 1999-11-19 22:00:08 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -285,7 +285,7 @@ string to search in."
 (lyskom-provide-function encode-coding-string (str coding-system) str)
 (lyskom-provide-function decode-coding-string (str coding-system) str)
 (lyskom-provide-function string-bytes (str) (length str))
-(lyskom-provide-function check-coding-system (name) nil)
+(lyskom-provide-function check-coding-system (name) (error "No such coding system"))
 (lyskom-provide-function string-width (str) (length str))
 (lyskom-provide-function char-width (c) 1)
 (lyskom-provide-function find-charset-string (str) '(ascii))

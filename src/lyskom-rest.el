@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.88 1999-11-19 13:38:15 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.89 1999-11-19 22:00:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.88 1999-11-19 13:38:15 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.89 1999-11-19 22:00:12 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -103,7 +103,7 @@
      "Internal LysKOM error")
 
 (put 'lyskom-format-error 'error-conditions
-     '(error lyskom-error lyskom-format-error))
+    '(error lyskom-error lyskom-format-error))
 (put 'lyskom-internal-error 'error-message
      "Internal LysKOM format error")
 
@@ -3287,10 +3287,11 @@ Other objects are converted correctly."
   
 (defun lyskom-prot-a-format-string (string)
   (let ((tmp (encode-coding-string string lyskom-server-coding-system)))
-    (format "%dH%s" (string-bytes tmp) tmp)))
+    (string-as-unibyte (format "%dH%s" (string-bytes tmp) tmp))))
 
 (defun lyskom-prot-a-format-raw-string (string)
-  (format "%dH%s" (string-bytes (cdr string)) (cdr string)))
+  (string-as-unibyte (format "%dH%s" (string-bytes (cdr string)) 
+			     (cdr string))))
 
 
 

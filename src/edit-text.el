@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.51 1999-11-19 13:37:46 byers Exp $
+;;;;; $Id: edit-text.el,v 44.52 1999-11-19 22:00:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.51 1999-11-19 13:37:46 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.52 1999-11-19 22:00:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -706,7 +706,7 @@ Based on ispell-message."
         (while (if internal-messagep
                    (< (point) internal-messagep)
                  (not (eobp)))
-          (if (looking-at subject-string)
+          (if (lyskom-looking-at subject-string)
               (progn (goto-char (match-end 0))
                      (let ((case-fold-search old-case-fold-search))
                        (ispell-region (point)
@@ -716,7 +716,7 @@ Based on ispell-message."
             (forward-line 1)))
 
         (while (< (point) limit)
-          (while (and (looking-at cite-regexp-start)
+          (while (and (lyskom-looking-at cite-regexp-start)
                       (< (point) limit)
                       (zerop (forward-line 1))))
 
@@ -1475,7 +1475,7 @@ to lyskom-edit-replace-headers"
   "Check if point is at the beginning of a header of type HEADER.
 Return the corresponding number (conf no etc.) if MATCH-NUMBER is
 non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
-  (if (looking-at
+  (if (lyskom-looking-at
        (concat (lyskom-get-string header)
 	       (cond ((eq match-number 'angled)
 		      "[^0-9]*<\\([0-9]+\\)>")
@@ -1524,7 +1524,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	   ((lyskom-looking-at-header 'header-subject nil)
 	    (setq subject (lyskom-edit-extract-subject)))
 
-           ((looking-at (lyskom-get-string 'aux-item-prefix))
+           ((lyskom-looking-at (lyskom-get-string 'aux-item-prefix))
             (goto-char (match-end 0))
             (let ((item (lyskom-edit-parse-aux-item)))
               (if item
@@ -1550,7 +1550,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
                               data))))
 
 (defun lyskom-edit-extract-aux-item-flags ()
-  (if (looking-at ".*\\[\\([^]]*\\)\\]\\s-*$")
+  (if (lyskom-looking-at ".*\\[\\([^]]*\\)\\]\\s-*$")
     (let ((flag-strings (match-string 1))
           (start 0)
           (flag nil)
@@ -1591,7 +1591,7 @@ Point must be located on the line where the subject is."
       (buffer-substring (1+ (point))
 			(progn
 			  (goto-char (1- (point-max)))
-			  (while (looking-at "\\s-")	; remove trailing
+			  (while (lyskom-looking-at "\\s-")	; remove trailing
 			    (backward-char 1))		; whitespace
 			  (forward-char 1)
 			  (point))))))
@@ -1601,7 +1601,7 @@ Point must be located on the line where the subject is."
   "Return non-nil if point is on the same line as an aux-item"
   (save-excursion
     (beginning-of-line)
-    (and (looking-at (lyskom-get-string 'aux-item-prefix))
+    (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix))
          (search-forward 
           (substitute-command-keys
            (lyskom-get-string 'header-separator)) 
