@@ -1,3 +1,11 @@
+1999-10-25  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-backtrace-list): New variable.
+
+	* parse.el (lyskom-char-p): Make lyskom-char-p ignore whitespace
+	to mimic behavior of lyskom-expect-char and friends.
+	(lyskom-protocol-error): Accumulate backtraces.
+
 1999-10-20  David Byers  <davby@ida.liu.se>
 
 	* mship-edit.el (lp--update-membership): When we set the priority

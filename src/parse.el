@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.23 1999-08-14 19:16:09 byers Exp $
+;;;;; $Id: parse.el,v 44.24 1999-10-25 08:50:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.23 1999-08-14 19:16:09 byers Exp $\n"))
+	      "$Id: parse.el,v 44.24 1999-10-25 08:50:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -99,7 +99,7 @@ first non-white character was not equal to CHAR."
 
 (defun lyskom-char-p (char)
   "Check if next token is CHAR (a character)."
-  (string-match (format "\\`%c[ \t\n\r]" char) (lyskom-string-to-parse)))
+  (string-match (format "\\`[ \t\n\r]*%c[ \t\n\r]" char) (lyskom-string-to-parse)))
 
 
 (defun lyskom-string-to-parse ()
@@ -1146,6 +1146,18 @@ functions and variables that are connected with the lyskom-buffer."
     (lyskom-debug-insert lyskom-proc
                          (format " Current string: ")
                          (buffer-substring lyskom-parse-pos (point-max))))
+
+  (lyskom-message "Saving debugging information...")
+  (setq lyskom-backtrace-list (cons (list (current-time-string)
+                                          (let* ((buffer (generate-new-buffer " *Backtrace*"))
+                                                 (standard-output buffer))
+                                            (backtrace)
+                                            (prog1 (buffer-string buffer)
+                                              (kill-buffer buffer)))
+                                          (lyskom-string-to-parse))
+                                    lyskom-backtrace-list))
+  (lyskom-message "Saving debugging information...done")
+
 
   (signal 'lyskom-protocol-error
           (format "Protocol error in %S: %s"
