@@ -2,6 +2,8 @@
 
 	Fix bug 921:
 	* commands1.el (kom-jump): Use lyskom-read-text-no-prefix-arg.
+	Print which text we're skipping comments from. Print special
+	message when skipping reviewed comments.
 
 	Fix bug 291:
 	* vars.el.in (lyskom-language): Added to minibuffer variables or
