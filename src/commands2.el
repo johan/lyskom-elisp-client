@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 43.1 1996-08-11 10:44:35 byers Exp $
+;;;;; $Id: commands2.el,v 43.2 1996-08-14 11:45:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 43.1 1996-08-11 10:44:35 byers Exp $\n"))
+	      "$Id: commands2.el,v 43.2 1996-08-14 11:45:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -457,7 +457,17 @@ otherwise: the conference is read with lyskom-completing-read."
   "Send a message to the person with the number PERS-NO.  PERS-NO == 0
 means send the message to everybody. MESSAGE is the message to
 send. If DONTSHOW is non-nil, don't display the sent message."
-  (let* ((string (or message
+  (let* ((minibuffer-setup-hook minibuffer-setup-hook)
+         (minibuffer-exit-hook minibuffer-exit-hook)
+         (tmp (add-hook 'minibuffer-setup-hook
+                        (function
+                         (lambda () (run-hooks
+                                     'lyskom-send-message-setup-hook)))))
+         (tmp (add-hook 'minibuffer-exit-hook
+                        (function 
+                         (lambda () (run-hooks 
+                                     'lyskom-send-message-exit-hook)))))
+         (string (or message
                      (lyskom-read-string (lyskom-get-string 'message-prompt))))
          (reply (blocking-do 'send-message pers-no string))
          (to-conf-stat (if (zerop pers-no)
@@ -477,6 +487,25 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                                               (lyskom-get-string 'everybody))
                                           string)) ;+++ lyskom-errno
     ))
+
+(defun lyskom-send-message-turn-off-resize-on-exit ()
+  (resize-minibuffer-mode -1)
+  (remove-hook 'lyskom-send-message-exit-hook
+               'lyskom-send-message-turn-off-resize-on-exit))
+               
+(defun lyskom-send-message-resize-minibuffer ()
+  "Temporarily turn on resizing of minibuffer"
+  (if (not resize-minibuffer-mode)
+      (progn
+        (resize-minibuffer-mode 0)
+        (add-hook 'lyskom-send-message-exit-hook
+                  'lyskom-send-message-turn-off-resize-on-exit))))
+
+
+(defun lyskom-send-message-auto-fill ()
+  "Temporarily turn on auto fill in minibuffer"
+  (setq fill-column 78)
+  (auto-fill-mode 1))
 
 
 

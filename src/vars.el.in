@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 43.3 1996-08-14 04:19:01 davidk Exp $
+;;;;; $Id: vars.el.in,v 43.4 1996-08-14 11:45:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 43.3 1996-08-14 04:19:01 davidk Exp $\n"
+  "$Id: vars.el.in,v 43.4 1996-08-14 11:45:59 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -194,13 +194,19 @@ tree.
 
 This variable is stored in the LysKOM server.")
 
-(defvar kom-after-load-hook nil
-  "Hook to run once after lyskom is loaded.
+(defvar lyskom-send-message-setup-hook nil
+  "*Hook that is called when the minibuffer is entered to read a message.")
+
+(defvar lyskom-send-message-exit-hook nil
+  "*Hook that is called when the minibuffer is exited after reading a message.")
+
+(defvar lyskom-after-load-hook nil
+  "*Hook to run once after lyskom is loaded.
 
 This variable is not saved in the LysKOM server.")
 
 (defvar lyskom-login-hook nil
-  "What to do when logged in.
+  "*What to do when logged in.
 This hook is called after we have logged in but before and command is
 accepted from the keyboard. It is called immediately before
 kom-login-hook.
@@ -325,7 +331,7 @@ to call.
 This variable is stored in the LysKOM server")
 
 (defvar lyskom-ding-on-no-subject 2
-  "How to ding if the user has not entered a subject line.
+  "*How to ding if the user has not entered a subject line.
 A number means the number of times to ding. A string is an argument for the
 program named by kom-audio-player. A symbol is interpreted as a function 
 to call.
@@ -351,7 +357,7 @@ This variable is stored in the LysKOM server.")
 
 
 (defvar lyskom-filter-outgoing-messages t
-  "t if outgoing remote-control messages and automatic replies are not
+  "*t if outgoing remote-control messages and automatic replies are not
 to be displayed in the buffer.
 
 This variable is not saved in the LysKOM server.")
@@ -540,7 +546,7 @@ This variable is not saved in the LysKOM server.")
     ("kom.csd.uu.se" . "CSD-KOM")
     ("striterax.medio.mh.se" . "MedioKOM")
     ("kom.mds.mdh.se" . "MdS-KOM"))
-  "An alist mapping server names to shorter identification strings
+  "*An alist mapping server names to shorter identification strings
 
 This variable is not saved in the LysKOM server.")
 
@@ -759,7 +765,7 @@ if any problems are detected.")
   "Internal of kom-do-when-done.")
 
 (defvar lyskom-do-when-starting nil
-  "Internal of kom-do-when-starting.")
+  "Internal of kom-do-when-starting. Obsolete")
 
 (defvar lyskom-list-of-edit-buffers nil
   "Keeps track of active edit-buffers.")
@@ -1037,10 +1043,10 @@ This is used by the command kom-busy-wait.")
   "The default file name when saving a lyskom-text.")
 
 (defvar lyskom-mode-hook nil
-  "Hook to run when lyskom-mode is entered.")
+  "*Hook to run when lyskom-mode is entered.")
 
 (defvar kom-quit-hook nil
-  "Hook to run when the LysKOM session is correctly ended.
+  "*Hook to run when the LysKOM session is correctly ended.
 
 This variable is stored in the LysKOM server.")
 
