@@ -1,3 +1,8 @@
+Mon Mar 11 11:30:45 1996  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el: kom-initial-digit-view: Corrected variable name
+	so first digit is not lost.
+
 Fri Mar  8 23:02:18 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send): Sätt bara
