@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.263 2002-08-05 18:14:40 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.264 2002-08-15 17:14:46 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.263 2002-08-05 18:14:40 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.264 2002-08-15 17:14:46 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1198,10 +1198,10 @@ Du bör sätta den till ett bättre värde.\n")
     (yes-or-no-nag . "Svara bara ja eller nej.")
     (yes-or-no . "(ja eller nej) ")
 
-    (y-or-n-instring . "jJnN")
+    (y-or-n-instring . "jJnN ")
     (j-or-n-nag . "Svara bara j eller n. ")
     (j-or-n . "(j eller n) ")
-    (y-instring . "jJ")
+    (y-instring . "jJ ")
 
     (person-does-not-exist . "Person %#1d (finns inte).")
     (conference-does-not-exist . "Möte %#1d (finns inte).")
