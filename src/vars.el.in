@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.65 1999-06-22 13:37:08 byers Exp $
+;;;;; $Id: vars.el.in,v 44.66 1999-06-22 13:51:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.65 1999-06-22 13:37:08 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.66 1999-06-22 13:51:50 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1105,6 +1105,9 @@ Users are encouraged to use their best sense of humor."
     kom-add-faq
     kom-del-faq
     kom-review-faq
+
+    kom-add-footnote
+    kom-sub-footnote
     ))
 
 ;;; ================================================================
