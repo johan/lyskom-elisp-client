@@ -1,3 +1,10 @@
+2002-09-18  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 757:
+	* compatibility.el (make-temp-file): Removed last argument from
+	write-region since the parameter lists in Gnu Emacs and XEmacs
+	differed.
+
 2002-09-17  David Byers  <david.byers@swipnet.se>
 
 	* Release av 0.47.1-BETA-1
