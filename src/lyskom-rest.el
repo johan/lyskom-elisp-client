@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.9 1996-06-12 07:55:47 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.10 1996-06-23 00:28:31 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.9 1996-06-12 07:55:47 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.10 1996-06-23 00:28:31 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1655,6 +1655,8 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
             (lyskom-get-string 'review-next-comment-prompt))
            ((eq 'REVIEW-MARK (read-info->type read-info))
             (lyskom-get-string 'review-next-marked-prompt))
+	   ;; The following is not really correct. The text to be read
+	   ;; might be in another conference.
            ((= lyskom-current-conf lyskom-pers-no)
             (lyskom-get-string 'read-next-letter-prompt))
            ((eq 'FOOTN-IN (read-info->type read-info))

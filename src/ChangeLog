@@ -1,3 +1,8 @@
+Sun Jun 23 02:16:23 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-parse-headers): Kör
+ 	lyskom-swascii-header-subject genom regexp-quote innan matchning.
+
 Tue Jun 11 09:25:24 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * parse.el (lyskom-parse-conf-type): Hanterar Any-Conf-Type.
