@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.52 2001-04-01 14:06:20 joel Exp $
+;;;;; $Id: option-edit.el,v 44.53 2001-04-21 16:29:25 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.52 2001-04-01 14:06:20 joel Exp $\n"))
+	      "$Id: option-edit.el,v 44.53 2001-04-21 16:29:25 joel Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1516,11 +1516,13 @@ customize buffer but do not save them to the server."
   (widget-value-set
    widget
    (cons
-    (lyskom-read-string (widget-get widget ':mark-key-prompt))
+    (lyskom-read-string (widget-get widget ':mark-key-prompt)
+                        (car (widget-value widget)))
     (lyskom-read-num-range 0
                            255
                            (widget-get widget ':mark-value-prompt)
-                           t)))
+                           t
+                           (cdr (widget-value widget)))))
   (widget-setup))
 
 (defun lyskom-widget-mark-association-match (widget value)
