@@ -1,6 +1,11 @@
+2001-05-21  Joel Rosdahl  <joel@rosdahl.net>
+
+	* debian/control (Maintainer): Changed maintainer address.
+	(Depends): Better dependencies.
+
 2001-05-21  David Byers  <davby@sen2.ida.liu.se>
 
-	* Release av 0.46.1-BETA-1
+	* Release av 0.46.2-BETA-1
 
 2001-05-21  David Byers  <davby@ida.liu.se>
 
