@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.41 1999-06-20 11:26:29 byers Exp $
+;;;;; $Id: commands1.el,v 44.42 1999-06-22 13:36:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.41 1999-06-20 11:26:29 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.42 1999-06-22 13:36:56 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -522,10 +522,38 @@ of the person."
 
 (defun lyskom-sub-member (pers conf)
   "Remove the person indicated by PERS as a member of CONF."
-  (let ((reply nil)
-	(self (= (conf-stat->conf-no pers) lyskom-pers-no)))
+  (let* ((reply nil)
+         (self (= (conf-stat->conf-no pers) lyskom-pers-no))
+         (mship (and self 
+                     kom-unsubscribe-makes-passive
+                     (lyskom-get-membership (conf-stat->conf-no conf))))
+         (passivate (and mship
+                         (not (membership-type->passive
+                               (membership->type mship))))))
+
     (cond ((null pers) (lyskom-insert-string 'error-fetching-person))
 	  ((null conf) (lyskom-insert-string 'error-fetching-conf))
+          (passivate 
+           (lyskom-format-insert 'unsubscribe-to conf)
+           (set-membership-type->passive (membership->type mship) t)
+           (setq reply (blocking-do 'set-membership-type
+                                    (conf-stat->conf-no pers)
+                                    (conf-stat->conf-no conf)
+                                    (membership->type mship)))
+           (if (not reply)
+               (lyskom-format-insert 'unsubscribe-failed
+                                     (lyskom-get-string 'You)
+                                     conf)
+             (lyskom-insert-string 'done)
+             (lyskom-format-insert 'passivate-done conf)
+             (if (= (conf-stat->conf-no conf) lyskom-current-conf)
+		 (progn 
+		   (set-read-list-empty lyskom-reading-list)
+                   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                                              lyskom-current-conf 0)
+		   (setq lyskom-current-conf 0)))
+	     (read-list-delete-read-info (conf-stat->conf-no conf)
+					 lyskom-to-do-list)))
 	  (t
 	   (if self
 	       (lyskom-format-insert 'unsubscribe-to conf)
@@ -543,7 +571,7 @@ of the person."
 				     (if self
 					 (lyskom-get-string 'You)
 				       (conf-stat->name pers))
-				     (conf-stat->name conf))
+				     conf)
 	     (lyskom-insert-string 'done)
 	     (if (and self
 		      (= (conf-stat->conf-no conf)
@@ -1153,7 +1181,8 @@ back on lyskom-to-do-list."
                 (lyskom-read-conf-stat
                  (lyskom-get-string 'go-to-conf-p)
                  '(all) nil "" t))))
-    (lyskom-go-to-conf conf)))
+  (when (lyskom-check-go-to-conf conf)
+    (lyskom-go-to-conf conf))))
 
 
 (defun lyskom-go-to-conf (conf)
@@ -1222,13 +1251,13 @@ Args: CONF-STAT MEMBERSHIP"
 	  (++ r)))
 
       (cond (found
-	     (let ((read-info (read-list->nth lyskom-to-do-list r)))
-	       (read-list-enter-first read-info lyskom-reading-list)
-	       (read-list-delete-read-info (conf-stat->conf-no conf-stat)
-					   lyskom-to-do-list)
-	       (read-list-enter-first read-info lyskom-to-do-list)
-	       (set-read-info->priority read-info priority)
-	       (lyskom-enter-conf conf-stat read-info)))
+             (let ((read-info (read-list->nth lyskom-to-do-list r)))
+               (read-list-enter-first read-info lyskom-reading-list)
+               (read-list-delete-read-info (conf-stat->conf-no conf-stat)
+                                           lyskom-to-do-list)
+               (read-list-enter-first read-info lyskom-to-do-list)
+               (set-read-info->priority read-info priority)
+               (lyskom-enter-conf conf-stat read-info)))
 	    (t
 	     (lyskom-go-to-empty-conf conf-stat))))))
 
@@ -1404,8 +1433,10 @@ If you are not member in the conference it will be flagged with an asterisk."
 	(setq name (lyskom-read-string (lyskom-get-string 'new-name)
 				       (conf-stat->name conf-stat)))
 	(if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
-	    (lyskom-format-insert 'change-name-done name
-				  (lyskom-default-button 'conf conf-stat))
+            (progn
+              (lyskom-format-insert 'change-name-done name
+                                    (lyskom-default-button 'conf conf-stat))
+              (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
 	  (lyskom-format-insert 'change-name-nope name 
 				(lyskom-get-error-text lyskom-errno)
 				lyskom-errno))))))
@@ -1430,8 +1461,10 @@ If you are not member in the conference it will be flagged with an asterisk."
 					    old-paren))
 		 (name (concat non-paren "(" paren ")")))
 	    (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
-		(lyskom-format-insert 'change-name-done name
-				      (lyskom-default-button 'conf conf-stat))
+                (progn
+                  (lyskom-format-insert 'change-name-done name
+                                        (lyskom-default-button 'conf conf-stat))
+                  (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
 	      (lyskom-format-insert 'change-name-nope name
 				    (lyskom-get-error-text lyskom-errno)
 				    lyskom-errno)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.57 1999-06-20 11:26:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.58 1999-06-22 13:37:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.57 1999-06-20 11:26:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.58 1999-06-22 13:37:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -345,6 +345,7 @@ du har läst klart allting. Kom tillbaks senare.
     (exclude-from . "Utesluta %#1P från %#2M...")
 
     (unsubscribe-failed . "\nDet gick inte. %#1P var kanske aldrig medlem i %#2M?\n")
+    (passivate-done . "Du är nu passiv medlem i %#1M.\n")
 
     (You . "Du")
     (could-not-create-conf . "Mötet \"%#1s\" kunde ej skapas.\n")
@@ -1167,7 +1168,7 @@ Uppkopplad sedan %#8s%#9s")
     (personal-comment-edit-aux . "Begär endast personliga svar")
     (personal-comment-regexp . "Begär endast personliga svar")
     
-    (request-confirmation-aux . "Författaren har begärt läsbekräftelse")
+    (request-confirmation-aux . "%#1P har begärt läsbekräftelse")
     (request-confirmation-edit-aux . "Begär bekräftelse om läsning")
     (request-confirmation-regexp . "Begär bekräftelse om läsning")
     (confirm-read-q . "Bekräfta läsning av inlägg %#1n? ")
@@ -1231,9 +1232,16 @@ Innehåll:    \"%#9s\"
     (no-comments-q . "Författaren vill inte ha kommentarer. Kommentera ändå? ")
     (private-answer-q . "Författaren har bett om personliga svar. Skriv personligt svar? ")
 
-    (your-invited . "Du har bjudits in till %#1M av %#2P.\n")
-    (accept-invitation . "Vill du acceptera inbjudan nu? ")
-    (enter-passive . "Du är passiv medlem i %#1M.\n")
+    (your-invited . "%#2P har bjudit in dig till %#1M.
+Genom att acceptera inbjudan fortsätter du vara medlem i %#1M.
+Du kan även tacka nej, och då kommer du automatiskt att gå ur mötet.
+")
+
+    (accept-invitation . "Vill du acceptera inbjudan och fortsätta vara medlem? ")
+    (enter-passive . "Du är passiv medlem i %#1M.
+Du måste bli aktiv medlem för att gå till mötet.\n")
+    (convert-passive . "Vill du bli aktiv medlem i %#1M? ")
+    (bug-secret-mship . "Du är hemlig medlem i %#1M\n")
 
     (invitation-mt-type . "inbjuden")
     (passive-mt-type . "passiv")
@@ -1255,7 +1263,7 @@ Innehåll:    \"%#9s\"
     (kom-slow-mode            . "Långsamma kommandon")
     (kom-quick-mode           . "Snabba kommandon")
     (kom-send-message         . "Sända meddelande")
-    (kom-send-alarm           . "Sända alarmmeddelande")
+    (kom-send-alarm           . "Skicka alarmmeddelande")
     (kom-create-conf	      . "Skapa möte")
     (kom-delete-conf          . "Utplåna")
     (kom-delete-text          . "Radera inlägg")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.68 1999-06-20 11:26:37 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.69 1999-06-22 13:37:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.68 1999-06-20 11:26:37 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.69 1999-06-22 13:37:02 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -436,8 +436,9 @@ Take first conf from lyskom-to-do-list and copy it to lyskom-reading-list.
 Tell server what the user is doing. If the user is reading a conf it is
 moved last on lyskom-to-do-list, with priority 0."
   (interactive)
-  (lyskom-maybe-move-unread t)
-  (lyskom-go-to-next-conf))
+  (when (lyskom-check-go-to-conf)
+    (lyskom-maybe-move-unread t)
+    (lyskom-go-to-next-conf)))
 
 
 (defun lyskom-go-to-pri-conf ()
@@ -445,35 +446,32 @@ moved last on lyskom-to-do-list, with priority 0."
 This differs from kom-go-to-next-conf only in the place where the yet unread 
 in the current conf is placed."
   (lyskom-start-of-command 'kom-go-to-next-conf)
-  (lyskom-maybe-move-unread nil)
-  (lyskom-go-to-next-conf)
-  (lyskom-end-of-command))
+  (when (lyskom-check-go-to-conf)
+    (lyskom-maybe-move-unread nil)
+    (lyskom-go-to-next-conf)
+    (lyskom-end-of-command)))
 
 
 (defun lyskom-go-to-next-conf ()
   "Actually go to the next conference on the lyskom-to-do-list"
   ;; Copy first element on lyskom-to-do-list to lyskom-reading-list.
   (if (not (read-list-isempty lyskom-to-do-list))
-      (progn
-	(read-list-enter-first
-	   (read-list->first lyskom-to-do-list)
-	   lyskom-reading-list)
-
-	;; Tell server which conf the user is reading.
-	(let ((conf-stat (read-info->conf-stat
-			  (read-list->first lyskom-reading-list))))
-	  (when conf-stat
-	    (lyskom-enter-conf
-	     conf-stat 
-	     (read-list->first lyskom-reading-list))
-	    (lyskom-set-mode-line conf-stat))))
+      (let ((conf-stat (read-info->conf-stat 
+                        (read-list->first lyskom-to-do-list))))
+        (when conf-stat
+          (lyskom-set-mode-line conf-stat)
+          (read-list-enter-first
+           (read-list->first lyskom-to-do-list)
+           lyskom-reading-list)
+          (lyskom-enter-conf conf-stat 
+                             (read-list->first lyskom-to-do-list))))
     (lyskom-insert-string 'all-conf-unread-r)
     (lyskom-set-mode-line (lyskom-get-string 'all-conf-unread-s))))
 
 
 (defun lyskom-maybe-move-unread (bury)
   "Empty the reading list.
-If the argument BURY is non-nil and there are unread artilces left in the
+If the argument BURY is non-nil and there are unread articles left in the
 reading list then the conf is inserted last in the to do list."
   (if (not (read-list-isempty lyskom-reading-list))
       (progn
@@ -499,38 +497,72 @@ reading list then the conf is inserted last in the to do list."
 	(set-read-list-empty lyskom-reading-list))))
 
 
+(defun lyskom-check-go-to-conf (&optional conf)
+  "Check if it is OK to go to conf CONF (a conf-stat).
+It is assumed that lyskom-pers-no is a member of the conference.
+This function interacts with the buffer and the user.
+
+If CONF is nil, check the first conf on the to-do list."
+  (let* ((conf-stat (or conf
+                        (read-info->conf-stat 
+                         (read-list->first lyskom-to-do-list))))
+         (mship (and conf-stat 
+                     (lyskom-get-membership (conf-stat->conf-no conf-stat))))
+         (type nil)
+         (continue t))
+    (when (and conf-stat mship)
+      (setq type (membership->type mship))
+
+      (when (membership-type->invitation type)
+        ;;; State the invitation,give the user a chance to accept it
+        ;;; Leave the conf if the user does not want it
+        (lyskom-format-insert 'your-invited
+                              conf-stat
+                              (membership->created-by mship))
+        (if (lyskom-j-or-n-p (lyskom-get-string 'accept-invitation))
+            (progn
+              (set-membership-type->invitation type nil)
+              (initiate-set-membership-type 'main
+                                            nil
+                                            lyskom-pers-no
+                                            (conf-stat->conf-no conf-stat)
+                                            (membership->type mship))
+              (setq continue t))
+          (progn
+            (lyskom-sub-member (blocking-do 'get-pers-stat lyskom-pers-no)
+                               conf-stat)
+            (setq continue nil)
+            )))
+
+      (when (membership-type->secret type)
+        (lyskom-format-insert-before-prompt 'bug-secret-mship conf-stat))
+
+      (when (membership-type->passive type)
+        ;;; Offer the user a chance to become an active member
+        ;;; If the offer is refused, boot the user off the conference
+        (lyskom-format-insert 'enter-passive conf-stat)
+        (setq continue nil)
+        (if (lyskom-j-or-n-p (lyskom-format 'convert-passive conf-stat))
+            (progn
+              (set-membership-type->passive type nil)
+              (initiate-set-membership-type 'main
+                                            nil 
+                                            lyskom-pers-no
+                                            (conf-stat->conf-no conf-stat)
+                                            (membership->type mship))
+              (setq continue t))
+          (progn
+            (setq continue nil))))
+      )
+    
+    ;;; Return the result
+    continue))
+
 (defun lyskom-enter-conf (conf-stat read-info)
   "Tell server which conf the user is reading.
 Prints the name and amount of unread in the conference we just went to 
 according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
-  ;;
-  ;; Deal with special membership types
-  ;;
-  (let ((mship (lyskom-get-membership (conf-stat->conf-no conf-stat))))
-    (when mship
-
-      ;; Check for invitation
-
-      (when (membership-type->invitation (membership->type mship))
-        (lyskom-format-insert 'your-invited
-                              conf-stat
-                              (membership->created-by mship))
-        (when (lyskom-j-or-n-p (lyskom-get-string 'accept-invitation))
-          (set-membership-type->invitation (membership->type mship)
-                                           nil)
-          (initiate-set-membership-type
-           'main
-           nil
-           lyskom-pers-no
-           (conf-stat->conf-no conf-stat)
-           (membership->type mship))))
-
-      ;; Check for going to passive membership
-
-      (when (membership-type->passive (membership->type mship))
-        (lyskom-format-insert 'enter-passive conf-stat))))
-
   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
                              lyskom-current-conf
                              (conf-stat->conf-no conf-stat))
@@ -538,13 +570,12 @@ Args: CONF-STAT READ-INFO"
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
   (let ((num-unread (text-list->length (read-info->text-list read-info))))
     (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
-			      'enter-conf
-			    (if (= num-unread 1)
-				'one-unread
-			      'several-unread))
-			  conf-stat
-			  num-unread)))
-  
+                              'enter-conf
+                            (if (= num-unread 1)
+                                'one-unread
+                              'several-unread))
+                          conf-stat
+                          num-unread)))  
 
 
 

@@ -7,6 +7,16 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+
+Kommandon: begär bekräftelse, endast personliga kommentarer, inga
+kommentarer. Se inlägg 4089678.
+
+
+lyskom-get-texts-to är buggig. Om man återser senaste N av vem som
+helst till ett möte och det inte finns N texter så buggar den ur. Den
+borde klippa till max texter i mötet.
+
+
 Använd face-flag i lyskom-format-aux för att bestämma om man skall
 visa faces eller inte. Kolla att 
 

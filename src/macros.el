@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.21 1999-06-13 15:00:59 byers Exp $
+;;;;; $Id: macros.el,v 44.22 1999-06-22 13:37:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.21 1999-06-13 15:00:59 byers Exp $\n"))
+	      "$Id: macros.el,v 44.22 1999-06-22 13:37:04 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -135,21 +135,23 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-(if (fboundp 'when)
-    nil
-  (defmacro when (expr &rest body)
-    "Execute BODY if EXPR evaluates to non-nil"
-    (list 'if expr (cons 'progn body)))
-  (put 'when lisp-indent-function 1)
-  (put 'when 'edebug-form-spec t))
+(eval-and-compile
+  (if (fboundp 'when)
+      nil
+    (defmacro when (expr &rest body)
+      "Execute BODY if EXPR evaluates to non-nil"
+      (list 'if expr (cons 'progn body)))
+    (put 'when lisp-indent-function 1)
+    (put 'when 'edebug-form-spec t)))
 
-(if (fboundp 'unless)
-    nil
-  (defmacro unless (expr &rest body)
-    "Execute BODY if EXPR evaluates to non-nil"
-    (append (list 'if expr nil) body))
-  (put 'unless lisp-indent-function 1)
-  (put 'unless 'edebug-form-spec t))
+(eval-and-compile
+  (if (fboundp 'unless)
+      nil
+    (defmacro unless (expr &rest body)
+      "Execute BODY if EXPR evaluates to non-nil"
+      (append (list 'if expr nil) body))
+    (put 'unless lisp-indent-function 1)
+    (put 'unless 'edebug-form-spec t)))
 
 
 ;;; ======================================================================

@@ -1,3 +1,14 @@
+1999-06-21  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-sub-member): Become passive member the
+	first unsubscribe and really unsubscribe on the second try.
+
+	Better handling of membership types.
+	* lyskom-rest.el (lyskom-check-go-to-conf): New function to check
+	if it is OK to go to a conference. Offer to activate passive
+	memberships. Offer to accept invitations. Warn about secret
+	memberships.
+
 1999-06-20  David Byers  <davby@anton9.ida.liu.se>
 
 	* Release av 0.46-BETA-1
