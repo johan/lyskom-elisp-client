@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.319 2004-01-26 21:51:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.320 2004-01-28 23:26:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.319 2004-01-26 21:51:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.320 2004-01-28 23:26:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -443,6 +443,7 @@ and you have finished reading. Please come back later.
     (text-to-delete-footnote-from . "Remove footnote from which text:")
     (text-to-add-cross-reference-to . "Add cross reference to which text:")
     (text-has-no-recipients-r . "Text %#1n has no recipients\n")
+    (cant-move-from-to-same . "Source and target conferences must be different.\n")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M%#2?b%[ %#2s%]%[%]...")

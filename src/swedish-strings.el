@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.360 2004-01-26 21:51:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.361 2004-01-28 23:26:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.360 2004-01-26 21:51:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.361 2004-01-28 23:26:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -433,6 +433,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-delete-footnote-from . "Vilket inlägg vill du subtrahera en fotnot från:")
     (text-to-add-cross-reference-to . "Vilket inlägg vill du addera en referens till:")
     (text-has-no-recipients-r . "Inlägg %#1n har inga mottagare\n")
+    (cant-move-from-to-same . "Mötet du flyttar till kan inte vara samma som du flyttar från.\n")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M%#2?b%[ %#2s%]%[%]...")
