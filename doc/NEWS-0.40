@@ -104,7 +104,7 @@ som finns i slutet av den här filen.
 
 ** Om det kommer asynkrona meddelanden lite olyckligt så kommer
    kom-first-line-face att användas på för många rader. Den här buggen
-   är har låg prioritet.
+   har låg prioritet.
 
 ** Återse senaste fungerar dåligt. Överhuvudtaget finns det många
    problem med återsefunktionerna som inte är rättade. De här buggarna

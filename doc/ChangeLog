@@ -1,3 +1,8 @@
+2002-04-27  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* NEWS-0.41: Typo fixad.
+	* NEWS-0.40: Typo fixad.
+
 2002-03-28  Hans Persson  <hans@localhost.localdomain>
 
 	* elisp-client.sgml: Lagt till beskrivningar av alla

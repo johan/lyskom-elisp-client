@@ -107,8 +107,7 @@ slinker med.
 
 ** Om det kommer asynkrona meddelanden lite olyckligt så kommer
    kom-first-line-face att användas på för många rader. Den här buggen
-   är har låg prioritet. Eventuellt är buggen fixad: ingen minns
-   säkert.
+   har låg prioritet. Eventuellt är buggen fixad: ingen minns säkert.
 
 ** Om man går ur ett möte medan man prioriterar möten kan man inte
    spara den nya prioriteringen. Denna bug kommer nog att fixas på
