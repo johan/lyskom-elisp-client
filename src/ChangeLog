@@ -1,3 +1,20 @@
+Wed Aug 14 13:19:06 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* vars.el.in (lyskom-send-message-setup-hook): Ny variabel.
+	(lyskom-send-message-exit-hook): Ny variabel.
+
+	* commands2.el (lyskom-send-message): Anropa
+ 	lyskom-send-message-setup-hook före läsning av meddelande och
+ 	lyskom-send-message-exit-hook efteråt.
+	(lyskom-send-message-auto-fill): Ny funktion.
+	(lyskom-send-message-resize-minibuffer): Ny funktion.
+	(lyskom-send-message-turn-off-resize-on-exit): Ny funktion.
+
+Tue Aug 13 14:58:55 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* vars.el.in (lyskom-after-load-hook): Bytte namn från
+ 	kom-after-load-hook. Gjorde om till användarvariabel.
+
 Sun Aug 11 12:32:14 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* commands2.el (kom-set-garb-nice): Sätt MUSTMATCH till t i anrop
