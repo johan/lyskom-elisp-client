@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 39.1 1996-03-18 15:43:24 byers Exp $
+;;;;; $Id: review.el,v 39.2 1996-03-25 15:41:44 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 39.1 1996-03-18 15:43:24 byers Exp $\n"))
+	      "$Id: review.el,v 39.2 1996-03-25 15:41:44 davidk Exp $\n"))
 
 
 
@@ -505,9 +505,9 @@ text is shown and a REVIEW list is built to shown the other ones."
 			      (text-stat->misc-info-list text-stat)))
 	 (misc-infos (and misc-info-list
 			  (append (lyskom-misc-infos-from-list 
-				   'COMM-IN misc-info-list)
+				   'FOOTN-IN misc-info-list)
 				  (lyskom-misc-infos-from-list 
-				   'FOOTN-IN misc-info-list))))
+				   'COMM-IN misc-info-list))))
 	 (text-nos (and misc-infos
 			(mapcar
 			 (function

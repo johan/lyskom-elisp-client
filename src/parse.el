@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 39.0 1996-03-14 18:18:09 davidk Exp $
+;;;;; $Id: parse.el,v 39.1 1996-03-25 15:41:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 39.0 1996-03-14 18:18:09 davidk Exp $\n"))
+	      "$Id: parse.el,v 39.1 1996-03-25 15:41:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -804,54 +804,44 @@ lyskom-parse-success, lyskom-parse-error and lyskom-parse-async calls
 functions and variables that are connected with the lyskom-buffer."
   (let ((lyskom-buffer (current-buffer))
 	(match-data (match-data)))
-;;    The old code /davidk
-;;    (if (and mode-line-process
-;;	     (not (equal mode-line-process '(": %s"))))
-;;	(progn
-;;	  (setq mode-line-process '(": %s"))
-;;	  (if (and (not (lyskom-is-in-minibuffer))
-;;		   kom-presence-messages)
-;;	      (message ""))
-;;	  (set-buffer-modified-p (buffer-modified-p))
-;;	  (sit-for 0)))
     ;; Was the server saving?
     (if lyskom-is-saving
 	(progn
-	 (setq mode-line-process (lyskom-get-string
-				  (if lyskom-executing-command
-				      'mode-line-working
-				    'mode-line-waiting))
-	       lyskom-is-saving nil)
-	 (if (and (not (lyskom-is-in-minibuffer))
-		  kom-presence-messages)
-	     (message ""))))
+	  (setq mode-line-process (lyskom-get-string
+				   (if lyskom-executing-command
+				       'mode-line-working
+				     'mode-line-waiting))
+		lyskom-is-saving nil)
+	  ;; Removed check for kom-presence-messages
+	  (if (and (not (lyskom-is-in-minibuffer)))
+	      (message ""))))
     (lyskom-save-excursion
-      (set-buffer lyskom-unparsed-buffer)
-      (if (and (> lyskom-string-bytes-missing 0)
-	       (< (length output) lyskom-string-bytes-missing))
-	  (setq lyskom-string-bytes-missing
-		(- lyskom-string-bytes-missing (length output)))
-	(setq lyskom-string-bytes-missing 0)
-	(while (not (zerop (1- (point-max)))) ;Parse while replies.
-	  (let* ((lyskom-parse-pos 1)
-		 (key (lyskom-parse-nonwhite-char)))
-	    (condition-case err
-		(let ((inhibit-quit nil))
-		  (cond
-		   ((eq key ?=)		;The call succeeded.
-		    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		   ((eq key ?%)		;The call was not successful.
-		    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+     (set-buffer lyskom-unparsed-buffer)
+     (if (and (> lyskom-string-bytes-missing 0)
+	      (< (length output) lyskom-string-bytes-missing))
+	 (setq lyskom-string-bytes-missing
+	       (- lyskom-string-bytes-missing (length output)))
+       (setq lyskom-string-bytes-missing 0)
+       (while (not (zerop (1- (point-max)))) ;Parse while replies.
+	 (let* ((lyskom-parse-pos 1)
+		(key (lyskom-parse-nonwhite-char)))
+	   (condition-case err
+	       (let ((inhibit-quit nil))
+		 (cond
+		  ((eq key ?=)		;The call succeeded.
+		   (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+		  ((eq key ?%)		;The call was not successful.
+		   (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
 		   ((eq key ?:)		;An asynchronous message.
 		    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
-		  (delete-region (point-min) lyskom-parse-pos))
-	      ;; One reply is now parsed.
-	      (lyskom-protocol-error
-	       (delete-region (point-min) (1+ lyskom-parse-pos))
-	       (signal 'lyskom-protocol-error err)))
-	    (goto-char (point-min))
-	    (while (looking-at "[ \t\n\r]")
-	      (delete-char 1))
-	    ))))
+		 (delete-region (point-min) lyskom-parse-pos))
+	     ;; One reply is now parsed.
+	     (lyskom-protocol-error
+	      (delete-region (point-min) (1+ lyskom-parse-pos))
+	      (signal 'lyskom-protocol-error err)))
+	   (goto-char (point-min))
+	   (while (looking-at "[ \t\n\r]")
+	     (delete-char 1))
+	   ))))
     (store-match-data match-data)))
 
