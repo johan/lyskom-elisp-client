@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.13 1991-12-18 15:47:10 byers Exp $
+;;;;; $Id: english-strings.el,v 35.14 1992-01-06 18:50:27 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.13 1991-12-18 15:47:10 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.14 1992-01-06 18:50:27 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -219,7 +219,7 @@ Email-address:\n\nOther:\t")
     (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status for that conference.")
-    (go-to-conf . "Go to conference: ")
+    (go-to-conf-p . "Go to conference: ")
     (want-become-member . "Subscribe? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
