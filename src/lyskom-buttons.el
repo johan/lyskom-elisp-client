@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.2 1996-10-06 05:18:20 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.3 1996-10-08 02:07:24 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -119,8 +119,16 @@ on such functions see the documentation for lyskom-add-button-action."
   ;; This is here to pervent unwanted events when clicking mouse-3
   (interactive "e"))
 
+(defun lyskom-make-button-menu (title entries)
+  "Create a menu keymap from a list of button actions."
+  ;; Use the command as the event for simplicity.
+  (append (list 'keymap title)
+	  (mapcar '(lambda (entry) (cons (cdr (cdr entry)) entry))
+		  entries)))
+
 (defun lyskom-mouse-3 (pos event)
   "Internal function used by kom-mouse-3"
+  (setq last-command-event nil)
   (let* ((type  (get-text-property pos 'lyskom-button-type))
          (arg   (get-text-property pos 'lyskom-button-arg))
          (text  (get-text-property pos 'lyskom-button-text))
@@ -136,26 +144,28 @@ on such functions see the documentation for lyskom-add-button-action."
     (cond ((null data) (goto-char pos))
           ((null actl) (goto-char pos))
           ((null buf) (goto-char pos))
-          ((and buf (null (get-buffer buf)))
+          ((null (get-buffer buf))
            (lyskom-message "%s" (lyskom-get-string 'no-such-buffer)))
           (t         
            (if (symbolp title) (setq title (lyskom-get-string title)))
            (set-buffer buf)
-           ;;
-           ;;   Using x-popup-menu is probably not the Right Thing
-           ;;   I looked in mouse.el for the mouse-major-mode-menu,
-           ;;   but it made Emacs abort when nothing was selected.
-           ;;
 
-           (let* ((menu (cons title (cons (cons "" actl) nil)))
-                  (result (x-popup-menu event menu)))
+	   ;; There is a simple bug in x-popup-menu which causes menus
+	   ;; from simple keymaps to be title-less. A list consisting
+	   ;; of a single keymap works better. A patch is submittet to
+	   ;; the GNU folks. /davidk
+           (let* ((menu (lyskom-make-button-menu title actl))
+		  (result (x-popup-menu event (list menu)))
+		  ;; We trust that the menu is really simple.
+		  (command (car result))
+		  )
 	     ;; If mouse-3 is bound to its default
 	     ;; mouse-save-than-kill, we will get an extra mouse event
 	     ;; when the user clicks to get a menu that stays up. So
 	     ;; we bind mouse-3 to a dummy function. Unfortunately it
 	     ;; doesn't work completely.
-             (if result
-                 (funcall result buf arg text)))))))
+             (if command
+                 (funcall command buf arg text)))))))
          
 
 (defun lyskom-mouse-2 (pos)
