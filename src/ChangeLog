@@ -1,3 +1,17 @@
+2001-11-13  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (lyskom-button-actions): added button-type:
+	recpt-type.
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): new paramter:
+	recpt - the conference to add, if set don't prompt. 
+	(lyskom-edit-insert-misc-conf): add set recipient selection menu
+	properties for the recipient spec.
+
+	* english-strings.el, swedish-strings.el (lyskom-message):
+	recpt-type-button strings. Removed trailing colon from recipient,
+	carbon-copy and blank-carbon-copy strings
+
 2001-10-16  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-default-button): don't bother to set

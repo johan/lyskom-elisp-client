@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.82 2001-08-16 15:29:28 qha Exp $
+;;;;; $Id: edit-text.el,v 44.83 2001-11-13 00:12:19 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.82 2001-08-16 15:29:28 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.83 2001-11-13 00:12:19 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -239,18 +239,27 @@ footn-to	-> Fotnot till text %d."
 
 
 (defun lyskom-edit-insert-misc-conf (conf-stat string stream number)
-  "Insert Mottagare: or Extra kopia: in edit-buffer.
-Args: CONF-STAT STRING STREAM NUMBER
+  "Insert Recipient:, Carbon copy: or Blind Carbon copy: in
+edit-buffer.
 CONF-STAT is the conf-stat of the conference that is about to be put in,
 STRING is the string that is inserted.
 STREAM is the buffer or a marker telling the position.
 NUMBER is the number of the person. Used if the conf-stat is nil."
-  (lyskom-princ  (lyskom-format "%#1s <%#2m> %#3M\n" 
-                                string
-                                (or conf-stat number)
-                                (or conf-stat ""))
-                 stream))
-
+  (add-text-properties
+   0 (length string)
+   (lyskom-default-button
+    'recpt-type
+    (list (or (conf-stat->conf-no conf-stat)
+	      number)
+	  (marker-buffer stream))
+    (list (lyskom-get-string 'recpt-type-popup-title)
+	  string))
+   string)
+  (lyskom-princ (lyskom-format "%#1s: <%#2m> %#3M\n" 
+			       string
+			       (or conf-stat number)
+			       (or conf-stat ""))
+		stream))
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
   (if text-stat

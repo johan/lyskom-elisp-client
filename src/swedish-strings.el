@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.186 2001-11-04 21:57:01 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.187 2001-11-13 00:12:23 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.186 2001-11-04 21:57:01 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.187 2001-11-13 00:12:23 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -795,10 +795,10 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 
     ;; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")
-    (recipient . "Mottagare:")
+    (recipient . "Mottagare")
     (recipient-prefix . "[Mm]")
-    (carbon-copy . "Extra kopia:")
-    (blank-carbon-copy . "Dold kopia:")
+    (carbon-copy . "Extra kopia")
+    (blank-carbon-copy . "Dold kopia")
     (carbon-copy-prefix . "[Ee]")
     (blank-carbon-copy-prefix . "[Dd]")
 
@@ -1254,6 +1254,7 @@ Text:
     (url-popup-title  . "URL %#1s")
     (aux-popup-title  . "Tilläggsinformation")
     (timestamp-popup-title . "Tidsstämpel %#1s")
+    (recpt-type-popup-title . "Mottagartyp: %#1s")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
@@ -1565,6 +1566,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-info-aux-action . "Information")
     (lyskom-button-delete-aux-action . "Radera")
     (lyskom-button-copy-timestamp-action . "Kopiera")
+    (lyskom-button-recpt-type-recipient . "Mottagare")
+    (lyskom-button-recpt-type-copy . "Extra kopia")
+    (lyskom-button-recpt-type-bcc . "Dold kopia")
     (lyskom-edit-toggle-secret-aux-action . "Växla \"hemlig\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Växla \"anonym\"")
     (lyskom-edit-toggle-inherit-aux-action   . "Växla \"ärvd\"")
