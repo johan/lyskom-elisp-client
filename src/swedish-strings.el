@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.275 2002-09-19 17:33:15 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.276 2002-10-16 20:22:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.275 2002-09-19 17:33:15 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.276 2002-10-16 20:22:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -270,7 +270,7 @@ för att radera det.")
     (what-ancestor . "Vilken av de kommenterade texterna önskas? ")
 
     (who-letter-to . "Vem vill du skicka brev till? ")
-    (who-send-text-to . "Vem vill du skicka inlägget till? ")
+    (who-send-text-to . "Vart vill du skicka inlägget? ")
     (has-motd . "%#1P har en lapp på dörren:\n\n")
     (motd-persist-q . "Vill du fortfarande skicka brevet? ")
 
@@ -383,6 +383,7 @@ du har läst klart allting. Kom tillbaks senare.
     (no-such-conf-or-pers . "Mötet eller personen finns ej.\n")
     (new-name . "Nytt namn: ")
     (new-paren . "Ny parentes: ")
+    (too-many-parens-in-name . "Namnet innehåller mer än en parentes. Använd \"Ändra namn\" istället.\n")
     (no-paren-in-name . "Namnet innehåller ingen parentes.\n")
     (who-to-change-supervisor-for . "Vem vill du ändra organisatör för? ")
     (new-supervisor . "Ny organisatör: ")

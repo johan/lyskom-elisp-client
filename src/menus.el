@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.24 2002-05-08 20:08:22 byers Exp $
+;;;;; $Id: menus.el,v 44.25 2002-10-16 20:22:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.24 2002-05-08 20:08:22 byers Exp $\n"))
+	      "$Id: menus.el,v 44.25 2002-10-16 20:22:16 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -49,20 +49,35 @@
   '((menu read
 	  ((item kom-view-next-text)
 	   (item kom-list-news)
+	   (item kom-list-summary)
 	   (hline review-separator)
+	   (item kom-view)
+	   (item kom-review-by-to)
+	   ;; (item kom-review-first)
+	   (item kom-review-last-normally-read)
+	   (item kom-review-more)
+	   (item kom-review-backward)
+           (item kom-review-clear)
+	   (hline review-comments-separator)
 	   (item kom-view-commented-text)
-	   (item kom-view-previous-commented-text)
+	   ;; (item kom-view-previous-commented-text)
 	   (item kom-review-comments)
 	   (item kom-review-tree)
 	   (item kom-find-root)
            (item kom-find-root-review)
-           (item kom-review-clear)
            (hline marks-separator)
+	   ;; Maybe kom-[un]mark-text shouldn't be in this menu, but the
+	   ;; other commands for marked messages are here.
+	   (item kom-mark-text)
+	   (item kom-unmark-text)
            (item kom-list-marks)
            (item kom-review-marked-texts)
            (item kom-review-all-marked-texts)
-           (item kom-review-clear)
+	   (hline save-separator)
+	   (item kom-save-text)
+	   (item kom-save-text-body)
 	   (hline jump-separator)
+	   (item kom-postpone)
 	   (item kom-jump)
 	   (item kom-super-jump)
 	   (item kom-set-unread)))
@@ -71,7 +86,21 @@
 	   (item kom-send-letter)
 	   (item kom-write-comment)
 	   (item kom-private-answer)
-	   (item kom-comment-previous)
+	   (item kom-write-footnote)
+	   ;; Mostly confusing for menu users:
+	   ;; (item kom-comment-previous)
+	   ;; (item kom-private-answer-previous)
+	   ;; Sort of logical to have commands for affecting
+	   ;; already written texts here
+	   (hline change-separator)
+	   (item kom-move-text)
+	   (item kom-add-recipient)
+	   (item kom-add-copy)
+	   (item kom-add-bcc)
+	   (item kom-sub-recipient)
+	   (item kom-add-cross-reference)
+	   (item kom-add-comment)
+	   (item kom-sub-comment)
 	   (hline send-separator)
 	   (item kom-send-message)))
     (menu conference
@@ -80,24 +109,53 @@
 	   (hline info-separator)
 	   (item kom-membership)
 	   (item kom-list-conferences)
+	   (item kom-list-re)
+	   (item kom-list-created-conferences)
 	   (item kom-status-conf)
 	   (item kom-review-presentation)
+	   (item kom-create-conf)
+	   (item kom-delete-conf)
+	   ;; (item kom-change-conf-motd) 
+           ;; (item kom-unset-conf-motd)
+	   ;; (item kom-set-super-conf)
+	   ;; (item kom-set-permitted-submitters)
+	   (item kom-set-garb-nice)
 	   (hline member-separator)
 	   (item kom-add-self)
 	   (item kom-sub-self)
+	   (item kom-add-member)
+	   (item kom-sub-member)
 	   (item kom-prioritize)))
     (menu person
 	  ((item kom-who-is-on)
+	   (item kom-who-is-on-in-conference)
+	   (item kom-who-is-present-in-conference)
+	   (item kom-who-is-on-and-friend)
 	   (item kom-status-session)
 	   (hline info-separator)
 	   (item kom-list-persons)
+	   (item kom-list-re)
 	   (item kom-status-person)
 	   (item kom-review-presentation)
 	   (hline change-separator)
 	   (item kom-change-name)
-	   (item kom-change-password)))
+	   (item kom-change-password)
+	   (item kom-change-presentation)
+	   ;; (item kom-set-motd-text)
+	   (item kom-change-conf-motd)
+	   (item kom-unset-conf-motd)))
     (menu other
-          ((item kom-customize))))
+          ((item kom-help)
+	   (item kom-customize)
+	   (item kom-change-language)
+	   (item kom-set-session-priority)
+	   (item kom-where-is)
+	   (item kom-display-time)
+	   (item kom-recover)
+	   (item kom-start-anew)
+	   ;; (item kom-get-appreciation)
+	   ;; (item kom-get-abuse)
+	   (item kom-quit))))
   "The menus used in LysKOM.")
 
 (defvar lyskom-popup-menu-template

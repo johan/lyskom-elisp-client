@@ -1,3 +1,24 @@
+2002-10-16  David Byers  <david.byers@swipnet.se>
+
+	* menus.el (lyskom-menu-template): Applied patch from Per Starbäck
+	to add more commands to the menus.
+
+	* commands1.el (kom-change-parenthesis): Print error message if
+	name contains more than one parenthesis.
+
+2002-09-21  David Byers  <david.byers@swipnet.se>
+
+	Make review commands fail more gracefully:
+	* review.el (lyskom-cant-review-error): Set error-message
+	property.
+	(lyskom-review-error): Set error-conditions property.
+
+2002-09-20  David Byers  <david.byers@swipnet.se>
+
+	More fixes for bug 619:
+	* commands1.el (lyskom-list-conf-print): Increased field length
+	for conference number.
+
 2002-10-13  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* distribution-README.end: Added two missing quote characters.
@@ -10,6 +31,7 @@
 	"triangle".
 	(lyskom-fill-message): Updated for the above change.
 
+>>>>>>> 44.630
 2002-09-19  David Byers  <davby@metzengerstein.dyndns.org>
 
 	* Release of 0.47.1-BETA-2
