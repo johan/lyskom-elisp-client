@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.221 2002-06-22 18:07:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.222 2002-06-26 20:19:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.221 2002-06-22 18:07:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.222 2002-06-26 20:19:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1368,8 +1368,6 @@ On since %#8s%#9s")
     (doing-nowhere-conn . "but is")
     (waiting-for-membership . "Waiting for the membership list to be fetched...%d/%d")
 
-    (keyboard-menu-help . "Next: SPC  Prev: DEL  Select: RET  Cancel: ESC")
-
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
@@ -1380,7 +1378,6 @@ On since %#8s%#9s")
     (language-set-to . "Language set to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
 
-;;    (reformat-generic . "(%#1s)")
     (reformat-html . "HTML")
     (reformat-enriched . "enriched")
     (reformat-filled . "filled")
@@ -1791,6 +1788,9 @@ have been removed, you can fix the problem by giving the command
     (ssh-cant-connect . "Unable to open ssh connection: %s")
     (ssh-closnig . "Closing ssh connection to %#1s")
     (ssh-unknown-host . "unknown host")
+
+    (keyboard-cancel . "Cancel")
+    (keyboard-menu-help . "(choose: C-n, C-p; confirm: RET)")
     ))
 
 
@@ -3584,6 +3584,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-format-html-authors-doc . "\
   This setting controls which author's HTML messages that the client will
   attempt to format.")
+    (kom-keyboard-menu-immediate-selection-doc . "\
+  This setting controls whether keyboard shortcuts in text-based context
+  menus require confirmation with return or not. With this on you have
+  to confirm all selections with return.")
 
 
     ;;
@@ -3760,6 +3764,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-async-highlight-text-body-tag . "Color message backgrounds:")
     (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
     (kom-format-html-authors-tag . "Format HTML-messages per author:")
+    (kom-keyboard-menu-immediate-selection-tag . "Shortcuts in text menus require confirmation:")
     )
 )
 

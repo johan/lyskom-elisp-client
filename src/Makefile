@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.96 2002-06-14 20:19:27 ceder Exp $
+# $Id: Makefile,v 44.97 2002-06-26 20:19:27 byers Exp $
 
 # Useful targets:
 #
@@ -73,6 +73,7 @@ SOURCES	 = 	komtypes.el \
 		deferred-insert.el \
 		utilities.el \
 		completing-read.el \
+		keyboard-menu.el \
 		command.el \
 		buffers.el \
 		aux-items.el \

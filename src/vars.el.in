@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.202 2002-06-22 17:13:04 byers Exp $
+;;;;; $Id: vars.el.in,v 44.203 2002-06-26 20:19:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.202 2002-06-22 17:13:04 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.203 2002-06-26 20:19:28 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -121,6 +121,12 @@ if the variable is in kom-dont-read-saved-variables."
 
 
 ;;; User flags
+
+(def-kom-var kom-keyboard-menu-immediate-selection nil
+  "*When non-nil, typing a keyboard shortcut in a keyboard menu selects
+the item immediately, without requiring the user to press RET to confirm."
+  server)
+
 
 (def-kom-var kom-edit-hide-add-button nil
   "*If non-nil, hide the add button shown after the headers when editing

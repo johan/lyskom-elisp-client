@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.70 2002-06-22 17:13:03 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.71 2002-06-26 20:19:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.70 2002-06-22 17:13:03 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.71 2002-06-26 20:19:28 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -256,21 +256,16 @@ If there is no active area, then do something else."
     (lyskom-traverse e entries
       (if (> (lyskom-string-width (car e)) maxlen)
           (setq maxlen (lyskom-string-width (car e)))))
-    (setq prompt (concat 
-                  (substring title 0
-                             (min (lyskom-string-width title)
-                                  (- (window-width (minibuffer-window))
-                                     maxlen 3))) ": "))
+    (setq prompt (substring title 0
+			    (min (lyskom-string-width title)
+				 (- (window-width (minibuffer-window))
+				    maxlen 3))))
 
-    (let ((choice (lyskom-completing-read prompt
-                                          (lyskom-maybe-frob-completion-table
-                                           entries t)
-                                          nil
-                                          t 
-                                          (cons (car (car entries))
-                                                0) nil)))
+    (let ((choice (lyskom-read-from-menu prompt
+                                         (lyskom-maybe-frob-completion-table
+                                          entries t))))
       (when choice
-        (funcall (cdr (lyskom-string-assoc choice entries))
+        (funcall (cdr choice)
                  buf arg text)))))
 
        
