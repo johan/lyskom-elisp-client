@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.8 1996-06-11 15:13:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.9 1996-06-23 20:06:04 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.8 1996-06-11 15:13:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.9 1996-06-23 20:06:04 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -129,7 +129,7 @@ Annat se \\[describe-mode] ---")
     (you-have-motd . "\nDu har en lapp p\345 d\366rren:\n\n")
     (lyskom-motd-was-garbed . "\nLoginmeddelandet finns inte!
 Det meddelande som ska visas efter inloggning har f\366rsvunnit.
-Kontakta systemadministratera.\n")
+Kontakta LysKOM-administrat\366ren.\n")
     (presentation-encouragement . 
      "Du har ingen presentation. Det skulle vara trevligt om du skrev en.
 Anv\344nd kommandot \304p. Om du inte vill skriva n\345gon presentation tryck fs.\n")
@@ -298,11 +298,11 @@ du har l\344st klart allting. Kom tillbaks senare.
     (from-machine . "K\366r fr\345n")
     (is-doing . "G\366r")
     (lyskom-client . "Klient")
-    (text-to-add-recipient . "Vilket inl\344gg vill du addera mottagare till")
-    (text-to-add-copy . "Vilket inl\344gg vill du addera en extra kopia till")
-    (text-to-delete-recipient . "Vilket inl\344gg vill du subtrahera mottagare fr\345n")
-    (text-to-add-comment-to . "Vilket inl\344gg vill du addera en kommentar till")
-    (text-to-delete-comment-from . "Vilket inl\344gg vill du subtrahera en kommentar fr\345n")
+    (text-to-add-recipient . "Vilket inl\344gg vill du addera mottagare till:")
+    (text-to-add-copy . "Vilket inl\344gg vill du addera en extra kopia till:")
+    (text-to-delete-recipient . "Vilket inl\344gg vill du subtrahera mottagare fr\345n:")
+    (text-to-add-comment-to . "Vilket inl\344gg vill du addera en kommentar till:")
+    (text-to-delete-comment-from . "Vilket inl\344gg vill du subtrahera en kommentar fr\345n:")
 
     (where-on-list-q . "Placering p\345 listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M...")
@@ -670,6 +670,7 @@ upptagna. Logga ut och kom tillbaks senare om du v\344ntar nu.
     (has-left . "Nu har %#1:P g\345tt ur LysKOM.")
     (has-left-r . "%#2@Nu har %#1P g\345tt ur LysKOM.\n")
     (unknown . "ok\344nd")
+    (secret-person . "Hemlig person")
 
     (message-broadcast . 
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

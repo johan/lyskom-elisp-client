@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.8 1996-06-11 15:14:28 byers Exp $
+;;;;; $Id: english-strings.el,v 41.9 1996-06-23 20:05:53 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.8 1996-06-11 15:14:28 byers Exp $"))
+              "$Id: english-strings.el,v 41.9 1996-06-23 20:05:53 davidk Exp $"))
 
 
 
@@ -124,7 +124,7 @@ Help: \\[describe-mode] ---")
     (you-have-motd . "\nYou have a note on your door:\n\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
 The message that was supposed to be shown after login has disappeared.
-Please contact the system administrator.\n")
+Please contact the LysKOM administrator.\n")
     (presentation-encouragement .
 "You have not written a presentation. Please write a presentation by using
 the command Ap. If you do not want to write a presentations, please type fk.\n")
@@ -299,11 +299,11 @@ and you have finished reading. Please come back later.
     (from-machine . "At")
     (is-doing . "Activity")
     (lyskom-client . "Client")
-    (text-to-add-recipient . "Add recipient to which article: ")
-    (text-to-add-copy . "Add recipient of carbon copy of which article: ")
-    (text-to-delete-recipient . "Remove recipient from which article: ")
-    (text-to-add-comment-to . "Add comment to which article: ")
-    (text-to-delete-comment-from . "Remove comment from which article: ")
+    (text-to-add-recipient . "Add recipient to which article:")
+    (text-to-add-copy . "Add recipient of carbon copy of which article:")
+    (text-to-delete-recipient . "Remove recipient from which article:")
+    (text-to-add-comment-to . "Add comment to which article:")
+    (text-to-delete-comment-from . "Remove comment from which article:")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M...")
@@ -655,6 +655,7 @@ for an article.
     (has-left . "%#1:P has left LysKOM.")
     (has-left-r . "%#2@%#1P has left LysKOM.\n")
     (unknown . "unknown")
+    (secret-person . "Secret user")
 
     (message-broadcast .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
