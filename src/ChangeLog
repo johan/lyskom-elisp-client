@@ -1,5 +1,8 @@
 2002-06-21  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* swedish-strings.el, english-strings.el: kom-change-language no
+	longer changes language in all sessions; fixed command name.
+
 	* english-strings.el: Corrected command name in
 	ignored-user-area-var.
 
