@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.24 1992-01-06 18:50:25 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.25 1992-01-24 23:24:58 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.24 1992-01-06 18:50:25 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.25 1992-01-24 23:24:58 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -229,7 +229,7 @@ Lyskom-sessionen är avslutad.
     (want-become-member . "Vill du bli medlem? ")
     (no-ok . "Nehej.\n")
 
-    (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för: ")
+    (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för (dig sj{lv): ")
 
     (conf-all-read . "%#1s - inga olästa.\n")
     (no-in-conf . "Du är inte närvarande i något möte.\n")
@@ -369,7 +369,20 @@ Lyskom-sessionen är avslutad.
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (Alla) ")
     (his-total-unread . "\n%#1s har totalt %#2d olästa.\n")
     (message-prompt . "Meddelande: ")
-    (message-sent . "Meddelandet sänt.\n")
+    (message-sent-to-user . 
+"================================================================
+Ditt meddelande till %#2s:
+
+%#1s
+----------------------------------------------------------------
+")
+    (message-sent-to-all . 
+"================================================================
+Ditt allm\344nna meddelande l\366d:
+
+%#1s
+----------------------------------------------------------------
+")
     (message-nope .
   "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.\n")
     (only-last . "Endast läsa senaste (0 - %#1d) i %#2s? ")
@@ -534,8 +547,20 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (has-left-r . "Nu har %#1s gått ur LysKOM.\n")
     (unknown . "okänd")
 
-    (message-broadcast . "Allmänt meddelande från %#1s (%#3s):\n\n%#2s\n")
-    (message-from . "Personligt meddelande från %#1s (%#3s):\n\n%#2s\n")
+    (message-broadcast . 
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Allmänt meddelande från %#1s (%#3s):
+
+%#2s
+----------------------------------------------------------------
+")
+    (message-from . 
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Personligt meddelande från %#1s (%#3s):
+
+%#2s
+----------------------------------------------------------------
+")
     (text-is-created . "Text %#1d är skapad!")
 
 
