@@ -1,3 +1,13 @@
+Thu Jul 25 11:35:36 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-read-conf-internal): Säkrare
+ 	hantering av C-g. (lyskom-read-conf-internal): Hantera tomma
+ 	strängen med några specialfall. (lyskom-complete-string): Total
+ 	omskrivning för att få den lite korrektare.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Säkrare
+ 	hantering av C-g vid mottagarkontroll.
+
 Thu Jul 25 03:01:52 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-strings): Gjorde om mellanslagen runt
@@ -24,6 +34,16 @@ Thu Jul 25 03:01:52 1996  David Kågedal  <davidk@lysator.liu.se>
 	* startup.el (lyskom-clear-vars): Gjorde
  	lyskom-normally-read-texts lokal. Lägg till lysikom-buffer till
  	lyskom-buffer-list.
+
+Wed Jul 24 17:44:59 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* internal.el (lyskom-apply-handler): Gör let på inhibit-quit isället.
+	(lyskom-apply-multi-list-handler): Dito.
+	(lyskom-apply-multi-handler): Dito.
+
+	* services.el (blocking-do): Testa quit-flag också. Vid vissa
+ 	tillfällen kommer inhibit-quit att vara satt av någon anledning.
+ 	(lyskom-wait-queue): Dito.
 
 Tue Jul 23 11:28:29 1996  David Byers  <davby@sen2.ida.liu.se>
 

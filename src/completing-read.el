@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.5 1996-07-17 08:59:36 byers Exp $
+;;;;; $Id: completing-read.el,v 41.6 1996-07-25 16:04:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.5 1996-07-17 08:59:36 byers Exp $\n"))
+       "$Id: completing-read.el,v 41.6 1996-07-25 16:04:03 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -241,183 +241,205 @@ PREDICATE is a list of name types to return. Valid types are
 ALL is set by try-completion and all-completions. See the Emacs lisp
 manual for a description. Special value 'lyskom-lookup makes the
 function work as a name-to-conf-stat translator."
-  (let* ((login-list (and (memq 'login predicate)
-                          (lyskom-read-conf-get-logins)))
-         (x-list (lyskom-completing-lookup-name string))
-         (candidate-list (and x-list
-                              (listify-vector (conf-list->conf-nos x-list))))
-         (candidate-type-list 
-          (and x-list (listify-vector (conf-list->conf-types x-list))))
-         (result-list nil))
 
-    ;;
-    ;;  login-list now contains a list of logins, IF the predicate
-    ;;  includes 'login
-    ;;
-    ;;  candidate-list contains a list of conf-nos, with the
-    ;;  corresponding conf-types in candidate-type-list.
-    ;;
-    ;;  Now set result-list to the conf-stats that fulfill the
-    ;;  predicate, fetching the conf-stats asynchronously.
-    ;;
+  ;;
+  ;;  Catch some degenerate cases that can cause...problems. This
+  ;;  won't solve all the...problems, but should speed things up a
+  ;;  little bit.
+  ;;
 
-    (save-excursion
-      (set-buffer (process-buffer lyskom-blocking-process))
-      (while candidate-list
-        (if (lyskom-read-conf-internal-verify-type (car candidate-list)
-                                                   (car candidate-type-list)
-                                                   predicate
-                                                   login-list
-                                                   x-list)
-            (initiate-get-conf-stat 'complete
-                                    (function (lambda (x)
-                                                (setq result-list
-                                                      (cons x result-list)))) 
-                                    (car candidate-list)))
-        (setq candidate-list (cdr candidate-list)
-              candidate-type-list (cdr candidate-type-list)))
+  (cond 
+   ((and (null all)
+         (string= string "")) "")
+   ((and (eq all 'lyskom-lookup)
+         (string= string "")) nil)
+   ((and (eq all 'lambda)
+         (string= string "")) nil)
+   (t
+
+    (let* ((login-list (and (memq 'login predicate)
+                            (lyskom-read-conf-get-logins)))
+           (x-list (lyskom-completing-lookup-name string))
+           (candidate-list (and x-list
+                                (listify-vector (conf-list->conf-nos x-list))))
+           (candidate-type-list 
+            (and x-list (listify-vector (conf-list->conf-types x-list))))
+           (lyskom-read-conf-internal-result-list nil)
+           (result-list nil))
+
+      ;;
+      ;;  login-list now contains a list of logins, IF the predicate
+      ;;  includes 'login
+      ;;
+      ;;  candidate-list contains a list of conf-nos, with the
+      ;;  corresponding conf-types in candidate-type-list.
+      ;;
+      ;;  Now set result-list to the conf-stats that fulfill the
+      ;;  predicate, fetching the conf-stats asynchronously.
+      ;;
+
+      (save-excursion
+        (set-buffer (process-buffer lyskom-blocking-process))
+        (while candidate-list
+          (if (lyskom-read-conf-internal-verify-type (car candidate-list)
+                                                     (car candidate-type-list)
+                                                     predicate
+                                                     login-list
+                                                     x-list)
+              (initiate-get-conf-stat 
+               'complete
+               (function (lambda (x)
+                           (if (boundp 'lyskom-read-conf-internal-result-list)
+                               (setq lyskom-read-conf-internal-result-list
+                                     (cons 
+                                      x 
+                                      lyskom-read-conf-internal-result-list)))))
+               (car candidate-list)))
+          (setq candidate-list (cdr candidate-list)
+                candidate-type-list (cdr candidate-type-list)))
       
+        ;;
+        ;;  Wait for the conf-stats to arrive
+        ;;
+
+        (lyskom-wait-queue 'complete))
+      (setq result-list lyskom-read-conf-internal-result-list)
+
       ;;
-      ;;  Wait for the conf-stats to arrive
+      ;;  Now the matching conf-stats are in result-list
       ;;
 
-      (lyskom-wait-queue 'complete))
-
-    ;;
-    ;;  Now the matching conf-stats are in result-list
-    ;;
-
-    (cond 
-
-     ((eq all 'lyskom-lookup)
-      (let ((names (mapcar 'conf-stat->name result-list))
-            (specials (lyskom-read-conf-expand-specials string
-                                                        predicate
-                                                        login-list
-                                                        x-list)))
-
-        (cond ((= (length result-list) 1)
-               (car result-list))
-              ((and (> (length result-list) 1)
-                    (lyskom-completing-member string names))
-               (elt result-list
-                    (- (length result-list)
-                       (length (lyskom-completing-member string names)))))
-
-              (specials (lyskom-read-conf-lookup-specials string
+      (cond 
+       ((eq all 'lyskom-lookup)
+        (let ((names (mapcar 'conf-stat->name 
+                             result-list))
+              (specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list))
-              ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                                                string) nil)
-              ((lyskom-read-conf-internal-verify-type nil
-                                                      nil
-                                                      predicate
-                                                      login-list
-                                                      x-list)
-               string))))
-     
-     ;;
-     ;;  Check for exact match. We have an exact match in the server
-     ;;  when there was a single match OR when there was no match, and
-     ;;  no match is valid according to predicate
-     ;;
+                                                          x-list)))
 
-     ((eq all 'lambda)
-      (let ((specials (lyskom-read-conf-expand-specials string
-                                                        predicate
-                                                        login-list
-                                                        x-list)))
-        (cond ((= (length result-list) 1) t)
-              (result-list nil)
-              ((= (length specials) 1) t)
-              (specials nil)
-              ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                             string) nil)
-              (t (lyskom-read-conf-internal-verify-type nil
+          (cond ((= (length result-list) 1)
+                 (car result-list))
+                ((and (> (length result-list) 1)
+                      (lyskom-completing-member string names))
+                 (elt result-list
+                      (- (length result-list)
+                         (length (lyskom-completing-member string names)))))
+
+                (specials (lyskom-read-conf-lookup-specials string
+                                                            predicate
+                                                            login-list
+                                                            x-list))
+                ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((lyskom-read-conf-internal-verify-type nil
                                                         nil
                                                         predicate
                                                         login-list
-                                                        x-list)))))
+                                                        x-list)
+                 string))))
+     
+       ;;
+       ;;  Check for exact match. We have an exact match in the server
+       ;;  when there was a single match OR when there was no match, and
+       ;;  no match is valid according to predicate
+       ;;
+
+       ((eq all 'lambda)
+        (let ((specials (lyskom-read-conf-expand-specials string
+                                                          predicate
+                                                          login-list
+                                                          x-list)))
+          (cond ((= (length result-list) 1) t)
+                (result-list nil)
+                ((= (length specials) 1) t)
+                (specials nil)
+                ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                (t (lyskom-read-conf-internal-verify-type nil
+                                                          nil
+                                                          predicate
+                                                          login-list
+                                                          x-list)))))
 
 
-     ;;
-     ;;  Called from all-completions. Return a list of all possible
-     ;;  completions, in this case all names in the result list plus,
-     ;;  if the input string is a person or conf number specification,
-     ;;  the input string, PROVIDED, the requested conference matches
-     ;;  the predicate. If there were no matches, return the input
-     ;;  string if no matches satisfies the predicate.
-     ;;
+       ;;
+       ;;  Called from all-completions. Return a list of all possible
+       ;;  completions, in this case all names in the result list plus,
+       ;;  if the input string is a person or conf number specification,
+       ;;  the input string, PROVIDED, the requested conference matches
+       ;;  the predicate. If there were no matches, return the input
+       ;;  string if no matches satisfies the predicate.
+       ;;
           
-     (all
-      (let ((names (mapcar 'conf-stat->name result-list))
-            (specials (lyskom-read-conf-expand-specials string
+       (all
+        (let ((names (mapcar 'conf-stat->name result-list))
+              (specials (lyskom-read-conf-expand-specials string
+                                                          predicate
+                                                          login-list
+                                                          x-list)))
+          (cond (specials (append specials names))
+                (names names)
+                ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((lyskom-read-conf-internal-verify-type nil
+                                                        nil
                                                         predicate
                                                         login-list
-                                                        x-list)))
-        (cond (specials (append specials names))
-              (names names)
-              ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                                                string) nil)
-              ((lyskom-read-conf-internal-verify-type nil
-                                                      nil
-                                                      predicate
-                                                      login-list
-                                                      x-list)
-               (list string))
-              (t nil))))
+                                                        x-list)
+                 (list string))
+                (t nil))))
 
-     ;;
-     ;;  Called from try-completion, and there were no matches. Try to
-     ;;  expand the input string as a person or conf number
-     ;;  specification or return something sensible if the predicate
-     ;;  is satisfied by no matches.
-     ;;
+       ;;
+       ;;  Called from try-completion, and there were no matches. Try to
+       ;;  expand the input string as a person or conf number
+       ;;  specification or return something sensible if the predicate
+       ;;  is satisfied by no matches.
+       ;;
 
-     ((null result-list)
-      (let ((specials (lyskom-read-conf-expand-specials string
+       ((null result-list)
+        (let ((specials (lyskom-read-conf-expand-specials string
+                                                          predicate
+                                                          login-list
+                                                          x-list)))
+          (cond (specials specials)
+                ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                ((lyskom-read-conf-internal-verify-type nil
+                                                        nil
                                                         predicate
                                                         login-list
-                                                        x-list)))
-        (cond (specials specials)
-              ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                             string) nil)
-              ((lyskom-read-conf-internal-verify-type nil
-                                                      nil
-                                                      predicate
-                                                      login-list
-                                                      x-list)
-               (list string))
-              (t nil))))
+                                                        x-list)
+                 (list string))
+                (t nil))))
 
-     ;;
-     ;;  Called from try-completion, and there were matches in the
-     ;;  server. Return t if the string is an exact match to any
-     ;;  string returned from the server. Otherwise, expand the string
-     ;;  as far as possible and return that
-     ;;
+       ;;
+       ;;  Called from try-completion, and there were matches in the
+       ;;  server. Return t if the string is an exact match to any
+       ;;  string returned from the server. Otherwise, expand the string
+       ;;  as far as possible and return that
+       ;;
 
-     (t
-      (let ((name-list (mapcar 'conf-stat->name result-list))
-            (specials (lyskom-read-conf-expand-specials string
-                                                        predicate
-                                                        login-list
-                                                        x-list))
-            (found nil))
-        (if specials (setq name-list (nconc specials name-list)))
+       (t
+        (let ((name-list (mapcar 'conf-stat->name result-list))
+              (specials (lyskom-read-conf-expand-specials string
+                                                          predicate
+                                                          login-list
+                                                          x-list))
+              (found nil))
+          (if specials (setq name-list (nconc specials name-list)))
 
-        (cond ((lyskom-completing-member string name-list) t) ; Exact match
-              ((= (length name-list) 1) (car name-list))
-              ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-                             string) nil)
-              (t (or (lyskom-complete-string string name-list)
-                     (and (lyskom-read-conf-internal-verify-type nil
-                                                                 nil
-                                                                 predicate
-                                                                 login-list
-                                                                 x-list)
-                          (list string))))))))))
+          (cond ((lyskom-completing-member string name-list) t) ; Exact match
+                ((= (length name-list) 1) (car name-list))
+                ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string) nil)
+                (t (or (lyskom-complete-string name-list)
+                       (and (lyskom-read-conf-internal-verify-type nil
+                                                                   nil
+                                                                   predicate
+                                                                   login-list
+                                                                   x-list)
+                            (list string))))))))))))
 
 
 
@@ -429,20 +451,6 @@ function work as a name-to-conf-stat translator."
         (setq result list)
       (setq list (cdr list))))
   result))
-
-
-(defun lyskom-complete-collect (_fn_ _seq_ &optional _initial_)
-  "Apply FN to all elements in SEQ in sequence. FN takes two arguments,
-a sequence element and the return value of the last invocation. 
-lyskom-complete-collect returns the last value returned by FN. Optional
-argument INITIAL is the initial value to give FN."
-  (let ((_result_ _initial_)
-        (_size_ (length _seq_))
-        (_position_ 0))
-    (while (< _position_ _size_)
-      (setq _result_ (funcall _fn_ (elt _seq_ _position_) _result_))
-      (setq _position_ (1+ _position_)))
-    _result_))
 
 
 (defun lyskom-read-conf-internal-verify-type (conf-no
@@ -466,276 +474,289 @@ argument INITIAL is the initial value to give FN."
                 (null (conf-list->conf-nos x-list))))))
 
 
+(defun lyskom-complete-string (string-list)
+  "Find the longest common prefix of all strings in STRING-LIST according to
+the LysKOM rules of string matching."
+  (let ((main-state 'start-of-string)
+        (tmp-state nil)
+        (current-state 'main-state)
+        (main-accumulator nil)
+        (tmp-accumulator nil)
+        (current-accumulator 'main-accumulator)
+        (done nil)
+        (next-char-start nil)
+        (paren-depth 0)
+        (data-list (lyskom-complete-string-munge-input string-list))
+        (next-char-state (vector nil nil)))
 
-(defun lyskom-complete-string (string string-list)
-  "Return the longest string that matches all the strings in
-string-list according to the LysKOM Rules of Engagement. Sorry, Name
-Comparison. STRING is the string the user entered. It is ignored at
-the moment. STRING-LIST is a list of strings that match the user's
-string."
+    (while (not done)
+      (lyskom-complete-string-next-char next-char-state data-list)
+      (cond
 
-  (if (null (cdr-safe string-list))
-      (or (car-safe string-list) "")
+       ;;
+       ;; Case one, a match of two non-special characters.
+       ;; Accumulate one character and advance the lists
+       ;;
 
-    (let ((result nil)
-          (start 0)
-          (paren-depth 0)
-          (position 0)
-          (data-list (mapcar (function (lambda (el) (vector 0 0 el))) 
-                             string-list))
-          (last-match nil)
-          (match ?\ )
-          (keep-going t))
-
-      (while keep-going
-
-        ;;
-        ;; Save the last character matched
-        ;;
-
-        (setq last-match match)
-
-        ;;
-        ;; Check how the next character matches. A nil means one of
-        ;; the strings is exhausted and we should stop. A number means
-        ;; that the heads of all strings was the same; the number is
-        ;; the character code of the head and we can accumulate this
-        ;; into the result. 'open-paren means that the heads did not
-        ;; match, but at least one of them was an open-paren
-        ;; character; we may be able to skip the parenthesized
-        ;; expression and get a match. t means that the heads were
-        ;; regular characters but did not all match.
-        ;;
-
-        (setq match
-              (lyskom-complete-collect
-               (function (lambda (el data)
-                           (prog1
-                               (cond ((null data) nil)
-                                     ((>= (aref el 1) 
-                                          (length (aref el 2))) nil)
-                                     ((eq data 'start)
-                                      (downcase (elt (aref el 2)
-                                                     (aref el 1))))
-                                     ((numberp data)
-                                      (if (eq (downcase 
-                                               (elt (aref el 2)
-                                                    (aref el 1))) data)
-                                          data
-                                        (if (or (eq data ?\()
-                                                (eq (elt (aref el 2)
-                                                         (aref el 1)) ?\())
-                                            'open-paren
-                                          t)))
-                                     (t data))
-                             (aset el  1 (1+ (aref el 1))))))
-                  
-               data-list
-               'start))
-        (cond 
-
-         ;;
-         ;; One of the strings is exhausted. If we are not in a
-         ;; parenthesized expression, output any pending matches and
-         ;; stop the loop.
-         ;;
-
-         ((null match) 
-          (if (or (= paren-depth 0) 
-                  (and (eq last-match ?\))
-                       (= paren-depth 1)))
-              (if (/= (aref (car data-list) 0)
-                      (1- (aref (car data-list) 1)))
-                  (setq result (cons (substring (aref (car data-list) 2)
-                                                (aref (car data-list) 0)
-                                                (1- (aref (car data-list) 1)))
-                                     result))))
-          (setq keep-going nil))
-
-         ;;
-         ;; We hit a word separator. If the last match was a
-         ;; close-paren, we have exited a parenthesized expression.
-         ;; Note that this does NOT happen when we match the
-         ;; close-paren itself! If this leaves us at paren depth zero,
-         ;; output the matched string. If not, just keep going.
-         ;;
-
-         ((and (/= paren-depth 0)
-               (memq match '(?\t ?\n ?\r ?\ )))
-          (if (eq last-match ?\))
-              (setq paren-depth (1- paren-depth)))
-
-          (if (and (= paren-depth 0)
-                   (/= (aref (car data-list) 0)
-                       (1- (aref (car data-list) 1))))
-              (progn
-                (setq result (cons (substring (aref (car data-list) 2)
-                                              (aref (car data-list) 0)
-                                              (1- (aref (car data-list) 1)))
-                                   result))
-                (setq match (lyskom-complete-string-next-word data-list))
-                (lyskom-complete-string-reset-position data-list))))
-
-         ;;
-         ;; We hit a word separator outside a parenthesized
-         ;; expression. In this case just output the matched word and
-         ;; skip all strings forward to the next word start.
-         ;;
-
-         ((and (= paren-depth 0)
-               (memq match '(?\t ?\n ?\r ?\ )))
-          (if (/= (aref (car data-list) 0)
-                  (1- (aref (car data-list) 1)))
-              (setq result (cons (substring (aref (car data-list) 2)
-                                            (aref (car data-list) 0)
-                                            (1- (aref (car data-list) 1)))
-                                 result)))
-          (setq match (lyskom-complete-string-next-word data-list))
-          (lyskom-complete-string-reset-position data-list))
-          
-         ;;
-         ;; We hit an open-parenthesis at the start of a word.
-         ;; Increase paren-depth and keep going.
-         ;;
-
-         ((and (eq match ?\()
-               (memq last-match '(?\t ?\n ?\r ?\ )))
-          (setq paren-depth (1+ paren-depth)))
+       ((eq (aref next-char-state 0) 'match)
+        (if (and (eq (aref next-char-state 1) ?\ )
+                 (or (eq (symbol-value current-state) 'start-of-word)
+                     (eq (symbol-value current-state) 'start-of-string)))
+            (lyskom-complete-string-advance data-list)
+          (progn
+            (lyskom-complete-string-accumulate current-accumulator
+                                        (aref next-char-state 1))
+            (if (eq (aref next-char-state 1) ?\ )
+                (set current-state 'start-of-word)
+              (set current-state 'in-a-word))
+            (lyskom-complete-string-advance data-list))))
        
+       ;;
+       ;; Case two, a match of two open-paren expressions Increase
+       ;; paren depth and accumulate a character. First set
+       ;; current-accumulator to the temporary if paren-depth is zero
+       ;; to start with.
+       ;;
 
-         ;;
-         ;; Characters matched and were not specials. The heads of all
-         ;; strings matched. Just keep going.
-         ;;
-
-         ((numberp match))
-
-         ;;
-         ;; Characters did not match and were in a parenthesized
-         ;; expression. In this case, scan forward until we leave all
-         ;; the parenthesized expressions we've entered and then scan
-         ;; forward to the start of the next word.
-         ;;
-      
-         ((/= paren-depth 0)
-          (while (/= paren-depth 0)
-            (lyskom-complete-string-up-level data-list)
-            (setq paren-depth (1- paren-depth)))
-          (setq match (lyskom-complete-string-next-word data-list))
-          (lyskom-complete-string-reset-position data-list))
-
-         ;;
-         ;; Characters did not match, one of them was a open paren and
-         ;; we're at the beginning of a new word. Skip past all
-         ;; parenthesized expressions at the heads of the strings and
-         ;; try again.
-         ;;
-
-         ((and (eq match 'open-paren)
-               (memq last-match '(?\t ?\n ?\r ?\ )))
-          (lyskom-complete-string-skip-parens-backup-others data-list)
-          (setq match (lyskom-complete-string-next-word data-list))
-          (lyskom-complete-string-reset-position data-list))
-
-         ;;
-         ;; Characters did not match and were not in a parenthesized
-         ;; expression. Abort if at the start of a word, otherwise
-         ;; skip on to the next word.
-         ;;
-
-         (t 
-          (if (/= (aref (car data-list) 0)
-                  (1- (aref (car data-list) 1)))          
-              (setq result (cons (substring (aref (car data-list) 2)
-                                            (aref (car data-list) 0)
-                                            (1- (aref (car data-list) 1)))
-                                 result)))
-          (if (memq last-match '(?\t ?\n ?\r ?\ ))
-              (setq keep-going nil)
+       ((eq (aref next-char-state 0) 'open-paren-match)
+        (if (zerop paren-depth)
             (progn
-              (setq match (lyskom-complete-string-next-word data-list))
-              (lyskom-complete-string-reset-position data-list))))))
+              (setq current-accumulator 'tmp-accumulator)
+              (setq current-state 'tmp-state)
+              (setq tmp-state main-state)
+              (setq tmp-accumulator nil)))
+        (setq paren-depth (1+ paren-depth))
+        (lyskom-complete-string-accumulate current-accumulator
+                                    (aref next-char-state 1))
+        (lyskom-complete-string-advance data-list))
 
-      (mapconcat 'identity (nreverse result) " "))))
+       ;;
+       ;; Case three, a match of two close-paren expressions
+       ;; Accumulate a character. If paren-depth is postitive,
+       ;; decrease it. If it ends up zero, add the temporary
+       ;; accumulator to the main accumulator and set the current
+       ;; accumulator to the main accumulator.
+       ;;
+
+       ((eq (aref next-char-state 0) 'close-paren-match)
+        (lyskom-complete-string-accumulate current-accumulator
+                                    (aref next-char-state 1))
+        (if (> paren-depth 0)
+            (progn
+              (setq paren-depth (1- paren-depth))
+              (if (zerop paren-depth)
+                  (progn
+                    (setq main-accumulator
+                          (nconc tmp-accumulator main-accumulator))
+                    (setq main-state tmp-state)
+                    (setq current-state 'main-state)
+                    (setq current-accumulator 'main-accumulator)))))
+        (lyskom-complete-string-advance data-list))
+
+       ;;
+       ;; Case two, a mismatch of any kind in a paren expression
+       ;;
+
+       ((and (> paren-depth 0)
+             (or (eq (aref next-char-state 0) 'mismatch)
+                 (eq (aref next-char-state 0) 'space-mismatch)
+                 (eq (aref next-char-state 0) 'open-paren-mismatch)))
+        (setq tmp-accumulator nil)
+        (setq tmp-state nil)
+        (setq current-state 'main-state)
+        (setq current-accumulator 'main-accumulator)
+        (lyskom-complete-string-close-parens data-list paren-depth)
+        (setq paren-depth 0))
+
+       ;;
+       ;; Case two and a half or so, a space mismatch. This is ignored
+       ;; if we're still at the start of the string
+       ;;
+       
+       ((and (eq (aref next-char-state 0) 'space-mismatch)
+             (eq (symbol-value current-state) 'start-of-string))
+        (lyskom-complete-string-skip-whitespace data-list))
+
+       ;;
+       ;; Case three, a mismatch of regular characters outside a paren
+       ;; Advance to the end of the current word
+       ;;
+
+       ((and (or (eq (aref next-char-state 0) 'mismatch)
+                 (eq (aref next-char-state 0) 'space-mismatch))
+             (zerop paren-depth))
+        (if (or (eq (symbol-value current-state) 'start-of-word)
+                (eq (symbol-value current-state) 'start-of-string))
+            (setq done t)
+          (progn
+            (lyskom-complete-string-advance-to-end-of-word data-list)
+            (set current-state 'in-a-word))))
+
+       ;;
+       ;; Case four, a mistmatch where one character is an open-paren
+       ;;
+
+       ((eq (aref next-char-state 0) 'open-paren-mismatch)
+        (lyskom-complete-string-skip-parens data-list))
 
 
-(defun lyskom-complete-string-up-level (data-list)
-  "Scan up one parenthesis level in all strings in DATA-LIST."
-  (let ((position 0)
-        (size (length data-list))
-        (el nil))
-    (while (< position size)
-      (setq el (elt data-list position))
-      (aset el 1 (1- (aref el 1)))      ; Fool lyskom-complete-string-skip-parens-2
-      (lyskom-complete-string-skip-parens-2 el)
-      (setq position (1+ position)))))
+       ;;
+       ;; Case five, eof
+       ;;
+
+       ((eq (aref next-char-state 0) 'eof)
+        (setq done t))
+
+       ;;
+       ;; Case six, can't happen
+       ;;
+
+       (t (error "This can't happen: %S" next-char-state))))
+
+    ;;
+    ;; Build the result by reversing the result list and making a
+    ;; string out of it.
+    ;;
+
+    (let ((tmp (make-string (length main-accumulator) 0))
+          (index 0))
+      (lyskom-traverse
+       el (nreverse main-accumulator)
+       (aset tmp index el)
+       (setq index (1+ index)))
+      tmp)))
+
+(defun lyskom-complete-string-accumulate (accumulator char)
+  (set accumulator (cons char (symbol-value accumulator))))
+
+(defun lyskom-complete-string-munge-input (string-list)
+  (mapcar (function
+           (lambda (x)
+             (vector 0 (length x) x)))
+          string-list))
+
+;;;
+;;; Advance one regular character or multiple whitespaces
+;;;
+
+(defun lyskom-complete-string-advance (data-list)
+  (lyskom-traverse 
+   el data-list
+   (string-match "\\(\\s-+\\|\\S-\\|$\\)"
+                 (aref el 2)
+                 (aref el 0))
+   (aset el 0 (match-end 0))))
+
+(defun lyskom-complete-string-skip-whitespace (data-list)
+  (lyskom-traverse
+   el data-list
+   (string-match "\\s-*" (aref el 2) (aref el 0))
+   (aset el 0 (match-end 0))))
+
+;;;
+;;; Advance to the end of the current word
+;;;
+
+(defun lyskom-complete-string-advance-to-end-of-word (data-list)
+  (lyskom-traverse
+   el data-list
+   (aset el 0 (string-match "\\(\\s-\\|$\\)" 
+                            (aref el 2)
+                            (aref el 0)))))
+
+;;;
+;;; Unwind a number of parens
+;;;
+
+(defun lyskom-complete-string-skip-parens (data-list)
+  (lyskom-traverse
+   el data-list
+   (if (eq ?\( (aref (aref el 2) (aref el 0)))
+       (progn
+         (aset el 0 (1+ (aref el 0)))
+         (lyskom-complete-string-close-parens-2 el 1)))))
+
+(defun lyskom-complete-string-close-parens (data-list depth)
+  (lyskom-traverse
+   el data-list
+   (lyskom-complete-string-close-parens-2 el depth)))
+
+(defun lyskom-complete-string-close-parens-2 (el depth)
+  (let ((tmp nil))
+    (while (> depth 0)
+      (setq tmp (string-match "[^(]*)"
+                              (aref el 2)
+                              (aref el 0)))
+      (if tmp
+          (progn
+            (aset el 0 (match-end 0))
+            (setq depth (1- depth)))
+        (progn
+          (setq tmp (string-match "[^)]*("
+                                  (aref el 2)
+                                  (aref el 0)))
+          (if tmp
+              (progn
+                (aset el 0 (match-end 0))
+                (setq depth (1+ depth)))
+            (aset el 0 (aref el 1))
+            (setq depth 0)))))))
+
+;;;
+;;; Check what's happenin' next
+;;;
+
+(defun lyskom-complete-string-next-char (state data-list)
+  (let ((eofp nil)
+        (open-paren-p nil)
+        (close-paren-p nil)
+        (matchp t)
+        (spacep nil)
+        (char nil)
+        (xchar nil))
+
+    (mapcar
+     (function 
+      (lambda (x)
+        (cond ((>= (aref x 0) (aref x 1))
+               (setq eofp t)
+               (setq matchp nil))
+              ((eq (aref (aref x 2) (aref x 0)) ?\()
+               (setq open-paren-p t))
+              ((eq (aref (aref x 2) (aref x 0)) ?\))
+               (setq close-paren-p t))
+              ((eq (aref (aref x 2) (aref x 0)) ?\ )
+               (setq spacep t)))
+
+        (setq matchp (and matchp
+                          (if (null char)
+                              (progn
+                                (setq xchar (aref (aref x 2)
+                                                  (aref x 0)))
+                                (setq char (downcase xchar)))
+                            (eq char (downcase (aref (aref x 2)
+                                                     (aref x 0)))))))))
+     data-list)
+
+    (aset state 1 xchar)
+    (cond (eofp (aset state 0 'eof))
+          ((and matchp open-paren-p)
+           (aset state 0 'open-paren-match))
+          ((and matchp close-paren-p)
+           (aset state 0 'close-paren-match))
+          (matchp
+           (aset state 0 'match))
+          (spacep
+           (aset state 0 'space-mismatch))
+          (open-paren-p
+           (aset state 0 'open-paren-mismatch))
+          (t
+           (aset state 0 'mismatch))))
+  state)
 
 
-(defun lyskom-complete-string-skip-parens-backup-others (data-list)
-
-  "Scan past the leading parenthesized expressions at heads of strings
-in DATA-LIST. If the string does not start with a parenthesized
-expression, back up one character. This operation is used to skip
-parentheses when a mismatch is found where one of the strings starts
-with a parenthesis."
-  (let ((position 0)
-        (size (length data-list))
-        (el nil))
-    (while (< position size)
-      (setq el (elt data-list position))
-      (if (eq (elt (aref el 2) (1- (aref el 1))) ?\()
-          (lyskom-complete-string-skip-parens-2 el)
-        (aset el 1 (max 0 (1- (aref el 1)))))
-      (setq position (1+ position)))))
-
-(defun lyskom-complete-string-skip-parens-2 (el)
-  "Skip past the next parenthesized expression in data list element
-EL. Used internally by lyskom-complete-string-up-level and
-lyskom-complete-string-skip-parens-backup-others."
-  (let* ((position (aref el 1))
-         (string (aref el 2))
-         (size (length string))
-         (paren-depth 1)
-         (cur ?\()
-         (last nil))
-    (while (and (< position size)
-                (> paren-depth 0))
-      (setq last cur)
-      (setq cur (elt string position))
-      (cond ((and (eq cur ?\() (eq last ?\ )) (setq paren-depth 
-                                                    (1+ paren-depth)))
-            ((and (eq cur ?\ ) (eq last ?\))) (setq paren-depth
-                                                    (1- paren-depth)))
-            (t nil))
-      (setq position (1+ position)))
-    (aset el 1 position)))
 
 
-
-(defun lyskom-complete-string-next-word (data-list)
-  "Skip to the next word in all strings in DATA-LIST unless at the
-start of a word already."
-  (let ((position 0)
-        (size (length data-list))
-        (el nil))
-    (while (< position size)
-      (setq el (elt data-list position))
-      (cond ((string-match "\\s-+" (aref el 2) (1- (aref el 1)))
-             (aset el 1 (match-end 0)))
-            ((= 0 (aref el 1)))
-            (t (aset el 1 (length (aref el 2)))))
-      (setq position (1+ position))))
-  ?\ )
-
-(defun lyskom-complete-string-reset-position (data-list)
-  "Set starting positions to current positions in all elements of DATA-LIST"
-  (let ((position 0)
-        (size (length data-list))
-        (el nil))
-    (while (< position size)
-      (setq el (elt data-list position))
-      (aset el 0 (aref el 1))
-      (setq position (1+ position)))))
 
 
 
