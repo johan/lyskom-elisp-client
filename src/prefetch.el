@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.15 1999-06-29 10:20:24 byers Exp $
+;;;;; $Id: prefetch.el,v 44.16 1999-08-23 09:51:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.15 1999-06-29 10:20:24 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.16 1999-08-23 09:51:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -83,6 +83,7 @@ lyskom-queue.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
 \('MEMBERSHIPISREAD\) -  Just sets the lyskom-membership-is-read variable to t.
+\('CANCELED . rest\)   Whatever it was, it has been canceled.
 
 
 See further documentation in the source code."
@@ -136,6 +137,27 @@ This is used to prevent the prefetch code to reenter itself.")
   (setq lyskom-prefetch-stack (lyskom-stack-create))
   (setq lyskom-pending-prefetch 0)
   (setq lyskom-membership-is-read 0))
+
+
+;;; =================================================================
+;;; Functions to cancel some prefetches
+
+(defun lyskom-prefetch-cancel-prefetch-map (conf-no &optional queue)
+;;;  (let ((prefetch-list (if queue
+;;;                           (lyskom-queue->all-entries queue)
+;;;                         (lyskom-stack->all-entries lyskom-prefetch-stack))))
+;;;    (lyskom-traverse el prefetch-list
+;;;      (cond
+;;;       ((lyskom-queue-p el)
+;;;        (lyskom-prefetch-cancel-prefetch-map conf-no el))
+;;;       ((not (consp el)) nil)
+;;;       ((or (and (eq (car el) 'MAP) 
+;;;                 (eq (conf-stat->conf-no (elt el 1)) conf-no))
+;;;            (and (eq (car el) 'CONFSTATFORMAP)
+;;;                 (eq (elt el 1) conf-no)))
+;;;        (setcar el 'CANCELED))
+;;;       )))
+)
 
 
 ;;;; ================================================================
@@ -378,6 +400,8 @@ process is started. Used to keep prefetch going."
     (while (not done)
       (setq element (lyskom-queue->first queue))
       (if (or (eq element 'DONE)
+              (and (consp element) 
+                   (eq (car element) 'CANCELED))
 	      (and (lyskom-queue-p element)
 		   (eq (lyskom-queue->first element) 'FINISHED)))
 	  (lyskom-queue-delete-first queue)
@@ -397,6 +421,8 @@ Return t if an element was prefetched, otherwise return nil."
     (while (not done)
       (setq element (lyskom-stack->top lyskom-prefetch-stack))
       (if (or (eq element 'DONE)
+              (and (consp element)
+                   (eq (car element) 'CANCELED))
 	      (and (lyskom-queue-p element)
 		   (eq (lyskom-queue->first element) 'FINISHED)))
 	  (lyskom-stack-pop lyskom-prefetch-stack)
@@ -409,6 +435,8 @@ Return t if an element was prefetched, otherwise return nil."
 	(cond
 	 ((eq element 'DONE) nil)
 	 ((eq element 'FINISHED) nil)
+         ((and (consp element)
+               (eq (car element) 'CANCELED)) nil)
 
 	 ;; A queue ==> check it out first.
 	 ((lyskom-queue-p element)

@@ -7,6 +7,10 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+När man har kört prefetchen får man en skum kö i lyskom-prefetch-stack 
+som inte innehåller något annat än element som är köer vars sista
+element är FINISHED. Ibland verkar köerna bli cirkulära.
+
 Man borde använda next-command-event med vänner i silent-read och
 j-or-n-p.
 
@@ -564,20 +568,6 @@ kommit.  Det verkade låsa sig då och jag fick göra quit och koppla upp
 mig igen.
 
 
-"Vill du bli medlem? (j eller n) 
-Mark set
- [6 times]
-error in process filter: Wrong type argument: number-or-marker-p, nil
-[20 times]"
-
-Jag tror jag hittat ett sätt att provocera fram det felmeddelandet (om
-det har någon praktisk nytta vet jag inte...)
-
-Utträd ur fritt forum eller något annat högtrafikmöte.
-G mötet
-svara j på att bli medlem
-a utträd ur mötet INNAN det hunnit cachas hos klienten. Modem eller
-att köra från en annan kontinent underlättar nog här ;-)
 
 
 

@@ -1,3 +1,29 @@
+1999-08-23  David Byers  <davby@ida.liu.se>
+
+	* startup.el: Set the process coding system of the network stream
+	to iso-8859-1 to avoid stupidities like Gnu Emacs sending its
+	internal representation of swedish characters to the server (and
+	lying about the length of the string in question.)
+
+	* compatibility.el (set-process-coding-system): New compatibility
+	function.
+
+1999-08-19  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-change-conf-type): Fixed bug in call to
+	mapconcat.
+
+1999-08-18  David Byers  <davby@ida.liu.se>
+
+	* prefetch.el (lyskom-prefetch-cancel-prefetch-map): New function.
+	(lyskom-skip-finished-in-queue): Handle CANCELED elements
+	(lyskom-prefetch-one-item): Handle CANCELED elements
+
+	* reading.el (lyskom-enter-map-in-to-do-list): Don't bug out if we 
+	get a map for a conference we're not a member of. This can happen
+	when there are RPC calls pending and we do something to the
+	membership list (a refetch, leave a conference, etc.)
+
 1999-08-22  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Check for
