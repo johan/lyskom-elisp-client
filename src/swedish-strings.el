@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.253 2002-06-19 08:28:25 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.254 2002-06-20 22:38:55 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.253 2002-06-19 08:28:25 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.254 2002-06-20 22:38:55 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -1951,7 +1951,7 @@ kommandot \"Spara variabler\".\n\n")
     (kom-next-kom             . "Nästa LysKOM")
     (kom-previous-kom         . "Föregående LysKOM")
     (kom-next-unread-kom      . "Nästa olästa LysKOM")
-    (kom-change-language      . "Ändra språk (i alla sessioner)")
+    (kom-change-language      . "Ändra språk")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
     (kom-where-is             . "Var finns kommandot")

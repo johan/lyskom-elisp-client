@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.218 2002-06-20 22:36:40 joel Exp $
+;;;;; $Id: english-strings.el,v 44.219 2002-06-20 22:38:55 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.218 2002-06-20 22:36:40 joel Exp $"))
+              "$Id: english-strings.el,v 44.219 2002-06-20 22:38:55 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1940,7 +1940,7 @@ have been removed, you can fix the problem by giving the command
     (kom-next-kom             . "Next LysKOM")
     (kom-previous-kom         . "Previous LysKOM")
     (kom-next-unread-kom      . "Next unread LysKOM")
-    (kom-change-language      . "Change language (in all sessions)")
+    (kom-change-language      . "Change language")
     (kom-calculate            . "Calculate")
     (kom-list-marks           . "List marked texts")
     (kom-where-is             . "Where (is the) command")
