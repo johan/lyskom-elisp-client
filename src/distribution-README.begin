@@ -27,13 +27,12 @@
 
     You should have received a copy of the GNU General Public License
     along with LysKOM; see the file COPYING. If not, write to Lysator,
-    c/o ISY, Linköpings universitet, S-581 83 Linköping, SWEDEN, or
+    c/o ISY, Linköpings universitet, SE-581 83 Linköping, SWEDEN, or
     the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA
     02139, USA.
 
-    Please mail bug reports to bug-lyskom@lysator.liu.se. 
-    Please mail change requests to kom@lysator.liu.se.
-
+    For information on how to report bugs or request changes, see
+    section 3, below.
 
 
 1.  REQUIREMENTS
@@ -51,7 +50,33 @@
 
     There are some requirements on supplemental elisp packages:
 
-    * custom
+    * w3 4.0 or later (optional)
+
+      LysKOM can use w3 for displaying HTML. At the time of writing
+      this, the latest version of W3 is 4.0. It is available from
+      <URL:http://www.cs.indiana.edu/elisp/w3/w3.html> and included in
+      many distributions of Emacs. If w3 is not installed, LysKOM will
+      be unable to display HTML.
+
+    * calc (optional)
+
+      LysKOM uses calc to implement the "Compute" command. If you want
+      to use it you need calc. The latest version of calc, as of
+      writing this, is available at <URL:ftp://ftp.gnu.org/pub/gnu/
+      calc/calc-2.02f.tar.gz>
+
+    * You should NOT HAVE macedit.el
+
+      Make sure you do not have a file called macedit.el early in your
+      load path. This file redefines a function that the client relies
+      heavily on. The redefinition is buggy. The client will attempt
+      to detect this situation and fix it by loading edmacro. If you
+      have macedit but not edmacro, you will experience problems. You
+      can recognize this situation if your Emacs says something like
+      this: "Key sequence < m o u s e - 2 > uses invalid prefix
+      characters" when you load or compile the elisp client.
+
+    * custom (mainly affects users of Gnu Emacs 19.34)
 
       You need to have a recent version of the custom package
       installed. The custom.el file that is bundled with Gnu Emacs
@@ -70,31 +95,5 @@
       If you have a version of Gnus installed that uses the old custom
       package, it's time to upgrade. The latest version of Gnus is
       available from <URL:http://www.gnus.org/>.
-
-    * You should NOT HAVE macedit.el
-
-      Make sure you do not have a file called macedit.el early in your
-      load path. This file redefines a function that the client relies
-      heavily on. The redefinition is buggy. The client will attempt
-      to detect this situation and fix it by loading edmacro. If you
-      have macedit but not edmacro, you will experience problems. You
-      can recognize this situation if your Emacs says something like
-      this: "Key sequence < m o u s e - 2 > uses invalid prefix
-      characters" when you load or compile the elisp client.
-
-    * w3 4.0 or later (optional)
-
-      LysKOM can use w3 for displaying HTML. At the time of writing
-      this, the latest version of W3 is 4.0. It is available from
-      <URL:http://www.cs.indiana.edu/elisp/w3/w3.html> and included in
-      many distributions of Emacs. If w3 is not installed, LysKOM will
-      be unable to display HTML.
-
-    * calc (optional)
-
-      LysKOM uses calc to implement the "Compute" command. If you want
-      to use it you need calc. The latest version of calc, as of
-      writing this, is available at <URL:ftp://ftp.gnu.org/pub/gnu/
-      calc/calc-2.02f.tar.gz>
 
 

@@ -5,8 +5,8 @@
     This procedure should work on any system, including Windows.
 
     1. In Emacs, type `M-x b y t e - c o m p i l e - f i l e RET' and
-       give the path to the lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el contained
-       in the archive in which you found this README file.
+       give the path to the lyskom-elisp-client-@@FLAVOUR@@-@@CLIENTVERSION@@.el
+       contained in the archive in which you found this README file.
 
        You may see some warnings when you compile. These can usually be
        ignored. When compilation is done you should have a new file named
@@ -15,7 +15,8 @@
 
     2. Copy lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc to where you want to
        install the client and either rename it to lyskom.elc or create
-       a symbolic link from lyskom.elc to lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc.
+       a symbolic link from lyskom.elc to 
+       lyskom-elisp-client-@@FLAVOUR@@-@@CLIENTVERSION@@.elc.
 
        If possible, you should place it in your site-lisp directory.
        Check the value of load-path (C-h v l o a d - p a t h RET) to

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.225 2002-07-24 19:40:48 byers Exp $
+;;;;; $Id: english-strings.el,v 44.226 2002-07-29 18:00:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.225 2002-07-24 19:40:48 byers Exp $"))
+              "$Id: english-strings.el,v 44.226 2002-07-29 18:00:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -78,6 +78,7 @@
   (define-key lyskom-en-edit-mode-map (kbd "=")     'kom-menu-button-press-or-self-insert-command)
   (define-key lyskom-en-edit-mode-map (kbd "TAB")   'kom-edit-next-button-or-self-insert)
   (define-key lyskom-en-edit-mode-map (kbd "M-TAB") 'kom-edit-prev-button)
+  (define-key lyskom-en-edit-mode-map (kbd "<S-tab>") 'kom-edit-prev-button)
   (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-x") 'lyskom-en-edit-aux-prefix)
   (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
@@ -1795,6 +1796,13 @@ have been removed, you can fix the problem by giving the command
     (keyboard-cancel . "Cancel")
     (keyboard-menu-help . "(choose: C-n, C-p; confirm: RET)")
     (customize-help . "See the beginning of the buffer for more information")
+    (missing-faces . "\
+Your text face scheme \"%#1s\" is missing the following faces:
+
+    %#2s
+
+Using the default face in place of these faces.
+")
     ))
 
 
@@ -2239,6 +2247,7 @@ have been removed, you can fix the problem by giving the command
   (define-key lyskom-en-mode-map (kbd "=") 'kom-menu-button-press)
   (define-key lyskom-en-mode-map (kbd "TAB") 'kom-next-link)
   (define-key lyskom-en-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-en-mode-map (kbd "<S-tab>") 'kom-previous-link)
 
   ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-en-mode-map (kbd "A ?") 'lyskom-help)
@@ -2465,6 +2474,8 @@ have been removed, you can fix the problem by giving the command
   (define-key lyskom-en-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
   (define-key lyskom-en-prioritize-mode-map "\t" 'kom-next-link)
   (define-key lyskom-en-prioritize-mode-map "\M-\C-i" 'kom-previous-link)
+  (define-key lyskom-en-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-en-prioritize-mode-map (kbd "<S-tab>") 'kom-previous-link)
 )
 
 (lyskom-language-var local lyskom-prioritize-header-lines en 2)
@@ -2489,6 +2500,7 @@ have been removed, you can fix the problem by giving the command
   (setq lyskom-en-customize-map (make-sparse-keymap))
   (define-key lyskom-en-customize-map (kbd "TAB") 'widget-forward)
   (define-key lyskom-en-customize-map (kbd "M-TAB") 'widget-backward)
+  (define-key lyskom-en-customize-map (kbd "<S-tab>") 'widget-backward)
   (define-key lyskom-en-customize-map (kbd "C-i") 'widget-forward)
   (define-key lyskom-en-customize-map (kbd "M-C-i") 'widget-backward)
   (define-key lyskom-en-customize-map (kbd "C-m") 'widget-button-press)

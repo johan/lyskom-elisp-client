@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.58 2002-07-23 18:28:39 byers Exp $
+;;;;; $Id: compatibility.el,v 44.59 2002-07-29 18:00:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.58 2002-07-23 18:28:39 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.59 2002-07-29 18:00:38 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -617,9 +617,6 @@ Otherwise treat \\ in NEWTEXT string as special:
 
 ;;; ================================================================
 ;;; Color stuff
-
-(defun lyskom-color-values (color)
-  nil)
 
 (lyskom-external-function set-specifier)
 (lyskom-external-function make-specifier)

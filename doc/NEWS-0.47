@@ -47,25 +47,25 @@
    utfyllnad av kommandonamn vars ord börjar på svenska tecken.
 
    Om du använder GNU Emacs 21 kan du använda ucs-tables.el som
-   antagligen kommer att följa med i version 21.3. (Hämtas t ex
-   från cvs <url:http://savannah.gnu.org/cgi-bin/viewcvs/emacs/
-   emacs/lisp/international/ucs-tables.el> revision 1.12 har vi
-   testat.) När du hämtat filen behöver du lägga den någonstans
-   i din load-path och se till att den används. Någonting i den
-   här stilen borde fungera om du lagt ucs-tables.el i ~/elisp:
+   antagligen kommer att följa med i version 21.3. (Hämtas t ex från
+   cvs <URL:http://savannah.gnu.org/cgi-bin/viewcvs/emacs/
+   emacs/lisp/international/ucs-tables.el>. Vi har testat revision
+   1.12.) När du hämtat filen behöver du lägga den någonstans i din
+   load-path och se till att den används. Någonting i den här stilen
+   borde fungera om du lagt ucs-tables.el i ~/elisp:
 
-   (setq load-path (cons (expand-file-name "~/elisp")
-                         load-path))
-   (require 'ucs-tables)
-   (unify-8859-on-encoding-mode 1)
-   (unify-8859-on-decoding-mode 1)
+       (setq load-path (cons (expand-file-name "~/elisp")
+                             load-path))
+       (require 'ucs-tables)
+       (unify-8859-on-encoding-mode 1)
+       (unify-8859-on-decoding-mode 1)
 
    För de som använder XEmacs innehåller elispklienten en patch
    som förhoppningsvis gör att paketet latin-unity kan användas
    för att avhjälpa samma problem. Följande i .emacs borde göra
    susen om latin-unity är installerat:
 
-   (latin-unity-install)
+       (latin-unity-install)
 
 
 * Migreringsproblem och kompatibilitetsproblem
@@ -89,28 +89,27 @@
    optimerade för antingen vit eller svart bakgrund. Det går att
    ställa enstaka färger i kom-login-hook om man så önskar.
 
-** FAQ-hanteringen har ändrats en del. Bland annat kommer du att få
-   läsa om alla FAQ:er en gång på grund av hur FAQ-läsmarkeringar
-   fungerar numera - information om vilka mötes-FAQ:er du läst sparas
-   i komservern, och varje gång det kommer en ny FAQ till ett möte du
-   är med i, kommer du att meddelas om det nästa gång du går in där.
-   Du kommer alltså inte behöva läsa om alla FAQ:er varje gång du
-   startar om klienten, men just första gången kan det kännas tradigt.
-   Lev med det.
+** FAQ-hanteringen har ändrats en del. Bland måste man läsa om alla
+   FAQ:er en gång på grund av hur FAQ-läsmarkeringar fungerar numera;
+   information om vilka mötes-FAQ:er man har läst sparas i servern,
+   och varje gång det kommer en ny FAQ till ett möte man är med i så
+   meddelas man om det nästa gång man går till mötet.
 
 ** De alternativa utseendena som man kan ha på inläggstext,
-   streckrader och första raden sträcker sig bara till textens slut
-   och inte till fönsterkanten i XEmacs, vilket gör att det kan se
-   lite underligt ut.
+   streckrader och första raden ser lite underliga ut i XEmacs
+   eftersom de bara sträcker sig till slutet av texten och inte till
+   fönstrets kant. Detta går tyvärr inte att undvika.
 
 ** Standardinstallationen av XEmacs i åtminstone Debian/Gnu Linux
-   innehåller en fil som heter macedit.el. Denna fil bör tas bort.
-   Elispklienten detekterar om den finns och undviker dock att ladda
-   den.
+   innehåller en fil som heter macedit.el. Denna fil bör tas bort
+   eftersom den kan orsaka problem för ett flertal Emacs-paket.
+   Elispklienten detekterar dock om den finns och undviker i så fall
+   att ladda den.
 
 ** Förr hette många hookvariabler (oriktigt) "lyskom-..." i stället
-   för "kom-...". Använder du någon av dessa som slutar fungera, är
-   det förmodligen bara att byta prefix. Tanken är att kod användaren
+   för "kom-...". De gamla namnen är tänkta att fungera i 0.47, men
+   kommer att tas bort i nästa version. Använder du någon av dessa så
+   bör du byta prefix på den redan nu. Tanken är att kod användaren
    ska eller vill peta i har prefixet "kom-"; "lyskom-..." är interna
    klientfunktioner som löper större risk för inkompatibla ändringar.
 
@@ -122,7 +121,7 @@
 *** Nu ändrar Ändra språk inte menyer eller tangentbindningar (men
     allting annat). Om man i stället kör kommandot med prefixargument
     C-u, det vill säga C-u x Ändra språk, så ändras alla språkberoende
-    inställningar inklusive tangentbindningar.
+    inställningar, inklusive tangentbindningarna.
 
 *** Klienten tittar på omgivningsvariablerna KOMLANGUAGE och LANG (i
     den ordningen) för att bestämma defaultspråk. Lämpliga värden att
@@ -158,26 +157,26 @@
                                     med det första som skönsvärde.
 
     Betydelsen kan konfigureras för varje enskilt kommando genom
-    variabeln lyskom-pick-text-no-strategy. Beteendet som gäller i
-    0.46.2 går att få genom att sätta lyskom-pick-text-no-strategy
+    variabeln kom-pick-text-no-strategy-alist. Beteendet som gäller i
+    0.46.2 går att få genom att sätta kom-pick-text-no-strategy-alist
     till värdet av lyskom-old-farts-text-prompt-strategy. Stoppa helt
     enkelt in följande i din .emacs:
 
         (add-hook 'lyskom-after-load-hook
                   (lambda ()
-                      (setq lyskom-pick-text-no-strategy
-                            lyskom-old-farts-text-prompt-strategy)))
+                      (setq kom-pick-text-no-strategy-alist
+                            kom-old-farts-text-prompt-strategy)))
 
 *** Man kan med mycket god precision konfigurera på vilket sätt man
-    vill ha prefixargument översättas till inläggsnummer och vilket
+    vill ha prefixargument ska översättas till inläggsnummer och vilket
     skönsvärde man vill få, då det promptas efter inläggsnummer. Kika
-    på dokumentationen för variabeln lyskom-pick-text-no-strategy.
+    på dokumentationen för variabeln kom-pick-text-no-strategy-alist.
 
 *** Inläsningen av inläggsnummer till alla kommandon har gjorts mer
     regelbunden. Man kan ställa in per kommando om kommandot alltid
     skall fråga efter inläggsnummer eller använda strategierna enligt
-    ovan. (Nytt från 0.46.2 och anpassat efter den ovanstående nyheten
-    i 0.47-BETA-3.)
+    ovan.
+
 
 ** Diverse
 
@@ -185,10 +184,11 @@
     beräknas automatiskt utifrån normal bakgrundsfärg. Denna funktion
     kan givetvis stängas av.
 
-*** Status (för) session visar nu när en person loggade ut senast (om
-    personen inte var inloggad -- då det ser ut som förr). Har du i
-    Inställningar för LysKOM bett om att inte tillåta utloggade,
-    slipper du dock även fortsättningsvis besnegla utloggade personer.
+*** Status (för) session visar nu när en person loggade ut senast om
+    personen inte är inloggad. Har du i Inställningar för LysKOM bett
+    om petig utfyllnad av namn så går det dock inte att mata in
+    namnen på personer som inte är inloggade, och därmed finns ingen
+    möjlighet att få status för dem.
 
 *** Gå till nästa möte tar prefixargument på samma sätt som Lista
     nyheter. Positivt prefixargument betyder gå till nästa möte med
@@ -438,8 +438,9 @@
 
 *** kom-text-no-prompts anger hur elispklienten skall fråga efter
     textnummer när man ger kommandon. Den ersätter
-    kom-prompt-for-text-no. Se även lyskom-read-text-no-prefix-arg och
-    lyskom-pick-text-no-strategy-alist för relevant info.
+    kom-prompt-for-text-no. Se även kom-pick-text-no-strategy-alist
+    och funktionen lyskom-read-text-no-prefix-arg och för relevant
+    info.
 
 *** kom-extended-status-information styr om man får se utökad
     information när man visar status för person, möte eller server.

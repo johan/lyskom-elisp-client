@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.260 2002-07-24 19:40:48 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.261 2002-07-29 18:00:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.260 2002-07-24 19:40:48 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.261 2002-07-29 18:00:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -73,6 +73,7 @@
   (define-key lyskom-sv-edit-mode-map (kbd "=")     'kom-menu-button-press-or-self-insert-command)
   (define-key lyskom-sv-edit-mode-map (kbd "TAB")   'kom-edit-next-button-or-self-insert)
   (define-key lyskom-sv-edit-mode-map (kbd "M-TAB") 'kom-edit-prev-button)
+  (define-key lyskom-sv-edit-mode-map (kbd "<S-tab>") 'kom-edit-prev-button)
   (define-key lyskom-sv-edit-mode-map (kbd "C-c")   'lyskom-sv-edit-prefix)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
@@ -1807,6 +1808,14 @@ kommandot \"Spara variabler\".\n\n")
     (keyboard-cancel . "Avbryt")
     (keyboard-menu-help . "(välj: C-n, C-p; bekräfta: RET)")
     (customize-help . "Se början av bufferten för mer information")
+
+    (missing-faces . "\
+Ditt teckensnittsschema \"%#1s\" saknar följande inställningar:
+
+    %#2s
+
+Använder standardteckensnittet för dessa inställningar.
+")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2264,6 +2273,7 @@ kommandot \"Spara variabler\".\n\n")
   (define-key lyskom-sv-mode-map (kbd "=")     'kom-menu-button-press)
   (define-key lyskom-sv-mode-map (kbd "TAB")   'kom-next-link)
   (define-key lyskom-sv-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-sv-mode-map (kbd "<S-tab>") 'kom-previous-link)
   (define-key lyskom-sv-mode-map (kbd "C-i")   'kom-next-link)
   (define-key lyskom-sv-mode-map (kbd "M-C-i") 'kom-previous-link)
 
@@ -2516,6 +2526,7 @@ kommandot \"Spara variabler\".\n\n")
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-i") 'kom-next-link)
   (define-key lyskom-sv-prioritize-mode-map (kbd "TAB") 'kom-next-link)
   (define-key lyskom-sv-prioritize-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "<S-tab>") 'kom-previous-link)
   (define-key lyskom-sv-prioritize-mode-map (kbd "M-C-i") 'kom-previous-link)
 )
 
@@ -2542,6 +2553,7 @@ kommandot \"Spara variabler\".\n\n")
   (setq lyskom-sv-customize-map (make-sparse-keymap))
   (define-key lyskom-sv-customize-map (kbd "TAB") 'widget-forward)
   (define-key lyskom-sv-customize-map (kbd "M-TAB") 'widget-backward)
+  (define-key lyskom-sv-customize-map (kbd "<S-tab>") 'widget-backward)
   (define-key lyskom-sv-customize-map (kbd "C-i") 'widget-forward)
   (define-key lyskom-sv-customize-map (kbd "M-C-i") 'widget-backward)
   (define-key lyskom-sv-customize-map (kbd "C-m") 'widget-button-press)

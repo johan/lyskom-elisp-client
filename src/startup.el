@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.75 2002-06-22 18:07:46 byers Exp $
+;;;;; $Id: startup.el,v 44.76 2002-07-29 18:00:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.75 2002-06-22 18:07:46 byers Exp $\n"))
+	      "$Id: startup.el,v 44.76 2002-07-29 18:00:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -472,7 +472,8 @@ shown to other users."
   (lyskom-start-of-command 'kom-start-anew)
   (lyskom-completing-clear-cache)
   (let ((new-me nil)
-	(login-successful nil))
+	(login-successful nil)
+        (ignored-user-area-vars nil))
     (unwind-protect
         (progn
           (if lyskom-first-time-around
@@ -570,8 +571,8 @@ shown to other users."
             (unless lyskom-is-running-compiled
               (lyskom-insert-string 'warning-about-uncompiled-client))
 
-            (if (not lyskom-dont-read-user-area)
-                (lyskom-read-options))
+            (unless lyskom-dont-read-user-area
+              (setq ignored-user-area-vars (lyskom-read-options)))
             (when (or session-priority kom-default-session-priority)
               (setq lyskom-session-priority
                     (or session-priority kom-default-session-priority)))
@@ -603,6 +604,13 @@ shown to other users."
                         'language-set-to
                         (lyskom-language-name kom-default-language))))
                    (setq lyskom-have-one-login t)))
+
+          (when ignored-user-area-vars
+            (lyskom-format-insert-before-prompt
+             'ignored-user-area-var
+             (mapconcat 'symbol-name 
+                        ignored-user-area-vars
+                        "\n    ")))
 
           ;; Show motd and encourage writing a presentation
 
