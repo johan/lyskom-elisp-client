@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.172 2002-08-06 19:43:33 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.173 2002-08-12 20:41:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.172 2002-08-06 19:43:33 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.173 2002-08-12 20:41:19 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -760,6 +760,37 @@ by PERS-NO"
                    pers-conf-stat))
               (lyskom-reject-recommendation (elt rec 0)))))))))
 
+(defun lyskom-clean-read-faqs (pers-no)
+  "Remove all read-faq aux-items from PERS-NO that correspond to texts
+that are no longer FAQs or are missing."
+  (let ((conf-stat (blocking-do 'get-conf-stat pers-no)))
+    (when conf-stat
+      (lyskom-traverse item (lyskom-get-aux-item (conf-stat->aux-items conf-stat)
+                                                 10000)
+        (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
+          (let ((conf-no (string-to-int (match-string 1 (aux-item->data item))))
+                (text-no (string-to-int (match-string 2 (aux-item->data item)))))
+            (initiate-get-text-stat 'background
+                                    'lyskom-clean-read-faqs-1
+                                    text-no
+                                    pers-no
+                                    conf-no
+                                    item)))))))
+
+(defun lyskom-clean-read-faqs-1 (text-stat pers-no conf-no item)
+  "Callback for lyskom-clean-read-faqs"
+  (let ((cmp (int-to-string conf-no)))
+    (when (or (null text-stat)
+              (lyskom-traverse aux (lyskom-get-aux-item 
+                                    (text-stat->aux-items text-stat)
+                                    28)
+                (when (string= cmp (aux-item->data aux))
+                  (lyskom-traverse-break t))))
+      (initiate-modify-conf-info 'background
+                                 nil
+                                 pers-no
+                                 (list (aux-item->aux-no item))
+                                 nil))))
 
 
 (defun lyskom-enter-conf (conf-stat read-info)
