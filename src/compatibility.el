@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.71 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: compatibility.el,v 44.72 2004-10-26 11:56:55 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.71 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.72 2004-10-26 11:56:55 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ============================================================
@@ -300,8 +300,26 @@ KEYS should be a string in the format used for saving keyboard macros
 
 (lyskom-function-alias frame-property (frame property &optional default)
   (or (cdr (assq property (frame-parameters frame))) default))
-(lyskom-function-alias face-background (face) nil)
-(lyskom-function-alias face-foreground (face) nil)
+
+
+(defun lyskom-face-background (face)
+  "Call face-background and return a string with the name or nil."
+  (let ((f (face-background face nil)))
+    (cond ((stringp f) f)
+	  ((and (fboundp 'color-specifier-p) 
+		(color-specifier-p f))
+		(color-name f)))))
+
+(defun lyskom-face-foreground (face)
+  "Call face-foreground and return a string with the name or nil."
+  (let ((f (face-foreground face nil)))
+    (cond ((stringp f) f)
+	  ((and (fboundp 'color-specifier-p) 
+		(color-specifier-p f))
+		(color-name f)))))
+
+
+
 (lyskom-function-alias find-face (face) (and (facep face) face))
 
 (defun lyskom-make-face (name temporary)
