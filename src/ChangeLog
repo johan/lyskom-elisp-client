@@ -1,5 +1,14 @@
 Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
 
+	* swedish-string.el, prioritize.el (lyskom-prioritize-mode-map):
+	  Moved the map to swedish-strings.el.
+
+	* swedish-strings.el (lyskom-header-separator): Now accepts
+	  different keyboard bindings.
+
+	* swedish-strings.el, edit-text.el: (lyskom-edit-mode-map):
+	  Moved the map to swedish-strings.el.
+
 	* vars.el, lyskom-rest.el (kom-start-of-command): Tommys
 	  kom-page-before-command included.
 
