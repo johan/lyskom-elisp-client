@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.85 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: startup.el,v 44.86 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.85 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: startup.el,v 44.86 2003-01-02 23:42:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -308,14 +308,14 @@ clients of the event. See lyskom-mode for details on lyskom."
                              (make-string kom-text-header-dash-length ?-)
                            "")
                          (when kom-highlight-dashed-lines
-                           `(face ,kom-dashed-lines-face)))
+                           `(face ,(or kom-dashed-lines-face
+                                       lyskom-default-dashed-lines-face))))
 
                         (lyskom-format-insert "%#2$%#1t\n"
                                               str
                                               (when kom-highlight-text-body
-                                                `(face ,kom-text-body-face))
-                                              (when kom-highlight-text-body
-                                                `(face ,kom-text-body-face)))
+                                                `(face ,(or kom-text-body-face
+                                                            lyskom-default-text-body-face))))
 
                         (lyskom-format-insert
                          "%#2$%#1s\n"
@@ -330,7 +330,8 @@ clients of the event. See lyskom-mode for details on lyskom."
                           kom-text-footer-format
                           lyskom-last-text-format-flags)
                          (when kom-highlight-dashed-lines
-                           `(face ,kom-dashed-lines-face)))
+                           `(face ,(or kom-dashed-lines-face
+                                       lyskom-default-dashed-lines-face))))
                         ))))
 
 	      ;; Can't use lyskom-end-of-command here.

@@ -1,4 +1,37 @@
+2003-01-03  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-buttons.el (lyskom-default-button): Use default, not
+	kom-text-face for timestamp buttons since kom-text-face is no
+	more.
+
+	Implement face customization:
+	* option-edit.el (lyskom-face-widget, lyskom-face-widget): New
+	widget type.
+	(lyskom-widget-functions): Added face widget to the list.
+
+	* view-text.el (lyskom-print-text): Get generated faces if the
+	user hasn't selected any specific faces.
+
+	* startup.el (lyskom): Get generated faces if the user hasn't
+	selected any specific faces.
+
+	* commands2.el (lyskom-send-message): Get generated faces if the
+	user hasn't selected any specific faces.
+
+	* async.el (lyskom-format-as-personal-message): Get generated
+	faces if the user hasn't selected any specific faces.
+
 2003-01-02  David Byers  <david.byers@swipnet.se>
+
+	Implement face customization:
+	* faces.el (lyskom-setup-faces-for-buffer): Don't muck with the
+	user-selectable values.
+
+	* option-edit.el: Added var parameter to all widget conversion
+	functions. 
+
+	* utilities.el (lyskom-current-client-time): Removed some
+	comments.
 
 	Cosmetics:
 	* commands2.el (kom-set-unread): Don't include range in prompt. It

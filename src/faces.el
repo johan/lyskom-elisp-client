@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.2 2003-01-02 17:12:26 byers Exp $
+;;;;; $Id: faces.el,v 44.3 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,137 +61,146 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.2 2003-01-02 17:12:26 byers Exp $\n"))
+	      "$Id: faces.el,v 44.3 2003-01-02 23:42:53 byers Exp $\n"))
 
 
 
 ;;; ================================================================
 ;;; Face variables
 ;;;
-;;; Aye, there are a lot of them.
+;;; Here's a list of all face variables. Seems to be useful on occasion.
 ;;;
+;;; kom-active-face
+;;; kom-url-face
+;;; kom-me-face
+;;; kom-highlight-face
+;;; kom-text-face
+;;; kom-subject-face
+;;; kom-text-no-face
+;;; kom-friends-face
+;;; kom-morons-face
+;;; kom-presence-face
+;;; kom-first-line-face
+;;; kom-warning-face
+;;; kom-mark-face
+;;; kom-dim-face
+;;; kom-text-body-face
+;;; kom-dashed-lines-face
+;;; kom-async-text-body-face
+;;; kom-async-dashed-lines-face
 
-(def-kom-var kom-active-face 'kom-face--plain--active-face
+(def-kom-var kom-active-face 'kom-face--default--active-face
   "*Face used for most \"clickable\" areas.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--active-face.
+The default value is kom-face--default--active-face.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-url-face 'kom-face--plain--url-face
+(def-kom-var kom-url-face 'kom-face--default--url-face
   "*Face used for URLs.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--url-face.
+The default value is kom-face--default--url-face.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-me-face 'kom-face--plain--me-face
+(def-kom-var kom-me-face 'kom-face--default--me-face
   "*Face used to show your own name.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--me-face.
+The default value is kom-face--default--me-face.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-highlight-face 'kom-face--plain--highlight-face
+(def-kom-var kom-highlight-face 'kom-face--default--highlight-face
   "*Face used for various highlights.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--highlight.
+The default value is kom-face--default--highlight.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-text-face 'kom-face--plain--text-face
-  "*Face used for text bodies.
-The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--text-face.
-
-This is a LysKOM face variable."
-  server
-  inherited)
-
-(def-kom-var kom-subject-face 'kom-face--plain--subject-face
+(def-kom-var kom-subject-face 'kom-face--default--subject-face
   "*Face used for subject lines.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--subject-fac.
+The default value is kom-face--default--subject-fac.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-text-no-face 'kom-face--plain--text-no-face
+(def-kom-var kom-text-no-face 'kom-face--default--text-no-face
   "*Face used for text numbers.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--text-no-fac.
+The default value is kom-face--default--text-no-fac.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-friends-face 'kom-face--plain--friends-face
+(def-kom-var kom-friends-face 'kom-face--default--friends-face
   "*Face used for people in kom-friends.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--friends-fac.
+The default value is kom-face--default--friends-fac.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-morons-face 'kom-face--plain--morons-face
+(def-kom-var kom-morons-face 'kom-face--default--morons-face
   "*Face used for people in kom-morons.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--morons-face.
+The default value is kom-face--default--morons-face.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-presence-face 'kom-face--plain--presence-face
+(def-kom-var kom-presence-face 'kom-face--default--presence-face
   "*Face used for presence messages.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--presence-f.
+The default value is kom-face--default--presence-f.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-first-line-face 'kom-face--plain--first-line-face
+(def-kom-var kom-first-line-face 'kom-face--default--first-line-face
   "*Face used for the first line header of each text.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--first-li.
+The default value is kom-face--default--first-li.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-warning-face 'kom-face--plain--warning-face
+(def-kom-var kom-warning-face 'kom-face--default--warning-face
   "*Face used to display important warnings.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--warning-fac.
+The default value is kom-face--default--warning-fac.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-mark-face 'kom-face--plain--mark-face
+(def-kom-var kom-mark-face 'kom-face--default--mark-face
   "*Face used for temporary marks.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--mark-face.
+The default value is kom-face--default--mark-face.
 
 This is a LysKOM face variable."
   server
   inherited)
 
-(def-kom-var kom-dim-face 'kom-face--plain--dim-face
+(def-kom-var kom-dim-face 'kom-face--default--dim-face
   "*Face used to display dimmed items, such as passive memberships.
 The value should be either a symbol naming a face or nil.
-The default value is kom-face--plain--dim-face.
+The default value is kom-face--default--dim-face.
 
 This is a LysKOM face variable."
   server
@@ -249,6 +258,22 @@ This is a LysKOM face variable."
   server
   inherited)
 
+(def-kom-var lyskom-default-text-body-face nil
+  "Default text body face."
+  inherited)
+
+(def-kom-var lyskom-default-async-text-body-face nil
+  "Default text body face."
+  inherited)
+
+(def-kom-var lyskom-default-dashed-lines-face nil
+  "Default text body face."
+  inherited)
+
+(def-kom-var lyskom-default-async-dashed-lines-face nil
+  "Default text body face."
+  inherited)
+
 
 ;;; ================================================================
 ;;; Main entry points
@@ -259,17 +284,10 @@ This is a LysKOM face variable."
                 (or (face-background 'default)
                     (frame-property (selected-frame) 'background-color)
                     "#ffffff"))))
-    ;; We've generated default background faces. Now either use them
-    ;; or lose them. If the user has selected specific faces, then
-    ;; don't use the generated faces.
-    (unless (facep kom-text-body-face)
-      (setq kom-text-body-face (cdr (assq 'text-body faces))))
-    (unless (facep kom-dashed-lines-face)
-      (setq kom-dashed-lines-face (cdr (assq 'dashed-lines faces))))
-    (unless (facep kom-async-text-body-face)
-      (setq kom-async-text-body-face (cdr (assq 'async-text-body faces))))
-    (unless (facep kom-async-dashed-lines-face)
-      (setq kom-async-dashed-lines-face (cdr (assq 'async-dashed-lines faces))))
+    (setq lyskom-default-text-body-face (cdr (assq 'text-body faces)))
+    (setq lyskom-default-dashed-lines-face (cdr (assq 'dashed-lines faces)))
+    (setq lyskom-default-async-text-body-face (cdr (assq 'async-text-body faces)))
+    (setq lyskom-default-async-dashed-lines-face (cdr (assq 'async-dashed-lines faces)))
     ))
 
 
@@ -386,8 +404,10 @@ for `lyskom-background-colors' for more information."
 ;;; ================================================================
 ;;; Predefined faces
 ;;;
+;;; There are two sets of predefined faces: the defaults and the
+;;; user-defined faces. Users should not muck with the defaults.
 
-(defface kom-face--plain--active-face
+(defface kom-face--default--active-face
   '((((background light))
      (:foreground "blue4")
      )
@@ -395,12 +415,13 @@ for `lyskom-background-colors' for more information."
      (:foreground "lightblue")
      )
     )
-  "Face used for most \"clickable\" areas."
+  "Face suitable for most \"clickable\" areas.
+Do not alter this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
 
-(defface kom-face--plain--url-face
+(defface kom-face--default--url-face
   '((((background light))
      (:foreground "blueviolet")
      )
@@ -408,12 +429,13 @@ for `lyskom-background-colors' for more information."
      (:foreground "moccasin")
      )
     )
-  "Face used for URLs."
+  "Face suitable for URLs.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
 
-(defface kom-face--plain--me-face
+(defface kom-face--default--me-face
   '((((background light))
      (:foreground "blue3"
      :background "lavender"
@@ -425,36 +447,33 @@ for `lyskom-background-colors' for more information."
      :weight bold)
      )
     )
-  "Face used to show your own name."
+  "Face suitable for showing your own name.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
 
-(defface kom-face--plain--highlight-face
+(defface kom-face--default--highlight-face
   '((((background light))
-     (:background "seagreen")
+     (:background "darkseagreen2")
      )
     (((background dark))
      (:background "darkblue")
      )
     )
-  "Face used for various highlights."
+  "Face suitable for various highlights.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--text-face
+(defface kom-face--default--subject-face
   '((t nil))
-  "Face used for text bodies."
+  "Face suitable for subject lines.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--subject-face
-  '((t nil))
-  "Face used for subject lines."
-  :group 'lyskom-faces
-  )
-
-(defface kom-face--plain--text-no-face
+(defface kom-face--default--text-no-face
   '((((background light))
      (:foreground "blue4")
      )
@@ -462,11 +481,12 @@ for `lyskom-background-colors' for more information."
      (:foreground "lightblue")
      )
     )
-  "Face used for text numbers."
+  "Face suitable for text numbers.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--friends-face
+(defface kom-face--default--friends-face
   '((((background light))
      (:foreground "blue3"
      :background "lavender")
@@ -475,11 +495,12 @@ for `lyskom-background-colors' for more information."
      (:foreground "red")
      )
     )
-  "Face used for people in kom-friends."
+  "Face suitable for people in kom-friends.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--morons-face
+(defface kom-face--default--morons-face
   '((((background light))
      (:foreground "blue3"
      :background "yellow")
@@ -488,11 +509,12 @@ for `lyskom-background-colors' for more information."
      (:foreground "yellow")
      )
     )
-  "Face used for people in kom-morons."
+  "Face suitable for people in kom-morons.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--presence-face
+(defface kom-face--default--presence-face
   '((((background light))
      (:foreground "dim gray"
      :slant italic)
@@ -502,12 +524,13 @@ for `lyskom-background-colors' for more information."
      :slant italic)
      )
     )
-  "Face used for presence messages."
+  "Face suitable for presence messages.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
 
-(defface kom-face--plain--mark-face
+(defface kom-face--default--mark-face
   '((((background light))
      (:foreground "blue3"
      :background "lavender")
@@ -517,25 +540,227 @@ for `lyskom-background-colors' for more information."
      :background "black")
      )
     )
-  "Face used for temporary marks."
+  "Face suitable for temporary marks.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
 
-(defface kom-face--plain--first-line-face
+(defface kom-face--default--first-line-face
   '((t (:weight bold)))
-  "Face used for the first line header of each text."
+  "Face suitable for the first line header of each text.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--warning-face
+(defface kom-face--default--warning-face
   '((t (:weight bold :foreground "red")))
-  "Face used to display important warnings."
+  "Face suitable for displaying important warnings.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
-(defface kom-face--plain--dim-face
+(defface kom-face--default--dim-face
   '((t (:foreground "gray")))
-  "Face used to display dimmed items, such as passive memberships."
+  "Face suitable for dimmed items, such as passive memberships.
+Do not change this face unless you know what you're doing."
   :group 'lyskom-faces
   )
+
+
+;;; ----------------------------------------------------------------
+;;; Dummy faces (copies of the default faces for uses to muck with.
+;;;
+
+(defface kom-face--user-defined--active-face
+  '((((background light))
+     (:foreground "blue4")
+     )
+    (((background dark))
+     (:foreground "lightblue")
+     )
+    )
+  "Face suitable for most \"clickable\" areas."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--url-face
+  '((((background light))
+     (:foreground "blueviolet")
+     )
+    (((background dark))
+     (:foreground "moccasin")
+     )
+    )
+  "Face suitable for URLs."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--me-face
+  '((((background light))
+     (:foreground "blue3"
+     :background "lavender"
+     :weight bold)
+     )
+    (((background dark))
+     (:foreground "gold"
+     :background "black"
+     :weight bold)
+     )
+    )
+  "Face suitable for showing your own name."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--highlight-face
+  '((((background light))
+     (:background "darkseagreen2")
+     )
+    (((background dark))
+     (:background "darkblue")
+     )
+    )
+  "Face suitable for various highlights."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--subject-face
+  '((t nil))
+  "Face suitable for subject lines."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--text-no-face
+  '((((background light))
+     (:foreground "blue4")
+     )
+    (((background dark))
+     (:foreground "lightblue")
+     )
+    )
+  "Face suitable for text numbers."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--friends-face
+  '((((background light))
+     (:foreground "blue3"
+     :background "lavender")
+     )
+    (((background dark))
+     (:foreground "red")
+     )
+    )
+  "Face suitable for people in kom-friends."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--morons-face
+  '((((background light))
+     (:foreground "blue3"
+     :background "yellow")
+     )
+    (((background dark))
+     (:foreground "yellow")
+     )
+    )
+  "Face suitable for people in kom-morons."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--presence-face
+  '((((background light))
+     (:foreground "dim gray"
+     :slant italic)
+     )
+    (((background dark))
+     (:foreground "gray"
+     :slant italic)
+     )
+    )
+  "Face suitable for presence messages."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--mark-face
+  '((((background light))
+     (:foreground "blue3"
+     :background "lavender")
+     )
+    (((background dark))
+     (:foreground "gold"
+     :background "black")
+     )
+    )
+  "Face suitable for temporary marks."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--first-line-face
+  '((t (:weight bold)))
+  "Face suitable for the first line header of each text."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--warning-face
+  '((t (:weight bold :foreground "red")))
+  "Face suitable for displaying important warnings."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--dim-face
+  '((t (:foreground "gray")))
+  "Face suitable for dimmed items, such as passive memberships."
+  :group 'lyskom-faces
+  )
+
+
+
+
+
+(defvar lyskom-predefined-faces
+  '((kom-active-face . (kom-face--default--active-face
+                        kom-face--user-defined--active-face))
+    (kom-url-face . (kom-face--default--url-face
+                     kom-face--user-defined--url-face))
+    (kom-me-face . (kom-face--default--me-face
+                    kom-face--user-defined--me-face))
+    (kom-highlight-face . (kom-face--default--highlight-face
+                           kom-face--user-defined--highlight-face))
+    (kom-text-face . (kom-face--default--text-face
+                      kom-face--user-defined--text-face))
+    (kom-subject-face . (kom-face--default--subject-face
+                         kom-face--user-defined--subject-face))
+    (kom-text-no-face . (kom-face--default--text-no-face
+                         kom-face--user-defined--text-no-face))
+    (kom-friends-face . (kom-face--default--friends-face
+                         kom-face--user-defined--friends-face))
+    (kom-morons-face . (kom-face--default--morons-face
+                        kom-face--user-defined--morons-face))
+    (kom-presence-face . (kom-face--default--presence-face
+                          kom-face--user-defined--presence-face))
+    (kom-first-line-face . (kom-face--default--first-line-face
+                            kom-face--user-defined--first-line-face))
+    (kom-warning-face . (kom-face--default--warning-face
+                         kom-face--user-defined--warning-face))
+    (kom-mark-face . (kom-face--default--mark-face
+                      kom-face--user-defined--mark-face))
+    (kom-dim-face . (kom-face--default--dim-face
+                     kom-face--user-defined--dim-face))
+    (kom-text-body-face . (kom-face--default--text-body-face
+                           kom-face--user-defined--text-body-face))
+    (kom-dashed-lines-face . (kom-face--default--dashed-lines-face
+                              kom-face--user-defined--dashed-lines-face))
+    (kom-async-text-body-face . (kom-face--default--async-text-body-face
+                                 kom-face--user-defined--async-text-body-face))
+    (kom-async-dashed-lines-face . (kom-face--default--async-dashed-lines-face
+                                    kom-face--user-defined--async-dashed-lines-face))
+    )
+  "Alist of predefined faces suitable for each face variable.
+Used for customization and nothing else."
+)
