@@ -1,3 +1,16 @@
+2004-10-29  Pontus Freyhult  <pont@soua.net>
+
+	* mship-edit.el (lp--entry-set-background): Use 
+	lyskom-safe-color-name.
+	(lp--entry-set-foreground): Dito.
+
+	* utilities.el (lyskom-safe-color-name): New function.
+
+	* compatibility.el (color-name): New alias.
+	(color-specifier-p): New alias.
+	(face-background): Reverted previous change, alias again.
+	(face-foreground): Reverted previous change, alias again.
+	
 2004-10-29  Pontus Freyhult  <pont@pontus.its.uu.se>
 
 	* lyskom-rest.el (lyskom-format-image): Disabled run time 
@@ -6,7 +19,6 @@
 	* compatibility.el (display-images-p): New alias.
 	(put-image): New alias.
 	(create-image): New alias.
-
 
 2004-10-29  Pontus Freyhult  <pont@soua.net>
 

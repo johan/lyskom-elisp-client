@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.49 2004-10-28 07:37:58 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: mship-edit.el,v 44.50 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.49 2004-10-28 07:37:58 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: mship-edit.el,v 44.50 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -170,7 +170,8 @@ This function does not tell the server about the change."
                                     (delq extent (lp--entry->extents entry)))))
 
       (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
-             (facename (intern (format "lyskom-%s-background" color)))
+             (facename (intern (format "lyskom-%s-background" 
+				       (lyskom-safe-color-name color))))
              (face (or (lyskom-find-face facename) (lyskom-make-face facename t))))
         (unless extent
           (lyskom-xemacs-or-gnu
@@ -203,7 +204,8 @@ This function does not tell the server about the change."
                                     (delq extent (lp--entry->extents entry)))))
 
       (let* ((extent (cdr (assq 'fcolor (lp--entry->extents entry))))
-             (facename (intern (format "lyskom-%s-foreground" color)))
+             (facename (intern (format "lyskom-%s-foreground" 
+				       (lyskom-safe-color-name color))))
              (face (or (lyskom-find-face facename) (lyskom-make-face facename t))))
         (unless extent
           (lyskom-xemacs-or-gnu
