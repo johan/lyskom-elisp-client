@@ -1,3 +1,8 @@
+Mon Nov 11 10:06:28 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* parse.el (lyskom-parse-bitstring): Gjorde inte rätt när strängen
+ 	var av samma längd som default.
+
 Mon Oct 28 00:03:12 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (kom-delete-conf): Använd lyskom-pending-commands
