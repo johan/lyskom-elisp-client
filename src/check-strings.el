@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.18 2002-05-22 21:40:50 byers Exp $
+;;;;; $Id: check-strings.el,v 44.19 2002-05-27 00:28:28 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -14,7 +14,6 @@
 ;;;;
 
 (require 'lyskom)
-
 
 (defvar lcs-dont-check-ending-categories '(lyskom-command)
   "String categories where ending mismatches are OK.")
@@ -35,6 +34,8 @@
   (or noninteractive
       (lcs-setup-message-buffer))
 
+  (lcs-message t "Checking help")
+  (lcs-check-help)
   (lcs-message t "Checking face schemes")
   (lcs-check-face-schemes)
 
@@ -52,9 +53,6 @@
 
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
-  
-;  (lcs-message t "Checking help strings")
-;  (lcs-check-help-strings)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
@@ -103,6 +101,30 @@
     (mapcar (lambda (el)
               (lcs-message nil "(%s) Unknown command in lyskom-commands" el))
             tmp)))
+
+(defun lcs-check-help ()
+  "Check the help files"
+  (let* ((help (mapcar (lambda (x) (cons (car x)
+                                         (mapcar 'car (eval (cdr x)))))
+                       (get 'lyskom-help-data 'lyskom-language-var)))
+         (all-sections nil))
+    (mapc (lambda (x)
+            (mapc (lambda (section)
+                    (push section all-sections))
+                  (cdr x)))
+          help)
+
+    (while help
+      (let ((sections all-sections))
+        (while sections
+          (unless (memq (car sections) (cdr (car help)))
+            (lcs-message nil
+                         "(%s) Missing help section (%s)" (car sections)
+                         (car (car help))))
+          (setq sections (cdr sections)))
+        (setq help (cdr help))))))
+
+
 
 (defun lcs-check-category (category)
   "Check the strings in CATEGORY."
@@ -311,62 +333,6 @@ Check that all server-stored variables are customizeable."
                            'lyskom-custom-variables var))
             cust-vars-in-buffer)))
 
-(defun lcs-check-help-strings ()
-  "Check help strings"
-  (lcs-check-category 'lyskom-help-strings)
-  (let ((commands (mapcar 'car
-                          (lcs-all-category-string
-                           'lyskom-command)))
-        (help-strings (mapcar 'car
-                              (lcs-all-category-string 'lyskom-help-strings)))
-        (help-symbols nil)
-        (tmp (apply 'append (mapcar 'cdr lyskom-help-categories))))
-
-    ;; Extract information from the help categories into a plist
-    ;; where keys are item types and values are list of symbols
-    ;; that appear in the items.
-
-    (while tmp
-      (setq help-symbols
-            (plist-put help-symbols
-                       (elt (car tmp) 0)
-                       (cons (elt (car tmp) 1)
-                             (plist-get help-symbols (elt (car tmp) 0)))))
-      (setq tmp (cdr tmp)))
-
-   ;; Ensure that all commands are listed in the help strings variable
-    (lcs-check-help-strings-2 "command" commands)
-    (lcs-check-help-strings-2 "help category" 
-                              (mapcar 'car lyskom-help-categories))
-
-    ;; Ensure that all commands are in some command category
-    (setq tmp commands)
-    (while tmp
-      (unless (memq (car tmp) (plist-get help-symbols 'command))
-        (lcs-message nil "(%s:%s) Command not categorized."
-                     'lyskom-help-categories (car tmp)))
-      (setq tmp (cdr tmp)))
-
-    ;; Ensure that all referenced categories exist 
-    (setq tmp (plist-get help-symbols 'category))
-    (while tmp
-      (unless (assq (car tmp) lyskom-help-categories)
-        (lcs-message nil "(%s:%s) Reference to help missing category."
-                     'lyskom-help-categories (car tmp)))
-      (setq tmp (cdr tmp)))
-    )) 
-
-(defun lcs-check-help-strings-2 (wot syms)
-  (while syms
-    (unless (memq (car syms) help-strings)
-      (lcs-message nil "(%s:%s) Help string missing for %s."
-                   'lyskom-help-strings
-                   (car syms)
-                   wot))
-      (setq syms (cdr syms))))
-                   
-             
-             
 (defun lcs-setup-message-buffer ()
   "Inititalize the message buffer for string checking."
   (save-excursion

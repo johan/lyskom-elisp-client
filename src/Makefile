@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.89 2002-05-26 21:34:15 byers Exp $
+# $Id: Makefile,v 44.90 2002-05-27 00:28:28 byers Exp $
 
 # Useful targets:
 #
@@ -185,7 +185,7 @@ fast: $(HEADER-ELC) $(LANGUAGE-ELC) $(SOURCES-ELC)
 
 
 check: $(TARGET-EL)
-	$(EMACS-BATCH) -l lpath.el -l $< -l check-strings.el \
+	$(EMACS-BATCH) -l lpath.el  -l help-compile.el -l $< -l check-strings.el \
 			-f lyskom-check-strings
 
 TAGS: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
