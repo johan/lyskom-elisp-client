@@ -1,7 +1,10 @@
 2001-12-14  Ulrik Haugen  <qha@lysator.liu.se>
 
+	* commands1.el (kom-list-re): case insensitive search is now the
+	default.
+
 	* swedish-strings.el, english-strings.el (lyskom-message): new
-	string: add-recpt-button-text 
+	string: add-recpt-button-text.
 
 	* edit-text.el (lyskom-edit-insert-miscs): use
 	add-recpt-button-text for the add recipient-button.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.121 2001-08-25 19:12:10 qha Exp $
+;;;;; $Id: commands1.el,v 44.122 2001-12-14 00:34:42 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.121 2001-08-25 19:12:10 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.122 2001-12-14 00:34:42 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1799,15 +1799,15 @@ If you are not member in the conference it will be flagged with an asterisk."
     (apply 'concat (nreverse res))))
 
 
-(def-kom-command kom-list-re (regexp &optional case-insensitive)
+(def-kom-command kom-list-re (regexp &optional case-sensitive)
   "List all persons and conferences whose name matches REGEXP.
-If the optional argument CASE-INSENSITIVE is true, the regexp will be
-converted so that the search is case insensitive."
+ If the optional argument CASE-SENSITIVE is true, the regexp will not
+be converted so that the search is case sensitive."
   (interactive (list (lyskom-read-string
 		      (lyskom-get-string 'search-re))
 		     current-prefix-arg))
-  (if case-insensitive
-      (setq regexp (lyskom-make-re-case-insensitive regexp)))
+  (unless case-sensitive
+    (setq regexp (lyskom-make-re-case-insensitive regexp)))
   (lyskom-format-insert 'matching-regexp regexp)
   (let ((conf-list (blocking-do 're-z-lookup regexp 1 1)))
     (if conf-list
