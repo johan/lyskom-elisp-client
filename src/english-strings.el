@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.235 2002-09-15 22:08:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.236 2002-09-15 23:14:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.235 2002-09-15 22:08:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.236 2002-09-15 23:14:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1411,6 +1411,7 @@ On since %#8s%#9s")
     (calc-expression . "Expression: ")
 
     (do-send-anonymous . "Send the text anonymously? ")
+    (remove-self-sending-anonymous . "Remove yourself as a recipient of the text? ")
     (anonymous . "anonymous")
     (Anonymous . "Anonymous")
 
