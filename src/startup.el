@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 36.4 1993-06-23 21:51:36 linus Exp $
+;;;;; $Id: startup.el,v 36.5 1993-07-28 18:30:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 36.4 1993-06-23 21:51:36 linus Exp $\n"))
+	      "$Id: startup.el,v 36.5 1993-07-28 18:30:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -376,14 +376,7 @@ WANT-PERSONS is t for persons, nil for confs."
    (t
     (initiate-login 'main 'lyskom-start-anew-login-2
 		    pers-no password pers-no lyskom-pers-no)
-    (lyskom-run 'main 'lyskom-edit-text lyskom-proc
-		       (lyskom-create-misc-list
-		       'recpt
-		       (server-info->pers-pres-conf lyskom-server-info))
-		      (lyskom-format 'presentation-subject name)
-		      (lyskom-format 'presentation-form name)
-		      'lyskom-set-presentation pers-no)
-    (lyskom-run 'main 'lyskom-tell-internat 'kom-tell-1st-pres))))
+    )))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.7 1993-07-26 19:07:49 linus Exp $
+;;;;; $Id: commands2.el,v 36.8 1993-07-28 18:28:47 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.7 1993-07-26 19:07:49 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.8 1993-07-28 18:28:47 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -479,15 +479,22 @@ Args: MEMBERSHIP-LIST CONF-STAT."
 ;;;              Skicka meddelande - Send message
 
 ;;; Author: Inge Wallin
+;;; Rewritten to use lyskom-read-conf-no by Linus Tolke
 
 
 (defun kom-send-message ()
-  "Send a message to one or all users in KOM right now."
+  "Send a message to one of the users in KOM right now."
   (interactive)
   (lyskom-start-of-command 'kom-send-message)
-  (lyskom-completing-read 'main 'lyskom-send-message
-			  (lyskom-get-string 'who-to-send-message-to)
-			  'person 'empty ""))
+  (lyskom-send-message 
+   (lyskom-read-conf-no (lyskom-get-string 'who-to-send-message-to)
+			'logins t)))
+
+(defun kom-send-alarm ()
+  "Send a message to all of the users in KOM right now."
+  (interactive)
+  (lyskom-start-of-command 'kom-send-alarm)
+  (lyskom-send-message 0))
 
 
 (defun lyskom-send-message (pers-no)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 36.1 1993-04-26 19:38:05 linus Exp $
+;;;;; $Id: services.el,v 36.2 1993-07-28 18:30:16 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 36.1 1993-04-26 19:38:05 linus Exp $\n"))
+	      "$Id: services.el,v 36.2 1993-07-28 18:30:16 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -608,3 +608,40 @@ Args: KOM-QUEUE HANDLER &rest DATA."
 
 
 ;;; ================================================================
+
+
+;; Blocking reading from server:
+
+(defun blocking-return (retval)
+  "Sets blocking variable."
+  (setq lyskom-blocking-return retval))
+
+(defun blocking-do (command &rest data)
+  "Does the COMMAND agains the lyskom-server and returns the result.
+COMMAND is one lyskom-command (like the initiate-* but the initiate- is 
+stripped.
+The cache is consulted when command is get-conf-stat, get-pers-stat
+or get-text-stat."
+  (save-excursion
+    (set-buffer (process-buffer (or lyskom-proc
+				    current-lyskom-process)))
+    (cond
+     ((and (eq command 'get-conf-stat)
+	   (cache-get-conf-stat (car data))))	 
+     ((and (eq command 'get-pers-stat)
+	   (cache-get-pers-stat (car data))))
+     ((and (eq command 'get-text-stat)
+	   (cache-get-text-stat (car data))))
+     ((and (eq command 'get-text)
+	   (cache-get-text (car data))))
+     (t
+      (let ((lyskom-blocking-return 'not-yet-gotten))
+	(apply (intern-soft (concat "initiate-"
+				    (symbol-name command)))
+	       'blocking 'blocking-return
+	       data)
+	(while (eq lyskom-blocking-return 'not-yet-gotten)
+	  (accept-process-output lyskom-proc))
+	lyskom-blocking-return)))))
+
+

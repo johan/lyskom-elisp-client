@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.9 1993-07-26 19:08:08 linus Exp $
+;;;;; $Id: edit-text.el,v 36.10 1993-07-28 18:29:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.9 1993-07-26 19:08:08 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.10 1993-07-28 18:29:43 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -108,39 +108,34 @@ footn-to	-> Fotnot till text %d."
 	    (data (cdr (car misc-list))))
 	(cond
 	 ((eq key 'recpt)
-	  (initiate-get-conf-stat 'edit 'lyskom-edit-insert-misc-conf
-				  data
-				  (lyskom-get-string 'recipient)
-				  where-put-misc data))
+	  (lyskom-edit-insert-misc-conf (blocking-do 'get-conf-stat data)
+					(lyskom-get-string 'recipient)
+					where-put-misc data))
 	 ((eq key 'cc-recpt)
-	  (initiate-get-conf-stat 'edit 'lyskom-edit-insert-misc-conf
-				  data
-				  (lyskom-get-string 'carbon-copy)
-				  where-put-misc data))
+	  (lyskom-edit-insert-misc-conf (blocking-do 'get-conf-stat data)
+					(lyskom-get-string 'carbon-copy)
+					where-put-misc data))
 	 ((eq key 'comm-to)
-	  (initiate-get-text-stat 'edit 'lyskom-edit-get-commented-author
-				 data
-				 (lyskom-get-string 'comment)
-				 where-put-misc data))
+	  (lyskom-edit-get-commented-author (blocking-do 'get-text-stat data)
+					    (lyskom-get-string 'comment)
+					    where-put-misc data))
 	 ((eq key 'footn-to)
-	  (initiate-get-text-stat 'edit 'lyskom-edit-get-commented-author
-				 data
-				 (lyskom-get-string 'footnote)
-				 where-put-misc data)))
-      (setq misc-list (cdr misc-list))))
-    (lyskom-run 'edit 'princ
-		(lyskom-format 'text-mass
-			       subject 
-			       (if kom-emacs-knows-iso-8859-1
-				   lyskom-header-separator
-				 lyskom-swascii-header-separator)
-			       body 
-			       (if kom-emacs-knows-iso-8859-1
-				   lyskom-header-subject
-				 lyskom-swascii-header-subject))
-		where-put-misc)
-    (lyskom-run 'edit 'lyskom-edit-goto-char where-put-misc)
-    (set-buffer edit-buffer)))
+	  (lyskom-edit-get-commented-author (blocking-do 'get-text-stat data)
+					    (lyskom-get-string 'footnote)
+					    where-put-misc data)))
+	(setq misc-list (cdr misc-list))))
+    (princ (lyskom-format 'text-mass subject 
+			  (if kom-emacs-knows-iso-8859-1
+			      lyskom-header-separator
+			    lyskom-swascii-header-separator)
+			  body 
+			  (if kom-emacs-knows-iso-8859-1
+			      lyskom-header-subject
+			    lyskom-swascii-header-subject))
+	   where-put-misc)
+    (set-buffer edit-buffer)
+    (goto-char where-put-misc)
+    ))
 
 
 (defun lyskom-edit-goto-char (marker)
@@ -178,11 +173,10 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
-  (lyskom-halt 'edit)
   (if text-stat
-    (initiate-get-conf-stat 'edit-2 'lyskom-edit-insert-commented-author
-			    (text-stat->author text-stat)
-			    string stream number)
+      (lyskom-edit-insert-commented-author 
+       (blocking-do 'get-conf-stat (text-stat->author text-stat))
+       string stream number)
     (lyskom-edit-insert-commented-author nil string stream number)))
 
 
@@ -193,7 +187,7 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 			    (lyskom-format 'by (conf-stat->name conf-stat))
 			  ""))
 	 stream)
-  (lyskom-resume 'edit))
+  )
 			  
 
 
@@ -444,8 +438,8 @@ text in BUFFER. If the conference has a set motd, then show it."
   (let ((text-no (conf-stat->msg-of-day conf-stat)))
     (if (zerop text-no)
 	(lyskom-edit-insert-misc-conf conf-stat string stream nil)
-      (initiate-get-text 'edit 'lyskom-edit-add-recipient/copy-3
-			 text-no conf-stat string stream buffer))))
+      (lyskom-edit-add-recipient/copy-3 (blocking-do 'get-text text-no)
+					conf-stat string stream buffer))))
 
 
 (defun lyskom-edit-add-recipient/copy-3 (text conf-stat string stream buffer)
