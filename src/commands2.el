@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.32 1999-06-13 15:00:53 byers Exp $
+;;;;; $Id: commands2.el,v 44.33 1999-06-13 15:27:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.32 1999-06-13 15:00:53 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.33 1999-06-13 15:27:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2051,7 +2051,7 @@ is alive."
         (current-faqs nil))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)
-      (lyskom-format-insert 'adding-faq conf-no text-no)
+      (lyskom-format-insert 'adding-faq text-no conf-no)
       (cache-del-text-stat text-no)
       (cache-del-conf-stat conf-no)
       (lyskom-report-command-answer
