@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.3 1996-10-08 12:24:41 nisse Exp $
+;;;;; $Id: edit-text.el,v 44.4 1996-10-11 11:12:48 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.3 1996-10-08 12:24:41 nisse Exp $\n"))
+	      "$Id: edit-text.el,v 44.4 1996-10-11 11:12:48 nisse Exp $\n"))
 
 
 ;;;; ================================================================
@@ -175,7 +175,8 @@ footn-to	-> Fotnot till text %d."
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
     (princ (lyskom-format 'text-mass subject 
-			  (lyskom-get-string 'header-separator)
+			  (substitute-command-keys
+			   (lyskom-get-string 'header-separator))
 			  body 
 			  (lyskom-get-string 'header-subject))
 	   where-put-misc)
@@ -318,11 +319,13 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (make-local-variable 'paragraph-separate)
   (setq paragraph-start (concat "^" 
 				(regexp-quote 
-				 (lyskom-get-string 'header-separator))
+				 (substitute-command-keys
+				  (lyskom-get-string 'header-separator)))
 				"$\\|" paragraph-start))
   (setq paragraph-separate (concat "^" 
 				   (regexp-quote 
-				    (lyskom-get-string 'header-separator))
+				    (substitute-command-keys
+				     (lyskom-get-string 'header-separator)))
 				   "$\\|" paragraph-separate))
   (run-hooks 'lyskom-edit-mode-hook))
 
@@ -747,7 +750,8 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 					; the real subject
     (save-restriction
       ;; Narrow to headers
-      (search-forward (lyskom-get-string 'header-separator))
+      (search-forward (substitute-command-keys
+		       (lyskom-get-string 'header-separator)))
       (beginning-of-line)
       (narrow-to-region (point-min) (point))
       (goto-char (point-min))
@@ -784,11 +788,11 @@ Point must be located on the line where the subject is."
   (save-excursion
     (goto-char (point-min))
     (if (not (or (re-search-forward 
-		  (regexp-quote 
+		  (substitute-command-keys
 		   (lyskom-get-string 'header-separator))
 		  nil (point-max))
-		 (re-search-forward 
-		  (regexp-quote 
+		 (search-forward 
+		  (substitute-command-keys
 		   (lyskom-get-string 'header-separator)) 
 		  nil (point-max))))
 	(signal 'lyskom-internal-error
@@ -871,10 +875,7 @@ the with-output-to-temp-buffer command is issued to make them both apear."
        (progn
 	 (set-buffer editing-buffer)
 	 (with-output-to-temp-buffer "*Commented*"
-	   (princ
-	    (if kom-emacs-knows-iso-8859-1
-		(text->text-mass text)
-	      (iso-8859-1-to-swascii (text->text-mass text))))))))
+	   (princ (text->text-mass text))))))
 
 
 (defun lyskom-edit-insert-commented (text editing-buffer)
