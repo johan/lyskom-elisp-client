@@ -1,3 +1,15 @@
+2001-02-20  Joel Rosdahl  <joel@rosdahl.net>
+
+	* debian/docs: Added NEWS-0.46.1.
+
+	* english-strings.el (lyskom-message): Reworded
+	{author,other}-fast-replies.
+
+	* swedish-strings.el (lyskom-message): Ditto.
+
+	* commands1.el (kom-change-parenthesis): Use name of current user
+	as default.
+
 2001-02-03  Joel Rosdahl  <joel@rosdahl.net>
 
 	* lyskom-rest.el (lyskom-update-prompt): Show "read next

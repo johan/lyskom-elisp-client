@@ -95,17 +95,22 @@
    Den här funktionen fungerar bara om man kör mot lyskomd version
    2.0.0 eller nyare.
 
-** Ändra parentes klarar av mer komplicerade namn.
+** Ändra parentes klarar av mer komplicerade namn, och prompten som
+   frågar efter namnet som ska ändras har den inloggade personen som
+   defaultvärde.
 
 ** RydKOM har flyttats till kom.hem.liu.se.
 
 ** När klienten frågar om man vill addera den kommenterades brevlåda
-   om man skriver en kommentar i ett möte där den kommentarade inte är
+   om man skriver en kommentar i ett möte där den kommenterade inte är
    medlem får man numera en fråga om huruvida det skall vara en extra
    kopiemottagare eller vanlig mottagare.
 
-** Repliker gjorda av författaren till ett inlägg visas före andra
-   repliker.
+** Repliker gjorda av författaren till ett inlägg visas före
+   andra repliker och kallas för anmärkningar.
+
+** Om nästa inlägg är en bilaga till ett importerat e-brev blir
+   prompten "Läsa nästa bilaga". Åtminstone ibland.
 
 ** En del funktionalitet som tidigare var begränsad till XEmacs finns
    även i Emacs 21:
@@ -122,7 +127,7 @@
 
 
 
-* Bugfixar
+* Buggfixar
 
 ** Klienten fungerar i Gnu Emacs 21.
 
@@ -162,8 +167,7 @@
    normal läsning, inte (som förut) två gånger.
 
 ** Det ska nu gå att klistra in text i inläggsediteringsbuffertar med
-   mittenmusknappen i alla Emacs-sorter.  Säg till om det inte
-   fungerar för dig!
+   mittenmusknappen i alla Emacs-sorter.
 
 ** Problemet med att klienten ibland hänger om man har asynkrona
    meddelanden omstyrda till en egen buffert är antagligen åtgärdat.
