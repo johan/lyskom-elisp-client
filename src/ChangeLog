@@ -1,3 +1,13 @@
+2002-04-27  Ulrik Haugen  <qha@lysator.liu.se>
+
+	Fix bug 458:
+	
+	* swedish-strings.el, english-strings.el
+	(lyskom-message): New string: who-is-friend.
+
+	* commands1.el (lyskom-who-is-on-9, lyskom-who-is-on-8): print
+	who-is-friend if given non-nil show-friends-only.
+
 2002-04-26  David Byers  <david.byers@swipnet.se>
 
 	* option-edit.el (lyskom-custom-variables): Added

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.199 2002-04-26 21:16:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.200 2002-04-27 17:38:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.199 2002-04-26 21:16:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.200 2002-04-27 17:38:37 qha Exp $"))
 
 
 ;;; ================================================================
@@ -549,6 +549,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (who-is-on-in-what-conference . "Who in which conference: ")
     (who-is-present-in-what-conference . "Who present in which conference: ")
+    (who-is-friend . "Only friends are shown.\n")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
     (who-is-active-and-present . "Only members present in %#1M are shown.\n")
 
