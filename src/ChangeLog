@@ -1,3 +1,29 @@
+2001-02-25  Joel Rosdahl  <joel@rosdahl.net>
+
+	* Release av 0.46.1.
+
+	* view-text.el (lyskom-view-text): Don't sort remarks when
+	reviewing without conversion.
+
+	* swedish-strings.el (lyskom-command): "Anmärkningar" instead of
+	"korta repliker".
+
+	* english-strings.el (lyskom-message): "Remarks" instead of
+	"fast/quick replies".
+
+	* commands2.el (kom-fast-reply): Updated doc string.
+
+	* Makefile (release-files): Include spec file in release.
+
+	* Makefile: Removed release-cleanup.
+
+	* distribution-README: Note about RPMs.
+
+	* lyskom-elisp-client.spec: Include NEWS-0.46.1.  Better source
+	URL.
+
+	* Makefile (clean): Don't remove RPM spec.
+
 2001-02-20  Joel Rosdahl  <joel@rosdahl.net>
 
 	* debian/docs: Added NEWS-0.46.1.
