@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.179 2002-12-09 20:36:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.180 2002-12-13 22:16:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.179 2002-12-09 20:36:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.180 2002-12-13 22:16:04 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2852,7 +2852,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                (add-text-properties 0 (length prompt-text)
                                     '(read-only t rear-nonsticky t)
                                     prompt-text))
-              (insert-string prompt-text)
+              (insert prompt-text)
               ;; Delete the old prompt
               (when lyskom-current-prompt
                 (if (and lyskom-slow-mode 

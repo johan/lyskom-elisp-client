@@ -1,3 +1,24 @@
+2002-12-13  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Change `insert-string' to
+	`insert' since the former is obsolete.
+
+	Bog 928:
+	* commands1.el (lyskom-times): Added Lucia.
+
+	Finished bug 924:
+	* option-edit.el (lyskom-nameday-widget): New widget type.
+
+	* vars.el.in (kom-url-transformation-rules): Improved the
+	Aftonbladet regexp.
+
+2002-12-11  David Byers  <david.byers@swipnet.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): Define swedish chars
+	using all possible methods.
+
+	* macros.el (lyskom-try-define-key): New macro.
+
 2002-12-09  David Byers  <david.byers@swipnet.se>
 
 	Work on bug 924:

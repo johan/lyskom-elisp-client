@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.214 2002-12-09 21:44:21 byers Exp $
+;;;;; $Id: vars.el.in,v 44.215 2002-12-13 22:16:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.214 2002-12-09 21:44:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.215 2002-12-13 22:16:05 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -197,7 +197,9 @@ The cdrs on the list may be either of:
   )
 
 (def-kom-var kom-url-transformation-rules 
-  '(("http://[^/]*aftonbladet\\.se/.*" . "\\&."))
+  '(
+    ("^http://[^/]*aftonbladet\\.se/.*/story/.*html?$" . "\\&.")
+    )
   "*An alist specifying transformations to be applied to URLs.
 
 Elements in this list are of the form `(REGEXP . NEWTEXT)'. Before an

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: names.el,v 44.1 2002-12-09 21:44:21 byers Exp $
+;;;;; $Id: names.el,v 44.2 2002-12-13 22:16:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.1 2002-12-09 21:44:21 byers Exp $\n"))
+	      "$Id: names.el,v 44.2 2002-12-13 22:16:04 byers Exp $\n"))
 
 (def-komtype nameday-data code name description data)
 
@@ -77,7 +77,8 @@ DATA is nameday data"
 
 (lyskom-define-namedays 'sv 
                         "Sverige"
-                        "Namnsdagar ur svenska språknämndens nya namnlängd."
+                        "\
+Namnsdagar enligt svenska språknämndens nya namnlängd."
                         '((1 . ((1 . ())
                                 (2 . ("Svea"))
                                 (3 . ("Alfred" "Alfrida"))
@@ -455,9 +456,11 @@ DATA is nameday data"
                                  (30 . ("Abel" "Set"))
                                  (31 . ("Sylvester"))))))
 
-(lyskom-define-namedays 'sv_1901
-                        "Sverge (före 1901)"
-                        "Svenska namnlängden för 1901"
+(lyskom-define-namedays 'sv-1901
+                        "Sverige (före 1901)"
+                        "\
+Namnsdagar enligt namnlängd från före 1901, med uppenbara helgdagar
+borttagna"
                         '((1 . ((1 . ())
                                 (2 . ("Abel" "Set"))
                                 (3 . ("Enoch"))
@@ -848,8 +851,12 @@ DATA is nameday data"
                                  ))))
 
 (lyskom-define-namedays 'fi
-                        "Suomi"
-                        "Finska namnsdagar"
+                        "Finska"
+                        "\
+Namnsdagar ur någon finsk namnlängd. Eftersom utvecklarna inte
+kan finska är beskrivningen på svenska, med förhoppningen att
+någon som kan finska kommer att reta sig på den och skriva om
+texten på rätt språk."
                         '((1 . ((1 . ())
                                 (2 . ("Aapeli"))
                                 (3 . ("Elmeri" "Elmer" "Elmo"))
@@ -1239,9 +1246,10 @@ DATA is nameday data"
                                  (31 . ("Sylvester" "Silvo"))
                                  ))))
 
-(lyskom-define-namedays 'fi_sv
+(lyskom-define-namedays 'fi-sv
                         "Finlandssvenska"
-                        "Finlandssvenska namnsdagar"
+                        "\
+Namnsdagar enligt någon finlandssvenskt namnlängd."
                         '((1 . ((1 . ())
                                 (2 . ("Gehard" "Gert"))
                                 (3 . ("Elmer" "Helmer"))
@@ -1631,9 +1639,13 @@ DATA is nameday data"
                                  (31 . ("Sylvester"))
                                  ))))
 
-(lyskom-define-namedays 'fi_orthodox
-                        "Suomi (ortodox)"
-                        "Ortodoxa namnsdagar från finland"
+(lyskom-define-namedays 'fi-orthodox
+                        "Finska (ortodoxa)"
+                        "\
+Namnsdagar ur någon finsk ortodox namnlängd. Eftersom 
+utvecklarna inte kan finska är beskrivningen på svenska, med
+förhoppningen att någon som kan finska kommer att reta sig
+på den och skriva om texten på rätt språk."
                         '((1 . ((1 . ("Vasili" "Vilho" "Pasi"))
                                 (2 . ("Sylvester" "Tapio" "Serafim"))
                                 (3 . ("Malakia" "Harto"))
@@ -2025,7 +2037,7 @@ DATA is nameday data"
 
 
 
-(defun lyskom-list-nameday-lists ()
+(defun kom-list-nameday-lists ()
   (interactive)
   (with-output-to-temp-buffer "*Help*"
     (princ

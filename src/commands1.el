@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.159 2002-12-09 21:44:20 byers Exp $
+;;;;; $Id: commands1.el,v 44.160 2002-12-13 22:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.159 2002-12-09 21:44:20 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.160 2002-12-13 22:16:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -551,7 +551,7 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
     (let ((priority
            (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
                (lyskom-read-num-range 0 255
-                                      (lyskom-get-string 'priority-q)
+                                      (lyskom-get-string 'other-priority-q)
                                       nil 100)
              (if (and (numberp kom-membership-default-priority)
                       (< kom-membership-default-priority 256)
@@ -2276,6 +2276,7 @@ If MARK-NO is nil, review all marked texts."
     ((nil  8 15 nil nil nil) . holdnose)
     ((nil 10 24 nil nil nil) . fnday)
     ((nil 11  1 nil nil nil) . allhelgonadag)
+    ((nil 12 13 nil nil nil) . luciaday)
     ((nil 12 24 nil nil nil) . xmaseve)
     ((nil 12 25 nil nil nil) . xmasday)
     ((nil 12 28 nil nil nil) . varnlosdag)
