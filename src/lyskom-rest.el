@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.19 1992-01-27 17:44:34 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 35.20 1992-03-07 19:43:44 willfor Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.19 1992-01-27 17:44:34 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.20 1992-03-07 19:43:44 willfor Exp $\n"))
 
 
 ;;;; ================================================================
@@ -213,12 +213,10 @@ Related variables are kom-tell-phrases and lyskom-commands.")
   (if (pos-visible-in-window-p (point-max))
       (progn
 	(recenter 0)
-	(kom-next-command))
+	(lyskom-next-command))
     (recenter 0)
     (move-to-window-line -1)
-    (beginning-of-line)
-    (setq lyskom-last-viewed (point))
-    (end-of-line)))
+    (lyskom-set-last-viewed)))
 
 
 ;;; Author: Per Cederqvist
@@ -226,21 +224,27 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 (defun kom-next-command ()
   "Run next command or scroll one page."
   (interactive)
-  (lyskom-next-command-or-scroll (- (window-height (selected-window)) 2)))
+  (if (pos-visible-in-window-p (point-max))
+      (lyskom-next-command)
+    (move-to-window-line -1)
+    (lyskom-set-last-viewed)
+    (lyskom-scroll)))
 
   
 (defun kom-line-next-command ()
   "Run next command or scroll one line."
   (interactive)
-  (lyskom-next-command-or-scroll 1))
+  (if (pos-visible-in-window-p (point-max))
+      (lyskom-next-command)
+    (move-to-window-line 1)
+    (lyskom-set-last-viewed)
+    (lyskom-scroll)))
 
 
-(defun lyskom-next-command-or-scroll (no-of-lines)
+(defun lyskom-next-command ()
   "Run next command or scroll (at most) NO-OF-LINES lines."
   (let ((doing-default-command t))
   (cond
-   ((not (pos-visible-in-window-p (point-max)))
-    (lyskom-scroll-lines no-of-lines))
    ((eq lyskom-command-to-do 'next-pri-text)
     (lyskom-view-priority-text))
    ((eq lyskom-command-to-do 'next-text)
@@ -605,20 +609,6 @@ The value is actually the membership for the conference."
 ;;;;                   Scrolling and text insertion.
 
 
-(defun lyskom-scroll-lines (no-of-lines)
-  "Scroll at most NO-OF-LINES lines, but only as much as needed
-to show the end of the buffer."
-  (interactive)
-  (while (and (not (zerop no-of-lines))
-	      (not (pos-visible-in-window-p (point-max))))
-    (scroll-up 1)
-    (-- no-of-lines))
-  (move-to-window-line -1)
-  (beginning-of-line)
-  (setq lyskom-last-viewed (point))
-  (end-of-line))
-
-
 (defun lyskom-scroll ()
   "Scroll screen if necessary.
 The position lyskom-last-viewed will always remain visible."
@@ -630,15 +620,18 @@ The position lyskom-last-viewed will always remain visible."
 	   (selected-window))
 	  (t				;(get-buffer-window (current-buffer))
 	   nil))))
-    (cond
-     (win				;Do nothing if no window showed LysKOM.
-      (while
-	  (and
-	   (not (pos-visible-in-window-p (point-max) win))
-	   (< (window-start win)
-	      lyskom-last-viewed))
-	(scroll-up 1)
-	(end-of-line 2))))))
+    (if (and win			;Do nothing if no window showed LysKOM.
+	     (not (pos-visible-in-window-p (point-max))))
+	(progn
+	  (goto-char (point-max))
+	  (recenter -1)
+	  (if (not (pos-visible-in-window-p lyskom-last-viewed))
+	      (progn
+		(set-window-start win lyskom-last-viewed)
+		(move-to-window-line -1)
+		(vertical-motion 1)
+		(if (not (pos-visible-in-window-p))
+		    (forward-char -1))))))))
 	
 
 (defun lyskom-insert (string)
@@ -656,8 +649,10 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
     (if window
 	(if (pos-visible-in-window-p (point) window)
 	    nil
-	  (goto-char (window-start window))
-	  (end-of-line (1- (window-height window)))))))
+	  (move-to-window-line -1)
+	  (vertical-motion 1)
+	  (if (not (pos-visible-in-window-p))
+	      (forward-char -1))))))
 
 
 (defun lyskom-insert-before-prompt (string)
@@ -709,6 +704,12 @@ Args: FORMAT-STRING &rest ARGS"
     (if kom-emacs-knows-iso-8859-1
 	(error str)
       (error (iso-8859-1-to-swascii str)))))
+
+
+(defun lyskom-set-last-viewed ()
+  (save-excursion
+    (vertical-motion 0)
+    (setq lyskom-last-viewed (point))))
 
 
 ;;; ================================================================
@@ -983,9 +984,7 @@ lyskom-is-waiting nil.
   (setq lyskom-no-prompt t)
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
-      (save-excursion
-	(beginning-of-line)
-	(setq lyskom-last-viewed (point))))
+      (lyskom-set-last-viewed))
   (lyskom-prefetch-and-print-prompt))
 
 
@@ -1709,4 +1708,3 @@ One parameter - the prompt string."
       (iso-8859-1-to-swascii lyskom-header-separator))
 (setq lyskom-swascii-header-subject
       (iso-8859-1-to-swascii lyskom-header-subject))
-

@@ -1,3 +1,9 @@
+Sat Mar  7 20:36:07 1992  Lars Willf|r  (willfor@robert)
+
+	* lyskom-rest.el: Skrev om scroll-rutinerna och point-flyttningen
+	  i lyskom-insert. Nu ska klienten inte bugga ur d} raderna {r
+	  l{ngre {n sk{rmraderna.
+
 Fri Mar  6 16:49:24 1992  Linus Tolke Y  (linus@robert)
 
 	* commands1.el (kom-add-recipient, kom-add-copy,
