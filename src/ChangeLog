@@ -1,5 +1,7 @@
 2000-12-03  Per Cederqvist  <ceder@moria>
 
+	* macros.el (blocking-do-multiple): Fixed typo in docstring.
+
 	* english-strings.el (kom-ispell-dictionary): Set the value for
 	"en", not "sv".
 	(kom-tell-phrases): Likewise.
