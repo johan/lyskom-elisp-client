@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.14 1996-05-01 13:55:31 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.15 1996-05-02 13:27:38 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.14 1996-05-01 13:55:31 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.15 1996-05-02 13:27:38 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1324,7 +1324,8 @@ The string is inserted at point."
 	  (lyskom-insert-at-point s)
 	  (if prevface
 	      (put-text-property (cdr place) (point) 'face prevface)))))
-    (delete-region (car place) (cdr place))
+    (let ((inhibit-read-only t))
+      (delete-region (car place) (cdr place)))
     (set-marker (car place) nil)
     (set-marker (cdr place) nil)
     (while (not (pos-visible-in-window-p))

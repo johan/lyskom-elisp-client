@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.6 1996-04-29 11:59:39 byers Exp $
+;;;;; $Id: view-text.el,v 40.7 1996-05-02 13:27:45 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.6 1996-04-29 11:59:39 byers Exp $\n"))
+	      "$Id: view-text.el,v 40.7 1996-05-02 13:27:45 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -491,7 +491,8 @@ Args: TEXT-STAT of the text being read."
       ;; the reference text does not exist anymore. Strange.
       nil)
     ;; (goto-char marker)
-    (delete-char chars-to-delete)
+    (let ((inhibit-read-only t))
+      (delete-char chars-to-delete))
     (set-marker marker nil)
 ))
 
