@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.25 1992-07-26 23:36:35 linus Exp $
+;;;;; $Id: vars.el,v 35.26 1992-08-30 18:08:10 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.25 1992-07-26 23:36:35 linus Exp $\n"))
+	      "$Id: vars.el,v 35.26 1992-08-30 18:08:10 linus Exp $\n"))
 
 
 
@@ -223,7 +223,7 @@ Dont change these. These are defined by the protocol.")
 ;;;                  Internal variables and constants
 
 
-(defconst lyskom-clientversion "0.34.7"
+(defconst lyskom-clientversion "0.35"
   "Version of the LysKOM elisp client.")
 
 (defconst lyskom-max-int 8388607
@@ -395,9 +395,6 @@ article in one of the first lyskom-fetch-membership-length conferences.")
 
 (defvar lyskom-unread-confs nil
   "List containing all unread confs.")
-
-(defvar lyskom-no-prompt t
-  "Non-nil if no prompt is displayed yet.")
 
 (defvar lyskom-dont-change-prompt nil
   "Non-nil during the entry of a text.")
