@@ -1,7 +1,7 @@
-SORT=20020818001
+SORT=20020908001
 EN.TITLE=Version 0.47 released
 EN.TEXT=<p>
-EN.TEXT=  <i>August 2002</i> &bull; Version 0.47 of the LysKOM elisp
+EN.TEXT=  <i>September 2002</i> &bull; Version 0.47 of the LysKOM elisp
 EN.TEXT=  client is now available (see the links to the left). This
 EN.TEXT=  version is fully compatible with the Emacs versions listed
 EN.TEXT=  under the system requirements, and works with somewhat
@@ -16,7 +16,7 @@ EN.TEXT=</p>
 
 SV.TITLE=Version 0.47 har släppts
 SV.TEXT=<p>
-SV.TEXT=  <i>Augusti 2002</i> &bull; Version 0.47 av elispklienten
+SV.TEXT=  <i>September 2002</i> &bull; Version 0.47 av elispklienten
 SV.TEXT=  finns att hämta (se länkarna till vänster). Den här
 SV.TEXT=  versionen fungerar fullt ut med de versioner som anges i
 SV.TEXT=  systemkraven och med något reducerad funktionalitet i Gnu
