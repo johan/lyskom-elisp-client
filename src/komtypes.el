@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 40.0 1996-03-26 08:31:30 byers Exp $
+;;;;; $Id: komtypes.el,v 40.1 1996-05-01 13:55:19 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 40.0 1996-03-26 08:31:30 byers Exp $\n"))
+	      "$Id: komtypes.el,v 40.1 1996-05-01 13:55:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -125,12 +125,17 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 
 (defsubst uconf-stat->garb-nice (conf)
   "Get garb-nice from a conference."
-  (elt (cd conf) 4))
+  (elt (cdr conf) 4))
 
 
 ;;; Modifiers
-
 ;;; You shouldn't need modifiers
+
+;;; Predicate
+
+(defsubst lyskom-uconf-stat-p (object)
+  "Return t if OBJECT is a conf-stat."
+  (eq (car-safe object) 'UCONF-STAT))
 
 
 ;;; ================================================================

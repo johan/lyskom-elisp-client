@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 40.1 1996-04-02 16:19:00 byers Exp $
+;;;;; $Id: cache.el,v 40.2 1996-05-01 13:55:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 40.1 1996-04-02 16:19:00 byers Exp $\n"))
+	      "$Id: cache.el,v 40.2 1996-05-01 13:55:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -50,15 +50,18 @@ cache it."
 (defun cache-construct-uconf-stat (conf)
   "If conf is non-nil, create an uconf-stat from conf and cache it.
 Return the new uconf-stat or nil"
-  (and conf
-       (cache-add-uconf-stat 
-	(lyskom-create-uconf-stat (conf-stat->conf-no conf)
-				  (conf-stat->name conf)
-				  (conf-stat->conf-type conf)
-				  (+
-				   (conf-stat->first-local-no conf)
-				   (conf-stat->no-of-texts conf))
-				  (conf-stat->garb-nice conf)))))
+  (let ((tmp nil))
+    (and conf
+         (cache-add-uconf-stat 
+          (setq tmp
+                (lyskom-create-uconf-stat (conf-stat->conf-no conf)
+                                          (conf-stat->name conf)
+                                          (conf-stat->conf-type conf)
+                                          (+
+                                           (conf-stat->first-local-no conf)
+                                           (conf-stat->no-of-texts conf))
+                                          (conf-stat->garb-nice conf)))))
+    tmp))
 
 (defun cache-add-uconf-stat (uconf-stat)
   "Insert a UCONF-STAT in the cache."
