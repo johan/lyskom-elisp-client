@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.100 2002-05-07 23:12:02 byers Exp $
+;;;;; $Id: utilities.el,v 44.101 2002-05-08 19:50:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.100 2002-05-07 23:12:02 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.101 2002-05-08 19:50:10 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -858,6 +858,9 @@ for strings."
 ;;; Faces
 ;;;
 
+(make-face 'lyskom-weak-highlight-face)
+(make-face 'lyskom-strong-highlight-face)
+
 (defun lyskom-set-face-foreground (face color)
   (condition-case nil
       (set-face-foreground face color)
@@ -877,26 +880,47 @@ for strings."
 (defun lyskom-set-face-scheme (scheme)
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
 in lyskom-face-schemes."
-  (let ((tmp (assoc scheme lyskom-face-schemes)))
+  (let ((tmp (assoc scheme lyskom-face-schemes))
+        (properties nil)
+        (background (or (face-background 'default)
+                        (frame-property (selected-frame) 'background-color))))
     (when (and tmp
                (fboundp 'copy-face)
                (fboundp 'lyskom-set-face-foreground)
                (fboundp 'lyskom-set-face-background))
-      (mapcar 
-       (lambda (spec)
-         (if (elt spec 1)
-             (lyskom-copy-face (elt spec 1) (elt spec 0))
-           (make-face (elt spec 0)))
-         (when (elt spec 2)
-           (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-         (when (elt spec 3)
-           (lyskom-set-face-background (elt spec 0) (elt spec 3))))
-       (cdr tmp)))))
+
+
+      ;; If we have a background color, then compute the highlight colors
+
+      (when background
+        (lyskom-set-face-background 'lyskom-strong-highlight-face
+                                    (lyskom-get-color-highlight (lyskom-color-values background) 0.05))
+        (lyskom-set-face-background 'lyskom-weak-highlight-face
+                                    (lyskom-get-color-highlight (lyskom-color-values background) 0.025)))
+
+      ;; Traverse face specifications in the face scheme
+
+      (lyskom-traverse spec (cdr tmp)
+        (if (eq 'property (car spec))
+            (setq properties (cons (cons (elt spec 1) (elt spec 2)) properties))
+          (if (elt spec 1) (lyskom-copy-face (elt spec 1) (elt spec 0)) (make-face (elt spec 0)))
+          (when (elt spec 2) (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
+          (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
+
+      ;; Check that the background color of the default face is what
+      ;; the face scheme expects. If not, copy the computed highlight
+      ;; faces to the real highlight faces.
+
+      (when (and background (assq 'expected-background properties))
+        (unless (equal (lyskom-color-values (cdr (assq 'expected-background properties)))
+                       (lyskom-color-values background))
+          (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face)
+          (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))))))
 
 
 (defun lyskom-face-resource (face-name attr type)
   (if (eq (lyskom-emacs-version) 'xemacs)
-      ;; XEmac style
+      ;; XEmacs style
       (let ((val (x-get-resource (concat face-name ".attribute" attr)
 				 (concat "Face.Attribute" attr)
 				 type)))
@@ -934,23 +958,20 @@ also reads the proper X resources."
 	    (error 'default))))  
   (lyskom-set-face-scheme kom-default-face-scheme)
   (if (eq (console-type) 'x)
-      (mapcar
-       (function
-	(lambda (face)
-	  (let* ((face-name (symbol-name face))
-		 (fg (lyskom-face-resource face-name "Foreground" 'string))
-		 (bg (lyskom-face-resource face-name "Background" 'string))
-		 (bl (lyskom-face-resource face-name "Bold" 'boolean))
-		 (it (lyskom-face-resource face-name "Italic" 'boolean))
-		 (ul (lyskom-face-resource face-name "Underline" 'boolean)))
-	    (if fg (set-face-foreground face fg))
-	    (if bg (set-face-background face bg))
-	    (if (eq bl 'on) (lyskom-modify-face 'bold face))
-	    (if (eq bl 'off) (lyskom-modify-face 'unbold face))
-	    (if (eq it 'on) (lyskom-modify-face 'italic face))
-	    (if (eq it 'off) (lyskom-modify-face 'unitalic face))
-	    (if ul (set-face-underline-p face (eq ul 'on))))))
-       lyskom-faces)))
+      (lyskom-traverse face lyskom-faces
+        (let* ((face-name (symbol-name face))
+               (fg (lyskom-face-resource face-name "Foreground" 'string))
+               (bg (lyskom-face-resource face-name "Background" 'string))
+               (bl (lyskom-face-resource face-name "Bold" 'boolean))
+               (it (lyskom-face-resource face-name "Italic" 'boolean))
+               (ul (lyskom-face-resource face-name "Underline" 'boolean)))
+          (if fg (set-face-foreground face fg))
+          (if bg (set-face-background face bg))
+          (if (eq bl 'on) (lyskom-modify-face 'bold face))
+          (if (eq bl 'off) (lyskom-modify-face 'unbold face))
+          (if (eq it 'on) (lyskom-modify-face 'italic face))
+          (if (eq it 'off) (lyskom-modify-face 'unitalic face))
+          (if ul (set-face-underline-p face (eq ul 'on)))))))
 
 
 ;;; ============================================================
@@ -1432,14 +1453,15 @@ in the 20th century")
 
 (defun lyskom-get-color-highlight (color distance)
   "Create a highlight color for COLOR that is DISTANCE away.
-COLOR is a string naming the color and DISTANCE is a non-negative
-integer no larger than 255, that in some way specifies how far
-away from the original color the new color should be."
-  (let* ((hls (lyskom-rgb-to-hls (lyskom-string-to-rgb color)))
+COLOR is a list of R G and B components from 0 to 65535.
+DISTANCE is a non-negative integer no larger than 1.0, that in some
+way specifies how far away from the original color the new color
+should be."
+  (let* ((hls (lyskom-rgb-to-hls (mapcar (lambda (x) (/ x 65535.0)) color)))
          (l (elt hls 1)))
     (if (> l 0.6)
-        (setq l (- l (/ distance 255.0)))
-      (setq l (+ l (/ distance 255.0))))
+        (setq l (- l distance))
+      (setq l (+ l distance)))
     (cond ((> l 1.0) (setq l 1.0))
           ((< l 0.0) (setq l 0.0)))
     (aset hls 1 l)
@@ -1555,50 +1577,50 @@ has the bug in that algorithm fixed)."
 ;;;         (setq g (+ g step)))
 ;;;       (setq r (+ r step)))))
 
-;;; (defun lyskom-test-auto-colors ()
-;;;   (make-face 'test-1)
-;;;   (make-face 'test-2)
-;;;   (make-face 'test-default)
-;;;   (while t
-;;;     (let ((foreground (read-from-minibuffer "Foreground: "))
-;;;           (background (read-from-minibuffer "Background: ")))
-;;;       (pop-to-buffer (get-buffer-create "*kom*-test"))
-;;;       (erase-buffer)
-;;;       (set-face-foreground 'test-default foreground)
-;;;       (set-face-background 'test-default background)
-;;;       (set-face-background 'test-1 (lyskom-get-color-highlight background 16))
-;;;       (set-face-background 'test-2 (lyskom-get-color-highlight background 8))
-;;;       (let ((lyskom-buffer (current-buffer)))
-;;;         (lyskom-format-insert "\
-;;; %#3@Läsa nästa fotnot...
-;;; 8408827 idag 00:40 /1 rad/ Lunkwill/CH ( Auf das Universum! )
-;;; Fotnot till text 8408825 av Lunkwill/CH ( Auf das Universum! )
-;;; Mottagare: Nätverk, Internet, LysNET, Sunet... <30873>
-;;; Mottagare: SUBnet (Stångåstadens och LiU:s) studentbostadsnät <12152>
-;;; Mottagare: Lunkwill/CH ( Auf das Universum! ) <2092>
-;;; Ärende: Vårmötet
-;;; %[%#1$------------------------------------------------------------
-;;; %]%[%#2$Och tack så mycket för förklaringarna! =)
-;;; %]%[%#1$(8408827) /Lunkwill/CH ( Auf das Universum! )/------
-;;; %]Gå till nästa möte...
-;;; SUN erfarenhetsutbyte - 1 oläst
-;;; Läsa nästa text...
-;;; 8408823 idag 00:39 /4 rader/ Erik Persson, Lysato(r)
-;;; Kommentar till text 8407161 av Dejan (något desperat)
-;;; Mottagare: SUN erfarenhetsutbyte <23622>
-;;; Ärende: Skapa partitionstabell
-;;; %[%#1$------------------------------------------------------------
-;;; %]%[%#2$Om du nu vill spela Fibre Channel med IDE-RAID så går du över ån efter
-;;; vatten. Det finns redan IDE-RAID med FC-interface.  Dock har jag inte
-;;; sett någon som stödjer något annat än FC-AL vilket är lite
-;;; begränsande.
-;;; %]%[%#1$(8408823) ------------------------------------------
-;;; %]Gå till nästa möte...
-;;; 
-;;; 
-;;; 
-;;; "
-;;;                               '(face test-1)
-;;;                               '(face test-2)
-;;;                               '(face test-default))))))
+;;;(defun lyskom-test-auto-colors ()
+;;;  (make-face 'test-1)
+;;;  (make-face 'test-2)
+;;;  (make-face 'test-default)
+;;;  (while t
+;;;    (let ((foreground (read-from-minibuffer "Foreground: "))
+;;;          (background (read-from-minibuffer "Background: ")))
+;;;      (pop-to-buffer (get-buffer-create "*kom*-test"))
+;;;      (erase-buffer)
+;;;      (set-face-foreground 'test-default foreground)
+;;;      (set-face-background 'test-default background)
+;;;      (set-face-background 'test-1 (lyskom-get-color-highlight (x-color-values background) 0.05))
+;;;      (set-face-background 'test-2 (lyskom-get-color-highlight (x-color-values background) 0.025))
+;;;      (let ((lyskom-buffer (current-buffer)))
+;;;        (lyskom-format-insert "\
+;;;%#3@Läsa nästa fotnot...
+;;;8408827 idag 00:40 /1 rad/ Lunkwill/CH ( Auf das Universum! )
+;;;Fotnot till text 8408825 av Lunkwill/CH ( Auf das Universum! )
+;;;Mottagare: Nätverk, Internet, LysNET, Sunet... <30873>
+;;;Mottagare: SUBnet (Stångåstadens och LiU:s) studentbostadsnät <12152>
+;;;Mottagare: Lunkwill/CH ( Auf das Universum! ) <2092>
+;;;Ärende: Vårmötet
+;;;%[%#1$------------------------------------------------------------
+;;;%]%[%#2$Och tack så mycket för förklaringarna! =)
+;;;%]%[%#1$(8408827) /Lunkwill/CH ( Auf das Universum! )/------
+;;;%]Gå till nästa möte...
+;;;SUN erfarenhetsutbyte - 1 oläst
+;;;Läsa nästa text...
+;;;8408823 idag 00:39 /4 rader/ Erik Persson, Lysato(r)
+;;;Kommentar till text 8407161 av Dejan (något desperat)
+;;;Mottagare: SUN erfarenhetsutbyte <23622>
+;;;Ärende: Skapa partitionstabell
+;;;%[%#1$------------------------------------------------------------
+;;;%]%[%#2$Om du nu vill spela Fibre Channel med IDE-RAID så går du över ån efter
+;;;vatten. Det finns redan IDE-RAID med FC-interface.  Dock har jag inte
+;;;sett någon som stödjer något annat än FC-AL vilket är lite
+;;;begränsande.
+;;;%]%[%#1$(8408823) ------------------------------------------
+;;;%]Gå till nästa möte...
+;;;
+;;;
+;;;
+;;;"
+;;;                              '(face test-1)
+;;;                              '(face test-2)
+;;;                              '(face test-default))))))
 ;;;

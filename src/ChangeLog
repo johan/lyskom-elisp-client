@@ -1,3 +1,22 @@
+2002-05-08  David Byers  <david.byers@swipnet.se>
+
+	Automatic color selection for highlight colors:
+	* compatibility.el (lyskom-color-values): Smarter definition that
+	can handle both strings and specifiers in XEmacs.
+
+	* vars.el.in (lyskom-face-schemes): Added incredibly ugly hack to
+	put properties in lyskom-face-schemes.
+
+	* utilities.el (lyskom-get-color-highlight): Modified to take list
+	of RGB and distance from 0 to 1.
+
+	Bug 525:
+	* swedish-strings.el (lyskom-sv-mode-map): Bind fm till
+	kom-filter-recipient.
+
+	* english-strings.el (lyskom-en-mode-map): Bind fr till
+	kom-filter-recipient.
+
 2002-05-07  David Byers  <david.byers@swipnet.se>
 
         Every KOM client needs color model conversion code:

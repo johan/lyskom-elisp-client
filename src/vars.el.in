@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.192 2002-05-07 20:12:13 byers Exp $
+;;;;; $Id: vars.el.in,v 44.193 2002-05-08 19:50:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.192 2002-05-07 20:12:13 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.193 2002-05-08 19:50:10 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2925,6 +2925,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face bold nil nil)
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#e8e8ff")
+     (property expected-background "white")
      )
     (bark
      (kom-active-face default "Gold" "Black")
@@ -2943,6 +2944,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-friends-face nil "Gold" "Black")
      (kom-morons-face nil "Gold" "Black")
      (kom-warning-face bold "Red" nil)
+     (property expected-background "black")
      )
     (black-and-tan
       (kom-text-body-face nil nil "#f8f8f0")
@@ -2961,6 +2963,7 @@ the value of  kom-tell-phrases for fun.")
       (kom-first-line-face bold nil nil)
       (kom-dim-face default "gray" nil)
       (kom-dashed-lines-face nil nil "#f0f0e0")
+      (property expected-background "white")
       )
     (inverse
      (kom-text-body-face nil nil "#080808")
@@ -2979,6 +2982,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face nil nil "black")
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil black)
+     (property expected-background "black")
      )
     (monochrome
      (kom-text-body-face nil nil nil)
@@ -2997,6 +3001,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face bold nil nil)
      (kom-first-line-face bold nil nil)
      (kom-dim-face default nil nil)
+     (property expected-background "white")
      )
     (minimal
      (kom-text-body-face nil nil nil)
@@ -3015,6 +3020,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face nil nil nil)
      (kom-dashed-lines-face nil nil nil)
      (kom-dim-face default nil nil)
+     (property expected-background "white")
      )
     (highlight
      (kom-text-body-face nil nil "#f8f8ff")
@@ -3033,6 +3039,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face nil  nil          "lavender")
      (kom-dashed-lines-face nil  nil          "lavender")
      (kom-dim-face       default   "gray"       nil)
+     (property expected-background "white")
      ))
   "*Face schemes for LysKOM.
 
