@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.24 1999-11-19 13:38:18 byers Exp $
+;;;;; $Id: macros.el,v 44.25 2000-03-21 15:21:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.24 1999-11-19 13:38:18 byers Exp $\n"))
+	      "$Id: macros.el,v 44.25 2000-03-21 15:21:25 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -244,17 +244,6 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
                                   (symbol-name sym))
                                lyskom-compatibility-definitions
                                ", ")))))))
-
-;;; ================================================================
-;;;         Faces
-
-(defmacro lyskom-make-face (name &rest body)
-  (` (if (memq (, name) (face-list))
-	 nil
-       (,@ body))))
-
-(put 'lyskom-make-face 'lisp-indent-function 1)
-
 
 ;;; ============================================================
 ;;; Keymap handling

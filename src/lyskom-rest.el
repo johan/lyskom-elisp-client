@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.99 2000-03-15 17:15:45 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.100 2000-03-21 15:21:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.99 2000-03-15 17:15:45 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.100 2000-03-21 15:21:24 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -214,6 +214,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
                                          (end-of-line)
                                          (forward-char 1)
                                          (point)))))
+           (set-extent-priority overlay 1000)
            (set-extent-face overlay 'kom-mark-face)
            (add-timeout 2 
                         'delete-extent
@@ -225,6 +226,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
                                          (forward-char 1)
                                          (point)))))
            (overlay-put overlay 'face 'kom-mark-face)
+           (overlay-put overlay 'priority 1000)
            (run-at-time 2 nil
                         'delete-overlay
                         overlay))))))
