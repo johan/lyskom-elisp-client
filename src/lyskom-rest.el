@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.11 1996-10-06 22:13:14 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.12 1996-10-08 02:46:39 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.11 1996-10-06 22:13:14 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.12 1996-10-08 02:46:39 nisse Exp $\n"))
 
 
 ;;;; ================================================================
@@ -154,10 +154,10 @@ assoc list."
 
 (defun lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (car (cdr (assoc command 
-		   (if kom-emacs-knows-iso-8859-1
-		       lyskom-commands
-		     lyskom-swascii-commands)))))
+  (lyskom-get-string command 
+		     (if kom-emacs-knows-iso-8859-1
+			 lyskom-commands
+		       lyskom-swascii-commands)))
 
 
 (defun lyskom-ok-command (alternative administrator)
@@ -172,13 +172,14 @@ assoc list."
   (interactive)
   (let ((fnc (lyskom-read-extended-command)))
     (cond
-     (fnc (call-interactively (car fnc)))
-     (t (kom-next-command))))
-)
+     (fnc (call-interactively fnc))
+     (t (kom-next-command)))) )
 
 (defun lyskom-read-extended-command ()
+  "Reads and returns a command"
   (let* ((completion-ignore-case t)
-	 (alternatives (mapcar (function reverse)
+	 (alternatives (mapcar (function (lambda (pair)
+					   (list (cdr pair) (car pair))))
 			       (if kom-emacs-knows-iso-8859-1
 				   lyskom-commands
 				 lyskom-swascii-commands)))
@@ -188,15 +189,19 @@ assoc list."
 				;; must be evalled before the call to 
 				;; completing-read
 				;; Yes, this is not beautiful
-				(list 'lambda '(alternative)
-				      (list 'lyskom-ok-command 'alternative
-					    lyskom-is-administrator))
+				;;(list 'lambda '(alternative)	     
+				;;	(list 'lyskom-ok-command 'alternative
+				;;	      lyskom-is-administrator))
+				(` (lambda (alternative)
+				     (lyskom-ok-command
+				      alternative
+				      (, lyskom-is-administrator))))
 				t nil))
-	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
-			     (if kom-emacs-knows-iso-8859-1
-				 lyskom-commands
-			       lyskom-swascii-commands))))
-    fnc))
+	 (fnc (rassq (car (all-completions name alternatives)) 
+		     (if kom-emacs-knows-iso-8859-1
+			 lyskom-commands
+		       lyskom-swascii-commands))))
+    (car fnc)))
 
 ;;; Resume operation after a crash.
 
@@ -1072,7 +1077,7 @@ Note that it is not allowed to use deferred insertions in the text."
                           (mapconcat 'single-key-description
                                      (append arg nil) " "))
                          ((symbolp arg)
-                          (or (car (cdr (assq arg lyskom-commands)))
+                          (or (cdr (assq arg lyskom-commands))
                               (princ arg)))
                          (t (format "%S" arg)))))
 
@@ -2677,7 +2682,7 @@ from the value of kom-tell-phrases-internal."
 (setq lyskom-swascii-commands
       (mapcar 
        (function (lambda (pair)
-		   (list (car pair) (iso-8859-1-to-swascii (car (cdr pair))))))
+		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
        lyskom-commands))
 (setq lyskom-swascii-header-separator 
       (iso-8859-1-to-swascii lyskom-header-separator))
