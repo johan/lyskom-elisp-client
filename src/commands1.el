@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.4 1996-08-10 13:10:28 byers Exp $
+;;;;; $Id: commands1.el,v 43.5 1996-08-11 10:44:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.4 1996-08-10 13:10:28 byers Exp $\n"))
+	      "$Id: commands1.el,v 43.5 1996-08-11 10:44:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -128,7 +128,8 @@
                    (blocking-do 'get-conf-stat who)
                  (lyskom-read-conf-stat 
                           (lyskom-get-string 'presentation-for-whom)
-                          '(all)))))
+                          '(all)
+                          nil "" t))))
           (if (null conf-stat)
               (lyskom-insert-string 'somebody-deleted-that-conf)
             (lyskom-format-insert 'review-presentation-of
@@ -274,9 +275,9 @@ as TYPE. If no such misc-info, return NIL"
 Ask for the name of the person, the conference to add him/her to."
   (interactive)
   (let* ((who (lyskom-read-conf-stat (lyskom-get-string 'who-to-add)
-				     '(pers)))
+				     '(pers) nil nil t))
 	 (whereto (lyskom-read-conf-stat (lyskom-get-string 'where-to-add)
-					 '(all)))
+					 '(all) nil nil t))
 	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
 			      whereto who)))
@@ -456,9 +457,9 @@ of the person."
   (interactive)
   (lyskom-sub-member
    (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude)
-                          '(pers) nil "")
+                          '(pers) nil "" t)
    (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
-			  '(all) nil "")))
+			  '(all) nil "" t)))
 
 
 (def-kom-command kom-sub-self (&optional conf)
@@ -477,7 +478,7 @@ of the person."
                                                    lyskom-current-conf)))))
                               (if ccn
                                   (cons ccn 0)
-                                ""))))))
+                                "")) t))))
 
 (defun lyskom-sub-member (pers conf)
   "Remove the person indicated by PERS as a member of CONF."
@@ -992,7 +993,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
   (interactive)
   (let ((conf-stat (or (lyskom-read-conf-stat
 			(lyskom-get-string 'who-to-remove-motd-for)
-			'(all) t)
+			'(all) t nil t)
 		       (blocking-do 'get-conf-stat lyskom-pers-no))))
     (cond
      ((null conf-stat)
@@ -1226,7 +1227,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'name-to-be-changed)
-		    '(all))))
+		    '(all) nil nil t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (let (name)
@@ -1256,13 +1257,13 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive)
   (let ((supervisee (lyskom-read-conf-stat
 		     (lyskom-get-string 'who-to-change-supervisor-for)
-		     '(all))))
+		     '(all) nil nil t)))
     (if (null supervisee)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (lyskom-tell-internat 'kom-tell-change-supervisor)
       (let ((supervisor (lyskom-read-conf-stat
 			 (lyskom-get-string 'new-supervisor)
-			 '(all))))
+			 '(all) nil nil t)))
 	(lyskom-format-insert 'change-supervisor-from-to
 			      supervisee
 			      supervisor)
@@ -2097,7 +2098,8 @@ command argument."
 				 (lyskom-get-string 'who-to-move-from-q)
 				 '(all)
 				 nil
-				 (if conf2 (conf-stat->name conf2) ""))))
+				 (if conf2 (conf-stat->name conf2) "")
+                                 t)))
 
 	 (conf-to-add-to (lyskom-read-conf-stat
 			  (lyskom-get-string
@@ -2108,7 +2110,8 @@ command argument."
 				 (t (lyskom-error "internal error"))))
 			  '(all)
 			  nil
-			  (if conf (conf-stat->name conf) "")))
+			  (if conf (conf-stat->name conf) "")
+                          t))
 	 (result nil))
     (setq result
 	  (cond ((eq action 'add-rcpt)
