@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.33 2000-09-02 14:23:10 byers Exp $
+;;;;; $Id: command.el,v 44.34 2000-09-02 14:30:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.33 2000-09-02 14:23:10 byers Exp $\n"))
+	      "$Id: command.el,v 44.34 2000-09-02 14:30:06 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -205,13 +205,6 @@
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
-;;;         (alternatives (mapcar                               
-;;;                        (lambda (pair)                       
-;;;                          (cons                              
-;;;                           (cdr pair)                        
-;;;                           (car pair)))                      
-;;;                        (lyskom-get-strings lyskom-commands  
-;;;                                            'lyskom-command)))
 	 (name nil)
          (prefix-text
           (cond ((eq prefix-arg '-) "- ")
@@ -256,10 +249,25 @@ transformed for matching."
   (lyskom-complete-command string predicate 'lyskom-lookup))
 
 (defsubst lyskom-command-match-string-regexp (string)
-  (concat "^"
-          (replace-in-string (regexp-quote (lyskom-unicase (lyskom-completing-strip-name string t)))
-                             "\\s-+" "\\\\S-*\\\\s-+")
+  (concat 
+   "^"
+   (replace-in-string (regexp-quote
+                       (lyskom-unicase
+                        (lyskom-completing-strip-command string)))
+                      "\\s-+" "\\\\S-*\\\\s-+")
           "\\s-*"))
+
+(defun lyskom-completing-strip-command (string)
+  "Strip parens and crap from a name.
+If optional DONT-STRIP-SPACES is non-nil, don't strip spaces at front
+and back of the string."
+  (while (string-match "([^()]*)" string) ; Strip nested parens
+    (setq string (replace-match " " t t string)))
+  (while (string-match "\\s-\\s-+" string) ; Collapse spaces
+    (setq string (replace-match " " t t string)))
+  (while (string-match "([^()]*$" string) ; Strip incomplete parens at end
+    (setq string (substring string 0 (match-beginning 0))))
+  string)
 
 (defun lyskom-complete-command (string predicate all)
   "Completion function for LysKOM commands."
