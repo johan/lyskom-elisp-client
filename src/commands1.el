@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.6 1991-09-15 16:19:58 linus Exp $
+;;;;; $Id: commands1.el,v 35.7 1991-09-15 16:58:41 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.6 1991-09-15 16:19:58 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.7 1991-09-15 16:58:41 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -555,7 +555,7 @@ user so instead."
 
 (defun kom-create-conf (conf-name)
   "Create a conference."
-  (interactive (list (read-string (lyskom-get-string 'name-of-conf))))
+  (interactive (list (lyskom-read-string (lyskom-get-string 'name-of-conf))))
   (let* ((open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))
@@ -1160,7 +1160,8 @@ PRIORITY is the smallest priority the conference can be read with."
 
 (defun kom-list-persons (match)
   "List all persons whose name matches MATCH (a string)."
-  (interactive (list (read-string (lyskom-get-string 'search-for-pers))))
+  (interactive (list (lyskom-read-string 
+		      (lyskom-get-string 'search-for-pers))))
   (lyskom-start-of-command 'kom-list-persons)
   (initiate-lookup-name 'main 'lyskom-list-pers-handler match))
 
@@ -1192,7 +1193,8 @@ PRIORITY is the smallest priority the conference can be read with."
 (defun kom-list-conferences (match)
   "List all conferences whose name matches MATCH (a string).
 Those that you are not a member in will be marked with an asterisk."
-  (interactive (list (read-string (lyskom-get-string 'search-for-conf))))
+  (interactive (list (lyskom-read-string
+		      (lyskom-get-string 'search-for-conf))))
   (lyskom-start-of-command 'kom-list-conferences)
   (initiate-lookup-name 'main 'lyskom-list-conferences match))
 
@@ -1245,6 +1247,7 @@ If you are not member in the conference it will be flagged with an asterisk."
 	(lyskom-end-of-command))
     (progn
       (lyskom-insert (conf-stat->name conf-stat))
+      (lyskom-scroll)
       (lyskom-tell-internat 'kom-tell-change-name)
       (setq name (read-from-minibuffer (lyskom-get-string 'new-name)))
       (initiate-change-name 'main 'lyskom-change-name-2

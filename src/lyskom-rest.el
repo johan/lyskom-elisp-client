@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.5 1991-09-15 10:05:22 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.6 1991-09-15 16:58:59 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.5 1991-09-15 10:05:22 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.6 1991-09-15 16:58:59 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1668,5 +1668,9 @@ One parameter - the prompt string."
 	(mapcar 
 	 (function (lambda (pair)
 		     (list (car pair) (iso-8859-1-to-swascii (car (cdr pair))))))
-	 lyskom-commands)))
+	 lyskom-commands))
+  (setq lyskom-header-separator 
+	(iso-8859-1-to-swascii lyskom-header-separator))
+  (setq lyskom-header-subject
+	(iso-8859-1-to-swascii lyskom-header-subject)))
 

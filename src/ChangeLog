@@ -1,5 +1,18 @@
 Sun Sep 15 18:17:11 1991  Linus Tolke Y  (linus at robin)
 
+	* lyskom-rest.el, edit-text.el, swedish-strings.el
+	  (lyskom-edit-insert-misc, lyskom-edit-read-misc-list): Fixat s}
+	  att den konverterar {ver [rende raden och skriv texten raden.
+
+	* commands1.el (lyskom-change-name): Scrollar p} r{tt st{lle.
+
+	* edit-text.el, startup.el, commands1.el (kom-list-persons,
+	  kom-list-conferences, kom-edit-send, kom-create-conf):
+	  read-string ersatt med lyskom-read-string.
+
+	* edit-text.el (lyskom-edit-mode): Nu skall vi inte f} f|rsta
+	  tangenttryckningen att betyda lyskom-kommandon.
+
 	* vars.el, commands1.el: Inlagt en kom-quit-hook.
 
 Fri Sep 13 23:50:56 1991  Inge Wallin  (inge at lysator)
