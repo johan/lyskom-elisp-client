@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.89 2002-01-07 16:47:30 byers Exp $
+;;;;; $Id: utilities.el,v 44.90 2002-02-24 16:59:19 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.89 2002-01-07 16:47:30 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.90 2002-02-24 16:59:19 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1284,7 +1284,8 @@ Returns a cons of (LOCAL . GLOBAL)"
                       (date (and text-stat
                                  (lyskom-traverse misc
                                      (text-stat->misc-info-list text-stat)
-                                   (when (memq (misc-info->type misc) lyskom-recpt-types-list)
+                                   (when (and (memq (misc-info->type misc) lyskom-recpt-types-list)
+					      (eq (misc-info->recipient-no misc) text-no))
                                      (lyskom-traverse-break 
                                       (if (misc-info->sent-at misc)
                                           (misc-info->sent-at misc)
@@ -1292,7 +1293,7 @@ Returns a cons of (LOCAL . GLOBAL)"
                  (when text-stat
                    (setq index local-no)
                    (if (lyskom-time-greater
-                        (text-stat->creation-time text-stat)
+			date
                         target-date)
                        (setq highest index)
                      (setq lowest index))

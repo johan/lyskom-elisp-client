@@ -1,3 +1,9 @@
+2002-02-24  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-find-text-by-date): Fixed assignment to
+	date variable inside the binary search loop. Use date variable in
+	later comparison.
+
 2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* mship-edit.el (lyskom-read-time): Commented out code that
