@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.7 1991-09-16 19:59:28 linus Exp $
+# $Id: Makefile,v 35.8 1991-09-16 20:33:44 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.7 1991-09-16 19:59:28 linus Exp $
+# $Id: Makefile,v 35.8 1991-09-16 20:33:44 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.7  1991-09-16 19:59:28  linus
+# Revision 35.8  1991-09-16 20:33:44  linus
+# r{tt namn p} todo filen i wc.
+#
+# Revision 35.7  1991/09/16  19:59:28  linus
 # Makefile now works with clientversion-long.
 #
 # Revision 35.6  1991/09/16  19:31:37  linus
@@ -107,8 +110,8 @@ elc-files: $(HEADER-ELC) $(PARTS-ELC)
 
 
 wc:
-	wc $(HEADER-EL) $(PARTS-EL)
-	wc ../doc/elisp-client.latexinfo ChangeLog ../misc/To-do
+	@wc $(HEADER-EL) $(PARTS-EL)
+	@wc ../doc/elisp-client.latexinfo ChangeLog ../misc/todo
 
 tags:
 	etags $(HEADER-EL) $(PARTS-EL)
