@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.24 1992-07-30 01:59:22 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.25 1992-07-31 01:49:07 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.24 1992-07-30 01:59:22 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.25 1992-07-31 01:49:07 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -995,7 +995,7 @@ lyskom-is-waiting nil.
       (lyskom-set-last-viewed))
   (lyskom-print-prompt)
   (lyskom-continue-prefetch)		; Verify that prefetch i running
-  )
+  (run-hooks 'lyskom-after-command-hook))
 
 
 (defun lyskom-print-prompt ()
@@ -1154,25 +1154,6 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 		    (read-list->all-entries lyskom-to-do-list))))
 
 
-(defun lyskom-prefetch-handle-map (map membership conf-stat)
-  "Add info about unread texts in a conf to the lyskom-to-do-list.
-Args: MAP MEMBERSHIP CONF-STAT.
-MAP is the mapping from local to global text-nos for (at least) all
-texts after membership->last-text-read. MEMBERSHIP is info about the
-user's membership in the conference."
-  (let ((unread (lyskom-list-unread map membership)))
-    (cond
-     (unread
-      (read-list-enter-read-info
-         (lyskom-create-read-info
-	    'CONF
-	    conf-stat
-	    (membership->priority membership)
-	    (lyskom-create-text-list unread))
-	 lyskom-to-do-list))))
-  (lyskom-prefetch-and-print-prompt))
-
-
 (defun lyskom-list-unread (map membership)
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
 The list consists of text-nos."
@@ -1193,19 +1174,6 @@ The list consists of text-nos."
 		   (elt the-map i)
 		   res)))))
     res))
-
-
-(defun lyskom-conf-fetched-p (conf-no)
-  "Return t if CONF-NO has been prefetched."
-  (let ((n lyskom-last-conf-received)
-	(result nil))
-    (while (and (not result)
-		(>= n 0))
-      (if (= (membership->conf-no (elt lyskom-membership n))
-	     conf-no)
-	  (setq result t))
-      (-- n))
-    result))
 
 
 ;;;; ================================================================

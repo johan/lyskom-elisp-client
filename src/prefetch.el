@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 35.6 1992-07-30 19:49:24 linus Exp $
+;;;;; $Id: prefetch.el,v 35.7 1992-07-31 01:49:12 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 35.6 1992-07-30 19:49:24 linus Exp $\n"))
+	      "$Id: prefetch.el,v 35.7 1992-07-31 01:49:12 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -499,7 +499,7 @@ Put the requests on QUEUE."
     (lyskom-add-membership-to-membership membership)
     (while list
       (lyskom-prefetch-map (membership->conf-no (car list))
-			   (membership->last-text-read (car list))
+			   (1+ (membership->last-text-read (car list)))
 			   queue)
       (setq list (cdr list)))
     (if (and (numberp lyskom-membership-is-read)
