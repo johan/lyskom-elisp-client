@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.7 1992-04-29 12:52:40 linus Exp $
+;;;;; $Id: cache.el,v 35.8 1992-05-04 00:41:56 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.7 1992-04-29 12:52:40 linus Exp $\n"))
+	      "$Id: cache.el,v 35.8 1992-05-04 00:41:56 linus Exp $\n"))
 
 
 
@@ -282,7 +282,12 @@ ARG: session-info"
 	     (narrow-to-region (point-min) (1- (point-max))))
 	   (setq min (point-max-marker))
 	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
-				  'insert)
+				  (function
+				   (lambda (string)
+				     (insert
+				      (if kom-emacs-knows-iso-8859-1
+					  string
+					(iso-8859-1-to-swascii string))))))
 	   (setq max (point-max-marker))
 	   (goto-char (point-max)))
 	 (delete-char 1))
