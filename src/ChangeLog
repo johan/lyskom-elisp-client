@@ -1,4 +1,18 @@
+2000-03-22  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el: Support for hidden entries in motion and entry
+	movement commands.
+	(lp--next-visible-entry): New function.
+	(lp--get-last-visible-entry): Renamed from lp--get-last-entry.
+
 2000-03-21  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--do-select-entries): Never select invisible
+	entries.
+	(lp--entry-set-visible): New function.
+	(lp--redraw-entry): Don't draw invisible entries.
+	(lp--move-up): Use lp--calculate-distance to take invisible
+	elements into account.
 
 	* compatibility.el (lyskom-make-face): New function.
 	(find-face): New compatibility function.
