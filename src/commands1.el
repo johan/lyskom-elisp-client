@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.14 1992-01-24 23:10:36 linus Exp $
+;;;;; $Id: commands1.el,v 35.15 1992-01-24 23:53:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.14 1992-01-24 23:10:36 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.15 1992-01-24 23:53:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1271,14 +1271,16 @@ If you are not member in the conference it will be flagged with an asterisk."
       (progn
 	(lyskom-insert-string 'no-such-conf-or-pers)
 	(lyskom-end-of-command))
-    (progn
-      (lyskom-insert (conf-stat->name conf-stat))
-      (lyskom-scroll)
-      (lyskom-tell-internat 'kom-tell-change-name)
-      (setq name (read-from-minibuffer (lyskom-get-string 'new-name)))
-      (initiate-change-name 'main 'lyskom-change-name-2
-			    (conf-stat->conf-no conf-stat)
-			    name name))))
+    (condition-case error
+	(let (name)
+	  (lyskom-insert (conf-stat->name conf-stat))
+	  (lyskom-scroll)
+	  (lyskom-tell-internat 'kom-tell-change-name)
+	  (setq name (read-from-minibuffer (lyskom-get-string 'new-name)))
+	  (initiate-change-name 'main 'lyskom-change-name-2
+				(conf-stat->conf-no conf-stat)
+				name name))
+      (quit (ding) (lyskom-insert "\n") (lyskom-end-of-command)))))
 
 
 (defun lyskom-change-name-2 (answer name)
