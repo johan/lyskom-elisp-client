@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.1 1993-04-26 19:35:49 linus Exp $
+;;;;; $Id: commands1.el,v 36.2 1993-04-28 22:43:12 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.1 1993-04-26 19:35:49 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.2 1993-04-28 22:43:12 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -390,7 +390,17 @@ If THENDO is nil then execute lyskom-end-of-command."
 					&optional thendo data)
   "Handle the result from an attempt to add a member to a conference."
   (if (null answer)
-      (lyskom-handle-command-answer answer)
+      (progn
+	(lyskom-insert-string 'nope)
+	(if (conf-type->rd_prot conf-conf-stat)
+	    (initiate-get-conf-stat 'main 'lyskom-add-member-answer-rd_prot
+				    (conf-stat->supervisor conf-conf-stat)
+				    conf-conf-stat)
+	  (lyskom-format-insert 'error-code
+				(lyskom-get-error-text lyskom-errno)
+				lyskom-errno)
+	  (lyskom-end-of-command)))
+
     (lyskom-insert-string 'done)
     (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat)) ;+++Borde {ndra i cachen i st{llet.
     (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat)) ;+++Borde {ndra i cachen i st{llet.
@@ -402,6 +412,18 @@ If THENDO is nil then execute lyskom-end-of-command."
 				   conf-conf-stat thendo data)
       (if thendo
 	  (apply 'lyskom-run 'main thendo data)))))
+
+
+(defun lyskom-add-member-answer-rd_prot (supervisorconf conf-conf-stat)
+  "Suggests that we contact the supervisor to become a member."
+  (if (not supervisorconf)
+      (lyskom-format-insert 'cant-find-supervisor
+			    (conf-stat->name conf-conf-stat))
+    (lyskom-format-insert 'is-read-protected-contact-supervisor
+			  (conf-stat->name conf-conf-stat)
+			  (conf-stat->name supervisorconf)))
+  (lyskom-end-of-command))
+
 
 
 (defun lyskom-add-membership (membership conf-stat &optional thendo data)
