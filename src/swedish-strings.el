@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.382 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.383 2004-10-31 15:37:26 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.382 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.383 2004-10-31 15:37:26 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -771,6 +771,8 @@ Meddelandet du försökte sända till %#1M var:
     (only-last . "Endast läsa senaste i %#1s: ")
     (initial-unread . "Initialt antal olästa (tomt för alla): ")
     (only-error . "Något gick galet. Ledsen.\n")
+
+    (lp--only-last . "Antal texter att läsa: ")
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")
     (you-have-unreads-special . "Du har %#1d okommentera%#1?d%[t%]%[de%] inlägg i %#2M\n")
@@ -2112,10 +2114,12 @@ Nuvarande rättigheter för %#1P (%#1p):
  Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
  Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
  Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:  I,H,P,M
+ Uppskjuta läsning:  u        Endast:         e
  Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
     (lp-hide-read-after . "Dölj medlemskap lästa efter: ")
     (lp-hide-read-since . "Dölj medlemskap ej lästa sedan: ")
+    (lp-skipping-missing-meeting . "Mötet %#1M finns inte längre, hoppar över.")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2576,6 +2580,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (lp--toggle-passive . "Växla passiv")
     (lp--toggle-message-flag . "Växla meddelanden")
     (lp--toggle-secret . "Växla hemlig")
+    (lp--set-unread . "Endast")
     (lp--quit . "Avsluta")
 ))
 
@@ -2961,6 +2966,8 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-prioritize-mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lyskom-sv-prioritize-mode-map (kbd "P") 'lp--toggle-passive)
   (define-key lyskom-sv-prioritize-mode-map (kbd "M") 'lp--toggle-message-flag)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "e") 'lp--set-unread)
+  (define-key lyskom-sv-prioritize-mode-map (kbd "u") 'lp--postpone)
   (define-key lyskom-sv-prioritize-mode-map (kbd "C-c C-c") 'lp--quit)
   (define-key lyskom-sv-prioritize-mode-map (kbd "q") 'lp--quit)
   (define-key lyskom-sv-prioritize-mode-map (kbd "(") 'lp--expand-entry)

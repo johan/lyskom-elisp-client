@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.50 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: mship-edit.el,v 44.51 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.50 2004-10-29 10:41:09 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: mship-edit.el,v 44.51 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -854,46 +854,149 @@ clicked on."
           (blocking-do 'get-conf-stat (membership->conf-no mship))))
       (lp--redraw-entry entry))))
 
-(defun lp--toggle-invitation ()
+(defun lp--selected-or-current-arg ()
+  "Return a list of selected entries or the current entry.
+This function is suitable to call from interactive."
+  (if (and lp--selected-entry-list
+	   (not (zerop (length lp--selected-entry-list))))
+      lp--selected-entry-list
+    (list (lp--entry-at (point)))))
+
+(defun lp--postpone (arg entries)
+  "Postpone reading of all but the last ENTRIES text in selected/
+current conferences."
+  (interactive (list current-prefix-arg
+		     (lp--selected-or-current-arg)))
+  (lyskom-with-lyskom-buffer
+    (let ((n (or (and arg 
+		      (prefix-numeric-value arg))
+		 (lyskom-read-number 
+		  (lyskom-get-string 'postpone-prompt)
+		  kom-postpone-default)))
+	  (l (mapcar
+	      (lambda (i)
+		(if (eq 'CONF (read-info->type i)) 
+		    (list (read-info->conf-stat i) 
+			  (read-info->text-list i))
+		  '(nil nil)))
+	      (read-list->all-entries lyskom-to-do-list))))
+      (lyskom-traverse cur entries
+	(unless cur
+	  (error (lyskom-get-string 'lp-no-entry)))
+	(let* ((conf-no (membership->conf-no (lp--entry->membership cur)))
+	       (conf-stat (blocking-do 'get-conf-stat conf-no)))
+	  (if (null conf-stat)
+	      (lyskom-message (lyskom-format (lyskom-get-string 
+					      'lp-skipping-missing-meeting)
+					     conf-no))
+	    (let ((rl (assoc conf-stat l)))
+	      (when (and (nth 1 rl) ; Handle passive conferences
+			 (< n (text-list->length (nth 1 rl))))
+		(text-list->trim-head (nth 1 rl) n)
+		(lp--update-buffer conf-no)
+		(when (= lyskom-current-conf conf-no)
+		  (lyskom-go-to-conf conf-no t))))))))
+    (read-list-delete-text nil lyskom-reading-list)
+    (read-list-delete-text nil lyskom-to-do-list)))
+
+(defun lp--set-unread (arg entries)
+  "Set number of unread messages in selected/current conference(s)."
+  ; Should probably unify with
+  (interactive (list current-prefix-arg
+		      (lp--selected-or-current-arg)))
+  (let ((num-unread (or (and arg
+		     (prefix-numeric-value arg))
+		(lyskom-read-num-range-or-date 
+		 0
+		 ; Does this really promote the user experience? Would it
+		 ; be better to fix lyskom-read-num-range-or-date to 
+		 ; be able to get a number or a date (ignoring ther range)?
+		 (let ((max-unread 0))
+		   (lyskom-traverse cur entries
+		     (when cur
+		       (setq max-unread 
+			     (max max-unread
+				  (conf-stat->no-of-texts
+				   (blocking-do 'get-conf-stat 
+						(membership->conf-no 
+						 (lp--entry->membership cur))))))))
+		   max-unread)
+		 (lyskom-format 'lp--only-last)))))
+    (lyskom-with-lyskom-buffer
+      (lyskom-traverse cur entries
+	(unless cur 
+	  (error (lyskom-get-string 'lp-no-entry)))
+	(let* ((conf-no (membership->conf-no (lp--entry->membership cur)))
+	       (conf-stat (progn (cache-del-conf-stat conf-no)
+				 (blocking-do 'get-conf-stat conf-no))))
+	  (if (null conf-stat)
+	      (lyskom-message (lyskom-format (lyskom-get-string 
+					      'lp-skipping-missing-meeting)
+					     conf-no))
+	    (let ((num-unread-this-conf (if (listp num-unread)
+					    num-unread
+					  (min num-unread
+					       (conf-stat->no-of-texts conf-stat)))))
+	      (cond ((listp num-unread-this-conf)
+		     (lyskom-format-insert 'set-unread-date 
+					   (elt num-unread-this-conf 0)
+					   (car (rassq (elt num-unread-this-conf 1) 
+						       lyskom-month-names))
+					   (elt num-unread-this-conf 2))
+		     (let* ((target-date (lyskom-create-time 0 0 0 
+							     (elt num-unread-this-conf 2) 
+							     (elt num-unread-this-conf 1) 
+							     (elt num-unread-this-conf 0) 
+							     0 0 nil))
+			    (text (lyskom-find-text-by-date conf-stat target-date)))
+		       (when text
+			 (blocking-do 'set-last-read 
+				      (conf-stat->conf-no conf-stat)
+				      (car text)))))
+		    ((numberp num-unread-this-conf) 
+		     (blocking-do 'set-unread conf-no num-unread-this-conf)))
+	      ; FIXME: Does not handle the current conf right,
+	      ; prefetch problem?
+	      (lyskom-replace-membership (lp--entry->membership cur))
+	      (when (= conf-no lyskom-current-conf)
+		(read-list-delete-read-info conf-no lyskom-reading-list))
+	      (read-list-delete-read-info conf-no lyskom-to-do-list)
+	      (lyskom-prefetch-one-membership conf-no lyskom-pers-no)
+	      (when (and (= conf-no lyskom-current-conf)
+			    (not (zerop num-unread-this-conf)))
+		(lyskom-go-to-conf conf-no t))))))
+    (read-list-delete-text nil lyskom-reading-list)
+    (read-list-delete-text nil lyskom-to-do-list))))
+
+
+(defun lp--toggle-flag (flag entries)
+  "Toggle the given FLAG for given ENTRIES."
+  (lp--save-excursion
+   (lyskom-traverse cur entries
+     (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
+           (t (lyskom-prioritize-flag-toggle (current-buffer)
+                                             (list cur flag)
+                                             ""))))))
+
+(defun lp--toggle-invitation (entries)
   "Toggle the invitation bit of the current entry"
-  (interactive)
-  (lp--save-excursion
-   (let ((cur (lp--entry-at (point))))
-     (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
-           (t (lyskom-prioritize-flag-toggle (current-buffer)
-                                             (list cur 'invitation)
-                                             ""))))))
+  (interactive (list (lp--selected-or-current-arg)))
+  (lp--toggle-flag 'invitation entries))
 
-(defun lp--toggle-passive ()
+(defun lp--toggle-passive (entries)
   "Toggle the passive bit of the current entry"
-  (interactive)
-  (lp--save-excursion
-   (let ((cur (lp--entry-at (point))))
-     (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
-           (t (lyskom-prioritize-flag-toggle (current-buffer)
-                                             (list cur 'passive)
-                                             ""))))))
+  (interactive (list (lp--selected-or-current-arg)))
+  (lp--toggle-flag 'passive entries))
 
-(defun lp--toggle-message-flag ()
-  "Toggle the passive bit of the current entry"
-  (interactive)
-  (lp--save-excursion
-   (let ((cur (lp--entry-at (point))))
-     (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
-           (t (lyskom-prioritize-flag-toggle (current-buffer)
-                                             (list cur 'message-flag)
-                                             ""))))))
+(defun lp--toggle-message-flag (entries)
+  "Toggle the message flag bit of current or selected entries"
+  (interactive (list (lp--selected-or-current-arg)))
+  (lp--toggle-flag 'message-flag entries))
 
-(defun lp--toggle-secret ()
+(defun lp--toggle-secret (entries)
   "Toggle the secret bit of the current entry"
-  (interactive)
-  (lp--save-excursion
-   (let ((cur (lp--entry-at (point))))
-     (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
-           (t (lyskom-prioritize-flag-toggle (current-buffer)
-                                             (list cur 'secret)
-                                             ""))))))
-
+  (interactive (list (lp--selected-or-current-arg)))
+  (lp--toggle-flag 'secret entries))
 
 
 ;;; ============================================================

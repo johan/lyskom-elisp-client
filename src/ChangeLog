@@ -1,3 +1,20 @@
+2004-10-31  Pontus Freyhult  <pont@soua.net>
+
+	* mship-edit.el (lp--selected-or-current-arg): New function.
+	(lp--toggle-flag): New function.
+	(lp--postpone): New function.
+	(lp--set-unread): New function.
+	(lp--toggle-message-flag, lp--toggle-invitiation,
+	 lp--toggle-secret, lp--toggle-passive): Use
+	lp--selected-or-current-arg and lp--toggle-flag.
+
+	* english-strings.el, swedish-strings.el (local):
+	Added lp--only-last and lp-skipping-missing-meeting. 
+	Changed lp-footer-help.
+	(global): Added lp--set-unread.
+	(lyskom-prioritize-mode-map): Added keyboard mappings
+	for lp--postpone and lp--set-unread.
+	
 2004-10-29  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--entry-set-background): Use 
