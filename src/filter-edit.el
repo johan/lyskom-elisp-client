@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.2 1996-10-11 11:16:04 nisse Exp $
+;;;;; $Id: filter-edit.el,v 44.3 1996-10-28 18:04:52 davidk Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.2 1996-10-11 11:16:04 nisse Exp $\n"))
+	      "$Id: filter-edit.el,v 44.3 1996-10-28 18:04:52 davidk Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -216,7 +216,7 @@ entry."
   "Format the filter list FILTERS and insert the result into the
 current buffer. The buffer variable 
 FILTER-EDIT-CURRENTLY-EDITED-FILTER-ENTRY-LIST is also updated."
-  (let ((buffer-read-only nil))
+  (let ((inhibit-read-only t))
     (setq filter-edit-currently-edited-filter-entry-list nil)
     (lyskom-format-filter-list-2 filters)
     (setq filter-edit-currently-edited-filter-entry-list
@@ -469,7 +469,7 @@ If NEWLINE is non-nil, insert a newline after the header."
 (defun lyskom-filter-edit-insert-entry ()
   "Add an entry to the end of the list"
   (interactive)
-  (let ((buffer-read-only nil)
+  (let ((inhibit-read-only t)
         (completion-ignore-case t)
         (rev-actions 
          (lyskom-reverse-pairs lyskom-filter-actions))
@@ -518,7 +518,7 @@ If NEWLINE is non-nil, insert a newline after the header."
         (entry nil)
         (filter nil)
         (pat nil)
-        (buffer-read-only nil)
+        (inhibit-read-only t)
         (completion-ignore-case t)
         (rev-what (lyskom-reverse-pairs lyskom-filter-what)))
     (setq what (completing-read
@@ -636,7 +636,7 @@ If NEWLINE is non-nil, insert a newline after the header."
   "Delete ARG pattern lines, starting with the one at point.
 Only lines in the current entry will be deleted."
   (interactive "p")
-  (let* ((buffer-read-only nil)
+  (let* ((inhibit-read-only t)
          (entry (lyskom-filter-edit-locate (point)))
          (filter (filter-entry->filter entry)))
     (if (null entry)
@@ -684,7 +684,7 @@ Only lines in the current entry will be deleted."
 If optional WHICH is non-nil, start with entry number WHICH.
 If NOERROR is non-nil, return nil instead of signaling an error."
   (interactive "p")
-  (let ((buffer-read-only nil))
+  (let ((inhibit-read-only t))
   (not
    (catch 'fail
      (if (null arg) (setq arg 1))
@@ -696,16 +696,22 @@ If NOERROR is non-nil, return nil instead of signaling an error."
              (if noerror
                  (throw 'fail t)
                (lyskom-error (lyskom-get-string 'filter-edit-end-of-list))))
-         (setq entry (elt filter-edit-currently-edited-filter-entry-list entry-no))
+         (setq entry (elt filter-edit-currently-edited-filter-entry-list
+			  entry-no))
          (delete-region (filter-entry->start entry)
                         (1+ (filter-entry->end entry)))
          (cond ((= 0 entry-no)
-                (setq filter-edit-currently-edited-filter-entry-list (cdr filter-edit-currently-edited-filter-entry-list))
+                (setq filter-edit-currently-edited-filter-entry-list
+		      (cdr filter-edit-currently-edited-filter-entry-list))
                 (setq filter-edit-change-flag t))
-               (t (setcdr (nthcdr (1- entry-no) filter-edit-currently-edited-filter-entry-list)
-                          (nthcdr (1+ entry-no) filter-edit-currently-edited-filter-entry-list))
+               (t (setcdr
+		   (nthcdr (1- entry-no)
+			   filter-edit-currently-edited-filter-entry-list)
+		   (nthcdr (1+ entry-no)
+			   filter-edit-currently-edited-filter-entry-list))
                   (setq filter-edit-change-flag t)))
-         (if (= entry-no (length filter-edit-currently-edited-filter-entry-list))
+         (if (= entry-no
+		(length filter-edit-currently-edited-filter-entry-list))
              (progn (if (lyskom-filter-edit-prev-entry 1 t)
                         (setq arg 0)
                       (throw 'fail t)))
@@ -791,7 +797,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   (if (or (not filter-edit-change-flag)
           (and filter-edit-change-flag
                (lyskom-j-or-n-p (lyskom-get-string 'filter-edit-restart-p))))
-      (let ((buffer-read-only nil))
+      (let ((inhibit-read-only t))
         (setq filter-edit-currently-edited-filter-entry-list nil)
         (delete-region filter-edit-list-start filter-edit-list-end)
         (goto-char filter-edit-list-start)
@@ -805,10 +811,11 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   "Toggle the permanent flag of the current entry"
   (interactive)
   (let ((entry-no (lyskom-filter-edit-locate-no (point)))
-        (buffer-read-only nil))
+        (inhibit-read-only t))
     (if (= -1 entry-no)
         (lyskom-error (lyskom-get-string 'filter-edit-outside-entry)))
-    (let ((entry (elt filter-edit-currently-edited-filter-entry-list entry-no)))
+    (let ((entry (elt filter-edit-currently-edited-filter-entry-list
+		      entry-no)))
       (set-filter->attribute (filter-entry->filter entry)
                              'expire
                              (not (filter->attribute 
@@ -825,10 +832,11 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   "Toggle the filter action of the current entry."
   (interactive)
   (let ((entry-no (lyskom-filter-edit-locate-no (point)))
-        (buffer-read-only nil))
+        (inhibit-read-only t))
     (if (= -1 entry-no)
         (lyskom-error (lyskom-get-string 'filter-edit-outside-entry)))
-    (let* ((entry (elt filter-edit-currently-edited-filter-entry-list entry-no))
+    (let* ((entry (elt filter-edit-currently-edited-filter-entry-list
+		       entry-no))
            (action-list lyskom-filter-actions)
            (action (car
                     (cdr (memq 
@@ -910,11 +918,11 @@ All key bindings:
         (curwin (current-window-configuration)))
     (pop-to-buffer (get-buffer-create 
                     (lyskom-get-string 'filter-edit-buffer-name)))
-    (let ((buffer-read-only nil))
+    (let ((inhibit-read-only t))
       (delete-region (point-min) (point-max)))
     (lyskom-filter-edit-mode)
     (setq lyskom-buffer buf)
-    (let ((buffer-read-only nil))
+    (let ((inhibit-read-only t))
       (setq filter-edit-filter-list filters)
       (insert (format (lyskom-get-string 'filter-edit-header)
                       server-name))
