@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.145 2000-12-09 09:22:29 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.146 2001-01-01 22:48:31 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.145 2000-12-09 09:22:29 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.146 2001-01-01 22:48:31 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -2082,6 +2082,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
   (define-key lyskom-sv-mode-map (kbd "C-?") 'scroll-down)
   (define-key lyskom-sv-mode-map (kbd "<DEL>") 'scroll-down)
+  (define-key lyskom-sv-mode-map (kbd "<delete>") 'scroll-down)
   (define-key lyskom-sv-mode-map (kbd "<BS>") 'scroll-down)
 )
 

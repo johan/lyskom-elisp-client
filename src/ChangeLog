@@ -1,3 +1,10 @@
+2000-12-31  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): Made "<delete>" scroll
+	up as well as the other delete-keys.
+
+	* english-strings.el (lyskom-en-mode-map): Ditto.
+
 2000-12-22  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (kom-page-next-command): Added (temporary)
@@ -17,7 +24,7 @@
 
 2000-12-29  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* lyskom-rest.el (j-or-n-p lyskom-j-or-n-p): Rmoved the parameter
+	* lyskom-rest.el (j-or-n-p lyskom-j-or-n-p): Removed the parameter
 	quittable and rewrote the functions as if it were always
 	t. Callers changed (in aux-items.el, commands1.el, commands2.el,
 	edit-text.el, filter-edit.el and startup.el).
@@ -26,7 +33,7 @@
 
 	* utilities.el: applied patch from Per Starbäck, device-class
 	isn't defined if it doesn't exist, lyskom-device-class is. Caller
-	changed. (Se text 5867166 in LysLysKOM.)
+	changed. (See text 5867166 in LysLysKOM.)
 
 2000-12-12  David Byers  <davby@sen5.ida.liu.se>
 
@@ -3730,4 +3737,5 @@ Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 
 Local Variables:
 outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
+eval: (ispell-change-dictionary "british")
 End:
