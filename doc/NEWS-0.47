@@ -43,6 +43,8 @@
    problem när du kommenterar texter skrivna med Latin-1. Om du
    använder language-environment Latin-1 kommer du istället att
    få problem när/om du kommenterar texter skrivna med Latin-9.
+   Med language-environment Latin-9 får du dessutom problem med
+   utfyllnad av kommandonamn vars ord börjar på svenska tecken.
 
    Om du använder GNU Emacs 21 kan du använda ucs-tables.el som
    antagligen kommer att följa med i version 21.3. (Hämtas t ex
