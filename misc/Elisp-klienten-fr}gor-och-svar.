@@ -2367,3 +2367,59 @@ givetvis g|ra saker i stil med:
 andra terminaltyper d{r du vill ha 8-bitars emacs" 
 					       (getenv "TERM")))
 (97469) -----------------------------------
+
+99514 1991-09-01  17:52  /13 rader/ Klaus Zeuge UPDATE
+Kommentar till text 96566 av Linus Tolke Y
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <59>
+[rende: Teckenrepresentation
+------------------------------------------------------------
+Nja, det st{mmer tyv{rr inte riktigt.
+I min emacs tex m}ste jag s{tta
+	kom-emacs-knows-iso-8859-1 till t, och
+	ctl-arrow till v{rde skiljt fr}n t och nil
+f|r att f} dels LysKOM att inte |vers{tta, dels f} emacsen att visa
+tecknen som de {r istf i \-representation.
+
+[r det special f|r just den h{r patchen, det h{r med ctl-arrow? Eller
+finns det bara en spridd patch?
+
+I det senare fallet vore det trevligt om LysKOM tog h{nsyn till detta
+genom att vid start titta p} v{rdet av ctl-arrow och vid oms{ttande av
+kom-emacs-knows-iso-8859-1 {ven s{tta ctl-arrow. Skulle det g}?
+(99514) -----------------------------------
+
+99514 1991-09-01  17:52  /13 rader/ Klaus Zeuge UPDATE
+Kommentar till text 96566 av Linus Tolke Y
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <59>
+[rende: Teckenrepresentation
+------------------------------------------------------------
+Nja, det st{mmer tyv{rr inte riktigt.
+I min emacs tex m}ste jag s{tta
+	kom-emacs-knows-iso-8859-1 till t, och
+	ctl-arrow till v{rde skiljt fr}n t och nil
+f|r att f} dels LysKOM att inte |vers{tta, dels f} emacsen att visa
+tecknen som de {r istf i \-representation.
+
+[r det special f|r just den h{r patchen, det h{r med ctl-arrow? Eller
+finns det bara en spridd patch?
+
+I det senare fallet vore det trevligt om LysKOM tog h{nsyn till detta
+genom att vid start titta p} v{rdet av ctl-arrow och vid oms{ttande av
+kom-emacs-knows-iso-8859-1 {ven s{tta ctl-arrow. Skulle det g}?
+(99514) -----------------------------------
+G} till n{sta m|te - Kommentera inl{gget (99514)
+Text nummer 99517 {r skapad.
+
+99517 1991-09-01  18:01  /7 rader/ Linus Tolke Y
+Kommentar till text 99514 av Klaus Zeuge UPDATE
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <60>
+[rende: Teckenrepresentation
+------------------------------------------------------------
+ctl-arrow har bara med kontrolltecken att g|ra:
+Dvs tecknena   till . Den avg|r om det skall visas som
+	     ^@      ^_  (ctl-arrow {r t)
+	     \000      \037. (ctl-arrow {r nil)
+
+Vad har du f|r patchar? Skicka doc-str{ngen till ctl-arrow till
+mig om den inte st{mmer med detta inl{gget.
+(99517) -----------------------------------
