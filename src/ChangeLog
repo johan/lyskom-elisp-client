@@ -1,3 +1,13 @@
+Wed Jun 23 12:40:40 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
+
+	* swedish-string.el (lyskom-mode-map, lyskom-edit-mode-map):
+	  emacs-19 way of giving commands.
+
+	* vars.el, command2.el, swedish-strings.el (kom-next-kom): New
+	  command, rotating through several lyskoms.
+
+	* commands2.el (kom-bury): buggfix, could hang
+
 Fri Jun 18 12:33:32 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
 
 	* commands2.el, swedish-strings.el (kom-bury): New command.

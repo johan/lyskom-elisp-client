@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.6 1993-06-18 11:51:12 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.7 1993-06-23 15:59:29 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.6 1993-06-18 11:51:12 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.7 1993-06-23 15:59:29 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -57,6 +57,12 @@
   (define-key lyskom-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-edit-mode-map "\C-c}"	'lyskom-edit-review-prefix)
   (define-key lyskom-edit-mode-map "\C-c]"	'lyskom-edit-review-prefix)
+  ;; emacs 19
+  (if (string-match "^19" emacs-version)
+      (progn
+	(define-key lyskom-edit-prefix [?\345] 'lyskom-edit-review-prefix)
+	(define-key lyskom-edit-prefix [?\305] 'lyskom-edit-review-prefix)
+	))
   (define-key lyskom-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
   (define-key lyskom-edit-mode-map "\C-c\C-c"	'kom-edit-send)
   (define-key lyskom-edit-mode-map "\C-ck"	'kom-edit-quit)
@@ -786,23 +792,35 @@ Cf. paragraph-start.")
   (define-prefix-command 'lyskom-list-prefix)
   (define-prefix-command 'lyskom-get-prefix)
   (define-prefix-command 'lyskom-S-prefix)
-  (define-key lyskom-mode-map "{" 'lyskom-change-prefix)
+  (define-key lyskom-mode-map "{" 'lyskom-change-prefix) ; krullar
   (define-key lyskom-mode-map "[" 'lyskom-change-prefix)
-  (define-key lyskom-mode-map "\344" 'lyskom-change-prefix) ; 8-bit emacs.
-  (define-key lyskom-mode-map "\304" 'lyskom-change-prefix)
-  (define-key lyskom-mode-map "\033{" 'lyskom-change-prefix) ; 7(8)-bit emacs.
-  (define-key lyskom-mode-map "\033[" 'lyskom-change-prefix) 
   (define-key lyskom-mode-map "}" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "]" 'lyskom-review-prefix)
+  (define-key lyskom-mode-map "\344" 'lyskom-change-prefix) ; 8-bit keymap
+  (define-key lyskom-mode-map "\304" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "\345" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "\305" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "\033}" 'lyskom-review-prefix) ; 7(8)-bit emacs.
+  (define-key lyskom-mode-map "\033{" 'lyskom-change-prefix) ; 7(8)-bit emacs.
+  (define-key lyskom-mode-map "\033[" 'lyskom-change-prefix) 
+  (define-key lyskom-mode-map "\033}" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "\033]" 'lyskom-review-prefix) 
+
   (define-key lyskom-mode-map "f" 'lyskom-get-prefix)
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
   (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
 
+  ;; emacs 19
+  (if (string-match "^19" emacs-version)
+      (progn
+	(define-key lyskom-mode-map [\344] 'lyskom-change-prefix)
+	(define-key lyskom-mode-map [\304] 'lyskom-change-prefix)
+	(define-key lyskom-mode-map [\345] 'lyskom-review-prefix)
+	(define-key lyskom-mode-map [\304] 'lyskom-review-prefix)
+
+	(define-key lyskom-mode-map [?l ?\344] 'kom-list-summary)
+	(define-key lyskom-mode-map [?l ?\304] 'kom-list-summary)
+	))
 	;(define-key lyskom-mode-map "vi" 'vilka)
 
   ; These should be first in order to be last in the menu of alternatives.
@@ -847,6 +865,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "A"  'kom-unmark-text)
   (define-key lyskom-mode-map "ni" 'kom-view-next-new-text)
   (define-key lyskom-mode-map "nm" 'kom-go-to-next-conf)
+  (define-key lyskom-mode-map "nl" 'kom-next-kom)
   (define-key lyskom-mode-map "S"  'kom-quit)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
