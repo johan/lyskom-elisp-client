@@ -1,3 +1,44 @@
+2000-07-03  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el (lyskom-button-actions): Added button type
+	func.
+
+	* vars.el.in (lyskom-text-buttons): Fixed problem with info-node
+	regexp: it had the space after the colon in the nodename and did
+	not allow stuff like ``(file.info)nodename''. 
+
+2000-06-13  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (forward-text): Go to point-max if after the last
+	text.
+	(backward-text): Go to point-min if before the first text.
+
+	* utilities.el (lyskom-next-area): Added parameter goto-point-max.
+	(lyskom-prev-area): Added parameter goto-point-min.
+
+2000-06-06  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-ispell-dictionary): Make inherited.
+
+ 	Prefetch messes up attachment display:
+	* prefetch.el (lyskom-prefetch-text-stat-all): New function.
+
+	* view-text.el (lyskom-skip-attachments): Mark skipped attachments
+	as read.
+
+ 	Check for bad calls to zerop:
+	* review.el (lyskom-review-by-to): Protect zerop check on
+	lyskom-current-conf by checking if it is nil first.
+
+	* commands2.el (kom-set-unread): Protect zerop check on
+	lyskom-current-conf by checking if it is nil first.
+
+	* commands1.el (kom-sub-self): Protect zerop check on
+	lyskom-current-conf by checking if it is nil first.
+	(kom-write-text): Same here.
+
+	* async.el (lyskom-parse-async): Cleanup not->null.
+
 2000-06-14  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* review.el (lyskom-review-comments): Review texts in correct

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.17 1999-11-19 13:38:38 byers Exp $
+;;;;; $Id: prefetch.el,v 44.18 2000-07-03 10:50:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.17 1999-11-19 13:38:38 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.18 2000-07-03 10:50:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -234,6 +234,15 @@ lyskom-prefetch-stack."
       (lyskom-queue-enter queue (cons 'TEXT-ALL text-no))
     (lyskom-stack-push lyskom-prefetch-stack (cons 'TEXT-ALL text-no)))
   (lyskom-continue-prefetch))
+
+(defun lyskom-prefetch-text-stat-all (text-stat &optional queue)
+  "Prefetch all info about the text with text stat TEXT-STAT.
+If QUEUE is non-nil, put the request on it, otherwise put it on 
+lyskom-prefetch-stack."
+  (when (null queue)
+    (setq queue (lyskom-queue-create))
+    (lyskom-stack-push lyskom-prefetch-stack queue))
+  (lyskom-prefetch-text-all-handler text-stat queue))
 
 
 (defun lyskom-prefetch-texttree (text-no &optional queue only-new)

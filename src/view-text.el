@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.43 2000-06-10 23:16:35 joel Exp $
+;;;;; $Id: view-text.el,v 44.44 2000-07-03 10:50:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.43 2000-06-10 23:16:35 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.44 2000-07-03 10:50:15 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -480,7 +480,9 @@ lyskom-reading-list."
       (lyskom-traverse text-stat result
         (read-list-delete-text (text-stat->text-no text-stat) lyskom-reading-list)
         (read-list-delete-text (text-stat->text-no text-stat) lyskom-to-do-list)
-        (if mark-as-read (lyskom-is-read-handler text-stat))))))
+        (when mark-as-read
+          (lyskom-mark-as-read text-stat)
+          (lyskom-is-read-handler text-stat))))))
 
 
 (defun lyskom-fetch-text-for-cache (text-stat)
@@ -1000,13 +1002,16 @@ Args: TEXT-STAT of the text being read."
 	 (misc (elt (defer-info->data defer-info) 0))
 	 (read-text-stat (elt (defer-info->data defer-info) 1))
 	 (type (misc-info->type misc))
-         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-         (mx-attachments-in (lyskom-get-text-attachments text-stat))
+         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                            17)))
+         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
+                                              16)))
+         (mx-attachments-in (lyskom-get-text-attachments read-text-stat))
          (mx-belongs-to (mapcar
                          (lambda (el)
                            (string-to-number (aux-item->data el)))
-                         (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
+                         (lyskom-get-aux-item (text-stat->aux-items 
+                                               read-text-stat) 10100)))
          (content-type "")
 	 fmt data)
 
@@ -1061,7 +1066,7 @@ Args: TEXT-STAT of the text being read."
 		  nil))
         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-        (mx-attachments-in (lyskom-get-text-attachments text-stat))
+        (mx-attachments-in (lyskom-get-text-attachments read-text-stat))
         (mx-belongs-to (mapcar
                         (lambda (el)
                           (string-to-number (aux-item->data el)))

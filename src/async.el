@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.32 2000-05-23 12:06:36 byers Exp $
+;;;;; $Id: async.el,v 44.33 2000-07-03 10:49:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.32 2000-05-23 12:06:36 byers Exp $\n"))
+	      "$Id: async.el,v 44.33 2000-07-03 10:49:58 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -119,7 +119,7 @@ this function shall be with current-buffer the BUFFER."
       (let ((info (lyskom-parse-who-info)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	 (if (or (not lyskom-pers-no)
+	 (if (or (null lyskom-pers-no)
 		 (zerop lyskom-pers-no))
 	     nil
 	   (cache-add-who-info info)))))
@@ -690,8 +690,7 @@ converted, before insertion."
 		      "Unexpected misc-info in new text "
 		      type))))))
 
-  ;; A little to much work, really
-  (lyskom-prefetch-text-all (text-stat->text-no text-stat))
+  (lyskom-prefetch-text-stat-all text-stat)
 
   ;; Give a message if the user is waiting. Update the prompt.
   (lyskom-run 'async 'lyskom-default-new-text-hook text-stat)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.73 2000-06-11 18:15:01 jhs Exp $
+;;;;; $Id: commands2.el,v 44.74 2000-07-03 10:50:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.73 2000-06-11 18:15:01 jhs Exp $\n"))
+	      "$Id: commands2.el,v 44.74 2000-07-03 10:50:01 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -680,7 +680,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   "Set number of unread articles in current conference."
   (interactive "P")
   (setq conf-no (or conf-no lyskom-current-conf))
-  (if (zerop conf-no)
+  (if (or (null conf-no) (zerop conf-no))
       (progn
         (lyskom-insert-string 'not-present-anywhere)
         (lyskom-insert-string "\n"))

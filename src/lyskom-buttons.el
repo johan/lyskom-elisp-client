@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.42 2000-06-02 14:40:51 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.43 2000-07-03 10:50:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.42 2000-06-02 14:40:51 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.43 2000-07-03 10:50:04 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1079,3 +1079,5 @@ depending on the value of `kom-lynx-terminal'."
             (lyskom-end-of-command)))
       (lyskom-format-insert 'cant-get-aux-item))))
            
+(defun lyskom-button-apply (buf arg text)
+  (apply (car arg) (cdr arg)))
