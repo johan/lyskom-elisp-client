@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.2 1996-10-06 05:18:13 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.3 1996-10-08 12:24:41 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.2 1996-10-06 05:18:13 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.3 1996-10-08 12:24:41 nisse Exp $\n"))
 
 
 ;;;; ================================================================
@@ -131,9 +131,8 @@ Does lyskom-end-of-command."
     (setq lyskom-edit-return-to-configuration config)
     (lyskom-edit-insert-miscs misc-list subject body)
     (goto-char (point-min))
-    (re-search-forward (concat "\\(" (regexp-quote lyskom-header-subject)
-			       "\\|" (regexp-quote lyskom-swascii-header-subject)
-			       "\\)")
+    (re-search-forward (regexp-quote (lyskom-get-string
+				      'header-subject))
 		       (point-max)
 		       'end)
     (if (not (looking-at "\\s-*$"))
@@ -176,13 +175,9 @@ footn-to	-> Fotnot till text %d."
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
     (princ (lyskom-format 'text-mass subject 
-			  (if kom-emacs-knows-iso-8859-1
-			      lyskom-header-separator
-			    lyskom-swascii-header-separator)
+			  (lyskom-get-string 'header-separator)
 			  body 
-			  (if kom-emacs-knows-iso-8859-1
-			      lyskom-header-subject
-			    lyskom-swascii-header-subject))
+			  (lyskom-get-string 'header-subject))
 	   where-put-misc)
     (set-buffer edit-buffer)
     (goto-char where-put-misc)
@@ -323,17 +318,11 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (make-local-variable 'paragraph-separate)
   (setq paragraph-start (concat "^" 
 				(regexp-quote 
-				 lyskom-header-separator)
-				"$\\|^"
-				(regexp-quote
-				 lyskom-swascii-header-separator)
+				 (lyskom-get-string 'header-separator))
 				"$\\|" paragraph-start))
   (setq paragraph-separate (concat "^" 
 				   (regexp-quote 
-				    lyskom-header-separator)
-				   "$\\|^"
-				   (regexp-quote
-				    lyskom-swascii-header-separator)
+				    (lyskom-get-string 'header-separator))
 				   "$\\|" paragraph-separate))
   (run-hooks 'lyskom-edit-mode-hook))
 
@@ -372,9 +361,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	      (if (string= subject "")
 		  (let ((old (point)))
 		    (goto-char (point-min))
-		    (re-search-forward (if kom-emacs-knows-iso-8859-1
-					   lyskom-header-subject
-					 lyskom-swascii-header-subject)
+		    (re-search-forward (lyskom-get-string 'header-subject)
 				       nil t)
 		    (end-of-line)
 		    (if (/= (point) old)
@@ -760,9 +747,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 					; the real subject
     (save-restriction
       ;; Narrow to headers
-      (search-forward (if kom-emacs-knows-iso-8859-1
-			  lyskom-header-separator
-			lyskom-swascii-header-separator))
+      (search-forward (lyskom-get-string 'header-separator))
       (beginning-of-line)
       (narrow-to-region (point-min) (point))
       (goto-char (point-min))
@@ -778,11 +763,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	    (nconc result (list 'comm-to n)))
 	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
 	    (nconc result (list 'footn-to n)))
-	   ((lyskom-looking-at-header (if kom-emacs-knows-iso-8859-1
-					  lyskom-header-subject
-					(regexp-quote
-					 lyskom-swascii-header-subject))
-				      nil)
+	   ((lyskom-looking-at-header 'header-subject nil)
 	    (setcar result (lyskom-edit-extract-subject)))
 	   (t
 	    (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
@@ -804,15 +785,11 @@ Point must be located on the line where the subject is."
     (goto-char (point-min))
     (if (not (or (re-search-forward 
 		  (regexp-quote 
-		   (if kom-emacs-knows-iso-8859-1
-		       lyskom-header-separator
-		     lyskom-swascii-header-separator)) 
+		   (lyskom-get-string 'header-separator))
 		  nil (point-max))
 		 (re-search-forward 
 		  (regexp-quote 
-		   (if kom-emacs-knows-iso-8859-1
-		       lyskom-swascii-header-separator
-		     lyskom-header-separator)) 
+		   (lyskom-get-string 'header-separator)) 
 		  nil (point-max))))
 	(signal 'lyskom-internal-error
 		"Altered lyskom-header-separator line.")
