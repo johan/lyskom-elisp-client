@@ -1,3 +1,7 @@
+2000-09-02  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46
+
 2000-09-02  David Byers  <davby@ida.liu.se>
 
 	* Makefile (release-files): Build zip file too.

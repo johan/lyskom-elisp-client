@@ -189,8 +189,9 @@
        path for compiling (this should only happen if the custom
        package is not on your default load path).
 
-    4. If you changed the list of languages or ran the configure
-       script, run `make clean'.
+    4. If you changed the list of languages, ran the configure script
+       or are recompiling with a different Emacs version, run `make
+       clean'.
 
     5. Run `make'. If your environment is set up correctly, LysKOM
        should be compiled. When compilation is finished, type `make

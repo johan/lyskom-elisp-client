@@ -2,18 +2,21 @@
                        Nyheter i lyskom.el 0.46
                        ========================
 
-    Version 0.46 som är den första publika releasen av elispklienten
-    sedan 1997 finns nu tillgänglig på följande URL.
+    Knappt tre år efter version 0.45 så finns nu version 0.46 av
+    elispklienten tillgänglig på följande adress:
 
        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
     Filen heter lyskom-0.46.tar.gz, och en kopia av den text du
     läser just nu finns under namnet NEWS-0.46 samt under namnet
-    NEWS-0.46 i tar-arkivet.
+    NEWS-0.46 i tar-arkivet. Det finns även en zip-fil för folk som
+    sitter med system som inte förstår tar-filer.
 
     Den här releasen är inte hårdtestad för stabilitet, men verkar
     fungera bättre än alla tidigare versioner (även om det bergis
-    finns en och annan som tycker att 0.38.2 var bättre). 
+    finns en och annan som tycker att 0.38.2 var bättre). Det kommer
+    att dyka upp fel, kanske allvarliga sådana. Det kommer att bli en
+    0.46.1 och antagligen en 0.46.2 vad tiden lider.
 
     Om du hittar ett fel i elispklienten och inte klarar av att rätta
     den själv, använd M-x kom-bug-report för att rapportera den. 
@@ -100,19 +103,24 @@
 *** Ta bort FAQ
 *** Var finns kommandot
 *** Vilka är inloggade i möte
+*** Återse FAQ
+*** Återse brevhuvud
+*** Ändra FAQ
 *** Ändra FAQ
 *** Ändra mötestyp
 *** Ändra parentes
 *** Ändra prioritet
-*** Återse FAQ
-*** Återse brevhuvud
 
 
 ** Nya variabler
 
+   Alla dessa variabler går att sätta via inställningsbufferten. 
+
 *** kom-agree-text
+*** kom-confirm-add-recipients
 *** kom-created-texts-are-saved
 *** kom-default-session-priority
+*** kom-dont-check-commented-authors
 *** kom-ignore-message-senders
 *** kom-keep-alive-interval
 *** kom-long-lines
@@ -188,6 +196,12 @@
     författaren till det kommenterade inte var medlem alls i någon
     mottagare.
 
+*** Man kan slippa ovanstående kontroll för vissa författare genom att
+    sätta variabeln kom-dont-check-commented-authors till en lista av
+    de personer (använd personernas nummer) som man inte vill göra
+    kontrollen för. Typiskt bra för importörer och andra automatiska
+    inläggsförfattare.
+
 *** Funktionen kom-insert-last-info-nodename stoppar in en referens
     till den senaste info-noden man var på i aktuell buffert.
     Funktionen kom-yank-info-nodename kopierar en referens till den
@@ -204,11 +218,9 @@
     kan använda extra-kopiemottagare. Om du hör till det fåtal som vet
     hur man adderar extra kopior (C-c C-a C-e i edit-mode, a "Addera
     extra kopiemottagare" i kombuffern) och använder Addera mottagare
-    med urskillning och avsikt och inte vill få frågan, kan du lägga
-    till följande i din .emacs:
-
-	(remove-hook 'lyskom-add-sub-recipients-hook
-		     'lyskom-annoying-verify-add-rcpt)
+    med urskillning och avsikt och inte vill få frågan så kan du sätta
+    kom-confirm-add-recipients till nil (det går att göra via
+    inställningsbufferten också).
 
 *** Edit-moden har stöd för "Roxen IS style bug/todo-list". Kommandot
     sitter på C-c C-b i edit-moden. Om du inte vet vad det här är så
@@ -492,7 +504,8 @@
 
 *** Man kan spara godtyckliga variabler i servern eller i sin .emacs.
     Det är bara att sätta dem innan man laddar lyskom.elc så läser
-    inte klienten de variablerna från servern.
+    inte klienten de variablerna från servern. Man behöver inte
+    använda hook-funktioner.
 
 *** I inställningsbufferten finns det en kryssruta för att säga att en
     variabel skall sparas i servern. Ikryssad så sparas den i servern.
@@ -501,32 +514,33 @@
 
 ** Multipla sessioner
 
-** Föregående och nästa LysKOM fungerar bättre. Man kan till och med
-   använda dem från buffertar som inte är LysKOM-buffertar.
+*** Föregående och nästa LysKOM fungerar bättre. Man kan till och med
+    använda dem från buffertar som inte är LysKOM-buffertar.
 
-** Om man kör XEmacs så kan man klicka på olästamarkeringen i
-   statusraden för att hoppa till första session med olästa
-   (mittenknapp) eller få upp en meny av sessioner med olästa (höger).
+*** Om man kör XEmacs så kan man klicka på olästamarkeringen i
+    statusraden för att hoppa till första session med olästa
+    (mittenknapp) eller få upp en meny av sessioner med olästa
+    (höger).
 
-** Man kan få Gå till nästa LysKOM som defaultkommando. Genom att
-   pilla på variablerna kom-server-priority och
-   kom-server-priority-breaks (leta efter "Sessionsprioritet" i
-   inställningsbufferten) så kan man få elispklienten att automatiskt
-   gå till ett annat LysKOM som defaultkommando.
+*** Man kan få Gå till nästa LysKOM som defaultkommando. Genom att
+    pilla på variablerna kom-server-priority och
+    kom-server-priority-breaks (leta efter "Sessionsprioritet" i
+    inställningsbufferten) så kan man få elispklienten att automatiskt
+    gå till ett annat LysKOM som defaultkommando.
 
-   Variabeln kom-server-priority ger en prioritet till LysKOM-servern.
-   För att en session skall avbryta en annan så måste den avbrytande
-   sessionen ha högre prioritet än det möte man för tillfället läser i
-   den avbrutna sessionen.
+*** Variabeln kom-server-priority ger en prioritet till
+    LysKOM-servern. För att en session skall avbryta en annan så måste
+    den avbrytande sessionen ha högre prioritet än det möte man för
+    tillfället läser i den avbrutna sessionen.
 
-   Variabeln kom-server-priority-breaks styr när avbrotten får ske.
-   Värdet express betyder att avbrott skall ske direkt.
-   express-letters betyder att avbrott sker direkt om det har kommit
-   brev i den andra sessionen. t betyder avbrott efter aktuell
-   kommentarskedja. letters betyder efter aktuell kommentarskedja om
-   det har kommit brev. after-conf betyder efter aktuellt möte.
-   after-conf-letters betyder efter aktuellt möte om det har kommit
-   brev.
+*** Variabeln kom-server-priority-breaks styr när avbrotten får ske. 
+    Värdet express betyder att avbrott skall ske direkt. 
+    express-letters betyder att avbrott sker direkt om det har kommit
+    brev i den andra sessionen. t betyder avbrott efter aktuell
+    kommentarskedja. letters betyder efter aktuell kommentarskedja om
+    det har kommit brev. after-conf betyder efter aktuellt möte. 
+    after-conf-letters betyder efter aktuellt möte om det har kommit
+    brev.
 
    Om man sätter kom-server-priority-breaks till when-done så får man
    prompt om att gå till nästa LysKOM om man läser ut allting i en
@@ -552,6 +566,15 @@
 *** Precis som man kan markera personer man gillar med variabeln
     kom-friends så kan man markera idioter med variabeln kom-morons. 
     De får ett annat utseende än personer markerade med kom-friends.
+
+*** Långsamma kommandon fungerar bättre. Den automatiska utfyllnaden
+    av kommandon tar hänsyn till parenteser och man kan klicka på
+    textnummer och liknande (eller använda * och =). En lista av alla
+    möjliga fortsättningar på ett delvis inmatat kommando finns på
+    "?".
+
+*** Utfyllnaden av kommandon när man trycker på "a" tar hänsyn till
+    parenteser.
 
 *** Variabeln kom-long-lines styr om man får långa streckrader
     överallt.
@@ -597,8 +620,17 @@
     för att spara raderade bitar till fil. Filnamnet är hårdkodat till
     ~/<buffer>-history där <buffer> är LysKOM-buffertens namn.
 
+*** Om man begränsar LysKOM-buffertens storlek så kan man tala om hur
+    små bitar som får tas bort åt gången. Detta för att begränsa
+    antalet anrop till eventuellt dyra hook-funktioner. Variabeln
+    heter kom-trim-buffer-minimum.
+
 *** Kommandot Lista klienter visar en sammanställning av hur många
     instanser av varje klient som körs.
+
+*** Om servern har rätt aux-item satt (e-mail) och man skriver fel
+    lösenord när man loggar in så visas en text som talar om att man
+    kan skicka mail till uppräknade e-mail-adresser för att få hjälp.
 
 
 ** Tilläggsinformation
