@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.13 1993-12-17 14:23:43 linus Exp $
+;;;;; $Id: commands2.el,v 36.14 1994-01-05 23:06:27 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.13 1993-12-17 14:23:43 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.14 1994-01-05 23:06:27 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -969,11 +969,15 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
     (set-buffer old-buf)
     (cond
-     ((eq old-buf (process-buffer lyskom-proc)))
-     ((save-excursion
-	(set-buffer (process-buffer lyskom-proc))
-	(set-buffer lyskom-unparsed-buffer)
-	(eq old-buf (current-buffer)))
+     ((condition-case error
+	  (eq old-buf (process-buffer lyskom-proc))
+	(error nil)))
+     ((condition-case error
+	  (save-excursion
+	    (set-buffer (process-buffer lyskom-proc))
+	    (set-buffer lyskom-unparsed-buffer)
+	    (eq old-buf (current-buffer)))
+	(error nil))
       (set-buffer (process-buffer lyskom-proc)))
      (t
       (error "I dont know what buffer you are running lyskom in (%s)?" 

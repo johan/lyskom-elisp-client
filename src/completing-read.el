@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.7 1993-12-14 02:22:04 linus Exp $
+;;;;; $Id: completing-read.el,v 36.8 1994-01-05 23:06:34 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.7 1993-12-14 02:22:04 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.8 1994-01-05 23:06:34 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -103,6 +103,22 @@ Returns the name."
     ))
 
 
+(defun lyskom-read-conf-name-internal-verify-type (cs predicate logins)
+  "Returns true if CONF-STAT is of the correct type.
+
+For types se documentation of lyskom-read-conf-name-internal.
+Logins is a list of conf-nos (only significant when PREDICATE is logins)."
+  (or (eq predicate 'all)
+      (and (eq predicate 'confs)
+	   (not (conf-type->letterbox 
+		 (conf-stat->conf-type cs))))
+      (and (eq predicate 'pers)
+	   (conf-type->letterbox
+	    (conf-stat->conf-type cs)))
+      (and (eq predicate 'logins)
+	   (memq (conf-stat->conf-no cs) logins))))
+
+
 (defun lyskom-read-conf-name-internal (string predicate all)
   "The \"try-completion\" for the lyskom-read name.
 STRING is the string to be matched.
@@ -155,7 +171,8 @@ to conf-no translator."
 				parlist)))
 		      ((eq predicate 'logins)
 		       (let ((nos (sort nos '<))
-			     (lis (sort logins '<))
+			     ;; We need logins later on
+			     (lis (sort (copy-sequence logins) '<))
 			     res)
 			 (while (and nos
 				     lis)
@@ -178,7 +195,18 @@ to conf-no translator."
 							 (car mappedlist))))
 		  (setq found (car mappedlist)))
 	      (setq mappedlist (cdr mappedlist)))
-	    found))))
+	    (cond
+	     (found)
+	     ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+			    string)
+	      (let* ((no (string-to-int (substring string
+						   (match-beginning 1)
+						   (match-end 1))))
+		     (cs (blocking-do 'get-conf-stat no)))
+		(if (lyskom-read-conf-name-internal-verify-type
+		     cs predicate logins)
+		    no))))))))
+
      ((eq all 'lambda)
       (or (= (length mappedlist) 1)
 	  (let ((found nil))
@@ -189,18 +217,49 @@ to conf-no translator."
 							 (car mappedlist))))
 		  (setq found t))
 	      (setq mappedlist (cdr mappedlist)))
-	    found)))
+	    (cond
+	     (found)
+	     ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+			    string)
+	      (let* ((no (string-to-int (substring string
+						   (match-beginning 1)
+						   (match-end 1))))
+		     (cs (blocking-do 'get-conf-stat no)))
+		(if (lyskom-read-conf-name-internal-verify-type
+		     cs predicate logins)
+		    string)))))))
      (all
-      (mapcar (function (lambda (no)
-			  (conf-stat->name 
-			   (blocking-do 'get-conf-stat no))))
-	      mappedlist))
+      (let ((names (mapcar (function (lambda (no)
+				       (conf-stat->name 
+					(blocking-do 'get-conf-stat no))))
+			   mappedlist)))
+	(if (and (string-match (lyskom-get-string 'person-or-conf-no-regexp)
+			       string)
+		 (let* ((no (string-to-int (substring string
+						      (match-beginning 1)
+						      (match-end 1))))
+			(cs (blocking-do 'get-conf-stat no)))
+		   (lyskom-read-conf-name-internal-verify-type cs 
+							       predicate
+							       logins)))
+	    (cons string names)
+	  names)))
+	    
      ((and (= (length mappedlist) 1)
 	   (string= string (conf-stat->name
 			    (blocking-do 'get-conf-stat (car mappedlist)))))
       t)
      ((= (length mappedlist) 0)
-      nil)
+      (if (string-match (lyskom-get-string 'person-or-conf-no-regexp)
+			string)
+	  (let* ((no (string-to-int (substring string
+					       (match-beginning 1)
+					       (match-end 1))))
+		 (cs (blocking-do 'get-conf-stat no)))
+	    (if (lyskom-read-conf-name-internal-verify-type
+		 cs predicate logins)
+		t))))
+
      (t					; No exact match
       (lyskom-try-complete-partials 
        string
