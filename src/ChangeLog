@@ -1,3 +1,9 @@
+2000-11-30  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-make-re-case-insensitive): Eliminate use of
+	split-string since it doesn't exist in all Emacsen (and fails in
+	XEmacs).
+
 2000-11-29  David Byers  <davby@sen5.ida.liu.se>
 
 	* Release av 0.46.1-BETA-3

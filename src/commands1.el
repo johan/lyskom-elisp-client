@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.92 2000-11-18 13:03:17 joel Exp $
+;;;;; $Id: commands1.el,v 44.93 2000-11-30 12:08:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.92 2000-11-18 13:03:17 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.93 2000-11-30 12:08:47 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1638,40 +1638,40 @@ If you are not member in the conference it will be flagged with an asterisk."
     (setq lyskom-char-classes 
 	  (lyskom-compute-char-classes lyskom-collate-table)))
   (let ((res nil)
-	(input (split-string re ""))
+	(input (listify-vector re))
 	val)
     (while input
       (cond
 
        ;; Copy "[]" character sets literally.
-       ((string= (car input) "[")
+       ((eq (car input) ?\[)
 	(setq res (cons "[" res))
 	(setq input (cdr input))
 	(when input			;Handle "[]asdf]" properly.
-	  (setq res (cons (car input) res))
+	  (setq res (cons (make-string 1 (car input)) res))
 	  (setq input (cdr input)))
-	(while (and input (not (string= (car input) "]")))
-	  (setq res (cons (car input) res))
+	(while (and input (not (eq (car input) ?\])))
+	  (setq res (cons (make-string 1 (car input)) res))
 	  (setq input (cdr input)))
 	(when input			;Don't forget the terminating "]".
-	  (setq res (cons (car input) res))
+	  (setq res (cons (make-string 1 (car input)) res))
 	  (setq input (cdr input))))
 
        ;; Copy backslashed sequences literally.
-       ((string= (car input) "\\")
+       ((eq (car input) ?\\)
 	(setq res (cons "\\" res))
 	(setq input (cdr input))
 	(when input
-	  (setq res (cons (car input) res))
+	  (setq res (cons (make-string 1 (car input)) res))
 	  (setq input (cdr input))))
 
        ;; Copy special characters literally.
-       ((member (car input) '("(" ")" "|" "+" "*" "?"))
-	(setq res (cons (car input) res))
+       ((memq (car input) '(?\( ?\) ?\| ?+ ?\* ?\?))
+	(setq res (cons (make-string 1 (car input)) res))
 	(setq input (cdr input)))
 
        ;; Create "[]" character sets for equivalent characters.
-       ((setq val (cdr-safe (assoc (aref (car input) 0) lyskom-char-classes)))
+       ((setq val (cdr-safe (assoc (car input) lyskom-char-classes)))
 	(setq res (cons "[" res))
 	(if (member "]" val)		;"]" must come first.
 	    (setq res (cons "]" res)))
@@ -1688,7 +1688,7 @@ If you are not member in the conference it will be flagged with an asterisk."
 
        ;; Copy other characters literally.
        (t
-	(setq res (cons (car input) res))
+	(setq res (cons (make-string 1 (car input)) res))
 	(setq input (cdr input)))))
 
     (apply 'concat (nreverse res))))
