@@ -1,5 +1,7 @@
 Wed Nov 12 09:03:26 1997  David Byers  <dbyers@atp>
 
+	* review.el (lyskom-get-texts-to): Fixade skrivfel. 
+
 	* distribution-README: Beskriv kompilering från enstaka fil.
 
 	* lyskom-rest.el (lyskom-do-insert): Klara av att en
