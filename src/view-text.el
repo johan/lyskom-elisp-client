@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.4 1996-10-10 14:00:04 davidk Exp $
+;;;;; $Id: view-text.el,v 44.5 1997-02-19 08:35:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.4 1996-10-10 14:00:04 davidk Exp $\n"))
+	      "$Id: view-text.el,v 44.5 1997-02-19 08:35:58 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -389,11 +389,9 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
           (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
           (setq body (substring str (match-end 0)))
           (lyskom-insert-string 'head-Subject)
-          ;; (setq s1 (point-max))
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
                                   (copy-sequence lyskom-current-subject)))
-          ;; (setq s2 (point-max))
           (if kom-dashed-lines
               (lyskom-insert 
                "------------------------------------------------------------\n")
@@ -404,11 +402,11 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
-          ;; (setq s1 (point-max))
+          (if kom-dashed-lines
+              (lyskom-insert 
+               "------------------------------------------------------------\n")
+            (lyskom-insert "\n"))
           (lyskom-format-insert "%#1t" str)
-          ;; (setq s2 (point-max))
-          ;; (setq t1 (point-max)
-          ;;       t2 (point-max))
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))
