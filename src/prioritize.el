@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 41.0 1996-05-02 19:27:58 davidk Exp $
+;;;;; $Id: prioritize.el,v 41.1 1996-05-03 16:52:14 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 41.0 1996-05-02 19:27:58 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 41.1 1996-05-03 16:52:14 byers Exp $\n"))
 
 
 
@@ -277,6 +277,18 @@
   "Get brief help on prioritize mode."
   (interactive)
   (lyskom-message "%s" (lyskom-get-string 'prioritize-help)))
+
+(defun kom-prioritize-deselect-all ()
+  "Deselect all selected entries"
+  (interactive)
+  (let ((entry nil))
+    (while lyskom-prioritize-selection
+      (setq entry (car lyskom-prioritize-selection))
+      (lyskom-prioritize-select entry nil)
+      (lyskom-prioritize-redraw-entry entry))))
+
+
+
 
 (defun kom-prioritize-select (&optional arg)
   "Select the record on the line containing point.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.0 1996-05-02 19:28:41 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.1 1996-05-03 16:52:22 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.0 1996-05-02 19:28:41 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.1 1996-05-03 16:52:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -571,6 +571,12 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (review-one-comment . "\305terse en kommentar till inl\344gg %#1n.\n")
     (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1n.\n")
     (read-normally-read . "Hur m\345nga vill du se igen?")
+
+    (review-conf-gone . "M\366tet finns inte.\n")
+    (review-pers-gone . "Personen finns inte.\n")
+    (review-cant-read-conf . "Du kan inte \345terse inl\344gg till ett slutet m\366te du inte \345r med i.\n")
+    (review-cant-read-letterbox . "Du kan inte \345terse in\344gg till n\345gon annans brevl\345da.\n")
+    (review-cant-read-empty . "M\366tet är tomt.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c f\366r att skicka in texten.")
@@ -1298,6 +1304,7 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
+  (define-key lyskom-prioritize-mode-map "\M-\C-?" 'kom-prioritize-deselect-all)
   (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-previous-line)
