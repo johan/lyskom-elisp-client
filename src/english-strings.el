@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.159 2001-12-14 00:27:03 qha Exp $
+;;;;; $Id: english-strings.el,v 44.160 2001-12-15 13:57:40 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.159 2001-12-14 00:27:03 qha Exp $"))
+              "$Id: english-strings.el,v 44.160 2001-12-15 13:57:40 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1258,6 +1258,7 @@ Text:
     (timestamp-popup-title . "Timestamp %#1s")
     (recpt-type-popup-title . "Recipient type: %#1s")
     (add-recpt-button-text . "[Add recipient]")
+    (add-recpt-button-text-regex . "\\[Add recipient\\]")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")

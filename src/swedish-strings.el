@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.191 2001-12-14 00:27:03 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.192 2001-12-15 13:57:41 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.191 2001-12-14 00:27:03 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.192 2001-12-15 13:57:41 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1257,6 +1257,7 @@ Text:
     (timestamp-popup-title . "Tidsstämpel %#1s")
     (recpt-type-popup-title . "Mottagartyp: %#1s")
     (add-recpt-button-text . "[Addera mottagare]")
+    (add-recpt-button-text-regex . "\\[Addera mottagare\\]")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
