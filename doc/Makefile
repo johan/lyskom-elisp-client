@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.6 1991-12-19 11:43:21 linus Exp $
+# $Id: Makefile,v 35.7 1993-05-26 18:11:45 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -24,8 +24,8 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-include Topdir.make
-include $(TOPDIR)/scripts/import.make
+RM = rm
+GENERIC-CLEAN = core
 
 elisp-client: elisp-client.latexinfo
 	emacs -batch -l /usr/local/lib/elisp/latexinfo-mode \
