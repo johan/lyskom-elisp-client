@@ -3,6 +3,9 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Om man går till ett möte som inte prefetchats och inte har några
+    inlägg blir promten fel, och man får ett felmeddelande.
+
     Lista nyheter visar fel innan prefetchen har hämtat alla mappar.
 
 Efter återse senaste fick jag fel prompt. Jag vill ha återse
@@ -66,6 +69,8 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
     kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
 
 Allmänna förbättringar
+
+    Modifiera interna datastrukturer vid utträd.
 
     Strunta i hemliga texter vid åar.
 

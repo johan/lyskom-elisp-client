@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.2 1996-10-06 05:18:07 davidk Exp $
+;;;;; $Id: commands2.el,v 44.3 1996-10-10 13:59:29 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.2 1996-10-06 05:18:07 davidk Exp $\n"))
+	      "$Id: commands2.el,v 44.3 1996-10-10 13:59:29 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -602,15 +602,16 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 ;;;            (Skip or re-read articles).
 
 ;;; Author: Linus Tolke
+;;; Rehacked: David K}gedal
 
 
 (def-kom-command kom-set-unread (&optional arg conf-no)
   "Set number of unread articles in current conference."
   (interactive "P")
+  (setq conf-no (or conf-no lyskom-current-conf))
   (if (and (zerop lyskom-current-conf) (null conf-no))
       (lyskom-insert-string 'not-present-anywhere)
-    (let ((conf-stat (blocking-do 'get-conf-stat (or conf-no 
-                                                     lyskom-current-conf))))
+    (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
       (if (null conf-stat)              ;+++ annan errorhantering
           (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
         (let* ((narg (prefix-numeric-value arg))
@@ -623,11 +624,17 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                      (lyskom-format 'only-last
                                     (conf-stat->no-of-texts conf-stat)
                                     (conf-stat->name conf-stat)))))
-               (result (blocking-do 'set-unread
-                                    (conf-stat->conf-no conf-stat) n)))
-          (if (null result)
-              (lyskom-insert-string 'only-error)
-            (lyskom-refetch)))))))
+	       (result (blocking-do 'set-unread conf-no n))
+               (membership (blocking-do 'query-read-texts
+					lyskom-pers-no
+					conf-no))
+	       )
+	  (lyskom-replace-membership membership lyskom-membership)
+	  (if (= conf-no lyskom-current-conf)
+	      (set-read-list-empty lyskom-reading-list))
+	  (read-list-delete-read-info conf-no lyskom-to-do-list)
+	  (lyskom-prefetch-map conf-no membership)
+	  )))))
 
 
 
