@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.295 2003-02-05 09:17:14 unicorn Exp $
+;;;;; $Id: swedish-strings.el,v 44.296 2003-03-03 08:45:06 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.295 2003-02-05 09:17:14 unicorn Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.296 2003-03-03 08:45:06 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -591,7 +591,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     (conf-for-status . "Vilket möte vill du se statusen för? ")
     (no-such-conf . "Mötet finns ej.\n")
-    (status-record . "Status för möte %#1M (%#1m) %#2s\n\n")
+    (status-record . "Status för möte %#1M (%#1m)%#2s\n\n")
     (change-type-prompt . "Ändra mötestyp för möte %#1M (%#1m) (%#2s)...")
     (Mailbox . "Brevlåda")
     (Protected . "Hemligt")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.191 2003-01-12 16:53:40 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.192 2003-03-03 08:45:06 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.191 2003-01-12 16:53:40 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.192 2003-03-03 08:45:06 ceder Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -834,18 +834,19 @@ CONF is the conference and NUM is the number of unread in the conference."
     (when (or (eq num 0) kom-print-number-of-unread-on-entrance faq-list)
       (lyskom-insert " - "))
 
-  (cond ((eq num 0) 
-         (lyskom-format-insert 'conf-all-read conf))
-        (kom-print-number-of-unread-on-entrance
-         (lyskom-format-insert 'enter-conf-unread num)))
+    (cond ((eq num 0) 
+	   (lyskom-format-insert 'conf-all-read conf))
+	  (kom-print-number-of-unread-on-entrance
+	   (lyskom-format-insert 'enter-conf-unread num)))
 
-  (when faq-list
-    (when (or (eq num 0) kom-print-number-of-unread-on-entrance)
-      (lyskom-insert ", "))
-    (lyskom-format-insert 'enter-conf-unread-faq (length faq-list)))
-
-  (lyskom-format-insert ".\n")
-  (lyskom-present-unread-faqs conf faq-list)))
+    (when faq-list
+      (when (or (eq num 0) kom-print-number-of-unread-on-entrance)
+	(lyskom-insert ", "))
+      (lyskom-format-insert 'enter-conf-unread-faq (length faq-list)))
+  
+    (lyskom-insert (lyskom-conf-type-marker conf))
+    (lyskom-format-insert ".\n")
+    (lyskom-present-unread-faqs conf faq-list)))
 
 
 (defun lyskom-leave-current-conf ()

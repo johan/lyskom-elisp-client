@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.156 2003-02-13 19:09:10 ceder Exp $
+;;;;; $Id: commands2.el,v 44.157 2003-03-03 08:45:07 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.156 2003-02-13 19:09:10 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.157 2003-03-03 08:45:07 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -158,6 +158,29 @@ MAP may be nil if there are no new texts."
 ;;; much enhanced by Inge Wallin (lyskom-status-conf-2 and beyond)
 
 
+(defun lyskom-conf-type-marker (conf-stat)
+  "Return a pretty string describing the type of CONF-STAT."
+  (let* ((type (conf-stat->conf-type conf-stat))
+	 (box (conf-type->letterbox type))
+	 (ori (conf-type->original type))
+	 (pro (conf-type->rd_prot type))
+	 (sec (conf-type->secret type)))
+    (cond
+     ((or box ori pro sec)
+      (concat
+       " ("
+       (if box (lyskom-get-string 'Mailbox) "")
+       (if (and box (or sec ori pro)) ", " "")
+       (if sec (lyskom-get-string
+		'Protected) "")
+       (if (and sec (or ori pro)) ", " "")
+       (if ori (lyskom-get-string
+		'no-comments) "")
+       (if (and ori pro) ", " "")
+       (if pro (lyskom-get-string 'closed) "")
+       ")"))
+     (t ""))))
+
 (def-kom-command kom-status-conf (&optional conf-no)
   "Print information about a conference.
 The information listed may be taken from the client's cache and
@@ -180,28 +203,10 @@ otherwise: the conference is read with lyskom-completing-read."
                            (uconf-stat (get-uconf-stat conf-no)))
       (if (null conf-stat)
           (lyskom-insert-string 'no-such-conf)
-        (let* ((type (uconf-stat->conf-type uconf-stat))
-               (box (conf-type->letterbox type))
-               (ori (conf-type->original type))
-               (pro (conf-type->rd_prot type))
-               (sec (conf-type->secret type)))
-          (lyskom-format-insert 'status-record
-                                conf-stat
-                                (cond
-                                 ((or box ori pro sec)
-                                  (concat
-                                   "("
-                                   (if box (lyskom-get-string 'Mailbox) "")
-                                   (if (and box (or sec ori pro)) ", " "")
-                                   (if sec (lyskom-get-string
-                                            'Protected) "")
-                                   (if (and sec (or ori pro)) ", " "")
-                                   (if ori (lyskom-get-string
-                                            'no-comments) "")
-                                   (if (and ori pro) ", " "")
-                                   (if pro (lyskom-get-string 'closed) "")
-                                   ")"))
-                                 (t ""))))
+        
+	(lyskom-format-insert 'status-record
+			      conf-stat
+			      (lyskom-conf-type-marker conf-stat))
         (let ((creator (conf-stat->creator conf-stat)))
           (lyskom-format-insert 'created-by
                                 creator
