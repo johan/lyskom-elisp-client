@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.130 2001-01-03 22:02:58 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.131 2001-02-02 23:24:08 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.130 2001-01-03 22:02:58 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.131 2001-02-02 23:24:08 joel Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2433,6 +2433,14 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                    ;; read might be in another conference.
                    ((= lyskom-current-conf lyskom-pers-no)
                     'read-next-letter-prompt)
+                   ((lyskom-get-aux-item (text-stat->aux-items
+                                          (cache-get-text-stat
+                                           (car-safe
+                                            (text-list->texts
+                                             (read-info->text-list
+                                              read-info)))))
+                                         10100)
+                    'read-next-attachment-prompt)
                    ((eq 'FOOTN-IN (read-info->type read-info))
                     'read-next-footnote-prompt)
                    ((eq 'COMM-IN (read-info->type read-info))

@@ -1,5 +1,13 @@
 2001-02-03  Joel Rosdahl  <joel@rosdahl.net>
 
+	* lyskom-rest.el (lyskom-update-prompt): Show "read next
+	attachment" prompt if next text is an attachment.
+
+	* swedish-strings.el (lyskom-message): Added
+	read-next-attachment-prompt.
+
+	* english-strings.el (lyskom-message): Ditto.
+
 	* distribution-README: Various small updates.
 
 2001-01-28  Joel Rosdahl  <joel@rosdahl.net>

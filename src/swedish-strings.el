@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.149 2001-01-28 22:37:03 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.150 2001-02-02 23:24:10 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.149 2001-01-28 22:37:03 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.150 2001-02-02 23:24:10 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -1061,6 +1061,7 @@ Du bör sätta den till ett bättre värde.\n")
     (read-next-footnote-prompt . "Läsa nästa fotnot")
     (read-next-comment-prompt . "Läsa nästa kommentar")
     (read-next-text-prompt . "Läsa nästa text")
+    (read-next-attachment-prompt . "Läsa nästa bilaga")
     (go-to-conf-of-marked-prompt . "Återuppta återse markerade")
     (go-to-conf-of-review-tree-prompt . "Återuppta återse kommentarer")
     (go-to-conf-of-review-prompt . "Återuppta återse")
