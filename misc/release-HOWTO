@@ -11,10 +11,11 @@ Checklista för att göra en ny release
  * Se till att allt går att kompilera och köra. Även den engelska
 versionen.
 
- * Uppdatera revisionsnumret
+ * Uppdatera revisionsnumret och tagga med en symbol
 
 	$ cd elisp-client
-	$ cvs tag -r 43.0
+	$ cvs commit -r 43.0
+	$ cvs tag v0-43
 
  * Bygg om
 
