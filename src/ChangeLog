@@ -1,3 +1,16 @@
+Sun Oct 27 02:21:42 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* option-edit.el (lyskom-widget-command-action): Gör inte car-safe
+ 	på svaret från lyskom-read-extended-command.
+	(lyskom-widget-command-value-create): Använd lyskom-get-string för
+ 	att hitta namn på kommandon.
+
+Sat Oct 26 19:48:36 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-mode): Byt ut overlay-map mot något
+ 	enklare.
+	(lyskom-count-down-edits): signal anropades på fel.
+
 Thu Oct 24 10:38:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* english-strings.el,swedish-strings.el (lyskom-message): Ändra
