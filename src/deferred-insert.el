@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 41.3 1996-05-06 14:57:59 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 41.4 1996-05-07 09:23:27 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -148,6 +148,7 @@ The insertion will be at (point)."
 		  'person-does-not-exist)
 	      'conference-does-not-exist))
 	(defer-info->call-par defer-info))
-     conf-stat)))
+     conf-stat)
+   (text-properties-at (defer-info->pos defer-info))))
 
 

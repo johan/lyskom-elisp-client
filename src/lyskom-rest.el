@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.3 1996-05-06 14:58:09 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.4 1996-05-07 09:23:31 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.3 1996-05-06 14:58:09 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.4 1996-05-07 09:23:31 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1142,7 +1142,7 @@ The string is inserted at point."
               (let ((tmp (cache-get-conf-stat arg)))
                 (if (null tmp)
                     (let* ((format-element
-			    (concat "%"
+			    (concat "%#2@%"
 				    (if equals-flag "=" "")
 				    (if pad-length (int-to-string pad-length))
 				    "#1"
