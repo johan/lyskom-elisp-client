@@ -1,3 +1,36 @@
+2002-07-29  David Byers  <david.byers@swipnet.se>
+
+	* utilities.el: Removed lyskom-pick-text-no-strategy-alist.
+
+	* vars.el.in (kom-pick-text-no-strategy-alist): Renamed from
+	lyskom-pick-text-no-prefix-strategy-alist to
+	kom-pick-text-no-strategy-alist and moved here from utilities.el
+
+	Fix bug 668:
+	* english-strings.el, swedigh-strings.el: Added binding of S-TAB
+	wherever we bound M-TAB.
+
+2002-07-26  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 661:
+	* utilities.el (lyskom-set-face-scheme): Warn when faces are
+	missing and copy the default. Set highlight faces unconditionally
+	when they are not specify (never warn that these are missing).
+
+	* compatibility.el (lyskom-color-values): Removed bogus definition
+	that fscked up everything.
+
+	Fix bug 660:
+	* flags.el (lyskom-ignored-user-area-vars): Removed from here.
+	(lyskom-read-options-eval): Removed warning about ignored vars.
+	Return list of ignored variables.
+	(lyskom-maybe-set-var-from-string): Added return value.
+
+	* startup.el (kom-start-anew): Moved warning about ignored vars
+	here so it is shown after language is set.
+
+	* vars.el.in (lyskom-ignored-user-area-vars): Moved here.
+
 2002-07-24  David Byers  <david.byers@swipnet.se>
 
 	* Release of 0.46-BETA-3

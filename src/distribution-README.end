@@ -25,26 +25,26 @@
        (M-x l y s k o m RET) to start the client. Enjoy!
 
 
-3.  Reporting bugs
+3.  Reporting bugs and requesting new features
 
     Before reporting a bug, please check that it is not one of the
     known issues below. Please report bugs by posting them to the
-    bugzilla at http://bugzilla.lysator.liu.se/. You can also e-mail
-    bug reports to bug-lyskom@lysator.liu.se if you are unable or
-    unwilling to use bugzilla.
+    bugzilla at <URL:http://bugzilla.lysator.liu.se/>. If you are
+    unable or unwilling to use bugzilla, you can e-mail bug reports
+    and feature requests to bug-lyskom@lysator.liu.se instead.
 
     To evaluate your bug report we need the following information:
 
     o   The LysKOM version you are using. This is shown when you start
-        LysKOM and is also contained in the variable
+        LysKOM and is also contained in the Emacs lisp variable
         lyskom-clientversion.
 
     o   The symptoms of the bug. Please be as detailed as possible.
         Please do not try to make conclusions. Just give us the facts.
 
     o   How you triggered the bug. If you know how to reproduce it,
-        please tell us. We're pretty good at fixing bugs we can
-        reproduce.
+        please tell us. We're really good at quickly fixing bugs we
+        can reproduce.
 
     o   How you started Emacs, what variables you have changed and
         which packages you have loaded. If possible, try to reproduce
@@ -53,23 +53,32 @@
     The command kom-bug-report may come in handy. It gives us a lot of
     information that you might not think of (such as what the internal
     data structures look like). If you post a bug report to our
-    bugzilla, please make the result of kom-bug-report an attachment
+    bugzilla, please make the result of kom-bug-report an *attachment*
     to your bug report.
 
 
 4. Known issues
 
+   Issue:  I have to re-read every FAQ even though I've read them
+           before!
+
+   Reason: Yeah, but that's the way it is. It'll only happen once.
+           In order to improve FAQ handling in the latest client
+           version we had to record read FAQs separately from read
+           texts, and no such record exists for FAQs you read before
+           upgrading. Sorry about that.
+
    Issue:  Cannot enter conference names containing international
            characters.
 
-   Reason: You may be using a different character coding from the
-           server, and conversion to the server's coding is not
-           working. For example, many versions of Emacs are unable to
-           convert from iso-8859-15 (latin-9) to iso-8859-1 (latin-1)
-           even though most characters are the same.
+   Reason: You may be using a different character coding than the
+           server is using, and conversion to the server's coding is
+           not working. For example, many versions of Emacs are unable
+           to convert from iso-8859-15 (latin-9) to iso-8859-1
+           (latin-1) even though most characters are the same.
 
            Switching to the character coding used by the server by
-           using set-language-environment (probably to Latin-1) will
+           using set-language-environment (usually to Latin-1) will
            fix this problem. If you are unwilling to do this, you can
            try loading the ucs-tables Emacs library (a version of this
            file is available from <URL:http://www.lysator.liu.se/

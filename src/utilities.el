@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.112 2002-07-24 11:50:13 jhs Exp $
+;;;;; $Id: utilities.el,v 44.113 2002-07-29 18:00:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.112 2002-07-24 11:50:13 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.113 2002-07-29 18:00:40 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -675,73 +675,6 @@ non-negative integer and 0 means the given text-no."
 	      (string-to-int (match-string 1))
 	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix) arg)))))))
 
-(defconst lyskom-old-farts-text-prompt-strategy
-  '((kom-comment-previous . ((t   . lyskom-get-previous-text)
-			     (nil . lyskom-get-previous-text)))
-    (t . ((t   . lyskom-get-last-read-text)
-	  (nil . lyskom-get-last-read-text)
-	  (0   . lyskom-get-text-at-point)
-	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
-	  (listp . lyskom-prompt-for-text-no)
-	  (lyskom-plusp . lyskom-get-explicit-text)
-	  (lyskom-minusp  lyskom-get-text-above-point abs))))
-"Put in your `lyskom-pick-text-no-strategy-alist' to get the 0.46 behaviour:
- * No prefix argument refers to the most recently read text.
- * The prefix argument zero refers to the text under point.
- * A positive prefix argument is interpreted as a text-no.
- * A negative prefix argument will try to find the text-no
-   of the text `arg' messages above point from the current
-   kom buffer.")
-
-(defvar lyskom-pick-text-no-strategy-alist
-      '((kom-comment-previous . ((t   . lyskom-get-previous-text)
-				 (nil . lyskom-get-previous-text)))
-        (kom-private-answer-previous . ((t   . lyskom-get-previous-text)
-                                        (nil . lyskom-get-previous-text)))
-	(t . ((t   . lyskom-get-text-at-point) ; default for prompts
-	      (nil . lyskom-get-text-at-point) ; no prefix arg
-	      (0   . lyskom-prompt-for-text-no)
-	      (-     lyskom-get-text-above-point (lambda (&optional arg) 1))
-	      (listp lyskom-get-text-at-point-ancestor
-		     (lambda (arg) (/ (logb (car arg)) 2)))
-	      (lyskom-plusp . lyskom-get-text-below-point)
-	      (lyskom-minusp  lyskom-get-text-above-point abs))))
-      "Defines how prefix arguments are used to find a text-no to operate on.
-The cars on the list are either one of the functions which invokes
-`lyskom-read-text-no-prefix-arg' (typically the one of the kom-* functions),
-or the value t for the strategy common to all such functions. For functions in
-the list, the strategy is chosen from the cdr of that entry and, if and when
-no matching rule was found that way, from the common strategy.
-
-Each cdr on the list is an alist specifying when to do how when mapping a
-prefix argument to a text-no.
-
-The cars on this alist are the predicates for which the cdrs map functions that
-retrieve the text-no to operate on. Each predicate is tested in turn on the
-prefix argument, and when one returns non-nil, the cdr gets invoked, until the
-list is empty or one cdr returned some non-nil value, whichever comes first. If
-you like, the cars can also be the actual prefix-arg values (-, 0 or nil, for
-example) that you want to invoke some special rule for. The value t means that
-the behaviour given by the cdr stipulates the DEFAULT value for the prompt,
-when one is shown.
-
-The cdrs on the list may be either of:
-
-* a function, in which case it gets called with four parameters: the prefix
-  argument, the PROMPT that would be used to ask the user for a text-no, a
-  (possibly nil) DEFAULT choice for that prompt, and a CONSTRAINT value, all
-  as provided in the call to `lyskom-read-text-no-prefix-arg' (see its docs)
-  Returning a positive integer means return that text-no. Returning a common
-  lyskom format string aborts, showing your helpful error description. A nil
-  return value means try successive rules instead to get a text-no.
-
-* a list of two functions, optionally followed by additional list items,
-  in which case the second function is called to change the prefix argument
-  parameter for the first function, which is then called as above. Any extra
-  items on the argument list will be appended to its argument list. Hence, a
-  '(my-get-text-no abs 17 4711) entry would result in a my-get-text-no call
-  (funcall my-get-text-no (abs prefix-arg) prompt default nil 17 4711).")
-
 (defun lyskom-read-text-no-prompt-p (command)
   "Return non-nil if the COMMAND should prompt for a text number."
   (let ((check (assq command kom-text-no-prompts)))
@@ -751,7 +684,7 @@ The cdrs on the list may be either of:
 				       default constraint)
   "Call in interactive list to read text-no for lyskom-commands using
 configurable prefix argument heuristics. The strategy used for picking a
-text-no is defined by the variable `lyskom-pick-text-no-strategy-alist'.
+text-no is defined by the variable `kom-pick-text-no-strategy-alist'.
 
 The PROMPT will be used to prompt for the number, either if invoked by the
 strategy directly, or as a fallback when no strategy rule found a text-no,
@@ -759,11 +692,11 @@ or when that text-no did not meet the CONSTRAINT.
 
 If the optional argument ALWAYS-PROMPT is non-nil and the user did not give
 a prefix argument, she gets prompted for the text number regardless of the
-`lyskom-pick-text-no-strategy-alist' settings. Another method of overriding
+`kom-pick-text-no-strategy-alist' settings. Another method of overriding
 the prefix-less strategies for a command is via `kom-text-no-prompts'.
 
 When DEFAULT is given, it will be the default text-no fall-back shown in the
-prompt, when `lyskom-pick-text-no-strategy-alist' did not specify a working
+prompt, when `kom-pick-text-no-strategy-alist' did not specify a working
 default. The requirements that must be met are given by CONSTRAINT, when
 specified. DEFAULT is either a text-no, a function for returning one or one
 of the symbols 'last-seen-written and 'last-written, which are compatibility
@@ -795,7 +728,7 @@ its first argument and remaining list items appended to the argument list."
     (when (listp constraint)
       (setq constraint-func (car constraint))
       (setq constraint-args (cdr constraint)))
-    (let* ((strategies lyskom-pick-text-no-strategy-alist)
+    (let* ((strategies kom-pick-text-no-strategy-alist)
            (how (append (cdr (assq lyskom-current-command strategies))
                         (cdr (assq t strategies)))))
       (while (and how (null text-no))
@@ -1123,6 +1056,7 @@ for strings."
 in lyskom-face-schemes."
   (let ((tmp (assoc scheme lyskom-face-schemes))
         (properties nil)
+        (set-faces nil)
         (background (or (face-background 'default)
                         (frame-property (selected-frame) 'background-color))))
     (when (and tmp
@@ -1146,19 +1080,47 @@ in lyskom-face-schemes."
             (setq properties (cons (cons (elt spec 1) (elt spec 2)) properties))
           (if (elt spec 1) (lyskom-copy-face (elt spec 1) (elt spec 0)) (make-face (elt spec 0)))
           (when (elt spec 2) (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-          (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
+          (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))
+          (setq set-faces (cons (elt spec 0) set-faces))))
 
       ;; Check that the background color of the default face is what
       ;; the face scheme expects. If not, copy the computed highlight
       ;; faces to the real highlight faces.
 
-      (when (and background (assq 'expected-background properties))
-        (unless (equal (lyskom-color-values (cdr (assq 'expected-background properties)))
-                       (lyskom-color-values background))
+      (when (or (not (facep 'kom-dashed-lines-face))
+                (not (facep 'kom-async-dashed-lines-face))
+                (not (facep 'kom-text-body-face))
+                (not (facep 'kom-async-text-body-face))
+                (not (and background
+                          (assq 'expected-background properties)
+                          (equal (lyskom-color-values 
+                                  (cdr (assq 'expected-background properties)))
+                                 (lyskom-color-values background)))))
+          (setq set-faces (append set-faces
+                                  (list 'kom-dashed-lines-face
+                                        'kom-text-body-face
+                                        'kom-async-dashed-lines-face
+                                        'kom-async-text-body-face)))
           (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face)
           (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face)
           (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face)
-          (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))))))
+          (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
+
+      ;; Check that we've set all faces. If not, copy the default face and post a message
+
+      (let ((unset-faces nil))
+        (lyskom-traverse face-name lyskom-faces
+          (unless (memq face-name set-faces)
+            (setq unset-faces (cons face-name unset-faces))
+            (copy-face 'default face-name)))
+
+        (when unset-faces
+          (lyskom-format-insert-before-prompt 
+           'missing-faces
+           (symbol-name scheme)
+           (mapconcat 'symbol-name
+                      unset-faces
+                      "\n    ")))))))
 
 
 (defun lyskom-face-resource (face-name attr type)
