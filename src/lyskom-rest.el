@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.29 1992-09-06 21:36:27 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 35.30 1992-12-02 10:41:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.29 1992-09-06 21:36:27 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.30 1992-12-02 10:41:48 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -708,8 +708,8 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
 Args: FORMAT-STRING &rest ARGS"
   (let ((str (apply 'format format-string args)))
     (if kom-emacs-knows-iso-8859-1
-	(message str)
-      (message (iso-8859-1-to-swascii str)))))
+	(message "%s" str)
+      (message "%s" (iso-8859-1-to-swascii str)))))
 
 
 (defun lyskom-error (format-string &rest args)
