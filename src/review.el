@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 36.2 1993-12-19 18:01:38 linus Exp $
+;;;;; $Id: review.el,v 36.3 1994-01-05 23:06:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 36.2 1993-12-19 18:01:38 linus Exp $\n"))
+	      "$Id: review.el,v 36.3 1994-01-05 23:06:49 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -70,7 +70,7 @@ The defaults for this command is the conference that you are in."
 	       ((> count 0)
 		(lyskom-format 'latest-n count))
 	       ((< count 0)
-		(lyskom-format 'first-n count)))))
+		(lyskom-format 'first-n (- count))))))
     (lyskom-completing-read 'review 'lyskom-review-by-to-get-default-for-conf
 			    (lyskom-format 'info-by-whom info)
 			    'person 'empty "" count info)))

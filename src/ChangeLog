@@ -1,3 +1,12 @@
+Wed Jan  5 20:16:52 1994  Linus Tolke Y  (linus@bodil)
+
+	* commands2.el, swedish-strings.el (kom-bug-report): little
+	stabler, new text.
+
+	* review.el (kom-review-by-to): F|rsta 7, wrong sign.
+	* completing-read.el (lyskom-read-conf-name-internal): Now manages
+	  the kom-specific Person 7, Möte 8 things.
+
 Sat Dec 18 14:29:42 1993  Linus Tolke Y  (linus@bodil)
 
 	* lyskom-rest.el, review.el (kom-view, kom-review-*): They are now

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.16 1993-12-19 17:58:13 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.17 1994-01-05 23:06:56 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.16 1993-12-19 17:58:13 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.17 1994-01-05 23:06:56 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -432,7 +432,8 @@ Ditt allm\344nna meddelande l\366d:
     (buggreport-compilestart . "Skapar buggrapporten...")
     (buggreport-compileend . "Skapar buggrapporten...klart")
     (buggreport-description . "Detta gjorde jag:
-(Fyll i dina kommentarer)\n\n\n
+(Fyll i dina kommentarer nedan)\n================\n\n
+================
 Bland informationen nedan finns ocks\345 en lista p\345 de 100 sist tryckta
 tangenterna i din emacs. Om du nyligen loggat in kan den inneh\345lla ditt
 lyskoml\366senord. Titta igenom den och \344ndra det som \344r ditt l\366senord
