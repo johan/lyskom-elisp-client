@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.77 2004-02-21 22:34:14 byers Exp $
+;;;;; $Id: view-text.el,v 44.78 2004-07-11 23:01:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.77 2004-02-21 22:34:14 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.78 2004-07-11 23:01:05 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -960,7 +960,7 @@ the client. That is done by lyskom-is-read."
   (let ((misc-info-list (text-stat->misc-info-list text-stat)))
     (lyskom-traverse
      misc-info misc-info-list
-     (if (and (memq (misc-info->type misc-info) '(RECPT BCC-RECPT CC-RECPT))
+     (if (and (memq (misc-info->type misc-info) lyskom-recpt-types-list)
 	      ;; The whole membership list might not be fetched
 	      ;; yet. So we better mark it as read in all conferences.
 	      ;; (lyskom-member-p (misc-info->recipient-no misc-info))

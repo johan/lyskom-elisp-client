@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.295 2004-06-26 13:32:33 byers Exp $
+;;;;; $Id: vars.el.in,v 44.296 2004-07-11 23:01:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.295 2004-06-26 13:32:33 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.296 2004-07-11 23:01:05 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3842,7 +3842,7 @@ This is currently not used."
 This is currently not used."
   local)
 
-(def-kom-var lyskom-fetch-map-nos 50
+(def-kom-var lyskom-fetch-map-nos 100
   "Number of text-nos lyskom will fetch when fetching maps."
   local)
 
@@ -3855,10 +3855,6 @@ at a time.")
 
 
 ;;;
-
-(def-kom-var lyskom-membership nil
-  "Sorted membership list of the logged in person."
-  local)
 
 (def-kom-var lyskom-unread-confs nil
   "List containing all unread confs."

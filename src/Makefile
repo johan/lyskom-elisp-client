@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.113 2004-07-03 16:17:53 qha Exp $
+# $Id: Makefile,v 44.114 2004-07-11 23:01:04 byers Exp $
 
 # Useful targets:
 #
@@ -70,6 +70,9 @@ LANGUAGE-EL := $(LANGUAGES:=-strings.el) $(LANGUAGES:=-help.el)
 # Finally, other source files.
 SOURCES	 = 	komtypes.el \
 		clienttypes.el \
+		elib-node.el \
+		stack-m.el \
+		avltree.el \
 		faces.el \
 		deferred-insert.el \
 		utilities.el \

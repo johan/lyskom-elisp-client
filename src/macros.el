@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.37 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: macros.el,v 44.38 2004-07-11 23:01:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.37 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: macros.el,v 44.38 2004-07-11 23:01:04 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -51,52 +51,59 @@
 (defmacro lyskom-traverse (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
 Value returned is always nil."
-  `(let* ((__i__ 0)
-          (__sequence__ ,sequence)
-          (__len__ (or (listp __sequence__ )
-                       (length __sequence__)))
-          (,atom nil)
-          (__result__ nil))
-     (setq __result__ __result__)       ; Get rid of compiler warnings
-     (if (listp __sequence__)
-         (while __sequence__
-           (setq ,atom (car __sequence__))
-           ,@body
-           (setq __sequence__ (cdr __sequence__)))
-       (while (< __i__ __len__)
-         (setq ,atom (aref __sequence__ __i__))
-         ,@body
-         (setq __i__ (1+ __i__))))
-     __result__))
-  
+  (let ((seq-sym (make-symbol "sequence"))
+        (len-sym (make-symbol "len"))
+        (idx-sym (make-symbol "index")))
+    `(catch 'lyskom-traverse
+       (let* ((,seq-sym ,sequence)
+              (,idx-sym 0)
+              (,len-sym (or (listp ,seq-sym)
+                            (length ,seq-sym)))
+              (,atom nil))
+         (if (listp ,seq-sym)
+             (while ,seq-sym
+               (setq ,atom (car ,seq-sym))
+               ,@body
+               (setq ,seq-sym (cdr ,seq-sym)))
+           (while (< ,idx-sym ,len-sym)
+             (setq ,atom (aref ,seq-sym ,idx-sym))
+             ,@body
+             (setq ,idx-sym (1+ ,idx-sym))))))))
 
-(defmacro lyskom-traverse-break (&optional result)
-  "Break a current lyskom-traverse"
-  `(progn (setq __len__ 0)
-          (setq __sequence__ nil)
-          (setq __result__ (or ,result __result__))))
+(defmacro lyskom-traverse-membership (var &rest forms)
+  "Traverse the membership list.
+Variable VAR is bound to each membership, in turn, and FORMS are evaluated."
+  `(catch 'lyskom-traverse
+     (lyskom-avltree-traverse
+      (lambda (,var) ,@forms) (lyskom-mship-cache-data))))
 
 (defmacro lyskom-traverse-aux (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
 Value returned is always nil."
-  (let ((seq (make-symbol "aux-items")))
-    (` (let (((, seq) (, sequence))
-             ((, atom) nil))
-         (while (, seq)
-           (setq (, atom) (car (, seq)))
+  (let ((seq-sym (make-symbol "aux-items")))
+    `(catch 'lyskom-traverse
+       (let ((,seq-sym ,sequence)
+             (,atom nil))
+         (while ,seq-sym
+           (setq ,atom (car ,seq-sym))
            (if (not (aux-item-flags->deleted
-                     (aux-item->flags (, atom))))
-               (progn (,@ body)))
-           (setq (, seq) (cdr (, seq))))))))
+                     (aux-item->flags ,atom)))
+               (progn ,@body))
+           (setq ,seq-sym (cdr ,seq-sym)))))))
 
 
-(put 'lyskom-traverse-aux 'edebug-form-spec
-     '(sexp form body))
+(defmacro lyskom-traverse-break (&optional result)
+  "Break a current lyskom-traverse"
+  `(throw 'lyskom-traverse ,result))
 
+
+
+(put 'lyskom-traverse-aux 'edebug-form-spec '(sexp form body))
 (put 'lyskom-traverse-aux 'lisp-indent-hook 2)
-
-(put 'lyskom-traverse 'edebug-form-spec
-     '(sexp form body))
+(put 'lyskom-traverse-membership 'edebug-form-spec '(sexp body))
+(put 'lyskom-traverse-membership 'lisp-indent-hook 1)
+(put 'lyskom-traverse 'lisp-indent-hook 2)
+(put 'lyskom-traverse 'edebug-form-spec '(sexp form body))
 
 
 ;;; ======================================================================
@@ -113,6 +120,16 @@ Value returned is always nil."
 
 (put 'lyskom-save-excursion 'edebug-form-spec t)
 (put 'lyskom-save-excursion 'lisp-indent-hook 0)
+
+
+(defmacro lyskom-with-lyskom-buffer (&rest forms)
+  "Evaluate FORMS in the current LysKOM buffer."
+  `(save-excursion
+     (set-buffer lyskom-buffer)
+     ,@forms))
+
+(put 'lyskom-with-lyskom-buffer 'edebug-form-spec t)
+(put 'lyskom-with-lyskom-buffer 'lisp-indent-hook 0)
 
 ;;; ======================================================================
 ;;; Some useful macros to make the code more readable.
