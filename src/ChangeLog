@@ -1,3 +1,9 @@
+2000-12-17  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* utilities.el: applied patch from Per Starbäck, device-class
+	isn't defined if it doesn't exist, lyskom-device-class is. Caller
+	changed. (Se text 5867166 in LysLysKOM.)
+
 2000-12-12  David Byers  <davby@sen5.ida.liu.se>
 
 	* Release av 0.46.1-BETA-4
