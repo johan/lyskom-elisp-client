@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.1 1994-01-10 15:37:36 linus Exp $
+;;;;; $Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.1 1994-01-10 15:37:36 linus Exp $\n"))
+	      "$Id: edit-text.el,v 38.2 1994-01-14 00:28:13 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -45,6 +45,20 @@
 
 (defvar lyskom-edit-mode-name "LysKOM edit"
   "Name of the mode.")
+
+(defvar lyskom-is-dedicated-edit-window nil
+  "Status variable for an edit-window.")
+
+(defvar lyskom-edit-handler nil
+  "Status variable for an edit-buffer.
+See lyskom-edit-handler-data.")
+
+(defvar lyskom-edit-handler-data nil
+  "Status variable for an edit-buffer.
+See lyskom-edit-handler.")
+
+(defvar lyskom-edit-return-to-configuration nil
+  "Status variable for an edit-buffer.")
 
 (defun lyskom-edit-text (proc misc-list subject body
 			      &optional handler &rest data)
@@ -88,8 +102,6 @@ Does lyskom-end-of-command."
       (switch-to-buffer-other-frame buffer))
      (t
       (switch-to-buffer buffer)))
-    (if (boundp 'lyskom-filter-old-buffer)
-	(setq lyskom-filter-old-buffer (current-buffer)))
     (lyskom-edit-mode)
     (setq lyskom-proc proc)
     (make-local-variable 'lyskom-edit-handler)
@@ -562,75 +574,6 @@ to the text in BUFFER."
 					      (end-of-line)
 					      (point)))))))
 	  nil)))
-      (beginning-of-line 2))
-    result))	   
-
-
-(defun lyskom-edit-extract-subject ()
-  "Find the subject.
-Point must be located on the line where the subject is."
-  (re-search-forward ": \\(.*\\)")
-  (buffer-substring (match-beginning 1) (match-end 1)))
-
-
-(defun lyskom-edit-extract-text ()
-  "Get text as a string."
-  (save-excursion
-    (goto-char (point-min))
-    (if (not (or (re-search-forward 
-		  (regexp-quote 
-		   (if kom-emacs-knows-iso-8859-1
-		       lyskom-header-separator
-		     lyskom-swascii-header-separator)) 
-		  nil (point-max))
-		 (not (or (equal (char-to-string 
-				  (elt 
-				   (if kom-emacs-knows-iso-8859-1
-				       lyskom-header-subject
-				     lyskom-swascii-header-subject)
-				   0))
-				 (buffer-substring (point) (1+ (point))))
-			  (equal (char-to-string 
-				  (elt 
-				   (if kom-emacs-knows-iso-8859-1
-				       lyskom-swascii-header-subject
-				     lyskom-header-subject)
-				   0))
-				 (buffer-substring (point) (1+ (point))))))))
-	(let ((char (string-to-char
-		     (upcase (buffer-substring (point) (1+ (point)))))))
-	  (nconc 
-	   result
-	   (cons
-	    (cond
-	     ((eq char (elt (lyskom-get-string 'recipient) 0)) ;recpt
-	      (re-search-forward "<\\([0-9]+\\)>")
-	      (cons 'recpt (string-to-int (buffer-substring
-					   (match-beginning 1)
-					   (match-end 1)))))
-	     ((eq char (elt (lyskom-get-string 'carbon-copy) 0)) ;cc-recpt
-	      (re-search-forward "<\\([0-9]+\\)>")
-	      (cons 'cc-recpt (string-to-int (buffer-substring
-					      (match-beginning 1)
-					      (match-end 1)))))
-	     ((eq char (elt (lyskom-get-string 'comment) 0)) ;comm-to
-	      (re-search-forward "\\([0-9]+\\)")
-	      (cons 'comm-to (string-to-int (buffer-substring
-					     (match-beginning 1)
-					     (match-end 1)))))
-	     ((eq char (elt (lyskom-get-string 'footnote) 0)) ;footn-to
-	      (re-search-forward "\\([0-9]+\\)")
-	      (cons 'footn-to (string-to-int (buffer-substring
-					      (match-beginning 1)
-					      (match-end 1)))))
-	     (t 
-	      (signal 'lyskom-internal-error 
-		      (list "Unknown header line: "
-			    (buffer-substring (point)
-					      (progn 
-						(end-of-line)
-						(point)))))))
-	    nil)))
       (beginning-of-line 2))
     result))	   
 

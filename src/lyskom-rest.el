@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.1 1994-01-10 15:37:42 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 38.2 1994-01-14 00:28:18 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.1 1994-01-10 15:37:42 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.2 1994-01-14 00:28:18 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -167,7 +167,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 		     lyskom-swascii-commands)))))
 
 
-(defun lyskom-ok-command (alternative)
+(defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
   (if administrator
       (not (memq (car (cdr alternative)) lyskom-admin-removed-commands))
@@ -182,10 +182,15 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 			       (if kom-emacs-knows-iso-8859-1
 				   lyskom-commands
 				 lyskom-swascii-commands)))
-	 (administrator lyskom-is-administrator)
 	 (name (completing-read (lyskom-get-string 'extended-command)
 				alternatives 
-				(function lyskom-ok-command)
+				;; lyskom-is-administrator is buffer-local and
+				;; must be evalled before the call to 
+				;; completing-read
+				;; Yes, this is not beautiful
+				(list 'lambda '(alternative)
+				      (list 'lyskom-ok-command 'alternative
+					    lyskom-is-administrator))
 				t nil))
 	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
 			     (if kom-emacs-knows-iso-8859-1
@@ -861,7 +866,7 @@ Args: FORMAT-ATOM &rest ARGS."
        ((eq format-letter ?%)
 	(setq result "%"))
        (t (signal 'lyskom-internal-error
-		  (list 'lyskom-format format-string))))
+		  (list 'lyskom-format-help format-letter))))
 
       ; Pad the result to appropriate length
       (cons (cond ((or (null length)

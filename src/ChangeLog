@@ -1,3 +1,20 @@
+Fri Jan 14 01:07:39 1994  Linus Tolke Y  (linus@bodil)
+
+	* async.el: removed extra function.
+	  completing-read.el: fixed lyskom-blocking-process hack.
+	  edit-text.el: Added missing defvars. 
+	  (lyskom-edit-extract-subject, lyskom-edit-extract-text):
+	  Removing extra function definitions.
+	  lyskom-rest.el (lyskom-ok-command): Now takes two arguments.
+	  scheme-like call.
+	  parse.el (lyskom-parse-num): removed extra definition.
+	  review.el: Fixed two bugs found by the byte-compiler.
+	  services.el: defvar'ed a few forgotten variables.
+	  startup.el (lyskom, lyskom-mode): Better doc-string.
+	  (lyskom-blocking-return, now made buffer-local).
+	  swedish-strings.el: defvar'ed a few forgotten variables.
+	  vars.el.in: defvar'ed a few forgotten variables.
+
 Mon Jan 10 19:04:48 1994  Linus Tolke Y  (linus@bodil)
 
 	* vars.el.in: new file

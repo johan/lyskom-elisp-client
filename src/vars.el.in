@@ -1,5 +1,5 @@
-;;;;;
-;;;;; $Id: vars.el.in,v 38.1 1994-01-10 18:00:34 linus Exp $
+;;;;; -*- emacs-lisp -*-
+;;;;; $Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.1 1994-01-10 18:00:34 linus Exp $\n"))
+	      "$Id: vars.el.in,v 38.2 1994-01-14 00:28:48 linus Exp $\n"))
 
 
 
@@ -157,6 +157,9 @@ otherwise => the new conf is entered after all conferences.")
 (defvar lyskom-prompt-executing-default-command-text ". "
   "*Text to end the prompt while the default-commands is executing.")
 
+(defvar lyskom-no-prompt nil
+  "Tells the session that we have no prompt.")
+
 (defvar kom-show-personal-messages-in-buffer t
   "*Buffer to show personal messages in.
 If nil, discard them.
@@ -240,6 +243,34 @@ Dont change these. These are defined by the protocol.")
 TCP/IP connection. This should be unlimited, but in practise there
 are systems that limits this. This variable is automatically adjusted
 if any problems are detected.")
+
+(defvar lyskom-do-when-done nil
+  "Internal of kom-do-when-done.")
+
+(defvar lyskom-do-when-starting nil
+  "Internal of kom-do-when-starting.")
+
+(defvar lyskom-list-of-edit-buffers nil
+  "Keeps track of active edit-buffers.")
+
+(defvar lyskom-sessions-with-unread nil
+  "List of lyskom-sessions with unread texts.
+This is not buffer-local.")
+
+(defvar lyskom-time-last-command nil
+  "Keeps the time of the last lyskom-command in this session.")
+
+(defvar lyskom-buffer nil
+  "What is the lyskom-buffer we are connected to.")
+
+(defvar output nil
+  "Uaark. Just to omit a warning...")
+
+(defvar lyskom-errno nil
+  "Errno of last lyskom error.")
+
+(defvar lyskom-parse-pos nil
+  "Position of parsing.")
 
 (defvar lyskom-unparsed-buffer nil
   "Buffer containing unparsed information from the server.")
@@ -568,3 +599,6 @@ the value of  kom-tell-phrases  for fun.")
 
 (defvar lyskom-default-password nil
   "Default LysKOM PASSWORD.")
+
+(defvar mode-line-conf-name nil
+  "Conf name that is present on the mode-line.")
