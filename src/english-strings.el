@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.287 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: english-strings.el,v 44.288 2003-07-27 14:17:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.287 2003-07-20 22:12:26 byers Exp $"))
+              "$Id: english-strings.el,v 44.288 2003-07-27 14:17:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -603,6 +603,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-is-passive-member-of-conf . "Well, %#1P is only a passive member of the conference %#2M.\n")
     (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
     (pers-is-member-of-conf-2 . "Number of unread: %#2D (last access %#1s)\n")
+    (pers-will-receive-async . "Reception of group messages %#1?b%[enabled%]%[disabled%]\n")
     (Unknown-number . "Unknown number")
     (text-to-check-will-read-for . "...for membership in recipients of text: ")
     (pers-to-check-will-read-for . "Person to check: ")
@@ -919,7 +920,7 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
 Post: \\[kom-edit-send], \
 Kill: \\[kom-edit-quit], \
 Help: \\[describe-mode] ---")
-    (text-mass . "%#4s%#1s\n%#2s\n%#3s")
+    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]\n%#3s")
     (comment-to-by . "%#1s to text %#2n%#3s.\n")
     (already-sent . "You have already posted this text. Post it anyway? ")
     (subject . "Subject: ")
@@ -1618,10 +1619,13 @@ You must become an active member of the conference to enter it.\n")
     (invitation-mt-type . "invited")
     (passive-mt-type . "passive")
     (secret-mt-type . "secret")
+    (message-flag-off-mt-type . "no group messages")
+    (message-flag-on-mt-type . "group messages")
 
     (Invitation-mt-type . "Invited")
     (Passive-mt-type . "Passive")
     (Secret-mt-type . "Secret")
+    (Message-flag-mt-type . "Group messages")
 
     (not-author-try-anyway-p . "You are not the author of the text. Try anyway? ")
     (what-no-comments-no . "Which text do you want to prevent comments to: ")
@@ -1920,6 +1924,10 @@ environment to one that uses \"%#2s\" to encode text.
     (limit-import-of-what . "Limit import of what? ")
     (limit-import-not-super . "You do not seem to be the supervisor of the conference. Try anyway? ")
     (limiting-import . "Limiting import of  %#1s to %#2M...")
+
+    (set-message-flag-for-conf . "Sett message flag for which conference? ")
+    (set-message-flag-to-what . "Receive grupp messages to %#1M? ")
+    (setting-message-flag . "%#1?b%[Enabling%]%[Disabling%] reception of group messages to %#2M...")
     ))
 
 
@@ -2150,6 +2158,7 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-join-all-conferences . "Join all conferences")
     (kom-leave-all-conferences . "Leave (almost) all conferences")
     (kom-limit-import         . "Limit imported texts")
+    (kom-change-message-flag  . "Change reception (of) group messages")
     ))
 
 (lyskom-language-var global lyskom-language-codes en

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.134 2003-04-06 21:07:38 byers Exp $
+;;;;; $Id: utilities.el,v 44.135 2003-07-27 14:17:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.134 2003-04-06 21:07:38 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.135 2003-07-27 14:17:25 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1211,7 +1211,12 @@ TIME defaults to the current client time."
           (delete nil
                   (list (if (membership-type->invitation mt) (lyskom-get-string 'invitation-mt-type) nil)
                         (if (membership-type->passive mt) (lyskom-get-string 'passive-mt-type) nil)
-                        (if (membership-type->secret mt) (lyskom-get-string 'secret-mt-type) nil)))
+                        (if (membership-type->secret mt) (lyskom-get-string 'secret-mt-type) nil)
+                        (if (eq (membership-type->message-flag mt)
+                                (membership-type->passive mt))
+                            (lyskom-get-string (if (membership-type->message-flag mt)
+                                                   'message-flag-on-mt-type
+                                                 'message-flag-off-mt-type)))))
           ", ")))
     (if (string= tmp "") 
         tmp

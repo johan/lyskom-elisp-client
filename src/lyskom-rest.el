@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.204 2003-07-19 22:26:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.205 2003-07-27 14:17:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.204 2003-07-19 22:26:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.205 2003-07-27 14:17:24 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3920,7 +3920,8 @@ Other objects are converted correctly."
    (lyskom-prot-a-format-bool (membership-type->invitation membership-type))
    (lyskom-prot-a-format-bool (membership-type->passive membership-type))
    (lyskom-prot-a-format-bool (membership-type->secret membership-type))
-   (lyskom-prot-a-format-bool (membership-type->rsv1 membership-type))
+   (lyskom-prot-a-format-bool (eq (membership-type->message-flag membership-type)
+                                  (membership-type->passive membership-type)))
    (lyskom-prot-a-format-bool (membership-type->rsv2 membership-type))
    (lyskom-prot-a-format-bool (membership-type->rsv3 membership-type))
    (lyskom-prot-a-format-bool (membership-type->rsv4 membership-type))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.47 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: parse.el,v 44.48 2003-07-27 14:17:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.47 2003-07-20 22:12:26 byers Exp $\n"))
+	      "$Id: parse.el,v 44.48 2003-07-27 14:17:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -597,8 +597,14 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 
 (defun lyskom-parse-membership-type ()
   "Parse a membership type"
-  (apply 'lyskom-create-membership-type
-         (lyskom-parse-bitstring '(nil nil nil nil nil nil nil nil))))
+  (let ((type
+         (apply 'lyskom-create-membership-type
+                (lyskom-parse-bitstring '(nil nil nil nil nil nil nil nil)))))
+    (set-membership-type->message-flag
+     type
+     (eq (membership-type->passive type)
+         (membership-type->message-flag type)))
+    type))
 
 (defun lyskom-parse-member-old ()
   "Parse an old-style member record."

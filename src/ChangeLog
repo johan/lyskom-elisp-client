@@ -1,9 +1,65 @@
+2003-07-27  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 761:
+	* startup.el (kom-start-anew): Set lyskom-is-administrator to nil
+	after logging on.
+
+	Fix bug 1058:
+	* edit-text.el (lyskom-edit-insert-miscs): Make the separator
+	read-only.
+
+2003-07-26  David Byers  <byers@lysator.liu.se>
+
+	Minor fixes:
+	* commands1.el (kom-sub-self): Restrict this command to
+	membership.
+
+	Improvements to completing read:
+	* completing-read.el (lyskom-read-conf-internal): Added membership
+	predicate to lyskom-read-conf-internal.
+	(lyskom-read-conf): Support integer argument in initial. Default
+	to placing point at the start of input.
+
+
+	Fix bug 1036:
+	* commands2.el (kom-change-message-flag): Nwe command.
+
+	* commands2.el (kom-is-person-member-of-conference): Show if a
+	person receives group messages to the conference.
+
+	* utilities.el (lyskom-return-membership-type): Show message-flag
+	if it is not the default.
+
+2003-07-25  David Byers  <byers@lysator.liu.se>
+
+	UI support for bug 1036:
+	* mship-edit.el (lp--compute-format-string): Support message-flag.
+	(lp--format-entry): Ditto.
+	(lp--flag-menu-get): Ditto.
+	(lp--flag-menu-set): Ditto.
+	(lp--format-insert-entry): Ditto.
+
+	Protocol support for bug 1036:
+	* komtypes.el (membership-type): Added message-flag.
+
+	* parse.el (lyskom-parse-membership-type): Set message-flag from
+	message-invert.
+
+	* lyskom-rest.el (lyskom-prot-a-format-membership-type): Transmit
+	message-invert instead of message-flag.
+
+2003-07-22  David Byers  <byers@lysator.liu.se>
+
+	* commands2.el (lyskom-update-membership-buffer): Fixed typo.
+
 2003-07-23  Per Cederqvist  <ceder@ingate.com>
 
 	* swedish-strings.el (lyskom-message): Fixed spelling error in
 	Swedish 'pers-is-member-of-rcpt: inlågg => inlägg.
 
 2003-07-21  David Byers  <byers@lysator.liu.se>
+
+	* NEWS-0.48: Updated to here.
 
 	Fix bug 708:
 	* flags.el (lyskom-flag-global-variable-from-common): New function.
@@ -639,7 +695,6 @@
 2003-03-08  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	kom-review-backward always raised an error.
-
 	* review.el (kom-review-backward): Extract the list of texts to
 	see with text-list->texts, not cdr.  Using cdr no longer works.
 
@@ -660,7 +715,6 @@
 2003-03-03  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	Print the conference type when entering a conference.
-
 	* swedish-strings.el (status-record): Removed a space.
 
 	* english-strings.el (status-record): Removed a space.
@@ -675,7 +729,6 @@
 2003-02-13  Per Cederqvist  <ceder@ingate.com>
 
 	Fix kom-postpone, which has been broken a while.
-
 	* komtypes.el (text-list->trim-head): New function.
 
 	* commands2.el (kom-postpone): Use text-list->trim-head instead of
@@ -813,7 +866,7 @@
 
 	* NEWS-0.48: Synched up to here.
 
-	Handle async-new-user-area message:
+	Handle async-new-user-area message (bug 837):
 	* startup.el (lyskom-accept-async): Accept async 19.
 
 	* async.el (lyskom-parse-async): Parse async type 19. Update

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.326 2003-07-23 15:54:50 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.327 2003-07-27 14:17:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.326 2003-07-23 15:54:50 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.327 2003-07-27 14:17:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -827,6 +827,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (pers-is-passive-member-of-conf . "Nja, %#1P är bara passiv medlem i mötet %#2M.\n")
     (pers-is-not-member-of-conf . "Nej, %#1P är inte medlem i mötet %#2M.\n")
     (pers-is-member-of-conf-2 . "Antal olästa: %#2D (senast inne %#1s)\n")
+    (pers-will-receive-async . "Tar %#1?b%[%]%[inte %]emot gruppmeddelanden till mötet\n")
     (Unknown-number . "Okänt antal")
     (text-to-check-will-read-for . "...för medlemskap i mottagare till inlägg: ")
     (pers-to-check-will-read-for . "Vilken person vill du kontrollera: ")
@@ -951,7 +952,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 Skicka in=\\[kom-edit-send], \
 Avbryt=\\[kom-edit-quit], \
 Annat se \\[describe-mode] ---")
-    (text-mass . "%#4s%#1s\n%#2s\n%#3s")
+    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]\n%#3s")
     (comment-to-by . "%#1s till text %#2n%#3s.\n")
     (already-sent . "Du har redan skickat denna text en gång. Sänd ändå? ")
     (subject . "Ärende: ")
@@ -1654,10 +1655,13 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (invitation-mt-type . "inbjuden")
     (passive-mt-type . "passiv")
     (secret-mt-type . "hemlig")
+    (message-flag-off-mt-type . "ej gruppmeddelanden")
+    (message-flag-on-mt-type . "gruppmeddelanden")
 
     (Invitation-mt-type . "Inbjuden")
     (Passive-mt-type . "Passiv")
     (Secret-mt-type . "Hemlig")
+    (Message-flag-mt-type . "Gruppmeddelanden")
 
     (not-author-try-anyway-p . "Du är inte författare till inlägget. Vill du försöka ändå? ")
     (what-no-comments-no . "Vilken text vill du inte ha kommentarer till: ")
@@ -1954,6 +1958,10 @@ teckenkodning.
     (limit-import-of-what . "Begränsa import av vad? ")
     (limit-import-not-super . "Du verkar inte vara organisatör för mötet. Försök ändå? ")
     (limiting-import . "Begränsar import av %#1s i %#2M...")
+
+    (set-message-flag-for-conf . "Ändra meddelandeflagga för vilket möte? ")
+    (set-message-flag-to-what . "Vill du ta emot gruppmeddelanden till %#1M? ")
+    (setting-message-flag . "%#1?b%[Slår på%]%[Stänger av%] mottagning av gruppmeddelanden till %#2M...")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2183,6 +2191,7 @@ teckenkodning.
     (kom-join-all-conferences . "Bli medlem i alla möten")
     (kom-leave-all-conferences . "Utträd ur (nästan) alla möten")
     (kom-limit-import         . "Begränsa import av texter")
+    (kom-change-message-flag  . "Ändra mottagning (av) gruppmeddelanden")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv

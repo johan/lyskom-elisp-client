@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.38 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: completing-read.el,v 44.39 2003-07-27 14:17:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.38 2003-01-05 21:37:06 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.39 2003-07-27 14:17:24 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -190,13 +190,16 @@ more of the following:
     conf    Return conferences (not letterboxes),
     pers    Return persons (letterboxes),
     login   Return persons who are also logged-in, and
+    membership Return only conferences and letterboxes lyskom-pers-no
+            is a member of.
     none    Return names that do not match anything in the database.
     (restrict c1 c2 ...) Restrict matching to conference numbers c1, 
             c2 etc. The implementation is inefficient for long lists.
 
 Optional arguments
 EMPTY     allow nothing to be entered.
-INITIAL   initial contents of the minibuffer
+INITIAL   initial contents of the minibuffer. If an integer, use the
+          name of that conference.
 MUSTMATCH if non-nil, the user must enter a valid name.
 
 The return value may be one of
@@ -205,6 +208,8 @@ nil:         Nothing was entered, or
 A string:    A name that matched nothing in the database."
 
   (lyskom-completing-clear-cache)
+  (when (integerp initial)
+    (setq initial (conf-stat->name (blocking-do 'get-uconf-stat initial))))
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
           lyskom-minibuffer-local-completion-map)
@@ -222,7 +227,9 @@ A string:    A name that matched nothing in the database."
                                           'lyskom-read-conf-internal
                                           type
                                           mustmatch
-                                          initial
+                                          (if (listp initial)
+                                              initial
+                                            (cons initial 0))
                                           'lyskom-name-hist)))
       (setq result
             (cond ((null read-string) nil)
@@ -329,9 +336,11 @@ function work as a name-to-conf-stat translator."
                             (lyskom-read-conf-get-logins)))
            (x-list (lyskom-completing-lookup-z-name string 
                                                     (if (or (memq 'all predicate)
+                                                            (memq 'membership predicate)
                                                             (memq 'conf predicate)
                                                             (memq 'none predicate)) 1 0)
                                                     (if (or (memq 'all predicate)
+                                                            (memq 'membership predicate)
                                                             (memq 'pers predicate)
                                                             (memq 'none predicate)
                                                             (memq 'login predicate)) 1 0)))
@@ -578,8 +587,11 @@ function work as a name-to-conf-stat translator."
            conf-type
            (conf-type->letterbox conf-type))
       (and (memq 'login predicate)
-           conf-type
+           conf-no
            (memq conf-no logins))
+      (and (memq 'membership predicate)
+           conf-no
+           (lyskom-get-membership conf-no t))
       (and (memq 'none predicate) 
            (and (null conf-no)
                 (null x-list)))))
