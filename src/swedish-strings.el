@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.334 2003-08-14 12:01:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.335 2003-08-14 14:16:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.334 2003-08-14 12:01:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.335 2003-08-14 14:16:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1622,10 +1622,18 @@ Innehåll:    \"%#9s\"
 
     ;; Cross-reference stuff
 
-    (person . "Person")
-    (conference . "Möte")
-    (text . "Inlägg")
-    (server . "Server")
+    (Person . "Person")
+    (person . "person")
+    (persons . "personer")
+    (Conference . "Möte")
+    (conference . "möte")
+    (conferences . "möten")
+    (Text . "Inlägg")
+    (text . "inlägg")
+    (texts . "inlägg")
+    (Server . "Server")
+    (server . "server")
+    (servers . "servrar")
 
     (xref-type . "Vad vill du referera till (inlägg, möte eller person)? ")
     (which-text-to-xref . "Lägg till referens till text nummer: ")
@@ -1996,6 +2004,10 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (unit-year . "år")
 
     (db-status-backup . "informationsförlust kan ha förekommit")
+    (no-support-in-server . "Servern saknar nödvändig funktionalitet för detta kommando.\n")
+    (mark-confs-as-known . "Markera dessa  %#2d %#1s som kända? ")
+    (no-new-conferences . "Inga nya %#2s%#1?b%[ sedan %#1s%]%[%].\n")
+    (new-conferences-since . "Nya %#2s%#1?b%[ sedan %#1s%]%[%]:\n")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2228,6 +2240,8 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (kom-change-message-flag  . "Ändra mottagning (av) gruppmeddelanden")
     (kom-list-faqs            . "Lista FAQ")
     (kom-list-server-faqs     . "Lista server-FAQ")
+    (kom-list-new-conferences . "Lista nya möten")
+    (kom-list-new-persons     . "Lista nya personer")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv

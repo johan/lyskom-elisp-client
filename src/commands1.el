@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.190 2003-08-05 00:06:50 jhs Exp $
+;;;;; $Id: commands1.el,v 44.191 2003-08-14 14:16:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.190 2003-08-05 00:06:50 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.191 2003-08-14 14:16:54 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -4145,9 +4145,9 @@ Arguments:
 (defun lyskom-read-cross-reference-and-get-aux-item ()
   "Query user about cross reference type and value, and return the
 corresponding aux-item."
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
+  (let* ((completions (list (cons (lyskom-get-string 'Conference) 'conf)
+                            (cons (lyskom-get-string 'Person) 'pers)
+                            (cons (lyskom-get-string 'Text) 'text)))
          (completion-ignore-case t)
          (type (cdr (lyskom-string-assoc
                      (lyskom-completing-read
@@ -4191,9 +4191,9 @@ corresponding aux-item."
 (defun lyskom-read-link ()
   "Query user about link type and value, and return the corresponding
 link as a string."
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
+  (let* ((completions (list (cons (lyskom-get-string 'Conference) 'conf)
+                            (cons (lyskom-get-string 'Person) 'pers)
+                            (cons (lyskom-get-string 'Text) 'text)))
          (completion-ignore-case t)
          (type (cdr (lyskom-string-assoc
                      (lyskom-completing-read

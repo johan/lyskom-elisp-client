@@ -1,5 +1,20 @@
 2003-08-14  David Byers  <byers@lysator.liu.se>
 
+	* services.el (initiate-first-unused-conf-no): New function.
+	(initiate-first-unused-text-no): New function.
+	(initiate-find-next-conf-no): New function.
+	(initiate-find-previous-conf-no): New function.
+
+	* commands2.el (kom-set-personal-label): Use capitalized strings
+	for conf, pers and text.
+	(lyskom-list-new-conferences): New function.
+	(kom-list-new-persons): New command.
+	(kom-list-new-conferences): New command.
+
+	* commands1.el (lyskom-read-cross-reference-and-get-aux-item): Use
+	capitalized strings for conf, pers and text.
+	(lyskom-read-link): Same here.
+
 	Handle async-new-presentation and async-new-motd correctly:
 	* async.el (lyskom-parse-async): Set the correct buffer when
 	looking for confs in the cache.

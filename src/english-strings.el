@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.295 2003-08-14 12:01:28 byers Exp $
+;;;;; $Id: english-strings.el,v 44.296 2003-08-14 14:16:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.295 2003-08-14 12:01:28 byers Exp $"))
+              "$Id: english-strings.el,v 44.296 2003-08-14 14:16:55 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1588,10 +1588,18 @@ Contents:     \"%#9s\"
 
     ;; Cross-reference stuff
 
-    (person . "User")
-    (conference . "Conference")
-    (text . "Text")
-    (server . "Server")
+    (Person . "User")
+    (person . "user")
+    (persons . "users")
+    (Conference . "Conference")
+    (conference . "conference")
+    (conferences . "conferences")
+    (Text . "Text")
+    (text . "text")
+    (texts . "texts")
+    (Server . "Server")
+    (server . "server")
+    (servers . "servers")
 
     (xref-type . "What to you want to refer to (text, conference or person)? ")
     (which-text-to-xref . "Add reference to text: ")
@@ -1966,6 +1974,10 @@ written a presentation.%]
     (unit-year . "year")
 
     (db-status-backup . "information loss may have occurred")
+    (no-support-in-server . "No support in server for this command.\n")
+    (mark-confs-as-known . "Mark these %#2d %#1s as known? ")
+    (no-new-conferences . "No new %#2s%#1?b%[ since %#1s%]%[%].\n")
+    (new-conferences-since . "New %#2s%#1?b%[ since %#1s%]%[%]:\n")
     ))
 
 
@@ -2199,6 +2211,8 @@ written a presentation.%]
     (kom-change-message-flag  . "Change reception (of) group messages")
     (kom-list-faqs            . "List FAQs")
     (kom-list-server-faqs     . "List server-FAQs")
+    (kom-list-new-conferences . "List new conferences")
+    (kom-list-new-persons     . "List new users")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
