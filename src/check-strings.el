@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.8 1999-06-22 13:36:55 byers Exp $
+;;;;; $Id: check-strings.el,v 44.9 1999-06-23 12:25:25 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -104,7 +104,7 @@ STRINGS is a list of (language . string)."
 	(lcs-message nil "(%s:%s) Missing languages %s"
 		     category name langs))))
 
-(defun lcs-check-key-bindings (commands keymap)
+(defun lcs-check-key-bindings (commands keymap &optional show-all-missing)
   "Check the commands in CATEGORY named NAME for bindings 
 in lyskom-X-mode-map"
   (let* ((langs (mapcar 'car lyskom-languages))
@@ -123,9 +123,10 @@ in lyskom-X-mode-map"
                (lcs-message nil "(%s:%s) Missing binding in %s" keymap 
                             (car commands) lang-c)))
         (setq commands (cdr commands))))
-    (mapcar (lambda (el)
-              (lcs-message nil "(%s:%s) Missing in %s" keymap el langs))
-            all-missing)))
+    (when show-all-missing
+      (mapcar (lambda (el)
+                (lcs-message nil "(%s:%s) Missing in %s" keymap el langs))
+              all-missing))))
 
 
 (defun lcs-check-string (category name lang string)
