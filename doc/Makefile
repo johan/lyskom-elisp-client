@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.4 1991-09-24 19:32:25 linus Exp $
+# $Id: Makefile,v 35.5 1991-09-24 22:38:05 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -35,6 +35,12 @@ elisp-client: elisp-client.latexinfo
 elisp-client.txt: elisp-client
 	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke $?
 
+elisp-client.dvi: elisp-client.latexinfo
+	latex elisp-client.latexinfo
+	texinfo elisp-client.??
+	latex elisp-client.latexinfo
+
 clean:
 	$(RM) $(GENERIC-CLEAN) elisp-client elisp-client.txt
 	$(RM) *.aux *.dvi *.fn *.ky *.log *.pg *.tp *.vr
+	$(RM) *.bbl *.blg *.fns *.idx *.ilg *.ind *.kys *.pgs *.tps *.vrs
