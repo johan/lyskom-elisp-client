@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.21 1999-06-26 20:48:23 byers Exp $
+;;;;; $Id: view-text.el,v 44.22 1999-06-29 14:21:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.21 1999-06-26 20:48:23 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.22 1999-06-29 14:21:23 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -482,15 +482,24 @@ blocking-do."
                     (let ((first-flag t))
                       (concat
                        "("
-                       (mapconcat (function
-                                   (lambda (str)
-                                     (cond
-                                      (first-flag
-                                       (setq first-flag nil)
-                                       (upcase-initials (lyskom-get-string str)))
-                                      (t (lyskom-get-string str)))))
-
-                                  format-flags ", ")
+                       (mapconcat 
+                        (lambda (str)
+                          (let ((face nil))
+                            ;; If it's a cons, the cdr is property list
+                            (when (consp str)
+                              (setq face (cdr str)
+                                    str (car str)))
+                            ;; Get the string
+                            (setq str (lyskom-get-string str))
+                            ;; Upcase the first in the list
+                            (when first-flag 
+                              (setq first-flag nil str (upcase-initials str)))
+                            ;; If we have a plist, apply it
+                            (when face
+                              (add-text-properties 0 (length str) face str))
+                            ;; Return the string
+                            str))
+                        format-flags ", ")
                        ")"))
                   ""))
                (end-dash-chars
@@ -647,8 +656,9 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 
 	  ;; Indicate that the text was truncated
 	  (if truncated
-	      (setq lyskom-last-text-format-flags
-		    (cons 'reformat-truncated lyskom-last-text-format-flags)))
+              (lyskom-signal-reformatted-text
+               '(reformat-truncated . (face kom-warning-face))))
+
 	  
           ;; (setq t2 (point-max))
 	  )

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.8 1999-06-26 20:48:09 byers Exp $
+;;;;; $Id: komtypes.el,v 44.9 1999-06-29 14:21:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,66 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.8 1999-06-26 20:48:09 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.9 1999-06-29 14:21:14 byers Exp $\n"))
+
+
+;;; ============================================================
+;;; Black magic...
+
+(defmacro def-komtype (type &rest args)
+  (let ((typename (symbol-name type))
+	(n 0)
+        (tmp nil))
+    ;; Constructor
+    (append
+     (list 'progn
+           (list 'defsubst
+                 (intern (concat "lyskom-create-" typename))
+                 args
+                 (concat "Create a `" typename "' from arguments.\n"
+                         "Args: " (upcase (mapconcat
+                                           'symbol-name args " ")) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'cons
+                       (list 'quote (intern (upcase typename)))
+                       (cons 'vector args)))
+           ;; Identifier
+           (list 'defsubst
+                 (intern (concat "lyskom-" typename "-p"))
+                 (list type)
+                 (concat "Return `t' if " (upcase typename)
+                         " is a " typename ".\n"
+                         "Args: " (upcase typename) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'and
+                       (list 'consp type)
+                       (list 'eq (list 'car type)
+                             (list 'quote (intern (upcase typename)))))))
+    ;; Selectors/Modifiers
+     (progn
+       (while args
+         (let ((argname (symbol-name (car args))))
+           ;; Selctor
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat typename "->" argname))
+                            (list type)
+                            "Automatically created with def-komtype."
+                            (list 'aref (list 'cdr type) n))
+                      tmp))
+           ;; Modifier
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat "set-" typename "->" argname))
+                            (list type (car args))
+                            "Automatically created with def-komtype."
+                            (list 'aset (list 'cdr type) n (car args)))
+                      tmp))
+           (setq n (1+ n)
+                 args (cdr args))))
+       tmp))))
+
+
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -97,49 +156,8 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 
 ;;; Constructor:
 
-(defsubst lyskom-create-uconf-stat (conf-no 
-				    name
-				    conf-type 
-				    highest-local-no
-				    nice)
-  "Create an uconf-stat from all parameters."
-  (cons 'UCONF-STAT
-	(vector conf-no name conf-type highest-local-no nice)))
-
-
-;;; Selectors:
-
-
-(defsubst uconf-stat->conf-no (conf)
-  "Get the conf-no from an uconf-stat"
-  (elt (cdr conf) 0))
-
-(defsubst uconf-stat->name (conf)
-  "Get the name of a conference."
-  (elt (cdr conf) 1))
-
-(defsubst uconf-stat->conf-type (conf)
-  "Get the type of a conference."
-  (elt (cdr conf) 2))
-
-(defsubst uconf-stat->highest-local-no (conf)
-  "Get the highest local number in a conference"
-  (elt (cdr conf) 3))
-
-(defsubst uconf-stat->garb-nice (conf)
-  "Get garb-nice from a conference."
-  (elt (cdr conf) 4))
-
-
-;;; Modifiers
-;;; You shouldn't need modifiers
-
-;;; Predicate
-
-(defsubst lyskom-uconf-stat-p (object)
-  "Return t if OBJECT is a conf-stat."
-  (eq (car-safe object) 'UCONF-STAT))
-
+(def-komtype uconf-stat 
+  conf-no name conf-type highest-local-no nice)
 
 ;;; ================================================================
 ;;;                            conf-stat
@@ -1057,62 +1075,6 @@ FOOTN-TO or FOOTN-IN."
 ;;; ================================================================
 ;;;                            flags
 
-
-;;; This is an experiment. Hopefully most of the code can be
-;;; automatically generated.
-
-(defmacro def-komtype (type &rest args)
-  (let ((typename (symbol-name type))
-	(n 0)
-        (tmp nil))
-    ;; Constructor
-    (append
-     (list 'progn
-           (list 'defsubst
-                 (intern (concat "lyskom-create-" typename))
-                 args
-                 (concat "Create a `" typename "' from arguments.\n"
-                         "Args: " (upcase (mapconcat
-                                           'symbol-name args " ")) "\n"
-                         "Automatically created with def-komtype.")
-                 (list 'cons
-                       (list 'quote (intern (upcase typename)))
-                       (cons 'vector args)))
-           ;; Identifier
-           (list 'defsubst
-                 (intern (concat typename "-p"))
-                 (list type)
-                 (concat "Return `t' if " (upcase typename)
-                         " is a " typename ".\n"
-                         "Args: " (upcase typename) "\n"
-                         "Automatically created with def-komtype.")
-                 (list 'and
-                       (list 'consp type)
-                       (list 'eq (list 'car type)
-                             (list 'quote (intern (upcase typename)))))))
-    ;; Selectors/Modifiers
-     (progn
-       (while args
-         (let ((argname (symbol-name (car args))))
-           ;; Selctor
-           (setq tmp (cons
-                      (list 'defsubst
-                            (intern (concat typename "->" argname))
-                            (list type)
-                            "Automatically created with def-komtype."
-                            (list 'aref (list 'cdr type) n))
-                      tmp))
-           ;; Modifier
-           (setq tmp (cons
-                      (list 'defsubst
-                            (intern (concat "set-" typename "->" argname))
-                            (list type (car args))
-                            "Automatically created with def-komtype."
-                            (list 'aset (list 'cdr type) n (car args)))
-                      tmp))
-           (setq n (1+ n)
-                 args (cdr args))))
-       tmp))))
 
 
 (def-komtype session-flags

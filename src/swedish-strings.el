@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.65 1999-06-29 10:20:29 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.66 1999-06-29 14:21:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.65 1999-06-29 10:20:29 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.66 1999-06-29 14:21:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -262,6 +262,8 @@ Skicka ett brev till %#2P för medlemsskap.\n")
     (secret-members-allowed . "Får man gå med som hemlig medlem? ")
     (what-comment-no . "Kommentera text nummer: ")
     (what-footnote-no . "Fotnotera text nummer: ")
+    (confusion-what-to-reply-to . "Jag förstår inte vilken text du vill skriva en kort replik till.\n")
+    (confusion-what-to-agree-to . "Jag förstår inte vilken text du vill hålla med om.\n")
     (confusion-what-to-comment . "Jag förstår inte vilken text du vill kommentera.\n")
     (confusion-what-to-footnote . "Jag förstår inte vilken text du vill skriva en fotnot till.\n")
 
@@ -943,6 +945,7 @@ Skicka en bugrapport.\n")
     (mode-line-unread . " Olästa ")
     (mode-line-letters . "brev ")
 
+    (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
     (error-code . "Felkod %#2d: %#1s.\n")
     (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt vä.
 Du bör sätta den till ett bättre värde.\n")
@@ -1279,7 +1282,7 @@ Innehåll:    \"%#9s\"
     (conference-no . "möte <%#1m> %#1M")
     (text-no . "inlägg %#1n")
 
-    (what-fast-reply-no . "Snabb replik till vilket inlägg? ")
+    (what-fast-reply-no . "Kort replik till vilket inlägg? ")
     (fast-reply-prompt . "Replik: ")
     (agree-prompt . "Text: ")
     (default-agree-string . "Håller med")
@@ -1456,7 +1459,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
     (kom-where-is             . "Var finns kommandot")
-    (kom-fast-reply           . "Snabb replik")
+    (kom-fast-reply           . "Kort replik")
     (kom-agree                . "Hålla med")
     (kom-add-faq              . "Addera FAQ")
     (kom-del-faq              . "Ta bort FAQ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.11 1999-06-29 10:20:08 byers Exp $
+;;;;; $Id: aux-items.el,v 44.12 1999-06-29 14:21:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.11 1999-06-29 10:20:08 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.12 1999-06-29 14:21:08 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -70,7 +70,7 @@
 
 
 (defun lyskom-aux-item-definition-call (def method &rest args)
-  (when (aux-item-p def)
+  (when (lyskom-aux-item-p def)
     (setq def (lyskom-find-aux-item-definition def)))
   (cond ((listp method)
          (let ((result nil))
@@ -88,7 +88,7 @@
 
 
 (defun lyskom-aux-item-definition-field (def method)
-  (when (aux-item-p def)
+  (when (lyskom-aux-item-p def)
     (setq def (lyskom-find-aux-item-definition def)))
   (cdr (assq method def)))
 
