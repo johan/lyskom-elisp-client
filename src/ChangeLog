@@ -1,5 +1,10 @@
 2003-08-30  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1101:
+	* komtypes.el (text-list->trim-head): The new length was computed
+	incorrectly, leading to problems if this function was called
+	without intervening calls to functions that corrected the error.
+
 	Fix bug 1131:
 	* parse.el (lyskom-init-parse): Inherit inheritable variables from
 	lyskom-buffer since the parsers may depend on them.
