@@ -1,0 +1,1057 @@
+<!doctype book public "-//OASIS//DTD DocBook V3.1//EN">
+<!-- ?stylesheet href="/local/sgml/style/dsssl/ldp.dsl" type="text/dsssl" -->
+
+<book>
+<bookinfo>
+  <title>Användarhandledning för LysKOMs emacslispklient</title>
+  <date>2002-03-26</date>
+  <edition>0.46</edition>
+
+  <copyright>
+    <year>1991</year>
+    <year>2001</year>
+    <holder>
+      <ulink url="http://www.lysator.liu.se/">
+        <citetitle>Lysator</citetitle>
+      </ulink>
+    </holder>
+  </copyright>
+
+  <publisher>
+    <publishername>Lysator</publishername>
+    <address>
+      <street>c/o ISY, Linköping University</street>
+      <postcode>SE-581 83</postcode>
+      <city>Linköping</city>
+      <country>Sweden</country>
+      <email>lyskom@lysator.liu.se</email>
+      <otheraddr>
+        <ulink url="http://www.lysator.liu.se/">
+          <citetitle>Lysator</citetitle>
+        </ulink>
+      </otheraddr>
+    </address>
+  </publisher>
+
+  <authorgroup>
+    <author>
+      <firstname>David</firstname>
+      <surname>Byers</surname>
+      <affiliation>
+        <address><email>byers@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+    <author>
+      <firstname>Per</firstname>
+      <surname>Cederqvist</surname>
+      <affiliation>
+        <address><email>ceder@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+    <author>
+      <firstname>David</firstname>
+      <surname>Kågedal</surname>
+      <affiliation>
+        <address><email>davidk@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+    <author>
+      <firstname>Hans</firstname>
+      <surname>Persson</surname>
+      <affiliation>
+        <address><email>unicorn@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+    <author>
+      <firstname>Linus</firstname>
+      <surname>Tolke</surname>
+      <affiliation>
+        <address><email>linus@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+    <author>
+      <firstname>Inge</firstname>
+      <surname>Wallin</surname>
+      <affiliation>
+        <address><email>inge@lysator.liu.se</email></address>
+      </affiliation>
+    </author>
+  </authorgroup>
+
+  <legalnotice>
+    <title>GNU General Public License</title>
+    <para>
+      LysKOM is free software; you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as
+      published by the Free Software Foundation; either version 2, or
+      (at your option) any later version.
+    </para>
+
+    <para>
+      LysKOM is distributed in the hope that it will be useful, but
+      WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+      General Public License for more details.
+    </para>
+
+    <para>
+      You should have received a copy of the GNU General Public
+      License along with LysKOM; see the file COPYING. If not, write
+      to Lysator, c/o ISY, Linköping University, S-581 83 Linköping,
+      SWEDEN, or the Free Software Foundation, Inc., 675 Mass Ave,
+      Cambridge, MA 02139, USA.
+    </para>
+
+    <para>
+      Var vänlig att rapportera eventuella fel i elispklienten eller
+      någon annan del av LysKOM-systemet till
+      <email>bug-lyskom@lysator.liu.se</email>.
+    </para>
+
+    <para>
+      Tillstånd ges att kopiera denna manual och distribuera kopiorna,
+      under förutsättning att denna copyrightnot och denna text finns
+      med på alla kopior.
+    </para>
+  </legalnotice>
+</bookinfo>
+
+<preface>
+  <title>Förord</title>
+
+  <para>
+    Det här dokumentet beskriver Emacslispklienten för LysKOM,
+    <filename>lyskom.el</filename>, ofta känd som
+    <quote>elispklienten</quote> eller <quote>elvispen</quote>.
+  </para>
+
+  <para>
+    Meningen med detta dokument är att det ska beskriva allt man
+    behöver veta om LysKOMs emacslisp-klient för att kunna använda
+    den. Det förutsätts att läsaren känner till
+    <command>Emacs</command>. LysKOM är i mångt och mycket gjort för
+    att efterlikna QZ-KOM så om du känner till detta är det en fördel,
+    men det är absolut inte nödvändigt för kunna förstå och använda
+    LysKOM.
+  </para>
+
+  <para>
+    Elispklienten har utvecklats mer eller mindre kontinuerligt, men
+    dokumentationen till den har varit ett lite sorgligare kapitel.
+    En manual skriven i <command>texinfo</command> har länge varit
+    tillgänglig, men den har inte uppdaterats efter version 0.39.  Jag
+    irriterade mig på det ett längre tag och började så smått att
+    pilla med att uppdatera den, men körde fast i
+    <command>texinfo</command> (och brist på tid).  Ett tag senare
+    slog det mig att det skulle vara trevligt att skriva manualen i
+    ett mer generellt format som DocBook. Det gav mig ju dessutom en
+    anledning att lära mig DocBook...
+  </para>
+
+  <para>
+    Hans Persson
+  </para>
+
+  <sect1>
+    <title>Historia</title>
+    <subtitle>Lite om KOMs historia fram till LysKOM</subtitle>
+
+    <comment>
+      Det här kapitlet saknar lite lämpliga årtal här och där.
+    </comment>
+
+    <para>
+      Det var en gång en teknisk högskola som hette LiTH. Där gick
+      många studenter och läste en massa klokskap i diverse kurser.
+      Ibland ägnade de sig även åt att diskutera med varandra med
+      hjälp av ett datorbaserat konferensystem som hette KOM och körde
+      på en DEC-20-dator som hette Linus. Konferensystemet kallades
+      därför LinusKOM och var mycket populärt bland vissa.
+    </para>
+
+    <para>
+      LinusKOM var ett QZ-KOM, vilket betyder att det var skapat av QZ
+      i Stockholm. QZ-KOM kunde köra på DEC-10 och DEC-20-maskiner, en
+      maskintyp som fanns i drift på LiTH fram till slutet av
+      1980-talet. 
+    </para>
+
+    <para>
+      En dag var det slutligen dags för Linus att pensioneras och
+      därmed försvann också möjligheten för studenterna att använda
+      LinusKOM. Det fanns inga andra DEC-20-maskiner på LiTH att
+      flytta LinusKOM till, och vid det här laget hade ett svårartat
+      beroende av KOM utvecklats hos vissa, så de bestämde sig för att
+      skriva ett eget system som fungerade ungefär likadant som det
+      hädangångna LinusKOM. Eftersom alla de som var med och skrev
+      systemet i början var medlemmar i datorföreningen Lysator så
+      fick det nya systemet heta LysKOM.
+    </para>
+
+    <para>
+      En tidig tanke när arbetet med LysKOM började var att det skulle
+      gå att ha flera olika användargränssnitt samtidigt. Någon vill
+      se en grafisk struktur på hur inläggen hänger ihop på sin
+      grafiska skärm, någon annan vill kunna fortsätta att använda sin
+      gamla vt100-terminal. Det var också klart att systemet skulle
+      köra under <productname>UNIX</productname> eftersom detta
+      operativsystem bedömdes som vanligt i framtiden. Lysators
+      medlemmar hade dessutom stor erfarenhet av
+      <productname>UNIX</productname> och Lysator ägde ett antal
+      <productname>UNIX</productname>-maskiner.
+    </para>
+
+    <para>
+      Bland annat av dessa orsaker valde man att använda en
+      klient-servermodell. En central server tar hand om alla inlägg
+      och sköter LysKOM:s hela databas. Mot denna server kan flera
+      klienter av olika sorter koppla upp sig via TCP/IP.
+    </para>
+
+    <para>
+      När servern började fungera behövdes det en enkel klient för att
+      lättare kunna testa den. Per Cederqvist skrev en enkel
+      testklient i emacslisp som sedan har byggts på av många
+      andra. Även personer utanför Lysator har bidragit till
+      utvecklingen med färdiga funktioner och framför allt kommentarer
+      och idéer. Det som en gång var tänkt som en temporär testrigg
+      har idag förvandlats till den mest kompletta klienten för
+      LysKOM, LysKOMs emacslispklient.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Utveckling av elispklienten</title>
+    <subtitle>Förutsättningarna för LysKOM-projektet</subtitle>
+
+    <para>
+      Nästan all utveckling av LysKOMs emacslispklient,
+      LysKOM-systemet och de flesta andra i detta dokument nämnda 
+      klienter är ideellt arbete utfört av medlemmar i Lysator,
+      datorföreningen vid Universitet och Tekniska Högskolan i
+      Linköping.
+    </para>
+
+    <para>
+      Om du vill delta i arbetet så är det bra om du skaffar dig en
+      ordentlig introduktion till hur systemet fungerar. Detta kräver
+      att du läser dokumentationen och studerar programkoden
+      ordentligt. Men för att du snabbast ska kunna lära dig systemet
+      är det bäst att du kontaktar någon av utvecklarna och framför
+      allt att du använder LysKOM.
+    </para>
+
+    <para>
+      För den som är intresserad av att utvecka LysKOM-systemet finns
+      det ett fleratal möten i LysLysKOM som är intressanta.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>LysKOM (-) Systemet, protokollet mm</para>
+      </listitem>
+
+      <listitem>
+        <para>LysKOM frågor (och) svar</para>
+      </listitem>
+
+      <listitem>
+        <para>LysKOM Elispklient; diskussion och idéer</para>
+      </listitem>
+
+      <listitem>
+        <para>LysKOM; Elispklientens buggrapporter</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      Alla de ovanstående är öppna möten som vem som helst kan delta
+      i. Det finns också ett antal slutna möten för interna
+      diskussioner mellan utvecklarna. Om du är seriöst intresserad av
+      att hjälpa till att utveckla LysKOM är du naturligtvis välkommen
+      som medlem även i de mötena.
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Andra LysKOM-klienter</title>
+    <subtitle>Alternativ till LysKOMs emacslispklient</subtitle>
+
+    <para>
+      Det finns vid det här laget en uppsjö av alternativa klienter
+      till LysKOM förutom elispklienten. Det här kapitlet gör inga
+      anspråk på att lista alla, utan bara några av de mer användbara.
+      Förutom de som listas nedan finns det åtskilliga mer eller
+      mindre experimentella klienter och klienter utvecklade för att
+      fylla något specialiserat syfte. I LysLysKOM finns mötet
+      <quote>LysKOM; Klientdiskussioner om andra klienter</quote> där
+      man kan diskutera andra klienter än elispklienten. Många av
+      klienterna nedan har även egna specialmöten i LysLysKOM.
+    </para>
+
+    <comment>
+      Uppdatera webbsidorna om klienter och peka ut dem härifrån för
+      komplett information om övriga klienter. Så mycket information
+      om andra klienter som det finns nu behöver det nog inte vara
+      här.
+    </comment>
+
+    <sect2>
+      <title>tty-klienten</title>
+
+      <para>
+        tty-klienten (även kallad C-klienten) är skriven i C med det
+        ursprungliga målet att så troget som möjligt likna QZ-KOM.
+        Avvikelser från detta mål har skett dels beroende på de
+        olika förutsättningar som LysKOM har jämfört med QZ-KOM och
+        dels beroende på personlig smak hos utvecklarna.
+      </para>
+
+      <para>
+        tty-klienten är ganska stabil och lätt att kompilera och köra
+        åtminstone på unixsystem där <command>gcc</command> finns
+        installerad. Den senaste versionen av tty-klienten finns att
+        hämta från <ulink
+        url="ftp://ftp.lysator.liu.se/pub/lyskom/tty-client/">ftp://ftp.lysator.liu.se/pub/lyskom/tty-client/</ulink>.
+        Mötet <quote>LysKOM ttyklienten; buggar, nyheter och
+        annat.</quote> i LysLysKOM är avsett för diskussion om
+        ttyklienten.
+      </para>
+
+      <para>
+        Det mesta i tty-klienten är gjort av Thomas Bellman
+        <email>bellman@lysator.liu.se</email>, men numera är det Linus
+        Tolke <email>linus@lysator.liu.se</email> som underhåller den.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>tkom och nilkom (och kom++)</title>
+
+      <para>
+        tkom och nilkom är två olika klienter som bygger på samma
+        grundstomme, nämligen klassbiblioteket kom++. Grundprogrammet
+        som pratar med LysKOM-servern är skrivet i C++ och sedan finns
+        det två olika användargränssnitt som är skrivna i
+        <command>TCL</command>. Nilkom kör mot en terminal medan tkom
+        öppnar X-fönster.
+        
+        Målet med denna klient är att erbjuda ett gränssnitt till
+        LysKOM-servern som är bättre än protokollet och det finns
+        redan nu rutiner för cachning av personer och möten.
+        
+        tkom, nilkom och kom++-paketet kräver att C++ och TCL/Tk finns
+        installerat på maskinen men om man vill använda paketet för
+        att bygga en helt egen klient kan man klara sig utan TCL.
+        
+        Den senaste versionen av kom++-klienten finns att hämta från
+        <ulink
+        url="ftp://ftp.lysator.liu.se/pub/lyskom/">ftp://ftp.lysator.liu.se/pub/lyskom/</ulink>.
+        
+        tkom, nilkom och kom++ är skrivna av Per Cederqvist
+        <email>ceder@lysator.liu.se</email> och Inge Wallin
+        <email>inge@lysator.liu.se</email>.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>WinKOM</title>
+
+      <para>
+        WinKOM är en LysKOM-klient för <productname>Microsoft
+        Windows</productname>. Den är nog, efter elispklienten, den
+        mest kompletta klienten som finns tillgänglig.
+      </para>
+
+      <para>
+        Den senaste versionen av WinKOM finns att hämta från <ulink
+        url="http://www.lysator.liu.se/~zander/WinKOM.html">http://www.lysator.liu.se/~zander/WinKOM.html</ulink>.
+        Mötet <quote>LysKOM Windowsklient (WinKOM); nyheter,
+        diskussion och idéer</quote> i LysLysKOM är avsett för
+        diskussion om WinKOM.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>JySKom</title>
+
+      <para>
+        JysKOM är en server skriven i <command>Perl</command> som gör
+        det möjligt att köra LysKOM via en webbläsare.
+      </para>
+
+      <comment>
+        Var är Lysators JySKom-server installerad?
+      </comment>
+
+      <para>
+        JySKom är skrivet av Jonas S. Karlsson
+        <email>jsk@lysator.liu.se</email>. 
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>WebKOM</title>
+
+      <para>
+        WebKOM är, liksom JySKom, en server för att kunna läsa LysKOM
+        via en webbläsare. WebKOM är skriven i
+        <command>Python</command>.  
+      </para>
+
+      <para>
+        Det finns en WebKOM-server installerad på Lysator med adressen
+        <ulink
+        url="http://webkom.lysator.liu.se/">http://webkom.lysator.liu.se/</ulink>.
+        Mötet <quote>LysKOM(-klienten) WebKOM</quote> i LysLysKOM är
+        avsett för diskussion om WebKOM.
+      </para>
+
+      <para>
+        WebKOM är skrivet av Peter Åstrand
+        <email>peter@student.liu.se</email>.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>LysKOM-servern</title>
+    <subtitle>Vad är en LysKOM-server, egentligen?</subtitle>
+
+    <para>
+      LysKOM-servern är en databashanterare specialskriven i C för
+      ändamålet. Varje LysKOM har en egen LysKOM-server som klienter
+      kan koppla upp sig mot. Lysators egen LysKOM-server,
+      <quote>LysLysKOM</quote>, finns tillgänglig på <systemitem
+      class="systemname">kom.lysator.liu.se</systemitem>.
+    </para>
+
+    <para>
+      Databasfilen för Lysators LysKOM är läsbar för flera av Lysators
+      medlemmar vilket kan tyckas vara en bugg, men den är medveten.
+      Vi vill inte ge någon en falsk känska av säkerhet och på ett
+      system sådant som Lysators är det alltför många som har
+      privilegier för att man ska kunna garantera någon hemlighet.  På
+      andra LysKOM-serverinstallationer kan situationen naturligtvis
+      vara en annan.
+    </para>
+  </sect1>
+</preface>
+
+<chapter>
+  <title>Installation</title>
+
+  <para>
+    Det här kapitlet beskriver övergripande hur man gör för att
+    installera elispklienten. För mer detaljerade instruktioner, se
+    filen <filename>README</filename> i elispklientdistributionen.
+  </para>
+  
+  <sect1>
+    <title>Att installera elispklienten</title>
+
+    <para>
+      För att kunna installera elispklienten måste du först ha
+      tillgång till den. Den senaste versionen finns alltid
+      tillgänglig från <ulink
+      url="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/">ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/</ulink>.
+      Hämta filen <filename>lyskom-version.tar.gz</filename> där
+      version är ett versionsnummer. Ta den fil som har det högsta
+      versionsnumret. När detta skrivs är 0.46.1 den senaste
+      versionen.
+    </para>
+
+    <para>
+      För att installera klienten, gör följande:
+    </para>
+
+    <screen>
+      $ tar xfz lyskom-0.46.1.tar.gz
+      $ cd lyskom-0.46.1
+      $ ./configure
+      $ make
+      $ make install
+    </screen>
+
+    <para>
+      Detta packar upp, kompilerar och installerar elispklienten. För
+      att det ska gå att köra den behöver du också lägga till ett par
+      rader i din <filename>.emacs</filename>-fil om du inte gjort det
+      tidigare. 
+    </para>
+
+    <screen>
+      (autoload 'lyskom "lyskom" "Starta LysKOM" t)
+    </screen>
+
+    <para>
+      Nu ska det förhoppningsvis gå att starta elispklienten genom att
+      skriva <userinput>M-x lyskom RET</userinput> inifrån
+      <command>Emacs</command>. Om klienten inte startar, läs de mer
+      detaljerade installationsanvisningarna i filen
+      <filename>README</filename> som följer med elispklienten. 
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Användbara versioner av Emacs</title>
+
+    <comment>
+      Se till att lista ut hur man klämmer fram svenska ur
+      stylesheetet.
+    </comment>
+
+    <para>
+      Eftersom <command>Emacs</command> vid det här laget är ett
+      program som varit med ett tag så finns det ett flertal versioner
+      i drift. Det finns dessutom två olika smaker som är nästan, men
+      inte helt, kompatibla med varandra: <command>GNU Emacs</command>
+      och <command>XEmacs</command>.
+    </para>
+
+    <para>
+      Var och en av dessa finns dessutom naturligtvis tillgänglig i
+      ett flertal versioner. För att inte göra elispklientutvecklandet
+      till ett sisyfosarbete där den mesta tiden går åt till att lägga
+      till stöd för gamla versioner så är stödet för äldre versioner
+      begränsat. De versioner som elispklienten ska fungera i är
+      dessa: 
+    </para>
+
+    <comment>
+      Kontrollera att denna lista är up to date.
+    </comment>
+
+    <itemizedlist>
+      <listitem>
+        <para>
+          <command>XEmacs</command> version 20.4, 21.1 och 21.2.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+          <command>GNU Emacs</command> version 19.34. För att använda
+          denna version krävs att du uppgraderar det medföljande
+          custom-paketet med ett nyare. Om du använder Gnus kan du
+          behöva uppdatera den också.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+          <command>GNU Emacs</command> version 20.5 och nyare. Det bör
+          även vara möjligt att använda version 20.2-20.4 med vissa
+          problem (till exempel med tabeller).
+        </para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      Om du av någon anledning vill köra en äldre version av
+      <command>Emacs</command> så blir du tvungen att använda en äldre
+      version även av elispklienten.
+    </para>
+  </sect1>
+</chapter>
+
+<chapter>
+  <title>Begrepp i LysKOM</title>
+
+  <para>
+    I LysKOM finns ett antal begrepp som du behöver veta vad de är
+    innan det går att förklara hur elispklienten fungerar mer i
+    detalj. Det här kapitlet förklarar några grundläggande begrepp.
+  </para>
+
+  <sect1>
+    <title>Personer</title>
+
+    <para>
+      För att du ska kunna köra LysKOM behöver du en
+      <wordasword>person</wordasword>, en användaridentitet. Det
+      första du måste göra för att kunna använda LysKOM är att skapa
+      en egen person. 
+    </para>
+
+    <para>
+      Börja med att starta klienten genom att skriva <userinput>M-x
+      lyskom RET</userinput> och ange vilken server du vill köra mot.
+      Det finns ett antal fördefinierade publika servrar tillgängliga
+      som förval. Lysators server, LysLysKOM, heter egentligen
+      <systemitem class="systemname">kom.lysator.liu.se</systemitem>. 
+    </para>
+
+    <para>
+      När klienten har kopplat upp sig mot servern så kommer den att
+      fråga dig efter ditt namn. Det är sed att ange både för- och
+      efternamn samt kanske vilken organisation du arbetar för, till
+      exempel
+    </para>
+
+    <screen>
+      Inge Wallin, ISY
+    </screen>
+
+    <para>
+      Om du inte är från den ort där servern står (LysLysKOM står i
+      Linköping) så kan det också vara trevligt att på något sätt ange
+      vilken stad du normalt finns i, till exempel
+    </para>
+
+    <screen>
+      Salvador Dalberg, Stacken, Stockholm
+    </screen>
+
+    <para>
+      Om det inte redan finns någon person med det namn du angett så
+      får du bekräfta att du stavat namnet rätt. Därefter får du ange
+      ett personligt lösenord.
+    </para>
+
+    <screen>
+      LysKOM elisp-klient version 0.46.2
+      Försöker koppla upp mot kom.lysator.liu.se.
+      Uppkopplingen klar. Serverns versionsnummer är 2.0.5.
+      
+      
+      
+      Rincewind, Unseen University, Discworld
+      Det tycks vara första gången du använder LysKOM. Välkommen!
+      Kontrollera att du stavat ditt namn rätt.  Använd gärna ditt fullständiga
+      namn och organisation, t ex "Eskil Block, FOA".  Om du stavat ditt namn
+      fel, eller vill ändra ditt namn, svara nej på frågan nedan.
+      
+      Observera att all information än så länge sparas så att vem som helst
+      kan läsa den. Dock är lösenordet krypterat.
+      
+      Om du är osäker på hur man använder LysKOM kan du hämta en manual via
+      anonym ftp från ftp.lysator.liu.se. Fråga din systemadministratör om
+      du är osäker.
+      Rincewind, Unseen University, Discworld
+      Du är nu inloggad. Vänta ett tag.
+      Du har blivit medlem i Presentation (av nya) möten.
+      
+      Gå till nästa möte - 
+    </screen>
+
+    <para>
+      Som synes så blir den nyskapade personen automatiskt medlem i
+      mötet <quote>Presentation (av nya) möten</quote>. I det mötet
+      presenteras alla möten (mer om vad ett möte är snart) i
+      KOM-systemet. Genom att vara med i det mötet får man reda på när
+      det skapas nya möten om nya ämnen eller när presentationen för
+      ett existerande möte ändras.
+    </para>
+
+  </sect1>
+
+  <sect1>
+    <title>Möten och brevlådor</title>
+
+    <para>
+      Diskussionerna i LysKOM förs i olika
+      <wordasword>möten</wordasword>. Alla inlägg läggs i ett eller
+      flera sådana möten och för att man ska se de inlägg som skapas
+      krävs det att man är medlem i något av dessa möten. Ett möte har
+      ett namn som kortfattat beskriver vad inläggen i mötet ska
+      handla om. Möten har också presentationer som lite mer utförligt
+      beskriver vad mötet är tänkt att handla om. När ett möte får en
+      ny presentation hamnar den som vi sett ovan i mötet
+      <quote>Presentation (av nya) möten</quote>. 
+    </para>
+      
+    <para>
+      De flesta möten är öppna för alla att bli medlemmar i men det
+      finns också slutna möten som det krävs att man kontaktar
+      administratören för mötet för att bli medlem i. Dessutom finns
+      det hemliga möten, vars existens inte kan upptäckas annat än av
+      medlemmarna i mötet.
+    </para>
+
+    <para>
+      Om man är medlem i ett möte så betyder det att man får läsa alla
+      inlägg som skrivs i det. Om man inte är inloggad i LysKOM när
+      ett inlägg skrivs så kommer man att få läsa det nästa gång man
+      loggar in.
+    </para>
+      
+    <para>
+      Det finns inga som helst mekanismer eller garantier för att
+      kontrollera att medlemmarna i ett möte skickar sina inlägg till
+      rätt möte. Det finns möjligheter för
+      <wordasword>organisatören</wordasword> av ett möte och
+      författaren av ett inlägg att i efterhand flytta ett inlägg om
+      det hamnat fel men oftast är det författarens ansvar att se till
+      att det hamnar rätt från början. Övriga personer kan inte flytta
+      inlägg från ett möte till ett annat, men vem som helst kan
+      addera ytterligare ett möte som mottagare till ett inlägg.
+    </para>
+
+    <para>
+      Det finns också en speciell sorts möten som kallas
+      <wordasword>brevlådor</wordasword>. Varje person i LysKOM har en
+      brevlåda som normalt bara den personen är medlem i. Andra
+      personer kan skicka brev till personen via brevlådan, men en
+      brevlåda är egentligen bara ett vanligt möte som är slutet
+      (vilket innebär att ingen annan kan gå med i det).
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Olika sorters texter</title>
+
+    <para>
+      All diskussion i LysKOM förs med
+      <wordasword>inlägg</wordasword>.  Ett inlägg är en text som
+      består av en <wordasword>ärenderad</wordasword> som talar om vad
+      inlägget handlar om och ett antal rader text som bilder själva
+      inläggskroppen. Det finns diverse olika sorters inlägg
+      (<wordasword>originalinlägg</wordasword>,
+      <wordasword>kommentarer</wordasword>,
+      <wordasword>brev</wordasword>,
+      <wordasword>fotnoter</wordasword>, etc) som kommer att gås
+      igenom nedan, men alla ryms inom begreppet inlägg.
+    </para>
+
+    <para>
+      Diverse andra uppgifter är också associerade med ett inlägg. Vem
+      som har skrivit det, när det skrevs, vilket/vilka möten det har
+      som mottagare och så vidare. De hittills nämnda uppgifterna
+      visas normalt av klienten när man läser ett inlägg, men det
+      finns mer som oftast inte syns. Ett inlägg har också några olika
+      nummer. Det viktigaste är <wordasword>inläggsnumret</wordasword>
+      som helt enkelt är ett löpnummer som numrerar alla inlägg som
+      skapats i den aktuella LysKOM-servern sedan den startades första
+      gången. Inläggsnumret är det första som visas när ett inlägg
+      skrivs ut (229662 i exemplet nedan). Ett inlägg får också ett
+      löpnummer i varje möte det ligger i, och detta brukar kallas
+      lokalt nummer (i det mötet). Det nedanstående inlägget har
+      lokalt nummer 495 i mötet <quote>Presentation (av nya)
+      möten</quote>. 
+    </para>
+
+    <sect2>
+      <title>Originalinlägg</title>
+
+      <para>
+        Ett <wordasword>originalinlägg</wordasword> är ett inlägg som
+        skrivs i ett möte utan att referera till något tidigare
+        existerande inlägg. Det nedanstående inlägget är ett exempel på
+        det.
+      </para>
+
+      <screen>
+        229662 1992-07-31 02:41 /13 rader/ Linus Tolke, Lysator, Enea Epact
+        Mottagare: Presentation (av nya) möten <495>
+        Markerad av 2 personer.
+        Ärende: LysKOM frågor (och) svar
+        ------------------------------------------------------------
+        Ett m|te f|r fr}gor och svar om LysKOM. 
+        
+        Alla frågor som rör systemet och klienter är välkomna.
+        
+        Detta möte har också fungerat och kommer att fungera som en
+        fråge och informationsinsamlingspunkt för frågor som rör
+        elisp-klienten och de sammanställs i en Osf (Ofta ställda
+        frågor).
+        
+        Osf finns att hämta under ftp på lysator:
+        /ftp@lysator.liu.se:/pub/lyskom/elisp-client/osf-elisp-client-0.34.6.
+        Den har versionsnummer som följer klienterna men uppdateras mer
+        sporadiskt.
+        (229662) /Linus Tolke, Lysator, Enea Epact/---------
+      </screen>
+    </sect2>
+
+    <sect2>
+      <title>Kommentarer</title>
+
+      <para>
+        Normalt förs diskussionen i LysKOM genom att en person läser
+        något intressant i ett inlägg och tycker att det är värt att
+        kommentera. Han kan då skriva en
+        <wordasword>kommentar</wordasword> till den första texten.
+        Oftast kommer kommentaren att hamna i samma möte som den
+        kommenterade texten, men det är inte nödvändigt att det är så.
+        Det går också att flytta texter från ett möte till ett annat i
+        efterhand. En kommentar skiljer sig egentligen inte på något
+        grundläggande sätt från ett originalinlägg, utan skillnaden
+        ligger i att en kommentar just är en kommentar till ett tidigare
+        inlägg. Det går dessutom att göra ett inlägg till en kommentar
+        till ett annat i efterhand, så vad som är ett originalinlägg och
+        vad som är en kommentar är lite flytande. 
+      </para>
+
+      <screen>
+        8127825 2002-03-12 11:52 /1 rad/ Attackbibliotekariestyrkan (vet var du bor!)
+        Kommentar till text 7939281 av i}m-läsande ceder (%)
+        Mottagare: Attackbibliotekariestyrkan (vet var du bor!) <194>
+            Mottaget: 2002-03-12 11:52
+        Mottagare: Inlägg }t mig <1839946>
+        Ärende: Plö dep
+        ------------------------------------------------------------
+        Oook!
+        (8127825) /Attackbibliotekariestyrkan (vet var du bor!)/
+      </screen>
+
+      <para>
+        I det ovanstående exemplet ser vi en kommentar (som är inlägg
+        nummer 8127825), skriven av <quote>Attackbibliotekariestyrkan
+        (vet var du bor!)</quote> som är en kommentar till inlägg
+        nummer 7939281 skriven av <quote>i}m-läsande ceder
+        (%)</quote>. Vi ser också hur det kan se ut när ett inlägg
+        ligger i flera möten samtidigt (inlägg 8127825 ligger dels i
+        brevlådan för <quote>Attackbibliotekariestyrkan (vet var du
+        bor!)</quote>, dels i mötet <quote>Inlägg }t mig</quote>).
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Fotnoter</title>
+
+      <para>
+        En fotnot är, precis som en kommentar, ett inlägg som är
+        knutet till ett tidigare inlägg genom en länk. En kommentar
+        till ett inlägg kan vem som helst, men en fotnot kan endast
+        författaren till det ursprungliga inlägget skapa.
+      </para>
+
+      <para>
+        När man läser så presenteras man med antingen ett inlägg eller
+        en kommentar i taget, och efter varje får man en ny prompt där
+        man kan välja vad man vill göra. Om ett inlägg man läser har
+        en fotnot så är grundinställningen i elispklienten att
+        fotnoten visas direkt efter det ursprungliga inlägget, innan
+        en ny prompt ges. Detta innebär att man kan använda fotnoter
+        för att korrigera fel i inlägg man skrivit utan att behöva
+        riskera att den som läser inlägget hinner drabbas av felet
+        innan han ser korrigeringen (vilket risken vore större för om
+        man använde en kommentar istället för en fotnot, eftersom
+        kommentaren inte skulle visas samtidigt som det ursprungliga
+        inlägget).
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Anmärkningar</title>
+
+      <para>
+        En <wordasword>anmärkning</wordasword> är, liksom en fotnot,
+        en text man kan hänga på en existerande text för att korrigera
+        den. En anmärkning är däremot inte ett inlägg i sig självt
+        utan lagras i en datastruktur i LysKOM-servern som kallas för
+        <wordasword>aux-item</wordasword>. Det går inte att flytta en
+        anmärkning från ett inlägg till ett annat som man kan göra med
+        ett riktigt inlägg. Anmärkningar visas alltid direkt efter den
+        aktuella texten; först de som är skrivna av författaren till
+        inlägget och sedan de skrivna av andra.
+      </para>
+
+      <comment>
+        Här behövs ett exempel, så klart.
+      </comment>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Övriga begrepp</title>
+
+    <sect2>
+      <title>Garbning och markering</title>
+
+      <para>
+        <wordasword>Garbning</wordasword> är inte något som användaren
+        av LysKOM kan utföra själv, utan en automatisk process (som
+        kan slås på eller av för varje LysKOM-server).  Garbning
+        innebär att LysKOM-systemet någon gång ibland (till exempel
+        varje natt) går igenom alla inlägg i databasen och kollar hur
+        gamla de är. Varje möte har en egenskap
+        (<wordasword>garbtid</wordasword>) som talar om hur länge
+        inlägg i det mötet ska sparas. Om ett inlägg är äldre än
+        garbtiden för alla möten det ligger i så kommer det inlägget
+        att tas bort. Den normala garbtiden för ett möte är 77 dagar,
+        men den kan ändras av organisatören för mötet.
+      </para>
+
+      <para>
+        När ett inlägg som har kommentarer garbas men kommentarerna
+        inte gör det så kommer kommentarslänkarna också att tas bort.
+        Detta innebär att en kommentar kommer att se ut som ett
+        originalinlägg efter att inlägget det var en kommentar till
+        garbats, vilket ibland kan leda till en viss förvirring.
+      </para>
+
+      <para>
+        Om man vill att ett visst inlägg ska finnas kvar även efter
+        att det blivit äldre än garbtiden för mötet det ligger i så
+        kan man <wordasword>markera</wordasword> det. Inlägg som är
+        markerade kommer att sparas när garbningen sker, oavsett hur
+        gamla de är.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Meddelanden</title>
+  
+      <para>
+        Ett <wordasword>meddelande<wordasword> är en text som skickas ut
+        synkront till alla avsedda mottagare som är inloggade, till
+        skillnad från inlägg som snällt ligger och väntar tills man vill
+        läsa dem, även om man inte var inloggad när inlägget skrevs. Om
+        man inte är inloggad när ett meddelande skickas så får man inte
+        se det. Det finns tre typer av meddelanden:
+        <wordasword>alarmmeddelanden</wordasword>,
+        <wordasword>gruppmeddelanden</wordasword> och
+        <wordasword>personliga meddelanden</wordasword>.
+      </para>
+  
+      <screen>
+        ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        Gruppmeddelande till Fågelobservationer i Östergötland och annorstädes (import)
+        från Bobo Kryss (leg. fågelnörd) (2002-03-26 20:50):
+        
+        2002-03-26 20:43: Taigatrast (Turdus ruficollis)
+        Hagge å (Dalarna)
+        Ses, stationär
+        Outfärgad hane - Under dagen
+        Rapportör: Bertil Rahm - Andrahandsuppgift (Rix-larm)
+        ----------------------------------------------------------------
+      </screen>
+  
+      <para>
+        Ett alarmmeddelande kommer att nå alla som är inloggade på
+        LysKOM-servern när det skickas. Detta kan vara ett antal hundra
+        personer på en aktiv server, så tänk efter om det verkligen är
+        nödvändigt att skicka ett alarmmeddelande. Meddelanden om
+        systemunderhåll av LysKOM-servern brukar skickas ut som
+        alarmmeddelanden. 
+      </para>
+  
+      <para>
+        Ett gruppmeddelande skickas till alla medlemmar av ett visst
+        möte som är inloggade just för stunden, oavsett om de håller på
+        att läsa i just det mötet eller något annat. Det finns vissa
+        möten som är skapade med det uttryckliga syftet att man ska
+        skicka meddelanden till dem istället för att skriva inlägg
+        (<quote>pipmöten</quote>, eftersom elispklienten normalt piper
+        när den tar emot ett meddelande). En anledning kan till exempel
+        vara ett möte för sambeställning av pizza i ett visst
+        geografiskt område där man vill ha svar direkt.
+      </para>
+  
+      <para>
+        Ett personligt meddelande har en enda person som mottagare, men
+        fungerar annars precis som de andra typerna. Om den mottagande
+        personen inte är inloggad så får man ett meddelande om att det
+        personliga meddelandet inte gick fram.
+      </para>
+    </sect2>
+  </sect1>
+</chapter>
+
+<chapter>
+  <title>Köra LysKOM</title>
+
+  <sect1>
+    <title>LysKOM-användare</title>
+
+    <sect2>
+      <title>Att skapa en LysKOM-användare för första gången</title>
+
+      <para>
+      </para>
+    </sect2>
+  </sect1>
+</chapter>
+
+<comment>
+Här är ett förslag på struktur för hela manualen. Sektioner som börjar
+med "#" är "färdiga".
+
+Struktur
+========
+# Författare
+# Licens
+  Kodare
+  Meny
+
+  Förord
+#   Historia
+#   Utveckling av elispklienten
+#   Andra LysKOM-klienter
+#   LysKOM-servern
+# Installation
+#   Att installera elispklienten
+#   Användbara versioner av Emacs [något om gamla Emacsen?]
+    Att starta elispklienten
+      [underkapitel Lysator och Andra maskiner tas bort]
+Begrepp i LysKOM
+#   Personer
+#   Möten och brevlådor
+#   Olika sorters texter
+#     Originalinlägg
+#     Kommentarer
+#     Fotnoter
+#     Anmärkningar
+#   Övriga begrepp
+#     Garbning
+#     Meddelanden
+  Köra LysKOM
+    LysKOM-användare
+      Att skapa en LysKOM-användare för första gången
+      Skapa användare
+      Ändra personuppgifter
+    Få hjälp
+    Att hantera möten
+      Bli medlem
+      Skapa möte
+      Ändra mötesuppgifter
+    Läsa inlägg
+      Vanlig läsning
+      Återse
+      Filtrering
+      Markering
+    Skriva inlägg
+      Nytt inlägg
+      Kommentar
+      Brev
+      Anonyma inlägg
+    Informationskommandon
+      Lista
+      Status
+    Meddelanden
+      Sända meddelanden
+      Alarmmeddelanden
+      Telefonsvarare
+    Diverse
+      Sluta
+      Ändra
+      Spara text
+      Addera och subtrahera
+      Fjärrstyrning
+    Prompten
+    Färgläggning [rubrik?]
+      [namn, nummer, mushantering, kontextmeny, *, <möte 6>]
+    Scrollning
+    Namn och namnkomplettering [senare]
+  Inställningar
+    Ändra inställningar
+    Prioritera möten
+    Flaggor
+    Variabler
+    Hookar
+    Environmentvariabler
+  Buggrapporter
+  Administratörskommandon
+  Index
+    Filer ???
+    Index
+    Tangenterna
+    Variabelindex
+    Hookar, etc ???
+  
+  Lägg till ett "Kom igång snabbt"-kapitel.
+</comment>
+
+</book>

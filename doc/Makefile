@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.41 2001-05-21 12:39:16 byers Exp $
+# $Id: Makefile,v 44.42 2002-03-26 21:58:03 unicorn Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -95,3 +95,18 @@ clean: smallclean
 	$(RM) *.toc
 	$(RM) *.bbl *.blg *.idx *.ilg *.ind *.log
 	$(RM) core *~
+
+
+# Fultargets för dokumentationen. Jag har inte ens försökt att göra 
+# något som någon annan har nytta av än.
+verify:
+	nsgmls -sv -c catalog elisp-client.sgml
+
+tex:
+	jade -t tex -c catalog elisp-client.sgml
+	jadetex elisp-client.tex
+
+html:
+	openjade -t sgml \
+	         -d /local/sgml/style/dsssl/docbook/html/docbook.dsl \
+	         elisp-client.sgml
