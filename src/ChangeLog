@@ -1,5 +1,8 @@
 2002-05-27  David Byers  <david.byers@swipnet.se>
 
+	* check-strings.el: Added checking of matching sections for all
+	languages in new help.
+
 	* help.en: New file.
 
 	* vars.el.in: Removed lyskom-help-categories.
