@@ -7,57 +7,6 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
-ceder sez att vid återse omodifierat borde man visa aux-items
-(creating-software) som man normalt skulle skippa.
-
-Kolla strängar där noll är passivt medlemskap.
-
-
-PRIORITERA
-
-Funktioner:
-Endast läsa senaste i alla markerade möten.
-Läs från ett visst datum i alla markerade.
-Samma som i förra prioritera.
-Uppdatera all information.
-Ändra namn på möte.
-
-
-
-VIKTIGT!!!!
-
-Medlemskapen kan komma från servern i godtycklig ordning. Det vore
-trevligt att sortera om dem när de kommer, men det blir för svårt. Det 
-finns för många sätt för medlemskapen att hamna fel.
-
-Prioritera möten måste sortera om mötena.
-
-När man går med i ett möte borde det läggas in i någorlunda sorterad
-ordning.
-
-Klienten borde kunna upptäcka att medlemskapslistan är osorterad och
-sortera den automatiskt, till exempel vis inloggning (efter prefetchen 
-är klar.)
-
-
-
-När man accepterar en inbjudan borde man automatiskt prioritera om den 
-enligt ens defaultprioritet och defaultposition.
-
-
-
-Addera medlem måste se till att ens membership-cache inte blir
-felordnad.
-
-
-
-Addera medlems defaultposition (first/last) måste se till att det är
-inom en prioritet.
-
-
-
-
-
 Kommandon: begär bekräftelse, endast personliga kommentarer, inga
 kommentarer. Se inlägg 4089678.
 
@@ -99,17 +48,23 @@ bilder för.
 
 
 
-* SAKER ATT KOLLA
+* SAKER ATT KOLLA TILL 0.46
+
+    Medlemskapslistan kan bli osorterad på många olika sätt. Klienten
+    måste klara av detta.
+    . Man kan adderas till ett möte så det ligger osorterat i listan.
+    . När man går med i ett möte själv så hamnar det i allmänhet osorterat.
+    Elispklienten borde kanske upptäcka när listan verkar osorterad
+    och i det läget sortera om den lokalt och i servern. Det skulle
+    till exempel kunna sk
+
+    Testa lyskom-is-anonymous!
+
+    Prioritet noll är tillåten. Kolla alla strängar som nämner
+    prioriter så att det står rätt i dem.
 
     Hur och var skall man egentligen spara inställningar? .emacs är
     kanske inte det bästa alternativet. 
-
-
-** Manipulera medlemskapstypen
-
-    Lägg till kommandot ändra medlemskapstyp.
- 
-    Testa lyskom-is-anonymous!
 
 
 * BUGGAR
@@ -186,7 +141,7 @@ bilder för.
     FIX BY: 
 
     Gå ur mötet man prefetchar genererar en bug.
-    FIX BY: 0.46
+    FIX BY: 0.46            FIXED
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
@@ -276,7 +231,38 @@ bilder för.
 
 * FÖRBÄTTRINGAR
 
+** PRIORITERA MÖTEN
+    
+    Skriv klart Hantera medlemskap (aka prioritera möten.) Se till att 
+    den hålls uppdaterad när man
+    . Går med i ett möte
+    . Passiviserar ett möte
+    . Går ur ett möte
+    . Ändrar prioritet på ett möte
+    . Ett möte byter namn
+    . Man byter namn på sig själv
+    . Man ändrar mötestyp
+    . Man ändrar medlemskapstyp
+    . Man blir utkastad ur ett möte
+    . Man blir adderad till ett möte
+    . Ett möte raderas
+    . Man skapar ett möte (och blir med i det)
+
+    Funktioner som borde finnas:
+    . Endast läsa senaste N i alla markerade möten
+    . Samma funktioner som i gamla prioritera möten
+    . Uppdatera all information
+    . Ändra namn på ett möte
+    . Ändra typ på ett möte
+
+
+
 ** LÄSA INLÄGG
+
+    Ceder tycker att Återse omodifierat skulle visa headerrader som
+    man normalt hoppar över. Det är saker som till exempel
+    creating-software.
+    FIX BY: 0.46
 
     Det vore skoj om lyskom.el kunde, som jag har för mig att någon
     föreslog en gång, parsa fotnoter av det där slaget [sed-mönster
@@ -401,6 +387,15 @@ bilder för.
     Kanske kan man mergea prioritera och lista medlemsskap? Det skulle
     ju förenkla...
     FIX BY: 0.48
+
+** MANIPULERA MEDLEMSKAPSTYPEN
+
+    Lägg till kommandot ändra medlemskapstyp.
+    FIX BY: 0.46
+ 
+    När man accepterar en inbjudan borde man automatiskt prioritera om
+    den enligt ens defaultprioritet och defaultposition.
+    FIX BY: 0.46
 
 
 ** ÅTERSE

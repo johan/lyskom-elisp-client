@@ -1,3 +1,14 @@
+1999-08-21  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-add-private-answer): New function.
+	(kom-add-request-confirm): New function.
+
+	* aux-items.el (lyskom-match-aux-items): New function.
+
+	* lyskom-rest.el (j-or-n-p): Allow a symbol for the prompt.
+
+	* commands2.el (kom-add-no-comments): New command.
+
 1999-08-14  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (kom-show-week-number): New variable.
