@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.118 2002-04-20 14:52:51 byers Exp $
+;;;;; $Id: commands2.el,v 44.119 2002-04-20 16:53:38 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.118 2002-04-20 14:52:51 byers Exp $\n"))
+              "$Id: commands2.el,v 44.119 2002-04-20 16:53:38 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2527,6 +2527,82 @@ to the first text that NEW is a comment or footnote to."
     (ediff-buffers
      (lyskom-create-text-buffer old old-text old-text-stat)
      (lyskom-create-text-buffer new new-text new-text-stat))))
+
+;;; ================================================================
+;;;             Se diff - View diff
+;;; Run diff on two texts and insert the result.
+
+;;; Author: Per Cederqvist
+
+
+(defun lyskom-create-temp-file (text-no text text-stat)
+  "Create a temporary file containing TEXT, and return its file name."
+  (let ((file (make-temp-file (format "kom-diff-%d." text-no)))
+	(buf (lyskom-create-text-buffer text-no text text-stat)))
+    (write-region (point-min) (point-max) file)
+    (kill-buffer buf)
+    file))
+
+(def-kom-command kom-diff-texts (old new &optional switches)
+  "Show differences between text OLD and NEW.
+When called interactively, it will prompt for the NEW text first,
+defaulting to the last viewed texts.  The OLD text number will default
+to the first text that NEW is a comment or footnote to."
+  (interactive
+   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
+	  (new-stat (blocking-do 'get-text-stat n))
+	  (o (lyskom-read-number
+	      'diff-what-text-old
+	      (if (null new-stat)
+		  (lyskom-error (lyskom-get-string 'no-such-text-no n))
+		(car (lyskom-text-stat-commented-texts new-stat))))))
+     (list
+      o n
+      (if current-prefix-arg
+	  (list (read-string "Diff switches: "
+			     (if (stringp diff-switches)
+				 diff-switches
+			       (mapconcat 'identity diff-switches " "))))
+	nil))))
+
+  (blocking-do-multiple ((old-text (get-text old))
+			 (new-text (get-text new))
+			 (old-text-stat (get-text-stat old))
+			 (new-text-stat (get-text-stat new)))
+    (let* ((buf (current-buffer))
+	   (oldfile (lyskom-create-temp-file old old-text old-text-stat))
+	   (newfile (lyskom-create-temp-file new new-text new-text-stat))
+	   (args (list "-L" (format "%d\t%s" old
+				    (lyskom-format-time
+				     'timeformat-yyyy-mm-dd-hh-mm-ss
+				     (text-stat->creation-time old-text-stat)))
+		       "-L" (format "%d\t%s" new
+				    (lyskom-format-time
+				     'timeformat-yyyy-mm-dd-hh-mm-ss
+				     (text-stat->creation-time new-text-stat)))
+		       oldfile newfile)))
+
+      (if switches
+	  (setq args (append
+		      (split-string (if (consp switches)
+					(mapconcat 'identity switches " ")
+				      switches))
+			     args))
+	(if diff-switches
+	  (setq args (append
+		      (split-string (if (consp diff-switches)
+					(mapconcat 'identity diff-switches " ")
+				      diff-switches))
+		      args))))
+	    
+
+      (set-buffer buf)
+      (let ((buffer-read-only nil))
+	(apply 'call-process diff-command nil buf nil args))
+      (delete-file oldfile)
+      (delete-file newfile))))
+      
+    
 
 ;;; ================================================================
 ;;;             Skapa aux-item

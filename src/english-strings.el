@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.194 2002-04-20 14:52:52 byers Exp $
+;;;;; $Id: english-strings.el,v 44.195 2002-04-20 16:53:38 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.194 2002-04-20 14:52:52 byers Exp $"))
+              "$Id: english-strings.el,v 44.195 2002-04-20 16:53:38 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -1859,6 +1859,7 @@ Number of sessions:  %21#1d (total)
     (kom-review-mail-headers  . "Review mail headers")
 
     (kom-compare-texts        . "Compare two texts")
+    (kom-diff-texts           . "View diff")
 
     (kom-become-anonymous     . "Become anonymous")
     (kom-become-nonanonymous  . "Become non-anonymous (come forth into the light)")

@@ -1,3 +1,16 @@
+2002-04-20  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	Implemented "View diff"/"Se diff":
+	* commands2.el (lyskom-create-temp-file): New function.
+	(kom-diff-texts): New command.
+
+	* vars.el.in (lyskom-commands): Added kom-diff-texts.
+
+	* swedish-strings.el (lyskom-command): Added kom-diff-texts.
+	(lyskom-help-strings): Ditto.
+	
+	* english-strings.el (lyskom-command): Added kom-diff-texts.
+
 2002-04-20  David Byers  <david.byers@swipnet.se>
 
 	Move binding of 'a' to 'x' in the swedish keymaps:
