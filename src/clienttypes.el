@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.23 2004-07-18 19:23:48 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.24 2004-07-19 11:53:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.23 2004-07-18 19:23:48 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.24 2004-07-19 11:53:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -172,7 +172,7 @@ Returns t if there was a conference to insert this text into."
 	       (conf-stat->conf-no (read-info->conf-stat read-info))))
        (read-info-enter-text-last read-info text-no)
        (setq inserted t))))
-    (when inserted (lp--maybe-update-unreads recipient))
+    (when inserted (lp--maybe-update-unreads (conf-stat->conf-no recipient)))
     inserted))
 
 
