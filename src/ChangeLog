@@ -28,6 +28,9 @@ Tue Jan  6 06:12:39 1998  David Kågedal  <davidk@lysator.liu.se>
 
 Sun Jan  4 01:42:08 1998  David Kågedal  <davidk@lysator.liu.se>
 
+	* parse.el (lyskom-expect-char): Använd char-to-string.
+	(lyskom-parse-misc-info-list): Dito.
+	
 	* services.el (lyskom-blocking-do-multiple): Använd
 	lyskom-ok-to-send-new-calls här också.
 
