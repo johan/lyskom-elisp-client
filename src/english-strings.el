@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.15 1992-08-27 11:55:42 byers Exp $
+;;;;; $Id: english-strings.el,v 35.16 1992-08-28 09:17:29 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.15 1992-08-27 11:55:42 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.16 1992-08-28 09:17:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -194,7 +194,6 @@ Email-address:\n\nOther:\t")
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
 
     (who-to-exclude . "Whom do you want to unsubscribe: ")
-
     (where-from-exclude . "From which conference: ")
 
     (leave-what-conf . "Unsubscribe to which conference: ")
@@ -294,6 +293,7 @@ Email-address:\n\nOther:\t")
     (who-to-add-q . "Add who/what as a recipient: ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
     (who-to-sub-q . "Remove who/what as a recipient: ")
+
     (adding-name-as-recipient . "Adding %#1s as recipient of article %#2d...")
     (adding-name-as-copy . "%#1s will receive a carbon copy of article %#2d...")
     (remove-name-as-recipient .
@@ -366,7 +366,7 @@ Email-address:\n\nOther:\t")
     (message-prompt . "Message: ")
     (message-sent-to-user .
      "================================================================
-Your message to %#2s:
+Your message for %#2s:
 
 %#1s
 ----------------------------------------------------------------
@@ -378,7 +378,6 @@ Your public message:
 %#1s
 ----------------------------------------------------------------
 ")
-
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.\n")
     (only-last . "Last (0 - %#1d) by %#2s: ")
@@ -403,16 +402,18 @@ Your public message:
     (could-not-read . "You couldn't read the article (%#1d).\n")
     (multiple-choice . "There are several alternatives.")
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
+
+    ; Only people fixing bugs or recieving bugg-reports should change these:
     (buggreport-compilestart . "Compiling...")
     (buggreport-compileend . "Compiling...done")
-;    (buggreport-description . "This is what I was doing:
-;(Fill in your comments below)\n\n\n
-;When you have completed writing this, send you r bug report to the LysKOM
-;developers. You can do this either by email to bug-lyskom@lysator.liu.se or
-;through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
-;buggrapporter\", or if nothing else works, you can send a normal letter to
-;Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
-;Mark the envelope with \"LysKOM bug report\"\n\n")
+    (buggreport-description . "This is what I was doing:
+(Fill in your comments below)\n\n\n
+When you have completed writing this, send you r bug report to the LysKOM
+developers. You can do this either by email to bug-lyskom@lysator.liu.se or
+through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
+buggrapporter\", or if nothing else works, you can send a normal letter to
+Lysator, c/0 ISY, Linkoping Univerity, S-581 83 Linkoping, SWEDEN.
+Mark the envelope with \"LysKOM bug report\"\n\n")
     (buggreport-internals . "LysKOM's internal information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-emacs-version . "emacs-version:")
@@ -426,6 +427,7 @@ Your public message:
     (buggreport-instead-of-byte-comp . "byte-code(\"byte-string\"")
     (buggreport-subject . "Bugreport elisp-client version %#1s")
 
+
     (not-logged-in . "You are not logged on.  ")
     (name-is-not-in-conf . "%#1s is in any conference.\n")
     (name-is-in-conf . "%#1s is in\n%#2s\n")
@@ -438,6 +440,7 @@ Your public message:
     (super-conf-for-is . "Changing superconference of %#1s to %#2s...")
     (permitted-submitters-removed-for-conf . "Admitting all authors to conference %#1s...")
     (submitters-conf-for-is . "Changing authors admitted to conference %#1s to the members of %#2s...") 
+   
     (conf-to-set-garb-nice-q . "Set expiration time for which conference: ")
     (new-garb-nice-q . "What do you want to set the expiration time to: ")
     (garb-nice-for-is . "Changing expiration for %#1s to %#2d...")
@@ -774,9 +777,6 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
   (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
-
-	;(define-key lyskom-mode-map "vi" 'vilka)
-
   ; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-mode-map "A?" 'lyskom-help)
   (define-key lyskom-mode-map "r?" 'lyskom-help)
