@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.69 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: compatibility.el,v 44.70 2004-07-12 13:14:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.69 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.70 2004-07-12 13:14:00 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -542,6 +542,43 @@ Otherwise treat \\ in NEWTEXT string as special:
 		nil
 	      (preceding-char))))))
 
+(lyskom-function-alias make-hash-table (&rest args)
+  "Create and return a new hash table.
+
+This is a limited emulation of the make-hash-table function available
+in some Emacsen. It ignores all arguments. The only test supported is
+`eq'."
+  (let ((test (car (cdr (memq ':test args)))))
+    (or (eq test 'eq) (lyskom-error "internal error: invalid hash function"))
+    (cons 'HASH nil)))
+
+(lyskom-function-alias gethash (key table)
+  "Look up KEY in TABLE and return its associated value.
+
+This is a limited emulation of the gethash function available in some
+Emacsen. It does not support the default argument."
+  (cdr (assq key (cdr table))))
+
+(lyskom-function-alias puthash (key value table)
+  "Associate KEY with VALUE in hash table TABLE.
+If KEY is already present in table, replace its current value with
+VALUE.
+
+This is a limited emulation of the puthash function available in some
+Emacsen."
+  (let ((tmp (assq key (cdr table))))
+    (if tmp
+        (setcdr tmp value)
+      (setcdr table (cons (cons key value) (cdr table))))))
+
+(lyskom-function-alias remhash (key table)
+  "Remove KEY from TABLE.
+
+This is a limited emulation of the remhash function available in some
+Emacsen."
+  (let ((tmp (assq key (cdr table))))
+    (when tmp
+      (setcdr table (delq tmp (cdr table))))))
 
 
 ;;; ================================================================
@@ -588,7 +625,8 @@ Otherwise treat \\ in NEWTEXT string as special:
   (lyskom-make-self-evaluating :prompt-format)
   (lyskom-make-self-evaluating :dead-ok)
   (lyskom-make-self-evaluating :mark)
-  (lyskom-make-self-evaluating :may-interrupt)
+  (lyskom-make-self-evaluating :test)
+  (lyskom-make-self-evaluating :size)
 )
 
 

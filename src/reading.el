@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.17 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: reading.el,v 44.18 2004-07-12 13:14:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.17 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: reading.el,v 44.18 2004-07-12 13:14:00 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -119,24 +119,24 @@ reasonable guess."
 
 (defun lyskom-mship-cache-create ()
   "Initialize the membership cache to empty."
-  (vector (make-hash-table :size 300 :test 'eq) 
+  (vector (lyskom-make-hash-table :size 300 :test 'eq) 
           (lyskom-avltree-create 'lyskom-membership-<)))
 
 (defun lyskom-mship-cache-get (conf-no)
   "Get the membership for CONF-NO from the membership cache."
-  (gethash conf-no (lyskom-mship-cache-index)))
+  (lyskom-gethash conf-no (lyskom-mship-cache-index)))
 
 (defun lyskom-mship-cache-put (mship)
   "Add MSHIP to the membership cache."
   (lyskom-avltree-enter (lyskom-mship-cache-data) mship)
-  (puthash (membership->conf-no mship) mship (lyskom-mship-cache-index)))
+  (lyskom-puthash (membership->conf-no mship) mship (lyskom-mship-cache-index)))
 
 (defun lyskom-mship-cache-del (conf-no)
   "Delete CONF-NO from the membership cache."
   (let ((mship (lyskom-mship-cache-get conf-no)))
     (when mship
       (lyskom-avltree-delete (lyskom-mship-cache-data) mship)
-      (remhash conf-no (lyskom-mship-cache-index)))))
+      (lyskom-remhash conf-no (lyskom-mship-cache-index)))))
 
 (defun lyskom-update-membership-positions ()
   "Update the position field of all memberships."

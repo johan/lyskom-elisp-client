@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.30 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: prefetch.el,v 44.31 2004-07-12 13:14:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.30 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.31 2004-07-12 13:14:00 byers Exp $\n"))
 
 (def-kom-var lyskom-prefetch-queue nil
   "A queue where all prefetch requests are entered."
@@ -311,10 +311,10 @@ Then prefetch all info (texttree) of comments."
   (lyskom-stop-prefetch)
   (when membership
     (unless (lyskom-try-get-membership (membership->conf-no membership) t)
-      (lyskom-add-memberships-to-membership (list membership))
-      (when (and (lyskom-visible-membership membership)
-                 (lyskom-prefetch-map (membership->conf-no membership)
-                                      membership)))))
+      (lyskom-add-memberships-to-membership (list membership)))
+    (when (and (lyskom-visible-membership membership)
+               (lyskom-prefetch-map (membership->conf-no membership)
+                                    membership))))
   (lyskom-start-prefetch))
 
 
