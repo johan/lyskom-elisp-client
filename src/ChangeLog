@@ -1,3 +1,14 @@
+2005-02-14  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1533:
+	* commands2.el (lyskom-list-summary): Copy the read-list before
+	passing it to lyskom-list-text-summary.
+
+2005-01-23  David Byers  <byers@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Init membership structures really
+	early since there is a race condition during first logon otherwise.
+
 2005-01-26  Johan Sundström  <jhs@lysator.liu.se>
 
 	* view-text.el

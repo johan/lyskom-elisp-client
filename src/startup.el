@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.111 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: startup.el,v 44.112 2005-02-14 18:14:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.111 2005-01-09 01:16:02 byers Exp $\n"))
+	      "$Id: startup.el,v 44.112 2005-02-14 18:14:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -537,7 +537,7 @@ shown to other users."
     (unwind-protect
         (progn
           (if lyskom-first-time-around
-              nil
+              (lyskom-init-membership)
             (lyskom-tell-internat 'kom-tell-login))
           ;; We can't allow the prefetch to go on after the new user
           ;; is logged in, but to shut down the prefetch would be too

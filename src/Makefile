@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.117 2005-01-23 17:24:29 byers Exp $
+# $Id: Makefile,v 44.118 2005-02-14 18:14:33 byers Exp $
 
 # Useful targets:
 #
@@ -47,7 +47,7 @@ EMACS = xemacs
 LANGUAGES = swedish english
 
 # These files are included in all distribution archives.
-DOCFILES = ../doc/NEWS-0.47 ../doc/NEWS-0.47.1
+DOCFILES = ../doc/NEWS-$(CLIENTVERSION)
 
 # Default target.
 TARGET = lyskom.elc
