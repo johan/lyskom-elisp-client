@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.137 2003-08-02 22:08:39 byers Exp $
+;;;;; $Id: utilities.el,v 44.138 2003-08-03 09:18:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.137 2003-08-02 22:08:39 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.138 2003-08-03 09:18:19 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1986,3 +1986,26 @@ Any whitespace and newlines in TEXT will be ignored."
                               (lyskom-get-server-alias)
                               72)
         (sit-for (if harder 0 1))))))
+
+(defun lyskom-get-server-stats ()
+  (let ((descr (blocking-do 'get-stats-description)))
+    (when descr
+      (let ((result (lyskom-create-server-stats))
+            (collector (make-collector)))
+      (set-server-stats->when result
+       (listify-vector (stats-description->when descr)))
+      (set-server-stats->what result
+       (listify-vector (stats-description->what descr)))
+      (lyskom-traverse name (stats-description->what descr)
+        (initiate-get-stats 'main
+                            (lambda (res name c)
+                              (when res
+                                (collector-push (cons name (listify-vector res)) c)))
+                            name
+                            name
+                            collector))
+      (lyskom-wait-queue 'main)
+
+      (set-server-stats->values result
+                                (nreverse (collector->value collector)))
+      result))))

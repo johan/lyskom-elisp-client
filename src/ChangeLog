@@ -1,9 +1,24 @@
 2003-08-03  David Byers  <byers@lysator.liu.se>
 
+	Support get-stats server call:
+	* utilities.el (lyskom-get-server-stats): New function.
+
+	* komtypes.el (server-stats): New type.
+
+	* parse.el (lyskom-parse-float): New function.
+	(lyskom-parse-stats): New function.
+
+	* komtypes.el (stats-description): New type.
+	(stats): New type.
+
+	* parse.el (lyskom-parse-stats-description): New function.
+	(lyskom-parse-stats-array): New function.
+
+	* services.el (initiate-get-stats-description): New function.
+
+	More work on bug 900 (now nags about presentations):
 	* vars.el.in (kom-dont-complain-about-missing-presentation): New
 	variable.
-
-2003-08-02  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el (lyskom-nag-about-presentation): New function.
 
@@ -37,7 +52,7 @@
 	(lyskom-unread-by-to): Same here.
 
 	* commands2.el (kom-status-person): Don't set default when reading
-	conference name (the default default is better).
+ 	conference name (the default default is better).
 	(kom-send-message): Fall back to the default default when reading
 	recipient name (better than the empty string, I think).
 

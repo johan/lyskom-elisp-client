@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.48 2003-07-27 14:17:25 byers Exp $
+;;;;; $Id: parse.el,v 44.49 2003-08-03 09:18:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.48 2003-07-27 14:17:25 byers Exp $\n"))
+	      "$Id: parse.el,v 44.49 2003-08-03 09:18:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -108,7 +108,7 @@ first non-white character was not equal to CHAR."
   (lyskom-string-skip-whitespace     
    (buffer-substring lyskom-parse-pos (point-max))))
 
-			  
+
 (defun lyskom-parse-num ()
   "Parse the next token as a number.
 Signal lyskom-parse-incomplete if the number is not followed by whitespace.
@@ -128,6 +128,23 @@ Signal lyskom-protocol-error if the next token is not a number."
                              "Expected number, got %S"
                              (lyskom-string-to-parse))))
 )
+
+(defun lyskom-parse-float ()
+  "Parse the next token as a float.
+Signal lyskom-parse-incomplete if the number is not followed by whitespace.
+Signal lyskom-protocol-error if the next token is not a number."
+  (goto-char lyskom-parse-pos)
+  (cond ((looking-at "[ \n]*[-+]?[0-9]*\\(\\.[0-9]*\\)?\\([eE][-+]?[0-9]+\\)?")
+         (if (char-after (match-end 0))
+             (progn (setq lyskom-parse-pos (goto-char (match-end 0)))
+                    (string-to-number (match-string 0)))
+           (signal 'lyskom-parse-incomplete nil)))
+        ((looking-at "[ \n]*\\'")
+         (goto-char (point-max))
+         (signal 'lyskom-parse-incomplete nil))
+        (t (lyskom-protocol-error 'lyskom-parse-num
+                                  "Expected float, got %S"
+                                  (lyskom-string-to-parse)))))
 
 
 
@@ -1072,6 +1089,24 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-parse-read-range ()
   "Parse a Read-Range"
   (lyskom-create-text-pair (lyskom-parse-num) (lyskom-parse-num)))
+
+(defun lyskom-parse-stats-description ()
+  "Parse a Stats-Description"
+  (lyskom-create-stats-description
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-string)
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-num)))
+
+
+(defun lyskom-parse-stats ()
+  "Parse a Stats"
+  (lyskom-create-stats (lyskom-parse-float)
+                       (lyskom-parse-float)
+                       (lyskom-parse-float)))
+
+(defun lyskom-parse-stats-array ()
+  "Parse an array of Stats"
+  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-stats))
+
 
 ;;; ================================================================
 ;;;          Parsing of complex datatypes without cache.
