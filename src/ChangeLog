@@ -1,3 +1,12 @@
+2000-07-17  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-add-sub-recipients-hook): Renamed function
+	specified in default hook.
+	(lyskom-add-sub-recipients-hook): Made local-hook.
+
+	* lyskom-buttons.el (lyskom-button-open-url): Don't go to end of
+	buffer when viewing an URL.
+
 2000-07-05  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (lyskom-button-actions): Moved definition of
