@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.4 1996-04-29 11:59:29 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.5 1996-05-01 13:55:46 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.4 1996-04-29 11:59:29 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.5 1996-05-01 13:55:46 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -358,7 +358,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (memberships-header . "Senast inne	   Prio	Ol\344sta	M\366tesnamn\n")
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     (conf-for-status . "Vilket m\366te vill du se statusen f\366r? ")
-    (no-such-conf . "M\366tet finns ej.")
+    (no-such-conf . "M\366tet finns ej.\n")
     (status-record . "Status f\366r m\366te %#1M (%#2m) %#3s\n\n")
     (Mailbox . "Brevl\345da")
     (Protected . "Skyddat")
@@ -387,7 +387,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (secret-membership . "*** Hemlig rad ***\n")
     (conf-membership-line . "%#1s%#2M\n")
     (pers-for-status . "Vem vill du se statusen f\366r? ")
-    (no-such-pers . "Det finns ingen s\345dan person.")
+    (no-such-pers . "Det finns ingen s\345dan person.\n")
     (pers-status-record . "Status f\366r person %#1P (%#2p)\n")
     (created-time .  "Skapad:%34#1s\n\n")
     (created-confs . "Skapade m\366ten:%27#1d\n")
@@ -687,6 +687,8 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
 
     (cannot-get-membership . "Kan ej h\344mta medlemsskap f\366r dig.")
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
+    (prioritize-help .
+"u,n Flytta möte, SPC markera, p prioritera markerade, q avsluta, C-h m hjälp")
     (your-priorities . " Prioritet  M\366tesnamn
 ----------------------------------------------------------------------------
 ")
@@ -826,7 +828,8 @@ Felmeddelande: %#1s**************************************************")
     (filter-edit-save-p . "Spara f\366r\344ndringar? ")
     (filter-edit-remove-empty . "Tomma filter g\366r att alla texter filtreras. Vill du ta bort dessa? ")
     (filter-edit-restart-p . "Du har gjort \344ndringar. Vill du verkligen b\366rja om? ")
-    (filter-edit-help . "p Upp, n Ned, i Ny rad, M-i Nytt filter, d Radera rad, M-d Radera filter")
+    (filter-edit-help . 
+"p,n Upp/ned, i/M-i Ny rad/filter, d/M-d Radera rad/filter, C-h m Mer hj\344lp")
     (filter-edit-header . "\304ndra filter f\366r \"%s\"\n")
     (filter-edit-saving . "Sparar \344ndringarna...")
     (filter-edit-saving-done . "Sparar \344ndringarna...klart")
@@ -1275,11 +1278,15 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
   (define-key lyskom-prioritize-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-prioritize-mode-map "*" 'kom-key-mouse-2)
-  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-select)
-  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "?" 'kom-prioritize-help)
+  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
   (define-key lyskom-prioritize-mode-map " " 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
-  (define-key lyskom-prioritize-mode-map "n" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
   (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-previous-line)
@@ -1296,7 +1303,7 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-set-priority)
   (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-save)
   (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank))
+)
 
 
 (defvar lyskom-prioritize-header-lines 2
@@ -1342,7 +1349,9 @@ This variable is stored in the LysKOM server.")
       ("Personligt svar" . lyskom-button-private-comment-text)
       ("Markera texten" . lyskom-button-mark-text)
       ("Avmarkera texten" . lyskom-button-unmark-text))
-     ((nil lyskom-print-text footer lyskom-button-comment-text)))
+     nil
+;     ((nil lyskom-print-text footer lyskom-button-comment-text))
+     )
     (conf 
      conf-text
      lyskom-button-view-conf-presentation
