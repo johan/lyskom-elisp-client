@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.15 1997-08-18 12:27:44 byers Exp $
+;;;;; $Id: option-edit.el,v 44.16 1997-09-26 10:07:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.15 1997-08-18 12:27:44 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.16 1997-09-26 10:07:51 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -938,7 +938,6 @@ customize buffer but do not save them to the server."
   ':args '(lyskom-name))
 
 
-
 ;;;
 ;;; The Command Widget
 ;;;
@@ -1002,6 +1001,7 @@ customize buffer but do not save them to the server."
   "A list of LysKOM commands"
   ':entry-format "%i %d %v"
   ':args '(lyskom-command))
+
 
 
 ;;;

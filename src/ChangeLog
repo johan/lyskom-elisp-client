@@ -1,3 +1,24 @@
+Fri Sep 26 11:18:57 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-message): Bryt inte stycken där alla
+ 	rader börjar med ett ord och ett kolon.
+
+Wed Sep 24 15:32:03 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-format-prompt): Använd eq, inte = för att
+ 	jämföra tecken.
+
+	* flags.el (kom-edit-options-send): Fixade buggen som gjorde att
+ 	defaultvärdena sparades.
+
+Tue Sep 23 16:41:30 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-face-schemes): Nya färger.
+
+1997-09-23  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands2.el (lyskom-help): Fungera i Gnu Emacs.
+
 1997-09-22  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (lyskom-next-kom): Ny funktion.

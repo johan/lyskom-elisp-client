@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.47 1997-09-21 11:43:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.48 1997-09-26 10:07:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.47 1997-09-21 11:43:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.48 1997-09-26 10:07:47 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1503,6 +1503,11 @@ in lyskom-messages."
          t)
         (t 'maybe)))
 
+(defsubst lyskom-fill-message-colon-line ()
+  "Return non-nil if the current line starts with a colon-like thing."
+  (looking-at "\\S-+\\s-*:"))
+
+
 
 (defun lyskom-fill-region (start end &optional justify nosqueeze to-eop)
   "Fill a region of text, compensating for bugs in Emacs."
@@ -1534,6 +1539,7 @@ in lyskom-messages."
             (wrap-paragraph 'maybe)
             (length-difference nil)
             (constant-length nil)
+            (all-lines-colons t)
             (current-line-length nil)
             (last-line-length nil)
             (paragraph-length 0)
@@ -1568,7 +1574,6 @@ in lyskom-messages."
                             length-difference)
                    (setq constant-length 'maybe-not))))
 
-
           (cond 
 
            ;;
@@ -1578,16 +1583,18 @@ in lyskom-messages."
 
            ((looking-at "^\\s-*$")
             (when (and in-paragraph 
+                       (not all-lines-colons)
                        (eq wrap-paragraph t)
                        (or (null constant-length)
                            (and (eq 0 length-difference)
                                 (< paragraph-length lyskom-minimum-brick-size))
                            (and (not (eq 0 length-difference))
                                 (< paragraph-length lyskom-minimum-triagle-size))))
-              (lyskom-fill-region start (match-beginning 0) nil t)
+              (lyskom-fill-region start (1- (match-beginning 0)) nil t)
               (lyskom-signal-reformatted-text 'reformat-filled))
             (setq start (match-end 0)
                   in-paragraph nil
+                  all-lines-colons t
                   wrap-paragraph 'maybe))
 
            ;;
@@ -1611,6 +1618,7 @@ in lyskom-messages."
                      have-indented-paragraphs))
             (setq have-indented-paragraphs t)
             (when (and (eq wrap-paragraph t)
+                       (not all-lines-colons)
                        (or (and (eq 0 length-difference)
                                 (< paragraph-length lyskom-minimum-brick-size))
                            (and (not (eq 0 length-difference))
@@ -1624,6 +1632,7 @@ in lyskom-messages."
                   constant-length t
                   length-difference nil
                   last-line-length nil
+                  all-lines-colons (lyskom-fill-message-colon-line)
                   single-line-regexp "\\(\\S-\\)"
                   fill-prefix nil
                   start (match-beginning 0)
@@ -1633,6 +1642,7 @@ in lyskom-messages."
            ((and in-paragraph
                  (looking-at "^\\s-*\\(-+\\|\\++\\)\\s-*\\S-"))
             (when (and (eq wrap-paragraph t)
+                       (not all-lines-colons)
                        (or (and (eq 0 length-difference)
                                 (< paragraph-length lyskom-minimum-brick-size))
                            (and (not (eq 0 length-difference))
@@ -1645,6 +1655,7 @@ in lyskom-messages."
                   paragraph-length 0
                   constant-length t
                   length-difference nil
+                  all-lines-colons (lyskom-fill-message-colon-line)
                   last-line-length nil
                   single-line-regexp "\\(\\S-\\)"
                   fill-prefix nil
@@ -1669,6 +1680,7 @@ in lyskom-messages."
                   constant-length 0
                   length-difference nil
                   last-line-length nil
+                  all-lines-colons (lyskom-fill-message-colon-line)
                   start (match-beginning 0)
                   fill-prefix (match-string 1)
                   single-line-regexp (concat (match-string 1) "\\(\\S-\\)")
@@ -1684,6 +1696,7 @@ in lyskom-messages."
                  (looking-at "\\s-*\\(\\S-\\)"))
             (setq in-paragraph t
                   paragraph-length 0
+                  all-lines-colons (lyskom-fill-message-colon-line)
                   constant-length t
                   length-difference nil
                   last-line-length nil
@@ -1714,7 +1727,17 @@ in lyskom-messages."
            ((and in-paragraph
                  wrap-paragraph
                  (> current-line-length fill-column))
-            (setq wrap-paragraph t)))
+            (setq wrap-paragraph t))
+           )
+
+          ;;
+          ;; Check if the line starts with Foo:
+          ;;
+
+          (when (and in-paragraph 
+                     all-lines-colons
+                     (not (lyskom-fill-message-colon-line)))
+            (setq all-lines-colons nil))
 
           ;;
           ;; Certain things are guaranteed to disqualify the 
@@ -1751,6 +1774,7 @@ in lyskom-messages."
         ;;
 
         (when (and in-paragraph 
+                   (not all-lines-colons)
                    (eq wrap-paragraph t)
                    (or (and (eq 0 length-difference)
                             (< paragraph-length lyskom-minimum-brick-size))
@@ -2044,28 +2068,28 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
             (setq start (match-end 0))
             (setq result 
                   (cons
-                   (cond ((= format-letter ?\[) (if kom-ansaphone-on "[" ""))
-                         ((= format-letter ?\]) (if kom-ansaphone-on "]" ""))
-                         ((= format-letter ?c)  command)
-                         ((= format-letter ?w) 
+                   (cond ((eq format-letter ?\[) (if kom-ansaphone-on "[" ""))
+                         ((eq format-letter ?\]) (if kom-ansaphone-on "]" ""))
+                         ((eq format-letter ?c)  command)
+                         ((eq format-letter ?w) 
                           (or (conf-stat->name 
                                (cache-get-conf-stat lyskom-current-conf))
                               (lyskom-format 'conference-no
                                              lyskom-current-conf)))
-                         ((= format-letter ?S) lyskom-server-name)
-                         ((= format-letter ?s)
+                         ((eq format-letter ?S) lyskom-server-name)
+                         ((eq format-letter ?s)
                           (or (cdr (assoc lyskom-server-name 
                                           kom-server-aliases))
                               lyskom-server-name))
-                         ((= format-letter ?p)
+                         ((eq format-letter ?p)
                           (or (conf-stat->name
                                (cache-get-conf-stat lyskom-pers-no))
                               (lyskom-format 'person-no
                                              lyskom-pers-no)))
 
-                         ((= format-letter ?#) (number-to-string 
+                         ((eq format-letter ?#) (number-to-string 
                                                 lyskom-session-no))
-                         ((= format-letter ?m)
+                         ((eq format-letter ?m)
                           (cond ((< messages 1)
                                  "")
                                 ((= messages 1)
@@ -2075,8 +2099,8 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                  (format (lyskom-get-string
                                           'prompt-several-messages) 
                                          messages))))
-                         ((= format-letter ?%) "%")
-                         ((= format-letter ?\ )
+                         ((eq format-letter ?%) "%")
+                         ((eq format-letter ?\ )
                           'SPC))
                    result)))
         (progn
