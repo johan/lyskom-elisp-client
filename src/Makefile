@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.22 1993-04-26 19:30:54 linus Exp $
+# $Id: Makefile,v 36.1 1993-04-26 19:35:11 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.22 1993-04-26 19:30:54 linus Exp $
+# $Id: Makefile,v 36.1 1993-04-26 19:35:11 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.22  1993-04-26 19:30:54  linus
+# Revision 36.1  1993-04-26 19:35:11  linus
+# New version
+#
+# Revision 35.22  1993/04/26  19:30:54  linus
 # Rewound to before prefetch.
 #
 # Revision 35.21  1993/02/04  04:00:48  linus
