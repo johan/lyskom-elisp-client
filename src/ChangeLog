@@ -5,6 +5,8 @@ Mon Oct 21 00:54:00 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* english-strings.el (lyskom-strings): Dito.
 
+	* vars.el.in (lyskom-commands): Dito.
+
 	* macros.el (map-keymap): Ignorera symboler i keymapen.
 
 	* language.el (lyskom-language-keymaps): Ny variabel
