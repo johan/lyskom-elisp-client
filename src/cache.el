@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 43.1 1996-08-09 20:56:25 davidk Exp $
+;;;;; $Id: cache.el,v 43.2 1996-08-12 14:44:50 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 43.1 1996-08-09 20:56:25 davidk Exp $\n"))
+	      "$Id: cache.el,v 43.2 1996-08-12 14:44:50 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -405,6 +405,72 @@ CACHE is the name of the variable that points to the cache."
 (defun cache-clear (cache)
   (set cache nil)
   (setq lyskom-caches (delete cache lyskom-caches)))
+
+;; (defsubst cache-hash (key cache)
+;;   "Return a hash value for use in the cache."
+;;   (mod key (length (aref cache 2))))
+;; 
+;; (defun cache-create (cache &optional size)
+;;   (set cache (vector 'CACHE-HASH (or size 1000)
+;; 			(make-vector (or size 1000) nil)))
+;;   (if (not (memq cache lyskom-caches))
+;; 	 (setq lyskom-caches (cons cache lyskom-caches)))
+;;   (symbol-value cache))
+;; 
+;; (defun cache-rehash (cache-symbol)
+;;   (let* ((cache (symbol-value cache-symbol))
+;; 	    (newsize (/ (aref cache 1) 5))
+;; 	    (oldsize (length (aref cache 2)))
+;; 	    (i 0))
+;;     (cache-create cache-symbol newsize)
+;;     (while (< i oldsize)
+;; 	 (let ((entries (aref cache i)))
+;; 	   (while entries
+;; 	     (cache-add cache-symbol (car (car entries)) (cdr (car entries)))
+;; 	     (setq entries (cdr entries))))
+;; 	 (setq i (1+ i)))
+;;     (symbol-value cache-symbol)))
+;; 
+;; (defun cache-assoc (key cache)
+;;   "Get data for item with key KEY from CACHE.
+;; CACHE is an assoc-list in this implementation."
+;;   (if cache
+;; 	 (cdr-safe (assq key (aref (aref cache 2)
+;; 				   (cache-hash key cache))))))
+;; 	     
+;; 
+;; 
+;; (defun cache-add (key data cache-symbol)
+;;   "Add DATA to CACHE under the key KEY.
+;; Args: KEY DATA CACHE.
+;; CACHE is a (the only one) quoted variable pointing to the cache (an alist).
+;; The variable might be changed."
+;;   (let ((cache (symbol-value cache-symbol)))
+;;     (if (null cache)
+;; 	   (setq cache (cache-create cache-symbol))
+;; 	 (if (> (aset cache 1 (1+ (aref cache 1)))
+;; 		(* (length (aref cache 2)) 20))
+;; 	     (setq cache (cache-rehash cache-symbol))))
+;;     (let ((hash (cache-hash key cache)))
+;; 	 (aset (aref cache 2) hash
+;; 	       (cons (cons key data) (aref (aref cache 2) hash))))))
+;; 
+;; (defun cache-del (key cache-symbol)
+;;   "Delete item with key KEY from CACHE.
+;; CACHE is the name of the variable that points to the cache."
+;;   (let ((cache (symbol-value cache-symbol)))
+;;     (if cache
+;; 	   (let* ((hash (cache-hash key cache))
+;; 		  (entries (aref (aref cache 2) hash))
+;; 		  (ass (assq key entries)))
+;; 	     (if ass
+;; 		 (progn (aset cache 1 (1- (aref cache 1)))
+;; 			(aset (aref cache 2) hash
+;; 			      (delq ass entries))))))))
+;; 
+;; (defun cache-clear (cache)
+;;   (set cache nil)
+;;   (setq lyskom-caches (delete cache lyskom-caches)))
 
 (defun clear-all-caches ()
   (mapcar (function (lambda (cache) (set cache nil)))
