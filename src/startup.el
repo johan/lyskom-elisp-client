@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.103 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: startup.el,v 44.104 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.103 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: startup.el,v 44.104 2004-07-12 18:11:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -203,7 +203,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 		       (setq lyskom-www-proxy-connect-phase 1)
 		       (set-process-filter proc
 					   'lyskom-www-proxy-connect-filter)
-		       (process-kill-without-query proc nil)
+		       (lyskom-set-process-query-on-exit-flag proc nil)
 
                        (lyskom-process-send-string 
                         proc
@@ -245,7 +245,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      (lyskom-insert
 	       (lyskom-format 'try-connect lyskom-clientversion host))
 	      (set-process-filter proc 'lyskom-connect-filter)
-              (process-kill-without-query proc nil)
+              (lyskom-set-process-query-on-exit-flag proc nil)
 	      (lyskom-process-send-string
 	       proc
 	       (concat "A"
@@ -438,7 +438,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                                   kom-ssh-relay-host
                                   "sh -c \"while :; do echo ok; sleep 600; done\"")))
                   (setenv "LC_ALL" old-lc-all)))
-              (process-kill-without-query proc))
+              (lyskom-set-process-query-on-exit-flag proc nil))
             (while (progn
                      (goto-char (point-max))
                      (re-search-backward "^--- .* ---$" nil t)

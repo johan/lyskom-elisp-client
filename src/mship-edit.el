@@ -159,12 +159,11 @@ This function does not tell the server about the change."
          (old-priority (and mship (membership->priority mship))))
     (when mship
       (set-membership->priority mship new-priority)
-      (lyskom-sort-membership)
+      (lyskom-replace-membership mship)
       (cond
        ((and (>= old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
-        ; Don't (lyskom-sort-to-do-list) since lyskom-sort-membership will.
-        )
+        (lyskom-sort-to-do-list))
 
        ((and (< old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
@@ -182,14 +181,10 @@ This function does not tell the server about the change."
 (defun lyskom-change-membership-position (conf-no new-position)
   "Change the position of memberhip for CONF-NO to NEW-POSITION.
 This function does not tell the server about the change."
-
-  ;; FIXME: We have to update all positions in the membership 
-  ;; FIXME: list, not just the one we changed.
-
   (let ((mship (lyskom-get-membership conf-no t)))
     (when mship
       (set-membership->position mship new-position)
-      (setq lyskom-membership (lyskom-move-in-list mship lyskom-membership new-position))
+      (lyskom-replace-membership mship)
       (lyskom-update-membership-positions))))
 
 
@@ -665,9 +660,7 @@ If optional NEW-MSHIP is non-nil, then get the membership again."
 
                   (cond 
                    ((null entry)
-                    (let* ((pos (or (membership->position mship)
-                                    (- (length lyskom-membership)
-                                       (length (memq mship lyskom-membership)))))
+                    (let* ((pos (lyskom-membership-position mship))
                            (elem (and pos (lp--get-entry pos)))
                            (entry (lyskom-create-lp--entry 
                                    nil
@@ -1578,9 +1571,8 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
 
         (setq lp--list-start-marker (point-marker))
         (goto-char (point-max))
-        (lyskom-sort-membership)
         (lyskom-display-buffer buf)
-        (lyskom-traverse mship (lyskom-default-value 'lyskom-membership)
+        (lyskom-traverse-membership mship
           (let ((entry (lyskom-create-lp--entry nil ; Start
                                                 nil ; End
                                                 (membership->priority mship)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.18 2004-02-22 20:32:56 byers Exp $
+;;;;; $Id: defvar.el,v 44.19 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,8 +33,8 @@
 ;;;;
 
 
-(defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.18 2004-02-22 20:32:56 byers Exp $\n"
+(defvar lyskom-clientversion-long 
+  "$Id: defvar.el,v 44.19 2004-07-12 18:11:16 byers Exp $\n"
   "Version for every file in the client.")
 
 

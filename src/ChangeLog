@@ -1,5 +1,52 @@
 2004-07-12  David Byers  <byers@lysator.liu.se>
 
+	Deal with changes in 21.4 widget package:
+	* option-edit.el (lyskom-create-widget): Don't mask errors when
+	creating the storage widget. Changed args for the storage widget
+	to a list.
+	(lyskom-widget-number-value-to-external): Convert from pretty much
+	anything to numbers.
+	(lyskom-widget-number-value-to-internal): Convert from pretty much
+	anything to strings.
+	(lyskom-ding-widget): Set values to numbers, not strings.
+	(lyskom-number-widget): Provide a default value.
+
+	Deal with Gnu Emacs 19.34:
+	* menus.el (lyskom-define-menu-gnu): Use
+	lyskom-encode-coding-string instead of encode-coding-string.
+
+	Eliminate warnings when compiling with Gnu Emacs 21.4:
+	* compatibility.el (function-obsolete-p): New alias.
+	(set-process-query-on-exit-flag): New alias.
+	(make-local-hook): New alias.
+	(lyskom-make-self-evaluating): New implementation that works in
+	all Emacsen yet doesn't generate warnings in 21.4
+
+	* startup.el (lyskom): Use lyskom-set-process-query-on-exit
+	instead of process-kill-without-query.
+	(lyskom-setup-ssh-relay): Same here.
+
+	* defvar.el (lyskom-clientversion-long): We don't treat
+	lyskom-clientversion-long as a constant in the rest of the code,
+	so let's not pretend that it is one, shall we?
+
+	Work on porting kom-handle-membership to new membership cache:
+	* mship-edit.el (lyskom-change-membership-priority): Don't attempt
+	to sort the membership list. Just replace the membership in the
+	cache to put it in the correct position. Explicitly sort the to-do
+	list since we no longer call lyskom-sort-membership.
+	(lyskom-change-membership-position): Use lyskom-replace-membership
+	to move the membership in the membership list.
+
+	* macros.el (lyskom-traverse-membership): Ensure that we get
+	lyskom-mship-cache from the right buffer.
+
+	* prioritize.el: Removed lyskom-prioritize-add-membership,
+	lyskom-prioritize-remove-membership and
+	lyskom-prioritize-replace-membership. As a result the prioritize
+	buffer can no longer deal with new, removed and altered
+	memberships.
+
 	* clienttypes.el (read-list-enter-read-info): When checking
 	whether to append texts to an existing read-list item, don't check
 	that conf-stats are eq. Just check that the conf-nos are the same.

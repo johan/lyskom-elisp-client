@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.105 2004-02-29 22:09:25 byers Exp $
+;;;;; $Id: option-edit.el,v 44.106 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.105 2004-02-29 22:09:25 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.106 2004-07-12 18:11:16 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -954,17 +954,15 @@ All key bindings:
     (lyskom-ignore value help-sym dummy)       ; Are they ever used?
 
     (setq storage-widget
-          (condition-case nil
-              (prog1
-                (widget-create 'checkbox
-                               ':value (and (not (memq variable kom-dont-read-saved-variables))
-                                            (or (memq variable lyskom-elisp-variables)
-                                                (lyskom-flag-global-variable-from-elisp variable)))
-                               ':args variable
-                               ':format "%[%v%]"
-                               ':help-echo (lyskom-custom-string 'variable-type-help))
-                (widget-insert " "))
-            (error nil)))
+	  (prog1
+	      (widget-create 'checkbox
+			     ':value (and (not (memq variable kom-dont-read-saved-variables))
+					  (or (memq variable lyskom-elisp-variables)
+					      (lyskom-flag-global-variable-from-elisp variable)))
+			     ':args (list variable)
+			     ':format "%[%v%]"
+			     ':help-echo (lyskom-custom-string 'variable-type-help))
+	    (widget-insert " ")))
 
     (setq spec 
           (cons (car spec)
@@ -1290,7 +1288,7 @@ All key bindings:
                 (list 'lyskom-number
                       ':tag (lyskom-custom-string 'number-of-times)
                       ':help-echo (lyskom-custom-string 'select-number)
-                      ':value "1"
+                      ':value 1
                       ':format "%[%t%]: (%v)"
                       ':size 0
                       ':min-value 1
@@ -1329,7 +1327,7 @@ All key bindings:
                                        :match (lambda (w v) (or (null v) (eq v 0))))
                                  (lyskom-number :tag ,(lyskom-custom-string 'number-of-times)
                                                 :help-echo ,(lyskom-custom-string 'select-number)
-                                                :value "1"
+                                                :value 1
                                                 :format "%[%t%]: (%v)"
                                                 :size 0
                                                 :min-value 1
@@ -1423,11 +1421,12 @@ All key bindings:
        'lyskom-number
        (list ':min-value (elt args 0)
              ':max-value (elt args 1)
+	     ':value 0
              ':size 0)
        propl)
     (lyskom-build-simple-widget-spec
      'lyskom-number
-     (list ':size 0)
+     (list ':size 0 ':value 0)
      propl)))
 
 ;;;
@@ -1699,10 +1698,16 @@ All key bindings:
     (widget-setup)))
 
 (defun lyskom-widget-number-value-to-external (widget value)
-  (string-to-int value))
+  (cond ((stringp value) (string-to-int value))
+	((numberp value) value)
+	((null value) 0)
+	(t (error "unable to convert settings value"))))
 
 (defun lyskom-widget-number-value-to-internal (widget value)
-  (format "% 4d " value))
+  (cond ((stringp value) value)
+	((numberp value) (format "% 4d" value))
+	((null value) "")
+	(t (format "%S" value))))
 
 (defun lyskom-widget-number-validate (widget)
   (if (numberp (widget-value widget))
