@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.0 1994-01-06 01:58:17 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 38.1 1994-01-10 15:37:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.0 1994-01-06 01:58:17 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.1 1994-01-10 15:37:42 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -165,7 +165,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 		   (if kom-emacs-knows-iso-8859-1
 		       lyskom-commands
 		     lyskom-swascii-commands)))))
-o
+
 
 (defun lyskom-ok-command (alternative)
   "Returns non-nil if it is ok to do such a command right now."
@@ -976,10 +976,7 @@ lyskom-is-waiting nil.
       nil
     (initiate-login-new 'idle nil lyskom-pers-no "" 0)
     (lyskom-tell-internat 'kom-tell-is-back))
-  (condition-case emacs-18.55
-      (setq lyskom-time-last-command (current-time))
-    (error ; No function current-time
-     ))
+  (setq lyskom-time-last-command (lyskom-current-time))
   (if (and lyskom-is-waiting
 	   (listp lyskom-is-waiting))
       (progn
@@ -1646,17 +1643,85 @@ then a newline is printed after the name instead."
   (lyskom-scroll))
 
 
+(defun irc-time-to-int (timestr)
+  "Convert from time in string format as returned by current-time-string
+to a double integer format, as returned by file-attributes.
+
+Written by Stephen Ma <ma_s@maths.su.oz.au>"
+  (let* ((norm+ '(lambda (num1 num2)
+		  (let ((sumh (+ (car num1) (car num2)))
+			(suml (+ (car (cdr num1)) (car (cdr num2)))))
+		    (list (+ sumh (/ suml 65536)) (% suml 65536)))))
+	 (norm* '(lambda (num1 num2)
+		  (let ((prodh (* num1 (car num2)))
+			(prodl (* num1 (car (cdr num2)))))
+		    (list (+ prodh (/ prodl 65536)) (% prodl 65536)))))
+	 (seconds (string-to-int (substring timestr 17 19)))
+	 (minutes (string-to-int (substring timestr 14 16)))
+	 (hours (string-to-int (substring timestr 11 13)))
+	 (partdays (1- (string-to-int (substring timestr 8 10))))
+	 (years (string-to-int (substring timestr 20 24)))
+	 (days (+ partdays
+		  (cond ((and (= (% years 4) 0)
+			      (/= (% years 100) 0))
+			 (cdr (assoc (substring timestr 4 7)
+				     '(("Jan" . 0)
+				       ("Feb" . 31)
+				       ("Mar" . 60)
+				       ("Apr" . 91)
+				       ("May" . 121)
+				       ("Jun" . 152)
+				       ("Jul" . 182)
+				       ("Aug" . 213)
+				       ("Sep" . 244)
+				       ("Oct" . 274)
+				       ("Nov" . 305)
+				       ("Dec" . 335)))))
+			(t (cdr (assoc (substring timestr 4 7)
+				       '(("Jan" . 0)
+					 ("Feb" . 31)
+					 ("Mar" . 59)
+					 ("Apr" . 90)
+					 ("May" . 120)
+					 ("Jun" . 151)
+					 ("Jul" . 181)
+					 ("Aug" . 212)
+					 ("Sep" . 243)
+					 ("Oct" . 273)
+					 ("Nov" . 304)
+					 ("Dec" . 334))))))
+		  (* (- years 1970) 365)
+		  (/ (- years 1969) 4)
+		  (- (/ (- years 1901) 100)))))
+    (funcall norm+
+	     (funcall norm*
+		      60
+		      (funcall norm+
+			       (funcall norm*
+					60
+					(funcall norm+
+						 (funcall norm*
+							  24
+							  (list 0 days))
+						 (list 0 hours)))
+			       (list 0 minutes)))
+	     (list 0 seconds))))
+
+(defun lyskom-current-time ()
+  (condition-case emacs-18
+      (current-time)
+    (error ; No function current-time
+     (irc-time-to-int (current-time-string)))))
+
 (defun lyskom-subtract-times (t1 t2)
   "Subtracts times and returns the result in seconds."
   (+ (* (- (car t1) (car t2)) 65526) (- (car (cdr t1)) (car (cdr t2)))))
 
 (defun lyskom-idle-time-is-reached ()
   "Returns non-nil if we are idle."
-  (condition-case emacs-18.55
-      (> (lyskom-subtract-times (current-time) lyskom-time-last-command)
-	 600)				;10 minuter
-    (error ; No function current-time
-     nil)))
+  (> (lyskom-subtract-times (lyskom-current-time) lyskom-time-last-command)
+     600)				;10 minuter
+  )
 
 ;;; ================================================================
 ;;;         Formatting functions for different data types

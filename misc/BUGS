@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 20
+Unused-Bug-Id: 22
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -380,4 +380,45 @@ Site: lysator
 Associated mails:
 End mails.
 ---
+
+Id: 20
+Summary: Incorrect symbol.
+Version: 0.38
+Created: linus: Thu Jan  6 12:55:26 1994
+Currently handled by: 
+Severity: 9
+Priority: 9
+Difficulty: 0
+Closed: linus: Sat Jan  8 20:10:39 1994
+Last edit: linus: Thu Jan  6 12:55:26 1994
+Reported by: Klaus Zeuge  <sojge@Minsk.DoCS.UU.SE>
+Site: Minsk.DoCS.UU.SE
+Associated mails:
+	backtrace: <9401060957.AA06337@Minsk.DoCS.UU.SE>
+	urs{kt: <199401061145.MAA04199@bodil>
+End mails.
+---
+
+Id: 21
+Summary: Better errors when sending messages.
+Version: 0.38
+Created: linus: Sat Jan  8 03:31:53 1994
+Currently handled by: 
+Severity: 4
+Priority: 3
+Difficulty: 1
+Last edit: linus: Sat Jan  8 03:32:23 1994
+Reported by: Per 'Hedde Hedbor
+Site: LysKOM
+Associated mails:
+End mails.
+---
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Personligt meddelande från Per 'Hedde' Hedbor (Gör lumpen) (03:30:22):
+
+Förresten, i lyskom klienten, är det så där särskilt snyggt
+att den säger 'Personen var kanske inte inloggad' när meddelandet var
+för långt?
+----------------------------------------------------------------
+Läsa nästa text - 
 

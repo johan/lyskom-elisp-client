@@ -1,3 +1,10 @@
+Sat Jan  8 20:15:31 1994  Linus Tolke Y  (linus@astrid)
+
+	* lyskom-rest.el, edit-text.el, startup.el 
+	  (lyskom-current-time, emacs-18.55): Now we can time things in
+	  older emacses also.
+	  vars.el: 0.38.1
+
 Thu Jan  6 01:53:07 1994  Linus Tolke Y  (linus@astrid)
 
 	* Distribuerat version 0.38		01.53
