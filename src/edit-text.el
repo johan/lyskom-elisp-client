@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 35.3 1991-09-15 10:05:55 linus Exp $
+;;;;; $Id: edit-text.el,v 35.4 1991-09-15 16:58:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.3 1991-09-15 10:05:55 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.4 1991-09-15 16:58:50 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -127,7 +127,8 @@ footn-to	-> Fotnot till text %d."
       (setq misc-list (cdr misc-list))))
     (lyskom-run 'edit 'princ
 		(lyskom-format 'text-mass
-			       subject lyskom-header-separator body)
+			       subject lyskom-header-separator body 
+			       lyskom-header-subject)
 		where-put-misc)
     (lyskom-run 'edit 'lyskom-edit-goto-char where-put-misc)
     (set-buffer edit-buffer)))
@@ -265,6 +266,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (interactive)
   (lyskom-clear-vars)
   (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
+  (text-mode)
   (run-hooks 'lyskom-edit-mode-mode-hook)
   (setq lyskom-edit-mode-mode-map (and (current-local-map)
 				       (copy-keymap (current-local-map))))
@@ -303,8 +305,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		  subject (lyskom-edit-extract-subject)))
 	  (let ((minibuffer-local-map (overlay-map lyskom-edit-mode-mode-map
 						   minibuffer-local-map)))
-	    (setq subject (read-string (lyskom-get-string 'subject)
-				       subject)))
+	    (setq subject (lyskom-read-string (lyskom-get-string 'subject)
+					      subject)))
 	  (setq message (lyskom-edit-extract-text))
 	  (setq mode-name "LysKOM sending")
 	  (save-excursion
@@ -467,7 +469,8 @@ to the text in BUFFER."
   (goto-char (point-min))
   (let ((result (cons 'MISC-LIST nil)))
     (while (and (< (point) (point-max))
-		(not (equal "Ä" (buffer-substring (point) (1+ (point))))))
+		(not (equal (elt lyskom-header-subject 0)
+			    (buffer-substring (point) (1+ (point))))))
       (let ((char (string-to-char
 		   (upcase (buffer-substring (point) (1+ (point)))))))
 	(nconc 

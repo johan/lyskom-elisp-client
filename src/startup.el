@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.2 1991-09-15 10:04:44 linus Exp $
+;;;;; $Id: startup.el,v 35.3 1991-09-15 16:59:10 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.2 1991-09-15 10:04:44 linus Exp $\n"))
+	      "$Id: startup.el,v 35.3 1991-09-15 16:59:10 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -45,7 +45,7 @@
 (defun lyskom (&optional host username password)
   "Start a LysKOM session.
 Optional arguments: HOST, USERNAME and PASSWORD."
-  (interactive (list (read-string (lyskom-format 'server-q
+  (interactive (list (lyskom-read-string (lyskom-format 'server-q
 					  (or (getenv "KOMSERVER")
 					      lyskom-default-server)))
 		     nil
