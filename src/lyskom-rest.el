@@ -50,7 +50,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.1 1991-08-21 15:45:06 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.2 1991-09-05 16:15:41 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -839,13 +839,16 @@ The name of the file is read using the minibuffer and the default is kom-text."
 	  (p2 (progn
 		(forward-text arg)
 		(beginning-of-line)
-		(point))))
+		(point)))
+	  (name (read-file-name 
+		 (lyskom-format 'save-on-file-q
+				(file-name-nondirectory lyskom-saved-file-name))
+		 (file-name-directory lyskom-saved-file-name)
+		 lyskom-saved-file-name
+		 nil)))
       (append-to-file p1 p2
-		      (expand-file-name (read-file-name (lyskom-get-string 'save-on-file-q)
-							default-directory
-							"kom-text"
-							nil))
-		      ))))
+		      (expand-file-name name))
+      (setq lyskom-saved-file-name name))))
 
 
 ;;; ================================================================

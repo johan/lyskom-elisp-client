@@ -12,7 +12,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.3 1991-08-28 03:26:27 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.4 1991-09-05 16:15:44 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
@@ -484,7 +484,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (one-unread . " - 1 oläst\n")
     (several-unread . " - %#1d olästa\n")
 
-    (save-on-file-q . "Spara inlägg på fil: ")
+    (save-on-file-q . "Spara inlägg på fil: (%#1s) ")
     (wait-for-prompt . "Vänta på prompten!")
     (go-to-pri-conf-prompt . "Gå till nästa prioriterade möte")
     (read-pri-text-conf . "Läsa nästa prioriterade text")
