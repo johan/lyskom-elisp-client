@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.6 1992-04-15 08:37:11 inge Exp $
+;;;;; $Id: cache.el,v 35.7 1992-04-29 12:52:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.6 1992-04-15 08:37:11 inge Exp $\n"))
+	      "$Id: cache.el,v 35.7 1992-04-29 12:52:40 linus Exp $\n"))
 
 
 
@@ -259,33 +259,37 @@ ARG: session-info"
   "Inserts a who-buffer-info into lyskom-who-info-cache"
   ;We can use lyskom-insert (not beautiful)
   ;we insert everything at the end of the buffer.
-  (let ((sesno lyskom-session-no)
-	min max
-	(where (cache-assoc (who-info->connection who-info) 
-			    lyskom-who-info-cache)))
-    (lyskom-save-excursion
-     (set-buffer lyskom-who-info-buffer)
-     (save-restriction
-       (if where
-	   (progn
-	     (narrow-to-region (marker-position 
-				(who-buffer-info->start-marker where))
-			       (1- (marker-position 
-				    (who-buffer-info->end-marker where))))
-	     (delete-region (point-min) (point-max)))
-	 (goto-char (point-max))
-	 (insert " ")
-	 (narrow-to-region (point-min) (1- (point-max))))
-       (setq min (point-max-marker))
-       (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
-			      'insert)
-       (setq max (point-max-marker))
-       (goto-char (point-max)))
-     (delete-char 1))
-    (cache-add (who-info->connection who-info) 
-	       (lyskom-create-who-buffer-info who-info min max)
-	       'lyskom-who-info-cache)
-    (run-hooks 'lyskom-who-info-has-changed-hook)))
+
+  ;defensive programming and it will work:
+  (if (and lyskom-who-info-buffer-is-on
+	   lyskom-who-info-buffer)
+      (let ((sesno lyskom-session-no)
+	    min max
+	    (where (cache-assoc (who-info->connection who-info) 
+				lyskom-who-info-cache)))
+	(lyskom-save-excursion
+	 (set-buffer lyskom-who-info-buffer)
+	 (save-restriction
+	   (if where
+	       (progn
+		 (narrow-to-region (marker-position 
+				    (who-buffer-info->start-marker where))
+				   (1- (marker-position 
+					(who-buffer-info->end-marker where))))
+		 (delete-region (point-min) (point-max)))
+	     (goto-char (point-max))
+	     (insert " ")
+	     (narrow-to-region (point-min) (1- (point-max))))
+	   (setq min (point-max-marker))
+	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
+				  'insert)
+	   (setq max (point-max-marker))
+	   (goto-char (point-max)))
+	 (delete-char 1))
+	(cache-add (who-info->connection who-info) 
+		   (lyskom-create-who-buffer-info who-info min max)
+		   'lyskom-who-info-cache)
+	(run-hooks 'lyskom-who-info-has-changed-hook))))
 
 
 (defun lyskom-set-session-info (pers-conf-stat conf-conf-stat session-info)

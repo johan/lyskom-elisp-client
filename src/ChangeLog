@@ -1,3 +1,10 @@
+Wed Apr 29 14:47:33 1992  Linus Tolke Y  (linus@robert)
+
+	* cache.el (lyskom-set-who-info-buffer-2): defensive programming.
+	  Racing conditions, (most dominant when user has user-area and
+	  motd and a lot of presence messages) at login and this function
+	  was called before the buffer was set.
+
 Wed Apr 15 10:32:41 1992  Inge Wallin  (inge@robert)
 
 	* cache.el(lyskom-set-who-info-buffer-2): Use insert instead of
