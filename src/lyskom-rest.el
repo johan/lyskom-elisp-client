@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.251 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.252 2005-01-09 22:09:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.251 2005-01-09 01:16:02 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.252 2005-01-09 22:09:00 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3767,9 +3767,11 @@ Returns the selected alternative (a symbol)"
                                  alt)))
                          alternatives))
          (alts-string (format "(%s) " (mapconcat (lambda (c)
-                                                   (format "%c: %s"
+                                                   (lyskom-format "%#3@%#1c:%#2s"
                                                            (elt c 0)
-                                                           (elt c 1)))
+                                                           (elt c 1)
+                                                           (and (eq (elt c 2) default) '(face bold))
+                                                           ))
                                                  alts
                                                  ", ")))
          (nagging nil))
@@ -3814,6 +3816,9 @@ Returns the selected alternative (a symbol)"
 						    t)))
       (signal 'quit nil))
 
+    (setq alts (cons (list ?\C-m
+                           (lyskom-traverse alt alts (when (eq default (elt alt 2)) (lyskom-traverse-break (elt alt 1))))
+                           default) alts))
     (lyskom-message "%s" (concat prompt (elt (assq input-char alts) 1)))
     (if (eq input-char ?\C-m)
         default

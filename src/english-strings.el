@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.345 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: english-strings.el,v 44.346 2005-01-09 22:09:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.345 2005-01-09 01:16:02 byers Exp $"))
+              "$Id: english-strings.el,v 44.346 2005-01-09 22:09:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -485,6 +485,22 @@ and you have finished reading. Please come back later.
     (unsub-all-open . "aLeave all open conferences")
     (abc-yes . "yYes")
     (abc-no . "nNo")
+    (abc-yes-all . "aJa to all")
+    (abc-no-all . "xNej to all")
+
+    (move-tree-move . "mMove")
+    (move-tree-sub  . "rRemove")
+    (move-tree-add  . "aAdd")
+    (move-tree-ign  . "nNothing")
+    (move-tree-jump . "jJump")
+    (move-tree-quit . "qCancel")
+
+    (move-tree-add-rcpt-type . "Add as: ")
+    (move-tree-rcpt . "rRecipient")
+    (move-tree-cc . "cCarbon copy")
+    (move-tree-bcc . "dBlind carbon copy")
+
+    (move-tree-leave-cc-q . "Leave original recipient as carbon copy recipient? ")
 
     (exclude-from . "Removing %#1P from %#2M...")
 
@@ -559,6 +575,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (adding-name-as-recipient . "Adding %#1M as recipient of text %#2n...")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
+    (adding-name-as-bcc . "%#1M will receive a blind carbon copy of text %#2n...")
     (remove-name-as-recipient .
      "Removing %#1M as recipient of text %#2n...")
     (adding-cross-reference . "Adding cross reference...")
@@ -570,7 +587,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (error-access-denied-add-recpt . "You are not allowed to add texts to %#2M.\n")
     (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
 
-    (moving-tree-what-action-q . "What do you want to do? (move) ")
+    (moving-tree-what-action-q . "What do you want to do? ")
     (moving-cant-read . "Can't move text %#1n (unable to read text).\n")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
     (moving-already-moved . "Text %#1n does not have %#2M as a recipient.\nSkipping this text and its comments.\n")
@@ -2567,12 +2584,6 @@ Change privileges for %#1P (%#1p)...")
     (lp--set-unread . "Only last") 
     (lp--quit . "Quit")
 ))
-
-(lyskom-language-var local lyskom-move-tree-actions en
-                     '(("Move text or subtract recipient" . move)
-                       ("Leave text and continue with comments" . skip)
-                       ("Abort this command" . quit)
-                       ("Skip this command and its comment tree" . jump)))
 
 (lyskom-language-var local lyskom-onoff-table en
   '(("on" . on) ("off" . off)))

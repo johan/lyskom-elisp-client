@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.221 2004-11-03 06:22:28 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands1.el,v 44.222 2005-01-09 22:08:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.221 2004-11-03 06:22:28 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: commands1.el,v 44.222 2005-01-09 22:08:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3712,7 +3712,10 @@ a recipient. Confirmation is required for each single move.
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-tree-to-move)))
-  (let ((root-text-stat (blocking-do 'get-text-stat text-no)))
+  (let ((root-text-stat (blocking-do 'get-text-stat text-no))
+        (last-move-tree-add-type 'move-tree-rcpt)
+        (last-move-leave-cc 'abc-no)
+        (last-move-tree-action nil))
     (if root-text-stat
 
         ;; Set up default recipients for from and to.
@@ -3732,7 +3735,7 @@ This command accepts text number prefix arguments (see
             (let ((source (lyskom-read-conf-stat 
                            'who-to-move-from-q
                            (list (cons 'restrict (mapcar 'car recipients)))
-                           nil nil t))
+                           t nil t))
                   (to-do (list (text-stat->text-no root-text-stat)))
                   (done nil))
 
@@ -3749,9 +3752,17 @@ This command accepts text number prefix arguments (see
                   ;; Check that this text is a candidate for moving
                   ;; If not, put it in done to fool the next control
                   ;; structure.
+                  ;;
+                  ;; A text is candidate for moving if one of its 
+                  ;; recipients is the source, or there is no
+                  ;; source (in which case we're just adding)
 
-                  (unless (memq (conf-stat->conf-no source)
-                                text-to-move-recipients)
+                  (unless text-stat
+                    (setq done (cons text-to-move done)))
+
+                  (unless (or (null source)
+                              (memq (conf-stat->conf-no source)
+                                    text-to-move-recipients))
                     (lyskom-format-insert 'moving-already-moved 
                                           text-to-move source)
                     (setq done (cons text-to-move done)))
@@ -3783,63 +3794,119 @@ This command accepts text number prefix arguments (see
                       (setq lyskom-last-viewed (point-max)))
 
 
-                    ;; Ask the user what to do
+                    ;; Ask the user what to do. Options:
+                    ;; source
+                    ;; --------------------------------------
+                    ;; null         add, quit, ign, jump
+                    ;; non-null     sub, move, quit, ign, jump
+                    ;; --------------------------------------
 
                     (let* ((completion-ignore-case t)
-                           (action
-                            (cdr
-                             (lyskom-string-assoc
-                              (lyskom-completing-read (lyskom-get-string 'moving-tree-what-action-q)
-                                                      lyskom-move-tree-actions
-                                                      nil
-                                                      t
-                                                      nil
-                                                      nil
-                                                      (car (rassoc 'move lyskom-move-tree-actions)))
-                              lyskom-move-tree-actions))))
+                           (action (lyskom-a-or-b-or-c-p
+                                    (lyskom-get-string 'moving-tree-what-action-q)
+                                    (if source 
+                                        '(move-tree-move 
+                                          move-tree-sub move-tree-ign
+                                          move-tree-jump move-tree-quit)
+                                      '(move-tree-add 
+                                        move-tree-ign move-tree-jump
+                                        move-tree-quit))
+                                    (if source
+                                        (if (memq last-move-tree-action '(move-tree-move move-tree-sub))
+                                            last-move-tree-action
+                                          'move-tree-move)
+                                      'move-tree-add))))
+                      (setq last-move-tree-action action)
                       (cond
+
+                       ;; Add recipient.
+
+                       ((eq action 'move-tree-add)
+                        (condition-case nil
+                            (let ((target
+                                   (lyskom-read-conf-stat 'who-to-add-q
+                                                          '(all)
+                                                          nil nil t)))
+                              (setq last-move-tree-add-type
+                                    (lyskom-a-or-b-or-c-p 'move-tree-add-rcpt-type
+                                                          '(move-tree-rcpt move-tree-cc move-tree-bcc)
+                                                          last-move-tree-add-type))
+                              (when target
+                                (lyskom-format-insert (or (cdr (assq last-move-tree-add-type
+                                                                     '((move-tree-rcpt . adding-name-as-recipient)
+                                                                       (move-tree-cc . adding-name-as-copy)
+                                                                       (move-tree-bcc . adding-name-as-bcc))))
+                                                          'adding-name-as-recipient)
+                                                      target (text-stat->text-no text-stat))
+                                (lyskom-move-recipient text-to-move source target
+                                                       (or (cdr (assq last-move-tree-add-type
+                                                                      '((move-tree-rcpt . RECPT)
+                                                                        (move-tree-cc . CC-RECPT)
+                                                                        (move-tree-bcc . BCC-RECPT))))
+                                                           'RECPT)))
+                              (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
+                              )
+                          (quit (setq to-do (cons text-to-move to-do))))
+                        )
 
                        ;; Move the text.
 
-                       ((eq action 'move)
+                       ((or (eq action 'move-tree-move)
+                            (eq action 'move-tree-sub))
                         (condition-case nil
                             (let ((target
-                                   (lyskom-read-conf-stat
-                                    (if (> (length text-to-move-recipients) 1)
-                                        'who-to-move-to-or-sub-q
-                                      'who-to-move-to-q)
-                                    '(all)
-                                    (> (length text-to-move-recipients) 1)
-                                    nil t)))
+                                   (when (eq action 'move-tree-move)
+                                     (lyskom-read-conf-stat
+                                      (if (> (length text-to-move-recipients) 1)
+                                          'who-to-move-to-or-sub-q
+                                        'who-to-move-to-q)
+                                      '(all)
+                                      (> (length text-to-move-recipients) 1)
+                                      nil t))))
                               (if target
                                   (lyskom-format-insert 'moving-name source target text-stat)
                                 (lyskom-format-insert 'remove-name-as-recipient
                                                       source
                                                       (text-stat->text-no text-stat)))
-                              (lyskom-move-recipient text-to-move source target 'RECPT)
+                              (lyskom-move-recipient text-to-move
+                                                     source
+                                                     target
+                                                     'RECPT
+                                                     (cond ((eq last-move-leave-cc 'abc-yes-all) t)
+                                                           ((eq last-move-leave-cc 'abc-no-all) nil)
+                                                           (t (setq last-move-leave-cc
+                                                                    (lyskom-a-or-b-or-c-p 'move-tree-leave-cc-q
+                                                                                          '(abc-yes abc-no abc-yes-all abc-no-all)
+                                                                                          last-move-leave-cc))
+                                                              (cdr (assq last-move-leave-cc '((abc-yes . t)
+                                                                                              (abc-no . nil)
+                                                                                              (abc-yes-all . t)
+                                                                                              (abc-no-all . nil))))))
+                                                     )
                               (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
                               )
                           (quit (setq to-do (cons text-to-move to-do))))
                         )
 
 
-                       ((eq action 'skip)
+                       ((eq action 'move-tree-ign)
                         (setq to-do (nconc (lyskom-text-comments text-stat) to-do))
                         )
 
-                       ((eq action 'quit)
+                       ((eq action 'move-tree-quit)
                         (setq to-do nil))
 
-                       ((eq action 'jump))))))))))
+                       ((eq action 'move-tree-jump))))))))))
       (lyskom-format-insert 'no-such-text-no text-no)
       )))
 
 
 
-(defun lyskom-move-recipient (text-no source target type)
+(defun lyskom-move-recipient (text-no source target type &optional leave-cc)
   "Remove TEXT-NO from SOURCE and add it to TARGET as TYPE.
 This is the internal function for moving texts around. SOURCE or TARGET
-may be nil. TYPE is ignored if TARGET is nil.
+may be nil. TYPE is ignored if TARGET is nil. If optional LEAVE-CC is 
+non-nil, then leave the original conference as a CC recipient.
 
 Calls lyskom-report-command-answer to report the result, to callers
 must have printed something without a newline at the end of the buffer."
@@ -3854,9 +3921,14 @@ must have printed something without a newline at the end of the buffer."
                              t))
                (add-errno lyskom-errno)
                (sub-result (if (and source add-result)
-                               (blocking-do 'sub-recipient
-                                            text-no
-                                            (conf-stat->conf-no source)) 
+                               (if leave-cc
+                                   (blocking-do 'add-recipient
+                                                text-no
+                                                (conf-stat->conf-no source)
+                                                'CC-RECPT)
+                                 (blocking-do 'sub-recipient
+                                              text-no
+                                              (conf-stat->conf-no source)) )
                              t))
                (sub-errno lyskom-errno))
 

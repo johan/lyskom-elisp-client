@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.389 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.390 2005-01-09 22:09:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.389 2005-01-09 01:16:02 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.390 2005-01-09 22:09:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -484,6 +484,22 @@ du har läst klart allting. Kom tillbaks senare.
     (unsub-all-open . "aGå ur alla öppna möten")
     (abc-yes . "jJa")
     (abc-no . "nNej")
+    (abc-yes-all . "aJa till alla")
+    (abc-no-all . "xNej till alla")
+
+    (move-tree-move . "fFlytta")
+    (move-tree-sub  . "sSubtrahera")
+    (move-tree-add  . "aAddera")
+    (move-tree-ign  . "iIngenting")
+    (move-tree-jump . "hHoppa")
+    (move-tree-quit . "qAvbryt")
+
+    (move-tree-add-rcpt-type . "Addera som: ")
+    (move-tree-rcpt . "mMottagare")
+    (move-tree-cc . "eExtra kopia")
+    (move-tree-bcc . "dDold kopia")
+
+    (move-tree-leave-cc-q . "Lämna ursprungsmottagare som extrakopiemottagare? ")
 
     (exclude-from . "Utesluta %#1P från %#2M...")
 
@@ -582,6 +598,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
+    (adding-name-as-bcc . "Adderar %#1M som dold kopiemottagare till text %#2n...")
     (remove-name-as-recipient .
 			      "Subtraherar %#1M som mottagare från text %#2n...")
     (adding-cross-reference . "Adderar referens...")
@@ -593,7 +610,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (error-access-denied-add-recpt . "Du får inte addera inlägg till %#2M.\n")
     (error-not-recipient . "%#2M är inte mottagare till inlägg %#1n.\n")
 
-    (moving-tree-what-action-q . "Vad vill du göra? (flytta) ")
+    (moving-tree-what-action-q . "Vad vill du göra? ")
     (moving-cant-read . "Det gick inte att inte flytta text %#1n (kan inte läsa texten).\n")
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
     (moving-already-moved . "Inlägg %#1n har inte %#2M som mottagare.\nFlyttar inte inlägget eller dess kommentarsträd.\n")
@@ -2607,12 +2624,6 @@ Nuvarande rättigheter för %#1P (%#1p):
     (lp--set-unread . "Endast")
     (lp--quit . "Avsluta")
 ))
-
-(lyskom-language-var local lyskom-move-tree-actions sv
-                     '(("Flytta eller subtrahera mottagare" . move)
-                       ("Lämna kvar och fortsätt med kommentarerna" . skip)
-                       ("Avsluta helt" . quit)
-                       ("Hoppa över inlägget och dess kommentarsträd" . jump)))
 
 (lyskom-language-var local lyskom-onoff-table sv
   '(("på" . on) ("av" . off)))
