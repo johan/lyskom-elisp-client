@@ -1,3 +1,18 @@
+Sun Nov 24 03:41:56 1991  Per Cederqvist  (ceder at robert)
+
+	* commands1.el (lyskom-write-comment-soon): Skrev lite kommentarer.
+
+	* swedish-strings.el, english-strings.el: (comment-keep-recpt-p)
+	  Ny text }t featuren nedan.
+
+	* vars.el (kom-confirm-multiple-recipients): Ny variabel som g|r
+	  att man kan st{nga av fr}gan nedan.
+
+	* commands1.el (lyskom-comment-recipients): Om
+	  kom-confirm-multiple-recipients {r non-nil s} m}ste anv{ndaren
+	  trycka "j" f|r att bekr{fta att de ska st} kvar som mottagare i
+	  kommentaren man skriver. Fr}gan st{lls n{r man trycker "k".
+
 Tue Nov 12 23:40:16 1991  Linus Tolke Y  (linus at lysator)
 
 	* vars.el, async.el, cache.el (lyskom-who-info-buffer-is-on): Ny

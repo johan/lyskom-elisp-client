@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.10 1991-11-06 15:24:42 byers Exp $
+;;;;; $Id: english-strings.el,v 35.11 1991-11-24 02:49:18 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.10 1991-11-06 15:24:42 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.11 1991-11-24 02:49:18 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -300,6 +300,7 @@ Email-address:\n\nOther:\t")
     (text-to-remove-q . "Remove which article as a comment: ")
     (add-comment-to . "Adding article %#1d as a comment to text %#2d...")
     (sub-comment-to . "Removing article %#1d as a comment to article %#2d...")
+    (comment-keep-recpt-p ."Shall %#1s remain a recipient? ")
 
     ; From commands2.el:
 
