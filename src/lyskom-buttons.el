@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.26 1999-06-13 15:00:56 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.27 1999-06-14 15:32:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.26 1999-06-13 15:00:56 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.27 1999-06-14 15:32:46 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -481,6 +481,11 @@ type TYPE before being send to lyskom-generate-button."
 			   (setq type 'pers))
 		       (setq xarg (conf-stat->conf-no arg)
 			     text (conf-stat->name arg)))
+                      ((lyskom-uconf-stat-p arg)
+		       (if (conf-type->letterbox (uconf-stat->conf-type arg))
+			   (setq type 'pers))
+		       (setq xarg (uconf-stat->conf-no arg)
+			     text (uconf-stat->name arg)))
 		      ((numberp arg)
                        (if (setq xarg (cache-get-conf-stat arg))
                            (progn
@@ -496,7 +501,9 @@ type TYPE before being send to lyskom-generate-button."
 		(cond ((lyskom-conf-stat-p arg)
 		       (setq xarg (conf-stat->conf-no arg)
 			     text (conf-stat->name arg)))
-		      ((lyskom-pers-stat-p arg)
+                      ((lyskom-uconf-stat-p arg)
+		       (setq xarg (uconf-stat->conf-no arg)
+			     text (uconf-stat->name arg)))		      ((lyskom-pers-stat-p arg)
 		       (setq xarg (pers-stat->pers-no arg)
 			     text 
                              (or (conf-stat->name

@@ -1,5 +1,11 @@
 1999-06-14  David Byers  <davby@ida.liu.se>
 
+	* lyskom-buttons.el (lyskom-default-button): Handle uconf-stats.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Use uconf-stats instead 
+	of conf-stats. Do not permit alternate names. Do not attempt to
+	format the xface property.
+
 	* parse.el (lyskom-parse-error): Removed message "bug i
 	lyskom-parse-error" since this would happen frequently when error
 	messages are sent to a client that has been restarted.

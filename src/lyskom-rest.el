@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.65 1999-06-13 15:00:57 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.66 1999-06-14 15:32:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.65 1999-06-13 15:00:57 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.66 1999-06-14 15:32:48 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1202,7 +1202,7 @@ Note that it is not allowed to use deferred insertions in the text."
              ((and allow-defer
                    kom-deferred-printing
                    (integerp arg))
-              (let ((tmp (cache-get-conf-stat arg)))
+              (let ((tmp (cache-get-uconf-stat arg)))
                 (if (null tmp)
                     (let* ((format-element
 			    (concat "%#2@%"
@@ -1212,7 +1212,7 @@ Note that it is not allowed to use deferred insertions in the text."
 				    (if colon-flag ":" "")
 				    (char-to-string format-letter)))
 			   (defer-info (lyskom-create-defer-info
-					'get-conf-stat
+					'get-uconf-stat
 					arg
 					'lyskom-deferred-insert-conf
 					oldpos
@@ -1232,37 +1232,32 @@ Note that it is not allowed to use deferred insertions in the text."
                               format-state)))
                       lyskom-defer-indicator)
                   (setq arg tmp)
-                  (let ((aux (conf-stat-find-aux arg
-                                                 10 
-                                                 lyskom-pers-no))
-                        (face (conf-stat-find-aux arg
-                                                  9)))
-                    (lyskom-maybe-add-face-to-string
-                     face
-                     (if aux
-                         (concat (aux-item->data (car aux)) " *")
-                      (conf-stat->name arg))))
+;                  (let ((aux (conf-stat-find-aux arg
+;                                                 10 
+;                                                 lyskom-pers-no))
+;                        (face (conf-stat-find-aux arg
+;                                                  9)))
+;                    (lyskom-maybe-add-face-to-string
+;                     face
+                  (uconf-stat->name arg)
                   )))
 	     
              ;; Find the name and return it
              ((integerp arg)
-              (let ((conf-stat (blocking-do 'get-conf-stat arg)))
+              (let ((conf-stat (blocking-do 'get-uconf-stat arg)))
                 (if (null conf-stat)
                     (lyskom-format (if (= format-letter ?P)
                                        'person-does-not-exist
                                      'conference-does-not-exist)
                                    arg)
-                  (let ((aux (conf-stat-find-aux conf-stat 10 lyskom-pers-no)))
-                    (if aux
-                        (concat (aux-item->data (car aux)) " *")
-                      (conf-stat->name conf-stat))))))
+                  (uconf-stat->name conf-stat))))
 	     
              ;; We got a conf-stat, and can use it directly
              ((lyskom-conf-stat-p arg)
-                  (let ((aux (conf-stat-find-aux arg 10 lyskom-pers-no)))
-                    (if aux
-                        (concat (aux-item->data (car aux)) " *")
-                      (conf-stat->name arg))))
+              (conf-stat->name arg))
+
+             ((lyskom-uconf-stat-p arg)
+              (uconf-stat->name arg))
 
              ;; Something went wrong
              (t (signal 'lyskom-internal-error
@@ -1270,6 +1265,7 @@ Note that it is not allowed to use deferred insertions in the text."
                               ": argument error")))))
       (if (and (not colon-flag)
                (or (lyskom-conf-stat-p arg)
+                   (lyskom-uconf-stat-p arg)
                    (numberp arg)))
           (setq propl 
                 (append
@@ -1287,6 +1283,8 @@ Note that it is not allowed to use deferred insertions in the text."
 		   (int-to-string arg))
                   ((lyskom-conf-stat-p arg) 
                    (int-to-string (conf-stat->conf-no arg)))
+                  ((lyskom-uconf-stat-p arg)
+                   (int-to-string (uconf-stat->conf-no arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error")))))
