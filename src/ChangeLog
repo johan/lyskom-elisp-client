@@ -1,3 +1,10 @@
+Thu Mar 12 04:23:51 1992  Linus Tolke Y  (linus@ruben)
+
+	* async.el, cache.el (logga ut, logga in): Nu klarar who-bufferten
+	  ocks} snabba in och utloggningar. (Postmaster). Det var lite
+	  problem annars om man hinner logga ut innan klienten hinner sl}
+	  upp namnet p} personen den skall stoppa in i who-bufferten.
+
 Sat Mar  7 20:36:07 1992  Lars Willf|r  (willfor@robert)
 
 	* lyskom-rest.el: Skrev om scroll-rutinerna och point-flyttningen
