@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.2 1997-02-07 18:07:24 byers Exp $
+;;;;; $Id: compatibility.el,v 44.3 1997-03-08 02:46:08 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.2 1997-02-07 18:07:24 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.3 1997-03-08 02:46:08 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -183,7 +183,13 @@ of the lyskom-provide-* functions instead."
     (ä       . adiearesis)
     (Ä       . Adiearesis)))
 
-(defconst lyskom-gnu-keysym nil)
+(defconst lyskom-gnu-keysym
+  '((å       . ?\å)
+    (Å       . ?\Å)
+    (ä       . ?\Ä)
+    (Ä       . ?\Ä)
+    (ö       . ?\ö)
+    (Ö       . ?\Ö)))
 
 
 (defun lyskom-keys (binding)
