@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.74 1999-06-29 14:21:21 byers Exp $
+;;;;; $Id: vars.el.in,v 44.75 1999-08-09 15:15:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.74 1999-06-29 14:21:21 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.75 1999-08-09 15:15:24 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -277,6 +277,11 @@ nil                 nil                         \"(%n) %f\"
   inherited)
 
 
+
+(def-kom-var kom-show-creating-software nil
+  "*If non-nil then show the creating software of each text, if specitfied."
+  server
+  inherited)
 
 (def-kom-var kom-show-author-at-end t
   "*If non-nil then the author will be shown at the end of each text."
