@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.98 2003-08-17 15:33:19 byers Exp $
+;;;;; $Id: startup.el,v 44.99 2003-08-25 17:36:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.98 2003-08-17 15:33:19 byers Exp $\n"))
+	      "$Id: startup.el,v 44.99 2003-08-25 17:36:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -642,16 +642,15 @@ shown to other users."
           ;; If login succeeded, clear the caches and set the language
 
           (when login-successful
-            (progn (clear-all-caches)
-                   (when (lyskom-set-language kom-default-language 'local)
-                     (unless lyskom-have-one-login
-                       (lyskom-set-language kom-default-language 'global)
-                       (lyskom-maybe-setq-default kom-default-language kom-default-language)
-                       (setq-default lyskom-language (lyskom-first-available-language kom-default-language)))
-                     (lyskom-format-insert-before-prompt
-                      'language-set-to
-                      (lyskom-language-name (lyskom-first-available-language kom-default-language))))
-                   (setq lyskom-have-one-login t)))
+            (clear-all-caches)
+            (when (lyskom-set-language (lyskom-default-language) 'local)
+              (unless lyskom-have-one-login
+                (lyskom-set-language (lyskom-default-language) 'global)
+                (setq-default lyskom-language lyskom-language)
+                (setq-default kom-default-language (list lyskom-language)))
+              (lyskom-format-insert-before-prompt
+               'language-set-to (lyskom-language-name (lyskom-default-language))))
+            (setq lyskom-have-one-login t))
 
           (when ignored-user-area-vars
             (lyskom-format-insert-before-prompt
