@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.257 2002-06-26 20:19:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.258 2002-07-11 14:25:54 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.257 2002-06-26 20:19:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.258 2002-07-11 14:25:54 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -257,6 +257,8 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (have-to-read . "Du måste läsa ett inlägg först.\n")
 
     (no-comment-to . "Det finns inget kommenterat inlägg att titta på.\n")
+    (no-text-at-point . "Det finns inget inlägg vid markören.\n")
+    (what-ancestor . "Vilken av de kommenterade texterna önskas? ")
 
     (who-letter-to . "Vem vill du skicka brev till? ")
     (who-send-text-to . "Vem vill du skicka inlägget till? ")
@@ -1128,6 +1130,7 @@ Skicka en bugrapport.\n")
     (unread-letters . "olästa brev")
 
     (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
+    (prefix-arg-try-again . "Ange en annan text eller tryck control-g för att avbryta.\n")
     (error-code . "Felkod %#2d/%#3S: %#1s.\n")
     (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt värde.
 Du bör sätta den till ett bättre värde.\n")

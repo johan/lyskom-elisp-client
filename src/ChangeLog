@@ -1,3 +1,46 @@
+2002-07-11  Johan Sundström  <jhs@lysator.liu.se>
+
+	* lyskom-rest.el (kom-view): Dropped the call to
+	`lyskom-read-text-no-prefix-arg' when invoked from button actions
+	or when a text-no was otherwise already provided for the call. It
+	is not safe to rely on how prefix arguments are interpreted by
+	that function any more since that is fully user configurable now.
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Rewritten to get
+	configurable behaviour via `lyskom-pick-text-no-strategy-alist'.
+	Also added new optional argument CONSTRAINT, for providing helpful
+	pointers about what kind of text certain commands need. DEFAULT is
+	now also legal when supplied as a function returning a text-no.
+
+	(lyskom-pick-text-no-strategy-alist): New variable for declaring
+	how lyskom-read-text-no-prefix-arg should treat prefix args, using
+	the new functions below. The default strategy picks the text under
+	point when no arg was given, prompts for a text-no when 0 is given,
+	takes the text N items above / below point for +/- args and the text
+	N ancestry levels up the comment tree for N successive C-u:s.
+
+	(lyskom-get-explicit-text): New function.
+	(lyskom-get-command-specified-default-text): New function.
+	(lyskom-get-last-read-text): New function.
+	(lyskom-get-text-at-point): New function.
+	(lyskom-get-text-at-point-ancestor): New function.
+	(lyskom-prompt-for-text-no): New function.
+	(lyskom-get-last-text-written-by-me): New function.
+	(lyskom-get-last-written-or-read-by-me): New function.
+	(lyskom-get-text-above-point): New function.
+	(lyskom-get-text-below-point): New function.
+
+	(lyskom-old-farts-text-prompt-strategy): New constant to set your
+	`lyskom-pick-text-no-strategy-alist' to to get the 0.46 strategy.
+
+	(lyskom-join-lists): New utility function.
+	(lyskom-get-ancestors-of-text): New function.
+
+	* swedish-strings.el, english-strings.el: prefix-arg-try-again
+	string added for showing some CONSTRAINT help. Also added strings
+	no-text-at-point and what-ancestor for the new function
+	lyskom-get-text-at-point-ancestor.
+
 2002-07-01  David Kågedal  <david@lysator.liu.se>
 
 	* compatibility.el (lyskom-color-values): Negated the condition

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.222 2002-06-26 20:19:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.223 2002-07-11 14:25:54 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.222 2002-06-26 20:19:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.223 2002-07-11 14:25:54 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -283,6 +283,8 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (have-to-read . "You must read a text first.\n")
 
     (no-comment-to . "There is no commented text.\n")
+    (no-text-at-point . "There is no text at point.\n")
+    (what-ancestor . "Which of the commented texts do you want? ")
 
     (who-letter-to . "Send a letter to whom? ")
     (who-send-text-to . "Send text to which conference? ")
@@ -1117,6 +1119,7 @@ Send a bug report.\n")
     (unread-letters . "unread letters")
 
     (bad-text-no-prefix . "Unable to translate prefix `%s' to a text number")
+    (prefix-arg-try-again . "Specify another text or press control-g to abort.\n")
     (error-code . "Error code %#2d/%#3S: %#1s.\n")
     (error-in-kom-do-when-done . "The variable kom-do-when-done has an erroneous value.
 You should set it to a better value.\n")

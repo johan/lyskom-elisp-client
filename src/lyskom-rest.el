@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.166 2002-06-29 20:29:20 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.167 2002-07-11 14:25:53 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.166 2002-06-29 20:29:20 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.167 2002-07-11 14:25:53 jhs Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -332,8 +332,11 @@ by design."
 	(let ((kom-page-before-command nil))
 	  (lyskom-start-of-command 'kom-view)
 	  (lyskom-tell-internat 'kom-tell-review))
-        (let ((current-prefix-arg text-no))
-          (setq text-no (lyskom-read-text-no-prefix-arg 'review-text-q)))
+	(unless (and (null current-prefix-arg)
+		     (integerp text-no)
+		     (plusp text-no))
+	  (let ((current-prefix-arg text-no))
+	    (setq text-no (lyskom-read-text-no-prefix-arg 'review-text-q))))
 
         (cond (text-no
                (when (or (not (listp kom-page-before-command))
