@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.17 1992-05-11 01:55:38 linus Exp $
+# $Id: Makefile,v 35.18 1992-06-16 11:33:32 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.17 1992-05-11 01:55:38 linus Exp $
+# $Id: Makefile,v 35.18 1992-06-16 11:33:32 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.17  1992-05-11 01:55:38  linus
+# Revision 35.18  1992-06-16 11:33:32  linus
+# Alfa-version is replaced upon installation also.
+#
+# Revision 35.17  1992/05/11  01:55:38  linus
 # support for distribution to nanny removed
 #
 # Revision 35.16  1992/03/28  19:54:10  linus
@@ -115,9 +118,11 @@ PARTS-ELC = $(SRC-ELC)
 all: lyskom.elc
 
 LEX = flex -8
+SWEDISH-ALFA-VERSION = /usr/local/src/2kom/lyskom.elc
+ENGLISH-ALFA-VERSION = /usr/local/src/2kom/english-lyskom.elc
 alfa: lyskom.elc makealfa english-lyskom.elc
-	./makealfa < lyskom.elc > /usr/local/src/2kom/lyskom.elc
-	./makealfa < english-lyskom.elc > /usr/local/src/2kom/english-lyskom.elc
+	./makealfa < lyskom.elc > $(SWEDISH-ALFA-VERSION)
+	./makealfa < english-lyskom.elc > $(ENGLISH-ALFA-VERSION)
 
 lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
@@ -159,6 +164,7 @@ install: installnodoc installdoc
 
 installnodoc: lyskom.elc lyskom.el
 	cp lyskom.elc /usr/local/lib/elisp/lyskom.elc
+	cp lyskom.elc $(SWEDISH-ALFA-VERSION)
 #	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
 	(VER=`grep "lyskom-clientversion " vars.el | \
 	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
