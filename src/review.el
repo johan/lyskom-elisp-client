@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.0 1996-03-26 08:32:02 byers Exp $
+;;;;; $Id: review.el,v 40.1 1996-03-29 03:05:13 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.0 1996-03-26 08:32:02 byers Exp $\n"))
+	      "$Id: review.el,v 40.1 1996-03-29 03:05:13 davidk Exp $\n"))
 
 
 
@@ -488,15 +488,14 @@ end."
 ;;; Author: Inge Wallin
 
 
-(defun kom-review-comments ()
+(def-kom-command kom-review-comments ()
   "View the comments to this text.
 If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
   (interactive)
-  (lyskom-start-of-command 'kom-review-comments)
   (lyskom-tell-internat 'kom-tell-review)
-  (initiate-get-text-stat 'read 'lyskom-review-comments
-			  lyskom-current-text))
+  (lyskom-review-comments
+   (blocking-do 'get-text-stat lyskom-current-text)))
 
 
 (defun lyskom-review-comments (text-stat)
@@ -528,8 +527,7 @@ text is shown and a REVIEW list is built to shown the other ones."
 		lyskom-current-text)
 	       lyskom-reading-list t))
 	  (lyskom-view-text (car text-nos)))
-      (lyskom-insert-string 'no-such-text)))
-  (lyskom-run 'main 'lyskom-end-of-command))
+      (lyskom-insert-string 'no-such-text))))
 
 
 ;;; ================================================================

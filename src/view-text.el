@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.0 1996-03-26 08:32:20 byers Exp $
+;;;;; $Id: view-text.el,v 40.1 1996-03-29 03:05:16 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.0 1996-03-26 08:32:20 byers Exp $\n"))
+	      "$Id: view-text.el,v 40.1 1996-03-29 03:05:16 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -48,7 +48,9 @@ If FOLLOW-COMMENTS is non-nil all comments and footnotes to this text will be
 read before the next text. CONF-STAT must be the conference status of the
 current conference, and PRIORITY the priority, if FOLLOW-COMMENTS is non-nil.
 If BUILD-REVIEW-TREE is non-nil then it fixes a new entry in the 
-lyskom-reading-list to read the comments to this."
+lyskom-reading-list to read the comments to this.
+
+Note that this function must not be called asynchronously."
 
   (let ((filter (and filter-active
                      (lyskom-filter-text-p text-no)))
@@ -484,7 +486,14 @@ Args: TEXT-STAT of the text being read."
 	   ((eq type 'FOOTN-IN)
 	    (lyskom-format-insert 'footnote-in-text-by
 				  (misc-info->footn-in misc)
-				  tyname))))
+				  tyname)))
+	  ;; Print information about who added the link
+	  (if (misc-info->sent-at misc)
+	      (lyskom-format-insert 'send-at
+				    (lyskom-return-date-and-time 
+				     (misc-info->sent-at misc))))
+	  (if (misc-info->sender misc)
+	      (lyskom-insert (lyskom-format 'sent-by (misc-info->sender misc)))))
       ;; Client tolerans agains buggy servers...
       ;; We are writing the line about what comments exists and
       ;; the reference text does not exist anymore. Strange.

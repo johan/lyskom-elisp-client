@@ -1,3 +1,16 @@
+Fri Mar 29 03:26:34 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* review.el (lyskom-review-comments,kom-review-comments): Skrev om
+	icke-asynkron. Kunde i sällsynta fall generera allvarliga fel
+	genom att anropa lyskom-view-text när cachen inte var fylld. Nu
+	anropas bara lyskom-review-comments synkront, så vi är utom fara.
+
+	* commands1.el (kom-add-comment,kom-sub-comment): Använd
+	def-kom-command.
+
+	* view-text.el (lyskom-print-header-comm): Visa när
+	kommentarslänken adderades.
+
 Wed Mar 27 16:19:57 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * Version 0.40.1 release
