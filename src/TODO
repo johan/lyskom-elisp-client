@@ -4,6 +4,10 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
+När man startar en ny session i en återanvänd buffert läggs en session
+för mycket till i sessionslistan. Överhuvudtaget bör nl med vänner
+putsas på. [FIXAT]
+
 När man har utplånat sig själv, och tryckt C-g vid loginprompten som
 följer blir vissa kommandon förvirrade.
 
@@ -127,6 +131,8 @@ Kommandot kom-review-comments visar fotnoter sist, inte först.
     Klickbara kommandon.
 
     Reentrant blocking-do
+
+När man sparar texter vill man inte att det ska stå t.ex. "idag".
 
 
 -------- Fixade saker
