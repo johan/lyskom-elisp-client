@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.108 2001-05-09 09:07:04 byers Exp $
+;;;;; $Id: commands1.el,v 44.109 2001-05-15 12:46:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.108 2001-05-09 09:07:04 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.109 2001-05-15 12:46:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3274,14 +3274,23 @@ If optional arg TEXT-NO is present then jump all comments to that text instead."
 		  (car current-prefix-arg))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-jump))))))
-  (if text-no
-      (progn
-	(lyskom-start-of-command 'kom-jump)
-	(initiate-get-text-stat 'main 'lyskom-jump text-no t)
-	(lyskom-run 'main 'lyskom-end-of-command))
-    (lyskom-start-of-command 'kom-jump)
-    (lyskom-insert-string 'have-to-read)
-    (lyskom-end-of-command)))
+  (cond ((and (null current-prefix-arg)
+              (eq 'REVIEW-TREE (read-info->type
+                                (read-list->first
+                                 lyskom-reading-list))))
+         (lyskom-start-of-command 'kom-jump)
+         (unwind-protect
+             (progn 
+               (set-read-list-del-first lyskom-reading-list)
+               (set-read-list-del-first lyskom-to-do-list))
+           (lyskom-end-of-command)))
+        (text-no
+         (lyskom-start-of-command 'kom-jump)
+         (initiate-get-text-stat 'main 'lyskom-jump text-no t)
+         (lyskom-run 'main 'lyskom-end-of-command))
+        (t (lyskom-start-of-command 'kom-jump)
+           (lyskom-insert-string 'have-to-read)
+           (lyskom-end-of-command))))
 
 
 (defun lyskom-jump (text-stat mark-as-read &optional sync)
