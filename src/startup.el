@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.109 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.110 2004-12-04 13:28:31 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.109 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.110 2004-12-04 13:28:31 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -98,8 +98,12 @@ clients of the event. See lyskom-mode for details on lyskom."
 	    kom-default-user-name
 	    (getenv "KOMNAME")))
   (setq password
-	(or password 
-	    lyskom-default-password
+	(or password
+	    (when (and lyskom-default-password ; Got default password?
+		       (or (not lyskom-server-name) ; For this host?
+			   (string= lyskom-server-name
+				    host)))
+	      lyskom-default-password)
 	    kom-default-password
 	    (getenv "KOMPASSWORD")))
   (if (zerop (length host))
@@ -604,7 +608,7 @@ shown to other users."
                                            1
                                            (lyskom-create-membership-type
                                             nil nil nil nil nil nil nil nil)))
-                          (setq login-successful t))
+			  (setq login-successful t))
                       (lyskom-insert-string 'wrong-password)
 		      (setq lyskom-default-password nil)
                       (when (lyskom-get-aux-item 
