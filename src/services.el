@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.1 1994-01-14 00:28:33 linus Exp $
+;;;;; $Id: services.el,v 38.2 1995-02-23 20:42:15 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.1 1994-01-14 00:28:33 linus Exp $\n"))
+	      "$Id: services.el,v 38.2 1995-02-23 20:42:15 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -649,23 +649,13 @@ or get-text-stat."
   (save-excursion
     (set-buffer (process-buffer (or lyskom-proc
 				    lyskom-blocking-process)))
-    (cond
-     ((and (eq command 'get-conf-stat)
-	   (cache-get-conf-stat (car data))))	 
-     ((and (eq command 'get-pers-stat)
-	   (cache-get-pers-stat (car data))))
-     ((and (eq command 'get-text-stat)
-	   (cache-get-text-stat (car data))))
-     ((and (eq command 'get-text)
-	   (cache-get-text (car data))))
-     (t
-      (let ((lyskom-blocking-return 'not-yet-gotten))
-	(apply (intern-soft (concat "initiate-"
-				    (symbol-name command)))
-	       'blocking 'blocking-return
-	       data)
-	(while (eq lyskom-blocking-return 'not-yet-gotten)
-	  (accept-process-output))
-	lyskom-blocking-return)))))
+    (let ((lyskom-blocking-return 'not-yet-gotten))
+      (apply (intern-soft (concat "initiate-"
+				  (symbol-name command)))
+	     'blocking 'blocking-return
+	     data)
+      (while (eq lyskom-blocking-return 'not-yet-gotten)
+	(accept-process-output))
+      lyskom-blocking-return)))
 
 

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.3 1994-01-14 02:40:01 linus Exp $
+# $Id: Makefile,v 38.4 1995-02-23 20:40:59 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,13 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.3 1994-01-14 02:40:01 linus Exp $
+# $Id: Makefile,v 38.4 1995-02-23 20:40:59 linus Exp $
 # $Log: Makefile,v $
-# Revision 38.3  1994-01-14 02:40:01  linus
+# Revision 38.4  1995-02-23 20:40:59  linus
+# En arbetsversion av 0.39 incheckad. Det {r ganska mycket gjort men det
+# finns mer att g|ra.
+#
+# Revision 38.3  1994/01/14  02:40:01  linus
 # Fixed local installation path.
 #
 # Revision 38.2  1994/01/14  00:28:00  linus
@@ -134,7 +138,7 @@
 # Lagt till lyskom-clientversion-long
 #
 
-CLIENTVERSION = 0.38.1
+CLIENTVERSION = 0.39
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
@@ -175,9 +179,19 @@ PARTS-ELC = $(SRC-ELC)
 
 all: lyskom.elc
 
+# I dont want any warnings of the newer file...
+vars.elc: vars.el macros.elc
+	$(EMACS-BATCH) -l `pwd`/macros -f batch-byte-compile $*.el
+
+macros.elc: macros.el
+	$(EMACS-BATCH) -f batch-byte-compile $*.el
+	
+
 # influenced by autoconf? Yes.
 vars.el: vars.el.in Makefile
+	rm -f vars.el
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
+	chmod 444 vars.el
 
 lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
