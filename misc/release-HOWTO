@@ -27,5 +27,7 @@ versionen.
 	$ make install
 	$ make release
 
+ * Annonsera i KOM
+
  * Ändra versionsnumret i Makefilen
 
