@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.122 2001-02-20 20:44:18 joel Exp $
+;;;;; $Id: english-strings.el,v 44.123 2001-02-25 16:26:52 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.122 2001-02-20 20:44:18 joel Exp $"))
+              "$Id: english-strings.el,v 44.123 2001-02-25 16:26:52 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1306,10 +1306,10 @@ On since %#8s%#9s")
     (content-type-regexp . "Content type: \\(\\S-+\\)")
     
     (agreeing . "Agreeing with text %#1n...")
-    (fast-replying . "Quick reply to text %#1n...")
+    (fast-replying . "Remark to text %#1n...")
     (author-fast-replies . "Remarks by the author:")
     (author-fast-reply-aux . "  \"%#1t\"")
-    (other-fast-replies . "Quick replies:")
+    (other-fast-replies . "Remarks:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
@@ -1395,8 +1395,8 @@ Contents:     \"%#9s\"
     (conference-no . "conference <%#1m> %#1M")
     (text-no . "text %#1n")
 
-    (what-fast-reply-no . "Quick reply to which text? ")
-    (fast-reply-prompt . "Reply: ")
+    (what-fast-reply-no . "Remark to which text? ")
+    (fast-reply-prompt . "Remark: ")
     (agree-prompt . "Text: ")
     (default-agree-string . "I agree")
     (what-agree-no . "Agree with which text? ")
@@ -1474,7 +1474,7 @@ You must become an active member of the conference to enter it.\n")
     (confusion-what-to-answer-to . "I can't figure out which text you want to write a reply to.\n")
     (confusion-what-to-view . "I can't figure out which text you want to view.\n")
 
-    (confusion-what-to-reply-to . "I can't figure out which text you want to write a fast reply to.\n")
+    (confusion-what-to-reply-to . "I can't figure out which text you want to write a remark to.\n")
     (confusion-what-to-agree-to . "I can't figure out which text you want to agree with.\n")
     (confusion-what-to-request-confirmation . "I can't figure out which text you want read confirmations for.\n")
     (confusion-what-to-comment . "I can't figure out which text you want to comment.\n")
@@ -1679,7 +1679,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-calculate            . "Calculate")
     (kom-list-marks           . "List marked texts")
     (kom-where-is             . "Where (is the) command")
-    (kom-fast-reply           . "Quick reply")
+    (kom-fast-reply           . "Remark (to text)")
     (kom-agree                . "Agree")
     (kom-add-faq              . "Add FAQ")
     (kom-del-faq              . "Remove FAQ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.151 2001-02-20 20:44:16 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.152 2001-02-25 16:26:50 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.151 2001-02-20 20:44:16 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.152 2001-02-25 16:26:50 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -1304,10 +1304,10 @@ Uppkopplad sedan %#8s%#9s")
     (content-type-regexp . "Innehållstyp: \\(\\S-+\\)")
     
     (agreeing . "Håller med om inlägg %#1n...")
-    (fast-replying . "Kort replik till inlägg %#1n...")
+    (fast-replying . "Anmärkning till inlägg %#1n...")
     (author-fast-replies . "Anmärkningar av författaren:")
     (author-fast-reply-aux . "  \"%#1t\"")
-    (other-fast-replies . "Repliker:")
+    (other-fast-replies . "Anmärkningar:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
@@ -1392,8 +1392,8 @@ Innehåll:    \"%#9s\"
     (conference-no . "möte <%#1m> %#1M")
     (text-no . "inlägg %#1n")
 
-    (what-fast-reply-no . "Kort replik till vilket inlägg? ")
-    (fast-reply-prompt . "Replik: ")
+    (what-fast-reply-no . "Anmärkning till vilket inlägg? ")
+    (fast-reply-prompt . "Anmärkning: ")
     (agree-prompt . "Text: ")
     (default-agree-string . "Håller med")
     (what-agree-no . "Håll med vilket inlägg? ")
@@ -1470,7 +1470,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-answer-to . "Jag förstår inte vilken text du vill besvara.\n")
     (confusion-what-to-view . "Jag förstår inte vilken text du vill återse.\n")
 
-    (confusion-what-to-reply-to . "Jag förstår inte vilken text du vill skriva en kort replik till.\n")
+    (confusion-what-to-reply-to . "Jag förstår inte vilken text du vill skriva en anmärkning till.\n")
     (confusion-what-to-agree-to . "Jag förstår inte vilken text du vill hålla med om.\n")
     (confusion-what-to-request-confirmation . "Jag förstår inte vilken text du vill ha läsbekräftelser på.\n")
     (confusion-what-to-comment . "Jag förstår inte vilken text du vill kommentera.\n")
@@ -1676,7 +1676,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
     (kom-where-is             . "Var finns kommandot")
-    (kom-fast-reply           . "Kort replik")
+    (kom-fast-reply           . "Anmärkning (till inlägg)")
     (kom-agree                . "Hålla med")
     (kom-add-faq              . "Addera FAQ")
     (kom-del-faq              . "Ta bort FAQ")
@@ -2073,6 +2073,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "s {") 'kom-send-message)
   (define-key lyskom-sv-mode-map (kbd "s [") 'kom-send-message)
 
+  (define-key lyskom-sv-mode-map (kbd "r a") 'kom-fast-reply)
   (define-key lyskom-sv-mode-map (kbd "r r") 'kom-fast-reply)
   (define-key lyskom-sv-mode-map (kbd "r h") 'kom-agree)
   
