@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.11 1991-10-07 15:34:26 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.12 1991-10-07 17:18:41 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.11 1991-10-07 15:34:26 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.12 1991-10-07 17:18:41 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
@@ -86,6 +86,7 @@ du är osäker.\n")
     (presentation-subject . "%#1s")
     (presentation-form . "Namn:\t\nAdress:\t\n\t\nTelefon:
 Email-adress:\n\nAnnat:\t")
+    (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej närvarande i något möte.")
 
 
