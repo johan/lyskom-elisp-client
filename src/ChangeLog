@@ -1,5 +1,10 @@
 Wed Aug 14 17:03:17 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* Version 0.43.1 släppt.
+	
+	* lyskom-rest.el (lyskom-update-prompt): Testa
+ 	lyskom-dont-change-prompt, om det redan fanns en prompt.
+
 	* Version 0.43 släppt.
 
 	* lyskom-rest.el (lyskom-update-prompt): Testa inte

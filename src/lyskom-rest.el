@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.6 1996-08-14 15:13:59 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.7 1996-08-14 18:38:13 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.6 1996-08-14 15:13:59 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.7 1996-08-14 18:38:13 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1588,7 +1588,9 @@ chosen according to this"
 (defun lyskom-update-prompt ()
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
-  (if lyskom-executing-command
+  (if (or lyskom-executing-command
+	  (and lyskom-current-prompt
+	       lyskom-dont-change-prompt))
       nil
     (let ((to-do (lyskom-what-to-do))
 	  (prompt nil))
