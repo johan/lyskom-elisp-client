@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.11 1997-07-11 14:17:21 byers Exp $
+;;;;; $Id: macros.el,v 44.12 1997-07-13 10:35:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,15 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.11 1997-07-11 14:17:21 byers Exp $\n"))
+	      "$Id: macros.el,v 44.12 1997-07-13 10:35:50 byers Exp $\n"))
+
+;;;
+;;; Require parts of the widget package. We do this to avoid generating
+;;; errors later on. This sucks. 
+;;;
+
+(require 'custom)
+(require 'widget)
 
 
 
