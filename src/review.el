@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.4 1997-02-07 18:08:06 byers Exp $
+;;;;; $Id: review.el,v 44.5 1997-04-15 22:35:34 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.4 1997-02-07 18:08:06 byers Exp $\n"))
+	      "$Id: review.el,v 44.5 1997-04-15 22:35:34 davidk Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -902,7 +902,13 @@ If ALL is set, return a list of all root texts."
                                           (misc-info->footn-to (car misclist)))
                              tmp)))) 
                (setq misclist (cdr misclist)))
-             
+
+	     ;;
+	     ;; Remove unreadable texts
+	     ;;
+
+	     (setq tmp (delq nil tmp))
+
              ;;
              ;; If no parents were found, this is is a top-level text
              ;;
