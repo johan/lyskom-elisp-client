@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.19 1992-07-26 23:14:02 linus Exp $
+# $Id: Makefile,v 35.20 1992-07-30 19:49:22 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.19 1992-07-26 23:14:02 linus Exp $
+# $Id: Makefile,v 35.20 1992-07-30 19:49:22 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.19  1992-07-26 23:14:02  linus
+# Revision 35.20  1992-07-30 19:49:22  linus
+# Moved around functions to the new reading.el file.
+#
+# Revision 35.19  1992/07/26  23:14:02  linus
 # Added prefetch.el
 #
 # Revision 35.18  1992/06/16  11:33:32  linus
@@ -93,12 +96,13 @@ EMACS-BATCH = emacs -batch -l /usr/local/lib/elisp/bytecomp
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el startup.el \
+	reading.el prefetch.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el \
 	elib-string.el \
-	prefetch.el lyskom-rest.el
+	lyskom-rest.el
 HEADER-EL = macros.el vars.el
 HEADER-ELC = macros.elc vars.elc
 SWEDISH-EL = swedish-strings.el
@@ -106,12 +110,13 @@ SWEDISH-ELC = swedish-strings.elc
 ENGLISH-EL = english-strings.el
 ENGLISH-ELC = english-strings.elc
 SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
+	reading.elc prefetch.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc \
 	elib-string.elc \
-	prefetch.elc lyskom-rest.elc 
+	lyskom-rest.elc 
 PARTS-ELC = $(SRC-ELC)
 
 .SUFFIXES : .el .elc

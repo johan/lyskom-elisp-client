@@ -1,5 +1,8 @@
 Thu Jul 30 03:54:50 1992  Linus Tolke Y  (linus@lysator)
 
+	* reading.el: New file, to contain functions that sets
+	  lyskom-membership, lyskom-to-do-list and lyskom-reading-list.
+
         * startup.el (lyskom-start-anew-login-3): Started the prefetch
 	  *after* stacking all entry prefetch-defaults.
 
