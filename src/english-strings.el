@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.119 2001-01-28 21:16:08 joel Exp $
+;;;;; $Id: english-strings.el,v 44.120 2001-01-28 22:37:00 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.119 2001-01-28 21:16:08 joel Exp $"))
+              "$Id: english-strings.el,v 44.120 2001-01-28 22:37:00 joel Exp $"))
 
 
 ;;; ================================================================
@@ -71,9 +71,9 @@
   (define-prefix-command 'lyskom-en-edit-insert-prefix)
   (define-prefix-command 'lyskom-en-edit-aux-prefix)
   (define-prefix-command 'lyskom-en-edit-add-prefix)
-  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click-or-yank)
+  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
+  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-x") 'lyskom-en-edit-aux-prefix)

@@ -1,5 +1,11 @@
 2001-01-28  Joel Rosdahl  <joel@rosdahl.net>
 
+	* english-strings.el (lyskom-en-edit-mode-map): Bind
+	kom-button-click-or-yank to different buttons depending on Emacs
+	flavour.
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Ditto.
+
 	* view-text.el (lyskom-view-text): Show fast replies made by
 	author first.
 
