@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.27 1992-08-03 04:09:45 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.28 1992-08-30 18:07:41 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.27 1992-08-03 04:09:45 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.28 1992-08-30 18:07:41 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -958,6 +958,7 @@ lyskom-is-waiting nil.
 	(lyskom-end-of-command)))
   (if (and lyskom-executing-command (not may-interrupt))
       (lyskom-error (lyskom-get-string 'wait-for-prompt)))
+  (lyskom-stop-prefetch)
   (if (not (and (boundp 'doing-default-command)
 		doing-default-command))
       (cond
@@ -968,10 +969,9 @@ lyskom-is-waiting nil.
 	(let ((name (lyskom-command-name function)))
 	  (if name (lyskom-insert name)))))
     (save-excursion
-      (if (not lyskom-no-prompt)
-	  (let ((buffer-read-only nil))
-	    (goto-char (point-max))
-	    (delete-char (- (length lyskom-prompt-text))))))
+      (let ((buffer-read-only nil))
+	(goto-char (point-max))
+	(delete-char (- (length lyskom-prompt-text)))))
     (lyskom-insert lyskom-prompt-executing-default-command-text))
   (if (pos-visible-in-window-p (point-max))
       (save-excursion
@@ -1000,7 +1000,6 @@ lyskom-is-waiting nil.
     (lyskom-insert (lyskom-queue->first lyskom-to-be-printed-before-prompt))
     (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
   (setq lyskom-executing-command nil)
-  (setq lyskom-no-prompt t)
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
@@ -1009,16 +1008,13 @@ lyskom-is-waiting nil.
 	(lyskom-stop-prefetch)
 	(lyskom-fetch-until-we-have-an-unread))
     (lyskom-print-prompt)
-    (lyskom-start-prefetch)		; Verify that prefetch i running
-    (run-hooks 'lyskom-after-command-hook)))
+    (run-hooks 'lyskom-after-command-hook) 
+    (lyskom-start-prefetch)))		;Restart the prefetch.
 
 
 (defun lyskom-print-prompt ()
-  "Print prompt if the client knows which command will be default.
-Set lyskom-no-prompt otwherwise. Tell server what I am doing.
-If lyskom-do-when-starting is non-nil then do the first command from this 
-list."
-  (setq lyskom-no-prompt nil)
+  "Print prompt. Tell server what I am doing.
+If lyskom-do-when-starting is non-nil then do the first command from this list."
   (let ((to-do (lyskom-what-to-do)))
     (setq lyskom-command-to-do to-do)
     (cond
@@ -1073,14 +1069,10 @@ list."
 			      (lyskom-command-name (key-binding command))))
 			(t (lyskom-format 'the-command command))))))
 
-     (t (signal 'lyskom-internal-error (list 'lyskom-print-prompt to-do)))))
-
-  (if lyskom-no-prompt
-      nil
+     (t (signal 'lyskom-internal-error (list 'lyskom-print-prompt to-do))))
     (lyskom-insert lyskom-prompt-text)
     (lyskom-maybe-do-when-starting))
-
-    (lyskom-set-mode-line))
+  (lyskom-set-mode-line))
 
 
 (defun lyskom-maybe-do-when-starting ()
