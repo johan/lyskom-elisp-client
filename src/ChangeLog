@@ -1,3 +1,8 @@
+2003-04-25  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in (kom-highlight-conferences): Corrected order of
+	elements in kom-highlight-conferences.
+
 2003-04-21  David Byers  <byers@lysator.liu.se>
 
 	More work on debugging stuff:
