@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.192 2003-08-30 17:47:45 jhs Exp $
+;;;;; $Id: commands2.el,v 44.193 2003-11-17 21:03:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.192 2003-08-30 17:47:45 jhs Exp $\n"))
+              "$Id: commands2.el,v 44.193 2003-11-17 21:03:49 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3542,9 +3542,7 @@ was given."
   "List conferences created since the last time this command
 was given."
   (interactive)
-  (let* ((result (make-collector))
-         (var (symbol-value varsym))
-         (count 0)
+  (let* ((var (symbol-value varsym))
          (conf-no (or (car var) 1))
          (last-conf-no (blocking-do 'first-unused-conf-no))
          (time-string (condition-case nil
@@ -3552,37 +3550,43 @@ was given."
                                     'date-and-time (cdr var)))
                         (error nil))))
 
-    (cond ((null last-conf-no)
-           (lyskom-format-insert 'no-support-in-server))
-          ((>= conf-no last-conf-no)
-           (lyskom-format-insert 'no-new-conferences 
-                                 time-string (lyskom-get-string obj)))
-          (t
-           (lyskom-format-insert 'new-conferences-since 
-                                 time-string (lyskom-get-string obj))
-           (while (< conf-no last-conf-no)
-             (initiate-get-uconf-stat 'main
-                                      (lambda (val result)
-                                        (and val (collector-push val result))) 
-                                      conf-no result)
-             (setq conf-no (1+ conf-no)))
-           (lyskom-wait-queue 'main)
-           (lyskom-traverse conf (nreverse (collector->value result))
-             (when (funcall filter conf)
-               (setq count (1+ count))
-               (lyskom-format-insert "%5#1m %#2c %#1M\n"
-                                     conf
-                                     (lyskom-list-conf-membership-char
-                                      (uconf-stat->conf-no conf)))))
-           (when (or kom-auto-confirm-new-conferences
-                     (lyskom-j-or-n-p (lyskom-format 'mark-confs-as-known
-                                                     (lyskom-get-string obj)
-                                                     count)))
-             (set varsym (cons conf-no (lyskom-current-client-time)))
-             (lyskom-save-options lyskom-buffer
-                                  nil
-                                  nil
-                                  nil))))))
+    (if (null last-conf-no)
+        (lyskom-format-insert 'no-support-in-server))
+    (let ((count (cons 0 (make-marker))))
+      (while (< conf-no last-conf-no)
+        (initiate-get-conf-stat 
+         'main
+         (lambda (conf filter count time-string)
+           (when (and conf (funcall filter conf))
+             (when (eq (car count) 0)
+               (lyskom-format-insert 'new-conferences-since 
+                                     time-string (lyskom-get-string obj)))
+             (rplaca count (1+ (car count)))
+             (lyskom-format-insert "%5#1m %#2c %#1M\n"
+                                   conf
+                                   (lyskom-list-conf-membership-char
+                                    (uconf-stat->conf-no conf)))
+             (set-marker (cdr count) (point))))
+         conf-no filter count time-string)
+        (setq conf-no (1+ conf-no)))
+      (lyskom-wait-queue 'main)
+      (when (marker-position (cdr count))
+        (goto-char (cdr count)))
+
+      (cond ((eq 0 (car count))
+             (lyskom-format-insert 'no-new-conferences 
+                                   time-string (lyskom-get-string obj))) 
+
+            (t 
+               (when (or kom-auto-confirm-new-conferences
+                         (lyskom-j-or-n-p (lyskom-format 'mark-confs-as-known
+                                                         (lyskom-get-string obj)
+                                                         (car count))))
+                 (set varsym (cons conf-no (lyskom-current-client-time)))
+                 (lyskom-save-options lyskom-buffer
+                                      nil
+                                      nil
+                                      nil)))))))
 
 
 
