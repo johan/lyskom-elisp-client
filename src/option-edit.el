@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.109 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.110 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.109 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.110 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -217,6 +217,7 @@
     [kom-show-imported-importer]
     [kom-show-imported-external-recipients]
     [kom-show-imported-envelope-sender]
+    [kom-show-imported-message-id]
     [kom-text-properties]
     [kom-fontify-text]
     [kom-smileys]
@@ -809,6 +810,7 @@ All key bindings:
     (kom-show-imported-importer (toggle (on off)))
     (kom-show-imported-envelope-sender (toggle (on off)))
     (kom-show-imported-external-recipients (toggle (on off)))
+    (kom-show-imported-message-id (toggle (on off)))
     (kom-agree-text (choice ((string nil :tag a-string)
                              (repeat (string nil
                                              :tag a-string

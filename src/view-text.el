@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.79 2004-07-18 19:23:48 byers Exp $
+;;;;; $Id: view-text.el,v 44.80 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.79 2004-07-18 19:23:48 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.80 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -113,6 +113,7 @@ Note that this function must not be called asynchronously."
                          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
                          (mx-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 19))
                          (mx-cc (lyskom-get-aux-item (text-stat->aux-items text-stat) 20))
+			 (mx-message-id (lyskom-get-aux-item (text-stat->aux-items text-stat) 22))
                          (mx-filename (lyskom-get-aux-item (text-stat->aux-items text-stat) 10104))
                          (mx-sender (lyskom-get-aux-item (text-stat->aux-items text-stat) 10103))
 			 (mx-headers (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))
@@ -154,6 +155,9 @@ Note that this function must not be called asynchronously."
                    (when mx-filename
                      (lyskom-format-insert 'attachment-filename
                                            (aux-item->data (car mx-filename))))
+                   (when (and mx-message-id kom-show-imported-message-id)
+                     (lyskom-format-insert 'message-id
+                                           (aux-item->data (car mx-message-id))))
 
                    ;; Insert imported at
 

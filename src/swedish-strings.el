@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.381 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.382 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.381 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.382 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1053,6 +1053,7 @@ Annat se \\[describe-mode] ---")
     
     (envelope-sender . "Sänt av: %#1s\n")
     (attachment-filename . "Bilagans filnamn: \"%#1s\"\n")
+    (message-id . "Meddelande-ID: %#1s\n")
 
     (written-by . " av %#1P\n")
 
@@ -4010,6 +4011,9 @@ ta fram menyer.")
     (kom-show-imported-external-recipients-doc . "\
   Visa externa mottagare och extra-kopiemottagare om detta är påslaget.")
 
+    (kom-show-imported-message-id-doc . "\
+  Påslaget betyder visa meddelande-id.")
+
     (kom-agree-text-doc . "\
   Text som används av kommandot Hålla med. Det kan antingen vara en text
   eller en lista av texter. Om det är en lista så väljs ett alternativ
@@ -4508,6 +4512,7 @@ ta fram menyer.")
     (kom-show-imported-importer-tag . "Visa importör av importerade inlägg:")
     (kom-show-imported-envelope-sender-tag . "Visa avsändare av importerade inlägg:")
     (kom-show-imported-external-recipients-tag . "Visa externa mottagare till importerade inlägg:")
+    (kom-show-imported-message-id-tag . "Visa meddelande-id för importerade inlägg:")
     (kom-agree-text-tag . "Text för Hålla med:")
     (kom-silent-ansaphone-tag . "Pip när automatsvar är påslaget:")
     (kom-default-session-priority-tag . "Läsnivå för nya sessioner:")
