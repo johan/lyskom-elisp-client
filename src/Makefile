@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.6 1993-09-10 16:36:51 linus Exp $
+# $Id: Makefile,v 36.7 1993-11-21 04:37:06 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.6 1993-09-10 16:36:51 linus Exp $
+# $Id: Makefile,v 36.7 1993-11-21 04:37:06 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.6  1993-09-10 16:36:51  linus
+# Revision 36.7  1993-11-21 04:37:06  linus
+# Better tags entry.
+#
+# Revision 36.6  1993/09/10  16:36:51  linus
 # Removed distribution script.
 #
 # Revision 36.5  1993/08/31  11:22:12  linus
@@ -189,7 +192,7 @@ wc:
 	@wc $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 	@wc ../doc/elisp-client.latexinfo ChangeLog ../misc/todo
 
-tags:
+TAGS: $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 	etags $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 
 doc:
