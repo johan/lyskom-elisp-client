@@ -1,3 +1,20 @@
+Thu Feb 13 12:28:55 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* komtypes.el (text-list->empty): Ny funktion.
+	(text-list->length): Ny funktion.
+	(text-list->delq): Ny funktion.
+	(text-list->append): Ny funktion.
+
+	* prefetch.el (lyskom-prefetch-text-list): Använd text-list->empty.
+
+	* lyskom-rest.el (lyskom-enter-conf): Använd text-list->length.
+	(lyskom-set-mode-line): Dito.
+	(lyskom-what-to-do): Dito.
+
+	* clienttypes.el (read-info-append-text-list): Använd
+	text-list->append.
+	(read-list-delete-text): Använd text-list->delq.
+
 Wed Feb 12 14:43:31 1997  David Byers  <davby@sen22.ida.liu.se>
 
 	* defvar.el (lyskom-save-variables): Fixade buggen med lokala
