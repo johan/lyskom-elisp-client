@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.4 1996-05-06 14:58:03 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.5 1996-05-12 12:28:16 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.4 1996-05-06 14:58:03 davidk Exp $"))
+              "$Id: english-strings.el,v 41.5 1996-05-12 12:28:16 byers Exp $"))
 
 
 
@@ -343,7 +343,10 @@ and you have finished reading. Please come back later.
     (newyearday . "\nMay %#1d be a prosperous and good year for you!")
     (newyeareve . "Happy New Year!")
     (newyearevelate . "Less than an hour to go...")
-
+    (lysbday . "
+On this day, in 1973, the Lysator Academic Computer Society was
+formed, and it was a great day in the history of computing in Sweden.
+Read all about it at http://www.lysator.liu.se/history/")
     (total-users . "    A total of %#1d users.\n")
     (who-to-add-q . "Add who/what as a recipient: ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
@@ -563,6 +566,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-cant-read-conf . "You can't review articles to a closed conference you are not a member of.\n")
     (review-cant-read-letterbox . "You can't review articles to somebody else's mailbox.")
     (review-cant-read-empty . "The conference is empty.\n")
+    (cant-review-everything . "You cannot review every artible in LysKOM.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the article.")

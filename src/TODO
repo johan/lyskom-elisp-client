@@ -3,6 +3,13 @@ Att göra i elisp-klienten
 
 Buggar
 
+    LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
+
+    lyskom-try-complete-partials borde returnera exakta matchar före
+    längsta match. Nu blir (lyskom-try-complete-partials "link"
+    '(("(foo) link (bar)" . 1) ("linkfoobar" . 2))) "linkfoobar", inte
+    "(foo) link (bar)".
+
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
     så scrollar klienten ibland trots att den inte borde.
 
@@ -17,7 +24,7 @@ Buggar
 
     Fotnoter som visas på en gång filtreras inte.
 
-    M-> i prioritera-bufferten. Text 1320736.
+    M-> i prioritera-bufferten. Text 1320736. (FIXAT)
 
     Det har hänt att call-info har blivit nil i lyskom-parse-error.
 
@@ -26,9 +33,9 @@ Buggar
     att gå med i möten om man ger dem fel prioritet.
 
     Om man försöker logga in med en förkortning som matchar flera namn
-    tror klienten att man inte finns.
+    tror klienten att man inte finns. (FIXAT?)
 
-    Lista meddelanden via fjärrkontroll listar baklänges.
+    Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
 
 Allmänna förbättringar
 
@@ -37,7 +44,7 @@ Allmänna förbättringar
     och det som står inom parentesen precis efter inläggstexten, så
     vill man antagligen inte återse det, eftersom man ju bevisligen
     har det framför sig.  I stället vill man antagligen kommentera
-    det. 
+    det. (IGNORERAT FÖR TILLFÄLLET -- JAG GILLADE DET INTE /dcb)
 
     Har detta att göra med lite för optimistisk cache att göra? Kanske
     bör man läsa om person-staten innan man varnar för lapp på dörren?
@@ -55,7 +62,3 @@ Allmänna förbättringar
 
     Återinför Olästa
 
-    Man skall få en lista av alternativ om man matar in ett namn som
-    har flera kompletteringar när man loggar in. Skall vi använda en
-    riktig completing-read vid inloggningen? Se inlägg 1375140
-    (markerat av David Byers) i LysKOM.
