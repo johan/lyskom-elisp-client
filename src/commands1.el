@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.60 1999-11-25 12:47:57 byers Exp $
+;;;;; $Id: commands1.el,v 44.61 1999-12-10 11:35:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.60 1999-11-25 12:47:57 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.61 1999-12-10 11:35:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2935,21 +2935,52 @@ the user has used a prefix command argument."
 If the argument TEXT-NO-ARG is non-nil, the user has used a prefix
 command argument."
   (interactive "P")
-  (blocking-do-multiple ((default-from (get-conf-stat lyskom-current-conf))
-			 (default-to (get-conf-stat lyskom-last-added-rcpt)))
-    (lyskom-add-sub-recipient text-no-arg
-			      (lyskom-get-string 'text-to-move)
-			      'move
-			      default-to
-			      default-from)))
+  (let* ((text-no (lyskom-read-number (lyskom-get-string 'text-to-move)
+                                      (or text-no-arg lyskom-current-text)))
+         (text-stat (blocking-do 'get-text-stat text-no))
+         default-recpt found)
+
+    (lyskom-traverse misc-item
+        (text-stat->misc-info-list text-stat)
+      (when (memq (misc-info->type misc-item)
+                  '(RECPT CC-RECPT BCC-RECPT))
+        (when (not found)
+          (setq default-recpt (misc-info->recipient-no misc-item)
+                found (eq (misc-info->type misc-item) 'RECPT)))
+        (when (eq (misc-info->recipient-no misc-item) lyskom-current-conf)
+          (setq default-recpt lyskom-current-conf found t))))
+
+    (cond ((null text-stat)
+           (lyskom-format-insert 'no-such-text-no text-no))
+          ((null default-recpt) 
+           (lyskom-format-insert 'text-has-no-recipients-r text-no))
+          (t (blocking-do-multiple
+                 ((default-from (get-conf-stat default-recpt))
+                  (default-to (get-conf-stat
+                               (or lyskom-last-added-rcpt
+                                   lyskom-current-conf))))
+               (lyskom-add-sub-recipient text-no-arg
+                                         (lyskom-get-string 'text-to-move)
+                                         'move
+                                         default-to
+                                         default-from t))))))
 
 (defun lyskom-add-sub-recipient (text-no-arg
 				 prompt
 				 action
 				 conf
-				 &optional conf2)
-  (let* ((text-no (lyskom-read-number prompt 
-				      (or text-no-arg lyskom-current-text)))
+				 &optional conf2 text-no-is-read)
+  "Add or remove a recipient.
+TEXT-NO-ARG is the prefix argument from (interactive \"P\"); PROMPT is
+the prompt string to use when reading the text number; ACTION is what
+to do (one of add-rcpt, add-copy, add-bcc, sub or move), CONF is the
+conference to add, remove or move from, CONF2 is thee conference to 
+move to (for move) and a non-nil TEXT-NO-IS-READ means that the user has
+already been prompted for a text number so TEXT-NO-ARG contains the 
+actual text to do whatever on."
+  (let* ((text-no (if text-no-is-read text-no-arg
+                    (lyskom-read-number prompt 
+                                        (or text-no-arg lyskom-current-text))))
 	 (text-stat (blocking-do 'get-text-stat text-no))
 	 (was-read (lyskom-text-read-p text-stat))
 
