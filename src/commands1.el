@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.3 1996-09-25 17:29:20 byers Exp $
+;;;;; $Id: commands1.el,v 44.4 1996-09-29 15:18:23 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.3 1996-09-25 17:29:20 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.4 1996-09-29 15:18:23 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -415,26 +415,30 @@ Also adds to lyskom-to-do-list."
       (progn
 	(setq lyskom-membership (sort (cons membership lyskom-membership)
 				      'lyskom-membership-<))
-	(let ((map (blocking-do
-		    'get-map
-		    (conf-stat->conf-no conf-stat)
-		    (max (1+ (membership->last-text-read membership))
-			 (conf-stat->first-local-no conf-stat))
-		    (conf-stat->no-of-texts conf-stat))))
-	  (if map
-	      (let ((texts (skip-first-zeros
-			    (sort (listify-vector (map->text-nos map))
-				  '<))))
-		(if texts
-		    (read-list-enter-read-info
-		     (lyskom-create-read-info
-		      'CONF conf-stat
-		      (membership->priority membership)
-		      (lyskom-create-text-list
-		       texts)
-		      nil nil)
-		     lyskom-to-do-list))))	  
-	  ))
+	;; (let ((map (blocking-do
+	;; 	       'get-map
+	;; 	       (conf-stat->conf-no conf-stat)
+	;; 	       (max (1+ (membership->last-text-read membership))
+	;; 		    (conf-stat->first-local-no conf-stat))
+	;; 	       (conf-stat->no-of-texts conf-stat))))
+	;;   (if map
+	;; 	 (let ((texts (skip-first-zeros
+	;; 		       (sort (listify-vector (map->text-nos map))
+	;; 			     '<))))
+	;; 	   (if texts
+	;; 	       (read-list-enter-read-info
+	;; 		(lyskom-create-read-info
+	;; 		 'CONF conf-stat
+	;; 		 (membership->priority membership)
+	;; 		 (lyskom-create-text-list
+	;; 		  texts)
+	;; 		 nil nil)
+	;; 		lyskom-to-do-list))))	  
+	;;   )
+	(lyskom-prefetch-map-using-conf-stat
+	 conf-stat
+	 (1+ (membership->last-text-read membership))
+	 membership))
     (lyskom-insert-string 'conf-does-not-exist))
   )
 

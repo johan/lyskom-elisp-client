@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.1 1996-09-25 17:29:40 byers Exp $
+;;;;; $Id: macros.el,v 44.2 1996-09-29 15:18:39 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.1 1996-09-25 17:29:40 byers Exp $\n"))
+	      "$Id: macros.el,v 44.2 1996-09-29 15:18:39 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -130,8 +130,14 @@ Value returned is always nil."
   (list 'defun cmd args doc interactive-decl
 	(list 'lyskom-start-of-command (list 'quote cmd))
 	(list 'unwind-protect
-	      (cons 'progn
-		    forms)
+	      (list 'condition-case 'error
+		    (cons 'progn
+			  forms)
+		    (list 'quit
+			  (list 'ding)
+			  (list 'lyskom-insert-before-prompt
+				(list 'lyskom-get-string
+				      (list 'quote 'interrupted)))))
 	      (list 'lyskom-end-of-command))))
 
 

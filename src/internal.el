@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 44.0 1996-08-30 14:46:42 davidk Exp $
+;;;;; $Id: internal.el,v 44.1 1996-09-29 15:18:28 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.0 1996-08-30 14:46:42 davidk Exp $\n"))
+	      "$Id: internal.el,v 44.1 1996-09-29 15:18:28 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -555,39 +555,30 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
       (lyskom-queue-delete-first (kom-queue->pending queue))
       (setq first-pending (lyskom-queue->first (kom-queue->pending queue))))))
 
-;;; Quit is ok to press while the handler is running but we should catch it 
-;;; here
+;;; Quit is NOT ok to press while the handler is running. inhibit-quit
+;;; should be t when these are called.
 (defun lyskom-apply-handler (pending)
   "Apply a handler. Args: PENDING.
 PENDING is an entry of the list as described in documentation for the variable
 lyskom-call-data. The car on the list must be a PARSED:
 	('PARSED RESULT HANDLER HANDLER-DATA)"
-  (let ((inhibit-quit nil))
-    (condition-case error
-        (if (car (cdr (cdr pending)))
-            (apply (car (cdr (cdr pending))) ;Handler
-                   (car (cdr pending))	;Result
-                   (car (cdr (cdr (cdr pending)))))) ;Handler-data
-      (quit (beep)))))
+  (if (car (cdr (cdr pending)))
+      (apply (car (cdr (cdr pending)))	;Handler
+	     (car (cdr pending))	;Result
+	     (car (cdr (cdr (cdr pending))))))) ;Handler-data
 
 (defun lyskom-apply-multi-handler (pending result-list)
   "Apply a handler for a lyskom-collect - lyskom-use construct."
-  (let ((inhibit-quit nil))
-    (condition-case error
-        (apply (car (cdr pending))	;Multi-handler
-               (nconc result-list
-                      (car (cdr (cdr pending))))) ;Multi-handler-data
-      (quit (beep)))))
+  (apply (car (cdr pending))		;Multi-handler
+	 (nconc result-list
+		(car (cdr (cdr pending)))))) ;Multi-handler-data
 
 
 (defun lyskom-apply-multi-list-handler (pending result-list)
   "Apply a handler for a lyskom-collect - lyskom-list-use construct."
-  (let ((inhibit-quit nil))
-    (condition-case error
-        (apply (car (cdr pending))	;Multi-handler
-               (cons result-list
-                     (car (cdr (cdr pending))))) ;Multi-handler-data
-      (quit (beep)))))
+  (apply (car (cdr pending))		;Multi-handler
+	 (cons result-list
+	       (car (cdr (cdr pending)))))) ;Multi-handler-data
     
 (defun lyskom-apply-function (pending)
   (setcar pending 'HALTED)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.1 1996-09-25 17:29:45 byers Exp $
+;;;;; $Id: parse.el,v 44.2 1996-09-29 15:18:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.1 1996-09-25 17:29:45 byers Exp $\n"))
+	      "$Id: parse.el,v 44.2 1996-09-29 15:18:44 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -118,7 +118,9 @@ Signal lyskom-protocol-error if the next token is not a number."
   (goto-char lyskom-parse-pos)
   (let* ((max (point-max))
 	 (result (condition-case read-error
-		     (read (current-buffer)) 
+		     ;; Eval it to prevent malfunction when
+		     ;; edebug-all-defs or edebug-all-forms is non-nil.
+		     (read (current-buffer))
 		   (end-of-file (signal 'lyskom-parse-incomplete nil))))
 	 (pos (point)))
     (cond
@@ -907,7 +909,9 @@ functions and variables that are connected with the lyskom-buffer."
        (let* ((lyskom-parse-pos 1)
 	      (key (lyskom-parse-nonwhite-char)))
 	 (condition-case err
-	     (let ((inhibit-quit nil))
+	     (let ((inhibit-quit t))	; Used to be nil, but that can
+					; cause hard-to-repair
+					; problems
 	       (cond
 		((eq key ?=)		;The call succeeded.
 		 (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.0 1996-08-30 14:47:57 davidk Exp $
+;;;;; $Id: services.el,v 44.1 1996-09-29 15:18:52 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.0 1996-08-30 14:47:57 davidk Exp $\n"))
+	      "$Id: services.el,v 44.1 1996-09-29 15:18:52 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -889,15 +889,11 @@ or get-text-stat."
 	     data)
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (memq (process-status lyskom-proc) '(open run))
+		  ;; The following test should probably be removed
 		  (not lyskom-quit-flag))
 ;;        (if (input-pending-p)
 ;;            (execute-kbd-macro (read-key-sequence "")))
         (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
-      (if (or lyskom-quit-flag quit-flag)
-	  (progn
-	    (setq lyskom-quit-flag nil)
-	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
-	    (signal 'quit nil)))
       lyskom-blocking-return)))
 
 

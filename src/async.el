@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.0 1996-08-30 14:45:09 davidk Exp $
+;;;;; $Id: async.el,v 44.1 1996-09-29 15:18:08 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.0 1996-08-30 14:45:09 davidk Exp $\n"))
+	      "$Id: async.el,v 44.1 1996-09-29 15:18:08 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -479,20 +479,27 @@ In that case, just discard this call."
 
     ;; Update the read-lists.
 
-    (if (and (lyskom-conf-fetched-p (conf-stat->conf-no recipient))
-	     (lyskom-visible-membership
-	      (lyskom-member-p (conf-stat->conf-no recipient)))
-	     (not (read-list-enter-text text-no recipient lyskom-to-do-list)))
-	;; If we have already read all texts in the conference...
-	(let ((info (lyskom-create-read-info
-		     'CONF
-		     recipient
-		     (membership->priority
-		      (lyskom-member-p (conf-stat->conf-no recipient)))
-		     (lyskom-create-text-list (list text-no)))))
-	  (read-list-enter-read-info info lyskom-to-do-list)
-	  (if (= lyskom-current-conf (conf-stat->conf-no recipient))
-	      (read-list-enter-first info lyskom-reading-list))))
+    ;; Prefetch thoughts:
+    ;; We need a way to check if a conferences is fetched.
+    ;; davidk /960924
+    
+    (let ((member (lyskom-member-p (conf-stat->conf-no recipient))))
+      (if (and member
+	       ;; (lyskom-conf-fetched-p (conf-stat->conf-no recipient))
+	       (lyskom-visible-membership member)
+	       (not (read-list-enter-text text-no recipient
+					  lyskom-to-do-list)))
+	  ;; If we have already read all texts in the conference or the
+	  ;; text has not been prefetched
+	  (let ((info (lyskom-create-read-info
+		       'CONF
+		       recipient
+		       (membership->priority
+			(lyskom-member-p (conf-stat->conf-no recipient)))
+		       (lyskom-create-text-list (list text-no)))))
+	    (read-list-enter-read-info info lyskom-to-do-list)
+	    (if (= lyskom-current-conf (conf-stat->conf-no recipient))
+		(read-list-enter-first info lyskom-reading-list)))))
 
     (lyskom-set-mode-line))))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 44.0 1996-08-30 14:47:42 davidk Exp $
+;;;;; $Id: reading.el,v 44.1 1996-09-29 15:18:50 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,34 +35,24 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.0 1996-08-30 14:47:42 davidk Exp $\n"))
+	      "$Id: reading.el,v 44.1 1996-09-29 15:18:50 davidk Exp $\n"))
 
 
-(defun lyskom-enter-map-in-to-do-list (map conf-stat)
+(defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
   "Takes a MAP and enters all its listed text-nos in the conference CONF-STAT.
 This works by modifying the lyskom-to-do-list which in some cases
 also means modifying the lyskom-reading-list. The zero text-nos are skipped."
-  (let ((list (listify-vector (map->text-nos map))))
-    (while list
-      (if (zerop (car list))
-	  (setq list (cdr list))
-	(if (read-list-enter-text (car list) conf-stat lyskom-to-do-list)
-	    (setq list (cdr list))
-	  (let ((info (lyskom-create-read-info 
-		       'CONF conf-stat
-		       (membership->priority 
-			(lyskom-member-p (conf-stat->conf-no conf-stat)))
-		       (lyskom-create-text-list
-			(delq 0 list)
-;;			(apply 'nconc
-;;			       (mapcar
-;;				(function
-;;				 (lambda (k)
-;;				   (if (zerop k) nil (list k))))
-;;				list))
-			))))
-	    (read-list-enter-read-info info lyskom-to-do-list)
-	    (setq list nil)))))))
+  (let ((list (lyskom-list-unread map membership)))
+    (if (null list)
+	nil
+      (read-list-enter-read-info
+       (lyskom-create-read-info 
+	'CONF conf-stat
+	(membership->priority 
+	 (lyskom-member-p (conf-stat->conf-no conf-stat)))
+	(lyskom-create-text-list
+	 list))
+       lyskom-to-do-list))))
 
 
 (defun lyskom-add-membership-to-membership (membership)

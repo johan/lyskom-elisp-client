@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.0 1996-08-30 14:45:21 davidk Exp $
+;;;;; $Id: clienttypes.el,v 44.1 1996-09-29 15:18:12 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.0 1996-08-30 14:45:21 davidk Exp $\n"))
+	      "$Id: clienttypes.el,v 44.1 1996-09-29 15:18:12 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -143,6 +143,15 @@
   (eq (car-safe object) 'READ-INFO))
 
 
+(defsubst read-info-append-text-list (read-info texts)
+  (set-read-info->text-list
+   read-info
+   (nconc (read-info->text-list read-info)
+	  texts)))
+
+(defsubst read-info-enter-text-last (read-info text-no)
+  (read-info-append-text-list read-info (list text-no)))
+
 				   
 ;;; ================================================================
 ;;;                          read-list
@@ -218,10 +227,7 @@ Returns t if there was a conference to insert this text into."
       ((and (eq 'CONF (read-info->type read-info))
 	    (= (conf-stat->conf-no recipient)
 	       (conf-stat->conf-no (read-info->conf-stat read-info))))
-       (set-read-info->text-list
-	read-info
-	(nconc (read-info->text-list read-info)
-	       (list text-no)))
+       (read-info-enter-text-last read-info text-no)
        (setq inserted t))))
     inserted))
 
@@ -265,10 +271,23 @@ will nomally be inserted after the old one, but if BEFORE is non-nil it
 will be inserted before it."
   (let ((pri (+ (if before 0 -1)
 		(read-info->priority read-info)))
-	(continue t))
+	(continue t)
+	(conf-stat (read-info->conf-stat read-info))
+	(type (read-info->type read-info)))
     (while continue
       (cond
-       ((null (cdr rlist))
+       ;; This case was added by davidk 960925. It is not used from
+       ;; everywhere, but at least lyskom-enter-map-in-to-do-list
+       ;; should become more efficient.
+       ((and (eq type 'CONF)
+	     (eq (read-info->type (car (cdr rlist))) 'CONF)
+	     (eq conf-stat (read-info->conf-stat (car (cdr rlist)))))
+	(read-info-append-text-list
+	 (car (cdr rlist))
+	 (text-list->texts (read-info->text-list read-info)))
+	(setq continue nil)) 
+       
+       ((null (cdr rlist)) 
 	(setcdr rlist (list read-info))
 	(setq continue nil))
        ((>= pri (read-info->priority (car (cdr rlist))))
