@@ -1,5 +1,17 @@
 Sat Aug 10 12:24:22 1996  David Byers  <davby@sen2.ida.liu.se>
 
+	* commands1.el (lyskom-status-session-9): Snyggare utskrivt av
+ 	idletid. Skriv inte ut idletid om klienten inte har skickat
+ 	user-active. (lyskom-format-secs-aux): Ny funktion.
+	(lyskom-format-secs): Ny funktion.
+
+	* english-strings.el, swedish-strings.el (lyskom-strings): Lade till
+ 	session-is-active.
+
+	* komtypes.el (def-komtype): Fixade buggen som gjorde att
+ 	def-komtype var obra genom att returnera en progn med defsubstarna
+ 	i istf att evaluera defsubstarna.
+
 	* vars.el.in (lyskom-server-features): Lägg in information om
  	protokollversion för servrar med version lägre än 1.7.0
 	(lyskom-server-features): Lade in lyskom-dynamic-session-info-flag

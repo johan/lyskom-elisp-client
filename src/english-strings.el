@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.4 1996-08-10 11:56:04 byers Exp $
+;;;;; $Id: english-strings.el,v 43.5 1996-08-10 13:10:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.4 1996-08-10 11:56:04 byers Exp $"))
+              "$Id: english-strings.el,v 43.5 1996-08-10 13:10:36 byers Exp $"))
 
 
 
@@ -932,6 +932,14 @@ Using %#6D from %#3s\n")
 Using %#6D from %#3s
 On since %#8s%#9s")
     (session-status-inactive . "\nHas been inactive for %#1d minutes\n")
+    (one-day . "one day")
+    (one-hour . "one hour")
+    (one-minute . "one minute")
+    (days . "days")
+    (hours . "hours")
+    (minutes . "minutes")
+    (and . "and")
+    (session-is-active . " and is currently active.\n")
     (session-is-invisible . "This session is invisible.\n")
     (status-for-session . "Session status for whom? ")
     (unknown-doing-what . "Exists")
