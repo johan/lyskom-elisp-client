@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.10 1991-11-02 18:05:42 linus Exp $
+;;;;; $Id: commands1.el,v 35.11 1991-11-24 02:49:24 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.10 1991-11-02 18:05:42 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.11 1991-11-24 02:49:24 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -698,16 +698,20 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 (defun lyskom-write-comment-soon (text-stat text text-no type)
   "Write a comment to the text with TEXT-STAT, TEXT and, TEXT-NO.
 TYPE is either 'comment or 'footnote."
-  (cond ((or (null text-stat)
-	     (null text))
-	 (lyskom-format-insert 'cant-read-textno text-no)
-	 (lyskom-end-of-command))
-	((string-match "\n" (text->text-mass text))
-	 (lyskom-write-comment text-stat
-			       (substring (text->text-mass text)
-					  0 (match-beginning 0))
-			       type))
-	(t (lyskom-write-comment text-stat "" type))))
+  (cond
+   ;; Text not found?
+   ((or (null text-stat)
+	(null text))
+    (lyskom-format-insert 'cant-read-textno text-no)
+    (lyskom-end-of-command))
+   ;; Give header.
+   ((string-match "\n" (text->text-mass text))
+    (lyskom-write-comment text-stat
+			  (substring (text->text-mass text)
+				     0 (match-beginning 0))
+			  type))
+   ;; The commented text had no header.
+   (t (lyskom-write-comment text-stat "" type))))
 
 
 (defun lyskom-write-comment (text-stat subject type)
@@ -735,7 +739,24 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
 (defun lyskom-comment-recipients (data lyskom-proc text-stat subject type)
   "Compute recipients to a comment to a text.
 Args: DATA, LYSKOM-PROC TEXT-STAT SUBJECT TYPE.
+DATA is a list of all the recipients that should receive this text.
+If DATA contains more than one conference the user is asked (using y-or-n-p)
+if all conferences really should receive the text.
 The call is continued to the lyskom-edit-text."
+  ;; Filter multiple recipients through y-or-n-p.
+  (if (and kom-confirm-multiple-recipients (> (length data) 1)
+	   (not (and (= (length data) 2)
+		     (or (= lyskom-pers-no (conf-stat->conf-no (car data)))
+			 (= lyskom-pers-no (conf-stat->conf-no
+					    (car (cdr data))))))))
+      (let ((new-data nil))
+	(while data
+	  (if (j-or-n-p (lyskom-format 'comment-keep-recpt-p
+				       (conf-stat->name (car data))))
+	      (setq new-data (cons (car data) new-data)))
+	  (setq data (cdr data)))
+	(setq data (nreverse new-data))))	    
+
   (let* ((member nil)
 	 (recver (lyskom-create-misc-list
 		  (cond 
@@ -757,6 +778,8 @@ The call is continued to the lyskom-edit-text."
 	      (setq member t))
 	  (setq recpts (cons (conf-stat->comm-conf conf-stat) recpts))))
       (setq data (cdr data)))
+    ;; Add the user to the list of recipients if he isn't a member in
+    ;; any of the recipients.
     (if (not member)
 	(setq recver (append recver (list (cons 'recpt lyskom-pers-no)))))
     (lyskom-edit-text lyskom-proc 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.14 1991-11-12 22:43:58 linus Exp $
+;;;;; $Id: vars.el,v 35.15 1991-11-24 02:49:03 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.14 1991-11-12 22:43:58 linus Exp $\n"))
+	      "$Id: vars.el,v 35.15 1991-11-24 02:49:03 ceder Exp $\n"))
 
 
 
@@ -165,6 +165,11 @@ kom-show-personal-messages-in-buffer decides which buffer to pop.")
 (defvar kom-ding-on-personal-messages t
   "*Non-nil means ding as personal messages arrive.
 Non-nil and non-t means only ding when they really are personal.")
+
+(defvar kom-confirm-multiple-recipients t
+  "*Non-nil means ask the user for confirmation about recipients.
+When the user writes a comment to a text with more than one recipient
+he gets a y-or-n-p question for all recipients.")
 
 (defconst lyskom-elisp-variables '(
   kom-do-when-done
