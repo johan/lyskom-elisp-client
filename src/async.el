@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.9 1997-10-23 12:18:47 byers Exp $
+;;;;; $Id: async.el,v 44.10 1997-12-04 20:39:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.9 1997-10-23 12:18:47 byers Exp $\n"))
+	      "$Id: async.el,v 44.10 1997-12-04 20:39:31 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -212,30 +212,41 @@ according to the value of FLAG."
 
 (defun lyskom-show-logged-in-person (conf-stat)
   "Visa p} kommandoraden vem som loggat in."
-  (cond
-   ((lyskom-is-in-minibuffer))
-   ((lyskom-show-presence (conf-stat->conf-no conf-stat)
-                          kom-presence-messages)
-    (lyskom-message
-     "%s"
-     (lyskom-format 'has-entered (or conf-stat
-				     (lyskom-get-string 'secret-person))))))
+  (let ((server (or (cdr (lyskom-string-assoc lyskom-server-name
+                                              kom-server-aliases))
+                    "KOM")))
+    (cond
+     ((lyskom-is-in-minibuffer))
+     ((lyskom-show-presence (conf-stat->conf-no conf-stat)
+                            kom-presence-messages)
+      (lyskom-message
+       "%s"
+       (lyskom-format 'has-entered
+                      (or conf-stat
+                          (lyskom-get-string 'secret-person))
+                      server
+                      ))))
 
-  (cond
-   ((lyskom-show-presence (conf-stat->conf-no conf-stat)
-                          kom-presence-messages-in-buffer)
-    (if conf-stat
-	(lyskom-format-insert-before-prompt 'has-entered-r conf-stat
-					    (and kom-text-properties
-						 '(face kom-presence-face)))
-      (lyskom-format-insert-before-prompt 'has-entered-r
-					  (lyskom-get-string 'secret-person)
-					  (and kom-text-properties
-					       '(face kom-presence-face)))))))
+    (cond
+     ((lyskom-show-presence (conf-stat->conf-no conf-stat)
+                            kom-presence-messages-in-buffer)
+      (if conf-stat
+          (lyskom-format-insert-before-prompt 'has-entered-r conf-stat
+                                              (and kom-text-properties
+                                                   '(face kom-presence-face))
+                                              server)
+        (lyskom-format-insert-before-prompt 'has-entered-r
+                                            (lyskom-get-string 'secret-person)
+                                            (and kom-text-properties
+                                                 '(face kom-presence-face))
+                                            server))))))
 
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)
   "Visa p} kommandoraden vem som loggat ut."
+  (let ((server (or (cdr (lyskom-string-assoc lyskom-server-name
+                                              kom-server-aliases))
+                    "KOM")))
   (cond
    ((lyskom-is-in-minibuffer))
    ((lyskom-show-presence (conf-stat->conf-no conf-stat) 
@@ -243,18 +254,21 @@ according to the value of FLAG."
     (lyskom-message
      "%s"
      (lyskom-format 'has-left (or conf-stat
-				  (lyskom-get-string 'secret-person))))))
+				  (lyskom-get-string 'secret-person))
+                    server))))
   (cond
    ((lyskom-show-presence (conf-stat->conf-no conf-stat)
                           kom-presence-messages-in-buffer)
     (if conf-stat
 	(lyskom-format-insert-before-prompt 'has-left-r conf-stat
 					    (and kom-text-properties
-						 '(face kom-presence-face)))
+						 '(face kom-presence-face))
+                                            server)
       (lyskom-format-insert-before-prompt 'has-left-r
 					  (lyskom-get-string 'secret-person)
 					  (and kom-text-properties
-					       '(face kom-presence-face)))))))
+					       '(face kom-presence-face))
+                                          server))))))
 
 
 

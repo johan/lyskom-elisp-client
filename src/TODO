@@ -17,6 +17,12 @@ Att göra i elisp-klienten
 
 ** OSORTERADE
 
+    Om man byter buffert med C-x b till den sista aktiva KOM-bufferten
+    så tycker Nästa LysKOM att det inte finns fler aktiva
+    KOM-sessioner. Funktionen verkar vara lite för känslig för hur
+    lyskom-buffer-list ser ut. Den borde nog göra något lite
+    intelligentare när listan ser ut att ha tagit slut.
+
     Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
     och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
     blev det rätt. 
@@ -364,6 +370,9 @@ Att göra i elisp-klienten
 
 
 ** DIVERSE OSORTERAT
+
+    Lista sessioner, ungefär som lista klienter, men som ger mer
+    sessionsinformation, till exempel idletid. Önskad av David Hedbor.
 
     Sortera vilkaslistan efter t.ex. idletid.
 
