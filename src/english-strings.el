@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.351 2005-01-12 19:12:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.352 2005-01-12 19:32:05 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.351 2005-01-12 19:12:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.352 2005-01-12 19:32:05 qha Exp $"))
 
 
 ;;; ================================================================
@@ -2661,7 +2661,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-mode-map (kbd "u") 'lyskom-en-unread-prefix)
 
   (define-key lyskom-en-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
-  (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
+  (define-key lyskom-en-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
 
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
