@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 39.1 1996-03-18 15:43:27 byers Exp $
+;;;;; $Id: services.el,v 39.2 1996-03-20 13:44:02 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 39.1 1996-03-18 15:43:27 byers Exp $\n"))
+	      "$Id: services.el,v 39.2 1996-03-20 13:44:02 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -683,9 +683,14 @@ The cache is consulted when command is get-conf-stat, get-pers-stat
 or get-text-stat."
   ;; Here we could check if lyskom-blocking-return is non-nil, in
   ;; which case there is a bug in the code
+
   (save-excursion
     (set-buffer (process-buffer (or lyskom-proc
 				    lyskom-blocking-process)))
+    ;; If this happens, we're in trouble
+    (if lyskom-is-parsing
+	(lyskom-really-serious-bug))
+
     (let ((lyskom-blocking-return 'not-yet-gotten))
       (apply (intern-soft (concat "initiate-"
 				  (symbol-name command)))

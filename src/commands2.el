@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 39.0 1996-03-14 18:17:03 davidk Exp $
+;;;;; $Id: commands2.el,v 39.1 1996-03-20 13:43:52 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 39.0 1996-03-14 18:17:03 davidk Exp $\n"))
+	      "$Id: commands2.el,v 39.1 1996-03-20 13:43:52 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -922,7 +922,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let* ((curbuf (current-buffer))
 	 (old-buf (condition-case ()
-			    debugger-old-buffer
+			    (or debugger-old-buffer (current-buffer))
 			  (void-variable (current-buffer))))
 	 (repname "*lyskom-bugreport*"))
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
