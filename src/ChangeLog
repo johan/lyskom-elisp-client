@@ -1,3 +1,11 @@
+1999-06-17  David Byers  <davby@ida.liu.se>
+
+	* feature.el (lyskom-define-feature): Inherit feature variables
+	into the minibuffer.
+
+	* completing-read.el (lyskom-completing-who-is-on): Use dynamic
+	session info when it should be used.
+
 1999-06-15  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-format-aux-help): Handle actual character 
