@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.29 2002-07-29 18:00:39 byers Exp $
+;;;;; $Id: flags.el,v 44.30 2002-08-01 18:24:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.29 2002-07-29 18:00:39 byers Exp $\n"))
+	      "$Id: flags.el,v 44.30 2002-08-01 18:24:08 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -180,20 +180,24 @@
 
 
 (defun lyskom-read-options ()
-  "Reads the user-area and sets the variables according to the choises."
+  "Reads the user-area and sets the variables according to the choises.
+Returns a list of variables that were ignored."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
 	(if (not pers-stat)  ;+++ Other error handler.
-	    (lyskom-insert-string 'you-dont-exist)
+	    (progn (lyskom-insert-string 'you-dont-exist)
+                   nil)
 	  (setq lyskom-other-clients-user-areas nil)
 	  (if (zerop (pers-stat->user-area pers-stat))
 	      (progn
 		;; (lyskom-tell-phrases-validate)
-		(setq lyskom-options-done t))
+		(setq lyskom-options-done t)
+                nil)
 	    (lyskom-read-options-eval 
 	     (blocking-do 'get-text
-			  (pers-stat->user-area pers-stat))))))))
+			  (pers-stat->user-area pers-stat))))))
+    nil))
 
 (defun lyskom-read-options-eval (text)
   "Handles the call from where we have the text.
