@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.122 2000-09-02 14:23:13 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.123 2000-09-02 20:08:51 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.122 2000-09-02 14:23:13 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.123 2000-09-02 20:08:51 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3587,8 +3587,8 @@ One parameter - the prompt string."
         `(kom-show-unread-in-frame-title
           (lyskom-session-has-unreads 
            (" ("
-            ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1 t))
-             (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1 t)))
+            ((lyskom-session-has-unreads ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread) 'iso-8859-1))
+             (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-letters) 'iso-8859-1)))
             ")"))))
 
   (add-hook 'kill-buffer-hook 'lyskom-remove-buffer-from-lists)
