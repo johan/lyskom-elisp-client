@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.11 2001-01-01 23:44:03 qha Exp $
+;;;;; $Id: filter-edit.el,v 44.12 2001-01-03 22:02:54 qha Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.11 2001-01-01 23:44:03 qha Exp $\n"))
+	      "$Id: filter-edit.el,v 44.12 2001-01-03 22:02:54 qha Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -130,17 +130,17 @@
         ((eq 'not (car (car filter)))
          (lyskom-verify-filter-pattern
           (cons (cdr (car filter)) (cdr filter))))
-        ((member (car (car filter))
+        ((memq (car (car filter))
 		 '(author-re recipient-re subject-re text-re))
          (and
           (lyskom-filter-verify-regexp (cdr (car filter)))
           (lyskom-verify-filter-pattern (cdr filter))))
          
-        ((member (car (car filter)) '(author subject recipient text))
+        ((memq (car (car filter)) '(author subject recipient text))
          (and
           (stringp (cdr (car filter)))
           (lyskom-verify-filter-pattern (cdr filter))))
-        ((member (car (car filter)) '(author-no recipient-no))
+        ((memq (car (car filter)) '(author-no recipient-no))
          (and
           (integerp (cdr (car filter)))
           (lyskom-verify-filter-pattern (cdr filter))))
@@ -275,7 +275,7 @@ If NEG is non-nil, format the negation."
 		 " != "
 	       " = ")
 	     (cdr (car pat))))
-    (cond ((member (car (car pat)) '(recipient-no author-no))
+    (cond ((memq (car (car pat)) '(recipient-no author-no))
 	   (save-excursion
 	     (if (boundp 'lyskom-buffer)
 		 (set-buffer lyskom-buffer))
@@ -527,11 +527,11 @@ If NEWLINE is non-nil, insert a newline after the header."
     (setq what (cdr (assoc what rev-what)))
 
     (if (not
-         (cond ((member what '(author subject text recipient))
+         (cond ((memq what '(author subject text recipient))
 		(setq arg argstring))
-               ((member what '(author-no recipient-no))
+               ((memq what '(author-no recipient-no))
 		(setq arg (string-to-int argstring)))
-               ((member what '(author-re subject-re text-re recipient-re))
+               ((memq what '(author-re subject-re text-re recipient-re))
                 (setq arg argstring)
                 (lyskom-filter-verify-regexp arg))))
         (lyskom-error (lyskom-get-string 'filter-edit-bad-argument)

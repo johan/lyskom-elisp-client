@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.36 2001-01-01 23:43:54 qha Exp $
+;;;;; $Id: async.el,v 44.37 2001-01-03 22:02:45 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.36 2001-01-01 23:43:54 qha Exp $\n"))
+	      "$Id: async.el,v 44.37 2001-01-03 22:02:45 qha Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -667,7 +667,7 @@ converted, before insertion."
       misc-info (text-stat->misc-info-list text-stat)
     (let ((type (misc-info->type misc-info)))
       (cond
-       ((member type '(RECPT CC-RECPT BCC-RECPT))
+       ((memq type lyskom-recpt-types-list)
 	;; add on lyskom-reading-list and lyskom-to-do-list if
 	;; this recipient is a recipient that has been checked.
 	(if (and (eq  (misc-info->recipient-no misc-info)
@@ -703,7 +703,7 @@ converted, before insertion."
       (lyskom-traverse
           misc-info (text-stat->misc-info-list text-stat)
         (let ((type (misc-info->type misc-info)))
-          (cond ((member type '(RECPT CC-RECPT BCC-RECPT))
+          (cond ((memq type lyskom-recpt-types-list)
                  (initiate-get-conf-stat 'async 'lyskom-delete-old-text
                                          (misc-info->recipient-no misc-info)
                                          text-stat

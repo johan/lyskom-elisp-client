@@ -259,7 +259,7 @@ only recomputed if the window width changes."
       (lp--format-entry mship-conf-stat entry))
 
     (when (or (eq (lp--entry->state entry) 'expanded)
-              (not (member (membership->created-by
+              (not (memq (membership->created-by
 			    (lp--entry->membership entry))
                             (list lyskom-pers-no 0 'contracted))))
       (lyskom-insert-at-point "\n        ")

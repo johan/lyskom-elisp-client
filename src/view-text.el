@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.45 2001-01-01 23:44:13 qha Exp $
+;;;;; $Id: view-text.el,v 44.46 2001-01-03 22:03:06 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.45 2001-01-01 23:44:13 qha Exp $\n"))
+	      "$Id: view-text.el,v 44.46 2001-01-03 22:03:06 qha Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -215,7 +215,7 @@ Note that this function must not be called asynchronously."
 			 (text-stat->misc-info-list text-stat)
 		       (let ((type (misc-info->type misc)))
 			 (cond
-			  ((member type '(RECPT BCC-RECPT CC-RECPT))
+			  ((memq type '(RECPT BCC-RECPT CC-RECPT))
 			   (lyskom-print-header-recpt 
 			    (misc-info->recipient-no misc)
 			    misc))
@@ -524,7 +524,7 @@ recipients to it that the user is a member in."
       (let* ((misc-info (elt misc-info-list i))
 	     (type (misc-info->type misc-info)))
 	(cond
-	 ((member type '(RECPT BCC-RECPT CC-RECPT))
+	 ((memq type '(RECPT BCC-RECPT CC-RECPT))
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
@@ -562,7 +562,7 @@ blocking-do."
           (setq misc-item (car misc-info-list))
           (setq type (misc-info->type misc-item))
           (setq misc-info-list (cdr misc-info-list))
-          (cond ((member type '(RECPT BCC-RECPT CC-RECPT))
+          (cond ((memq type '(RECPT BCC-RECPT CC-RECPT))
                  (setq membership (if bg
                                       (lyskom-try-get-membership
                                        (misc-info->recipient-no misc-item) t)
@@ -900,7 +900,7 @@ the client. That is done by lyskom-is-read."
   (let ((misc-info-list (text-stat->misc-info-list text-stat)))
     (lyskom-traverse
      misc-info misc-info-list
-     (if (and (member (misc-info->type misc-info) '(RECPT BCC-RECPT CC-RECPT))
+     (if (and (memq (misc-info->type misc-info) '(RECPT BCC-RECPT CC-RECPT))
 	      ;; The whole membership list might not be fetched
 	      ;; yet. So we better mark it as read in all conferences.
 	      ;; (lyskom-member-p (misc-info->recipient-no misc-info))

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.128 2000-11-19 15:14:29 joel Exp $
+;;;;; $Id: vars.el.in,v 44.129 2001-01-03 22:03:05 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.128 2000-11-19 15:14:29 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.129 2001-01-03 22:03:05 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2354,6 +2354,11 @@ to be bold with yellow text on a red background."
 (defvar lyskom-fast-reply-history nil)
 
 
+;;; ============================================================
+
+(defconst lyskom-comment-types-list '(COMM-IN FOOTN-IN))
+(defconst lyskom-recpt-types-list '(RECPT CC-RECPT BCC-RECPT))
+(defconst lyskom-review-types-list '(REVIEW REVIEW-TREE REVIEW-MARK))
 
 (eval-and-compile (provide 'lyskom-vars))
 

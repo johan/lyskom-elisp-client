@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.18 2001-01-01 23:44:04 qha Exp $
+;;;;; $Id: filter.el,v 44.19 2001-01-03 22:02:55 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.18 2001-01-01 23:44:04 qha Exp $\n"))
+	      "$Id: filter.el,v 44.19 2001-01-03 22:02:55 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -166,7 +166,7 @@ invalid-value until a filter action has been selected.")
           misc
           (text-stat->misc-info-list text-stat)
         (let ((type (misc-info->type misc)))
-          (if (member type '(RECPT CC-RECPT BCC-RECPT))
+          (if (memq type lyskom-recpt-types-list)
               (initiate-get-conf-stat 'filter 
                                       nil
                                       (misc-info->recipient-no misc)))))

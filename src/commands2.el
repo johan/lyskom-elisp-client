@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.87 2001-01-01 23:43:59 qha Exp $
+;;;;; $Id: commands2.el,v 44.88 2001-01-03 22:02:50 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.87 2001-01-01 23:43:59 qha Exp $\n"))
+	      "$Id: commands2.el,v 44.88 2001-01-03 22:02:50 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -937,7 +937,7 @@ on one line."
 	    (let ((type (read-info->type 
 			 (read-list->nth lyskom-reading-list
 					 r))))
-	      (if (member type '(CONF REVIEW-MARK REVIEW))
+	      (if (memq type '(CONF REVIEW-MARK REVIEW))
 		  (setq len 0)
 		(++ r))))
 	  (read-list->nth lyskom-reading-list r)))))))
@@ -1517,9 +1517,9 @@ current conference to another session."
 		(> len 0))
       (let ((type (read-info->type (read-list->first lyskom-reading-list))))
 	(cond 
-	 ((member type '(REVIEW REVIEW-TREE REVIEW-MARK))
+	 ((memq type lyskom-review-types-list)
 	  (read-list-rotate lyskom-reading-list))
-	 ((member type '(COMM-IN FOOTN-IN))
+	 ((memq type lyskom-comment-types-list)
 	  (set-read-list-del-first lyskom-reading-list))
 	 ((eq type 'CONF)
 	  (let* ((rlist (read-info->text-list
@@ -2020,7 +2020,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                               0 label)))
            (cache-del-text-stat objno))
 
-          ((member type '(conf pers))
+          ((memq type '(conf pers))
            (setq object
                  (lyskom-read-conf-stat (lyskom-get-string 
                                          (if (eq type 'pers)

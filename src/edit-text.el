@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.73 2001-01-01 23:44:02 qha Exp $
+;;;;; $Id: edit-text.el,v 44.74 2001-01-03 22:02:53 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.73 2001-01-01 23:44:02 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.74 2001-01-03 22:02:53 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -796,7 +796,7 @@ Cannot be called from a callback."
       (cond ((eq (car misc) 'comm-to)
              (setq comm-to-list (cons (cdr misc)
                                       comm-to-list)))
-            ((member (car misc) '(recpt cc-recpt bcc-recpt))
+            ((memq (car misc) '(recpt cc-recpt bcc-recpt))
              (when (eq (car misc) 'recpt)
                (setq num-real-recpt (1+ num-real-recpt))
                (when (eq (cdr misc) me) (setq num-me (1+ num-me))))
@@ -913,7 +913,7 @@ Cannot be called from a callback."
           ;;
 
           (lyskom-traverse misc (cdr misc-list)
-            (cond ((member (car misc) '(recpt bcc-recpt cc-recpt))
+            (cond ((memq (car misc) '(recpt bcc-recpt cc-recpt))
                    (if (or (memq (cdr misc) author-list)
                            (eq (cdr misc) me))
                        (setq author-list (delq (cdr misc) author-list))))))
@@ -1078,7 +1078,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
         (while headers
-          (if (member (car headers) '(comm-to footn-to))
+          (if (memq (car headers) '(comm-to footn-to))
               (setq no (car (cdr headers))
                     headers nil)
             (setq headers (cdr (cdr headers)))))

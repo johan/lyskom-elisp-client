@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.21 2001-01-01 23:43:55 qha Exp $
+;;;;; $Id: buffers.el,v 44.22 2001-01-03 22:02:46 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.21 2001-01-01 23:43:55 qha Exp $\n"))
+	      "$Id: buffers.el,v 44.22 2001-01-03 22:02:46 qha Exp $\n"))
 
 
 ;;;;
@@ -499,7 +499,7 @@ Returns the window displaying BUFFER."
              ;; OTHER, OTHER-WINDOW -- Switch to in another window
              ;;
 
-             ((member open '(other other-window))
+             ((memq open '(other other-window))
               (switch-to-buffer-other-window buffer)
               (setq dedicated-window (selected-window))
               (setq window (selected-window)))

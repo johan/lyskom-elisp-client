@@ -19,7 +19,7 @@
 	  (cond ((and (eq c ?')  (not dquot)) (setq squot (not squot)))
 		((and (eq c ?\") (not squot)) (setq dquot (not dquot)))
 		((eq c ?\\) (setq start (1+ start)))
-		((and (member c '(?\  ?\t ?\r ?\n))
+		((and (memq c '(?\  ?\t ?\r ?\n))
 		      (not squot)
 		      (not dquot))
 		 (setq end i))
