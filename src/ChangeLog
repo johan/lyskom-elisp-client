@@ -1,3 +1,37 @@
+Fri Jul 11 09:17:28 1997  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el,swedish-strings.el (lyskom-custom-strings):
+ 	Lade till kom-ispell-dictionary-doc och kom-ispell-dictionary-tag.
+
+	* option-edit.el (lyskom-ispell-dictionary-widget): Ny funktion.
+	(lyskom-customize-buffer-format): Lade till kom-ispell-dictionary
+	(lyskom-custom-variables): Dito.
+	(lyskom-widget-functions): Lade till ispell-dictionary
+
+	* menus.el (lyskom-edit-menu-template): Lägg in kom-ispell-message
+ 	i edit-text-menyn.
+
+	* english-strings.el,swedish-strings.el (lyskom-menu): Text för
+ 	kom-ispell-message.
+	
+	* edit-text.el (lyskom-edit-send): Avsluta med
+ 	lyskom-edit-text-abort.
+	(kom-ispell-message): Nytt kommando.
+	(lyskom-ispell-text): Använd kom-ispell-message
+
+	* macros.el (lyskom-widget-wrapper): Nytt makro.
+	(widget-setup): Definiera med l-w-w
+	(widget-at): Dito
+	(widget-value): Dito
+	(widget-button-click): Dito
+	(widget-value-set): Dito
+	(widget-insert): Dito
+	(widget-create): Dito
+	(widget-get): Dito
+	(widget-put): Dito.
+
+	* vars.el.in (lyskom-text-buttons): Fixade liten regexpbug.
+
 Thu Jul 10 10:16:35 1997  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-set-face-scheme): Testa att console-type

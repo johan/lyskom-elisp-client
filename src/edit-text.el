@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.15 1997-07-09 14:41:15 byers Exp $
+;;;;; $Id: edit-text.el,v 44.16 1997-07-11 08:53:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.15 1997-07-09 14:41:15 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.16 1997-07-11 08:53:52 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -308,7 +308,7 @@ Commands:
 
               (if (not (run-hook-with-args-until-failure 
                         'lyskom-send-text-hook))
-                  (signal 'quit nil))
+                  (signal 'lyskom-edit-text-abort nil))
                                                 
               ;;
               ;; Check that there is a subject
@@ -398,14 +398,105 @@ kom-ispell-dictionary is the dictionary to use to check spelling."
            (beginning-of-line)
            (point))))
     (let ((ispell-dictionary kom-ispell-dictionary)
-          (new-ispell (not (string= "svenska8" ispell-dictionary))))
-      (ignore ispell-dictionary)
+          (new-ispell (or (not (boundp 'ispell-dictionary))
+                          (not (string= kom-ispell-dictionary 
+                                        ispell-dictionary)))))
       (if new-ispell
           (ispell-kill-ispell t))
       (prog1
           (ispell-region start (point-max))
         (if new-ispell
             (ispell-kill-ispell t))))))
+
+(defun lyskom-ispell-text ()
+  "Check spelling of the text body.
+Put this in lyskom-send-text-hook"
+  (kom-ispell-message)
+  t)
+
+
+(defun kom-ispell-message ()
+  "Check spelling of the text.
+kom-ispell-dictionary is the dictionary to use to check spelling.
+Based on ispell-message."
+  (interactive)
+  (let ((ispell-dictionary (or kom-ispell-dictionary ispell-dictionary))
+        (kill-ispell (or (not (boundp 'ispell-dictionary))
+                         (not (string= kom-ispell-dictionary
+                                       ispell-dictionary))))
+        (result nil))
+    (when kill-ispell (ispell-kill-ispell t))
+
+    ;; Checking code
+
+    (save-excursion
+      (goto-char (point-min))
+      (let* ((internal-messagep 
+              (save-excursion
+                (re-search-forward
+                 (concat "^"
+                         (regexp-quote
+                          (substitute-command-keys
+                           (lyskom-get-string 'header-separator)))
+                         "$")
+                 nil t)))
+             (limit 
+              (copy-marker
+               (cond ((not ispell-message-text-end) (point-max))
+                     ((char-or-string-p ispell-message-text-end)
+                      (if (re-search-forward ispell-message-text-end nil t)
+                          (match-beginning 0)
+                        (point-max)))
+                     (t (min (point-max) (funcall ispell-message-text-end))))))
+             (cite-regexp (regexp-quote kom-cite-string))
+             (cite-regexp-start (concat "^[ \t]*$\\|" cite-regexp))
+             (cite-regexp-end (concat "^\\(" cite-regexp "\\)"))
+             (old-case-fold-search case-fold-search)
+             (case-fold-search t)
+             (ispell-checking-message t)
+             (subject-string 
+              (concat "^" (regexp-quote (lyskom-get-string 'subject)))))
+        (goto-char (point-min))
+        (while (if internal-messagep
+                   (< (point) internal-messagep)
+                 (not (eobp)))
+          (if (looking-at subject-string)
+              (progn (goto-char (match-end 0))
+                     (let ((case-fold-search old-case-fold-search))
+                       (ispell-region (point)
+                                      (progn
+                                        (end-of-line)
+                                        (point)))))
+            (forward-line 1)))
+
+        (while (< (point) limit)
+          (while (and (looking-at cite-regexp-start)
+                      (< (point) limit)
+                      (zerop (forward-line 1))))
+
+          (if (< (point) limit)
+              (let* ((start (point))
+                     (end-c (and (re-search-forward cite-regexp-end limit 'end)
+                                 (match-beginning 0)))
+                     (end-fwd (and (goto-char start)
+                                   (re-search-forward ispell-message-start-skip
+                                                      limit 'end)))
+                     (end (or (and end-c end-fwd (min end-c end-fwd))
+                              end-c 
+                              end-fwd
+                              (marker-position limit))))
+                (goto-char start)
+                (setq result (ispell-region start end))
+                  (if (and end-fwd (= end end-fwd))
+                      (progn (goto-char end)
+                             (re-search-forward ispell-message-end-skip 
+                                                limit 'end))
+                    (goto-char end)))))
+          (set-marker limit nil)
+          result))
+
+    (when kill-ispell (ispell-kill-ispell t))
+    result))
 
 
 (defun lyskom-edit-send-check-recipients (misc-list subject) 

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.17 1997-07-10 08:58:47 byers Exp $
+;;;;; $Id: utilities.el,v 44.18 1997-07-11 08:54:12 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.17 1997-07-10 08:58:47 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.18 1997-07-11 08:54:12 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -43,13 +43,7 @@
 ;;; various files need to be loaded in a very specific order.
 ;;;
 
-(require 'custom)
-(require 'widget)
-(require 'wid-edit)
-(require 'wid-browse)
-(require 'cus-edit)
-(require 'cus-face)
-
+;;; Define widget wrappers for all the functions in macros.el
 
 ;;;
 ;;; Lisp utility functions
