@@ -85,6 +85,8 @@
   membership                            ; The membership
   selected                              ; Selected or not
   state                                 ; Expanded display or not
+  invisible                             ; Non-nil when invisible
+  extents                               ; Alist of extents of this entry
   )
 
 (defvar lp--last-format-string nil)
@@ -97,6 +99,52 @@
 (defvar lp--list-end-marker nil)
 (defvar lp--selected-entry-list nil)
 
+;;; ============================================================
+;;; Stuff
+
+(defun lp--entry-set-background (entry color)
+  "Use extents or overlays to set the background of ENTRY to COLOR."
+  (if (null color)
+      (let* ((extent (assq 'color (lp--entry->extents entry))))
+        (when extent
+          (lyskom-xemacs-or-gnu
+           (delete-extent (cdr extent))
+           (delete-overlay (cdr extent)))
+          (set-lp--entry->extents entry 
+                                  (delq extent (lp--entry->extents entry)))))
+
+    (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
+           (facename (intern (format "lyskom-%s-background" color)))
+           (face (or (find-face facename) (lyskom-make-face facename t))))
+      (unless extent
+        (lyskom-xemacs-or-gnu
+         (setq extent (make-extent (lp--entry->start-marker entry)
+                                   (lp--entry->end-marker entry)))
+         (setq extent (make-overlay (lp--entry->start-marker entry)
+                                    (lp--entry->end-marker entry) nil t)))
+        (set-lp--entry->extents entry (cons (cons 'color extent)
+                                            (lp--entry->extents entry))))
+      (set-face-background face color)
+      (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
+                                   (set-extent-property extent 'start-open t)
+                                   (set-extent-property extent 'priority 1000)
+                                   (set-extent-property extent 'face face))
+                            (progn (overlay-put extent 'priority 1000)
+                                   (overlay-put extent 'face face))))))
+
+(defun lp--entry-update-extents (entry)
+  (let ((extents (lp--entry->extents entry)))
+    (while extents
+      (lyskom-xemacs-or-gnu 
+       (progn (set-extent-property (cdr (car extents)) 'end-open t)
+              (set-extent-property (cdr (car extents)) 'start-open t)
+              (set-extent-endpoints (cdr (car extents))
+                                    (lp--entry->start-marker entry)
+                                    (lp--entry->end-marker entry)))
+       (progn (move-overlay (cdr (car extents)) 
+                            (or (lp--entry->start-marker entry) 0)
+                            (or (lp--entry->end-marker entry) 0))))
+      (setq extents (cdr extents)))))
 
 
 ;;; ============================================================
@@ -262,11 +310,16 @@ only recomputed if the window width changes."
                                                  (lyskom-get-string 'Passive-mt-type)
                                                  (membership->conf-no
                                                   (lp--entry->membership entry))))
-                    '(lp--unread t))))
+                    '(lp--unread t)
+                    )))
       (if defer-info
           (lyskom-replace-deferred defer-info string)
-        (lyskom-insert-at-point string)))))
+        (lyskom-insert-at-point string))
 
+      (if (lp--entry->selected entry)
+          (lp--entry-set-background entry (face-background-name 'kom-mark-face))
+        (lp--entry-set-background entry nil)))))
+      
 
 (defun lp--format-entry-expansion (conf-stat defer-info)
   (let ((entry nil))
@@ -307,6 +360,7 @@ The start and end markers of the entry are adjusted"
     (set-lp--entry->start-marker entry (point-marker))
     (lp--format-insert-entry entry)
     (set-lp--entry->end-marker entry (point-marker))
+    (lp--entry-update-extents entry)
     (forward-char 1)))
 
 (defun lp--erase-entry (entry)
@@ -315,7 +369,8 @@ The start and end markers of the entry are adjusted"
     (delete-region (lp--entry->start-marker entry)
                    (1+ (lp--entry->end-marker entry)))
     (set-lp--entry->start-marker entry nil)
-    (set-lp--entry->end-marker entry nil)))
+    (set-lp--entry->end-marker entry nil)
+    (lp--entry-update-extents entry)))
 
 (defun lp--redraw-entry-mark (entry)
   "Redraw the mark for ENTRY."
@@ -323,6 +378,9 @@ The start and end markers of the entry are adjusted"
     (lp--save-excursion
      (goto-char (lp--entry->start-marker entry))
      (insert (if (lp--entry->selected entry) ?* ?\ ))
+     (if (lp--entry->selected entry)
+         (lp--entry-set-background entry (face-background-name 'kom-mark-face))
+       (lp--entry-set-background entry nil))
      (delete-char 1))))
 
 (defun lp--redraw-entry (entry)
@@ -526,7 +584,9 @@ entry priority"
                                    (membership->priority mship)
                                    mship
                                    nil
-                                   'normal)))
+                                   'normal
+                                   nil
+                                   nil)))
                       (when pos
                         (save-excursion
                           (goto-char (lp--entry->start-marker elem))
@@ -1157,6 +1217,7 @@ entry with an adjacent priority."
   (define-key lp--mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lp--mode-map (kbd "P") 'lp--toggle-passive)
   (define-key lp--mode-map (kbd "C-c C-c") 'lp--quit)
+  (define-key lp--mode-map (kbd "q") 'lp--quit)
 
   (define-key lp--mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lp--mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
@@ -1248,11 +1309,10 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
 (defun lp--create-buffer ()
   "Create a buffer for managing memberships."
   (let ((buf (lyskom-get-buffer-create 'prioritize
-                                       (concat (buffer-name) "-prioritize")
+                                       (concat (buffer-name) "-membership")
                                        t))
         (entry-list nil))
 
-    ;;; First cache all the conf stats
     (lyskom-save-excursion
       (set-buffer buf)
       (let ((buffer-read-only nil))
@@ -1278,7 +1338,9 @@ Medlemskap för %#1M på %#2s
                                                 (membership->priority mship)
                                                 mship
                                                 nil
-                                                'normal)))
+                                                'normal
+                                                nil
+                                                nil)))
             (lp--print-entry entry)
             (setq entry-list (cons entry entry-list))))
         (lp--set-entry-list (nreverse entry-list))
@@ -1288,7 +1350,7 @@ Medlemskap för %#1M på %#2s
  Markera medlemskap: SPC      Markera område: C-w      Flytta markerade:   C-y
  Sätt prioritet:     p        Öka prioritet:  +        Minska prioritet:   -
  Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:    I,H,P
- Avsluta och spara:  C-c C-c                           Mer hjälp:        C-h m
+ Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
         buf
         ))))

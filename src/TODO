@@ -5,6 +5,17 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+** Blockera eller klara av att man ger kommandon i bufferten medan den
+   håller på att uppdateras.
+
+** Stöd för att helt dölja ett medlemskap i kom-handle-membership. Man
+   vill kanske dölja alla man inte har olästa i, eller alla som man
+   inte har varit inne i på jättelänge
+
+** Stöd för att hajlajta medlemskap i kom-handle-membership. Man vill
+   kanske hajlajta allt som uppfyller ett visst kriterium (eller
+   anti-hajlajta allt annat). Man vill kunna hajlajta alla markerade.
+
 ** Man vill kunna skicka user-agent och proxy-authorization till
    HTTP-proxyn. Se specen för HTTP 1.1, kapitel 11 och RFC 2069.
 

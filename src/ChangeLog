@@ -1,3 +1,22 @@
+2000-03-21  David Byers  <davby@ida.liu.se>
+
+	* compatibility.el (lyskom-make-face): New function.
+	(find-face): New compatibility function.
+	(face-background-name): New compatibility function.
+
+	* macros.el: Removed lyskom-make-face.
+
+	* mship-edit.el (lp--entry-set-background): New function.
+	(lp--entry-update-extents): New function.
+	(lp--format-entry): Set background according to selected status.
+	(lp--redraw-entry-mark): Same here.
+	(lp--print-entry): Update entry extents when done.
+	(lp--erase-entry): Same here.
+
+	* lyskom-rest.el (kom-next-command): Set the priority of the
+	scroll indicator extent to something high so it overrides whatever
+	is already on that line.
+
 2000-03-16  David Byers  <davby@ida.liu.se>
 
 	* mship-edit.el: Renamed set-lp--entry-pri-and-pos to
@@ -8,6 +27,7 @@
 	since lyskom-update-membership-positions will.
 	(lp--update-membership): Don't update position or priority unless
 	necessary. 
+	(lp--quit): New command.
 
 2000-03-15  David Byers  <davby@ida.liu.se>
 
