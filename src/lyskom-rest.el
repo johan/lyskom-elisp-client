@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.0 1996-03-14 18:17:57 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 39.1 1996-03-16 11:32:28 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.0 1996-03-14 18:17:57 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 39.1 1996-03-16 11:32:28 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2088,7 +2088,12 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 		  (setq inhibit-quit nil)) ; This will break instantly.
 	      ;; Keep inhibit-quit set to t
 	      (cond
-	       ((not (string-match "\n" output)))
+
+	       ;; This test make startup a lot faster, but
+	       ;; mysteriously causes emacs to go into a tight poll()
+	       ;; loop sometimes
+	       ;; ((not (string-match "\n" output)))
+	       
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
 		(setq lyskom-is-parsing t)
 		(unwind-protect
@@ -2129,22 +2134,27 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 ;;;         Debug buffer
 
 (defun lyskom-debug-insert (proc prefix string)
-  ;;(save-excursion
-    (let* ((buf (get-buffer-create
-		 lyskom-debug-communications-to-buffer-buffer))
-	   (win (get-buffer-window buf 'visible)))
-      (save-selected-window
-	(if win
+  (let* ((buf (get-buffer-create
+	       lyskom-debug-communications-to-buffer-buffer))
+	 (win (get-buffer-window buf 'visible)))
+    (if win
+	(save-excursion
+	  (save-selected-window
 	    (select-window win)
-	  (set-buffer buf))
-	(let ((move (eobp)))
-	  (save-excursion
-	    (goto-char (point-max))
-	    (insert "\n"
-		    (format "%s" proc)
-		    prefix  string))
-	  (if move (goto-char (point-max)))))))
-;;)
+	    (let ((move (eobp)))
+	      (save-excursion
+		(goto-char (point-max))
+		(insert "\n"
+			(format "%s" proc)
+			prefix  string))
+	      (if move (goto-char (point-max))))))
+      (save-excursion
+	(set-buffer buf)
+	(goto-char (point-max))
+	(insert "\n"
+		(format "%s" proc)
+		prefix  string)))))
+
 
 ;;; ================================================================
 ;;;         Formatting functions for different data types

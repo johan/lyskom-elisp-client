@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 39.0 1996-03-14 18:18:01 davidk Exp $
+;;;;; $Id: macros.el,v 39.1 1996-03-16 11:32:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 39.0 1996-03-14 18:18:01 davidk Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 39.1 1996-03-16 11:32:32 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -157,6 +157,10 @@ Value returned is always nil."
 
 ;; Multiple blocking read from server
 
+(defvar lyskom-quit-flag nil
+  "A flag indicating if the filter was interrupted by C-g.
+ It is set to the same value as quit-flag on filter exit.")
+
 (defvar lyskom-multiple-blocking-return nil
   "Return from blocking-do-multiple")
 
@@ -173,6 +177,11 @@ Value returned is always nil."
     (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
 		(not lyskom-quit-flag))
       (accept-process-output))
+    (if lyskom-quit-flag
+	(progn
+	  (setq lyskom-quit-flag nil)
+	  (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
+	  (signal 'quit nil)))
     lyskom-multiple-blocking-return))
 
 (defun lyskom-blocking-do-multiple-1 (&rest data)
