@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE book SYSTEM "manual.dtd">
+
+<book lang="en">
+  <chapter>
+    <title>Texts in LysKOM</title>
+
+    <para>
+    </para>
+
+    <section id="texts:special">
+      <title>Special Texts</title>
+
+      <section id="texts:presentations">
+        <title>Presentations</title>
+
+        <para>
+          Every conference and person can and should have a
+          presentation. A conference presentation should contain
+          information about the conference, such as what topics are
+          appropriate, related conferences and possibly external
+          links. Do not confuse presentations with FAQs; there is
+          support for FAQ texts as well (<xref linkend="texts:faqs"
+          />).
+        </para>
+
+        <para>
+          Keeping with the tradition of openness, presentations of
+          persons in LysKOM are fairly detailed, almost always
+          including the real name and location of the person, and
+          frequently including telephone number, address, interests,
+          job details and more.
+        </para>
+
+        <para>
+          You can see the presentation for any conference or person
+          using &fn:kom-review-presentation;. To change or create a
+          presentation for a person or conference, use
+          &fn:kom-change-presentation;. You can remove a presentation
+          using &fn:kom-remove-presentation;. To make an existing text
+          the presentation of a conference, use
+          &fn:kom-set-presentation;.
+        </para>
+
+        <para>
+          When you use &fn:kom-change-presentation; to create the
+          presentation for a conference or person, the recipient of
+          that text will be a special conference (there is one for
+          conferences and one for persons). If the conference is
+          secret, the recipient will be the conference itself since
+          there is no point in presenting a secret conference.
+        </para>
+
+        <para>
+          When you use &fn:kom-change-presentation; to change a
+          presentation the new presentation will be a comment to the
+          old one. This is a convention that helps people see what
+          differs from one presentation to the next.
+        </para>
+
+        <para>
+          Presentations are protected from automatic deletion, but can
+          be deleted manually. Don't do that.
+        </para>
+      </section>
+
+      <section id="texts:notices">
+        <title>Notices</title>
+
+        <para>
+          A notice is a text containing important information about
+          the server, a person or a conference. Each object can have
+          at most one notice. Notices are sent to a special
+          conference. Check the recipient of your notice if it is
+          applied to a secret conference; the conference will be less
+          secret if its notice is in a public conference.
+        </para>
+
+        <para>
+          Notices are protected from automatic deletion but can be
+          deleted manually. Don't do that. If you want to remove a
+          notice, use the appropriate command (see below).
+        </para>
+
+        <simplesect id="texts:notices:server">
+          <title>Server notices</title>
+
+          <para>
+            The server notice (sometimes called "message of the day")
+            is shown on login and can be reviewed by using the
+            &fn:kom-status-server;; the text number of the server
+            notice will be listed.
+          </para>
+
+          <para>
+            The server notice is set using the &fn:kom-set-motd; and
+            removed with &fn:kom-remove-motd; These commands are only
+            available in administrative mode.
+          </para>
+        </simplesect>
+
+
+        <simplesect id="texts:notices:conf">
+          <title>Conference notices</title>
+
+          <para>
+            Conference notices are not used in this client. They can
+            be set and removed by the conference supervisor using
+            &fn:kom-change-conf-motd; and &fn:kom-unset-conf-motd;,
+            respectively.
+          </para>
+        </simplesect>
+
+        <simplesect id="texts:notices:pers">
+          <title>Person notices</title>
+
+          <para>
+            Notices may be attached to letterboxes. In a strictly
+            technical sense, these notices are conference notices, but
+            from the perspective of the user they are different. When
+            writing a text with a lettterbox as a recipient, any
+            notice on that letterbox will be shown, and confirmation
+            is required to submit the text.
+          </para>
+
+          <para>
+            Person notices are set and removed by the conference
+            supervisor using &fn:kom-change-conf-motd; and
+            &fn:kom-unset-conf-motd;, respectively.
+          </para>
+        </simplesect>
+
+      </section>
+
+      <section id="texts:faqs">
+        <title>FAQs</title>
+
+        <para>
+          A FAQ is a regular text that is linked to one or more
+          conferences through a FAQ link. The purpose of a FAQ is to
+          answer questions that are frequently asked in the
+          conference. If the list of questions is small, it is not
+          uncommon to use the conference presentation instead. It is
+          also possible to attach a FAQ to the server itself.
+        </para>
+
+        <para>
+          A FAQ is considered unread as a FAQ until you read it using
+          one of the special FAQ-related commands in the context of a
+          particular conference. If a text you have read is added as a
+          FAQ to a conference, it will become an unread FAQ for that
+          conference, and will be shown the next time you enter the
+          conference. If it is later added as a FAQ to another
+          conference, it will become an unread FAQ for
+          <emphasis>that</emphasis> conference, despite the face that
+          you have read it twice.
+        </para>
+
+        <para>
+          With default settings, unread FAQs are listed and shown each
+          time you enter a conference or log on to the server. When
+          you enter a conference, FAQs that are unread in that
+          conference are listed and shown. When you log on to the
+          server, unread FAQs that are attached to the server are
+          listed.
+        </para>
+
+        <para>
+          To list all FAQs that are attached to a conference, use
+          &fn:kom-status-conf; (FAQs are listed as part of the status)
+          or &fn:kom-review-presentation; (in which case FAQs are
+          listed after the conference presentation). To list all
+          conferences attached to the server, use
+          &fn:kom-status-server; (FAQs are listed as part of the
+          status).
+        </para>
+
+        <para>
+          To view FAQs for a particular conference, use
+          &fn:kom-review-faq;. To view FAQs for the server, use
+          &fn:kom-review-server-faq;.
+        </para>
+
+        <para>
+          In the elisp client the link is created with one of the
+          commands &fn:kom-add-faq; or &fn:kom-change-conf-faq;, and is
+          removed using &fn:kom-del-faq;. There are similar commands
+          for manipulating server FAQs; these can only be used by
+          users with administrative rights to the LysKOM server.
+        </para>
+
+        <para>
+          There are a number of settings that affect FAQs.
+          &var:kom-auto-list-faqs; controls automatic listing of FAQs
+          when entering conferences. &var:kom-auto-review-faqs;
+          controls automatic reviewing of FAQs when entering
+          conferences.
+        </para>
+
+      </section>
+    </section>
+  </chapter>
+</book>
