@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.7 1993-07-14 15:52:19 linus Exp $
+;;;;; $Id: commands1.el,v 36.8 1993-07-26 19:07:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.7 1993-07-14 15:52:19 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.8 1993-07-26 19:07:28 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -618,7 +618,8 @@ This does lyskom-end-of-command"
 		     (server-info->conf-pres-conf lyskom-server-info))
 		    conf-name ""
 		    'lyskom-set-presentation conf-no)
-  (lyskom-end-of-command))
+  ;; lyskom-end-of-command is done by lyskom-edit-text
+  )
 
 
 (defun lyskom-set-presentation (text-no conf-no)
@@ -823,7 +824,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 			    subject "")))
 
     (quit (lyskom-end-of-command)
-	  (ding))))
+	  (signal 'quit "quit in lyskom-comment-recipients"))))
 
 
 ;;; ================================================================
