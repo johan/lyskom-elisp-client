@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 36.1 1993-04-26 19:36:52 linus Exp $
+;;;;; $Id: flags.el,v 36.2 1993-08-20 09:00:06 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 36.1 1993-04-26 19:36:52 linus Exp $\n"))
+	      "$Id: flags.el,v 36.2 1993-08-20 09:00:06 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -256,6 +256,8 @@ or not."
 
 
 (defun lyskom-read-options-eval-get-holerith ()
+  (while (string-match "\\s-" (substring txt 0 1))
+    (setq txt (substring txt 1)))
   (let ((len (string-to-int txt))
 	(start (progn (string-match "[0-9]+H" txt)
 		      (match-end 0))))
