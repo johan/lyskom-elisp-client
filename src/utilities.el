@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.117 2002-09-11 19:06:25 byers Exp $
+;;;;; $Id: utilities.el,v 44.118 2002-09-13 09:11:02 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.117 2002-09-11 19:06:25 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.118 2002-09-13 09:11:02 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -614,6 +614,8 @@ non-negative integer and 0 means the given text-no."
 	result)))
 
 (defun lyskom-get-explicit-text (arg &optional prompt default constraint) arg)
+
+;; NOTUSED: lyskom-get-command-specified-default-text
 (defun lyskom-get-command-specified-default-text (a p def &optional c) def)
 
 (defun lyskom-get-last-read-text (&optional arg prompt default constraint)
