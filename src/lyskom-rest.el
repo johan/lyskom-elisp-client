@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.7 1991-09-16 18:48:19 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.8 1991-09-17 19:37:15 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.7 1991-09-16 18:48:19 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.8 1991-09-17 19:37:15 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -687,6 +687,15 @@ Args: FORMAT-STRING &rest ARGS"
       (message (iso-8859-1-to-swascii str)))))
 
 
+(defun lyskom-error (format-string &rest args)
+  "Like error, but converts iso-8859/1 texts to swascii if necessary.
+Args: FORMAT-STRING &rest ARGS"
+  (let ((str (apply 'format format-string args)))
+    (if kom-emacs-knows-iso-8859-1
+	(error str)
+      (error (iso-8859-1-to-swascii str)))))
+
+
 ;;; ================================================================
 ;;;                  Extended string formatting
 
@@ -911,7 +920,7 @@ lyskom-is-waiting nil.
 	(setq lyskom-is-waiting nil)
 	(lyskom-end-of-command)))
   (if (and lyskom-executing-command (not may-interrupt))
-      (error (lyskom-get-string 'wait-for-prompt)))
+      (lyskom-error (lyskom-get-string 'wait-for-prompt)))
   (if (not (and (boundp 'doing-default-command)
 		doing-default-command))
       (cond
