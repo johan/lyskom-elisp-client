@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.177 2002-09-22 07:53:12 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.178 2002-11-21 17:05:03 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.177 2002-09-22 07:53:12 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.178 2002-11-21 17:05:03 joel Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2886,11 +2886,13 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 			  (lyskom-default-button
 			   'timestamp lyskom-current-prompt-timestamp
 			   (list 'timestamp-popup-title
-				 (format-time-string "%Y-%m-%d %H:%M"
-						     lyskom-current-prompt-timestamp)))
+				 (let ((kom-print-relative-dates nil))
+                                   (lyskom-format-time
+                                    'date-and-time
+                                    lyskom-current-prompt-timestamp))))
 			  '(lyskom-prompt t))
 			 text)
-    (when executing (setq lyskom-current-prompt-timestamp (current-time)))
+    (when executing (setq lyskom-current-prompt-timestamp (lyskom-current-client-time)))
     text))
            
 

@@ -1,3 +1,9 @@
+2002-11-21  Joel Rosdahl  <joel@rosdahl.net>
+
+	* lyskom-rest.el (lyskom-modify-prompt): Use lyskom-format-time to
+	create the prompt timestamp string so that you see seconds if
+	wanted.
+
 2002-10-30  Per Cederqvist  <ceder@ingate.com>
 
 	* commands2.el (kom-compare-texts): Don't give a backtrace if one
