@@ -1,4 +1,23 @@
+Sat Sep  2 14:24:57 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* slow.el (lyskom-expand-slow-command): Use
+ 	lyskom-slow-list-completions to sort possible completions.
+	(lyskom-slow-list-completions): New function.
+	(kom-slow-list-completions): Use lyskom-slow-list-completions.
+
+	* compatibility.el (char-before): New compatibility definition.
+
+2000-09-02  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-maybe-frob-completion-table): Add third
+	argument to lyskom-recode-string.
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Add third argument
+	to lyskom-recode-string.
+
 2000-09-01  David Byers  <davby@sen2.ida.liu.se>
+
+	* slow.el (kom-slow-click-or-yank): Fixed typo.
 
 	* Release of 0.46-BETA-W
 
