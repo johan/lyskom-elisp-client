@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.83 2002-04-03 21:06:52 qha Exp $
+# $Id: Makefile,v 44.84 2002-04-13 14:01:25 joel Exp $
 
 # Useful targets:
 #
@@ -154,11 +154,11 @@ lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el $(SOURCES)
 verbose: verbose-el $(TARGET)
 
 verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
-	cp /dev/null $@
+	cp /dev/null $(TARGET-EL)
 	for i in $^ ; do \
 		echo '(eval-when-compile (message "Compiling %s" "'$$i'"))' \
-			>>$@ ; \
-		cat $$i >>$@ ; \
+			>>$(TARGET-EL) ; \
+		cat $$i >>$(TARGET-EL) ; \
 	    done
 
 %.elc: %.el _header.el

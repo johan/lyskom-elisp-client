@@ -1,3 +1,7 @@
+2002-04-13  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* Makefile (verbose-el): Made target "verbose" work again.
+
 2002-04-13  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands1.el (kom-review-presentation): When a prefix argument
