@@ -1,52 +1,84 @@
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.3 1996-09-25 17:29:18 byers Exp $
+;;;;; $Id: check-strings.el,v 44.4 1997-07-01 16:29:28 petli Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
 ;;;;  This file is used for checking swedish-strings.el and
 ;;;;  english-strings.el. Run using
 ;;;;
-;;;;  emacs -batch -l check-strings.el -f run
+;;;;  emacs -batch -l check-strings.el [-l <lyskomfiles>.el] -f lyskom-check-strings
+;;;;
+;;;;  or by M-x lyskom-check-strings
 ;;;;
 ;;;;
 
-(defvar language-files '((english . "english-strings.el")
-                         (swedish . "swedish-strings.el")))
-(defvar language-values nil)
-(defvar language-variables '(lyskom-strings lyskom-commands lyskom-keybindings))
+(require 'lyskom)
 
-(defun language-value (language sym)
-  (cdr (assq sym (cdr (assq language language-values)))))
+(defvar lcs-message-buffer "*LysKOM string check*")
 
+(defun lyskom-check-strings ()
+  "Check the strings in LysKOM for sanity."
+  (interactive)
+  (or noninteractive
+      (lcs-setup-message-buffer))
 
-(defun missing-sym (sym)
-  (intern (concat (symbol-name sym) "-missing")))
+  (lcs-message t "Languages: %s" (mapcar 'car lyskom-languages))
+  (mapcar 'lcs-check-category lyskom-language-categories)
 
-(defun symbol-value-safe (sym)
-  (and (boundp sym)
-       (symbol-value sym)))
+  (or noninteractive
+      (display-buffer lcs-message-buffer)))
 
+(defun lcs-check-category (category)
+  "Check the strings in CATEGORY."
+  (lcs-message t "Checking category %s" category)
+  (let ((strings (lcs-all-category-string category)))
+    (while strings
+      (lcs-check-strings category (car (car strings))
+			 (cdr (car strings)))
+      (setq strings (cdr strings)))))
+  
+(defun lcs-all-category-string (category)
+  "Returns list of names for CATEGORY, and their strings."
+  (mapcar (function
+	   (lambda (symbol)
+	     (let ((info (get symbol category)))
+	       (if info (cons symbol info)))))
+	  (get category 'lyskom-language-symbols)))
 
-(defun read-language (language file vars)
-  (let ((result (list language)))
-    (load-file file)
-    (while vars
-      (setq result (append result (list (cons (car vars) 
-					      (symbol-value-safe
-					       (car vars))))))
-      (setq result (append result (list (cons (missing-sym (car vars))
-					      (symbol-value-safe
-					       (missing-sym (car vars)))))))
-      (setq vars (cdr vars)))
-    (setq language-values (cons result language-values))))
+(defun lcs-check-strings (category name strings)
+  "Check the strings in CATEGORY named NAME.
+STRINGS is a list of (language . string)."
+;;  (lcs-message t "Checking %s:%s" category name)
+  (let ((format-list 'uninitialized)
+	(first-str nil)
+	(langs (mapcar 'car lyskom-languages)))
+    (while strings
+      (let* ((lang (car (car strings)))
+	     (str (cdr (car strings)))
+	     (flist (lcs-check-string category name lang str)))
+	(if (listp format-list)
+	    (or (lcs-check-format-string format-list flist)
+		(lcs-message nil "(%s:%s) Format mismatch\n    %S\n    %S"
+			     category name first-str str))
+	  (setq format-list flist
+		first-str str))
 
+	(setq strings (cdr strings)
+	      langs (delq lang langs))))
 
-(defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxc]\\)"
-  "regexp matching format string parts.")
+    (if langs
+	(lcs-message nil "(%s:%s) Missing languages %s"
+		     category name langs))))
 
+(defun lcs-check-string (category name lang string)
+  "Check the string in CATEGORY named NAME in language LANG.
+STRING is the string."
+  (if (and string (stringp string))
+      (lcs-split-format-string string)
+    nil))
 
-(defun format-string (string)
+(defun lcs-split-format-string (string)
+  "Extract the formatters from STRING."
   (let ((result nil)
 	(start 0))
     (while (and (< start (length string))
@@ -64,113 +96,37 @@
     result))
 
 
-(defun check-format-string (template string)
-  (if (not (stringp string))
-      nil
-    (let* ((tmp (format-string string))
-	   (result t))
-      (setq template (copy-sequence template))
-      (while tmp
-	(if (not (member (car tmp) template))
-	    (setq result nil tmp nil)
-	  (setq template (delete (car tmp) template))
-	  (setq tmp (delete (car tmp) tmp))))
-      (and result (null template)))))
-	    
-      
+(defun lcs-check-format-string (template flist)
+  "Match the formatters in TEMPLATE to those in FLIST."
+  (let* ((result t))
+    (setq template (copy-sequence template))
+    (while flist
+      (if (not (member (car flist) template))
+	  (setq result nil flist nil)
+	(setq template (delete (car flist) template))
+	(setq flist (delete (car flist) flist))))
+    (and result (null template))))
 
-(defun check-language-value (language sym)
-  (message "  Checking %s %S" language sym)
-  (let ((tmp (language-value language sym))
-        (missing nil)
-        (check nil))
-    (while tmp
-      (setq check (car tmp))
-      (if (and (cdr check)
-	       (stringp (cdr check)))
-	  (setq format-list (format-string (cdr check)))
-	(setq format-list nil))
-      (setq tmp (cdr tmp))
-      (setq missing nil)
-      (mapcar '(lambda (lang)
-		 (if (and (not (assq (car check)
-				     (language-value (car lang) sym)))
-			  (not (memq (car check)
-				     (language-value 
-				      (car lang)
-				      (missing-sym sym)))))
-		     (setq missing (cons lang missing))
-		   (if (and (stringp (cdr check))
-			    (assq (car check)
-				  (language-value (car lang) sym)))
-		       (if (not
-			    (check-format-string 
-			     format-list
-			     (cdr (assq (car check)
-					(language-value (car lang) sym)))))
-			   (message "    Format mismatch for %S in %s and %s\n    %S\n    %S"
-				    (car check)
-				    language
-				    (cdr lang)
-				    format-list
-				    (format-string 
-				     (cdr (assq (car check)
-						(language-value (car lang) sym))))
-				    )))))
-	      language-files)
-      (if missing
-	  (message "    Missing %S in %s"
-		   (car check)
-		   (mapconcat
-		    '(lambda (x) (format "%s" (cdr x)))
-		    missing
-		    ", "))))))
+(defun lcs-setup-message-buffer ()
+  "Inititalize the message buffer for string checking."
+  (save-excursion
+    (set-buffer (get-buffer-create lcs-message-buffer))
+    (erase-buffer)))
 
-
-
-(defvar lyskom-keybindings nil)
-(defvar keymaps nil)
-
-(defun suppress-keymap (&rest args) nil)
-
-(defmacro define-key (map key cmd)
-  (` (progn (setq keymaps (cons (quote (, map)) keymaps))
-            (x-define-key (, cmd)))))
-
-(defun define-prefix-command (&rest args) nil)
-
-(defun x-define-key (cmd)
-  (if (not (assq cmd lyskom-keybindings))
-      (setq lyskom-keybindings (cons (cons cmd nil) lyskom-keybindings))))
-
-(defun reset-keybindings ()
-  (setq lyskom-keybindings nil)
-  (mapcar (function (lambda (x) (set x nil))) keymaps)
-  (setq keymaps nil))
-
-
-
-
-;;; ============================================================
-;;; Here are the functions that do the deed
-;;;
-
-(defun run ()
-  (setq language-values nil)
-  (load-file "./vars.el.in")
-  (mapcar 'load-language language-files)
-  (mapcar 'check-language language-files))
-   
-
-(defun load-language (file-spec)
-  (message "Loading %S from %s" (car file-spec) (cdr file-spec))
-  (read-language (car file-spec) (cdr file-spec)
-		 language-variables)
-  (reset-keybindings))
-
-(defun check-language (file-spec)
-  (message "Checking %S in %s" (car file-spec) (cdr file-spec))
-  (mapcar (function
-           (lambda (x)
-	     (check-language-value (car file-spec) x)))
-	  language-variables))
+(defun lcs-message (echo format &rest args)
+  "Display a message during string checking.
+If ECHO is non-nil display the message in the echo area, otherwise
+only append it to the log buffer.
+FORMAT and ARGS are as for `format'."
+  (let ((msg (apply 'format format args)))
+    (if noninteractive
+	(princ (concat msg "\n") t)
+      (save-excursion
+	(set-buffer lcs-message-buffer)
+	(goto-char (point-max))
+	(insert msg "\n"))
+      (if echo
+	  (message msg)))))
+	
+    
+    
