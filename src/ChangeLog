@@ -1,3 +1,23 @@
+2002-11-21  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-buttons.el (lyskom-generate-button): Protect call to car
+	that was done to cause an error if menu-title was not a cons from
+	warnings in the byte compiler.
+
+	* review.el (kom-review-comments): Call to lyskom-insert-string
+	was not in parens.
+
+	* prefetch.el (lyskom-prefetch-membership-handler): Commeted out a
+	loop that didn't contain a body that did anything useful.
+
+	* keyboard-menu.el (lyskom-keyboard-menu-keys-for-string): Fixed
+	bug found by warnings in pretest for 21.3.
+
+	* compatibility.el (condition-case): Fix warnings in Gnu Emacs
+	pretest for 21.3.
+	(lyskom-dummy-variable-to-fool-the-byte-compiler): New variable
+	for putting values of forms called only for their side effects in.
+
 2002-11-21  Joel Rosdahl  <joel@rosdahl.net>
 
 	* lyskom-rest.el (lyskom-modify-prompt): Use lyskom-format-time to

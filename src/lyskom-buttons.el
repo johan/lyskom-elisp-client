@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.74 2002-09-14 21:28:06 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.75 2002-11-22 17:38:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.74 2002-09-14 21:28:06 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.75 2002-11-22 17:38:39 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -429,7 +429,8 @@ argument MENU-TITLE defines the title for the popup menu. See
 lyskom-default-button for more information. Optional argument SUBTLE
 means don't set the lyskom-button property if non-nil. that means
 kom-next- and -previous-link won't notice the button"
-  (car menu-title)		; produce error if menu-title not cons
+  (setq lyskom-dummy-variable-to-fool-the-byte-compiler
+        (car menu-title))		; produce error if menu-title not cons
   (let* ((persno (cond ((boundp 'lyskom-pers-no) lyskom-pers-no)
                        ((and (boundp 'lyskom-buffer) lyskom-buffer)
                         (save-excursion
