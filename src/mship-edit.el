@@ -159,8 +159,8 @@ This function does not tell the server about the change."
   (let* ((mship (lyskom-get-membership conf-no t))
          (old-priority (and mship (membership->priority mship))))
     (when mship
-      (lyskom-replace-membership mship
-        (set-membership->priority mship new-priority))
+      (set-membership->priority mship new-priority)
+      (lyskom-replace-membership mship)
 
       (cond
        ((and (>= old-priority lyskom-session-priority)
@@ -183,11 +183,11 @@ This function does not tell the server about the change."
 (defun lyskom-change-membership-position (conf-no new-position)
   "Change the position of memberhip for CONF-NO to NEW-POSITION.
 This function does not tell the server about the change."
-  (let ((mship (lyskom-get-membership conf-no t)))
+  (let* ((mship (lyskom-get-membership conf-no t))
+         (old-position (membership->position mship)))
     (when mship
-      (lyskom-replace-membership mship
-        (set-membership->position mship new-position))
-      (lyskom-update-membership-positions))))
+      (set-membership->position mship new-position)
+       (lyskom-replace-membership mship))))
 
 
 ;;; ============================================================
@@ -1082,14 +1082,15 @@ lp--update-membership is called automatically before this function exits."
         (old-pos (lp--entry-position entry))
         (lp--inhibit-update t)
         (need-redraw nil))
-    (lyskom-replace-membership (lp--entry->membership entry)
-      (when (and priority (not (eq priority old-pri)))
-        (set-lp--entry->priority entry priority)
-        (set-membership->priority (lp--entry->membership entry) priority)
-        (setq need-redraw t))
-      (when (and position (not (eq position old-pos)))
-        (lp--move-entry entry position)
-        (setq need-redraw nil)))
+    (when (and priority (not (eq priority old-pri)))
+      (set-lp--entry->priority entry priority)
+      (set-membership->priority (lp--entry->membership entry) priority)
+      (setq need-redraw t))
+    (when (and position (not (eq position old-pos)))
+      (lp--move-entry entry position)
+      (set-membership->position (lp--entry->membership entry) position)
+      (setq need-redraw nil))
+    (lyskom-replace-membership (lp--entry->membership entry))
     (sit-for 0)
     (lp--update-membership entry old-pri old-pos)
     (when need-redraw (lp--redraw-entry entry))))

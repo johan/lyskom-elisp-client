@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.331 2004-05-03 15:11:59 byers Exp $
+;;;;; $Id: english-strings.el,v 44.332 2004-07-18 14:58:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.331 2004-05-03 15:11:59 byers Exp $"))
+              "$Id: english-strings.el,v 44.332 2004-07-18 14:58:04 byers Exp $"))
 
 
 ;;; ================================================================
@@ -617,6 +617,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
     (pers-is-member-of-conf-2 . "Number of unread: %#2D (last access %#1s)\n")
     (pers-will-receive-async . "Reception of group messages %#1?b%[enabled%]%[disabled%]\n")
+    (pers-mship-priority . "Membership priority: %#1d\n")
     (Unknown-number . "Unknown number")
     (text-to-check-will-read-for . "...for membership in recipients of text: ")
     (pers-to-check-will-read-for . "Person to check: ")
@@ -789,7 +790,9 @@ The message you were sending to %#1M was:
     (Author . "Author")
     (Subject . "Subject")
     (Comments . "Co")
+    (Num-marks . "Mk")
     (mark-type . "Type")
+    (mark-no . "Mrk")
 
     (could-not-read . "You couldn't read the text (%#1n).\n")
     (multiple-choice . "There are several alternatives.")

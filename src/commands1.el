@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.216 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: commands1.el,v 44.217 2004-07-18 14:58:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.216 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.217 2004-07-18 14:58:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -794,6 +794,7 @@ be called from a callback."
                                             lyskom-pers-no 
                                             (conf-stat->conf-no whereto)
                                             t 0)))
+                    (read-list-delete-read-info (conf-stat->conf-no whereto) lyskom-to-do-list)
                     (if (< (membership->priority mship) lyskom-session-priority)
                         (lyskom-format-insert-before-prompt
                          'member-in-conf-with-low-priority
@@ -803,9 +804,7 @@ be called from a callback."
                       (if (lyskom-try-get-membership (conf-stat->conf-no whereto) t)
                           (progn (lyskom-replace-membership mship)
                                  (lyskom-fetch-start-of-map whereto mship))
-                        (lyskom-add-membership mship
-                                               whereto
-                                               t))))
+                        (lyskom-add-membership mship whereto t))))
                   (lp--update-buffer (conf-stat->conf-no whereto)))
                 (lyskom-insert-string 'done))))))))
     became-member))
