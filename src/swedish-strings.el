@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.21 1991-12-13 18:26:02 inge Exp $
+;;;;; $Id: swedish-strings.el,v 35.22 1991-12-13 19:20:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.21 1991-12-13 18:26:02 inge Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.22 1991-12-13 19:20:37 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -467,6 +467,7 @@ M{rk kuvertet LysKOM buggrapport.\n\n")
     (review-text-no . "Återse text nummer %#1d")
     (review-one-comment . "Återse en kommentar till inlägg %#1d.\n")
     (review-many-comments . "Äterse %#2d kommentarer till inlägg %#1d.\n")
+    (read-normally-read . "Hur m}nga vill du se igen?")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")
@@ -672,6 +673,8 @@ Felmeddelande: %#1s**************************************************")
     (kom-review-comments	"Återse alla kommentarer")
     (kom-review-tree		"Återse alla kommentarer rekursivt")
     (kom-review-clear           "Återse hoppa")
+    (kom-review-last-normally-read
+     				"Återse igen")
     (kom-review-next            "Återse nästa")
     (kom-find-root		"Återse urinlägget")
     (kom-review-by-to           "Återse senaste")
@@ -823,6 +826,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}ak" 'kom-review-comments)
   (define-key lyskom-mode-map "}ar" 'kom-review-tree)
   (define-key lyskom-mode-map "}h" 'kom-review-clear)
+  (define-key lyskom-mode-map "}i" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "}n" 'kom-review-next)
   (define-key lyskom-mode-map "}r" 'kom-find-root)
   (define-key lyskom-mode-map "}s" 'kom-review-by-to)

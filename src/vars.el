@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.15 1991-11-24 02:49:03 ceder Exp $
+;;;;; $Id: vars.el,v 35.16 1991-12-13 19:20:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.15 1991-11-24 02:49:03 ceder Exp $\n"))
+	      "$Id: vars.el,v 35.16 1991-12-13 19:20:28 linus Exp $\n"))
 
 
 
@@ -413,6 +413,9 @@ message \"new text\" is received.")
 
 (defvar lyskom-previous-text nil
   "Text-no of previous text.  Nil means no text.")
+
+(defvar lyskom-normally-read-texts nil
+  "Stack of texts that are read normally. Used for kom-review-last-normally-read.")
 
 (defvar lyskom-current-subject ""
   "Current subject.")

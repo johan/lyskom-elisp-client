@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.15 1991-11-08 13:15:49 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.16 1991-12-13 19:20:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.15 1991-11-08 13:15:49 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.16 1991-12-13 19:20:55 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -380,7 +380,8 @@ lyskom-mark-as-read."
   (read-list-delete-text text-no lyskom-reading-list)
   (read-list-delete-text text-no lyskom-to-do-list)
   (initiate-get-text-stat 'background 'lyskom-is-read-handler
-			  text-no))
+			  text-no)
+  (setq lyskom-normally-read-texts (cons text-no lyskom-normally-read-texts)))
 
 
 (defun lyskom-is-read-handler (text-stat)
