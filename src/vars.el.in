@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.9 1996-07-08 10:05:21 byers Exp $
+;;;;; $Id: vars.el.in,v 41.10 1996-07-09 08:28:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.9 1996-07-08 10:05:21 byers Exp $\n"
+  "$Id: vars.el.in,v 41.10 1996-07-09 08:28:49 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -64,6 +64,13 @@ If no window is displaying that buffer or the buffer does not exits then it
 uses the same window.
 
 This variable is stored in the LysKOM server.")
+
+(defvar kom-prompt-format "%s"
+  "*Basic format for LysKOM prompts. Needs to be a valid format
+string. The only format specifier should be a single \"%s\", which
+will be replaced by the real prompt.
+
+This variable is stored in the LysKOM server")
 
 (defvar kom-cite-string ">"
   "*String to insert before each line of a commented text.
@@ -578,6 +585,7 @@ This variable is not saved in the LysKOM server.")
     kom-ding-on-wait-done
     kom-show-personal-messages-in-buffer
     kom-pop-personal-messages
+    kom-prompt-format
     kom-do-when-done
     kom-higher-priority-breaks
     kom-login-hook

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.6 1996-07-08 10:05:16 byers Exp $
+;;;;; $Id: startup.el,v 41.7 1996-07-09 08:28:38 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.6 1996-07-08 10:05:16 byers Exp $\n"))
+	      "$Id: startup.el,v 41.7 1996-07-09 08:28:38 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -506,6 +506,9 @@ to see, set of call."
 	(server-name lyskom-server-name)
 	)
     (kill-all-local-variables)
+    (make-local-variable 'kom-ansaphone-show-messages)
+    (make-local-variable 'kom-ansaphone-record-messages)
+    (make-local-variable 'kom-prompt-format)
     (make-local-variable 'kom-ansaphone-on)
     (make-local-variable 'kom-ansaphone-default-reply)
     (make-local-variable 'kom-remote-control)
