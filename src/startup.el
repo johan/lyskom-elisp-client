@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.7 1992-05-11 02:01:14 linus Exp $
+;;;;; $Id: startup.el,v 35.8 1992-06-13 21:17:08 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.7 1992-05-11 02:01:14 linus Exp $\n"))
+	      "$Id: startup.el,v 35.8 1992-06-13 21:17:08 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -249,7 +249,11 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
 	     (/= (conf-stat->msg-of-day conf-stat) 0))
 	(progn
 	  (lyskom-insert-string 'you-have-motd)
-	  (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))))      
+	  (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))))
+    (if (and conf-stat
+	     (zerop (conf-stat->presentation conf-stat))
+	     (not (zerop (conf-stat->no-of-texts conf-stat))))
+	(lyskom-insert-string 'presentation-encouragement))
     (lyskom-collect 'main)
     (initiate-get-membership 'main nil pers-no)
     (initiate-get-unread-confs 'main nil pers-no)
