@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.22 2000-01-11 10:05:07 byers Exp $
+;;;;; $Id: flags.el,v 44.23 2000-02-08 13:09:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.22 2000-01-11 10:05:07 byers Exp $\n"))
+	      "$Id: flags.el,v 44.23 2000-02-08 13:09:13 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -81,7 +81,7 @@
                        (lambda (var)
                          (lyskom-format-objects
                           (substring (symbol-name var) 4)
-                          (prin1-to-string (symbol-value var)))))
+                          (lyskom-flag-value-to-string var))))
                       lyskom-global-non-boolean-variables
                       "\n")
            ))
@@ -92,7 +92,7 @@
 			     (length (symbol-name var))
 			     (symbol-name var))
 		     " "
-		     (let* ((data (prin1-to-string (symbol-value var)))
+		     (let* ((data (lyskom-flag-value-to-string var))
 			    (coding 
 			     (lyskom-mime-charset-coding-system
 			      (lyskom-mime-string-charset data)))
@@ -314,3 +314,15 @@ It returns nil, and writes a message when an error occurs."
 	   (lyskom-format-insert (lyskom-get-string 'error-in-options)
 				 var string)
 	   nil)))))
+
+
+(defun lyskom-flag-value-to-string (symbol)
+  "Convert value of SYMBOL to a string."
+  (cond ((eq symbol 'kom-permanent-filter-list)
+         (prin1-to-string 
+          (mapcar (lambda (filter)
+                    (lyskom-create-filter (filter->pattern filter)
+                                          (filter->attribute-list filter)
+                                          nil))
+                  kom-permanent-filter-list)))
+        (t (prin1-to-string (symbol-value symbol)))))

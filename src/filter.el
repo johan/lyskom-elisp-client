@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.12 1999-11-21 15:39:52 byers Exp $
+;;;;; $Id: filter.el,v 44.13 2000-02-08 13:09:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.12 1999-11-21 15:39:52 byers Exp $\n"))
+	      "$Id: filter.el,v 44.13 2000-02-08 13:09:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -60,8 +60,10 @@
 (defun make-filter (&optional p a)
   "Creates and returns a filter structure.
 Optional P and A initialize pattern and attributes, respectively."
-  (list 'filter (vector p a
-			(lyskom-create-compile-filter-function p))))
+  (lyskom-create-filter p a (lyskom-create-compile-filter-function p)))
+
+(defun lyskom-create-filter (pattern attribute-list function)
+  (list 'filter (vector pattern attribute-list function)))
 
 (defun lyskom-recompile-filter (filter)
   "Re-compile the filter FILTER"
