@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.8 2003-05-04 19:24:55 byers Exp $
+;;;;; $Id: names.el,v 44.9 2003-05-04 20:01:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.8 2003-05-04 19:24:55 byers Exp $\n"))
+	      "$Id: names.el,v 44.9 2003-05-04 20:01:11 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -2052,7 +2052,7 @@ Namnsdagar enligt namnlängd från 1993, med uppenbara helgdagar borttagna."
                                  (22 . ("Natanael" "Natalia"))
                                  (23 . ("Adam"))
                                  (24 . ("Eva"))
-                                 (25 . (""))
+                                 (25 . ())
                                  (26 . ("Stefan" "Staffan"))
                                  (27 . ("Johannes" "Hannes"))
                                  (28 . ("Rakel" "Benjamin"))
@@ -2207,7 +2207,7 @@ texten på rätt språk."
                                 (7 . ("Helmi" "Kastehelmi"))
                                 (8 . ("Heino"))
                                 (9 . ("Timo"))
-                                (10 . ("Aino" "Aina" "ainikki"))
+                                (10 . ("Aino" "Aina" "Ainikki"))
                                 (11 . ("Osmo"))
                                 (12 . ("Liotta"))
                                 (13 . ("Kukka" "Floora"))
@@ -3707,7 +3707,7 @@ språk."
                                 (16 . ("Vilkko"))
                                 (17 . ("Feodor" "Heikki" "Marianne" "Marjaana"))
                                 (18 . ("Leonilla" "Leila"))
-                                (19 . ("Arhippa" "arhi"))
+                                (19 . ("Arhippa" "Arhi"))
                                 (20 . ("Leo" "Agaton" "Oiva"))
                                 (21 . ("Timo" "Jesto"))
                                 (22 . ("Mauri"))
@@ -3868,7 +3868,7 @@ språk."
                                 (17 . ("Marina" "Marketta" "Maarit" "Erho"))
                                 (18 . ("Eemeli" "Eemil" "Into"))
                                 (19 . ("Riina" "Teijo" "Serafim"))
-                                (20 . ("Elias" "eelis" "Ilja"))
+                                (20 . ("Elias" "Eelis" "Ilja"))
                                 (21 . ("Maria" "Johanne" "Juhani" "Juha" "Simeoni" "Simana"))
                                 (22 . ("Maria" "Magdaleena"))
                                 (23 . ("Rohkima" "Runo" "Viljo" "Tuukka"))
