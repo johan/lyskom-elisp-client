@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.252 2003-01-02 17:12:26 byers Exp $
+;;;;; $Id: english-strings.el,v 44.253 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.252 2003-01-02 17:12:26 byers Exp $"))
+              "$Id: english-strings.el,v 44.253 2003-01-02 23:42:53 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2762,6 +2762,10 @@ Select whether to execute command or keyboard macro.")
     (link-highlight-match . "Highlight group")
     (link-fold-case . "Case insensitive")
 
+    (generated-face . "Automatic")
+    (fonts . "Fonts\n")
+    (other-face . "Other")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3714,6 +3718,64 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
       \\N means substitute match for (...) number N,
       \\\\ means insert one \\.")
 
+    (kom-active-face-doc . "\
+  Face used for clickable areas other than URLs, conference and person
+  names, friends, morons and text numbers..")
+    (kom-url-face-doc . "\
+  Face used for clickable URLs.")
+    (kom-me-face-doc . "\
+  Face used for my own name.")
+    (kom-highlight-face-doc . "\
+  Face used for highlighting clickable areas as the mouse is moved
+  over them.")
+    (kom-subject-face-doc . "\
+  Face used for subject lines.")
+    (kom-text-no-face-doc . "\
+  Face used for text numbers.")
+    (kom-friends-face-doc . "\
+  Face used for names of people listed in \"Friends and other 
+  special people\".")
+    (kom-morons-face-doc . "\
+  Face used for names of people listed in \"Morons and other
+  \"special\" people.")
+    (kom-presence-face-doc . "\
+  Face used for presence messages.")
+    (kom-first-line-face-doc . "\
+  Face used for first header line. This face is overlayed on other
+  text. Properties not defined by this face will be retained. For
+  example, if you only set the weight property, the colors normally
+  used will not be changed.")
+    (kom-warning-face-doc . "\
+  Face used for important warnings.")
+    (kom-mark-face-doc . "\
+  Face used for various marks, including the indicator shown when the
+  client scrolls less than a full page. This face is overlayed on other
+  text. Properties not defined by this face will be retained. For
+  example, if you only set the weight property, the colors normally
+  used will not be changed.")
+    (kom-dim-face-doc . "\
+  Face used for various discreet texts.")
+    (kom-text-body-face-doc . "\
+  Face used for text bodies. This face is overlayed on other
+  text. Properties not defined by this face will be retained. For
+  example, if you only set the weight property, the colors normally
+  used will not be changed.")
+    (kom-dashed-lines-face-doc . "\
+  Face used for dashed lines around texts.  This face is overlayed
+  on other text. Properties not defined by this face will be retained. 
+  For example, if you only set the weight property, the colors 
+  normally used will not be changed.")
+    (kom-async-text-body-face-doc . "\
+  Face used for messages.  This face is overlayed on other
+  text. Properties not defined by this face will be retained. For
+  example, if you only set the weight property, the colors normally
+  used will not be changed.")
+    (kom-async-dashed-lines-face-doc . "\
+  Face used for dashed lines around messages.  This face is overlayed
+  on other text. Properties not defined by this face will be retained. 
+  For example, if you only set the weight property, the colors normally
+  used will not be changed.")
+
     ;;
     ;; Tags for variables
     ;;
@@ -3893,6 +3955,24 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")
     (kom-url-transformation-rules-tag . "Transformation of URLs:")
     (kom-text-links-tag . "Text links:")
+
+    (kom-active-face-tag . "Other clickable areas:")
+    (kom-url-face-tag . "Clickable URLs:")
+    (kom-me-face-tag . "My own name:")
+    (kom-highlight-face-tag . "Mouseover highlight:")
+    (kom-subject-face-tag . "Subject lines:")
+    (kom-text-no-face-tag . "Text numbers:")
+    (kom-friends-face-tag . "Friends and other special people:")
+    (kom-morons-face-tag . "Morons and other \"special\" people:")
+    (kom-presence-face-tag . "Presence messages:")
+    (kom-first-line-face-tag . "First header line:")
+    (kom-warning-face-tag . "Important warnings:")
+    (kom-mark-face-tag . "Various marks:")
+    (kom-dim-face-tag . "Various discreet texts:")
+    (kom-text-body-face-tag . "Text bodies:")
+    (kom-dashed-lines-face-tag . "Dashed lines around texts:")
+    (kom-async-text-body-face-tag . "Messages:")
+    (kom-async-dashed-lines-face-tag . "Dashed lines around messages:")
     )
 )
 

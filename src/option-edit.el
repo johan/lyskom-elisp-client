@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.85 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: option-edit.el,v 44.86 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.85 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.86 2003-01-02 23:42:53 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -117,6 +117,28 @@
     [kom-view-commented-in-window]
     [kom-personal-messages-in-window]
     
+    "\n\n"
+    section
+    (fonts bold centered)
+    section
+    "\n"
+    [kom-active-face]
+    [kom-url-face]
+    [kom-me-face]
+    [kom-highlight-face]
+    [kom-subject-face]
+    [kom-text-no-face]
+    [kom-friends-face]
+    [kom-morons-face]
+    [kom-presence-face]
+    [kom-first-line-face]
+    [kom-warning-face]
+    [kom-mark-face]
+    [kom-dim-face]
+    [kom-text-body-face]
+    [kom-dashed-lines-face]
+    [kom-async-text-body-face]
+    [kom-async-dashed-lines-face]
     "\n\n"
     section
     (audio-cues bold centered)
@@ -743,6 +765,23 @@ customize buffer but do not save them to the server."
                                                  ) :indent 8 :tag "")
                                    ))
                             :indent 4))
+    (kom-url-face (face))
+    (kom-text-no-face (face))
+    (kom-active-face (face))
+    (kom-highlight-face (face))
+    (kom-me-face (face))
+    (kom-friends-face (face))
+    (kom-morons-face (face))
+    (kom-subject-face (face))
+    (kom-presence-face (face))
+    (kom-first-line-face (face))
+    (kom-warning-face (face))
+    (kom-mark-face (face))
+    (kom-dim-face (face))
+    (kom-text-body-face (face t))
+    (kom-dashed-lines-face (face t))
+    (kom-async-text-body-face (face t))
+    (kom-async-dashed-lines-face (face t))
 ))
 
 (defvar lyskom-widget-functions 
@@ -756,6 +795,7 @@ customize buffer but do not save them to the server."
     (repeat . lyskom-repeat-widget)
     (cons . lyskom-cons-widget)
     (list . lyskom-list-widget)
+    (face . lyskom-face-widget)
     (nameday . lyskom-nameday-widget)
     (kbd-macro . lyskom-kbd-macro-widget)
     (url-viewer . lyskom-url-viewer-widget)
@@ -778,7 +818,7 @@ customize buffer but do not save them to the server."
 (defun lyskom-create-widget (variable)
   (let* ((el (assq variable lyskom-custom-variables))
          (dummy (or el (error "Unknown variable: %S" variable)))
-         (spec (lyskom-widget-convert-specification (car (cdr el))))
+         (spec (lyskom-widget-convert-specification (car (cdr el)) variable))
          (tag-sym (intern (concat (symbol-name variable) "-tag")))
          (doc-sym (intern (concat (symbol-name variable) "-doc")))
          (help-sym (intern (concat (symbol-name variable) "-help")))
@@ -847,7 +887,7 @@ customize buffer but do not save them to the server."
         widget)))
 
 
-(defun lyskom-widget-convert-specification (spec)
+(defun lyskom-widget-convert-specification (spec var)
   "Convert a LysKOM widget specification to something widget-create accepts"
   (let ((convertfn (assq (car spec) lyskom-widget-functions)))
     (if (null convertfn)
@@ -855,7 +895,8 @@ customize buffer but do not save them to the server."
     (nconc (funcall (cdr convertfn)
                     (car spec)
                     (car (cdr spec))
-                    (cdr (cdr spec)))
+                    (cdr (cdr spec))
+                    var)
            (lyskom-widget-convert-props spec))))
 
 (defun lyskom-widget-convert-props (spec)
@@ -891,26 +932,26 @@ customize buffer but do not save them to the server."
     (cons type new-props)))
 
 
-(defun lyskom-file-widget (type &optional args propl)
+(defun lyskom-file-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec 'file
                                    '(:format "%[%t%] %v" :size 0)
                                    propl))
 
-(defun lyskom-person-widget (type &optional args propl)
+(defun lyskom-person-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec 'lyskom-name nil propl))
 
-(defun lyskom-mark-association-widget (type &optional args propl)
+(defun lyskom-mark-association-widget (type &optional args propl ar)
   (lyskom-build-simple-widget-spec 'lyskom-mark-association nil propl))
 
-(defun lyskom-command-widget (type &optional args propl)
+(defun lyskom-command-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec 'lyskom-command nil propl))
 
-(defun lyskom-kbd-macro-widget (type &optional args propl)
+(defun lyskom-kbd-macro-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec 'lyskom-kbd-macro
                                    (list ':macro-buffer lyskom-buffer)
                                    propl))
 
-(defun lyskom-item-widget (type &optional args propl)
+(defun lyskom-item-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec 'item
                                    (list ':format "%t"
                                          ':tag (lyskom-custom-string 
@@ -918,7 +959,7 @@ customize buffer but do not save them to the server."
                                          ':value (elt args 1))
                                    propl))
 
-(defun lyskom-language-widget (type &optional args propl)
+(defun lyskom-language-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':format "%[%t%] %v"
@@ -934,7 +975,7 @@ customize buffer but do not save them to the server."
           lyskom-languages))
    propl))
 
-(defun lyskom-nameday-widget (type &optional args propl)
+(defun lyskom-nameday-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':format "%[%t%] %v"
@@ -949,7 +990,7 @@ customize buffer but do not save them to the server."
           lyskom-namedays))
    propl))
 
-(defun lyskom-ispell-dictionary-widget (type &optional args propl)
+(defun lyskom-ispell-dictionary-widget (type &optional args propl var)
   (let ((tmp-dictionary-alist nil))
     (condition-case nil 
         (progn (require 'ispell)
@@ -987,7 +1028,31 @@ customize buffer but do not save them to the server."
                         tmp-dictionary-alist))))
      propl)))
 
-(defun lyskom-url-viewer-widget (type &optional args propl)
+(defun lyskom-face-widget (type &optional args propl var)
+  (let ((wargs (append (mapcar (lambda (f)
+                                 (list 'item 
+                                       :tag (symbol-name f)
+                                       :value f
+                                       :format "%t"))
+                               (cdr (assq var lyskom-predefined-faces)))
+                       (list (list 'symbol
+                                   ':size 30
+                                   ':tag (lyskom-custom-string 
+                                          'other-face))))))
+    (when args
+      (setq wargs 
+            (append (list (list 'item
+                                :tag (lyskom-custom-string 'generated-face)
+                                :value nil
+                                :format "%t"))
+                    wargs)))
+    (lyskom-build-simple-widget-spec
+     'menu-choice
+     (list ':format "%[%t%] %v\n"
+           ':args wargs)
+     propl)))
+
+(defun lyskom-url-viewer-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice 
    (list ':format "%[%v%]\n"
@@ -1044,7 +1109,7 @@ customize buffer but do not save them to the server."
                      ':value "galeon")))
    propl))
 
-(defun lyskom-open-window-widget (type &optional args propl)
+(defun lyskom-open-window-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':case-fold t
@@ -1073,7 +1138,7 @@ customize buffer but do not save them to the server."
                      ':size 0)))
    propl))
 
-(defun lyskom-ding-widget (type &optional args propl)
+(defun lyskom-ding-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list  ':case-fold t
@@ -1138,7 +1203,7 @@ customize buffer but do not save them to the server."
                 ))
    propl))
 
-(defun lyskom-toggle-widget-inverse (type &optional args propl)
+(defun lyskom-toggle-widget-inverse (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':case-fold t
@@ -1154,7 +1219,7 @@ customize buffer but do not save them to the server."
                      ':format "%t")))
    propl))
 
-(defun lyskom-toggle-widget (type &optional args propl)
+(defun lyskom-toggle-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':case-fold t
@@ -1171,42 +1236,42 @@ customize buffer but do not save them to the server."
    propl))
 
 
-(defun lyskom-repeat-widget (type &optional args propl)
+(defun lyskom-repeat-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'editable-list 
    (list ':format "%[%t%]\n%v%i"
          ':args
-         (list (lyskom-widget-convert-specification args)))
+         (list (lyskom-widget-convert-specification args var)))
    propl))
 
-(defun lyskom-cons-widget (type &optional args propl)
+(defun lyskom-cons-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'cons
    (list ':format "%v\n"
          ':tag ""
-         ':args (list (lyskom-widget-convert-specification (elt args 0))
-                      (lyskom-widget-convert-specification (elt args 1))))
+         ':args (list (lyskom-widget-convert-specification (elt args 0) var)
+                      (lyskom-widget-convert-specification (elt args 1) var)))
    propl))
 
-(defun lyskom-list-widget (type &optional args propl)
+(defun lyskom-list-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'list
    (list ':format "%v\n"
          ':tag ""
-         ':args (mapcar 'lyskom-widget-convert-specification args))
+         ':args (mapcar (lambda (x) (lyskom-widget-convert-specification x var)) args))
    propl))
 
-(defun lyskom-choice-widget (type &optional args propl)
+(defun lyskom-choice-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice
    (list ':case-fold t
          ':format "%[%t%] %v"
          ':args
-         (mapcar 'lyskom-widget-convert-specification args))
+         (mapcar (lambda (x) (lyskom-widget-convert-specification x var)) args))
    propl))
 
 
-(defun lyskom-string-widget (type &optional args propl)
+(defun lyskom-string-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'lyskom-string 
    (list ':size 0 
@@ -1214,7 +1279,7 @@ customize buffer but do not save them to the server."
    propl))
 
 
-(defun lyskom-number-widget (type &optional args propl)
+(defun lyskom-number-widget (type &optional args propl var)
   (if args
       (lyskom-build-simple-widget-spec
        'lyskom-number
@@ -1230,7 +1295,7 @@ customize buffer but do not save them to the server."
 ;;;
 ;;; The ansaphone reply widget (whew!)
 
-(defun lyskom-ansaphone-reply-widget (type &optional args propl)
+(defun lyskom-ansaphone-reply-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'editable-list
    (list ':format "%t:\n%v%i\n"

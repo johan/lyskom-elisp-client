@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.79 2003-01-01 23:32:44 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.80 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.79 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.80 2003-01-02 23:42:53 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -606,7 +606,7 @@ up."
                       (t (setq xarg nil text ""))))
 
 	       ((eq type 'timestamp)
-		(setq face kom-text-face
+		(setq face 'default
 		      subtle t)
 		(cond ((null arg) (setq xarg (current-time)
 					;text (format-time-string "%Y-%m-%d %H:%M")

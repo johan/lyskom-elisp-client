@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.288 2003-01-02 17:12:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.289 2003-01-02 23:42:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.288 2003-01-02 17:12:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.289 2003-01-02 23:42:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2850,6 +2850,10 @@ teckenkodning.
     (link-highlight-match . "Visa grupp")
     (link-fold-case . "Versaler och gemener lika")
 
+    (generated-face . "Automatgenererat teckensnitt")
+    (fonts . "Teckensnitt\n")
+    (other-face . "Annat")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3788,7 +3792,7 @@ i servern. Annars sparas det i din .emacs.")
   kan innehålla följande specialtecken:
 
       \\& ersätts med den text som matchar regexpen
-      \\N ersätts med den text som matchar (...)-uttryck N i regexpen
+      \\N ersätts med den text som matchar \(...\)-uttryck N i regexpen
       \\\\ ersätts med en \\.")
     (kom-text-links-doc . "\
   Definition av textlänkar. Varje rad definierar en länk för inlägg i ett
@@ -3804,8 +3808,68 @@ i servern. Annars sparas det i din .emacs.")
   Länksubstitutionen kan innehålla följande specialtecken:
 
       \\& ersätts med den text som matchar regexpen
-      \\N ersätts med den text som matchar (...)-uttryck N i regexpen
+      \\N ersätts med den text som matchar \(...\)-uttryck N i regexpen
       \\\\ ersätts med en \\.")
+
+    (kom-active-face-doc . "\
+  Teckensnitt för klickbara texter förutom URLer, möten, vänner och
+  bekanta, idioter och knäppskallar, och inläggsnummer. Värdet skall 
+  vara namnet på en så kallad `face'.")
+    (kom-url-face-doc . "\
+  Teckensnitt för klickbara URLer.")
+    (kom-me-face-doc . "\
+  Teckensnitt för ens eget namn.")
+    (kom-highlight-face-doc . "\
+  Teckensnitt för markering av klickbara ytor när muspekaren förs över
+  dem.")
+    (kom-subject-face-doc . "\
+  Teckensnitt för ärenderader.")
+    (kom-text-no-face-doc . "\
+  Teckensnitt för inläggsnummer.")
+    (kom-friends-face-doc . "\
+  Teckensnitt för vänner och bekanta. De personer som räknas upp i
+  listan \"vänner och bekanta\" kommer att markeras med detta
+  teckensnitt.")
+    (kom-morons-face-doc . "\
+  Teckensnitt för idioter och knäppskallar. De personer som räknas upp
+  i listan \"vänner och bekanta\" kommer att markeras med detta
+  teckensnitt.")
+    (kom-presence-face-doc . "\
+  Teckensnitt för närvaromeddelanden.")
+    (kom-first-line-face-doc . "\
+  Teckensnitt för första raden i inläggshuvudet. Detta teckensnitt
+  överlagras på standardteckensnitten i första raden, så de egenskaper
+  som inte sätts av detta teckensnitt kommer inte att påverkas.")
+    (kom-warning-face-doc . "\
+  Teckensnitt för viktiga varningar.")
+    (kom-mark-face-doc . "\
+  Teckensnitt för diverse markeringar. Bland annat används detta
+  teckensnitt för markeringen när elispklienten bläddrar mindre än en
+  hel skärmsida. Detta teckensnitt överlagras på standardteckensnitten
+  där det används, så de egenskaper som inte sätts av detta
+  teckensnitt kommer inte att påverkas.")
+    (kom-dim-face-doc . "\
+  Teckensnitt för diverse diskreta texter. Detta teckensnitt används
+  bland annat för att visa passiva medlemskap.")
+    (kom-text-body-face-doc . "\
+  Teckensnitt för inläggstexter. Detta teckensnitt överlagras på
+  standardteckensnitten i inläggstexten, så de egenskaper som inte
+  sätts av detta teckensnitt kommer inte att påverkas.")
+    (kom-dashed-lines-face-doc . "\
+  Teckensnitt för streckrader runt inlägg. Detta teckensnitt
+  överlagras på standardteckensnitten i streckraden, så de egenskaper
+  som inte sätts av detta teckensnitt kommer inte att påverkas.")
+    (kom-async-text-body-face-doc . "\
+  Teckensnitt för meddelanden. Detta teckensnitt överlagras på
+  standardteckensnitten i meddelandet, så de egenskaper som inte
+  sätts av detta teckensnitt kommer inte att påverkas.")
+    (kom-async-dashed-lines-face-doc . "\
+  Teckensnitt för streckrader runt meddelanden. Detta teckensnitt
+  överlagras på standardteckensnitten i streckraderna, så de
+  egenskaper som inte sätts av detta teckensnitt kommer inte att
+  påverkas.") 
+
+
 
     ;;
     ;; Tags for variables
@@ -3986,6 +4050,23 @@ i servern. Annars sparas det i din .emacs.")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")
     (kom-url-transformation-rules-tag . "Transformation av URLer:")
     (kom-text-links-tag . "Textlänkar:")
+    (kom-active-face-tag . "Övriga klickbara texter:")
+    (kom-url-face-tag . "Klickbara URLer:")
+    (kom-me-face-tag . "Mitt eget namn:")
+    (kom-highlight-face-tag . "Markering av klickbara ytor:")
+    (kom-subject-face-tag . "Ärenderader:")
+    (kom-text-no-face-tag . "Inläggsnummer:")
+    (kom-friends-face-tag . "Vänner och bekanta:")
+    (kom-morons-face-tag . "Idioter och knäppskallar:")
+    (kom-presence-face-tag . "Närvaromeddelanden:")
+    (kom-first-line-face-tag . "Första raden i inläggshuvudet:")
+    (kom-warning-face-tag . "Viktiga varningar:")
+    (kom-mark-face-tag . "Diverse markeringar:")
+    (kom-dim-face-tag . "Diverse diskreta texter:")
+    (kom-text-body-face-tag . "Inläggstexter:")
+    (kom-dashed-lines-face-tag . "Streckrader runt inlägg:")
+    (kom-async-text-body-face-tag . "Meddelanden:")
+    (kom-async-dashed-lines-face-tag . "Streckrader runt meddelanden:")
     )
 )
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.125 2003-01-01 23:32:45 byers Exp $
+;;;;; $Id: utilities.el,v 44.126 2003-01-02 23:42:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.125 2003-01-01 23:32:45 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.126 2003-01-02 23:42:54 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1076,74 +1076,6 @@ for strings."
                         (copy-face old new)))
 
 
-
-;;FACE  (defun lyskom-set-face-scheme (scheme)
-;;FACE    "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
-;;FACE  in lyskom-face-schemes."
-;;FACE    (let ((tmp (assoc scheme lyskom-face-schemes))
-;;FACE          (properties nil)
-;;FACE          (set-faces nil)
-;;FACE          (background (or (face-background 'default)
-;;FACE                          (frame-property (selected-frame) 'background-color))))
-;;FACE      (when (and tmp
-;;FACE                 (fboundp 'copy-face)
-;;FACE                 (fboundp 'lyskom-set-face-foreground)
-;;FACE                 (fboundp 'lyskom-set-face-background))
-;;FACE  
-;;FACE  
-;;FACE        ;; If we have a background color, then compute the highlight colors
-;;FACE  
-;;FACE        (when background
-;;FACE          (lyskom-set-face-background 'lyskom-strong-highlight-face
-;;FACE                                      (lyskom-get-color-highlight (lyskom-color-values background) 0.05))
-;;FACE          (lyskom-set-face-background 'lyskom-weak-highlight-face
-;;FACE                                      (lyskom-get-color-highlight (lyskom-color-values background) 0.025)))
-;;FACE  
-;;FACE        ;; Traverse face specifications in the face scheme
-;;FACE  
-;;FACE        (lyskom-traverse spec (cdr tmp)
-;;FACE          (if (eq 'property (car spec))
-;;FACE              (setq properties (cons (cons (elt spec 1) (elt spec 2)) properties))
-;;FACE            (if (elt spec 1) (lyskom-copy-face (elt spec 1) (elt spec 0)) (make-face (elt spec 0)))
-;;FACE            (when (elt spec 2) (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-;;FACE            (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))
-;;FACE            (setq set-faces (cons (elt spec 0) set-faces))))
-;;FACE  
-;;FACE        ;; Check that the background color of the default face is what
-;;FACE        ;; the face scheme expects. If not, copy the computed highlight
-;;FACE        ;; faces to the real highlight faces.
-;;FACE  
-;;FACE        (let ((expected-background
-;;FACE               (or (null background)
-;;FACE                   (null (assq 'expected-background properties))
-;;FACE                   (equal (lyskom-color-values 
-;;FACE                           (cdr (assq 'expected-background properties)))
-;;FACE                          (lyskom-color-values background)))))
-;;FACE           (unless (and (memq 'kom-dashed-lines-face set-faces)
-;;FACE                        expected-background)
-;;FACE             (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face))
-;;FACE  
-;;FACE           (unless (and (memq 'kom-text-body-face set-faces)
-;;FACE                        expected-background)
-;;FACE             (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))
-;;FACE  
-;;FACE           (unless (and (memq 'kom-async-dashed-lines-face set-faces)
-;;FACE                        expected-background)
-;;FACE             (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face))
-;;FACE  
-;;FACE           (unless (and (memq 'kom-async-text-body-face set-faces)
-;;FACE                        expected-background)
-;;FACE             (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
-;;FACE  
-;;FACE           (setq set-faces (append set-faces
-;;FACE                                   (list 'kom-dashed-lines-face
-;;FACE                                         'kom-text-body-face
-;;FACE                                         'kom-async-dashed-lines-face
-;;FACE                                         'kom-async-text-body-face))))
-;;FACE  
-;;FACE  )))
-
-
 (defun lyskom-face-resource (face-name attr type)
   (if (eq (lyskom-emacs-version) 'xemacs)
       ;; XEmacs style
@@ -1169,35 +1101,6 @@ for strings."
       (funcall (intern (concat "make-face-" (symbol-name what)))
                face)
     (error nil)))
-
-;;FACE  (defun lyskom-setup-faces ()
-;;FACE    "Initalize the faces in the LysKOM client.
-;;FACE  This sets the face scheme according to `kom-default-face-scheme', and
-;;FACE  also reads the proper X resources."
-;;FACE    (unless kom-default-face-scheme
-;;FACE      (setq kom-default-face-scheme
-;;FACE  	  (condition-case nil
-;;FACE  	      (cond ((eq (lyskom-device-class) 'mono) 'monochrome)
-;;FACE  		    ((eq (lyskom-background-mode) 'dark)
-;;FACE  		     'inverse)
-;;FACE  		    (t 'default))
-;;FACE  	    (error 'default))))  
-;;FACE    (lyskom-set-face-scheme kom-default-face-scheme)
-;;FACE    (if (eq (console-type) 'x)
-;;FACE        (lyskom-traverse face lyskom-faces
-;;FACE          (let* ((face-name (symbol-name face))
-;;FACE                 (fg (lyskom-face-resource face-name "Foreground" 'string))
-;;FACE                 (bg (lyskom-face-resource face-name "Background" 'string))
-;;FACE                 (bl (lyskom-face-resource face-name "Bold" 'boolean))
-;;FACE                 (it (lyskom-face-resource face-name "Italic" 'boolean))
-;;FACE                 (ul (lyskom-face-resource face-name "Underline" 'boolean)))
-;;FACE            (if fg (set-face-foreground face fg))
-;;FACE            (if bg (set-face-background face bg))
-;;FACE            (if (eq bl 'on) (lyskom-modify-face 'bold face))
-;;FACE            (if (eq bl 'off) (lyskom-modify-face 'unbold face))
-;;FACE            (if (eq it 'on) (lyskom-modify-face 'italic face))
-;;FACE            (if (eq it 'off) (lyskom-modify-face 'unitalic face))
-;;FACE            (if ul (set-face-underline-p face (eq ul 'on)))))))
 
 
 ;;; ============================================================

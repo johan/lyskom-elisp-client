@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.222 2003-01-01 23:32:45 byers Exp $
+;;;;; $Id: vars.el.in,v 44.223 2003-01-02 23:42:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.222 2003-01-01 23:32:45 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.223 2003-01-02 23:42:54 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -116,7 +116,6 @@ if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
          ((memq ,var kom-dont-read-saved-variables) nil)
          (t (set-default ,var ,value))))
-
 
 ;;;; ================================================================
 ;;;;                     Variables and constants.
