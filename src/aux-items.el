@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.27 2002-04-11 18:49:09 byers Exp $
+;;;;; $Id: aux-items.el,v 44.28 2002-04-11 21:57:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.27 2002-04-11 18:49:09 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.28 2002-04-11 21:57:29 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -607,9 +607,11 @@ return non-nil if the item is to be included in the list."
     (lyskom-insert "\n")))
 
 (defun lyskom-print-faq-for-conf (item &optional obj)
-  (concat 
-   (lyskom-format 'faq-for-conf-aux (string-to-int (aux-item->data item)))
-   (lyskom-aux-item-terminating-button item obj)))
+  (let ((conf-no (string-to-int (aux-item->data item))))
+    (concat 
+     (cond ((zerop conf-no) (lyskom-get-string 'faq-for-server-aux))
+          (t (lyskom-format 'faq-for-conf-aux conf-no)))
+     (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-creating-software (item &optional obj)
   (when (or kom-show-creating-software
