@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.12 1997-10-12 10:31:43 byers Exp $
+;;;;; $Id: command.el,v 44.13 1997-10-24 10:50:20 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,11 +31,15 @@
 ;;;;
 
 
-(eval-when-compile
-  (require 'lyskom-vars "vars")
-  (require 'lyskom-services "services")
-  (require 'lyskom-language "language")
-  (require 'lyskom-clienttypes "clienttypes"))
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: command.el,v 44.13 1997-10-24 10:50:20 davidk Exp $\n"))
+
+;;; (eval-when-compile
+;;;   (require 'lyskom-vars "vars")
+;;;   (require 'lyskom-services "services")
+;;;   (require 'lyskom-language "language")
+;;;   (require 'lyskom-clienttypes "clienttypes"))
 
 
 ;;; ======================================================================
