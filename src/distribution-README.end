@@ -15,8 +15,8 @@
        to say something like this in your init file:
 
             (defvar kom-server-aliases 
-                    '(("kom.domain.org     . "DomainKOM")
-                      ("kom.lysator.liu.se . "LysKOM")))
+                    '(("kom.domain.org"     . "DomainKOM")
+                      ("kom.lysator.liu.se" . "LysKOM")))
 
        The first server listed in kom-server-aliases will be the
        default server for new users.
