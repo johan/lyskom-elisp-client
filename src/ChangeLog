@@ -1,3 +1,8 @@
+1999-10-25  David Byers  <davby@ida.liu.se>
+
+	* parse.el (lyskom-char-p): New implementation to fix spurious
+	protocol errors.
+
 1999-10-25  David Kagedal  <davidk@lysator.liu.se>
 
 	* option-edit.el (lyskom-custom-variables): Reversed logic for
