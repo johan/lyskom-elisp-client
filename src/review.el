@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 43.0 1996-08-07 16:41:01 davidk Exp $
+;;;;; $Id: review.el,v 43.1 1996-08-23 22:07:16 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 43.0 1996-08-07 16:41:01 davidk Exp $\n"))
+	      "$Id: review.el,v 43.1 1996-08-23 22:07:16 davidk Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -627,7 +627,7 @@ If reading forward then starts reading backward and the other way round."
 ;;; Author: Linus Tolke
 
 
-(defun kom-review-tree (&optional text-no)
+(def-kom-command kom-review-tree (&optional text-no)
   "Review all comments to this text.
 Descends recursively in the comment-tree without marking the texts as read.
 The tree is forgotten when a kom-go-to-next-conf command is issued.
@@ -641,40 +641,32 @@ instead. In this case the text TEXT-NO is first shown."
 		  current-prefix-arg)
 		 (t
 		  (signal 'lyskom-internat-error '(kom-review-tree))))))
-  (lyskom-start-of-command 'kom-review-tree)
-  (unwind-protect
-      (progn
-	(lyskom-tell-internat 'kom-tell-review)
-	(if text-no
-	    (let ((ts (blocking-do 'get-text-stat text-no)))
-	      (lyskom-follow-comments ts
-				      nil 'review
-				      (lyskom-get-current-priority)
-				      t))
-	  (lyskom-insert-string 'read-text-first)))
-    (lyskom-end-of-command)))
+  (lyskom-tell-internat 'kom-tell-review)
+  (if text-no
+      (let ((ts (blocking-do 'get-text-stat text-no)))
+	(lyskom-follow-comments ts
+				nil 'review
+				(lyskom-get-current-priority)
+				t))
+    (lyskom-insert-string 'read-text-first)))
 
 
-(defun kom-find-root (&optional text-no)
+(def-kom-command kom-find-root (&optional text-no)
   "Finds the root text of the tree containing the text in lyskom-current-text."
   (interactive)
-  (lyskom-start-of-command 'kom-find-root)
-  (unwind-protect
-      (progn
-	(lyskom-tell-internat 'kom-tell-review)
-	(cond
-	 (lyskom-current-text 
-	  (let* ((ts (blocking-do 'get-text-stat (or text-no 
-						     lyskom-current-text)))
-		 (r (lyskom-find-root ts ts)))
-	    (if r
-		(lyskom-view-text r)
-	      (signal 'lyskom-internal-error "Could not find root"))
-	    )
-	  )
-	 (t
-	  (lyskom-insert-string 'read-text-first))))
-    (lyskom-end-of-command)))
+  (lyskom-tell-internat 'kom-tell-review)
+  (cond
+   (lyskom-current-text 
+    (let* ((ts (blocking-do 'get-text-stat (or text-no 
+					       lyskom-current-text)))
+	   (r (lyskom-find-root ts ts)))
+      (if r
+	  (lyskom-view-text r)
+	(signal 'lyskom-internal-error "Could not find root"))
+      )
+    )
+   (t
+    (lyskom-insert-string 'read-text-first))))
 
 
 (def-kom-command kom-find-root-review ()

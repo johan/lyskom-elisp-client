@@ -1,3 +1,8 @@
+Fri Aug 23 15:11:17 1996  David Kågedal  <kg@infovav.se>
+
+	* review.el (kom-review-tree): Använd def-kom-command.
+	(kom-find-root): Dito.
+
 Fri Aug 23 00:39:03 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-view-text): Använd no-such-text-no istället
