@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.379 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.380 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.379 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.380 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -3763,6 +3763,14 @@ ta fram menyer.")
   Information i vilkalistan om när en person loggade in och hur länge sedan
   personen var aktiv.")
 
+    (kom-remember-password-doc . "\
+  Om denna inställning är påslagen sparas lösenordet till LysKOM-servern
+  som en lokal variabel i sessionsbufferten och kan på så vis användas
+  vid återinloggning ifall sessionen kopplas ner. OBS: Lösenordet sparas
+  i klartext, detta gör att om någon får tillgång till din LysKOM-
+  sessionsbuffer (även nedkopplad sådan) kan han/hon få reda på ditt
+  lösenord ifall du aktiverar detta val.")
+
     (kom-idle-hide-doc . "\
   I vilkalistan visas normalt enbart de sessioner som har varit aktiva
   under den senaste tiden. Denna inställning bestämmer hur många minuter
@@ -4419,6 +4427,8 @@ ta fram menyer.")
     (kom-presence-messages-in-buffer-tag .
 "Närvaromeddelanden i LysKOM-bufferten:")
     (kom-page-before-command-tag . "Rensa skärmen:")
+
+    (kom-remember-password-tag . "Kom ihåg LysKOM-sessionslösenordet:")
 
     (kom-idle-hide-tag . 
 "Antal minuter en session får vara inaktiv och ändå visas: ")

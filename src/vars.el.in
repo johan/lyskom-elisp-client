@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.300 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.301 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.300 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.301 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1718,6 +1718,15 @@ command is accepted from the keyboard. It is called immediately before
 This hook is called after the session is logged in but before any
 command is accepted from the keyboard. Unlike `lyskom-login-hook' it
 can be stored in the server."
+  server)
+
+(def-kom-var kom-remember-password nil
+  "**Controls whatever to store the password in the session buffer.
+
+When this is set to `t', the client will store the password for the 
+current session as a buffert local variable. This can be used in
+conjunction with kom-relogin-behaviour to reattach dead sessions
+automatically."
   server)
 
 (def-kom-var kom-confirm-add-recipients t

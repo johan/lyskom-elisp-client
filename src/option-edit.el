@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.107 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.108 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.107 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.108 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -74,6 +74,7 @@
     [kom-auto-confirm-new-conferences]
     "\n"
     [kom-idle-hide]
+    [kom-remember-password]
     [kom-show-where-and-what]
     [kom-show-since-and-when]
     "\n"
@@ -649,6 +650,7 @@ All key bindings:
                       :menu-tag some-persons))))
     (kom-show-where-and-what (toggle (yes no)))
     (kom-show-since-and-when (toggle (yes no)))
+    (kom-remember-password (toggle (yes no)))
     (kom-idle-hide (number))
     (kom-show-footnotes-immediately (toggle (yes no)))
     (kom-follow-comments-outside-membership (toggle (yes no)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.105 2004-07-15 17:13:03 byers Exp $
+;;;;; $Id: startup.el,v 44.106 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.105 2004-07-15 17:13:03 byers Exp $\n"))
+	      "$Id: startup.el,v 44.106 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -92,9 +92,11 @@ clients of the event. See lyskom-mode for details on lyskom."
 
   (run-hooks 'lyskom-init-hook)
   (setq username
-	(or username (getenv "KOMNAME")))
+	(or username lyskom-default-user-name
+	    (getenv "KOMNAME")))
   (setq password
-	(or password (getenv "KOMPASSWORD")))
+	(or password lyskom-default-password
+	    (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (let* ((env-kom (getenv "KOMSERVER"))
 	     (canon (or (lyskom-string-rassoc env-kom kom-server-aliases)
@@ -575,19 +577,16 @@ shown to other users."
                     (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
                     (setq lyskom-first-time-around nil)
                     (if (blocking-do 'login new-me
-                                     (if lyskom-default-password
-                                         (prog1
-                                             lyskom-default-password
-                                           (setq lyskom-default-password nil)
-                                           (set-default 'lyskom-default-password
-                                                        nil))
-                                       ;; Use password read when creating
-                                       ;; the person when loggin in new
-                                       ;; users
-                                       (or lyskom-is-new-user
-                                           (silent-read
-                                            (lyskom-get-string 'password))))
-                                     (if invisiblep 1 0))
+                                     (setq lyskom-default-password
+					   (if lyskom-default-password
+					       lyskom-default-password
+					     ;; Use password read when creating
+					     ;; the person when loggin in new
+					     ;; users
+					     (or lyskom-is-new-user
+						 (silent-read
+						  (lyskom-get-string 'password)))))
+					   (if invisiblep 1 0))
                         (progn
                           (if lyskom-is-new-user
                               (blocking-do 'add-member
@@ -599,6 +598,7 @@ shown to other users."
                                             nil nil nil nil nil nil nil nil)))
                           (setq login-successful t))
                       (lyskom-insert-string 'wrong-password)
+		      (setq lyskom-default-password nil)
                       (when (lyskom-get-aux-item 
                              (server-info->aux-item-list lyskom-server-info)
                              13)        ; e-mail
@@ -623,6 +623,10 @@ shown to other users."
 
             (unless lyskom-dont-read-user-area
               (setq ignored-user-area-vars (lyskom-read-options)))
+
+	    (if (not kom-remember-password)
+		(setq lyskom-default-password nil))
+
             (when (or session-priority kom-default-session-priority)
               (setq lyskom-session-priority
                     (or session-priority kom-default-session-priority)))
