@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.28 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: komtypes.el,v 44.29 2003-07-27 14:17:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.28 2003-07-20 22:12:26 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.29 2003-07-27 14:17:24 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -480,11 +480,18 @@ Automatically created with def-komtype" type)
    (membership-type     :read-only t))
   :nil-safe)
 
+;;;
+;;; Note that message-flag here is *not* the same as in the
+;;; protocol. The value of message-flag is computed from
+;;; message-invert in the protocol when received and when
+;;; sent.
+;;;
+
 (def-komtype membership-type
   (invitation
    passive
    secret
-   (rsv1                :read-only t)
+   message-flag
    (rsv2                :read-only t)
    (rsv3                :read-only t)
    (rsv4                :read-only t)

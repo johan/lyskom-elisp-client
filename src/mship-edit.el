@@ -270,11 +270,11 @@ only recomputed if the window width changes."
   (if (and lp--last-format-string
            (eq (window-width) lp--last-window-width))
       lp--last-format-string
-    (let ((total (- (window-width) 1 3 3 2 12 2 5 2 3 1)))
+    (let ((total (- (window-width) 1 3 3 2 12 2 5 2 4 1)))
       (setq lp--last-window-width (window-width))
       (setq lp--last-format-string
-            (concat "%#1c %=3#2s %#9c %=-" (number-to-string total)
-                    "#3M  %=-12#4s %[%#13@%=5#5s%]  %[%#10@%#6c%]%[%#11@%#7c%]%[%#12@%#8c%]")))))
+            (concat "%#1c %=3#2s %#10c %=-" (number-to-string total)
+                    "#3M  %=-12#4s %[%#15@%=5#5s%]  %[%#11@%#6c%]%[%#12@%#7c%]%[%#13@%#8c%]%[%#14@%#9c%]")))))
 
 (defun lp--format-insert-entry (entry)
   "Format ENTRY and insert it into the current buffer at point."
@@ -335,10 +335,11 @@ only recomputed if the window width changes."
                      'date
                      (membership->last-time-read (lp--entry->membership entry)))
                     (if un (int-to-string un) "")
-                    
+
                     (if (membership-type->invitation (membership->type (lp--entry->membership entry))) ?I ?.)
                     (if (membership-type->secret (membership->type (lp--entry->membership entry))) ?H ?.)
                     (if (membership-type->passive (membership->type (lp--entry->membership entry))) ?P ?.)
+                    (if (membership-type->message-flag (membership->type (lp--entry->membership entry))) ?M ?.)
                     (if (and conf-stat (eq lyskom-pers-no (conf-stat->supervisor conf-stat))) ?O ?\ )
                     (lyskom-default-button 'prioritize-flag-menu
                                            (list entry 'invitation)
@@ -356,6 +357,12 @@ only recomputed if the window width changes."
                                            (list entry 'passive)
                                            (list "%#1s (%=#2M)"
                                                  (lyskom-get-string 'Passive-mt-type)
+                                                 (membership->conf-no
+                                                  (lp--entry->membership entry))))
+                    (lyskom-default-button 'prioritize-flag-menu
+                                           (list entry 'message-flag)
+                                           (list "%#1s (%=#2M)"
+                                                 (lyskom-get-string 'Message-flag-mt-type)
                                                  (membership->conf-no
                                                   (lp--entry->membership entry))))
                     '(lp--unread t)
@@ -721,7 +728,8 @@ FLAG must be one of 'invitation, 'secret or 'passive."
   (funcall
    (cond ((eq flag 'invitation) 'membership-type->invitation)
          ((eq flag 'secret) 'membership-type->secret)
-         ((eq flag 'passive) 'membership-type->passive))
+         ((eq flag 'passive) 'membership-type->passive)
+         ((eq flag 'message-flag) 'membership-type->message-flag))
    (membership->type (lp--entry->membership entry))))
 
 (defun lp--flag-menu-set (entry flag value)
@@ -730,7 +738,8 @@ FLAG must be one of 'invitation, 'secret or 'passive."
   (funcall
    (cond ((eq flag 'invitation) 'set-membership-type->invitation)
          ((eq flag 'secret) 'set-membership-type->secret)
-         ((eq flag 'passive) 'set-membership-type->passive))
+         ((eq flag 'passive) 'set-membership-type->passive)
+         ((eq flag 'message-flag) 'set-membership-type->message-flag))
    (membership->type (lp--entry->membership entry))
    value))
 
@@ -1546,9 +1555,9 @@ Medlemskap för %#1M på %#2s
  Flytta upp:         M-p      Flytta ned:     M-n      Ändra flaggor:    I,H,P
  Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
-        buf
         ))
     (lyskom-wait-queue 'deferred)
+    buf
     ))
 
 

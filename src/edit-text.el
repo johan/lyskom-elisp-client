@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.109 2003-03-16 15:57:27 byers Exp $
+;;;;; $Id: edit-text.el,v 44.110 2003-07-27 14:17:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.109 2003-03-16 15:57:27 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.110 2003-07-27 14:17:24 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -250,7 +250,8 @@ nil             -> Ingenting."
 				 (substitute-command-keys
 				  (lyskom-get-string 'header-separator))
 				 body 
-				 (lyskom-get-string 'header-subject))
+				 (lyskom-get-string 'header-subject)
+                                 `(read-only t))
 		  where-put-misc)
     (set-buffer edit-buffer)
     (goto-char where-put-misc)

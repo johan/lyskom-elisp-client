@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.91 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: startup.el,v 44.92 2003-07-27 14:17:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.91 2003-07-20 22:12:26 byers Exp $\n"))
+	      "$Id: startup.el,v 44.92 2003-07-27 14:17:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -613,6 +613,7 @@ shown to other users."
 
             ;; Now we are logged in.
             (setq lyskom-pers-no new-me)
+            (setq lyskom-is-administrator nil)
             (lyskom-insert-string 'are-logged-in)
 
             (unless lyskom-is-running-compiled

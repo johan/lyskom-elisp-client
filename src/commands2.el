@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.168 2003-07-02 19:10:01 byers Exp $
+;;;;; $Id: commands2.el,v 44.169 2003-07-27 14:17:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.168 2003-07-02 19:10:01 byers Exp $\n"))
+              "$Id: commands2.el,v 44.169 2003-07-27 14:17:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -80,7 +80,7 @@ See `kom-list-membership-in-window'."
         (save-excursion (set-buffer buf)
                         (erase-buffer))
         (lyskom-traverse x lyskom-membership
-          (initiate-get-conf-stat 'memberhsip 'lyskom-memb-received-1
+          (initiate-get-conf-stat 'membership 'lyskom-memb-received-1
                                   (membership->conf-no x)
                                   x buf))))))
 
@@ -2643,34 +2643,42 @@ See `kom-keep-alive' for more information."
             (lyskom-read-conf-stat (lyskom-get-string 'conf-to-check-mship-of)
                                    '(all) nil nil t)))
 	 (mship (lyskom-is-member (conf-stat->conf-no conf-stat) pers-no)))
-    (if mship
-	(if (membership-type->passive (membership->type mship))
-	    (lyskom-format-insert 'pers-is-passive-member-of-conf
-				  pers-no conf-stat)
-	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-stat)
-          (when kom-deferred-printing
-            (lyskom-format-insert 
-             'pers-is-member-of-conf-2
-             (lyskom-format-time
-              'date-and-time
-              (membership->last-time-read mship))
-             (lyskom-create-defer-info
-              'query-read-texts
-              (list pers-no (conf-stat->conf-no conf-stat) t 0)
-              (lambda (membership defer-info)
-                (if (null membership)
-                    (lyskom-replace-deferred 
-                     defer-info (lyskom-get-string 'Unknown-number))
-                  (let ((conf-stat (defer-info->data defer-info)))
-                    (lyskom-replace-deferred defer-info 
-                                             (number-to-string 
-                                              (- (+ (conf-stat->first-local-no conf-stat)
-                                                    (conf-stat->no-of-texts conf-stat))
-                                                 (membership->last-text-read membership)
-                                                 (length (membership->read-texts membership))
-                                                 1))))))
-              nil nil "%#1s" conf-stat))))
-      (lyskom-format-insert 'pers-is-not-member-of-conf pers-no (conf-stat->conf-no conf-stat)))))
+    (if (null mship)
+        (lyskom-format-insert 'pers-is-not-member-of-conf pers-no (conf-stat->conf-no conf-stat))
+      (if (membership-type->passive (membership->type mship))
+          (progn
+            (lyskom-format-insert 'pers-is-passive-member-of-conf
+                                  pers-no conf-stat)
+            (lyskom-format-insert 'pers-will-receive-async
+                                  (membership-type->message-flag
+                                   (membership->type mship))))
+        (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-stat)
+        (lyskom-format-insert 'pers-will-receive-async
+                              (membership-type->message-flag
+                               (membership->type mship)))
+        (when kom-deferred-printing
+          (lyskom-format-insert 
+           'pers-is-member-of-conf-2
+           (lyskom-format-time
+            'date-and-time
+            (membership->last-time-read mship))
+           (lyskom-create-defer-info
+            'query-read-texts
+            (list pers-no (conf-stat->conf-no conf-stat) t 0)
+            (lambda (membership defer-info)
+              (if (null membership)
+                  (lyskom-replace-deferred 
+                   defer-info (lyskom-get-string 'Unknown-number))
+                (let ((conf-stat (defer-info->data defer-info)))
+                  (lyskom-replace-deferred defer-info 
+                                           (number-to-string 
+                                            (- (+ (conf-stat->first-local-no conf-stat)
+                                                  (conf-stat->no-of-texts conf-stat))
+                                               (membership->last-text-read membership)
+                                               (length (membership->read-texts membership))
+                                               1))))))
+            nil nil "%#1s" conf-stat))))
+      )))
 
 (def-kom-command kom-will-person-read-text (pers-no text-no)
   "Check if a particular person is a member of any recipient of a text..
@@ -3344,6 +3352,31 @@ are advisory; clients may ignore them."
                                                         nil nil nil nil)
                           0 data))))
           (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+
+
+(def-kom-command kom-change-message-flag (uconf-stat)
+  "Specify whether to receive group messages to a particular conference."
+  (interactive (list (lyskom-read-uconf-stat 'set-message-flag-for-conf
+                                            '(membership) nil
+                                            lyskom-current-conf t)))
+  (when uconf-stat
+    (let* ((mship (lyskom-get-membership (uconf-stat->conf-no uconf-stat) t)))
+      (if (null mship)
+          (lyskom-format-insert 'not-member-of-conf uconf-stat)
+        (set-membership-type->message-flag
+         (membership->type mship)
+         (lyskom-j-or-n-p (lyskom-format 'set-message-flag-to-what
+                                         uconf-stat)))
+        (lyskom-format-insert 'setting-message-flag
+                              (membership-type->message-flag
+                               (membership->type mship))
+                              uconf-stat)
+        (lyskom-report-command-answer
+         (blocking-do 'set-membership-type
+                      lyskom-pers-no
+                      (uconf-stat->conf-no uconf-stat)
+                      (membership->type mship)))))))
+
 
 
 

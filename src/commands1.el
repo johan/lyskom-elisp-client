@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.183 2003-07-20 22:12:25 byers Exp $
+;;;;; $Id: commands1.el,v 44.184 2003-07-27 14:17:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.183 2003-07-20 22:12:25 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.184 2003-07-27 14:17:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -889,7 +889,7 @@ See `kom-unsubscribe-makes-passive'."
    (blocking-do 'get-conf-stat lyskom-pers-no)
    (if conf (blocking-do 'get-conf-stat conf)
      (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
-                            '(all) nil 
+                            '(membership) nil 
                             (let ((ccn 
                                    (if (or (null lyskom-current-conf)
                                            (zerop lyskom-current-conf))
