@@ -2577,3 +2577,49 @@ kommer det att funka om du applicerar patchen i text 116224.
 str{ng som inneh}ller en newline. Emacs beter sig olika p} olika
 maskiner i det fallet.)
 (119458) -----------------------------------
+
+119896 1991-10-06  01:09  /2 rader/ |rjan b
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <132>
+Mottagare: |rjan b <453>
+    Mottaget: 1991-10-06 01:09
+Ärende: 
+------------------------------------------------------------
+Hur anger man "F|r k{nnedom"-mottagare? [r det samma som "extra
+mottagare"? Hur anger man d} det innan man skickat in texten?
+(119896) -----------------------------------
+Fotnot i text 119898 av |rjan b
+
+119898 1991-10-06  01:10  /1 rad/ |rjan b
+Fotnot till text 119896 av |rjan b
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <133>
+Mottagare: |rjan b <454>
+    Mottaget: 1991-10-06 01:10
+Ärende: 
+------------------------------------------------------------
+"extra kopia" hette det tydligen.
+(119898) -----------------------------------
+
+119972 1991-10-06  08:58  /6 rader/ Pell Pell Pell
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <134>
+    Sänt:     1991-10-06 10:56
+    Sänt av Linus Tolke Y
+Ärende: Hur tar man bort lapp p} d|rren? Tydligen inte med radera text. Osnyggt
+------------------------------------------------------------
+Pell Pell Pell
+Du {r nu inloggad. V{nta ett tag.
+
+Du har en lapp p} d|rren:
+
+Det finns ingen s}dan text. (103242)
+(119972) -----------------------------------
+Kommentar i text 120001 av Linus Tolke Y
+
+120001 1991-10-06  10:58  /2 rader/ Linus Tolke Y
+Extra kopia: Pell Pell Pell <2715>
+Kommentar till text 119972 av Pell Pell Pell
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <135>
+Ärende: Hur tar man bort lapp p} d|rren? Tydligen inte med radera text. Osnyggt
+------------------------------------------------------------
+Du använder:
+aTa bort lapp på dörren<RET>
+(120001) -----------------------------------
