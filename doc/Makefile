@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.5 1997-10-11 18:19:43 byers Exp $
+# $Id: Makefile,v 44.6 1999-06-20 11:32:23 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -21,77 +21,8 @@
 # MA 02139, USA.
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
-#
-# $Log: Makefile,v $
-# Revision 44.5  1997-10-11 18:19:43  byers
-# OK, det blev ytterligare några ändringar.
-# Snart dags för 0.45.1
-#
-# Revision 44.4  1997/09/27 11:43:02  byers
-# Nästan alla variabler är dokumenterade.
-# Uppdaterade NEWS-filen för 0.45.1
-#
-# Revision 44.3  1997/09/16 15:07:36  byers
-# Småfixar
-#
-# Revision 44.2  1997/08/11 19:54:02  davidk
-# Ändrade versionsnumret till 0.45
-# Ladda ../src/widget.el manuellt när man bygger lyskom-variables.data
-#
-# Revision 44.1  1996/09/03 16:05:34  byers
-# Remainders for 0.44.1
-#
-# Revision 44.0  1996/08/30 14:41:32  davidk
-# Ändrade revisionsnumret till 44.0
-#
-# Revision 43.5  1996/08/30 12:32:08  davidk
-# *** empty log message ***
-#
-# Revision 43.4  1996/08/15 19:30:47  davidk
-# Version 0.43.2 släppt.
-#
-# Revision 43.3  1996/08/14 13:49:16  byers
-# Nya filer för dokumentationsdatabasen, lite upptadering i dokumentationen
-#
-# Revision 43.2  1996/08/14 04:15:14  davidk
-# Bytte versionsnummer till 0.43.
-#
-# Revision 43.1  1996/08/07 20:00:46  davidk
-# Ny ansvarsfördelning mellan Makefilerna.
-#
-# Revision 43.0  1996/08/07 16:36:24  davidk
-# Nytt revisionsnummer.
-#
-# Revision 41.1  1996/08/07 16:22:53  davidk
-# Uppdaterade copyright.
-# Separerade install och release.
-#
-# Revision 41.0  1996/05/02 19:20:35  davidk
-# Nytt revisionsnummer: 41.0
-#
-# Revision 40.0  1996/03/26 08:28:01  byers
-# New version number for release of 0.40
-# Added NEWS file for 0.40
-#
-# Revision 39.0  1996/03/14 18:14:56  davidk
-# Ökade revisionsnumret till 39.0.
-#
-# Revision 38.0  1994/01/06 01:47:03  linus
-# New version
-#
-# Revision 35.12  1994/01/06  00:54:49  linus
-# Fixed bugs in install.
-#
-# Revision 35.11  1994/01/06  00:40:23  linus
-# Install directive moved here.
-#
-# Revision 35.10  1994/01/06  00:04:42  linus
-# Fixed so info-nuke works even if infod using makeinfo.
-#
-#
-# If you edit this, make sure it works afterwards also. /Linus
 
-CLIENTVERSION = 0.45.1
+CLIENTVERSION = 0.46-BETA-1
 
 SHELL = /bin/sh
 RM = rm -vf
