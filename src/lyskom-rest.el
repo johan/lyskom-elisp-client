@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.29 1996-03-12 07:29:20 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.30 1996-03-13 13:44:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.29 1996-03-12 07:29:20 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.30 1996-03-13 13:44:44 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1324,16 +1324,14 @@ What chars are converted to is controlled by the iso-8859-1-table."
   "Searches backwards for a text start and recenters with that text at the top."
   (interactive "p")
   (let ((paragraph-start lyskom-text-start))
-    (backward-paragraph arg))
-  (end-of-line))
+    (backward-paragraph arg)))
 
 
 (defun forward-text (&optional arg)
   "Searches forward for a text start and recenters with that text at the top."
   (interactive "p")
   (let ((paragraph-start lyskom-text-start))
-    (forward-paragraph arg))
-  (end-of-line))
+    (forward-paragraph arg)))
 
 
 (defun kom-save-text (&optional arg)

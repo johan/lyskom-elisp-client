@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.5 1996-02-21 19:48:16 davidk Exp $
+;;;;; $Id: macros.el,v 38.6 1996-03-13 13:44:48 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.5 1996-02-21 19:48:16 davidk Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 38.6 1996-03-13 13:44:48 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -170,7 +170,8 @@ Value returned is always nil."
 	     (cdr (car call-list)))
       (setq call-list (cdr call-list)))
     (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
-    (while (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+    (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+		(not lyskom-quit-flag))
       (accept-process-output))
     lyskom-multiple-blocking-return))
 
