@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.205 2002-03-03 17:51:54 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.206 2002-03-11 19:19:34 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.205 2002-03-03 17:51:54 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.206 2002-03-11 19:19:34 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -595,7 +595,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (created-chars . "Antal skapade tecken:%20#1d\n")
     (no-of-sessions . "Antal sessioner:%25#1d\n")
     (present-time-d-h-m-s . "Närvarotid:%19#1d d %02#2d:%02#3d:%02#4d\n")
-    (last-log-in . "Senast inne:%29#1s\n")
+    (last-log-in . "Senaste in-/utloggning:%18#1s\n")
     (user-name . "Användare: %30#1s\n")
 
     (read-texts . "Lästa texter:%28#1d\n")
