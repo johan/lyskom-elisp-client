@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.11 1997-12-28 19:16:13 byers Exp $
+;;;;; $Id: async.el,v 44.12 1998-02-11 14:41:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.11 1997-12-28 19:16:13 byers Exp $\n"))
+	      "$Id: async.el,v 44.12 1998-02-11 14:41:18 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -92,11 +92,11 @@ this function shall be with current-buffer the BUFFER."
 	       (set-conf-stat->name cached-stat new-name)))
 	 (cond
 	  ((lyskom-is-in-minibuffer))
-	  (kom-presence-messages
+          ((lyskom-show-presence conf-no kom-presence-messages)
 	   (lyskom-message "%s" (lyskom-format 'name-has-changed-to-name
 					       old-name new-name))))
 	 (cond
-	  (kom-presence-messages-in-buffer
+	  ((lyskom-show-presence conf-no kom-presence-messages-in-buffer)
 	   (lyskom-format-insert-before-prompt
 	    'name-has-changed-to-name-r 
 	    old-name 
@@ -189,8 +189,8 @@ this function shall be with current-buffer the BUFFER."
 	 (if (and lyskom-pers-no
 		  (not (zerop lyskom-pers-no))
 		  (/= lyskom-pers-no pers-no)
-		  (or kom-presence-messages
-		      kom-presence-messages-in-buffer))
+		  (or (lyskom-show-presence pers-no kom-presence-messages)
+		      (lyskom-show-presence pers-no kom-presence-messages-in-buffer)))
 	     (initiate-get-conf-stat 'follow
 				     'lyskom-show-logged-out-person
 				     pers-no session-no))
@@ -201,13 +201,13 @@ this function shall be with current-buffer the BUFFER."
       (lyskom-skip-tokens tokens)))))
 
 
-(defsubst lyskom-show-presence (num flag)
+(defun lyskom-show-presence (num flag)
   "Returns non-nil if presence messages for NUM should be displayed
 according to the value of FLAG."
   (cond ((null flag) nil)
-        ((and (listp flag)
-              (memq num flag)) t)
-        ((not (listp flag)) t)))
+        ((eq flag 'friends) (memq num kom-friends))
+        ((listp flag) (memq num flag))
+        (t t)))
 
 
 (defun lyskom-show-logged-in-person (conf-stat)

@@ -1,3 +1,17 @@
+1998-01-31  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Testa att både namn och portnummer stämmer
+	överens när man testar om det redan finns en session.
+
+	* vars.el.in (lyskom-server-port): Ny variabel.
+
+1998-01-14  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-region): Fixade en
+ 	omformatteringsbug.
+	(kom-next-command): Stöd markering av scrollrader å sånt i XEmacs
+	också. 
+
 Tue Jan  6 06:12:39 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* services.el (lyskom-wait-queue): Här skulle man visst också
@@ -28,6 +42,18 @@ Sat Jan  3 22:25:51 1998  David Kågedal  <davidk@lysator.liu.se>
 	* internal.el (lyskom-halt,lyskom-resume): Använd assq istället
  	för assoc.
 
+Sun Dec 28 15:15:19 1997  David Byers  <dbyers@atp>
+
+	* option-edit.el (lyskom-customize-apply): Fixa
+	kom-dont-read-saved-variables. 
+	(lyskom-create-widget): Skapa widget som man kan välja om
+	variabeln skall sparas i servern eller inte.
+
+	* vars.el.in (kom-url-viewer-preferences): Spara i servern.
+	(kom-mosaic-command): Dito.
+	(kom-audio-player): Dito.
+	(kom-netscape-command): Dito.
+	
 Thu Dec 25 10:39:23 1997  David Byers  <dbyers@atp>
 
 	* lyskom-buttons.el (lyskom-button-open-email): Använd

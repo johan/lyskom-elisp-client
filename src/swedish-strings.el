@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.38 1997-12-28 19:16:42 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.39 1998-02-11 14:41:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.38 1997-12-28 19:16:42 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.39 1998-02-11 14:41:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1822,6 +1822,7 @@ Innehåll:    \"%#9s\"
     ;; Help messages
     ;;
 
+    (variable-type-help . "Kryssa i för att spara inställningen i servern")
     (default-help-echo . "Ändra värdet på %#1s.")
     (change-this-name . "Ändra namnet på denna rad.")
     (show-doc . "Visa hjälptexten.")
@@ -1852,6 +1853,8 @@ Innehåll:    \"%#9s\"
     (yes . "Ja ")
     (no . "Nej")
     (max-text-length . "För inlägg kortare än: ")
+    
+    (friends . "Vänner och bekanta")
 
     (turned-off      . "Avslaget            ")
     (number-of-times . "Några gånger")
@@ -1925,7 +1928,10 @@ Innehåll:    \"%#9s\"
 \\[widget-button-press] ändrar värdet
 
 Hälptexter:  [?] Visa hjälptext    [!] Göm hjälptext
-Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde")
+Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde
+
+Om rutan före inställningens namn är ikryssad kommer värdet att sparas
+i servern. Annars sparas det i din .emacs.")
 
     (section . "------------------------------------------------------------------------------\n")
     (look-and-feel-misc . "Diverse utseende och beteende\n")

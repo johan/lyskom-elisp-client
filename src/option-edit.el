@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.18 1997-12-28 19:16:36 byers Exp $
+;;;;; $Id: option-edit.el,v 44.19 1998-02-11 14:41:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.18 1997-12-28 19:16:36 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.19 1998-02-11 14:41:29 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -194,9 +194,19 @@ customize buffer but do not save them to the server."
   (let ((tmp lyskom-widgets))
     (save-excursion
       (set-buffer lyskom-buffer)
+      (when (listp kom-dont-read-saved-variables)
+        (setq kom-dont-read-saved-variables nil))
       (while tmp
         (set (car (car tmp))
              (widget-value (cdr (car tmp))))
+        (when (and (listp kom-dont-read-saved-variables)
+                   (not (widget-value (widget-get (cdr (car tmp)) 
+                                                  ':lyskom-storage-widget)))
+                   (or (memq (car (car tmp)) lyskom-elisp-variables)
+                       (memq (car (car tmp)) lyskom-global-boolean-variables)
+                       (memq (car (car tmp)) lyskom-global-non-boolean-variables)))
+          (setq kom-dont-read-saved-variables 
+                (cons (car (car tmp)) kom-dont-read-saved-variables)))
         (setq tmp (cdr tmp))))))
 
 (eval-when-compile (defvar save-options-init-file nil))
@@ -215,9 +225,11 @@ customize buffer but do not save them to the server."
         (lambda (e)
           (when (and (vectorp e)
                      (symbolp (elt e 0))
-                     (not (memq (elt e 0) lyskom-elisp-variables))
-                     (not (memq (elt e 0) lyskom-global-boolean-variables))
-                     (not (memq (elt e 0) lyskom-global-non-boolean-variables))
+                     (or 
+                      (and (not (memq (elt e 0) lyskom-elisp-variables))
+                           (not (memq (elt e 0) lyskom-global-boolean-variables))
+                           (not (memq (elt e 0) lyskom-global-non-boolean-variables)))
+                      (memq (elt e 0) kom-dont-read-saved-variables))
                      (boundp (elt e 0)))
             (setq var-list (cons (cons (elt e 0)
                                        (symbol-value (elt e 0)))
@@ -419,13 +431,17 @@ customize buffer but do not save them to the server."
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
-    (kom-presence-messages      (choice ((const (on t))
-              (repeat (person nil :tag name)
-                      :tag some-persons
-                      :menu-tag some-persons))))
+    (kom-presence-messages (choice ((const (on t))
+                                    (const (friends friends))
+                                    (repeat (person nil :tag name)
+                                            :indent 4
+                                            :tag some-persons
+                                            :menu-tag some-persons))))
     (kom-presence-messages-in-buffer
      (choice ((const (on t))
+              (const (friends friends))
               (repeat (person nil :tag name)
+                      :indent 4
                       :tag some-persons
                       :menu-tag some-persons))))
     (kom-show-where-and-what (toggle (yes no)))
@@ -438,16 +454,19 @@ customize buffer but do not save them to the server."
     (kom-higher-priority-breaks (choice ((const (express-break express))
                                          (const (break t))
                                          (const (no-break nil)))))
-    (kom-login-hook (repeat (command nil :tag command)))
+    (kom-login-hook (repeat (command nil :tag command)
+                            :indent 4))
     (kom-do-when-done (repeat (choice ((command nil :tag command)
                                        (kbd-macro nil :tag kbd-macro))
                                       :tag execute
                                       :help-echo select-what-to-execute
-                                      :format "%[%t%] %v")))
+                                      :format "%[%t%] %v")
+                              :indent 4))
     (kom-page-before-command (choice ((const (page-none nil))
                                       (const (page-all t))
                                       (repeat (command nil
                                                        :tag command)
+                                              :indent 4
                                               :tag page-some
                                               :menu-tag page-some
                                               :format "%[%t%] %v"
@@ -479,8 +498,9 @@ customize buffer but do not save them to the server."
               (const (group-rcpt group))
               (const (sender-rcpt sender)))))
     (lyskom-filter-outgoing-messages (noggle (yes no)))
-    (kom-friends (repeat (person nil :tag name)))
-    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)))
+    (kom-friends (repeat (person nil :tag name) :indent 4))
+    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
+                                        :indent 4))
     (kom-mosaic-command (file))
     (kom-netscape-command (file))
     (kom-confirm-multiple-recipients
@@ -500,7 +520,8 @@ customize buffer but do not save them to the server."
     (kom-ansaphone-show-messages (toggle (yes no)))
     (kom-ansaphone-default-reply (string nil :format "%[%t%]\n%v"))
     (kom-remote-control (toggle (on off)))
-    (kom-remote-controllers (repeat (person nil :tag name)))
+    (kom-remote-controllers (repeat (person nil :tag name)
+                                    :indent 4))
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
     (kom-show-namedays (toggle (on off)))
@@ -539,8 +560,25 @@ customize buffer but do not save them to the server."
          (doc-sym (intern (concat (symbol-name variable) "-doc")))
          (help-sym (intern (concat (symbol-name variable) "-help")))
          (value (save-excursion (set-buffer lyskom-buffer)
-                                (symbol-value variable))))
+                                (symbol-value variable)))
+         (storage-widget nil))
+
     (ignore value help-sym dummy)       ; Are they ever used?
+
+    (setq storage-widget
+          (condition-case nil
+              (prog1
+                (widget-create 'checkbox
+                               ':value (and (not (memq variable kom-dont-read-saved-variables))
+                                            (or (memq variable lyskom-elisp-variables)
+                                                (memq variable lyskom-global-boolean-variables)
+                                                (memq variable lyskom-global-non-boolean-variables)))
+                               ':args variable
+                               ':format "%[%v%]"
+                               ':help-echo (lyskom-custom-string 'variable-type-help))
+                (widget-insert " "))
+            (error nil)))
+
     (setq spec 
           (cons (car spec)
                 (append
@@ -554,6 +592,7 @@ customize buffer but do not save them to the server."
                        (lyskom-format 
                         (lyskom-custom-string 'default-help-echo)
                         (symbol-name variable))
+                       ':lyskom-storage-widget storage-widget
                        )
                  (cdr spec))))
     (let ((widget (apply 'widget-create spec)))
