@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.21 1992-05-11 02:00:25 linus Exp $
+;;;;; $Id: vars.el,v 35.22 1992-06-17 19:36:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.21 1992-05-11 02:00:25 linus Exp $\n"))
+	      "$Id: vars.el,v 35.22 1992-06-17 19:36:33 linus Exp $\n"))
 
 
 
@@ -204,6 +204,7 @@ These are the flags that are saved in the elisp-client part of the server.")
   kom-print-number-of-unread-on-entrance
   kom-read-depth-first
   kom-reading-puts-comments-in-pointers-last
+  kom-confirm-multiple-recipients
 )
   "List of flags that are to be saved as booleans in the common block.
 
