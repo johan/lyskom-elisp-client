@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.102 2000-02-17 17:01:40 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.103 2000-02-21 22:12:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.102 2000-02-17 17:01:40 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.103 2000-02-21 22:12:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -82,8 +82,8 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-}")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-Å) 'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-å) 'lyskom-sv-edit-review-prefix)
-  (define-key lyskom-sv-edit-prefix (kbd "C-Å") 'lyskom-sv-edit-review-prefix)
-  (define-key lyskom-sv-edit-prefix (kbd "C-å") 'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control Å)] 'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control å)] 'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "C-i")     'lyskom-sv-edit-insert-prefix)
@@ -1780,10 +1780,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (lyskom-keys 'Ä) 'lyskom-sv-change-prefix)
   (define-key lyskom-sv-mode-map (lyskom-keys 'Å) 'lyskom-sv-review-prefix)
   (define-key lyskom-sv-mode-map (lyskom-keys 'å) 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map (kbd "ä") 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map (kbd "Ä") 'lyskom-sv-change-prefix)
-  (define-key lyskom-sv-mode-map (kbd "Å") 'lyskom-sv-review-prefix)
-  (define-key lyskom-sv-mode-map (kbd "å") 'lyskom-sv-review-prefix)
+  (define-key lyskom-sv-mode-map [ä] 'lyskom-sv-change-prefix)
+  (define-key lyskom-sv-mode-map [Ä] 'lyskom-sv-change-prefix)
+  (define-key lyskom-sv-mode-map [Å] 'lyskom-sv-review-prefix)
+  (define-key lyskom-sv-mode-map [å] 'lyskom-sv-review-prefix)
 
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
@@ -1841,8 +1841,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "l s") 'kom-membership)
   (define-key lyskom-sv-list-prefix (lyskom-keys 'ä) 'kom-list-summary)
   (define-key lyskom-sv-list-prefix (lyskom-keys 'Ä) 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix (kbd "ä") 'kom-list-summary)
-  (define-key lyskom-sv-list-prefix (kbd "Ä") 'kom-list-summary)
+  (define-key lyskom-sv-list-prefix [ä] 'kom-list-summary)
+  (define-key lyskom-sv-list-prefix [Ä] 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l {") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
@@ -1865,8 +1865,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "f t") 'kom-move-text)
   (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'ä) 'kom-filter-subject)
   (define-key lyskom-sv-filter-get-prefix (lyskom-keys 'Ä) 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix (kbd "ä") 'kom-filter-subject)
-  (define-key lyskom-sv-filter-get-prefix (kbd "Ä") 'kom-filter-subject)
+  (define-key lyskom-sv-filter-get-prefix [ä] 'kom-filter-subject)
+  (define-key lyskom-sv-filter-get-prefix [Ä] 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f {") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
@@ -1916,8 +1916,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "s s") 'kom-status-session)
   (define-key lyskom-sv-S-prefix (lyskom-keys 'ä) 'kom-send-message)
   (define-key lyskom-sv-S-prefix (lyskom-keys 'Ä) 'kom-send-message)
-  (define-key lyskom-sv-S-prefix (kbd "ä") 'kom-send-message)
-  (define-key lyskom-sv-S-prefix (kbd "Ä") 'kom-send-message)
+  (define-key lyskom-sv-S-prefix [ä] 'kom-send-message)
+  (define-key lyskom-sv-S-prefix [Ä] 'kom-send-message)
   (define-key lyskom-sv-mode-map (kbd "s {") 'kom-send-message)
   (define-key lyskom-sv-mode-map (kbd "s [") 'kom-send-message)
 

@@ -1,3 +1,10 @@
+2000-02-20    <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-netscape): Added more
+	possible values for window-system on MS-Windows systems (courtesy
+	RMS who does not want to associate "win" with MS-Windows and the
+	XEmacs team who thinks mswindows is prettier than w32 or win32.)
+
 2000-02-17  David Byers  <davby@sen2.ida.liu.se>
 
 	* aux-items.el: Encode aux-items that need to be encoded with the
