@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.36 1999-06-28 10:41:11 byers Exp $
+;;;;; $Id: startup.el,v 44.37 1999-06-28 13:45:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.36 1999-06-28 10:41:11 byers Exp $\n"))
+	      "$Id: startup.el,v 44.37 1999-06-28 13:45:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -191,8 +191,6 @@ CONNECT %s:%d HTTP/1.0\r\n\
                                                          host port)))))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
-	      (if session-priority
-		  (setq lyskom-session-priority session-priority))
 	      (setq lyskom-buffer buffer)
 	      (setq lyskom-default-user-name username)
 	      (setq lyskom-default-password password)
@@ -253,7 +251,7 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil) 
 	      ;; Log in
-	      (kom-start-anew t)
+	      (kom-start-anew t session-priority)
 	      (if (memq lyskom-buffer lyskom-buffer-list)
 		  (while (not (eq lyskom-buffer (car lyskom-buffer-list)))
 		    (setq lyskom-buffer-list
@@ -380,7 +378,7 @@ CONNECT %s:%d HTTP/1.0\r\n\
 ;;;                        Start anew
 
 
-(defun kom-start-anew (&optional lyskom-first-time-around)
+(defun kom-start-anew (&optional lyskom-first-time-around session-priority)
   "Start as a new person."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
@@ -468,6 +466,9 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	    
 	    (if (not lyskom-dont-read-user-area)
 		(lyskom-read-options))
+            (when (or session-priority kom-default-session-priority)
+              (setq lyskom-session-priority
+                    (or session-priority kom-default-session-priority)))
 	    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
 				       lyskom-current-conf
 				       0)
