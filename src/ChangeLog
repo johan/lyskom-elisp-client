@@ -1,4 +1,90 @@
+2003-08-17  David Byers  <byers@lysator.liu.se>
+
+	Make initial value for reading confs more configurable:
+	* filter.el (kom-filter-author): Simplified. Initial values are
+	now computed in completing-read.el, not here.
+
+	* completing-read.el (lyskom-read-conf-guess-initial): Added
+	PROMPT parameter.
+	(lyskom-get-initial-conf-strategy): Added PROMPT parameter.
+	Operate on new format. Combine prompt-specific, command-specific
+	and default configuration.
+
+	* vars.el.in (lyskom-default-conference-strategy): New format.
+	Removed lyskom-default-conference-self as default.
+
+	* completing-read.el (lyskom-default-conference-last-author): New
+	function. 
+
+	Pass symbols or lists to lyskom-read-conf-stat and friends:
+	* startup.el (kom-start-anew): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+
+	* review.el (lyskom-review-by-to): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(lyskom-unread-by-to): Same.
+
+	* filter.el (kom-filter-subject): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(kom-filter-author): Same.
+	(kom-filter-text): Same.
+
+	* faqs.el (kom-change-conf-faq): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(kom-list-faqs): Same.
+
+	* edit-text.el (kom-edit-add-recipient): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(kom-edit-add-bcc): Same.
+	(kom-edit-add-copy): Same.
+	(kom-edit-move-text): Same.
+
+	* completing-read.el (lyskom-read-conf): Support list as prompt.
+
+	* commands2.el (kom-status-conf): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(kom-status-person): Same.
+	(kom-set-garb-nice): Same.
+	(kom-set-permitted-submitters): Same.
+	(kom-set-super-conf): Same.
+	(kom-set-personal-label): Same.
+	(kom-is-person-member-of-conference): Same.
+	(kom-will-person-read-text): Same.
+
+	* commands1.el (kom-delete-conf): Pass symbol as prompt to
+	lyskom-read-conf-stat.
+	(kom-review-presentation): Same.
+	(kom-unread-presentation): Same.
+	(kom-add-member): Same.
+	(kom-add-self): Same.
+	(kom-change-priority): Same.
+	(kom-sub-member): Same.
+	(kom-sub-self): Same.
+	(kom-change-presentation): Same.
+	(kom-change-conf-motd): Same.
+	(kom-set-presentation): Same.
+	(kom-set-motd-text): Same.
+	(kom-remove-presentation): Same.
+	(kom-unset-conf-motd): Same.
+	(kom-go-to-conf): Same.
+	(lyskom-write-text): Same.
+	(kom-change-name): Same.
+	(kom-change-parenthesis): Same. Also moved initial to vars.el.in.
+	(kom-change-supervisor): Same.
+	(kom-change-password): Same.
+	(kom-who-is-on-in-conference): Same.
+	(kom-who-is-present-in-conference): Same.
+	(lyskom-add-helper): Same.
+	(kom-sub-recipient): Same.
+	(lyskom-read-cross-reference-and-get-aux-item): Same. Also cleanup.
+	(lyskom-read-link): Same.
+
 2003-08-16  David Byers  <byers@lysator.liu.se>
+
+	Work on supporting UTC timestamps from the server:
+	* komtypes.el (lyskom-create-time-from-utc): New function.
+
+	* utilities.el (lyskom-days-in-year): New function.
 
 	Support for new server calls:
 	* parse.el (lyskom-parse-scheduling-info): New function.

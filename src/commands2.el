@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.182 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: commands2.el,v 44.183 2003-08-17 12:48:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.182 2003-08-16 16:58:45 byers Exp $\n"))
+              "$Id: commands2.el,v 44.183 2003-08-17 12:48:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -194,8 +194,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (interactive)
   (let ((conf-no
          (or conf-no
-             (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-                                  '(all) nil nil t)))
+             (lyskom-read-conf-no 'conf-for-status '(all) nil nil t)))
         (kom-print-seconds-in-time-strings nil)
         (kom-extended-status-information (lyskom-extended-status-override 'conf)))
     (cache-del-conf-stat conf-no)
@@ -395,8 +394,7 @@ This command accepts text number prefix arguments \(see
          (or (when (interactive-p)
 	       (text-stat->author (blocking-do 'get-text-stat text-or-pers-no)))
 	     text-or-pers-no
-             (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
-                                  '(pers) nil nil t)))
+             (lyskom-read-conf-no 'pers-for-status '(pers) nil nil t)))
         (kom-print-seconds-in-time-strings nil)
         (kom-extended-status-information (lyskom-extended-status-override 'pers))
         conf-stat
@@ -607,8 +605,7 @@ See `kom-default-message-recipient'."
   (let* ((tmp nil)
          (target (or who
                      (lyskom-read-conf-no
-                      (format (lyskom-get-string 'who-to-send-message-to)
-                              (lyskom-get-string 'nobody))
+                      `(who-to-send-message-to ,(lyskom-get-string 'nobody))
                       (if kom-permissive-completion
                           '(all)
                         '(login conf))
@@ -1477,9 +1474,8 @@ conference will eventually be deleted automatically \(this process is
 called garbage collection). This can only happen when a text is older
 than the garbage collection time of all its recipients."
   (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat
-                    (lyskom-get-string 'conf-to-set-garb-nice-q)
-                    '(all) nil nil t)))
+  (let ((conf-stat (lyskom-read-conf-stat 'conf-to-set-garb-nice-q
+                                          '(all) nil nil t)))
     (if (not conf-stat)
         (lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((garb-nice (lyskom-read-number 'new-garb-nice-q)))
@@ -1504,15 +1500,14 @@ than the garbage collection time of all its recipients."
 The permitted submitters of a conference is another conference. Only
 members of the permitted submitters may submit texts to the conference."
   (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat 
-                    (lyskom-get-string 'conf-to-set-permitted-submitters-q)
-                    '(all) nil nil t)))
+  (let ((conf-stat (lyskom-read-conf-stat 'conf-to-set-permitted-submitters-q
+                                          '(all) nil nil t)))
 
     (if (not conf-stat)
         (lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((new-conf (lyskom-read-conf-stat
-                       (lyskom-format 'new-permitted-submitters-q
-                                      (conf-stat->name conf-stat))
+                       `(new-permitted-submitters-q 
+                         ,(conf-stat->name conf-stat))
                        '(all) 
                        t nil t)))
         (if (eq new-conf nil)
@@ -1543,14 +1538,12 @@ If a conference is set to only accept new texts, and not comments, any
 comments submitted to the conference will be sent to the super
 conference instead."
   (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat 
-                    (lyskom-get-string 'conf-to-set-super-conf-q)
-                    '(all) nil nil t)))
+  (let ((conf-stat (lyskom-read-conf-stat 'conf-to-set-super-conf-q
+                                          '(all) nil nil t)))
     (if (not conf-stat)
         (lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((new-conf (lyskom-read-conf-stat
-                       (lyskom-format 'new-super-conf-q
-                                      (conf-stat->name conf-stat))
+                       `(new-super-conf-q ,(conf-stat->name conf-stat))
                        '(all) nil nil t)))
 
         ;; Set the super conference for conf-stat to new-conf.
@@ -2298,13 +2291,12 @@ Sets a personal label on an object of some kind."
 
           ((memq type '(conf pers))
            (setq object
-                 (lyskom-read-conf-stat (lyskom-get-string 
-                                         (if (eq type 'pers)
-                                             'label-what-pers
-                                           'label-what-conf))
-                                         (if (eq type 'pers)
-                                             '(pers)
-                                           '(all))
+                 (lyskom-read-conf-stat (if (eq type 'pers)
+                                            'label-what-pers
+                                          'label-what-conf)
+                                        (if (eq type 'pers)
+                                            '(pers)
+                                          '(all))
                                          nil nil t))
            (setq objno (conf-stat->conf-no object))
            (setq aux (conf-stat-find-aux object 10 lyskom-pers-no))
@@ -2635,12 +2627,12 @@ See `kom-keep-alive' for more information."
   (interactive)
   (let* ((pers-no
           (or pers-no
-              (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-mship-for)
+              (lyskom-read-conf-no 'pers-to-check-mship-for
                                    '(all) nil nil t)))
          (conf-stat
           (if conf-no 
               (blocking-do 'get-conf-stat conf-no)
-            (lyskom-read-conf-stat (lyskom-get-string 'conf-to-check-mship-of)
+            (lyskom-read-conf-stat 'conf-to-check-mship-of
                                    '(all) nil nil t)))
 	 (mship (lyskom-is-member (conf-stat->conf-no conf-stat) pers-no)))
     (if (null mship)
@@ -2686,7 +2678,7 @@ If a prefix argument is given, that text will be checked.
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-will-read-for)
+  (interactive (list (lyskom-read-conf-no 'pers-to-check-will-read-for
                                           '(all) nil nil t)
                      (lyskom-read-text-no-prefix-arg 'text-to-check-will-read-for
                                                      t)))
@@ -2921,13 +2913,14 @@ properly in the client."
          (completion-ignore-case t)
          (object-type 
           (cdr (lyskom-string-assoc 
-                (lyskom-completing-read (lyskom-get-string 'what-kind-to-add-aux-to)
-                                        completions
-                                        nil t)
+                (lyskom-completing-read 
+                 (lyskom-get-string 'what-kind-to-add-aux-to) 
+                 completions nil t)
                 completions)))
          (object-id (cond ((eq object-type 'server) nil)
                            ((eq object-type 'conference)
-                            (lyskom-read-conf-no 'which-conf-to-add-aux-to '(pers conf)))
+                            (lyskom-read-conf-no 'which-conf-to-add-aux-to
+                                                 '(pers conf)))
                            ((eq object-type 'text)
                             (lyskom-read-number 'which-text-to-add-aux-to 
                                                 (if (and lyskom-current-text

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.27 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: filter.el,v 44.28 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.27 2003-08-02 20:21:46 byers Exp $\n"))
+	      "$Id: filter.el,v 44.28 2003-08-17 12:48:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -461,9 +461,8 @@ To change existing filters, use `kom-filter-edit'."
                      (lyskom-get-string 'filter-subject)
                      (or subject lyskom-current-subject)))
       (setq filter (cons (cons 'subject subject) filter))
-      (setq conf (lyskom-read-conf-no
-                  (lyskom-get-string 'filter-in-conf)
-                  '(all) t nil t))
+      (setq conf (lyskom-read-conf-no 'filter-in-conf
+                                      '(all) t nil t))
       (if (/= conf 0)
           (setq filter (cons (cons 'recipient-no conf) filter)))
       (setq action (lyskom-filter-read-action))
@@ -488,37 +487,20 @@ conferences.
 
 To change existing filters, use `kom-filter-edit'."
   (interactive)
-  (let (auth-stat author conf filter action permanent)
-    (blocking-do-multiple ((text-stat (get-text-stat 
-                                       (or lyskom-current-text 0)))
-                           (conf-stat (get-conf-stat
-                                       lyskom-current-conf)))
-      (if text-stat
-          (setq auth-stat (blocking-do 'get-conf-stat
-                                       (text-stat->author text-stat))))
-      (setq author 
-            (lyskom-read-conf-no (lyskom-get-string 'filter-author)
-                                 '(pers)
-                                 t
-                                 (and auth-stat
-                                      (cons (conf-stat->name auth-stat) 0))
-                                 t))
-      (if (/= author 0)
-          (setq filter (cons (cons 'author-no author) filter)))
-      (setq conf (lyskom-read-conf-no
-                  (lyskom-get-string 'filter-in-conf)
-                  '(all)
-                  t
-                  (and conf-stat (cons (conf-stat->name conf-stat) 0))
-                  t))
-      (if (/= conf 0)
-          (setq filter (cons (cons 'recipient-no conf) filter)))
-      (setq action (lyskom-filter-read-action))
-      (setq permanent (lyskom-filter-read-permanent))
-      (lyskom-add-filter
-       (make-filter filter
-                    (list (cons 'action action)
-                          (cons 'expire (not permanent))))))))
+  (let (author conf filter action permanent)
+    (setq author (lyskom-read-conf-no 'filter-author '(pers) t nil t))
+    (if (/= author 0)
+        (setq filter (cons (cons 'author-no author) filter)))
+    (setq conf (lyskom-read-conf-no 'filter-in-conf
+                                    '(all) t nil t))
+    (if (/= conf 0)
+        (setq filter (cons (cons 'recipient-no conf) filter)))
+    (setq action (lyskom-filter-read-action))
+    (setq permanent (lyskom-filter-read-permanent))
+    (lyskom-add-filter
+     (make-filter filter
+                  (list (cons 'action action)
+                        (cons 'expire (not permanent)))))))
 
 (def-kom-command kom-filter-recipient ()
   "Interactively filter a recipient. This creates a permanent or
@@ -527,10 +509,7 @@ temporary filter on a particular recipient.
 To change existing filters, use `kom-filter-edit'."
   (interactive)
   (let ((conf-no (lyskom-read-conf-no 'filter-recipient
-                                      '(all)
-                                      nil
-                                      nil
-                                      t))
+                                      '(all) nil nil t))
         (action (lyskom-filter-read-action))
         (permanent (lyskom-filter-read-permanent)))
     (cond ((and conf-no (not (zerop conf-no)))
@@ -654,7 +633,7 @@ To change existing filters, use `kom-filter-edit'."
                                          (or text "")))
       (setq filter (cons (cons 'text text) filter))
       (setq conf (lyskom-read-conf-no
-                  (lyskom-get-string 'filter-in-conf)
+                  'filter-in-conf
                   '(all) t nil t))
       (if (/= conf 0)
           (setq filter (cons (cons 'recipient-no conf) filter)))

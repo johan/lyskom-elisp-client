@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.16 2003-08-15 06:32:04 qha Exp $
+;;;;; $Id: faqs.el,v 44.17 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.16 2003-08-15 06:32:04 qha Exp $\n"))
+              "$Id: faqs.el,v 44.17 2003-08-17 12:48:06 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -274,9 +274,8 @@ create a new one. You need administrative rights to do this."
   "Change a FAQ fo a conference. If the conference doesn't have a FAQ,
 create a new FAQ."
   (interactive)
-  (let* ((conf-no (lyskom-read-conf-no
-                   (lyskom-get-string 'what-to-change-faq-you)
-                   '(conf pers) nil nil t))
+  (let* ((conf-no (lyskom-read-conf-no 'what-to-change-faq-you
+                                       '(conf pers) nil nil t))
          (conf-stat (when conf-no       ; Need this to make sure the conf-stat is up-to-date!
                       (cache-del-conf-stat conf-no)
                       (blocking-do 'get-conf-stat conf-no))))
@@ -457,8 +456,7 @@ create a new FAQ."
 
 (def-kom-command kom-list-faqs (conf-stat)
   "List all FAQs for a conference."
-  (interactive (list (lyskom-read-conf-stat (lyskom-get-string
-                                             'conf-to-list-faqs)
+  (interactive (list (lyskom-read-conf-stat 'conf-to-list-faqs
                                             '(conf) nil nil t)))
   (lyskom-do-list-faqs conf-stat
                        (lyskom-get-aux-item 

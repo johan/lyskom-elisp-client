@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.340 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.341 2003-08-17 12:48:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.340 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.341 2003-08-17 12:48:06 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -699,7 +699,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Adderad %#1s av %#2P\n")
     (is-supervisor-mark . "O ")
-    (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
+    (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%#1s) ")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
     (his-total-unread . "\n%#1M har totalt %#2d olästa (plus %#3d i passiva medlemskap).\n")
     (message-prompt . "Meddelande: ")

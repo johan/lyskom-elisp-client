@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.194 2003-08-16 16:58:44 byers Exp $
+;;;;; $Id: commands1.el,v 44.195 2003-08-17 12:48:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.194 2003-08-16 16:58:44 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.195 2003-08-17 12:48:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -77,8 +77,7 @@ than the deleted conference will become inaccessible, and will
 eventually be permanently deleted."
   (interactive)
   (let ((conf-stat 
-	 (lyskom-read-conf-stat (lyskom-get-string 'what-conf-to-delete)
-				'(all) nil nil t)))
+	 (lyskom-read-conf-stat 'what-conf-to-delete '(all) nil nil t)))
     (if conf-stat
 	(if (lyskom-ja-or-nej-p
 	     (lyskom-format 'confirm-delete-pers-or-conf
@@ -193,10 +192,8 @@ This command accepts text number prefix arguments (see
                               (text-stat->author
                                (blocking-do 'get-text-stat text-or-conf-no))
                             text-or-conf-no))
-           (lyskom-read-conf-stat
-            (lyskom-get-string 'presentation-for-whom)
-            '(all)
-            nil nil t))))
+           (lyskom-read-conf-stat 'presentation-for-whom '(all)
+                                  nil nil t))))
     (lyskom-review-presentation conf-stat)))
 
 (def-kom-command kom-unread-presentation (&optional text-or-conf-no)
@@ -217,9 +214,8 @@ This command accepts text number prefix arguments (see
                               (text-stat->author
                                (blocking-do 'get-text-stat text-or-conf-no))
                             text-or-conf-no))
-           (lyskom-read-conf-stat
-            (lyskom-get-string 'unread-presentation-for-whom)
-            '(all) nil nil t))))
+           (lyskom-read-conf-stat 'unread-presentation-for-whom
+                                  '(all) nil nil t))))
     (if (zerop (conf-stat->presentation conf-stat))
         (lyskom-format-insert 'has-no-presentation conf-stat)
       (lyskom-format-insert 'marking-text-unread
@@ -522,10 +518,8 @@ server configuration this command may either create an invitation or
 simply make the person a member of the conference without asking them
 for confirmation."
   (interactive)
-  (let* ((who (lyskom-read-conf-stat (lyskom-get-string 'who-to-add)
-				     '(pers) nil nil t))
-	 (whereto (lyskom-read-conf-stat (lyskom-get-string 'where-to-add)
-					 '(all) nil nil t))
+  (let* ((who (lyskom-read-conf-stat 'who-to-add '(pers) nil nil t))
+	 (whereto (lyskom-read-conf-stat 'where-to-add '(all) nil nil t))
 	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who 
                                                      pers-stat 
@@ -549,9 +543,8 @@ See `kom-membership-default-priority' and
 `kom-membership-default-placement'"
   (interactive)
   (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
-                    (lyskom-read-conf-stat 
-                     (lyskom-get-string 'where-to-add-self)
-                     '(all) nil nil t)))
+                    (lyskom-read-conf-stat 'where-to-add-self
+                                           '(all) nil nil t)))
          (mship (lyskom-is-member (conf-stat->conf-no whereto)
                                   lyskom-pers-no)))
 
@@ -610,9 +603,8 @@ See `kom-membership-default-priority' and
 the priority of several memberships, use `kom-prioritize' instead."
   (interactive)
   (let* ((conf-stat (if conf (blocking-do 'get-conf-stat conf)
-                      (lyskom-read-conf-stat 
-                       (lyskom-get-string 'change-priority-for-q)
-                       '(all) nil nil t)))
+                      (lyskom-read-conf-stat  'change-priority-for-q
+                                              '(all) nil nil t)))
          (mship (lyskom-get-membership (conf-stat->conf-no conf-stat) t))
 	 (kom-membership-default-priority nil))
     (blocking-do-multiple ((who (get-conf-stat lyskom-pers-no))
@@ -882,10 +874,8 @@ unless BLOCKING is t, in which cast it is the conf-stat."
 supervisor of the conference or of the member being removed."
   (interactive)
   (lyskom-sub-member
-   (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude)
-                          '(pers) nil nil t)
-   (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
-			  '(all) nil nil t)))
+   (lyskom-read-conf-stat 'who-to-exclude '(pers) nil nil t)
+   (lyskom-read-conf-stat 'where-from-exclude '(all) nil nil t)))
 
 
 (def-kom-command kom-sub-self (&optional conf-no)
@@ -899,7 +889,7 @@ See `kom-unsubscribe-makes-passive'."
   (interactive)
   (let* ((me (blocking-do 'get-conf-stat lyskom-pers-no))
 	 (conf (if conf-no (blocking-do 'get-conf-stat conf-no)
-                 (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
+                 (lyskom-read-conf-stat 'leave-what-conf
                                         '(membership) nil nil t))))
     (lyskom-sub-member me conf)))
 
@@ -1485,9 +1475,7 @@ or conference doesn't have a presentation, a new presentation will
 be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no 
-	      (lyskom-get-string 'what-to-change-pres-you)
-	      '(all) t nil t)))
+   (let ((no (lyskom-read-conf-no 'what-to-change-pres-you '(all) t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -1500,8 +1488,7 @@ be created."
 or conference doesn't have a notice, a new notice till be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
-				  '(all) t nil t)))
+   (let ((no (lyskom-read-conf-no 'who-to-put-motd-for '(all) t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -1587,9 +1574,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
-   (let ((conf-no (lyskom-read-conf-no
-                   (lyskom-get-string 'what-to-set-pres-you)
-                   '(all) t nil t))
+   (let ((conf-no (lyskom-read-conf-no 'what-to-set-pres-you '(all) t nil t))
          (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
                                                   lyskom-previous-text)))
      (when (zerop conf-no)
@@ -1605,9 +1590,7 @@ This command accepts text number prefix arguments (see
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
-   (let ((conf-no (lyskom-read-conf-no
-                   (lyskom-get-string 'what-to-set-motd-you)
-                   '(all) t nil t))
+   (let ((conf-no (lyskom-read-conf-no 'what-to-set-motd-you '(all) t nil t))
          (text-no (lyskom-read-text-no-prefix-arg
                    'what-text-to-set-as-motd-no t
                    lyskom-previous-text)))
@@ -1653,9 +1636,8 @@ This command accepts text number prefix arguments (see
 remove a presentation without adding a new one. This can be accomplished
 with the `kom-change-presentation' command."
   (interactive)
-  (let ((conf-stat (or (lyskom-read-conf-stat
-                        (lyskom-get-string 'who-to-remove-pres-for)
-                        '(all) t nil t)
+  (let ((conf-stat (or (lyskom-read-conf-stat 'who-to-remove-pres-for
+                                              '(all) t nil t)
                        (blocking-do 'get-conf-stat lyskom-pers-no))))
     (cond ((null conf-stat)
            (lyskom-insert-string 'cant-get-conf-stat))
@@ -1676,9 +1658,8 @@ with the `kom-change-presentation' command."
 (def-kom-command kom-unset-conf-motd ()
   "Removes the notice for a person or conference."
   (interactive)
-  (let ((conf-stat (or (lyskom-read-conf-stat
-			(lyskom-get-string 'who-to-remove-motd-for)
-			'(all) t nil t)
+  (let ((conf-stat (or (lyskom-read-conf-stat 'who-to-remove-motd-for
+                                              '(all) t nil t)
 		       (blocking-do 'get-conf-stat lyskom-pers-no))))
     (cond
      ((null conf-stat)
@@ -1705,8 +1686,7 @@ Changing conferences runs `kom-change-conf-hook' and
   (interactive)
   (let ((conf (if conf-no
                   (blocking-do 'get-conf-stat conf-no)
-                (lyskom-read-conf-stat (lyskom-get-string 'go-to-conf-p)
-                                       '(all) nil nil t))))
+                (lyskom-read-conf-stat 'go-to-conf-p '(all) nil nil t))))
     (when (lyskom-check-go-to-conf conf)
       (lyskom-go-to-conf conf))))
 
@@ -1843,8 +1823,7 @@ recipients are handled."
   (lyskom-nag-about-presentation)
   (let* ((tono (if (and arg lyskom-current-conf (not (zerop lyskom-current-conf)))
                    lyskom-current-conf
-                 (lyskom-read-conf-no (lyskom-get-string prompt)
-                                      '(pers conf) nil nil t)))
+                 (lyskom-read-conf-no prompt '(pers conf) nil nil t)))
          (conf-stat (blocking-do 'get-conf-stat tono)))
     (cache-del-conf-stat tono)
     (if (if (zerop (conf-stat->msg-of-day conf-stat))
@@ -2158,9 +2137,8 @@ If it is 'conf, only conferences will be listed."
 name of a conference or person, you need to be the supervisor of that
 conference or person."
   (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat 
-		    (lyskom-get-string 'name-to-be-changed)
-		    '(all) nil nil t)))
+  (let ((conf-stat (lyskom-read-conf-stat 'name-to-be-changed
+                                          '(all) nil nil t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (let (name)
@@ -2190,9 +2168,8 @@ In some LysKOM communities it is popular to put a witticism enclosed in
 parenthesis at the end of one's name. This command is intended to make
 it easy to change this information."
   (interactive)
-  (let ((conf-stat (lyskom-read-conf-stat 
-		    (lyskom-get-string 'name-to-be-changed)
-		    '(all) nil lyskom-pers-no t)))
+  (let ((conf-stat (lyskom-read-conf-stat 'name-to-be-changed
+                                          '(all) nil nil t)))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (cond 
@@ -2227,15 +2204,13 @@ it easy to change this information."
   "Change the supervisor of a person or conference. You need to be the
 supervisor of the person or conference to perform this operation."
   (interactive)
-  (let ((supervisee (lyskom-read-conf-stat
-		     (lyskom-get-string 'who-to-change-supervisor-for)
-		     '(all) nil nil t)))
+  (let ((supervisee (lyskom-read-conf-stat 'who-to-change-supervisor-for
+                                           '(all) nil nil t)))
     (if (null supervisee)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (lyskom-tell-internat 'kom-tell-change-supervisor)
-      (let ((supervisor (lyskom-read-conf-stat
-			 (lyskom-get-string 'new-supervisor)
-			 '(all) nil nil t)))
+      (let ((supervisor (lyskom-read-conf-stat 'new-supervisor
+                                               '(all) nil nil t)))
 	(lyskom-format-insert 'change-supervisor-from-to
 			      supervisee
 			      supervisor)
@@ -2510,8 +2485,7 @@ If MARK-NO is nil, review all marked texts."
 person you need either the old password for the person, or have
 administrative privileges enabled."
   (interactive)
-  (let ((pers-no (lyskom-read-conf-no (lyskom-get-string 'whos-passwd)
-				      '(pers) t nil t))
+  (let ((pers-no (lyskom-read-conf-no 'whos-passwd '(pers) t nil t))
 	(old-pw (silent-read (lyskom-get-string 'old-passwd)))
 	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
 	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
@@ -2683,7 +2657,7 @@ Several variables affect display. See `kom-show-where-and-what',
 `kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (let ((conf-stat 
-	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-on-in-what-conference)
+	 (lyskom-read-conf-stat 'who-is-on-in-what-conference
                                 '(all) nil nil t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
@@ -2713,7 +2687,7 @@ Several variables affect display. See `kom-show-where-and-what',
 `kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (let ((conf-stat 
-	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-present-in-what-conference)
+	 (lyskom-read-conf-stat 'who-is-present-in-what-conference
 				'(all) nil nil t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
@@ -3621,12 +3595,9 @@ This command accepts text number prefix arguments (see
          (move-attachments nil)
          (conf (blocking-do 'get-conf-stat
                             (lyskom-default-value last-variable)))
-         (target (lyskom-read-conf-stat
-                  (lyskom-get-string who-prompt)
-                  '(all) 
-                  nil 
-                  (and conf (cons (conf-stat->name conf) 0))
-                  t)))
+         (target (lyskom-read-conf-stat who-prompt '(all) 
+                                        nil (and conf (conf-stat->name conf))
+                                        t)))
 
     (when (and target text-no)
 
@@ -3711,10 +3682,10 @@ This command accepts text number prefix arguments (see
           (if recipients
               (let* ((conf (lyskom-default-recpt-for-sub recipients))
                      (source (lyskom-read-conf-stat
-                              (lyskom-get-string 'who-to-sub-q)
+                              'who-to-sub-q
                               (list (cons 'restrict (mapcar 'car recipients)))
                               nil
-                              (and conf (cons (conf-stat->name conf) 0))
+                              (and conf (conf-stat->name conf))
                               t)))
                 (when source
                   (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'sub-footnotes-too-q)))
@@ -3765,14 +3736,12 @@ recipient to remove and target the recipient to add to text-stat."
                                      (mapcar 'car
                                              recipients)))
                          nil
-                         (and default-from
-                              (cons (conf-stat->name default-from) 0))
+                         (and default-from (conf-stat->name default-from))
                          t))
                 (target (lyskom-read-conf-stat
                          'who-to-move-to-q '(all)
                          nil
-                         (and default-to 
-                              (cons (conf-stat->name default-to) 0))
+                         (and default-to (conf-stat->name default-to))
                          t)))
             (when (and source target)
               (setq move-footnotes (and footnotes (lyskom-j-or-n-p 'move-footnotes-too-q)))
@@ -3821,8 +3790,7 @@ This command accepts text number prefix arguments (see
                            'who-to-move-from-q
                            (list (cons 'restrict (mapcar 'car recipients)))
                            nil
-                           (and default-from
-                                (cons (conf-stat->name default-from) 0))
+                           (and default-from (conf-stat->name default-from))
                            t))
                   (to-do (list (text-stat->text-no root-text-stat)))
                   (done nil))
@@ -3902,7 +3870,7 @@ This command accepts text number prefix arguments (see
                                     '(all)
                                     (> (length text-to-move-recipients) 1)
                                     (and default-to 
-                                         (cons (conf-stat->name default-to) 0))
+                                         (conf-stat->name default-to))
                                     t)))
                               (if target
                                   (progn
@@ -4213,26 +4181,23 @@ corresponding aux-item."
                       t)
                      completions)))
          (obj nil)
-         (prompt nil)
          (char nil))
     (cond
      ((eq type 'text)
-      (setq prompt (lyskom-get-string 'which-text-to-xref))
-      (while (null obj)
-        (setq obj (text-stat->text-no
-                   (blocking-do 'get-text-stat
-                                (lyskom-read-number prompt))))
-        (setq prompt (lyskom-get-string 'which-text-to-xref-err )))
+      (let ((prompt 'which-text-to-xref))
+        (while (null obj)
+          (setq obj (text-stat->text-no
+                     (blocking-do 'get-text-stat
+                                  (lyskom-read-number prompt))))
+          (setq prompt 'which-text-to-xref-err )))
       (setq char "T"))
      ((eq type 'conf)
-      (setq prompt (lyskom-get-string 'which-conf-to-xref))
       (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(conf) nil nil t)))
+        (setq obj (lyskom-read-conf-no 'which-conf-to-xref '(conf) nil nil t)))
       (setq char "C"))
      ((eq type 'pers)
-      (setq prompt (lyskom-get-string 'which-pers-to-xref))
       (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(pers) nil nil t)))
+        (setq obj (lyskom-read-conf-no 'which-pers-to-xref '(pers) nil nil t)))
       (setq char "P")))
 
     (when obj
@@ -4258,15 +4223,14 @@ link as a string."
                       nil
                       t)
                      completions)))
-         (obj nil)
-         (prompt nil))
+         (obj nil))
     (cond
      ((eq type 'text)
-      (setq prompt (lyskom-get-string 'which-text-to-link))
-      (while (null obj)
-        (setq obj (blocking-do 'get-text-stat
-			       (lyskom-read-number prompt)))
-        (setq prompt (lyskom-get-string 'which-text-to-link-err )))
+      (let ((prompt 'which-text-to-link))
+        (while (null obj)
+          (setq obj (blocking-do 'get-text-stat
+                                 (lyskom-read-number prompt)))
+          (setq prompt 'which-text-to-link-err )))
       (let* ((text-no (text-stat->text-no obj))
              (text (blocking-do 'get-text text-no))
 	     (txt (text->decoded-text-mass text obj))
@@ -4275,16 +4239,14 @@ link as a string."
 	(format "<text %d: %s>" text-no subject)))
      
      ((eq type 'conf)
-      (setq prompt (lyskom-get-string 'which-conf-to-link))
       (while (null obj)
-        (setq obj (lyskom-read-conf-stat prompt '(conf) nil nil t)))
+        (setq obj (lyskom-read-conf-stat 'which-conf-to-link '(conf) nil nil t)))
       (format "<möte %d: %s>" (conf-stat->conf-no obj)
 			   (conf-stat->name obj)))
 
      ((eq type 'pers)
-      (setq prompt (lyskom-get-string 'which-pers-to-link))
       (while (null obj)
-        (setq obj (lyskom-read-conf-stat prompt '(pers) nil nil t)))
+        (setq obj (lyskom-read-conf-stat 'which-pers-to-link '(pers) nil nil t)))
       (format "<person %d: %s>" (conf-stat->conf-no obj)
 			   (conf-stat->name obj))))))
 
