@@ -1,3 +1,28 @@
+Sat Jan 13 00:29:22 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* english-strings.el (lyskom-strings): Fler fixar.
+
+	* lyskom-rest.el (lyskom-do-format): Ge ett mer talande
+ 	felmeddelande vid formatfel. Använd det nya felet
+ 	lyskom-format-error.
+
+	* completing-read.el (lyskom-read-conf-name-internal):
+ 	Abstraherade listify-vector, men var ska den ligga?
+	Fixade riktig completion på unika träffar.
+
+	* commands2.el (kom-change-conf-type): 'conf ->
+	'confs. Unwind-protect. 
+
+	* lyskom-rest.el (lyskom-format-privs): Ny funktion (från ceder).
+	(lyskom-format-object): La till PRIVS.
+
+Tue Jan  9 00:30:15 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* english-strings.el (lyskom-strings): Ännu fler fixar.
+
+	* edit-text.el (lyskom-edit-get-commented): Använd
+	lyskom-edit-parse-header.
+
 Mon Jan  8 23:17:01 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-looking-at-header): Fungerade inte riktigt.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.8 1996-01-08 22:21:01 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.9 1996-01-13 06:50:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.8 1996-01-08 22:21:01 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.9 1996-01-13 06:50:29 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -445,30 +445,13 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
-	     (endhead (progn
-			(goto-char (point-min))
-			(or (re-search-forward 
-			     (regexp-quote
-			      (if kom-emacs-knows-iso-8859-1
-				  lyskom-header-separator
-				lyskom-swascii-header-separator))
-			     nil t)
-			    (re-search-forward 
-			     (regexp-quote
-			      (if kom-emacs-knows-iso-8859-1
-				  lyskom-swascii-header-separator
-				lyskom-header-separator))))
-			(point)))
-	     (found (progn
-		      (goto-char (point-min))
-		      (or (re-search-forward "^K[^0-9]*\\([0-9]+\\)" endhead
-					     t)
-			  (re-search-forward "^Fot[^0-9]*\\([0-9]+\\)" endhead
-					     t))))
-	     (no (and found
-		      (string-to-int (buffer-substring
-				      (match-beginning 1)
-				      (match-end 1))))))
+	     (headers (cdr (lyskom-edit-parse-headers)))
+	     (no nil))
+	(while headers
+	  (if (or (eq (car headers) 'comm-to)
+		  (eq (car headers) 'footn-to))
+	      (setq no (car (cdr headers))
+		    headers nil)))
 	(cond
 	 (no
 	  (goto-char p)
