@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 36.2 1993-04-27 00:01:17 linus Exp $
+;;;;; $Id: english-strings.el,v 36.3 1993-05-11 13:17:06 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 36.2 1993-04-27 00:01:17 linus Exp $\n"))
+	      "$Id: english-strings.el,v 36.3 1993-05-11 13:17:06 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -914,8 +914,7 @@ Cf. paragraph-start.")
     (kom-tell-change-supervisor "Changes the organizer for something.")
     )
   "These texts are used as arguments to lyskom-tell-server.
-The variable kom-mercial defaults to kom-tell-wait.
-Users are encouraged to change this dictionary for fun.")
+The variable kom-mercial defaults to kom-tell-wait.")
 
 
 ;; Placed here because this must NOT be evaluated before 
