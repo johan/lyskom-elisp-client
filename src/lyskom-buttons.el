@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.0 1996-08-30 14:46:53 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.1 1996-09-03 16:01:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -564,20 +564,24 @@ This is a LysKOM button action."
   (let ((host (substring url (match-beginning 2) (match-end 2)))
 	(path (substring url (match-end 0)))
 	(user "anonymous"))
-
+    (if  (string-match ";type=.$" path)
+        (setq path (substring path 0 (match-beginning 0))))
     (if (and (string-match "\\([^@]*\\)@" host)
 	     (match-beginning 1))
 	(progn
 	  (setq user (substring host (match-beginning 1) (match-end 1)))
 	  (setq host (substring host (match-end 0)))))
-    (find-file (concat "/" user "@" host ":/" path))))
+    (cond ((string= host "localhost") (find-file path))
+          (t (find-file (concat "/" user "@" host ":/" path))))
+    ;;    (message "%s  %s  %s" user host path)
+    ))
 
 
 
 (defun lyskom-view-url-telnet (url manager)
   "View the URL URL using telnet. Second argument MANAGER is ignored."
   (if (not (and (string-match 
-		 "telnet:\\(//\\)?\\([^/:]*\\)\\(:[0-9]*\\)?\\(/.*$\\|$\\)"
+                 "telnet://\\([^@]*@\\)?\\([^/:]*\\)\\(:[0-9]*\\)?"
 		 url)
 		(match-beginning 0)
 		(match-beginning 2)))
@@ -586,13 +590,27 @@ This is a LysKOM button action."
 	(port (if (match-beginning 3)
 		  (substring url (1+ (match-beginning 3)) (match-end 3))
 		""))
-	(user ""))
-    (if (and (string-match "\\([^@]*\\)@" host)
-	     (match-beginning 1))
-	(progn
-	  (setq user (substring host (match-beginning 1) (match-end 1)))
-	  (setq host (substring host (match-end 0)))))
-    (telnet (concat host " " port))))
+	(user (if (match-beginning 1)
+                  (substring url (match-beginning 1) (1- (match-end 1)))
+                nil))
+        (password nil))
+    (if (and user
+             (string-match "^\\([^:]*\\):\\(.*\\)" user))
+        (progn (setq password (substring user
+                                         (match-beginning 2)
+                                         (match-end 2)))
+               (setq user (substring user 
+                                     (match-beginning 1)
+                                     (match-end 1)))))
+
+    (telnet (concat host " " port))
+;;    (message "u:%s  p:%s  h:%s  #:%s" 
+;;             (or user "<u>")
+;;             (or password "<p>")
+;;             (or host "<h>")
+;;             (or port "<#>"))
+
+    ))
 
 
 (defun lyskom-view-url-mailmode (url manager)
