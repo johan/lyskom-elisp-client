@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.7 1997-07-12 13:10:52 byers Exp $
+;;;;; $Id: async.el,v 44.8 1997-09-10 13:14:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.7 1997-07-12 13:10:52 byers Exp $\n"))
+	      "$Id: async.el,v 44.8 1997-09-10 13:14:41 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -446,7 +446,8 @@ converted, before insertion."
     (let ((type (misc-info->type misc-info)))
       (cond
        ((or (eq type 'RECPT)
-	    (eq type 'CC-RECPT))
+	    (eq type 'CC-RECPT)
+            (eq type 'BCC-RECPT))
 	;; add on lyskom-reading-list and lyskom-to-do-list if
 	;; this recipient is a recipient that has been checked.
 	(if (and (eq  (misc-info->recipient-no misc-info)

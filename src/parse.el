@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.9 1997-08-18 12:27:51 byers Exp $
+;;;;; $Id: parse.el,v 44.10 1997-09-10 13:15:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.9 1997-08-18 12:27:51 byers Exp $\n"))
+	      "$Id: parse.el,v 44.10 1997-09-10 13:15:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -338,6 +338,8 @@ result is assigned to the element."
 	(setq res (lyskom-parse-misc-footn-to last n)))
        ((eq next-key 5)			;footn-in
 	(setq res (lyskom-parse-misc-footn-in last n)))
+       ((eq next-key 15)                ;bcc-recpt
+        (setq res (lyskom-parse-misc-recipient 'BCC-RECPT last n)))
        (t				;error!
 	(signal 'lyskom-protocol-error
 		(list 'lyskom-parse-misc-info-list-sub
@@ -350,7 +352,7 @@ result is assigned to the element."
 	      
 (defun lyskom-parse-misc-recipient (type last n)
   "Parse a recipient. Args: TYPE LAST N.
-TYPE is either RECPT or CC-RECPT.
+TYPE is either RECPT, CC-RECPT or BCC-RECPT.
 LAST is a pointer to the last element on a misc-info-list.
 N is number of misc-items left to parse.
 Returns (cons n next-key)."

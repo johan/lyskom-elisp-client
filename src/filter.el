@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 44.6 1997-08-08 14:46:29 byers Exp $
+;;;;; $Id: filter.el,v 44.7 1997-09-10 13:15:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.6 1997-08-08 14:46:29 byers Exp $\n"))
+	      "$Id: filter.el,v 44.7 1997-09-10 13:15:06 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -155,7 +155,9 @@ invalid-value until a filter action has been selected.")
           misc
           (text-stat->misc-info-list text-stat)
         (let ((type (misc-info->type misc)))
-          (if (or (eq type 'RECPT) (eq type 'CC-RECPT))
+          (if (or (eq type 'RECPT) 
+                  (eq type 'CC-RECPT)
+                  (eq type 'BCC-RECPT))
               (initiate-get-conf-stat 'filter 
                                       nil
                                       (misc-info->recipient-no misc)))))
@@ -532,6 +534,7 @@ the current text"
     (let ((text-stat (blocking-do 'get-text-stat lyskom-current-text))
           (recipients nil)
           (cc-recipients nil)
+          (bcc-recipients nil)
           (filter-recipient nil)
           (conf-stat (if (and lyskom-current-conf
                               (not (zerop lyskom-current-conf)))
@@ -543,7 +546,10 @@ the current text"
                                       recipients)))
               ((eq (misc-info->type misc) 'CC-RECPT)
                (setq cc-recipients (cons (misc-info->recipient-no misc)
-                                         cc-recipients)))))
+                                         cc-recipients)))
+              ((eq (misc-info->type misc) 'BCC-RECPT)
+               (setq bcc-recipients (cons (misc-info->recipient-no misc)
+                                         bcc-recipients)))))
 
       (setq filter-recipient (or 
                               (and conf-stat
@@ -552,7 +558,8 @@ the current text"
                                     (memq lyskom-current-conf cc-recipients))
                                    lyskom-current-conf)
                               (car (nreverse recipients))
-                              (car (nreverse cc-recipients))))
+                              (car (nreverse cc-recipients))
+                              (car (nreverse bcc-recipients))))
 
       (if (null filter-recipient)
           (lyskom-insert-string 'no-recipient)

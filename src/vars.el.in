@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.31 1997-08-18 12:28:11 byers Exp $
+;;;;; $Id: vars.el.in,v 44.32 1997-09-10 13:15:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.31 1997-08-18 12:28:11 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.32 1997-09-10 13:15:32 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1093,7 +1093,8 @@ Users are encouraged to use their best sense of humor."
   "The largest int emacs, and thus this LysKOM client, can handle.")
 
 (defconst lyskom-server-features
-  '(((>= 1 9 0) (lyskom-accept-async-flag
+  '(((>  1 9 0) (lyskom-bcc-flag))
+    ((>= 1 9 0) (lyskom-accept-async-flag
                  lyskom-dynamic-session-info-flag
                  lyskom-idle-time-flag))
     ((>= 1 8 0) (lyskom-long-conf-types-flag 
@@ -1157,6 +1158,10 @@ lyskom-server-features for more information."
 
 (def-kom-var lyskom-accept-async-flag nil
   "t if the server supports the accept-async call."
+  inherited)
+
+(def-kom-var lyskom-bcc-flag nil
+  "t if the server supports the bcc misc items."
   inherited)
 
 (def-kom-var lyskom-max-packet-size lyskom-max-int
@@ -1481,6 +1486,9 @@ This is used by the command kom-busy-wait."
 
 (def-kom-var lyskom-last-added-ccrcpt 0
   "The default conference when adding a ccrecipient.")
+
+(def-kom-var lyskom-last-added-bccrcpt 0
+  "The default conference when adding a bccrecipient.")
 
 (def-kom-var lyskom-saved-file-name (concat default-directory "kom-text")
   "The default file name when saving a lyskom-text.")
