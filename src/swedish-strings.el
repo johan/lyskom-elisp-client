@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.16 1996-07-29 09:17:06 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.17 1996-08-02 00:35:33 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.16 1996-07-29 09:17:06 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.17 1996-08-02 00:35:33 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -828,6 +828,7 @@ Skicka en bugrapport.\n")
 **************************************************
 Lyskom-sessionen onormalt st\344ngd.
 Felmeddelande: %#1s**************************************************")
+    (dead-session . "LysKOM-sessionen \344r inte aktiv.")
     (error-not-found . "Fel nummer %#1d. Ingen klartextf\366rklaring finns.")
 
     ; Useful in more place than one:

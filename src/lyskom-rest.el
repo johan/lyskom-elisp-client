@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.20 1996-08-01 23:45:32 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.21 1996-08-02 00:35:26 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.20 1996-08-01 23:45:32 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.21 1996-08-02 00:35:26 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1503,6 +1503,9 @@ This function checks if lyskom-doing-default-command and
 lyskom-first-time-around are bound. The text entered in the buffer is
 chosen according to this"
 
+  (if (not lyskom-proc)
+      (lyskom-error "%s" (lyskom-get-string 'dead-session)))
+
   (if (and lyskom-is-waiting
            (listp lyskom-is-waiting))
       (progn
@@ -2281,7 +2284,6 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(delq proc lyskom-sessions-with-unread))
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
-  (lyskom-clear-vars)
   (lyskom-format-insert 'closed-connection sentinel)
   (setq mode-line-process (lyskom-get-string 'mode-line-down))
   (beep)
