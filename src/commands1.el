@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.219 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: commands1.el,v 44.220 2004-07-21 11:14:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.219 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.220 2004-07-21 11:14:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -699,19 +699,8 @@ be called from a callback."
           ;; the membership lsit sorted.
 
           (when (eq lyskom-pers-no (conf-stat->conf-no who))
-            (setq position
-                  (let ((index 0))
-                    (lyskom-traverse-membership mship
-                      (cond ((> (membership->priority mship) priority))
-                            ((< (membership->priority mship) priority)
-                             (lyskom-traverse-break index))
-                            ((and (= (membership->priority mship) priority)
-                                  (= index position))
-                             (lyskom-traverse-break position))
-                            ((and (= (membership->priority mship) priority)
-                                  (> index position))
-                             (lyskom-traverse-break index)))
-                      (setq index (1+ index))))))
+            (setq position (lyskom-query-membership-position
+                            priority position)))
 
 
           ;; Print the prompt

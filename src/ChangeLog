@@ -1,3 +1,20 @@
+2004-07-21  David Byers  <byers@lysator.liu.se>
+
+	* mship-edit.el (lp--update-buffer): When updating an existing
+	membership, use its position if it has one, or things could go
+	very wrong.
+
+	* commands1.el (lyskom-add-member): Query the membership cache for
+	the new position of the membership instead of attempting (and
+	failing) to duplicate the logic here.
+
+	* reading.el (lyskom-membership-list-prepend): Summport
+	simulation.
+	(lyskom-membership-list-insert-position): New function.
+	(lyskom-membership-list-insert): Support simulation.
+	(lyskom-query-membership-position): New function.
+	(lyskom-membership-list-append): Support simulation.
+
 2004-07-20  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-enter-conf): Update the membership buffer

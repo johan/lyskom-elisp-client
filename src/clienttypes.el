@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.26 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.27 2004-07-21 11:14:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.26 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.27 2004-07-21 11:14:38 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -233,9 +233,6 @@ will be inserted before it."
 	(type (read-info->type read-info)))
     (while continue
       (cond
-       ;; This case was added by davidk 960925. It is not used from
-       ;; everywhere, but at least lyskom-enter-map-in-to-do-list
-       ;; should become more efficient.
        ((and (eq type 'CONF)
 	     (eq (read-info->type (car (cdr rlist))) 'CONF)
 	     (eq (conf-stat->conf-no conf-stat)
