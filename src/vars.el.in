@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.59 1999-06-10 13:36:28 byers Exp $
+;;;;; $Id: vars.el.in,v 44.60 1999-06-11 12:56:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.59 1999-06-10 13:36:28 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.60 1999-06-11 12:56:18 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -203,6 +203,11 @@ enabled mode."
   "*If Non-nil the texts are shown with comments references at the end."
   server
   inherited)
+
+(def-kom-var kom-postpone-default 17
+  "*The number of articles to postpone by default."
+  server)
+
 
 (def-kom-var kom-dashed-lines t
   "*If Non-nil then all texts will be surrounded by lines of dashes."
