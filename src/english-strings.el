@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.13 1996-08-30 03:57:01 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.14 1996-08-30 14:35:07 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.13 1996-08-30 03:57:01 davidk Exp $"))
+              "$Id: english-strings.el,v 43.14 1996-08-30 14:35:07 davidk Exp $"))
 
 
 
@@ -1566,72 +1566,6 @@ This variable is stored in the LysKOM server.")
 
 
      
-;;;; This file contains the code that makes it possible to run a 
-;;;; long-commands mode in the lyskom-buffer.
-;;;;
-
-;;; Author: Linus Tolke 
-
-(defvar lyskom-slow-mode-map
-      (make-sparse-keymap)
-"Mode map for the `slow' lyskom command mode.")
-
-(define-key lyskom-slow-mode-map "\r" 'lyskom-parse-command-and-execute)
-
-(defun lyskom-parse-command-and-execute ()
-  "Reads a command from the last line in the buffer and executes it."
-  (interactive)
-  (goto-char (point-max))
-  (save-restriction
-    (narrow-to-region lyskom-last-viewed (point-max))
-    (search-backward lyskom-prompt-text))
-  (forward-char (length lyskom-prompt-text))
-  (while (looking-at "\\s-")
-    (forward-char 1))
-  (let* ((text (buffer-substring (point) (point-max)))
-	 (completion-ignore-case t)
-	 (alternatives (mapcar (function reverse)
-			       (if kom-emacs-knows-iso-8859-1
-				   lyskom-commands
-				 lyskom-swascii-commands)))
-	 (completes (all-completions text alternatives)))
-    (cond
-     ((zerop (length text))
-      (kom-next-command))
-     ((> (length completes) 1)
-      (lyskom-insert "\nYou might mean one of the following:\n")
-      (mapcar (function (lambda (string) 
-			  (lyskom-insert string)
-			  (lyskom-insert "\n")))
-	      completes)
-      (lyskom-end-of-command))
-     ((= (length completes) 1)
-      (delete-region (point) (point-max))
-      (call-interactively (car (reverse-assoc (car completes)
-					      (if kom-emacs-knows-iso-8859-1
-						  lyskom-commands
-						lyskom-swascii-commands)))))
-     (t
-      (lyskom-insert "There is not such command.\n")
-      (lyskom-end-of-command)))
-  ))
-
-
-(defun kom-slow-mode ()
-  "Starts the slow-command-mode."
-  (interactive)
-  (lyskom-start-of-command 'kom-slow-mode)
-  (use-local-map lyskom-slow-mode-map)
-  (lyskom-end-of-command))
-
-(defun kom-quick-mode ()
-  "Starts the quick-command-mode."
-  (interactive)
-  (lyskom-start-of-command 'kom-quick-mode)
-  (use-local-map lyskom-mode-map)
-  (lyskom-end-of-command))
-
-
 ;; Review a non-converted text
 ;; Author: Linus Tolke
  
