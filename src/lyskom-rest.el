@@ -50,7 +50,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.3 1991-09-08 20:03:21 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.4 1991-09-13 21:59:49 inge Exp $\n"))
 
 
 ;;;; ================================================================
@@ -494,30 +494,36 @@ CONF can be a a conf-stat or a string."
 		(conf-stat->name conf))
 	       (t "")))
 	(unread -1)
+	(total-unread 0)
+	(len 0)
 	(read-info-list nil))
 
     ; Set unread to the number of unread texts in CONF.
     (if (lyskom-conf-stat-p conf)
 	(progn
-	  (setq read-info-list (read-list->all-entries lyskom-to-do-list))
-	  (while (and (= unread -1)
-		     read-info-list)
-	    (if (and (read-info->conf-stat (car read-info-list))
-		     (= (conf-stat->conf-no conf)
-			(conf-stat->conf-no 
-			 (read-info->conf-stat (car read-info-list)))))
-		(setq unread (length (text-list->texts
-				      (read-info->text-list 
-				       (car read-info-list)))))
-	      (setq read-info-list (cdr read-info-list))))
-	  (if (= unread -1)
-	      (setq unread 0))))
+	  (setq read-info-list 
+		(read-list->all-entries lyskom-to-do-list))
+
+	  (while read-info-list
+	    (if (read-info->conf-stat (car read-info-list))
+		(progn
+		  (setq len (length (text-list->texts 
+				     (read-info->text-list 
+				      (car read-info-list)))))
+		  (if (= (conf-stat->conf-no conf)
+			 (conf-stat->conf-no 
+			  (read-info->conf-stat (car read-info-list))))
+		      (setq unread len))
+		  (setq total-unread (+ total-unread len))))
+	    (setq read-info-list (cdr read-info-list)))))
+    (if (= unread -1)
+	(setq unread 0))
 
     (if (null name)
 	nil
       (setq mode-line-conf-name 
 	    (substring (concat (if (lyskom-conf-stat-p conf)
-				   (format "(%d) " unread)
+				   (format "(%d/%d) " unread total-unread)
 				 "")
 			       name
 			       (make-string 27 ? ))
