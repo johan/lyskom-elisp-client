@@ -1,3 +1,18 @@
+1998-06-10  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-current-time): Ny funktion.
+	
+	* startup.el (lyskom): Använd den
+
+1998-06-08  David Byers  <davby@ida.liu.se>
+
+	* services.el (initiate-set-membership-type): Ny funktion. Whee!
+
+	* parse.el: Lade till parsning av created-at i
+	lyskom-parse-membership och lyskom-parse-member
+
+	* komtypes.el: Lade till created-at i membership och member.
+
 Tue Jun  2 11:49:27 1998  David Byers  <davby@ida.liu.se>
 
 	* Lade in -*-coding: raw-text;-*- i alla filer.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.26 1998-06-02 12:14:24 byers Exp $
+;;;;; $Id: commands2.el,v 44.27 1998-06-14 14:15:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.26 1998-06-02 12:14:24 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.27 1998-06-14 14:15:43 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -250,8 +250,8 @@ otherwise: the conference is read with lyskom-completing-read."
       (if (lyskom-j-or-n-p
 	   (lyskom-get-string 'show-members-list-also-q))
 	  (let ((member-list (blocking-do 'get-members
-					  (conf-stat->conf-no conf-stat)
-					  0 lyskom-max-int)))
+                                           (conf-stat->conf-no conf-stat)
+                                           0 lyskom-max-int)))
 	    
 	    (lyskom-format-insert 'conf-has-these-members
 				  conf-stat)
@@ -260,10 +260,10 @@ otherwise: the conference is read with lyskom-completing-read."
 		(progn
 		  (lyskom-insert-string 'member-list-header)
 		  (lyskom-traverse 
-		   member (conf-no-list->conf-nos member-list)
+		   member (member-list->members member-list)
 		   (let ((membership (blocking-do
 				      'query-read-texts 
-				      member
+				      (member->conf-no member)
 				      (conf-stat->conf-no conf-stat))))
 		     ;; Print a row describing the membership of MEMBER
 		     ;; (described by MEMBERSHIP) in CONF-STAT.
@@ -284,13 +284,25 @@ otherwise: the conference is read with lyskom-completing-read."
 					       (if (zerop unread)
 						   "         "
 						 (format "%7d  " unread))
-					       member))))))
+					       (member->conf-no member)
+                                               (lyskom-return-membership-type (member->membership-type member))
+                                               )
+                         (when (and (member->created-by member)
+                                    (not (zerop (member->created-by member)))
+                                    (not (eq (member->conf-no member)
+                                             (member->created-by member))))
+                           (lyskom-format-insert 'conf-membership-line-2
+                                                 (lyskom-return-date-and-time
+                                                  (member->created-at member))
+                                                 (member->created-by member)))
+                         )))))
 	      
 	      ;; Don't show membership info
 	      (lyskom-insert "\n")
 	      (lyskom-traverse
-	       member (conf-no-list->conf-nos member-list)
-	       (lyskom-format-insert "  %#1P\n" member))))))))
+	       member (member-list->members member-list)
+	       (lyskom-format-insert "  %#1P\n" 
+                                     (member->conf-no member)))))))))
 
 
 ;;; ================================================================
@@ -437,7 +449,18 @@ otherwise: the conference is read with lyskom-completing-read."
 			   (conf-stat->supervisor member-conf-stat))
 			(lyskom-get-string 'is-supervisor-mark)
 		      "  ")
-		    member-conf-stat)
+		    member-conf-stat
+                    (lyskom-return-membership-type (membership->type membership))
+                    )
+                   (when (and (membership->created-by membership)
+                              (not (zerop (membership->created-by membership)))
+                              (not (eq (conf-stat->conf-no conf-stat)
+                                       (membership->created-by membership))))
+                     (lyskom-format-insert 'pers-membership-line-2
+                                           (lyskom-return-date-and-time
+                                            (membership->created-at membership))
+                                           (membership->created-by membership)))
+
 		   (setq lyskom-count-var (+ lyskom-count-var unread)))))))
 
 	  ;; "Print the total number of unread texts for the person CONF-STAT."
@@ -1917,3 +1940,46 @@ membership info."
                                nil nil secret nil nil nil nil nil)
                               0 label)))
            (cache-del-conf-stat objno)))))
+
+
+(defun lyskom-read-text-no-prefix-arg (prompt command)
+  "Call in interactive list to read text-no"
+  (cond
+   ((null current-prefix-arg) lyskom-current-text)
+   ((integerp current-prefix-arg) current-prefix-arg)
+   ((listp current-prefix-arg) 
+    (lyskom-read-number (lyskom-get-string prompt)))
+   (t (signal 'lyskom-internal-error (list command)))))  
+
+(def-kom-command kom-fast-reply (&optional text-no)
+  "Add a fast reply to a text."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no
+                                                     'kom-fast-reply)))
+  (lyskom-fast-reply text-no
+                     (lyskom-read-string 
+                      (lyskom-get-string 'fast-reply-prompt)
+                      nil
+                      'lyskom-fast-reply-history)))
+                                         
+
+
+(def-kom-command kom-agree (&optional text-no)
+  "Convenience function to add agreement."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no
+                                                     'kom-agree)))
+  (lyskom-fast-reply text-no  (lyskom-read-string (lyskom-get-string 'agree-prompt)
+                                                  (lyskom-get-string 'default-agree-string)
+                                                  'lyskom-fast-reply-history)))
+    
+
+(defun lyskom-fast-reply (text-no message)
+  "To text TEXT-NO add MESSAGE as a fast reply."
+  (lyskom-report-command-answer
+   (blocking-do 'modify-text-info
+                text-no
+                nil
+                (list (lyskom-create-aux-item 0 2 0 0 
+                                              (lyskom-create-aux-item-flags
+                                               nil nil nil nil nil nil nil nil)
+                                              0 message)))))
+               

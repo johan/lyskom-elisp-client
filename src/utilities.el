@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.24 1998-06-02 12:15:27 byers Exp $
+;;;;; $Id: utilities.el,v 44.25 1998-06-14 14:16:12 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.24 1998-06-02 12:15:27 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.25 1998-06-14 14:16:12 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -197,6 +197,19 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
   "Call accept-process-output with the correct timeout values."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
+
+(defun lyskom-current-time (&optional secs)
+  "Return the time in a format that LysKOM understands.
+If optional argument SECS is set, it is used in place of the value
+of \(current-time\)."
+  (let ((time (decode-time (or secs (current-time)))))
+    (setcar (cdr (cdr (cdr (cdr time))))
+            (1- (car (cdr (cdr (cdr (cdr time)))))))
+    (setcar (cdr (cdr (cdr (cdr (cdr time)))))
+            (- (car (cdr (cdr (cdr (cdr (cdr time))))))
+               1900))
+    time))
+
 
 
 ;;;
@@ -387,19 +400,19 @@ under XEmacs."
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
 in lyskom-face-schemes."
   (let ((tmp (assoc scheme lyskom-face-schemes)))
-    ;; This test is NOT good, but now it's better...
-    (if (and tmp (or (not (eq (console-type) 'tty))
-		     (not (eq (device-class) 'mono))))
-        (progn
-          (mapcar 
-           (function
-            (lambda (spec)
-	      (copy-face (or (elt spec 1) 'default) (elt spec 0))
-              (if (elt spec 2)
-                  (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-              (if (elt spec 3)
-                  (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
-	   (cdr tmp))))))
+    (when (and tmp
+               (fboundp 'copy-face)
+               (fboundp 'lyskom-set-face-foreground)
+               (fboundp 'lyskom-set-face-background))
+      (mapcar 
+       (function
+        (lambda (spec)
+          (copy-face (or (elt spec 1) 'default) (elt spec 0))
+          (if (elt spec 2)
+              (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
+          (if (elt spec 3)
+              (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
+       (cdr tmp)))))
 
 
 (defun lyskom-face-resource (face-name attr type)
@@ -546,3 +559,21 @@ also reads the proper X resources."
          ((and binding
                (null base-binding)) (define-key keymap keys binding)))))
 
+
+;;;
+;;; Stuff
+;;;
+
+(defun lyskom-return-membership-type (mt)
+  "Return a text description of membership type mt"
+  (let ((tmp
+         (mapconcat 
+          'identity
+          (delete nil
+                  (list (if (membership-type->invitation mt) (lyskom-get-string 'invitation-mt-type) nil)
+                        (if (membership-type->passive mt) (lyskom-get-string 'passive-mt-type) nil)
+                        (if (membership-type->secret mt) (lyskom-get-string 'secret-mt-type) nil)))
+          ", ")))
+    (if (string= tmp "") 
+        tmp
+      (concat "[" tmp "]"))))
