@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.58 2001-10-14 14:47:38 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.59 2001-11-12 21:46:57 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.58 2001-10-14 14:47:38 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.59 2001-11-12 21:46:57 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -548,11 +548,13 @@ up."
 		(setq face 'kom-text-face
 		      subtle t)
 		(cond ((null arg) (setq xarg (current-time)
-					 text (format-time-string "%Y-%m-%d %H:%M")))
+					;text (format-time-string "%Y-%m-%d %H:%M")
+					))
 		      (t (setq xarg arg
-			       text (format-time-string "%Y-%m-%d %H:%M" arg)))))
-
-	       (t (setq xarg arg text "")))
+			       ;text (format-time-string "%Y-%m-%d %H:%M" arg)
+			       ))))
+	       (t (setq xarg arg
+			text "")))
 	 (lyskom-generate-button type xarg text face menu-title subtle))))
                   
 

@@ -1,3 +1,8 @@
+2001-10-16  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-default-button): don't bother to set
+	the lyskom-button-text property for timestamps.
+	
 2001-11-04  Johan Sundström  <jhs@lysator.liu.se>
 
 	* vars.el.in (kom-review-marks-texts-as-read): New variable.
