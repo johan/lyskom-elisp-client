@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.43 1999-10-09 16:13:22 byers Exp $
+;;;;; $Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.43 1999-10-09 16:13:22 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1035,6 +1035,9 @@ text is a member of some recipient of this text."
 
 ;;; ============================================================
 ;;; Info node stuff
+
+(defvar Info-current-node)
+(defvar Info-current-file)
 
 (defun kom-yank-info-nodename ()
   "Put the current Info-node on the kill-ring."

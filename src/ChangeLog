@@ -1,3 +1,12 @@
+1999-10-13  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-view-text): Use lyskom-mx-date-to-time.
+
+	* komtypes.el (lyskom-create-time): Added tzhr and tzmin to time.
+
+	* view-text.el (lyskom-mx-date-to-time): New function.
+	(lyskom-view-text): Handle missing cal-iso.
+
 1999-10-11  David Byers  <davby@ida.liu.se>
 
 	Replaced all uses of current-time-string with lyskom-client-date
