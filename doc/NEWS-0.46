@@ -23,6 +23,23 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Kommandot Återse lista visar information om vanlig läsning också,
+   inte bara återseende. Det är alltså användbart i fler lägen än det
+   gamla kommandot var.
+
+** När man ändrar svarsmeddelande så får man editera sitt gamla
+   meddelande.
+
+** Prefix till Lista Möten anger hur många olästa som skall finnas för 
+   att mötet skall visa. Anger man noll så kommer alla möten att
+   visas. 
+
+** Vilkalistan har numera en tidsstämpel.
+
+** Om man trycker C-u före kommandon för att kommentera, skriva privat 
+   svar eller skriva fotnot så är defaultvärdet för inlägget man skall 
+   kommentera det inlägg som markören står på.
+
 ** Man kan lägga till och ta bort fotnoter med kommandona Addera
    fotnot och Subtrahera fotnot.
 
@@ -162,6 +179,16 @@ LysKOM-bufferten och i inläggsbufferten.
 
 
 Bugfixar
+
+** Om man skriver in ett namn som matchar mer än ett i databasen, och
+   matchar det ena exakt utan parentes så kommer det att accepteras
+   som unikt. Förr var man tvungen att skriva in parentesen också.
+
+** Det går att ladda elispklienten mer än en gång i samma Emacs utan
+   att allting går sönder.
+
+** Man kan välja språk genom att sätta kom-default-language till det
+   språk man vill ha.
 
 ** De extremt långa inloggningstiderna som en del personer upplevde
    (dvs tiden det tog att få första prompten) är förhoppningsvis
