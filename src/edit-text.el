@@ -266,12 +266,12 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 	  (save-excursion
 	    (setq misc-list (lyskom-edit-read-misc-list)
-		  subject (lyskom-edit-extract-subject)
-		  message (lyskom-edit-extract-text)))
+		  subject (lyskom-edit-extract-subject)))
 	  (let ((minibuffer-local-map (overlay-map (current-local-map)
 						   minibuffer-local-map)))
 	    (setq subject (read-string (lyskom-get-string 'subject)
 				       subject)))
+	  (setq message (lyskom-edit-extract-text))
 	  (setq mode-name "LysKOM sending")
 	  (save-excursion
 	    (set-buffer (process-buffer lyskom-proc))
@@ -480,12 +480,19 @@ Point must be located on the line where the subject is."
 
 (defun lyskom-edit-extract-text ()
   "Get text as a string."
-  (beginning-of-line 3)
-  (buffer-substring (point)
-		    (if (eq (char-after (1- (point-max))) ; remove trailing
-			    ?\n)			  ; linefeed if present
-			(1- (point-max))		   
-		      (point-max))))
+  (save-excursion
+    (goto-char (point-min))
+    (if (not (re-search-forward (regexp-quote lyskom-header-separator) 
+				nil (point-max)))
+	(signal 'lyskom-internal-error
+		"Altered lyskom-header-separator line.")
+      (buffer-substring (1+ (point))
+			(progn
+			  (goto-char (1- (point-max)))
+			  (while (looking-at "\\s-")	; remove trailing
+			    (backward-char 1))		; whitespace
+			  (forward-char 1)
+			  (point))))))
 
   
 (defun lyskom-create-text-handler (text-no edit-buffer)

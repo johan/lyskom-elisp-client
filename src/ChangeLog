@@ -1,7 +1,11 @@
 Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
 
+	* edit-text.el (lyskom-edit-extract-text): Ny och omskriven s} att
+	  den kollar lyskom-header-separator. Detta kr{vdes f|r att man
+	  skall kunna {ndra texten efter: C-c C-c C-x o
+
 	* commands1.el (lyskom-return-username): Nu kan den {ven matcha
-	  maskinnamn som har andra tecken {n bokst{ver i sig.
+	  maskinnamn som har andra tecken {n bokst{ver i sig.	 
 
 	* vars.el (lyskom-elisp-variables): Lagt till lyskom-prompt-text
 	  och lyskom-prompt-executing-default-command-text till listan av
@@ -3082,5 +3086,6 @@ Sun Oct  7 16:56:40 1990  Per Cederqvist  (ceder at laila)
 
 Local Variables:
 mode:indented-swedish
+outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
 eval:(auto-fill-mode 1)
 End:
