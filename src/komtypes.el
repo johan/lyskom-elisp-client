@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.35 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: komtypes.el,v 44.36 2003-08-17 15:33:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.35 2003-08-17 12:48:06 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.36 2003-08-17 15:33:19 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -395,30 +395,29 @@ Automatically created with def-komtype" type)
   :nil-safe)
 
 (defun lyskom-create-time-from-utc (sec min hour mday mon year 
-                                        wday yday isdst tzhr tzmin)
-  (let* ((tz (current-time-zone))
-         (date (decode-time
-                (encode-time sec min hour mday mon year (elt tz 1)))))
+                                        wday yday isdst &optional tzhr tzmin)
+  (if lyskom-server-uses-utc
+      (let* ((date (decode-time (encode-time sec min hour mday mon year 0))))
+        (unless (eq mday (elt date 3))
+          (setq yday (if (< (or (car (current-time-zone)) 0) 0)
+                         (- yday 1) (+ yday 1)))
+          (cond ((< yday 1) (setq yday (lyskom-days-in-year (elt date 5))))
+                ((> yday (lyskom-days-in-year year)) (setq yday 1))))
 
-    ;; Date is (SEC MINUTE HOUR DAY MONTH YEAR DOW DST ZONE)
-    ;;           0     1     2   3    4     5   6   7    8
+        (lyskom-create-time (elt date 0) ; sec
+                            (elt date 1) ; min
+                            (elt date 2) ; hour
+                            (elt date 3) ; mday
+                            (elt date 4) ; mon
+                            (elt date 5) ; year
+                            (elt date 6) ; dow
+                            yday        ; yday
+                            (elt date 7) ; dst
+                            nil nil)
+        )
+    (lyskom-create-time sec min hour mday mon year
+                        wday yday isdst tzhr tzmin)))
 
-    (unless (eq mday (elt date 3))
-      (setq yday (if (< (car tz) 0) (- yday 1) (+ yday 1)))
-      (cond ((< yday 1) (setq yday (lyskom-days-in-year (elt date 5))))
-            ((> yday (lyskom-days-in-year year)) (setq yday 1))))
-
-    (lyskom-create-time (elt date 0)    ; sec
-                        (elt date 1)    ; min
-                        (elt date 2)    ; hour
-                        (elt date 3)    ; mday
-                        (elt date 4)    ; mon
-                        (elt date 5)    ; year
-                        (elt date 6)    ; dow
-                        yday            ; yday
-                        (elt date 7)    ; dst
-                        nil nil)
-  ))
 
 ;;; ================================================================
 ;;;                               privs

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.42 2003-08-16 19:16:03 byers Exp $
+;;;;; $Id: services.el,v 44.43 2003-08-17 15:33:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.42 2003-08-16 19:16:03 byers Exp $\n"))
+	      "$Id: services.el,v 44.43 2003-08-17 15:33:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -850,12 +850,17 @@ Args: KOM-QUEUE HANDLER PERS-NO TEXT-NO &rest DATA."
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
     (lyskom-send-packet kom-queue (lyskom-format-objects 57 pers-no text-no))))
 
-(defun initiate-get-last-text (kom-queue handler before &rest data)
-  "Get text created before BEFORE.
-Args: KOM-QUEUE HANDLER BEFORE &rest DATA"
-  (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
-    (lyskom-send-packet kom-queue (lyskom-format-objects 58 before))))
+
+;; WARNING: If you start using this you have to figure out a way to
+;; convert local time (before) to UTC. Since this doesn't work at the
+;; moment, I have commented this functoun into oblivion.
+;;
+;; (defun initiate-get-last-text (kom-queue handler before &rest data)
+;;   "Get text created before BEFORE.
+;; Args: KOM-QUEUE HANDLER BEFORE &rest DATA"
+;;   (lyskom-server-call
+;;     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+;;     (lyskom-send-packet kom-queue (lyskom-format-objects 58 before))))
 
 
 (defun initiate-create-anonymous-text (kom-queue 

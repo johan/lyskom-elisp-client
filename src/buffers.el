@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.25 2003-08-16 16:58:44 byers Exp $
+;;;;; $Id: buffers.el,v 44.26 2003-08-17 15:33:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.25 2003-08-16 16:58:44 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.26 2003-08-17 15:33:18 byers Exp $\n"))
 
 
 ;;;;
@@ -140,7 +140,7 @@ a child of some buffer, reparent it."
         (setq done (cons current done))
         (setq queue (append queue (lyskom-get-buffer-children current)))
         (funcall function current)))))
-        
+
 
 (defun lyskom-map-buffer-children (function buffer)
   "Apply FUNCTION to each child of BUFFER and make a list of the results."

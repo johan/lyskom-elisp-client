@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.53 2003-08-16 19:16:03 byers Exp $
+;;;;; $Id: parse.el,v 44.54 2003-08-17 15:33:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.53 2003-08-16 19:16:03 byers Exp $\n"))
+	      "$Id: parse.el,v 44.54 2003-08-17 15:33:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -312,7 +312,7 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 
 (defun lyskom-parse-time ()
   "Parse a time from server. Args: none."
-  (lyskom-create-time
+  (lyskom-create-time-from-utc
    (lyskom-parse-num)			;sec
    (lyskom-parse-num)			;min
    (lyskom-parse-num)			;hour
@@ -320,7 +320,7 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
    (1+ (lyskom-parse-num))		;mon
    (+ 1900 (lyskom-parse-num))		;year
    (lyskom-parse-num)			;wday
-   (lyskom-parse-num)			;yday
+   (1+ (lyskom-parse-num))		;yday
    (lyskom-parse-num)))			;isdst
 
 
@@ -1164,6 +1164,7 @@ i.e creates the buffer, sets all markers and pointers."
 	 (concat (if lyskom-debug-communications-to-buffer "" " ")
 		 (buffer-name)
 		 "-replies")))
+  (lyskom-set-buffer-parent lyskom-unparsed-buffer lyskom-buffer)
   (save-excursion (set-buffer lyskom-unparsed-buffer)
 		  (lyskom-set-buffer-multibyte nil))
   (setq lyskom-unparsed-marker 
