@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 38.2 1995-03-01 17:55:54 byers Exp $
+;;;;; $Id: flags.el,v 38.3 1995-10-25 09:30:48 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 38.2 1995-03-01 17:55:54 byers Exp $\n"))
+	      "$Id: flags.el,v 38.3 1995-10-25 09:30:48 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -222,7 +222,7 @@ If successful then set the buffer not-modified. Else print a warning."
       (initiate-set-user-area 'options 'lyskom-save-options-3
                               lyskom-pers-no text-no kombuf 
                               done-message error-message)
-    (save-excusrsion
+    (save-excursion
      (set-buffer kombuf)
      (lyskom-insert-string 'could-not-save-options)
      (lyskom-message (lyskom-get-string 'could-not-save-options)))))
