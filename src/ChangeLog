@@ -1,4 +1,15 @@
+Fri Jul 28 14:15:12 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-K
+
 2000-07-28  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-prefetch-conf-tresh): Not really a user
+	variable. Don't save in server.
+	(lyskom-prefetch-confs): Not really a user variable. Don't save in
+	server.
+	(lyskom-fetch-map-nos): Not really a user variable. Don't save in
+	server. 
 
 	* completing-read.el (lyskom-read-conf-lookup-specials): Return
 	conf-z-info, not uconf-stat.
