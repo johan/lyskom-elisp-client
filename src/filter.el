@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.28 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: filter.el,v 44.29 2003-08-17 13:21:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.28 2003-08-17 12:48:06 byers Exp $\n"))
+	      "$Id: filter.el,v 44.29 2003-08-17 13:21:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -455,7 +455,7 @@ An alternative to this is `kom-super-jump'.
 
 To change existing filters, use `kom-filter-edit'."
   (interactive)
-  (when (/= 0 lyskom-current-conf)
+  (when (not (eq 0 lyskom-current-conf))
     (let* (conf perm filter action)
       (setq subject (lyskom-read-from-minibuffer 
                      (lyskom-get-string 'filter-subject)
@@ -463,7 +463,7 @@ To change existing filters, use `kom-filter-edit'."
       (setq filter (cons (cons 'subject subject) filter))
       (setq conf (lyskom-read-conf-no 'filter-in-conf
                                       '(all) t nil t))
-      (if (/= conf 0)
+      (if (not (eq conf 0))
           (setq filter (cons (cons 'recipient-no conf) filter)))
       (setq action (lyskom-filter-read-action))
       (setq perm (lyskom-filter-read-permanent))
@@ -489,11 +489,11 @@ To change existing filters, use `kom-filter-edit'."
   (interactive)
   (let (author conf filter action permanent)
     (setq author (lyskom-read-conf-no 'filter-author '(pers) t nil t))
-    (if (/= author 0)
+    (if (not (eq author 0))
         (setq filter (cons (cons 'author-no author) filter)))
     (setq conf (lyskom-read-conf-no 'filter-in-conf
                                     '(all) t nil t))
-    (if (/= conf 0)
+    (if (not (eq conf 0))
         (setq filter (cons (cons 'recipient-no conf) filter)))
     (setq action (lyskom-filter-read-action))
     (setq permanent (lyskom-filter-read-permanent))
@@ -622,7 +622,7 @@ single conference.
 
 To change existing filters, use `kom-filter-edit'."
   (interactive)
-  (when (/= 0 lyskom-current-conf)
+  (when (not (eq 0 lyskom-current-conf))
     (let ((conf nil)
           (action nil)
           (perm nil)
@@ -632,10 +632,9 @@ To change existing filters, use `kom-filter-edit'."
                                           'filter-which-text)
                                          (or text "")))
       (setq filter (cons (cons 'text text) filter))
-      (setq conf (lyskom-read-conf-no
-                  'filter-in-conf
-                  '(all) t nil t))
-      (if (/= conf 0)
+      (setq conf (lyskom-read-conf-no 'filter-in-conf
+                                      '(all) t nil t))
+      (if (not (eq conf 0))
           (setq filter (cons (cons 'recipient-no conf) filter)))
       (setq action (lyskom-filter-read-action))
       (setq perm (lyskom-filter-read-permanent))

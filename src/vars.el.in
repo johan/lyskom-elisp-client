@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.261 2003-08-17 12:48:07 byers Exp $
+;;;;; $Id: vars.el.in,v 44.262 2003-08-17 13:21:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.261 2003-08-17 12:48:07 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.262 2003-08-17 13:21:34 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -217,11 +217,11 @@ the priority among links that match the same text is undefined."
                            (default . (lyskom-default-conference-at-point
                                        lyskom-default-conference-self))))
 
-    (kom-set-presentation (who-to-set-pres-you
+    (kom-set-presentation (what-to-set-pres-you
                            (default . (lyskom-default-conference-at-point
                                        lyskom-default-conference-self))))
 
-    (kom-set-motd-text (who-to-set-motd-you
+    (kom-set-motd-text (what-to-set-motd-you
                         (default . (lyskom-default-conference-at-point
                                     lyskom-default-conference-self))))
 
@@ -297,11 +297,16 @@ the priority among links that match the same text is undefined."
                                  lyskom-default-conference-empty)))
                     (info-to-conf))
 
+    (kom-set-permitted-submitters (conf-to-set-permitted-submitters-q)
+                                  (new-permitted-submitters-q
+                                   (default . (lyskom-default-conference-empty))))
+
     (lyskom (what-is-your-name 
              (default . (lyskom-default-conference-empty))))
 
 
     ;; Things I suspect to magical stuff
+    ;; -- lyskom-add-helper
 
     (kom-add-recipient (who-to-add-q))
     (kom-add-copy (who-to-add-copy-q))
@@ -332,8 +337,6 @@ the priority among links that match the same text is undefined."
     (kom-status-conf (conf-for-status))
     (kom-status-person (pers-for-status))
     (kom-set-garb-nice (conf-to-set-garb-nice-q))
-    (kom-set-permitted-submitters (conf-to-set-permitted-submitters-q)
-                                  (new-permitted-submitters-q))
     (kom-set-super-conf (conf-to-set-super-conf-q) (new-super-conf-q))
     (kom-set-personal-label (label-what-pers) (label-what-conf))
     (kom-is-person-member-of-conference (pers-to-check-mship-for) (conf-to-check-mship-of))

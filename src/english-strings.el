@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.301 2003-08-17 12:48:46 byers Exp $
+;;;;; $Id: english-strings.el,v 44.302 2003-08-17 13:21:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.301 2003-08-17 12:48:46 byers Exp $"))
+              "$Id: english-strings.el,v 44.302 2003-08-17 13:21:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -343,20 +343,20 @@ Disconnecting from LysKOM since all connections are in use
 and you have finished reading. Please come back later.
 ===============================================================================
 \n")
-    (what-to-change-pres-you . "Change presentation of whom/what (yourself): ")
+    (what-to-change-pres-you . "Change presentation of whom/what: ")
     (what-to-change-faq-you . "Change FAQ for which conference: ")
-    (who-to-put-motd-for . "Post notice on whom/what (yourself): ")
+    (who-to-put-motd-for . "Post notice on whom/what: ")
 
-    (what-to-set-pres-you . "Set presentation for whom/what (yourself): ")
+    (what-to-set-pres-you . "Set presentation for whom/what: ")
     (what-text-to-set-as-pres-no . "Which text do you want as the new presentation: ")
-    (what-to-set-motd-you . "Set notice on whom/what (yourself): ")
+    (what-to-set-motd-you . "Set notice on whom/what: ")
     (what-text-to-set-as-motd-no . "Which text do you want as the new notice: ")
     (conf-already-has-pres . "The conference/person already has a presentation. Continue anyway? ")
     (conf-already-has-motd . "The conference/person already has a notice. Continue anyway? ")
     (setting-conf-pres . "Setting presentation of %#1M to text %#2n...")
     (setting-conf-motd . "Setting notice for %#1M to text %#2n...")
 
-    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från (dig själv): ")
+    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från: ")
     (removing-pres-for-conf . "Tar bort presentation (text %#2n) från %#1M...")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
@@ -416,7 +416,7 @@ and you have finished reading. Please come back later.
     (new-passwd-again . "Repeat the new password for confirmation: ")
     (what-mark-to-unread . "Mark which mark type as unread (name or 0-255, RET for all)? ")
     (what-mark-to-view . "Review which mark type (name or 0-255, RET for all)? ")
-    (whos-passwd . "Change password for whom? (yourself) ")
+    (whos-passwd . "Change password for whom? ")
     (old-passwd . "Your current password: ")
     (new-passwd . "The new password: ")
     (changing-passwd . "Changing password...")

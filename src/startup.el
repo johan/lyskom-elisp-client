@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.96 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: startup.el,v 44.97 2003-08-17 13:21:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.96 2003-08-17 12:48:06 byers Exp $\n"))
+	      "$Id: startup.el,v 44.97 2003-08-17 13:21:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -542,10 +542,9 @@ shown to other users."
               (if new-me
                   nil
                 (let ((name nil))
-                  (while (or (null name)
-                             (string= name ""))
+                  (while (or (null name) (string= name ""))
                     (setq name (lyskom-read-conf-name 'what-is-your-name
-                                                      '(pers none) t "" t)))
+                                                      '(pers none) nil nil t)))
                   (setq new-me
                         (or (conf-z-info->conf-no 
                              (lyskom-lookup-conf-by-name name '(pers)))
