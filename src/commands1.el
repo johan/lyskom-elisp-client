@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.13 1996-10-24 09:47:31 byers Exp $
+;;;;; $Id: commands1.el,v 44.14 1996-10-28 18:02:00 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.13 1996-10-24 09:47:31 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.14 1996-10-28 18:02:00 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -81,8 +81,20 @@
 			    (conf-stat->name conf-stat)))
 	    (if (blocking-do 'delete-conf
 			     (conf-stat->conf-no conf-stat))
-		(lyskom-format-insert 'conf-is-deleted
-				      (conf-stat->name conf-stat))
+		(progn
+		  (lyskom-format-insert 'conf-is-deleted
+					(conf-stat->name conf-stat))
+		  (when (= (conf-stat->conf-no conf-stat)
+			   lyskom-pers-no)
+		    (lyskom-insert (lyskom-get-string
+				    'you-have-deleted-yourself))
+		    (setq lyskom-pers-no nil
+			  lyskom-membership nil
+			  lyskom-to-do-list (lyskom-create-read-list)
+			  lyskom-reading-list (lyskom-create-read-list)
+			  lyskom-pending-commands (cons
+						   'kom-start-anew
+						   lyskom-pending-commands))))
 	      (lyskom-format-insert 'you-could-not-delete
 				    conf-stat))
 	  (lyskom-insert-string 'deletion-not-confirmed))
@@ -596,7 +608,7 @@ If optional arg TEXT-NO is present write a comment to that text instead."
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
-				(format " (%d)" text-no)
+				(lyskom-format " (%#1n)" text-no)
 			      "")))
   (unwind-protect
       (if text-no
