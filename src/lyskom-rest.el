@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.25 1997-02-13 11:36:11 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.26 1997-02-19 08:35:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.25 1997-02-13 11:36:11 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.26 1997-02-19 08:35:42 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -654,8 +654,14 @@ The position lyskom-last-viewed will always remain visible."
 		(set-window-start win lyskom-last-viewed)
 		(move-to-window-line -1)
 		(vertical-motion 1)
-		(if (not (pos-visible-in-window-p))
-		    (forward-char -1))))))))
+		(when (not (pos-visible-in-window-p))
+		    (forward-char -1)
+                    (when (> (current-column)
+                             (window-width))
+                      (backward-char (+ (- (current-column)
+                                            (window-width))
+                                        2)))
+                    )))))))
 	
 
 (defun lyskom-insert (string)

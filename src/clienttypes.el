@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.3 1997-02-13 11:35:51 davidk Exp $
+;;;;; $Id: clienttypes.el,v 44.4 1997-02-19 08:35:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.3 1997-02-13 11:35:51 davidk Exp $\n"))
+	      "$Id: clienttypes.el,v 44.4 1997-02-19 08:35:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -334,7 +334,7 @@ element will be the new first element."
   (cons 'QUEUE (cons nil nil)))
 
 
-(defun lyskom-queue-enter (queue element)
+(defsubst lyskom-queue-enter (queue element)
   "Enter last into the queue QUEUE the ELEMENT."
   (let ((elementcell (cons element nil)))
     (if (null (car (cdr queue)))
@@ -348,37 +348,37 @@ element will be the new first element."
 	      elementcell))))
 
 
-(defun lyskom-queue-p (queue)
+(defsubst lyskom-queue-p (queue)
   "Return t if QUEUE is a queue, otherwise return nil."
   (eq (car-safe queue) 'QUEUE))
 
 
-(defun lyskom-queue-isempty (queue)
+(defsubst lyskom-queue-isempty (queue)
   "Return t if QUEUE is empty, otherwise return nil."
   (null (car (cdr queue))))
 
 
-(defun lyskom-queue->first (queue)
+(defsubst lyskom-queue->first (queue)
   "Return the first element of QUEUE or nil if it is empty."
   (car-safe (car (cdr queue))))
 
 
-(defun lyskom-queue->all-entries (queue)
+(defsubst lyskom-queue->all-entries (queue)
   "Return all elements of QUEUE (nil if it is empty)."
   (car-safe (cdr queue)))
 
 
-(defun lyskom-queue->last (queue)
+(defsubst lyskom-queue->last (queue)
   "Return the lastelement of QUEUE or nil if it is empty."
   (car-safe (cdr (cdr queue))))
 
 
-(defun lyskom-queue-make-empty (queue)
+(defsubst lyskom-queue-make-empty (queue)
   "Make the queue QUEUE empty."
   (setcdr queue (cons nil nil)))
 
 
-(defun lyskom-queue-delete-first (queue)
+(defsubst lyskom-queue-delete-first (queue)
   "Delete the first element of QUEUE and return it. If QUEUE is empty
 return nil and do nothing."
   (if (lyskom-queue-isempty queue)
@@ -446,7 +446,7 @@ The element last pushed is first in the list."
   (cdr stack))
 
 
-(defun lyskom-stack-isempty (stack)
+(defsubst lyskom-stack-isempty (stack)
   "Returns non-nil if the STACK is empty."
   (not (cdr stack)))
 

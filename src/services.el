@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.4 1997-02-07 18:08:09 byers Exp $
+;;;;; $Id: services.el,v 44.5 1997-02-19 08:35:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.4 1997-02-07 18:08:09 byers Exp $\n"))
+	      "$Id: services.el,v 44.5 1997-02-19 08:35:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -868,7 +868,7 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
 
 (defun blocking-do (command &rest data)
   "Does the COMMAND agains the lyskom-server and returns the result.
-COMMAND is one lyskom-command (like the initiate-* but the initiate- is 
+COMMAND is one lyskom-command \(like the initiate-* but the initiate- is 
 stripped.
 The cache is consulted when command is get-conf-stat, get-pers-stat
 or get-text-stat."
@@ -891,9 +891,10 @@ or get-text-stat."
 		  (memq (process-status lyskom-proc) '(open run))
 		  ;; The following test should probably be removed
 		  (not lyskom-quit-flag))
-;;        (if (input-pending-p)
-;;            (execute-kbd-macro (read-key-sequence "")))
         (lyskom-accept-process-output))
+      (if (or lyskom-quit-flag quit-flag)
+          (signal 'quit nil))
+      (setq lyskom-quit-flag nil)
       lyskom-blocking-return)))
 
 

@@ -1,3 +1,35 @@
+Tue Feb 18 13:30:34 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* completing-read.el (lyskom-complete-string-close-parens-2):
+ 	Skrev om.
+
+Mon Feb 17 09:18:07 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-scroll): Sätt inte point bortom fönstrets
+ 	sisa kolumn. Det är inte så himla skoj om man har automatisk
+ 	horisontell scrollning.
+
+Fri Feb 14 18:35:39 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Fixade bug re
+ 	multipla mottagare och kommenterad-författare-kontroll.
+
+Thu Feb 13 14:25:51 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* clienttypes.el (lyskom-queue-isempty): Gjorde till defsubst
+ 	eftersom den ibland anropas *mycket*.
+	(lyskom-queue->first): Dito.
+	(lyskom-queue-p): Dito.
+	(lyskom-stack-isempty): Dito.
+	(lyskom-queue->all-entries): Dito.
+	(lyskom-queue-enter): Dito.
+	(lyskom-queue->last): Dito.
+	(lyskom-queue-make-empty): Dito.
+	(lyskom-queue-delete-first): Dito.
+
+	* parse.el (lyskom-parse-unparsed): Tog bort while-loopen för att
+ 	radera whitespace. Använd match-data itsället.
+
 Thu Feb 13 12:28:55 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* komtypes.el (text-list->empty): Ny funktion.
@@ -15,7 +47,28 @@ Thu Feb 13 12:28:55 1997  David Kågedal  <davidk@lysator.liu.se>
 	text-list->append.
 	(read-list-delete-text): Använd text-list->delq.
 
+Thu Feb 13 09:41:52 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* view-text.el (lyskom-print-text): Tog bort utkommenterad kod.
+ 	Lade till dashed lines före ärendelösa inlägg.
+
+	* parse.el (lyskom-parse-num): Skrivit om helt, utan read,
+ 	condition-case och specialhack för strängar som ändå inte används.
+
+	* services.el (blocking-do): Signalera quit om lyskom-quit-flag är
+ 	t för att undvika att returnera not-yet-gotten.
+
+	* parse.el (lyskom-parse-unparsed): Defensivt hack om
+ 	lyskom-parse-pos blir för stor.
+
 Wed Feb 12 14:43:31 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* parse.el (lyskom-fill-vector): Använd funcall istf apply.
+	(lyskom-parse-char): Flytta grenar i cond
+	(lyskom-parse-num): Flyttade grenar i cond
+	(lyskom-parse-nonwhite-char): Gjorde iterativ
+	(lyskom-parse-num): Tog bort while-loopar med looking-at. 
+	(lyskom-parse-num): Strunta i \t och \r i regexparna
 
 	* defvar.el (lyskom-save-variables): Fixade buggen med lokala
  	variabler.
