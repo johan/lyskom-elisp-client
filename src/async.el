@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.18 1999-06-26 20:48:02 byers Exp $
+;;;;; $Id: async.el,v 44.19 1999-06-28 16:09:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.18 1999-06-26 20:48:02 byers Exp $\n"))
+	      "$Id: async.el,v 44.19 1999-06-28 16:09:54 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -480,12 +480,15 @@ Non-nil NOBEEP means don't beep."
         (setq when (substring when 4 19))
       (setq when (substring when 11 19)))
 
+    (setq nobeep (or nobeep (and kom-ansaphone-on
+                                 kom-silent-ansaphone)))
+
     (cond ((or (null recipient)		; Have been seen to be nil when
                                         ; listing recorded
                                         ; messages. Should it be?
                                         ; /davidk
 	       (eq recipient 0))	; Public message
-           (if (not nobeep) (lyskom-beep kom-ding-on-common-messages))
+           (if (not nobeep) (lyskom-beep kom-ding-on-common-messages sender))
            (lyskom-format (lyskom-get-string-sol 'message-broadcast)
                           (cond
                            ((stringp sender) sender)
@@ -494,7 +497,7 @@ Non-nil NOBEEP means don't beep."
                           message
                           when))
           ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
-           (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages))
+           (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages sender))
            (lyskom-format (lyskom-get-string-sol 'message-from)
                           (cond
                            ((stringp sender) sender)
@@ -503,7 +506,7 @@ Non-nil NOBEEP means don't beep."
                           message
                           when))
           (t                            ; Group message
-           (if (not nobeep) (lyskom-beep kom-ding-on-group-messages))
+           (if (not nobeep) (lyskom-beep kom-ding-on-group-messages recipient))
            (lyskom-format (lyskom-get-string-sol 'message-from-to)
                           message
                           (cond
