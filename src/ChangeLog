@@ -1,3 +1,10 @@
+2005-02-15  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1512:
+	* menus.el (lyskom-define-menu-xemacs): Handle case when
+	current-local-map is nil (don't attempt to guess shortcuts in this
+	case).
+
 2005-02-14  David Byers  <byers@lysator.liu.se>
 
 	Fix ugliness when default server is unset:
