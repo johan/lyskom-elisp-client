@@ -1,3 +1,10 @@
+2003-08-24  David Byers  <byers@lysator.liu.se>
+
+	* NEWS-0.48: Updated to here.
+
+	Support setting keep-commented:
+	* commands2.el (kom-set-keep-commented): New command.
+
 2003-08-20  David Byers  <byers@lysator.liu.se>
 
 	More work on bug 459:
@@ -47,7 +54,7 @@
 	(kom-filter-author): Same here.
 	(kom-filter-text): Same here.
 
-	* commands2.el (kom-create-aux-item): Set MUSTMATCH when readinf
+	* commands2.el (kom-create-aux-item): Set MUSTMATCH when reading
 	conference name.
 
 	* vars.el.in (lyskom-default-conference-strategy): Default for

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.302 2003-08-17 13:21:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.303 2003-08-24 14:34:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.302 2003-08-17 13:21:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.303 2003-08-24 14:34:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -643,11 +643,11 @@ Read all about it at http://www.lysator.liu.se/history/")
     (anon-texts-not-permitted . "Anonymous texts are not permitted")
     (secret-members-permitted . "Secret members are permitted")
     (secret-members-not-permitted . "Secret members are not permitted")
-    (garb-nice . "Expiration time (in days):%16#1d\n")
+    (garb-nice .      "Expiration time:          %16#1d day%#1?d%[%]%[s%]\n")
+    (keep-commented . "Min. expiration time for commented texts: %#1d day%#1?d%[%]%[s%]\n")
     (lowest-local-no . "Lowest local number: %21#1d\n")
     (highest-local-no . "Highest local number: %20#1d\n")
-    (last-text-time . 
-     "Time of last text:    %20#1s (according to your cache)\n")
+    (last-text-time . "Time of last text:    %20#1s (according to your cache)\n")
     (no-of-motd . "Notice in text:    %13#1n\n")
     (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
@@ -825,8 +825,11 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (submitters-conf-for-is . "Changing authors admitted to conference %#1M to the members of %#2M...") 
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference? ")
+    (conf-to-set-keep-commented-q . "Set minimum expiration time for commented texts in which conference? ")
+    (new-keep-commented-q . "How many days shall new comments protect texts from removal? ")
     (new-garb-nice-q . "After how many days shall texts be removed? ")
-    (garb-nice-for-is . "Changing expiration for %#1M to %#2d days...")
+    (garb-nice-for-is . "Changing expiration for %#1M to %#2d day%#2?d%[%]%[s%]...")
+    (keep-commented-for-is . "Changing minimum expiration for commented texts in %#1M to %#2d day%#2?d%[%]%[s%]...")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
     (closing-server . "Shutting down the server...")
@@ -2223,6 +2226,7 @@ written a presentation.%]
     (kom-list-server-faqs     . "List server-FAQs")
     (kom-list-new-conferences . "List new conferences")
     (kom-list-new-persons     . "List new users")
+    (kom-set-keep-commented   . "Change minimum expiration (for commented texts)")
     ))
 
 (lyskom-language-var global lyskom-language-codes en

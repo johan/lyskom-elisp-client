@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.342 2003-08-17 13:21:33 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.343 2003-08-24 14:34:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.342 2003-08-17 13:21:33 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.343 2003-08-24 14:34:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -640,8 +640,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (anon-texts-not-permitted . "Anonyma inlägg är inte tillåtna")
     (secret-members-permitted . "Hemliga medlemmar är tillåtna")
     (secret-members-not-permitted . "Hemliga medlemmar är inte tillåtna")
-    (garb-nice . "Livslängd på inlägg (dagar):%14#1d\n")
-    (lowest-local-no . "Lägsta existerande lokala nummer: %8#1d\n")
+    (garb-nice .      "Livslängd på inlägg:        %14#1d dag%#1?d%[%]%[ar%]\n")
+    (keep-commented . "Minsta livslängd för kommenterade inlägg: %#1d dag%#1?d%[%]%[ar%]\n")
+    (lowest-local-no ."Lägsta existerande lokala nummer: %8#1d\n")
     (highest-local-no . "Högsta existerande lokala nummer: %8#1d\n")
     (last-text-time . 
 		    "Tid för senaste inlägg: %18#1s (står det i din cache)\n")
@@ -856,8 +857,11 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (submitters-conf-for-is . "Ändra tillåtna författare för möte %#1M till\nmedlemmarna i %#2M...")
 
     (conf-to-set-garb-nice-q . "Vilket möte vill du sätta livslängd för? ")
+    (conf-to-set-keep-commented-q . "För vilket möte vill du sätta minsta livslängd för kommenterade texter? ")
     (new-garb-nice-q . "Efter hur många dagar ska inlägg utplånas? ")
-    (garb-nice-for-is . "Ändrar livslängden för %#1M till %#2d dagar...")
+    (new-keep-commented-q . "Hur många dagar nya kommentarer skydda det kommenterade? ")
+    (garb-nice-for-is . "Ändrar livslängden för %#1M till %#2d dag%#2?d%[%]%[ar%]...")
+    (keep-commented-for-is . "Ändrar så kommentarer skyddar från utplåning i %#2d dag%#2?d%[%]%[ar%] för %#1M...")
 
     (really-shutdown . "Är du säker på att du vill stänga av servern? ")
     (closing-server . "Stänga av servern...")
@@ -2252,6 +2256,7 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (kom-list-server-faqs     . "Lista server-FAQ")
     (kom-list-new-conferences . "Lista nya möten")
     (kom-list-new-persons     . "Lista nya personer")
+    (kom-set-keep-commented   . "Ändra minsta livslängd (för kommenterade inlägg)")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
