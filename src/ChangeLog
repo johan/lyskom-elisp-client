@@ -11,6 +11,14 @@ Fri Mar 29 03:26:34 1996  David Kågedal  <davidk@lysator.liu.se>
 	* view-text.el (lyskom-print-header-comm): Visa när
 	kommentarslänken adderades.
 
+Thu Mar 28 15:11:27 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-set-mode-line): Se till att mode-raden
+ 	uppdateras.
+
+	* view-text.el (lyskom-follow-comments): Se till att kommentarer
+	till fotnoter som läses omedelbart läggs på lässtacken.
+
 Wed Mar 27 16:19:57 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * Version 0.40.1 release
