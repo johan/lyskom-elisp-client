@@ -119,12 +119,17 @@ Currently handled by: ingwa & linus
 Severity: 4
 Priority: 5
 Difficulty: 9
-Last edit: inge: Mon Aug  3 01:08:47 1992
+Closed: linus: Mon Apr 26 22:30:25 1993
+Last edit: linus: Mon Apr 26 23:39:07 1993
 Reported by: everybody
 Site: 
 Associated mails:
 End mails.
 ---
+Linus tried to do this. I have now resigned and will not try this
+further. If anyone else wants to. Be my guest.
+
+See also bug number 9.
 
 Id: 8
 Summary: Created text while in prioritying mode lost
@@ -148,6 +153,7 @@ Currently handled by:
 Severity: 5
 Priority: 9
 Difficulty: 0
+Closed: linus: Mon Apr 26 23:38:18 1993
 Last edit: linus: Mon Aug  3 07:18:26 1992
 Reported by: linus
 Site: 
