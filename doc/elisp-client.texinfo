@@ -3,12 +3,23 @@
 
 @setfilename elisp-client
 @settitle Användarhandledning elispklienten
+
+@c 
+@c  Jag har bara anvent funktions, variable och key indexen.
+@c  funktions-indexet anv{nds f|r olika funktioner. B}de
+@c  elisp-funktioner och "funktioner" p} lyskom-niv}.
+@c  variable-indexet anv{nds f|r variabler och flaggor, b}de emacs-lisp
+@c  flaggor och environment-variabler
+@c  key-indexet anv{nds f|r tangentbordsbindningar.
+@c
+
+
 @setchapternewpage odd
 
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 35.2 1993-12-14 02:10:37 linus Exp $
+$Id: elisp-client.texinfo,v 35.3 1993-12-19 17:55:37 linus Exp $
 @end ifinfo
 
 @iftex
@@ -35,13 +46,10 @@ $Id: elisp-client.texinfo,v 35.2 1993-12-14 02:10:37 linus Exp $
 @title Användarhandledning för elispklienten
 @subtitle En LysKOM-klient för GNU emacs.
 
+@author Linus Tolke @file{linus@@lysator.liu.se}
 @author Per Cederqvist @file{ceder@@lysator.liu.se}
 @author Inge Wallin @file{ingwa@@isy.liu.se} eller @file{inge@@lysator.liu.se}
-@author Linus Tolke @file{linus@@lysator.liu.se}
 
-@c 
-@c  Jag har bara anvent funktions och variable indexet.
-@c
 @page
 Copyright @copyright{} 1991,1992,1993 Lysator
 
@@ -69,18 +77,21 @@ Tillstånd ges att kopiera denna manual och distribuera kopiorna, under
 förutsättning att denna copyrightnot och denna text finns med på alla
 kopior.
 
-
-@ifinfo
-
+@page
 Författarna till denna klient är alla medlemmar i Datorföreningen
 Lysator vid Linköpings Tekniska Högskola --- LiTH.
 
-De som för tillfället arbetar mest med klienten är:
+Den som för tillfället arbetar mest med elispklienten är:
+
+Linus Tolke --- @file{linus@@lysator.liu.se}
+
+Andra mer eller mindre aktiva personer är:
 
 Per Cederqvist --- @file{ceder@@lysator.liu.se}
 Inge Wallin --- @file{ingwa@@isy.liu.se} eller @file{inge@@lysator.liu.se}
-Linus Tolke --- @file{linus@@lysator.liu.se}
-@end ifinfo
+Thomas Bellman --- @file{bellman@@lysator.liu.se}
+Lars Aronsson --- @file{aronsson@@lysator.liu.se}
+Lars Willför --- @file{willfor@@lysator.liu.se}
 @end titlepage
 
 
@@ -96,13 +107,13 @@ Dokumentationen uppdaterad till klient version 0.38
 @menu
 * Förord::                      Förord
 * Bakgrund::                    Lite om koms historia fram till LysKOM.
-
-Uppstart
-
 * Servern::                     Servern
+
 * Uppstart::                    Uppstart
 * Första gången::               Första gången du kör LysKOM
+
 * Möten::                       Om möten
+
 * Köra LysKOM::                 Köra LysKOM
 * Namn::                        Namn
 * Skriva inlägg::               Att skriva inlägg
@@ -111,6 +122,7 @@ Uppstart
 * Variabler::                   Variabler
 * Hookar::                      Hookar
 * Environmentvariabler::        Environmentvariabler
+
 * Buggrapporter::               Buggrapporter
 * Filer::                       Filer
 * Index::                       Index
@@ -122,6 +134,8 @@ Uppstart
 Förord
 
 * Bakgrund:: Lite om koms historia fram till LysKOM.
+* Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
+* Andra klienter:: Alternativ till elispklienten.
 
 Uppstart
 
@@ -156,7 +170,6 @@ Kommandon
 
 * Spara text::			Spara text
 * Markeringar::			Kommandon för att hantera markeringar.
-* Kommandon under annat::	Kommandon under annat
 * Skapa::			Kommandon för att skapa möten.
 * Kommandon för att addera och subtrahera::  Kommandon för att addera och subtrahera.
 * Ändra personuppgifter::	
@@ -173,7 +186,7 @@ Kommandon
 * Ändra inställningarna:: Hur man ändrar LysKOMklientens parametrar.
 @end menu
 
-@node Förord, Bakgrund, Top, Top
+@node Förord, Servern, Top, Top
 @comment  node-name,  next,  previous,  up
 @chapter Förord
 
@@ -185,18 +198,101 @@ LysKOM.
 
 @menu
 * Bakgrund:: Lite om koms historia fram till LysKOM.
+* Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
+* Andra klienter:: Alternativ till elispklienten.
 @end menu
 
-@node Bakgrund, Servern, Förord, Top
+@c Ja, den h{r noden och de f|ljande: Utveckling av klienten och
+@c Bakgrund ligger i "fel" ordning i dokumentet. Det beror p} att jag
+@c vill ha texten som ligger i dessa tv} f|ljande noder direkt under
+@c f|rordet medan det skall vara en egen nod i info-varianten.
+
+@node Utveckling av klienten, Andra klienter, Bakgrund, Förord
+@comment  node-name,  next,  previous,  up
+
+All utveckling av elisp-klienten, lyskom-systemet och i detta dokument
+nämnda andra klienter är ideelt arbete utfört av medlemmar i Lysator,
+datorföreningen vid Universitet och Tekniska Högskolan i Linköping.
+
+Om du vill deltaga i arbetet så är det bra om du skaffar dig en
+ordentlig introduktion till hur systemet fungerar. Om du finns i
+Linköping så är det enklast att prata med någon av de som varit med och
+som är ansvariga för det som hittills är gjort. Om du inte finns i
+Linköping är du utelämnad åt självstudier av de få dokument som finns
+och källkoden. Jag skulle nog vilja rekommendera ett veckosluts
+intensivkurs i Linköping för att få riktigt grepp om hur det hela
+hänger ihop.
+
+
+@node Andra klienter,, Utveckling av klienten, Förord
+@comment  node-name,  next,  previous,  up
+
+Det finns alternativ till elisp-klienten som också är fritt
+tillgängliga. Än så länge har de inte riktigt elisp-klientens
+funktionalitet utan är begränsade i något avseende men det sker
+utveckling av dem hela tiden.
+
+Samtliga här beskrivna klienter har fördelen framför elisp-klienten att
+de är mindre cpu-krävande och därför snabbare.
+
+@table @asis
+
+@item tty-klienten
+@itemx C-klienten
+tty-klienten är skriven i C med det ursprungliga målet att så troget som
+möjligt likna QZ-kom. Avvikelser från detta målet har skett dels
+beroende på de olika förutsättningar som LysKOM har jämför med QZ-kom
+och dels beroende på personlig smak hos utvecklarna. När detta skrivs är
+tty-klienten (version L0.11) ganska stabil, den går lätt att kompilera
+och köra på flera olika system @footnote{SunOS4 (sun3 och sun4),
+Solaris, Linux, Dynix 3.0, Ultrix, HPUX} förusatt att man har GCC
+installerad.
+
+Den senaste versionen av tty-klienten kan du hämta via anonym ftp från
+@file{ftp.lysator.liu.se} i underbiblioteket @file{/pub/lyskom/tty-client/}
+
+Den som gjort mest i tty-klienten är Thomas Bellman
+@code{<bellman@@lysator.liu.se>}.
+
+Den som för närvarande gör något och som är ansvarig för de senaste
+versionerna är Linus Tolke @code{<linus@@lysator.liu.se>}.
+
+@item tkom
+@itemx nilkom
+@itemx kom++
+tkom och nilkom är två olika klienter som bygger på samma grundstomme.
+Grundprogrammet som pratar med lyskom-servern är skrivet i C++ och sedan
+finns det två olika användargränssnitt som är skrivna i TCL. Nilkom kör
+mot en terminal medan tkom öppnar X-fönster.
+
+Målet med denna klient är att erbjuda ett gränssnitt till lyskom-servern
+som är bättre än protokollet och det finns redan nu rutiner för cache av
+personer och möten.
+
+tkom, nilkom, kom++-paketet kräver att C++ och TCL/Tk finns installerat på
+maskinen men om man vill använda paketet för att bygga en helt egen
+klient kan man klara sig utan TCL.
+
+Den senaste versionen av kom++-klienten finns att hämta via anonym ftp
+från @file{ftp.lysator.liu.se} i underbiblioteket @file{/pub/lyskom}.
+
+De som för närvarande jobbar med kom++-klienten är Per Cederqvist
+@code{<ceder@@lysator.liu.se>} och Inge Wallin @code{<ingwa@@isy.liu.se>}
+eller @code{<inge@@lysator.liu.se>}.
+
+@end table
+
+@node Bakgrund,  Utveckling av klienten,, Förord
+@comment  node-name,  next,  previous,  up
 @chapter Bakgrund
 
 LysKOM är ett konferenssystem som är inspirerat av KOM, det
-konferenssystem som skapades av QZ i Stockholm. Orsaken till att
-LysKOM skrevs var att det KOMsystem Lysators medlemmar hade tillgång
-till lades ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och
-den sista DEC-20-maskinen på LiTH som studenterna hade tillgång till
-såldes och försvann. KOM hade blivit vanebildande för en del och det
-bedömdes att en ersättning var nödvändig.
+konferenssystem som skapades av QZ i Stockholm. Orsaken till att LysKOM
+skrevs var att det KOMsystem Lysators medlemmar hade tillgång till lades
+ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och den sista
+DEC-20-maskinen på LiTH som studenterna hade tillgång till såldes och
+försvann. KOM hade blivit vanebildande för en del och det bedömdes att
+en ersättning var nödvändig.
 
 En tidig tanke när vi började jobba med LysKOM var att det skulle gå
 att ha flera olika användarinterface samtidigt. Någon vill se en
@@ -227,7 +323,10 @@ funktioner och att hitta fel i. Detta dokument är en enkel
 användarhandledning och beskriver hur man använder elispklienten.
 
 
-@node Servern, Uppstart, Bakgrund, Top
+
+
+@node Servern, Uppstart, Förord, Top
+@comment  node-name,  next,  previous,  up
 @chapter Servern
 
 Servern, databashanteraren, är skriven i C och körs på
@@ -241,6 +340,7 @@ situationen en annan.
 
 
 @node Uppstart, Första gången, Servern, Top
+@comment  node-name,  next,  previous,  up
 @chapter Uppstart
 @ifinfo
 Det är olika procedurer för att komma in i LysKOM beroende på 
@@ -256,6 +356,7 @@ nedan.
 @end menu
 @end ifinfo
 @node Lysator, IDA, Uppstart, Uppstart
+@comment  node-name,  next,  previous,  up
 @section Från Lysators maskiner
 
 Enklast är att köra LysKOM från någon av Lysators UNIX-maskiner.
@@ -268,6 +369,7 @@ att trycka @key{RET}.
 
 
 @node IDA, Andra maskiner, Lysator, Uppstart
+@comment  node-name,  next,  previous,  up
 @section Från elev-sparcarna på IDA (Inst. för Datavetenskap på LiTH):
 
 Lägg in
@@ -282,6 +384,7 @@ denna möjlighet att köra LysKOM. På @file{diag19.ida.liu.se} ligger ett litet
 program som reläar anropen vidare till @file{varg.lysator.liu.se} där
 databasen för närvarande ligger.
 @node Andra maskiner,  , IDA, Uppstart
+@comment  node-name,  next,  previous,  up
 @section Från andra maskiner
 
 Om du vill hämta LysKOMklienten från någonstans utanför LiTH kan du
@@ -312,6 +415,7 @@ nameserver. Tyvärr går det inte att ge IP-nummer till Emacs.
 
 
 @node Första gången, Möten, Uppstart, Top
+@comment  node-name,  next,  previous,  up
 @chapter Första gången du kör LysKOM
 
 När du har svarat på frågan om server och uppkopplingen mellan klient
@@ -361,6 +465,7 @@ författaren av inlägget att flytta inlägget om det hamnat fel men oftast
 är det författarens ansvar att se till att det hamnar rätt från början.
 
 @node Köra LysKOM, Namn, Möten, Top
+@comment  node-name,  next,  previous,  up
 @chapter Köra LysKOM
 
 
@@ -391,12 +496,14 @@ alfarelease.
 
 
 @node Scrollning, Kommandon, Prompten, Köra LysKOM
+@comment  node-name,  next,  previous,  up
 @section Scrollning
 
 Om inte allt ryms på skärmsidan så syns en procentsats i mode-raden.
 Tryck på mellanslag när du läst klart så scrollas nästa sida fram.
 
 @node Kommandon, Administratörskommandon, Scrollning, Köra LysKOM
+@comment  node-name,  next,  previous,  up
 @section Kommandon
 
 Det finns två slags kommandon, dels de som är bundna till enskilda
@@ -435,7 +542,6 @@ förra versionen.
 
 * Spara text::			Spara text
 * Markeringar::			Kommandon för att hantera markeringar.
-* Kommandon under annat::	Kommandon under annat
 * Skapa::			Kommandon för att skapa möten.
 * Kommandon för att addera och subtrahera::  Kommandon för att addera och subtrahera.
 * Ändra personuppgifter::	
@@ -446,6 +552,7 @@ förra versionen.
 * Ändra inställningarna::	
 @end menu
 @node Läsa, Få hjälp, Kommandon, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Kommandon för att läsa texter.
 
 @table @asis
@@ -497,7 +604,9 @@ olästa inlägg.
 Hoppa över alla kommentarer till det senast lästa inlägget, dvs
 markera dem som lästa utan att visa dem. Detta sker rekursivt så
 att alla kommentarer till kommentarerna också markeras som lästa,
-osv.
+osv. För att undvika att detta kommando jobbar för evigt läsmarkerar 
+och söker klienten bara rekursivt vidare om kommentaren i varje steg
+är nyare än det kommenterade inlägget.
 
 
 @item @kbd{e}
@@ -545,6 +654,7 @@ Detta kommando rullar tillbaka skärmen så att man kan se det som skrevs
 innan. För att komma framåt igen är det bara att trycka @key{SPC}. 
 @end table
 @node Få hjälp, Skriva, Läsa, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Få hjälp
 
 Du kan alltid få hjälp.
@@ -591,10 +701,12 @@ avsnittet nedan som beskriver vad du kan göra medan du skriver.
 @itemx @code{Kommentera inlägget}
 @findex Kommentera inlägget
 @kindex k
+@kindex C-u k
 Kommentera det senast lästa eller skrivna inlägget. Man kan också
-kommentera ett valfritt inlägg genom att istället för att trycka
-@kbd{k} trycka inläggsnummret för det inlägg man vill kommentera
-följt av @kbd{k}.
+kommentera ett valfritt inlägg genom att istället för att trycka @kbd{k}
+trycka inläggsnummret för det inlägg man vill kommentera följt av
+@kbd{k}. Alternativ till detta är att trycka @kbd{C-u k} varpå man får
+ange inläggsnumret.
 
 Om inlägget skulle ha flera mottagare så får man, för var och 
 en av dessa mottagare en kontrollfråga om man vill att den skall vara
@@ -614,17 +726,26 @@ bestämmer sig för att kommentera.
 @itemx @code{Fotnot till inlägg}
 @findex Fotnot till inlägg
 @kindex F
-Skriv en fotnot till det senast lästa eller skrivna inlägget. Kommandot
-fungerar som kommandot @code{Kommentera inlägget}.
+@kindex C-u F
+Skriv en fotnot till det senast lästa inlägget. Kommandot fungerar som
+kommandot @code{Kommentera inlägget}. Observera att om man inte explicit
+anger inläggsnummer skriver man alltid fotnoter till senast lästa
+inlägg. Detta innebär att man "tvingas" återse sitt senast skrivna inlägg
+innan man kan skriva en fotnot till det.
 
 
 @item @kbd{p}
 @itemx @code{Personligt svar}
 @findex Personligt svar
 @kindex p
+@kindex C-u p
 Skriv ett personligt svar till författaren av det senast lästa
 inlägget. Detta är detsamma som att skicka ett brev till honom som
-är en kommentar till inlägget.
+är en kommentar till inlägget. 
+
+Man kan liksom när man skriver kommentarer skriva personligt svar till
+godtyckligt inlägg genom att antingen skriva inläggsnummer @kbd{p} eller
+@kbd{C-u p} följt av inläggsnumret och @kbd{RET}.
 
 
 @item @kbd{P}
@@ -638,6 +759,7 @@ inlägg.
 @end table
 
 @node Lista, Bli medlem, Skriva, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Lista
 
 Du kan lista olika saker med dessa olika kommandona.
@@ -706,6 +828,7 @@ mötet, eller på dina markerade inlägg, när du har prompten
 @end table
 
 @node Bli medlem, Sluta, Lista, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Bli medlem
 
 Här beskriver vi hur du kan bli medlem i ett möte, samt hur du gör för
@@ -757,6 +880,7 @@ Detta kommando har inte någon egen tangent.
 @end table
 
 @node Sluta, Annat, Bli medlem, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Sluta
 
 @table @asis
@@ -768,21 +892,41 @@ Detta kommando har inte någon egen tangent.
 @kindex q
 Avslutar LysKOM. Det går lika bra att sluta genom att gå ur Emacs
 eller ta bort LysKOM-bufferten.
+
+Om du har inlägg som du börjat skriva på och sedan varken slängt eller
+skickat in till LysKOM-servern så kommer du att få en extra
+kontrollfråga om du verkligen vill sluta trots att du har oinskickade
+texter.
+
+Om du väljer att gå ur lyskom genom att avsluta Emacs och har
+oinskickade buffertar kommer elisp-klienten att se till att Emacs
+betraktar LysKOM som en viktig process. Om du däremot har skickat in
+eller slängt alla dina texter ser elisp-klientetn till att Emacs inte
+betraktar LysKOM som en viktig process. Om du får en kontrollfråga:
+"Active processes exist; kill them and exit anyway? (yes or no)" innebär
+det alltså att du har oinskickade texter. @footnote{För att detta skall
+fungera korrekt krävs att du kör en emacs version 18.58 eller senare.}
+
+
 @end table
 
 @node Annat, Ändra, Sluta, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection övriga kommandon i LysKOM.
 
 @table @asis
-@item @kbd{r}
+@item @kbd{M-x kom-recover}
 @itemx @code{Återstarta kom}
 @findex Återstarta kom
-@kindex r
+@kindex M-x kom-recover
 Nollställer diverse interna strukturer i klienten. Används då
 klienten har hängt sig eller då klienten och servern har kommit ur
 fas. Det kan de göra om man trycker @code{C-g} @kindex C-g
 vid olämpliga tillfällen.
 
+Om klienten hänger sig på detta vis beror det egentligen på att det är
+en bugg i klienten. Se till att skapa en buggrapport innan du ger det
+här kommandot. Se även @ref{Buggrapporter}
 
 @item @kbd{t}
 @itemx @code{Se tiden}
@@ -826,18 +970,22 @@ i LysKOM just nu och den kan man får fram i ett temporärt fönster
 med detta kommando. Höjden på detta fönster regleras med 
 variabeln @code{kom-who-buffer-size-when-displaying}.
 
+Detta fungerar givetvis inte om man har slagit av hanteringen av
+Vilkabufferten. @xref{Vilkabufferten}
+
 @item 
 @itemx @code{Kasta ut en session}
 @findex Kasta ut en session
 Du kan slänga ut en session som har hängt sig eller som du
 glömt på någon annan maskin. Du kan bara slänga ut 
 sessioner där personer som du är organisatör för är
-inloggade om du inte är i administratörsmode.
+inloggade om du inte är i administratörsmod.
 
 @end table
 
 @ifinfo
 @node Ändra, Återse, Annat, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Ändra
 
 Du kan ändra dina egna parametrar med olika kommandon.
@@ -863,6 +1011,7 @@ placerar dig i redigeringsläge. Om du bara trycker @kbd{RET} så
 
 @ifinfo
 @node Återse, Status, Ändra, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Återse
 
 Det finns flera olika kommandon för att återse olika texter. De är 
@@ -918,7 +1067,7 @@ kommentarer återses.
 @itemx @code{Återse urinlägget}
 @findex Återse urinlägget
 @kindex år
-återser originalinlägget som gav upphov till den kommentarkedja
+Återser originalinlägget som gav upphov till den kommentarkedja
 som det senast lästa inlägget ingår i.
 
 
@@ -926,14 +1075,14 @@ som det senast lästa inlägget ingår i.
 @itemx @code{Återse nästa}
 @findex Återse nästa
 @kindex ån
-återser nästa inlägg i återsestacken.
+Återser nästa inlägg i återsestacken.
 
 
 @item @kbd{ås}
 @itemx @code{Återse senaste}
 @findex Återse senaste
 @kindex ås
-återse de senaste N inläggen av X i mötet M. LysKOM frågar efter
+Återse de senaste N inläggen av X i mötet M. LysKOM frågar efter
 personen X och mötet M. N är prefixargument. 
 
 Om man inte ger något prefixargument sätts N@code{=1}. Om man anger N@code{=0}
@@ -999,6 +1148,7 @@ Om man t ex återser de senaste N av någon så vill man kanske
 
 @ifinfo
 @node Status, Spara text, Återse, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Status
 
 Du kan få status för personer och möten med dessa olika kommandon.
@@ -1030,6 +1180,7 @@ Vill man inte ha denna lista skall man svara @kbd{n} på frågan.
 @end table
 
 @node Spara text, Markeringar, Status, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Spara text
 
 @table @asis
@@ -1041,7 +1192,8 @@ Spara den senast lästa texten på fil. Programmet frågar efter filnamn.
 @end table
 
 @ifinfo
-@node Markeringar, Kommandon under annat, Spara text, Kommandon
+@node Markeringar, Skapa, Spara text, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Markeringar
 
 En markering är ett litet märke som du sätter på ett inlägg som gör
@@ -1087,16 +1239,18 @@ från det inlägget. Det senast lästa inlägget är default.
 @findex Återse markerade
 @kindex åm
 Frågar efter en markering och visar upp alla markerade inlägg med
-just den markeringen.
+just den markeringen. Normalt markerar elisp-klienten med markering 100.
+@xref{Variabler, kom-default-mark}.
 
 @end table
 
-@node Kommandon under annat, Skapa, Markeringar, Kommandon
+@iftex
 @subsection Kommandon under annat
 Här följer några funktioner som inte ligger på några egna tangenter,
 men som kan hittas under @kbd{a}
+@end iftex
 
-@node Skapa, Kommandon för att addera och subtrahera, Kommandon under annat, Kommandon
+@node Skapa, Kommandon för att addera och subtrahera, Markeringar, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Skapa
 
@@ -1191,6 +1345,7 @@ mötet.
 @end table
 
 @node Ändra personuppgifter, Ändra mötesuppgifter, Kommandon för att addera och subtrahera, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Ändra personuppgifter
 
 @table @asis
@@ -1235,6 +1390,7 @@ personen/mötet i fråga.
 @end table
 
 @node Ändra mötesuppgifter, Meddelande, Ändra personuppgifter, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Ändra mötesuppgifter
 
 @table @asis
@@ -1258,10 +1414,21 @@ och då får du ett felmeddelande.
 @item @code{Ändra supermöte}
 @findex Ändra supermöte
 Frågar efter vilket möte vi skall ändra supermöte för
-samt vilket möte som skall vara det nya supoermötet.
+samt vilket möte som skall vara det nya supermötet.
+
+Supermöte för ett möte är det möte till vilket inlägg som inte får
+skickas till mötet, skickas. Anledningarna till att inlägg inte får
+skickas till ett visst möte kan vara att det är skrivskyddat och han som
+försöker skicka in det tillhör inte de tillåtna författarna för det
+mötet eller att mötet är kommentarsskyddat och då skickas kommentarerna
+till supermötet.
+
+I nästa version av LysKOM-systemet (Protokoll B) kommer det att vara två
+olika möten beroende på om mötet är skrivskyddat eller kommentarsskyddat.
 @end table
 
 @node Meddelande, Prioritera, Ändra mötesuppgifter, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Meddelande
 
 @table @asis
@@ -1279,6 +1446,7 @@ skickar iväg det till mottagarna.
 @end table
 
 @node Prioritera, Ändra inställningarna, Meddelande, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Prioritera
 
 @table @asis
@@ -1332,6 +1500,7 @@ ställen. @kbd{u} och @kbd{n} är bra för den sista "finjusteringen".
 @end table
 
 @node Ändra inställningarna,  , Prioritera, Kommandon
+@comment  node-name,  next,  previous,  up
 @subsection Ändra inställningarna
 
 @table @asis
@@ -1376,6 +1545,7 @@ förlorade.
 @end table
 
 @node Administratörskommandon,  , Kommandon, Köra LysKOM
+@comment  node-name,  next,  previous,  up
 @section Administratörskommandon
 
 @table @asis
@@ -1413,6 +1583,7 @@ Tar bort loginmeddelandet.
 
 
 @node Namn, Skriva inlägg, Köra LysKOM, Top
+@comment  node-name,  next,  previous,  up
 @chapter Namn
 
 När du skall ange ett mötes- eller person-namn så räcker det att
@@ -1433,6 +1604,7 @@ naturligtvis också för mötesnamn.
 
 
 @node Skriva inlägg, Vilkabufferten, Namn, Top
+@comment  node-name,  next,  previous,  up
 @chapter Att skriva inlägg
 
 För varje inlägg/kommentar man skriver får man upp en ny buffert. Man
@@ -1533,6 +1705,7 @@ texten trycker du @kbd{C-c a m} resp. @kbd{C-c a k} och så får du ange vem eller
 vilket möte du skall lägga till.
 
 @node Vilkabufferten, Flaggor, Skriva inlägg, Top
+@comment  node-name,  next,  previous,  up
 @chapter Vilkabufferten
 
 Elisp-klienten upprätthåller en lista på vilka som är inloggade och
@@ -1540,7 +1713,13 @@ vad de sysslar med i den så kallade vilkabufferten. Man kan se vad
 alla gör hela tiden om man har den framme, annars finns den bara i
 bakgrunden.
 
+Denna finess drar ansenliga mängder extra cpu-kraft från maskinen du kör
+klienten på. Därför finns det möjlighet att slå av den. Har man väl
+slagit av den finns de däremot ingen möjlighet att slå på den igen utan
+att starta om LysKOM.
+
 @node Flaggor, Variabler, Vilkabufferten, Top
+@comment  node-name,  next,  previous,  up
 @chapter Flaggor
 
 Elispklienten har ett antal flaggor för att användaren skall kunna
@@ -1577,7 +1756,7 @@ dessa rader ut efter själva inlägget.
 
 
 @item @code{kom-print-number-of-unread-on-entrance}
-@itemx @code{t} @code{common}
+@itemx @code{t} (@code{common})
 @vindex kom-print-number-of-unread-on-entrance
 Om icke-@code{nil} så skrivs antalet olästa i ett möte ut så fort
 användaren går in i ett möte.
@@ -1672,6 +1851,7 @@ konvertera alla tecken den skriver ut till swascii.
 @end table
 
 @node Variabler, Hookar, Flaggor, Top
+@comment  node-name,  next,  previous,  up
 @chapter Variabler
 
 Det finns ett antal variabler som man kan styra elispklientens
@@ -1740,11 +1920,14 @@ avgöra vilken ordning man får läsa mötena i.
 Följande värden kan användas:
 
 @table @asis
-@item @code{first}så stoppas nya möten in först.
-@item @code{last}så stoppas nya möten in sist.
-@item ett talså kommer nya möten att stoppas in på denna position
-i listan. Värdena @code{0} respektive ett @emph{stort} tal kommer att ha
-samma effekt som @code{first} respektive @code{last}.
+@item @code{first}
+så stoppas nya möten in först.
+@item @code{last}
+så stoppas nya möten in sist.
+@item ett tal
+så kommer nya möten att stoppas in på denna position i listan. Värdena
+@code{0} respektive ett @emph{stort} tal kommer att ha samma effekt som
+@code{first} respektive @code{last}.
 @end table
 
 
@@ -1776,7 +1959,8 @@ så bytas slutet av prompten till denna text.
 @itemx @code{10} (elisp)
 @vindex kom-who-buffer-size-when-displaying
 Antalet rader som Vilkabufferten skall visas med när man ger kommandot
-@code{Visa vilkalistan}.
+@code{Visa vilkalistan}. @xref{Vilkabufferten} och 
+@ref{Annat, Visa vilkalistan}.
 
 
 @item @code{kom-do-when-starting}
@@ -1802,7 +1986,7 @@ Gå till nästa möte -
 
 
 @item @code{kom-do-when-done}
-@itemx @code{("åam" "t")} (@code{elisp})
+@itemx @code{(kom-review-all-marked-texts kom-display-time)} (@code{elisp})
 @vindex kom-do-when-done
 Denna variabel innehåller kommandon som utförs då man har läst
 klart alla inlägg. Varje kommando i listan skriver först ut en
@@ -1874,6 +2058,7 @@ Avgör hur många texter som skall hämtas i förväg.
 @end table
 
 @node Hookar, Environmentvariabler, Variabler, Top
+@comment  node-name,  next,  previous,  up
 @chapter Hookar
 
 Det finns en del hookar i elisp-klienten. En hook är en variabel som
@@ -1974,6 +2159,7 @@ dags att ge nästa kommando.
 @end table
 
 @node Environmentvariabler, Buggrapporter, Hookar, Top
+@comment  node-name,  next,  previous,  up
 @chapter Environmentvariabler
 
 @table @asis
@@ -1999,14 +2185,13 @@ environmentvariabler med hjälp av @code{ps -axeww}.
 
 
 @node Buggrapporter, Filer, Environmentvariabler, Top
+@comment  node-name,  next,  previous,  up
 @chapter Buggrapporter
 
 Det finns troligtvis många fel i klienten. Om du stöter på något som
 borde fungera annorlunda, eller som inte fungerar alls, så skriv ett
-inlägg i mötet @samp{LysKOM Elispklientens buggrapporter}. Om felet är
-så allvarligt att det inte går, så kan du istället skicka mail till
-@file{bug-lyskom@@lysator.liu.se}. Synpunkter på den här texten och systemet
-i övrigt kan också skickas dit.
+mail till @file{bug-lyskom@@lysator.liu.se}. Synpunkter på den här texten
+och systemet i övrigt kan också skickas dit.
 
 En buggrapport skall innehålla information om:
 
@@ -2015,18 +2200,43 @@ En buggrapport skall innehålla information om:
 @item Vilken version av elisp-klienten du kör.
 @item Vilken LysKOM-server du har kopplat upp dig mot och versionsnummer.
 @end table
-Det är bra om buggrapporten innehåller all tillgänglig
-information från din körning. Dvs att du har kört funktionen
-@code{kom-bug-report} och skickat med resultatet. Annars måste
-det till en extremt utförlig beskrivning på hur felet uppkom
-för att vi skall ha någon som helst möjlighet att veta vad det
-handlar om.
+
+@findex kom-bug-report
+Det är bra om buggrapporten innehåller all tillgänglig information från
+din körning. Dvs att du har kört funktionen @code{kom-bug-report} och
+skickat med resultatet. Annars måste det till en extremt utförlig
+beskrivning på hur felet uppkom för att vi skall ha någon som helst
+möjlighet att veta vad det handlar om.
 
 Om du skulle råka fixa felet själv så skicka med en context-diff
 så kan vi lätt applicera den.
 
+Om du inte har tillgång till mail så kan du skicka dina buggrapporter
+med vanligt brev till:
+@example
+	Lysator
+	c/o ISY
+	Linköpings University
+	S-581 83 Linkoping
+	SWEDEN
+@end example
+
+Observera att det faktum att du skickar in en buggrapport inte på något
+sätt är en garanti för att buggen kommer att fixas till en senare
+version av klienten, eller ens att det någonsin blir en senare version
+av klienten.
+
+Om du däremot undviker att skicka in en buggrapport så finns det en
+möjlighet att ingen någonsin får reda på just din bugg.
+
+Om du tvunget vill ha en viss bugg rättad så finns det företag som åtar
+sig sådant arbete. Skicka brev till bug-lyskom@@lysator.liu.se så kan vi
+förmedla en sådan företagskontakt.
+
+
 
 @node Filer, Index, Buggrapporter, Top
+@comment  node-name,  next,  previous,  up
 @chapter Filer
 
 @table @asis
@@ -2038,14 +2248,17 @@ D:o
 
 
 @node Index, Tangenterna, Filer, Top
+@comment  node-name,  next,  previous,  up
 @unnumbered Index
 @printindex fn
 
 @node Tangenterna, Variabelindex, Index, Top
+@comment  node-name,  next,  previous,  up
 @unnumbered Tangenterna
 @printindex ky
 
 @node Variabelindex,  , Tangenterna, Top
+@comment  node-name,  next,  previous,  up
 @unnumbered Variabelindex
 @printindex vr
 
