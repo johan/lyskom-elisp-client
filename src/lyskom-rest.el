@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.161 2002-05-22 21:40:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.162 2002-05-28 20:56:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.161 2002-05-22 21:40:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.162 2002-05-28 20:56:45 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1127,7 +1127,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxcCSDF?]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxcCSDF?]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
@@ -1277,6 +1277,7 @@ Deferred insertions are not supported."
         (format-letter nil)
         (colon-flag nil)
         (equals-flag nil)
+        (downcase-flag nil)
         (face-flag nil)
         (abort-format nil))
 
@@ -1334,12 +1335,13 @@ Deferred insertions are not supported."
 						   (match-beginning 4)
 						   (match-end 4)))
 		       nil)
-	      colon-flag (match-beginning 5)
-              face-flag (match-beginning 6)
-	      format-letter (if (match-beginning 7)
+              downcase-flag (match-beginning 5)
+	      colon-flag (match-beginning 6)
+              face-flag (match-beginning 7)
+	      format-letter (if (match-beginning 8)
 				(aref (format-state->format-string 
 				       format-state)
-				      (match-beginning 7))
+				      (match-beginning 8))
 			      (signal 'lyskom-internal-error
 				      (list 'lyskom-format-aux 
 					    (format-state->format-string
@@ -1365,6 +1367,7 @@ Deferred insertions are not supported."
              equals-flag
              colon-flag
              face-flag
+             downcase-flag
              (if (and (match-beginning 2)
                       (eq (aref (format-state->format-string format-state)
                                 (match-beginning 2))
@@ -1385,6 +1388,7 @@ Deferred insertions are not supported."
                                equals-flag
                                colon-flag
                                face-flag
+                               downcase-flag
                                pad-letter
 			       allow-defer)
   (let ((arg nil)
@@ -1417,7 +1421,8 @@ Deferred insertions are not supported."
                          ((symbolp arg) (symbol-name arg))
                          (t (signal 'lyskom-format-error
                                     (list 'lyskom-format
-                                          ": argument error (expected string)"))))))
+                                          ": argument error (expected string)")))))
+      (when downcase-flag (setq result (downcase result))))
      ;;
      ;;  Format a number by conferting it to a string and inserting
      ;;  it into the result list
@@ -1466,7 +1471,8 @@ Deferred insertions are not supported."
      ;;  Format a sexp by princing it. Sort of.
      ;;
      ((= format-letter ?S)
-      (setq result (format "%S" arg)))
+      (setq result (format "%S" arg))
+      (when downcase-flag (setq result (downcase result))))
 
      ;;
      ;;  Format a text property array indicator by retrieving the

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.134 2002-05-26 23:15:53 byers Exp $
+;;;;; $Id: commands2.el,v 44.135 2002-05-28 20:56:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.134 2002-05-26 23:15:53 byers Exp $\n"))
+              "$Id: commands2.el,v 44.135 2002-05-28 20:56:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2040,7 +2040,10 @@ global effect, including changes to key binding."
                     'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table)) 
-                           (if global 'global 'local)))))
+                           (if global 'global 'local))
+      (lyskom-format-insert 
+       'language-set-to 
+       (lyskom-language-name (cdr (lyskom-string-assoc language table)))))))
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help-compile.el,v 44.1 2002-05-26 21:34:16 byers Exp $
+;;;;; $Id: help-compile.el,v 44.2 2002-05-28 20:56:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -223,8 +223,8 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
             (let ((re (concat (lyskom-non-matching-regexp
                                (concat "</" tag ">"))
                               "\\(</" tag ">\\)")))
-              (if (eq tag-end (string-match re string tag-end))
-                  (setq end-tag-start (match-beginning 1)
+              (if (string-match (concat "</" tag ">") string tag-end)
+                  (setq end-tag-start (match-beginning 0)
                         end-tag-end (match-end 0))
                 (error "Unterminated tag: %s %s" tag string))))
 
@@ -238,7 +238,7 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
                        (if (eq end-tag-start tag-end)
                            nil
                          (lyskom-help-parse-string
-                          (substring string tag-end (1+ end-tag-start))
+                          (substring string tag-end end-tag-start)
                           syntax)))
                       result)
                 start end-tag-end)
@@ -254,7 +254,8 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
       (let ((text (substring string start)))
         (cond (collect-data (setq result (cons (cons 'TEXT text) result)))
               ((string-match "\\`\\s-*\\'" text))
-              (t (error "Unexpected text \"%s\" at end of document" text)))))
+              (t (error "Unexpected text \"%s\" at %d in document %s" 
+                        text start string)))))
 
     ;; Done. The result is, as usual, in reverse order.
 
