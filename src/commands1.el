@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.0 1996-03-26 08:30:47 byers Exp $
+;;;;; $Id: commands1.el,v 40.1 1996-03-29 03:05:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.0 1996-03-26 08:30:47 byers Exp $\n"))
+	      "$Id: commands1.el,v 40.1 1996-03-29 03:05:10 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1760,18 +1760,16 @@ the user has used a prefix command argument."
 ;;; Author: David Byers
 ;;; Heavily based on code by Lars Willf|r
 
-(defun kom-add-comment (text-no-arg)
+(def-kom-command kom-add-comment (text-no-arg)
   "Add a text as a comment to another text."
   (interactive "P")
-  (lyskom-start-of-command 'kom-add-comment)
   (lyskom-add-sub-comment text-no-arg
 			  (lyskom-get-string 'text-to-add-comment-to)
 			  t))
 
-(defun kom-sub-comment (text-no-arg)
+(def-kom-command kom-sub-comment (text-no-arg)
   "Remove a comment from a text."
   (interactive "P")
-  (lyskom-start-of-command 'kom-sub-comment)
   (lyskom-add-sub-comment text-no-arg
 			  (lyskom-get-string 'text-to-delete-comment-from)
 			  nil))
