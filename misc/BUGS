@@ -1,5 +1,5 @@
 Version: 1
-Unused-Bug-Id: 8
+Unused-Bug-Id: 10
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -87,12 +87,14 @@ Currently handled by:
 Severity: 3
 Priority: 4
 Difficulty: 5
-Last edit: inge: Mon Aug  3 01:03:32 1992
+Closed: linus: Mon Aug  3 06:14:07 1992
+Last edit: linus: Mon Aug  3 06:13:53 1992
 Reported by: Thomas Bellman
 Site: 
 Associated mails:
 End mails.
 ---
+lyskom-after-command-hook is the name.
 
 Id: 6
 Summary: Use session-info instead of who-info
@@ -123,4 +125,35 @@ Site:
 Associated mails:
 End mails.
 ---
+
+Id: 8
+Summary: Created text while in prioritying mode lost
+Created: linus: Mon Aug  3 06:58:30 1992
+Currently handled by: 
+Severity: 1
+Priority: 3
+Difficulty: 6
+Last edit: linus: Mon Aug  3 06:58:30 1992
+Reported by: bellman@Lysator.LiU.SE
+Site: 
+Associated mails:
+	the report: <229988@LysKOM.lysator.liu.se>
+End mails.
+---
+
+Id: 9
+Summary: Make prefetch-package error proof.
+Created: linus: Mon Aug  3 07:16:46 1992
+Currently handled by: 
+Severity: 5
+Priority: 9
+Difficulty: 0
+Last edit: linus: Mon Aug  3 07:18:26 1992
+Reported by: linus
+Site: 
+Associated mails:
+End mails.
+---
+I have already done some of the functions i.e. the ones that I have
+ended up with errors in. All of the handlers must be fixed.
 
