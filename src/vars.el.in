@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.26 1996-03-12 07:29:24 byers Exp $
+;;;;; $Id: vars.el.in,v 38.27 1996-03-13 01:46:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.26 1996-03-12 07:29:24 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.27 1996-03-13 01:46:51 davidk Exp $\n"))
 
 
 
@@ -936,8 +936,7 @@ the value of  kom-tell-phrases  for fun.")
 	(lyskom-make-face 'kom-presence-face
 	  (make-face 'kom-presence-face)
 	  (make-face-italic 'kom-presence-face nil t)
-	  (set-face-foreground 'kom-presence-face
-			       "DimGray")))
+	  (set-face-foreground 'kom-presence-face "grey")))
     (progn
       (lyskom-make-face 'kom-active-face
 	(copy-face 'underline 'kom-active-face))
