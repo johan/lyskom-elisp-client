@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.9 1996-06-23 20:06:04 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.10 1996-07-08 09:46:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.9 1996-06-23 20:06:04 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.10 1996-07-08 09:46:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -832,6 +832,7 @@ Felmeddelande: %#1s**************************************************")
 
     (starting-program . "Startar %#1s...")
     (super-jump . "Filtrerar \344rende \"%#1r\" i m\366te \"%#2M\"\n")
+    (no-recipient . "Inl\344gget har ingen mottagare.\n")
     (filtered . "[Filtrerad]")
     (filter-error-specification . "Fel i filterspecifikationen")
     (filter-error-bad-not . "Fel i filterspecifikation efter 'not'")

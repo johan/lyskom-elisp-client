@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.9 1996-06-23 20:05:53 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.10 1996-07-08 09:46:16 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.9 1996-06-23 20:05:53 davidk Exp $"))
+              "$Id: english-strings.el,v 41.10 1996-07-08 09:46:16 byers Exp $"))
 
 
 
@@ -808,6 +808,7 @@ Error message: %#1s**************************************************")
 
     (starting-program . "Starting %#1s...")
     (super-jump . "Filtering subject \"%#1r\" in conference \"%#2M\"\n")
+    (no-recipient . "There are no recipients for this article.\n")
     (filtered . "[Filtered]")
     (filter-error-specification . "Error in the filter specification")
     (filter-error-bad-not . "Error in the filter specification after 'not'")

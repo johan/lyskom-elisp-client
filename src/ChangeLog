@@ -1,3 +1,66 @@
+Mon Jul  8 10:37:48 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* filter.el (kom-super-jump): Väljer mottagare att filtrera som
+ 	aktuellt möte om inlägget har aktuellt möte som mottagare, annars
+ 	inläggets första mottagare.
+
+	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
+ 	till no-recipient.
+
+Thu Jul  4 14:10:36 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el: Totalt omskriven. Större, kanske
+ 	långsammare, men jag vet hur den fungerar nu.
+	(lyskom-read-conf-no): Ny betydelse av PREDICATE-parametern.
+	(lyskom-read-conf-stat): Ny parameterlista (nytt PREDICATE,
+ 	MUSTMATCH tillagt.)
+	(lyskom-read-conf-name): Nu parameterlista. Ny ordning, lagt till
+ 	EMPTY-parametern.
+	(lyskom-read-conf-internal): Ny funktion som gör allt jobb.
+	(lyskom-read-conf-name-internal): Utbytt mot
+ 	lyskom-read-conf-internal.
+	(lyskom-read-conf-get-logins, lyskom-read-conf-expand-specials,
+ 	lyskom-read-conf-lookup-specials, lyskom-lookup-conf-by-name,
+ 	lyskom-complete-collect, lyskom-read-conf-internal-verify-type,
+ 	lyskom-complete-string, lyskom-complete-string-up-level,
+ 	lyskom-complete-string-skip-parens-backup-others,
+ 	lyskom-complete-string-skip-parens-2,
+ 	lyskom-complete-string-next-word,
+ 	lyskom-complete-string-reset-position): Nya funktioner.
+
+
+	* startup.el (kom-start-anew): Ändrade predicate-parametern till
+ 	lyskom-read-conf-nånting. Använd lyskom-lookup-conf-by-name.
+
+	* review.el (lyskom-review-by-to): Ändrade predicate-parametern
+ 	till lyskom-read-conf-nånting.
+
+	* commands2.el (kom-status-conf, kom-status-person,
+ 	kom-send-message, kom-set-garb-nice, kom-set-permitted-submitters,
+ 	kom-set-super-conf, kom-change-conf-type): Ändrade
+ 	predicate-parametern till lyskom-read-conf-nånting.
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Ändrade
+ 	predicate-parametern till lyskom-read-conf-nånting.
+
+	* filter.el (kom-filter-subject, kom-filter-author,
+ 	kom-filter-text): Ändrade predicate-parametern till
+ 	lyskom-read-conf-nånting.
+	
+	* commands1.el (kom-delete-conf, kom-review-presentation,
+ 	kom-send-letter, kom-add-member, kom-add-self, kom-sub-member,
+ 	kom-sub-self, kom-change-presentation, kom-change-conf-motd,
+ 	kom-unset-conf-motd, kom-go-to-conf, kom-change-name,
+ 	kom-change-supervisor, kom-change-password,
+ 	lyskom-add-sub-recipient): Ändrade predicate-parametern till
+ 	lyskom-read-conf-nånting.
+
+	* startup.el (kom-start-anew): Anropa lyskom-login-hook oxo. Den
+ 	sparas *inte* i servern.
+
+	* vars.el.in (lyskom-text-buttons): Ny definition av regexpen för
+ 	textnummer.
+
 Tue Jul  2 09:14:53 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-prefetch-comment-stats): Ny funktion.
@@ -10,6 +73,18 @@ Sun Jun 23 02:16:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-parse-headers): Kör
  	lyskom-swascii-header-subject genom regexp-quote innan matchning.
+
+Sat Jun 22 17:15:53 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* ansaphone.el (lyskom-ansaphone-message-handler): Spara
+ 	meddelanden enbart om kom-ansaphone-record-messages är icke-nil
+ 	(request från Tommy Persson). Visa inte alltid meddelanden som
+ 	spelas in.
+
+	* vars.el.in (lyskom-elisp-variables): Lade till
+ 	kom-ansaphone-record-messages och kom-ansaphone-show-messages.
+	(kom-ansaphone-record-messages): Ny variabel.
+	(kom-ansaphone-show-messages): Nu variabel.
 
 Thu Jun 20 01:08:00 1996  David Kågedal  <davidk@lysator.liu.se>
 
