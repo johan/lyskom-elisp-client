@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.55 1999-07-02 15:03:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.56 1999-07-12 16:49:48 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.55 1999-07-02 15:03:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.56 1999-07-12 16:49:48 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -412,6 +412,7 @@ formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
 
     (total-users . "    A total of %#1d users (%#2s.)\n")
+    (total-users-sans-date . "    A total of %#1d users\n")
     (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s.)\n")
     (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s.)\n")
     (total-visible-active-users
