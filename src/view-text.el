@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 35.4 1991-09-15 10:04:24 linus Exp $
+;;;;; $Id: view-text.el,v 35.5 1991-10-16 17:00:33 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 35.4 1991-09-15 10:04:24 linus Exp $\n"))
+	      "$Id: view-text.el,v 35.5 1991-10-16 17:00:33 ceder Exp $\n"))
 
 
 (defun lyskom-view-text (queue text-no &optional mark-as-read
@@ -339,8 +339,12 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
 
 (defun lyskom-mark-as-read (text-stat)
   "Mark a text as read in all conferences that are recipients.
-Tell the server that it is read. This function does not remove
-the text from the internal structures of the client."
+Tell the server that it is read.
+
+Args: TEXT-STAT
+
+This function does not remove the text from the internal structures of
+the client. That is done by lyskom-is-read."
   (let ((misc-info-list (text-stat->misc-info-list text-stat)))
     (lyskom-traverse
      misc-info misc-info-list

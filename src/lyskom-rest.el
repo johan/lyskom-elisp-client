@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.9 1991-10-08 16:10:39 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.10 1991-10-16 17:00:41 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.9 1991-10-08 16:10:39 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.10 1991-10-16 17:00:41 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -364,7 +364,8 @@ Deletes TEXT-NO from lyskom-reading-list and lyskom-to-do-list.
 Adds info in lyskom-membership.
 
 This function only modifies the internal state of the client. It does
-mark the text as read in the server."
+not mark the text as read in the server. That function is performed by
+lyskom-mark-as-read."
   (read-list-delete-text text-no lyskom-reading-list)
   (read-list-delete-text text-no lyskom-to-do-list)
   (initiate-get-text-stat 'background 'lyskom-is-read-handler
