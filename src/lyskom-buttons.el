@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.64 2002-03-21 19:44:51 joel Exp $
+;;;; $Id: lyskom-buttons.el,v 44.65 2002-04-10 22:24:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.64 2002-03-21 19:44:51 joel Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.65 2002-04-10 22:24:26 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1210,23 +1210,20 @@ depending on the value of `kom-lynx-terminal'."
                (setq items (cdr items))))))
               
     (if aux
-        (progn
+        (let ((header (cond ((eq 'text (car arg)) 
+                             (lyskom-format 'text-no (elt arg 1)))
+                            ((eq 'conf (car arg))
+                             (lyskom-format 'conference-no
+                                            (blocking-do 'get-conf-stat
+                                                         (elt arg 1))))
+                            (t "????"))))
           (lyskom-start-of-command nil)
           (unwind-protect
-              (let ((data (lyskom-aux-item-call 
-                           aux
-                           'info 
-                           aux
-                           (cond ((eq 'text (car arg)) 
-                                  (lyskom-format 'text-no (elt arg 1)))
-                                 ((eq 'conf (car arg))
-                                  (lyskom-format 'conference-no
-                                                 (blocking-do 'get-conf-stat
-                                                              (elt arg 1))))
-                                 (t "????")))))
-                (if data
-                    (lyskom-insert data)
-                  (lyskom-format-insert 'aux-item-no-info)))
+              (lyskom-insert (or (lyskom-aux-item-call aux
+                                                       'info 
+                                                       aux
+                                                       header)
+                                 (lyskom-aux-item-info aux header)))
             (lyskom-end-of-command)))
       (lyskom-format-insert 'cant-get-aux-item))))
            

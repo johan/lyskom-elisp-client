@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.214 2002-04-10 19:50:24 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.215 2002-04-10 22:24:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.214 2002-04-10 19:50:24 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.215 2002-04-10 22:24:26 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -576,6 +576,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (conf-has-motd . "\n%#1M har en lapp på dörren:\n")
     (status-conf-generic . "%-40#1s %#2s\n")
+    (status-aux-item . "Tilläggsinformation:       %15#1s%#3s (skapad av %#2M)\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1466,11 +1467,26 @@ Innehåll:    \"%#9s\"
     (default-agree-string . "Håller med")
     (what-agree-no . "Håll med vilket inlägg? ")
 
+    (what-kind-to-add-aux-to . "Koppla tilläggsinformation till vad? ")
+    (which-conf-to-add-aux-to . "Vilket möte vill du koppla till? ")
+    (which-text-to-add-aux-to . "Vilket inlägg vill du koppla till? ")
+    (which-aux-item-tag . "Aux-item tag: ")
+    (which-aux-item-inherit . "Sätt inherit-flaggan? ")
+    (which-aux-item-secret . "Sätt secret-flaggan? ")
+    (which-aux-item-anonymous . "Sätt anonymous-flaggan? ")
+    (which-aux-item-rsv1 . "Sätt reserved1-flaggan? ")
+    (which-aux-item-rsv2 . "Sätt reserved2-flaggan? ")
+    (which-aux-item-rsv3 . "Sätt reserved3-flaggan? ")
+    (which-aux-item-rsv4 . "Sätt reserved4-flaggan? ")
+    (which-aux-item-inherit-limit . "Arvsgräns: ")
+    (which-aux-item-data . "Data: ")
+
     ;; Cross-reference stuff
 
     (person . "Person")
     (conference . "Möte")
     (text . "Inlägg")
+    (server . "Server")
 
     (xref-type . "Vad vill du referera till (inlägg, möte eller person)? ")
     (which-text-to-xref . "Lägg till referens till text nummer: ")

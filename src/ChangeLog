@@ -1,5 +1,13 @@
 2002-04-10  David Byers  <david.byers@swipnet.se>
 
+	Implementera kommando för att skapa godtyckliga aux-items:
+	* commands2.el (kom-status-conf): Visa okända aux-items.
+	(kom-create-aux-item): Nytt kommando
+
+	* lyskom-buttons.el (lyskom-button-info-aux): Print info even if
+	there is no info handler for the aux-item type (required to handle
+	unknown types).
+
 	* lyskom-rest.el (lyskom-check-go-to-conf): When we don't want to
 	accept an invitation, don't make the membership *passive*. That
 	causes all kinds of odd messages.
