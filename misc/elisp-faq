@@ -66,12 +66,18 @@ m5: Vilken markering anv{nder sig elispklienten normalt av?
 Personer:
 p1: Varf|r finns det tv} statuskommandon: Status m|te och status person?
 
-
 Sessionen:
 s1: Kan jag }terstarta sessionen efter det att jag g}tt ur lyskom?
 
+Systemet:
+t1: Hur och till vem skickar jag buggrapporter?
+
 Maskinspecifika saker:
 u1: Varf|r kan jag inte k|ra elisplienten p} en dec-station.
+
+Vad h{nder med LysKOM i framtiden:
+v1: Protokoll B, vad {r det?
+v2: Vad kommer att ing} i protokoll B?
 
 Historia:
 |1: Varf|r skrevs elisp-klienten?
@@ -309,6 +315,24 @@ s1: Kan jag }terstarta sessionen efter det att jag g}tt ur lyskom?
 Nej.
 
 
+Systemet:
+t1: Hur och till vem skickar jag buggrapporter?
+
+Buggrapporter skickas till bug-lyskom@lysator.liu.se. Se till att f}
+med all vital information, enklast genom att k|ra funktionen
+kom-compile-bug-report och skicka den bufferten.
+
+Ifall buggen {r reproducerbar och du har tid s} g|r dessutom f|ljande:
+- G} till l{get precis innan du gav kommandot som orsakade buggen.
+- S{tt variabeln: lyskom-debug-communications-to-buffer till t.
+- S{tt variabeln: debug-on-error till t.
+- Provocera fram buggen.
+- K|r kom-compile-bug-report. Det skall g} bra att g|ra i *Backtrace*
+  bufferten ifall du fick en s}dan.
+- Skicka in denna nya bufferten ist{llet. Den kan inneh}lla lite mer
+  information.
+
+
 Maskinspecifika saker:
 u1: Varf|r kan jag inte k|ra elisplienten p} en dec-station.
 
@@ -332,6 +356,26 @@ Skip leading spaces and newlines."
               (string-to-int-orig (substring string i)))
           0))))
 
+
+Vad h{nder med LysKOM i framtiden:
+v1: Protokoll B, vad {r det?
+LysKOM jobbar som sagt med server-klient modell. Protokollet {r enkelt
+men inneh}ller en del speciella saker typ asynkrona anrop fr}n b}da
+h}llen... Den ursprungliga specen gjordes snabbt eftersom vi snabbt
+ville f} ett fungerande system. Tyv{rr fick det en del brister och vi
+best{mde oss f|r att g|ra om allt fr}n scratch. Detta omgjorda
+protokoll {r protokoll B. Tyv{rr s} {r det ursprungliga protokollet s}
+pass bra att det g}r l}ngsamt med utvecklingen.
+
+v2: Vad kommer att ing} i protokoll B?
+* Textdelar (Lars Aronsson Lysator inl{gg 58964):
+I Protokoll B mellan klient och server kommer varje INL[GG att best}
+av det vanliga HUVUDET och av en INL[GGSKROPP. Den senare kommer att
+best} av en f|ljd av KROPPSDELAR. Varje kroppsdel har en datatyp och
+en dataarea. Typerna kan vara t.ex. ISO 8859-1 text, Sun SPARC ljudfil
+eller en grafisk bild. I Protokoll B blir det i de flesta fall fel att
+tala om "text", "textstatus", "textnummer" etc. Ordet "text" b|r d}
+ers{ttas med ordet "inl{gg".
 
 Historia:
 |1: Varf|r skrevs elisp-klienten?
