@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.7 1993-06-23 15:59:29 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.8 1993-06-23 21:51:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.7 1993-06-23 15:59:29 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.8 1993-06-23 21:51:43 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -225,11 +225,13 @@ Skicka ett brev till %#2s f\366r medlemsskap.\n")
     (anyone-member . "F\345r vem som helst bli medlem? ")
     (secret-conf . "Hemligt m\366te? ")
     (comments-allowed . "F\345r man skriva kommentarer? ")
+    (what-comment-no . "Kommentera text nummer: ")
     (confusion-what-to-comment . "Jag f\366rst\345r inte vilken text du vill kommentera.\n")
     (confusion-what-to-footnote . "Jag f\366rst\345r inte vilken text du vill skriva en fotnot till.\n")
 
     (confusion-who-to-reply-to . "Jag f\366rst\345r inte vems inl\344gg du vill skriva ett privat svar till.\n")
     (confusion-what-to-answer-to . "Jag f\366rst\345r inte vilken text du vill besvara.")
+    (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots os\344nt meddelande? ")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
     (session-ended . "
 *****************************
