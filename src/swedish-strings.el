@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.139 2000-09-01 13:15:54 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.140 2000-09-01 14:13:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.139 2000-09-01 13:15:54 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.140 2000-09-01 14:13:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2453,6 +2453,10 @@ i servern. Annars sparas det i din .emacs.")
         erbjuder LysKOM att lägga till författaren som mottagare till
         inlägget. 
 
+    Författare som inte kontrolleras
+        En lista av författare som inte skall kontrolleras även om
+        kontroll av kommenterad författares medlemskap är påslaget.
+
     Kontroll av olästa kommentarer
         När detta är påslaget så kontrollerar LysKOM att det inlägg man
         kommenterar inte har några kommentarer man inte har läst. Detta är
@@ -3184,6 +3188,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ding-on-wait-done-doc . "")
     (kom-ding-on-priority-break-doc . "")
     (kom-ding-on-new-letter-doc . "")
+
     (kom-check-for-new-comments-doc . "")
     (kom-check-commented-author-membership . "")
     (kom-confirm-multiple-recipients-doc . "")
@@ -3227,6 +3232,8 @@ i servern. Annars sparas det i din .emacs.")
   Om du begränsar LysKOM-buffertens storlek så måste den bli så här mycket
   för stor innan text i bufferten raderas. Variablen ska vara ett heltal,
   default är 4096.")
+    (kom-dont-check-commented-authors-doc . "")
+
 
 
     ;;
@@ -3384,6 +3391,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-created-texts-are-saved-tag . "Spara författade inlägg:")
     (kom-confirm-add-recipients-tag . "Fråga om kommentarer skall sändas till nya mottagare:")
     (kom-trim-buffer-minimum-tag . "Minsta storlek av LysKOM-bufferten som tas bort:")
+    (kom-dont-check-commented-authors-tag . "Författare som inte kontrolleras:")
     )
 )
 

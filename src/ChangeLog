@@ -1,5 +1,17 @@
+2000-09-01  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release of 0.46-BETA-W
+
 2000-09-01  David Byers  <davby@ida.liu.se>
 
+	
+	Selective checking of commented author's membership:
+	* edit-text.el (lyskom-edit-send-check-recipients): Use
+	kom-dont-check-commented-authors. 
+
+	* vars.el.in (kom-dont-check-commented-authors): New variable.
+
+	Better command completion:
 	* command.el (lyskom-complete-command): Fix. We didn't handle
 	check for exact match properly. Fix unibyte incompatibility.
 	(lyskom-read-extended-command): Use lyskom-complete-command.
