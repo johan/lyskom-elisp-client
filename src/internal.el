@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 40.1 1996-04-02 16:20:05 byers Exp $
+;;;;; $Id: internal.el,v 40.2 1996-05-01 19:07:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 40.1 1996-04-02 16:20:05 byers Exp $\n"))
+	      "$Id: internal.el,v 40.2 1996-05-01 19:07:20 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -262,29 +262,30 @@ Arguments: KOM-QUEUE REF-NO HANDLER HANDLER-DATA
 		   parser parser-data handler handler-data))
 
 
-;;; This is used by initiate-get-map. This is a temporary solution.
+;;; This is used by z-initiate-get-map, which is not used.
+;;; This was a temporary solution.
 
-(defun lyskom-kom-queue-collect-p (queue-name)
-  "Return t if the kom-queue QUEUE-NAME has an unmatched 'COLLECT item.
-It is illegal to call lyskom-collect or lyskom-collect-ignore-err on
-the kom-queue if and only if this function returns t."
-  (let* ((queue (cdr-safe (assoc queue-name lyskom-call-data)))
-	 (pending (lyskom-queue->all-entries (kom-queue->pending queue)))
-	 (collect-flg nil)
-	 (type nil))
-    (while (and queue pending)
-      (setq type (car (car pending)))
-      (setq pending (cdr pending))
-      (cond
-       ((eq type 'COLLECT)
-	(setq collect-flg t))
-       ((eq type 'COLLECT-IGNORE)
-	(setq collect-flg t))
-       ((eq type 'USE)
-	(setq collect-flg nil))
-       ((eq type 'LIST-USE)
-	(setq collect-flg nil))))
-    collect-flg))
+;;(defun lyskom-kom-queue-collect-p (queue-name)
+;;  "Return t if the kom-queue QUEUE-NAME has an unmatched 'COLLECT item.
+;;It is illegal to call lyskom-collect or lyskom-collect-ignore-err on
+;;the kom-queue if and only if this function returns t."
+;;  (let* ((queue (cdr-safe (assoc queue-name lyskom-call-data)))
+;;	 (pending (lyskom-queue->all-entries (kom-queue->pending queue)))
+;;	 (collect-flg nil)
+;;	 (type nil))
+;;    (while (and queue pending)
+;;      (setq type (car (car pending)))
+;;      (setq pending (cdr pending))
+;;      (cond
+;;       ((eq type 'COLLECT)
+;;	(setq collect-flg t))
+;;       ((eq type 'COLLECT-IGNORE)
+;;	(setq collect-flg t))
+;;       ((eq type 'USE)
+;;	(setq collect-flg nil))
+;;       ((eq type 'LIST-USE)
+;;	(setq collect-flg nil))))
+;;    collect-flg))
 
 
 ;;;; ================================================================
@@ -403,15 +404,6 @@ is sent with each packet. If STRING is longer it is splitted."
      (progn
        (if lyskom-debug-communications-to-buffer
 	   (lyskom-debug-insert process ">>>>>> " string))
-;;;       (save-excursion
-;;;	 (set-buffer (get-buffer-create 
-;;;		      lyskom-debug-communications-to-buffer-buffer))
-;;;	 (save-excursion
-;;;	   (goto-char (point-max))
-;;;	   (insert "\n"
-;;;		   (format "%s" process)
-;;;		   (concat ">>>>>> " string)))
-;;;	 (set-buffer (process-buffer process)))
        string)))
    (t
     (let ((i 0))
@@ -463,28 +455,32 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
       (setq type (car first-pending))
 
       (cond
+
        ((eq type 'PARSED)
-              (kom-queue-halt queue)
-              (unwind-protect
-                  (lyskom-apply-handler first-pending)
-              (kom-queue-resume queue))
+	(kom-queue-halt queue)
+	(unwind-protect
+	    (lyskom-apply-handler first-pending)
+	  (kom-queue-resume queue))
         (if (or (eq (kom-queue->collect-flag queue) 'COLLECT)
                 (and (eq (kom-queue->collect-flag queue) 'COLLECT-IGNORE)
                      (car (cdr first-pending))))
             (lyskom-queue-enter (kom-queue->collect-queue queue)
                                 (car (cdr first-pending)))))
+
        ((eq type 'COLLECT)
         (if (kom-queue->collect-flag queue)
             (signal 'lyskom-internal-error
                     '("lyskom-check-call COLLECT."))
           (set-kom-queue-collect-flag queue 'COLLECT)
           (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
+
        ((eq type 'COLLECT-IGNORE)
         (if (kom-queue->collect-flag queue)
             (signal 'lyskom-internal-error
                     '("lyskom-check-call COLLECT-IGNORE."))
           (set-kom-queue-collect-flag queue 'COLLECT-IGNORE)
           (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
+
        ((eq type 'USE)
         (if (not (kom-queue->collect-flag queue))
             (signal 'lyskom-internal-error
@@ -496,6 +492,7 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
                             (kom-queue->collect-queue queue)))
           (kom-queue-resume queue))
         (set-kom-queue-collect-flag queue nil))
+
        ((eq type 'LIST-USE)
         (if (not (kom-queue->collect-flag queue))
             (signal 'lyskom-internal-error
@@ -507,6 +504,7 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
                             (kom-queue->collect-queue queue)))
           (kom-queue-resume queue))
         (set-kom-queue-collect-flag queue nil))
+
        ((eq type 'RUN)
         (if (kom-queue->collect-flag queue)
             (signal 'lyskom-internal-error
@@ -515,6 +513,7 @@ RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
         (unwind-protect
             (lyskom-apply-function first-pending)
           (kom-queue-resume queue)))
+       
        (t (signal 'lyskom-internal-error
                   (list 'lyskom-check-call
                         "unknown key:"

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 40.3 1996-04-29 11:59:21 byers Exp $
+;;;;; $Id: services.el,v 40.4 1996-05-01 19:07:23 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 40.3 1996-04-29 11:59:21 byers Exp $\n"))
+	      "$Id: services.el,v 40.4 1996-05-01 19:07:23 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -389,30 +389,32 @@ with big maps."
 		      (lyskom-format-objects 34 conf-no
 					     first-local no-of-texts)))
 
-(defun z-initiate-get-map  (kom-queue handler conf-no first-local
-					     no-of-texts &rest data)
-  "Get mapping from local to global text-nos for CONF-NO from server.
-Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS &rest DATA.
-This function will automatically split fetching of big maps to small
-chunks of lyskom-fetch-map-nos texts/chunk if KOM-QUEUE is not already
-used to collect a result. This currently gives a big performance gain.
-Unfortunately it is impossible (or at least very hard) to do the same
-thing when a collect is in progress. This will of course be fixed in
-protocol B."
-  (cond
-   ((lyskom-kom-queue-collect-p kom-queue)
-    ;; Use oldstyle single big map. Sorry.
-    (initiate-get-map kom-queue handler conf-no
-		      first-local no-of-texts data))
-   (t
-    ;; You win.
-    (lyskom-collect-ignore-err kom-queue)
-    (while (> no-of-texts 0)
-      (initiate-get-map kom-queue nil conf-no
-				  first-local lyskom-fetch-map-nos data)
-      (setq first-local (+ lyskom-fetch-map-nos first-local))
-      (setq no-of-texts (- no-of-texts lyskom-fetch-map-nos)))
-    (lyskom-list-use kom-queue 'lyskom-receive-get-map handler data))))
+;; As far as I can tell, this function is not used. /davidk
+;;(defun z-initiate-get-map  (kom-queue handler conf-no first-local
+;;					     no-of-texts &rest data)
+;;  "Get mapping from local to global text-nos for CONF-NO from server.
+;;Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS &rest DATA.
+;;This function will automatically split fetching of big maps to small
+;;chunks of lyskom-fetch-map-nos texts/chunk if KOM-QUEUE is not already
+;;used to collect a result. This currently gives a big performance gain.
+;;Unfortunately it is impossible (or at least very hard) to do the same
+;;thing when a collect is in progress. This will of course be fixed in
+;;protocol B."
+;;  (cond
+;;   ((lyskom-kom-queue-collect-p kom-queue)
+;;    ;; Use oldstyle single big map. Sorry.
+;;    (initiate-get-map kom-queue handler conf-no
+;;		      first-local no-of-texts data))
+;;   (t
+;;    ;; You win.
+;;    (lyskom-collect-ignore-err kom-queue)
+;;    (while (> no-of-texts 0)
+;;      (initiate-get-map kom-queue nil conf-no
+;;				  first-local lyskom-fetch-map-nos data)
+;;      (setq first-local (+ lyskom-fetch-map-nos first-local))
+;;      (setq no-of-texts (- no-of-texts lyskom-fetch-map-nos)))
+;;    (lyskom-list-use kom-queue 'lyskom-receive-get-map handler data))))
+
 
 (defun lyskom-receive-get-map (map-list handler data-list)
   "Receive a list of maps.

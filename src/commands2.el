@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 40.2 1996-04-29 11:58:52 byers Exp $
+;;;;; $Id: commands2.el,v 40.3 1996-05-01 19:07:17 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 40.2 1996-04-29 11:58:52 byers Exp $\n"))
+	      "$Id: commands2.el,v 40.3 1996-05-01 19:07:17 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -232,9 +232,10 @@ otherwise: the conference is read with lyskom-completing-read."
 	(lyskom-format-insert 'conf-has-motd conf-stat)
 	(lyskom-view-text (conf-stat->msg-of-day conf-stat)))
 
-					; Show all members of CONF-STAT if the user so wishes."
+      ;; Show all members of CONF-STAT if the user so wishes."
       (lyskom-scroll)
-      (if (null (lyskom-j-or-n-p (lyskom-get-string 'show-members-list-also-q)))
+      (if (null (lyskom-j-or-n-p
+		 (lyskom-get-string 'show-members-list-also-q)))
 	  nil
 	(let ((member-list (blocking-do 'get-members
 					(conf-stat->conf-no conf-stat)
