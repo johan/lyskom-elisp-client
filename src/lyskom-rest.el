@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.28 1997-03-11 13:48:57 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.29 1997-06-29 14:19:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.28 1997-03-11 13:48:57 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.29 1997-06-29 14:19:55 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1324,28 +1324,31 @@ Note that it is not allowed to use deferred insertions in the text."
 ;;; Author: David K}gedal
 ;;; This should be considered an experiment
 
-(defvar lyskom-format-experimental nil)
+(defvar lyskom-format-experimental '(html enriched))
 
 (lyskom-external-function w3-fetch)
-(lyskom-external-function w3-preview-this-buffer)
+(lyskom-external-function w3-region)
 
 (defun lyskom-format-text-body (text)
   "Format a text for insertion. Does parsing of special markers in the text."
   ;; This function is probably not written as it should
-  (if lyskom-format-experimental
-      (cond
-       ((and (string-match "\\`html:" text)
-             (condition-case e (require 'w3) (error nil)))
+  (cond
+   ((and (string-match "\\`html:" text)
+         (memq 'html lyskom-format-experimental)
+         (condition-case e (require 'w3) (error nil)))
         (let ((tmpbuf (generate-new-buffer "lyskom-html")))
           (unwind-protect
               (save-excursion
                 (set-buffer tmpbuf)
                 (insert (substring text 5))
-                (w3-preview-this-buffer)
-                (buffer-string))
+                (w3-region (point-max) (point-min))
+                (let ((tmp (buffer-string)))
+                  (set-text-properties 0 (length tmp) '(end-closed nil) tmp)
+                  tmp))
             (kill-buffer tmpbuf))))
        ((and (fboundp 'format-decode-buffer)
-             (string-match "\\`enriched:" text))
+             (string-match "\\`enriched:" text)
+             (memq 'enriched lyskom-format-experimental))
         (let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
           (unwind-protect
               (save-excursion
@@ -1356,12 +1359,9 @@ Note that it is not allowed to use deferred insertions in the text."
                 ;; (substring (buffer-string) 0 -1) ; Remove the \n
                 )
             (kill-buffer tmpbuf))))
-       (t (lyskom-button-transform-text text)
-	))
-    (if kom-text-properties
-	(lyskom-button-transform-text text)
-      text)))
-    
+       (t (if kom-text-properties
+              (lyskom-button-transform-text text)
+            text))))
 
 
 ;;; ============================================================
@@ -2132,7 +2132,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
-  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
+;  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
 ;  (setq lyskom-apo-timeout-log
 ;        (cons lyskom-apo-timeout lyskom-apo-timeout-log))
   (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout

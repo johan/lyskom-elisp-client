@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.16 1997-03-13 08:27:55 byers Exp $
+;;;;; $Id: startup.el,v 44.17 1997-06-29 14:20:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.16 1997-03-13 08:27:55 byers Exp $\n"))
+	      "$Id: startup.el,v 44.17 1997-06-29 14:20:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -82,18 +82,22 @@ See lyskom-mode for details."
 
     (let* ((buffer (get-buffer host))
 	   (name nil)
-	   (proc nil))
+	   (proc nil)
+           (reused-buffer nil))
       (if (and buffer
 	       (lyskom-buffer-p buffer)
 	       (not (prog1
 			(j-or-n-p (lyskom-get-string
 				   'start-new-session-same-server))
 		      (message ""))))
-	  (switch-to-buffer buffer)
+	  (progn 
+            (switch-to-buffer buffer)
+            (setq reused-buffer t))
 	(unwind-protect
 	    (progn
 	      (cond ((and buffer (not (lyskom-buffer-p buffer)))
 		     (set-buffer buffer)
+                     (setq reused-buffer t)
 		     (goto-char (point-max))
 		     (let ((time (decode-time (current-time))))
 		       (setcar (cdr (cdr (cdr (cdr time))))
@@ -189,7 +193,7 @@ See lyskom-mode for details."
 	  (if init-done
 	      nil
 	    (if proc (delete-process proc))
-	    (kill-buffer buffer)))))))
+	    (unless reused-buffer (kill-buffer buffer))))))))
 
 
 (defun lyskom-setup-client-check-version (spec version)

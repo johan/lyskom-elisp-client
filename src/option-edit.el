@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.6 1997-03-11 13:49:01 byers Exp $
+;;;;; $Id: option-edit.el,v 44.7 1997-06-29 14:20:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.6 1997-03-11 13:49:01 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.7 1997-06-29 14:20:00 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -142,6 +142,9 @@
     [kom-url-viewer-preferences]
     [kom-mosaic-command]
     [kom-netscape-command]
+    [kom-lynx-terminal]
+    [kom-lynx-terminal-comand]
+    [kom-lynx-xterm-command]
 
     "\n\n"
     section
@@ -200,7 +203,68 @@ customize buffer but do not save them to the server."
     (lyskom-save-options (current-buffer)
                          (lyskom-get-string 'saving-settings)
                          (lyskom-get-string 'saving-settings-done)
-                         (lyskom-get-string 'could-not-save-options))))
+                         (lyskom-get-string 'could-not-save-options))
+    (let ((var-list nil))
+      (mapcar 
+       (function 
+        (lambda (e)
+          (when (and (vectorp e)
+                     (symbolp (elt e 0))
+                     (not (memq (elt e 0) lyskom-elisp-variables))
+                     (not (memq (elt e 0) lyskom-global-boolean-variables))
+                     (not (memq (elt e 0) lyskom-global-non-boolean-variables))
+                     (boundp (elt e 0)))
+            (setq var-list (cons (cons (elt e 0)
+                                       (symbol-value (elt e 0)))
+                                 var-list)))))
+       lyskom-customize-buffer-format)
+      
+      (let* ((actual-save-options-init-file
+              (or (and (boundp 'save-options-init-file)
+                       save-options-init-file)
+                  (and (not (equal user-init-file ""))
+                       user-init-file)
+                  (and (eq system-type 'ms-dos)
+                       (concat "~" (user-login-name) "/_emacs"))
+                  (concat "~" (user-login-name) "/.emacs")))
+             (init-output-buffer (find-file-noselect
+                                  actual-save-options-init-file))
+             (init-output-marker nil))
+
+        (save-excursion
+          (set-buffer init-output-buffer)
+          ;;
+          ;; Find and delete the previously saved data, and position to write.
+          ;;
+          (goto-char (point-min))
+          (if (re-search-forward "^;;; LysKOM Settings *\n" nil 'move)
+              (let ((p (match-beginning 0)))
+                (goto-char p)
+                (or (re-search-forward
+                     "^;;; End of LysKOM Settings *\\(\n\\|\\'\\)"
+                     nil t)
+                    (error "can't find END of saved state in .emacs"))
+                (delete-region p (match-end 0)))
+            (goto-char (point-max))
+            (insert "\n"))
+          (setq init-output-marker (point-marker)))
+
+    (let ((standard-output init-output-marker))
+      (princ ";;; LysKOM Settings\n")
+      (princ ";;; =====================\n")
+      (mapcar
+       (function 
+        (lambda (x)
+          (princ (format "(setq %S %S)\n" (car x) (cdr x)))))
+       var-list)
+      (princ ";;; ============================\n")
+      (princ ";;; End of LysKOM Settings\n"))
+
+    (set-marker init-output-marker nil)
+    (save-excursion
+      (set-buffer init-output-buffer)
+      (save-buffer))
+    ))))
 
 (defun lyskom-customize-save ()
   "Apply changes and save them to the server."
@@ -221,6 +285,10 @@ customize buffer but do not save them to the server."
   (lyskom-customize-apply)
   (lyskom-customize-send)
   (lyskom-customize-quit))
+
+(defun lyskom-customize-help ()
+  (interactive)
+  (message (lyskom-get-string 'customize-help)))
 
 (defun kom-customize ()
   "Open the customize buffer"
@@ -560,7 +628,11 @@ customize buffer but do not save them to the server."
               (list 'item
                     ':tag (lyskom-custom-string 'mosaic-viewer)
                     ':format "%t"
-                    ':value "mosaic"))))
+                    ':value "mosaic")
+              (list 'item
+                    ':tag (lyskom-custom-string 'lynx-viewer)
+                    ':format "%t"
+                    ':value "lynx"))))
 
 (defun lyskom-open-window-widget (type &optional args propl)
   (list 'menu-choice
@@ -853,7 +925,7 @@ customize buffer but do not save them to the server."
 (defun lyskom-widget-string-action (widget &optional event)
   (let ((tmp (read-from-minibuffer 
               (format "%s: " (widget-get widget ':tag))
-              (cons (widget-value widget) 1))))
+              (widget-value widget))))
     (widget-value-set widget tmp)
     (widget-setup)))
 

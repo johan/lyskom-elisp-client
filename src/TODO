@@ -4,10 +4,6 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-    När man har utplånat sig själv, och tryckt C-g vid loginprompten
-    som följer blir vissa kommandon förvirrade. [ÄR MAN SÅ DUM FÅR MAN
-    VÄL SKYLLA SIG SJÄLV. JU!]
-
     lyskom-replace-deferred verkar inte använda lyskom-last-viewed i
     alla fall. Och den beter sig fel när man står vid prompten och
     vill bläddra bakåt.
@@ -18,18 +14,12 @@ Att göra i elisp-klienten
     endast i ett möte (säg IÅM) innan det prefetchas får man två
     parallella prefetcher på samma möte.
 
-    Gå med i möten startar inte prefetch på mötet. [FIXAT?]
-
     Gå ur mötet man prefetchar genererar en bug.
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
 
     Lista nyheter visar fel innan prefetchen har hämtat alla mappar.
-
-    Efter återse senaste fick jag fel prompt. Jag vill ha återse
-    nästa-prompten direkt om det finns texter som matchar villkoret.
-    [Lustigt. Jag fick rätt prompt]
 
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
@@ -41,9 +31,6 @@ Att göra i elisp-klienten
     samma mappar som complete.el gör, till wrappers runt complete.el
     som kollar om completion är LysKOM-completion eller något annat.
 
-    Nu när lyskom-bufferten återanvänds så kanske M-x lyskom inte ska
-    döda bufferten om den misslyckas med att koppla upp sig...
-    
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
 
@@ -70,7 +57,7 @@ Att göra i elisp-klienten
 
     När jag ska läsa en kommentar till ett brev i min brevlåda så blir
     prompten "Läsa nästa brev" i stället för "Läsa nästa
-    kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
+    kommentar". Kommentaren ligger inte i brevlådan. (LÅG PRIORITET)
 
 -------- Allmänna förbättringar
 
@@ -123,10 +110,10 @@ Att göra i elisp-klienten
     Klickbara kommandon.
 
 
-    Reentrant blocking-do
+    Reentrant blocking-do [FINNS, MEN ANVÄNDS INTE]
 
     kom-customize skall nog inte ta med alla variabler, bara sådana
-    som många vill ändra på. Annars blir det svåröverskådligt.
+    som många vill ändra på. Annars blir det svåröverskådligt. [FIXAT?]
 
     Det behövs dokumentation: fråmst användarhandledning, men det
     skulle inte skada med en kortfattad beskrivning av stabila delar
@@ -256,3 +243,19 @@ Att göra i elisp-klienten
 
     Visa i prompten om man är i administratörsläge.
 
+    I prioritera möten så borde ledtexterna till prioritera mfl spegla
+    om man prioriterar markerade möten eller det möte man står på.
+
+    När man har utplånat sig själv, och tryckt C-g vid loginprompten
+    som följer blir vissa kommandon förvirrade. [ÄR MAN SÅ DUM FÅR MAN
+    VÄL SKYLLA SIG SJÄLV. JU!]
+
+    Gå med i möten startar inte prefetch på mötet. [FIXAT?]
+
+    Efter återse senaste fick jag fel prompt. Jag vill ha återse
+    nästa-prompten direkt om det finns texter som matchar villkoret.
+    [Lustigt. Jag fick rätt prompt]
+
+    Nu när lyskom-bufferten återanvänds så kanske M-x lyskom inte ska
+    döda bufferten om den misslyckas med att koppla upp sig. [FIXAT]
+    

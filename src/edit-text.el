@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.12 1997-04-15 22:32:06 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.13 1997-06-29 14:19:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.12 1997-04-15 22:32:06 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.13 1997-06-29 14:19:40 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -218,7 +218,7 @@ The result is a list of dotted pairs:
 	('comm-to . text-no)
 	('footn-to . text-no).
 First element is a type-tag."
-  (let ((result (cons 'MISC-LIST nil)))
+   (let ((result (cons 'MISC-LIST nil)))
     (while (not (null misc-pairs))
       (nconc result (cons (cons (car misc-pairs)
 				(car (cdr misc-pairs)))
@@ -303,6 +303,14 @@ Commands:
 		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
 		      subject (car headers)))
               ;;
+              ;; Run user hooks
+              ;; ####: ++++: FIXME: We should quit more graciously.
+
+              (if (not (run-hook-with-args-until-failure 
+                        'lyskom-send-text-hook))
+                  (signal 'quit nil))
+                                                
+              ;;
               ;; Check that there is a subject
               ;;
 
@@ -372,6 +380,28 @@ Commands:
        (error nil)))
     (lyskom-unknown-header
      (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
+
+
+
+(defun lyskom-ispell-text ()
+  "Check spelling of the text body. 
+kom-ispell-dictionary is the dictionary to use to check spelling."
+  (let ((start 
+         (save-excursion
+           (goto-char (point-min))
+           (search-forward (substitute-command-keys
+                            (lyskom-get-string 'header-separator)))
+           (forward-line 1) 
+           (beginning-of-line)
+           (point))))
+    (let ((ispell-dictionary kom-ispell-dictionary)
+          (new-ispell (not (string= "svenska8" ispell-dictionary))))
+      (if new-ispell
+          (ispell-kill-ispell t))
+      (prog1
+          (ispell-region start (point-max))
+        (if new-ispell
+            (ispell-kill-ispell t))))))
 
 
 (defun lyskom-edit-send-check-recipients (misc-list subject) 
@@ -538,12 +568,14 @@ text is a member of some recipient of this text."
 
     extra-headers))
     
-
+(defvar lyskom-send-experimental t)
 
 (defun lyskom-send-transform-text (message)
-  (if lyskom-format-experimental
+  (if lyskom-send-experimental
       (condition-case nil
-          (let ((buf (generate-new-buffer "lyskom-enriched")))
+          (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
+                                               "lyskom-enriched" 
+                                               t)))
             (unwind-protect
                 (save-excursion
                   (set-buffer buf)
@@ -552,8 +584,12 @@ text is a member of some recipient of this text."
                   (format-encode-buffer 'text/enriched)
                   (goto-char (point-min))
                   (search-forward "\n\n")
-                  (if (not (string= (buffer-substring (point)
+                  (if (and (not (string= (buffer-substring (point)
 						      (point-max)) message))
+                           (save-excursion
+                             (set-buffer lyskom-buffer)
+                             (lyskom-j-or-n-p 
+                              (lyskom-get-string 'send-formatted) t)))
                       (concat "enriched:\n" (buffer-string))
                     message))
               (kill-buffer buf)))

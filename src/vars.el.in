@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.19 1997-05-14 11:12:48 petli Exp $
+;;;;; $Id: vars.el.in,v 44.20 1997-06-29 14:20:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.19 1997-05-14 11:12:48 petli Exp $\n"))
+	      "$Id: vars.el.in,v 44.20 1997-06-29 14:20:15 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -289,9 +289,12 @@ be sent.")
 (def-kom-var lyskom-send-message-exit-hook nil
   "*Hook that is called when the minibuffer is exited after reading a message.")
 
+(def-kom-var lyskom-send-text-hook nil
+  "*Hook that is called before sending a text. Hook functions return t to
+signal suggess and nil to prevent the text from being sent.")
+
 (def-kom-var lyskom-after-load-hook nil
   "*Hook to run once after lyskom is loaded.")
-
 
 (def-kom-var lyskom-login-hook nil
   "*What to do when logged in.
@@ -465,6 +468,9 @@ various LysKOM elements.")
 ;;;
 
 
+(defvar lyskom-url-protocol-regexp
+  "\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|mailto\\|telnet\\):")
+
 (def-kom-var lyskom-text-buttons
   '(
     ;; Text numbers
@@ -478,17 +484,19 @@ various LysKOM elements.")
 
     ;; URLs
 
+    ("\\(www[^\\.\t \012\"<>|\\]*\\|ftp\\|home[^\\.\t \012\"<>|\\]*\\)\\.[^\t \012\"<>|\\]*[^\t \012\"<>|.,!(){}?'`:]" 
+     pseudo-url 0 nil kom-url-face)
+
     ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012
 \"<>|\\]*[^\t \012
 \"<>|.,!(){}?'`:]" 
      url 0 nil kom-url-face)
-
     ("<URL:\\s-*\\([^>]*\\)\\s-*>"
      url 1 1 kom-url-face)
 
     ;; Email
 
-    ("[^()<>@,;:\"\\\\ - ]+@\\S-+\\(\\.[^ - <>;,.'\"!:?)]+\\)+"
+    ("[^()<>@,;:\"\\\\ - ]+@[^ - <>;,.'\"!:?) \t\012]+\\(\\.[^ - <>;,.'\"!:?)]+\\)+"
      email 0 0 kom-url-face)
 
     ;; JySKom enhancements
@@ -765,6 +773,10 @@ Cf. paragraph-start.")
 
 (def-kom-var kom-ansaphone-default-reply nil
   "*Default message to send when the ansaphone is on."
+  server)
+
+(def-kom-var kom-ispell-dictionary nil
+  "*Dictionary to use for spell checking."
   server)
 
 (def-kom-var lyskom-button-actions nil
