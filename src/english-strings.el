@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.63 1999-10-13 15:50:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.64 1999-10-13 22:32:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.63 1999-10-13 15:50:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.64 1999-10-13 22:32:21 byers Exp $"))
 
 
 ;;; ================================================================
@@ -807,8 +807,8 @@ Help: \\[describe-mode] ---")
     (comment-in-text . "Comment in text %#1n")
     (footnote-in-text . "Footnote in text %#1n")
 
-    (attachment-to-text . "Attachment to text %#1n")
-    (attachment-in-text . "Attachment in text %#1n")
+    (attachment-to-text . "Attachment %#3sto text %#1n")
+    (attachment-in-text . "Attachment %#3sin text %#1n")
     
     (envelope-sender . "Sent by: %#1s\n")
     (attachment-filename . "Attachment file name: \"%#1s\"\n")
@@ -2021,6 +2021,7 @@ You must become an active member of the conference to enter it.\n")
     (some-person . "Person %#1d")
     (invalid-value . "Invalid value (%#1S)")
     (unknown-command . "Unknown command (%#1s)")
+    (ding . "Audio cue")
 
     ;;
     ;; Help messages
@@ -2065,6 +2066,7 @@ Select whether to execute command or keyboard macro.")
     (number-of-times . "A few times")
     (specific-spec . "Per mottager/avsändare")
     (sound-file . "Audio file")
+    (other-persons . "All others")
 
     (selected-mark . "Mark          ")
     (conf-or-person . "Person eller möte")
@@ -2073,7 +2075,27 @@ Select whether to execute command or keyboard macro.")
     (before . "Before the text")
     (after . "After the text")
     (depth-first . "In comment order")
-    (time-order . "I time order")
+    (time-order . "In time order")
+
+    (ar-message-type . "Message type")
+    (ar-personal     . "Personal")
+    (ar-group        . "Group")
+    (ar-alarm        . "Alarm")
+    (ar-any-type     . "Any message type")
+    (ar-sender       . "Sender")
+    (ar-any-sender   . "Any sender")
+    (ar-specified-sender . "Specified senders")
+    (ar-pers-or-conf . "Person or conference")
+    (ar-recipient    . "Recipient")
+    (ar-any-recipient . "Any recipient")
+    (ar-specified-recipient . "Specified recipients")
+    (ar-person       . "Person")
+    (ar-message-text . "Message text")
+    (ar-any-message  . "Any message")
+    (ar-matching-regexp . "Matching regexp")
+    (ar-reply        . "Reply")
+    (ar-no-reply     . "No reply")
+    (ar-reply-text   . "Reply text")
 
     (express-break . "Immediately upon creation  ")
     (break .         "After current comment chain")
@@ -2247,9 +2269,18 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     ;; Doc strings for variables
     ;;
 
-    (kom-emacs-knows-iso-8859-1-doc . "\
-  Turned on means that LysKOM expects Emacs to understand ISO-8859-1. There
-  is no point in turning this off.")
+    (kom-ansaphone-replies-doc . "\
+  This setting controls automatic replies in detail. You can set replies
+  for specific senders, recipients and even message contents. If the message
+  being replied to does not match any element in this list, the default
+  auto reply message above is sent instead.
+
+  For each pattern in the list you can set the required message type, 
+  sender the message must have, recipient the message must have, a regular
+  expression the message must match and the reply to send.
+
+  It is advisable to configure the client not to send a message to any
+  group or alarm message.")
 
     (kom-bury-buffers-doc . "\
   Controls how the LysKOM buffer is handled when moving to another KOM buffer
@@ -2293,6 +2324,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     %S - Inserts the server name.
     %p - Inserts the name of the user currently logged on.
     %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
     %# - Inserts the current session number.
     %  - Inserts a space if it seems necessary.
     %% - Inserts a percent sign.
@@ -2314,6 +2347,102 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     %S - Inserts the server name.
     %p - Inserts the name of the user currently logged on.
     %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
+
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+
+    (kom-anonymous-prompt-format-doc . "\
+  The format of the LysKOM prompt used when anonymous. Certain control
+  sequences cause special text to be inserted:
+
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
+
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+
+    (kom-anonymous-prompt-format-executing-doc . "\
+  The format of the LysKOM prompt when the default command is executing
+  and the session is anonymous. Certain control sequences cause special 
+  text to be inserted:
+
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
+
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+
+    (kom-enabled-prompt-format-doc . "\
+  The format of the LysKOM prompt when in administrator mode. Certain
+  control sequences cause special text to be inserted:
+
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
+    %# - Inserts the current session number.
+    %  - Inserts a space if it seems necessary.
+    %% - Inserts a percent sign.
+
+  Here are a few examples:
+
+    \"%[%c% %m%] - \"             The default prompt
+    \"%[%s: %c% %m%] - \"         Could display \"LysKOM: Se tiden - \"")
+
+    (kom-enabled-prompt-format-executing-doc . "\
+  The format of the LysKOM prompt when the default command is executing
+  and the session is in administrator mode. Certain control sequences 
+  cause special text to be inserted:
+
+    %c - Inserts the current default command.
+    %[ - Inserts `[' if the ansaphone is on.
+    %] - Inserts `]' is the ansaphone is on.
+    %m - Inserts information about recorded messages.
+    %s - Inserts the name of the LysKOM system
+    %S - Inserts the server name.
+    %p - Inserts the name of the user currently logged on.
+    %w - Inserts the name of the current conference.
+    %a - Inserts `anonymous'
+    %A - Inserts `Anonymous'
     %# - Inserts the current session number.
     %  - Inserts a space if it seems necessary.
     %% - Inserts a percent sign.
@@ -2780,12 +2909,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-check-for-new-comments-doc . "")
     (kom-check-commented-author-membership . "")
     (kom-confirm-multiple-recipients-doc . "")
+    (kom-check-commented-author-membership-doc . "")
 
     ;;
     ;; Tags for variables
     ;;
     
-    (kom-emacs-knows-iso-8859-1-tag . "Emacs can display ISO-8859-1:")
+    (kom-ansaphone-replies-tag . "Automatic replies")
     (kom-bury-buffers-tag . "Bury buffers when changing LysKOM:")
 
   (kom-personal-messages-in-window-tag . "Personal messages:      ")
@@ -2798,6 +2928,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-user-prompt-format-tag . "Prompt format:")
     (kom-user-prompt-format-executing-tag . "Prompt format when executing:")
+    (kom-anonymous-prompt-format-tag . "Prompt format (anonymous):")
+    (kom-anonymous-prompt-format-executing-tag . "Prompt format when executing (anonymous):")
+    (kom-enabled-prompt-format-tag . "Prompt format (admin):")
+    (kom-enabled-prompt-format-executing-tag . "Prompt format when executing (admin):")
 
     (kom-higher-priority-breaks-tag . 
 "Read prioritized texts:                           ")
@@ -2918,6 +3052,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-text-footer-dash-length-tag . "Text footer length")
     (kom-text-header-dash-length-tag . "Length of dashed line before text")
     (kom-show-personal-message-date-tag . "Show date and time of messages")
+    (kom-w3-simplify-body-tag . "Display HTML without document colors")
+    (kom-mercial-tag . "Text do display when all is read")
     )
 )
 

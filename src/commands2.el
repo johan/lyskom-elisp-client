@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.48 1999-10-13 15:50:27 byers Exp $
+;;;;; $Id: commands2.el,v 44.49 1999-10-13 22:32:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.48 1999-10-13 15:50:27 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.49 1999-10-13 22:32:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1066,18 +1066,18 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;;; Author: Linus Tolke
 
 
-(def-kom-command kom-display-who-buffer ()
-  "Make the who-buffer appear on the screen as a temp buffer."
-  (interactive)
-  (let ((win (selected-window))
-	(who (display-buffer lyskom-who-info-buffer)))
-    (unwind-protect
-	(progn
-	  (select-window who)
-	  (if (numberp kom-who-buffer-size-when-displaying)
-	      (enlarge-window (- kom-who-buffer-size-when-displaying 
-				 (window-height who)))))
-      (select-window win))))
+;;(def-kom-command kom-display-who-buffer ()
+;;  "Make the who-buffer appear on the screen as a temp buffer."
+;;  (interactive)
+;;  (let ((win (selected-window))
+;;	(who (display-buffer lyskom-who-info-buffer)))
+;;    (unwind-protect
+;;	(progn
+;;	  (select-window who)
+;;	  (if (numberp kom-who-buffer-size-when-displaying)
+;;	      (enlarge-window (- kom-who-buffer-size-when-displaying 
+;;				 (window-height who)))))
+;;      (select-window win))))
 
 
 

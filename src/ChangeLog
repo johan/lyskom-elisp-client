@@ -1,3 +1,23 @@
+1999-10-14  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-ansaphone-reply-widget): New widget type.
+	(lyskom-customize-buffer-format): Added ansaphone replies.
+	(lyskom-custom-variables): Added kom-ansaphone-replies.
+
+1999-10-13  David Byers  <davby@ida.liu.se>
+
+	* Removed all references to kom-emacs-knows-iso-8859-1
+
+	* review.el (kom-review-noconversion): Don't set
+	kom-emacs-knows-iso-8859-1 
+
+	* commands2.el (kom-display-who-buffer): Kommenterade ut.
+
+	* option-edit.el (lyskom-ding-widget): Full definition of ding
+	widget.
+	(lyskom-create-widget): Don't insert doc button if doc string is
+	empty.
+
 1999-10-12  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (Info-current-file): Get rid of Info-related

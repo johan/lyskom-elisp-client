@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.80 1999-10-13 16:42:14 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.81 1999-10-13 22:32:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.80 1999-10-13 16:42:14 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.81 1999-10-13 22:32:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2063,6 +2063,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (some-person . "Person %#1d")
     (invalid-value . "Otillåtet värde (%#1S)")
     (unknown-command . "Okänt kommando (%#1s)")
+    (ding . "Ljudsignal")
 
     ;;
     ;; Help messages
@@ -2106,6 +2107,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (number-of-times . "Några gånger")
     (specific-spec . "Per mottager/avsändare")
     (sound-file . "Ljudfil")
+    (other-persons . "Alla andra")
     (selected-mark . "Markering")
     (conf-or-person . "Person eller möte")
     (ask . "Fråga varje gång")
@@ -2115,6 +2117,26 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (last . "Sist ")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
+
+    (ar-message-type . "Meddelandetype")
+    (ar-personal     . "Personligt meddelande")
+    (ar-group        . "Gruppmeddelande")
+    (ar-alarm        . "Alarmmeddelande")
+    (ar-any-type     . "Alla meddelandetyper")
+    (ar-sender       . "Avsändare")
+    (ar-any-sender   . "Alla avsändare")
+    (ar-specified-sender . "Specifika avsändare")
+    (ar-pers-or-conf . "Person eller möte")
+    (ar-recipient    . "Mottagare")
+    (ar-any-recipient . "Alla mottagare")
+    (ar-specified-recipient . "Specifika mottagare")
+    (ar-person       . "Person")
+    (ar-message-text . "Meddelandetext")
+    (ar-any-message  . "Alla meddelanden")
+    (ar-matching-regexp . "Meddelanden som matchar")
+    (ar-reply        . "Automatsvar")
+    (ar-no-reply     . "Inget svar")
+    (ar-reply-text   . "Svarstext")
 
     (express-break . "Omedelbart efter de har skapats")
     (break         . "Efter aktuell kommentarskedja  ")
@@ -2282,9 +2304,18 @@ i servern. Annars sparas det i din .emacs.")
     ;; Doc strings for variables
     ;;
 
-    (kom-emacs-knows-iso-8859-1-doc . "\
-  Påslaget betyder att Emacs förväntas förstå ISO-8859-1. Avslaget innebär att
-  swascii accepteras i kommandonamn med mera. Skall vara påslaget.")
+    (kom-ansaphone-replies-doc . "\
+  Den här inställningen styr automatsvar i detalj. Det går att ställa in 
+  svar för specifika avsändare, mottagare och till och med meddelanden. Om
+  meddelandet som skall besvaras inte stämmer in på något i den här listan
+  så används svarsmeddelandet ovan istället.
+
+  För varje mönster går det att ställa in meddelandetyp, avsändare som 
+  meddelandet skall ha, mottagare som meddelandet skall ha, ett mönster
+  som meddelandet skall innehålla och vilket svar som skall skickas.
+
+  Det är lämpligt att ställa in att inget svar skall skickas på något
+  gruppmeddelande eller alarmmeddelande.")
 
     (kom-bury-buffers-doc . "\
   Bestämmer hur bufferten hanteras när man går till ett annat KOM med Nästa
@@ -2328,6 +2359,8 @@ i servern. Annars sparas det i din .emacs.")
     %S - Sätter in LysKOM-serverns namn
     %p - Sätter in namnet på den person som är inloggad.
     %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
     %# - Sätter in sessionsnummer.
     %  - Sätter in mellanslag om det ser ut att behövas.
     %% - Sätter in ett procenttecken.
@@ -2349,6 +2382,8 @@ i servern. Annars sparas det i din .emacs.")
     %S - Sätter in LysKOM-serverns namn
     %p - Sätter in namnet på den person som är inloggad.
     %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
     %# - Sätter in sessionsnummer.
     %  - Sätter in mellanslag om det ser ut att behövas.
     %% - Sätter in ett procenttecken.
@@ -2359,6 +2394,98 @@ i servern. Annars sparas det i din .emacs.")
     \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
 
     
+    (kom-anonymous-prompt-format-doc . "\
+  Format för LysKOM-prompten när man är anonym. Vissa teckenkombinationer 
+  sätter in speciella texter:
+
+    %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
+    %[ - Sätter in '[' om automatsvar är påslaget.
+    %] - Sätter in ']' om automatsvar är avstängt.     
+    %m - Sätter in information om antal inspelade meddelanden.
+    %s - Sätter in LysKOM-systemets namn
+    %S - Sätter in LysKOM-serverns namn
+    %p - Sätter in namnet på den person som är inloggad.
+    %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
+    %# - Sätter in sessionsnummer.
+    %  - Sätter in mellanslag om det ser ut att behövas.
+    %% - Sätter in ett procenttecken.
+
+  Några exempel:
+
+    \"%[%c% %m%] - \"             Standardprompt
+    \"%[%s: %c% %m%] - \"         Till exempel \"LysKOM: Se tiden - \"")
+
+    (kom-anonymous-prompt-format-executing-doc . "\
+  Format för LysKOM-prompten efter man trycker på SPC eller RET och är
+  anonym.  Vissa teckenkombinationer sätter in speciella texter:
+
+    %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
+    %[ - Sätter in '[' om automatsvar är påslaget.
+    %] - Sätter in ']' om automatsvar är avstängt.     
+    %m - Sätter in information om antal inspelade meddelanden.
+    %s - Sätter in LysKOM-systemets namn
+    %S - Sätter in LysKOM-serverns namn
+    %p - Sätter in namnet på den person som är inloggad.
+    %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
+    %# - Sätter in sessionsnummer.
+    %  - Sätter in mellanslag om det ser ut att behövas.
+    %% - Sätter in ett procenttecken.
+
+  Några exempel:
+
+    \"%[%c% %m%].\"             Standardprompt
+    \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
+
+    (kom-enabled-prompt-format-doc . "\
+  Format för LysKOM-prompten när man är i administratörsmod. Vissa
+  teckenkombinationer sätter in speciella texter:
+
+    %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
+    %[ - Sätter in '[' om automatsvar är påslaget.
+    %] - Sätter in ']' om automatsvar är avstängt.     
+    %m - Sätter in information om antal inspelade meddelanden.
+    %s - Sätter in LysKOM-systemets namn
+    %S - Sätter in LysKOM-serverns namn
+    %p - Sätter in namnet på den person som är inloggad.
+    %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
+    %# - Sätter in sessionsnummer.
+    %  - Sätter in mellanslag om det ser ut att behövas.
+    %% - Sätter in ett procenttecken.
+
+  Några exempel:
+
+    \"%[%c% %m%] - \"             Standardprompt
+    \"%[%s: %c% %m%] - \"         Till exempel \"LysKOM: Se tiden - \"")
+
+    (kom-enabled-prompt-format-executing-doc . "\
+  Format för LysKOM-prompten efter man trycker på SPC eller RET och är i
+  administratörsmod.  Vissa teckenkombinationer sätter in speciella texter:
+
+    %c - Sätter in kommandot som körs om man trycker på SPC eller RET.
+    %[ - Sätter in '[' om automatsvar är påslaget.
+    %] - Sätter in ']' om automatsvar är avstängt.     
+    %m - Sätter in information om antal inspelade meddelanden.
+    %s - Sätter in LysKOM-systemets namn
+    %S - Sätter in LysKOM-serverns namn
+    %p - Sätter in namnet på den person som är inloggad.
+    %w - Sätter in namn på aktuellt möte.
+    %a - Sätter in \"anonym\"
+    %A - Sätter in \"Anonym\"
+    %# - Sätter in sessionsnummer.
+    %  - Sätter in mellanslag om det ser ut att behövas.
+    %% - Sätter in ett procenttecken.
+
+  Några exempel:
+
+    \"%[%c% %m%].\"             Standardprompt
+    \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
+
     (kom-cite-string-doc . "\
   Text som sätts in före varje rad i ett citerat inlägg. Normalt brukar
   någonting i stil med \"> \" användas. Notera dock att det inte är brukligt
@@ -2829,13 +2956,14 @@ i servern. Annars sparas det i din .emacs.")
     (kom-check-for-new-comments-doc . "")
     (kom-check-commented-author-membership . "")
     (kom-confirm-multiple-recipients-doc . "")
+    (kom-check-commented-author-membership-doc . "")
 
 
     ;;
     ;; Tags for variables
     ;;
     
-    (kom-emacs-knows-iso-8859-1-tag . "Emacs förstår ISO-8859-1:")
+    (kom-ansaphone-replies-tag . "Detaljerade automatsvar")
     (kom-bury-buffers-tag . "Begrav buffertar när man byter LysKOM:")
 
   (kom-personal-messages-in-window-tag . "Personliga meddelanden:   ")
@@ -2848,6 +2976,10 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-user-prompt-format-tag . "Promptformat:")
     (kom-user-prompt-format-executing-tag . "Promptformat vid körning:")
+    (kom-anonymous-prompt-format-tag . "Promptformat (anonym):")
+    (kom-anonymous-prompt-format-executing-tag . "Promptformat vid körning (anonym):")
+    (kom-enabled-prompt-format-tag . "Promptformat (admin):")
+    (kom-enabled-prompt-format-executing-tag . "Promptformat vid körning (admin):")
 
     (kom-higher-priority-breaks-tag . 
 "Läs prioriterade texter:                  ")
