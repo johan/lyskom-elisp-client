@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 10
+Unused-Bug-Id: 11
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -156,4 +156,28 @@ End mails.
 ---
 I have already done some of the functions i.e. the ones that I have
 ended up with errors in. All of the handlers must be fixed.
+
+Id: 10
+Summary: Feature missing in the documentation.
+Created: linus: Thu Aug  6 04:44:19 1992
+Currently handled by: 
+Severity: 2
+Priority: 5
+Difficulty: 0
+Last edit: linus: Thu Aug  6 04:47:13 1992
+Reported by: bellman
+Site: 
+Associated mails:
+End mails.
+---
+230929 1992-08-05  22:50  /2 rader/ Bellman -- The Recursive Hacker
+Kommentar till text 230923 av Yf=f(Yf)
+Mottagare: LysKOM fr}gor (och) svar <373>
+[rende: Skum default.
+------------------------------------------------------------
+Ett visst experimenterande ger vid handen att du f}r det m|te du
+senast adderade.
+(230929) -----------------------------------
+Kommentar i text 230930 av ceder (Per Cederqvist  Lysator)
+G} till n{sta m|te -
 
