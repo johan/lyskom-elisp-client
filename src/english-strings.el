@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.99 2000-08-14 15:56:29 byers Exp $
+;;;;; $Id: english-strings.el,v 44.100 2000-08-16 14:21:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.99 2000-08-14 15:56:29 byers Exp $"))
+              "$Id: english-strings.el,v 44.100 2000-08-16 14:21:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -451,6 +451,14 @@ Read all about it at http://www.lysator.liu.se/history/")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
     (remove-name-as-recipient .
      "Removing %#1M as recipient of text %#2n...")
+
+    (error-recipient-limit . "Text %#1n has too many recipients.\n")
+    (error-already-recipient . "%#2M is already a recipient of text %#1n.\n")
+    (error-permission-denied-add-recpt . "Only the author of %#1n or supervisor for %#2M can change recipient types.\n")
+    (error-permission-denied-sub-recpt . "Only the author of %#1n or supervisor for %#2M can remove the recipient.\n")
+    (error-access-denied-add-recpt . "You are not allowed to add texts to %#2M.\n")
+    (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
+
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
     (text-to-add-q . "Add which text as a comment? ")
     (text-to-remove-q . "Remove which text as a comment? ")
@@ -1262,6 +1270,12 @@ On since %#8s%#9s")
     (do-send-anonymous . "Send the text anonymously? ")
     (anonymous . "anonymous")
     (Anonymous . "Anonymous")
+
+    (secret-conf-letter . "S")
+    (protected-conf-letter . "P")
+    (created-conf-letter . "C")
+    (superconf-conf-letter . "S")
+    (supervisor-conf-letter . "O")
 
     ;; Some Help
 

@@ -1,3 +1,38 @@
+2000-08-16  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-list-created-conferences-2): Show if
+	conference is secret or protected.
+
+	* swedish-strings.el (lyskom-message): Skyddat->Hemligt.
+
+	* commands1.el (kom-add-recipient): Rewrote.
+	(kom-add-copy): Rewrote.
+	(kom-add-bcc): Rewrote.
+	(lyskom-verify-add-recipient): Rewrote.
+	(lyskom-add-helper): New function.
+	(kom-sub-recipient): Rewrote. Only allow completion of actual
+	recipients. 
+	(kom-move-text): Rewrote. Only complete actual recipients.
+	(lyskom-move-recipient): New function replaces
+	lyskom-add-sub-recipients. Better error messages.
+
+	* vars.el.in (lyskom-add-recipient-hook): New variable.
+	(lyskom-add-sub-recipients-hook): Removed.
+	
+
+	* completing-read.el (lyskom-read-conf-internal-verify-type):
+	Added restrict predicate.
+	(lyskom-read-conf-internal): Changed x-list to candidate-list
+	since x-list is probably not the right thing to look at.
+	Implement more efficient matching if the restrict predicate is
+	used. Get persons or conferences only as needed according to the
+	predicate.
+	(lyskom-completing-lookup-z-name): want-pers and want-conf were
+	swapped in call to lookup-z-name (and it didn't matter since we
+	always called it with both set to 1).
+
+	* utilities.el (lyskom-text-recipients): New function.
+
 2000-08-15  David Byers  <davby@ida.liu.se>
 
 	* async.el (lyskom-is-in-minibuffer): Check cursor-in-echo-area.
