@@ -1,5 +1,11 @@
 2002-09-15  David Byers  <david.byers@swipnet.se>
 
+	Fix problem when calling kom-view before reading anything:
+	* utilites.el (lyskom-read-text-no-prefix-arg): Moved cond branch
+	for prompting when there is no prefix argument to the first
+	branch so that errors occurring when looking for texts for a
+	command that always prompts will not be signalled.
+
 	kom-write-footnote footnoted the wrong text:
 	* utilities.el (lyskom-read-text-no-prefix-arg): Use default
 	parameter as default in prompt when the command is specified to
