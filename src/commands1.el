@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.103 2001-04-23 21:39:41 joel Exp $
+;;;;; $Id: commands1.el,v 44.104 2001-04-24 20:55:28 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.103 2001-04-23 21:39:41 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.104 2001-04-24 20:55:28 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1950,7 +1950,7 @@ If no such existed either, nil is returned."
                 (< i 256))
       (when (not (assq i used)) ; mark type i not presently used?
 	(when list
-	  (if (= i (cdar list)) ; already named?
+	  (if (= i (cdr (car list))) ; already named?
 	      (setq list (cdr list))
 	    (setq found t)))) ; neither used nor named!
       (when (not found)
@@ -1976,7 +1976,7 @@ increasing number of marks per mark type (and, when equal, by mark type)."
 	     (type (mark->mark-type mark))
 	     (tcnt (assq type cnt-alist)))
 	(when tcnt (setq tcnt (cdr tcnt)))
-	(set-alist 'cnt-alist type (if (null tcnt) 1 (1+ tcnt))))
+	(lyskom-set-alist cnt-alist type (if (null tcnt) 1 (1+ tcnt))))
       (setq mark-list (cdr mark-list)))
 
     ;; Sort the list, least-used, lowest number of mark type first:
@@ -1986,6 +1986,7 @@ increasing number of marks per mark type (and, when equal, by mark type)."
 		       ((< (cdr x) (cdr y)) t)
 		       ((= (cdr x) (cdr y)) (< (car x) (car y)))
 		       (t nil)))))))
+
 
 
 ;;; ================================================================

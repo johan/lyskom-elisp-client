@@ -1,3 +1,10 @@
+2001-04-24  Johan Sundström  <jhs@lysator.liu.se>
+
+	* utilities.el (lyskom-set-alist): New function.
+
+	* commands1.el (lyskom-allocate-mark-type): Removed non-kosher use
+	of cdar and set-alist; uses the above now instead.
+
 2001-04-23  Joel Rosdahl  <joel@rosdahl.net>
 
 	Clean-up of time handling and time formatting functions.
