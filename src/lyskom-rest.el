@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.133 2001-04-25 19:51:38 joel Exp $
+;;;;; $Id: lyskom-rest.el,v 44.134 2001-05-10 14:43:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.133 2001-04-25 19:51:38 joel Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.134 2001-05-10 14:43:58 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1916,201 +1916,202 @@ in lyskom-messages."
         ;; Scan each line
         ;;
 
-        (while (not (eobp))
-          (setq current-line-length (lyskom-fill-message-line-length))
+        (condition-case nil
+            (while (not (eobp))
+              (setq current-line-length (lyskom-fill-message-line-length))
 
-          ;;
-          ;; Do some work on checking for constant differences
-          ;;
+              ;;
+              ;; Do some work on checking for constant differences
+              ;;
 
-          (cond ((null length-difference)
-                 (when (and current-line-length last-line-length)
-                   (setq length-difference (- current-line-length
-                                              last-line-length))))
-                ((eq constant-length 'maybe-not)
-                 (setq constant-length nil))
-                (constant-length
-                 (unless (= (- current-line-length last-line-length)
-                            length-difference)
-                   (setq constant-length 'maybe-not))))
+              (cond ((null length-difference)
+                     (when (and current-line-length last-line-length)
+                       (setq length-difference (- current-line-length
+                                                  last-line-length))))
+                    ((eq constant-length 'maybe-not)
+                     (setq constant-length nil))
+                    (constant-length
+                     (unless (= (- current-line-length last-line-length)
+                                length-difference)
+                       (setq constant-length 'maybe-not))))
 
-          (cond 
+              (cond 
 
-           ;;
-           ;; An empty line signifies a new paragraph. If we were scanning
-           ;; a paragraph and it was to be filled, fill it. 
-           ;;
+               ;;
+       ;; An empty line signifies a new paragraph. If we were scanning
+               ;; a paragraph and it was to be filled, fill it. 
+               ;;
 
-           ((looking-at "^\\s-*$")
-            (when (and in-paragraph 
-                       (not all-lines-colons)
-                       (eq wrap-paragraph t)
-                       (or (null constant-length)
-                           (and (eq 0 length-difference)
-                                (< paragraph-length lyskom-minimum-brick-size))
-                           (and (not (eq 0 length-difference))
-                                (< paragraph-length lyskom-minimum-triagle-size))))
-              (lyskom-fill-region start (1- (match-beginning 0)) nil t)
-              (lyskom-signal-reformatted-text 'reformat-filled))
-            (setq start (match-end 0)
-                  in-paragraph nil
-                  all-lines-colons t
-                  wrap-paragraph 'maybe))
+               ((looking-at "^\\s-*$")
+                (when (and in-paragraph 
+                           (not all-lines-colons)
+                           (eq wrap-paragraph t)
+                           (or (null constant-length)
+                               (and (eq 0 length-difference)
+                                    (< paragraph-length lyskom-minimum-brick-size))
+                               (and (not (eq 0 length-difference))
+                                    (< paragraph-length lyskom-minimum-triagle-size))))
+                  (lyskom-fill-region start (1- (match-beginning 0)) nil t)
+                  (lyskom-signal-reformatted-text 'reformat-filled))
+                (setq start (match-end 0)
+                      in-paragraph nil
+                      all-lines-colons t
+                      wrap-paragraph 'maybe))
 
-           ;;
-           ;; We're in a paragraph, but wait! This looks like 
-           ;; a LysKOM text!
-           ;;
+               ;;
+               ;; We're in a paragraph, but wait! This looks like 
+               ;; a LysKOM text!
+               ;;
 
-           ((looking-at (concat "^" (regexp-quote (lyskom-get-string 'subject))
-                                ".*\n----"))
-            (setq wrap-paragraph nil))
+               ((looking-at (concat "^" (regexp-quote (lyskom-get-string 'subject))
+                                    ".*\n----"))
+                (setq wrap-paragraph nil))
 
-           ;;
-           ;; We're in a paragraph, but we see indentation, a dash or
-           ;; something that looks like the end of a LysKOM text.
-           ;; This has to mean something...
-           ;;
+               ;;
+            ;; We're in a paragraph, but we see indentation, a dash or
+               ;; something that looks like the end of a LysKOM text.
+               ;; This has to mean something...
+               ;;
 
-           ((and in-paragraph
-                 (looking-at "^\\s-+\\([^\n]*\\)\\(\n\\S-\\|\\'\\)")
-                 (or (not (eq (point-max) (match-beginning 2)))
-                     have-indented-paragraphs))
-            (setq have-indented-paragraphs t)
-            (when (and (eq wrap-paragraph t)
-                       (not all-lines-colons)
-                       (or (and (eq 0 length-difference)
-                                (< paragraph-length lyskom-minimum-brick-size))
-                           (and (not (eq 0 length-difference))
-                                (< paragraph-length lyskom-minimum-triagle-size))
-                           (null constant-length)))
-              (lyskom-fill-region start (match-beginning 0) nil t)
-              (lyskom-signal-reformatted-text 'reformat-filled))
-            (setq start (match-beginning 0)
-                  in-paragraph t
-                  paragraph-length 0
-                  constant-length t
-                  length-difference nil
-                  last-line-length nil
-                  all-lines-colons (lyskom-fill-message-colon-line)
-                  single-line-regexp "\\(\\S-\\)"
-                  fill-prefix nil
-                  start (match-beginning 0)
-                  wrap-paragraph (lyskom-fill-message-initial-wrap
-                                  current-line-length (match-beginning 1))))
+               ((and in-paragraph
+                     (looking-at "^\\s-+\\([^\n]*\\)\\(\n\\S-\\|\\'\\)")
+                     (or (not (eq (point-max) (match-beginning 2)))
+                         have-indented-paragraphs))
+                (setq have-indented-paragraphs t)
+                (when (and (eq wrap-paragraph t)
+                           (not all-lines-colons)
+                           (or (and (eq 0 length-difference)
+                                    (< paragraph-length lyskom-minimum-brick-size))
+                               (and (not (eq 0 length-difference))
+                                    (< paragraph-length lyskom-minimum-triagle-size))
+                               (null constant-length)))
+                  (lyskom-fill-region start (match-beginning 0) nil t)
+                  (lyskom-signal-reformatted-text 'reformat-filled))
+                (setq start (match-beginning 0)
+                      in-paragraph t
+                      paragraph-length 0
+                      constant-length t
+                      length-difference nil
+                      last-line-length nil
+                      all-lines-colons (lyskom-fill-message-colon-line)
+                      single-line-regexp "\\(\\S-\\)"
+                      fill-prefix nil
+                      start (match-beginning 0)
+                      wrap-paragraph (lyskom-fill-message-initial-wrap
+                                      current-line-length (match-beginning 1))))
 
-           ((and in-paragraph
-                 (looking-at "^\\s-*\\(-+\\|\\++\\)\\s-*\\S-"))
-            (when (and (eq wrap-paragraph t)
-                       (not all-lines-colons)
-                       (or (and (eq 0 length-difference)
-                                (< paragraph-length lyskom-minimum-brick-size))
-                           (and (not (eq 0 length-difference))
-                                (< paragraph-length lyskom-minimum-triagle-size))
-                           (null constant-length)))
-              (lyskom-fill-region start (match-beginning 0) nil t)
-              (lyskom-signal-reformatted-text 'reformat-filled))
-            (setq start (match-beginning 0)
-                  in-paragraph t
-                  paragraph-length 0
-                  constant-length t
-                  length-difference nil
-                  all-lines-colons (lyskom-fill-message-colon-line)
-                  last-line-length nil
-                  single-line-regexp "\\(\\S-\\)"
-                  fill-prefix nil
-                  start (match-beginning 0)
-                  wrap-paragraph (lyskom-fill-message-initial-wrap
-                                  current-line-length (match-beginning 1))))
-
-
-           ;;
-           ;; Here's a tricky one... We're not in a paragraph, and we
-           ;; see what looks like an indented paragraph. Take care with
-           ;; this one!
-           ;;
-
-           ((and (not in-paragraph)
-                 (looking-at "\\(\\s-+\\)\\S-")
-                 (looking-at (concat "\\(\\s-+\\)[^\n]*\n"
-                                     (match-string 1)
-                                     "\\(\\S-\\)")))
-            (setq in-paragraph t
-                  paragraph-length 0
-                  constant-length 0
-                  length-difference nil
-                  last-line-length nil
-                  all-lines-colons (lyskom-fill-message-colon-line)
-                  start (match-beginning 0)
-                  fill-prefix (match-string 1)
-                  single-line-regexp (concat (match-string 1) "\\(\\S-\\)")
-                  wrap-paragraph (lyskom-fill-message-initial-wrap
-                                  current-line-length (match-beginning 2))))
-
-           ;;
-           ;; Not in a paragraph, but here comes some text. Let's start
-           ;; a paragraph, shall we?
-           ;;
-
-           ((and (not in-paragraph)
-                 (looking-at "\\s-*\\(\\S-\\)"))
-            (setq in-paragraph t
-                  paragraph-length 0
-                  all-lines-colons (lyskom-fill-message-colon-line)
-                  constant-length t
-                  length-difference nil
-                  last-line-length nil
-                  start (match-beginning 0)
-                  fill-prefix nil
-                  single-line-regexp "\\(\\S-\\)"
-                  wrap-paragraph (lyskom-fill-message-initial-wrap
-                                  current-line-length (match-beginning 1))))
+               ((and in-paragraph
+                     (looking-at "^\\s-*\\(-+\\|\\++\\)\\s-*\\S-"))
+                (when (and (eq wrap-paragraph t)
+                           (not all-lines-colons)
+                           (or (and (eq 0 length-difference)
+                                    (< paragraph-length lyskom-minimum-brick-size))
+                               (and (not (eq 0 length-difference))
+                                    (< paragraph-length lyskom-minimum-triagle-size))
+                               (null constant-length)))
+                  (lyskom-fill-region start (match-beginning 0) nil t)
+                  (lyskom-signal-reformatted-text 'reformat-filled))
+                (setq start (match-beginning 0)
+                      in-paragraph t
+                      paragraph-length 0
+                      constant-length t
+                      length-difference nil
+                      all-lines-colons (lyskom-fill-message-colon-line)
+                      last-line-length nil
+                      single-line-regexp "\\(\\S-\\)"
+                      fill-prefix nil
+                      start (match-beginning 0)
+                      wrap-paragraph (lyskom-fill-message-initial-wrap
+                                      current-line-length (match-beginning 1))))
 
 
-           ;;
+               ;;
+            ;; Here's a tricky one... We're not in a paragraph, and we
+          ;; see what looks like an indented paragraph. Take care with
+               ;; this one!
+               ;;
+
+               ((and (not in-paragraph)
+                     (looking-at "\\(\\s-+\\)\\S-")
+                     (looking-at (concat "\\(\\s-+\\)[^\n]*\n"
+                                         (match-string 1)
+                                         "\\(\\S-\\)")))
+                (setq in-paragraph t
+                      paragraph-length 0
+                      constant-length 0
+                      length-difference nil
+                      last-line-length nil
+                      all-lines-colons (lyskom-fill-message-colon-line)
+                      start (match-beginning 0)
+                      fill-prefix (match-string 1)
+                      single-line-regexp (concat (match-string 1) "\\(\\S-\\)")
+                      wrap-paragraph (lyskom-fill-message-initial-wrap
+                                      current-line-length (match-beginning 2))))
+
+               ;;
+          ;; Not in a paragraph, but here comes some text. Let's start
+               ;; a paragraph, shall we?
+               ;;
+
+               ((and (not in-paragraph)
+                     (looking-at "\\s-*\\(\\S-\\)"))
+                (setq in-paragraph t
+                      paragraph-length 0
+                      all-lines-colons (lyskom-fill-message-colon-line)
+                      constant-length t
+                      length-difference nil
+                      last-line-length nil
+                      start (match-beginning 0)
+                      fill-prefix nil
+                      single-line-regexp "\\(\\S-\\)"
+                      wrap-paragraph (lyskom-fill-message-initial-wrap
+                                      current-line-length (match-beginning 1))))
+
+
+               ;;
            ;; We're in a paragraph, but the line looks kind of strange
-           ;;
+               ;;
 
-           ((and in-paragraph
-                 (or (not (looking-at single-line-regexp))
-                     (and (< (char-to-int (char-after (match-beginning 1)))
-                             (length lyskom-line-start-chars))
-                          (not (aref lyskom-line-start-chars
-                                     (char-to-int 
-                                      (char-after
-                                       (match-beginning 1))))))))
-            (setq wrap-paragraph nil))
+               ((and in-paragraph
+                     (or (not (looking-at single-line-regexp))
+                         (and (< (char-to-int (char-after (match-beginning 1)))
+                                 (length lyskom-line-start-chars))
+                              (not (aref lyskom-line-start-chars
+                                         (char-to-int 
+                                          (char-after
+                                           (match-beginning 1))))))))
+                (setq wrap-paragraph nil))
 
-           ;;
-           ;; We're in a paragraph, the line looks OK, but is long. That 
-           ;; means we should probably be filling the paragraph later
-           ;;
+               ;;
+        ;; We're in a paragraph, the line looks OK, but is long. That 
+            ;; means we should probably be filling the paragraph later
+               ;;
 
-           ((and in-paragraph
-                 wrap-paragraph
-                 (> current-line-length fill-column))
-            (setq wrap-paragraph t))
-           )
+               ((and in-paragraph
+                     wrap-paragraph
+                     (> current-line-length fill-column))
+                (setq wrap-paragraph t))
+               )
 
-          ;;
-          ;; Check if the line starts with Foo:
-          ;;
+              ;;
+              ;; Check if the line starts with Foo:
+              ;;
 
-          (when (and in-paragraph 
-                     all-lines-colons
-                     (not (lyskom-fill-message-colon-line)))
-            (setq all-lines-colons nil))
+              (when (and in-paragraph 
+                         all-lines-colons
+                         (not (lyskom-fill-message-colon-line)))
+                (setq all-lines-colons nil))
 
-          ;;
-          ;; Certain things are guaranteed to disqualify the 
-          ;; current paragraph from wrapping, no matter what.
-          ;; This is where we look for those.
-          ;;
+              ;;
+              ;; Certain things are guaranteed to disqualify the 
+              ;; current paragraph from wrapping, no matter what.
+              ;; This is where we look for those.
+              ;;
 
-          (when (and in-paragraph
-                     wrap-paragraph)
-            (setq eol-point (save-excursion (end-of-line) (point)))
-            (when (re-search-forward "\
+              (when (and in-paragraph
+                         wrap-paragraph)
+                (setq eol-point (save-excursion (end-of-line) (point)))
+                (when (re-search-forward "\
 \\(\\S-[ \t][ \t][ \t]+\\S-\
 \\|\\S-[ \t]* \t[ \t]*\\S-\
 \\|[ \t]*\t [ \t]*\
@@ -2120,16 +2121,19 @@ in lyskom-messages."
 \\|\\*/\
 \\|[^:]//\
 \\)"
-                       eol-point t)
-              (setq wrap-paragraph nil)))
+                                         eol-point t)
+                  (setq wrap-paragraph nil)))
 
 
-          (setq last-line-length current-line-length)
-          (end-of-line)
-          (setq paragraph-length (1+ paragraph-length))
-          (unless (eobp)
-            (forward-line 1)
-            (beginning-of-line)))
+              (setq last-line-length current-line-length)
+              (end-of-line)
+              (setq paragraph-length (1+ paragraph-length))
+              (unless (eobp)
+                (forward-line 1)
+                (beginning-of-line)))
+
+          (error (goto-char (point-max))
+                 (setq in-paragraph nil)))
 
         ;;
         ;; We've seen the end of buffer. Fill any unfilled junk.
