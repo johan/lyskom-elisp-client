@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.75 2000-07-29 23:38:17 jhs Exp $
+;;;;; $Id: commands2.el,v 44.76 2000-08-15 10:32:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.75 2000-07-29 23:38:17 jhs Exp $\n"))
+	      "$Id: commands2.el,v 44.76 2000-08-15 10:32:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -706,7 +706,10 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 	  (if (= conf-no lyskom-current-conf)
 	      (set-read-list-empty lyskom-reading-list))
 	  (read-list-delete-read-info conf-no lyskom-to-do-list)
-	  (lyskom-prefetch-map conf-no membership)
+          (if (= conf-no lyskom-current-conf)
+              (progn (lyskom-fetch-start-of-map conf-stat membership)
+                     (lyskom-go-to-conf lyskom-current-conf t))
+            (lyskom-prefetch-map conf-no membership))
 	  )))))
 
 

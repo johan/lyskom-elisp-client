@@ -46,7 +46,7 @@
 
     * XEmacs version 21.1 and 21.2
     * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.3 and newer
+    * Gnu Emacs version 20.5 and newer
 
     [1] You'll have to replace the included custom package, and if you 
         use Gnus, you may have to update that as well.
