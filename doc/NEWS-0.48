@@ -824,134 +824,191 @@
   0.47.1. In addition a number of bugs and enhancements not registered
   in bugzilla have been implemented.
 
-  ID      Summary
+   ID      Summary
   ------------------------------------------------------------------------
-  250     Prioritera om möte automatiskt vid accepterad mötesinbjudan
-  260     Fråga efter olästa när man går med i ett möte
-  290 DUP Färgläggning av asynkrona meddelanden
-  291     "endast" med antal dagar som argument
-  292     Tidsangivelser tar inte hänsyn till tidszoner
-  301     Låt "Flytta inlägg" även flytta bilagor
-  305     Implementera bugzilla-länkar
-  409     Använd serveranropet local-to-global istället för get-map
-  459     Initialvärden för kommandon
-  480     Bättre sätt att ange typsnitt och färger
-  486     Man borde kunna sätta faces i .emacs
-  498     Dokumentation om färg
-  499     Olika scheman i olika sessioner
-  584     Visa user-arean på ett snyggare sätt
-  591     Använd nya query-read-texts för att kontrollera medlemsskap
-  619     För smal kolumn i Lista ägda möten
-  623     Endast läsa senaste tillåter inte rätt intervall
-  628 REJ Error in process filter
-  664     Uppoppning av framear
-  677     Smartare val av filtreringsmöte
-  678     Bättre URL-extrahering
-  697     FAQ visas 2 ggr
-  701     Ingen completion vid inläsning av textnummer
-  708     Använd parametern "language" från blocket "common" i user-arean
-  709     Lista FAQ:er
-  719     Lista klienter sorterar baklänges
-  742     Nytt kommando: "Kommer N.N. att läsa denna text"?
-  747     Lista passiva medlemskap separat
-  750     Dåligt ui om det saknas defaultaction på en knapp
-  753     Hämta inställningar från annan LysKOM-server
-  754     Återse ombrutet saknas
-  755     Subtrahera kommentar - förvalt argument
-  761     Administratörsmod ligger kvar efter kom-start-anew
-  769 REJ Felaktigt meddelande i minibuffert
-  772 DUP Number of lines is sometimes wrong
-  789     Färgläggningsbugg vid mottagning av meddelande
-  815     Incorrect error for too long message
-  817     Ärenderader ändras inte av ispell
-  822     'Personligt svar' till sig själv blir urinlägg
-  823     kom-write-text borde fråga efter möte
-  831     Markören placeras sist på raden då man läser inlägg
-  834     Tangenter för addera, subtrahera och påbörja nya trådar
-  837     Synching settings of several clients
-  839     När man går med i ett möte man redan var så borde detta anges
-  842     Nya möten ger sjutton i läsnivåer
-  854     Utträda ur möte (för alla möten)
-  858     Felaktig text i Addera medlem
-  859     Felaktig fråga i Status (för) möte
-  868     Add support for mx-refuse-import aux item
-  879     Fotnotera bör välja texten under markören om det går
-  880     Trimma mellanslag efter prompten "Återse inlägg"
-  881 REJ Visa versionsnummer
-  914     Bindings of swedish characters don't work in tty
-  915     It is painful to extend kom-server-aliases
-  919     Ändra FAQ borde addera om ingen FAQ redan finns
-  921     Hoppa över alla kommentarer inkonsekvent
-  923     Lägg på en punkt i slutet av URLar från socialdemokratisk tidning.
-  924     Namnsdagar för flera länder
-  927     kom-list-who-is-on-in-conference visar passiva medlemmar
-  928     Lucia saknas i lyskom-times i kom-display-time
-  946     Visa antal kommentarer i Lista ärenden (kom-list-summary)
-  947     C-c å obunden i kommentarönstret
-  950     Show names from more than one name list
-  951     Name days for Hungary
-  952     Name days for Czechia
-  953 DUP fixes made to subject with ispell are lost
-  961     Server FAQs are presented over and over again
-  962     addera extrabrevlåda vid kommentering när "dirigera om k." är på
-  963 DUP addera extrabrevlåda vid kommentering när "dirigera om k." är på
-  964     Klienten funkar inte i textläge (trots att X funkar fint)
-  965 REJ Cachning hindrar ångrande av SUBTRAHERA KOMMENTAR
-  975     kom-send-letter bör fungera även för möten
-  979     Disturbing database-sync message
-  983     Markering av möten som man är organisatör för
-  984     elispklienten bör kunna oläsmarkera inlägg
-  986 REJ Status (för) inlägg
-  987     l m - ingen legend
-  988 REJ Internal LysKOM format error: lyskom-format-aux, "LysKOM-server? (%#1s) "
-  995     Kommentering av anonyma texter
- 1000     Cut-and-paste-fel i hjälptexter i "Inställnignar för LysKOM"
- 1001 DUP Cut-and-paste-fel i hjälptexter i "Inställnignar för LysKOM"
- 1002     åK återser samma text som åk
- 1003     kom-ding-on-group-messages respekteras inte.
- 1004 REJ lyskom-ispell-text removes punctuation
- 1006     Kontrollera (om person är) medlem (i möte) should return number of unread texts if person is member
- 1007 REJ kom-review-converted respekterar inte kom-smileys=nil
- 1008     "Lista ägda möten" och livslängd
- 1012     Tiden efter 10000000
- 1013     Kan ej visa presentation
- 1022     Kopiera tidsstämplar
- 1024     Typo in names.el
- 1031     Automatgenererade teckensnitt beräknas fel i tty
- 1032     Var finns kommandot-kommandot ger konstig output
- 1034     Open URL:s in new window or new tab of Mozilla
- 1035     Formateringsmiss i Begränsa import av texter
- 1036     Klientstöd för bug 827 (meddelandeflagga)
- 1038     accepting-recommendation
- 1039     Private comments to my own texts dissapears
- 1044     Failure to open an URL under Windows
- 1046     Inställningar (för) LysKOM körs i fundamental mode ==> dåligt med hjälptext
- 1047     Två gånger samma urinlägg
- 1054     "Anonym" filtreras inte.
- 1058     Separatorraden i editbufferten ska inte gå att ha sönder.
- 1064     Mouse button yank in edit buffers signals (wrong-type-argument integer-or-marker-p nil)
- 1067     Slowdown with many unread
- 1073     kom-created-texts-are-saved broken
- 1075     Implement get-boottime-info
- 1076     Handle async-new-presentation
- 1077     Handle async-new-motd
- 1078     Klienten frågar ej efter markeringstyp när man markerar inlägg
- 1080     highlighting of server statistics missing if window is too short
- 1081     Extra spaces in kom-status-server and kom-status-person output
- 1082     Lista FAQ frågar på engelska efter "Conference"
- 1101     Uppskjut läsning => försök att läsa text nil
- 1117     Support keep-commented
- 1126     Instruction line in edit buffer only almost write protected
- 1128     HTML import restrictions for mx-refuse-import
- 1131     Client displays times in UTC after kom-recover
- 1132     kom-list-new-conferences sometimes lists no conferences
- 1133 DUP Visa när session avslutas.
- 1137     Markera inlägg hanterar ej ospecificerad markeringstyp
- 1140     Add footnote has wrong default
- 1142     Markeringstyp i markeringsbekräftelse
- 1174     "Bli medlem i alla möten" begär bekräftelse om gruppmeddelanden
- 1208 REJ Assertion failure when moving text
- 1213     "Skicka brev" fungerar inte
- 1226     Oväntat fel på ny emacs, UNK-language okänd symbol
- 1228     För stort inläggsnummer
- 1229     "Assertion failed in uconf-stat->conf-no" vid "x lista nya möten"
+   234     Låt medlemskapsbufferten uppdateras vid namnbyte 
+   250     Prioritera om möte automatiskt vid accepterad mötesinbjudan 
+   260     Fråga efter olästa när man går med i ett möte 
+   277     Fördefinierade sessioner 
+   278     Visa vilka sessioner man har olästa i i moderaden 
+   279     Implementera "Lista sessioner" 
+   284     Ny variabel: kom-show-imported-message-id 
+   290 DUP Färgläggning av asynkrona meddelanden 
+   291     "endast" med antal dagar som argument 
+   292     Tidsangivelser tar inte hänsyn till tidszoner 
+   301     Låt "Flytta inlägg" även flytta bilagor 
+   305     Implementera bugzilla-länkar 
+   409     Använd serveranropet local-to-global istället för get-map 
+   437     membershipbufferten visar fel saker 
+   439     "Olästa brev" - vilken session? 
+   459     Initialvärden för kommandon 
+   480     Bättre sätt att ange typsnitt och färger 
+   486     Man borde kunna sätta faces i .emacs 
+   498     Dokumentation om färg 
+   499     Olika scheman i olika sessioner 
+   515 REJ Bug i prefetch-koden 
+   584     Visa user-arean på ett snyggare sätt 
+   591     Använd nya query-read-texts för att kontrollera medlemsskap 
+   619     För smal kolumn i Lista ägda möten 
+   623     Endast läsa senaste tillåter inte rätt intervall 
+   628 REJ Error in process filter 
+   664     Uppoppning av framear 
+   677     Smartare val av filtreringsmöte 
+   678     Bättre URL-extrahering 
+   697     FAQ visas 2 ggr 
+   701     Ingen completion vid inläsning av textnummer 
+   708     Använd parametern "language" från blocket "common" i user... 
+   709     Lista FAQ:er 
+   719     Lista klienter sorterar baklänges 
+   742     Nytt kommando: "Kommer N.N. att läsa denna text"? 
+   744     Fel i user-arean efter uppdatering till 0.47 
+   747     Lista passiva medlemskap separat 
+   749     Lista medlemskap tar ingen hänsyn till passiva medlemmar 
+   750     Dåligt ui om det saknas defaultaction på en knapp 
+   753     Hämta inställningar från annan LysKOM-server 
+   754     Återse ombrutet saknas 
+   755     Subtrahera kommentar - förvalt argument 
+   761     Administratörsmod ligger kvar efter kom-start-anew 
+   769 REJ Felaktigt meddelande i minibuffert 
+   772 DUP Number of lines is sometimes wrong 
+   789     Färgläggningsbugg vid mottagning av meddelande 
+   815     Incorrect error for too long message 
+   817     Ärenderader ändras inte av ispell 
+   822     'Personligt svar' till sig själv blir urinlägg 
+   823     kom-write-text borde fråga efter möte 
+   831     Markören placeras sist på raden då man läser inlägg 
+   834     Tangenter för addera, subtrahera och påbörja nya trådar 
+   837     Synching settings of several clients 
+   839     När man går med i ett möte man redan var så borde detta a... 
+   842     Nya möten ger sjutton i läsnivåer 
+   854     Utträda ur möte (för alla möten) 
+   858     Felaktig text i Addera medlem 
+   859     Felaktig fråga i Status (för) möte 
+   868     Add support for mx-refuse-import aux item 
+   879     Fotnotera bör välja texten under markören om det går 
+   880     Trimma mellanslag efter prompten "Återse inlägg" 
+   881 REJ Visa versionsnummer 
+   914     Bindings of swedish characters don't work in tty 
+   915     It is painful to extend kom-server-aliases 
+   919     Ändra FAQ borde addera om ingen FAQ redan finns 
+   921     Hoppa över alla kommentarer inkonsekvent 
+   923     Lägg på en punkt i slutet av URLar från socialdemokratisk... 
+   924     Namnsdagar för flera länder 
+   927     kom-list-who-is-on-in-conference visar passiva medlemmar 
+   928     Lucia saknas i lyskom-times i kom-display-time 
+   946     Visa antal kommentarer i Lista ärenden (kom-list-summary) 
+   947     C-c å obunden i kommentarönstret 
+   950     Show names from more than one name list 
+   951     Name days for Hungary 
+   952     Name days for Czechia 
+   953 DUP fixes made to subject with ispell are lost 
+   961     Server FAQs are presented over and over again 
+   962     addera extrabrevlåda vid kommentering när "dirigera om k.... 
+   963 DUP addera extrabrevlåda vid kommentering när "dirigera om k.... 
+   964     Klienten funkar inte i textläge (trots att X funkar fint) 
+   965 REJ Cachning hindrar ångrande av SUBTRAHERA KOMMENTAR 
+   975     kom-send-letter bör fungera även för möten 
+   979     Disturbing database-sync message 
+   980     Separat buffert för Lista Nyheter 
+   983     Markering av möten som man är organisatör för 
+   984     elispklienten bör kunna oläsmarkera inlägg 
+   986 REJ Status (för) inlägg 
+   987     l m - ingen legend 
+   988 REJ Internal LysKOM format error: lyskom-format-aux, "LysKOM-... 
+   995     Kommentering av anonyma texter 
+  1000     Cut-and-paste-fel i hjälptexter i "Inställnignar för LysKOM" 
+  1001 DUP Cut-and-paste-fel i hjälptexter i "Inställnignar för LysKOM" 
+  1002     åK återser samma text som åk 
+  1003     kom-ding-on-group-messages respekteras inte. 
+  1004 REJ lyskom-ispell-text removes punctuation 
+  1006     Kontrollera (om person är) medlem (i möte) should return... 
+  1007 REJ kom-review-converted respekterar inte kom-smileys=nil 
+  1008     "Lista ägda möten" och livslängd 
+  1012     Tiden efter 10000000 
+  1013     Kan ej visa presentation 
+  1022     Kopiera tidsstämplar 
+  1024     Typo in names.el 
+  1031     Automatgenererade teckensnitt beräknas fel i tty 
+  1032     Var finns kommandot-kommandot ger konstig output 
+  1034     Open URL:s in new window or new tab of Mozilla 
+  1035     Formateringsmiss i Begränsa import av texter 
+  1036     Klientstöd för bug 827 (meddelandeflagga) 
+  1038     accepting-recommendation 
+  1039     Private comments to my own texts dissapears 
+  1044     Failure to open an URL under Windows 
+  1046     Inställningar (för) LysKOM körs i fundamental mode ==> då... 
+  1047     Två gånger samma urinlägg 
+  1054     "Anonym" filtreras inte. 
+  1058     Separatorraden i editbufferten ska inte gå att ha sönder. 
+  1064     Mouse button yank in edit buffers signals (wrong-type-arg... 
+  1067     Slowdown with many unread 
+  1073     kom-created-texts-are-saved broken 
+  1075     Implement get-boottime-info 
+  1076     Handle async-new-presentation 
+  1077     Handle async-new-motd 
+  1078     Klienten frågar ej efter markeringstyp när man markerar i... 
+  1080     highlighting of server statistics missing if window is to... 
+  1081     Extra spaces in kom-status-server and kom-status-person ... 
+  1082     Lista FAQ frågar på engelska efter "Conference" 
+  1101     Uppskjut läsning => försök att läsa text nil 
+  1117     Support keep-commented 
+  1125     Inconsistent order of questions 
+  1126     Instruction line in edit buffer only almost write protected 
+  1128     HTML import restrictions for mx-refuse-import 
+  1131     Client displays times in UTC after kom-recover 
+  1132     kom-list-new-conferences sometimes lists no conferences 
+  1133 DUP Visa när session avslutas. 
+  1137     Markera inlägg hanterar ej ospecificerad markeringstyp 
+  1140     Add footnote has wrong default 
+  1141     Flytta träd borde kunna lämna kvar originalmötet som extr... 
+  1142     Markeringstyp i markeringsbekräftelse 
+  1174     "Bli medlem i alla möten" begär bekräftelse om gruppmedde... 
+  1208 REJ Assertion failure when moving text 
+  1213     "Skicka brev" fungerar inte 
+  1226     Oväntat fel på ny emacs, UNK-language okänd symbol 
+  1228     För stort inläggsnummer 
+  1229     "Assertion failed in uconf-stat->conf-no" vid "x lista ny... 
+  1232     kom-change-priority asks about group messages 
+  1233     Incorrect prompt when receiving letters 
+  1234     lista klienter: error in process filter 
+  1236     Kasta ut session fungerar inte alls 
+  1237     check-strings.el should check menus 
+  1238     kom-write-footnote has wrong default (again) 
+  1250     High load during login 
+  1251     Fel vid textflytt 
+  1259     Don't format application/msword 
+  1261     Slow regexp in lyskom-text-buttons 
+  1271     Möjlighet att begränsa antalet visningar i Lista nya {möt... 
+  1272     återse konverterat har slutat fungera. 
+  1276     Sökväg till ssh-binär borde vara konfigurerbar 
+  1278     Förenkla återanslutning av döda sessioner 
+  1280     x Spara variabler fungerar inte 
+  1281     Strängen "kommentera inlägget" bör ändras 
+  1282     Protocol error in 80=lyskom-parse-membership-list-old (se... 
+  1283 REJ Kunna markera inlägg (träd?) som offtopic 
+  1284 REJ Scrolling "hangs"; neither SPC nor RET scrolls when only ... 
+  1285 REJ l r x 
+  1307     lyskom-save-text uses relative dates 
+  1309     Oläsmarkera i menyn 
+  1310     Klarar inte av att visa bilder 
+  1311     Känna igen urlar - rtsp: 
+  1312     Antal markeringar per inlägg i Lista markeringar 
+  1319 DUP Icke-ISO 8859 i vilkalistan förstör formattering 
+  1320     Dålig slump vid tilldelning av relay-port assignment i ly... 
+  1324     Visa presentation borde även visa eventuell fotnot 
+  1325     'K' (kom-comment-previous) har slutat fungera i emacs 21.1 
+  1326     Urlar i img src 
+  1328     Insance text cross reference makes text unreadable 
+  1344     xemacs 21.4, windows 2000, lyskom.el och ny version av ly... 
+  1351 DUP Hantering av Windows specialtecken 
+  1356 REJ Undvika bildmöten/bildtexter 
+  1362     Protocol error when parsing start of floating point number 
+  1373     R does not work 
+  1383     Finish kom-handle-membership 
+  1401 REJ Skönsvärde för "Uppskjuta läsning" 
+  1402     Ta emot meddelanden till nya medlemsskap 
+  1412 REJ Bug when commenting 
+  1423     Öppna URL:er i en tab/nytt fönster 
+  1487     "Återse rot13"-kommando 
+  1491     Styra vilka kommandon som kan återansluta en död session. 
+  1500     Ny .spec-fil 
