@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.10 1995-10-30 15:42:02 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.11 1995-10-30 18:00:54 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.10 1995-10-30 15:42:02 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.11 1995-10-30 18:00:54 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -211,7 +211,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 (defun kom-recover ()
   "Try to recover from an error."
   (interactive)
-  (lyskom-init-parse)
+  (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
   (setq lyskom-pending-calls nil)
   (setq lyskom-output-queue (lyskom-queue-create))
@@ -846,7 +846,8 @@ Args: FORMAT-STRING &rest ARGS"
         (signal 'lyskom-internal-error (list 'lyskom-format-insert
                                              ": bad format string"))
       (save-excursion
-        (if (boundp 'lyskom-buffer)
+        (if (and (boundp 'lyskom-buffer)
+		 lyskom-buffer)
             (set-buffer lyskom-buffer))
         (setq state (lyskom-format-aux (make-format-state
                                         fmt
