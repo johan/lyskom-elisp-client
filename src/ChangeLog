@@ -1,3 +1,10 @@
+2001-12-09  Per Cederqvist  <ceder@moria>
+
+	* commands2.el (kom-is-person-member-of-conference): When the
+	optional arguments pers-no and conf-no were given, the function
+	used the conf-no instead of the pers-no argument.  Removed
+	spurious &optional keyword in argument list.
+
 2001-11-27  Johan Sundström  <jhs@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-button-review-comments,
