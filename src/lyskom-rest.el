@@ -614,8 +614,9 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
   (cond
    ((and lyskom-executing-command
 	 (not lyskom-is-waiting))
-    (setq lyskom-to-be-printed-before-prompt
-	  (cons string lyskom-to-be-printed-before-prompt)))
+    (or lyskom-to-be-printed-before-prompt
+	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
+    (lyskom-queue-enter lyskom-to-be-printed-before-prompt string))
    (t
     (goto-char (point-max))
     (let* ((window (get-buffer-window (current-buffer)))
@@ -900,8 +901,10 @@ lyskom-is-waiting nil.
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
   (message "")
-  (mapcar 'lyskom-insert lyskom-to-be-printed-before-prompt)
-  (setq lyskom-to-be-printed-before-prompt nil)
+  (while (and lyskom-to-be-printed-before-prompt
+	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
+    (lyskom-insert (lyskom-queue->first lyskom-to-be-printed-before-prompt))
+    (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
   (setq lyskom-executing-command nil)
   (setq lyskom-no-prompt t)
   (lyskom-scroll)
