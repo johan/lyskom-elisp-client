@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.144 2002-09-18 20:48:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.145 2002-10-30 13:43:08 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.144 2002-09-18 20:48:32 byers Exp $\n"))
+              "$Id: commands2.el,v 44.145 2002-10-30 13:43:08 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2551,14 +2551,21 @@ to the first text that NEW is a comment or footnote to."
 			 (new-text (get-text new))
 			 (old-text-stat (get-text-stat old))
 			 (new-text-stat (get-text-stat new)))
-    (condition-case nil
-        (ediff-buffers
-         (lyskom-create-text-buffer old old-text old-text-stat)
-         (lyskom-create-text-buffer new new-text new-text-stat))
-      (file-error (lyskom-error (lyskom-get-string 'external-program-missing)
-                                (cond ((boundp 'ediff-diff-program) ediff-diff-program)
-                                      ((boundp 'diff-command) diff-command)
-                                      (t "diff (gissningsvis)")))))))
+    (cond
+     ((or (null old-text) (null old-text-stat))
+      (lyskom-format-insert 'no-such-text-no old))
+     ((or (null new-text) (null new-text-stat))
+      (lyskom-format-insert 'no-such-text-no new))
+     (t
+      (condition-case nil
+	  (ediff-buffers
+	   (lyskom-create-text-buffer old old-text old-text-stat)
+	   (lyskom-create-text-buffer new new-text new-text-stat))
+	(file-error (lyskom-error (lyskom-get-string 'external-program-missing)
+				  (cond ((boundp 'ediff-diff-program)
+					 ediff-diff-program)
+					((boundp 'diff-command) diff-command)
+					(t "diff (gissningsvis)")))))))))
 
 ;;; ================================================================
 ;;;             Se diff - View diff
@@ -2603,41 +2610,51 @@ to the first text that NEW is a comment or footnote to."
 			 (new-text (get-text new))
 			 (old-text-stat (get-text-stat old))
 			 (new-text-stat (get-text-stat new)))
-    (let* ((buf (current-buffer))
-	   (oldfile (lyskom-create-temp-file old old-text old-text-stat))
-	   (newfile (lyskom-create-temp-file new new-text new-text-stat))
-	   (args (list "-L" (format "%d\t%s" old
-				    (lyskom-format-time
-				     'timeformat-yyyy-mm-dd-hh-mm-ss
-				     (text-stat->creation-time old-text-stat)))
-		       "-L" (format "%d\t%s" new
-				    (lyskom-format-time
-				     'timeformat-yyyy-mm-dd-hh-mm-ss
-				     (text-stat->creation-time new-text-stat)))
-		       oldfile newfile)))
 
-      (if switches
-	  (setq args (append
-		      (split-string (if (consp switches)
-					(mapconcat 'identity switches " ")
-				      switches))
-			     args))
-	(if diff-switches
-	  (setq args (append
-		      (split-string (if (consp diff-switches)
-					(mapconcat 'identity diff-switches " ")
-				      diff-switches))
-		      args))))
+    (cond
+     ((or (null old-text) (null old-text-stat))
+      (lyskom-format-insert 'no-such-text-no old))
+     ((or (null new-text) (null new-text-stat))
+      (lyskom-format-insert 'no-such-text-no new))
+     (t
+      (let* ((buf (current-buffer))
+	     (oldfile (lyskom-create-temp-file old old-text old-text-stat))
+	     (newfile (lyskom-create-temp-file new new-text new-text-stat))
+	     (args (list "-L" (format "%d\t%s" old
+				      (lyskom-format-time
+				       'timeformat-yyyy-mm-dd-hh-mm-ss
+				       (text-stat->creation-time
+					old-text-stat)))
+			 "-L" (format "%d\t%s" new
+				      (lyskom-format-time
+				       'timeformat-yyyy-mm-dd-hh-mm-ss
+				       (text-stat->creation-time
+					new-text-stat)))
+			 oldfile newfile)))
+
+	(if switches
+	    (setq args (append
+			(split-string (if (consp switches)
+					  (mapconcat 'identity switches " ")
+					switches))
+			args))
+	  (if diff-switches
+	      (setq args (append
+			  (split-string (if (consp diff-switches)
+					    (mapconcat 'identity diff-switches
+						       " ")
+					  diff-switches))
+			  args))))
 	    
 
-      (set-buffer buf)
-      (let ((buffer-read-only nil))
-	(apply 'call-process (if (boundp 'diff-command)
-                                 diff-command
-                               "diff")
-               nil buf nil args))
-      (delete-file oldfile)
-      (delete-file newfile))))
+	(set-buffer buf)
+	(let ((buffer-read-only nil))
+	  (apply 'call-process (if (boundp 'diff-command)
+				   diff-command
+				 "diff")
+		 nil buf nil args))
+	(delete-file oldfile)
+	(delete-file newfile))))))
       
     
 
