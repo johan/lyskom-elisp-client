@@ -34,8 +34,18 @@ The syntax of all format directives is
      %[pad-length]#[arg-no][flags][format-letter][letter-options]
 
 pad-length is the length of the resulting string. If it is negative,
-is will be left-justified in the length, otherwise
-right-justified. This field is optional.
+is will be left-justified in the length, otherwise right-justified.
+This field is optional. All format directives accept a colon followed
+by an arbitrary character before the argument number (e.g.
+"%10:-#1s"). The character will be used as the pad character.
+
+When inserting floats (%f), pad-length can be of the form
+[total-length].[min-fraction-length].[max-fraction-length], in which
+case between min-fraction-length and max-fraction-length decimal
+places are shown, and the total size of the formatted string is
+total-length. Standard modifiers, such as - and = still apply. Note
+that max-fraction-length is optional together with its preceding
+period.
 
 arg-no is the argument number from the argument list to insert, and
 must be prefixed by a hash mark when it exists. This field is
@@ -64,6 +74,12 @@ o - Insert an integer in octal format.
 x - Insert an integer in hexadecimal format. 
 
 c - Interpret and insert an integer as a single character.
+
+f - Insert a float (like %f in regular format)
+
+g - Insert a float (like %g in regular format)
+
+e - Insert a float (like %e in regular format)
 
 @ - The argument must be a valid text property list, and will be
     inserted into the buffer at the point of this directive provided
@@ -108,6 +124,13 @@ n - The argument must be an integer or a text-stat. The integer or
     text-no is inserted and appropriate text properties added.
 
 r - The argument is a string and will be formatted as a subject line.
+
+F - Fill the region that this directive is active for (i.e. the
+    current subformat or to the end of the string). The argument is
+    the value of fill-column to use.
+
+l - The argument is a string or character that is used to fill out the
+    entire pad-length.
 
 ? - A conditional. The type of argument depends on letter-options.
     Currently implemented letter-options are "d" for one-or-more, "b"
@@ -154,6 +177,7 @@ format letter). This means downcase the result.
 
 
 
+
 2.4 Conditionals
 
 The "?" format letter introduces a conditional in the format string.
@@ -183,10 +207,13 @@ b - Boolean. The first subformat is chosen if the argument is non-nil
     variable "answer" as "yes" or "no" for t and nil using
     (lyskom-format "%#1?b%[yes%]%[no%]" answer).
 
-z - Zero. The first subformat is chosen if the argument is zero and
-    the second if the argument is nonzero. You could format a conf-no
+z - Zero. The first subformat is chosen if the argument is nonzero and
+    the second if the argument is zero. You could format a conf-no
     variable as a "does not exist" or the conference name using
     (lyskom-format "%#1?z%[does not exist%]%[%#1M%]")
+
++ - Non-negative. The first subformat is chosen if the argument is
+    zero or more; the second is chosen if it is negative.
 
 
 
