@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.249 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.250 2004-11-16 07:07:01 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.249 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.250 2004-11-16 07:07:01 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2995,11 +2995,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                 (save-excursion
                   (set-buffer (lyskom-get-prioritized-session))
                   (list
-                   (or (cdr (lyskom-string-assoc
-                             lyskom-server-name
-                             (append kom-server-aliases
-                                     kom-builtin-server-aliases)))
-                       lyskom-server-name)))))
+		   (lyskom-session-nickname)))))
 
          ((eq to-do 'next-pri-text)
           (setq prompt
