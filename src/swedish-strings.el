@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.11 1996-08-14 14:10:30 byers Exp $
+;;;;; $Id: swedish-strings.el,v 43.12 1996-08-22 06:58:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.11 1996-08-14 14:10:30 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.12 1996-08-22 06:58:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -111,6 +111,8 @@ Annat se \\[describe-mode] ---")
 
 (defvar lyskom-swascii-header-subject nil
   "The swascii version of lyskom-header-subject.")
+
+(defconst lyskom-missing-strings '())
 
 (defconst lyskom-strings 
   '(
@@ -1157,6 +1159,8 @@ Uppkopplad sedan %#8s%#9s")
   "Regexp matching beginning of a text in lyskom buffer.
 Cf. paragraph-start.")
 
+
+(defconst lyskom-missing-bindings '(lyskom-previous-prefix))
 
 (if lyskom-mode-map
     nil
