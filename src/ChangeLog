@@ -1,5 +1,11 @@
 2002-09-18  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 522:
+	* startup.el (lyskom): Print motd of lyskom sort of like a normal
+	text. Don't print the header because it distracts attention. Do
+	print the footer using whatever settings are currently loaded
+	(usually the defaults).
+
 	Fix bug 757:
 	* compatibility.el (make-temp-file): Removed last argument from
 	write-region since the parameter lists in Gnu Emacs and XEmacs

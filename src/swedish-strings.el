@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.272 2002-09-15 23:14:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.273 2002-09-18 20:06:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.272 2002-09-15 23:14:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.273 2002-09-18 20:06:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -158,6 +158,7 @@ kan skapa en ny:\n")
     (wrong-password-email . "* %#1t\n")
     (are-logged-in . "Du är nu inloggad. Vänta ett tag.\n")
     (you-have-motd . "\nDu har en lapp på dörren:\n\n")
+    (server-has-motd . "Servern har ett loginmeddelande:\n")
     (lyskom-motd-was-garbed . "\nLoginmeddelandet finns inte!
 Det meddelande som ska visas efter inloggning har försvunnit.
 Kontakta LysKOM-administratören.\n")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.80 2002-08-12 20:41:19 byers Exp $
+;;;;; $Id: startup.el,v 44.81 2002-09-18 20:06:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.80 2002-08-12 20:41:19 byers Exp $\n"))
+	      "$Id: startup.el,v 44.81 2002-09-18 20:06:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -285,7 +285,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                 (setq lyskom-collate-table (blocking-do 'get-collate-table))
                 (setq lyskom-char-classes nil)
                 (lyskom-update-command-completion))
-	      (if (not (zerop (server-info->motd-of-lyskom
+              (if (not (zerop (server-info->motd-of-lyskom
 			       lyskom-server-info)))
 		  (blocking-do-multiple ((text (get-text 
                                                 (server-info->motd-of-lyskom
@@ -293,12 +293,43 @@ clients of the event. See lyskom-mode for details on lyskom."
                                          (text-stat (get-text-stat
                                                      (server-info->motd-of-lyskom
                                                       lyskom-server-info))))
-		    (lyskom-format-insert "%#1t\n"
-		     (if (and text text-stat)
-			 (text->decoded-text-mass text text-stat)
-		       (lyskom-get-string 'lyskom-motd-was-garbed))
-                     (when kom-highlight-text-body
-                       '(face kom-text-body-face)))))
+                    (let* ((conf-stat (and text-stat (blocking-do 'get-conf-stat (text-stat->author text-stat))))
+                           (str (and text text-stat (text->decoded-text-mass text text-stat))))
+                      (if (null text-stat)
+                          (lyskom-get-string 'lyskom-motd-was-garbed)
+                        (lyskom-insert (lyskom-get-string 'server-has-motd))
+                        (when (string-match "\n" str)
+                          (setq str (substring str (match-end 0))))
+                        (lyskom-format-insert 
+                         "%#2$%#1s\n"
+                         (if kom-dashed-lines
+                             (make-string kom-text-header-dash-length ?-)
+                           "")
+                         (when kom-highlight-dashed-lines
+                           '(face kom-dashed-lines-face)))
+
+                        (lyskom-format-insert "%#2$%#1t\n"
+                                              str
+                                              (when kom-highlight-text-body
+                                                '(face kom-text-body-face))
+                                              (when kom-highlight-text-body
+                                                '(face kom-text-body-face)))
+
+                        (lyskom-format-insert
+                         "%#2$%#1s\n"
+                         (lyskom-format-text-footer 
+                          text-stat
+                          conf-stat
+                          (cond ((eq (text-stat->author text-stat) 0)
+                                 (lyskom-get-string 'person-is-anonymous))
+                                (conf-stat (conf-stat->name conf-stat))
+                                (t (lyskom-format 'person-does-not-exist 
+                                                  (text-stat->author text-stat))))
+                          kom-text-footer-format
+                          lyskom-last-text-format-flags)
+                         (when kom-highlight-dashed-lines
+                           '(face kom-dashed-lines-face)))
+                        ))))
 
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil)
