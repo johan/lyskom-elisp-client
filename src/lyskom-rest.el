@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.23 1997-02-09 10:50:43 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.24 1997-02-12 13:46:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.23 1997-02-09 10:50:43 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.24 1997-02-12 13:46:05 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1426,26 +1426,42 @@ and then a forward-text.
 With an argument ARG the search is done over that number of texts.
 The name of the file is read using the minibuffer and the default is kom-text."
   (interactive "p")
-  (save-excursion
-    (backward-text arg)
-    (let ((p1 (point))
-	  (p2 (progn
-		(forward-text arg)
-		(beginning-of-line)
-		(point)))
-	  (name (read-file-name
-		 (lyskom-format 'save-on-file-q
-				    (file-name-nondirectory
-				     lyskom-saved-file-name))
-		 (file-name-directory lyskom-saved-file-name)
-		 lyskom-saved-file-name
-		 nil)))
-      (if (file-directory-p name)
-	  (setq name (concat (file-name-as-directory name)
-			     (file-name-nondirectory lyskom-saved-file-name))))
-      (append-to-file p1 p2
-		      (expand-file-name name))
-      (setq lyskom-saved-file-name name))))
+  (let ((buf (lyskom-get-buffer-create 'temp " *kom*-text"))
+        (lyskom-print-complex-dates nil)
+        (list-of-texts nil)
+        (kom-deferred-printing nil)
+        (name nil))
+    (unwind-protect
+        (save-excursion
+          (while (> arg 0)
+            (backward-text 1)
+            (if (looking-at "\\([0-9]+\\)\\s-")
+                (setq list-of-texts (cons (string-to-int (match-string 1))
+                                          list-of-texts)
+                      arg (1- arg))
+              (setq arg 0)))
+          (set-buffer buf)
+          (mapcar (function
+                   (lambda (n)
+                     (lyskom-view-text n)
+                     (goto-char (point-max))
+                     (insert "\n")))
+                  list-of-texts)
+          (setq name (read-file-name
+                      (lyskom-format 'save-on-file-q
+                                     (file-name-nondirectory
+                                      lyskom-saved-file-name))
+                      (file-name-directory lyskom-saved-file-name)
+                      lyskom-saved-file-name
+                      nil))
+          (when (file-directory-p name)
+            (setq name (concat (file-name-as-directory name)
+                               (file-name-nondirectory 
+                                lyskom-saved-file-name))))
+          (append-to-file (point-min) (point-max) (expand-file-name name))
+          (setq lyskom-saved-file-name name))
+      (kill-buffer buf))))
+
 
 
 ;;; ================================================================

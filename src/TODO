@@ -4,9 +4,6 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-    Läsningen av user-arean buggade i XEmacs av någon anledning. Det
-    såg ut som en XEmacs-bug. Jag *tror* jag har gjort en workaround.
-
     Trycka C-g medan man loggar in kan göra att man inte kan logga in
     igen. (Rapporterat av Tommy Persson.) Felmeddelandet blir "Illegal
     nånting: listp not-yet-gotten"
@@ -57,7 +54,10 @@ Att göra i elisp-klienten
     Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
     spara det på fil, så blir det bara fotnoten som sparas.  Man vill
     nog spara minst själva huvudinlägget, och nog också fotnoterna
-    samtidigt.
+    samtidigt. [Pja, det är faktist meningen att det skall funka så
+    här. Spara text sparar sisa inlägget man tittade på.
+    Prefixargument ger fler. Frågan om det är *bra* eller inte är en
+    helt annan...]
 
     Om ett namn som fylls i i efterhand gör att sista raden blir för
     lång, så scrollar klienten trots att den inte borde. Jag trodde
@@ -122,17 +122,18 @@ Att göra i elisp-klienten
     Kommandot kom-review-comments visar fotnoter sist, inte först.
 
     Det skulle vara bra om skönsvärde för att skriva fotnot vore den
-    senaste text man själv skrev, inte den senaste man läste.
+    senaste text man själv skrev, inte den senaste man läste. 
 
     Klickbara kommandon.
 
 
     Reentrant blocking-do
 
-   När man sparar texter vill man inte att det ska stå t.ex. "idag".
-
 
 -------- Fixade saker
+
+    När man sparar texter vill man inte att det ska stå t.ex. "idag".
+    [FIXAT]
 
     Fixa klart z-initiate-get-map. [BEHÖVS INTE]
 
@@ -235,4 +236,7 @@ Att göra i elisp-klienten
     När man startar en ny session i en återanvänd buffert läggs en session
     för mycket till i sessionslistan. Överhuvudtaget bör nl med vänner
     putsas på. [FIXAT]
+
+    Läsningen av user-arean buggade i XEmacs av någon anledning. Det
+    såg ut som en XEmacs-bug. Jag *tror* jag har gjort en workaround.
 
