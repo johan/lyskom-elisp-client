@@ -1,5 +1,7 @@
 Thu May  2 18:47:18 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* 0.41 release
+
 	* swedish-strings.el,english-strings.el (lyskom-strings): Nytt
 	format på de strängar som används i
 	lyskom-print-delayed-header-comm.
