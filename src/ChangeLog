@@ -1,3 +1,8 @@
+2003-10-26  Joel Rosdahl  <joel@rosdahl.net>
+
+	* commands1.el (lyskom-get-least-used-mark-types-alist): Handle
+	nil in mark list got from cache-get-marked-texts.
+
 2003-10-23  Joel Rosdahl  <joel@rosdahl.net>
 
 	Fix bug 1137:
