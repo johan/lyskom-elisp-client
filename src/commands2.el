@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 43.4 1996-08-27 15:15:09 byers Exp $
+;;;;; $Id: commands2.el,v 43.5 1996-08-28 09:02:24 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 43.4 1996-08-27 15:15:09 byers Exp $\n"))
+	      "$Id: commands2.el,v 43.5 1996-08-28 09:02:24 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -64,6 +64,45 @@
 			     (membership->conf-no x)
 			     x buffer))))
 
+;;;(defun lyskom-memb-received-1 (conf-stat membership buffer)
+;;;  "Part of kom-membership.
+;;;Get maps for the conference CONF-STAT. MEMBERSHIP is the users
+;;;membership in that conference. Call lyskom-memb-received with
+;;;the resulting MAP, CONF-STAT, MEMBERSHIP and BUFFER.
+;;;Args: CONF-STAT MEMBERSHIP BUFFER."
+;;;  (if (/= (conf-stat->conf-no conf-stat)
+;;;	  (membership->conf-no membership))
+;;;      (signal 'lyskom-internal-error '("lyskom-memb-received-1")))
+;;;  (let ((first-wanted (1+ (membership->last-text-read membership)))
+;;;	(last-existing  (+ (conf-stat->first-local-no conf-stat)
+;;;			   (conf-stat->no-of-texts conf-stat)
+;;;			   -1)))
+;;;    (if (> first-wanted last-existing)
+;;;	(lyskom-run 'membership 'lyskom-memb-received
+;;;		    nil conf-stat membership buffer)
+;;;      (initiate-get-map 'membership 'lyskom-memb-received
+;;;			(membership->conf-no membership)
+;;;			first-wanted
+;;;			(+ 1 last-existing
+;;;			   (- first-wanted))
+;;;			conf-stat membership buffer))))
+
+;;;(defun lyskom-memb-received (map conf-stat membership buffer)
+;;;  "Args: MAP CONF-STAT MEMBERSHIP BUFFER.
+;;;Prints membership in a conferences.
+;;;MAP may be nil if there are no new texts."
+;;;  (save-window-excursion
+;;;    (set-buffer buffer)
+;;;    (goto-char (point-max))
+;;;    (lyskom-format-insert 'memberships-line
+;;;			  (lyskom-return-date-and-time  (membership->last-time-read
+;;;						membership))
+;;;			  (membership->priority membership)
+;;;			  (if map
+;;;			      (length (lyskom-list-unread map membership))
+;;;			    0)
+;;;			  conf-stat)))
+
 (defun lyskom-memb-received-1 (conf-stat membership buffer)
   "Part of kom-membership.
 Get maps for the conference CONF-STAT. MEMBERSHIP is the users
@@ -73,19 +112,23 @@ Args: CONF-STAT MEMBERSHIP BUFFER."
   (if (/= (conf-stat->conf-no conf-stat)
 	  (membership->conf-no membership))
       (signal 'lyskom-internal-error '("lyskom-memb-received-1")))
-  (let ((first-wanted (1+ (membership->last-text-read membership)))
-	(last-existing  (+ (conf-stat->first-local-no conf-stat)
-			   (conf-stat->no-of-texts conf-stat)
-			   -1)))
+  (let* ((first-wanted (1+ (membership->last-text-read membership)))
+	 (last-existing  (+ (conf-stat->first-local-no conf-stat)
+			    (conf-stat->no-of-texts conf-stat)
+			    -1)))
     (if (> first-wanted last-existing)
 	(lyskom-run 'membership 'lyskom-memb-received
 		    nil conf-stat membership buffer)
-      (initiate-get-map 'membership 'lyskom-memb-received
-			(membership->conf-no membership)
-			first-wanted
-			(+ 1 last-existing
-			   (- first-wanted))
-			conf-stat membership buffer))))
+      (if (> (- last-existing first-wanted) 50)
+	  (lyskom-run 'membership 'lyskom-memb-received
+		      (- last-existing first-wanted)
+		      conf-stat membership buffer)
+	(initiate-get-map 'membership 'lyskom-memb-received
+			  (membership->conf-no membership)
+			  first-wanted
+			  (+ 1 last-existing
+			     (- first-wanted))
+			  conf-stat membership buffer)))))
 
 (defun lyskom-memb-received (map conf-stat membership buffer)
   "Args: MAP CONF-STAT MEMBERSHIP BUFFER.
@@ -95,12 +138,18 @@ MAP may be nil if there are no new texts."
     (set-buffer buffer)
     (goto-char (point-max))
     (lyskom-format-insert 'memberships-line
-			  (lyskom-return-date-and-time  (membership->last-time-read
+			  (lyskom-return-date-and-time
+			   (membership->last-time-read
 						membership))
 			  (membership->priority membership)
-			  (if map
-			      (length (lyskom-list-unread map membership))
-			    0)
+			  (cond
+			   ((null map) 0)
+			   ((numberp map) map)
+			   ((listp map)
+			    (length (lyskom-list-unread map membership)))
+			   (t (signal
+			       'lyskom-internal-error
+			       '("Erroneous map in lyskom-memb-received"))))
 			  conf-stat)))
 
 
