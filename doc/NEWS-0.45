@@ -1,4 +1,3 @@
-
 		       Nyheter i lyskom.el 0.45
 		       ========================
 
@@ -6,21 +5,53 @@ Version 0.45 av elispklienten finns nu tillgänglig på följande URL.
 
        <URL:ftnp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
-Filen heter lyskom-0.45.el.gz, och en kopia av den text du läser just
-nu finns under namnet NEWS-0.45
+Filen heter lyskom-0.45.tar.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.45 samt under namnet NEWS-0.45 i
+tar-arkivet.
+
+Frivilliga sökes som är intresserade av att försöka få elispklienten
+att fungera bättre tillsammans med XEmacs. Till exempel vore det
+trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 
 * Fitjurs och förbättringar
 
+** Det går hjälpligt att köra elispklienten under XEmacs.
+
 ** Kommandot "Återse fler inlägg", bunder till "åy" fortsätter ett
    återsekommando från den plats det slutade, med samma kriterier. Det
    innebär att Återse senaste 10 av XX till YY följt av Återse 10 fler
-   inlägg kommer att visa de senaste 20 inläggen av XX till YY.
+   inlägg kommer att visa de senaste 20 inläggen av XX till YY i två
+   omgångar (10 per kommando.)
 
 ** Man kan numera stoppa in vektorer som tangentbordsmakron i
    kom-do-when-done. 
 
 ** kom-permissive-completion är satt till t per default.
+
+** En experimentell Ändra Variabler har inkluderats. För att den skall
+   fungera krävs det att Emacs kan hitta Per Abrahamsens widget-paket
+   (kan hämtas på http://www.dina.kvl.dk/~abraham/custom), minst
+   version 0.991. Kommandot heter "Inställningar (för) LysKOM".
+
+** kom-edit-texts-in-window kan numera vara new-frame eller
+   other-frame för att skriva texter i ett nött fönster eller i ett
+   annat (men existerande) fönster.
+
+** Variablerna kom-prioritize-in-window styr var man prioriterar möten
+   och kom-customize-in-window styr var man gör inställningar i
+   LysKOM. Båda fungerar helt analogt med kom-edit-texts-in-window.
+
+** Delar av bufferthanteringen har skrivits om så att den är enklare
+   att använda. Detta kan leda till att inläggsskrivarfönstret beter
+   sig lite annorlunda. Rapportera om något konstigt inträffar.
+
+** Variabeln kom-ding-on-new-letter kontrollerar hur elispklienten
+   piper när det kommer brev. Default är att inte pipa alls.
+
+** Elispklienten känner igen e-mail adresser i inläggstexter.
+   Hanteringen är dock något primitiv eftersom man inte kan välja
+   vilket program som skall användas för att skicka mail.
 
 
 * Bugfixar
@@ -28,6 +59,10 @@ nu finns under namnet NEWS-0.45
 ** Completion fungerar bättre. Numera borde completion avslutas med SPC
    bara när det verkligen passar.
 
+** Helt kompatibel med protokollversion 9.
+
+** De engelska strängarna är översedda och genomgågna och stämmer nu
+   väl överens med de svenska.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
