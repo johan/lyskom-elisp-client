@@ -1,3 +1,7 @@
+2000-08-23  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release of 0.46-BETA-O
+
 2000-08-23  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (lyskom-stop-keep-alive): Use disable-timeout for
