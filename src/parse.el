@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.39 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: parse.el,v 44.40 2002-05-01 21:42:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.39 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: parse.el,v 44.40 2002-05-01 21:42:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1020,7 +1020,7 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-parse-local-to-global-block (block-type)
   "Parse a Local-To-Global-Block"
   (cond ((eq block-type 'sparse)
-         (let ((len (lyskom-parse-num)))
+         (let ((len (lyskom-parse-string)))
            (lyskom-parse-list len 'lyskom-parse-text-number-pair)))
         ((eq block-type 'dense)
          (lyskom-parse-map))))
@@ -1193,35 +1193,49 @@ functions and variables that are connected with the lyskom-buffer."
 	  ;; Removed check for kom-presence-messages
 	  (if (and (not (lyskom-is-in-minibuffer)))
 	      (message ""))))
-    (lyskom-save-excursion
-     (set-buffer lyskom-unparsed-buffer)
-     (while (not (zerop (1- (point-max)))) ;Parse while replies.
-       (let* ((lyskom-parse-pos 1)
-	      (key (lyskom-parse-nonwhite-char)))
-	 (condition-case err
-	     (let ((inhibit-quit t))	; Used to be nil, but that can
+    (if lyskom-parser-recovering
+        (lyskom-save-excursion
+          (set-buffer lyskom-unparsed-buffer)
+          (goto-char (point-min))
+          (if (re-search-forward "^[:%=]" nil t)
+              (progn (delete-region (point-min) (match-beginning 0))
+                     (lyskom-set-default 'lyskom-parser-recovering nil))
+            (when (> (point-max) (point-min))
+              (delete-region (point-min) (1- (point-max))))))
+      (lyskom-save-excursion
+        (set-buffer lyskom-unparsed-buffer)
+        (while (not (zerop (1- (point-max)))) ;Parse while replies.
+          (let* ((lyskom-parse-pos 1)
+                 (key (lyskom-parse-nonwhite-char)))
+            (condition-case err
+                (let ((inhibit-quit t))	; Used to be nil, but that can
 					; cause hard-to-repair
 					; problems
-	       (cond
-		((= key ?=)		;The call succeeded.
-		 (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		((= key ?%)		;The call was not successful.
-		 (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-		((= key ?:)		;An asynchronous message.
-		 (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
-	       (delete-region (point-min) lyskom-parse-pos))
-	   ;; One reply is now parsed.
-	   (lyskom-protocol-error
-	    (delete-region (point-min) (min (point-max) (1+ lyskom-parse-pos)))
-	    (signal 'lyskom-protocol-error err)))
-	 (goto-char (point-min))
-         (if (looking-at "[ \n]+")
-             (delete-region (match-beginning 0) (match-end 0)))
-	 )))
+                  (cond
+                   ((= key ?=)		;The call succeeded.
+                    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+                   ((= key ?%)		;The call was not successful.
+                    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+                   ((= key ?:)		;An asynchronous message.
+                    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer))
+                   (t
+                    (lyskom-protocol-error 'lyskom-parse-unparsed
+                                           "Expected =, %% or :, got %S"
+                                           (lyskom-string-to-parse))))
+                  (delete-region (point-min) lyskom-parse-pos))
+              ;; One reply is now parsed.
+              (lyskom-protocol-error
+               (delete-region (point-min) (min (point-max) (1+ lyskom-parse-pos)))
+               (signal 'lyskom-protocol-error err)))
+            (goto-char (point-min))
+            (if (looking-at "[ \n]+")
+                (delete-region (match-beginning 0) (match-end 0)))
+            ))))
     (store-match-data match-data)))
 
 (defun lyskom-protocol-error (function format-string &rest args)
   (when lyskom-debug-communications-to-buffer
+    (setq lyskom-debug-communications-limit nil)
     (lyskom-debug-insert lyskom-proc
                          (format " Protocol error in %S: " function)
                          (apply 'format format-string args))
@@ -1236,8 +1250,16 @@ functions and variables that are connected with the lyskom-buffer."
                          (buffer-substring lyskom-parse-pos (point-max))))
 
   (lyskom-save-backtrace (lyskom-string-to-parse))
+  (lyskom-parse-recover)
   (signal 'lyskom-protocol-error
           (format "Protocol error in %S: %s"
                   function
                   (apply 'format format-string args))))
+
+(defun lyskom-parse-recover ()
+  "Initiate parser recovery."
+  (lyskom-save-excursion
+    (set-buffer lyskom-buffer)
+    (setq lyskom-parser-recovering t)
+    (initiate-get-time 'main nil)))
 

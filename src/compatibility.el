@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.52 2002-04-24 21:20:37 byers Exp $
+;;;;; $Id: compatibility.el,v 44.53 2002-05-01 21:42:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.52 2002-04-24 21:20:37 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.53 2002-05-01 21:42:39 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -593,6 +593,22 @@ Otherwise treat \\ in NEWTEXT string as special:
   "T of OBJECT is an editor buffer that has not been deleted."
   (and (bufferp object)
        (buffer-name object)))
+
+;;; ================================================================
+;;; Color stuff
+
+(defun lyskom-color-values (color &optional frame)
+  nil)
+
+(eval-and-compile
+  (cond ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
+        ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values))
+        ((fboundp 'make-specifier)
+         (defun lyskom-color-values (color &optional frame)
+           (let ((spec (make-specifier 'color)))
+             (set-specifier spec color)
+             (color-rgb-components spec))))))
+
 
 ;;; ======================================================================
 ;;; Platform-specific stuff

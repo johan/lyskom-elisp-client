@@ -1,3 +1,51 @@
+2002-05-01  David Byers  <david.byers@swipnet.se>
+
+	* commands1.el (kom-move-text-tree): New command, innit?
+
+	Improve parser error reporting and recovery:
+	* utilities.el (lyskom-text-comments): New function.
+
+	* parse.el (lyskom-parse-recover): New function.
+	(lyskom-parse-unparsed): Signal a parse error if we start parsing
+	and see anything but '%', '=' or ':'. Recover from parse errors by
+	scanning until we see a '%', a '=' or a ':' at the beginning of a
+	line (sure, not perfect, but a lot better than what we've got
+	now).
+
+	* vars.el.in (lyskom-parser-recovering): New variable.
+
+	* parse.el (lyskom-parse-unparsed): If the key is invalid, signal
+	a protocol error rather than continue. Otherwise we can't see
+	where the error really occurs.
+
+	Fix bug setting language on logon:
+	* startup.el (kom-start-anew): Set kom-have-on-login if login is
+	successful.
+
+	Fix dependency on mapc, which is not available in Emacs 20.7:
+	* komtypes.el (text-mapping->global-numbers): Use lyskom-traverse
+	instead of mapc.
+
+	Improve performance when debugging communications:
+	* lyskom-rest.el (lyskom-debug-insert): Limit buffer size to
+	lyskom-debug-communications-limit.
+	(lyskom-filter): Limit size of *kom*-replies to
+	lyskom-debug-communications-limit.
+
+2002-04-29  David Byers  <david.byers@swipnet.se>
+
+	Fix bug where changing presentation of FAQ lost recipients:
+	* commands1.el (lyskom-get-recipients-from-misc-list): Don't
+	downcase the recipient type.
+
+	* swedish-strings.el, english-strings.el: Hänvisa till ? och Hjälp
+	i first-greeting.
+
+	* vars.el.in (kom-default-language): Fixed bug 495.
+
+	* commands2.el (kom-obsolete-extended-command-binding): Clarified
+	message.
+
 2002-04-29  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (kom-default-language): Added a pointer to
@@ -26,6 +74,22 @@
 	Added text-to-see-author-status-of.
 
 2002-04-28  David Byers  <david.byers@swipnet.se>
+
+	* view-text.el (lyskom-format-mx-author): If mx-author is the
+	empty string, pretend that it is nil.
+	(lyskom-view-text): Don't put a space character after the time
+	zone.
+
+	* swedish-strings.el,english-strings.el (lyskom-messages):
+	Uppdaterade presentation-form.
+
+	* compatibility.el (lyskom-color-values): New function (mimics
+	x-color-values, color-values etc).
+
+	* lyskom-rest.el (lyskom-format-insert-overlays): Set extent
+	priority to 1000 to override text properties in the same area
+	under XEmacs.
+	(lyskom-is-loaded): Get language from LC_ALL and LC_MESSAGES too.
 
 	* header.el: When detecting a buggy read-kbd-macro, attempt to
 	load good definitions from known libraries rather than just bail.

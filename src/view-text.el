@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.63 2002-04-25 20:56:36 byers Exp $
+;;;;; $Id: view-text.el,v 44.64 2002-05-01 21:42:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.63 2002-04-25 20:56:36 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.64 2002-05-01 21:42:40 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -123,7 +123,7 @@ Note that this function must not be called asynchronously."
                               (concat
                                (lyskom-format-time 'date-and-time date)
                                (if (time->tzhr date)
-                                   (lyskom-format " %#1s%#2s " 
+                                   (lyskom-format " %#1s%#2s" 
                                                   (time->tzhr date)
                                                   (time->tzmin date))
                                  ""))
@@ -889,7 +889,6 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                                   (cons text-stat body)
                                   (and kom-highlight-text-body
                                        '(face kom-text-body-face)))
-           ; (overlay-put (make-overlay start (point)) 'face 'foo-face)
             )
 
 	  ;; Indicate that the text was truncated
@@ -1222,7 +1221,10 @@ Args: TEXT-STAT of the text being read."
       (lyskom-insert "\n"))))
 
 (defun lyskom-format-mx-author (mx-from mx-author)
-  (let ((author nil))
+  (let ((author nil)
+        (mx-author (if (and mx-author (equal (aux-item->data mx-author) ""))
+                       nil
+                     mx-author)))
     (when (or mx-from mx-author)
       (setq author (lyskom-get-string 'email-name-prefix))
       (when mx-author (setq author (concat author (aux-item->data mx-author))))

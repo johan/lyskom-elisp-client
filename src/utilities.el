@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.97 2002-04-22 22:18:05 byers Exp $
+;;;;; $Id: utilities.el,v 44.98 2002-05-01 21:42:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.97 2002-04-22 22:18:05 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.98 2002-05-01 21:42:40 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1256,6 +1256,16 @@ car of each element is the recipient number and the cdr is the type."
                                result))
           (setq result (cons (misc-info->recipient-no misc)
                              result)))))
+    (nreverse result)))
+
+(defun lyskom-text-comments (text-stat)
+  "Return the list of comments to TEXT-STAT"
+  (let ((result nil))
+    (lyskom-traverse misc (text-stat->misc-info-list text-stat)
+      (cond ((eq (misc-info->type misc) 'FOOTN-IN)
+             (setq result (cons (misc-info->footn-in misc) result)))
+            ((eq (misc-info->type misc) 'COMM-IN)
+             (setq result (cons (misc-info->comm-in misc) result)))))
     (nreverse result)))
 
 

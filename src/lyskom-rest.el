@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.157 2002-04-25 20:56:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.158 2002-05-01 21:42:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.157 2002-04-25 20:56:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.158 2002-05-01 21:42:39 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1124,7 +1124,8 @@ Args: FORMAT-STRING &rest ARGS"
            (args (aref overlay 2)))
        (while args
          (set-extent-property overlay (car args) (car (cdr args)))
-         (setq args (nthcdr 2 args))))
+         (setq args (nthcdr 2 args)))
+       (set-extent-priority overlay 1000))
      (let ((overlay (make-overlay (+ start (aref overlay 0))
                                   (+ start (aref overlay 1))))
            (args (aref overlay 2)))
@@ -3436,12 +3437,13 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(condition-case nil
 	    (progn
 	      (setq lyskom-quit-flag nil)
-	      
+
               (if lyskom-debug-communications-to-buffer
                   (save-excursion
                     (set-buffer (get-buffer-create "*kom*-replies"))
                     (goto-char (point-max))
-                    (princ (string-as-unibyte output) (current-buffer))))
+                    (princ (string-as-unibyte output) (current-buffer))
+                    (lyskom-debug-limit-buffer)))
 
 	      (if lyskom-debug-communications-to-buffer
                   (if (not lyskom-debug-what-i-am-doing)
@@ -3449,7 +3451,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                                     (eq ?5 (elt output 1))))
                           (lyskom-debug-insert proc "From " output))
                     (lyskom-debug-insert proc "From " output)))
-	      
+
 	      (set-buffer (process-buffer proc))
 	      (princ (string-as-unibyte output) lyskom-unparsed-marker)
 	      ;;+++lyskom-string-skip-whitespace
@@ -3470,7 +3472,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	       ;; it does when the maps are read in one chunk, which
 	       ;; they usually aren't anymore.
 	       ((not (string-match "\n" output)))
-	       
+
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
 		(let ((lyskom-is-parsing t))
 		  (unwind-protect
@@ -3516,6 +3518,11 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 ;;; ================================================================
 ;;;         Debug buffer
 
+(defun lyskom-debug-limit-buffer ()
+  (when (and (numberp lyskom-debug-communications-limit)
+             (> (point-max) lyskom-debug-communications-limit))
+    (delete-region (point-min) (- (point-max) lyskom-debug-communications-limit))))
+
 (defun lyskom-debug-insert (proc prefix string)
   (let* ((buf (get-buffer-create
 	       lyskom-debug-communications-to-buffer-buffer))
@@ -3533,6 +3540,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 			(format "%s" proc)
                         ": "
                         string))
+              (lyskom-debug-limit-buffer)
 	      (if move (goto-char (point-max))))))
       (save-excursion
 	(set-buffer buf)
@@ -3540,7 +3548,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(insert "\n"
                 prefix
 		(format "%s" proc)
-		": "  string)))))
+		": "  string)
+        (lyskom-debug-limit-buffer)))))
 
 
 ;;; For serious bugs
@@ -3840,6 +3849,8 @@ One parameter - the prompt string."
   ;; Set up default language
   (let ((languages (list kom-default-language
                          (lyskom-language-from-environment "KOMLANGUAGE")
+                         (lyskom-language-from-environment "LC_ALL")
+                         (lyskom-language-from-environment "LC_MESSAGES")
                          (lyskom-language-from-environment "LANG")
                          (car (car (last lyskom-languages))))))
     (lyskom-traverse lang languages

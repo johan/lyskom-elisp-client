@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.21 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: komtypes.el,v 44.22 2002-05-01 21:42:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.21 2002-04-21 21:32:16 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.22 2002-05-01 21:42:39 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -1450,9 +1450,8 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
          (mapcar 'cdr (text-mapping->block map)))
         ((eq (text-mapping->type map) 'dense)
          (let ((result nil))
-           (mapc (lambda (el)
-                   (unless (zerop el) (setq result (cons el result))))
-                 (map->text-nos (text-mapping->block map)))
+           (lyskom-traverse el (map->text-nos (text-mapping->block map))
+             (unless (zerop el) (setq result (cons el result))))
            (nreverse result)))))
 
 (defun text-mapping->global-to-local (map global)

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.190 2002-04-29 21:57:35 qha Exp $
+;;;;; $Id: vars.el.in,v 44.191 2002-05-01 21:42:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.190 2002-04-29 21:57:35 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.191 2002-05-01 21:42:40 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1133,6 +1133,10 @@ at random and used. This element may be a string, function or list."
 
 (def-kom-var kom-default-language nil
   "*Which language to use for messages in new sessions.
+The value is a symbol whose name is the ISO 630 code for the desired
+language (e.g. sv for Swedish and en for English). Not that the languages
+available depend on how you have built the client.
+
 All choices are listed in `lyskom-languages'"
   server 
   inherited
@@ -1185,6 +1189,11 @@ appear more than once"
 
 (def-kom-var lyskom-onoff-table nil
   "A completion table for on and off selections."
+  local
+  language-force)
+
+(def-kom-var lyskom-move-tree-actions nil
+  "A completion table for actions in kom-move-text-tree"
   local
   language-force)
 
@@ -1767,6 +1776,7 @@ is a list of vectors, where each vector specifies an item.
     kom-add-bcc
     kom-sub-recipient
     kom-move-text
+    kom-move-text-tree
     kom-add-comment
     kom-sub-comment
     kom-add-cross-reference
@@ -1990,6 +2000,10 @@ This is not buffer-local.")
 
 (def-kom-var lyskom-err-stat nil
   "Err-stat of last lyskom error."
+  local)
+
+(def-kom-var lyskom-parser-recovering nil
+  "Non-nil if the parser is recovering from an error."
   local)
 
 (def-kom-var lyskom-parse-pos nil
@@ -2370,6 +2384,7 @@ set to that text."
     kom-add-bcc
     kom-sub-recipient
     kom-move-text
+    kom-move-text-tree
     kom-add-comment
     kom-sub-comment
     kom-add-cross-reference
@@ -2486,6 +2501,13 @@ kom-go-to-next-conf might go to the same conference again.)")
 (def-kom-var lyskom-debug-communications-to-buffer nil
   "Non-nil means all communications with the server is stored in a buffer.
 The name is stored in lyskom-debug-communications-to-buffer-buffer.")
+
+(def-kom-var lyskom-debug-communications-limit 60000
+  "When set to an integer limits the communications log to that many
+bytes. When set to a non-integer, the communications log is unlimited.
+If a protocol error is detected, this limit will be reset to nil.
+
+See lyskom-debug-communications-to-buffer")
 
 (def-kom-var lyskom-backtrace-list nil
   "List containing debugging information.")
