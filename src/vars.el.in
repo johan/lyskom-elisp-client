@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.180 2002-04-14 21:52:00 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.181 2002-04-20 14:52:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.180 2002-04-14 21:52:00 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.181 2002-04-20 14:52:53 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -100,6 +100,13 @@ are in the list.")
 
 
 ;;; User flags
+
+(def-kom-var kom-extended-status-information t
+  "*If t, list extended status information for all objects in LysKOM.
+Extended status information include such information as read FAQs.
+Values other than t or nil are reserved for future extensions."
+  server
+)
 
 (def-kom-var kom-auto-list-faqs t
   "*If non-nil, list unread FAQs when entering a conference or logging
