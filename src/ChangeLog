@@ -1,5 +1,25 @@
 1999-12-03  David Byers  <davby@sen2.ida.liu.se>
 
+	* swedish-strings.el, english-strings.el (lyskom-command): Removed
+	kom-edit-options.
+
+	* flags.el: Commented out all the kom-edit-options stuff.
+	(lyskom-save-options): Fix string encoding of user area
+	(it was really messed up.)
+
+1999-12-03  David Byers  <davby@ida.liu.se>
+
+	* command.el (lyskom-read-extended-command): Use
+	lyskom-maybe-recode-string in place of last patch.
+
+	* buffers.el (lyskom-generate-new-buffer): Use
+	lyskom-maybe-recode-string to maybe recode the buffer name.
+	(lyskom-get-buffer-create): Here too.
+
+	* utilities.el (lyskom-maybe-recode-string): New function.
+
+1999-12-03  David Byers  <davby@sen2.ida.liu.se>
+
 	* command.el (lyskom-read-extended-command): Patch in order to do
 	correct completion in a unibyte environment with multibyte strings
 	as alternatives.

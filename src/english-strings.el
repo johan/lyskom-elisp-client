@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.74 1999-12-02 23:44:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.75 1999-12-03 15:33:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.74 1999-12-02 23:44:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.75 1999-12-03 15:33:19 byers Exp $"))
 
 
 ;;; ================================================================
@@ -954,6 +954,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (error-in-options . "There was an error in one of your variables (%#1s)
 It was set to \"%#2s\" in the user area. It is set to nil instead.
 Send a bug report.\n")
+    (error-in-options-short . "There was an error in your saved settings. Some settings have not been read.")
 
     ; From elib-string.el:
     ; No entries.
@@ -1479,7 +1480,6 @@ You must become an active member of the conference to enter it.\n")
     (kom-unset-conf-motd      . "Remove notice")
     (kom-save-text            . "Archive text (in file)")
     (kom-save-text-body       . "Save text body (in file)")
-    (kom-edit-options         . "Change options")
     (kom-save-options         . "Save options")
     (kom-shutdown-server      . "Shut down (server)")
     (kom-sync-database        . "Save (the) database")
