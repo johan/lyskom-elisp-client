@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.198 2003-04-05 18:49:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.199 2003-04-06 20:23:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.198 2003-04-05 18:49:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.199 2003-04-06 20:23:15 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -483,11 +483,11 @@ settings to control session priorities."
 		 (type (read-info->type tri))
 		 (priority (read-info->priority
 			    (read-list->first lyskom-reading-list)))
-		 (is-review-tree (eq type 'REVIEW-TREE))
+		 (is-review-tree (memq type '(REVIEW-TREE)))
 		 (is-review (or (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))
 				is-review-tree))
 		 (mark-as-read (not is-review)))
-	    (when is-review
+	    (when (or is-review (eq type 'REVIEW-FAQ-TREE))
               (set-text-list->texts
                (read-info->text-list tri)
                (delq text-no (text-list->texts 
@@ -1785,6 +1785,7 @@ Deferred insertions are not supported."
       (if (and (not colon-flag)
                (or (lyskom-conf-stat-p arg)
                    (lyskom-uconf-stat-p arg)
+                   (lyskom-conf-z-info-p arg)
                    (numberp arg)))
           (setq propl 
                 (append
@@ -2826,7 +2827,8 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                     'review-next-comment-prompt)
                    ((eq 'REVIEW-MARK (read-info->type read-info))
                     'review-next-marked-prompt)
-                   ((eq 'REVIEW-FAQ (read-info->type read-info))
+                   ((or (eq 'REVIEW-FAQ (read-info->type read-info))
+                        (eq 'REVIEW-FAQ-TREE (read-info->type read-info)))
                     'review-next-faq-prompt)
                    ;; The following is not really correct. The text to be
                    ;; read might be in another conference.
@@ -2857,6 +2859,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                       (read-info->type (read-list->first lyskom-to-do-list)))
                   'go-to-conf-of-review-prompt)
                  ((eq 'REVIEW-FAQ
+                      (read-info->type (read-list->first lyskom-to-do-list)))
+                  'go-to-conf-of-review-faq-prompt)
+                 ((eq 'REVIEW-FAQ-TREE
                       (read-info->type (read-list->first lyskom-to-do-list)))
                   'go-to-conf-of-review-faq-prompt)
                  ((eq 'REVIEW-TREE 

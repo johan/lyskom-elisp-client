@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.10 2003-03-16 11:05:41 byers Exp $
+;;;;; $Id: faqs.el,v 44.11 2003-04-06 20:23:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.10 2003-03-16 11:05:41 byers Exp $\n"))
+              "$Id: faqs.el,v 44.11 2003-04-06 20:23:15 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -258,9 +258,9 @@ do this. To add a FAQ, use `kom-add-server-faq'."
       (lyskom-do-review-faq faq-list)
       ))))
 
-(defun lyskom-do-review-faq (faq-list)
+(defun lyskom-do-review-faq (faq-list &optional review-tree)
   (read-list-enter-read-info
-   (lyskom-create-read-info 'REVIEW-FAQ
+   (lyskom-create-read-info (if review-tree 'REVIEW-FAQ-TREE 'REVIEW-FAQ)
                             nil
                             (lyskom-review-get-priority)
                             (lyskom-create-text-list faq-list)
@@ -463,5 +463,5 @@ create a new FAQ."
       (lyskom-do-list-summary faq-list))
 
     (when kom-auto-review-faqs
-      (lyskom-do-review-faq faq-list))))
+      (lyskom-do-review-faq faq-list t))))
 

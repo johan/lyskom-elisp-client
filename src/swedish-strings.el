@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.316 2003-04-05 20:41:25 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.317 2003-04-06 20:23:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.316 2003-04-05 20:41:25 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.317 2003-04-06 20:23:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -915,6 +915,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (review-cant-read-letterbox . "Du kan inte återse inlägg till någon annans brevlåda.\n")
     (review-cant-read-empty . "Mötet är tomt.\n")
     (cant-review-everything . "Du kan inte återse alla texter i LysKOM.\n")
+    (cant-unread-everything . "Du kan inte oläsmarkera alla texter i LysKOM.\n")
 
     (more-than-one-root . "Inlägg %#1n har mer än ett urinlägg.\n")
     (more-than-one-root-review . 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.50 2003-03-15 23:14:17 byers Exp $
+;;;;; $Id: review.el,v 44.51 2003-04-06 20:23:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.50 2003-03-15 23:14:17 byers Exp $\n"))
+	      "$Id: review.el,v 44.51 2003-04-06 20:23:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -219,7 +219,7 @@ mark unread performed with `kom-unread-by-to'."
                               to))
     
       (condition-case arg
-          (let ((list (lyskom-get-texts-by-to by to count t)))
+          (let ((list (lyskom-get-texts-by-to by to count t t)))
             (setq lyskom-last-unread-num 
                   (if (< lyskom-last-unread-num 0)
                       (- count)
@@ -435,7 +435,7 @@ texts, review the last N texts instead of the first (you can use
     (setq lyskom-have-unread t)
 
     (condition-case arg
-        (let ((list (lyskom-get-texts-by-to by to count)))
+        (let ((list (lyskom-get-texts-by-to by to count nil t)))
           (if list
               (lyskom-traverse text-no list
                 (unless (lyskom-mark-unread text-no)
@@ -462,11 +462,11 @@ texts, review the last N texts instead of the first (you can use
 ;;;
 
 
-(defun lyskom-get-texts-by-to (by to num &optional again)
+(defun lyskom-get-texts-by-to (by to num &optional again do-unread)
   "Get NUM texts written by person number BY in conference number TO
-Args: BY TO NUM"
+Args: BY TO NUM AGAIN DO-UNREAD"
   (cond ((and (zerop by) 
-              (zerop to)) (lyskom-get-texts-globally num again))
+              (zerop to)) (lyskom-get-texts-globally num again do-unread))
         ((zerop to) (lyskom-get-texts-by by num again))
         ((zerop by) (lyskom-get-texts-to to num again))
         ((and (eq by lyskom-pers-no)
@@ -536,7 +536,7 @@ This function signals an error if review is impossible"
 ;;; Author: Per Cederquist, David Byers
 ;;;
 
-(defun lyskom-get-texts-globally (num &optional again)
+(defun lyskom-get-texts-globally (num &optional again do-unread)
   "Get the last NUM texts created in LysKOM. If AGAIN is non-nil, keep
 going from where we were before."
   (cond ((and again (null num))
@@ -544,7 +544,8 @@ going from where we were before."
         ((and again (< lyskom-last-review-num 0)) 
          (setq num (- num)))
         ((null num) 
-         (lyskom-format-insert 'cant-review-everything)
+         (lyskom-format-insert
+          (if do-unread 'cant-unread-everything 'cant-review-everything))
          (signal 'lyskom-cant-review-error t)))
 
   (let ((result nil)

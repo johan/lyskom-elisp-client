@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.84 2003-03-16 19:49:00 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.85 2003-04-06 20:23:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.84 2003-03-16 19:49:00 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.85 2003-04-06 20:23:15 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -571,8 +571,13 @@ up."
                       ((lyskom-uconf-stat-p arg)
 		       (if (conf-type->letterbox (uconf-stat->conf-type arg))
 			   (setq type 'pers))
-		       (setq xarg arg
+		       (setq xarg (conf-z-info->conf-no arg)
 			     text (uconf-stat->name arg)))
+                      ((lyskom-conf-z-info-p arg)
+                       (if (conf-type->letterbox (conf-z-info->conf-type arg))
+                           (setq type 'pers))
+                       (setq xarg (conf-z-info->conf-no arg)
+                             text (conf-z-info->name arg)))
 		      ((numberp arg)
                        (if (setq xarg (cache-get-uconf-stat arg))
                            (progn
@@ -591,8 +596,11 @@ up."
                       ((lyskom-uconf-stat-p arg)
 		       (setq xarg arg
 			     text (uconf-stat->name arg)))
+                      ((lyskom-conf-z-info-p arg)
+                       (setq xarg arg
+                             text (conf-z-info->name arg)))
 		      ((lyskom-pers-stat-p arg)
-		       (setq xarg arg
+		       (setq xarg (conf-z-info->conf-no arg)
 			     text (or (conf-stat->name
                                        (cache-get-conf-stat
                                         (pers-stat->pers-no arg)))
@@ -1370,5 +1378,7 @@ ARG is interpreted by `lyskom-highlight-function-get-conf-stat'.
 This function never makes server calls, so if the information required
 to answer accurately is not cached, this function will return an incorrect
 result (nil instead of t)."
-  (eq 0 (conf-stat->presentation
-         (lyskom-highlight-function-get-conf-stat arg))))
+  (let ((conf-stat (lyskom-highlight-function-get-conf-stat arg)))
+    (cond ((null conf-stat) nil)
+          ((conf-type->secret (conf-stat->conf-type conf-stat)) nil)
+          (t (eq 0 (conf-stat->presentation conf-stat))))))

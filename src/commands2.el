@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.163 2003-04-05 20:02:28 byers Exp $
+;;;;; $Id: commands2.el,v 44.164 2003-04-06 20:23:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.163 2003-04-05 20:02:28 byers Exp $\n"))
+              "$Id: commands2.el,v 44.164 2003-04-06 20:23:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1076,7 +1076,7 @@ the text on one line."
                                  (read-list->nth read-list r)))))
               (and (null conf-no)
                    (memq (read-info->type (read-list->nth read-list r))
-                         '(CONF REVIEW-MARK REVIEW REVIEW-FAQ))))
+                         '(CONF REVIEW-MARK REVIEW REVIEW-TREE REVIEW-FAQ REVIEW-FAQ-TREE))))
           (setq len 0)
         (setq r (1+ r))))
     (setq read-info (read-list->nth read-list r))
