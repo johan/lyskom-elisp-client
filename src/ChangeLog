@@ -1,3 +1,10 @@
+2005-01-04  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): Added keybindings for
+	unaccelerated < and >.
+	
+	* english-strings.el (lyskom-en-mode-map): Ditto.
+
 2004-12-06  Pontus Freyhult  <pont@soua.net>
 
 	Bugfix: Handle case when started from buffer with no local keymap
