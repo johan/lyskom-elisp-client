@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.3 1996-08-10 03:35:52 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.4 1996-08-10 11:56:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.3 1996-08-10 03:35:52 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.4 1996-08-10 11:56:17 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1575,7 +1575,7 @@ chosen according to this"
       (lyskom-set-last-viewed))
   (lyskom-prefetch-and-print-prompt)
   (run-hooks 'lyskom-after-command-hook)
-  (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+  (if lyskom-idle-time-flag
       (initiate-user-active 'background nil))
   (if kom-inhibit-typeahead
       (discard-input)))

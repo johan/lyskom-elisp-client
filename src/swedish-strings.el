@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.5 1996-08-10 03:35:55 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.6 1996-08-10 11:56:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.5 1996-08-10 03:35:55 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.6 1996-08-10 11:56:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -967,8 +967,8 @@ K\366r %#6D fr\345n %#3s\n")
     (session-status-9 . "Session %#1d \344r %#2P <%#2p>
 %#5s %#7s %#4M
 K\366r %#6D fr\345n %#3s
-Uppkopplad sedan %#8s
-och har inte varit aktiv p\345 %#9d minuter\n")
+Uppkopplad sedan %#8s%#9s")
+    (session-status-inactive . "\nHar inte varit aktiv p\345 %#1d minuter\n")
     (session-is-invisible . "Denna session \344r osynlig.\n")
     (status-for-session . "Sessionsstatus f\366r vilken person? ")
     (unknown-doing-what . "Existerar")
