@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.12 1991-12-08 17:02:18 byers Exp $
+;;;;; $Id: english-strings.el,v 35.13 1991-12-18 15:47:10 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.12 1991-12-08 17:02:18 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.13 1991-12-18 15:47:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -417,8 +417,13 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (name-is-not-in-conf . "%#1s is in any conference.\n")
     (name-is-in-conf . "%#1s is in\n%#2s\n")
     (connected-during . "Connect time: %#1d seconds.\n")
-    (conf-to-set-garb-nice-q . "Set expiration for which conference: ")
-    (new-garb-nice-q . "What do you want to set the life-time to: ")
+
+    (conf-to-set-super-conf-q . "Set superconference of which conference: ")
+    (new-super-conf-q . "Which converece do you want as superconference: ")
+    (super-conf-for-is . "Changing superconference of %#1s to %#2s...")
+
+    (conf-to-set-garb-nice-q . "Set expiration time for which conference: ")
+    (new-garb-nice-q . "What do you want to set the expiration time to: ")
     (garb-nice-for-is . "Changing expiration for %#1s to %#2d...")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
@@ -454,6 +459,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-text-no . "Review article %#1d")
     (review-one-comment . "Review one comment to article %#1d.\n")
     (review-many-comments . "Review %#2d comments to article %#1d.\n")
+    (read-normally-read . "How many articles to you want to review: ")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the article.")
@@ -659,6 +665,8 @@ Error message: %#1s**************************************************")
     (kom-review-comments	"Review all comments")
     (kom-review-tree		"Review all comments recursively")
     (kom-review-clear           "Review and skip")
+    (kom-review-last-normally-read
+     				"Review again")
     (kom-review-next            "Review next")
     (kom-find-root		"Review original (article)")
     (kom-review-by-to           "Review last")
@@ -696,6 +704,7 @@ Error message: %#1s**************************************************")
     (kom-sub-member             "Remove subscriber")
     (kom-change-conf-motd	"(Post) note (on the) door")
     (kom-set-garb-nice          "Change expiration")
+    (kom-set-super-conf         "Change superconference")
     (kom-unset-conf-motd	"Remove note (from the door)")
     (kom-save-text		"Save article (in file)")
     (kom-edit-options		"Change options")
@@ -796,6 +805,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "rn" 'kom-review-next)
   (define-key lyskom-mode-map "ro" 'kom-find-root)
   (define-key lyskom-mode-map "rl" 'kom-review-by-to)
+  (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "rs" 'kom-review-stack)
   (define-key lyskom-mode-map "rp" 'kom-review-presentation)
