@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.1 1996-09-29 15:18:47 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.2 1996-10-03 00:21:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.1 1996-09-29 15:18:47 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.2 1996-10-03 00:21:14 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -87,8 +87,6 @@ lyskom-queue.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
 ('MEMBERSHIPISREAD) -  Just sets the lyskom-membership-is-read variable to t.
-('ALL-CONF-TEXTS) -    All text in all conferences.
-('CONF-TEXTS) -        All text in one conference.
 
 
 See further documentation in the source code.")
@@ -130,22 +128,12 @@ This is used to prevent the prefetch code to reenter itself.")
   "Variable counting the number of unfinished prefetch requests.")
 
 
-;+++These should really be in vars.el:
-(defvar lyskom-prefetch-limit 1
-  "Number of prefetch requests the client will try to keep going
-at a time.")
-
-(defvar lyskom-prefetch-map-size 25
-  "Number of local text-no:s that are fetched at a time in a map.")
-
-
 ;;; ================================================================
 ;;;                 Functions callable from the outside
 
 
 (defun lyskom-setup-prefetch ()
   "Sets up the prefetch process in lyskom."
-;+++ Much more could be done here.
   (setq lyskom-prefetch-stack (lyskom-stack-create))
   (setq lyskom-pending-prefetch 0)
   (setq lyskom-membership-is-read 0))
@@ -276,22 +264,22 @@ lyskom-prefetch-stack."
   (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-all-conf-texts (&optional queue)
-  "Prefetches the texts in all conferences."
-  (if queue
-      (lyskom-queue-enter queue (list 'ALL-CONF-TEXTS))
-    (lyskom-stack-push lyskom-prefetch-stack (list 'ALL-CONF-TEXTS)))
-  (lyskom-continue-prefetch))
+;;(defun lyskom-prefetch-all-conf-texts (&optional queue)
+;;  "Prefetches the texts in all conferences."
+;;  (if queue
+;;      (lyskom-queue-enter queue (list 'ALL-CONF-TEXTS))
+;;    (lyskom-stack-push lyskom-prefetch-stack (list 'ALL-CONF-TEXTS)))
+;;  (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-conf-texts (text-list &optional queue)
-  "Prefetches the texts in all conferences."
-  (if (null (text-list->texts text-list))
-      nil
-    (if queue
-	(lyskom-queue-enter queue (list 'CONF-TEXTS text-list))
-      (lyskom-stack-push lyskom-prefetch-stack (list 'CONF-TEXTS text-list))))
-  (lyskom-continue-prefetch))
+;;(defun lyskom-prefetch-conf-texts (text-list &optional queue)
+;;  "Prefetches the texts in all conferences."
+;;  (if (null (text-list->texts text-list))
+;;      nil
+;;    (if queue
+;;	(lyskom-queue-enter queue (list 'CONF-TEXTS text-list))
+;;      (lyskom-stack-push lyskom-prefetch-stack (list 'CONF-TEXTS text-list))))
+;;  (lyskom-continue-prefetch))
 
 
 ;;; ================================================================
