@@ -1,5 +1,9 @@
 Fri Oct 11 02:52:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* vars.el.in (kom-allow-incompleteness): Ny variabel.
+
+	* commands2.el (kom-list-news): Använd den.
+
 	* lyskom-rest.el (lyskom-prefetch-all-confs): Gör
  	lyskom-wait-for-membership.
 	(lyskom-wait-for-membership): Skriv ut det totala antalet möten
