@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.302 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.303 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.302 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.303 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3164,6 +3164,30 @@ Other variables that control display of imported e-mail include
 Values other than `t' and `nil' are reserved for future use."
   server)
 
+(def-kom-var kom-show-imported-message-id nil
+  "**Controls display of the message id in imported mail.
+
+When set to `t', display the message id of the imported e-mail. When
+set to `nil', don't.
+
+`kom-show-imported-message-id' set to `t':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Message-ID: <D1696C471C6CD511A0BE00D0B7A932DE01BBB4FA@spareribs.meat.com>
+  External recipient: BBQ <531@kom.meat.com>
+
+`kom-show-imported-message-id' set to `nil':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  External recipient: BBQ <531@kom.meat.com>
+
+Other variables that control display of imported e-mail include
+`kom-show-imported-envelope-sender', `kom-show-imported-importer' and
+`kom-show-imported-external-recipients'.
+
+Values other than `t' and `nil' are reserved for future use."
+  server)
+
 (def-kom-var kom-show-imported-external-recipients t
   "**Controls display of external recipients of imported e-mail.
 
@@ -3184,8 +3208,8 @@ headers.
   Imported: today 00:07 by Mailman
 
 Other variables that control display of imported e-mail include
-`kom-show-imported-importer' and
-`kom-show-imported-external-recipients'.
+`kom-show-imported-envelope-sender', `kom-show-imported-importer' and
+`kom-show-imported-message-id'.
 
 Values other than `t' and `nil' are reserved for future use."
   server)

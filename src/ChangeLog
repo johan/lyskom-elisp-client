@@ -1,3 +1,22 @@
+2004-10-23  Pontus Freyhult  <pont@soua.net>
+
+	Fix bug 284:
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-custom-strings): Added kom-show-imported-message-id-tag
+	and kom-show-imported-message-id-doc.
+	(lyskom-message): Added message-id.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-show-imported-message-id.
+	(lyskom-custom-variables): Dito.	
+
+	*vars.el.in (kom-show-imported-message-id): New variable.
+	(kom-show-imported-external-recipients): Changed documentation
+	(added kom-show-imported-message-id as "see also").
+
+	* view-text.el (lyskom-view-text): Show Message-Id if available
+	and kom-show-imported-message-id is true.
+	
 2004-10-19  Pontus Freyhult  <pont@soua.net>
 
 	Allow for easy relogin from dead sessions (bug 1278):

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.338 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.339 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.338 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.339 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1018,6 +1018,7 @@ Help: \\[describe-mode] ---")
     
     (envelope-sender . "Sent by: %#1s\n")
     (attachment-filename . "Attachment file name: \"%#1s\"\n")
+    (message-id . "Message-ID: %#1s\n")
 
     (comment-to-text-by . "Comment to text %#1n by %#2P")
     (footnote-to-text-by . "Footnote to text %#1n by %#2P")
@@ -3897,6 +3898,10 @@ up menus.")
   Show external recipients and CC recipients of imported e-mails if this
   is on. This only works with compilant e-mail importers.")
 
+    (kom-show-imported-message-id-doc . "\
+  Show Message-Id of imported e-mails if this is on. This only works with 
+  compilant e-mail importers.")
+
     (kom-agree-text-doc . "\
   Default text for the Agree command. It can either be a text or a list
   of texts. If it is a list, one of the texts will be chosen at random.")
@@ -4395,6 +4400,7 @@ up menus.")
     (kom-show-imported-importer-tag . "Show importer of imported messages:")
     (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")
     (kom-show-imported-external-recipients-tag . "Show external recipients of imported messages:")
+    (kom-show-imported-message-id-tag . "Show message-id of imported messages:")
     (kom-agree-text-tag . "Default text for Agree:")
     (kom-silent-ansaphone-tag . "Beep when auto reply is on:")
     (kom-default-session-priority-tag . "Default session priority:")
