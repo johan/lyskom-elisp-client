@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 43.9 1996-08-30 12:32:18 davidk Exp $
+# $Id: Makefile,v 44.0 1996-08-30 14:44:47 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 43.9 1996-08-30 12:32:18 davidk Exp $
+# $Id: Makefile,v 44.0 1996-08-30 14:44:47 davidk Exp $
 #
 
 CLIENTVERSION = 0.44
