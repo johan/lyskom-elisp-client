@@ -1,5 +1,41 @@
+;; Included from fields.el
+
+;; (provide 'fields)
+
+(defun fields-new (string)
+  (let ((fields nil))
+    (while (string-match "\\[" string)
+      (insert (substring string 0 (match-beginning 0)))
+      (setq string (substring string (match-end 0)))
+      (cond ((= (elt string 0) ?\[)
+	     (insert "[")
+	     (setq string (substring string 1)))
+	    ((string-match "\\([^]]+\\)\\]" string)
+	     (setq fields (cons (list (intern (match-string 1 string))
+				      (point-marker)
+				      nil)
+				fields))
+	     (setq string (substring string (match-end 0))))))
+    (insert string)
+    (cons (current-buffer) fields)))
+
+
+(defun fields-replace (fields item string)
+  (save-excursion
+    (set-buffer (car fields))
+    (let ((place (assq item (cdr fields))))
+      (if (not place) (error "Unknown item"))
+      (goto-char (nth 1 place))
+      (insert string)
+      (if (nth 2 place)
+	  (delete-region (point) (nth 2 place))
+	(setcar (cdr (cdr place)) (point-marker)))
+      (if (zerop (length string))
+	  (setcar (cdr (cdr place)) nil)))))
+
+
 (require 'advice)
-(require 'fields)
+;; (require 'fields)
 
 (defvar lyskom-caches-stat '(text text-stat pers-stat uconf-stat conf-stat
 				  static-session-info))
