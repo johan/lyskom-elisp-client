@@ -1,7 +1,20 @@
+2003-05-04  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1032:
+	* command.el (lyskom-read-extended-command): Do not permit null
+	input.
+
+	Fix bug 1031:
+	* faces.el (lyskom-setup-faces-for-buffer): Set defaults to nil,
+	not default.
+
+	Fixed bug 1024:
+	* names.el (fi-sv): Fixed tYpo
+
 2003-04-26  Ulrik Haugen  <qha@lysator.liu.se>
 
-My previous attempt to fix bug 1022 was incomplete, trying to repair it I
-realised how it should be done.
+	My previous attempt to fix bug 1022 was incomplete, trying to
+	repair it I realised how it should be done.
 
 	* lyskom-rest.el (lyskom-modify-prompt): Don't "use current-time
 	instead of lyskom-current-client-time".
@@ -17,6 +30,7 @@ realised how it should be done.
 	(lyskom-en-edit-mode-map): Added binding for
 	kom-insert-last-info-nodename.
 
+	Fix bug 1022:
 	* lyskom-buttons.el (lyskom-button-copy-timestamp): Fixed typo.
 
 	* lyskom-rest.el (lyskom-modify-prompt): Use current-time instead

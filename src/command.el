@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.46 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: command.el,v 44.47 2003-05-04 17:23:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.46 2003-01-05 21:37:05 byers Exp $\n"))
+	      "$Id: command.el,v 44.47 2003-05-04 17:23:29 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -244,19 +244,21 @@
            lyskom-command-minibuffer-local-completion-map)
           (minibuffer-local-must-match-map 
            lyskom-command-minibuffer-local-must-match-map))
+      (while (or (null name)
+                 (string= "" name))
       (lyskom-with-lyskom-minibuffer
        (setq name (lyskom-completing-read prompt
                                           'lyskom-complete-command
-                                        ;                                        (lyskom-maybe-frob-completion-table
-                                        ;                                         alternatives)
                                           ;; lyskom-is-administrator is buffer-local and
                                           ;; must be evalled before the call to 
                                           ;; completing-read
                                           ;; Yes, this is not beautiful
-                                          (list 'lambda '(alternative)	     
+                                          (list 'lambda '(alternative) ;
                                                 (list 'lyskom-ok-command 'alternative
                                                       lyskom-is-administrator))
-                                          t nil 'lyskom-command-history))))
+                                          t
+                                          nil
+                                          'lyskom-command-history)))))
     (cdr (lyskom-string-assoc name alternatives))))
 
 
