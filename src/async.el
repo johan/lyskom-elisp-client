@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.0 1994-01-06 01:56:25 linus Exp $
+;;;;; $Id: async.el,v 38.1 1994-01-14 00:28:05 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.0 1994-01-06 01:56:25 linus Exp $\n"))
+	      "$Id: async.el,v 38.1 1994-01-14 00:28:05 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -385,18 +385,6 @@ The text is converted, before insertion."
 
   (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))
 
-
-(defun lyskom-conf-fetched-p (conf-no)
-  "Return t if CONF-NO has been prefetched."
-  (let ((n (1- (length lyskom-membership)))
-	(result nil))
-    (while (and (not result)
-		(>= n 0))
-      (if (= (membership->conf-no (elt lyskom-membership n))
-	     conf-no)
-	  (setq result t))
-      (-- n))
-    result))
 
 
 (defun lyskom-add-new-text (recipient text-no local-no)

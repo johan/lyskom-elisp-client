@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.0 1994-01-06 01:59:01 linus Exp $
+;;;;; $Id: review.el,v 38.1 1994-01-14 00:28:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.0 1994-01-06 01:59:01 linus Exp $\n"))
+	      "$Id: review.el,v 38.1 1994-01-14 00:28:28 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -151,7 +151,7 @@ Checks for errors then gets maps and calls next function."
 	  (lyskom-insert-string 'no-get-conf)
 	  t)
 	 ((not (eq (not pers-no) (not pers-stat)))
-	  (lyskom-insert-string 'no'get'pers)
+	  (lyskom-insert-string 'no-get-pers)
 	  t)
 	 ((and (not conf-stat)
 	       (not pers-stat))
@@ -499,13 +499,15 @@ of the root text as argument."
 (defun lyskom-review-tree (text)
   "Takes a TEXT as an arg, shows the text and the tree of all comments.
 Does a lyskom-end-of-command.
-Text is a text-no or a text-stat."
+Text is a text-no."
   (cond
    ((integerp text)
     (lyskom-view-text 'main text nil t nil (lyskom-get-current-priority) t))
-   (t 
-    (lyskom-view-text 'main (text-stat->text-no text-stat)
-		      nil t nil (lyskom-get-current-priority) t)))
+   (t
+    (signal 'lyskom-internal-error
+	    (list 'lyskom-review-tree
+		  "Called with incorrect argument."
+		  text))))
   (lyskom-run 'main 'lyskom-end-of-command))
 
 

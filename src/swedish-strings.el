@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.0 1994-01-06 01:59:23 linus Exp $
+;;;;; $Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.0 1994-01-06 01:59:23 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -46,6 +46,9 @@
   "Mode map for LysKOM edit.")
 
 ;;; Set the keymap for lyskom-edit-mode
+
+(defvar lyskom-edit-prefix nil
+  "Mode-map for lyskom edit mode.")
 
 (if lyskom-edit-mode-map
     nil
@@ -99,10 +102,15 @@ Avbryt=\\[kom-edit-quit], \
 Annat se \\[describe-mode] ---")
   "*String to separate headers from text body.")
 
+(defvar lyskom-swascii-header-separator nil
+  "The swascii version of lyskom-header-separator.")
+
 
 (defvar lyskom-header-subject "\304rende: "
   "*String to prompt for subject in the edit buffer.")
 
+(defvar lyskom-swascii-header-subject nil
+  "The swascii version of lyskom-header-subject.")
 
 (defconst lyskom-strings 
   '(
@@ -796,6 +804,9 @@ Felmeddelande: %#1s**************************************************")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
+(defvar lyskom-swascii-commands nil
+  "The swascii-versions of lyskom-commands.")
+
 
 (defvar lyskom-text-start "
 [0-9]+ 199[0-9]-[0-1][0-9]-[0-3][0-9] +[0-2][0-9]:[0-5][0-9]  /[0-9]+ rad\\(er\\)?/ "
@@ -1066,8 +1077,10 @@ Users are encouraged to use their best sense of humor.")
 
 ;;; Author: Linus Tolke 
 
-(setq lyskom-slow-mode-map
-      (make-sparse-keymap))
+(defvar lyskom-slow-mode-map
+  (make-sparse-keymap)
+  "Mode map for the `slow' lyskom command mode.")
+
 (define-key lyskom-slow-mode-map "\r" 'lyskom-parse-command-and-execute)
 
 (defun lyskom-parse-command-and-execute ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.1 1994-01-10 15:37:49 linus Exp $
+;;;;; $Id: startup.el,v 38.2 1994-01-14 00:28:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.1 1994-01-10 15:37:49 linus Exp $\n"))
+	      "$Id: startup.el,v 38.2 1994-01-14 00:28:38 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -44,7 +44,9 @@
 
 (defun lyskom (&optional host username password)
   "Start a LysKOM session.
-Optional arguments: HOST, USERNAME and PASSWORD."
+Optional arguments: HOST, USERNAME and PASSWORD.
+
+See lyskom-mode for details."
   (interactive (list (lyskom-read-string (lyskom-format 'server-q
 					  (or (getenv "KOMSERVER")
 					      lyskom-default-server)))
@@ -480,7 +482,12 @@ Commands:
 All bindings (this is here due to the fact that inconsistensies while 
 developping this package are frequent):
 \\{lyskom-mode-map}
-Entry to this mode runs lyskom-mode-hook."
+Entry to this mode runs lyskom-mode-hook.
+
+Functions and variables beginning with kom- are intended for the user to see,
+set or call.
+Functions and variables beginning with lyskom- are not intended for the user
+to see, set of call."
   (interactive)
   (lyskom-clear-vars)
   (setq mode-line-buffer-identification
@@ -512,6 +519,7 @@ Entry to this mode runs lyskom-mode-hook."
 	(server-info lyskom-server-info)
 	)
     (kill-all-local-variables)
+    (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-unparsed-buffer)
     (make-local-variable 'lyskom-unparsed-marker)
     (make-local-variable 'lyskom-is-writing)

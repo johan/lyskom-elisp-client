@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.1 1994-01-10 18:07:53 linus Exp $
+# $Id: Makefile,v 38.2 1994-01-14 00:28:00 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.1 1994-01-10 18:07:53 linus Exp $
+# $Id: Makefile,v 38.2 1994-01-14 00:28:00 linus Exp $
 # $Log: Makefile,v $
-# Revision 38.1  1994-01-10 18:07:53  linus
+# Revision 38.2  1994-01-14 00:28:00  linus
+# Fixed some bytecomp warnings.
+#
+# Revision 38.1  1994/01/10  18:07:53  linus
 # The installation method changed (again).
 # The version is now contained in the Makefile.
 #
@@ -132,7 +135,6 @@ CLIENTVERSION = 0.38.1
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
-MKDIR = /bin/mkdir
 
 RM = /usr/gnu/bin/rm -vf
 
@@ -212,6 +214,7 @@ install: installnodoc installdoc
 installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
 	# Lysator
 	cp lyskom.el /usr/local/lib/emacs/site-lisp/lyskom.el
+	cp lyskom.el /usr/local/var/elisp/lyskom.el
 	cp lyskom-$(CLIENTVERSION).elc /usr/local/lib/emacs/site-lisp/lyskom.elc
 
 lyskom-$(CLIENTVERSION).elc: lyskom.el
@@ -228,10 +231,8 @@ lyskom-$(CLIENTVERSION).el.gz: lyskom.el
 lyskom-$(CLIENTVERSION).elc.gz: lyskom-$(CLIENTVERSION).elc
 	gzip -9 < lyskom-$(CLIENTVERSION).elc > lyskom-$(CLIENTVERSION).elc.gz
 
-installatftp: lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz
-	touch lyskom-$(CLIENTVERSION).elc.gz # Do we have confidence problems?
-	mv lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz \
-		/usr/ftp/pub/lyskom/elisp-client
+installatftp: lyskom-$(CLIENTVERSION).el.gz
+	mv lyskom-$(CLIENTVERSION).el.gz /usr/ftp/pub/lyskom/elisp-client
 
 .PHONY: installnodoc
 installnodoc: installatlysator installatftp
