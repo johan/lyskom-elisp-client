@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.7 1996-08-14 18:38:13 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.8 1996-08-23 22:07:11 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.7 1996-08-14 18:38:13 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.8 1996-08-23 22:07:11 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -842,7 +842,14 @@ The string is inserted at point."
 	(setq deferred (cdr deferred))))))
 
 (defun lyskom-format-insert-before-prompt (format-string &rest argl)
-  (lyskom-insert-before-prompt (format-state->result (lyskom-do-format format-string argl))))
+  "Format and insert a string according to FORMAT-STRING.
+The string is inserted just before the prompt, and if the prompt is not
+currently visible the text is queued to be inserted when the prompt
+reappears.
+
+Note that it is not allowed to use deferred insertions in the text."
+  (lyskom-insert-before-prompt
+   (format-state->result (lyskom-do-format format-string argl))))
 
 
 (defun lyskom-do-format (format-string &optional argl allow-defer)

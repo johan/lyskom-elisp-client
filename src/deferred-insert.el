@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 43.1 1996-08-09 20:56:30 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 43.2 1996-08-23 22:07:08 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 ;;;     `lyskom-defer-indicator' as a placeholder.
 ;;; 
 ;;;  2. Create a defer-info-structure by calling
-;;;     `lyskom-create-defe-info' with the following parameters
+;;;     `lyskom-create-defer-info' with the following parameters
 ;;;
 ;;;        SERVER-CALL - the call to get the data (initate-get-*)
 ;;;        CALL-ARG    - the argument for the server call. This is
