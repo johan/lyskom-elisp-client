@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.0 1994-01-06 01:58:38 linus Exp $
+;;;;; $Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.0 1994-01-06 01:58:38 linus Exp $\n"))
+	      "$Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -103,36 +103,6 @@ first non-white character was not equal to CHAR."
    (buffer-substring lyskom-parse-pos (point-max))))
 
 			  
-(defun lyskom-parse-num ()
-  "Parse next token as a number.
-Signal lyskom-parse-incomplete if the number is not followed by whitespace.
-Signal lyskom-protocol-error if the next token is not a number."
-  (let ((max (point-max))
-	(pos lyskom-parse-pos)
-	(result 0))
-    ;; skip whitespace
-    (while (and (< pos max)
-		(or (= (char-after pos) 32)
-		    (= (char-after pos) 13)
-		    (= (char-after pos) 10)))
-      (setq pos (1+ pos)))
-    ;; read the number
-    (while (and (< pos max) (>= (char-after pos) ?0)
-		(<= (char-after pos) ?9))
-      (setq result (+ (* 10 result) (char-after pos) (- ?0)))
-      (setq pos (1+ pos)))
-
-    (cond
-     ((= max pos)
-      (signal 'lyskom-parse-incomplete nil))
-     ((or (= pos 1) (< (char-after (1- pos)) ?0)
-	  (> (char-after (1- pos)) ?9))
-      (signal 'lyskom-protocol-error
-	      (list "Expected number, got " (lyskom-string-to-parse)))))
-    (setq lyskom-parse-pos pos)
-    result))
-
-
 (defun lyskom-parse-num ()
   "Parse the next token as a number.
 Signal lyskom-parse-incomplete if the number is not followed by whitespace.

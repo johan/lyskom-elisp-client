@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.0 1994-01-06 01:57:07 linus Exp $
+;;;;; $Id: completing-read.el,v 38.1 1994-01-14 00:28:09 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.0 1994-01-06 01:57:07 linus Exp $\n"))
+	      "$Id: completing-read.el,v 38.1 1994-01-14 00:28:09 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -85,7 +85,11 @@ The fourth argument INITIAL is the initial contents of the input-buffer.
 
 Returns the name."
   (let* ((completion-ignore-case t)
-	 (current-lyskom-process lyskom-proc) ;What an ugly hack.
+	 ; When lyskom-read-conf-name-internal is called the current-buffer
+	 ; is the minibuffer and the buffer-local variable lyskom-proc is not
+	 ; correct. Then the variable lyskom-blocking-process must be set
+	 ; instead. It is not buffer-local but scopes the let.
+	 (lyskom-blocking-process lyskom-proc)
 	 (minibuffer-local-completion-map 
 	  lyskom-minibuffer-local-completion-map)
 	 (minibuffer-local-must-match-map 
