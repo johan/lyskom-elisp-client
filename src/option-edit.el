@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.78 2002-07-24 19:40:48 byers Exp $
+;;;;; $Id: option-edit.el,v 44.79 2002-10-20 13:20:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.78 2002-07-24 19:40:48 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.79 2002-10-20 13:20:00 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -161,6 +161,7 @@
     [kom-show-footnotes-immediately]
     [kom-follow-comments-outside-membership]
     [kom-follow-attachments]
+    [kom-mark-read-texts-as-read-in-new-recipient]
     [kom-created-texts-are-read]
     [kom-created-texts-are-saved]
     [kom-review-uses-cache]
@@ -520,6 +521,7 @@ customize buffer but do not save them to the server."
     (kom-enabled-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
+    (kom-mark-read-texts-as-read-in-new-recipient (toggle (yes no)))
     (kom-review-uses-cache (toggle (yes no)))
     (kom-review-marks-texts-as-read (toggle (yes no)))
     (kom-created-texts-are-saved (choice ((const (no nil))

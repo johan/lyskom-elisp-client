@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.276 2002-10-16 20:22:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.277 2002-10-20 13:20:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.276 2002-10-16 20:22:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.277 2002-10-20 13:20:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1834,6 +1834,32 @@ Ditt teckensnittsschema \"%#1s\" saknar följande inställningar:
 
 Använder standardteckensnittet för dessa inställningar.
 ")
+
+    (no-mule-warning . "\
+
+%#1@Du har stödet för multibytetecken (MULE) avslaget i emacs. Detta beror
+antagligen på att du har ett anrop till standard-display-european
+eller motsvarande i din .emacs, eller i någon av systemets startfiler.
+
+Elispklienten är gjord för att köras med stödet för multibytetecken
+påslaget. Utan detta stöd kan inlägg visas fel, och du kan få problem
+med att skapa inlägg. Du bör därför slå på stödet för multibytetecken
+i emacs.
+
+")
+    (coding-system-mismatch-warning . "\
+
+%#3@Din emacs är inställd på att i första hand koda tecken enligt
+\"%#1s\", men den LysKOM-server du kör mot rekommenderar
+\"%#2s\". Det innebär att kommentarer du skriver till
+andras inlägg, och kommentarer till dina inlägg kan få en blandning av
+tecken som inte går att visa ordentligt. Du bör byta språkomgivning i
+emacs till en som använder \"%#2s\" som förstahandsval för
+teckenkodning.
+
+")
+
+
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -3690,6 +3716,11 @@ i servern. Annars sparas det i din .emacs.")
   används bland annat för färgade inläggsbakgrunder). Genom att begränsa
   antalet markeringar kan scrollning gå mycket fortare. Varje inlägg
   behöver mellan 1 och 4 markeringar beroende på andra inställningar.")
+    (kom-mark-read-texts-as-read-in-new-recipient-doc . "\
+  Om detta är påslaget så läsmarkeras redan lästa inlägg automatiskt i
+  möten de adderas till medan man är inloggad. Om man inte är inloggad
+  så sker inte denna läsmarkering. Inlägg som adderas till ens brevlåda
+  läsmarkeras dock aldrig automatiskt.")
 
 
     ;;
@@ -3868,6 +3899,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
     (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
     (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
+    (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")
     )
 )
 

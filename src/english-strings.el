@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.240 2002-10-16 20:22:16 byers Exp $
+;;;;; $Id: english-strings.el,v 44.241 2002-10-20 13:20:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.240 2002-10-16 20:22:16 byers Exp $"))
+              "$Id: english-strings.el,v 44.241 2002-10-20 13:20:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1820,6 +1820,31 @@ Your text face scheme \"%#1s\" is missing the following faces:
 
 Using the default face in place of these faces.
 ")
+
+    (no-mule-warning . "\
+
+%#1@You have disabled support for multibyte characters (MULE) in emacs.
+This may be due to a call to standard-display-european in your .emacs
+or in one of the shared emacs startup files.
+
+This software is designed to run with support for multibyte characters
+enabled. Without this support texts may be displayed incorrectly, and
+you may encounter problems writing texts. Consider enabling sypport
+for multibyte characters in emacs.
+
+")
+    (coding-system-mismatch-warning . "\
+
+%#3@Your emacs is configured to encode characters using \"%#1s\",
+but the LysKOM server you are using recommends \"%#2s\".
+
+You may encounter problems when writing comments, and comments to your
+texts may contain a mix of characters that cannot be encoded or
+displayed correctly. Please consider changing your language
+environment to one that uses \"%#2s\" to encode text.
+
+")
+
     ))
 
 
@@ -3631,6 +3656,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   limiting the number of overlays it is possible to speed up operations
   such as scrolling significantly. Each text requires 1-4 overlays for
   highlighting, depending on other settings.")
+    (kom-mark-read-texts-as-read-in-new-recipient-doc . "\
+  When this is on, texts that have been read will automatically be
+  marked as read in any conferences they are added to. This only works
+  as long as the LysKOM session is logged in. Texts are never 
+  automatically marked as read in your mailbox.")
 
 
     ;;
@@ -3809,6 +3839,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-format-html-authors-tag . "Format HTML-messages per author:")
     (kom-keyboard-menu-immediate-selection-tag . "Shortcuts in text menus require confirmation:")
     (kom-max-overlays-tag . "Maximum number of overlays:")
+    (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")
     )
 )
 

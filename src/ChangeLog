@@ -1,3 +1,21 @@
+2002-10-20  David Byers  <david.byers@swipnet.se>
+
+	* utilities.el (lyskom-check-configuration): New function to check
+	Emacs configuration on startup.
+
+	* startup.el (lyskom): Added call to lyskom-check-configuration.
+
+	* vars.el.in (kom-mark-read-texts-as-read-in-new-recipient): New
+	variable.
+
+	* async.el (lyskom-async-new-recipient): Use
+	kom-mark-read-texts-as-read-in-new-recipient. 
+
+2002-10-19  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in (kom-created-texts-are-read): Changed default value
+	of kom-created-texts-are-read.
+
 2002-10-16  David Byers  <david.byers@swipnet.se>
 
 	* doc/NEWS-0.47.1: Updated to here.

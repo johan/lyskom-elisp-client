@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.120 2002-09-15 17:20:40 byers Exp $
+;;;;; $Id: utilities.el,v 44.121 2002-10-20 13:20:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,15 +36,40 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.120 2002-09-15 17:20:40 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.121 2002-10-20 13:20:01 byers Exp $\n"))
 
-;;;
-;;; Need Per Abrahamsens widget and custom packages There should be a
-;;; better way of doing this, but I'll be darned if I know how. The
-;;; various files need to be loaded in a very specific order.
-;;;
 
-;;; Define widget wrappers for all the functions in macros.el
+(defvar coding-category-list)
+(defun lyskom-check-configuration ()
+  ;; Excuse my paranoia. This code is hardly tested at all, so I
+  ;; really want it wrapped to prevent errors from breaking the
+  ;; client. Plus it lets me check how to do stuff in Gnu Emacs 21
+  ;; without worrying about compatibility with other versions.
+  (when kom-check-configuration-on-startup
+    (condition-case nil
+        (progn
+          ;; Check that we have MULE
+          (when (and (>= emacs-major-version 20)
+                     (boundp 'enable-multibyte-characters)
+                     (not enable-multibyte-characters))
+            (lyskom-format-insert 'no-mule-warning
+                                  '(face kom-warning-face)
+                                  ))
+
+          ;; Check coding system
+          (when (and enable-multibyte-characters
+                     (not (memq lyskom-server-coding-system
+                                (coding-system-get
+                                 (symbol-value (car coding-category-list))
+                                 'alias-coding-systems))))
+            (lyskom-format-insert 'coding-system-mismatch-warning
+                                  (symbol-value (car coding-category-list))
+                                  lyskom-server-coding-system
+                                  '(face kom-warning-face)
+                                  ))
+          )
+      (error nil)
+      )))
 
 ;;;
 ;;; Lisp utility functions
