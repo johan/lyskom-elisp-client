@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.173 2002-08-12 20:41:19 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.174 2002-08-13 19:55:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.173 2002-08-12 20:41:19 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.174 2002-08-13 19:55:44 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -781,16 +781,17 @@ that are no longer FAQs or are missing."
   "Callback for lyskom-clean-read-faqs"
   (let ((cmp (int-to-string conf-no)))
     (when (or (null text-stat)
-              (lyskom-traverse aux (lyskom-get-aux-item 
-                                    (text-stat->aux-items text-stat)
-                                    28)
-                (when (string= cmp (aux-item->data aux))
-                  (lyskom-traverse-break t))))
+              (not (lyskom-traverse aux (lyskom-get-aux-item 
+                                         (text-stat->aux-items text-stat)
+                                         28)
+                     (when (string= cmp (aux-item->data aux))
+                       (lyskom-traverse-break t)))))
       (initiate-modify-conf-info 'background
                                  nil
                                  pers-no
                                  (list (aux-item->aux-no item))
-                                 nil))))
+                                 nil)
+      )))
 
 
 (defun lyskom-enter-conf (conf-stat read-info)
