@@ -1,3 +1,11 @@
+Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
+
+	* view-text.el (lyskom-print-text): Hantera
+ 	lyskom-last-text-format-flags som sträng.
+	(lyskom-deferred-insert-footer): Dito.
+
+	* parse.el (lyskom-skip-one-token): Skip arrays correctly, please.
+
 Sat Oct 11 20:32:09 1997  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.45.1
@@ -19,6 +27,10 @@ Fri Oct 10 15:47:22 1997  David Byers  <davby@sen2.ida.liu.se>
 Tue Oct  7 12:30:30 1997  David Byers  <davby@ida.liu.se>
 
 	* parse.el (lyskom-parse-vector): Klara att parsea 0 { }. 
+
+Mon Oct  6 21:19:41 1997  David Byers  <davby@litefix.ida.liu.se>
+
+	* view-text.el (lyskom-view-text): Handle aux-items. Sort of.
 
 Wed Oct  1 14:30:39 1997  David Byers  <davby@ida.liu.se>
 
@@ -145,6 +157,89 @@ Wed Sep 17 13:56:29 1997  David Byers  <davby@ida.liu.se>
  	kom-tell-phrases)): Låt innehållet i variabeln kom-tell-phrases
  	åverrajda det som sätts som default.
 	(lyskom-sv-edit-mode-map): Lade tillbaks C-c } k
+
+Wed Sep 17 22:25:50 1997  David Byers  <davby@litefix.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-add-aux-item-flag): Ny funktion.
+	(lyskom-edit-on-aux-item): Dito.
+	(lyskom-edit-extract-aux-item-flags): Dito.
+	(lyskom-edit-parse-headers): Hantera aux-items på ett nytt sätt.
+
+Tue Sep 16 20:21:42 1997  David Byers  <davby@litefix.ida.liu.se>
+
+	* swedish-strings.el (lyskom-message): Lade till aux-item
+ 	headertexter.
+
+	* lyskom-rest.el (lyskom-format-object): Stöd aux-items.
+	(lyskom-format-aux-item-flags): Ny funktion.
+	(lyskom-format-aux-item): Ny funktion.
+
+	* services.el (initiate-modify-system-info): Ny funktion.
+	(initiate-query-predefined-aux-items): Ny funktion.
+	(initiate-set-expire): Ny funktion.
+
+	* parse.el (lyskom-parse-server-info-old): Bytte namn från
+ 	lyskom-parse-server-info.
+
+	* services.el (initiate-get-conf-stat): Hantera aux-items.
+	(initiate-get-text-stat): Dito.
+	(initiate-modify-conf-info): Ny funktion.
+	(initiate-modify-text-info): Dito.
+	(initiate-get-server-info): Hantera aux-items.
+
+	* startup.el (lyskom-create-new-person): Skicka aux-items till
+ 	create-pers.
+
+	* commands1.el (kom-create-conf): Skicka aux-items till
+ 	create-conf.
+
+	* services.el (initiate-create-conf): Hantera aux-items.
+	(initiate-create-text): Dito.
+	(initiate-create-anonymous-text): Dito.
+	(initiate-create-person): Dito.
+
+	* edit-text.el (lyskom-edit-send): Skicka med aux-items till
+ 	send-function.
+
+	* flags.el (kom-edit-options-send): Skicka med aux-items till
+ 	initiate-create-text.
+	(lyskom-save-options): Dito.
+
+	* commands2.el (kom-sync-database): Hindra kommandot baserat på
+ 	protokollversion. Inte lika bra, men det är bara ett hack i alla
+ 	fall.
+
+	* startup.el (lyskom): Tog bort lyskom-server-versioon.
+
+	* vars.el.in (lyskom-server-features): Nytt format baserat på
+ 	protokollversion.
+
+	* startup.el (lyskom-setup-client-for-server-version): Hantera
+ 	nytt format på lyskom-server-supports.
+
+	* swedish-strings.el (lyskom-message): Lade till tooo-old-server
+
+	* vars.el.in (lyskom-server-version-info): Ny variabel.
+
+	* commands2.el (kom-who-am-i): Använd version-info.
+
+	* startup.el (lyskom): Hämta versionsinfo från servern.
+
+	* async.el (lyskom-parse-async): Använd lyskom-parse-test-stat-old
+
+	* services.el (initiate-get-text-stat): Använd
+ 	lyskom-parse-text-stat-old.
+	(initiate-get-conf-stat): Använd lyskom-parse-conf-stat-old
+
+	* parse.el (lyskom-parse-aux-item-flags): Ny funktion.
+	(lyskom-parse-aux-item): Ny funktion.
+	(lyskom-parse-aux-item-list): Ny funktion.
+	(lyskom-parse-conf-stat-old): Bytte från lyskom-parse-conf-stat
+	(lyskom-parse-text-stat-old): Bytte från lyskom-parse-text-stat
+
+	* komtypes.el (aux-item): Ny typ.
+	(aux-item-flags): Ny typ.
+	(conf-stat): Lade till expire och aux-items.
 
 Tue Sep 16 11:24:24 1997  David Byers  <davby@ida.liu.se>
 

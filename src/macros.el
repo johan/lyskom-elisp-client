@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.15 1997-10-12 10:31:46 byers Exp $
+;;;;; $Id: macros.el,v 44.16 1997-10-23 12:19:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.15 1997-10-12 10:31:46 byers Exp $\n"))
+	      "$Id: macros.el,v 44.16 1997-10-23 12:19:11 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -67,6 +67,22 @@ Value returned is always nil."
 		      body
 		      (list '(setq __i__ (1+ __i__)))))))
 
+(defmacro lyskom-traverse-aux (atom sequence &rest body)
+  "Bind ATOM to each element in SEQUENCE and execute BODY.
+Value returned is always nil."
+  (let ((seq (make-symbol "aux-items")))
+    (` (let (((, seq) (, sequence))
+             ((, atom) nil))
+         (while (, seq)
+           (setq (, atom) (car (, seq)))
+           (if (not (aux-item-flags->deleted
+                     (aux-item->flags (, atom))))
+               (,@ body))
+           (setq (, seq) (cdr (, seq))))))))
+
+
+(put 'lyskom-traverse-aux 'edebug-form-spec
+     '(sexp form body))
 
 (put 'lyskom-traverse 'edebug-form-spec
      '(sexp form body))

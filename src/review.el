@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.9 1997-10-11 13:26:17 byers Exp $
+;;;;; $Id: review.el,v 44.10 1997-10-23 12:19:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.9 1997-10-11 13:26:17 byers Exp $\n"))
+	      "$Id: review.el,v 44.10 1997-10-23 12:19:16 byers Exp $\n"))
+
+(eval-when-compile
+  (require 'lyskom-command "command"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -370,6 +373,111 @@ going from where we were before."
 
 
 ;;; ================================================================
+;;; lyskom-get-letters-to
+;;; Author: David Byers
+;;; 
+;;; Get letters by self that have a specified letterbox as
+;;; recipient. Do this by linearly searching selfs letterbox
+;;; map and look as every single doggone text-stat. What a drag.
+;;;
+;;; +++ FIXME: This is just get-texts-by right now. Need to filter stuff.
+;;;
+
+(defun lyskom-get-letters-to (persno recipient num &optional again pstart)
+  "Get NUM texts written by PERSNO. Args: persno num"
+  (let ((persstat (blocking-do 'get-pers-stat persno)))
+    (lyskom-check-review-access t persstat)
+
+    (cond ((and again (null num)) (setq num lyskom-last-review-num))
+          ((and again (< lyskom-last-review-num 0)) (setq num (- num))))
+
+    (let* ((plow (or pstart (pers-stat->first-created-text persstat)))
+           (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
+           (result (if again
+                       lyskom-last-review-saved-result-list
+                     nil))
+           (increment (if num (abs num)))
+           (mark (cond (again lyskom-last-review-pmark)
+                        ((and num (< num 0)) plow)
+                        (t phigh)))
+           (collector nil)
+           (found nil)
+           (start nil)
+           (data nil))
+    
+
+      (if (null num)
+          (setq num (1+ phigh)
+                mark phigh
+                increment (1+ phigh)))
+
+      (while (and (<= mark phigh)
+                  (>= mark plow)
+                  (> (abs num) (length result)))
+
+        (setq increment (min lyskom-fetch-map-nos increment))
+        (setq start (if (< num 0)
+                        mark
+                      (- mark (1- increment))))
+        (if (< start 0)
+            (progn
+              (setq increment (- increment start))
+              (setq start 0)))
+      
+        (setq data (lyskom-remove-zeroes
+                    (listify-vector
+                     (map->text-nos
+                      (blocking-do 'get-created-texts
+                                   persno
+                                   start
+                                   increment)))))
+
+        (setq collector (make-collector))
+        (mapcar
+         (function
+          (lambda (x)
+            (initiate-get-text-stat 
+             'main 
+             (function
+              (lambda (x collector pers-no)
+                (if (and x
+                         (lyskom-is-recipient x pers-no))
+                    (collector-push (text-stat->text-no x) collector))))
+             x
+             collector
+             recipient)))
+         data)
+
+        (lyskom-wait-queue 'main)
+        (setq found (nreverse (collector->value collector)))
+
+        (if (> num 0)
+            (setq result (nconc found result)
+                  mark (- mark increment))
+          (setq result (nconc result found)
+                mark (+ mark increment)))
+        (if (null found)
+            (setq increment (min lyskom-fetch-map-nos (* increment 2)))
+          (setq increment (- (abs num) (length result)))))
+
+      (setq lyskom-last-review-pmark mark)
+
+      (if (> num 0)
+          (progn
+            (setq lyskom-last-review-saved-result-list 
+                  (nfirst (- (length result) num) result))
+            (nthcdr (- (length result) num) result))
+        (progn
+          (setq lyskom-last-review-saved-result-list
+                (nthcdr (- num) result))
+          (nfirst (- num)  result))))))
+
+
+
+
+
+
+;;; ================================================================
 ;;; lyskom-get-texts-by-and-to
 ;;; Author: David Byers
 ;;;
@@ -435,191 +543,213 @@ recipient. If optional AGAIN is non-nil, continue from where we were.
 Args: persno confno num &optional again pstart cstart"
   (blocking-do-multiple ((persstat (get-pers-stat persno))
                          (confstat (get-conf-stat confno)))
-    (lyskom-check-review-access confstat persstat)
+    (cond
 
-    (cond ((and again (null num)) (setq num lyskom-last-review-num))
-          ((and again (< lyskom-last-review-num 0) (setq num (- num)))))
+     ;;
+     ;; Special case: reviewing to a letterbox or conference we're not
+     ;; a member of and have no access to.
+     ;;
 
-    (let* ((result-list (if again
-                            lyskom-last-review-saved-result-list
-                          nil))
-           (by-list (if again
-                        lyskom-last-review-saved-by-list
-                      nil))
-           (to-list (if again 
-                            lyskom-last-review-saved-to-list 
-                          nil))
-           (result-size (if again
-                            lyskom-last-review-saved-result-size
-                          0))
-           (by nil)
-           (to nil)
-           (increment lyskom-fetch-map-nos)
-           (plow (or pstart (pers-stat->first-created-text persstat)))
-           (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
-           (pmark (cond (again lyskom-last-review-pmark)
-                        ((and num (< num 0)) plow)
-                        (t phigh)))
-           (clow (or cstart (conf-stat->first-local-no confstat)))
-           (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
-           (cmark (cond (again lyskom-last-review-cmark)
-                        ((and num (< num 0)) clow)
-                        (t chigh)))
-           (smallest (if again lyskom-last-review-saved-smallest nil))
-           (largest (if again lyskom-last-review-saved-largest nil))
-           (abort-loop nil))
+     ((and (eq lyskom-pers-no persno)
+           confstat
+           (or (conf-type->letterbox (conf-stat->type confstat))
+               (and (conf-type->rd_prot (conf-stat->type confstat))
+                    (null (map->text-nos 
+                           (blocking-do 'get-map
+                                        (conf-stat->conf-no conf)
+                                        (conf-stat->first-local-no conf)
+                                        1)))))
+           (not (eq persno confno)))
+      (lyskom-get-letters-to persno confno num again pstart))
 
-      (if (null num)
-          (setq num (1+ phigh)))
+     ;;
+     ;; General case
+     ;;
 
-      (while (and (or (and (<= pmark phigh)
-                           (>= pmark plow))
-                      (and (<= cmark chigh)
-                           (>= cmark clow)))
-                  (> (abs num) result-size)
-                  (not abort-loop))
+     (t
+      (lyskom-check-review-access confstat persstat)
+      (cond ((and again (null num)) (setq num lyskom-last-review-num))
+            ((and again (< lyskom-last-review-num 0) (setq num (- num)))))
+      (let* ((result-list (if again
+                              lyskom-last-review-saved-result-list
+                            nil))
+             (by-list (if again
+                          lyskom-last-review-saved-by-list
+                        nil))
+             (to-list (if again 
+                          lyskom-last-review-saved-to-list 
+                        nil))
+             (result-size (if again
+                              lyskom-last-review-saved-result-size
+                            0))
+             (by nil)
+             (to nil)
+             (increment lyskom-fetch-map-nos)
+             (plow (or pstart (pers-stat->first-created-text persstat)))
+             (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
+             (pmark (cond (again lyskom-last-review-pmark)
+                          ((and num (< num 0)) plow)
+                          (t phigh)))
+             (clow (or cstart (conf-stat->first-local-no confstat)))
+             (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
+             (cmark (cond (again lyskom-last-review-cmark)
+                          ((and num (< num 0)) clow)
+                          (t chigh)))
+             (smallest (if again lyskom-last-review-saved-smallest nil))
+             (largest (if again lyskom-last-review-saved-largest nil))
+             (abort-loop nil))
 
-        (setq by (and (<= pmark phigh)
-                      (>= pmark plow)
-                      (lyskom-remove-zeroes
-                       (listify-vector
-                        (map->text-nos
-                         (blocking-do 'get-created-texts
-                                      (pers-stat->pers-no persstat)
-                                      (if (< num 0)
-                                          pmark
-                                        (max 0 (- pmark (1- increment))))
-                                      increment)))))
-              to (and (<= cmark chigh)
-                      (>= cmark clow)
-                      (lyskom-remove-zeroes
-                       (listify-vector
-                        (map->text-nos
-                         (blocking-do 'get-map
-                                      (conf-stat->conf-no confstat)
-                                      (if (< num 0)
-                                          cmark
-                                        (max 0 (- cmark (1- increment))))
-                                      increment))))))
+        (if (null num)
+            (setq num (1+ phigh)))
 
-        (if (> num 0)
-            (if (and smallest by
-                     (> smallest (car by)))
-                (setq abort-loop t))
-          (if (and largest by
-                   (< largest (car (nthcdr (1- (length by)) by))))
-            (setq abort-loop t)))
+        (while (and (or (and (<= pmark phigh)
+                             (>= pmark plow))
+                        (and (<= cmark chigh)
+                             (>= cmark clow)))
+                    (> (abs num) result-size)
+                    (not abort-loop))
 
-        ;;
-        ;;    Add intersection between new TO and old BYs
-        ;;    to the results list.
-        ;;
+          (setq by (and (<= pmark phigh)
+                        (>= pmark plow)
+                        (lyskom-remove-zeroes
+                         (listify-vector
+                          (map->text-nos
+                           (blocking-do 'get-created-texts
+                                        (pers-stat->pers-no persstat)
+                                        (if (< num 0)
+                                            pmark
+                                          (max 0 (- pmark (1- increment))))
+                                        increment)))))
+                to (and (<= cmark chigh)
+                        (>= cmark clow)
+                        (lyskom-remove-zeroes
+                         (listify-vector
+                          (map->text-nos
+                           (blocking-do 'get-map
+                                        (conf-stat->conf-no confstat)
+                                        (if (< num 0)
+                                            cmark
+                                          (max 0 (- cmark (1- increment))))
+                                        increment))))))
 
-        (setq result-list
-              (cons (apply 'nconc
-                           (mapcar 
-                            (function
-                             (lambda (x)
-                               (lyskom-intersection to x)))
-                            by-list))
-                    result-list))
+          (if (> num 0)
+              (if (and smallest by
+                       (> smallest (car by)))
+                  (setq abort-loop t))
+            (if (and largest by
+                     (< largest (car (nthcdr (1- (length by)) by))))
+                (setq abort-loop t)))
 
-        ;;
-        ;;    Add new BY and TO to the by-list and to-list
-        ;;
+          ;;
+          ;;    Add intersection between new TO and old BYs
+          ;;    to the results list.
+          ;;
 
-        (setq by-list (cons by by-list)
-              to-list (cons to to-list))
+          (setq result-list
+                (cons (apply 'nconc
+                             (mapcar 
+                              (function
+                               (lambda (x)
+                                 (lyskom-intersection to x)))
+                              by-list))
+                      result-list))
+
+          ;;
+          ;;    Add new BY and TO to the by-list and to-list
+          ;;
+
+          (setq by-list (cons by by-list)
+                to-list (cons to to-list))
       
 
+          ;;
+          ;;    Add intersections between new BY and all TOs
+          ;;
+
+          (setq result-list
+                (mapcar2 (function
+                          (lambda (x y)
+                            (lyskom-intersection y
+                                                 (nconc x by))))
+                         result-list
+                         to-list))
+
+          (setq result-size (apply '+ (mapcar 'length result-list)))
+
+          ;;
+          ;;    Adjust the marks
+          ;;
+
+          (if (> num 0)
+              (setq pmark (- pmark increment)
+                    cmark (- cmark increment))
+            (setq pmark (+ pmark increment)
+                  cmark (+ cmark increment)))
+
+
+          ;;
+          ;;  If we have exhausted the conference, calculate smallest and
+          ;;  largest
+          ;;
+
+          (if (and (null smallest)
+                   (null largest)
+                   (or (> cmark chigh)
+                       (< cmark clow)))
+              (setq smallest 
+                    (apply 'min
+                           (mapcar (function (lambda (x)
+                                               (if x
+                                                   (apply 'min x)
+                                                 (lyskom-maxint))))
+                                   to-list))
+                    largest
+                    (apply 'max
+                           (mapcar (function (lambda (x)
+                                               (if x
+                                                   (apply 'max x)
+                                                 -1)))
+                                   to-list))))
+
+
+          ;;
+          ;;    This is the end of the while loop
+          ;;
+
+          )
+
+        (setq lyskom-last-review-pmark pmark)
+        (setq lyskom-last-review-cmark cmark)
+        (setq lyskom-last-review-saved-by-list by-list)
+        (setq lyskom-last-review-saved-to-list to-list)
+        (setq lyskom-last-review-saved-smallest smallest)
+        (setq lyskom-last-review-saved-largest largest)
+
         ;;
-        ;;    Add intersections between new BY and all TOs
+        ;;  Extract results
         ;;
 
         (setq result-list
-              (mapcar2 (function
-                        (lambda (x y)
-                          (lyskom-intersection y
-                                               (nconc x by))))
-                       result-list
-                       to-list))
-
-        (setq result-size (apply '+ (mapcar 'length result-list)))
+              (apply 'nconc (if (< num 0)
+                                (nreverse result-list)
+                              result-list)))
 
         ;;
-        ;;    Adjust the marks
+        ;;  Save discarded results and return retained results
         ;;
 
         (if (> num 0)
-            (setq pmark (- pmark increment)
-                  cmark (- cmark increment))
-          (setq pmark (+ pmark increment)
-                cmark (+ cmark increment)))
+            (progn
+              (setq lyskom-last-review-saved-result-list
+                    (nfirst (- (length result-list) num) result-list))
+              (setq lyskom-last-review-saved-result-size
+                    (length  lyskom-last-review-saved-result-list))
+              (setq lyskom-last-review-saved-result-list
+                    (cons lyskom-last-review-saved-result-list
+                          (make-list (- (length by-list) 1) nil)))
+              (nthcdr (- (length result-list) num) result-list))
 
-
-        ;;
-        ;;  If we have exhausted the conference, calculate smallest and
-        ;;  largest
-        ;;
-
-        (if (and (null smallest)
-                 (null largest)
-                 (or (> cmark chigh)
-                     (< cmark clow)))
-            (setq smallest 
-                  (apply 'min
-                         (mapcar (function (lambda (x)
-                                             (if x
-                                                 (apply 'min x)
-                                               (lyskom-maxint))))
-                                 to-list))
-                  largest
-                  (apply 'max
-                         (mapcar (function (lambda (x)
-                                             (if x
-                                                 (apply 'max x)
-                                                  -1)))
-                                 to-list))))
-
-
-      ;;
-      ;;    This is the end of the while loop
-      ;;
-
-      )
-
-      (setq lyskom-last-review-pmark pmark)
-      (setq lyskom-last-review-cmark cmark)
-      (setq lyskom-last-review-saved-by-list by-list)
-      (setq lyskom-last-review-saved-to-list to-list)
-      (setq lyskom-last-review-saved-smallest smallest)
-      (setq lyskom-last-review-saved-largest largest)
-
-      ;;
-      ;;  Extract results
-      ;;
-
-      (setq result-list
-            (apply 'nconc (if (< num 0)
-                              (nreverse result-list)
-                            result-list)))
-
-      ;;
-      ;;  Save discarded results and return retained results
-      ;;
-
-      (if (> num 0)
           (progn
-            (setq lyskom-last-review-saved-result-list
-                  (nfirst (- (length result-list) num) result-list))
-            (setq lyskom-last-review-saved-result-size
-                  (length  lyskom-last-review-saved-result-list))
-            (setq lyskom-last-review-saved-result-list
-                  (cons lyskom-last-review-saved-result-list
-                        (make-list (- (length by-list) 1) nil)))
-            (nthcdr (- (length result-list) num) result-list))
-
-        (progn
             (setq lyskom-last-review-saved-result-list 
                   (nthcdr (- num) result-list))
             (setq lyskom-last-review-saved-result-size
@@ -627,7 +757,7 @@ Args: persno confno num &optional again pstart cstart"
             (setq lyskom-last-review-saved-result-list
                   (cons lyskom-last-review-saved-result-list
                         (make-list (- (length by-list) 1) nil)))
-            (nfirst (- num) result-list))))))
+            (nfirst (- num) result-list))))))))
 
 
 

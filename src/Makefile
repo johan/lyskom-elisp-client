@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.22 1997-10-11 13:26:14 byers Exp $
+# $Id: Makefile,v 44.23 1997-10-23 12:18:45 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.22 1997-10-11 13:26:14 byers Exp $
+# $Id: Makefile,v 44.23 1997-10-23 12:18:45 byers Exp $
 #
 
 
@@ -36,8 +36,8 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.45.1
-DOCFILES=NEWS-0.45.1 MIGRATION-0.44-0.45
+CLIENTVERSION = 0.46-beta
+DOCFILES=NEWS-0.46
 
 FTPDIR=/home/davby/www-pub
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
@@ -58,13 +58,14 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		clienttypes.el \
 		deferred-insert.el \
 		utilities.el \
+		command.el \
 		buffers.el \
+		aux-items.el \
 		prefetch.el \
 		startup.el \
 		reading.el \
 		internal.el \
 		services.el \
-		command.el \
 		parse.el \
 		cache.el \
 		view-mode.el \
@@ -112,6 +113,15 @@ vars.el: vars.el.in Makefile
 	rm -f vars.el
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 	chmod 444 vars.el
+
+%.elc: %.el header.el
+	$(EMACS-BATCH) -l ./header.el -l ./lpath.el -f batch-byte-compile $<
+
+header.el: $(HEADER)
+	cat $(HEADER) > header.el
+
+fast: $(HEADER-ELC) $(SOURCES-ELC)
+	cat $(HEADER-ELC) $(SOURCES-ELC) > lyskom.elc
 
 lyskom.el: $(HEADER) $(SOURCES)
 	cat $(HEADER) $(SOURCES) > lyskom.el

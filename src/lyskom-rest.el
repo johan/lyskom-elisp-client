@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.50 1997-09-28 11:38:42 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.51 1997-10-23 12:19:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,12 +74,15 @@
 ;;;;    work is needed.
 ;;;;
 
-(require 'lyskom-menus "menus")
+(eval-when-compile
+  (require 'lyskom-command "command")
+  (require 'lyskom-menus "menus")
+  (require 'lyskom-clienttypes "clienttypes.el"))
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.50 1997-09-28 11:38:42 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.51 1997-10-23 12:19:08 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1176,7 +1179,12 @@ Note that it is not allowed to use deferred insertions in the text."
                               format-state)))
                       lyskom-defer-indicator)
                   (setq arg tmp)
-                  (conf-stat->name arg))))
+                  (let ((aux (conf-stat-find-aux arg
+                                                 10 
+                                                 lyskom-pers-no)))
+                    (if aux
+                        (concat (aux-item->data (car aux)) " *")
+                      (conf-stat->name arg))))))
 	     
              ;; Find the name and return it
              ((integerp arg)
@@ -1186,10 +1194,17 @@ Note that it is not allowed to use deferred insertions in the text."
                                        'person-does-not-exist
                                      'conference-does-not-exist)
                                    arg)
-                  (conf-stat->name conf-stat))))
+                  (let ((aux (conf-stat-find-aux conf-stat 10 lyskom-pers-no)))
+                    (if aux
+                        (concat (aux-item->data (car aux)) " *")
+                      (conf-stat->name conf-stat))))))
 	     
              ;; We got a conf-stat, and can use it directly
-             ((lyskom-conf-stat-p arg) (conf-stat->name arg))
+             ((lyskom-conf-stat-p arg)
+                  (let ((aux (conf-stat-find-aux arg 10 lyskom-pers-no)))
+                    (if aux
+                        (concat (aux-item->data (car aux)) " *")
+                      (conf-stat->name arg))))
 
              ;; Something went wrong
              (t (signal 'lyskom-internal-error
@@ -1267,6 +1282,10 @@ Note that it is not allowed to use deferred insertions in the text."
             (cond ((stringp arg) (lyskom-format-text-body arg))
                   ((lyskom-text-p arg) 
                    (lyskom-format-text-body (text->text-mass arg)))
+                  ((and (consp arg)
+                        (lyskom-text-stat-p (car arg)))
+                   (lyskom-format-text-body (cdr arg)
+                                            (car arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error"))))))
@@ -1370,13 +1389,32 @@ Note that it is not allowed to use deferred insertions in the text."
 (lyskom-external-function w3-fetch)
 (lyskom-external-function w3-region)
 
-(defun lyskom-format-text-body (text)
+(defun lyskom-format-text-body (text &optional text-stat)
   "Format a text for insertion. Does parsing of special markers in the text."
-  (string-match "^\\(\\S-+\\):" text)
-  (let* ((sym (and (match-beginning 1)
-                   (intern (match-string 1 text))))
-         (fn (cdr (assq sym lyskom-format-special)))
+  (let* ((ct-item (car (text-stat-find-aux text-stat 1)))
+         (content-type (cond (ct-item (aux-item->data ct-item))
+                             ((and (string-match "^\\(\\S-+\\):" text)
+                                   (match-beginning 1))
+                              (match-string 1 text))
+                             (t nil)))
+         (fn (and content-type
+                  (cdr 
+                   (let ((tmp lyskom-format-special)
+                         (result nil)
+                         (case-fold-search t))
+                     (while tmp
+                       (when (string-match (car (car tmp)) content-type)
+                         (setq result (car tmp))
+                         (setq tmp nil))
+                       (setq tmp (cdr tmp)))
+                     result))))
          (formatted (and fn (funcall fn text))))
+
+    (when (eq t lyskom-last-text-format-flags)
+      (lyskom-signal-reformatted-text
+       (if content-type
+           (lyskom-format 'reformat-generic content-type)
+         nil)))
 
     (cond (formatted formatted)
           (kom-text-properties 
@@ -1440,6 +1478,27 @@ in lyskom-messages."
             ;; (substring (buffer-string) 0 -1) ; Remove the \n
             )
         (kill-buffer tmpbuf)))))
+
+(defun lyskom-format-ö (text)
+  (cond ((string= text "") "")
+        (t
+         (save-excursion
+           (set-buffer (lyskom-get-buffer-create 'lyskom-text 
+                                                 " lyskom-text" t))
+           (erase-buffer)
+           (insert text)
+           (goto-char (point-min))
+           (while (not (looking-at "\\'"))
+             (save-restriction
+               (narrow-to-region (point)
+                                 (save-excursion (end-of-line) (point)))
+               (lyskom-fill-region (point-min) (point-max))
+               (goto-char (point-max)))
+             (forward-line 1))
+           (lyskom-signal-reformatted-text t)
+           (if kom-text-properties
+               (lyskom-button-transform-text (buffer-string))
+             (buffer-substring (point-min) (1- (point-max))))))))
 
 
 
@@ -2717,6 +2776,10 @@ Other objects are converted correctly."
 	    (cond
 	     ((eq (car object) 'MISC-LIST)
 	      (lyskom-format-misc-list (cdr object)))
+             ((eq (car object) 'AUX-ITEM)
+              (lyskom-format-aux-item object))
+             ((eq (car object) 'AUX-ITEM-FLAGS)
+              (lyskom-format-aux-item-flags object))
 	     ((eq (car object) 'CONF-TYPE)
 	      (lyskom-format-conf-type object))
 	     ((eq (car object) 'PRIVS)
@@ -2749,6 +2812,27 @@ Other objects are converted correctly."
          (lyskom-format-bool (conf-type->rsv2 conf-type))
          (lyskom-format-bool (conf-type->rsv3 conf-type)))
      "")))
+
+(defun lyskom-format-aux-item (item)
+  "Format an AUX-ITEM for output to the server."
+  (concat
+   (int-to-string (aux-item->aux-no item))                  " "
+   (int-to-string (aux-item->tag item))                     " "
+   (lyskom-format-aux-item-flags (aux-item->flags item))    " "
+   (int-to-string (aux-item->inherit-limit item))           " "
+   (lyskom-format-string (aux-item->data item))))
+
+(defun lyskom-format-aux-item-flags (flags)
+  "Format AUX-ITEM-FLAGS for output to the server."
+  (concat
+   (lyskom-format-bool (aux-item-flags->deleted flags))
+   (lyskom-format-bool (aux-item-flags->inherit flags))
+   (lyskom-format-bool (aux-item-flags->secret flags))
+   (lyskom-format-bool (aux-item-flags->anonymous flags))
+   (lyskom-format-bool (aux-item-flags->reserved1 flags))
+   (lyskom-format-bool (aux-item-flags->reserved2 flags))
+   (lyskom-format-bool (aux-item-flags->reserved3 flags))
+   (lyskom-format-bool (aux-item-flags->reserved4 flags))))
 
 
 (defun lyskom-format-privs (privs)
@@ -2783,7 +2867,7 @@ Other objects are converted correctly."
       (setq result (concat result " "
 			    (lyskom-format-misc-item (car misc-list))))
       (setq misc-list (cdr misc-list)))
-    (setq result (concat result " }\n"))))
+    (setq result (concat result " }"))))
 
 
 (defun lyskom-format-misc-item (misc-item)
@@ -2803,7 +2887,7 @@ Other objects are converted correctly."
   "Format some kind of list to send to server."
   (apply 'concat (list (format "%d {" (length list))
 		       (apply 'lyskom-format-objects list)
-		       " }\n")))
+		       " }")))
 
   
 (defun lyskom-format-string (string)
@@ -2940,6 +3024,8 @@ One parameter - the prompt string."
 (lyskom-set-queue-priority 'async 3)
 (lyskom-set-queue-priority 'prefetch 0)
 
+
+(provide 'lyskoom-rest)
 
 ;;; This should be the very last lines of lyskom.el Everything should
 ;;; be loaded now, so it's time to run the lyskom-after-load-hook.

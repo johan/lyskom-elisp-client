@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.2 1997-09-10 13:15:09 byers Exp $
+;;;;; $Id: komtypes.el,v 44.3 1997-10-23 12:19:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,8 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.2 1997-09-10 13:15:09 byers Exp $\n"))
-
+	      "$Id: komtypes.el,v 44.3 1997-10-23 12:19:03 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -157,14 +156,16 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 				garb-nice
 				no-of-members
 				first-local-no
-				no-of-texts)
+				no-of-texts
+                                &optional expire
+                                aux-items)
   "Create a conf-stat from all parameters."
   (cons
    'CONF-STAT
    (vector conf-no name conf-type creation-time last-written 
 	   creator presentation supervisor permitted-submitters 
 	   super-conf msg-of-day garb-nice no-of-members first-local-no 
-	   no-of-texts )))
+	   no-of-texts (or expire 0) aux-items)))
 
 
 ;;; Selectors:
@@ -229,6 +230,14 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
   "Get no-of-texts from conf-stat."
   (elt (cdr conf-stat) 14))
 
+(defsubst conf-stat->expire (conf-stat)
+  "Get expire from conf-stat."
+  (elt (cdr conf-stat) 15))
+
+(defsubst conf-stat->aux-items (conf-stat)
+  "Get aux-items from conf-stat."
+  (elt (cdr conf-stat) 16))
+
 
 ;;; Modifiers:
 
@@ -291,6 +300,14 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 (defsubst set-conf-stat->no-of-texts (conf-stat newval)
   "Set no-of-texts in conf-stat to NEWVAL."
   (aset (cdr conf-stat) 14 newval))
+
+(defsubst set-conf-stat->expire (conf-stat newval)
+  "Set expire in conf-stat to NEWVAL."
+  (aset (cdr conf-stat) 15 newval))
+
+(defsubst set-conf-stat->aux-items (conf-stat newval)
+  "Set aux-items in conf-stat to NEWVAL."
+  (aset (cdr conf-stat) 16 newval))
 
 
 
@@ -544,12 +561,13 @@ Both vectors should be of the same length."
 				no-of-lines
 				no-of-chars
 				no-of-marks
-				misc-info-list)
+				misc-info-list
+                                &optional aux-items)
   "Create a text-stat from all parameters."
   (cons
    'TEXT-STAT
    (vector text-no creation-time author no-of-lines no-of-chars 
-	   no-of-marks misc-info-list )))
+	   no-of-marks misc-info-list aux-items)))
 
 
 ;;; Selectors:
@@ -582,6 +600,10 @@ Both vectors should be of the same length."
   "Get misc-info-list from text-stat."
   (elt (cdr text-stat) 6))
 
+(defsubst text-stat->aux-items (text-stat)
+  "Get aux-items from text-stat."
+  (elt (cdr text-stat) 7))
+
 
 ;;; Modifiers:
 
@@ -609,10 +631,13 @@ Both vectors should be of the same length."
   "Set no-of-marks in text-stat to NEWVAL."
   (aset (cdr text-stat) 5 newval))
 
-
 (defsubst set-text-stat->misc-info-list (text-stat newval)
   "Set misc-info-list in text-stat to NEWVAL."
   (aset (cdr text-stat) 6 newval))
+
+(defsubst set-text-stat->aux-items (text-stat newval)
+  "Set aux-items in text-stat to NEWVAL."
+  (aset (cdr text-stat) 7 newval))
 
 
 ;;; Predicate:
@@ -620,7 +645,6 @@ Both vectors should be of the same length."
 (defsubst lyskom-text-stat-p (object)
   "Return t if OBJECT is a text-stat."
   (eq (car-safe object) 'TEXT-STAT))
-
 
 ;;; ================================================================
 ;;;                            text
@@ -1677,12 +1701,13 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 				  pers-pres-conf
 				  motd-conf
 				  kom-news-conf
-				  motd-of-lyskom)
+				  motd-of-lyskom
+                                  &optional aux-items)
   "Create a server-info from all parameters."
   (cons
    'SERVER-INFO
    (vector version conf-pres-conf pers-pres-conf motd-conf kom-news-conf 
-	   motd-of-lyskom )))
+	   motd-of-lyskom aux-items )))
 
 
 ;;; Selectors:
@@ -1711,6 +1736,10 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get motd-of-lyskom from server-info."
   (elt (cdr server-info) 5))
 
+(defsubst server-info->aux-item-list (server-info)
+  "Get motd-of-lyskom from server-info."
+  (elt (cdr server-info) 6))
+
 
 ;;; Modifiers:
 
@@ -1737,6 +1766,10 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 (defsubst set-server-info->motd-of-lyskom (server-info newval)
   "Set motd-of-lyskom in server-info to NEWVAL."
   (aset (cdr server-info) 5 newval))
+
+(defsubst set-server-info->aux-item-list (server-info newval)
+  "Set motd-of-lyskom in server-info to NEWVAL."
+  (aset (cdr server-info) 6 newval))
 
 
 ;;; Predicate:
@@ -1830,6 +1863,21 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   (eq (car-safe object) 'CONF-Z-INFO))
 
 
+;;; ================================================================
+;;;                              aux-item
+
+(def-komtype aux-item-flags deleted inherit secret anonymous
+  reserved1 reserved2 reserved3 reserved4)
+
+(def-komtype aux-item aux-no 
+                       tag
+                       creator
+                       sent-at
+                       flags
+                       inherit-limit
+                       data)
+
+
 ;;;; ================================================================
 ;;;; This field is just simulation of a field in the conf-stat
 ;;;; that not yet exist.
@@ -1842,3 +1890,55 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 
 ;;; ================================================================
+
+
+
+;;; Utilities
+
+(defun text-stat-find-aux (text-stat tag &optional person)
+  "Return a list containing the aux items in TEXT-STAT with tag TAG.
+If PERSON is non-nil return only those items created by person.
+Args: TEXT-STAT TAG PERSON"
+  (let ((result nil)
+        (items (text-stat->aux-items text-stat)))
+    (while items
+      (when (and (eq tag (aux-item->tag (car items)))
+                 (not (aux-item-flags->deleted
+                       (aux-item->flags (car items))))
+                 (or (null person)
+                     (eq person (aux-item->creator (car items)))))
+        (setq result (cons (car items) result)))
+      (setq items (cdr items)))
+    (nreverse result)))
+
+(defun conf-stat-find-aux (text-stat tag &optional person)
+  "Return a list containing the aux items in CONF-STAT with tag TAG.
+If PERSON is non-nil return only those items created by person.
+Args: TEXT-STAT TAG PERSON"
+  (let ((result nil)
+        (items (conf-stat->aux-items text-stat)))
+    (while items
+      (when (and (eq tag (aux-item->tag (car items)))
+                 (not (aux-item-flags->deleted
+                       (aux-item->flags (car items))))
+                 (or (null person)
+                     (eq person (aux-item->creator (car items)))))
+        (setq result (cons (car items) result)))
+      (setq items (cdr items)))
+    (nreverse result)))
+
+(defun lyskom-is-recipient (text-stat conf-no)
+  "Return non-nil if TEXT-STAT has CONF-NO as a recipient."
+  (let ((result nil))
+    (lyskom-traverse misc
+        (text-stat->misc-info-list text-stat)
+      (when (and (or (eq (misc-info->type misc) 'RECPT)
+                     (eq (misc-info->type misc) 'CC-RECPT)
+                     (eq (misc-info->type misc) 'BCC-RECPT))
+                 (eq (misc-info->recipient-no misc) conf-no))
+        (setq result t)))
+    result))
+
+
+
+(provide 'lyskom-types)

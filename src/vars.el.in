@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.42 1997-10-12 10:31:53 byers Exp $
+;;;;; $Id: vars.el.in,v 44.43 1997-10-23 12:19:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.42 1997-10-12 10:31:53 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.43 1997-10-23 12:19:29 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1141,44 +1141,55 @@ Users are encouraged to use their best sense of humor."
   "The largest int emacs, and thus this LysKOM client, can handle.")
 
 (defconst lyskom-server-features
-  '(((>  1 9 0) (lyskom-bcc-flag))
-    ((>= 1 9 0) (lyskom-accept-async-flag
-                 lyskom-dynamic-session-info-flag
-                 lyskom-idle-time-flag))
-    ((>= 1 8 0) (lyskom-long-conf-types-flag 
-                 lyskom-set-last-read-flag
-                 lyskom-uconf-stats-flag))
-    ((>= 1 7 0) (lyskom-z-lookup-flag))
-    ((= 1 9 0) ((protocol-version 9)))
-    ((= 1 8 0) ((protocol-version 8)))
-    ((= 1 7 0) ((protocol-version 7)))
-    ((= 1 7 1) ((protocol-version 7)))
-    ((< 1 7 0) ((protocol-version 6))))
-  "List describing which features a certain server version has.
-Each element is a list containing the server version and what it
-supports:
+  '((10 lyskom-bcc-flag
+        lyskom-extended-types-flag)
+    (9  lyskom-accept-async-flag
+        lyskom-dynamic-session-info-flag
+        lyskom-idle-time-flag)
+    (8  lyskom-long-conf-types-flag 
+        lyskom-set-last-read-flag 
+        lyskom-uconf-stats-flag
+        lyskom-set-last-read-flag)
+    (7  lyskom-z-lookup-flag))
+  "List describing which features a certain server has. Each
+element is a list containing the protocol version and what
+it supports. The format of each element is:
 
-\(VERSION SUPPORTS\)
+\(VERSION . SUPPORTS\)
 
-VERSION is a list of \(RELATION MAJOR MINOR REVISION\) RELATION is one
-of >= \(features apply to server at or above the specified version\)
-or = \(features apply to only that server version\). MAJOR, MINOR and
-REVISION are integers that are compared to the actual server version.
+Version is simply a protocol version. Protocol equal to or above the
+version support the supports list.
 
-SUPPORTS is a list of cons pairs and symbols. Cons pairs are placed in
-the lyskom-server-supports list, symbols are interpreted as variable
-names set to 't'.")
+SUPPORTS is a list of pairs and symbols. Cons pairs are treated as
+arguments to setq, symbols are interpreted as variable names set
+ to 't'.")
+
+;;;(defconst lyskom-server-features
+;;;  '(((>= 2 0 0) (lyskom-bcc-flag
+;;;                 lyskom-aux-items-flag))
+;;;    ((>= 1 9 0) (lyskom-accept-async-flag
+;;;                 lyskom-dynamic-session-info-flag
+;;;                 lyskom-idle-time-flag))
+;;;    ((>= 1 8 0) (lyskom-long-conf-types-flag 
+;;;                 lyskom-set-last-read-flag
+;;;                 lyskom-uconf-stats-flag))
+;;;    ((>= 1 7 0) (lyskom-z-lookup-flag))
+;;;    ((= 2 0 0) ((protocol-version 10)))
+;;;    ((= 1 9 0) ((protocol-version 9)))
+;;;    ((= 1 8 0) ((protocol-version 8)))
+;;;    ((= 1 7 0) ((protocol-version 7)))
+;;;    ((= 1 7 1) ((protocol-version 7)))
+;;;    ((< 1 7 0) ((protocol-version 6))))
+;;;  "List describing which features a certain server version has.
+;;;Each element is a list containing the server version and what it
+;;;supports:
+;;;")
 
 
 (def-kom-var lyskom-server-version '(0 0 0)
   "The version of the server.  A list of three integers, major
 version, minor version and revision."
   local)
-
-(def-kom-var lyskom-server-supports nil
-  "Assoc list of features supported by the LysKOM server. See
-lyskom-server-features for more information."
-  inherited)
 
 (def-kom-var lyskom-idle-time-flag nil
   "t if idle time calls are supported by the server."
@@ -1210,6 +1221,10 @@ lyskom-server-features for more information."
 
 (def-kom-var lyskom-bcc-flag nil
   "t if the server supports the bcc misc items."
+  inherited)
+
+(def-kom-var lyskom-extended-types-flag nil
+  "t if the server supports expire and aux items."
   inherited)
 
 (def-kom-var lyskom-max-packet-size lyskom-max-int
@@ -1332,6 +1347,10 @@ will be shown."
 
 (def-kom-var lyskom-server-info nil
   "Info about the server"
+  local)
+
+(def-kom-var lyskom-server-version-info nil
+  "Version information about the client"
   local)
 
 (def-kom-var lyskom-server-name ""
@@ -1700,8 +1719,14 @@ an unknown person.")
 (def-kom-var kom-no-comments-to-motd nil
   "This should always be set to nil unless you are Klaus Zeuge.") ;+++SOJGE
 
-(def-kom-var lyskom-format-special '((html . lyskom-format-html)
-                                (enriched . lyskom-format-enriched))
+(def-kom-var lyskom-format-special 
+  '(("html"               . lyskom-format-html)
+    ("enriched"           . lyskom-format-enriched)
+    ("text/html"          . lyskom-format-html)
+    ("text/enriched"      . lyskom-format-enriched)
+    ("text/plain"         . nil)
+    ("x-kom/basic"        . nil)
+    ("x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")
