@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.114 2000-09-14 08:07:55 byers Exp $
+;;;;; $Id: english-strings.el,v 44.115 2000-12-03 16:15:41 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.114 2000-09-14 08:07:55 byers Exp $"))
+              "$Id: english-strings.el,v 44.115 2000-12-03 16:15:41 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -3371,7 +3371,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 ;;;; Other language-dependent variables
 ;;;;
 
-(lyskom-language-var kom-ispell-dictionary sv
+(lyskom-language-var kom-ispell-dictionary en
   "english")
 
 
@@ -3415,7 +3415,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)
-    (lyskom-language-strings kom-tell-phrases sv
+    (lyskom-language-strings kom-tell-phrases en
       (mapcar (function 
                (lambda (x)
                  (cond ((and (consp x)

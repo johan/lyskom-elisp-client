@@ -1,3 +1,9 @@
+2000-12-03  Per Cederqvist  <ceder@moria>
+
+	* english-strings.el (kom-ispell-dictionary): Set the value for
+	"en", not "sv".
+	(kom-tell-phrases): Likewise.
+
 2000-12-02  Per Cederqvist  <ceder@moria>
 
 	Enable colors on tty devices under Emacs 21.
