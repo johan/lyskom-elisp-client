@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.168 2002-07-13 13:48:39 jhs Exp $
+;;;;; $Id: lyskom-rest.el,v 44.169 2002-07-16 02:30:04 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.168 2002-07-13 13:48:39 jhs Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.169 2002-07-16 02:30:04 jhs Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -502,15 +502,43 @@ lyskom-mark-as-read."
 ;;;                        Go to next conf.
 
 
-(def-kom-command kom-go-to-next-conf ()
+(def-kom-command kom-go-to-next-conf (&optional num)
   "Go to next conf.
 Take first conf from lyskom-to-do-list and copy it to lyskom-reading-list.
 Tell server what the user is doing. If the user is reading a conf it is
-moved last on lyskom-to-do-list, with priority 0."
-  (interactive)
-  (when (lyskom-check-go-to-conf)
-    (lyskom-maybe-move-unread t)
-    (lyskom-go-to-next-conf)))
+moved last on lyskom-to-do-list, with priority 0. When a prefix argument
+is given, it is interpreted as for kom-list-news; positive numbers set a
+lower bound for how many unreads you want in the conference to move to,
+a negative argument sets a lower bound instead. You end up in the first
+conference in your lyskom-to-do-list that matches the given bounds."
+  (interactive "P")
+  (let ((conf-stat nil)
+	(num-arg (cond
+		  ((numberp num) num)
+		  ((and (listp num)
+			(numberp (car num))) (car num))
+		  (t nil))))
+    (when num-arg
+      (let ((read-list (cdr (lyskom-list-news)))
+	    (msgs-conf nil)
+	    (unreads   nil)
+	    (at-least  (if  (< num-arg 0) 1 num-arg))
+	    (at-most   (and (< num-arg 0) (- num-arg))))
+	(while (and read-list (null conf-stat))
+	  (setq msgs-conf (car read-list))
+	  (setq read-list (cdr read-list))
+	  (setq unreads (car msgs-conf))
+	  (when (and (>= unreads at-least) ; unreads within lower bound
+		     (or (not at-most)
+			 (<= unreads at-most))) ; unreads within upper bound
+	    (setq conf-stat (cdr msgs-conf))))))
+    (if (and num-arg (null conf-stat))
+	(lyskom-insert-string 'no-unreads-shown)
+      (when (lyskom-check-go-to-conf conf-stat)
+	(lyskom-maybe-move-unread t)
+	(if conf-stat
+	    (lyskom-go-to-conf conf-stat)
+	  (lyskom-go-to-next-conf))))))
 
 
 (defun lyskom-go-to-pri-conf ()
