@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.1 1996-03-26 14:13:56 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.2 1996-03-29 03:07:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.1 1996-03-26 14:13:56 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.2 1996-03-29 03:07:26 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -655,7 +655,8 @@ CONF can be a a conf-stat or a string."
 		(delq lyskom-proc lyskom-sessions-with-unread-letters))
 	(or (assq lyskom-proc lyskom-sessions-with-unread-letters)
 	    (setq lyskom-sessions-with-unread-letters
-		  (cons lyskom-proc lyskom-sessions-with-unread-letters))))))
+		  (cons lyskom-proc lyskom-sessions-with-unread-letters)))))
+  (force-mode-line-update))
 
 
 ;;; ================================================================
