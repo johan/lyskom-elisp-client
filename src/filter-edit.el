@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.7 1999-11-19 13:37:58 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.8 2000-08-23 10:43:43 byers Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.7 1999-11-19 13:37:58 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.8 2000-08-23 10:43:43 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -478,10 +478,11 @@ If NEWLINE is non-nil, insert a newline after the header."
           (insert "\n"))
       (goto-char filter-edit-list-end))
       
-      (setq action (completing-read (lyskom-get-string 'filter-edit-filter-how)
-                                    rev-actions
-                                    nil
-                                    t))
+      (setq action (lyskom-completing-read (lyskom-get-string 'filter-edit-filter-how)
+                                           (lyskom-maybe-frob-completion-table
+                                            rev-actions)
+                                           nil
+                                           t))
       (setq permanent
             (lyskom-j-or-n-p (lyskom-get-string 'filter-permanent) t))
       (setq filter (make-filter nil
@@ -518,13 +519,15 @@ If NEWLINE is non-nil, insert a newline after the header."
         (inhibit-read-only t)
         (completion-ignore-case t)
         (rev-what (lyskom-reverse-pairs lyskom-filter-what)))
-    (setq what (completing-read
+    (setq what (lyskom-completing-read
                 (lyskom-get-string 'filter-edit-filter-what)
-                rev-what
+		(lyskom-maybe-frob-completion-table rev-what)
                 nil t))
     (setq pred 
-          (completing-read (lyskom-format 'filter-edit-insert-pred what)
-                           lyskom-filter-predicate-list
+          (lyskom-completing-read (lyskom-format 'filter-edit-insert-pred what)
+			   (lyskom-maybe-frob-completion-table
+			    lyskom-filter-predicate-list
+			    t)
                            nil t))
     (setq argstring (read-from-minibuffer
                      (lyskom-format 'filter-edit-insert-arg what pred)))
@@ -553,7 +556,8 @@ If NEWLINE is non-nil, insert a newline after the header."
 
     (setq pat 
           (cons what arg))
-    (if (cdr (assoc pred lyskom-filter-predicate-list))
+    (if (cdr (assoc pred (lyskom-maybe-frob-completion-table
+			  lyskom-filter-predicate-list t)))
         (setq pat (cons 'not pat)))
 
     ;;

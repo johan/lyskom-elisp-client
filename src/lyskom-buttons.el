@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.49 2000-08-21 14:20:54 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.50 2000-08-23 10:43:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.49 2000-08-21 14:20:54 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.50 2000-08-23 10:43:45 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -154,7 +154,7 @@ If there is no active area, then do something else."
   "Do nothing."
   (interactive "@e")
   ;; This is here to pervent unwanted events when clicking mouse-3
-  )
+  (identity 1))
 
 (defun lyskom-make-button-menu (title entries buf arg text)
   "Create a menu keymap from a list of button actions."
@@ -246,12 +246,13 @@ If there is no active area, then do something else."
                                   (- (window-width (minibuffer-window))
                                      maxlen 3))) ": "))
 
-    (let ((choice (completing-read prompt
-                                   entries
-                                   nil
-                                   t 
-                                   (cons (car (car entries))
-                                         0) nil)))
+    (let ((choice (lyskom-completing-read prompt
+                                          (lyskom-maybe-frob-completion-table
+                                           entries t)
+                                          nil
+                                          t 
+                                          (cons (car (car entries))
+                                                0) nil)))
       (when choice
         (funcall (cdr (lyskom-string-assoc choice entries))
                  buf arg text)))))

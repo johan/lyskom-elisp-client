@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.14 2000-08-21 14:20:52 byers Exp $
+;;;;; $Id: buffers.el,v 44.15 2000-08-23 10:43:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.14 2000-08-21 14:20:52 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.15 2000-08-23 10:43:34 byers Exp $\n"))
 
 
 ;;;;
@@ -136,7 +136,7 @@ a child of some buffer, reparent it."
       (setq current (car queue))
       (setq queue (cdr queue))
       (unless (or (memq current done)
-                  (not (buffer-live-p buffer)))
+                  (not (buffer-live-p current)))
         (setq done (cons current done))
         (setq queue (append queue (lyskom-get-buffer-children current)))
         (funcall function current)))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.6 1999-11-19 13:38:45 byers Exp $
+;;;;; $Id: remote-control.el,v 44.7 2000-08-23 10:43:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.6 1999-11-19 13:38:45 byers Exp $\n"))
+	      "$Id: remote-control.el,v 44.7 2000-08-23 10:43:48 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -71,10 +71,13 @@ turn auto-reply on, off turn it off and nil toggle its state."
                              nil nil t))))
   (setq state (or state
                   (cdr-safe (assoc
-                             (completing-read
+                             (lyskom-completing-read
                               (lyskom-get-string 'remote-control-autoreply)
-                              lyskom-onoff-table nil t nil nil)
-                             lyskom-onoff-table))))
+                              (lyskom-maybe-frob-completion-table
+			       lyskom-onoff-table t)
+			      nil t nil nil)
+                             (lyskom-maybe-frob-completion-table
+			      lyskom-onoff-table t)))))
   (let ((info (blocking-do 'get-session-info session-no)))
     (lyskom-send-message (session-info->pers-no info)
                          (format "Remote-command: %d %d\nautoreply\n%s"

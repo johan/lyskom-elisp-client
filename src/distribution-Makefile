@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.9 2000-08-17 17:26:06 byers Exp $
+# $Id: distribution-Makefile,v 44.10 2000-08-23 10:43:41 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -86,7 +86,8 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		talkback.el \
 		lyskom-rest.el
 
-HEADER = 	defvar.el \
+HEADER = 	header.el \
+		defvar.el \
 		feature.el \
 		vars.el \
 		macros.el \

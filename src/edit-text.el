@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.66 2000-08-11 15:00:50 byers Exp $
+;;;;; $Id: edit-text.el,v 44.67 2000-08-23 10:43:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.66 2000-08-11 15:00:50 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.67 2000-08-23 10:43:42 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1285,8 +1285,10 @@ RECPT-TYPE is the type of recipient to add."
                             (cons (lyskom-get-string 'text) 'text)))
          (completion-ignore-case t)
          (type (cdr (lyskom-string-assoc
-                     (completing-read (lyskom-get-string 'xref-type)
-                                      completions nil t)
+                     (lyskom-completing-read (lyskom-get-string 'xref-type)
+                                             (lyskom-maybe-frob-completion-table 
+                                              completions)
+                                             nil t)
                      completions)))
          (obj nil)
          (prompt nil)

@@ -1,3 +1,111 @@
+2000-08-23  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-stop-keep-alive): Use disable-timeout for
+	XEmacs 20.4 compatibility.
+	(lyskom-keep-alive): Use add-timeout for XEmacs 20.4
+	compatibility.
+
+	Get rid of compiler warnings:
+	* utilities.el (functionp): Use lyskom-compiled-function-p, not
+	byte-code-function-p to eliminate a warning.
+	(lyskom-compiled-function-p): Define depending on Emacs version to
+	avoid using function marked as obsolete in XEmacs but not in Emacs
+	and vice versa (compiled-function-p vs byte-code-function-p).
+	
+	* lyskom-buttons.el (kom-mouse-null): Added call to identity to
+	get rid of compiler warning in Gnu Emacs 20.2.
+
+	* lyskom-rest.el (lyskom-is-loaded): defvar
+	frame-icon-title-format to avoid compiler warnings.
+
+	* compatibility.el (strikethrough): Define face strikethrough
+	here. The type of definition is set at compile time.
+
+	* utilities.el (lyskom-setup-faces): Move creation of face
+	strikethrough to compatibility.el.
+
+2000-08-22  David Byers  <davby@ida.liu.se>
+
+	Get rid of compiler warnings:
+	* compatibility.el (lyskom-encode-coding-char): Test emacs version
+	at compile time to get rid of some warnings. Downside is that we
+	need to run in the same version (more or less) that we compiled
+	in.
+
+	Get completing-read to work in unibyte MULE emacsen:
+	* startup.el (lyskom-read-server-name): Use
+	lyskom-completing-read.
+
+	* remote-control.el (kom-remote-autoreply): Use
+	lyskom-completing-read.
+
+	* lyskom-buttons.el (lyskom-keyboard-menu): Use
+	lyskom-completing-read. Recove completion table as necessary.
+
+	* filter.el (lyskom-filter-read-action): Use
+	lyskom-completing-read.
+
+	* filter-edit.el (lyskom-filter-edit-insert-entry): Use
+	lyskom-completing-read.
+	(lyskom-filter-edit-insert-pattern): Use lyskom-completing-read.
+
+	* edit-text.el (kom-edit-add-cross-reference): Use
+	lyskom-completing-read.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity): Use
+	lyskom-completing-read.
+
+	* command.el (lyskom-read-extended-command): Use
+	lyskom-completing-read. 
+
+	* commands2.el (kom-change-language): Use lyskom-completing-read.
+	(kom-del-faq): Use lyskom-completing-read.
+	
+	* utilities.el (lyskom-default-collate-table): Rewrote the string
+	so it can be safely encoded in iso-8859-1 so that Gnu Emacs will
+	not attempt to save it in emacs-mule encoding, which would fuck it
+	up completely.
+
+	* startup.el (lyskom-read-server-name): Recode completion table as
+	necessary.
+
+	* remote-control.el (kom-remote-autoreply): Recode completion
+	table as necessary.
+
+	* commands2.el (kom-del-faq): Recode completion table as
+	necessary.
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity):
+	Recode completion table as necessary.
+
+	* filter-edit.el (lyskom-filter-edit-insert-entry): Recode
+	completion tables as necessary.
+	(lyskom-filter-read-action): Recode completion table as necessary.
+
+
+	* commands2.el (kom-change-language): Recode completion table as
+	necessary.
+
+	* command.el (lyskom-read-extended-command): Recode completion
+	table as necessary.
+	
+	* utilities.el (lyskom-maybe-frob-completion-table): New function
+	to recode completion tables for completing-read according to the
+	state of enable-multibyte-characters.
+
+2000-08-22  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-completing-match-string): Quote
+	string to be used as regexp.
+
+	* commands1.el (kom-list-created-conferences): Re-signal caught
+	quit signal.
+
+2000-08-21  David Byers  <davby@ida.liu.se>
+
+	* buffers.el (lyskom-traverse-buffer-hierarchy): Test liveness of
+	current buffer, not root buffer (doh!).
+
 2000-08-21  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-N

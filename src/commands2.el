@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.77 2000-08-17 17:26:05 byers Exp $
+;;;;; $Id: commands2.el,v 44.78 2000-08-23 10:43:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.77 2000-08-17 17:26:05 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.78 2000-08-23 10:43:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1927,13 +1927,13 @@ Return-value: 'no-session if there is no suitable session to switch to
   (interactive)
   (let* ((completion-ignore-case t)
          (table (lyskom-available-language-list))
-         (language (completing-read
-                   (lyskom-get-string 'which-language)
-                   table
-                   nil
-                   t
-                   nil
-                   'lyskom-language-history)))
+         (language (lyskom-completing-read
+                    (lyskom-get-string 'which-language)
+                    (lyskom-maybe-frob-completion-table table)
+                    nil
+                    t
+                    nil
+                    'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table))))))
 
@@ -1957,7 +1957,8 @@ Return-value: 'no-session if there is no suitable session to switch to
           (lambda (codelist)
             (when (assq code codelist)
               (setq result
-                    (cons (cons (cdr (assq code codelist)) code)
+                    (cons (cons (cdr (assq code codelist))
+				code)
                           result)))))
          tmp)))
      codes)
@@ -2000,7 +2001,9 @@ Return-value: 'no-session if there is no suitable session to switch to
          (completion-ignore-case t)
          (type (cdr (lyskom-string-assoc
                      (completing-read (lyskom-get-string 'label-what-kind)
-                                      completions nil t)
+                                      (lyskom-maybe-frob-completion-table 
+				       completions)
+				      nil t)
                      completions)))
          (objno nil)
          (label nil)
@@ -2154,8 +2157,10 @@ Return-value: 'no-session if there is no suitable session to switch to
       (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
      ((null faq-list) 
       (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     (t (setq text-no (completing-read (lyskom-get-string 
-                                        'text-to-del-as-faq) faq-list nil t))
+     (t (setq text-no (lyskom-completing-read (lyskom-get-string 'text-to-del-as-faq)
+                                              (lyskom-maybe-frob-completion-table 
+                                               faq-list)
+                                              nil t))
         (when text-no
           (lyskom-format-insert 'deleting-faq 
                                 (string-to-int text-no)
@@ -2384,7 +2389,10 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 (defun lyskom-keep-alive ()
   (setq lyskom-keep-alive-timers
 	(cons
-	 (run-with-timer kom-keep-alive-interval kom-keep-alive-interval 'lyskom-keep-alive-callback (current-buffer))
+	 (add-timeout kom-keep-alive-interval
+                      'lyskom-keep-alive-callback
+                      (current-buffer)
+                      kom-keep-alive-interval)
 	 lyskom-keep-alive-timers)))
 
 (def-kom-command kom-stop-keep-alive ()
@@ -2398,7 +2406,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 
 
 (defun lyskom-stop-keep-alive ()
-  (mapcar 'cancel-timer lyskom-keep-alive-timers)
+  (mapcar 'disable-timeout lyskom-keep-alive-timers)
   (setq lyskom-keep-alive-timers nil))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.41 2000-08-21 14:20:53 byers Exp $
+;;;;; $Id: compatibility.el,v 44.42 2000-08-23 10:43:39 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.41 2000-08-21 14:20:53 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.42 2000-08-23 10:43:39 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -163,9 +163,6 @@ KEYS should be a string in the format used for saving keyboard macros
 
 ;;;
 
-
-(lyskom-provide-macro byte-code-function-p (obj)
-  (` (compiled-function-p (, obj))))
 
 (lyskom-provide-function characterp (obj)
   (integerp obj))
@@ -341,16 +338,20 @@ string to search in."
 
 ;; defmacro lyskom-encode-coding-char in XEmacs so the compiled code
 ;; is quicker. In Gnu Emacs define it as a function.
+;;
+;; The definition is made at compile-time to avoid getting warnings 
+;; about encode-coding-char.
 
 (eval-and-compile
-  (lyskom-xemacs-or-gnu
-   (defmacro lyskom-encode-coding-char (c system) c)
-   (if (fboundp 'encode-coding-char)
-       (defun lyskom-encode-coding-char (c system)
-         (let ((s (encode-coding-char c system)))
-           (if (and s (= (length s) 1))
-               (elt s 0))))
-     (defun lyskom-encode-coding-char (c system) c))))
+  (cond ((eval-when-compile (string-match "XEmacs" (emacs-version)))
+         (defmacro lyskom-encode-coding-char (c system) c))
+        ((eval-when-compile (fboundp 'encode-coding-char))
+         (defun lyskom-encode-coding-char (c system)
+           (let ((s (encode-coding-char c system)))
+             (if (and s (= (length s) 1))
+                 (elt s 0)))))
+        (t (defmacro lyskom-encode-coding-char (c system) c))))
+
 
 (eval-and-compile
   (lyskom-xemacs-or-gnu
@@ -363,6 +364,24 @@ string to search in."
                  enable-multibyte-characters)
             (string-width (string-make-multibyte str)))
            (t (string-width str))))))
+
+
+(eval-and-compile
+  (cond ((eval-when-compile (string-match "XEmacs" (emacs-version)))
+         (defun lyskom-completing-read (prompt
+                                        table 
+                                        &optional predicate require-match
+                                        init hist def inherit-input-method)
+           (completing-read prompt table predicate require-match init hist)))
+        ((eval-when-compile (> emacs-major-version 19))
+         (fset 'lyskom-completing-read (symbol-function 'completing-read)))
+        (t 
+         (defun lyskom-completing-read (prompt
+                                        table 
+                                        &optional predicate require-match
+                                        init hist def inherit-input-method)
+           (completing-read prompt table predicate require-match init hist)))))
+     
 
 
 (lyskom-provide-function last (x &optional n)
@@ -405,6 +424,12 @@ property and a property with the value nil."
   "Like make-face in XEmacs"
   (lyskom-xemacs-or-gnu (make-face name nil temporary)
                         (make-face name)))
+
+(if (not (find-face 'strikethrough))
+    (progn (make-face 'strikethrough)
+           (if (eval-when-compile (fboundp 'set-face-strikethrough-p))
+               (set-face-strikethru-p 'strikethrough t)
+             (set-face-underline-p 'strikethrough t))))
 
 
 ;;; ======================================================================

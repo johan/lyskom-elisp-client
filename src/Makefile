@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.58 2000-08-17 17:26:01 byers Exp $
+# $Id: Makefile,v 44.59 2000-08-23 10:43:33 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.58 2000-08-17 17:26:01 byers Exp $
+# $Id: Makefile,v 44.59 2000-08-23 10:43:33 byers Exp $
 #
 
 
@@ -98,7 +98,8 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		talkback.el \
 		lyskom-rest.el
 
-HEADER = 	defvar.el \
+HEADER = 	header.el \
+		defvar.el \
 		feature.el \
 		vars.el \
 		macros.el \
@@ -124,11 +125,11 @@ vars.el: vars.el.in Makefile
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 	chmod 444 vars.el
 
-%.elc: %.el header.el
-	$(EMACS-BATCH)  -l ./lpath.el -l ./header.el -f batch-byte-compile $<
+%.elc: %.el _header.el
+	$(EMACS-BATCH)  -l ./lpath.el -l ./_header.el -f batch-byte-compile $<
 
-header.el: $(HEADER)
-	cat $(HEADER) > header.el
+_header.el: $(HEADER)
+	cat $(HEADER) > _header.el
 
 fast: $(HEADER-ELC) $(SOURCES-ELC)
 	cat $(HEADER-ELC) $(SOURCES-ELC) > $(TARGET)
