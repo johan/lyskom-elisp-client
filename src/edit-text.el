@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.7 1993-06-23 21:51:29 linus Exp $
+;;;;; $Id: edit-text.el,v 36.8 1993-06-23 23:50:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.7 1993-06-23 21:51:29 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.8 1993-06-23 23:50:50 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -700,7 +700,10 @@ the with-output-to-temp-buffer command is issued to make them both apear."
        (progn
 	 (set-buffer editing-buffer)
 	 (with-output-to-temp-buffer "*Commented*"
-	   (princ (text->text-mass text))))))
+	   (princ
+	    (if kom-emacs-knows-iso-8859-1
+		(text->text-mass text)
+	      (iso-8859-1-to-swascii (text->text-mass text))))))))
 
 
 (defun lyskom-edit-insert-commented (text editing-buffer)
