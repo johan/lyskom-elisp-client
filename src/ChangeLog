@@ -1,3 +1,9 @@
+Mon Oct 28 11:39:21 1991  Per Cederqvist  (ceder at robin)
+
+	* swedish-strings.el (lyskom-edit-mode-map): kom-edit-add-copy
+	  (Extra Kopia) finns nu {ven p} "\C-cae", och inte bara p}
+	  "\C-cak".
+
 Fri Oct 25 16:22:03 1991  Linus Tolke Y  (linus at lysator)
 
 	* lyskom-rest.el (kom-save-text): read-file-name gets

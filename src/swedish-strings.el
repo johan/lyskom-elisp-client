@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.14 1991-10-23 18:26:13 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.15 1991-10-28 10:44:45 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.14 1991-10-23 18:26:13 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.15 1991-10-28 10:44:45 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -79,6 +79,7 @@
   (define-key lyskom-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
   (define-key lyskom-edit-mode-map "\C-cam" 'kom-edit-add-recipient)
   (define-key lyskom-edit-mode-map "\C-cak" 'kom-edit-add-copy)
+  (define-key lyskom-edit-mode-map "\C-cae" 'kom-edit-add-copy)
   (define-key lyskom-edit-mode-map "\C-ca?" 'lyskom-help))
 
 
