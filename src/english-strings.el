@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.7 1996-05-02 17:12:08 davidk Exp $
+;;;;; $Id: english-strings.el,v 40.8 1996-05-02 17:39:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 40.7 1996-05-02 17:12:08 davidk Exp $"))
+              "$Id: english-strings.el,v 40.8 1996-05-02 17:39:21 davidk Exp $"))
 
 
 
@@ -534,6 +534,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-session-priority . "Set reading level:")
 
     ; From review.el:
+    (review-how-many . "Review how many: ")
     (latest-n . "last %#1d")
     (first-n . "first %#1d")
     (info-by-whom . "%#1s by whom: ")
@@ -543,7 +544,8 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (no-get-conf . "You are not allowed to access that conferene.\n")
     (no-get-pers . "You are not allowed to access that user.\n")
     (no-review-info . "You are not allowed to review %#1s\n")
-    (review-info . "Review %#1s\n")
+    (review-info . "Review %#1s")
+    (review-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
     (you-review . "You are now reviewing %#1s.\n")
     (read-text-first . "You must read a article first.\n")
     (cannot-read-last-text . "You cannot review the last read article.\n")
