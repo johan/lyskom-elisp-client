@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.61 2002-09-18 19:06:56 byers Exp $
+;;;;; $Id: compatibility.el,v 44.62 2002-11-22 17:38:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.61 2002-09-18 19:06:56 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.62 2002-11-22 17:38:39 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -629,10 +629,12 @@ Otherwise treat \\ in NEWTEXT string as special:
 
 (eval-and-compile
   (condition-case nil
-      (symbol-value ':default-help-echo)
+      (setq lyskom-dummy-variable-to-fool-the-byte-compiler
+            (symbol-value ':default-help-echo))
     (error (set ':default-help-echo ':default-help-echo)))
   (condition-case nil
-      (symbol-value ':group)
+      (setq lyskom-dummy-variable-to-fool-the-byte-compiler
+            (symbol-value ':group))
     (error (set ':group ':group))))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.23 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: prefetch.el,v 44.24 2002-11-22 17:38:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.23 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: prefetch.el,v 44.24 2002-11-22 17:38:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -714,8 +714,8 @@ Put the requests on QUEUE."
 ;;;                            memberships))
         )
     (lyskom-insert-memberships-in-membership memberships)
-    (while (< i size)
-      (let ((membership (aref memberships i)))
+;;;     (while (< i size)
+;;;      (let ((membership (aref memberships i)))
 ;;; Commented out 1999-06-26 byers
 ;;; This should not be necessary since we know that all of these
 ;;; maps were empty when we started the client. Texts created after
@@ -726,8 +726,8 @@ Put the requests on QUEUE."
 ;;;	    (lyskom-prefetch-map (membership->conf-no membership)
 ;;;				 membership
 ;;;				 queue))
-)
-      (++ i))
+;;;)
+;;;      (++ i))
     (if (and (numberp lyskom-membership-is-read)
 	     (< (length memberships) lyskom-fetch-membership-length))
 	(progn

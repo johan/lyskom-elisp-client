@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: keyboard-menu.el,v 44.3 2002-10-23 17:54:45 byers Exp $
+;;;;; $Id: keyboard-menu.el,v 44.4 2002-11-22 17:38:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: keyboard-menu.el,v 44.3 2002-10-23 17:54:45 byers Exp $\n"))
+	      "$Id: keyboard-menu.el,v 44.4 2002-11-22 17:38:39 byers Exp $\n"))
 
 (defvar lyskom-keyboard-menu-menu)
 (defvar lyskom-keyboard-menu-buffer)
@@ -76,8 +76,8 @@ Like read-event in Gnu Emacs or next-command-event in XEmacs."
           (setq b-lc (cons (downcase (substring word 1 2)) b-lc)
                 b-uc (cons (upcase (substring word 1 2)) b-uc)))
         (when (> (length word) 2)
-          c-lc (cons (downcase (substring word 2 3)) c-lc)
-          c-uc (cons (upcase (substring word 2 3)) c-uc))
+          (setq c-lc (cons (downcase (substring word 2 3)) c-lc)
+                c-uc (cons (upcase (substring word 2 3)) c-uc)))
         ))
     (mapcar (lambda (s)
               (lyskom-xemacs-or-gnu

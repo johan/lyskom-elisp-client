@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.42 2002-10-16 20:22:16 byers Exp $
+;;;;; $Id: review.el,v 44.43 2002-11-22 17:38:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.42 2002-10-16 20:22:16 byers Exp $\n"))
+	      "$Id: review.el,v 44.43 2002-11-22 17:38:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1236,7 +1236,7 @@ text is shown and a REVIEW list is built to shown the other ones."
            (cache-del-text-stat text-no))
          (lyskom-review-comments
           (blocking-do 'get-text-stat text-no)))
-        (t lyskom-insert-string 'read-text-first)))
+        (t (lyskom-insert-string 'read-text-first))))
 
 
 (defun lyskom-review-comments (text-stat)
