@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.111 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.112 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.111 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.112 2004-11-15 17:27:16 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -84,6 +84,7 @@
     [kom-morons]
     "\n"
     [kom-show-unread-in-frame-title]
+    [kom-unread-mode-line-type]
     [kom-presence-messages-in-echo-area]
     [kom-presence-messages-in-buffer]
     "\n"
@@ -863,6 +864,10 @@ All key bindings:
     (kom-saved-file-name (file))
     (kom-follow-attachments (toggle (yes no)))
     (kom-show-unread-in-frame-title (toggle (yes no)))
+
+    (kom-unread-mode-line-type (choice ((const (simple-unread-mode-line nil))
+					(const (explicit-unread-mode-line t)))))
+
     (kom-confirm-add-recipients (toggle (yes no)))
     (kom-trim-buffer-minimum (number))
     (kom-dont-check-commented-authors (repeat (person nil 
