@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.166 2002-02-25 18:14:18 joel Exp $
+;;;;; $Id: english-strings.el,v 44.167 2002-02-25 18:27:31 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.166 2002-02-25 18:14:18 joel Exp $"))
+              "$Id: english-strings.el,v 44.167 2002-02-25 18:27:31 joel Exp $"))
 
 
 ;;; ================================================================
@@ -2103,6 +2103,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "I")  'kom-who-am-i)
   (define-key lyskom-en-mode-map (kbd "W")  'kom-busy-wait)
   (define-key lyskom-en-mode-map (kbd "A p") 'kom-change-presentation)
+  (define-key lyskom-en-mode-map (kbd "A q") 'kom-change-conf-faq)
   (define-key lyskom-en-mode-map (kbd "A f") 'kom-filter-edit)
   (define-key lyskom-en-mode-map (kbd "A m") 'kom-change-auto-reply)
   (define-key lyskom-en-mode-map (kbd "A t") 'kom-move-text)
