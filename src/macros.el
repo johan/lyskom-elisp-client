@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.25 2000-03-21 15:21:25 byers Exp $
+;;;;; $Id: macros.el,v 44.26 2000-12-03 22:31:33 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.25 2000-03-21 15:21:25 byers Exp $\n"))
+	      "$Id: macros.el,v 44.26 2000-12-03 22:31:33 ceder Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -163,7 +163,7 @@ Value returned is always nil."
 The value of the last form in BODY is returned.
 Each element in BIND-LIST is a list (SYMBOL FORM) which binds SYMBOL to
 the result of the server call FORM, which is the same as used in blocking-do.
-All the forms in BIND-LIST are evaluated before and symbols are bound."
+All the forms in BIND-LIST are evaluated before any symbols are bound."
   (let ((bindsym 'multiple-bind-sym)
 	(index 0))
     (` (let (((, bindsym)
