@@ -1,0 +1,93 @@
+Version 0.41 av elispklienten finns nu tillgänglig. Den innehåller
+rättningar på ett par mer eller mindra allvarligar buggar i 0.40 och
+ett par nya finesser.
+
+* Fitjurs och förbättringar
+
+** Det går en aning fortare att visa texter. Detta görs genom att
+   utskrift av namn på författare till kommentarer mm. fördröjs om de
+   inte redan finns i cachen.
+
+** Innehållet i bufferten scrollas mer kontinuerligt allteftersom
+   utmatning kommer. Tidigare scrollade den bara när man fick en
+   prompt. Med det nyare beteendet är det lättare att se att något
+   händer och man får se information tidigare. Detta beteende kan
+   styras med variabeln kom-continuous-scrolling.
+
+** Man blir inte längre ombedd att skriva en presentation när man
+   skapar hemliga möten.
+
+** Kommandot kom-view-previous-commented-text är nytt.
+
+** Information om vem som har adderat en kommentarslänk visas nu i
+   kommentaren.
+
+* Bugfixar
+
+** Återse senaste fungerar! De problem som rapporterats om detta
+   kommando borde vara lösta i denna version.
+
+** lyskom.el går nu igenom bytekompileringen nästan helt utan
+   varningar. De återstående varningarna om odefinierade funktioner
+   kan lugnt ignoreras.
+
+** Bufferten positioneras rätt från början om man använder
+   kom-page-before-command.
+
+** Det är svårare att få klienten att stoppa köerna av misstag.
+
+** Man kan nu trycka 'åak' direkt efter att ha skrivit en kommentar
+   genom att trycka på 'k'.
+
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Elispklienten hänger fortfarande ibland men vi vet inte varför. Det
+   är numera lite enklare att avbryta och några hängningar har
+   eliminerats, men problemet är inte löst. Problemet är att emacs gör
+   poll() med timeout satt till noll sekunder upprepat, trots att det
+   rimligen borde finnas data tillgängligt. Det kan vara ett
+   kodningsfel, det kan vara en bug i emacs och det kan kanske vara så
+   att svaret helt enkelt dröjer. Vi har numera en explicit timeout
+   som per default är satt till en sekund, så emacs bör inte dra 100%
+   CPU även om den fortfarande stannar ibland.
+
+** Man kan inte filtrera anonyma inlägg eller inlägga av personer som
+   inte längre existerar. Den här buggen har låg prioritet.
+
+** Om det kommer asynkrona meddelanden lite olyckligt så kommer
+   kom-first-line-face att användas på för många rader. Den här buggen
+   är har låg prioritet.
+
+
+Migrering från 0.38 till nyare versioner
+----------------------------------------
+
+Prioritera om möten med prioritet 0 till en högre prioritet. I
+framtiden (och delvis redan nu) så kommer prioritet 0 att betyda
+passivt medlemsskap (man läser inte mötet men servern minns vad man
+har läst tidigare).
+
+Vissa variabler skall ha nya värden. Följande variabler är av
+speciellt intresse (se dokumentationen för respektive variabel i Ändra
+variabler eller med C-h v):
+
+kom-ding-on-personal-messages (sätt till siffra, antal pip)
+kom-ding-on-group-messages (sätt till siffra, antal pip)
+kom-ding-on-common-messages (sätt till siffra, antal pip)
+
+LysKOM använder andra hookar än förr. Numera används i första hand
+kom-login-hook, lyskom-after-load-hook och lyskom-mode-hook.
+kom-login-hook lagras i servern och körs när en session loggar in.
+lyskom-after-load-hook körs när lyskom.elc har laddats in i Emacs.
+lyskom-mode-hook körs när man går in i lyskom-mode. Saker som
+kom-do-when-starting och liknande finns inte längre. Om din LysKOM
+inte beter sig som du förväntar vid inloggningen så kan det vara så
+att du använder en hook som inte längre finns.
+
+Om du har gjort egen färgsättning i elispklienten så fär du göra om.
+Färger som definieras i .emacs kommer att skrivas över. Definiera i
+stället om färgerna i lyskom-after-load-hook. Se dokumentationen av
+kom-default-face-scheme och lyskom-face-schemes för mer information. 
+
+Hanteringen av färger kan nog ändras igen om vi kommer på ett
+smidigare sätt att göra det.
