@@ -1040,3 +1040,286 @@ att jag inte {r organisat|r f|r n}got m|te alls).
 (177171) -----------------------------------
 Kommentar i text 177176 av Calle Dybedahl
 Kommentar i text 177180 av ceder (Per Cederqvist  Lysator)
+
+187695 1992-03-25  03:23  /5 rader/ H}kan Haskel (HiH)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <307>
+Markerad av dig.
+[rende: Flytta inl{gg
+------------------------------------------------------------
+Jag har sett att det har blivit lite diskussioner n{r inl{gg har
+flyttats mellan olika m|ten.
+
+Hur g|r man igentligen f|r att flytta inl{gg?
+G}r det att g|ra med elist-klienten ?
+(187695) -----------------------------------
+Kommentar i text 187697 av Lars Willf|r (svartsmurf)
+]terse n{sta markerade - Avmarkera (inl{gg)
+Avmarkering av text 187695...klart.
+
+187697 1992-03-25  03:30  /18 rader/ Lars Willf|r (svartsmurf)
+Kommentar till text 187695 av H}kan Haskel (HiH)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <308>
+Markerad av dig.
+[rende: Flytta inl{gg
+------------------------------------------------------------
+Tyv{rr finns det ingen flytta-funktion (var det inte n}n som skrev en
+s}n!?!) s} man f}r anv{nda addera och subtrahera mottagare.
+
+Det kan ofta vara en god ide' att addera innan du subtraherar,
+f|rresten. Om Allan Anv{ndare skriver ett inl{gg om hur man kan skiva
+bananer med hj{lp av ett skivminne i Unixgurus formelutbyte som du {r
+organisat|r f|r kan du flytta inl{gget till /dev/null genom att f|rst
+addera /dev/null som mottagare (det f}r alla g|ra) och sedan
+subtrahera Unixguru-m|tet som mottagare (det f}r du g|ra som
+organisat|r f|r m|tet).
+
+MEN om du b|rjar med att subtrahera inl{ggets enda mottagare
+(Unixguru-m|tet) kan du inte efter}t addera /dev/null eftersom du inte
+l{ngre har r{tt att l{sa inl{gget! Kanske ingen st|rre f|rlust i det
+h{r fallet, men det kan vara bra att t{nka p}...
+
+Men en flytta-funktion vore klart bra att ha. Jag har f|r mig att
+n}gon skulle skriva en s}n, men jag minns kanske fel.
+(187697) -----------------------------------
+
+188756 1992-03-27  13:30  /8 rader/ Henrik Johansson D86/Uppsala
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <309>
+Markerad av dig.
+[rende: L}ngsam uppstart
+------------------------------------------------------------
+
+Tyv{rr har jag inte haft tid att l{sa igenom alla (86) inl{ggen i det
+h{r m|tet s} kanske detta redan har diskuterats.
+
+N{r jag kopplar upp mig och har gett namn och l|senord dr|jer det en
+stund innan jag kan se hur m}nga ol{sta inl{gg jag har.  Varf|r ska
+det ta s}n tid?  [r det f|r att "who"-listan byggs upp, eller {r det
+av n}gon annan anledning?  Kan man snabba upp det p} n}got s{tt?
+(188756) -----------------------------------
+Kommentar i text 188765 av MeTa ((gcc == Parse error) && (hate(PUM)))
+
+188765 1992-03-27  14:17  /4 rader/ MeTa ((gcc == Parse error) && (hate(PUM)))
+Kommentar till text 188756 av Henrik Johansson D86/Uppsala
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <310>
+Markerad av dig.
+[rende: L}ngsam uppstart
+------------------------------------------------------------
+(R{tta mina fel ceder)
+Det tar  tid eftersom klienten h{mtar information om alla ol{sta
+inl{gg, har du mycket ol{st blir det mycket att h{mta.
+					/MeTa
+(188765) -----------------------------------
+Kommentar i text 188797 av Henrik Johansson D86/Uppsala
+
+188797 1992-03-27  16:24  /4 rader/ Henrik Johansson D86/Uppsala
+Kommentar till text 188765 av MeTa ((gcc == Parse error) && (hate(PUM)))
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <311>
+Markerad av dig.
+[rende: L}ngsam uppstart
+------------------------------------------------------------
+Jahaja, men om jag nu har tv} (2) m|ten med vardera 1 (ett) ol{st
+inl{gg, ska det beh|va ta 30s d}?
+
+/avd. f|r j{kt :-)
+(188797) -----------------------------------
+Kommentar i text 188798 av Calle Dybedahl
+Nu har Ingemar Ragnemalm g}tt ur LysKOM.
+
+188813 1992-03-27  17:24  /13 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 188798 av Calle Dybedahl
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <313>
+Markerad av dig.
+[rende: L}ngsam uppstart
+------------------------------------------------------------
+S} var det f|rr, men numera {r det inte s}. Se till att du inte har en
+alltf|r gammal klient!
+
+Du kan st{nga av who-bufferten med
+
+	(setq lyskom-who-info-buffer-is-on nil)
+
+i din .emacs. D} b|r uppstarten g} lite snabbare (i alla fall om det
+{r m}nga inloggade).  (Du kan dock inte sl} p} den igen {n - r{tta mig
+om jag har fel, Linus!).
+
+Men eftersom elisp inte {r v{rldens snabbaste spr}k s} {r enda s{ttet
+att f} riktigt bra fart att k|ra p} en snabb maskin.
+(188813) -----------------------------------
+Kommentar i text 188936 av Uwe
+Kommentar i text 189444 av Henrik Johansson D86/Uppsala
+
+191360 1992-04-02  10:24  /10 rader/ Yf=f(Yf)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <318>
+Markerad av dig.
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+Om detta inte {r enbart en klientfr}ga s} kan v{l n}'n som vet vart addera den
+r{tt.
+
+Voff| g|r dom p} detta viset med mina fina }ttabitarstecken? Eftersom jag kan
+l{sa andras }ttbitarsinl{gg helt OK, s} lagras dom allts} utan att
+transformeras. Men varf|r {ndras d} ett {rende som jag har skrivit n{r n}gon
+annan kommenterar det utan att {ndra {rende? Hur hanteras {rendetexten n{r den
+kopieras fr}n mitt skrivna inl{gg till editbuffern hos den som kommenterar?
+
+									/jw
+(191360) -----------------------------------
+Kommentar i text 191372 av Inge Wallin, ISY
+Nu har Mikael Pettersson g}tt in i LysKOM.
+]terse n{sta markerade - Markera (inl{gg)
+Nu har Mikael Pettersson g}tt ur LysKOM.
+
+191360 1992-04-02  10:24  /10 rader/ Yf=f(Yf)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <318>
+Markerad av dig.
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+Om detta inte {r enbart en klientfr}ga s} kan v{l n}'n som vet vart addera den
+r{tt.
+
+Voff| g|r dom p} detta viset med mina fina }ttabitarstecken? Eftersom jag kan
+l{sa andras }ttbitarsinl{gg helt OK, s} lagras dom allts} utan att
+transformeras. Men varf|r {ndras d} ett {rende som jag har skrivit n{r n}gon
+annan kommenterar det utan att {ndra {rende? Hur hanteras {rendetexten n{r den
+kopieras fr}n mitt skrivna inl{gg till editbuffern hos den som kommenterar?
+
+									/jw
+(191360) -----------------------------------
+Kommentar i text 191372 av Inge Wallin, ISY
+Nu har Mikael Pettersson g}tt in i LysKOM.
+]terse n{sta markerade - Markera (inl{gg)
+Nu har Mikael Pettersson g}tt ur LysKOM.
+
+191372 1992-04-02  10:46  /3 rader/ Inge Wallin, ISY
+Kommentar till text 191360 av Yf=f(Yf)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <319>
+Markerad av dig.
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+N{r n}gon l{ser s} g|rs alla 8-bitarstecken om till 7-bitars om
+klienten tror att inte hans emacs klarar av det.  Detta omgjorda
+{rende stoppas sedan in i hans editbuffert och skickas iv{g sen.
+(191372) -----------------------------------
+Kommentar i text 191400 av Yf=f(Yf)
+Kommentar i text 191429 av Linus Tolke Y
+
+191400 1992-04-02  11:23  /3 rader/ Yf=f(Yf)
+Kommentar till text 191372 av Inge Wallin, ISY
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <320>
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+Vad {r motiveringen bakom designbeslutet att {ndra *texten* och inte bara dess
+*displayande*? Att skyffla osynliga representationer fram och tillbaka och ha
+ett filter mellan dom och utskriften vore v{l b}de snyggare och generellare...
+(191400) -----------------------------------
+Kommentar i text 191415 av ceder (Per Cederqvist  Lysator)
+Kommentar i text 191442 av Inge Wallin, ISY
+]terse n{sta text - ]terse alla kommentarer
+]terse text nummer 191415.
+191415 1992-04-02  12:00  /18 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 191400 av Yf=f(Yf)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <321>
+Markerad av dig.
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+Det vore snyggar, generellare, och jobbigare att implementera.
+Elispklienten {r bara en f|rstudie till den riktiga klienten, i alla
+fall i mitt medvetande... Men om du (eller n}gon annan) f|rb{ttrar
+hanteringen {r det nog inte om|jligt att det l{ggs in i klienten.
+
+F|r l{nge sedan hade klienten tv} kopior av alla texter. Dels l}g
+texten i bufferten (i alla fall n{r man hade l{st texten), dels fanns
+den i en assoc-lista d{r man kunde ta fram den med hj{lp av dess
+textnummer. N}gon tyckte (med r{tta!) att det tog on|digt mycket plats
+och rationaliserade det s} att assoclistan i st{llet inneh|ll pekare
+till bufferten.
+
+Knappt tv} m}nader senare (i juni 1991) inf|rdes fixen med
+kom-emacs-knows-iso-8859-1. Den konverterar helt r}tt texten n{r den
+s{tts in i bufferten. Sedan beh}lls bara pekare in i bufferten n{r man
+ska extrahera {renderaden... Inte riktigt bra...
+
+S} kan det g}!
+(191415) -----------------------------------
+
+191429 1992-04-02  12:42  /11 rader/ Linus Tolke Y
+Kommentar till text 191372 av Inge Wallin, ISY
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <322>
+Markerad av dig.
+[rende: ]ttabitarstecken.
+------------------------------------------------------------
+Anledningen till att det {r detta omgjorda {rende som stoppas in och
+inte det ursprungliga {r att text-massans cache (som tidigare var
+str{ngar) numera {r implementerad som perkare i bufferten (och i
+bufferten ligger ju de omgjorda tecknena). Vi kan ganska l{tt {ndra
+det igen s} att cachen implementeras som str{ngar, men om man inte
+skriver rutiner f|r att sl{nga ut saker fr}n cachen s} lagras all text
+2 g}nger i emacsen och emacsen blir dubbelt s} stor.
+
+Jag {r ledsen att jag inte st|rs av detta beteende. Jag {r ocks}
+ledsen att anledningen till att jag inte st|rs av beteendet {r att jag
+vet vad det beror p}.
+(191429) -----------------------------------
+
+191776 1992-04-02  21:43  /3 rader/ Redin
+Mottagare: LysKOM; Elispklientens buggrapporter <88>
+Mottagare: Redin <2365>
+    Mottaget: 1992-04-02 21:43
+Markerad av dig.
+[rende: Oups 
+------------------------------------------------------------
+Detta {r ingen nyhet men irriterande:
+Om jag r}kar sabba raden med instruktioner l{ngst ner i headern s} kan
+jag inte skicka in inl{gget. M}ste det kontroleras att den {r r{tt?
+(191776) -----------------------------------
+Kommentar i text 192027 av Linus Tolke Y
+]terse n{sta markerade - Markera (inl{gg)
+Markering av text 191776...klart.
+
+191773 1992-04-02  21:34  /6 rader/ H}kan Haskel (HiH)
+Kommentar till text 191770 av H}kan Haskel (HiH)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <325>
+Markerad av dig.
+[rende: [ndra variabel, hur?
+------------------------------------------------------------
+Nej, nu fungerar ingenting :-(.
+Nu f}r jag hela tiden:
+
+Symbol's function definition is void: nil
+
+Finns det n}got s{tt att }terst{lla alla sina variabler till default?
+(191773) -----------------------------------
+Kommentar i text 191784 av ceder (Per Cederqvist  Lysator)
+
+191784 1992-04-02  22:31  /6 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 191773 av H}kan Haskel (HiH)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <326>
+Markerad av dig.
+[rende: [ndra variabel, hur?
+------------------------------------------------------------
+G} ur emacs och starta om.
+
+Det finns andra l|sningar, men dom {r jobbiga. Mycket jobbiga. Det
+r{cker inte att ladda in filen "lyskom.el{,c}" igen eftersom den
+anv{nder defvar p} m}nga variabler. Om variablen redan har ett v{rde
+s} kommer den allts} att beh}lla det.
+(191784) -----------------------------------
+
+207294 1992-05-10  19:13  /2 rader/ Ulf Lindb{ck
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <349>
+Markerad av dig.
+[rende: 
+------------------------------------------------------------
+Finns det n}got enklare s{tt att flytta ett kommentarstr{d {n att 
+addera och subtrahera mottagare f|r alla kommentarer?
+(207294) -----------------------------------
+Kommentar i text 207295 av ceder (Per Cederqvist  Lysator)
+
+207295 1992-05-10  19:24  /1 rad/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 207294 av Ulf Lindb{ck
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <350>
+Markerad av dig.
+[rende: Flytta tr{d.
+------------------------------------------------------------
+Nej, tyv{rr inte.
+(207295) -----------------------------------
