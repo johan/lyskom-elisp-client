@@ -1,0 +1,174 @@
+
+
+                           SERVER CALLBACKS
+                             David Byers
+
+
+
+    This file explains some traps you may fall prey to when writing
+    server callbacks. All developers must know this.
+
+
+
+    DYNAMIC BINDING AND LEXICAL-LET
+
+
+    Da Rulez:
+
+    * Never rely on dynamic scoping in callbacks
+    * Use collectors to pass results from a callback to a waiting
+      caller.
+    * Don't use lexical-let or closure.
+    * Did I say never to rely on dynamic scoping?
+
+
+    Sometimes you might want to use dynamic scoping to access
+    variables in the environment where you specify a callback.
+    Typically the code looks something like this:
+
+        (let ((foo nil))
+          (initiate-get-text 'main (lambda (x) (setq foo x)) text-no)
+          (lyskom-wait-queue 'main)
+          (use foo))
+
+    This is unsafe. If the user interrupts the function (C-g) after
+    the call has been made to the server but before the reply has been
+    received (not unusual when the server is slow to respond), the
+    environment in which foo is bound no longer exists. When the
+    callback is eventually called, it will access or bind foo in a
+    different environment than was intended. If you're really unlucky
+    the user may have initiated some other function that uses a
+    variable named foo, and when the callback is executed it will not
+    only use a variable in the wrong environment, but it may set that
+    variable to something that confuses the code in the new
+    environment.
+
+    The solution is to either implement static scoping for Emacs,
+    which would make you something of a hero, or to avoid the problem
+    entirely. The collector data type is intended for this
+    application. The code above can be written using collectors:
+
+        (let ((foo (make-collector)))
+           (initiate-get-text 'main (lambda (x res)
+                                       (set-collector->value res x))
+                                    text-no
+                                    foo)
+           (lyskom-wait-queue 'main)
+           (princ (collector->value foo)))
+
+    A collector is really just a cons pair where the cdr is the value
+    of the collector. The caller passes the collector (the value of
+    foo) to the function that eventually causes the callback to be
+    called. The callback only references its parameters, not the
+    caller's environment. The caller finally extracts the value from
+    the collector.
+
+    If the function above gets interrupted, the cons cell still exists
+    even if the binding to foo is lost. The callback will set the
+    value of the collector and exit. Eventually the collector will be
+    garbage collected since there are no longer any references to it.
+
+    When playing with collectors, these are the functions you might
+    want to use:
+
+        make-collector          Create a new collector.
+        collector->value        Return the value of a collector.
+        set-collector->value    Set the value of a collector.
+        collector-push          Push a value onto the front of the
+                                collecor's value. More or less the
+                                same as (set-collector->value
+                                collector (cons value
+                                (collector->value collector))
+        set-value-of-collector  Set the value of a collector.
+
+    The functions collector-push and set-value-of-collector can be
+    used as callbacks. If you are making lots of server calls and
+    collecting the results in a list, just use collector-push as the
+    callback for your server calls, and pass the collector as an extra
+    argument to the initiate-* function. If you are making a single
+    server call and want the result in a collector, use the
+    set-value-of-collector function as your callback.
+        
+
+    At this point you may be thinking "why not use lexical-let or
+    petli's closure". I'll tell you why. 
+
+    First, lexical-let is something that comes with cl.el. This
+    package is not in the standard install of Emacs 19.34, so don't
+    use it. And even if you could use it there are reasons not to:
+
+    * It rewrites the code, replacing all references to lexical
+      variables with references to gensymmed variables. This sort of
+      ensures unique names. But what if you interrupt the function,
+      then call it again. The new environment will be using the same
+      names as the old one (the names are generated when the function
+      is defined), so both the new and the old callbacks will affect
+      the same variables.
+
+    * The code rewriting is buggy. Try expanding the following snippet
+      and you'll see what I mean:
+
+        (defmacro fie (x) (list 'quote x))
+        (macroexpand '(lexical-let ((foo nil)) (fie (setq foo t))))
+
+      If all was well, lexical-let wouldn't touch the setq or the foo,
+      because the call to fie will cause all of that to be quoted. But
+      lexical let rewrites that part too, causing the meaning of the
+      code to change. If the rewriting fails on one easy example (when
+      testing lexical-let this was the first test I tried) I do not
+      want to trust it elsewhere.
+
+    There is another package, closure, written by petli (who has
+    hacked some of the client). The rewriting process has different
+    problems from lexical-let: it gets the example above right but
+    fails to terminate on other inputs. It has the same variable
+    naming problem that lexical-let has, which is enough to disqualify
+    it. It also requires you to use setq to set your variables, which
+    may not always be what you want. Just as with cl, closure is not
+    part of your default Emacs.
+
+    Finally, the lexical-lets will only help you when your callback is
+    declared in-line. If it's in a different function, you actually
+    *want* dynamic scope, sort of. Use collectors instead.
+
+
+
+
+
+    NO ACCEPTING MORE INPUT
+
+
+    Da Rulez:
+
+    * Callbacks must never, ever, make blocking calls to the server.
+    * Callbacks must never, ever, interact with the user.
+    * Callbacks must never, ever, call accept-process-output
+
+    The parser is not reentrant.
+
+    Your callbacks get called before the parser has cleaned up after
+    the call that caused your callback to be called. If you cause the
+    parser to be called recursively in this state, things will break.
+
+    You can cause the parser to get called recursively by calling
+    anything that in turn causes process output to be accepted. This
+    includes, but is not limited to, interacting with the user through
+    read-from-minibuffer, calling accept-process-output, calling
+    lyskom-wait-queue (or any other function that waits until some
+    server call has completed) and calling blocking-do.
+
+    If you make a recursive call to the parser it will detect this and
+    present the user with a stack trace.
+
+    The parser could be fixed to be reentrant (you'll also have to
+    deal with the parsing of asynchronous messages in async.el), but
+    even if it were reentrant, making blocking calls within callbacks
+    would be a pretty bad idea since it might result in a slower
+    client.
+
+    Asyncronous calls (the initiate-something calls) are prefectly OK
+    since your function will return (and the parser will return)
+    before the parser gets called again.
+
+
+

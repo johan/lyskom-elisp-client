@@ -186,5 +186,5 @@
         lyskom-update-inherited-variables
         lyskom-undisplay-buffer-hook
         lyskom-set-partial-window-configuration
+        lyskom-traverse-buffer-hierarchy
         lyskom-quit-query
-
