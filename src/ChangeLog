@@ -1,3 +1,34 @@
+Thu Apr 25 01:42:29 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (kom-delayed-printing): Ändrade default till nil.
+
+	* view-text.el (lyskom-print-delayed-header-comm): Radera efter
+	att den nya texten skrivits in. På så sätt blandas inte markers så
+	lätt ihop.
+
+	* commands1.el (kom-list-conferences): Skicka mötesnummer till
+	lyskom-list-conf-print.
+	(lyskom-list-conf-print): Använd mötesnummer istället för
+	conf-stat, så att utskriften kan fördröjas.
+	(kom-list-persons,lyskom-list-pers-print): Samma trick.
+
+	* lyskom-rest.el (lyskom-filter): Skrev om testet efte newline.
+
+	* vars.el.in (kom-delayed-printing): Ny variabel.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Använd den.
+
+	* view-text.el (lyskom-print-header-comm): Dito.
+
+Wed Apr 24 03:44:31 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-print-header-comm): Delade upp den så att
+	utskriften kan fördröjas.
+	(lyskom-print-delayed-header-comm): Den fördröjda utskriften.
+
+	* lyskom-rest.el (lyskom-insert-at-point): Ny funktion.
+	(lyskom-format-insert-at-point): Ny funktion.
+
 Tue Apr 23 00:47:17 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-start-of-command): Anta att

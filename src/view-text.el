@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.3 1996-04-23 16:53:25 davidk Exp $
+;;;;; $Id: view-text.el,v 40.4 1996-04-25 15:03:33 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.3 1996-04-23 16:53:25 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.4 1996-04-25 15:03:33 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -433,42 +433,62 @@ Args: TEXT-STAT of the text being read."
 	(lyskom-print-header-comm (misc-info->footn-in misc) misc))))))
 
 
+
 (defun lyskom-print-header-comm (text misc)
   "Get author of TEXT-NO and print a header line."
-  (let ((text-stat (blocking-do 'get-text-stat text)))
-    ;;+++ error kommer att se annorlunda ut.
+  (let ((text-stat (if kom-delayed-printing
+		       (cache-get-text-stat text)
+		     (blocking-do 'get-text-stat text)))
+	(marker (point-max-marker)))
+    (if text-stat
+	(progn
+	  (lyskom-print-delayed-header-comm text-stat misc marker 0))
+      (lyskom-insert "[...]\n")
+      (initiate-get-text-stat 'background 'lyskom-print-delayed-header-comm
+			      text misc marker 6))))
+
+
+(defun lyskom-print-delayed-header-comm (text-stat misc marker chars-to-delete)
+  "Get author of TEXT-NO and print a header line."
+  ;;+++ error kommer att se annorlunda ut.
+  (save-excursion
+    (goto-char (+ marker chars-to-delete))
     (if text-stat
 	(let ((author (text-stat->author text-stat))
 	      (type (misc-info->type misc)))
-
+	
 	  (cond
 	   ((eq type 'COMM-TO)
-	    (lyskom-format-insert 'comment-to-text-by 
-				  (misc-info->comm-to misc)
-				  author))
+	    (lyskom-format-insert-at-point 'comment-to-text-by 
+					   (misc-info->comm-to misc)
+					   author))
 	   ((eq type 'FOOTN-TO)
-	    (lyskom-format-insert 'footnote-to-text-by
-				  (misc-info->footn-to misc)
-				  author))
+	    (lyskom-format-insert-at-point 'footnote-to-text-by
+					   (misc-info->footn-to misc)
+					   author))
 	   ((eq type 'COMM-IN)
-	    (lyskom-format-insert 'comment-in-text-by
-				  (misc-info->comm-in misc)
-				  author))
+	    (lyskom-format-insert-at-point 'comment-in-text-by
+					   (misc-info->comm-in misc)
+					   author))
 	   ((eq type 'FOOTN-IN)
-	    (lyskom-format-insert 'footnote-in-text-by
-				  (misc-info->footn-in misc)
-				  author)))
+	    (lyskom-format-insert-at-point 'footnote-in-text-by
+					   (misc-info->footn-in misc)
+					   author)))
 	  ;; Print information about who added the link
 	  (if (misc-info->sent-at misc)
-	      (lyskom-format-insert 'send-at
-				    (lyskom-return-date-and-time 
-				     (misc-info->sent-at misc))))
+	      (lyskom-format-insert-at-point 'send-at
+					     (lyskom-return-date-and-time 
+					      (misc-info->sent-at misc))))
 	  (if (misc-info->sender misc)
-	      (lyskom-insert (lyskom-format 'sent-by (misc-info->sender misc)))))
+	      (lyskom-format-insert-at-point 'sent-by
+					     (misc-info->sender misc))))
       ;; Client tolerance agains buggy servers...
       ;; We are writing the line about what comments exists and
       ;; the reference text does not exist anymore. Strange.
-      nil)))
+      nil)
+    (goto-char marker)
+    (set-marker marker nil)
+    (delete-char chars-to-delete)))
 
 
 
