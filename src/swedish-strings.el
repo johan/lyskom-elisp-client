@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.8 1991-09-15 16:59:17 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.9 1991-10-02 22:03:45 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.8 1991-09-15 16:59:17 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.9 1991-10-02 22:03:45 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
@@ -342,7 +342,15 @@ Lyskom-sessionen är avslutad.
     (does-not-exist . "Detta kommando finns inte.")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
-    (buggreport-description . "Detta gjorde jag:\n(Fyll i dina kommenarer)\n\n\n\n\n")
+    (buggreport-description . "Detta gjorde jag:
+(Fyll i dina kommenarer)\n\n\n
+N{r du skrivit klart skall du skicka in din buggrapport till
+LysKOM-utvecklarna. Det sker antingen med email till 
+bug-lyskom@lysator.liu.se eller i Lysators LysKOM till m|tet
+\"LysKOM; Elispklientens buggrapporter\" eller om inget annat
+fungerar med vanligt brev till:
+Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN.
+M{rk kuvertet LysKOM buggrapport.\n\n")
     (buggreport-internals . "LysKOMs interna information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-pending-calls . "lyskom-pending-calls:")
