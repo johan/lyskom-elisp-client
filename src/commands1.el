@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.18 1992-04-15 08:37:16 inge Exp $
+;;;;; $Id: commands1.el,v 35.19 1992-06-13 21:13:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.18 1992-04-15 08:37:16 inge Exp $\n"))
+	      "$Id: commands1.el,v 35.19 1992-06-13 21:13:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -824,20 +824,23 @@ that text instead."
 	(lyskom-collect 'main)
 	(initiate-get-text-stat 'main nil text-no)
 	(initiate-get-text 'main nil text-no)
-	(lyskom-use 'main 'lyskom-private-answer-soon))
+	(lyskom-use 'main 'lyskom-private-answer-soon text-no))
     (lyskom-start-of-command 'kom-private-answer)
     (lyskom-insert-string 'confusion-who-to-reply-to)
     (lyskom-end-of-command)))
 
 
-(defun lyskom-private-answer-soon (text-stat text)
+(defun lyskom-private-answer-soon (text-stat text text-no)
   "Write a private answer to TEXT-STAT, TEXT."
   (lyskom-start-of-command 'kom-private-answer)
-  (if (string-match "\n" (text->text-mass text))
-      (lyskom-private-answer text-stat
-			     (substring (text->text-mass text)
-					0 (match-beginning 0)))
-    (lyskom-private-answer text-stat "")))
+  (if (and text-stat text)
+      (if (string-match "\n" (text->text-mass text))
+	  (lyskom-private-answer text-stat
+				 (substring (text->text-mass text)
+					    0 (match-beginning 0)))
+	(lyskom-private-answer text-stat ""))
+    (lyskom-format-insert 'no-such-text-no text-no)
+    (lyskom-end-of-command)))
 
 
 (defun lyskom-private-answer (text-stat subject)
