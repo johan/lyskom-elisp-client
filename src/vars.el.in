@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.165 2002-03-02 20:35:21 joel Exp $
+;;;;; $Id: vars.el.in,v 44.166 2002-03-03 21:31:21 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.165 2002-03-02 20:35:21 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.166 2002-03-03 21:31:21 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1131,6 +1131,7 @@ Each element is a cons cell consisting of the name of the month
 appear more than once"
   local
   inherited)
+(put 'lyskom-month-names 'lyskom-language-force t)
 
 (def-kom-var lyskom-onoff-table nil
   "A completion table for on and off selections."

@@ -1,5 +1,8 @@
 2002-03-03  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* vars.el.in (lyskom-month-names): Added property
+	'lyskom-language-force.
+
 	Fixes to make "make check" happy again:
 
 	* english-strings.el: Added ending mismatch exception for
