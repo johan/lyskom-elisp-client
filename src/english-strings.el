@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.155 2001-11-13 00:12:20 qha Exp $
+;;;;; $Id: english-strings.el,v 44.156 2001-11-18 23:27:25 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.155 2001-11-13 00:12:20 qha Exp $"))
+              "$Id: english-strings.el,v 44.156 2001-11-18 23:27:25 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1570,6 +1570,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-recpt-type-recipient . "Recipient")
     (lyskom-button-recpt-type-copy . "Carbon copy")
     (lyskom-button-recpt-type-bcc . "Blind Carbon copy")
+    (lyskom-button-recpt-type-sub . "Remove")
     (lyskom-edit-toggle-secret-aux-action . "Toggle \"secret\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Toggle \"anonymous\"")
     (lyskom-edit-toggle-inherit-aux-action . "Toggle \"inherited\"")

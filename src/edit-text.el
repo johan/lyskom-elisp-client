@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.84 2001-11-17 09:09:00 ceder Exp $
+;;;;; $Id: edit-text.el,v 44.85 2001-11-18 23:27:24 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.84 2001-11-17 09:09:00 ceder Exp $\n"))
+	      "$Id: edit-text.el,v 44.85 2001-11-18 23:27:24 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -177,7 +177,8 @@ recpt		-> Mottagare: <%d> %s.
 cc-recpt	-> Extra kopia: <%d> %s.
 bcc-recpt       -> Blind kopia: <%d> %s.
 comm-to		-> Kommentar till text %d.
-footn-to	-> Fotnot till text %d."
+footn-to	-> Fotnot till text %d.
+nil             -> Ingenting."
   (let ((edit-buffer (current-buffer))
 	(where-put-misc (point-min-marker))
 	(main-buffer lyskom-buffer))
@@ -245,21 +246,18 @@ CONF-STAT is the conf-stat of the conference that is about to be put in,
 STRING is the string that is inserted.
 STREAM is the buffer or a marker telling the position.
 NUMBER is the number of the person. Used if the conf-stat is nil."
-  (add-text-properties
-   0 (length string)
-   (lyskom-default-button
-    'recpt-type
-    (list (or (conf-stat->conf-no conf-stat)
-	      number)
-	  (marker-buffer stream))
-    (list (lyskom-get-string 'recpt-type-popup-title)
-	  string))
-   string)
-  (lyskom-princ (lyskom-format "%#1s: <%#2m> %#3M\n" 
-			       string
-			       (or conf-stat number)
-			       (or conf-stat ""))
-		stream))
+  (lyskom-princ
+   (lyskom-format "%[%#1@%#2s%]: <%#3m> %#4M\n" 
+                  (lyskom-default-button
+                   'recpt-type
+                   (list (or (conf-stat->conf-no conf-stat) number)
+                         (marker-buffer stream))
+                   (list (lyskom-get-string 'recpt-type-popup-title)
+                         string))
+                  string
+                  (or conf-stat number)
+                  (or conf-stat ""))
+   stream))
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
   (if text-stat
@@ -1219,7 +1217,7 @@ CC recipients."
 
 
 (defun lyskom-edit-do-add-recipient/copy (recpt-type recpt-no edit-buffer)
-  (lyskom-save-excursion
+  (save-excursion
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (miscs (lyskom-edit-translate-headers (elt headers 1)))
@@ -1232,8 +1230,6 @@ CC recipients."
       (lyskom-edit-replace-headers (elt headers 0)
                                    miscs
                                    (elt headers 2)))))
-           
-    
 
 
 (defun lyskom-edit-add-recipient/copy (prompt 
@@ -1289,6 +1285,23 @@ RECPT-TYPE is the type of recipient to add."
                                               (conf-stat->conf-no conf-stat)
                                               edit-buffer)))
        (when win-config (set-window-configuration win-config)))))))
+
+(defun lyskom-edit-sub-recipient/copy (recpt-no edit-buffer)
+  "Remove the recipient having RECPT-NO from EDIT-BUFFER"
+  ;; XXX: lyskom-edit-sub-recipient/copy: Symbol's value as variable is void: recpt
+  (save-excursion
+    (set-buffer edit-buffer)
+    (let* ((headers (lyskom-edit-parse-headers))
+           (miscs (lyskom-edit-translate-headers (elt headers 1)))
+           (elem (lyskom-edit-find-misc miscs '(cc-recpt bcc-recpt recpt)
+                                        recpt-no)))
+
+      (when elem (setcar elem nil))
+
+      (lyskom-edit-replace-headers (elt headers 0)
+                                   miscs
+                                   (elt headers 2)))))
+    
 
 (defun kom-edit-add-cross-reference ()
   (interactive)
