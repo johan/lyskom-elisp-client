@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.2 1996-03-18 15:43:18 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 39.3 1996-03-20 13:15:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.2 1996-03-18 15:43:18 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 39.3 1996-03-20 13:15:10 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1367,6 +1367,16 @@ The name of the file is read using the minibuffer and the default is kom-text."
 
 
 ;;; ================================================================
+;;;                Some useful abstractions
+
+(defsubst lyskom-membership-highest-index ()
+  "Return the number of conferences the user is a member of minus 1.
+This is the highest index in lyskom-membership that contains data, if
+positions are counted from 0, as they are."
+  (1- (length lyskom-membership)))
+
+
+;;; ================================================================
 ;;;                             To-do
 
 
@@ -1562,8 +1572,8 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
    ((not (read-list-isempty lyskom-to-do-list))
     'next-conf)
    ((and lyskom-membership-is-read
-	 (= (1+ lyskom-last-conf-received)
-	    (length lyskom-membership)))
+	 (= lyskom-last-conf-received
+	    (lyskom-membership-highest-index)))
     'when-done)
    (t 'unknown)))
 
@@ -1678,10 +1688,7 @@ lyskom-prefetch-conf started and possibly another thread of
 lyskom-prefetch-handle-conf. This will not be a problem.
 
 List news and other things that require the correct count of articles will
-have to wait. The correct way of waiting is:
-    (while (not (lyskom-prefetch-done))
-      (lyskom-prefetch-conf)
-      (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
+have to wait. The correct way of waiting is to use lyskom-prefetch-all-confs.
 
 If we just want to know wether we have fetched all info or not we do the test
 \(lyskom-prefetch-done)."
@@ -1691,7 +1698,7 @@ If we just want to know wether we have fetched all info or not we do the test
 
   (let ((lyskom-prefetch-confs lyskom-prefetch-confs))
     (while (and (< lyskom-last-conf-fetched
-		   (1- (length lyskom-membership)))
+		   (lyskom-membership-highest-index))
 		(< (- lyskom-last-conf-fetched lyskom-last-conf-received)
 		   lyskom-prefetch-confs))
       (++ lyskom-last-conf-fetched)
@@ -1709,14 +1716,13 @@ If we just want to know wether we have fetched all info or not we do the test
 (defun lyskom-prefetch-done ()
   "Returns t if lyskom has fetched all its info."
   (>= lyskom-last-conf-done
-      (1- (length lyskom-membership))))
+      (lyskom-membership-highest-index)))
 
 
 (defun lyskom-prefetch-handle-conf (conf-stat membership)
   "Check if there is any unread texts in a conference.
 Args: CONF-STAT MEMBERSHIP"
   (++ lyskom-last-conf-received)
-  (++ lyskom-last-conf-done)
   (cond
    ((and (lyskom-visible-membership membership)
 	 (> (+ (conf-stat->first-local-no conf-stat)
@@ -1733,6 +1739,8 @@ Args: CONF-STAT MEMBERSHIP"
 		      membership
 		      conf-stat))
    (t 
+    ;; Consider this conference handled
+    (++ lyskom-last-conf-done)
     (lyskom-prefetch-and-print-prompt))))
 
 
@@ -1742,6 +1750,7 @@ Args: MAP MEMBERSHIP CONF-STAT.
 MAP is the mapping from local to global text-nos for (at least) all
 texts after membership->last-text-read. MEMBERSHIP is info about the
 user's membership in the conference."
+  (++ lyskom-last-conf-done)
   (let ((unread (lyskom-list-unread map membership)))
     (cond
      (unread
@@ -1752,8 +1761,7 @@ user's membership in the conference."
 	    (membership->priority membership)
 	    (lyskom-create-text-list unread))
 	 lyskom-to-do-list))))
-  (lyskom-prefetch-and-print-prompt)
-  )
+  (lyskom-prefetch-and-print-prompt))
 
 
 (defun lyskom-list-unread (map membership)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 39.1 1996-03-18 15:43:02 byers Exp $
+;;;;; $Id: edit-text.el,v 39.2 1996-03-20 13:15:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 39.1 1996-03-18 15:43:02 byers Exp $\n"))
+	      "$Id: edit-text.el,v 39.2 1996-03-20 13:15:00 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -60,7 +60,12 @@ See lyskom-edit-handler.")
 (defvar lyskom-edit-return-to-configuration nil
   "Status variable for an edit-buffer.")
 
-(put 'abort-send 'error-conditions '(error lyskom-error lyskom-edit-error))
+;;; Error signaled by lyskom-edit-parse-headers
+(put 'lyskom-unknown-header 'error-conditions
+     '(error lyskom-error lyskom-unknown-header lyskom-edit-error))
+
+(put 'lyskom-no-subject 'error-conditions
+     '(error lyskom-error lyskom-no-subject lyskom-edit-error))
 
 (defun lyskom-edit-text (proc misc-list subject body
 			      &optional handler &rest data)
@@ -349,7 +354,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 (defun lyskom-edit-send (send-function)
   "Send the text to the server by calling SEND-FUNCTION."
   (interactive)
-  (condition-case data
+  (condition-case err
       (if (or (string= mode-name lyskom-edit-mode-name)
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
@@ -369,7 +374,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 				       nil t)
 		    (end-of-line)
 		    (if (/= (point) old)
-			(signal 'abort-send 'enter-subject-idi))))
+			(signal 'lyskom-no-subject 'enter-subject-idi))))
 	      (setq message (lyskom-edit-extract-text))
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
@@ -394,8 +399,10 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	      (set-buffer (window-buffer (selected-window))))
 	    (goto-char (point-max))))
     (lyskom-edit-error
+     (if (cdr (cdr err))
+	 (goto-char (car (cdr (cdr err)))))
      (lyskom-beep lyskom-ding-on-no-subject)
-     (lyskom-message (lyskom-get-string (cdr data))))))
+     (lyskom-message (lyskom-get-string (cdr err))))))
 
 
 (defun kom-edit-quit ()
@@ -465,7 +472,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
-	     (headers (cdr (lyskom-edit-parse-headers)))
+	     (headers (condition-case err
+			  (cdr (lyskom-edit-parse-headers))
+			(lyskom-edit-error nil))) ; Ignore these errors
 	     (no nil))
 	(while headers
 	  (if (or (eq (car headers) 'comm-to)
@@ -537,18 +546,23 @@ Entry to this mode runs lyskom-edit-mode-hook."
 ;;;                       in lyskom-edit-mode.
 
 
-(defun lyskom-looking-at-header (header angled)
+(defun lyskom-looking-at-header (header match-number)
   "Check if point is at the beginning of a header of type HEADER.
 Return the corresponding number (conf no etc.). If ANGLED is non-nil,
 only match a number inside <>."
   (if (looking-at
-       (concat (downcase (substring (lyskom-get-string header)
-				    0 4))
-	       (if angled
-		   "[^0-9]*<\\([0-9]+\\)>"
-		 "[^0-9]*\\([0-9]+\\)")))
-      (string-to-int (buffer-substring (match-beginning 1)
-				       (match-end 1)))
+       (concat (regexp-quote (downcase (substring (lyskom-get-string header)
+						  0 4)))
+	       (cond ((eq match-number 'angled)
+		      "[^0-9]*<\\([0-9]+\\)>")
+		     (match-number
+		      "[^0-9]*\\([0-9]+\\)")
+		     (nil
+		      ""))))
+      (if match-number
+	  (string-to-int (buffer-substring (match-beginning 1)
+					   (match-end 1)))
+	t)
     nil))
 
 (defun lyskom-edit-parse-headers ()
@@ -572,18 +586,21 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	(let ((case-fold-search t)
 	      n)
 	  (cond
-	   ((setq n (lyskom-looking-at-header 'recipient t))
+	   ((setq n (lyskom-looking-at-header 'recipient 'angled))
 	    (nconc result (list 'recpt n)))
-	   ((setq n (lyskom-looking-at-header 'carbon-copy t))
+	   ((setq n (lyskom-looking-at-header 'carbon-copy 'angled))
 	    (nconc result (list 'cc-recpt n)))
-	   ((setq n (lyskom-looking-at-header 'comment nil))
+	   ((setq n (lyskom-looking-at-header 'comment t))
 	    (nconc result (list 'comm-to n)))
-	   ((setq n (lyskom-looking-at-header 'footnote nil))
+	   ((setq n (lyskom-looking-at-header 'footnote t))
 	    (nconc result (list 'footn-to n)))
-	   ((looking-at (if kom-emacs-knows-iso-8859-1
-			    lyskom-header-subject
-			  lyskom-swascii-header-subject))
-	    (setcar result (lyskom-edit-extract-subject)))))
+	   ((lyskom-looking-at-header (if kom-emacs-knows-iso-8859-1
+					  lyskom-header-subject
+					lyskom-swascii-header-subject)
+				      nil)
+	    (setcar result (lyskom-edit-extract-subject)))
+	   (t
+	    (signal 'lyskom-unknown-header (list unknown-header (point))))))
 	(forward-line 1)))
     result))
 
