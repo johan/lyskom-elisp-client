@@ -1,3 +1,52 @@
+Wed Jan 17 07:12:03 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el
+ 	(kom-membership,kom-status-conf,kom-set-unread,kom-status-conf)
+	(kom-status-person,kom-list-summary,kom-display-who-buffer)
+	(kom-set-garb-nice,kom-set-permitted-submitters,kom-set-super-conf)
+	(kom-enable-adm-caps,kom-disable-adm-caps,kom-force-logout)
+	(kom-postpone,kom-change-conf-type,kom-send-message,kom-send-alarm):
+ 	Använd def-kom-command.
+
+	* vars.el.in (lyskom-last-grup-message-recipient): Ny variabel.
+	(kom-send-message-to-last-sender): Justerade semantiken, så att
+ 	'always gör att den aldrig föreslör möten som mottagare.
+
+	* async.el (lyskom-show-personal-message): Sätt den.
+
+	* commands2.el (kom-send-message): Använd den.
+
+Tue Jan 16 05:14:08 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* macros.el (def-kom-command): Nytt makro som sätter in
+ 	lyskom-start-of-command/lyskom-end-of-command rätt.
+
+	* commands1.el
+ 	(kom-get-appreciation,kom-get-appreciation,kom-delete-conf)
+	(kom-view-commented-text,kom-add-self,kom-sub-member)
+	(kom-sub-self,kom-change-presentation,kom-change-conf-motd)
+	(kom-unset-conf-motd,kom-go-to-conf,kom-list-persons)
+	(kom-list-conferences,kom-change-name,kom-change-supervisor)
+	(kom-mark-text,kom-unmark-text,kom-change-password)
+	(kom-display-time,kom-who-is-on): Använd def-kom-command.
+
+Mon Jan 15 18:55:42 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* review.el (kom-find-root,kom-review-tree): Skrev om blockande.
+
+	* services.el (blocking-do): Använd lyskom-quit-flag.
+
+	* macros.el (lyskom-save-excursion): La till en edebug-hint.
+
+	* vars.el.in (lyskom-quit-flag): Ny variabel.
+
+	* lyskom-rest.el (lyskom-filter): Sätt lyskom-quit-flag.
+
+Sun Jan 14 16:37:40 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* completing-read.el (lyskom-read-conf-name-internal):
+	Kompletterade inte unika träffar så bra.
+
 Sat Jan 13 00:29:22 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* english-strings.el (lyskom-strings): Fler fixar.
