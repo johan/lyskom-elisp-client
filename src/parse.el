@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.52 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: parse.el,v 44.53 2003-08-16 19:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.52 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: parse.el,v 44.53 2003-08-16 19:16:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1121,6 +1121,11 @@ Args: TEXT-NO. Value: text-stat."
     (lyskom-save-excursion
       (set-buffer lyskom-buffer)
       (setq lyskom-static-server-info tmp))))
+
+(defun lyskom-parse-scheduling-info ()
+  "Parse a scheduling-info"
+  (lyskom-create-scheduling-info (lyskom-parse-num)
+                                 (lyskom-parse-num)))
 
 
 ;;; ================================================================

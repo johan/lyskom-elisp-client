@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.41 2003-08-14 14:16:55 byers Exp $
+;;;;; $Id: services.el,v 44.42 2003-08-16 19:16:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.41 2003-08-14 14:16:55 byers Exp $\n"))
+	      "$Id: services.el,v 44.42 2003-08-16 19:16:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1345,6 +1345,21 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
     (lyskom-send-packet kom-queue (lyskom-format-objects 117 conf-no))))
+
+(defun initiate-get-scheduling (kom-queue handler session-no &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-scheduling-info)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 118 (or session-no 0)))))
+
+(defun initiate-set-scheduling (kom-queue handler session-no priority weight &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 119 (or session-no 0) priority weight))))
+
+(defun initiate-set-connection-time-format (kom-queue handler use-utc &rest data)
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 120 use-utc))))
 
 
 ;;; ================================================================

@@ -1,5 +1,14 @@
 2003-08-16  David Byers  <byers@lysator.liu.se>
 
+	Support for new server calls:
+	* parse.el (lyskom-parse-scheduling-info): New function.
+
+	* komtypes.el (scheduling-info): New datatype.
+
+	* services.el (initiate-get-scheduling): New function.
+	(initiate-set-scheduling): New function.
+	(initiate-set-connection-time-format): New function.
+
 	Handle async-text-aux-changed:
 	* async.el (lyskom-parse-async): Handle async-text-aux-changed.
 
