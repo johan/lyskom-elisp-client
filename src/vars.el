@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.3 1993-05-05 03:14:26 linus Exp $
+;;;;; $Id: vars.el,v 36.4 1993-05-22 21:06:45 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.3 1993-05-05 03:14:26 linus Exp $\n"))
+	      "$Id: vars.el,v 36.4 1993-05-22 21:06:45 linus Exp $\n"))
 
 
 
@@ -499,6 +499,32 @@ unread texts in list-unread.")
 (defvar lyskom-is-administrator nil
   "This variable is t if the user is in administrator mode and nil otherwise.")
 
+
+;;;; The default is a swedish-speaking server.
+
+(defconst kom-tell-phrases-internal
+  '(
+    (kom-tell-silence		"") ; Why ?
+    (kom-tell-send		"F\366rs\366ker l\344gga in en text.")
+    (kom-tell-login		"Loggar in.")
+    (kom-tell-read		"L\344ser.")
+    (kom-tell-1st-pres		"Skriver den f\366rsta presentationen.")
+    (kom-tell-write-comment	"Skriver en kommentar.")
+    (kom-tell-write-footnote	"Skriver en fotnot.")
+    (kom-tell-write-letter	"Skriver ett brev.")
+    (kom-tell-write-reply	"Skriver ett privat svar.")
+    (kom-tell-write-text	"Skriver inl\344gg.")
+    (kom-tell-conf-pres		"Skriver presentation f\366r ett nytt m\366te.")
+    (kom-tell-recover		"Trycker 'r'. Suck.")
+    (kom-tell-wait		"V\344ntar.")
+    (kom-tell-regret		"\305ngrar sig och sl\344nger inl\344gget.")
+    (kom-tell-review		"\305terser.")
+    (kom-tell-change-name       "Ändrar sitt namn till n\345got annat.")
+    (kom-tell-change-supervisor "Ändrar organisat\366r f\366r n\345got.")
+    )
+  "The variable  kom-tell-phrases  defaults to this value.
+Users must not change this constant, but are encouraged to change
+the value of  kom-tell-phrases  for fun.")
 
 ;;; ================================================================
 ;;;          Externally defined variables (environment)
