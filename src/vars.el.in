@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.304 2004-10-28 18:51:55 byers Exp $
+;;;;; $Id: vars.el.in,v 44.305 2004-11-03 12:48:05 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.304 2004-10-28 18:51:55 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.305 2004-11-03 12:48:05 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4497,38 +4497,42 @@ the value of  kom-tell-phrases for fun.")
 ;;;          Externally defined variables (environment)
 
 
-(defvar kom-default-server nil
-  "**Setting this variable does nothing. See `lyskom-default-server' instead.")
-
-(def-kom-var lyskom-default-server "kom.lysator.liu.se"
+(def-kom-var kom-default-server "kom.lysator.liu.se"
   "**Default LysKOM server.
 
-The value of this variable must be a string or `nil'. Instead of
-setting this variable you may set the environment variable `KOMSERVER'.") 
-
-(defvar kom-default-user-name nil
-  "**Setting this variable does nothing. See `lyskom-default-user-name' instead.")
-
-(def-kom-var lyskom-default-user-name nil
-  "**Default LysKOM user name.
-
-The value of this variable must be a string, integer indicating the
-default user name, or `nil' to indicate no default. If set to an
-integer, log in as the user with that conference number. If set to a
-string, log in as the user with that name.
-
-Instead of setting this variable you may set the environment variable
-`KOMNAME' to the username to login as." 
+The value of this variable must be a string or `nil'."
   local)
 
-(defvar kom-default-password nil
-  "**Setting this variable does nothing. See `lyskom-default-password' instead.")
+(def-kom-var lyskom-default-server nil
+  "**This variable is reserved for internal use. See 
+`kom-default-server' instead." 
+  local)
 
-(def-kom-var lyskom-default-password nil
+(def-kom-var kom-default-user-name nil
+  "**Default LysKOM user name.
+
+The value of this variable must be a string, indicating the
+default user name, an integer indicating the conference number or 
+`nil' to indicate no default. If set to an integer, log in as the
+user with that conference number. If set to a string, log in as the 
+user with that name."
+  local)
+
+(def-kom-var lyskom-default-user-name nil
+  "**This variable is reserved for internal use. See 
+`kom-default-user-name' instead."
+  local)
+
+(def-kom-var kom-default-password nil
   "**Default LysKOM password.
 
 The value of this variable must be a string or `nil'. There may be an
 environment variable for this, but it shouldn't be used if there is."
+  local)
+
+(def-kom-var lyskom-default-password nil
+  "**This variable is resvered for internal use. See 
+`kom-default-password' instead."
   local)
 
 (def-kom-var mode-line-conf-name nil
