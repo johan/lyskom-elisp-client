@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $
+;;;;; $Id: defvar.el,v 44.11 1999-11-19 13:37:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $\n"
+  "$Id: defvar.el,v 44.11 1999-11-19 13:37:43 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -119,8 +119,7 @@ is saved before executing FORMS and restored when FORMS have finished."
       (make-local-variable (car syms))
       (set (car syms) (car vals))
       (setq syms (cdr syms)
-            vals (cdr vals)))
-    (set-buffer-multibyte nil)))
+            vals (cdr vals)))))
 
          
 

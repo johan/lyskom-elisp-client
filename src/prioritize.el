@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.14 1999-06-28 10:41:07 byers Exp $
+;;;;; $Id: prioritize.el,v 44.15 1999-11-19 13:38:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.14 1999-06-28 10:41:07 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.15 1999-11-19 13:38:41 byers Exp $\n"))
 
 
 

@@ -3,6 +3,12 @@
 Att göra i elisp-klienten
 =========================
 
+Kolla alla användningar av length och substring för att se var man
+borde använda string-width och truncate-string-to-width istället.
+
+Kolla alla aset och aref så att de inte använder tecken som nyckel
+utan omkodning till iso-8859-1 först.
+
 MULEifiera hanteringen av user-arean.
 
 Kolla att spara text sparar med en vettig kodning.

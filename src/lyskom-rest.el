@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.87 1999-11-19 02:16:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.88 1999-11-19 13:38:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.87 1999-11-19 02:16:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.88 1999-11-19 13:38:15 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1495,19 +1495,20 @@ Note that it is not allowed to use deferred insertions in the text."
     
     (cond ((or (null pad-length)
                (null result)) nil)
-          ((> abs-length (length result))
-           (let ((padstring (make-string (- abs-length (length result))
+          ((> abs-length (string-width result))
+           (let ((padstring (make-string (- abs-length (string-width result))
                                          pad-letter)))
              (if (< pad-length 0)       ; LEFT justify
                  (progn
-                   (setq prop-adjust-end (- (- abs-length (length result))))
+                   (setq prop-adjust-end (- (- abs-length (string-width 
+							   result))))
                    (setq result (concat result padstring)))
                (progn
-                 (setq prop-adjust-start (- abs-length (length result)))
+                 (setq prop-adjust-start (- abs-length (string-width result)))
                  (setq result (concat padstring result))))))
           ((and equals-flag
-                (< abs-length (length result)))
-           (setq result (substring result 0 abs-length))))
+                (< abs-length (string-width result)))
+           (setq result (lyskom-truncate-string-to-width result abs-length))))
     
     (if result
         (progn
@@ -2101,7 +2102,7 @@ in lyskom-messages."
 (defun lyskom-fill-message-line-length ()
   (- (save-excursion (end-of-line)
                      (skip-chars-backward " \t")
-                     (point)) (point)))
+                     (current-column)) (current-column)))
 
 
 ;;; ============================================================
@@ -3312,7 +3313,6 @@ One parameter - the prompt string."
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
-    (set-buffer-multibyte nil)
     (while (not (or (eq (setq input-char 
 			      (condition-case err
 				  (read-char-exclusive)
@@ -3391,7 +3391,7 @@ One parameter - the prompt string."
            (function
             (lambda (x)
               (aset tmp (char-to-int x) t)))
-           lyskom-line-start-chars-string)
+           (encode-coding-string lyskom-line-start-chars-string 'iso-8859-1))
           tmp))
 
 

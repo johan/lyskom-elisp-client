@@ -1,5 +1,36 @@
 1999-11-19  David Byers  <davby@ida.liu.se>
 
+	* utilities.el (lyskom-truncate-string-to-width): New function
+	copied from Gnu Emacs.
+
+	* Changed file coding of all files to iso-8859-1 since we now have
+	the ambition to deal with multibyte text.
+	
+	* lyskom-rest.el (lyskom-format-aux-help): Use
+	lyskom-truncate-string-to-width instead of substring.
+	(lyskom-format-aux-help): Use string-width instead of length.
+	(lyskom-format-aux-help): Same here.
+	(lyskom-fill-message-line-length): Use current-column instead of
+	point to calculate current line width.
+	(lyskom-is-loaded): Encode lyskom-line-start-chars-string in
+	ISO-8859-1 before using it.
+	(silent-read): Don't disable multibyte characters.
+
+	* defvar.el (lyskom-setup-minibuffer-variables): Don't disable
+	multibyte characters.
+
+	* buffers.el (lyskom-generate-new-buffer): Don't disable multibyte
+	characters.
+	(lyskom-get-buffer-create): Same here.
+
+	* mime.el (lyskom-mime-string-charset): Use find-charset-string.
+
+	* compatibility.el (check-coding-system): Provide dummy
+	check-coding-system.
+
+	* mime.el (lyskom-mime-charset-coding-system): Use
+	check-coding-system.
+
 	* startup.el (lyskom): Decode the motd text mass and format it as
 	a text.
 

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.12 1999-11-19 02:16:10 byers Exp $
+;;;;; $Id: komtypes.el,v 44.13 1999-11-19 13:38:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.12 1999-11-19 02:16:10 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.13 1999-11-19 13:38:06 byers Exp $\n"))
 
 
 ;;; ============================================================

@@ -1,4 +1,4 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;; Included from fields.el
 
 ;; (provide 'fields)

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.41 1999-11-19 02:16:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.42 1999-11-19 13:39:03 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.41 1999-11-19 02:16:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.42 1999-11-19 13:39:03 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -279,18 +279,75 @@ of \(current-time\)."
 
 (defsubst lyskom-unicase-char (c)
   "Smash case and diacritical marks on c." 
-  (aref lyskom-collate-table (char-to-int c)))
+  (if (< (char-to-int c) (length lyskom-default-collate-table))
+      (aref lyskom-collate-table (char-to-int c))
+    c))
 
 (defun lyskom-unicase (s)
   "Smash case and diacritical marks of all chars in s." 
   (lyskom-save-excursion
    (set-buffer lyskom-buffer)
    (let ((l (length s))
-	 (s2 (copy-sequence s)))
+	 (s2 (encode-coding-string s lyskom-server-coding-system)))
      (while (> l 0)
        (setq l (1- l))
        (aset s2 l (lyskom-unicase-char (aref s2 l))))
      s2)))
+
+
+;; Stolen from Gnu Emacs
+
+(defun lyskom-truncate-string-to-width (str end-column &optional start-column padding)
+  "Truncate string STR to end at column END-COLUMN.
+The optional 2nd arg START-COLUMN, if non-nil, specifies
+the starting column; that means to return the characters occupying
+columns START-COLUMN ... END-COLUMN of STR.
+
+The optional 3rd arg PADDING, if non-nil, specifies a padding character
+to add at the end of the result if STR doesn't reach column END-COLUMN,
+or if END-COLUMN comes in the middle of a character in STR.
+PADDING is also added at the beginning of the result
+if column START-COLUMN appears in the middle of a character in STR.
+
+If PADDING is nil, no padding is added in these cases, so
+the resulting string may be narrower than END-COLUMN."
+  (or start-column
+      (setq start-column 0))
+  (let ((len (length str))
+	(idx 0)
+	(column 0)
+	(head-padding "") (tail-padding "")
+	ch last-column last-idx from-idx)
+    (condition-case nil
+	(while (< column start-column)
+	  (setq ch (aref str idx)
+		column (+ column (char-width ch))
+		idx (1+ idx)))
+      (args-out-of-range (setq idx len)))
+    (if (< column start-column)
+	(if padding (make-string end-column padding) "")
+      (if (and padding (> column start-column))
+	  (setq head-padding (make-string (- column start-column) padding)))
+      (setq from-idx idx)
+      (if (< end-column column)
+	  (setq idx from-idx)
+	(condition-case nil
+	    (while (< column end-column)
+	      (setq last-column column
+		    last-idx idx
+		    ch (aref str idx)
+		    column (+ column (char-width ch))
+		    idx (1+ idx)))
+	  (args-out-of-range (setq idx len)))
+	(if (> column end-column)
+	    (setq column last-column idx last-idx))
+	(if (and padding (< column end-column))
+	    (setq tail-padding (make-string (- end-column column) padding))))
+      (setq str (substring str from-idx idx))
+      (if padding
+	  (concat head-padding str tail-padding)
+	str))))
+
 
 (defun lyskom-string-assoc (key list)
   "Return non-nil if KEY is the same string as the car of an element of LIST.
