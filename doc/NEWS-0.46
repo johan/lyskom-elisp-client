@@ -292,9 +292,9 @@
     vara markerade med MIME content type.
 
 *** Elispklienten är lite mer Gnus-kompatibel. Om man råkar köra
-    XEmacs har kom-smileys satt till t och har rätt version av Gnus
-    installerad , så kommer gladmän att visas som små bilder. Återse
-    omodifierat gör att man slipper gladmän.
+    XEmacs eller Emacs 21, har kom-smileys satt till t, och har rätt
+    version av Gnus installerad, så kommer gladmän att visas som små
+    bilder. Återse omodifierat gör att man slipper gladmän.
 
 
 ** Återse inlägg
