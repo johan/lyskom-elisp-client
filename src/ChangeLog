@@ -1,4 +1,20 @@
+Fri Aug  8 13:40:06 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-message): Workaround för bug i
+ 	fill-region.
+
+Thu Aug  7 09:33:16 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-message): Nu fungerar det att sätta
+ 	kom-autowrap till en siffra.
+
+Fri Aug  1 10:44:59 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): Byt plats på URL och e-mail.
+
 Tue Jul 29 11:30:48 1997  David Byers  <davby@ida.liu.se>
+
+	* filter.el (kom-super-jump): Hoppa över Fwd: också.
 
 	* parse.el (lyskom-parse-num): FIXADE BUGGEN!
 

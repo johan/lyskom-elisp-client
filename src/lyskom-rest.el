@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.41 1997-07-29 14:53:21 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.42 1997-08-08 14:46:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.41 1997-07-29 14:53:21 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.42 1997-08-08 14:46:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1501,11 +1501,24 @@ in lyskom-messages."
         (t 'maybe)))
 
 
+(defun lyskom-fill-region (start end &optional justify nosqueeze to-eop)
+  "Fill a region of text, compensating for bugs in Emacs."
+  (save-match-data
+    (let ((fill-column (if nosqueeze (1- fill-column) fill-column)))
+      (when nosqueeze
+        (condition-case nil
+            (save-excursion
+              (goto-char (match-beginning 0))
+              (backward-char 1)
+              (delete-horizontal-space))
+          (error nil)))
+      (fill-region start (match-beginning 0) nil t))))
+
 (defun lyskom-fill-message (text)
   "Try to reformat a message."
   (cond 
    ((null kom-autowrap) text)
-   ((and (numberp kom-autowrap) (> kom-autowrap (length text))) text)
+   ((and (numberp kom-autowrap) (> (length text) kom-autowrap)) text)
    (t
     (save-excursion
       (set-buffer (lyskom-get-buffer-create 'lyskom-text " lyskom-text" t))
@@ -1568,10 +1581,8 @@ in lyskom-messages."
                                 (< paragraph-length lyskom-minimum-brick-size))
                            (and (not (eq 0 length-difference))
                                 (< paragraph-length lyskom-minimum-triagle-size))))
-              (save-match-data
-                (let ((fill-column (1- fill-column)))
-                  (fill-region start (match-beginning 0) nil t))
-              (lyskom-signal-reformatted-text 'reformat-filled)))
+              (lyskom-fill-region start (match-beginning 0) nil t)
+              (lyskom-signal-reformatted-text 'reformat-filled))
             (setq start (match-end 0)
                   in-paragraph nil
                   wrap-paragraph 'maybe))
@@ -1602,9 +1613,7 @@ in lyskom-messages."
                            (and (not (eq 0 length-difference))
                                 (< paragraph-length lyskom-minimum-triagle-size))
                            (null constant-length)))
-              (save-match-data
-                (let ((fill-column (1- fill-column)))
-                  (fill-region start (match-beginning 0) nil t)))
+              (lyskom-fill-region start (match-beginning 0) nil t)
               (lyskom-signal-reformatted-text 'reformat-filled))
             (setq start (match-beginning 0)
                   in-paragraph t
@@ -1626,9 +1635,7 @@ in lyskom-messages."
                            (and (not (eq 0 length-difference))
                                 (< paragraph-length lyskom-minimum-triagle-size))
                            (null constant-length)))
-              (save-match-data
-                (let ((fill-column (1- fill-column)))
-                  (fill-region start (match-beginning 0) nil t)))
+              (lyskom-fill-region start (match-beginning 0) nil t)
               (lyskom-signal-reformatted-text 'reformat-filled))
             (setq start (match-beginning 0)
                   in-paragraph t
@@ -1747,9 +1754,7 @@ in lyskom-messages."
                        (and (not (eq 0 length-difference))
                             (< paragraph-length lyskom-minimum-triagle-size))
                        (not (eq constant-length t))))
-          (save-match-data
-            (let ((fill-column (1- fill-column)))
-              (fill-region start (point) nil t)))
+          (lyskom-fill-region start (point) nil t)
           (lyskom-signal-reformatted-text 'reformat-filled)))
       
       ;;
