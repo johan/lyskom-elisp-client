@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.133 2003-03-16 19:49:01 byers Exp $
+;;;;; $Id: utilities.el,v 44.134 2003-04-06 21:07:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.133 2003-03-16 19:49:01 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.134 2003-04-06 21:07:38 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1919,3 +1919,12 @@ has the bug in that algorithm fixed)."
 ;;;                              '(face test-2)
 ;;;                              '(face test-default))))))
 ;;;
+
+
+(defun lyskom-is-url (text)
+  "Return non-nil if TEXT can be interpreted as an URL.
+Any whitespace and newlines in TEXT will be ignored."
+  (save-match-data
+    (let ((text (replace-in-string text "\\s-+" "")))
+      (or (string-match "^\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$" text)
+          (string-match "^\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$"  text)))))
