@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.11 1996-01-19 18:50:11 byers Exp $
+;;;;; $Id: startup.el,v 38.12 1996-01-21 17:55:06 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.11 1996-01-19 18:50:11 byers Exp $\n"))
+	      "$Id: startup.el,v 38.12 1996-01-21 17:55:06 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -126,9 +126,9 @@ See lyskom-mode for details."
 	  ;;; B|rja
 	    (kom-start-anew t)
 	    (setq init-done t))
-	;; Something went wrong. Lets cleanup everything. :->
 	(if init-done
 	    nil
+	  ;; Something went wrong. Lets cleanup everything. :->
 	  (if proc (delete-process proc))
 	  (kill-buffer buffer))))))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.18 1996-01-19 18:50:01 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.19 1996-01-21 17:54:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.18 1996-01-19 18:50:01 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.19 1996-01-21 17:54:51 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -213,15 +213,17 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 
 ;;; Resume operation after a crash.
 
-(defun kom-recover ()
-  "Try to recover from an error."
-  (interactive)
+(defun kom-recover (&optional refetch)
+  "Try to recover from an error.
+If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
+  (interactive "p")
   (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
   (setq lyskom-pending-calls nil)
   (setq lyskom-output-queue (lyskom-queue-create))
   (setq lyskom-number-of-pending-calls 0)
   (setq lyskom-is-parsing nil)
+  (if refetch (lyskom-refetch))
   (lyskom-tell-internat 'kom-tell-recover)
   (lyskom-end-of-command))
 
@@ -356,66 +358,67 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 
 ;;; Modified to handle filters
 
-(defun kom-view-next-text ()
+(def-kom-command kom-view-next-text ()
   "Display next text (from lyskom-reading-list)."
   (interactive)
-  (unwind-protect
-	(lyskom-start-of-command 'kom-view-next-text)
-	(lyskom-tell-internat 'kom-tell-read)
-	(let ((action 'next-text))
-	  (while (eq action 'next-text)
-	    (if (read-list-isempty lyskom-reading-list)
-		(progn
-		  (if (/= 0 lyskom-current-conf)
-		      (lyskom-insert-string 'completely-read-conf)
-		    (lyskom-insert-string 'not-in-any-conf))
-		  (setq action nil))
+  (lyskom-tell-internat 'kom-tell-read)
+  (let ((action 'next-text))
+    (while (eq action 'next-text)
+      (if (read-list-isempty lyskom-reading-list)
+	  (progn
+	    (if (/= 0 lyskom-current-conf)
+		(lyskom-insert-string 'completely-read-conf)
+	      (lyskom-insert-string 'not-in-any-conf))
+	    (setq action nil))
 	      
-	      (progn
-		(let* ((tri (read-list->first lyskom-reading-list))
-		       (text-no (car (cdr (read-info->text-list tri))))
-		       (type (read-info->type tri))
-		       (priority (read-info->priority
-				  (read-list->first lyskom-reading-list)))
-		       (is-review-tree (eq type 'REVIEW-TREE))
-		       (is-review (or (eq type 'REVIEW)
-					    (eq type 'REVIEW-MARK)
-					    is-review-tree))
-		       (mark-as-read (not is-review)))
-		  (if is-review
-		      (delq text-no 
-			    (read-info->text-list tri))) ;First entry only
-		  (if mark-as-read
-		      (lyskom-is-read text-no)
-		    (read-list-delete-text nil lyskom-reading-list)
-		    (read-list-delete-text nil lyskom-to-do-list))
-		  (setq action
-			(lyskom-view-text text-no mark-as-read 
-					  (and kom-read-depth-first
-					       (not is-review))
-					  (read-info->conf-stat
-					   (read-list->first
-					    lyskom-reading-list))
-					  priority
-					  is-review-tree
-					  (not is-review))))))))
-	  (lyskom-end-of-command)))
+	(progn
+	  (let* ((tri (read-list->first lyskom-reading-list))
+		 (text-no (car (cdr (read-info->text-list tri))))
+		 (type (read-info->type tri))
+		 (priority (read-info->priority
+			    (read-list->first lyskom-reading-list)))
+		 (is-review-tree (eq type 'REVIEW-TREE))
+		 (is-review (or (eq type 'REVIEW)
+				(eq type 'REVIEW-MARK)
+				is-review-tree))
+		 (mark-as-read (not is-review)))
+	    (if is-review
+		(delq text-no 
+		      (read-info->text-list tri))) ;First entry only
+	    (if mark-as-read
+		(lyskom-is-read text-no)
+	      (read-list-delete-text nil lyskom-reading-list)
+	      (read-list-delete-text nil lyskom-to-do-list))
+	    (setq action
+		  (lyskom-view-text text-no mark-as-read 
+				    (and kom-read-depth-first
+					 (not is-review))
+				    (read-info->conf-stat
+				     (read-list->first
+				      lyskom-reading-list))
+				    priority
+				    is-review-tree
+				    (not is-review)))))))))
   
 
 ;;; Modified to handle filters
 
+;; This is horribly ugly. It acts like a user command, but it isn't.
 (defun lyskom-view-priority-text ()
   "Display the first text from the next conference on the lyskom-to-do-list."
   (lyskom-start-of-command 'kom-view-next-text)
-  (lyskom-tell-internat 'kom-tell-read)
-  (let* ((tri (read-list->first lyskom-to-do-list))
-	 (priority (read-info->priority
-		    (read-list->first lyskom-reading-list)))
-	 (text-no (car (text-list->texts (read-info->text-list tri)))))
-    (lyskom-is-read text-no)
-    (lyskom-view-text text-no t nil (read-info->conf-stat tri) 
-		      priority nil t))
-  (lyskom-run 'main 'lyskom-end-of-command))
+  (unwind-protect
+      (progn
+	(lyskom-tell-internat 'kom-tell-read)
+	(let* ((tri (read-list->first lyskom-to-do-list))
+	       (priority (read-info->priority
+			  (read-list->first lyskom-reading-list)))
+	       (text-no (car (text-list->texts (read-info->text-list tri)))))
+	  (lyskom-is-read text-no)
+	  (lyskom-view-text text-no t nil (read-info->conf-stat tri) 
+			    priority nil t))
+	(lyskom-wait-queue 'main))
+    (lyskom-end-of-command)))
 
 
 (defun lyskom-is-read (text-no)
@@ -1575,14 +1578,11 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 
 (defun lyskom-prefetch-all-confs ()
   "Gets all conferences using prefetch."
-  (if (>= lyskom-last-conf-fetched
-	  (1- (length lyskom-membership)))
-      nil				; done
+  (while (not (lyskom-prefetch-done))
     (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
 	  (lyskom-prefetch-confs lyskom-max-int))
       (lyskom-prefetch-conf))
-    (lyskom-prefetch-all-confs)))
-
+    (accept-process-output)))
 
 ;; ---------------------------------------------------------
 ;; prefetch conf-stats
@@ -1596,7 +1596,7 @@ This is initiated by lyskom-refetch.
 
 The following variables and functions are involved:
 lyskom-last-conf-fetched, lyskom-last-conf-received, lyskom-last-conf-done
-(this functions variables).
+\(this functions variables).
 lyskom-membership, lyskom-unread-confs (set at login).
 Functions:
 lyskom-prefetch-conf, starts the ball going, later verifies that everything
@@ -1623,7 +1623,7 @@ have to wait. The correct way of waiting is:
       (accept-process-output))
 
 If we just want to know wether we have fetched all info or not we do the test
-(lyskom-prefetch-done)."
+\(lyskom-prefetch-done)."
   
   ;; Algoritm:
   ;;
@@ -1640,20 +1640,22 @@ If we just want to know wether we have fetched all info or not we do the test
 	    (initiate-get-conf-stat 'main 'lyskom-prefetch-handle-conf
 				    (membership->conf-no membership)
 				    membership)
+	  (++ lyskom-last-conf-done)
 	  (++ lyskom-prefetch-confs)
 	  (++ lyskom-last-conf-received))))))
 
 
 (defun lyskom-prefetch-done ()
   "Returns t if lyskom has fetched all its info."
-  (> lyskom-last-conf-done
-     (length lyskom-membership)))
+  (>= lyskom-last-conf-done
+      (1- (length lyskom-membership))))
 
 
 (defun lyskom-prefetch-handle-conf (conf-stat membership)
   "Check if there is any unread texts in a conference.
 Args: CONF-STAT MEMBERSHIP"
   (++ lyskom-last-conf-received)
+  (++ lyskom-last-conf-done)
   (cond
    ((> (+ (conf-stat->first-local-no conf-stat)
 	  (conf-stat->no-of-texts conf-stat)
@@ -1688,8 +1690,6 @@ user's membership in the conference."
 	    (membership->priority membership)
 	    (lyskom-create-text-list unread))
 	 lyskom-to-do-list))))
-  ;; This could be the problem why it sometimes hang during
-  ;; login. But I don't understand how it works. /davidk
   (lyskom-prefetch-and-print-prompt)
   )
 
@@ -2021,7 +2021,8 @@ then a newline is printed after the name instead."
 					;        ;the handler.
 		  (setq lyskom-is-parsing nil)))))
 	  ;; condition-case handler
-	  (quit (setq lyskom-quit-flag t)))
+	  (quit (setq lyskom-quit-flag t))
+	  )
 
       ; Restore selected buffer and match data.
       (store-match-data old-match-data)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.10 1996-01-19 18:50:15 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.11 1996-01-21 17:55:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.10 1996-01-19 18:50:15 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.11 1996-01-21 17:55:10 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -166,7 +166,7 @@ Email-adress:\n\nAnnat:\t")
     ; No entries.
 
     ; From services.el:
-    (interrupted . "Kommandot avbrutet")
+    (interrupted . "Kommandot avbrutet\n")
 
     ; From cache.el:
     ; No entries.

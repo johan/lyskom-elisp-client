@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.5 1996-01-19 18:50:05 byers Exp $
+;;;;; $Id: parse.el,v 38.6 1996-01-21 17:54:59 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.5 1996-01-19 18:50:05 byers Exp $\n"))
+	      "$Id: parse.el,v 38.6 1996-01-21 17:54:59 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -712,16 +712,18 @@ i.e creates the buffer, sets all markers and pointers."
 (defun lyskom-parse-success (ref-no buffer)
   "Parse the results of a successful call and call the handler."
   (lyskom-save-excursion
-    (set-buffer buffer)
-    (let* ((kom-queue (cdr (assoc ref-no lyskom-pending-calls)))
-	   (call-info (lyskom-locate-ref-no kom-queue ref-no)))
-      (set-buffer lyskom-unparsed-buffer)
-      (apply-parser call-info)
-      (set-buffer buffer)
-      (lyskom-decrease-pending-calls)
-      (setq lyskom-pending-calls
-	    (lyskom-assoc-dremove ref-no lyskom-pending-calls))
-      (lyskom-check-call kom-queue))))
+   (set-buffer buffer)
+   (let* ((kom-queue (cdr (assoc ref-no lyskom-pending-calls)))
+	  (call-info (lyskom-locate-ref-no kom-queue ref-no)))
+     (if (null call-info)
+	 nil ; This call has probably been cancelled
+       (set-buffer lyskom-unparsed-buffer)
+       (apply-parser call-info)
+       (set-buffer buffer)
+       (lyskom-decrease-pending-calls)
+       (setq lyskom-pending-calls
+	     (lyskom-assoc-dremove ref-no lyskom-pending-calls))
+       (lyskom-check-call kom-queue)))))
 
 
 (defun lyskom-locate-ref-no (kom-queue ref-no)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.11 1996-01-19 18:49:41 byers Exp $
+;;;;; $Id: commands2.el,v 38.12 1996-01-21 17:54:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.11 1996-01-19 18:49:41 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.12 1996-01-21 17:54:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -548,26 +548,19 @@ means send the message to everybody."
 ;;; Rehacked: Inge Wallin
 
 
-(defun kom-list-news (&optional num)
-  "Runs lyskom-start-of-command and then gets all conferences using 
-lyskom-prefetch-all-confs."
-  (interactive "P")
-  (lyskom-start-of-command 'kom-list-news)
-  (lyskom-prefetch-all-confs)
-  (lyskom-list-news (cond
-		     ((numberp num) num)
-		     ((and (listp num)
-			   (numberp (car num))) (car num))
-		     (t nil))))
-
-
 (defvar lyskom-special-conf-name "\\`Inl.gg .t mig\\'"
   "Regexp to match conf names that are special.")
 
-(defun lyskom-list-news (num-arg)
+(def-kom-command kom-list-news (&optional num)
   "Print the number of unread articles to the user."
-  (interactive)
-  (let ((sum 0))
+  (interactive "P")
+  (lyskom-prefetch-all-confs)
+  (let ((num-arg (cond
+		  ((numberp num) num)
+		  ((and (listp num)
+			(numberp (car num))) (car num))
+		  (t nil)))
+	(sum 0))
     (mapcar
      (function
       (lambda (info)
@@ -595,10 +588,8 @@ lyskom-prefetch-all-confs."
       (lyskom-insert 
        (if (/= sum 1)
 	   (lyskom-format 'total-unreads 
-		   sum
-)
-	 (format (lyskom-get-string 'total-unread))))))
-  (lyskom-end-of-command))
+			  sum)
+	 (format (lyskom-get-string 'total-unread)))))))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.9 1996-01-17 11:50:54 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.10 1996-01-21 17:54:44 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.9 1996-01-17 11:50:54 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.10 1996-01-21 17:54:44 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -160,7 +160,7 @@ Email-address:\n\nOther:\t")
     ; No entries.
 
     ; From services.el:
-    (interrupted . "Interrupted")
+    (interrupted . "Interrupted\n")
 
     ; From cache.el:
     ; No entries.

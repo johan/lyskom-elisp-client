@@ -1,3 +1,8 @@
+Sun Jan 21 18:38:26 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* async.el (lyskom-show-personal-message): Sätt bara
+ 	group-recipient om det var ett gruppmeddelande.
+
 Fri Jan 19 19:21:25 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el: Rewrote ISO conversion to work in-place.
@@ -8,11 +13,35 @@ Fri Jan 19 19:21:25 1996  David Byers  <byers@lysator.liu.se>
 	  title, basically.)
 
 	* filter.el: Fixed bug in kom-list-filters
-
-	* async.el: Fixed small bugs.
 	
+Thu Jan 18 08:01:43 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-list-news): Skrev om enligt ISO9000.
+
+	* lyskom-rest.el (lyskom-prefetch-done): Använd
+ 	lyskom-lsat-conf-done.
+	(kom-recover): La till argumentet refetch.
+
+	* lyskom-rest.el (lyskom-prefetch-all-confs): Använd
+ 	lyskom-prefetch-done.
+
+	* startup.el (kom-start-anew): Anropa lyskom-wait-queue innan
+ 	kom-login-hook. Fast kanske inte, ändå...
 
 Wed Jan 17 07:12:03 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* services.el (lyskom-wait-queue): Ny funktion.
+
+	* lyskom-rest.el (kom-view-next-text): Använd def-kom-command.
+	(lyskom-view-priority-text): Använd lyskom-wait-queue.
+
+	* commands1.el (lyskom-jump): Lägg till parameter sync
+ 	(EXPERIMENT).
+
+	* parse.el (lyskom-parse-success): Kolla om call-info är nil.
+
+	* services.el (blocking-do): signalera 'quit istället för 'error
+ 	när lyskom-quit-flag är satt.
 
 	* commands2.el
  	(kom-membership,kom-status-conf,kom-set-unread,kom-status-conf)
