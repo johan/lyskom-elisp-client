@@ -1,3 +1,7 @@
+Tue Jan 11 11:58:38 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-F
+
 2000-01-11  David Byers  <davby@ida.liu.se>
 
 	* flags.el (kom-save-options): Was removed by mistake.
