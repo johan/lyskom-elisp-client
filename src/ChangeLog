@@ -1,3 +1,8 @@
+Fri Aug 23 02:38:58 1991  Linus Tolke Y  (linus at robin)
+
+	* swedish-strings.el (lyskom-strings): Tagit bort ett space f|r
+	  mycket vid ]terse  senaste av  (info-by-to).
+
 Wed Aug 21 17:43:13 1991  Linus Tolke Y  (linus at lysator)
 
 	* Alla filer (lyskom-clientversion-long): Lagt till rcs
