@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.107 2003-01-01 23:32:42 byers Exp $
+# $Id: Makefile,v 44.108 2003-01-07 23:43:40 qha Exp $
 
 # Useful targets:
 #
@@ -301,12 +301,18 @@ redhat-packages: $(PACKAGENAME)-src-$(CLIENTVERSION).tar.gz
 ######################################################################
 # Debian packages
 
+# Keeping the suffix in it's own variable lets you easily replace it
+# from the commandline. This is useful when you're building a package
+# just for your self and don't want it replaced by the package in the
+# distribution. (make DEBIANCLIENTVERSIONSUFFIX=qha1 debian-packages).
+DEBIANCLIENTVERSIONSUFFIX = 1
+
 DEBIANCLIENTVERSION := $(subst -,.,$(CLIENTVERSION))
 
 debian-packages: $(RELEASE-BASE-SRC).buildstamp
 	cp -R debian $(RELEASE-BASE-SRC)
 	$(RM) -rf $(RELEASE-BASE-SRC)/debian/CVS
-	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-1)/' <debian/changelog >$(RELEASE-BASE-SRC)/debian/changelog
+	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-$(DEBIANCLIENTVERSIONSUFFIX))/' <debian/changelog >$(RELEASE-BASE-SRC)/debian/changelog
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >$(RELEASE-BASE-SRC)/debian/rules
 	cd $(RELEASE-BASE-SRC) && dpkg-buildpackage
 
