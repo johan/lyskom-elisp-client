@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 36.1 1993-04-26 19:37:54 linus Exp $
+;;;;; $Id: reading.el,v 38.0 1994-01-06 01:58:55 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 36.1 1993-04-26 19:37:54 linus Exp $\n"))
+	      "$Id: reading.el,v 38.0 1994-01-06 01:58:55 linus Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat)
