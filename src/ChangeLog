@@ -1,3 +1,9 @@
+1999-12-03  David Byers  <davby@sen2.ida.liu.se>
+
+	* command.el (lyskom-read-extended-command): Patch in order to do
+	correct completion in a unibyte environment with multibyte strings
+	as alternatives.
+
 Fri Dec  3 11:54:28 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-D

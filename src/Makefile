@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.43 1999-11-25 16:19:07 byers Exp $
+# $Id: Makefile,v 44.44 1999-12-03 14:06:14 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.43 1999-11-25 16:19:07 byers Exp $
+# $Id: Makefile,v 44.44 1999-12-03 14:06:14 byers Exp $
 #
 
 
@@ -36,7 +36,7 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.46-BETA-D
+CLIENTVERSION = 0.46-BETA-E
 DOCFILES=NEWS-0.46
 DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
@@ -56,7 +56,6 @@ TARGET=lyskom.elc
 TARGET-EL=$(TARGET:%.elc=%.el)
 
 LANGUAGE-EL=$(LANGUAGES:=-strings.el)
-EMACS-BATCH=$(EMACS) -batch
 SOURCES	 = 	$(LANGUAGE-EL) \
 		komtypes.el \
 		clienttypes.el \

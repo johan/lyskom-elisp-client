@@ -134,7 +134,12 @@ while [ ! "$q1" ] ; do
 done
 
 revision=""
-ask "Vill du göra en numerisk revision för alla filer" ja
+if [ -z `echo $version | sed "s/.*BETA.*//"` ] ; then
+    $ans=nej
+else
+    $ans=ja
+fi
+ask "Vill du göra en numerisk revision för alla filer" $ans
 if [ "$yes" ] ; then
     xecho "Revision: \c"
     read revision
