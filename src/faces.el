@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.7 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: faces.el,v 44.8 2004-10-28 18:51:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.7 2003-08-16 16:58:45 byers Exp $\n"))
+	      "$Id: faces.el,v 44.8 2004-10-28 18:51:55 byers Exp $\n"))
 
 
 
@@ -560,7 +560,7 @@ Do not change this face unless you know what you're doing."
 (defface kom-face--default--morons-face
   '((((background light))
      (:foreground "blue3"
-     :background "yellow")
+     :background "#ffff60")
      )
     (((background dark))
      (:foreground "yellow")

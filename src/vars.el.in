@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.303 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.304 2004-10-28 18:51:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.303 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.304 2004-10-28 18:51:55 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1723,9 +1723,9 @@ can be stored in the server."
 (def-kom-var kom-relogin-behaviour 'ask
   "**Controls how to behave when commands are issued in dead sessions.
 
-When this is set to `t', the client will try to login automatically. 
-When set to 'ask, the client will ask whatever the user wants to reattach.
-When set to nil, the client will not attempt to reattach." 
+When this is set to `t', the client will try to login automatically.
+When set to `ask', the client will ask whatever the user wants to
+reattach. When set to `nil', the client will not attempt to reattach."
   server)
 
 (def-kom-var kom-remember-password nil
@@ -4250,9 +4250,15 @@ idea.
 Values other than `t' and `nil' are reserved for future use."
   server)
 
-(def-kom-var kom-format-show-images t "**Control image display
+(def-kom-var kom-format-show-images t 
+  "**Control in-line display of images.
 
-nil means inhibit special image handling." server)
+When set to `t', attempt to display images in-line. When set to `nil', 
+images are handled as normal texts.
+
+Values other than `t' and `nil' are reserved for future use."
+  server)
+
 
 (def-kom-var kom-format-html-authors '((t . t))
   "**Determines from which authors we accept HTML.
@@ -4506,17 +4512,20 @@ setting this variable you may set the environment variable `KOMSERVER'.")
 (def-kom-var lyskom-default-user-name nil
   "**Default LysKOM user name.
 
-The value of this variable must be a string, integer or `nil'. If it's an
-integer, it must be the conference number of the user to login as. Instead of
-setting this variable you may set the environment variable `KOMNAME' to the
-username to login as." 
+The value of this variable must be a string, integer indicating the
+default user name, or `nil' to indicate no default. If set to an
+integer, log in as the user with that conference number. If set to a
+string, log in as the user with that name.
+
+Instead of setting this variable you may set the environment variable
+`KOMNAME' to the username to login as." 
   local)
 
 (defvar kom-default-password nil
   "**Setting this variable does nothing. See `lyskom-default-password' instead.")
 
 (def-kom-var lyskom-default-password nil
-  "Default LysKOM password.
+  "**Default LysKOM password.
 
 The value of this variable must be a string or `nil'. There may be an
 environment variable for this, but it shouldn't be used if there is."

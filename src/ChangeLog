@@ -1,3 +1,7 @@
+2004-10-28  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in: Updated some documentation strings.
+
 2004-10-28  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--entry-set-foreground): Do not try to handle
@@ -50,7 +54,7 @@
 
 	* view-text.el (lyskom-view-text): Show Message-Id if available
 	and kom-show-imported-message-id is true.
-	
+
 2004-10-19  Pontus Freyhult  <pont@soua.net>
 
 	Allow for easy relogin from dead sessions (bug 1278):
@@ -71,7 +75,7 @@
 	* option-edit.el (lyskom-customize-buffer-format): Added 
 	kom-relogin-behaviour.
 	(lyskom-custom-variables): Dito.	
-	
+
 	Clean up lyskom-default-password, enable password storing:
 	* english-strings.el, swedish-strings.el: 
 	(lyskom-custom-strings): Added kom-remember-password-tag
@@ -104,13 +108,25 @@
 	* vars.el.in (kom-format-show-images): New variable.
 	(lyskom-format-special): Use lyskom-format-image for
 	texts with content-type starting with image.
-	
+
 2004-10-17  David Byers  <byers@lysator.liu.se>
 
+	Keep last read column in kom-handle-membership updated:
+	* services.el (initiate-pepsi): Update last-time-entered when
+	going to a conference with a cached membership. This makes it
+	possible to update the corresponding column in the membership
+	buffer correctly.
+
+	Visual tweaks:
+	* faces.el (kom-face--default--morons-face): Changed background to
+	something slightly more legible.
+
+	Mode documentation for kom-handle-membership:
 	* mship-edit.el (lp--mode): Added mode documentation.
 
 2004-09-27  David Byers  <byers@lysator.liu.se>
 
+	Menus for kom-handle-membership:
 	* menus.el (lyskom-prioritize-menu-template): New template.
 	(lyskom-prioritize-menu): New variable.
 	(lyskom-build-menus-xemacs): Build prioritize menu.
