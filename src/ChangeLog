@@ -1,3 +1,9 @@
+Tue Oct  8 17:06:05 1991  Linus Tolke Y  (linus at lysator)
+
+	* edit-text.el, lyskom-rest.el (lyskom-edit-text, lyskom-filter):
+	  Found and fixed the bug that made the first char in the
+	  edit-buffer arrive in the *kom*-buffer.
+
 Mon Oct  7 16:29:42 1991  Linus Tolke Y  (linus at lysator)
 
 	* commands1.el (lyskom-change-pres-or-motd-3): Now we get the

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 35.7 1991-10-03 16:33:32 linus Exp $
+;;;;; $Id: edit-text.el,v 35.8 1991-10-08 16:10:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.7 1991-10-03 16:33:32 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.8 1991-10-08 16:10:42 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -76,6 +76,8 @@ Does lyskom-end-of-command."
       (switch-to-buffer-other-window buffer))
      (t
       (switch-to-buffer buffer)))
+    (if (boundp 'lyskom-filter-old-buffer)
+	(setq lyskom-filter-old-buffer (current-buffer)))
     (lyskom-edit-mode)
     (setq lyskom-proc proc)
     (make-local-variable 'lyskom-edit-handler)
