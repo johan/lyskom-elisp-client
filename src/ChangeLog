@@ -1,5 +1,8 @@
 Sun Sep 29 04:26:52 1991  Per Cederqvist  (ceder at ruben)
 
+	* flags.el (lyskom-read-options-2): Run lyskom-login-hook even if
+	  the person has no userarea.
+
 	* vars.el (kom-show-personal-message-in-buffer,
 	  kom-pop-personal-message, kom-ding-on-personal-messages,
 	  lyskom-personal-messages-hook): added.
