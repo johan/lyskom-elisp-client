@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.49 1997-09-26 12:26:03 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.50 1997-09-28 11:38:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.49 1997-09-26 12:26:03 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.50 1997-09-28 11:38:42 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1816,7 +1816,7 @@ A symbol other than t means call it as a function."
         ((eq t arg) (ding t))
         ((numberp arg) (while (> arg 0)
                          (ding t)
-                         (sit-for 0.1)
+                         (sit-for kom-ding-pause-amount)
                          (setq arg (1- arg))))
         ((stringp arg)
          (start-process "audio"
@@ -1904,7 +1904,8 @@ The name of the file is read using the minibuffer and the default is kom-text."
                                 lyskom-saved-file-name))))
           (append-to-file (point-min) (point-max) (expand-file-name name))
           (setq lyskom-saved-file-name name))
-      (kill-buffer buf))))
+;      (kill-buffer buf)
+)))
 
 
 

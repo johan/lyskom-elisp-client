@@ -1,3 +1,16 @@
+Sun Sep 28 13:09:28 1997  David Byers  <davby@ida.liu.se>
+
+	* services.el (def-kom-service): Nytt makro.
+	(lyskom-server-call): Dito.
+	(initiate-add-recipient): Kan lägga till BCC-recpt.
+	(initiate-*): Omgärda med lyskom-server-call.
+
+Sat Sep 27 18:19:12 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-ding-pause-amount): Ny variabel.
+	
+	* lyskom-rest.el (lyskom-beep): Använd kom-ding-pause-amount.
+
 Fri Sep 26 11:18:57 1997  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (kom-text-footer-format): Ny variabel.

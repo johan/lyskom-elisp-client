@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.20 1997-09-21 11:44:39 byers Exp $
+# $Id: Makefile,v 44.21 1997-09-28 11:38:39 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.20 1997-09-21 11:44:39 byers Exp $
+# $Id: Makefile,v 44.21 1997-09-28 11:38:39 byers Exp $
 #
 
 
@@ -144,7 +144,7 @@ TAGS: $(HEADER) $(SOURCES)
 install: lyskom.elc lyskom.el
 	cp lyskom.el lyskom.elc $(LISPDIR)
 
-release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
+release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) lyskom.el
 	mkdir lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
@@ -159,6 +159,7 @@ release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	cp lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR)
 	rm -rf lyskom-$(CLIENTVERSION)
 	rm -rf lyskom-$(CLIENTVERSION).tar.gz
+	mv lyskom.el $(FTPDIR)/lyskom-$(CLIENTVERSION).el
 
 clean:
 	$(RM) *.el.gz *.elc.gz lyskom.el english-lyskom.el

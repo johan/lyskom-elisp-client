@@ -5,6 +5,13 @@ Att göra i elisp-klienten
 
 * BUGGAR
 
+** VIKTIGA BUGGAR
+
+    Ingen av initiate-funktionerna fungerar i något annat än LysKOMs
+    huvudbuffert. De borde alla undersöka om det finns några köer i
+    den aktuella bufferten, och om det inte gör det, försöka hitta en
+    LysKOM-buffert att göra anropet i.
+
 ** DEFERRED INSERT
 
     lyskom-replace-deferred verkar inte använda lyskom-last-viewed i

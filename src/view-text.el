@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.10 1997-09-27 11:41:48 byers Exp $
+;;;;; $Id: view-text.el,v 44.11 1997-09-28 11:38:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.10 1997-09-27 11:41:48 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.11 1997-09-28 11:38:49 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -472,7 +472,7 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                               (t (string-to-int field-width)))))
                  
                    (lyskom-format 
-                    (format "%%%s#1s" field-width)
+                    "%#1s"
                     (if have-author
                         (if (< (length author-name) width)
                             (make-string (- width (length author-name)) ?-)
@@ -659,19 +659,21 @@ Args: TEXT-STAT of the text being read."
 		     (blocking-do 'get-text-stat text))))
 
     ;; Print information about the link
-    (if text-stat
-	(progn
-	  (lyskom-insert-header-comm text-stat misc))
-      (let ((defer-info (lyskom-create-defer-info
-			 'get-text-stat
-			 text
-			 'lyskom-insert-deferred-header-comm
-			 (point-max-marker)
-			 (length lyskom-defer-indicator)
-			 nil		; Filled in later
-			 misc)))
-	(lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
-	(lyskom-defer-insertion defer-info)))
+    (cond (text-stat
+           (lyskom-insert-header-comm text-stat misc))
+          ((not kom-deferred-printing) 
+           (lyskom-insert-header-comm text-stat misc))
+          (t
+           (let ((defer-info (lyskom-create-defer-info
+                              'get-text-stat
+                              text
+                              'lyskom-insert-deferred-header-comm
+                              (point-max-marker)
+                              (length lyskom-defer-indicator)
+                              nil       ; Filled in later
+                              misc)))
+             (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+             (lyskom-defer-insertion defer-info))))
 
     ;; Print information about who added the link
     (if (misc-info->sent-at misc)
@@ -723,7 +725,7 @@ Args: TEXT-STAT of the text being read."
       (lyskom-format-insert 'footnote-in-text (misc-info->footn-in misc))))
     (if author
 	(lyskom-format-insert 'written-by author)
-      (lyskom-insert-at-point "\n"))))
+      (lyskom-insert "\n"))))
 
 
 
