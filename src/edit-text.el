@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.107 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: edit-text.el,v 44.108 2003-01-07 21:17:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.107 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.108 2003-01-07 21:17:12 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -910,24 +910,7 @@ Cannot be called from a callback."
         ;;
 
         (lyskom-traverse author raw-author-list
-          (let ((send-comments-to
-                 (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
-
-            (when send-comments-to
-              (cond ((string-match "^\\([0-9]+\\)\\s-+\\([0-9]+\\)" (aux-item->data send-comments-to))
-                     (setq send-comments-to 
-                           (cons (string-to-number
-                                  (match-string 1 (aux-item->data send-comments-to)))
-                                 (string-to-number
-                                  (match-string 2 (aux-item->data send-comments-to))))))
-                    ((string-match "^\\([0-9]+\\)"
-                                   (aux-item->data send-comments-to))
-                     (setq send-comments-to
-                           (cons (string-to-number
-                                  (match-string 1 (aux-item->data send-comments-to)))
-                                 0)))
-                    (t (setq send-comments-to nil))))
-
+          (let ((send-comments-to (lyskom-get-send-comments-to author t)))
             (cond
 
              ;; Author is in kom-dont-check-commented-authors

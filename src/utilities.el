@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.127 2003-01-05 21:37:08 byers Exp $
+;;;;; $Id: utilities.el,v 44.128 2003-01-07 21:17:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.127 2003-01-05 21:37:08 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.128 2003-01-07 21:17:12 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1246,6 +1246,34 @@ return nil."
 
 ;;; ============================================================
 ;;; Database stuff
+
+(defun lyskom-get-send-comments-to (conf-no &optional want-type)
+  "Get the send-comments-to value for conference CONF-NO.
+Returns nil if there is no send-comments-to set.
+
+Ïf WANT-TYPE is set, return as a conf (RECPT . TYPE), wher RECPT
+is the conference to use and TYPE is the type of recipient (numeric)."
+  (let* ((conf-stat (if (lyskom-conf-stat-p conf-no)
+                        conf-no
+                      (blocking-do 'get-conf-stat conf-no)))
+         (send-comments-to
+          (and conf-stat 
+               (car (lyskom-get-aux-item (conf-stat->aux-items conf-stat) 33))))
+         (result (when send-comments-to
+                   (cond ((string-match "^\\([0-9]+\\)\\s-+\\([0-9]+\\)" (aux-item->data send-comments-to))
+                          (cons (string-to-number
+                                 (match-string 1 (aux-item->data send-comments-to)))
+                                (string-to-number
+                                 (match-string 2 (aux-item->data send-comments-to)))))
+                         ((string-match "^\\([0-9]+\\)"
+                                        (aux-item->data send-comments-to))
+                          (cons (string-to-number
+                                 (match-string 1 (aux-item->data send-comments-to)))
+                                0))
+                         (t nil)))))
+    (if want-type result (car result))))
+    
+
 
 (defun lyskom-is-supervisor (conf-no viewer-no)
   "Return non-nil if the supervisor of CONF-NO is VIEWER-NO."

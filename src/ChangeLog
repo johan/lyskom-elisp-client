@@ -1,4 +1,34 @@
+2003-01-07  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 962:
+	* edit-text.el (lyskom-edit-send-check-recipients): Use
+	lyskom-get-send-comments-to.
+
+	* utilities.el (lyskom-get-send-comments-to): New function.
+
+	* commands1.el (kom-write-text): Add sender as recipient when
+	sending to a conference the sender is not a member of. Respect
+	send-comments-to.
+	(lyskom-comment-recipients): Respect send-comments.to when adding
+	lyskom-pers-no as a recipient.
+
+	Started working on a command reference manual:
+	* commands2.el: Wrote user documentation for all commands in the
+	docstrings. Lisp-level documentation, where it still exists, is
+	placed after the user-level documentation, below the legend "Lisp
+	documentation". I intend to generate the english command reference
+	from the source code.
+
 2003-01-06  David Byers  <david.byers@swipnet.se>
+
+	Started working on a command reference manual:
+	* commands1.el: Wrote user documentation for all commands in the
+	docstrings. Lisp-level documentation, where it still exists, is
+	placed after the user-level documentation, below the legend "Lisp
+	documentation". I intend to generate the english command reference
+	from the source code.
+
+	* NEWS-0.48: Synched up to here.
 
 	Handle async-new-user-area message:
 	* startup.el (lyskom-accept-async): Accept async 19.

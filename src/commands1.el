@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.165 2003-01-06 11:18:25 byers Exp $
+;;;;; $Id: commands1.el,v 44.166 2003-01-07 21:17:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.165 2003-01-06 11:18:25 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.166 2003-01-07 21:17:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -46,7 +46,7 @@
 
 
 (def-kom-command kom-get-appreciation ()
-  "Give the user a little light in the dark"
+  "Provides a little light in the dark."
   (interactive)
   (lyskom-insert-string 'appreciation))
   
@@ -58,7 +58,7 @@
 
 
 (def-kom-command kom-get-abuse ()
-  "Give the user a little verbal abuse."
+  "Provides a bit of verbal abuse."
   (interactive)
   (lyskom-insert-string 'abuse))
 
@@ -70,7 +70,11 @@
 
 
 (def-kom-command kom-delete-conf ()
-  "Delete a person or a conference."
+  "Deletes a person or a conference. In order to delete a conference
+you must be the supervisor of the conference. Once a conference is
+deleted, it can never be restored, and texts with no recipients other
+than the deleted conference will become inaccessible, and will
+eventually be permanently deleted."
   (interactive)
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'what-conf-to-delete)
@@ -112,7 +116,20 @@
 
 
 (def-kom-command kom-delete-text (text-no)
-  "Delete a text. Argument: TEXT-NO"
+  "Permanently deletes a text. In order to delete a text you must
+be the author of the text, or the supervisor of the author.
+
+It is a very bad idea to delete texts that have comments. By deleting
+a text with comments, the comments lost their context. This can lead
+to fragmented discussion trees, where it is impossible to understand
+what a comment means, or indeed what the whole discussion is about.
+
+Instead of deleting a text, consider moving it to a conference created
+specifically for storing texts that are no longer interesting. Several
+LysKOM systems have such conferences, so ask around.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-text-to-delete)))
   (if text-no
       (let* ((text-stat (blocking-do 'get-text-stat text-no))
@@ -159,8 +176,13 @@
 
 
 (def-kom-command kom-review-presentation (&optional text-or-conf-no)
-  "Review the presentation for a person or a conference. If a prefix argument
-is given, the presentation of the author of that text will be shown."
+  "Reviews the presentation for a person or a conference. If you give
+a prefix argument it is treated as a text number prefix argument (see
+`lyskom-read-text-no-prefix-arg'), and this command shows the
+presentation of the author of that text.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
 		    (list (lyskom-read-text-no-prefix-arg
 			   'text-to-see-author-of))))
@@ -304,10 +326,14 @@ is given, the presentation of the author of that text will be shown."
 ;;; Modified by: David Kågedal, Johan Sundström
 
 (def-kom-command kom-view-commented-text (text-no)
-  "View the commented text.
-If the current text is comment to (footnote to) several text then the first
-text is shown and a REVIEW list is built to shown the other ones. If the
-optional arg TEXT-NO is present review the text that text commented instead."
+  "Views the text that the selected text is a comment to. If the
+current text is comment or footnote to several texts then the first
+text is shown and the remaining texts are reviewed.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache'."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
   (if text-no
       (progn
@@ -320,10 +346,18 @@ optional arg TEXT-NO is present review the text that text commented instead."
 
 
 (def-kom-command kom-view-previous-commented-text (text-no)
-  "View the text the previous text commented.
-If the previously viewed text is a comment to (footnote to) several
-texts then the first text is shown and a REVIEW list is built to show
-the other ones."
+  "Views the text that the selected text is a comment to. If the
+current text is comment or footnote to several texts then the first
+text is shown and the remaining texts are reviewed.
+
+Without a prefix argument this will display the text that the
+next-to-last text in the buffer is a comment to. With a prefix
+argument this command is identical to `kom-view-commented-text'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')
+
+See `kom-review-uses-cache'."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q nil
                                                      lyskom-previous-text)))
   (cond (text-no
@@ -391,12 +425,12 @@ as TYPE. If no such misc-info, return NIL"
 
 ;;; ================================================================
 ;;;                         Brev - Send letter
-
 ;;; Author: Inge Wallin
-;;; Rewritten using read-conf-no by Linus Tolke (4=>1)
 
 (def-kom-command kom-send-letter (&optional pers-no)
-  "Send a personal letter to a person or a conference."
+  "Send a personal letter to a person. This command is similar to
+`kom-write-text', but intended specifically for sending personal
+messages. When reading the recipient it will only allow letterboxes."
   (interactive)
   (condition-case nil
       (progn
@@ -444,8 +478,10 @@ as TYPE. If no such misc-info, return NIL"
 ;; Add another person
 
 (def-kom-command kom-add-member ()
-  "Add a person as a member of a conference.
-Ask for the name of the person, the conference to add him/her to."
+  "Invite a person as a member of a conference. Depending on the
+server configuration this command may either create an invitation or
+simply make the person a member of the conference without asking them
+for confirmation."
   (interactive)
   (let* ((who (lyskom-read-conf-stat (lyskom-get-string 'who-to-add)
 				     '(pers) nil nil t))
@@ -461,7 +497,14 @@ Ask for the name of the person, the conference to add him/her to."
 ;; Add self
 
 (def-kom-command kom-add-self (&optional conf)
-  "Add this person as a member of a conference."
+  "Become a member of a conference. The default priority of the
+membership is determined by `kom-membership-default-priority' and its
+placement by `kom-membership-default-placement' You can also use this
+command to change the priority of an existing membership and to
+re-join a conference of which you are a passive member.
+
+See `kom-membership-default-priority' and 
+`kom-membership-default-placement'"
   (interactive)
   (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
                     (lyskom-read-conf-stat 
@@ -483,7 +526,8 @@ Ask for the name of the person, the conference to add him/her to."
 
 
 (def-kom-command kom-change-priority (&optional conf)
-  "Change the priority of a conference."
+  "Changes the priority of a single membership. If you want to change
+the priority of several memberships, use `kom-prioritize' instead."
   (interactive)
   (let* ((conf-stat (if conf (blocking-do 'get-conf-stat conf)
                       (lyskom-read-conf-stat 
@@ -712,8 +756,8 @@ unless BLOCKING is t, in which cast it is the conf-stat."
 ;; Subtract another person
 
 (def-kom-command kom-sub-member ()
-  "Subtract a person as a member from a conference. Ask for the name
-of the person."
+  "Remove a member from a conference. To do this you need to be the
+supervisor of the conference or of the member being removed."
   (interactive)
   (lyskom-sub-member
    (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude)
@@ -723,7 +767,13 @@ of the person."
 
 
 (def-kom-command kom-sub-self (&optional conf)
-  "Subtract this person as a member from a conference."
+  "Resign your membership of a conference. If
+`kom-unsubscribe-make-passive' is set, them resigning once converts
+your membership to a passive membership and resigning twice removes
+the membership completely (if the server supports passive
+memberships).
+
+See `kom-unsubscribe-make-passive'."
   (interactive)
   (lyskom-sub-member 
    (blocking-do 'get-conf-stat lyskom-pers-no)
@@ -810,7 +860,13 @@ of the person."
 
 
 (def-kom-command kom-create-conf (&optional name)
-  "Create a conference."
+  "Create a new conference. Use this command when you want to create a
+new conference. It will ask for all required information.
+
+Before creating a conference, check that there isn't already one
+covering the intended topics. There may be a conference for discussing
+converence creation where you can ask. If there isn't, there is
+probably a general Q&A conference where you can ask."
   (interactive)
   (let* ((conf-name (or name
 			(lyskom-read-string
@@ -894,8 +950,15 @@ This does lyskom-end-of-command"
 
 
 (defun kom-write-comment (text-no)
-  "Write a comment to a text.
-If optional arg TEXT-NO is present write a comment to that text instead."
+  "Write a comment to the selected text.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list 
                 (let ((lyskom-current-command 'kom-write-comment))
                   (lyskom-read-text-no-prefix-arg 'what-comment-no))))
@@ -927,8 +990,19 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 
 
 (def-kom-command kom-write-footnote (text-no)
-  "Write a footnote to a text.
-If optional arg TEXT-NO is present write a footnote to that text instead."
+  "Write a footnote to the selected text. In order to write a footnote
+you must be the author, or superviser of the author, of the selected
+text.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg'). Without a prefix argument this
+command will write a footnote to the most recently read or written
+applicable text."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-footnote-no nil
                                                      'last-seen-written)))
   (if text-no
@@ -940,7 +1014,16 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 
 
 (def-kom-command kom-comment-previous (text-no)
-  "Write a comment to previously viewed text."
+  "Write a comment to the selected text. Without a prefix argument
+the selected text is the next-to-last text in the buffer.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-comment-no nil
                                                      lyskom-previous-text)))
   (if text-no
@@ -1093,7 +1176,9 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 	  ;; any of the recipients.
 	  (when (not member)
 	      (setq recver (append recver
-				   (list (cons 'RECPT lyskom-pers-no)))))
+				   (list (cons 'RECPT
+                                               (or (lyskom-get-send-comments-to lyskom-pers-no)
+                                                   lyskom-pers-no))))))
 	  (lyskom-edit-text lyskom-proc 
 			    recver
 			    subject "")))
@@ -1103,15 +1188,21 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 
 ;;; ================================================================
 ;;;                Personligt svar - personal answer
-
+;;;
 ;;; Author: ???
 ;;; Rewritten using blocking-do by: Linus Tolke
 
 
 (def-kom-command kom-private-answer (text-no)
-  "Write a private answer to the current text.
-If optional arg TEXT-NO is present write a private answer to
-that text instead."
+  "Write a private answer to the selected text.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no)))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
@@ -1171,12 +1262,22 @@ that text instead."
 
 ;;; ================================================================
 ;;;    Personligt svar p} f|reg}ende - kom-private-answer-previous
-
+;;;
 ;;; Author: ceder
 ;;; Rewritten using blocking-do by: Linus Tolke
 
 (def-kom-command kom-private-answer-previous (text-no)
-  "Write a private answer to previously viewed text."
+  "Write a private answer to the selected text. Without a prefix
+argument the next-to-last text in the buffer will be selected.
+
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no nil
                                                      lyskom-previous-text)))
   (if text-no
@@ -1196,8 +1297,7 @@ that text instead."
 
 
 (defun kom-quit (&optional arg)
-  "Quit session. Kill process and buffer-local variables.
-If optional argument is non-nil then dont ask for confirmation."
+  "Exit LysKOM. With prefix argument, don't ask for confirmation."
   (interactive "P")
   (lyskom-start-of-command 'kom-quit t)
   (let ((do-end-of-command t))
@@ -1259,7 +1359,9 @@ Don't ask for confirmation."
 
 
 (def-kom-command kom-change-presentation ()
-  "Change presentation for a person or a conference."
+  "Change presentation for a person or a conference. If the person
+or conference doesn't have a presentation, a new presentation will 
+be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no 
@@ -1273,7 +1375,8 @@ Don't ask for confirmation."
 
 
 (def-kom-command kom-change-conf-motd ()
-  "Change motd for a person or a conference."
+  "Change the notice for a person or a conference. If the person
+or conference doesn't have a notice, a new notice till be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
@@ -1358,7 +1461,10 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 
 
 (def-kom-command kom-set-presentation (arg)
-  "Add a presentation for a person or conference."
+  "Set the presentation of a conference or person to the selected text.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive "P")
    (let ((conf-no (lyskom-read-conf-no
                    (lyskom-get-string 'what-to-set-pres-you)
@@ -1373,7 +1479,10 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
       'pres)))
 
 (def-kom-command kom-set-motd-text (arg)
-  "Add a motd for a person or conference."
+  "Set the notice for a person or conference to the selected text.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive "P")
    (let ((conf-no (lyskom-read-conf-no
                    (lyskom-get-string 'what-to-set-motd-you)
@@ -1419,7 +1528,9 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
                          (blocking-do 'set-conf-motd conf-no text-no)))))))))))
 
 (def-kom-command kom-remove-presentation ()
-  "Removes a presentation for a person or a conference."
+  "Removes the presentation for a person or a conference. Please don't
+remove a presentation without adding a new one. This can be accomplished
+with the `kom-change-presentation' command."
   (interactive)
   (let ((conf-stat (or (lyskom-read-conf-stat
                         (lyskom-get-string 'who-to-remove-pres-for)
@@ -1442,7 +1553,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 
 
 (def-kom-command kom-unset-conf-motd ()
-  "Removes motd for a person or a conference."
+  "Removes the notice for a person or conference."
   (interactive)
   (let ((conf-stat (or (lyskom-read-conf-stat
 			(lyskom-get-string 'who-to-remove-motd-for)
@@ -1466,10 +1577,10 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 ;;; Author: ???
 
 (def-kom-command kom-go-to-conf (&optional conf-no)
-  "Select a certain conference.
-The user is prompted for the name of the conference.
-If s/he was already reading a conference that conference will be put
-back on lyskom-to-do-list."
+  "Go to a conference and start reading texts there.
+
+Changing conferences runs `kom-change-conf-hook' and
+`kom-after-change-conf-hook'."
   (interactive)
   (let ((conf (if conf-no
                   (blocking-do 'get-conf-stat conf-no)
@@ -1588,7 +1699,13 @@ Args: CONF-STAT MEMBERSHIP"
 
 
 (def-kom-command kom-write-text (&optional arg)
-  "Start writing a LysKOM text that isn't a comment.."
+  "Start writing a new text that isn't a comment to any existing text.
+With a prefix argument don't ask for a recipient.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled."
   (interactive "P")
   (let ((recpt (cond ((consp arg) lyskom-current-conf)
 		     ((numberp arg) arg)
@@ -1608,20 +1725,24 @@ Args: CONF-STAT MEMBERSHIP"
 	(lyskom-insert-string 'no-in-conf)
       (lyskom-tell-internat 'kom-tell-write-text)
       (lyskom-edit-text lyskom-proc
-                        (lyskom-create-misc-list 'RECPT
-                                                 recpt)
+                        (if (lyskom-get-membership recpt)
+                            (lyskom-create-misc-list 'RECPT recpt)
+                          (lyskom-create-misc-list 
+                           'RECPT recpt
+                           'RECPT (or (lyskom-get-send-comments-to lyskom-pers-no)
+                                      lyskom-pers-no)))
                         "" ""))))
 
 
 ;;; ================================================================
 ;;;                 Lista Personer - List persons
-
+;;;
 ;;; Author: ceder
 ;;; Rewritten: linus
 
 (def-kom-command kom-list-persons (match)
-  "List all conferences whose name matches MATCH (a string).
-Those that you are not a member in will be marked with an asterisk."
+  "List all persons whose names start with a particular string.
+For more flexible listing, use kom-list-re instead."
   (interactive (list (lyskom-read-string
 		      (lyskom-get-string 'search-for-pers))))
   (let ((result (blocking-do 'lookup-z-name match 1 0)))
@@ -1648,8 +1769,9 @@ Those that you are not a member in will be marked with an asterisk."
 ;;; Rewritten: linus
 
 (def-kom-command kom-list-conferences (&optional match)
-  "List all conferences whose name matches MATCH (a string).
-Those that you are not a member in will be marked with an asterisk."
+  "List all conferences whose names start with a particular string.
+Those that you are not a member in will be marked with an asterisk.
+For more flexible searching, use `kom-list-re'."
   (interactive)
 
   (unless kom-allow-incompleteness
@@ -1669,7 +1791,10 @@ Those that you are not a member in will be marked with an asterisk."
 
 
 (def-kom-command kom-list-created-conferences (arg)
-  "List all conferences created by some person."
+  "List all conferences created by a particular person. With a prefix
+argument, also list persons created by that person.
+
+See `kom-allow-incompleteness'."
   (interactive "P")
 
   (unless kom-allow-incompleteness
@@ -1832,8 +1957,11 @@ If you are not member in the conference it will be flagged with an asterisk."
 
 
 (def-kom-command kom-list-re (regexp &optional case-sensitive what)
-  "List all persons and conferences whose name matches REGEXP.
+  "List all persons and conferences whose names match a particular
+regular expression. Regular expressions are case insensitive. You 
+will be asked whether to look for persons, conferences, or both.
 
+Lisp documentation:
 By default, the regexp will be converted so that the match is
 performed in a case insensitive way.  If the optional argument
 CASE-SENSITIVE is true, that conversion will not be performed.
@@ -1893,7 +2021,9 @@ If it is 'conf, only conferences will be listed."
 
 
 (def-kom-command kom-change-name ()
-  "Change the name of a person or conference."
+  "Change the name of a person or conference. In order to change the
+name of a conference or person, you need to be the supervisor of that
+conference or person."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'name-to-be-changed)
@@ -1922,7 +2052,10 @@ If it is 'conf, only conferences will be listed."
 ;;; Author: Per Cederqvist (template stolen from kom-change-name)
 
 (def-kom-command kom-change-parenthesis ()
-  "Change the name of a person or conference."
+  "Change parenthsized contents in the  name of a person or conference.
+In some LysKOM communities it is popular to put a witticism enclosed in
+parenthesis at the end of one's name. This command is intended to make
+it easy to change this information."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'name-to-be-changed)
@@ -1963,7 +2096,8 @@ If it is 'conf, only conferences will be listed."
 ;;; Rewritten: linus
 
 (def-kom-command kom-change-supervisor ()
-  "Change the supervisor of a person or conference."
+  "Change the supervisor of a person or conference. You need to be the
+supervisor of the person or conference to perform this operation."
   (interactive)
   (let ((supervisee (lyskom-read-conf-stat
 		     (lyskom-get-string 'who-to-change-supervisor-for)
@@ -1995,7 +2129,9 @@ If it is 'conf, only conferences will be listed."
 ;;; Modified by: Linus Tolke, Johan Sundström, Joel Rosdahl
 
 (def-kom-command kom-mark-text (&optional text-no)
-  "Mark the text TEXT-NO."
+  "Mark a text.
+The settings `kom-symbolic-marks-alist' and `kom-default-mark' control
+what mark to set."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-mark)))
   (if text-no
       (lyskom-mark-text text-no)
@@ -2003,7 +2139,7 @@ If it is 'conf, only conferences will be listed."
 
 
 (def-kom-command kom-unmark-text (&optional text-no)
-  "Unmark the text TEXT-NO."
+  "Unmark a text that was previously marked."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-unmark)))
   (if text-no
       (lyskom-unmark-text text-no)
@@ -2165,14 +2301,14 @@ increasing number of marks per mark type (and, when equal, by mark type)."
 ;;; Modified by: Joel Rosdahl
 
 (def-kom-command kom-review-marked-texts ()
-  "Review marked texts with a certain mark."
+  "Review all texts you have marked with a particular mark."
   (interactive)
   (lyskom-review-marked-texts
    (lyskom-read-mark-type (lyskom-get-string 'what-mark-to-view) t)))
 
 
 (def-kom-command kom-review-all-marked-texts ()
-  "Review all marked texts"
+  "Review all texts you have marked, regardless of mark."
   (interactive)
   (lyskom-review-marked-texts nil))
 
@@ -2212,7 +2348,9 @@ If MARK-NO is nil, review all marked texts."
 
 
 (def-kom-command kom-change-password ()
-  "Change the password for a person."
+  "Change the password for a person. To change the password for a
+person you need either the old password for the person, or have
+administrative privileges enabled."
   (interactive)
   (let ((pers-no (lyskom-read-conf-no (lyskom-get-string 'whos-passwd)
 				      '(pers) t "" t))
@@ -2263,7 +2401,9 @@ If MARK-NO is nil, review all marked texts."
 (lyskom-external-function calendar-absolute-from-gregorian)
 
 (def-kom-command kom-display-time ()
-  "Ask server about time and date."
+  "Display the current date and time, according to the server. If
+`kom-show-week-number', include the ISO week number. Display of
+today's name is controlled by `kom-show-namedays'."
   (interactive)
   (let ((time (lyskom-current-server-time))
         (lyskom-last-text-format-flags nil)
@@ -2323,9 +2463,7 @@ If MARK-NO is nil, review all marked texts."
                                            (time->sec  time))))
 		       (error nil))))))
             lyskom-times)
-;;;
-;;; +++ FIXME specialhack för svenska. Borde det generaliseras?
-;;;   
+
     (when kom-show-namedays
       (let ((tmp (lyskom-nameday time)))
         (when tmp
@@ -2338,7 +2476,7 @@ If MARK-NO is nil, review all marked texts."
 
 ;;; ================================================================
 ;;;                Vilka ({r inloggade) - Who is on?
-
+;;;
 ;;; Author: ???
 ;;; Rewritten by: David K}gedal
 
@@ -2348,15 +2486,16 @@ If MARK-NO is nil, review all marked texts."
 
 (def-kom-command kom-who-is-on (&optional arg)
   "Display a list of active connected users.
-With a positive prefix argument ARG, list sessions who have been active 
-in the last ARG minutes.
 
-With a positive zero prefix argument ARG, list all visible sessions.
+With a positive prefix argument ARG, list sessions who have been
+active in the last ARG minutes. With a positive zero prefix argument
+\(i.e. `0', not `-0'), list all visible sessions. With a negative
+nonzero prefix argument ARG, list both visible and invisible sessions
+who have been active in the last -ARG minutes. With a negative zero
+prefix argument (C-u -), list all sessions.
 
-With a negative nonzero prefix argument ARG, list both visible and
-invisible sessions who have been active in the last -ARG minutes.
-
-With a negative zero prefix argument (C-u -), list all sessions."
+Several variables affect display. See `kom-show-where-and-what', 
+`kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (condition-case nil
       (if (lyskom-have-feature dynamic-session-info)
@@ -2371,25 +2510,32 @@ With a negative zero prefix argument (C-u -), list all sessions."
 ;;; Author: petli
 
 (def-kom-command kom-who-is-on-in-conference (&optional arg)
-  "Display a list of all connected users in CONF.
-The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negative, invisible sessions are also shown.
+  "Display a list of all connected users who are members of a
+particular cnoference.
 
-If the prefix is 0, all visible sessions are shown."
+With a positive prefix argument ARG, list sessions who have been
+active in the last ARG minutes. With a positive zero prefix argument
+\(i.e. `0', not `-0'), list all visible sessions. With a negative
+nonzero prefix argument ARG, list both visible and invisible sessions
+who have been active in the last -ARG minutes. With a negative zero
+prefix argument \(C-u -), list all sessions.
+
+Several variables affect display. See `kom-show-where-and-what',
+`kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-on-in-what-conference)
-				'(all) nil 
-				(let ((ccn 
-				       (if (or (null lyskom-current-conf)
-					       (zerop lyskom-current-conf))
-					   ""
-					 (conf-stat->name
-					  (blocking-do 'get-conf-stat
-						       lyskom-current-conf)))))
-				  (if ccn
-				      (cons ccn 0)
-				    "")) t)))
+                                '(all) nil 
+                                (let ((ccn 
+                                       (if (or (null lyskom-current-conf)
+                                               (zerop lyskom-current-conf))
+                                           ""
+                                         (conf-stat->name
+                                          (blocking-do 'get-conf-stat
+                                                       lyskom-current-conf)))))
+                                  (if ccn
+                                      (cons ccn 0)
+                                    "")) t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
 	    (lyskom-who-is-on-9 arg conf-stat)
@@ -2404,11 +2550,18 @@ If the prefix is 0, all visible sessions are shown."
 ;;; Copied from kom-who-is-on-in-conference by petli
 
 (def-kom-command kom-who-is-present-in-conference (&optional arg)
-  "Display a list of all connected users currently present in CONF.
-The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negative, invisible sessions are also shown.
+  "Display a list of all connected users currently present in a
+particular conference.
 
-If the prefix is 0, all visible sessions are shown."
+With a positive prefix argument ARG, list sessions who have been
+active in the last ARG minutes. With a positive zero prefix argument
+\(i.e. `0', not `-0'), list all visible sessions. With a negative
+nonzero prefix argument ARG, list both visible and invisible sessions
+who have been active in the last -ARG minutes. With a negative zero
+prefix argument \(C-u -), list all sessions.
+
+Several variables affect display. See `kom-show-where-and-what',
+`kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-present-in-what-conference)
@@ -2436,11 +2589,17 @@ If the prefix is 0, all visible sessions are shown."
 ;;; Author: Ulrik Haugen
 
 (def-kom-command kom-who-is-on-and-friend (&optional arg)
-  "Display a list of all connected users in kom-friends.
-The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negative, invisible sessions are also shown.
+  "Display a list of all connected users in `kom-friends'.
 
-If the prefix is 0, all visible sessions are shown."
+With a positive prefix argument ARG, list sessions who have been
+active in the last ARG minutes. With a positive zero prefix argument
+\(i.e. `0', not `-0'), list all visible sessions. With a negative
+nonzero prefix argument ARG, list both visible and invisible sessions
+who have been active in the last -ARG minutes. With a negative zero
+prefix argument \(C-u -), list all sessions.
+
+Several variables affect display. See `kom-show-where-and-what',
+`kom-show-since-and-when' and `kom-idle-hide' for more information."
   (interactive "P")
   (condition-case nil
       (if (lyskom-have-feature dynamic-session-info)
@@ -2810,7 +2969,15 @@ Uses Protocol A version 9 calls"
 
 		 
 (def-kom-command kom-list-clients (prefix)
-  "Display a list of all connected users."
+  "Display a list of all connected sessions, including current logon
+and client software.
+
+With a positive prefix argument ARG, list sessions who have been
+active in the last ARG minutes. With a positive zero prefix argument
+\(i.e. `0', not `-0'), list all visible sessions. With a negative
+nonzero prefix argument ARG, list both visible and invisible sessions
+who have been active in the last -ARG minutes. With a negative zero
+prefix argument \(C-u -), list all sessions."
   (interactive "P")
   (let* ((want-invisible (if prefix t nil))
          (who-info-list (blocking-do 'who-is-on-dynamic t want-invisible nil))
@@ -2999,7 +3166,9 @@ Uses Protocol A version 9 calls"
 ;;; Author: David Byers
 
 (def-kom-command kom-status-session (&optional text-or-session-no)
-  "Show status for all sessions a person has. Asks for person name.
+  "Show status for all sessions a person has.
+
+Lisp documentation:
 Optional argument should be a list of sessions to get information
 about or a single session number. When used interactively, the prefix
 argument is used to find a text whose author's status is shown."
@@ -3189,9 +3358,11 @@ WHO-INFOS that are potential sessions."
 
 
 (defun kom-jump (&optional text-no)
-  "Jumps all comments to the current text. Descends recursively in comment tree.
-The three is truncated if we encounter an older text.
-If optional arg TEXT-NO is present then jump all comments to that text instead."
+  "Skips all comments to the selected text. Descends recursively in
+the comment tree, marking all texts found as read. 
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'jump-from-text)))
   (cond ((and (null current-prefix-arg)
               (eq 'REVIEW-TREE (read-info->type (read-list->first lyskom-reading-list))))
@@ -3254,7 +3425,14 @@ footnotes) to it as read in the server."
 ;;; Author: David Byers
 
 (def-kom-command kom-add-recipient (text-no)
-  "Add a recipient to a text."
+  "Add a recipient to a text.
+If the recipient already exists, this will convert the current recipient
+type to a regular copy recipient, if possible.
+
+See `kom-confirm-add-recipients'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-recipient)))
   (lyskom-add-helper text-no 
                      'lyskom-last-added-rcpt 
@@ -3263,7 +3441,14 @@ footnotes) to it as read in the server."
                      'RECPT))
 
 (def-kom-command kom-add-copy (text-no)
-  "Add a recipient to a text."
+  "Add a carbon copy recipient to a text.
+If the recipient already exists, this will convert the current recipient
+type to a carbon copy recipient, if possible.
+
+See `kom-confirm-add-recipients'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-copy)))
   (lyskom-add-helper text-no 
                      'lyskom-last-added-ccrcpt 
@@ -3272,7 +3457,14 @@ footnotes) to it as read in the server."
                      'CC-RECPT))
 
 (def-kom-command kom-add-bcc (text-no)
-  "Add a recipient to a text."
+  "Add a recipient to a text.
+If the recipient already exists, this will convert the current recipient
+type to a BCC recipient, if possible.
+
+See `kom-confirm-add-recipients'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-bcc)))
   (lyskom-add-helper text-no 
                      'lyskom-last-added-bccrcpt
@@ -3318,7 +3510,11 @@ The value of RECIPIENTS should be the result of a call to
 
 
 (def-kom-command kom-sub-recipient (text-no)
-  "Remove a recipient from text TEXT-NO."
+  "Remove a recipient from the selected text. Take care not to remove
+the last recipient, since this will make the text unreadable.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-recipient)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
     (if text-stat
@@ -3341,7 +3537,14 @@ The value of RECIPIENTS should be the result of a call to
 
 
 (def-kom-command kom-move-text (text-no)
-  "Move text TEXT-NO from one conference to another.
+  "Move the selected text from one conference to another.
+If you want to move an entire comment tree, use `kom-move-text-tree' 
+instead.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg').
+
+Lisp documentation:
 CONTINUATION is the function that does the actual moving. It is called
 with three arguments: source, target and text-stat, where source is the
 recipient to remove and target the recipient to add to text-stat."
@@ -3381,7 +3584,12 @@ recipient to remove and target the recipient to add to text-stat."
 
 
 (def-kom-command kom-move-text-tree (text-no)
-  "Move text TEXT-NO and all its descendants from one conference to another."
+  "Move the selected text and all comments below it from one
+conference to another. This command can also be used to remove or add
+a recipient. Confirmation is required for each single move.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-tree-to-move)))
   (let ((root-text-stat (blocking-do 'get-text-stat text-no)))
     (if root-text-stat
@@ -3610,13 +3818,25 @@ must have printed something without a newline at the end of the buffer."
 ;;; Heavily based on code by Lars Willf|r
 
 (def-kom-command kom-add-comment (text-no-arg)
-  "Add a text as a comment to another text."
+  "Add one text as a comment to another text.
+This command is used to connect a text to another one after both have
+been created. If you want to write a new comment, use `kom-write-comment'
+instead.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-comment-to)))
   (lyskom-add-sub-comment text-no-arg
 			  t))
 
 (def-kom-command kom-sub-comment (text-no-arg)
-  "Remove a comment from a text."
+  "Remove a comment from a text.
+Be careful removing comments. If others have written comments to the
+comment being removed, the context of those comments may become
+hard to understand.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-comment-from)))
   (lyskom-add-sub-comment text-no-arg
 			  nil))
@@ -3662,13 +3882,25 @@ DO-ADD: NIL if a comment should be subtracted.
                             'confusion-what-to-sub-comment-from))))
 
 (def-kom-command kom-add-footnote (text-no-arg)
-  "Add a text as a footnote to another text."
+  "Add a text as a footnote to another text. This command is used to
+add a text as a footnote to another text after both have been created.
+If you want to write a new footnote, use `kom-write-footnot' instead.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-footnote-to)))
   (lyskom-add-sub-footnote text-no-arg
 			  t))
 
 (def-kom-command kom-sub-footnote (text-no-arg)
-  "Remove a footnote from a text."
+  "Remove a footnote from a text.
+
+Be careful removing comments. If others have written comments to the
+comment being removed, the context of those comments may become
+hard to understand.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-footnote-from)))
   (lyskom-add-sub-footnote text-no-arg
 			  nil))
@@ -3721,7 +3953,11 @@ DO-ADD: NIL if a footnote should be subtracted.
 ;;; Author: Joel Rosdahl
 
 (def-kom-command kom-add-cross-reference (text-no-arg)
-  "Add a cross reference to a text."
+  "Add a cross reference to a text.
+The reference can be to another text, a conference or a person.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
   (interactive "P")
   (lyskom-add-cross-reference text-no-arg
                               (lyskom-get-string

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.154 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: commands2.el,v 44.155 2003-01-07 21:17:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.154 2003-01-06 14:08:47 byers Exp $\n"))
+              "$Id: commands2.el,v 44.155 2003-01-07 21:17:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -48,7 +48,11 @@
 
 ;; This functions is left in its "asynchronous way".
 (def-kom-command kom-membership ()
-  "Show memberships last visited, priority, unread and name."
+  "Show memberships last visited, priority, unread and name.
+This command is semi-obsolete and will be removed in a future
+version of the client.
+
+See `kom-list-membership-in-window'."
   (interactive)
   (let ((buffer (lyskom-get-buffer-create 'list-membership
                                           (concat (buffer-name 
@@ -155,7 +159,13 @@ MAP may be nil if there are no new texts."
 
 
 (def-kom-command kom-status-conf (&optional conf-no)
-  "Prints conference status.
+  "Print information about a conference.
+The information listed may be taken from the client's cache and
+therefore slightly out of date.
+
+See `kom-extended-status-information'.
+
+Lisp documentation:
 If argument CONF-NO is existing and non-nil then this conference is used. 
 otherwise: the conference is read with lyskom-completing-read."
   (interactive)
@@ -362,8 +372,14 @@ otherwise: the conference is read with lyskom-completing-read."
 
 
 (def-kom-command kom-status-person (&optional text-or-pers-no)
-  "Prints status for a person. If a prefix argument is given, the status of the
-author of that text will be shown."
+  "Show information about a person. 
+If a prefix argument is given, the status of the author of that text
+will be shown.
+
+See `kom-extended-status-information'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
 		    (list (lyskom-read-text-no-prefix-arg
 			   'text-to-see-author-status-of))))
@@ -557,7 +573,16 @@ author of that text will be shown."
 
 
 (def-kom-command kom-send-message (&optional who message)
-  "Send a message to one of the users in KOM right now."
+  "Send a message to another user or all members of a conference.
+Messages sent with this command are not texts and are not stored
+in the database. If you don't know if you should use this or write
+a text, write a text \(see `kom-write-text' instead). Remember that
+messages of this type are intrusive, yet may not be read by all
+users.
+
+Runs `kom-send-message-setup-hook' when entering the minibuffer.
+
+See `kom-default-message-recipient'."
   (interactive)
   (let* ((tmp nil)
          (target (or who
@@ -601,8 +626,12 @@ author of that text will be shown."
       (lyskom-send-message target message))))
 
 
-(def-kom-command kom-send-alarm (&optional message)
-  "Send a message to all of the users in KOM right now."
+(def-kom-command kom-send-alarm (&optional message) 
+  "Send a message to all of the users in LysKOM.
+Don't use this command unless what you have to say is really important to
+everyone who is logged on.
+
+Runs `kom-send-message-setup-hook' when entering the minibuffer."
   (interactive)
   (lyskom-insert (lyskom-get-string 'message-all-info))
   (lyskom-send-message 0 message))
@@ -828,10 +857,15 @@ environment."
 
 
 (def-kom-command kom-list-news (&optional num)
-  "Print the number of unread articles to the user. A prefix argument
-of zero lists all conferences, a positive prefix arguments sets a
-lower bound on the number of unread messages, whereas a negative
-prefix argument sets an upper bound on the number of unread messages."
+  "Print the number of unread texts in each conference.
+
+If the prefix argument is zero, show all conferences, including those
+with no unread textts. With a positiv prefix argument, only show
+conferences with at least that many unread texts. With a negative
+prefix argument, only show conferences with no more than that many
+unread texts.
+
+See `kom-allow-incompleteness'."
   (interactive "P")
   (let ((num-arg (cond
                   ((numberp num) num)
@@ -924,12 +958,17 @@ least one unread message in them."
 
 
 (defun kom-busy-wait (arg)
-  "Sets the kom-session in wait-mode.
-The wait-mode is interrupted when a text in a conference with higher priority
-than that of the next text to be read.
-If you want another priority to break that the ones higher that the next text 
-to be read, give the priority as a prefix argument.
-When a text is received the new text is displayed."
+  "Wait for new texts.
+Waiting is interrupted when a text in a conference with higher priority
+than that of the next text to be read. If you want another priority to
+break that the ones higher that the next text to be read, give the 
+priority as a prefix argument. When a text is received the new text
+is displayed.
+
+This command is semi-obsolete and may be removed in a future version
+of the client.
+
+See `kom-ding-on-wait-done'."
   (interactive "P")
   (lyskom-start-of-command 'kom-busy-wait)
   (unwind-protect
@@ -997,9 +1036,11 @@ When a text is received the new text is displayed."
 
 
 (def-kom-command kom-list-summary (prefix)
-  "List a summary of the unread in the current conf.
-The summary contains the date, number of lines, author and subject of the text
-on one line."
+  "List a summary of the unread texts in the current conference.
+The summary contains the date, number of lines, author and subject
+of the text on one line.
+
+with a prefix argument, list each unique subject only once."
   (interactive "P")
   (if (read-list-isempty lyskom-reading-list)
       (lyskom-insert-string 'have-to-be-in-conf-with-unread)
@@ -1202,7 +1243,10 @@ included."
 ;;; Modified by: Joel Rosdahl
 
 (def-kom-command kom-list-marks (&optional which-mark)
-  "List texts marked with a particular mark number."
+  "List texts marked with a particular mark. Use `kom-mark-text' to
+mark texts and `kom-unmark-text' to unmark them. A numeric prefix
+argument indicated the mark to list. With no prefix argument, you
+will be prompted for the mark."
   (interactive "P")
   (when (not (numberp which-mark))
     (setq which-mark (lyskom-read-mark-type
@@ -1283,7 +1327,7 @@ YYYY-MM-DD."
 ;;; Author: David Byers
 
 (def-kom-command kom-who-am-i ()
-  "Show my name"
+  "Show your name and information about your sessions."
   (interactive)
   (if (and lyskom-current-conf
            (not (zerop lyskom-current-conf)))
@@ -1398,7 +1442,10 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-set-garb-nice ()
-  "Set the garb-nice value for a conference."
+  "Set the garbage collection time for a conference. Texts in a
+conference will eventually be deleted automatically \(this process is
+called garbage collection). This can only happen when a text is older
+than the garbage collection time of all its recipients."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat
                     (lyskom-get-string 'conf-to-set-garb-nice-q)
@@ -1423,7 +1470,9 @@ YYYY-MM-DD."
 ;;; Author: Linus Tolke
 
 (def-kom-command kom-set-permitted-submitters ()
-  "Set the permitted submitters of a conference."
+  "Set the permitted submitters of a conference. 
+The permitted submitters of a conference is another conference. Only
+members of the permitted submitters may submit texts to the conference."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
                     (lyskom-get-string 'conf-to-set-permitted-submitters-q)
@@ -1459,7 +1508,10 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-set-super-conf ()
-  "Set the super conference for a conference."
+  "Set the super conference for a conference.
+If a conference is set to only accept new texts, and not comments, any
+comments submitted to the conference will be sent to the super
+conference instead."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
                     (lyskom-get-string 'conf-to-set-super-conf-q)
@@ -1489,7 +1541,10 @@ YYYY-MM-DD."
 ;;;
 
 (def-kom-command kom-sync-database ()
-  "Save the LysKOM database."
+  "Save the LysKOM database.
+You can only run this command if you have administrative rights.
+
+See `kom-enable-adm-caps'."
   (interactive)
   (if (and (>= (version-info->protocol-version lyskom-server-version-info) 8)
            (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync)))
@@ -1505,7 +1560,10 @@ YYYY-MM-DD."
 ;;; Author: Inge Wallin
 
 (def-kom-command kom-shutdown-server ()
-  "Shutdown the LysKOM server."
+  "Shutdown the LysKOM server.
+You can only run this command if you have administrative rights.
+
+See `kom-enable-adm-caps'."
   (interactive)
   (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-shutdown))
       (progn
@@ -1521,7 +1579,11 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-enable-adm-caps ()
-  "Enable the LysKOM adminstrator commands for the current user."
+  "Enable the adminstrator commands for the current user.
+You can use this command even if you don't have administrative rights
+on the system, but you still won't be able to use privileged commands.
+
+Use `kom-disable-adm-caps' to return to normal mode."
   (interactive)
   (lyskom-enable-adm-caps (blocking-do 'enable 255)
                           (lyskom-get-string 'administrator)
@@ -1551,7 +1613,10 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-set-motd ()
-  "Set the message of the day for LysKOM."
+  "Set the notice for the server.
+You can only use this command if you have administrative rights.
+
+See `kom-enable-adm-caps'."
   (interactive)
   (let* ((old-motd-text-stat (and (server-info->motd-of-lyskom lyskom-server-info)
                                  (blocking-do 'get-text-stat (server-info->motd-of-lyskom lyskom-server-info))))
@@ -1611,7 +1676,10 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-remove-motd ()
-  "Remove the message of the day for LysKOM."
+  "Remove the notice for the LysKOM server.
+You can only use this command if you have administrative rights.
+
+See `kom-enable-adm-caps'."
   (interactive)
   (lyskom-insert-string 'removing-motd)
   (initiate-set-motd-of-lyskom 'background 'lyskom-set-motd-3
@@ -1624,7 +1692,10 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-force-logout ()
-  "Force another user to log out."
+  "Force another session to log out.
+You can log out any sessions logged on as users you are the
+supervisor of. With administrative rights you can log out any
+user."
   (interactive)
   (let ((session (car-safe (lyskom-read-session-no
                             (lyskom-get-string 'who-to-throw-out)
@@ -1644,8 +1715,13 @@ YYYY-MM-DD."
 
 
 (def-kom-command kom-postpone (today)
-  "Postpone the reading of all but the last TODAY articles in the
-current conference to another session."
+  "Postpone the reading of all but the last N texts in the current
+conference. The postponed texts will be removed from the read list for
+this session but return in your next session or when you do a
+`kom-recover'.
+
+A numeric prefix argument is the number of texts to read now. Without
+a prefix argument this command will prompt for the number of texts."
   (interactive (list
                 (cond
                  ((null current-prefix-arg)
@@ -1689,9 +1765,16 @@ current conference to another session."
 ;;; Author: David K}gedal
 
 (def-kom-command kom-set-session-priority (priority)
-  "Set the priority level of the current session.
-This sets the variable kom-session-priority and refetches all
-membership info."
+  "Set the priority level of the current session and refetch all
+memberships. Conferences whose priorities are lower than the session
+priority will not be included when reading. This is useful to separate
+conferences to read while at work from conferences to not read at
+work.
+
+A numeric prefix argument specifies the new session priority. Without
+prefix argument, you will be prompted for a priority.
+
+See `kom-default-session-priority'."
   (interactive "P")
   (let ((pri (or priority
                  (lyskom-read-num-range 0
@@ -1799,7 +1882,11 @@ Return-value: 'no-session if there is no suitable session to switch to
     result))
 
 (def-kom-emacs-command kom-next-kom ()
-  "Pop up the next lyskom-session."
+  "Pop up the next LysKOM-session.
+This command can be run from any buffer to go to the next available
+LysKOM session.
+
+See `kom-previous-kom' and `kom-next-unread-kom' for related commands."
   (interactive)
   (let ((result (lyskom-next-kom 'lyskom-buffer-list 'forward)))
     (cond ((eq result 'no-session)
@@ -1812,7 +1899,11 @@ Return-value: 'no-session if there is no suitable session to switch to
           (t nil))))
 
 (def-kom-emacs-command kom-previous-kom ()
-  "Pop up the previous lyskom-session."
+  "Pop up the previous LysKOM-session.
+This command can be run from any buffer to go to the next available
+LysKOM session.
+
+See `kom-next-kom' and `kom-next-unread-kom' for related commands."
   (interactive)
   (let ((result (lyskom-next-kom 'lyskom-buffer-list 'backward)))
     (cond ((eq result 'no-session)
@@ -1826,7 +1917,11 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 
 (def-kom-emacs-command kom-next-unread-kom ()
-  "Pop up the previous lyskom-session."
+  "Pop up the next LysKOM-session with unread texts.
+This command can be run from any buffer to go to the next available
+LysKOM session.
+
+See `kom-next-kom' and `kom-previous-kom' for related commands."
   (interactive)
   (let ((result (lyskom-next-kom 'lyskom-sessions-with-unread 'forward)))
     (cond ((eq result 'no-session)
@@ -1897,7 +1992,10 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;; Author: David Byers
 
 (def-kom-emacs-command kom-where-is (cmd)
-  "Show on which key a LysKOM command is"
+  "Show on which key a LysKOM command is. Prompts for a command name
+and displays all key bindings for the command. This is similar to the
+Emacs function `where-is', but reads localized LysKOM command names,
+not function names."
   (interactive (list (lyskom-read-extended-command)))
   (let ((w (where-is-internal cmd))
         (msg nil))
@@ -1923,7 +2021,10 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;;  Author: David Byers
 
 (defun kom-show-user-area ()
-  "Get and display the user area of the current person"
+  "Get and display the user area of the current person. The user area
+is a regular text used to store all settings. The format of this text
+is documented in the LysKOM protocol specification. This command is
+primarily intended for use by developers."
   (interactive)
   (lyskom-start-of-command 'kom-show-user-area)
   (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
@@ -1936,7 +2037,17 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;; Bli anonym
 
 (def-kom-command kom-become-anonymous ()
-  "Become pseudo-anonymous"
+  "Become pseudo-anonymous. 
+
+When this mode is in effect, your movements in LysKOM will not be
+reported as usual, and when writing texts you will have the option of
+sending them anonymously. Depending on what you do, it may still be
+possible to deduce that you are the author of an anonymous text.
+
+To summarize, texts you create while in this mode should be difficult
+to trace back to you, if you are careful. It is not foolproof.
+
+Use `kom-become-nonanonymous' to return to normal mode."
   (interactive)
   (if lyskom-is-anonymous
       (lyskom-insert 'you-are-already-anonymous)
@@ -1947,7 +2058,9 @@ Return-value: 'no-session if there is no suitable session to switch to
     (lyskom-update-prompt t)))
 
 (def-kom-command kom-become-nonanonymous ()
-  "Leave pseudo-anonymous mode"
+  "Leave pseudo-anonymous mode.
+
+See `kom-become-anonymous' for information on anonymous mode."
   (interactive)
   (if lyskom-is-anonymous
       (progn (when (and lyskom-current-conf 
@@ -1964,7 +2077,9 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;;   Author: Tomas Abrahamsson & David Byers
 
 (def-kom-command kom-change-conf-type ()
-  "Change type of a conference"
+  "Change type of a conference.
+Using this command you can set all flags of a conference, with
+the exception of the letterbox flag (which cannot be modified)."
   (interactive)
   (let* ((uconf-stat (lyskom-read-uconf-stat
                       (lyskom-get-string 'what-conf-to-change)
@@ -2024,8 +2139,16 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;;
 
 (def-kom-command kom-change-language (&optional global)
-  "Change the current language in LysKOM
+  "Change the current language in the current LysKOM session.
+With a prefix argument, also make changes that would affect all 
+sessions, such as key bindings.
 
+The selected language is not svaed between sessions. To permanently
+set and save language settings. use `kom-customize' instead.
+
+See `kom-default-language'.
+
+Lisp documentation:
 The optional argument GLOBAL indicates that the change should have a
 global effect, including changes to key binding."
   (interactive "P")
@@ -2080,7 +2203,9 @@ global effect, including changes to key binding."
 
 (lyskom-external-function calc-eval)
 (def-kom-command kom-calculate (&optional exprx)
-  "Calculate optional arg EXPRX, or prompt the user for an expression."
+  "Calculate a mathematical expression.
+This function requires the `calc' package to be installed, and is
+really only a simple interface to the basic functionality of calc."
   (interactive)
   (when (lyskom-try-require 'calc 
                             (lyskom-get-string 'need-library))
@@ -2103,7 +2228,8 @@ global effect, including changes to key binding."
 ;;; Ändra namn
 
 (def-kom-command kom-set-personal-label ()
-  "Set a personal label on an object of some kind"
+  "This command is obsolete, broken and doesn't work. Don't use it.
+Sets a personal label on an object of some kind."
   (interactive)
   (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
                             (cons (lyskom-get-string 'person) 'pers)
@@ -2174,7 +2300,14 @@ global effect, including changes to key binding."
 
 
 (def-kom-command kom-fast-reply (text-no)
-  "Add a remark (fast reply) to a text."
+  "Add a remark to a text.
+Note that remarks may not be seen by all users. Users are not notified
+when remarks are created, and not all clients support remarks.
+
+See `kom-agree' for a variant of this command.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no)))
   (if text-no
       (progn (lyskom-format-insert 'fast-replying text-no)
@@ -2196,7 +2329,16 @@ global effect, including changes to key binding."
                        (elt text (random (length kom-agree-text)))))))
 
 (def-kom-command kom-agree (text-no)
-  "Convenience function to add agreement."
+  "Add a predefined remark to a text.
+Note that remarks may not be seen by all users. Users are not notified
+when remarks are created, and not all clients support remarks.
+
+The remark to add is defined by `kom-agree-text'.
+
+See `kom-fast-reply' for a general variant of this command.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no)))
   (if text-no
       (progn (lyskom-format-insert 'agreeing text-no)
@@ -2232,7 +2374,15 @@ global effect, including changes to key binding."
 ;;; Various aux-item stuff
 
 (def-kom-command kom-add-no-comments (&optional text-no)
-  "Add a don't comment me please aux-item to a text."
+  "Add a request for no comments to the selected text. 
+
+Such a request is advisory; clients may ignore them. Be restrictive
+with requests for no comments as other users may find them annoying or
+even insulting \(they can be seen as the LysKOM equivalent of telling
+someone to shut up and get out after making them listen to you).
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no nil
                                                      'last-seen-written)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
@@ -2272,7 +2422,11 @@ global effect, including changes to key binding."
 
 
 (def-kom-command kom-add-private-answer (text-no)
-  "Add a private answer only please aux-item to a text."
+  "Add a request for private replies only to the selected text.
+Note that such requests are advisory; clients may ignore them.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no nil
                                                      'last-seen-written)))
   (if text-no
@@ -2313,7 +2467,14 @@ global effect, including changes to key binding."
     (lyskom-insert 'confusion-what-to-comment)))
 
 (def-kom-command kom-add-request-confirm (text-no)
-  "Add confirmation request aux-item to a text."
+  "Add confirmation request to the selected text. 
+Note that such requests are advisory; clients may ignore them. Use
+confirmation requests very sparingly. If unmotivated use of them
+becomes widespread, then they will be ignored even when they are used
+appropriately.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg
                       'what-request-confirm-no nil 'last-seen-written)))
   (if text-no
@@ -2354,7 +2515,11 @@ global effect, including changes to key binding."
     (lyskom-insert 'confusion-what-to-request-confirmation)))
 
 (def-kom-command kom-review-mail-headers (text-no)
-  "Review the mail headers of an imported message"
+  "Show all mail headers of an imported message. Mail headers are also
+shown when you use the `kom-review-noconversion' command.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 
                       'review-mail-headers-to-what)))
   (if text-no
@@ -2390,8 +2555,13 @@ global effect, including changes to key binding."
     (error (lyskom-stop-keep-alive))))
 
 (def-kom-command kom-keep-alive ()
-  "Keep the LysKOM session alive by sending a request every once in a while.
-The variable kom-keep-alive-interval controls the frequency of the request."
+  "Keep the LysKOM session alive by sending a request every once in a
+while. The variable `kom-keep-alive-interval' controls the frequency
+of the request. This command may be useful for users with brain-dead
+broadband access that disconnects when the line has been inactive for
+too long.
+
+Use `kom-stop-keep-alive' to turn off this mode."
   (interactive)
   (set-buffer lyskom-buffer)
   (lyskom-stop-keep-alive)
@@ -2411,7 +2581,9 @@ The variable kom-keep-alive-interval controls the frequency of the request."
          lyskom-keep-alive-timers)))
 
 (def-kom-command kom-stop-keep-alive ()
-  "Stop sending periodic requests to keep the session alive."
+  "Stop sending periodic requests to keep the session alive.
+
+See `kom-keep-alive' for more information."
   (interactive)
   (lyskom-stop-keep-alive)
   (unless (eq (current-buffer) lyskom-buffer)
@@ -2433,7 +2605,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 ;;; Author: Johan Sundström
 
 (def-kom-command kom-is-person-member-of-conference (&optional pers-no conf-no)
-  "Find out whether PERS-NO is a member of conference CONF-NO."
+  "Check if a particular person is a member of a particular conference."
   (interactive)
   (let* ((pers-no
           (or pers-no
@@ -2452,7 +2624,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
 (def-kom-command kom-help (&optional section)
-  "Get some help with LysKOM."
+  "Run the built-in help system."
   (interactive)
   (let* ((alternatives (delq nil
                              (mapcar (lambda (section)
@@ -2477,14 +2649,16 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 
 
 (def-kom-command kom-make-review-mark-as-read ()
-  "Makes all review commands mark texts as read. Overrides the value of the
-configurable variable `kom-review-marks-texts-as-read' in the current buffer."
+  "Makes all review commands mark texts as read. Overrides the value
+of the configurable variable `kom-review-marks-texts-as-read' in the
+current buffer."
   (interactive)
   (setq kom-review-marks-texts-as-read t))
 
 (def-kom-command kom-make-review-not-mark-as-read ()
-  "Makes all review commands not mark texts as read. Overrides the value of the
-configurable variable `kom-review-marks-texts-as-read' in the current buffer."
+  "Makes all review commands not mark texts as read. Overrides the
+value of the configurable variable `kom-review-marks-texts-as-read' in
+the current buffer."
   (interactive)
   (setq kom-review-marks-texts-as-read nil))
 
@@ -2509,10 +2683,14 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
 (defvar diff-command)
 (defvar ediff-diff-program)
 (def-kom-command kom-compare-texts (old new)
-  "Show differences between text OLD and NEW.
+  "Show differences between two texts, OLD and NEW.
+
 When called interactively, it will prompt for the NEW text first,
 defaulting to the last viewed texts.  The OLD text number will default
-to the first text that NEW is a comment or footnote to."
+to the first text that NEW is a comment or footnote to.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg') for the NEW text."
   (interactive
    (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
 	  (new-stat (blocking-do 'get-text-stat n))
@@ -2560,10 +2738,14 @@ to the first text that NEW is a comment or footnote to."
 (defvar diff-command)
 
 (def-kom-command kom-diff-texts (old new &optional switches)
-  "Show differences between text OLD and NEW.
+  "Show differences between two texts, OLD and NEW.
+
 When called interactively, it will prompt for the NEW text first,
-defaulting to the last viewed texts.  The OLD text number will default
-to the first text that NEW is a comment or footnote to."
+defaulting to the last viewed texts. The OLD text number will default
+to the first text that NEW is a comment or footnote to.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg') for the NEW text."
   (interactive
    (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
 	  (new-stat (blocking-do 'get-text-stat n))
@@ -2637,7 +2819,10 @@ to the first text that NEW is a comment or footnote to."
 ;;;             Skapa aux-item
 
 (def-kom-command kom-create-aux-item ()
-  "Create arbitrary aux-items"
+  "Creates arbitrary aux-items.
+This command is primarily targeted at advanced users and developers
+who want access to aux-item-based features before they are implemented
+properly in the client."
   (interactive)
   (let* ((completions
           (mapcar (lambda (x) (cons (lyskom-get-string x) x))
@@ -2698,7 +2883,7 @@ to the first text that NEW is a comment or footnote to."
 ;;;
 
 (def-kom-command kom-status-server ()
-  "Show status information for the LysKOM server"
+  "Show status information for the LysKOM server."
   (interactive)
   (blocking-do-multiple ((server-info (get-server-info))
                          (server-version (get-version-info))
@@ -2823,7 +3008,9 @@ to the first text that NEW is a comment or footnote to."
 ;;; Rekommendera möte
 
 (def-kom-command kom-recommend-conference ()
-  "Recommend a conference to new LysKOM users"
+  "Recommend a conference to new LysKOM users.
+Thie command can only be used if you have administrative rights
+to the LysKOM server."
   (interactive)
   (let* ((conf-stat (lyskom-read-conf-stat 'recommend-which-conf
                                            '(conf)
@@ -2873,10 +3060,9 @@ to the first text that NEW is a comment or footnote to."
 (def-kom-command kom-redirect-comments ()
   "Add extended information to your letterbox that causes some other
 conference to be added as a recipient to comments to your texts when
-someone posts them in a conference you are not a member of.
+someone posts them to a conference you are not a member of.
 
-Note that this functionality depends on the client. Not all clients
-will honor this redirection."
+Note that this is advisory only; clients may ignore your redirection."
   (interactive)
   (let* ((conf-stat (lyskom-read-conf-stat 'redirect-for-whom
                                            '(pers) nil nil t))
@@ -2945,7 +3131,9 @@ v m"
 (defun kom-apropos (re do-all)
   "List LysKOM-related symbols whose name or documentation matches a regexp.
 With prefix argument, also list symbols that are not part of the semi-stable
-interface (i.e. symbols whose name starts with \"lyskom\")."
+interface (i.e. symbols whose name starts with \"lyskom\").
+
+This command is intended primarily for developers and advanced users."
   (interactive "sLysKOM-apropos (regexp): \nP")
   (message "Searching for %s..." re)
   (let ((result nil)
