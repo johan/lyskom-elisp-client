@@ -17,7 +17,8 @@ tar-arkivet.
 * Försämringar
 
 ** En hel del bakåtkompatibilitet är borta. Det går antagligen inte
-   att köra Elispklienten mot lyskomd 1.7.0 eller äldre.
+   att köra Elispklienten mot lyskomd 1.7.0 eller äldre. Det borde
+   inte vara någta allvarliga problem med lyskomd 1.8.0.
 
 
 * Fitjurs, förbättringar och andra förändringar
@@ -53,6 +54,10 @@ tar-arkivet.
    och för kännedom räknas inte.
 
 ** Man kan markera med markering 0 nu.
+
+** Om servern har ett alias, som LysKOM, LuddKOM, HelKOM eller TokKOM
+   så skrivs detta ut i alla närvaromeddelanden. Om servern inte har
+   ett alias så används "KOM" där det förr stod "LysKOM".
 
 ** Nytt kommando: Vilka (är inloggade) i möte (bundet till lv)
    Som vilka, men visar endast medlemmar i ett visst möte.
@@ -145,10 +150,15 @@ LysKOM-bufferten och i inläggsbufferten.
     till kommentarer som skrivs till inlägget.
 
     Notera att servern helt godtyckligt kan ta bort eller lägga till
-    flaggor, utan någon som helst varning.
+    flaggor, utan någon som helst varning, och gör ofta detta. Lite
+    inte på att du blir anonym bara för att du begär det...
 
 
 Bugfixar
+
+** De extremt långa inloggningstiderna som en del personer upplevde
+   (dvs tiden det tog att få första prompten) är förhoppningsvis
+   borta. 
 
 ** Om man inte har w3 installerat så försöker klienten inte längre
    anropa w3 för att formattera HTML.
