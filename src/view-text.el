@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 38.2 1995-03-01 17:56:20 byers Exp $
+;;;;; $Id: view-text.el,v 38.3 1995-03-04 14:16:15 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 38.2 1995-03-01 17:56:20 byers Exp $\n"))
+	      "$Id: view-text.el,v 38.3 1995-03-04 14:16:15 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -53,16 +53,19 @@ lyskom-reading-list to read the comments to this."
   (let ((filter (and filter-active
 		    (lyskom-filter-text-p text-no))))
     (cond ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
+	   (setq filter 'next-text)
 	   'next-text)
 	  ((eq filter 'skip-tree)
 	   (lyskom-filter-prompt text-no 'filter-tree)
 	   (initiate-get-text-stat 'main 'lyskom-jump text-no t)
+	   (setq filter 'next-text)
 	   'next-text)
 	  (t
 	   (if (not (or (null filter) 
 			(eq filter 'dontshow)))
 	       (lyskom-message "%s" (lyskom-get-string 'invalid-filter-list)))
-	  
+	   (if (eq filter 'dontshow)
+	       (setq filter 'next-text))
 	   (blocking-do-multiple ((text-stat (get-text-stat text-no))
 				  (text (get-text text-no)))
 	     (if (and text-stat
@@ -145,8 +148,8 @@ lyskom-reading-list to read the comments to this."
 		       (lyskom-follow-comments text-stat conf-stat mark-as-read
 					       priority build-review-tree))
 		   )
-	       (lyskom-format-insert 'no-such-text text-no))))))
-  nil)
+	       (lyskom-format-insert 'no-such-text text-no)))))
+    filter))
 	  
 	  
 (defun lyskom-insert-person-name (conf-no)
