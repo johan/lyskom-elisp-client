@@ -1,5 +1,21 @@
 Sat May  4 00:07:06 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* Jag plockade koden för "Lista (med) regexpar" från 0.38.2.
+
+	* parse.el (lyskom-parse-conf-z-info-list): Ny funktion.
+	(lyskom-parse-conf-z-info): Dito.
+
+	* komtypes.el: La till funktioner för conf-z-info-list och
+ 	conf-z-info.
+
+	* services.el (initiate-re-z-lookup): Ny funktion.
+
+	* swedish-strings.el (lyskom-commands): La till "Lista (med)
+ 	regexpar".
+	(lyskom-mode-map): La in kommandot på "lr".
+
+	* english-strings.el: Dito.
+
 	* lyskom-rest.el (lyskom-format-aux-help): Inga knappar på möte
 	0.
 
