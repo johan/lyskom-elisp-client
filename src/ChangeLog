@@ -1,3 +1,7 @@
+2002-08-28  Hans Persson  <hans@localhost.localdomain>
+
+	* swedish-strings.el (local): Spelling fix.
+
 2002-08-15  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* swedish-strings.el, english-strings.el (local): y-or-n-instring

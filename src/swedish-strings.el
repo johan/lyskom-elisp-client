@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.264 2002-08-15 17:14:46 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.265 2002-08-28 08:13:46 unicorn Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.264 2002-08-15 17:14:46 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.265 2002-08-28 08:13:46 unicorn Exp $\n"))
 
 
 ;;; ================================================================
@@ -518,7 +518,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (moving-tree-what-action-q . "Vad vill du göra? (flytta) ")
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
-    (moving-already-moved . "Inlägg %#1n har inte %#2M som mottagare.\nFlytter inte inlägget eller dess kommentarsträd.\n")
+    (moving-already-moved . "Inlägg %#1n har inte %#2M som mottagare.\nFlyttar inte inlägget eller dess kommentarsträd.\n")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar till %#1n? ")
     (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar från %#1n? ")
     (text-to-add-footn-q . "Vilket inlägg vill du addera som fotnot till %#1n? ")
