@@ -1,5 +1,8 @@
 Fri Aug 20 09:56:47 1993  Linus Tolke Y  (linus@dell)
 
+	* vars.el,edit-text.el (kom-dont-restore-window-after-editing,
+	  kom-edit-send): New variable.
+
 	* flags.el (lyskom-read-options-eval-get-holerith): Fixed
 	  string-to-int problem.
 

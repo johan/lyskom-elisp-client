@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.8 1993-08-20 08:03:50 linus Exp $
+;;;;; $Id: vars.el,v 36.9 1993-08-20 09:18:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.8 1993-08-20 08:03:50 linus Exp $\n"))
+	      "$Id: vars.el,v 36.9 1993-08-20 09:18:48 linus Exp $\n"))
 
 
 
@@ -63,6 +63,9 @@ uses the same window.")
 
 (defvar kom-created-texts-are-read t
   "*Non-nil means automatically mark texts that you create as read.")
+
+(defvar kom-dont-restore-window-after-editing nil
+  "*If non-nil then don't restore the window configuration after sending a text.")
 
 (defvar kom-default-mark 100
   "*If non-nil (must be an integer) then the user is not asked for type of mark.")
