@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.75 1999-08-09 15:15:24 byers Exp $
+;;;;; $Id: vars.el.in,v 44.76 1999-08-14 19:16:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.75 1999-08-09 15:15:24 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.76 1999-08-14 19:16:15 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1054,6 +1054,7 @@ Users are encouraged to use their best sense of humor."
     kom-status-person
     kom-status-conf
     kom-add-self
+    kom-change-priority
     kom-list-summary
     kom-sub-self
     kom-quit
@@ -1276,6 +1277,10 @@ This is not buffer-local.")
 
 (def-kom-var lyskom-errno nil
   "Errno of last lyskom error."
+  local)
+
+(def-kom-var lyskom-err-stat nil
+  "Err-stat of last lyskom error."
   local)
 
 (def-kom-var lyskom-parse-pos nil

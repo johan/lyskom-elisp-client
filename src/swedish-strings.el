@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.69 1999-07-12 16:49:51 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.70 1999-08-14 19:16:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.69 1999-07-12 16:49:51 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.70 1999-08-14 19:16:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -352,6 +352,8 @@ du har läst klart allting. Kom tillbaks senare.
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M...")
     (add-member-in . "Addera %#1P som medlem i %#2M...")
+    (change-priority-for-q . "Ändra prioritet för möte: ")
+    (change-priority-for . "Ändra prioritet på %#2M...")
     (unsubscribe-to . "Utträda ur %#1M...")
 
     (exclude-from . "Utesluta %#1P från %#2M...")
@@ -1354,6 +1356,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-status-person	      . "Status (för) person")
     (kom-status-conf	      . "Status (för) möte")
     (kom-add-self	      . "Bli medlem i möte")
+    (kom-change-priority      . "Ändra prioritet")
     (kom-list-summary	      . "Lista ärenden")
     (kom-sub-self             . "Utträda ur möte")
     (kom-quit		      . "Sluta")
