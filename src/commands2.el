@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.8 1991-12-13 18:26:05 inge Exp $
+;;;;; $Id: commands2.el,v 35.9 1992-01-24 23:13:17 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.8 1991-12-13 18:26:05 inge Exp $\n"))
+	      "$Id: commands2.el,v 35.9 1992-01-24 23:13:17 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -488,17 +488,23 @@ Args: MEMBERSHIP-LIST CONF-STAT."
 (defun lyskom-send-message (pers-no)
   "Send a message to the person with the number CONF-NO.  CONF-NO == 0 
 means send the message to everybody."
-  (initiate-send-message 'main 'lyskom-send-message-2
-			 pers-no
-			 (lyskom-read-string (lyskom-get-string 'message-prompt))))
+  (let ((string (lyskom-read-string (lyskom-get-string 'message-prompt))))
+    (lyskom-collect 'main)
+    (initiate-send-message 'main nil pers-no string)
+    (initiate-get-conf-stat 'main nil pers-no)
+    (lyskom-use 'main 'lyskom-send-message-2 string)))
 
 
-(defun lyskom-send-message-2 (reply)
+(defun lyskom-send-message-2 (reply to-conf-stat string)
   "Receive the reply from send-message and report on it."
   (if reply
-      (lyskom-insert-string 'message-sent)
+      (lyskom-handle-as-personal-message
+       (if to-conf-stat
+	   (lyskom-format 'message-sent-to-user
+			  string (conf-stat->name to-conf-stat))
+	 (lyskom-format 'message-sent-to-all string)))
     (lyskom-insert-before-prompt
- (lyskom-get-string 'message-nope)))
+     (lyskom-get-string 'message-nope)))
   (lyskom-end-of-command))
 
 
