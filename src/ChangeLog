@@ -1,4 +1,19 @@
+2002-06-23  David Byers  <david.byers@swipnet.se>
+
+	Try to fix bug 429 (sort of):
+	* command.el (lyskom-command-minibuffer-local-completion-map): New
+	variable.
+	(lyskom-command-minibuffer-local-must-match-map): New variable.
+	(lyskom-read-extended-command): Use new minibuffer maps when
+	reading command names. Do completion using
+	lyskom-complete-command.
+	(lyskom-ok-command): Support vectors from
+	lyskom-read-extended-command as inputs.
+
 2002-06-22  David Byers  <david.byers@swipnet.se>
+
+        * doc/NEWS-0.47: Uppdaterad till denna punkt i ChangeLog inför
+	release av 0.47-BETA-3 någon gång snart.
 
 	* startup.el (lyskom): Renamed all proxy-* variables to
 	www-proxy-*. Changed open-network-stream to
