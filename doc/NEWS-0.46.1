@@ -80,6 +80,20 @@
    hela bufferten. Praktiskt för den som sparar sina LysKOM-sessioner
    på fil.
 
+** Om man ger ett prefixargument till "Lista (med) regexpar" kommer
+   kommandot att översätta regexpen så att vissa tecken behandlas
+   lika.  Vilka tecken som ska behandlas lika avgörs av servern; samma
+   ekvivalensklasser används av de vanliga kommandona som listar namn.
+
+   Specialtecken som påverkar regexpens funktion översätts inte.
+   Tecken skrivna inom en []-grupp översätts inte.
+
+   Exempel: regexpen "ab[a]" översätts till "[AaÀÁÂÃàáâã][Bb][a]" om
+   man kör mot lyskomd version 2.0.4.
+
+   Den här funktionen fungerar bara om man kör mot lyskomd version
+   2.0.0 eller nyare.
+
 
 * Bugfixar
 
