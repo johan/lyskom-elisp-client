@@ -13,7 +13,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 35.2 1991-08-28 20:07:57 linus Exp $\n"))
+	      "$Id: internal.el,v 35.3 1991-09-04 15:22:58 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -487,15 +487,13 @@ PENDING is an entry of the list as described in documentation for the variable
 lyskom-call-data. The car on the list must be a PARSED:
 	('PARSED RESULT HANDLER HANDLER-DATA)"
   (setq inhibit-quit nil)
-  (let ((did-quit nil))
-    (condition-case error
-	(if (car (cdr (cdr pending)))
-	    (apply (car (cdr (cdr pending))) ;Handler
-		   (car (cdr pending))	;Result
-		   (car (cdr (cdr (cdr pending)))))) ;Handler-data
-      (quit (setq did-quit t)))
-    (setq inhibit-quit t)
-    (if did-quit (keyboard-quit))))
+  (condition-case error
+      (if (car (cdr (cdr pending)))
+	  (apply (car (cdr (cdr pending))) ;Handler
+		 (car (cdr pending))	;Result
+		 (car (cdr (cdr (cdr pending)))))) ;Handler-data
+    (quit (beep)))
+  (setq inhibit-quit t))
 
 (defun lyskom-apply-multi-handler (pending result-list)
   "Apply a handler for a lyskom-collect - lyskom-use construct."
