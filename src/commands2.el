@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.15 1996-08-06 21:33:25 davidk Exp $
+;;;;; $Id: commands2.el,v 43.0 1996-08-07 16:39:18 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.15 1996-08-06 21:33:25 davidk Exp $\n"))
+	      "$Id: commands2.el,v 43.0 1996-08-07 16:39:18 davidk Exp $\n"))
 
 
 ;;; ================================================================
