@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.198 2003-08-24 18:41:35 byers Exp $
+;;;;; $Id: commands1.el,v 44.199 2003-08-24 21:12:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.198 2003-08-24 18:41:35 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.199 2003-08-24 21:12:43 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3285,8 +3285,7 @@ argument is used to find a text whose author's status is shown."
 		      (cond
 		       ((listp text-or-session-no) text-or-session-no)
 		       ((numberp text-or-session-no) (list text-or-session-no)))
-                      (lyskom-read-session-no 
-                       (lyskom-get-string 'status-for-session))))
+                      (lyskom-read-session-no 'status-for-session)))
 	who-info)
     (cond ((null sessions)
            (lyskom-insert-string 'no-such-session-r))

@@ -1,5 +1,18 @@
 2003-08-24  David Byers  <byers@lysator.liu.se>
 
+	* commands1.el (kom-status-session): Pass prompt to
+	lyskom-read-session-no as symbol.
+
+	* commands2.el (kom-force-logout): Pass prompt to
+	lyskom-read-session-no as symbol.
+
+	* remote-control.el (kom-remote-autoreply): Pass prompt to
+	lyskom-read-session-no as symbol.
+	(kom-remote-set-message): Same.
+	(kom-remote-list-messages): Same.
+	(kom-remote-erase-messages): Same.
+	(kom-remote-quit): Same.
+
 	* Makefile (TARGET): Default to debug compile.
 
 	Fix bug 459:

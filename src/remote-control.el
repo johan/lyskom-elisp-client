@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.10 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: remote-control.el,v 44.11 2003-08-24 21:12:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.10 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: remote-control.el,v 44.11 2003-08-24 21:12:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -74,7 +74,7 @@ affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
-                             (lyskom-get-string 'remote-control-who)
+                             'remote-control-who
                              nil nil t))))
   (setq state (or state
                   (cdr-safe (assoc
@@ -110,7 +110,7 @@ affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
-                             (lyskom-get-string 'remote-control-who)
+                             'remote-control-who
                              nil nil t))))
   (setq message (or message
                     (lyskom-read-string
@@ -137,7 +137,7 @@ affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
-                             (lyskom-get-string 'remote-control-who)
+                             'remote-control-who
                              nil nil t))))
   (let ((info (blocking-do 'get-session-info session-no)))
     (lyskom-send-message (session-info->pers-no info)
@@ -162,7 +162,7 @@ affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
-                             (lyskom-get-string 'remote-control-who)
+                             'remote-control-who
                              nil nil t))))
   (let ((info (blocking-do 'get-session-info session-no)))
     (lyskom-send-message (session-info->pers-no info)
@@ -188,7 +188,7 @@ affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
-                             (lyskom-get-string 'remote-control-who)
+                             'remote-control-who
                              nil nil t))))
   (let ((info (blocking-do 'get-session-info session-no)))
     (lyskom-send-message (session-info->pers-no info)

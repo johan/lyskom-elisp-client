@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.266 2003-08-24 18:41:36 byers Exp $
+;;;;; $Id: vars.el.in,v 44.267 2003-08-24 21:12:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.266 2003-08-24 18:41:36 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.267 2003-08-24 21:12:44 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -199,7 +199,10 @@ the priority among links that match the same text is undefined."
 
 
 (def-kom-var lyskom-default-conference-strategy
-  '((kom-delete-conf (what-conf-to-delete
+  '((kom-start-anew (what-is-your-name
+                     (default . (lyskom-default-conference-empty))))
+
+    (kom-delete-conf (what-conf-to-delete
                       (default . (lyskom-default-conference-empty))))
 
     (kom-sub-self (leave-what-conf
@@ -356,6 +359,11 @@ the priority among links that match the same text is undefined."
 
     ;; Defaults and commands that use the defaults
 
+    (kom-remote-autoreply (remote-control-who))
+    (kom-remote-set-message (remote-control-who))
+    (kom-remote-list-messages (remote-control-who))
+    (kom-remote-erase-messages (remote-control-who))
+    (kom-remote-quit (remote-control-who))
     (kom-review-presentation (presentation-for-whom))
     (kom-unread-presentation (unread-presentation-for-whom))
     (kom-add-member (who-to-add) (where-to-add))
@@ -364,6 +372,7 @@ the priority among links that match the same text is undefined."
     (kom-sub-member (who-to-exclude) (where-from-exclude))
     (kom-write-text (who-send-text-to))
     (kom-send-letter (who-letter-to))
+    (kom-force-logoout (who-to-throw-out))
     (kom-change-supervisor (what-to-change-supervisor-for) (new-supervisor))
     (kom-who-is-on-in-conference (who-is-on-in-what-conference))
     (kom-who-is-present-in-conference (who-is-present-in-what-conference))
@@ -371,6 +380,7 @@ the priority among links that match the same text is undefined."
     (kom-edit-add-cross-reference (which-conf-to-xref) (which-pers-to-xref))
     (kom-edit-insert-link (which-conf-to-link) (which-pers-to-link))
     (kom-status-conf (conf-for-status))
+    (kom-status-session (session-for-status))
     (kom-status-person (pers-for-status))
     (kom-set-keep-commented (conf-to-set-keep-commented-q))
     (kom-set-garb-nice (conf-to-set-garb-nice-q))
