@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.90 2002-02-24 16:59:19 byers Exp $
+;;;;; $Id: utilities.el,v 44.91 2002-02-24 19:37:05 joel Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.90 2002-02-24 16:59:19 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.91 2002-02-24 19:37:05 joel Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1267,8 +1267,7 @@ Returns a cons of (LOCAL . GLOBAL)"
          (highest (+ lowest (conf-stat->no-of-texts conf-stat)))
          (result nil)
          (index (+ lowest (/ (- highest lowest) 2)))
-         (last-index (1- index))
-         (ix 0))
+         (last-index (1- index)))
     (while (/= last-index index)
       (let* ((map (blocking-do 'local-to-global 
                                (conf-stat->conf-no conf-stat)
