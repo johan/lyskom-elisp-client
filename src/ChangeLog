@@ -1,3 +1,14 @@
+2000-05-29  Johan Sundström  <jhs@lysator.liu.se>
+
+	* view-text.el (lyskom-view-text): Marks now show themselves,
+	always. Perhaps ought not to when kom-default-mark is set, and
+	this really ought to be done as a %m or something flag to
+	lyskom-format with context menus to change or remove a mark, but
+	that will have to wait for the time being.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Altered
+	the strings marked-by-you and marked-by-you-and-others somewhat.
+
 2000-05-28  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands2.el (kom-list-news): Rehacked from scratch. Now

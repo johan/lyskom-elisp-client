@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.87 2000-05-28 17:55:30 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.88 2000-05-29 01:39:04 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.87 2000-05-28 17:55:30 jhs Exp $"))
+              "$Id: english-strings.el,v 44.88 2000-05-29 01:39:04 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -787,8 +787,8 @@ Help: \\[describe-mode] ---")
     (line . " /1 line/ ")
     (lines ." /%#1d lines/ ")
 
-    (marked-by-you . "Marked by you.\n")
-    (marked-by-you-and-others . "Marked by you and %#1?d%[someone else%]%[%#1d others%].\n")
+    (marked-by-you . "Marked by you (%#1d).\n")
+    (marked-by-you-and-others . "Marked by you (%#2d) and %#1?d%[someone else%]%[%#1d others%].\n")
     (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
 
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.114 2000-05-28 17:55:33 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.115 2000-05-29 01:39:07 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.114 2000-05-28 17:55:33 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.115 2000-05-29 01:39:07 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -793,8 +793,8 @@ Annat se \\[describe-mode] ---")
     (line . " /1 rad/ ")
     (lines ." /%#1d rader/ ")
 
-    (marked-by-you . "Markerad av dig.\n")
-    (marked-by-you-and-others . "Markerad av dig och %#1?d%[någon annan%]%[%#1d andra%].\n")
+    (marked-by-you . "Markerad av dig (%#1d).\n")
+    (marked-by-you-and-others . "Markerad av dig (%#2d) och %#1?d%[någon annan%]%[%#1d andra%].\n")
     (marked-by-several . "Markerad av %#1d person%#1?d%[%]%[er%].\n")
 
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
