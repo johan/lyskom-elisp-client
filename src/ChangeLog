@@ -1,3 +1,8 @@
+2002-06-14  Per Cederqvist  <ceder@ingate.com>
+
+	* Makefile (vars.el): Shorten the version string for the CVS
+	versions.
+
 2002-06-14  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* distribution-Makefile.in (LANGUAGE-EL): Include the compiled
