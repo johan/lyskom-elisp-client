@@ -1,4 +1,136 @@
+Tue Jul 15 10:56:50 1997  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-line-start-chars): Sätt till nil.
+
+	* lyskom-rest.el (lyskom-line-start-chars): Sätt värdet här.
+
+	* edit-text.el (lyskom-edit-get-commented): Skicka med
+ 	edit-fönstret till thendo.
+	(lyskom-edit-show-commented): Bibehåll valt fönster.
+	(lyskom-edit-insert-commented): Ta emot ett till argument.
+
+	* vars.el.in (kom-print-number-of-unread-on-entrance): Ärv
+ 	variabeln.
+	(kom-show-author-at-end): Dito.
+	(kom-dashed-lines): Dito.
+	(kom-reading-puts-comments-in-pointers-last): Dito.
+
+Mon Jul 14 11:24:09 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-message): Klara att fill-column inte
+ 	är ett heltal.
+
+	* command.el (lyskom-read-extended-command): Visa prefixargumentet
+ 	(om det finns.)
+	(kom-extended-command): Skicka prefixargument till
+ 	lyskom-read-extended-command.
+
+	* commands1.el (kom-list-clients): Använd
+ 	dynamic-session-info. Prefix gör att man får osynliga användare.
+
+	* lyskom-rest.el (forward-text): Sätt paragraph-ignore-fill-prefix
+ 	till t.
+	(backward-text): Dito.
+
+	* commands1.el (kom-list-clients): Skriv ut total-users istf
+ 	total-visible-users.
+
+	* lyskom-rest.el (lyskom-fill-message): Bindestreck och plus kan
+ 	också inleda stycken.
+
+	* vars.el.in (lyskom-line-start-chars): Definiera från
+ 	lyskom-line-start-chars-string.
+	(lyskom-line-start-chars-string): Ny variabel.
+	(kom-dont-read-saved-variables): Läs inte lyskom-login-hook från
+ 	servern.
+
+	* english-strings.el,swedish-strings.el (lyskom-message): Minde
+ 	whitespace efter återse hur många etc.
+
+	* lyskom-rest.el (lyskom-fill-message): Nu bryter vi tvåradare med
+ 	nollskild konstant radlängdsskillnad.
+	(lyskom-minimum-triagle-size): Ny variabel.
+	(lyskom-fill-message): Massera fill-column lite snyggare.
+
+	* edit-text.el (lyskom-edit-send): Kör användarhookar efter att ha
+ 	kollat ärende osv.
+
+	* swedish-strings.el,english-strings.el (lyskom-edit-mode-map):
+ 	Bind mouse-2 till kom-button-click-or-yank.
+
+	* lyskom-buttons.el (kom-button-click-or-yank): Ny funktion.
+	(kom-button-click): Lade till do-default-argumentet.
+
+	* option-edit.el: Lägg till kom-show-namedays.
+
+	* vars.el.in (kom-show-namedays): Sätt defaultvärdet till nil och
+ 	spara i servern.
+
+	* prioritize.el (lyskom-prioritize-current-entry): Hantera att
+ 	markören inte står i början av raden.
+	(kom-prioritize-select): Flytta inte markören när man markerar.
+
+	* swedish-strings.el,english-strings.el (lyskom-message): I
+ 	priority-q skriv ut vad prioritet noll betyder.
+	(lyskom-sv-prioritize-mode-map): Bind kom-next-link och
+ 	kom-previous-link.
+
+	* commands1.el (lyskom-try-add-member): Tillåt att man explicit
+ 	anger prioritet noll.
+
 Sun Jul 13 12:06:20 1997  David Byers  <davby@ida.liu.se>
+
+	* menus.el (lyskom-do-popup-menu): Försök inte anropa nil.
+
+	* view-mode.el: Flyttade om lite i filen så att keymappen
+ 	definieras innan moden.
+	(lyskom-view-base-mode): Fifflade så att det fungerar även om
+ 	view-mode är en minor mode och det inte finns en view-major-mode.
+	
+	* compatibility.el (lyskom-gnu-keysym): Fixade en typo.
+	(lyskom-xemacs-keysym): Dito.
+	(lyskom-keysym): Skrev om så den fungerar i Gnu Emacs.
+
+	* option-edit.el (kom-customize): Då inte bara för att
+ 	kom-active-face inte finns.
+	(lyskom-create-widget): Sätt menu-tag.
+	(lyskom-make-menu-tag): Ny funktion.
+
+	* check-strings.el (lcs-dont-check-ending-categories): Ny
+ 	variabel.
+	(lcs-check-strings): Kontrollera att strängar avslutas på samma
+ 	sätt. Radbrytningar, punkt, kolon, frågetecken mm skall vara lika
+ 	i alla språk.
+	(lcs-match-endings): Ny variabel.
+	(lcs-check-string-ending): Ny funktion.
+
+	* english-strings.el,swedish-strings.el: Synkroniserade, fixade
+ 	icke-matchande avslutningar.
+
+	* Makefile, distribution-Makefile (SOURCES): Lade till
+ 	view-mode.el.
+
+	* swedish-strings.el (lyskom-message): Lade till
+ 	more-than-one-root och more-than-one-root-review.
+
+	* review.el (kom-find-root-review): Varna om det finns mer än ett
+ 	urinlägg.
+	(kom-find-root): Visa alla urinlägg.
+
+	* vars.el.in (kom-show-namedays): Lade till kom-show-namedays.
+
+	* commands1.el (kom-display-time): Visa namnsdagar enbart om
+ 	kom-show-nameday är satt.
+
+	* option-edit.el (lyskom-create-widget): Lägg till help-echo
+	(lyskom-create-widget): Dito.
+	(lyskom-widget-help-format-handler): Hantera nytt argsformat.
+	(lyskom-widget-help-action): Dito, byt ut help-echo.
+	(lyskom-custom-variables): Lade till help-echo på några variabler.
+	(lyskom-url-viewer-widget): Lade till help-echo
+	(lyskom-ding-widget): Dito
+	(lyskom-name): Dito.
+	(lyskom-command): Dito.
 
 	* macros.el: Require custom och widget för att undvika fel pga att
  	man har autoloads definierade för en massa andra

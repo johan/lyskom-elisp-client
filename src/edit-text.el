@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.18 1997-07-12 13:11:05 byers Exp $
+;;;;; $Id: edit-text.el,v 44.19 1997-07-15 10:23:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.18 1997-07-12 13:11:05 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.19 1997-07-15 10:23:05 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -302,19 +302,13 @@ Commands:
 		(setq headers (lyskom-edit-parse-headers)
 		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
 		      subject (car headers)))
-              ;;
-              ;; Run user hooks
-              ;; ####: ++++: FIXME: We should quit more graciously.
 
-              (if (not (run-hook-with-args-until-failure 
-                        'lyskom-send-text-hook))
-                  (signal 'lyskom-edit-text-abort nil))
-                                                
               ;;
               ;; Check that there is a subject
               ;;
 
-	      (if (string= subject "")
+	      (if (or (null subject)
+                      (string= subject ""))
 		  (let ((old (point)))
 		    (goto-char (point-min))
 		    (re-search-forward (lyskom-get-string 'header-subject)
@@ -336,6 +330,14 @@ Commands:
                                                        extra-headers))))))
 
               ;;
+              ;; Run user hooks
+              ;; ####: ++++: FIXME: We should quit more graciously.
+
+              (if (not (run-hook-with-args-until-failure 
+                        'lyskom-send-text-hook))
+                  (signal 'lyskom-edit-text-abort nil))
+                                                
+              ;;
               ;; Transform the message text
               ;;
 
@@ -347,6 +349,13 @@ Commands:
 
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
+                (let ((full-message
+                       (cond ((and lyskom-allow-missing-subject
+                                   (null subject)
+                                   (not (string-match ".*\n" message)))
+                              message)
+                             (t (concat (or subject "") "\n" message)))))
+
 		(set-buffer lyskom-buffer)
 		;; Don't change the prompt if we won't see our own text
 		(if kom-created-texts-are-read
@@ -356,9 +365,9 @@ Commands:
 		(funcall send-function
                          'sending
                          'lyskom-create-text-handler
-                         (concat subject "\n" message)
+                         full-message
                          misc-list
-                         buffer)))
+                         buffer))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -732,6 +741,7 @@ text is a member of some recipient of this text."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
+             (window (selected-window))
              (headers (condition-case nil
                           (cdr (lyskom-edit-parse-headers))
                         (lyskom-edit-error nil))) ; Ignore these errors
@@ -746,7 +756,7 @@ text is a member of some recipient of this text."
          (no
           (goto-char p)
           (set-buffer lyskom-buffer)
-          (initiate-get-text 'edit thendo no buffer)
+          (initiate-get-text 'edit thendo no buffer window)
           (set-buffer buffer))
          (t
           (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
@@ -834,7 +844,7 @@ and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
 either 'recpt, 'cc-recpt, 'comm-to or 'footn-to. This is to make it
 easy to use the result in a call to `lyskom-create-misc-list'."
   (goto-char (point-min))
-  (let ((result (cons "" nil)))		; The car will be replaced by
+  (let ((result (cons nil nil)))	; The car will be replaced by
 					; the real subject
     (save-restriction
       ;; Narrow to headers
@@ -952,7 +962,7 @@ Point must be located on the line where the subject is."
     (kill-buffer edit-buffer))))
 
 
-(defun lyskom-edit-show-commented (text editing-buffer)
+(defun lyskom-edit-show-commented (text editing-buffer window)
   "Handles the TEXT from the return of the call of the text.
 The EDITING-BUFFER is the buffer the editing is done in. If this buffer is 
 not displayed nothing is done. If displayed then this buffer is chosen then 
@@ -960,18 +970,20 @@ the with-output-to-temp-buffer command is issued to make them both apear."
   (and text
        (get-buffer-window editing-buffer)
        (progn
-	 (set-buffer editing-buffer)
+         (set-buffer editing-buffer)
+         (select-window window)
          (let ((buf (lyskom-get-buffer-create 'view-commented "*Commented*"))
                (kom-deferred-printing nil))
-           (lyskom-display-buffer buf)
-           (save-excursion (set-buffer buf)
-                           (erase-buffer)
-                           (lyskom-view-text (text->text-no text))
-                           (set-buffer-modified-p nil)
-                           (lyskom-view-mode))))))
+           (save-selected-window
+             (lyskom-display-buffer buf)
+             (save-excursion (set-buffer buf)
+                             (erase-buffer)
+                             (lyskom-view-text (text->text-no text))
+                             (set-buffer-modified-p nil)
+                             (lyskom-view-mode)))))))
 
 
-(defun lyskom-edit-insert-commented (text editing-buffer)
+(defun lyskom-edit-insert-commented (text editing-buffer window)
   "Handles the TEXT from the return of the call of the text.
 The text is inserted in the buffer with '>' first on each line."
   (if text

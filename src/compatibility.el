@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.10 1997-07-11 14:17:06 byers Exp $
+;;;;; $Id: compatibility.el,v 44.11 1997-07-15 10:23:02 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.10 1997-07-11 14:17:06 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.11 1997-07-15 10:23:02 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -179,13 +179,13 @@ of the lyskom-provide-* functions instead."
     (down-mouse-3 . (button3))
     (å       . aring)
     (Å       . Aring)
-    (ä       . adiearesis)
-    (Ä       . Adiearesis)))
+    (ä       . adiaeresis)
+    (Ä       . Adiaeresis)))
 
 (defconst lyskom-gnu-keysym
   '((å       . ?\å)
     (Å       . ?\Å)
-    (ä       . ?\Ä)
+    (ä       . ?\ä)
     (Ä       . ?\Ä)
     (ö       . ?\ö)
     (Ö       . ?\Ö)))
@@ -197,10 +197,12 @@ of the lyskom-provide-* functions instead."
 
 (defun lyskom-keysym (sym)
   "Look up the proper symbol to bind sym to"
-  (or (cdr (assq sym (lyskom-xemacs-or-gnu lyskom-xemacs-keysym
-                                           lyskom-gnu-keysym)))
-      sym))
-
+  (lyskom-xemacs-or-gnu (or (cdr (assq sym lyskom-xemacs-keysym)) sym)
+                        (or (cdr (assq sym lyskom-gnu-keysym))
+                            (let ((name (symbol-name sym)))
+                              (and (= (length name) 1)
+                                   (elt name 0)))
+                            sym)))
 
 ;;; ============================================================
 ;;; Text property and extents stuff

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.12 1997-07-12 13:11:22 byers Exp $
+;;;;; $Id: menus.el,v 44.13 1997-07-15 10:23:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -253,7 +253,8 @@
    (popup-menu menu event)
    (let* ((result (nreverse (x-popup-menu (or event t)
                                           (list menu)))))
-     (cond ((listp (car result)) 
+     (cond ((null result))
+           ((listp (car result)) 
             (apply (car (car result))
                    (cdr (car result))))
            ((commandp (car result))

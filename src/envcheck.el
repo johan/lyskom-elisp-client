@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: envcheck.el,v 1.2 1997-07-11 14:17:11 byers Exp $
+;;;;; $Id: envcheck.el,v 1.3 1997-07-15 10:23:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -164,6 +164,7 @@ library from http://www.dina.kvl.dk/~abraham/custom/")
 
     (catch 'terminate
       (if have-w3
+          (load-library "w3")
           (unless (fboundp 'w3-region)
             (message "
 --- Antique version of w3 detected (WARNING)

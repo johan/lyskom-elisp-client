@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.12 1997-07-12 13:11:24 byers Exp $
+;;;;; $Id: option-edit.el,v 44.13 1997-07-15 10:23:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.12 1997-07-12 13:11:24 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.13 1997-07-15 10:23:25 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -58,6 +58,7 @@
     section
     "\n"
     [kom-default-language]
+    [kom-show-namedays]
     "\n"
     [kom-idle-hide]
     [kom-show-where-and-what]
@@ -322,7 +323,8 @@ customize buffer but do not save them to the server."
                (erase-buffer))
              (use-local-map lyskom-customize-map)
              (condition-case nil
-                 (copy-face 'kom-active-face 'widget-button-face))
+                 (copy-face 'kom-active-face 'widget-button-face)
+               (error nil))
              (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
              (widget-setup)
              (mapcar (function
@@ -400,7 +402,7 @@ customize buffer but do not save them to the server."
     (kom-user-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
-    (kom-default-mark (choice ((number (0 255) 
+    (kom-default-mark (choice ((number (1 255) 
                                        :tag selected-mark
                                        :format "%[%t%] (%v)"
                                        :size 0)
@@ -433,6 +435,7 @@ customize buffer but do not save them to the server."
     (kom-do-when-done (repeat (choice ((command nil :tag command)
                                        (kbd-macro nil :tag kbd-macro))
                                       :tag execute
+                                      :help-echo select-what-to-execute
                                       :format "%[%t%] %v")))
     (kom-page-before-command (choice ((const (page-none nil))
                                       (const (page-all t))
@@ -448,12 +451,13 @@ customize buffer but do not save them to the server."
      (choice ((const (ask-every-time nil))
               (number (0 255)
                       :tag fixed-priority 
+                      :help-echo select-priority
                       :format "%[%t%] (%v)"
                       :size 0))))
     (kom-show-personal-messages-in-buffer
      (choice ((const (messages-in-lyskom-buffer t))
               (const (discard-messages nil))
-              (string nil :tag in-named-buffer))))
+              (string nil :tag in-named-buffer :help-echo select-buffer))))
     (kom-pop-personal-messages (toggle (yes no)))
     (kom-ding-on-new-letter (ding))
     (kom-ding-on-priority-break (ding))
@@ -481,7 +485,9 @@ customize buffer but do not save them to the server."
     (kom-check-for-new-comments (toggle (yes no)))
     (kom-inhibit-typeahead (noggle (yes no)))
     (kom-max-buffer-size (choice ((const (no-size-limit nil))
-                                  (number nil :tag max-size-in-bytes))))
+                                  (number nil 
+                                          :tag max-size-in-bytes
+                                          :help-echo select-buffer-size))))
 
     (kom-ansaphone-record-messages (toggle (yes no)))
     (kom-ansaphone-show-messages (toggle (yes no)))
@@ -490,6 +496,7 @@ customize buffer but do not save them to the server."
     (kom-remote-controllers (repeat (person nil :tag name)))
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
+    (kom-show-namedays (toggle (on off)))
 ))
 
 (defvar lyskom-widget-functions 
@@ -511,6 +518,12 @@ customize buffer but do not save them to the server."
     (file . lyskom-file-widget)
 ))
 
+(defun lyskom-make-menu-tag (str)
+  "Make a menu tag from the string STR."
+  (if (string-match "\\(.*\\):\\s-*" str)
+      (match-string 1 str)
+    str))
+
 (defun lyskom-create-widget (variable)
   (let* ((el (assq variable lyskom-custom-variables))
          (dummy (or el (error "Unknown variable: %S" variable)))
@@ -526,10 +539,14 @@ customize buffer but do not save them to the server."
                 (append
                  (list ':tag
                        (lyskom-custom-string tag-sym)
+                       ':menu-tag
+                       (lyskom-make-menu-tag (lyskom-custom-string tag-sym))
                        ':value
                        (lyskom-custom-get-value variable)
-                       ;; ':doc
-                       ;; (lyskom-custom-string doc-sym)
+                       ':help-echo
+                       (lyskom-format 
+                        (lyskom-custom-string 'default-help-echo)
+                        (symbol-name variable))
                        )
                  (cdr spec))))
     (let ((widget (apply 'widget-create spec)))
@@ -539,14 +556,21 @@ customize buffer but do not save them to the server."
             (widget-insert "  ")
             (widget-create 'lyskom-widget-help
                            ':value (lyskom-default-value 'kom-customize-format)
+                           ':help-echo
+                           (if (eq (lyskom-default-value 'kom-customize-format)
+                                   'long)
+                               (lyskom-custom-string 'hide-doc)
+                             (lyskom-custom-string 'show-doc))
                            ':args
                            (list (list 'long
                                        "\n%s\n\n"
                                        (lyskom-custom-string doc-sym)
+                                       (lyskom-custom-string 'hide-doc)
                                        "!")
                                  (list 'short 
                                        "%s"
                                        ""
+                                       (lyskom-custom-string 'show-doc)
                                        "?"))
                            ':format "%[[%T]%]\n%D"))
         (error (widget-insert "\n")))
@@ -644,6 +668,7 @@ customize buffer but do not save them to the server."
   (list 'menu-choice 
         ':format "%[%v%]\n"
         ':case-fold t
+        ':help-echo (lyskom-custom-string 'select-url-viewer)
         ':args
         (list (list 'item
                     ':tag (lyskom-custom-string 'no-viewer)
@@ -725,6 +750,7 @@ customize buffer but do not save them to the server."
                     ':match '(lambda (w v) (or (null v) (eq v 0))))
               (list 'lyskom-number
                     ':tag (lyskom-custom-string 'number-of-times)
+                    ':help-echo (lyskom-custom-string 'select-number)
                     ':value "1"
                     ':format "%[%t%]: (%v)"
                     ':size 0
@@ -732,6 +758,7 @@ customize buffer but do not save them to the server."
                     ':max-value 255)
               (list 'lyskom-string
                     ':tag (lyskom-custom-string 'sound-file)
+                    ':help-echo (lyskom-custom-string 'select-audio-file)
                     ':size 0))))
 
 (defun lyskom-toggle-widget-inverse (type &optional args propl)
@@ -887,6 +914,7 @@ customize buffer but do not save them to the server."
 (define-widget 'lyskom-name 'default
   "A LysKOM person"
   ':format "%[[*]%] %v"
+  ':help-echo (lyskom-custom-string 'change-this-name)
   ':value 0
   ':lyskom-predicate '(pers)
   ':action 'lyskom-widget-name-action
@@ -953,6 +981,7 @@ customize buffer but do not save them to the server."
 (define-widget 'lyskom-command 'default
   "A LysKOM command"
   ':format "%[%t%] %v"
+  ':help-echo (lyskom-custom-string 'select-command)
   ':value 'kom-display-time
   ':action 'lyskom-widget-command-action
   ':value-create 'lyskom-widget-command-value-create
@@ -1127,10 +1156,11 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-widget-help-action (widget &optional event)
   (let* ((value (widget-get widget ':value))
-         (syms (car (cdr (memq (assq value (widget-get widget ':args))
-                               (widget-get widget ':args))))))
+         (spec (assq value (widget-get widget ':args)))
+         (syms (car (cdr (memq spec (widget-get widget ':args))))))
     (if (null syms)
         (setq syms (car (widget-get widget ':args))))
+    (widget-put widget ':help-echo (elt syms 3))
     (widget-value-set widget (car syms))
     (widget-setup)))
 
@@ -1145,7 +1175,7 @@ customize buffer but do not save them to the server."
           ((eq escape ?T)
            (if (widget-get widget ':indent)
                (insert-char ?  (widget-get widget ':indent)))
-           (insert (elt spec 3)))
+           (insert (elt spec 4)))
           (t (widget-default-format-handler widget escape)))))
 
 

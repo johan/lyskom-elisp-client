@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.26 1997-07-12 13:11:41 byers Exp $
+;;;;; $Id: vars.el.in,v 44.27 1997-07-15 10:23:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.26 1997-07-12 13:11:41 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.27 1997-07-15 10:23:41 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -78,7 +78,7 @@ Dont change these. These are defined by the protocol.")
   (mapcar 'make-local-variable lyskom-local-variables)
   (mapcar 'make-local-hook lyskom-local-hooks))
 
-(def-kom-var kom-dont-read-saved-variables nil
+(def-kom-var kom-dont-read-saved-variables '(lyskom-login-hook)
   "*Non nil means don't read some variables from the server.
 t means don't read any variables. A list means don't read variables that
 are in the list.")
@@ -187,15 +187,18 @@ enabled mode."
 
 (def-kom-var kom-reading-puts-comments-in-pointers-last t
   "*If Non-nil the texts are shown with comments references at the end."
-  server)
+  server
+  inherited)
 
 (def-kom-var kom-dashed-lines t
   "*If Non-nil then all texts will be surrounded by lines of dashes."
-  server)
+  server
+  inherited)
 
 (def-kom-var kom-show-author-at-end t
   "*If non-nil then the author will be shown at the end of each text."
-  server)
+  server
+  inherited)
 
 (def-kom-var kom-print-number-of-unread-on-entrance t
   "*If Non-nil then print automatically the number of unread articles when
@@ -649,6 +652,11 @@ executing. "
 
 (def-kom-var lyskom-print-complex-dates t
   "If non-nil, print today and yesterday using a special format.")
+
+(def-kom-var kom-show-namedays nil
+  "*Non-nil means display namedays when running in swedish.
+This variable will eventually be replaced with something else."
+  server)
 
 (def-kom-var kom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
@@ -1605,6 +1613,8 @@ an unknown person.")
   "If non-nil the user area will not be read on login."
   local)
 
+(def-kom-var lyskom-allow-missing-subject nil)
+
 (def-kom-var lyskom-show-comments t
   "This should always be set to t.")    ;+++SOJGE
 
@@ -1630,19 +1640,13 @@ texts that is to be sent to the server.")
   "Saved value of buffer-read-only when in slow mode."
   local)
 
-(def-kom-var lyskom-line-start-chars
-  [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t 
-       nil t nil t t t t t t nil t t t t t t t t t t t t t nil nil t nil nil
-       nil nil t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil
-       t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil nil nil
-       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-       nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t nil
-       t t t nil t nil t t t t t t nil nil t t t nil t t nil nil t t t t t t
-       t t t t t t t t t t t t t t t t t t t t t t t t nil t t t t t t t t t
-       t t t t t t t t t t t t t t t t t t t t t t nil t t t t t t t t]
-  "Vector defining which ISO-8859-1 characters can be expected to start
-lines of text.")
+(defvar lyskom-line-start-chars-string
+  "\"$&'()*+-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abcdefghijklmnopqrstuvwxyz¡£¤¥§©ª«­®±²³µ¶¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõöøùúûüışÿ"
+  "Characters that may start a line in a paragraph to be broken.")
+
+(def-kom-var lyskom-line-start-chars nil
+  "Computer-friendly version of lyskom-line-start-string")
+
 
 (def-kom-var lyskom-last-text-format-flags nil
   "List of flags specifying how the last text was reformatted. This variable

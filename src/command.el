@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.6 1997-07-10 08:58:39 byers Exp $
+;;;;; $Id: command.el,v 44.7 1997-07-15 10:22:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -100,12 +100,12 @@
 (defun kom-extended-command ()
   "Read a LysKOM function name and call the function."
   (interactive)
-  (let ((fnc (lyskom-read-extended-command)))
+  (let ((fnc (lyskom-read-extended-command current-prefix-arg)))
     (cond
      (fnc (call-interactively fnc))
      (t (kom-next-command)))) )
 
-(defun lyskom-read-extended-command ()
+(defun lyskom-read-extended-command (&optional prefix-arg)
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
@@ -113,7 +113,20 @@
 					   (cons (cdr pair) (car pair))))
 			       (lyskom-get-strings lyskom-commands
 						   'lyskom-command)))
-	 (name nil))
+	 (name nil)
+         (prefix-text
+          (cond ((eq prefix-arg '-) "- ")
+                              ((equal prefix-arg '(4)) "C-u ")
+                              ((integerp prefix-arg) 
+                               (format "%d " prefix-arg))
+                              ((and (consp prefix-arg) 
+                                    (integerp (car prefix-arg)))
+                               (format "%d " (car prefix-arg)))
+                              (t nil)))
+         (prompt (if prefix-text
+                     (concat prefix-text (lyskom-get-string 'extended-command))
+                   (lyskom-get-string 'extended-command))))
+
     ;; (add-hook 'minibuffer-setup-hook
     ;; 		 (function
     ;; 		  (lambda ()
@@ -122,7 +135,7 @@
     ;; 		      (aset table ?\} 345)
     ;; 		      (set-case-table table)))))
     (lyskom-with-lyskom-minibuffer
-     (setq name (completing-read (lyskom-get-string 'extended-command)
+     (setq name (completing-read prompt
                                  alternatives 
                                  ;; lyskom-is-administrator is buffer-local and
                                  ;; must be evalled before the call to 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.4 1997-07-01 16:29:28 petli Exp $
+;;;;; $Id: check-strings.el,v 44.5 1997-07-15 10:22:54 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -13,6 +13,10 @@
 ;;;;
 
 (require 'lyskom)
+
+
+(defvar lcs-dont-check-ending-categories '(lyskom-command)
+  "String categories where ending mismatches are OK.")
 
 (defvar lcs-message-buffer "*LysKOM string check*")
 
@@ -57,9 +61,15 @@ STRINGS is a list of (language . string)."
 	     (str (cdr (car strings)))
 	     (flist (lcs-check-string category name lang str)))
 	(if (listp format-list)
-	    (or (lcs-check-format-string format-list flist)
-		(lcs-message nil "(%s:%s) Format mismatch\n    %S\n    %S"
-			     category name first-str str))
+	    (progn 
+              (or (lcs-check-format-string format-list flist)
+                  (lcs-message nil "(%s:%s) Format mismatch\n    %S\n    %S"
+                               category name first-str str))
+              (and 
+               (not (memq category lcs-dont-check-ending-categories))
+               (or (lcs-check-string-ending first-str str)
+                   (lcs-message nil "(%s:%s) Ending mismatch\n    %S\n    %S"
+                               category name first-str str))))
 	  (setq format-list flist
 		first-str str))
 
@@ -95,6 +105,26 @@ STRING is the string."
 			      result))))
     result))
 
+
+(defconst lcs-match-endings 
+  '("\\." "\\?" ":" "!" "\\.\n" "\\?\n" ":\n" "!\n" "\n" ")" ")\n"
+    "\\? +" ": +" "\\? +\n" ": +\n")
+  "String endings that should be identical in various languages.")
+
+(defun lcs-check-string-ending (template str)
+  (cond ((or (not (stringp template))
+             (not (stringp str))) t)
+        (t (let ((result
+                  (mapcar
+                   (function
+                    (lambda (x)
+                      (let ((pat (concat "\\`\\(.\\|\n\\)*" x "\\'")))
+                        (eq (string-match pat template)
+                            (string-match pat str)))))
+                   lcs-match-endings)))
+             (cond ((memq nil result) nil)
+                   (t t))))))
+    
 
 (defun lcs-check-format-string (template flist)
   "Match the formatters in TEMPLATE to those in FLIST."

@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.2 1997-07-11 14:17:07 byers Exp $
+# $Id: distribution-Makefile,v 44.3 1997-07-15 10:23:04 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -45,7 +45,7 @@ LANGUAGES=swedish english
 
 RM=/bin/rm -f
 SHELL=/bin/sh
-LANGUAGE-EL=$(LANGUAGES:%=%-strings.el)
+LANGUAGE-EL=$(LANGUAGES:=-strings.el)
 EMACS-BATCH=$(EMACS) -batch
 SOURCES	 = 	$(LANGUAGE-EL) \
 		komtypes.el \
@@ -61,6 +61,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		command.el \
 		parse.el \
 		cache.el \
+		view-mode.el \
 		commands1.el \
 		commands2.el \
 		review.el \
