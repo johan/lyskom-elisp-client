@@ -1,3 +1,7 @@
+Fri May 21 17:34:38 1993  Linus Tolke Y  (linus@bodil)
+
+	* commands1.el (lyskom-mark-text): Cleaning cache of the text-stat.
+
 Tue May 11 16:47:38 1993  Linus Tolke Y  (linus@bodil)
 
 	* startup.el (lyskom-connect-filter): When emacs is collecting
