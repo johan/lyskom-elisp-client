@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.174 2003-08-04 17:01:58 byers Exp $
+;;;;; $Id: commands2.el,v 44.175 2003-08-13 20:54:13 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.174 2003-08-04 17:01:58 byers Exp $\n"))
+              "$Id: commands2.el,v 44.175 2003-08-13 20:54:13 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2179,7 +2179,7 @@ the exception of the letterbox flag (which cannot be modified)."
 With a prefix argument, also make changes that would affect all 
 sessions, such as key bindings.
 
-The selected language is not svaed between sessions. To permanently
+The selected language is not saved between sessions. To permanently
 set and save language settings. use `kom-customize' instead.
 
 See `kom-default-language'.
