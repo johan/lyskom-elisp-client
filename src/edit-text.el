@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.6 1996-10-27 15:54:45 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.7 1996-10-28 18:03:42 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,14 +33,11 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.6 1996-10-27 15:54:45 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.7 1996-10-28 18:03:42 davidk Exp $\n"))
 
 
 ;;;; ================================================================
 
-
-(defvar lyskom-edit-mode-mode-map nil
-  "Mode map for the mode LysKOM edites in.")
 
 (defvar lyskom-edit-mode-name "LysKOM edit"
   "Name of the mode.")
@@ -230,8 +227,7 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 			(if conf-stat
 			    (lyskom-format 'by conf-stat)
 			  ""))
-	 stream)
-  )
+	 stream))
 			  
 
 
@@ -271,16 +267,6 @@ Watch out! None of these functions are allowed to do kill-all-local-variables
 because kom-edit-send and other functions depend on some variables to be able
 to enter the text in the correct lyskom-process.")
 
-(defvar lyskom-edit-mode-mode-hook nil
-  "*List of functions to be called when entering lyskom-edit-mode.
-Watch out! None of these functions are allowed to do kill-all-local-variables
-because kom-edit-send and other functions depend on some variables to be able
-to enter the text in the correct lyskom-process.
-
-This one differs from lyskom-edit-mode-hook in that it is called before
-the lyskom-special key bindings are added.")
-
-
 (defun lyskom-edit-mode ()
   "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
 Commands:
@@ -294,22 +280,15 @@ Commands:
 \\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
 
 \\[kom-edit-insert-commented]   inserts the commented of footnoted text.
-\\[kom-edit-insert-text]   inserts the shown text, you tell the number.
-
-The mode is based on the mode in the lyskom-edit-mode-mode-hook or fundamental.
-Entry to this mode runs lyskom-edit-mode-hook."
+\\[kom-edit-insert-text]   inserts the shown text, you tell the number."
   (interactive)
   (lyskom-clear-vars)
-  (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
   (text-mode)
-  (run-hooks 'lyskom-edit-mode-mode-hook)
-  (setq lyskom-edit-mode-mode-map (and (current-local-map)
-				       (copy-keymap (current-local-map))))
+  (setq mode-line-buffer-identification '("LysKOM (server: %b)"))
   (setq major-mode 'lyskom-edit-mode)
   (setq mode-name lyskom-edit-mode-name)
   ;; (setq buffer-offer-save t)
-  (use-local-map (append lyskom-edit-mode-map
-			 (cdr lyskom-edit-mode-mode-map)))
+  (use-local-map lyskom-edit-mode-map)
   (auto-save-mode 1)
   (auto-fill-mode 1)
   (make-local-variable 'paragraph-start)
