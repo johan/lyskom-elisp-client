@@ -1,3 +1,8 @@
+2004-11-03  Pontus Freyhult  <pont@soua.net>
+
+	* commands1.el (kom-view-commented-text): Cleanup (progn removal),
+	inhibit immediate display of footnotes.
+
 2004-10-31  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--selected-or-current-arg): New function.
