@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.8 1996-02-17 05:41:44 davidk Exp $
+;;;;; $Id: completing-read.el,v 38.9 1996-02-17 15:36:10 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.8 1996-02-17 05:41:44 davidk Exp $\n"))
+	      "$Id: completing-read.el,v 38.9 1996-02-17 15:36:10 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -475,21 +475,25 @@ Returns the name."
                    (try-completion string who-list nil))
                   ((eq all t)           ; all-completions
                    (all-completions string who-list nil))
-                  ((eq all 'lambda)      ; exact match
-                   (and (assoc string who-list) t)))))
+                  ((eq all 'lambda)	; exact match
+                   (and (assoc string who-list) t))
+		  ((eq all 'session-no)	; get number
+		   (car-safe (assoc string who-list))))))
     (cond ((eq all 'session-no)
            (if partial
                (let ((output nil)
                      (list who-list)
+		     (num (string-to-number string))
                      (conf-no (lyskom-read-conf-name-internal string
-                                                              predicate
-                                                              'conf-no)))
+							      predicate
+							      'conf-no)))
                  (while list
-                   (if (eq conf-no (who-info->pers-no (cdr (car list))))
+                   (if (or (eq conf-no (who-info->pers-no (cdr (car list))))
+			   (eq num (who-info->connection (cdr (car list)))))
                        (setq output (cons
                                      (who-info->connection (cdr (car list)))
                                      output)))
                    (setq list (cdr list)))
                  output)
-             result))
+             (list (string-to-number result))))
            (t (or partial result)))))

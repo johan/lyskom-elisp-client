@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.19 1996-02-17 05:42:29 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.20 1996-02-17 15:36:58 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.19 1996-02-17 05:42:29 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.20 1996-02-17 15:36:58 byers Exp $\n"))
 
 
 
@@ -194,12 +194,17 @@ program named by kom-audio-player.")
 (defvar kom-audio-player "audioplay"
   "*Program to play audio files.")
 
-(defvar kom-send-message-to-last-sender t
-  "*Who to send messages to.
-Non-nil means default recipient of messages is the sender of the last
-personal message received. If the last message was a group message,
-the default recipient will be the recipient of that message, unless
-this variable is 'group. Nil means default is everybody.")
+(defvar kom-default-message-recipient 'group
+  "*Determines default recipient of personal messages.
+
+everybody means the default recipient is everybody.
+
+group means the default recipient is the group to which the last
+message was sent, if it was a group message. If the last message was a
+personal message or a common message, it means the same as sender.
+
+sender means the sender of the last message received.")
+
 
 (defvar lyskom-filter-outgoing-messages t
   "t if outgoing remote-control messages and automatic replies are not
@@ -228,6 +233,7 @@ various LysKOM elements.")
      (("Visa presentation" . lyskom-button-view-conf-presentation)
       ("Visa mötesstatus" . lyskom-button-view-conf-status)
       ("Gå till mötet" . lyskom-button-goto-conf)
+      ("Skicka gruppmeddelande" . lyskom-button-send-message)
       ("Bli medlem i mötet" . lyskom-button-add-self)
       ("Utträd ur mötet" . lyskom-button-sub-self))
      ((kom-list-news . lyskom-button-goto-conf)))
@@ -376,6 +382,7 @@ he gets a y-or-n-p question for all recipients.")
     kom-quit-hook
     kom-show-where-and-what
     kom-who-buffer-size-when-displaying
+    kom-default-message-recipient
     kom-write-texts-in-window
     kom-remote-control
     kom-remote-controllers
@@ -707,10 +714,28 @@ This is used by the command kom-busy-wait.")
 (defvar kom-session-filter-list nil
   "List of patterns to filter during this session")
 
-    kom-remote-control
-    kom-remote-controllers
-    kom-ansaphone-on
-    kom-ansaphone-default-reply
+(defvar kom-ansaphone-replies
+  '((group nil nil nil nil)
+    (common nil nil nil nil))
+  "*List of automatic replies to various messages.
+
+A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
+    MESSAGE-TYPE is one of personal, group or common or nil
+    SENDER is a list of integers or a single integer or nil
+    RECIPIENT is a list of integers or a single integer or nil
+    TEXT is a regular expression or nil
+    REPLY is a string or nil
+
+When an incoming message arrives and the auto-reply facility is on,
+this list is checked for automatic replies. The message type, sender,
+recipient and text of the incoming messages is matched against the 
+elements of this list. If a match is found, the corresponding reply is
+send. A nil in one of the message-type, sender, recipient or text
+components in the list is taken to mean a wildcard. A null reply means
+don't send a reply.
+
+If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
+
 
 (defvar lyskom-filter-list nil
   "List of patterns that are filtered.")
@@ -884,10 +909,11 @@ the value of  kom-tell-phrases  for fun.")
 			  (copy-face 'kom-text-face 'kom-text-no-face))
 	(lyskom-make-face 'kom-presence-face
 			  (make-face 'kom-presence-face)
-			  (make-face-italic 'kom-presence-face)
-			  (cond ((eq bgmode 'dark)
-				 (set-face-foreground '
-				  kom-presence-face "DarkGray"))
+			  (make-face-italic 'kom-presence-face nil t)
+			  (cond ((or (null bgmode)
+				     (eq bgmode 'dark))
+				 (set-face-foreground 'kom-presence-face 
+						      "DimGray")) 
 				((eq bgmode 'light)
 				 (set-face-foreground
 				  'kom-presence-face "LightGray")))))
@@ -908,5 +934,5 @@ the value of  kom-tell-phrases  for fun.")
 			(copy-face 'default 'kom-subject-face))
       (lyskom-make-face 'kom-presence-face
 			(make-face 'kom-presence-face)
-			(make-face-italic 'kom-presence-face)))))
+			(make-face-italic 'kom-presence-face nil t)))))
 

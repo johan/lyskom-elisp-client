@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.15 1996-02-17 05:42:23 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.16 1996-02-17 15:36:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.15 1996-02-17 05:42:23 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.16 1996-02-17 15:36:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -641,9 +641,9 @@ Personligt meddelande fr\345n %#1P (%#3s):
 ")
     (message-from-to .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
+Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")
     (text-is-created . "Text %#1n \344r skapad!")
@@ -902,7 +902,7 @@ Text:
     (kom-review-backward        "(\305terse) Bakl\344nges")
     (kom-view-next-text		"L\344sa n\344sta inl\344gg")
     (kom-who-is-on		"Vilka \344r inloggade") 
-    (kom-display-who-buffer	"Visa vilkalistan")
+;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-busy-wait		"V\344nta p\345 ett inl\344gg")
     (kom-write-comment		"Kommentera inl\344gget")
     (kom-comment-previous	"Kommentera f\366reg\345ende inl\344gg")

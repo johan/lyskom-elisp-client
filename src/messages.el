@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: messages.el,v 38.2 1996-02-17 05:42:07 davidk Exp $
+;;;;; $Id: messages.el,v 38.3 1996-02-17 15:36:37 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,17 +34,38 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 38.2 1996-02-17 05:42:07 davidk Exp $\n"))
+	      "$Id: messages.el,v 38.3 1996-02-17 15:36:37 byers Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
-  "A list of personal message handlers.")
+  "A list of personal message handlers.
 
-(defvar lyskom-message-current-text "")
+Each element of the list is a function of four arguments, MESSAGE-TYPE
+SENDER RECIPIENT and TEXT. MESSAGE-TYPE is one of personal, group or
+common and denotes the type of message. SENDER is the conf-stat of the
+sender of the message. RECIPIENT is the conf-stat of the message
+recipient or zero for common messages. 
+
+The functions may use the lyskom-set-current-message-text function to
+modify the message text. A non-nil return value from the function
+indicates that the message was handlerd and no other handlers need to
+be called and a nil return value means that the message was not
+handled and should be sent to the next handler.")
+
+(defvar lyskom-message-current-text ""
+  "The text of the current message. Use
+lyskom-set-current-message-text to modify this variable.")
 
 (defun lyskom-set-current-message-text (text)
+  "Set the current message text to TEXT. For use by personal message
+handlers."
   (setq lyskom-message-current-text text))
 
 (defun lyskom-handle-personal-message (sender recipient text)
+  "Handle a personal message.
+
+SENDER is the sender of the message (a conf-stat) RECIPIENT is the
+recipient of the message (a conf-stat or zero for common
+messages. TEXT is the text of the message."
   (let ((message-type (cond ((eq recipient 0) 'common)
                             ((= (conf-stat->conf-no recipient)
                                 lyskom-pers-no) 'personal)

@@ -4,6 +4,19 @@ Sat Feb 17 00:24:23 1996  David K}gedal  <davidk@lysator.liu.se>
 	(lyskom-add-member-by-no): Anropa lyskom-add-member-answer för att
 	uppdatera cache mm.
 
+Fri Feb 16 12:42:15 1996  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el: lyskom-is-read är nu asynkron eftersom den
+	anropas av lyskom-create-text-handler.
+
+	* view-text.el: Gjorde så lyskom-print-date-and-time och
+	lyskom-return-date-and-time kan ta ett extra agurment
+	(formatsträng) vilket gör att den kan användas istf
+	lyskom-return-time. 
+
+	* commands2.el: Bytte ut lyskom-return-time mot
+	lyskom-return-date-and-time i alla funktioner.
+
 Fri Feb 16 05:41:31 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom-start-anew-new-person)
@@ -49,6 +62,14 @@ Sun Feb 11 23:08:01 1996  David K}gedal  <davidk@lysator.liu.se>
 	* startup.el (kom-start-anew): Förhindra minibuffertmeddelanden
 	under lösenordsinmatning.
 
+Thu Feb  8 17:12:06 1996  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in: Lade till skicka gruppmeddelande till
+ 	lyskom-button-actions.
+
+	* async.el,swedish-strings.el,english-strings.el: Fixade
+ 	formattering av gruppmeddelanden.
+
 Tue Feb  6 17:52:34 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el : Lade till kom-presence-face.
@@ -61,7 +82,8 @@ Tue Feb  6 17:52:34 1996  David K}gedal  <davidk@lysator.liu.se>
 Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Lade till kom-print-complex-dates, fixade fel som
-	uppstod vid tidigare incheckning.
+	uppstod vid tidigare incheckning. Tog bort ett antal symboler som
+	stod fel i filen. Lade till kom-ansaphone-replies.
 
 	* view-text.el: lyskom-print-date-and-time kan nu skriva ut idag
 	och igår.
@@ -69,6 +91,11 @@ Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 	* english-strings.el, swedish-strings.el: Lade till idag och igår.
 
 	* commands2.el: Lade till argument till några funktioner.
+
+Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
+
+	* ansaphone.el: Fixade bug i hantering av allmänna
+	meddelanden. Flyttade ut kom-ansaphone-replies.
 
 Sun Feb  4 03:02:40 1996  David K}gedal  <davidk@lysator.liu.se>
 
