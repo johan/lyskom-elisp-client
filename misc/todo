@@ -1,3 +1,5 @@
+* flags.el: string-to-int sm{ller.
+
 * a[ndra namn RET p 5 RET ^g
   ^G tas inte om hand snyggt. lyskom-end-of-command blir aldrig k|rd.
 
