@@ -1,3 +1,12 @@
+2003-01-04  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 961:
+	* faqs.el (lyskom-faq-is-read): Handle server FAQs correctly so
+	they are not presented even when they have been read.
+	(lyskom-register-read-faq): If conf-no is nil, set it to zero.
+	(lyskom-get-unread-faqs): If conf-stat is nil, set conf-no to
+	zero.
+
 2003-01-03  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 823:

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.6 2002-12-16 22:12:45 byers Exp $
+;;;;; $Id: faqs.el,v 44.7 2003-01-04 22:49:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,9 +33,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.6 2002-12-16 22:12:45 byers Exp $\n"))
+              "$Id: faqs.el,v 44.7 2003-01-04 22:49:48 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
+  (unless conf-no (setq conf-no 0))
   (unless (lyskom-faq-is-read conf-no text-no)
     (setq lyskom-read-faqs (cons (cons conf-no text-no) lyskom-read-faqs))
     (initiate-modify-conf-info 
@@ -55,7 +56,7 @@
 
 (defun lyskom-faq-is-read (conf-no text-no)
   "Return non-nil if lyskom-pers-no has read CONF-NOs FAQ TEXT-NO."
-  (member (cons conf-no text-no) lyskom-read-faqs))
+  (member (cons (or conf-no 0) text-no) lyskom-read-faqs))
 
 (defun lyskom-update-read-faqs ()
   "Update the list of read FAQs from the server."
@@ -377,7 +378,7 @@ The text to add is passed in TEXT-NO"
 
 (defun lyskom-get-unread-faqs (conf-stat)
   "Return a list of unread FAQs for conf CONF-STAT."
-  (let* ((conf-no (and conf-stat (conf-stat->conf-no conf-stat)))
+  (let* ((conf-no (if conf-stat (conf-stat->conf-no conf-stat) 0))
          (aux-list (if conf-stat
                        (conf-stat->aux-items conf-stat)
                      (server-info->aux-item-list lyskom-server-info)))
