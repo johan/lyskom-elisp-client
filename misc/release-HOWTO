@@ -25,6 +25,7 @@ versionen.
  * Installera på Lysator och ftp
 
 	$ make install
+	$ make release
 
  * Ändra versionsnumret i Makefilen
 
