@@ -1,5 +1,11 @@
 2004-02-29  David Byers  <byers@lysator.liu.se>
 
+	Better fontification code:
+	* lyskom-rest.el: (lyskom-format-plaintext-fonts-body): New macro.
+	For internal use only.
+	(lyskom-format-plaintext-fonts): Don't use / as an italics
+	delimiter.
+
 	Fix bug 1282:
 	* services.el (initiate-query-read-texts): Call correct membership
 	parser. Use new names.
