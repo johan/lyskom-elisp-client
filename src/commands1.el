@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.118 2001-08-15 23:46:01 qha Exp $
+;;;;; $Id: commands1.el,v 44.119 2001-08-16 18:28:05 teddy Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.118 2001-08-15 23:46:01 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.119 2001-08-16 18:28:05 teddy Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2712,7 +2712,17 @@ If the prefix is 0, all visible sessions are shown."
   (interactive "P")
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-on-in-what-conference)
-			      '(all) nil nil t)))
+				'(all) nil 
+				(let ((ccn 
+				       (if (or (null lyskom-current-conf)
+					       (zerop lyskom-current-conf))
+					   ""
+					 (conf-stat->name
+					  (blocking-do 'get-conf-stat
+						       lyskom-current-conf)))))
+				  (if ccn
+				      (cons ccn 0)
+				    "")) t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
 	    (lyskom-who-is-on-9 arg conf-stat)
@@ -2735,7 +2745,17 @@ If the prefix is 0, all visible sessions are shown."
   (interactive "P")
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-present-in-what-conference)
-			      '(all) nil nil t)))
+				'(all) nil 
+				(let ((ccn 
+				       (if (or (null lyskom-current-conf)
+					       (zerop lyskom-current-conf))
+					   ""
+					 (conf-stat->name
+					  (blocking-do 'get-conf-stat
+						       lyskom-current-conf)))))
+				  (if ccn
+				      (cons ccn 0)
+				    "")) t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
 	    (lyskom-who-is-on-9 arg conf-stat t)
