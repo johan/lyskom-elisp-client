@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.58 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: review.el,v 44.59 2004-04-11 21:53:47 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.58 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: review.el,v 44.59 2004-04-11 21:53:47 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1575,6 +1575,60 @@ all review-related functions."
 	  (lyskom-view-text (car text-nos)))
       (lyskom-insert-string 'no-such-text))))
 
+
+(def-kom-command kom-review-cross-references (text-no)
+  "Review all cross-referenced texts from the selected text `text-no'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg').
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-as-read' for information on settings that affect
+all review-related functions."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-xrefs-q)))
+  (lyskom-tell-internat 'kom-tell-review)
+  (cond (text-no
+         (unless kom-review-uses-cache
+	   (cache-del-text-stat text-no))
+         (lyskom-review-cross-references
+          (blocking-do 'get-text-stat text-no)))
+        (t (lyskom-insert-string 'read-text-first))))
+
+(defun lyskom-cross-referenced-text (aux-item-xref)
+  (and (string-match "^T\\([0-9]+\\)" (aux-item->data aux-item-xref))
+       (string-to-int (match-string 1 (aux-item->data aux-item-xref)))))
+
+(defun lyskom-review-cross-references (text-stat)
+  "Handles the return from the initiate-get-text-stat,
+displays and builds list."
+  (let* ((all-xrefs (lyskom-get-aux-item (text-stat->aux-items text-stat) 3))
+	 (only-txts (mapcar 'lyskom-cross-referenced-text all-xrefs))
+	 (to-review '()))
+
+    ;; Only try to review texts that we can read.
+    (while only-txts
+      (when (car only-txts)
+	(unless kom-review-uses-cache
+	  (cache-del-text-stat (car only-txts)))
+	(when (blocking-do 'get-text-stat (car only-txts))
+	  (setq to-review (cons (car only-txts) to-review))))
+      (setq only-txts (cdr only-txts)))
+    (setq to-review (nreverse to-review))
+
+    (if to-review
+	(progn
+	  (lyskom-format-insert 'review-text-no (car to-review))
+	  (when (cdr to-review)
+	    (lyskom-review-enter-read-info
+	     (lyskom-create-read-info
+	      'REVIEW nil (lyskom-review-get-priority)
+	      (lyskom-create-text-list (cdr to-review))
+	      lyskom-current-text) t))
+          ;; Don't check the no-cache thing here since we already
+          ;; did earlier. We may end up slightly out of sync with
+          ;; the server, but not so anyone will really notice.
+	  (lyskom-view-text (car to-review)))
+      (lyskom-insert-string 'no-such-text))))
 
 
 
