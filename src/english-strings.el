@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.9 1991-10-31 10:22:56 byers Exp $
+;;;;; $Id: english-strings.el,v 35.10 1991-11-06 15:24:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.9 1991-10-31 10:22:56 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.10 1991-11-06 15:24:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -254,6 +254,7 @@ Email-address:\n\nOther:\t")
     (from-machine . "At")
     (is-doing . "Activity")
     (text-to-add-recipient . "Add recipient to which article: ")
+    (text-to-add-copy . "Add recipient of carbon copy of which article: ")
     (text-to-delete-recipient . "Remove recipient from which article: ")
     (text-to-add-comment-to . "Add comment to which article: ")
     (text-to-delete-comment-from . "Remove comment from which article: ")
@@ -289,9 +290,10 @@ Email-address:\n\nOther:\t")
     (time-is . "The time is %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(according to the server).\n")
     (total-users . "    A total of %#1d users.\n")
     (who-to-add-q . "Add who/what as a recipient: ")
+    (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy: ")
     (who-to-sub-q . "Remove who/what as a recipient: ")
-
     (adding-name-as-recipient . "Adding %#1s as recipient of article %#2d...")
+    (adding-name-as-copy . "%#1s will receive a carbon copy of article %#2d...")
     (remove-name-as-recipient .
      "Removing %#1s as recipient of article %#2d...")
     (text-to-add-q . "Add which article as a comment: ")
@@ -685,6 +687,7 @@ Error message: %#1s**************************************************")
     (kom-review-marked-texts    "Review marked (articles)")
     (kom-review-all-marked-texts "Review all marked (articles)")
     (kom-add-recipient          "Add recipient")
+    (kom-add-copy		"Add (recipient of) carbon copy")
     (kom-sub-recipient          "Remove recipient")
     (kom-add-comment		"Add comment")
     (kom-sub-comment		"Remove comment")
