@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.51 1999-06-10 13:36:24 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.52 1999-06-10 13:54:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.51 1999-06-10 13:36:24 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.52 1999-06-10 13:54:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1585,7 +1585,7 @@ Innehåll:    \"%#9s\"
   (define-prefix-command 'lyskom-sv-next-prefix)
   (define-prefix-command 'lyskom-sv-list-prefix)
   (define-prefix-command 'lyskom-sv-S-prefix)
-  (define-prefix-command 'lyskom-fast-reply-prefix)
+  (define-prefix-command 'lyskom-sv-fast-reply-prefix)
   (define-prefix-command 'lyskom-sv-filter-get-prefix)
 
   (define-key lyskom-sv-mode-map (kbd "f") 'lyskom-sv-filter-get-prefix)
