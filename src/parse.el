@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.8 1997-08-12 12:58:21 byers Exp $
+;;;;; $Id: parse.el,v 44.9 1997-08-18 12:27:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.8 1997-08-12 12:58:21 byers Exp $\n"))
+	      "$Id: parse.el,v 44.9 1997-08-18 12:27:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -123,7 +123,7 @@ Signal lyskom-protocol-error if the next token is not a number."
     (goto-char (point-max))
     (signal 'lyskom-parse-incomplete nil))
    (t (signal 'lyskom-protocol-error
-              (list ref-no "Expected number, got " (lyskom-string-to-parse)))))
+              (list "Expected number, got " (lyskom-string-to-parse)))))
 
 )
 

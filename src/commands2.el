@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.14 1997-07-29 14:53:00 byers Exp $
+;;;;; $Id: commands2.el,v 44.15 1997-08-18 12:26:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.14 1997-07-29 14:53:00 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.15 1997-08-18 12:26:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -571,6 +571,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
            (setq lyskom-message-string ""))
           (t (setq lyskom-message-string (substring lyskom-message-string 
                                                     0 size))))))
+
+(lyskom-external-function lyskom-resize-minibuffer-mode)
+(lyskom-external-function resize-minibuffer-setup)
 
 (defun lyskom-send-message-turn-off-resize-on-exit ()
   (resize-minibuffer-mode -1)

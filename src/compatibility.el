@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.11 1997-07-15 10:23:02 byers Exp $
+;;;;; $Id: compatibility.el,v 44.12 1997-08-18 12:26:45 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.11 1997-07-15 10:23:02 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.12 1997-08-18 12:26:45 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -352,6 +352,12 @@ Otherwise treat \\ in NEWTEXT string as special:
 				 (char-to-string c)))))
 			 newtext ""))))))
     (concat rtn-str (substring str start))))
+
+
+(lyskom-provide-function buffer-live-p (object)
+  "T of OBJECT is an editor buffer that has not been deleted."
+  (and (bufferp object)
+       (buffer-name object)))
 
 ;;; Local Variables:
 ;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)

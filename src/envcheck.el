@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: envcheck.el,v 1.3 1997-07-15 10:23:13 byers Exp $
+;;;;; $Id: envcheck.el,v 1.4 1997-08-18 12:27:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -164,14 +164,15 @@ library from http://www.dina.kvl.dk/~abraham/custom/")
 
     (catch 'terminate
       (if have-w3
-          (load-library "w3")
-          (unless (fboundp 'w3-region)
-            (message "
+          (progn
+            (load-library "w3")
+            (unless (fboundp 'w3-region)
+              (message "
 --- Antique version of w3 detected (WARNING)
 
 You have a version of w3 installed that is of no use to LysKOM. Although
 LysKOM will work, it will be unable to format articles containing HTML.
-You may want to upgrade your w3 to version 3.something."))
+You may want to upgrade your w3 to version 3.something.")))
         (message "
 --- Didn't find w3 at all (WARNING)
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.25 1997-07-29 14:53:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.26 1997-08-18 12:26:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.25 1997-07-29 14:53:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.26 1997-08-18 12:26:53 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2413,6 +2413,11 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
      lyskom-button-open-url
      (("Open" . lyskom-button-open-url)
       ("Copy" . lyskom-button-copy-url))
+     nil)
+    (info-node 
+     info-node-text
+     lyskom-button-goto-info-node
+     (("Open" . lyskom-button-goto-info-node))
      nil)
     (email
      email-text

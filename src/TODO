@@ -4,6 +4,10 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
+    Radera inlägg borde gnälla lite om det finns markeringar.
+
+    Återse alla markerade borde gå att avbryta med nästa möte.
+
     lyskom-replace-deferred verkar inte använda lyskom-last-viewed i
     alla fall. Och den beter sig fel när man står vid prompten och
     vill bläddra bakåt.
