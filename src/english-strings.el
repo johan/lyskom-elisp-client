@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.281 2003-04-21 16:15:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.282 2003-04-25 22:24:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.281 2003-04-21 16:15:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.282 2003-04-25 22:24:37 qha Exp $"))
 
 
 ;;; ================================================================
@@ -108,6 +108,7 @@
   (define-key lyskom-en-edit-prefix (kbd "C-i 9") 'kom-edit-insert-digit-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
   (define-key lyskom-en-edit-prefix (kbd "C-i C-l") 'kom-edit-insert-link)
+  (define-key lyskom-en-edit-prefix (kbd "C-i C-i") 'kom-insert-last-info-nodename)
   (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-r") 'kom-edit-add-recipient)
   (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)

@@ -1,3 +1,14 @@
+2003-04-26  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map) english-strings.el
+	(lyskom-en-edit-mode-map): Added binding for
+	kom-insert-last-info-nodename.
+
+	* lyskom-buttons.el (lyskom-button-copy-timestamp): Fixed typo.
+
+	* lyskom-rest.el (lyskom-modify-prompt): Use current-time instead
+	of lyskom-current-client-time (fixes bug 1022).
+
 2003-04-25  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (kom-highlight-conferences): Corrected order of
