@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.206 2002-07-30 10:53:33 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.207 2002-09-08 11:13:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.206 2002-07-30 10:53:33 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.207 2002-09-08 11:13:14 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -251,7 +251,7 @@ other than t or nil are reserved for future use."
   server
 )
 
-(def-kom-var kom-extended-status-information t
+(def-kom-var kom-extended-status-information nil
   "*If t, list extended status information for all objects in LysKOM.
 Extended status information include such information as read FAQs.
 Values other than t or nil are reserved for future extensions."
@@ -2908,7 +2908,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face italic "grey" nil)
      (kom-mark-face default "gold" "black")
      (kom-warning-face bold "red" nil)
-     (kom-first-line-face nil nil "black")
+     (kom-first-line-face bold nil nil)
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#101010")
      (kom-text-body-face nil nil "#080808")

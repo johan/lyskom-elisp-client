@@ -5,8 +5,8 @@
     Version 0.47 av elispklienten innehåller ett stort antal bugfixar
     och ny funktionalitet. Den finns att hämta på följande adress:
 
-        <URL:http://www.lysator.liu.se/lyskom/elisp-client/>
-        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+      <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>
+      <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
     Filen heter lyskom-0.47.tar.gz, och en kopia av den text du läser
     just nu finns under namnet NEWS-0.47 i tar-arkivet. Det finns även
@@ -25,6 +25,12 @@
                                VIKTIGT
                          ====================
 
+    Den här versionen av elispklienten innehåller en del ändringar som
+    bryter mot invanda mönster och andra som (åtminstone i början) kan
+    upplevas besvärliga. Denna text beskriver ändringarna i detalj och
+    förklarar hur man kan ändra det man inte gillar. Läs speciellt
+    under rubriken "Ändringar i alla inläggsrelaterade kommandon".
+
     Från och med version 0.47 av elispklienten så är stödet för Gnu
     Emacs 19.34 och LysKOM-servrar med protokollversion 9 eller
     tidigare (dvs lyskomd äldre än version 2.0.0) inte längre
@@ -36,6 +42,8 @@
     Emacs 21.1 (eller senare i 21-serien) eller XEmacs 21.4 (eller
     senare i 21-serien). Det kanske fungerar med andra versioner
     också. Lycka till.
+
+
 
 * Problem med teckenuppsättningar
 
@@ -95,7 +103,7 @@
    servern, och varje gång det kommer en ny FAQ till ett möte man är
    med i så meddelas man om det nästa gång man går till mötet.
 
-** De alternativa utseendena som man kan ha på inläggstext,
+** De avvikande bakgrundsfärgerna som man kan ha på inläggstext,
    streckrader och första raden ser lite underliga ut i XEmacs
    eftersom de bara sträcker sig till slutet av texten och inte till
    fönstrets kant. Detta går tyvärr inte att undvika.
@@ -181,8 +189,9 @@
 ** Diverse
 
 *** Inlägg och andra texter har numera en egen bakgrundsfärg. Färgen
-    beräknas automatiskt utifrån normal bakgrundsfärg. Denna funktion
-    kan givetvis stängas av.
+    beräknas automatiskt utifrån normal bakgrundsfärg. Dessa avvikande
+    bakgrundsfärger kan givetvis stängas av via "Inställningar (för)
+    LysKOM".
 
 *** Status (för) session visar nu när en person loggade ut senast om
     personen inte är inloggad. Har du i Inställningar för LysKOM bett
@@ -228,6 +237,9 @@
 *** Standardbeteendet för "Lista (med) regexpar" (l r) är nu att inte
     göra skillnad på gemener och versaler. Ges prefixargument C-u,
     anses det som förut vara skillnad.
+
+*** "Lista (med) regexpar" frågar nu om man vill lista personer eller
+    möten.
 
 *** DSKOM och LysCOM har tillkommit i listan över LysKOM-servrar.
     CSD-KOM:s adress har uppdaterats, MedioKOM är borta och HelKOM
