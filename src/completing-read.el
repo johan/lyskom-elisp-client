@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.5 1993-07-28 18:29:18 linus Exp $
+;;;;; $Id: completing-read.el,v 36.6 1993-08-31 10:27:06 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.5 1993-07-28 18:29:18 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.6 1993-08-31 10:27:06 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -90,12 +90,17 @@ Returns the name."
 	  lyskom-minibuffer-local-completion-map)
 	 (minibuffer-local-must-match-map 
 	  lyskom-minibuffer-local-must-match-map))
-    (completing-read prompt 
-		     'lyskom-read-conf-name-internal
-		     type
-		     mustmatch
-		     initial
-		     'lyskom-name-hist)))
+    (condition-case error
+	(completing-read prompt 
+			 'lyskom-read-conf-name-internal
+			 type
+			 mustmatch
+			 initial
+			 'lyskom-name-hist)
+      (wrong-number-of-arguments ; This is for emacs 18.
+       (completing-read prompt 'lyskom-read-conf-name-internal
+			type mustmatch)))
+    ))
 
 
 (defun lyskom-read-conf-name-internal (string predicate all)
@@ -163,9 +168,28 @@ to conf-no translator."
 			 res)))))
     (cond
      ((eq all 'conf-no)
-      (car mappedlist))
+      (cond
+       ((= (length mappedlist) 1)
+	(car mappedlist))
+       (t (let ((found nil))
+	    (while (and (not found) mappedlist)
+	      (if (string= string
+			   (conf-stat->name (blocking-do 'get-conf-stat
+							 (car mappedlist))))
+		  (setq found (car mappedlist)))
+	      (setq mappedlist (cdr mappedlist)))
+	    found))))
      ((eq all 'lambda)
-      (= (length mappedlist) 1))
+      (or (= (length mappedlist) 1)
+	  (let ((found nil))
+	    (while (and (not found)
+			mappedlist)
+	      (if (string= string 
+			   (conf-stat->name (blocking-do 'get-conf-stat 
+							 (car mappedlist))))
+		  (setq found t))
+	      (setq mappedlist (cdr mappedlist)))
+	    found)))
      (all
       (mapcar (function (lambda (no)
 			  (conf-stat->name 
