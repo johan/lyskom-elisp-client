@@ -78,9 +78,12 @@
                 <br /><br />
                 <b>Status:</b>
                 <br />
-                Stabil<br />
-                Utvecklas aktivt<br />
-                Används mycket
+                <lang id="sv">Stabil</lang>
+		<lang id="en">Stable</lang><br />
+                <lang id="sv">Utvecklas aktivt</lang>
+		<lang id="en">Actively developed</lang><br />
+                <lang id="sv">Används mycket</lang>
+		<lang id="en">Heavily used</lang>
                 <br /><br />
                 <b>
                   <lang id="sv">Systemkrav:</lang>
@@ -165,7 +168,7 @@
                 <br /><br />
                 <b>
                   <lang id="sv">Dokumentation (föråldrad)</lang>
-                  <lang id="en">Documentation (obsolete)</lang>
+                  <lang id="en">Documentation (obsolete, Swedish)</lang>
                 </b>
                 <br />
                 <a href="lyskom-manual.html">
