@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.76 2001-02-25 16:28:18 joel Exp $
+# $Id: Makefile,v 44.77 2001-03-15 20:24:59 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.76 2001-02-25 16:28:18 joel Exp $
+# $Id: Makefile,v 44.77 2001-03-15 20:24:59 joel Exp $
 #
 
 
@@ -127,7 +127,11 @@ all: $(TARGET)
 
 vars.el: vars.el.in Makefile
 	rm -f vars.el
-	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < vars.el.in > vars.el
+	if test -d CVS -a x$(DO_RELEASE) = x; then \
+		sed "s/@@CLIENTVERSION@@/$(CLIENTVERSION) (from CVS; built `date +%Y-%m-%d`)/g" < vars.el.in > vars.el ; \
+	else \
+		sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < vars.el.in > vars.el ; \
+	fi
 	chmod 444 vars.el
 
 %.elc: %.el _header.el
@@ -172,8 +176,11 @@ install: $(TARGET) $(TARGET-EL)
 
 release: release-files release-move
 
-release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
-	mkdir lyskom-$(CLIENTVERSION)
+release-files: clean
+	$(MAKE) do-release-files DO_RELEASE=1
+
+do-release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
+	mkdir -p lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
 	    sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < distribution-$$i \
@@ -231,6 +238,6 @@ clean:
 		  lyskom-$(CLIENTVERSION).tar.gz \
 		  lyskom-$(CLIENTVERSION).zip \
 		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
-	$(RM) *~ *.elc $(GENERIC-CLEAN)
+	$(RM) vars.el *.elc $(GENERIC-CLEAN)
 	$(RM) -r build-stamp lyskom-elisp-client*.gz lyskom-elisp-client*.deb \
 		lyskom-elisp-client*.dsc lyskom-elisp-client*.changes
