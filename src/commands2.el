@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.40 1999-06-29 10:20:10 byers Exp $
+;;;;; $Id: commands2.el,v 44.41 1999-06-29 14:21:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.40 1999-06-29 10:20:10 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.41 1999-06-29 14:21:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2010,24 +2010,17 @@ is alive."
            (cache-del-conf-stat objno)))))
 
 
-(defun lyskom-read-text-no-prefix-arg (prompt command)
-  "Call in interactive list to read text-no"
-  (cond
-   ((null current-prefix-arg) lyskom-current-text)
-   ((integerp current-prefix-arg) current-prefix-arg)
-   ((listp current-prefix-arg) (lyskom-read-number prompt))
-   (t (signal 'lyskom-internal-error (list command)))))  
-
-(def-kom-command kom-fast-reply (&optional text-no)
+(def-kom-command kom-fast-reply (text-no)
   "Add a fast reply to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no
-                                                     'kom-fast-reply)))
-  (lyskom-format-insert 'fast-replying text-no)
-  (lyskom-fast-reply text-no
-                     (lyskom-read-string 
-                      (lyskom-get-string 'fast-reply-prompt)
-                      nil
-                      'lyskom-fast-reply-history)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no)))
+  (if text-no
+      (progn (lyskom-format-insert 'fast-replying text-no)
+             (lyskom-fast-reply text-no
+                                (lyskom-read-string 
+                                 (lyskom-get-string 'fast-reply-prompt)
+                                 nil
+                                 'lyskom-fast-reply-history)))
+    (lyskom-insert-string 'confusion-what-to-reply-to)))
                                          
 
 
@@ -2041,13 +2034,15 @@ is alive."
 
 (def-kom-command kom-agree (&optional text-no)
   "Convenience function to add agreement."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no
-                                                     'kom-agree)))
-  (lyskom-format-insert 'agreeing text-no)
-  (lyskom-fast-reply text-no
-                     (lyskom-read-string (lyskom-get-string 'agree-prompt)
-                                         (lyskom-default-agree-string)
-                                         'lyskom-fast-reply-history)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no)))
+  (if text-no
+      (progn (lyskom-format-insert 'agreeing text-no)
+             (lyskom-fast-reply text-no
+                                (lyskom-read-string
+                                 (lyskom-get-string 'agree-prompt)
+                                 (lyskom-default-agree-string)
+                                 'lyskom-fast-reply-history)))
+    (lyskom-insert-string 'confusion-what-to-agree-to)))
     
 
 (defun lyskom-fast-reply (text-no message)

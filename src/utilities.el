@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.29 1999-06-29 10:20:31 byers Exp $
+;;;;; $Id: utilities.el,v 44.30 1999-06-29 14:21:19 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.29 1999-06-29 10:20:31 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.30 1999-06-29 14:21:19 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -297,6 +297,21 @@ The value is actually the element of LIST whose car equals KEY."
                          lyskom-buffer)
                     (current-buffer)))
     (and (boundp sym) (symbol-value sym))))
+
+
+;;; ============================================================
+;;; Prefix arguments
+
+(defun lyskom-read-text-no-prefix-arg (prompt &optional command)
+  "Call in interactive list to read text-no"
+  (cond
+   ((null current-prefix-arg) lyskom-current-text)
+   ((integerp current-prefix-arg) current-prefix-arg)
+   ((listp current-prefix-arg) 
+    (lyskom-read-number prompt (lyskom-text-at-point)))
+   (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
+                    current-prefix-arg))))
+
 
 
 ;;; ======================================================================

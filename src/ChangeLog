@@ -1,5 +1,25 @@
 1999-06-29  David Byers  <davby@ida.liu.se>
 
+	* vars.el.in (lyskom-face-schemes): Added kom-warning-face.
+	(lyskom-faces): Ditto.
+
+	* view-text.el (lyskom-format-text-footer): Add the ability to
+	have properties on the format flags.
+
+	* async.el (lyskom-parse-async): Update the uconf-stat cache when
+	a name changes.
+
+	* komtypes.el (uconf-stat): Use def-komtype.
+	(uconf-stat): 
+
+	* messages.el (lyskom-filter-message-handler): New message handler
+ 	used to filter ignored messages.
+
+	* vars.el.in (kom-ignore-message-senders): New variable.
+	(kom-ignore-message-recipients): New variable.
+
+1999-06-29  David Byers  <davby@ida.liu.se>
+
 	* edit-text.el (lyskom-edit-send-check-recipients): Passive
 	members should be added as direct recipients.
 	(lyskom-edit-send-check-recipients): Add each author only once.
