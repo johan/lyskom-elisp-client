@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.133 2000-08-28 13:32:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.134 2000-08-28 15:07:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.133 2000-08-28 13:32:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.134 2000-08-28 15:07:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -436,6 +436,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (total-active-users . "    Sammanlagt %#1d aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (total-visible-active-users
      . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
+    (client-statistics . "    Klienternas fördelning:\n")
+    (client-statistics-line . "    %=-25#1s: %#2d")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
@@ -889,6 +891,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (has-entered-r . "%#2@Nu har %#1P gått in i %#3s.\n")
     (has-left . "Nu har %#1:P gått ur %#2s.")
     (has-left-r . "%#2@Nu har %#1P gått ur %#3s.\n")
+    (Unknown . "Okänd")
     (unknown . "okänd")
     (unknown-person . "Okänd person")
 

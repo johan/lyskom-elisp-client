@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.117 2000-08-28 13:32:15 byers Exp $
+;;;;; $Id: vars.el.in,v 44.118 2000-08-28 15:07:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.117 2000-08-28 13:32:15 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.118 2000-08-28 15:07:13 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -444,7 +444,8 @@ long as there are sessions with unread texts.
   "*Hook that is called before a text is shown. When the hooks are
 called, lyskom-view-text-text is bound to the text mass of the 
 text and lyskom-view-text-text-stat to the text-stat of the text
-to be shown.")
+to be shown."
+  local-hook)
 
 
 (def-kom-var lyskom-send-message-hook '(lyskom-send-message-trim-newlines)
@@ -455,17 +456,21 @@ and lyskom-message-recipient to the conf-stat of the recipient or nil if
 the recipient does not exist or if the message is a common message.
 
 If lyskom-message-string is set to nil by a hook, the message will not
-be sent.")
+be sent."
+  local-hook)
 
 (def-kom-var lyskom-send-message-setup-hook nil
-  "*Hook that is called when the minibuffer is entered to read a message.")
+  "*Hook that is called when the minibuffer is entered to read a message."
+  local-hook)
 
 (def-kom-var lyskom-send-message-exit-hook nil
-  "*Hook that is called when the minibuffer is exited after reading a message.")
+  "*Hook that is called when the minibuffer is exited after reading a message."
+  local-hook)
 
 (def-kom-var lyskom-send-text-hook nil
   "*Hook that is called before sending a text. Hook functions return t to
-signal suggess and nil to prevent the text from being sent.")
+signal suggess and nil to prevent the text from being sent."
+  local-hook)
 
 (def-kom-var lyskom-after-load-hook nil
   "*Hook to run once after lyskom is loaded.")
@@ -473,13 +478,15 @@ signal suggess and nil to prevent the text from being sent.")
 (def-kom-var lyskom-change-conf-hook nil
   "*Hook to run when changing conferences.
 The functions in this list are run with two arguments. The first is the 
-current conf-no and the second is the conf-no being changed to.")
+current conf-no and the second is the conf-no being changed to."
+  local-hook)
 
 (def-kom-var lyskom-login-hook nil
   "*What to do when logged in.
 This hook is called after we have logged in but before and command is
 accepted from the keyboard. It is called immediately before
-kom-login-hook.")
+kom-login-hook."
+  local-hook)
 
 (def-kom-var kom-login-hook nil
   "*What to do when logged in.
@@ -1853,7 +1860,7 @@ set to that text."
 
 (def-kom-var kom-quit-hook nil
   "*Hook to run when the LysKOM session is correctly ended."
-  server)
+  server-hook)
 
 (def-kom-var kom-quit-when-idle t
   "Non-nil to automatically quit when LysKOM is full and the session is idle")
@@ -1945,7 +1952,8 @@ in any conference other than the person's letterbox."
 When the hook is run 'sender' is bound to the pers-stat of the sender
 of the message (or possibly nil), 'recipient' is 0 if the message is a
 public message and otherwise the pers-no of the user, and 'message' is
-a string that holds the message.")
+a string that holds the message."
+  local-hook)
 
 
 (def-kom-var lyskom-executing-command t
