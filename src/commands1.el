@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.117 2001-08-15 23:41:08 qha Exp $
+;;;;; $Id: commands1.el,v 44.118 2001-08-15 23:46:01 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.117 2001-08-15 23:41:08 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.118 2001-08-15 23:46:01 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3891,7 +3891,7 @@ corresponding aux-item."
 
 (defun lyskom-read-link ()
   "Query user about link type and value, and return the corresponding
-aux-item."
+link as a string."
   (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
                             (cons (lyskom-get-string 'person) 'pers)
                             (cons (lyskom-get-string 'text) 'text)))
