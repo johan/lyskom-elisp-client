@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.12 1997-10-23 12:19:33 byers Exp $
+;;;;; $Id: view-text.el,v 44.13 1997-11-12 14:10:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.12 1997-10-23 12:19:33 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.13 1997-11-12 14:10:50 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -503,7 +503,8 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                result
                (cond
                 ((eq format-letter ?p)
-                 (lyskom-format (format "%%%s#1p" field-width) author))
+                 (lyskom-format (format "%%%s#1p" field-width) 
+                                (or author (text-stat->author text))))
 
                 ((eq format-letter ?P)
                  (lyskom-format (format "%%%s#1P" field-width) 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.51 1997-10-23 12:19:08 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.52 1997-11-12 14:10:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.51 1997-10-23 12:19:08 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.52 1997-11-12 14:10:45 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -697,7 +697,9 @@ The position lyskom-last-viewed will always remain visible."
           (setq fn (get-text-property (car bounds) 'special-insert))
           (remove-text-properties (car bounds) (cdr bounds)
                                   '(special-insert))
-          (funcall fn (car bounds) (cdr bounds))
+          (condition-case val
+              (funcall fn (car bounds) (cdr bounds))
+            (error (apply 'message (cdr val))))
           (setq start next)
           (setq bounds (next-text-property-bounds 1 start
                                                   'special-insert)))))
@@ -1433,10 +1435,10 @@ in lyskom-messages."
   (add-text-properties start (min (point-max) end) '(end-closed nil)))
 
 (defun lyskom-format-html (text)
-  (condition-case e (require 'w3) (error nil))
-  (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
-  (lyskom-signal-reformatted-text 'reformat-html)
-  (substring text 5))
+  (when (condition-case e (progn (require 'w3) t) (error nil))
+    (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+    (lyskom-signal-reformatted-text 'reformat-html)
+    (substring text 5)))
 
 ;;;(defun lyskom-format-html (text)
 ;;;  (condition-case e (require 'w3) (error nil))

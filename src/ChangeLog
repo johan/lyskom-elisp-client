@@ -1,3 +1,12 @@
+Wed Nov 12 09:03:26 1997  David Byers  <dbyers@atp>
+
+	* distribution-README: Beskriv kompilering från enstaka fil.
+
+	* lyskom-rest.el (lyskom-do-insert): Klara av att en
+	speciel-insert-funktion signalerar ett fel.
+	(lyskom-format-html): Försök inte formattera som HTML om inte w3
+	finns. 
+
 Wed Nov 12 10:29:21 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send): När man la till det
@@ -9,6 +18,12 @@ Mon Oct 27 11:09:35 1997  David Kågedal  <davidk@lysator.liu.se>
 	* flags.el (kom-edit-options-send): Fixade parentesfel.
 	
 	* review.el (lyskom-get-texts-by-and-to): Fixade felskrivning.
+
+Thu Oct 23 14:23:34 1997  David Byers  <davby@ida.liu.se>
+
+	* messages.el (lyskom-info-request-handler): Gjorde så att
+ 	elispklienten reagerar på INFO igen. ^N och ^O verkade ha
+ 	försvunnit av någon anledning.
 
 Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 
