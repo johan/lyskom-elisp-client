@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.77 2002-12-16 19:59:45 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.78 2002-12-31 00:22:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.77 2002-12-16 19:59:45 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.78 2002-12-31 00:22:09 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -315,12 +315,49 @@ If there is no active area, then do something else."
       url)))
 
 
-(defun lyskom-button-transform-text (text)
+
+(defun lyskom-button-add-links (text links)
+  "Add links to TEXT according to LINKS.
+LINKS is a list of lyskom-text-link objects."
+  (lyskom-traverse spec links
+    (let ((case-fold-search (lyskom-text-link->ignore-case spec)) 
+          (start 0))
+      (while (string-match (lyskom-text-link->pattern spec) text start)
+         ;; Need to do this here since replace-in-string fscks up match-data
+        (setq start (match-end 0))
+        (add-text-properties
+         (or (match-beginning (lyskom-text-link->highlight spec))
+             (match-beginning 0))
+         (or (match-end (lyskom-text-link->highlight spec))
+             (match-end 0))
+         (lyskom-generate-button 'url
+                                 nil
+                                 (replace-in-string 
+                                  (match-string 0 text)
+                                  (lyskom-text-link->pattern spec)
+                                  (lyskom-text-link->replacement spec))
+                                 'kom-url-face)
+         text)))))
+
+
+(defun lyskom-button-transform-text (text &optional text-stat)
   "Add text properties to the string TEXT according to the definition of
 lyskom-text-buttons. Returns the modified string."
   (let ((blist lyskom-text-buttons)
+        (rcpts (reverse (lyskom-text-recipients text-stat)))
         (start 0)
         (el nil))
+
+    ;; Do links from kom-text-links last -- they have precedence
+    ;; Do the first recipient last so links for that rcpt have prio
+    (lyskom-traverse rcpt rcpts
+      (lyskom-button-add-links text (cdr (assq rcpt kom-text-links))))
+
+    ;; Do global links from kom-text-links very last
+    (lyskom-button-add-links text (cdr (assq t kom-text-links)))
+
+
+    ;; Do other text buttons
     (while blist
       (setq el (car blist))
       (setq start 0)
@@ -364,12 +401,7 @@ lyskom-text-buttons. Returns the modified string."
  					(lyskom-button-get-text el text)
  					(lyskom-button-get-face el)))
 
- 	       ((eq (elt el 1) 'bugzilla)
- 		(lyskom-generate-button 'bugzilla
- 					(lyskom-button-get-arg el text)
- 					(lyskom-button-get-text el text)
- 					(lyskom-button-get-face el)))
-               
+
                ((eq (elt el 1) 'email)
                 (lyskom-generate-button 'email
                                         nil
@@ -798,19 +830,6 @@ This is a LysKOM button action."
   (if (fboundp 'compose-mail)
       (compose-mail text)
     (mail nil text)))
-
-(defun lyskom-button-show-bugzilla-bug (buf arg text)
-  (let ((case-fold-search t)
-        (url ""))
-    (unless (string-match "^http" kom-my-bugzilla)
-      (setq url "http://"))
-    (setq url (concat url kom-my-bugzilla))
-    (unless (string-match "/$" url)
-      (setq url (concat url "/")))
-    (setq url (concat url "show_bug.cgi?id=" arg))
-    (lyskom-button-open-url buf
-                            nil
-                            url)))
 
 
 (defun lyskom-button-copy-url (but arg text)
