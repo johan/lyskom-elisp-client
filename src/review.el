@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.36 2001-05-21 12:39:26 byers Exp $
+;;;;; $Id: review.el,v 44.37 2001-08-21 22:03:48 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.36 2001-05-21 12:39:26 byers Exp $\n"))
+	      "$Id: review.el,v 44.37 2001-08-21 22:03:48 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -88,12 +88,13 @@
 
 (def-kom-command kom-review-more (&optional count)
   "Review more articles using the same critera as the last review."
-  (interactive "P")
+  (interactive "p")
   (if (not lyskom-have-review)
       (lyskom-format-insert 'no-review-done)
-    (let* ((count (lyskom-read-number
-                   (lyskom-get-string 'review-how-many-more)
-                   (abs lyskom-last-review-num)))
+    (let* ((count (or count
+		      (lyskom-read-number
+		       (lyskom-get-string 'review-how-many-more)
+		       (abs lyskom-last-review-num))))
            (info (progn (if (and (listp count)
                                  (integerp (car count))
                                  (null (cdr count)))

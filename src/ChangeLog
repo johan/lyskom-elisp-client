@@ -1,3 +1,15 @@
+2001-08-21  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): understands links broken
+	before the number as well as those broken after it.
+
+	* review.el (kom-review-more): doesn't ignore the prefix argument
+	if supplied.
+
+	* swedish-strings.el, english-strings.el
+	(lyskom-sv-edit-mode-map, lyskom-en-edit-mode-map): moved
+	kom-edit-insert-link to C-c C-i C-l.
+
 2001-08-16  Björn Brenander  <bjorn@brenander.pp.se>
 
 	* commands1.el (kom-who-is-on-in-conference): now suggests the
@@ -40,20 +52,13 @@
 	<person 70:Calle Dybedahl (on a mission from Goddess)>:
 	New function for viewing a URL in Galeon.
 
-	* vars.el.in (kom-url-managers): See above.
-	(kom-galeon-command): See above.
+	* vars.el.in (kom-url-managers, kom-galeon-command): See above.
 
-	* swedish-strings.el (lyskom-custom-strings): See above.
-	(lyskom-custom-strings): See above.
-	(lyskom-custom-strings): See above.
+	* swedish-strings.el, english-strings.el (lyskom-custom-strings):
+	See above.
 
-	* option-edit.el (lyskom-customize-buffer-format): See above.
-	(lyskom-custom-variables): See above.
-	(lyskom-url-viewer-widget): See above.
-
-	* english-strings.el (lyskom-custom-strings): See above.
-	(lyskom-custom-strings): See above.
-	(lyskom-custom-strings): See above.
+	* option-edit.el (lyskom-customize-buffer-format,
+	lyskom-custom-variables, lyskom-url-viewer-widget): See above.
 
 2001-07-11  Christer Ekholm  <che@init.se>
 
