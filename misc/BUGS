@@ -1,0 +1,126 @@
+Version: 1
+Unused-Bug-Id: 8
+Note: This is the header of a bugtrack file.
+Note: If you see this, it means that there are
+Note: no *known* bugs to track.
+
+Id: 1
+Summary: Use the cookie package to implement the who buffer
+Created: inge: Mon Aug  3 00:46:42 1992
+Currently handled by: 
+Severity: 5
+Priority: 5
+Difficulty: 6
+Last edit: inge: Mon Aug  3 00:50:06 1992
+Reported by: ingwa
+Site: 
+Associated mails:
+End mails.
+---
+
+Id: 2
+Summary: When somebody restarts, the who buffer of all other people gets out of order
+Created: inge: Mon Aug  3 00:54:48 1992
+Currently handled by: 
+Severity: 7
+Priority: 7
+Difficulty: 6
+Last edit: inge: Mon Aug  3 00:55:57 1992
+Reported by: ingwa
+Site: 
+Associated mails:
+End mails.
+---
+See further bug with id 1.  I suggest we fix this one at the same time
+as bug no 1 is fixed.
+
+Id: 3
+Summary: The who buffer should have the number of logged in people in its status line
+Created: inge: Mon Aug  3 00:58:07 1992
+Currently handled by: 
+Severity: 4
+Priority: 3
+Difficulty: 2
+Last edit: inge: Mon Aug  3 00:58:07 1992
+Reported by: ingwa
+Site: 
+Associated mails:
+End mails.
+---
+
+Id: 4
+Summary: The login sequence is incorrect
+Created: inge: Mon Aug  3 01:01:20 1992
+Currently handled by: 
+Severity: 8
+Priority: 8
+Difficulty: 7
+Last edit: inge: Mon Aug  3 01:01:44 1992
+Reported by: Tommy Persson
+Site: 
+Associated mails:
+End mails.
+---
+92109 1991-08-22  17:03  /10 rader/ Tommy Persson
+Mottagare: LysKOM Elispklient; buggar, nyheter och annat. <3669>
+Markerad av dig och n}gon annan.
+[rende: Irriterende fr}ga om password
+------------------------------------------------------------
+Jag p}pekde denna bugg i ett tidigare inl{gg men den verkar inte ha
+blivit fixad.  N{r man startar om kom och har en gammal kombuffert
+kvar s} fr}gar kom efter password trots att man skickar med detta som
+argument.
+
+Jag startar kom med:
+
+(defun kom ()
+  (interactive)
+  (lyskom "obel18" "Tommy Persson" lyskom-passwd))
+(92109) -----------------------------------
+Kommentar i text 92110 
+Kommentar i text 92186 av Inge Wallin, ISY
+
+Id: 5
+Summary: Implement lyskom-end-of-command-hook
+Created: inge: Mon Aug  3 01:03:32 1992
+Currently handled by: 
+Severity: 3
+Priority: 4
+Difficulty: 5
+Last edit: inge: Mon Aug  3 01:03:32 1992
+Reported by: Thomas Bellman
+Site: 
+Associated mails:
+End mails.
+---
+
+Id: 6
+Summary: Use session-info instead of who-info
+Created: inge: Mon Aug  3 01:05:08 1992
+Currently handled by: 
+Severity: 3
+Priority: 8
+Difficulty: 5
+Last edit: inge: Mon Aug  3 01:05:54 1992
+Reported by: ingwa
+Site: 
+Associated mails:
+End mails.
+---
+Also check that the server never sends any who-infos any more.  It
+should be obsoleted by now.
+
+Id: 7
+Summary: Implement real prefetch into the client
+Created: inge: Mon Aug  3 01:08:36 1992
+Currently handled by: ingwa & linus
+Severity: 4
+Priority: 5
+Difficulty: 9
+Last edit: inge: Mon Aug  3 01:08:47 1992
+Reported by: everybody
+Site: 
+Associated mails:
+End mails.
+---
+
