@@ -1,3 +1,8 @@
+2005-01-16  Pontus Freyhult  <pont@soua.net>
+
+	* swedish-strings.el: Added compatibility key bindings to make GNU
+	Emacs 21 in UTF-8 mode work correctly.
+
 2005-01-12  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* english-strings.el (lyskom-en-mode-map): replaced reference to
