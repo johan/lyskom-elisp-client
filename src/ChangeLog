@@ -1,3 +1,14 @@
+2001-03-15  Joel Rosdahl  <joel@rosdahl.net>
+
+	* Makefile: Include build date in client version if built from a
+	checked-out CVS module.  Somewhat crude, but maybe nice.
+
+	* swedish-strings.el (lyskom-message): Added missing word.
+	Different formatting for client statistics lines.
+
+	* english-strings.el (lyskom-en-edit-mode-map): Fixed cut-n-paste
+	error.  Different formatting for client statistics lines.
+
 2001-02-25  Joel Rosdahl  <joel@rosdahl.net>
 
 	* Release av 0.46.1.
