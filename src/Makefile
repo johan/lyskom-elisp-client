@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.88 2002-05-24 11:55:00 ceder Exp $
+# $Id: Makefile,v 44.89 2002-05-26 21:34:15 byers Exp $
 
 # Useful targets:
 #
@@ -60,7 +60,9 @@ HEADER = 	header.el \
 		$(VARS-EL) \
 		macros.el \
 		compatibility.el \
-		language.el
+		language.el \
+		help.el
+
 
 # Next come the language definitions.
 LANGUAGE-EL := $(LANGUAGES:=-strings.el)
@@ -169,7 +171,7 @@ verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
 	$(EMACS-BATCH) -l lpath.el -l _header.el -f batch-byte-compile $<
 
 $(TARGET): $(TARGET-EL)
-	$(EMACS-BATCH) -l lpath.el -f batch-byte-compile $<
+	$(EMACS-BATCH) -l lpath.el -l help-compile.el -f batch-byte-compile $<
 
 HEADER-ELC = $(HEADER:%.el=%.elc)
 LANGUAGE-ELC = $(LANGUAGE-EL:.el%.elc)

@@ -1,3 +1,22 @@
+2002-05-26  David Byers  <david.byers@swipnet.se>
+
+	* help-compile.el: New file.
+
+	* help.el: New file.
+
+	* help.sv: New file.
+
+	* vars.el.in (lyskom-help-data): New variable.
+	(lyskom-maybe-setq-default): Removed eval since eval will be done
+	after macro expansion.
+	(lyskom-maybe-setq): Same here.
+
+	* swedish-strings.el (sv): Load swedish help strings.
+
+	* Makefile (SOURCES): Added help.el.
+
+	* macros.el (defmacro): New macro (only exists during compile).
+
 2002-05-25  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 528:

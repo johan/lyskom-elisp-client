@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.209 2002-05-25 18:22:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.210 2002-05-26 21:34:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.209 2002-05-25 18:22:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.210 2002-05-26 21:34:15 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1639,6 +1639,7 @@ You must become an active member of the conference to enter it.\n")
     ;; Help stuff
 
     (help-with-what . "What do you want help with? ")
+    (help-for . "Help for \"%#1s\"\n")
 
     ;; Button actions
 
@@ -3830,6 +3831,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (lyskom-language-var global lyskom-unread-title-format en
   (lyskom-make-lyskom-unread-title-format))
+
+(lyskom-language-var local lyskom-help-data en nil)
 
 
 (provide 'lyskom-strings)
