@@ -1,11 +1,7 @@
-Nummer 'p' sm{ller om inl{gget inte finns.
-
 Administrat|rskommandona borde bara vara under a n{r man {r i 
 administrat|rsmode:
 	\verg} till normalmode, Ta bort loginmeddelande, S{tt
 	loginmeddelande, St{ng  av servern.
-
-* N{r man skickar ett egen meddelande s} skall det inte tuta.
 
 * Ordningen av argumenten till funktioner som markera, avmarkera,
   subtrahera, addera.
@@ -23,8 +19,6 @@ r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
 
 * Svara p} personligt meddelande kanske {r en kul finess.
 
-* Visa senaste text med \344-notation.
-
 * En ny f|rb{ttrad lista av m|ten (f|rslag enligt -E):
      nummer medlemmar inl{gg senaste-inl{gg namn
   sorterat p} senaste inl{gg {r ett alternativ.
@@ -40,13 +34,11 @@ Linus: Hmm, hur skall de hanteras egentligen?
 * Fotnot skall {ven hamna i extrakopiemottagarem|ten.
 
 * klienten skall fr}ga efter en presentation.
+Linus: en sn{ll uppmaning inlagt. R{cker det?
 
 * flags.el: string-to-int sm{ller.
 
 * Trunkera detta m|te ur kommentarskedjan. (Tommy)
-
-* Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
-  skall bli obsolete!
 
 * who-bufferten skall ha antalet inloggade i sin statusrad.
 
@@ -58,10 +50,6 @@ Linus: Hmm, hur skall de hanteras egentligen?
 
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
-
-* I swedish-strings.el, n{r lyskom-modem-map skapas, anv{nds 
-  (fset 'lyskom-review-prefix (make-keymap)). Jag tror det borde 
-  vara (define-prefix-command 'lyskom-review-prefix) ist{llet. /ceder
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 H{r ovanf|r {r nya entries som vi {nnu inte har best{mt var de h|r
@@ -151,6 +139,8 @@ Linus: R{cker inte ceders uppdelning av anropen?
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
   who-info. 
+(* Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
+  skall bli obsolete!)
 
 * cookie-mode skall anv{ndas till:
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
@@ -199,7 +189,7 @@ klart?
 
 * fixa s} att \file{} genererar citationstecken ist{llet f|r `'
 inge: nja, varf|r det? det {r v{l bra som det {r.
-linus: snyggare.
+linus: snyggare, framf|r allt svenskare.
 
 * kom-page-before-command borde aktiveras f|rst efter det att alla
   argument till en funktion l{sts in.
@@ -265,8 +255,10 @@ linus: jag tycker vi v{ntar tills dess.
   i antal rader? n{r gr{nsen {r uppn}dd s} b|rjar klienten ta bort
   rader fr}n starten. detta kan ske antingen radvis eller inl{ggsvis,
   dvs endast hela utskrivna inl{gg tas bort (komplicerat). Ny flagga?
-Linus: G|r inte detta nu n{r vi {ven anv{nder oss av positioner i
+linus: G|r inte detta nu n{r vi {ven anv{nder oss av positioner i
 bufferten f|r att cacha texter. WARNING!
+linus: Fr}n och med 0.34.6 har jag sl{ngt ut bufferten som cache igen.
+R{ttare sagt, det finns ingen text-cachning l{ngre.
 
 * Fixa unwind-protect runt alla inmatningar fr}n tangentbordet s} att
   man kan trycka quit lite oftare och f} en ny prompt. Jag vill ha ett
