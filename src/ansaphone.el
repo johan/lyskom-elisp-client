@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: ansaphone.el,v 38.2 1996-02-17 05:41:27 davidk Exp $
+;;;;; $Id: ansaphone.el,v 38.3 1996-02-17 15:35:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,30 +34,8 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 38.2 1996-02-17 05:41:27 davidk Exp $\n"))
+	      "$Id: ansaphone.el,v 38.3 1996-02-17 15:35:49 byers Exp $\n"))
 
-
-(defvar kom-ansaphone-replies
-  '((group nil nil nil nil)
-    (common nil nil nil nil))
-  "*List of automatic replies to various messages.
-
-A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
-    MESSAGE-TYPE is one of personal, group or common or nil
-    SENDER is a list of integers or a single integer or nil
-    RECIPIENT is a list of integers or a single integer or nil
-    TEXT is a regular expression or nil
-    REPLY is a string or nil
-
-When an incoming message arrives and the auto-reply facility is on,
-this list is checked for automatic replies. The message type, sender,
-recipient and text of the incoming messages is matched against the 
-elements of this list. If a match is found, the corresponding reply is
-send. A nil in one of the message-type, sender, recipient or text
-components in the list is taken to mean a wildcard. A null reply means
-don't send a reply.
-
-If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
 
 (defvar lyskom-ansaphone-messages nil
   "Messages collected by the automatic reply facility.
@@ -157,13 +135,12 @@ See kom-ansaphone-on"
                                                       (match-end 1)))))
     (if (and kom-ansaphone-on
              sender
-             (not (eq sender 0))
+	     recipient
              (not is-automatic))
         (let ((reply (lyskom-ansaphone-find-reply 
                       message-type
-                      (conf-stat->conf-no sender)
-		      ;; Could this be the problem /davidk
-		      (cond ((numberp recipient) recipient)
+		      (conf-stat->conf-no sender)
+                      (cond ((numberp recipient) recipient)
 			    (t (conf-stat->conf-no recipient)))
                       text)))
           (if (and reply (elt reply 4))

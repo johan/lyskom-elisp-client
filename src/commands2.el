@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.16 1996-02-17 05:41:40 davidk Exp $
+;;;;; $Id: commands2.el,v 38.17 1996-02-17 15:36:02 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.16 1996-02-17 05:41:40 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.17 1996-02-17 15:36:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -95,7 +95,7 @@ MAP may be nil if there are no new texts."
     (set-buffer buffer)
     (goto-char (point-max))
     (lyskom-format-insert 'memberships-line
-			  (lyskom-return-time  (membership->last-time-read
+			  (lyskom-return-date-and-time  (membership->last-time-read
 						membership))
 			  (membership->priority membership)
 			  (if map
@@ -163,7 +163,7 @@ otherwise: the conference is read with lyskom-completing-read."
 				  "\n"
 				"")))
       (lyskom-format-insert 'created-at
-			    (lyskom-return-time
+			    (lyskom-return-date-and-time
 			     (conf-stat->creation-time conf-stat)))
       (lyskom-format-insert 'members
 			    (conf-stat->no-of-members conf-stat))
@@ -175,7 +175,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			    (1- (+ (conf-stat->no-of-texts conf-stat)
 				   (conf-stat->first-local-no conf-stat))))
       (lyskom-format-insert 'last-text-time
-			    (lyskom-return-time
+			    (lyskom-return-date-and-time
 			     (conf-stat->last-written conf-stat)))
       (lyskom-format-insert 'no-of-motd
 			    (conf-stat->msg-of-day conf-stat))
@@ -262,8 +262,10 @@ otherwise: the conference is read with lyskom-completing-read."
 	      (if (or (null member-conf-stat)
 		      (null membership))
 		  (lyskom-insert-string 'secret-membership)
-		(lyskom-print-date-and-time
-		 (membership->last-time-read membership))
+		(lyskom-insert 
+		 (format "%17s"
+			 (lyskom-return-date-and-time
+			  (membership->last-time-read membership))))
 		(let ((unread (- (+ (conf-stat->first-local-no conf-stat)
 				    (conf-stat->no-of-texts conf-stat))
 				 (membership->last-text-read membership)
@@ -306,7 +308,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			    conf-stat
 			    conf-stat)
       (lyskom-format-insert 'created-time
-			    (lyskom-return-time
+			    (lyskom-return-date-and-time
 			     (conf-stat->creation-time conf-stat)))
 
       (lyskom-format-insert 'created-confs
@@ -335,7 +337,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			      (% (pers-stat->total-time-present pers-stat)
 				 60)))
       (lyskom-format-insert 'last-log-in
-			    (lyskom-return-time
+			    (lyskom-return-date-and-time
 			     (pers-stat->last-login pers-stat)))
       (lyskom-format-insert 'user-name
 			    (pers-stat->username pers-stat))
@@ -345,7 +347,7 @@ otherwise: the conference is read with lyskom-completing-read."
           (lyskom-format-insert 'marked-texts
                             (pers-stat->no-of-marks pers-stat)))
       (lyskom-format-insert 'time-for-last-letter
-			    (lyskom-return-time
+			    (lyskom-return-date-and-time
 			     (conf-stat->last-written conf-stat)))
 
       (let ((superconf 
@@ -425,8 +427,10 @@ otherwise: the conference is read with lyskom-completing-read."
 		(if (or (null member-conf-stat)
 			(null membership))
 		    (lyskom-insert-string 'secret-membership)
-		  (lyskom-print-date-and-time
-		   (membership->last-time-read membership))
+          (lyskom-insert 
+           (format "%17s"
+                   (lyskom-return-date-and-time
+                    (membership->last-time-read membership))))
 		  (let ((unread (- (+ (conf-stat->first-local-no
 				       member-conf-stat)
 				      (conf-stat->no-of-texts
@@ -471,16 +475,27 @@ otherwise: the conference is read with lyskom-completing-read."
         'all t
         ;; Initial string:
         (cond
-         ((null kom-send-message-to-last-sender) nil)
-         ((and (eq kom-send-message-to-last-sender 'group)
+         ((eq kom-default-message-recipient 'everybody) nil)
+
+         ((and (eq kom-default-message-recipient 'group)
                lyskom-last-group-message-recipient)
           (if (string-match "^19" emacs-version)
               (cons lyskom-last-group-message-recipient 0)))
-         (lyskom-last-personal-message-sender
+
+	 ((or (and (eq kom-default-message-recipient 'group)
+		   (null lyskom-last-group-message-recipient))
+	      (and (eq kom-default-message-recipient 'sender)
+		   lyskom-last-personal-message-sender))
           (if (string-match "^19" emacs-version)
               (cons lyskom-last-personal-message-sender 0)
             lyskom-last-personal-message-sender))
-         (t ""))))
+
+         (t 
+	  (if lyskom-last-personal-message-sender
+	      (if (string-match "^19" emacs-version)
+		  (cons lyskom-last-personal-messsage-sender 0)
+		lyskom-last-personal-message-sender)
+	    "")))))
    message))
   
 

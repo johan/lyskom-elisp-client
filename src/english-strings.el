@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.14 1996-02-17 05:41:51 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.15 1996-02-17 15:36:16 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.14 1996-02-17 05:41:51 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.15 1996-02-17 15:36:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -614,9 +614,9 @@ Personal message from %#1P (%#3s):
 ")
     (message-from-to .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Group message to %#3s from %#2s (%#4s):
+Group message to %#3M from %#2P (%#4s):
 
-%#1s
+%#1t
 ----------------------------------------------------------------
 ")    (text-is-created . "Article %#1d has been created!")
 
@@ -867,7 +867,7 @@ Text:
     (kom-review-backward        "(Review) Backwards")
     (kom-view-next-text         "(Read) next article")
     (kom-who-is-on              "Who (is on)") 
-    (kom-display-who-buffer     "Display who (list)")
+;    (kom-display-who-buffer     "Display who (list)")
     (kom-busy-wait              "Wait (for news)")
     (kom-write-comment          "(Write) comment")
     (kom-comment-previous       "(Write) comment (to) previous article")
