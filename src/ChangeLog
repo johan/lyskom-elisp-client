@@ -1,5 +1,28 @@
 2003-08-17  David Byers  <byers@lysator.liu.se>
 
+	Go over EMPTY and MUSTMATCH parameters to lyskom-read-conf-stat:
+	* startup.el (kom-start-anew): Don't allow EMPTY when logging on.
+
+	* filter.el (kom-filter-subject): Don't use /=. Use not eq
+	instead.
+	(kom-filter-author): Same here.
+	(kom-filter-text): Same here.
+
+	* commands2.el (kom-create-aux-item): Set MUSTMATCH when readinf
+	conference name.
+
+	* vars.el.in (lyskom-default-conference-strategy): Default for
+	kom-set-permitted-submitters new-permitted-submitters-q is empty.
+
+	* commands1.el (kom-change-presentation): Don't allow EMPTY when
+	reading conf name (it means the same as the default initial
+	value).
+	(kom-change-conf-motd): Same here.
+	(kom-set-presentation): Same here.
+	(kom-set-motd-text): Same here.
+	(kom-remove-presentation): Same here.
+	(kom-change-password): Same here.
+
 	* macros.el (lyskom-with-external-functions): Work even if
 	byte-compile-unresolved-functions is not bound (e.g. in
 	check-strings.el and when not compiled).

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.183 2003-08-17 12:48:05 byers Exp $
+;;;;; $Id: commands2.el,v 44.184 2003-08-17 13:21:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.183 2003-08-17 12:48:05 byers Exp $\n"))
+              "$Id: commands2.el,v 44.184 2003-08-17 13:21:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1508,8 +1508,7 @@ members of the permitted submitters may submit texts to the conference."
       (let ((new-conf (lyskom-read-conf-stat
                        `(new-permitted-submitters-q 
                          ,(conf-stat->name conf-stat))
-                       '(all) 
-                       t nil t)))
+                       '(all) t nil t)))
         (if (eq new-conf nil)
             (lyskom-format-insert 'permitted-submitters-removed-for-conf 
                                   conf-stat)
@@ -2920,7 +2919,7 @@ properly in the client."
          (object-id (cond ((eq object-type 'server) nil)
                            ((eq object-type 'conference)
                             (lyskom-read-conf-no 'which-conf-to-add-aux-to
-                                                 '(pers conf)))
+                                                 '(pers conf) nil nil t))
                            ((eq object-type 'text)
                             (lyskom-read-number 'which-text-to-add-aux-to 
                                                 (if (and lyskom-current-text
@@ -3248,10 +3247,7 @@ Thie command can only be used if you have administrative rights
 to the LysKOM server."
   (interactive)
   (let* ((conf-stat (lyskom-read-conf-stat 'recommend-which-conf
-                                           '(conf)
-                                           nil
-                                           nil
-                                           t))
+                                           '(conf) nil nil t))
          (priority (and (lyskom-j-or-n-p 'recommend-set-priority-q)
                         (lyskom-read-num-range 0 255 'priority-q)))
          (mship-type (and priority
@@ -3259,18 +3255,9 @@ to the LysKOM server."
                           (lyskom-read-membership-type)))
 
          (aux-item (lyskom-create-aux-item 
-                    0
-                    29
-                    nil
-                    nil
-                    (lyskom-create-aux-item-flags nil
-                                                  nil
-                                                  nil
-                                                  nil
-                                                  nil
-                                                  nil
-                                                  nil
-                                                  nil)
+                    0 29 nil nil
+                    (lyskom-create-aux-item-flags nil nil nil nil
+                                                  nil nil nil nil)
                     0
                     (mapconcat 'lyskom-format-object
                                (delq nil

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.195 2003-08-17 12:48:05 byers Exp $
+;;;;; $Id: commands1.el,v 44.196 2003-08-17 13:21:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.195 2003-08-17 12:48:05 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.196 2003-08-17 13:21:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1475,9 +1475,7 @@ or conference doesn't have a presentation, a new presentation will
 be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no 'what-to-change-pres-you '(all) t nil t)))
-     (if (zerop no)
-	 (setq no lyskom-pers-no))
+   (let ((no (lyskom-read-conf-no 'what-to-change-pres-you '(all) nil nil t)))
      (blocking-do 'get-conf-stat no))
    'pres))
 
@@ -1488,9 +1486,7 @@ be created."
 or conference doesn't have a notice, a new notice till be created."
   (interactive)
   (lyskom-change-pres-or-motd-2
-   (let ((no (lyskom-read-conf-no 'who-to-put-motd-for '(all) t nil t)))
-     (if (zerop no)
-	 (setq no lyskom-pers-no))
+   (let ((no (lyskom-read-conf-no 'who-to-put-motd-for '(all) nil nil t)))
      (blocking-do 'get-conf-stat no))
    'motd))
 
@@ -1574,11 +1570,9 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
-   (let ((conf-no (lyskom-read-conf-no 'what-to-set-pres-you '(all) t nil t))
+   (let ((conf-no (lyskom-read-conf-no 'what-to-set-pres-you '(all) nil nil t))
          (text-no (lyskom-read-text-no-prefix-arg 'what-text-to-set-as-pres-no t
                                                   lyskom-previous-text)))
-     (when (zerop conf-no)
-         (setq conf-no lyskom-pers-no))
      (lyskom-set-pres-or-motd-2
       conf-no
       text-no
@@ -1590,16 +1584,11 @@ This command accepts text number prefix arguments (see
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
   (interactive "P")
-   (let ((conf-no (lyskom-read-conf-no 'what-to-set-motd-you '(all) t nil t))
+   (let ((conf-no (lyskom-read-conf-no 'what-to-set-motd-you '(all) nil nil t))
          (text-no (lyskom-read-text-no-prefix-arg
                    'what-text-to-set-as-motd-no t
                    lyskom-previous-text)))
-     (when (zerop conf-no)
-         (setq conf-no lyskom-pers-no))
-     (lyskom-set-pres-or-motd-2
-      conf-no
-      text-no
-      'motd)))
+     (lyskom-set-pres-or-motd-2 conf-no text-no 'motd)))
 
 (defun lyskom-set-pres-or-motd-2 (conf-no text-no what)
   (let ((set-pres (eq what 'pres)))
@@ -1636,9 +1625,8 @@ This command accepts text number prefix arguments (see
 remove a presentation without adding a new one. This can be accomplished
 with the `kom-change-presentation' command."
   (interactive)
-  (let ((conf-stat (or (lyskom-read-conf-stat 'who-to-remove-pres-for
-                                              '(all) t nil t)
-                       (blocking-do 'get-conf-stat lyskom-pers-no))))
+  (let ((conf-stat (lyskom-read-conf-stat 'who-to-remove-pres-for
+                                          '(all) nil nil t)))
     (cond ((null conf-stat)
            (lyskom-insert-string 'cant-get-conf-stat))
           ((zerop (conf-stat->presentation conf-stat))
@@ -1659,7 +1647,7 @@ with the `kom-change-presentation' command."
   "Removes the notice for a person or conference."
   (interactive)
   (let ((conf-stat (or (lyskom-read-conf-stat 'who-to-remove-motd-for
-                                              '(all) t nil t)
+                                              '(all) nil nil t)
 		       (blocking-do 'get-conf-stat lyskom-pers-no))))
     (cond
      ((null conf-stat)
@@ -2485,7 +2473,7 @@ If MARK-NO is nil, review all marked texts."
 person you need either the old password for the person, or have
 administrative privileges enabled."
   (interactive)
-  (let ((pers-no (lyskom-read-conf-no 'whos-passwd '(pers) t nil t))
+  (let ((pers-no (lyskom-read-conf-no 'whos-passwd '(pers) nil nil t))
 	(old-pw (silent-read (lyskom-get-string 'old-passwd)))
 	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
 	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
@@ -3596,7 +3584,8 @@ This command accepts text number prefix arguments (see
          (conf (blocking-do 'get-conf-stat
                             (lyskom-default-value last-variable)))
          (target (lyskom-read-conf-stat who-prompt '(all) 
-                                        nil (and conf (conf-stat->name conf))
+                                        nil 
+                                        (and conf (conf-stat->name conf))
                                         t)))
 
     (when (and target text-no)

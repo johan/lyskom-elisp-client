@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.100 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: option-edit.el,v 44.101 2003-08-17 13:21:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.100 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.101 2003-08-17 13:21:33 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1522,9 +1522,7 @@ All key bindings:
                                'which-conf)
                               (t 'which-name)))
                        (widget-get widget ':lyskom-predicate)
-                       nil
-                       ""
-                       t)))
+                       nil "" t)))
   (widget-setup))
                
 (defun lyskom-widget-name-value-create (widget)

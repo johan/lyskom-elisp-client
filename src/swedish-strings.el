@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.341 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.342 2003-08-17 13:21:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.341 2003-08-17 12:48:06 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.342 2003-08-17 13:21:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -334,20 +334,20 @@ Kopplar ned från LysKOM eftersom LysKOM är fullt och
 du har läst klart allting. Kom tillbaks senare.
 ===============================================================================
 \n")
-    (what-to-change-pres-you . "Vilket möte/person vill du ändra presentationen för (dig själv): ")
+    (what-to-change-pres-you . "Vilket möte/person vill du ändra presentationen för: ")
     (what-to-change-faq-you . "Vilket möte vill du ändra FAQ för: ")
-    (who-to-put-motd-for . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
+    (who-to-put-motd-for . "Vilket möte/person vill du sätta lapp på dörr för: ")
 
-    (what-to-set-pres-you . "Vilket möte/person vill du sätta presentationen för (dig själv): ")
+    (what-to-set-pres-you . "Vilket möte/person vill du sätta presentationen för: ")
     (what-text-to-set-as-pres-no . "Vilket inlägg vill du ska vara den nya presentationen: ")
-    (what-to-set-motd-you . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
+    (what-to-set-motd-you . "Vilket möte/person vill du sätta lapp på dörr för: ")
     (what-text-to-set-as-motd-no . "Vilket inlägg vill du ska vara den nya lappen: ")
     (conf-already-has-pres . "Mötet/personen har redan en presentation. Fortsätt ändå? ")
     (conf-already-has-motd . "Mötet/personen har redan en lapp på dörren. Fortsätt ändå? ")
     (setting-conf-pres . "Sätter presentation för %#1M till text %#2n...")
     (setting-conf-motd . "Sätter lapp på dörren för %#1M till text %#2n...")
 
-    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från (dig själv): ")
+    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från: ")
     (removing-pres-for-conf . "Tar bort presentation (text %#2n) från %#1M...")
 
     (cant-get-conf-stat . "Kan ej hämta mötesstatus för mötet.\n")
@@ -355,7 +355,7 @@ du har läst klart allting. Kom tillbaks senare.
     (want-become-member . "Vill du bli medlem? ")
     (no-ok . "Nehej.\n")
 
-    (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för (dig själv): ")
+    (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för: ")
 
     (conf-all-read . "inga olästa")
     (no-in-conf . "Du är inte närvarande i något möte.\n")
@@ -407,7 +407,7 @@ du har läst klart allting. Kom tillbaks senare.
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
     (what-mark-to-unread . "Oläsmarkera vilken markeringstyp (namn eller 0-255, RET för alla)? ")
     (what-mark-to-view . "Återse vilken markeringstyp (namn eller 0-255, RET för alla)? ")
-    (whos-passwd . "Vem vill du ändra lösenord för? (dig själv) ")
+    (whos-passwd . "Vem vill du ändra lösenord för? ")
     (old-passwd . "Mata in ditt nuvarande lösenord: ")
     (new-passwd . "Mata in det nya lösenordet: ")
     (changing-passwd . "Ändrar lösenordet...")
