@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.11 1993-08-16 17:03:05 linus Exp $
+;;;;; $Id: edit-text.el,v 36.12 1993-08-20 09:18:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.11 1993-08-16 17:03:05 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.12 1993-08-20 09:18:37 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -302,8 +302,10 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	    (initiate-create-text 'sending 'lyskom-create-text-handler
 				  (concat subject "\n" message) misc-list
 				  buffer)))
-	(set-window-configuration lyskom-edit-return-to-configuration)
-	(set-buffer (window-buffer (selected-window)))
+	(if kom-dont-restore-window-after-editing
+	    (bury-buffer)
+	  (set-window-configuration lyskom-edit-return-to-configuration)
+	  (set-buffer (window-buffer (selected-window))))
 	(goto-char (point-max)))))
 
 
