@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.348 2003-08-28 19:45:44 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.349 2003-08-28 20:58:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.348 2003-08-28 19:45:44 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.349 2003-08-28 20:58:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2961,6 +2961,8 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (no . "Nej")
     (to-file . "Till fil:")
     (max-text-length . "För inlägg kortare än: ")
+    (autowrap-timeout . "Antal sekunder: ")
+    (no-timeout . "Ingen tidsbegränsning")
     
     (friends . "Vänner och bekanta")
 
@@ -3547,7 +3549,18 @@ ta fram menyer.")
     (kom-autowrap-doc . "\
   Om detta är påslaget så kommer LysKOM att försöka bryta om raderna i
   stycken vars rader egentligen är längre än skärmen är bred. Stycken
-  som verkar vara förformatterade av författaren bryts dock aldrig om.")
+  som verkar vara förformatterade av författaren bryts dock aldrig om.
+  Det går att ange en maximal längd i tecken på inlägg som får brytas
+  om (vilket kan vara användbart för att undvika mycket långa inlägg).")
+
+    (kom-autowrap-timeout-doc . "\
+  Denna inställning begränsar hur lång tid automatisk ombrytning av
+  raderna i ett inlägg får ta (i sekunder). En begränsning är särskilt
+  användbar när man läser mycket långa inlägg. Notera att tiden är
+  högst ungefärlig. Ombrytningen kan pågå i flera sekunder längre än
+  detta värde. Begränsningen gör också att all inläggsvisning går
+  aningen långsammare. Om begränsningen är avstängd kan man ändå
+  avbryta ombrytningen genom att trycka C-g.") 
 
     (kom-print-number-of-unread-on-entrance-doc . "\
   Om detta är påslaget så visas antalet olästa i ett möte när man går till 
@@ -4227,6 +4240,8 @@ ta fram menyer.")
 "Streckade linjer kring inläggstexten:     ")
     (kom-autowrap-tag . 
 "Automatisk radbrytning vid läsning:       ")
+    (kom-autowrap-timeout-tag . 
+"Tidsbegränsning av automatisk radbrytning: ")
     (kom-show-author-at-end-tag .
 "Visa författarens namn efter inlägget:    ")
 

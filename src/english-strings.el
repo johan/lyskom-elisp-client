@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.308 2003-08-28 19:45:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.309 2003-08-28 20:58:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.308 2003-08-28 19:45:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.309 2003-08-28 20:58:21 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2849,6 +2849,8 @@ Select whether to execute command or keyboard macro.")
     (no . "No ")
     (to-file . "To file:")
     (max-text-length . "For texts shorter than: ")
+    (autowrap-timeout . "Timeout in seconds: ")
+    (no-timeout . "No timeout")
 
     (friends . "Friends and other special people")
 
@@ -3406,7 +3408,19 @@ up menus.")
     (kom-autowrap-doc . "\
   With this setting turned on, LysKOM will attempt to fill any paragraphs
   containing lines that are wider than the screen. Paragraphs that appear
-  to have been preformatted by the author are exempted from this treatment.")
+  to have been preformatted by the author are exempted from this treatment.
+  If set to a number, only texts shorter than this number (in characters)
+  will be filled. This may be useful to avoid filling very long texts.")
+
+    (kom-autowrap-timeout-doc . "\
+  This setting controls the maximum number of seconds the client may
+  spend attempting to fill paragraphs of a text. This is useful to
+  avoid long waits while the client is breaking lines in a very long
+  text. The actual time spent filling paragraphs may be several
+  seconds longer than this value. Unfortunately there is no way to
+  avoid this. Furthermore, setting a limit slows down all text display
+  slightly. When this is off, it is still possible to cancel paragraph
+  filling by typing C-g.")
 
     (kom-show-author-at-end-doc . "\
   When this is turned on, the name of the author will be shown at the end
@@ -4107,6 +4121,8 @@ up menus.")
 "Dashed lines around the text body:                ")
     (kom-autowrap-tag . 
 "Fill wide paragraphs before displaying:           ")
+    (kom-autowrap-timeout-tag . 
+"Maximum time spend filling paragraphs:            ")
     (kom-show-author-at-end-tag .
 "Show the name of the author after the body:       ")
 

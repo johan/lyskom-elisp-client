@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.101 2003-08-17 13:21:33 byers Exp $
+;;;;; $Id: option-edit.el,v 44.102 2003-08-28 20:58:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.101 2003-08-17 13:21:33 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.102 2003-08-28 20:58:22 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -207,6 +207,7 @@
     [kom-postpone-default]
     "\n"
     [kom-autowrap]
+    [kom-autowrap-timeout]
     [kom-show-author-at-end]
     [kom-show-creating-software]
     [kom-show-imported-importer]
@@ -613,6 +614,8 @@ All key bindings:
     (kom-autowrap (choice ((const (on t))
                            (const (off nil))
                            (number nil :tag max-text-length))))
+    (kom-autowrap-timeout (choice ((const (no-timeout nil))
+                                   (number nil :tag autowrap-timeout))))
     (kom-auto-list-faqs (toggle (on off)))
     (kom-auto-review-faqs (toggle (on off)))
     (kom-dashed-lines (toggle (on off)))

@@ -1,5 +1,15 @@
 2003-08-28  David Byers  <byers@lysator.liu.se>
 
+	Handle breaking very long texts:
+	* lyskom-rest.el (lyskom-fill-message): Added option of a timeout
+	for filling, replaced whitespace deletion at the end with a method
+	that does not rely on regexps (it seems that anchoring a regexp at
+	the end of the buffer does not improve performance as much as I
+	expected), and caused C-g to break out of the filling loop, but
+	not out of the function.
+
+	* vars.el.in (kom-autowrap-timeout): New variable.
+
 	Fix bug 1117:
 	* commands2.el (kom-set-garb-nice): Moved kom-set-keep-commented
 	into this function. It makes more sense that way.

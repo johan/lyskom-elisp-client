@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.218 2003-08-25 17:36:39 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.219 2003-08-28 20:58:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.218 2003-08-25 17:36:39 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.219 2003-08-28 20:58:21 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2443,23 +2443,26 @@ in lyskom-messages."
       (insert text)
       (goto-char (point-min))
 
-      (let ((start (point))
-            (in-paragraph nil)
-            (wrap-paragraph 'maybe)
-            (length-difference nil)
-            (constant-length nil)
-            (all-lines-colons t)
-            (current-line-length nil)
-            (last-line-length nil)
-            (paragraph-length 0)
-            (eol-point nil)
-            (have-indented-paragraphs nil)
-            (fill-column 
-             (cond ((not (integerp fill-column)) (- (window-width) 5))
-                   ((> fill-column (- (window-width) 5)) (- (window-width) 5))
-                   (t fill-column)))
-            (fill-prefix nil)
-            (single-line-regexp "\\(\\S-\\)"))
+      (let* ((start (point))
+             (in-paragraph nil)
+             (wrap-paragraph 'maybe)
+             (length-difference nil)
+             (constant-length nil)
+             (all-lines-colons t)
+             (current-line-length nil)
+             (last-line-length nil)
+             (paragraph-length 0)
+             (eol-point nil)
+             (have-indented-paragraphs nil)
+             (cancel (cons nil nil))
+             (timer (and kom-autowrap-timeout
+                         (run-at-time kom-autowrap-timeout nil (lambda (obj) (setcdr obj t)) cancel)))
+             (fill-column 
+              (cond ((not (integerp fill-column)) (- (window-width) 5))
+                    ((> fill-column (- (window-width) 5)) (- (window-width) 5))
+                    (t fill-column)))
+             (fill-prefix nil)
+             (single-line-regexp "\\(\\S-\\)"))
 
         ;;
         ;; Scan each line
@@ -2487,7 +2490,7 @@ in lyskom-messages."
               (cond 
 
                ;;
-       ;; An empty line signifies a new paragraph. If we were scanning
+               ;; An empty line signifies a new paragraph. If we were scanning
                ;; a paragraph and it was to be filled, fill it. 
                ;;
 
@@ -2517,7 +2520,7 @@ in lyskom-messages."
                 (setq wrap-paragraph nil))
 
                ;;
-            ;; We're in a paragraph, but we see indentation, a dash or
+               ;; We're in a paragraph, but we see indentation, a dash or
                ;; something that looks like the end of a LysKOM text.
                ;; This has to mean something...
                ;;
@@ -2575,8 +2578,8 @@ in lyskom-messages."
 
 
                ;;
-            ;; Here's a tricky one... We're not in a paragraph, and we
-          ;; see what looks like an indented paragraph. Take care with
+               ;; Here's a tricky one... We're not in a paragraph, and we
+               ;; see what looks like an indented paragraph. Take care with
                ;; this one!
                ;;
 
@@ -2598,7 +2601,7 @@ in lyskom-messages."
                                       current-line-length (match-beginning 2))))
 
                ;;
-          ;; Not in a paragraph, but here comes some text. Let's start
+               ;; Not in a paragraph, but here comes some text. Let's start
                ;; a paragraph, shall we?
                ;;
 
@@ -2618,7 +2621,7 @@ in lyskom-messages."
 
 
                ;;
-           ;; We're in a paragraph, but the line looks kind of strange
+               ;; We're in a paragraph, but the line looks kind of strange
                ;;
 
                ((and in-paragraph
@@ -2632,8 +2635,8 @@ in lyskom-messages."
                 (setq wrap-paragraph nil))
 
                ;;
-        ;; We're in a paragraph, the line looks OK, but is long. That 
-            ;; means we should probably be filling the paragraph later
+               ;; We're in a paragraph, the line looks OK, but is long. That 
+               ;; means we should probably be filling the paragraph later
                ;;
 
                ((and in-paragraph
@@ -2679,8 +2682,12 @@ in lyskom-messages."
               (setq paragraph-length (1+ paragraph-length))
               (unless (eobp)
                 (forward-line 1)
-                (beginning-of-line)))
-
+                (beginning-of-line)
+                (when kom-autowrap-timeout 
+                  (sit-for 0)
+                  (and (cdr cancel) (error "Out of time")))))
+          (quit (goto-char (point-max))
+                (setq in-paragraph nil))
           (error (goto-char (point-max))
                  (setq in-paragraph nil)))
 
@@ -2703,10 +2710,12 @@ in lyskom-messages."
       ;; Kill off unwanted whitespace at the end of the message
       ;;
 
-      (let ((tmp (buffer-string)))
-        (if (string-match "[ \t\n]+\\'" tmp)
-            (substring tmp 0 (match-beginning 0))
-          tmp))))))
+      (let* ((pos (1- (point-max))))
+	(while (and (> pos 0) 
+		    (progn (goto-char pos)
+			   (looking-at "[ \t\n\r]")))
+	  (setq pos (1- pos)))
+	(buffer-substring (point-min) pos))))))
 
 (defun lyskom-fill-message-line-length ()
   (- (save-excursion (end-of-line)
