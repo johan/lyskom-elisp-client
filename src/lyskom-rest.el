@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.190 2003-01-09 21:41:43 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.191 2003-01-12 16:53:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.190 2003-01-09 21:41:43 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.191 2003-01-12 16:53:40 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2519,7 +2519,9 @@ A list of pairs means OPTARG will be used as a key to look up the real
         ((and (listp arg)
               (or (assq optarg arg)
                   (assq t arg)))
-         (lyskom-beep (cdr (assq optarg arg)) optarg))
+         (lyskom-beep (cdr (or (assq optarg arg)
+                               (assq t arg)))
+                      optarg))
         (t (beep))))
 
 (defun lyskom-face-default-p (f1)
