@@ -1,3 +1,11 @@
+Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
+
+	* swedish-strings.el, commands2.el (kom-compile-bug-report): Lite
+	  sk|nhets{ndringar. Nu skall Backtracen hanteras snyggare.
+
+	* swedish-strings.el (lyskom-strings): buggreport-subject hade en
+	  %s f|r mycket.
+
 Wed Aug 14 02:46:40 1991  Linus Tolke Y  (linus at lysator)
 
 	* lyskom-rest.el (lyskom-end-of-command,

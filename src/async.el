@@ -148,7 +148,9 @@ this function shall be with current-buffer the BUFFER."
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	 (defvar lyskom-allow-eval nil)
+;^
+	 (setq lyskom-allow-eval nil)
+;v
 	 (cond
 	  ((string= message "info")
 	   (initiate-send-message 'follow nil sender 
