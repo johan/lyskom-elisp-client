@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.18 1999-06-19 09:04:34 byers Exp $
+;;;;; $Id: completing-read.el,v 44.19 1999-06-25 20:17:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.18 1999-06-19 09:04:34 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.19 1999-06-25 20:17:13 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -496,16 +496,26 @@ function work as a name-to-conf-stat translator."
                              candidate-list)
                             (list string))))))))))))
 
-
-
 (defun lyskom-completing-member (string list)
-  "Check case-insensitively if STRING is a member of LIST"
-  (let (result)
-  (while (and list (not result))
-    (if (string= (lyskom-unicase string) (lyskom-unicase (car list)))
-        (setq result list)
-      (setq list (cdr list))))
-  result))
+  (let ((string (lyskom-unicase (lyskom-completing-strip-name string)))
+        (result nil))
+    (while (and list (not result))
+      (if (string= string (lyskom-unicase 
+                           (lyskom-completing-strip-name (car list))))
+          (setq result list)
+        (setq list (cdr list))))
+    result))
+
+
+(defun lyskom-completing-strip-name (string)
+  "Strip parens and crap from a name"
+  (while (string-match "([^()]*)" string)
+    (setq string (replace-match " " t t string)))
+  (while (string-match "\\s-\\s-+" string)
+    (setq string (replace-match " " t t string)))
+  (if (string-match "^\\s-*\\(.*\\S-\\)\\s-*$" string)
+      (match-string 1 string)
+    string))
 
 
 (defun lyskom-read-conf-internal-verify-type (conf-no

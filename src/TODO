@@ -476,7 +476,9 @@ bilder för.
     Skriv ihop hantera medlemskap (prioritize-new.el.) Den skall
     utnyttja den nya medlemskapsstrukturen.
 
-    Implementera anonyma medlemskap i klienten.
+    Implementera anonyma medlemskap i klienten. Detta är inte långt
+    ifrån klart. Vi har hemliga medlemskap och behöver bara en hook
+    att bli anonym när man går in i mötet.
     
     Implementera re-z-lookup med re-lookup-X så att vi kan återinföra
     maximal kompatibilitet.
@@ -606,11 +608,15 @@ Naturligtvis bör beteendet vara valbart.
   vad för meddelande man vill ha, med det förra meddelandet som
   default. Typ: Meddelande ("Lunch") ? _
 
+    Klart.
+
 - Det vore kul om man kunde påverka lista nyheter så den listar möten
   med mer än foo olästa. Då kunde man ju kunna skriva C-u 0 ln för att
   få se alla möten. Varför? För att status person är plågsamt långsamt
   (jag förmodar att det frågar lyskomservern i stället för att glo i
   sin egen cache).
+
+    Klart.
 
 
 
@@ -684,6 +690,8 @@ få två svar, medan "hans persson" RET borde kunna ge bara ett, för det
 matchar mig exakt, men bara halvdant på den andra personen. Är det en
 bra eller dålig idé?
 
+    Klart.
+
 
 
 
@@ -702,6 +710,8 @@ Vid "list möten" utan parametrar (dvs return vid frågan)
 Internal Lyskom format error.: lyskom-format, ": argument error"
 
 Inget mera ploppar ut som resultat.
+
+        Antagligen klart. Vem vet.
 
 
 
@@ -1115,6 +1125,7 @@ för vanliga olästa?  Det jag skulle vilja se är motsvarande detta
 
 dvs information om det kommentarsträd jag just håller på att läsa.
 
+KLART.
 
 
 
@@ -1166,7 +1177,7 @@ efter att jag loggat in. Då blev det fult.
 > 
 > Jag förstår inte vems inlägg du vill
 >  skriva ett privat svar till.
-
+Klart
 
 
 
@@ -1303,7 +1314,7 @@ Här får du lite diverse småkorrigeringar (ja, några av dem är petiga):
    Om denna inställning är påslagen så kommer meddelanden som skickas 
 - automatiskt, till exempel automatiska svar och svar på
    fjärkontrollförsök
-+  automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
++ automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
    även att visas som om man hade skickat det manuellt.")
  
      (kom-friends-doc . "\

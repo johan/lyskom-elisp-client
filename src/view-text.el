@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.19 1999-06-23 12:25:31 byers Exp $
+;;;;; $Id: view-text.el,v 44.20 1999-06-25 20:17:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.19 1999-06-23 12:25:31 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.20 1999-06-25 20:17:25 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -193,15 +193,9 @@ Note that this function must not be called asynchronously."
 			    (if is-marked-by-me
 				(if (= num-marks 1)
 				    (lyskom-get-string 'marked-by-you)
-				  (if (= num-marks 2)
-				      (lyskom-get-string 
-				       'marked-by-you-and-one)
-				    (lyskom-format 'marked-by-you-and-several
-						   (1- num-marks))))
-			      (if (= num-marks 1)
-				  (lyskom-get-string 'marked-by-one)
-				(lyskom-format 'marked-by-several
-					       num-marks))))))
+                                  (lyskom-format 'marked-by-you-and-others
+                                                 (1- num-marks)))
+                              (lyskom-format 'marked-by-several num-marks)))))
 		   
 		     (lyskom-print-text text-stat text
 					mark-as-read text-no flat-review))

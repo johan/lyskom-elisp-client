@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.49 1999-06-23 12:25:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.50 1999-06-25 20:17:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.49 1999-06-23 12:25:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.50 1999-06-25 20:17:15 byers Exp $"))
 
 
 ;;; ================================================================
@@ -399,6 +399,7 @@ and you have finished reading. Please come back later.
 
     (weekdays . ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday"
 		 "Friday" "Saturday" "Sunday"])
+    (weekdays-short . ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"])
     (time-is . "The time is %#1s %#2s(according to the server).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
@@ -412,11 +413,11 @@ On this day, in 1973, the Lysator Academic Computer Society was
 formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
 
-    (total-users . "    A total of %#1d users.\n")
-    (total-visible-users . "    A total of %#1d visible users.\n")
-    (total-active-users . "    A total of %#1d active users.\n")
+    (total-users . "    A total of %#1d users (%#2s.)\n")
+    (total-visible-users . "    A total of %#1d visible users (%#2s.)\n")
+    (total-active-users . "    A total of %#1d active users (%#2s.)\n")
     (total-visible-active-users
-     . "    A total of %#1d visible active users.\n")
+     . "    A total of %#1d visible active users (%#2s.)\n")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy? ")
     (who-to-sub-q . "Remove who/what as a recipient? ")
@@ -587,6 +588,7 @@ The message you were sending to %#1M was:
     (you-have-read-everything . "No news (is bad news).\n")
     (total-unreads . "\nYou have %#1d unread articles.\n")
     (total-unread . "\nYou have 1 unread article.\n")
+    (list-unread-with-n-unread . "Listing conferences with at least %#1d unread.\n")
     (waiting-for-anything .
      "You are waiting for an article in any conference.\n")
     (waiting-higher-than . 
