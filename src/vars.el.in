@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.17 1996-02-02 05:09:08 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.18 1996-02-05 11:46:53 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.17 1996-02-02 05:09:08 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.18 1996-02-05 11:46:53 byers Exp $\n"))
 
 
 
@@ -43,7 +43,7 @@
 ;;;; ================================================================
 ;;;;                    Emacs dependant variables
 
-(defvar kom-emacs-knows-iso-8859-1 nil
+(defvar kom-emacs-knows-iso-8859-1 t
   "*If non-nil then dont convert texts and other things to swascii.
 This variable is not saved. It should be set in your .emacs")
 
@@ -216,54 +216,58 @@ various LysKOM elements.")
   '((text
      text-text
      lyskom-button-view-text
-     ((kom-view "Återse" . lyskom-button-view-text)
-      (kom-write-comment "Kommentera" . lyskom-button-comment-text)
-      (kom-private-answer "Personligt svar" . lyskom-button-private-comment-text)
-      (kom-mark-text "Markera" . lyskom-button-mark-text)
-      (kom-unmark-text "Avmarkera" . lyskom-button-unmark-text))
+     (("Återse texten" . lyskom-button-view-text)
+      ("Kommentera texten" . lyskom-button-comment-text)
+      ("Personligt svar" . lyskom-button-private-comment-text)
+      ("Markera texten" . lyskom-button-mark-text)
+      ("Avmarkera texten" . lyskom-button-unmark-text))
      nil)
     (conf 
      conf-text
      lyskom-button-view-conf-presentation
-     ((kom-view-presentation "Återse presentation" . 
-                             lyskom-button-view-conf-presentation)
-      (kom-status-conf "Visa status" . lyskom-button-view-conf-status)
-      (kom-go-to-conf "Gå till mötet" . lyskom-button-goto-conf))
+     (("Visa presentation" . lyskom-button-view-conf-presentation)
+      ("Visa mötesstatus" . lyskom-button-view-conf-status)
+      ("Gå till mötet" . lyskom-button-goto-conf)
+      ("Bli medlem i mötet" . lyskom-button-add-self)
+      ("Utträd ur mötet" . lyskom-button-sub-self))
      ((kom-list-news . lyskom-button-goto-conf)))
     (pers 
      pers-text
      lyskom-button-view-pers-presentation
-     ((kom-view-presentation "Återse presentation" . 
+     (("Visa presentation" . 
                              lyskom-button-view-pers-presentation)
-      (kom-status-person "Visa status" . lyskom-button-view-pers-status)
-      (kom-send-letter "Skicka brev" . lyskom-button-mail))
+      ("Visa personstatus" . lyskom-button-view-pers-status)
+      ("Skicka brev" . lyskom-button-mail)
+      ("Sänd meddelande" . lyskom-button-send-message))
      nil)
     (url 
      url-text
      lyskom-button-open-url
-     ((kom-open-url "Öppna" . lyskom-button-open-url)
-      (kom-copy-url "Kopiera" . lyskom-button-copy-url))
+     (("Öppna" . lyskom-button-open-url)
+      ("Kopiera" . lyskom-button-copy-url))
      nil))
 
 "This variable defines valid button types in LysKOM. Each element is a
-list consisting of TYPE LABEL DEFAULT ACTIONS HINTS.
+list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).
 TYPE is the button type the entry defines
 LABEL is a textual representation for the button type, used in menu titles. If
-it is a symbol, that symbol will be looked up using lyskom-get-string.
+      it is a symbol, that symbol will be looked up using lyskom-get-string.
 DEFAULT is the default action to take on a click. It must be a function.
-ACTIONS are other possible actions. The format of this entry is described below.
-HINTS is a list of hints to override the default action. This is described below.
+ACTIONS are other possible actions. The format of this entry is described 
+        below.
+HINTS is a list of hints to override the default action. This is described 
+      below.
 
-The ACTIONS entry is used to construct a pop-up menu. It is a list consisting of
-lists with the format (COMMAND STRING . FUNCTION). COMMAND is used to distinguish
-the elements of the menu, STRING is the menu label and FUNCTION is the function to
-call when the menu item is selected.
+The ACTIONS entry is used to construct a pop-up menu. It is a list consisting 
+of lists with the format (STRING . FUNCTION). STRING is the menu label and
+FUNCTION is the function to call when the menu item is selected.
 
 The HINTS entry is used to generate hints that the default action should be 
 overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
 as interactive LysKOM command and HINT is a function to call. When a button
-is generated while the command COMMAND is being executed, HINT is used as a hint
-for a new default action. The user has the option to ignore or used the hint.")
+is generated while the command COMMAND is being executed, HINT is used as a 
+hint for a new default action. The user has the option to ignore or used the 
+hint.")
 
 
 (defvar lyskom-text-buttons
@@ -343,6 +347,9 @@ he gets a y-or-n-p question for all recipients.")
 
 (defvar kom-max-buffer-size nil
   "*If non-nil, ensure that buffers won't grow any larger than this")
+
+(defvar lyskom-print-complex-dates t
+  "*If non-nil, print today and yesterday using a special format.")
 
 (defvar lyskom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")

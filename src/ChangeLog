@@ -1,3 +1,15 @@
+Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in: Lade till kom-print-complex-dates, fixade fel som
+	uppstod vid tidigare incheckning.
+
+	* view-text.el: lyskom-print-date-and-time kan nu skriva ut idag
+	och igår.
+
+	* english-strings.el, swedish-strings.el: Lade till idag och igår.
+
+	* commands2.el: Lade till argument till några funktioner.
+
 Thu Feb  1 10:30:54 1996  David Byers  <byers@lysator.liu.se>
 
 	* commands1.el, commands2.el: Some more interactive functions

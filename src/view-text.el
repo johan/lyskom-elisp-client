@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 38.8 1996-02-01 09:37:25 byers Exp $
+;;;;; $Id: view-text.el,v 38.9 1996-02-05 11:46:55 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 38.8 1996-02-01 09:37:25 byers Exp $\n"))
+	      "$Id: view-text.el,v 38.9 1996-02-05 11:46:55 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -295,14 +295,45 @@ recipients to it that the user is a member in."
     res))
 
 
+(defun lyskom-subtract-one-day (x)
+  (let ((high-x (1- (car x)))
+        (low-x (car (cdr x))))
+    (if (> 20864 low-x)
+        (setq high-x (1- high-x)
+              low-x (+ low-x 65536)))
+    (setq low-x (- low-x 20864))
+    (list high-x low-x nil)))
+
+(defun lyskom-calculate-day-diff (time)
+  (let* ((now (current-time))
+         (yesterday (lyskom-subtract-one-day now))
+         (decnow (decode-time now))
+         (decthen (decode-time yesterday)))
+    (cond ((and (= (time->mday time) (elt decnow 3))
+                (= (1+ (time->mon time)) (elt decnow 4))
+                (= (+ (time->year time) 1900) (elt decnow 5)))
+           'today)
+          ((and (= (time->mday time) (elt decthen 3))
+                (= (1+ (time->mon time)) (elt decthen 4))
+                (= (+ (time->year time) 1900) (elt decthen 5)))
+           'yesterday)
+          (t nil))))
+
 (defun lyskom-print-date-and-time (time)
   "Print date and time. Arg: TIME."
-  (lyskom-format-insert 'time-y-m-d-h-m
-			(+ (time->year time) 1900)
-			(1+ (time->mon  time))
-			(time->mday time)
-			(time->hour time)
-			(time->min  time)))
+  (let* ((diff (lyskom-calculate-day-diff time)))
+    (lyskom-format-insert 
+     (if (and diff lyskom-print-complex-dates)
+         (intern (concat (symbol-name diff) "-time-format-string"))
+       'time-y-m-d-h-m)
+     (+ (time->year time) 1900)
+     (1+ (time->mon  time))
+     (time->mday time)
+     (time->hour time)
+     (time->min  time)
+     (and diff (lyskom-get-string diff)))))
+                  
+
 
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
