@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.135 2001-05-07 15:20:34 byers Exp $
+;;;;; $Id: vars.el.in,v 44.136 2001-05-08 21:45:39 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.135 2001-05-07 15:20:34 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.136 2001-05-08 21:45:39 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2366,7 +2366,8 @@ See lyskom-compute-char-classes."
     ("text/html"          . lyskom-format-html)
     ("text/enriched"      . lyskom-format-enriched)
     ("text/plain"         . nil)
-    ("x-kom/basic"        . nil)
+    ("text/x-kom-basic"   . nil)
+    ("x-kom/basic"        . nil)  ;Archaic alias for text/x-kom-basic.
     ("x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one

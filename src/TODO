@@ -1049,7 +1049,7 @@ den här strukturen:
 
 	Byte	Innehåll
 	0-24	Ärenderaden
-	25-149	Texten i formatet x-kom/basic (dvs omformatterbar text)
+	25-149	Texten i formatet text/x-kom-basic (dvs omformatterbar text)
 	150-299	Texten i formatet text/html
 	300-399	En liten ikon som används av HTML-versionen
 	400-799	En shockwave-animation som används av HTML-versionen
@@ -1068,7 +1068,7 @@ sekvens av delar.  En fjärde siffra innebär att en sådan del i sin tur
 finns i flera format, et c.
 
 Exemplet är en sekvens av ärenderaden och texten.  Texten finns i två
-varianter: x-kom/basic och text/html.  text/html-varianten är en
+varianter: text/x-kom-basic och text/html.  text/html-varianten är en
 sekvens av tre delar: själva html-texten, en ikon, och en animation.
 Animationen finns i två varianter: en shockwaveanimation och en
 stillbild.
@@ -1076,7 +1076,7 @@ stillbild.
 Nedkodat skulle det kunna bli så här:
 
 	1;x-kom/subject;0;24
-	2.1;x-kom/basic;25;125
+	2.1;text/x-kom-basic;25;125
 	2.2.1;text/html;150;150
 	2.2.2;image/png;300;100
 	2.2.3.1;image/shockwave;400;400
@@ -1090,7 +1090,7 @@ eller något liknande.  Exemplet skulle kunna se ut ungefär så här:
 	(sequence
 	  (x-kom/subject 0 24)
 	  (alternative
-	    (x-kom/basic 25 125)
+	    (text/x-kom-basic 25 125)
 	    (text/html 150 150
 	      (inline
 		(image/png 300 100)
