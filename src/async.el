@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 36.1 1993-04-26 19:35:28 linus Exp $
+;;;;; $Id: async.el,v 36.2 1993-04-27 00:00:57 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 36.1 1993-04-26 19:35:28 linus Exp $\n"))
+	      "$Id: async.el,v 36.2 1993-04-27 00:00:57 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -91,12 +91,15 @@ this function shall be with current-buffer the BUFFER."
 	    (new-name (lyskom-parse-string)))
 	(lyskom-save-excursion
 	  (set-buffer buffer)
+	  (if (= conf-no lyskom-pers-no)
+	      (lyskom-insert-before-prompt 
+	       (lyskom-format 'you-changed-name-to new-name)))
 	  (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
 	  (cond
 	   ((lyskom-is-in-minibuffer))
 	   (kom-presence-messages
-	    (lyskom-message (lyskom-format 'name-has-changed-to-name
-					   old-name new-name))))
+	    (lyskom-message "%s" (lyskom-format 'name-has-changed-to-name
+						old-name new-name))))
 	  (cond
 	   (kom-presence-messages-in-buffer
 	    (lyskom-insert-before-prompt
@@ -167,10 +170,16 @@ this function shall be with current-buffer the BUFFER."
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	 (initiate-get-conf-stat 'async
-				 'lyskom-show-personal-message sender
-				 recipient
-				 message))))
+	 (cond
+	  ((string= message "	")
+	   (initiate-send-message 'follow nil sender
+				  (format "emacs-version: %s\nclient-version: %s"
+					  (emacs-version)
+					  lyskom-clientversion)))
+	  (t (initiate-get-conf-stat 'async
+				     'lyskom-show-personal-message sender
+				     recipient
+				     message))))))
 
      ((eq msg-no 13)			; New logout
       (let ((pers-no (lyskom-parse-num))

@@ -1,4 +1,17 @@
+Tue Apr 27 00:48:00 1993  Linus Tolke Y  (linus@bodil)
+
+	* commands2.el, swedish-strings.el, english-strings.el
+	  (have-to-be-in-conf) changed to have-to-be-in-conf-with-unread.
+
 Mon Apr 26 21:25:25 1993  Linus Tolke Y  (linus@bodil)
+
+	* commands2.el, lyskom-rest.el (kom-list-news, lyskom-list-news,
+	  lyskom-prefetch-all-confs): kom-list-news now takes a prefix
+	  argument.
+
+	* async.el (lyskom-parse-async): Names can now contain %.
+	  Extra text in the buffer when you change name.
+	  Clientinformation added.
 
 	* lyskom-rest.el, startup.el, Makefile: rewound to before the
 	  testing with prefetch. Some bugs left fixed.
