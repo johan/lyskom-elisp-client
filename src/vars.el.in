@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.273 2003-08-28 19:45:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.274 2003-08-28 20:58:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.273 2003-08-28 19:45:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.274 2003-08-28 20:58:22 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2080,6 +2080,22 @@ When set to `nil', do not break lines automatically at all.
 
 Values other than `t', `nil' and integers are reserved for future
 use."
+  server)
+
+(def-kom-var kom-autowrap-timeout 5
+  "**Limits how much time automatic text wrapping may take.
+
+When set to an integer, limits the number of seconds automatic line
+breaking may take. Without a limitation, breaking lines of a very long
+text can take a very, very long time. Note that this setting is
+approximate; the actual time spent breaking lines may be several
+seconds longer than this value. Furthermore, using this setting slows
+down all text display slightly.
+
+When set to `nil', do not limit the amout of time automatic line
+breaking may take.
+
+Values other than `nil' and integers are reserved for future use."
   server)
 
 (def-kom-var kom-keep-alive-interval 180
