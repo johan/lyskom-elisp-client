@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.37 2003-07-30 18:15:11 byers Exp $
+;;;;; $Id: flags.el,v 44.38 2003-08-13 20:31:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,11 +34,13 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.37 2003-07-30 18:15:11 byers Exp $\n"))
+	      "$Id: flags.el,v 44.38 2003-08-13 20:31:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
 
+(put 'lyskom-invalid-flag-type 'error-conditions
+     '(error lyskom-error lyskom-invalid-flag-type))
 
 (defvar lyskom-options-text nil
   "Text mass when reading options.")
@@ -118,16 +120,18 @@ settings and save them to your emacs init file."
          (common-block 
           (concat
            (mapconcat (lambda (var)
-                        (let ((common-name (elt var 0))
-                              (elisp-name (elt var 1))
-                              (type (elt var 2)))
-                          (lyskom-format-objects
-                           (symbol-name common-name)
-                           (funcall 
-                            (cdr (assq 'write
-                                       (cdr (assq (or type t)
-                                                  lyskom-global-variable-types))))
-                            (symbol-value elisp-name)))))
+                        (condition-case nil
+                            (let ((common-name (elt var 0))
+                                  (elisp-name (elt var 1))
+                                  (type (elt var 2)))
+                              (lyskom-format-objects
+                               (symbol-name common-name)
+                               (funcall 
+                                (cdr (assq 'write
+                                           (cdr (assq (or type t)
+                                                      lyskom-global-variable-types))))
+                                (symbol-value elisp-name))))
+                          (lyskom-invalid-flag-type "")))
                       lyskom-global-variables
                       "\n")
            ))
@@ -469,3 +473,11 @@ elisp variable VAR."
 
 (defun lyskom-flag-read-from-string (str)
   (car (read-from-string str)))
+
+(defun lyskom-flag-read-integer (str)
+  (cond ((equal str "nil") nil)
+        (t (string-to-int str))))
+
+(defun lyskom-flag-write-integer (val)
+  (cond ((integerp val) (prin1-to-string val))
+        (t (signal 'lyskom-invalid-flag-type nil))))

@@ -1,5 +1,24 @@
 2003-08-13  David Byers  <byers@lysator.liu.se>
 
+	Work on bug 1075:
+	* parse.el (lyskom-parse-static-server-info): New function.
+
+	* services.el (initiate-get-boottime-info): New function.
+
+	* vars.el.in (lyskom-static-server-info): New variable.
+
+	* komtypes.el (static-server-info): New type.
+
+	Fix bug 1078:
+	* vars.el.in (lyskom-global-variable-types): Change read of
+	integer.
+	(kom-default-mark): Put this both in the common area and the elisp
+	area. This is a good thing when we set it to values that are not
+	legal according to the protocol specification.
+
+	* flags.el (lyskom-flag-read-integer): When reading integers,
+	accept nil too.
+
 	Delete initial value on change:
 	* completing-read.el (lyskom-read-from-minibuffer-clear-initial):
 	New function.

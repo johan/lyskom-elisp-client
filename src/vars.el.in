@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.254 2003-08-02 22:08:39 byers Exp $
+;;;;; $Id: vars.el.in,v 44.255 2003-08-13 20:31:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.254 2003-08-02 22:08:39 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.255 2003-08-13 20:31:52 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -52,8 +52,8 @@
 (defconst lyskom-global-variable-types
   '((boolean (read . lyskom-flag-read-boolean)
              (write . lyskom-flag-write-boolean))
-    (integer (read . string-to-int)
-             (write . prin1-to-string))
+    (integer (read . lyskom-flag-read-integer)
+             (write . lyskom-flag-write-integer))
     (symbol-list (read . lyskom-flag-read-symbol-list)
                  (write . lyskom-flag-write-symbol-list))
     (t (read . lyskom-flag-read-from-string)
@@ -673,7 +673,8 @@ simply mark with that number. When set to `nil', `kom-mark-text' will
 ask for a mark.
 
 Values other than integers and `nil' are reserved for future use."
-  common default-mark integer)
+  common default-mark integer
+  server)
 
 (def-kom-var kom-symbolic-marks-alist '(("Standard" . 100))
   "**Association list that maps symbolic marks to mark numbers.
@@ -3270,6 +3271,10 @@ will be shown."
 
 (def-kom-var lyskom-conf-cache nil
   "Cache of conference statuses."
+  local)
+
+(def-kom-var lyskom-static-server-info nil
+  "Cache of static-server-info"
   local)
 
 (def-kom-var lyskom-uconf-cache nil
