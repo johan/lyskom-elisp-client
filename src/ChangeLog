@@ -1,5 +1,9 @@
 2003-08-14  David Byers  <byers@lysator.liu.se>
 
+	Handle async-new-presentation and async-new-motd correctly:
+	* async.el (lyskom-parse-async): Set the correct buffer when
+	looking for confs in the cache.
+
 	Show more stats in non-extended display:
 	* commands2.el (kom-status-server): Show text, conf and person
 	statistics in the default display.
