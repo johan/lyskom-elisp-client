@@ -1,3 +1,18 @@
+2002-01-07  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-miscs): Place add button after
+	aux-items. Make a button out of the aux-item prefix.
+	(lyskom-edit-insert-aux-item): Place new aux-items before add
+	button.
+	(lyskom-edit-parse-headers): Use aux-item-prefix-regexp
+	(lyskom-edit-on-aux-item): Same here.
+
+	* utilities.el (lyskom-parse-date): New function (not complete)
+	that can be used to translate a string to a date specification.
+
+	* vars.el.in (lyskom-button-actions): Changed add-recipient to
+	add-recipient-or-xref and added choices for aux-items.
+
 2002-01-03  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (kom-set-unread): Reindented.

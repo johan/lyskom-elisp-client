@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.89 2001-12-15 13:57:40 qha Exp $
+;;;;; $Id: edit-text.el,v 44.90 2002-01-07 16:47:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.89 2001-12-15 13:57:40 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.90 2002-01-07 16:47:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -209,11 +209,6 @@ nil             -> Ingenting."
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
-    (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
-                                 (lyskom-default-button 'add-recipient
-                                                        edit-buffer)
-                                 (lyskom-get-string 'add-recpt-button-text))
-                  where-put-misc)
     (mapcar (function
              (lambda (item)
                (let ((data (lyskom-aux-item-call
@@ -221,9 +216,19 @@ nil             -> Ingenting."
                             item lyskom-pers-no)))
                  (when data
                    (lyskom-princ
-                    (concat (lyskom-get-string 'aux-item-prefix) data "\n")
+                    (lyskom-format "%#1@%[%#3s%] %#2s\n" 
+                            (lyskom-default-button 'aux-edit-menu 
+                                                   (cons edit-buffer
+                                                         (copy-marker where-put-misc)))
+                            data
+                            (lyskom-get-string 'aux-item-prefix))
                     where-put-misc)))))
             aux-list)
+    (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
+                                 (lyskom-default-button 'add-recipient-or-xref
+                                                        edit-buffer)
+                                 (lyskom-get-string 'add-recpt-button-text))
+                  where-put-misc)
     (lyskom-princ (lyskom-format 'text-mass subject 
 				 (substitute-command-keys
 				  (lyskom-get-string 'header-separator))
@@ -1358,10 +1363,10 @@ RECPT-TYPE is the type of recipient to add."
              "$")
      nil t)
     (beginning-of-line)
-    (forward-line -1)
+    (forward-line -2)
     (insert
      (concat (lyskom-format
-              (format "%%#1@%%[%s%%]%%#2s" (lyskom-get-string 'aux-item-prefix))
+              (format "%%#1@%%[%s%%] %%#2s" (lyskom-get-string 'aux-item-prefix))
               (lyskom-default-button 'aux-edit-menu (cons (current-buffer)
                                                           (point-marker)))
               (lyskom-aux-item-call item 
@@ -1548,7 +1553,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 	   ((lyskom-looking-at-header 'header-subject nil)
 	    (setq subject (lyskom-edit-extract-subject)))
 
-           ((lyskom-looking-at (lyskom-get-string 'aux-item-prefix))
+           ((lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
             (goto-char (match-end 0))
             (let ((item (lyskom-edit-parse-aux-item)))
               (if item
@@ -1636,7 +1641,7 @@ Point must be located on the line where the subject is."
   "Return non-nil if point is on the same line as an aux-item"
   (save-excursion
     (beginning-of-line)
-    (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix))
+    (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
          (re-search-forward (concat "^"
                                     (regexp-quote
                                      (substitute-command-keys

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.161 2002-01-02 14:32:41 byers Exp $
+;;;;; $Id: english-strings.el,v 44.162 2002-01-07 16:47:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.161 2002-01-02 14:32:41 byers Exp $"))
+              "$Id: english-strings.el,v 44.162 2002-01-07 16:47:30 byers Exp $"))
 
 
 ;;; ================================================================
@@ -815,11 +815,13 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
     (add-recipient . "Add a recipient")
+    (add-recipient-or-xref . "Add...")
 
     (secret-aux-flag . "secret")
     (anonymous-aux-flag . "anonymous")
     (inherit-aux-flag  . "inherited")
-    (aux-item-prefix . "> ")
+    (aux-item-prefix . "[*]")
+    (aux-item-prefix-regexp . "\\[\\*\\]\\s-*")
     (comment-item-prefix . "#\\s-*")
     (text-no-comment . "%#1d %#2s /%#3d line%#3?d%[%]%[s%]/ %#4P %#5?b%[ [anonymous]%]%[%]\n")
     (cant-fcc-text-file-error . "Unable to save text %#1n to \"%#2s\" (%#3s: %#4s).\n")
@@ -1269,7 +1271,7 @@ Text:
     (aux-popup-title  . "Extra information")
     (timestamp-popup-title . "Timestamp %#1s")
     (recpt-type-popup-title . "Recipient type: %#1s")
-    (add-recpt-button-text . "[Add recipient]")
+    (add-recpt-button-text . "[Add...]")
     (add-recpt-button-text-regex . "\\[Add recipient\\]")
     (generic-popup-title . "%#1s")
 
@@ -1292,7 +1294,12 @@ On since %#8s%#9s")
     (one-day . "one day")
     (one-hour . "one hour")
     (one-minute . "one minute")
+    (years . "years")
+    (year . "år")
+    (month . "month")
+    (months . "months")
     (days . "days")
+    (day . "day")
     (hours . "hours")
     (minutes . "minutes")
     (and . "and")
@@ -1590,6 +1597,13 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-recpt-type-copy . "Carbon copy")
     (lyskom-button-recpt-type-bcc . "Blind Carbon copy")
     (lyskom-button-recpt-type-sub . "Remove")
+    (lyskom-button-recpt-add-recipient . "Recipient")
+    (lyskom-button-recpt-add-copy . "Carbon copy recipient")
+    (lyskom-button-recpt-add-bcc . "Blind carbon copy recipient")
+    (lyskom-button-aux-type-xref . "Referenc till conference/person/text")
+    (lyskom-button-aux-type-no-comments . "Request no comments")
+    (lyskom-button-aux-type-personal-comments . "Request personal reply")
+
     (lyskom-edit-toggle-secret-aux-action . "Toggle \"secret\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Toggle \"anonymous\"")
     (lyskom-edit-toggle-inherit-aux-action . "Toggle \"inherited\"")
@@ -1599,6 +1613,21 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-prioritize-flag-clear-action . "Clear")
 
     ))
+
+
+(lyskom-language-var lyskom-month-names sv
+  '(("jan" . 1)  ("januari" . 1)
+    ("feb" . 2)  ("februari" . 2)
+    ("mar" . 3)  ("march" . 3)
+    ("apr" . 4)  ("april" . 4)
+    ("may" . 5)  ("may" . 5)
+    ("jun" . 6)  ("june" . 6)
+    ("jul" . 7)  ("july" . 7)
+    ("aug" . 8)  ("august" . 8)
+    ("sep" . 9)  ("september" . 9)
+    ("oct" . 10) ("october" . 10)
+    ("nov" . 11) ("november" . 11)
+    ("dec" . 12) ("december" . 12)))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.12 2001-05-07 15:20:30 byers Exp $
+;;;;; $Id: check-strings.el,v 44.13 2002-01-07 16:47:29 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -49,8 +49,8 @@
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
   
-  (lcs-message t "Checking help strings")
-  (lcs-check-help-strings)
+;  (lcs-message t "Checking help strings")
+;  (lcs-check-help-strings)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
@@ -69,12 +69,13 @@
 
 (defun lcs-check-category (category)
   "Check the strings in CATEGORY."
-  (lcs-message t "Checking category %s" category)
-  (let ((strings (lcs-all-category-string category)))
-    (while strings
-      (lcs-check-strings category (car (car strings))
-			 (cdr (car strings)))
-      (setq strings (cdr strings)))))
+  (unless (eq category 'lyskom-help-strings)
+    (lcs-message t "Checking category %s" category)
+    (let ((strings (lcs-all-category-string category)))
+      (while strings
+        (lcs-check-strings category (car (car strings))
+                           (cdr (car strings)))
+        (setq strings (cdr strings))))))
   
 (defun lcs-all-category-string (category)
   "Returns list of names for CATEGORY, and their strings."
@@ -269,6 +270,7 @@ Check that all server-stored variables are customizeable."
 
 (defun lcs-check-help-strings ()
   "Check help strings"
+  (lcs-check-category 'lyskom-help-strings)
   (let ((commands (mapcar 'car
                           (lcs-all-category-string
                            'lyskom-command)))
