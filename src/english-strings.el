@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.0 1996-05-02 19:26:37 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.1 1996-05-03 16:52:10 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.0 1996-05-02 19:26:37 davidk Exp $"))
+              "$Id: english-strings.el,v 41.1 1996-05-03 16:52:10 byers Exp $"))
 
 
 
@@ -555,6 +555,11 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-one-comment . "Review one comment to article %#1n.\n")
     (review-many-comments . "Review %#2d comments to article %#1n.\n")
     (read-normally-read . "How many articles to you want to review: ")
+    (review-conf-gone . "The conference does not exist.\n")
+    (review-pers-gone . "The user does not exist.\n")
+    (review-cant-read-conf . "You can't review articles to a closed conference you are not a member of.\n")
+    (review-cant-read-letterbox . "You can't review articles to somebody else's mailbox.")
+    (review-cant-read-empty . "The conference is empty.\n")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the article.")
@@ -1235,6 +1240,7 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
+  (define-key lyskom-prioritize-mode-map "\M-\C-?" 'kom-prioritize-deselect-all)
   (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
   (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)

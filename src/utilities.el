@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 41.0 1996-05-02 19:28:49 davidk Exp $
+;;;;; $Id: utilities.el,v 41.1 1996-05-03 16:52:27 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 41.0 1996-05-02 19:28:49 davidk Exp $\n"))
+	      "$Id: utilities.el,v 41.1 1996-05-03 16:52:27 byers Exp $\n"))
 
 
 ;;;
@@ -124,6 +124,14 @@ The value is actually the element of LIST whose cdr is KEY."
       (setq seq1 (cdr seq1)
             seq2 (cdr seq2)))
     (nreverse result)))
+
+
+(defun lyskom-maxint ()
+  (let ((n 1) (l nil))
+    (while (> n 0)
+      (setq l (cons n l))
+      (setq n (* 2 n)))
+    (apply '+ l)))
 
 
 ;;;
