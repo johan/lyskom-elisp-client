@@ -785,7 +785,7 @@ Args: FORMAT-ATOM &rest ARGS."
 (defvar iso-8859-1-table 
   " 	
  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	
-  !c#$Y|$\"c+?!-R?C+23'u$-,10?????AAAA[][CE@EEIIIIENOOOO\\*OUUU^Y?Baaaa{}{ce`eeiiii?noooo|/|uuu~y?"
+  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"
   "*This is a table of the chars corresponding value in SWASCII.
 Used by the function iso-8859-1-to-swascii function.")
 
