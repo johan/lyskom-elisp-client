@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.97 2002-06-26 20:19:27 byers Exp $
+# $Id: Makefile,v 44.98 2002-07-24 18:12:22 byers Exp $
 
 # Useful targets:
 #
@@ -158,7 +158,7 @@ $(TARGET-EL) lyskom-all-$(CLIENTVERSION).el: \
 	cat $^ >$@
 
 %-help.el: help-%.xml
-	emacs -batch -l help-compile.el $^ -f lyskom-help-compile-to-el
+	$(EMACS) -batch -l help-compile.el $^ -f lyskom-help-compile-to-el
 
 lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el $(SOURCES)
 	cat $^ >$@
