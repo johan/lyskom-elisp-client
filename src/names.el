@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.9 2003-05-04 20:01:11 byers Exp $
+;;;;; $Id: names.el,v 44.10 2003-07-02 19:10:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.9 2003-05-04 20:01:11 byers Exp $\n"))
+	      "$Id: names.el,v 44.10 2003-07-02 19:10:02 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -86,7 +86,8 @@ DATA is nameday data"
          (mlist (cdr (assq (time->mon time) alist)))
          (dlist (cdr (assq (time->mday time) mlist))))
     (if data
-        (cond ((null dlist) nil)
+        (cond ((null dlist) 
+               (lyskom-format 'no-nameday nil (and show-list-name (nameday-data->name data))))
               ((eq 1 (length dlist))
                (lyskom-format 'has-nameday-1 
                               (car dlist)

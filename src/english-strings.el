@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.285 2003-06-01 18:10:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.286 2003-07-02 19:10:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.285 2003-06-01 18:10:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.286 2003-07-02 19:10:01 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1885,6 +1885,7 @@ environment to one that uses \"%#2s\" to encode text.
 
     (has-nameday-1 . "Today's name is %#1s%#2?b%[ (%#2s)%]%[%].")
     (has-nameday-2 . "Today's names are %#1s and %#2s%#3?b%[ (%#3s)%]%[%].")
+    (no-nameday . "No nameday today%#2?b%[ (%#2s)%]%[%]")
 
     (invalid-date-entry . "Invalid date")
     (number-out-of-range . "Invalid number")

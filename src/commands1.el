@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.181 2003-05-17 15:09:18 byers Exp $
+;;;;; $Id: commands1.el,v 44.182 2003-07-02 19:10:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.181 2003-05-17 15:09:18 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.182 2003-07-02 19:10:01 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1814,13 +1814,13 @@ recipients are handled."
   "Start writing a new text."
   (when default
     (setq default (uconf-stat->name (blocking-do 'get-uconf-stat default))))
-  (let* ((tono (or arg
-                   (lyskom-read-conf-no
-                    (lyskom-get-string prompt)
-                    '(pers conf) 
-                    nil
-                    (and default (cons default 0))
-                    t)))
+  (let* ((tono (if (and arg lyskom-current-conf (not (zerop lyskom-current-conf)))
+                   lyskom-current-conf
+                 (lyskom-read-conf-no (lyskom-get-string prompt)
+                                      '(pers conf) 
+                                      nil
+                                      (and default (cons default 0))
+                                      t)))
          (conf-stat (blocking-do 'get-conf-stat tono)))
     (cache-del-conf-stat tono)
     (if (if (zerop (conf-stat->msg-of-day conf-stat))
@@ -2475,8 +2475,7 @@ If MARK-NO is nil, review all marked texts."
 
 (defun lyskom-get-marked-texts (mark-no)
   "Return a list of all texts marked with MARK-NO."
-  (let ((mark-list (cache-get-marked-texts))
-	(text-list nil))
+  (let ((text-list nil))
     (lyskom-traverse mark (cache-get-marked-texts)
       (if (and mark
                (or (null mark-no)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.92 2003-06-01 18:10:34 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.93 2003-07-02 19:10:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.92 2003-06-01 18:10:34 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.93 2003-07-02 19:10:02 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -124,9 +124,9 @@ this-command-keys."
                    (and parent (widget-get parent ':href))
                    (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href))))
-         (type  (get-text-property pos 'lyskom-button-type))
-         (data  (assq type lyskom-button-actions))
-         (hint (get-text-property pos 'lyskom-button-hint))
+         (type  (and pos (get-text-property pos 'lyskom-button-type)))
+         (data  (and type (assq type lyskom-button-actions)))
+         (hint (and pos (get-text-property pos 'lyskom-button-hint)))
          (act  (or (and kom-use-button-hints hint)
                    (and data (elt data 2)))))
     (cond (href (require 'w3)
@@ -474,13 +474,7 @@ means don't set the lyskom-button property if non-nil. that means
 kom-next- and -previous-link won't notice the button"
   (setq lyskom-dummy-variable-to-fool-the-byte-compiler
         (car menu-title))		; produce error if menu-title not cons
-  (let* ((persno (cond ((boundp 'lyskom-pers-no) lyskom-pers-no)
-                       ((and (boundp 'lyskom-buffer) lyskom-buffer)
-                        (save-excursion
-                          (set-buffer lyskom-buffer)
-                          lyskom-pers-no))
-                       (t -1)))
-         (numarg (cond ((numberp arg) arg)
+  (let* ((numarg (cond ((numberp arg) arg)
                        ((stringp arg) (string-to-number arg))
                        ((lyskom-conf-stat-p arg) (conf-stat->conf-no arg))
                        ((lyskom-uconf-stat-p arg) (uconf-stat->conf-no arg))
