@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.9 1991-10-02 22:03:45 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.10 1991-10-03 16:33:34 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,10 +36,10 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.9 1991-10-02 22:03:45 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.10 1991-10-03 16:33:34 linus Exp $\n"))
 
 
-(defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
+(defvar lyskom-header-separator "--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
   "*String to separate headers from text body.")
 
 
