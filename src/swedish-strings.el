@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.15 1996-07-27 11:40:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.16 1996-07-29 09:17:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.15 1996-07-27 11:40:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.16 1996-07-29 09:17:06 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1586,7 +1586,13 @@ This variable is stored in the LysKOM server.")
     (39 . "Minnet slut")
     (40 . "Servern har ballat ur")
     (41 . "Klienten tror att servern s\344ger att den inte f\366rst\345r klienten")
-    (42 . "Ingen s\345dan session finns"))
+    (42 . "Ingen s\345dan session finns")
+    (43 . "Ogiltigt regulj\344rt uttryck")
+    (44 . "Texten \344r inte markerad")
+    (45 . "Tillf\344lligt fel. F\366rs\366k senare")
+    (46 . "Serven v\344grade ta emot en array")
+    (47 . "Mottagaren tar inte emot anonyma texter"))
+
   "All the errors reported from the server in plain text.")
 
 
