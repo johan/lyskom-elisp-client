@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.24 2004-07-19 11:53:42 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.25 2004-07-19 20:11:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.24 2004-07-19 11:53:42 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.25 2004-07-19 20:11:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -256,7 +256,8 @@ RLIST is a list of read-info."
 				      (car (cdr rlist))))
 	    conf-no)
 	(setcdr rlist (cdr (cdr rlist)))
-      (setq rlist (cdr rlist)))))
+      (setq rlist (cdr rlist))))
+  (lp--maybe-update-unreads conf-no))
  
 (defun read-list-rotate (read-list)
   "Put the first element of READ-LIST last in the same list. The second

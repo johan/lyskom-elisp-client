@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.298 2004-07-15 17:13:04 byers Exp $
+;;;;; $Id: vars.el.in,v 44.299 2004-07-19 20:11:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.298 2004-07-15 17:13:04 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.299 2004-07-19 20:11:58 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2891,16 +2891,6 @@ preferred name of the month."
 (def-kom-var lyskom-prioritize-mode-map nil
   "Keymap used in lyskom-prioritize-mode."
   local)
-
-(def-kom-var lyskom-prioritize-header-lines nil
-  "Number of lines in the header of the prioritization buffer."
-  local
-  language-force)
-
-(def-kom-var lyskom-prioritize-header nil
-  "Header for the reprioritization buffer."
-  inherited
-  language-force)
 
 (def-kom-var kom-ansaphone-default-reply nil
   "**Default message to send when automatic replies are on.
