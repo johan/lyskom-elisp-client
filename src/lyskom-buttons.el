@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 40.3 1996-05-01 13:55:23 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 40.4 1996-05-02 00:17:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -318,10 +318,11 @@ FACE is the default text face for the button."
 		       'lyskom-button-arg arg
 		       'lyskom-buffer lyskom-buffer)))))
 
-    (if the-hint
-        (cons 'lyskom-button-hint
-              (cons the-hint props))
-      props)))
+    (append (list 'rear-nonsticky t)
+	    (if the-hint
+		(cons 'lyskom-button-hint
+		      (cons the-hint props))
+	      props))))
       
         
            
