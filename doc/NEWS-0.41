@@ -8,6 +8,9 @@ ett par nya finesser.
 
 * Fitjurs och förbättringar
 
+** Allting går fortare, på grund av lite intelligentare
+   parser. Inloggningsfasen går t.ex. ungefär tre gånger så fort.
+
 ** Innehållet i bufferten scrollas mer kontinuerligt allteftersom
    utmatning kommer. Tidigare scrollade den bara när man fick en
    prompt. Med det nyare beteendet är det lättare att se att något

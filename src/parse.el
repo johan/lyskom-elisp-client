@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 40.1 1996-04-22 21:05:37 davidk Exp $
+;;;;; $Id: parse.el,v 40.2 1996-04-28 22:38:36 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 40.1 1996-04-22 21:05:37 davidk Exp $\n"))
+	      "$Id: parse.el,v 40.2 1996-04-28 22:38:36 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -819,31 +819,27 @@ functions and variables that are connected with the lyskom-buffer."
 	      (message ""))))
     (lyskom-save-excursion
      (set-buffer lyskom-unparsed-buffer)
-     (if (and (> lyskom-string-bytes-missing 0)
-	      (< (length output) lyskom-string-bytes-missing))
-	 (setq lyskom-string-bytes-missing
-	       (- lyskom-string-bytes-missing (length output)))
-       (setq lyskom-string-bytes-missing 0)
-       (while (not (zerop (1- (point-max)))) ;Parse while replies.
-	 (let* ((lyskom-parse-pos 1)
-		(key (lyskom-parse-nonwhite-char)))
-	   (condition-case err
-	       (let ((inhibit-quit nil))
-		 (cond
-		  ((eq key ?=)		;The call succeeded.
-		   (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		  ((eq key ?%)		;The call was not successful.
-		   (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-		   ((eq key ?:)		;An asynchronous message.
-		    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
-		 (delete-region (point-min) lyskom-parse-pos))
-	     ;; One reply is now parsed.
-	     (lyskom-protocol-error
-	      (delete-region (point-min) (1+ lyskom-parse-pos))
-	      (signal 'lyskom-protocol-error err)))
-	   (goto-char (point-min))
-	   (while (looking-at "[ \t\n\r]")
-	     (delete-char 1))
-	   ))))
+     (setq lyskom-string-bytes-missing 0)
+     (while (not (zerop (1- (point-max)))) ;Parse while replies.
+       (let* ((lyskom-parse-pos 1)
+	      (key (lyskom-parse-nonwhite-char)))
+	 (condition-case err
+	     (let ((inhibit-quit nil))
+	       (cond
+		((eq key ?=)		;The call succeeded.
+		 (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+		((eq key ?%)		;The call was not successful.
+		 (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+		((eq key ?:)		;An asynchronous message.
+		 (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
+	       (delete-region (point-min) lyskom-parse-pos))
+	   ;; One reply is now parsed.
+	   (lyskom-protocol-error
+	    (delete-region (point-min) (1+ lyskom-parse-pos))
+	    (signal 'lyskom-protocol-error err)))
+	 (goto-char (point-min))
+	 (while (looking-at "[ \t\n\r]")
+	   (delete-char 1))
+	 )))
     (store-match-data match-data)))
 

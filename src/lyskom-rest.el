@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.10 1996-04-27 20:15:43 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.11 1996-04-28 22:38:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.10 1996-04-27 20:15:43 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.11 1996-04-28 22:38:29 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2212,17 +2212,19 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
 	      (if quit-flag		; We are allowed to break here.
-		  (setq inhibit-quit nil)) ; This will break instantly.
+		  (setq inhibit-quit nil)) ; This will break
+					   ; instantly.
+
 	      ;; Keep inhibit-quit set to t
 	      (cond
 
-	       ;; This test make startup a lot faster. The first
-	       ;; method we used was to do
-	       ;;       (not (string-match "\n" output))
-	       ;; but that made it behave extremely badly when viewing
-	       ;; a text likt 50122. This might work better.
-	       ((not (save-excursion
-		       (search-backward "\n" (- (point) (length output)) t))))
+	       ((and (> lyskom-string-bytes-missing 0)
+		     (< (length output) lyskom-string-bytes-missing))
+		(setq lyskom-string-bytes-missing
+		      (- lyskom-string-bytes-missing (length output))))
+
+	       ;; This test makes e.g. startup a lot faster.
+	       ((not (string-match "\n" output)))
 	       
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
 		(setq lyskom-is-parsing t)

@@ -4,7 +4,7 @@ Att göra i elisp-klienten
 Buggar
 
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
-    så scrollar klienten fel ibland.
+    så scrollar inte klienten trots att den ibland borde.
 
     åm -> lä -> åh --- Sen får man läsa markerade iaf. (FIXAT?)
 
