@@ -20,6 +20,14 @@ Mon Jul  8 10:37:48 1996  David Byers  <davby@sen2.ida.liu.se>
 	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
  	till no-recipient.
 
+Thu Jul  4 23:45:48 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (kom-follow-comments-outside-membership): Ny
+ 	variabel.
+	(lyskom-elisp-variables): La till den.
+
+	* view-text.el: Använd den.
+
 Thu Jul  4 14:10:36 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* completing-read.el: Totalt omskriven. Större, kanske
