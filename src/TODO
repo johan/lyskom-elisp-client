@@ -41,7 +41,12 @@ Buggar
 
     M-> i prioritera-bufferten. Text 1320736.
 
+    Det har hänt att call-info har blivit nil i lyskom-parse-error.
+
 Allmänna förbättringar
+
+    Har detta att göra med lite för optimistisk cache att göra? Kanske
+    bör man läsa om person-staten innan man varnar för lapp på dörren?
 
     Visa fotnoter på ett bättre sätt.
 
