@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.275 2003-04-05 18:14:25 byers Exp $
+;;;;; $Id: english-strings.el,v 44.276 2003-04-05 19:26:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.275 2003-04-05 18:14:25 byers Exp $"))
+              "$Id: english-strings.el,v 44.276 2003-04-05 19:26:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1873,8 +1873,8 @@ environment to one that uses \"%#2s\" to encode text.
 ")
 
 
-    (has-nameday-1 . "Today's name is %#1s.")
-    (has-nameday-2 . "Today's names are %#1s and %#2s.")
+    (has-nameday-1 . "Today's name is %#1s%#2?b%[ (%#2s)%]%[%].")
+    (has-nameday-2 . "Today's names are %#1s and %#2s%#3?b%[ (%#3s)%]%[%].")
 
     (invalid-date-entry . "Invalid date")
     (number-out-of-range . "Invalid number")
@@ -2875,7 +2875,8 @@ Select whether to execute command or keyboard macro.")
     (url-transform-newtext . " To:")
 
     (default-namedays . "Namedays for current language")
-    (specific-namedays . "Specific name list:")
+    (specific-namedays . "Specific name list")
+    (several-name-lists . "Several name lists")
 
     (link-pattern-for . "Link patterns for")
     (all-conferences . "All recipients")
