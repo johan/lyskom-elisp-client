@@ -1,5 +1,22 @@
 Wed Jun 23 12:40:40 1993  Linus Tolke Y  (linus@bodil.lysator.liu.se)
 
+	* edit-text.el, startup.el (lyskom-count-down-edits,
+	  lyskom-list-of-edit-buffers): The process-kill-without-query
+	  is manipulated to allow killing without query when you have
+	  no unsent message but asks if you have unsent message. There
+	  is no longer a difference in functioning between emacs-18
+	  and emacs-19 (emacs-18 have different defaults on
+	  process-kill-without-query for real processes and network
+	  streams.)
+	  commands1.el (kom-quit): Extra question and popping of
+	  unsent window.
+	  edit-text.el (lyskom-edit-mode): buffer-offer-save no longer
+	  on in the edit-buffer.
+
+        * commands1.el, swedish-strings.el (kom-write-comment,
+	  kom-write-footnote): Other behaviour when giving empty
+	  prefix arg.
+
         * lyskom-rest.el (silent-read): Doesn't barf on other
 	  input-events but exits.
 	  (lyskom-maybe-move-unread): Update documentation according

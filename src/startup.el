@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 36.3 1993-05-11 16:00:20 linus Exp $
+;;;;; $Id: startup.el,v 36.4 1993-06-23 21:51:36 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 36.3 1993-05-11 16:00:20 linus Exp $\n"))
+	      "$Id: startup.el,v 36.4 1993-06-23 21:51:36 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -496,6 +496,7 @@ Entry to this mode runs lyskom-mode-hook."
   (setq mode-name "LysKOM")
   (setq mode-line-process '(": %s"))
   (use-local-map lyskom-mode-map)
+  (lyskom-count-down-edits)
   (run-hooks 'lyskom-mode-hook))
 
 
@@ -564,6 +565,7 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'mode-line-conf-name)
     (make-local-variable 'lyskom-output-queue)
     (make-local-variable 'lyskom-options-done)
+    (make-local-variable 'lyskom-list-of-edit-buffers)
     (setq lyskom-proc proc)
     (setq lyskom-pers-no pers-no)
     (setq lyskom-membership membership)
@@ -574,4 +576,5 @@ Entry to this mode runs lyskom-mode-hook."
     (setq lyskom-server-info server-info)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
+    (setq lyskom-list-of-edit-buffers nil)
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.6 1993-06-01 19:39:59 linus Exp $
+;;;;; $Id: edit-text.el,v 36.7 1993-06-23 21:51:29 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.6 1993-06-01 19:39:59 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.7 1993-06-23 21:51:29 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -63,6 +63,9 @@ Does lyskom-end-of-command."
   (let ((buffer (generate-new-buffer
 		 (concat (buffer-name (process-buffer proc)) "-edit")))
 	(config (current-window-configuration)))
+    (setq lyskom-list-of-edit-buffers (cons buffer 
+					    lyskom-list-of-edit-buffers))
+    (process-kill-without-query (get-buffer-process (current-buffer)) t)
     (cond
      ((and (or (bufferp kom-write-texts-in-window)
 	       (stringp kom-write-texts-in-window))
@@ -249,7 +252,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 				       (copy-keymap (current-local-map))))
   (setq major-mode 'lyskom-edit-mode)
   (setq mode-name lyskom-edit-mode-name)
-  (setq buffer-offer-save t)
+  ;; (setq buffer-offer-save t)
   (use-local-map (overlay-map lyskom-edit-mode-mode-map
 			      lyskom-edit-mode-map))
   (auto-save-mode 1)
@@ -322,7 +325,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
     (lyskom-save-excursion
      (set-buffer edit-buffer)
      (delete-auto-save-file-if-necessary))
-    (kill-buffer edit-buffer))
+    (kill-buffer edit-buffer)
+    (lyskom-count-down-edits))
   (garbage-collect))			;Take care of the garbage.
 
 
@@ -656,7 +660,6 @@ Point must be located on the line where the subject is."
       (lyskom-run 'background 'set 'lyskom-dont-change-prompt nil)
       (lyskom-run 'background 'lyskom-set-mode-line)))
 
-
     (set-buffer edit-buffer)		;Need local variables.
 
     ;; Select the old configuration.
@@ -683,7 +686,8 @@ Point must be located on the line where the subject is."
     (lyskom-save-excursion
      (set-buffer edit-buffer)
      (delete-auto-save-file-if-necessary))
-    (kill-buffer edit-buffer))))
+    (kill-buffer edit-buffer)
+    (lyskom-count-down-edits))))
 
 
 (defun lyskom-edit-show-commented (text editing-buffer)
@@ -719,6 +723,30 @@ The text is inserted in the buffer with '>' first on each line."
 	    (backward-char 2))))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
+
+(defun lyskom-count-down-edits ()
+  "Counts down the number of edit sessions.
+Returns non-nil if there are sessions left.
+
+Can be called from any of the lyskom-associated buffers. At least the main
+buffer and edit buffers."
+  (save-excursion
+    (let ((proc (or (get-buffer-process (current-buffer))
+		    (and (boundp 'lyskom-proc)
+			 (processp lyskom-proc)
+			 lyskom-proc)
+		    (signal 'lyskom-internal-error
+			    "lyskom-count-down-edits called from "
+			    (current-buffer)))))
+      (set-buffer (process-buffer proc))
+      (while (and lyskom-list-of-edit-buffers
+		  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
+	(setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
+      (if lyskom-list-of-edit-buffers
+	  (process-kill-without-query proc t)
+	(process-kill-without-query proc nil)))
+    lyskom-list-of-edit-buffers))
+      
 
 ;;; ================================================================
 ;;;        Maphanteringsfunktion - keymap handling.
@@ -779,6 +807,3 @@ BUG: does not descend in the maps."
 	      (cdr ele))))
 	 (cdr newmap))))
       map))))
-
-
-

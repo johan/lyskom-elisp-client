@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.4 1993-05-21 15:43:34 linus Exp $
+;;;;; $Id: commands1.el,v 36.5 1993-06-23 21:51:21 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.4 1993-05-21 15:43:34 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.5 1993-06-23 21:51:21 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -654,10 +654,8 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 		  lyskom-current-text)
 		 ((integerp current-prefix-arg)
 		  current-prefix-arg)
-		 ((and (listp current-prefix-arg) 
-		       (integerp (car current-prefix-arg)) 
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
+		 ((listp current-prefix-arg) 
+		  (lyskom-read-number (lyskom-get-string 'what-comment-no)))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command (concat 
@@ -685,10 +683,8 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 		  lyskom-current-text)
 		 ((integerp current-prefix-arg)
 		  current-prefix-arg)
-		 ((and (listp current-prefix-arg) 
-		       (integerp (car current-prefix-arg)) 
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
+		 ((listp current-prefix-arg) 
+		  (lyskom-read-number (lyskom-get-string 'what-comment-no)))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command 'kom-write-footnote)
@@ -931,7 +927,13 @@ If optional argument is non-nil then dont ask for confirmation."
   (interactive "P")
   (lyskom-start-of-command 'kom-quit t)
   (cond
-   ((or arg (ja-or-nej-p (lyskom-get-string 'really-quit)))
+   ((and (lyskom-count-down-edits)
+	 (display-buffer (car lyskom-list-of-edit-buffers))
+	 (not (ja-or-nej-p (lyskom-get-string 'quit-in-spite-of-unsent))))
+    (lyskom-end-of-command))
+   ((or arg
+	(ja-or-nej-p (lyskom-get-string 'really-quit))
+	)
     (initiate-logout 'main nil)
     (set-process-sentinel lyskom-proc nil)
     (delete-process lyskom-proc)
@@ -1693,9 +1695,12 @@ MY-SESSION-NO is the session number of the running session.
 (defun lyskom-window-width ()
   "Returns the width of the lyskom-window of the screen-width if not displayed."
   (let ((win (get-buffer-window (current-buffer))))
-    (if win
-	(window-width win)
-      (screen-width))))
+    (cond
+     (win (window-width win))
+     ((fboundp 'frame-width)
+      (frame-width))
+     (t
+      (screen-width)))))
 
 
 (defun lyskom-return-username (who-info)
