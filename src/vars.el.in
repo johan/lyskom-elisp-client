@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.230 2003-01-15 00:08:00 byers Exp $
+;;;;; $Id: vars.el.in,v 44.231 2003-01-15 00:42:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.230 2003-01-15 00:08:00 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.231 2003-01-15 00:42:12 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -559,7 +559,7 @@ The value of this variable must be a string. See
 
 
 (def-kom-var kom-enabled-prompt-format-executing "%[%c% %m%]."
-  "*Format of LysKOM prompt when executing a default command when
+  "**Format of LysKOM prompt when executing a default command when
 privileges are enabled. 
 
 The value of this variable must be a string. See
@@ -955,32 +955,40 @@ influence what this client stores in the common block of the user-area."
   server)
 
 (def-kom-var kom-presence-messages-in-echo-area t
-  "*If non-nil, LysKOM prints continuous info about what other people are doing.
-Info is printed on the echo area and never in the buffer. If minibuffer is
-used, no message is printed.
+  "**Controls display of presence messages in the echo area.
+
+If non-`nil', LysKOM prints continuous info about what other people
+are doing. Info is printed on the echo area and never in the buffer.
+If minibuffer is used, no message is printed.
 
 A list of integers means show messages for those users.
 
-The value 'friends means show messages for the users in kom-friends.
+The value `friends' means show messages for the users in `kom-friends'.
 
-The value 'morons means show messages for the users in kom-morons.
+The value `morons' means show messages for the users in `kom-morons'.
 
-The value 'friends-and-morons means show messages for the users in 
-kom-friends and kom-morons.
+The value `friends-and-morons' means show messages for the users in 
+`kom-friends' and `kom-morons'.
 
-If you want the messages in the buffer, you could set the variable 
-kom-presence-messages-in-buffer."
+If you want the messages in the buffer, set the variable 
+`kom-presence-messages-in-buffer'.
+
+Values other than those listed are reserved for future use."
   server)
 
 
 
 (def-kom-var kom-presence-messages-in-buffer nil
-  "*If non-nil, LysKOM prints information about what other people are doing in the buffer.
-All printing is done just before the prompt.
+  "**Controls display of presence messages in the LysKOM buffer.
 
-If nil no messages are printed.
-If 'presence, messages about people logging in, out and people 
-changing name are printed."
+If non-`nil', LysKOM prints information about what other people are
+doing in the LysKOM buffer. All printing is done just before the
+prompt.
+
+If `nil' no messages are printed. If `presence', messages about people
+logging in, out and people changing name are printed.
+
+All other values are reserved for future use."
   server)
 
 (def-kom-var kom-show-where-and-what t
@@ -1641,7 +1649,7 @@ Values other than a list of integers are reserved for future use."
   server)
 
 (def-kom-var kom-morons nil
-  "*List of people morons and other nasty people.
+  "**List of people morons and other nasty people.
 
 The value of this variable is a list of person numbers. People listed
 here will be displayed using the face in `kom-morons-face'.
@@ -2150,7 +2158,7 @@ the client. Use `kom-server-aliases' instead.
 Values other than those described are reserved for future use.")
 
 (def-kom-var kom-ansaphone-on nil
-  "*Controls automatic replies to personal messages.
+  "*'Controls automatic replies to personal messages.
 
 When set to `t', send automatically send replies to personal messages.
 See `kom-ansaphone-replies' and `kom-ansaphone-default-reply' for ways
@@ -3066,7 +3074,7 @@ At most lyskom-max-pending-calls calls are sent at once."
   local)
 
 (def-kom-var lyskom-max-pending-calls 20
-  "*Max number of calls that are transmitted to the server at once.
+  "Max number of calls that are transmitted to the server at once.
 Extra calls are queued in lyskom-output-queue and sent when the replies
 returns.
 
@@ -3130,7 +3138,7 @@ Non-integer values are reserved for future use."
 
 
 (def-kom-var lyskom-session-priority 0
-  "*This sessions priority.
+  "This sessions priority.
 Only texts in conferences with a priority equal to or higher than this
 will be shown."
   local)
@@ -3280,7 +3288,7 @@ This is currently not used."
   local)
 
 (def-kom-var lyskom-fetch-membership-length 6
-  "*Number of entries in the membership-list that is fetched at a time.
+  "Number of entries in the membership-list that is fetched at a time.
 This should be optimized depending on how often you read LysKOM and
 the activity in the first groups in you membership list.
 
@@ -3378,10 +3386,10 @@ until a new filename has been chosen."
   local)
 
 (def-kom-var lyskom-mode-hook nil
-  "*Hook to run when lyskom-mode is entered.")
+  "*'Hook to run when `lyskom-mode' is entered.")
 
 (def-kom-var kom-quit-hook nil
-  "*Hook to run when the LysKOM session is ended.
+  "**Hook to run when the LysKOM session is ended.
 
 This hook is only run when the session ends by using `kom-quit' or
 `kom-remote-quit'. The hook is not run is the session is forecfully
@@ -3509,7 +3517,7 @@ letterbox."
   local-hook)
 
 (def-kom-var kom-personal-message-hook nil
-  "*Hook to run when a personal message is received.
+  "**Hook to run when a personal message is received.
 
 When the hook is run, `sender' is bound to the conf-stat of the sender
 of the message (or possibly `nil'), `recipient' is 0 if the message is

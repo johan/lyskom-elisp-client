@@ -1,5 +1,7 @@
 2003-01-15  David Byers  <david.byers@swipnet.se>
 
+	* vars.el.in: Minor fixes to documentation.
+	
 	* vars.el.in: YES! YES! YES! FINALLY DONE (FOR NOW)! All user
 	variables (well at least nearly all) are documented! God, this was
 	boring work.
