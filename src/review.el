@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.32 2000-08-21 12:29:17 byers Exp $
+;;;;; $Id: review.el,v 44.33 2001-01-01 23:44:11 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.32 2000-08-21 12:29:17 byers Exp $\n"))
+	      "$Id: review.el,v 44.33 2001-01-01 23:44:11 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -281,9 +281,8 @@ Args: BY TO NUM"
                (lyskom-traverse misc (text-stat->misc-info-list x)
                  (setq found 
                        (or found
-                           (and (or (eq (misc-info->type misc) 'RECPT)
-                                    (eq (misc-info->type misc) 'CC-RECPT)
-                                    (eq (misc-info->type misc) 'BCC-RECPT))
+                           (and (member (misc-info->type misc)
+					'(RECPT CC-RECPT BCC-RECPT))
                                 (eq (misc-info->recipient-no misc) to)))))
                found)))
           (list to)
@@ -948,10 +947,8 @@ If reading forward then starts reading backward and the other way round."
   (interactive)
   (cond
    ((and (not (read-list-isempty lyskom-reading-list))
-	 (or (eq (read-info->type (read-list->first lyskom-reading-list))
-		 'REVIEW)
-	     (eq (read-info->type (read-list->first lyskom-reading-list))
-		 'REVIEW-MARK)))
+	 (member (read-info->type (read-list->first lyskom-reading-list))
+		 '(REVIEW REVIEW-MARK)))
     (let* ((info (read-list->first lyskom-reading-list))
 	   (list (read-info->text-list info))
 	   (texts (cdr list))
@@ -1174,21 +1171,13 @@ end."
   (interactive)
   (let ((found nil))
     (if (not (read-list-isempty lyskom-reading-list))
-        (while (or (eq (read-info->type (read-list->first lyskom-reading-list))
-                       'REVIEW)
-                   (eq (read-info->type (read-list->first lyskom-reading-list))
-                       'REVIEW-TREE)
-                   (eq (read-info->type (read-list->first lyskom-reading-list))
-                       'REVIEW-MARK))
+        (while (member (read-info->type (read-list->first lyskom-reading-list))
+                       '(REVIEW REVIEW-TREE REVIEW-MARK))
           (set-read-list-del-first lyskom-reading-list)
           (setq found t)))
     (if (not (read-list-isempty lyskom-to-do-list))
-        (while (or (eq (read-info->type (read-list->first lyskom-to-do-list))
-                       'REVIEW)
-                   (eq (read-info->type (read-list->first lyskom-to-do-list))
-                       'REVIEW-TREE)
-                   (eq (read-info->type (read-list->first lyskom-to-do-list))
-                       'REVIEW-MARK))
+        (while (member (read-info->type (read-list->first lyskom-to-do-list))
+                       '(REVIEW REVIEW-TREE REVIEW-MARK))
           (set-read-list-del-first lyskom-to-do-list)
           (setq found t)))
 

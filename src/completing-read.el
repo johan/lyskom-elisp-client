@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.34 2000-09-02 14:30:07 byers Exp $
+;;;;; $Id: completing-read.el,v 44.35 2001-01-01 23:44:01 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.34 2000-09-02 14:30:07 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.35 2001-01-01 23:44:01 qha Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -631,8 +631,8 @@ the LysKOM rules of string matching."
        ((eq (aref next-char-state 0) 'match)
         (if (eq (aref next-char-state 1) ?\ )
             (progn
-              (cond ((or (eq (symbol-value current-state) 'start-of-word)
-                         (eq (symbol-value current-state) 'start-of-string))
+              (cond ((member (symbol-value current-state)
+			     '(start-of-word start-of-string))
                      nil)
                     ((eq last-event-worth-noting 'mismatch)
                      (lyskom-complete-string-accumulate current-accumulator
@@ -698,9 +698,8 @@ the LysKOM rules of string matching."
        ;;
 
        ((and (> paren-depth 0)
-             (or (eq (aref next-char-state 0) 'mismatch)
-                 (eq (aref next-char-state 0) 'space-mismatch)
-                 (eq (aref next-char-state 0) 'open-paren-mismatch)))
+             (member (aref next-char-state 0)
+		     '(mismatch space-mismatch open-paren-mismatch)))
         (setq last-event-worth-noting 'mismatch)
         (setq tmp-accumulator nil)
         (setq tmp-state nil)
@@ -715,8 +714,8 @@ the LysKOM rules of string matching."
        ;;
        
        ((and (eq (aref next-char-state 0) 'space-mismatch)
-             (or (eq (symbol-value current-state) 'start-of-string)
-                 (eq (symbol-value current-state) 'start-of-word)))
+             (member (symbol-value current-state)
+		     '(start-of-string start-of-word)))
         (setq last-event-worth-noting nil)
         (lyskom-complete-string-skip-whitespace data-list))
 
@@ -725,12 +724,11 @@ the LysKOM rules of string matching."
        ;; Advance to the end of the current word
        ;;
 
-       ((and (or (eq (aref next-char-state 0) 'mismatch)
-                 (eq (aref next-char-state 0) 'space-mismatch))
+       ((and (member (aref next-char-state 0) '(mismatch space-mismatch))
              (zerop paren-depth))
         (setq last-event-worth-noting 'mismatch)
-        (if (or (eq (symbol-value current-state) 'start-of-word)
-                (eq (symbol-value current-state) 'start-of-string))
+        (if (member (symbol-value current-state)
+		    '(start-of-word start-of-string))
             (setq done t)
           (progn
             (if (not have-here)

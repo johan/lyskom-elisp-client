@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.128 2000-12-31 21:47:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.129 2001-01-01 23:44:07 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.128 2000-12-31 21:47:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.129 2001-01-01 23:44:07 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -364,12 +364,9 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 		(> len 1))
       (let ((type (read-info->type (read-list->first lyskom-reading-list))))
 	(cond 
-	 ((or (eq type 'REVIEW)
-	      (eq type 'REVIEW-TREE)
-	      (eq type 'REVIEW-MARK))
+	 ((member type '(REVIEW REVIEW-TREE REVIEW-MARK))
 	  (read-list-rotate lyskom-reading-list))
-	 ((or (eq type 'COMM-IN)
-	      (eq type 'FOOTN-IN))
+	 ((member type '(COMM-IN FOOTN-IN))
 	  (set-read-list-del-first lyskom-reading-list))
 	 (t 
 	  (setq finished t))))
@@ -399,8 +396,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 		 (priority (read-info->priority
 			    (read-list->first lyskom-reading-list)))
 		 (is-review-tree (eq type 'REVIEW-TREE))
-		 (is-review (or (eq type 'REVIEW)
-				(eq type 'REVIEW-MARK)
+		 (is-review (or (member type '(REVIEW REVIEW-MARK))
 				is-review-tree))
 		 (mark-as-read (not is-review)))
 	    (when is-review
@@ -415,8 +411,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				    priority
 				    is-review-tree
 				    (not is-review)
-				    (or (eq type 'REVIEW)
-					(eq type 'REVIEW-MARK))))
+				    (member type '(REVIEW REVIEW-MARK))))
 	    (if mark-as-read
 		(lyskom-is-read text-no)
 	      (read-list-delete-text nil lyskom-reading-list)
@@ -463,9 +458,7 @@ lyskom-mark-as-read."
   "Update lyskom-membership for all recipients to TEXT-STAT."
   (lyskom-traverse
       misc (text-stat->misc-info-list text-stat)
-    (if (or (eq 'RECPT (misc-info->type misc))
-            (eq 'BCC-RECPT (misc-info->type misc))
-	    (eq 'CC-RECPT (misc-info->type misc)))
+    (if (member (misc-info->type misc) '(RECPT BCC-RECPT CC-RECPT))
 	(let ((membership (lyskom-try-get-membership
 			   (misc-info->recipient-no misc))))
 	  (if membership
@@ -2637,9 +2630,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 
 (defun lyskom-get-prioritized-session ()
   "Get the session to go to if we are doing an auto-goto-session"
-  (let ((session-list (if (or (eq kom-server-priority-breaks 'express-letters)
-                              (eq kom-server-priority-breaks 'letters)
-                              (eq kom-server-priority-breaks 'after-conf-letters))
+  (let ((session-list (if (member kom-server-priority-breaks
+				  '(express-letters letters
+						    after-conf-letters))
                           lyskom-sessions-with-unread-letters
                         lyskom-sessions-with-unread))
         (session nil)
@@ -2687,24 +2680,23 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                               (set-buffer pri-session)
                                               kom-server-priority))))
       (and (not (eq pri-session (current-buffer)))
-           (or (and (or (eq kom-server-priority-breaks 'express) 
-                        (eq kom-server-priority-breaks 'express-letters) )
+           (or (and (member kom-server-priority-breaks
+			    '(express express-letters))
                     pri-session
                     (or (null pri) (> pri-session-pri pri)))
                (and (eq kom-server-priority-breaks 'when-done)
                     pri-session
                     (read-list-isempty lyskom-reading-list)
                     (read-list-isempty lyskom-to-do-list))
-               (and (or (eq kom-server-priority-breaks t)
-                        (eq kom-server-priority-breaks 'letters))
+               (and (member kom-server-priority-breaks '(t letters))
                     pri-session
                     (or (null type)
                         (eq type 'CONF)
                         (eq type 'REVIEW)
                         (eq type 'REVIEW-MARK))
                     (or (null pri) (> pri-session-pri pri)))
-               (and (or (eq kom-server-priority-breaks 'after-conf)
-                        (eq kom-server-priority-breaks 'after-conf-letters))
+               (and (member kom-server-priority-breaks
+			    '(after-conf after-conf-letters))
                     pri-session
                     (read-list-isempty lyskom-reading-list)
                     (or (null pri) (> pri-session-pri pri)))
@@ -2716,9 +2708,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	 (not (read-list-isempty lyskom-to-do-list))
 	 (let ((type (read-info->type (read-list->first lyskom-reading-list))))
 	   (or (eq kom-higher-priority-breaks 'express)
-	       (eq type 'CONF)
-	       (eq type 'REVIEW)
-	       (eq type 'REVIEW-MARK)))
+	       (member type '(CONF REVIEW REVIEW-MARK))))
 	 (> (read-info->priority (read-list->first lyskom-to-do-list))
 	    (read-info->priority (read-list->first lyskom-reading-list))))
     (if (> (text-list->length (read-info->text-list

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.13 1999-11-19 13:38:06 byers Exp $
+;;;;; $Id: komtypes.el,v 44.14 2001-01-01 23:44:05 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.13 1999-11-19 13:38:06 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.14 2001-01-01 23:44:05 qha Exp $\n"))
 
 
 ;;; ============================================================
@@ -2024,9 +2024,7 @@ Args: CONF-STAT TAG PERSON"
   (let ((result nil))
     (lyskom-traverse misc
         (text-stat->misc-info-list text-stat)
-      (when (and (or (eq (misc-info->type misc) 'RECPT)
-                     (eq (misc-info->type misc) 'CC-RECPT)
-                     (eq (misc-info->type misc) 'BCC-RECPT))
+      (when (and (member (misc-info->type misc) '(RECPT CC-RECPT BCC-RECPT))
                  (eq (misc-info->recipient-no misc) conf-no))
         (setq result t)))
     result))

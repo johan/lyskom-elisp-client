@@ -1,5 +1,72 @@
 2000-12-31  Ulrik Haugen  <qha@lysator.liu.se>
 
+	* view-text.el (lyskom-view-text): Replaced
+	(or (eq foo 'a) (eq foo 'b) ...) with (member foo '(a b ...))
+	This means that the comparison will be done by `equal' instead,
+	but that shouldn't matter.
+	(lyskom-text-read-p): Ditto.
+	(lyskom-text-read-at-least-once-p): Ditto.
+	(lyskom-mark-as-read): Ditto.
+
+	* utilities.el (lyskom-text-recipients): Ditto.
+
+	* review.el (lyskom-get-texts-by-to): Ditto.
+	(kom-review-backward): Ditto.
+	(kom-review-clear): Ditto.
+
+	* prefetch.el (lyskom-prefetch-text-all-handler): Ditto.
+	(lyskom-prefetch-texttree-handler): Ditto.
+	(lyskom-prefetch-texts-handler): Ditto.
+
+	* parse.el (lyskom-parse-bitstring): Ditto.
+
+	* mship-edit.el (lp--format-insert-entry): Ditto except I replaced
+	(and (not (eq foo a)) (not (eq foo b)) ...) with
+	(not (member foo (list a b))
+
+	* lyskom-rest.el (kom-view-next-new-text): Ditto.
+	(kom-view-next-text): Ditto.
+	(lyskom-is-read-handler): Ditto.
+	(lyskom-get-prioritized-session): Ditto.
+	(lyskom-what-to-do): Ditto.
+
+	* lyskom-buttons.el (lyskom-generate-button): Ditto.
+	(lyskom-view-url-windows): Ditto.
+	(lyskom-view-url-netscape): Ditto.
+
+	* komtypes.el (lyskom-is-recipient): Ditto.
+
+	* filter.el (lyskom-filter-text-p-2): Ditto.
+
+	* filter-edit.el (lyskom-verify-filter-pattern): Ditto.
+	(lyskom-format-filter-pattern-insert): Ditto.
+	(lyskom-filter-edit-insert-pattern): Ditto.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Ditto.
+	(lyskom-edit-send-check-recipients): Ditto.
+	(lyskom-edit-get-commented): Ditto.
+
+	* completing-read.el (lyskom-complete-string): Ditto.
+
+	* commands2.el (kom-list-summary): Ditto.
+	(kom-postpone): Ditto.
+	(kom-set-personal-label): Ditto.
+
+	* commands1.el (lyskom-get-recipients-from-misc-list): Ditto.
+	(lyskom-list-created-conferences-2): Ditto except I replaced
+	(or (eq (a) foo) (eq (b) foo) ...) with
+	(member foo (list (a) (b) ...))
+	(lyskom-jump): Ditto.
+
+	* clienttypes.el (read-list-delete-text): Ditto.
+
+	* buffers.el (lyskom-display-buffer): Ditto.
+
+	* autoconf.el (extract-configuration-option): Ditto.
+
+	* async.el (lyskom-async-new-text): Ditto.
+	(lyskom-async-deleted-text): Ditto.
+
 	* swedish-strings.el (lyskom-sv-mode-map): Made "<delete>" scroll
 	up as well as the other delete-keys.
 
