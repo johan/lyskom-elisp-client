@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.4 1995-10-28 11:07:42 byers Exp $
+;;;;; $Id: english-strings.el,v 38.5 1995-11-16 23:46:20 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.4 1995-10-28 11:07:42 byers Exp $"))
+	      "$Id: english-strings.el,v 38.5 1995-11-16 23:46:20 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -559,9 +559,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (sent-by . "   Posted by ")
     (recieved-at . "    Received: %#1s\n")
     (written-by . "by %#1s")
-    (comment-to-text-by . "Comment to article %#1d %#2s\n")
+    (comment-to-text-by . "Comment to article %#1n by %#2P\n")
     (footnote-to-text-by . "Footnote to article %#1d %#2s\n")
-    (comment-in-text-by . "Comment in article %#1d %#2s\n")
+    (comment-in-text-by . "Comment in article %#1n by %#2P\n")
     (footnote-in-text-by . "Footnote in article %#1d %#2s\n")
 
     ; From async.el:
@@ -578,24 +578,24 @@ but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
 for an article.
 ===========================================================\n")
-    (has-entered . "%#1s has entered LysKOM.")
-    (has-entered-r . "%#1s has entered LysKOM.\n")
-    (has-left . "%#1s has left LysKOM.")
-    (has-left-r . "%#1s has left LysKOM.\n")
+    (has-entered . "%#1:P has entered LysKOM.")
+    (has-entered-r . "%#1P has entered LysKOM.\n")
+    (has-left . "%#1:P has left LysKOM.")
+    (has-left-r . "%#1:P has left LysKOM.\n")
     (unknown . "unknown")
 
     (message-broadcast .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Public message from %#1s (%#3s):
+Public message from %#1P (%#3s):
 
-%#2s
+%#2t
 ----------------------------------------------------------------
 ")
     (message-from . 
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personal message from %#1s (%#3s):
+Personal message from %#1P (%#3s):
 
-%#2s
+%#2t
 ----------------------------------------------------------------
 ")
     (message-from-to .
@@ -651,8 +651,8 @@ Group message to %#3s from %#2s (%#4s):
 
     (all-conf-unread-r . "You have nothing unread.\n")
     (all-conf-unread-s . "You have nothing unread. ")
-    (one-unread . " - one unread article\n")
-    (several-unread . " - %#1d unread articles\n")
+    (one-unread . "%#1M - one unread article\n")
+    (several-unread . "%#1M - %#2d unread articles\n")
 
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
@@ -669,7 +669,7 @@ Group message to %#3s from %#2s (%#4s):
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
     (the-command . "Command:%#1s")
-    (error-in-do-when-starting . "Error in your kom-do-when-starting. %#1s\n")
+    (error-in-login-hook . "There was an error in your kom-login-hook: %#1s\n")
 
     (give-a-number . "Enter a number: ")
 

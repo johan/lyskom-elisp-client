@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 38.3 1995-10-25 09:30:48 davidk Exp $
+;;;;; $Id: flags.el,v 38.4 1995-11-16 23:46:24 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 38.3 1995-10-25 09:30:48 davidk Exp $\n"))
+	      "$Id: flags.el,v 38.4 1995-11-16 23:46:24 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -239,9 +239,7 @@ If successful then set the buffer not-modified. Else print a warning."
 
 
 (defun lyskom-read-options ()
-  "Reads the user-area and sets the variables according to the choises.
-Also run lyskom-login-hook (regardless of whether the person has a userarea
-or not."
+  "Reads the user-area and sets the variables according to the choises."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
@@ -249,9 +247,7 @@ or not."
 	    (lyskom-insert-string 'you-dont-exist)
 	  (setq lyskom-other-clients-user-areas)
 	  (if (zerop (pers-stat->user-area pers-stat))
-	      (prog1
-		  (setq lyskom-do-when-starting kom-do-when-starting)
-		(run-hooks 'lyskom-login-hook)
+	      (progn
 		(lyskom-tell-phrases-validate)
 		(setq lyskom-options-done t))
 	    (lyskom-read-options-eval 
@@ -322,9 +318,7 @@ or not."
 		  (setcdr (car pos) working)))))
 	  (++ r))
 
-	(setq lyskom-do-when-starting kom-do-when-starting)
 	(setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
-	(run-hooks 'lyskom-login-hook)
 	;; Remove not found user-areas
 	(let ((pos lyskom-other-clients-user-areas))
 	  (if pos

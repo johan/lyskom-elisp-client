@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.7 1995-10-28 11:41:32 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.8 1995-11-16 23:46:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.7 1995-10-28 11:41:32 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.8 1995-11-16 23:46:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -702,7 +702,7 @@ Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
     (go-to-next-conf-prompt . "G\345 till n\344sta m\366te")
     (go-to-your-mailbox-prompt . "G\345 till din brevl\345da")
     (the-command . "Kommandot:%#1s")
-    (error-in-do-when-starting . "Fel i din kom-do-when-starting. %#1s\n")
+    (error-in-login-hook . "Det fanns ett fel i din kom-login-hook: %#1s\n")
 
     (give-a-number . "Mata in ett tal: ")
 
