@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.14 1996-02-02 05:00:13 davidk Exp $
+;;;;; $Id: commands2.el,v 38.15 1996-02-05 11:46:41 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.14 1996-02-02 05:00:13 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.15 1996-02-05 11:46:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -341,6 +341,9 @@ otherwise: the conference is read with lyskom-completing-read."
 			    (pers-stat->username pers-stat))
       (lyskom-format-insert 'read-texts
 			    (pers-stat->read-texts pers-stat))
+      (if (= (pers-stat->pers-no pers-stat) lyskom-pers-no)
+          (lyskom-format-insert 'marked-texts
+                            (pers-stat->no-of-marks pers-stat)))
       (lyskom-format-insert 'time-for-last-letter
 			    (lyskom-return-time
 			     (conf-stat->last-written conf-stat)))
@@ -481,10 +484,10 @@ otherwise: the conference is read with lyskom-completing-read."
    message))
   
 
-(def-kom-command kom-send-alarm ()
+(def-kom-command kom-send-alarm (&optional message)
   "Send a message to all of the users in KOM right now."
   (interactive)
-  (lyskom-send-message 0 nil))
+  (lyskom-send-message 0 message))
 
 
 (defun lyskom-send-message (pers-no message)
@@ -519,29 +522,30 @@ means send the message to everybody."
 ;;; Author: Linus Tolke
 
 
-(def-kom-command kom-set-unread (&optional arg)
+(def-kom-command kom-set-unread (&optional arg conf-no)
   "Set number of unread articles in current conference."
   (interactive "P")
-  (if (zerop lyskom-current-conf)
+  (if (and (zerop lyskom-current-conf) (null conf-no))
       (lyskom-insert-string 'not-present-anywhere)
-    (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
-      (if (null conf-stat)		;+++ annan errorhantering
-	  (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
-	(let* ((narg (prefix-numeric-value arg))
-	       (n (if (and arg
-			   (<= 0 narg)
-			   (<= narg (conf-stat->no-of-texts conf-stat)))
-		      narg
-		    (lyskom-read-num-range 
-		     0 (conf-stat->no-of-texts conf-stat)
-		     (lyskom-format 'only-last
-				    (conf-stat->no-of-texts conf-stat)
-				    (conf-stat->name conf-stat)))))
-	       (result (blocking-do 'set-unread
-				    (conf-stat->conf-no conf-stat) n)))
-	  (if (null result)
-	      (lyskom-insert-string 'only-error)
-	    (lyskom-refetch)))))))
+    (let ((conf-stat (blocking-do 'get-conf-stat (or conf-no 
+                                                     lyskom-current-conf))))
+      (if (null conf-stat)              ;+++ annan errorhantering
+          (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
+        (let* ((narg (prefix-numeric-value arg))
+               (n (if (and arg
+                           (<= 0 narg)
+                           (<= narg (conf-stat->no-of-texts conf-stat)))
+                      narg
+                    (lyskom-read-num-range 
+                     0 (conf-stat->no-of-texts conf-stat)
+                     (lyskom-format 'only-last
+                                    (conf-stat->no-of-texts conf-stat)
+                                    (conf-stat->name conf-stat)))))
+               (result (blocking-do 'set-unread
+                                    (conf-stat->conf-no conf-stat) n)))
+          (if (null result)
+              (lyskom-insert-string 'only-error)
+            (lyskom-refetch)))))))
 
 
 
@@ -560,40 +564,40 @@ means send the message to everybody."
   (interactive "P")
   (lyskom-prefetch-all-confs)
   (let ((num-arg (cond
-		  ((numberp num) num)
-		  ((and (listp num)
-			(numberp (car num))) (car num))
-		  (t nil)))
-	(sum 0))
+                  ((numberp num) num)
+                  ((and (listp num)
+                        (numberp (car num))) (car num))
+                  (t nil)))
+        (sum 0))
     (mapcar
      (function
       (lambda (info)
-	(let ((un (length (cdr (read-info->text-list info))))
-	      (name (conf-stat->name (read-info->conf-stat info)))
-	      (conf-stat (read-info->conf-stat info)))
-	  (cond
-	   ((eq (read-info->type info) 'CONF)
-	    (if (or (not num-arg)
-		    (>= (-- num-arg) 0))
-		(lyskom-insert 
-		 (if (and (boundp 'lyskom-special-conf-name)
-			  (stringp lyskom-special-conf-name)
-			  (string-match lyskom-special-conf-name name))
-		     (if (/= un 1)
-			 (lyskom-format 'you-have-unreads-special un conf-stat)
-		       (lyskom-format 'you-have-an-unread-special conf-stat))
-		   (if (/= un 1)
-		       (lyskom-format 'you-have-unreads un conf-stat)
-		     (lyskom-format 'you-have-an-unread conf-stat)))))
-	    (setq sum (+ sum un)))))))
+        (let ((un (length (cdr (read-info->text-list info))))
+              (name (conf-stat->name (read-info->conf-stat info)))
+              (conf-stat (read-info->conf-stat info)))
+          (cond
+           ((eq (read-info->type info) 'CONF)
+            (if (or (not num-arg)
+                    (>= (-- num-arg) 0))
+                (lyskom-insert 
+                 (if (and (boundp 'lyskom-special-conf-name)
+                          (stringp lyskom-special-conf-name)
+                          (string-match lyskom-special-conf-name name))
+                     (if (/= un 1)
+                         (lyskom-format 'you-have-unreads-special un conf-stat)
+                       (lyskom-format 'you-have-an-unread-special conf-stat))
+                   (if (/= un 1)
+                       (lyskom-format 'you-have-unreads un conf-stat)
+                     (lyskom-format 'you-have-an-unread conf-stat)))))
+            (setq sum (+ sum un)))))))
      (read-list->all-entries lyskom-to-do-list))
     (if (= 0 sum)
-	(lyskom-insert-string 'you-have-read-everything)
+        (lyskom-insert-string 'you-have-read-everything)
       (lyskom-insert 
        (if (/= sum 1)
-	   (lyskom-format 'total-unreads 
-			  sum)
-	 (format (lyskom-get-string 'total-unread)))))))
+           (lyskom-format 'total-unreads 
+                          sum)
+         (format (lyskom-get-string 'total-unread)))))))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.12 1996-02-02 05:00:26 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.13 1996-02-05 11:46:45 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.12 1996-02-02 05:00:26 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.13 1996-02-05 11:46:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -380,6 +380,7 @@ and you have finished reading. Please come back later.
     (user-name . "User: %36#1s\n")
 
     (read-texts . "Articles read:%28#1d\n")
+    (marked-texts . "Articles marked:%26#1d")
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
     (superconf . "%[%#3@Superconference:%31#1:m%] %#4s(%#2M)\n")
     (supervisor . "%[%#3@Supervisor:%29#1:p%] %#4s(%#2P)\n")
@@ -552,6 +553,10 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d %02#3d/%02#1d  %02#4d:%02#5d ")
+    (today-time-format-string . "%#6s %02#4d:%02#5d")
+    (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
+    (today . "today")
+    (yesterday . "yesterday")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d %02#3d/%02#2d %02#4d:%02#5d")
     (no-such-text-no . "The article doesn't exist. (%#1d)\n")
