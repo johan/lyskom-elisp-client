@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.31 2000-08-10 12:01:50 byers Exp $
+;;;;; $Id: review.el,v 44.32 2000-08-21 12:29:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.31 2000-08-10 12:01:50 byers Exp $\n"))
+	      "$Id: review.el,v 44.32 2000-08-21 12:29:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1172,22 +1172,27 @@ end."
 (def-kom-command kom-review-clear ()
   "Deletes all review-types from the lyskom-reading-list and lyskom-to-do-list."
   (interactive)
-  (if (not (read-list-isempty lyskom-reading-list))
-      (while (or (eq (read-info->type (read-list->first lyskom-reading-list))
-		     'REVIEW)
-		 (eq (read-info->type (read-list->first lyskom-reading-list))
-		     'REVIEW-TREE)
-		 (eq (read-info->type (read-list->first lyskom-reading-list))
-		     'REVIEW-MARK))
-	(set-read-list-del-first lyskom-reading-list)))
-  (if (not (read-list-isempty lyskom-to-do-list))
-      (while (or (eq (read-info->type (read-list->first lyskom-to-do-list))
-		     'REVIEW)
-		 (eq (read-info->type (read-list->first lyskom-to-do-list))
-		     'REVIEW-TREE)
-		 (eq (read-info->type (read-list->first lyskom-to-do-list))
-		     'REVIEW-MARK))
-	(set-read-list-del-first lyskom-to-do-list))))
+  (let ((found nil))
+    (if (not (read-list-isempty lyskom-reading-list))
+        (while (or (eq (read-info->type (read-list->first lyskom-reading-list))
+                       'REVIEW)
+                   (eq (read-info->type (read-list->first lyskom-reading-list))
+                       'REVIEW-TREE)
+                   (eq (read-info->type (read-list->first lyskom-reading-list))
+                       'REVIEW-MARK))
+          (set-read-list-del-first lyskom-reading-list)
+          (setq found t)))
+    (if (not (read-list-isempty lyskom-to-do-list))
+        (while (or (eq (read-info->type (read-list->first lyskom-to-do-list))
+                       'REVIEW)
+                   (eq (read-info->type (read-list->first lyskom-to-do-list))
+                       'REVIEW-TREE)
+                   (eq (read-info->type (read-list->first lyskom-to-do-list))
+                       'REVIEW-MARK))
+          (set-read-list-del-first lyskom-to-do-list)
+          (setq found t)))
+
+    (unless found (lyskom-insert 'not-reviewing))))
 
 
 ;;; ================================================================
