@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.39 1997-07-15 10:23:19 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.40 1997-07-17 10:33:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.39 1997-07-15 10:23:19 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.40 1997-07-17 10:33:50 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -234,7 +234,8 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 	 ((or (stringp command)
               (vectorp command))
 	  (execute-kbd-macro command))
-	 (t (call-interactively command)))))
+         ((commandp command) (call-interactively command))
+         (t (lyskom-start-of-command nil) (lyskom-end-of-command)))))
      ((eq lyskom-command-to-do 'unknown)
       (lyskom-insert
        (lyskom-get-string 'wait-for-server)))
@@ -796,7 +797,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxc]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(:\\)?\\([][@MmPpnrtsdoxcCSD]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
@@ -888,6 +889,11 @@ Note that it is not allowed to use deferred insertions in the text."
     state))
 
 
+
+;;;
+;;; If you add a format letter, for goodness' sake, don't forget to
+;;; att it to the regexp above too!
+;;;
 
 
 
@@ -1070,11 +1076,11 @@ Note that it is not allowed to use deferred insertions in the text."
                          ((vectorp arg) 
                           (mapconcat 'single-key-description
                                      (append arg nil) " "))
-                         ((symbolp arg)
+                         ((and arg (symbolp arg))
                           (if (memq arg lyskom-commands)
 			      (lyskom-get-string arg)
 			    (princ arg)))
-                         (t (format "%S" arg)))))
+                         (t (format "(%S)" arg)))))
 
      ;;
      ;;  Format a sexp by princing it. Sort of.
@@ -2125,11 +2131,13 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 	     (command
 	      (cond
 	       ((commandp (car now)) (car now))
-	       ((and (listp (car next))
+	       ((and (car next)
+                     (listp (car next))
 		     (not (eq (car (car next))
 			      'lambda)))
 		(car (setq now (car next))))
-	       (t (car (setq now next))))))
+	       (t (or (car (setq now next))
+                      'kom-display-time)))))
 	(if nochange
 	    nil
 	  (setq lyskom-do-when-done (cons next (cdr now))))
@@ -2138,7 +2146,7 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
      (lyskom-insert-before-prompt (lyskom-get-string
 				   'error-in-kom-do-when-done))
      (lyskom-beep t)
-     (setq lyskom-do-when-done '((kom-edit-options kom-display-time)
+     (setq lyskom-do-when-done '((kom-customize kom-display-time)
 				 . (kom-edit-options kom-display-time)))
      'kom-display-time)))
 
@@ -2586,7 +2594,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
       (setq quit-flag nil)
       ;; Restore selected buffer and match data.
       (store-match-data old-match-data)
-      (set-buffer lyskom-filter-old-buffer))
+      (when (buffer-live-p lyskom-filter-old-buffer)
+        (set-buffer lyskom-filter-old-buffer)))
     (sit-for 0)))
       
 
