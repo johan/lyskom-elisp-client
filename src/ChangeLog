@@ -1,3 +1,7 @@
+2002-09-08  David Byers  <davby@metzengerstein.dyndns.org>
+
+	* Released 0.47
+
 2002-09-07  David Byers  <david.byers@swipnet.se>
 
 	* commands2.el (kom-change-conf-type): allow-secret was inversely
