@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 41.1 1996-05-03 22:41:04 davidk Exp $
+;;;;; $Id: cache.el,v 41.2 1996-06-06 01:35:46 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 41.1 1996-05-03 22:41:04 davidk Exp $\n"))
+	      "$Id: cache.el,v 41.2 1996-06-06 01:35:46 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -340,8 +340,13 @@ ARG: session-info"
 ;;; ================================================================
 ;;;                     Generic cache routines
 
-;;; BUGS: The cache is never emptied. +++
+(defvar lyskom-caches nil
+  "A list of all the caches in use.
+This is used to clear all caches with `clear-all-caches'") 
 
+(defun cache-create (cache)
+  (set cache nil)
+  (setq lyskom-caches (cons cache lyskom-caches)))
 
 (defun cache-assoc (key cache)
   "Get data for item with key KEY from CACHE.
@@ -349,33 +354,40 @@ CACHE is an assoc-list in this implementation."
   (cdr-safe (assoc key cache)))
 
 
-(defun cache-add (__key__ __data__ __cache__)
+(defun cache-add (key data cache)
   "Add DATA to CACHE under the key KEY.
 Args: KEY DATA CACHE.
 CACHE is a (the only one) quoted variable pointing to the cache (an alist).
 The variable might be changed."
-  (cond
-   ((null (symbol-value __cache__))
-    (set __cache__ (list (cons __key__ __data__))))
-   (t (let ((oldval (assoc __key__ (symbol-value __cache__))))
-	(cond
-	 ((null oldval)
-	  (set __cache__
-	       (cons (cons __key__ __data__)
+  (if (null (symbol-value cache))
+      (cache-create cache))
+  (let ((oldval (assoc key (symbol-value cache))))
+    (cond
+     ((null oldval)
+      (set cache
+	   (cons (cons key data)
 
-		     (symbol-value __cache__))))
-	 (t
-	  (setcdr oldval __data__)))))))
+		 (symbol-value cache))))
+     (t
+      (setcdr oldval data)))))
 
 
-(defun cache-del (__key__ __cache__)
+(defun cache-del (key cache)
   "Delete item with key KEY from CACHE.
 CACHE is the name of the variable that points to the cache."
-  (let ((oldval (assoc __key__ (symbol-value __cache__))))
+  (let ((oldval (assoc key (symbol-value cache))))
     (if oldval
 	(setcdr oldval nil))))		;A pair (key . nil) will remain.
 					;Fix this bug someday. +++
 
+(defun cache-clear (cache)
+  (set cache nil)
+  (setq lyskom-caches (delete cache lyskom-caches)))
+
+(defun clear-all-caches ()
+  (mapcar (function (lambda (cache) (set cache nil)))
+	  lyskom-caches)
+  (setq lyskom-caches nil))
 
 ;;; ================================================================
 ;;;         lyskom-tell-server (this is also a sort of cache)
