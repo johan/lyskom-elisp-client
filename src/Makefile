@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.3 1994-01-14 02:40:01 linus Exp $
+# $Id: Makefile,v 38.3.2.1 1995-01-07 12:25:04 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.3 1994-01-14 02:40:01 linus Exp $
+# $Id: Makefile,v 38.3.2.1 1995-01-07 12:25:04 linus Exp $
 # $Log: Makefile,v $
-# Revision 38.3  1994-01-14 02:40:01  linus
+# Revision 38.3.2.1  1995-01-07 12:25:04  linus
+# Ny version 0.38.2
+#
+# Revision 38.3  1994/01/14  02:40:01  linus
 # Fixed local installation path.
 #
 # Revision 38.2  1994/01/14  00:28:00  linus
@@ -134,7 +137,7 @@
 # Lagt till lyskom-clientversion-long
 #
 
-CLIENTVERSION = 0.38.1
+CLIENTVERSION = 0.38.2
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
