@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.7 1996-08-14 18:37:58 davidk Exp $
+;;;;; $Id: commands1.el,v 43.8 1996-08-27 10:52:22 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.7 1996-08-14 18:37:58 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.8 1996-08-27 10:52:22 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -530,7 +530,9 @@ of the person."
 (def-kom-command kom-create-conf (&optional name)
   "Create a conference."
   (interactive)
-  (let* ((conf-name (or name (lyskom-read-string (lyskom-get-string 'name-of-conf))))
+  (let* ((conf-name (or name
+			(lyskom-read-string
+			 (lyskom-get-string 'name-of-conf))))
 	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))
@@ -547,9 +549,12 @@ of the person."
                                                         nil
                                                         nil))))
     (if (null conf-no)
-	(lyskom-format-insert 'could-not-create-conf
-			      conf-name
-			      lyskom-errno)
+	(progn
+	  (lyskom-format-insert 'could-not-create-conf
+				conf-name)
+	  (lyskom-format-insert 'error-code
+				(lyskom-get-error-text lyskom-errno)
+				lyskom-errno))
       (progn
 	(let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
 	  (lyskom-format-insert 'created-conf-no-name 
