@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.337 2003-08-15 06:24:04 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.338 2003-08-15 06:32:04 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.337 2003-08-15 06:24:04 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.338 2003-08-15 06:32:04 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1505,7 +1505,7 @@ Uppkopplad sedan %#8s%#9s")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     (fast-reply-too-long . "Kan inte skapa anmärkningar som består av mer än en rad.\n")
     
-    (conf-to-faq . "Lista FAQ för vilket möte: ")
+    (conf-to-list-faqs . "Lista FAQ för vilket möte: ")
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>")
     (faq-for-server-aux . "Texten är FAQ för LysKOM-servern") 
     (faq-in-text-aux . "FAQ i inlägg:                   %10#1n %#2D")

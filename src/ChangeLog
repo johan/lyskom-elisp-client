@@ -1,12 +1,20 @@
 2003-08-15  Ulrik Haugen  <qha@lysator.liu.se>
 
-        Fix for bug 1082.
+	* english-strings.el (local): Changed "what conference" -> "which
+	conference" in conf-to-check-mship-of, conf-to-list-faqs.
+
+	* english-strings.el, swedish-strings.el (local): Renamed
+	conf-to-faq -> conf-to-list-faqs.
+
+	* faqs.el (kom-list-faqs): Caller changed.
+
+	Fix for bug 1082.
 
 	* faqs.el (kom-list-faqs): Removed hard coded string when asking
 	for conference.
 
 	* english-strings.el, swedish-strings.el (local): added
-	what-conf-to-faq.
+	conf-to-faq.
 
 2003-08-14  David Byers  <byers@lysator.liu.se>
 

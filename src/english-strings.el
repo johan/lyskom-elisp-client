@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.298 2003-08-15 06:24:03 qha Exp $
+;;;;; $Id: english-strings.el,v 44.299 2003-08-15 06:32:04 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.298 2003-08-15 06:24:03 qha Exp $"))
+              "$Id: english-strings.el,v 44.299 2003-08-15 06:32:04 qha Exp $"))
 
 
 ;;; ================================================================
@@ -594,7 +594,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     ;; Used for kom-is-person-member-of-conference:
     (pers-to-check-mship-for . "Whose membership do you want to check? ") ;-)
-    (conf-to-check-mship-of . "...for what conference? ")
+    (conf-to-check-mship-of . "...for which conference? ")
     (conf-is-empty . "The conference %#1M is empty.\n")
     (pers-is-member-of-conf . "Yes, %#1P is a member of the conference %#2M.\n")
     (pers-is-passive-member-of-conf . "Well, %#1P is only a passive member of the conference %#2M.\n")
@@ -1471,7 +1471,7 @@ On since %#8s%#9s")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     (fast-reply-too-long . "Can't create remarks that consist of more than one line.\n")
 
-    (conf-to-faq . "List FAQ for what conference: ")
+    (conf-to-list-faqs . "List FAQ for which conference: ")
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>")
     (faq-for-server-aux . "FAQ for the LysKOM-server") 
     (faq-in-text-aux . "FAQ in text:                 %10#1n %#2D")
