@@ -1,3 +1,12 @@
+Thu Aug 29 22:31:04 1996  David Kågedal  <kg@infovav.se>
+
+	* deferred-insert.el (lyskom-replace-deferred): Försök inte
+ 	använda buffertens fönster om den inte syns i något fönster.
+
+	* commands1.el (lyskom-insert-deferred-session-info): Hantera att
+ 	session-info blir nil. Inte så sannolikt, men det verkar ha hänt
+ 	Bellman.
+
 Wed Aug 28 11:00:40 1996  David Kågedal  <kg@infovav.se>
 
 	* commands2.el (lyskom-memb-received-1,lyskom-memb-received):
