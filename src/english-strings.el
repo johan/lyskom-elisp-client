@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.10 1996-07-08 09:46:16 byers Exp $
+;;;;; $Id: english-strings.el,v 41.11 1996-07-09 08:28:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.10 1996-07-08 09:46:16 byers Exp $"))
+              "$Id: english-strings.el,v 41.11 1996-07-09 08:28:25 byers Exp $"))
 
 
 
@@ -896,6 +896,12 @@ Text:
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
     (generic-popup-title . "%#1s")
+
+    (who-i-am-not-present . "%#1P (not in any conference)\n")
+    (who-i-am-present . "%#1P is present in %#2M\n")
+    (who-i-am-client . "The programs is lyskom.el, version %#1s.\n")
+    (who-i-am-server . "This is %#1s, version %#2s.\n")
+    (who-i-am-emacs . "Running under %#1s.\n")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -954,7 +960,8 @@ Text:
     (kom-review-presentation    "Review presentation")
     (kom-review-backward        "(Review) Backwards")
     (kom-view-next-text         "(Read) next article")
-    (kom-who-is-on              "Who (is on)") 
+    (kom-who-is-on              "Who is on") 
+    (kom-who-am-i               "Where (am) i")
 ;    (kom-display-who-buffer     "Display who (list)")
     (kom-list-clients		"List clients")
     (kom-busy-wait              "Wait (for news)")
@@ -1140,6 +1147,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "fc" 'kom-filter-text)
 
   (define-key lyskom-mode-map "w"  'kom-who-is-on)
+  (define-key lyskom-mode-map "I"  'kom-who-am-i)
   (define-key lyskom-mode-map "W"  'kom-busy-wait)
   (define-key lyskom-mode-map "Ap" 'kom-change-presentation)
   (define-key lyskom-mode-map "Af" 'kom-filter-edit)
