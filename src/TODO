@@ -3,8 +3,6 @@ Att göra i elisp-klienten
 
 Buggar
 
-    Ändra variabler klarar inte att hantera buffertlokala variabler.
-
     Completion-koden är ivägen när man vill skapa nya personer. [Nåja,
     inte så mycket. Det är bara att man inte får skapa namn som är
     prefix till existerande namn]
@@ -108,4 +106,6 @@ Fixade saker
     tror klienten att man inte finns. (FIXAT?)
 
     Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
+
+    Ändra variabler klarar inte att hantera buffertlokala variabler. FIXAT.
 

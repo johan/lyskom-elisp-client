@@ -1,3 +1,51 @@
+Tue Jul 23 11:28:29 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Skrev om till
+ 	att använda query-read-texts istf get-membership.
+
+	* flags.el (lyskom-Edit-options-modify): Ny funktion.
+	(kom-edit-options): Byt ut Edit-options-modify mot
+ 	lyskom-Edit-options-modify så att den hanterar buffertlokala
+ 	variabler lite bättre. Denna patch är dock helt beroende av
+ 	implementationen av edit-options och fungerar kanske inte så bra i
+ 	alla emacsversioner.
+
+	* filter-edit.el (lyskom-filter-edit-save): Spara ändringarna i
+ 	rätt buffert så inte buffertlokala variabler skrivs över med nil
+ 	eller defaultvärden.
+
+Mon Jul 22 14:10:51 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* async.el (lyskom-default-new-text-hook): Eventuellt är
+ 	scrollning till botten vid promptbyte eliminerad.
+
+	* vars.el.in (lyskom-noadmin-removed-commands): Lade till
+ 	kom-sync-database.
+
+	* swedish-strings.el (lyskom-strings): Lade till syncing-database
+ 	och really-sync
+
+	* commands2.el (kom-sync-database): Ny funktion
+
+	* services.el (initiate-sync): Ny funktion.
+
+	* lyskom-rest.el: Tog bort kom-dict och relaterade funktioner.
+ 	Removes lyskom-put-back-on-to-do-list Removed lyskom-return-time.
+	(lyskom-insert-before-prompt): Inlajnade
+ 	lyskom-do-insert-before-prompt
+
+	* commands2.el (kom-shutdown-server): Gör def-kom-command, använd
+ 	blocking-do.
+
+	* lyskom-rest.el (j-or-n-p): Hantera C-g även om read-char normalt
+ 	inte kan läsa C-g. Hantera C-l också.
+	Tog bort lyskom-handle-command-answer.
+
+	* commands2.el (kom-change-conf-type): Hantera ändra mötestyp på
+ 	personer. Spara de flaggor som inte explicit sätts av funktionen.
+ 	Visa aktuell mötestyp innan frågorna ställs. Använd
+ 	lyskom-j-or-n-p för att ställa frågorna.
+
 Fri Jul 19 18:29:41 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-follow-comments): Det stod comments på ett

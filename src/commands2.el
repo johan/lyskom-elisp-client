@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.9 1996-07-17 08:59:31 byers Exp $
+;;;;; $Id: commands2.el,v 41.10 1996-07-23 13:16:47 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.9 1996-07-17 08:59:31 byers Exp $\n"))
+	      "$Id: commands2.el,v 41.10 1996-07-23 13:16:47 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1080,22 +1080,30 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 
 
 
+;;; ================================================================
+;;;                  Spara databasen - Save database
+;;;
+
+(def-kom-command kom-sync-database ()
+  "Save the LysKOM database."
+  (interactive)
+  (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync))
+      (progn (lyskom-insert-string 'syncing-server)
+             (lyskom-report-command-answer (blocking-do 'sync)))))
+
 
 ;;; ================================================================
 ;;;                  St{ng av servern - Shutdown
 
 ;;; Author: Inge Wallin
 
-
-(defun kom-shutdown-server ()
+(def-kom-command kom-shutdown-server ()
   "Shutdown the LysKOM server."
   (interactive)
-  (lyskom-start-of-command 'kom-shutdown-server)
   (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-shutdown))
       (progn
 	(lyskom-insert-string 'closing-server)
-	(initiate-shutdown 'main 'lyskom-handle-command-answer 0))
-    (lyskom-end-of-command)))
+        (lyskom-report-command-answer (blocking-do 'shutdown 0)))))
 
 
 ;;; ================================================================
@@ -1412,25 +1420,54 @@ membership info."
 (def-kom-command kom-change-conf-type ()
   "Change type of a conference"
   (interactive)
-  (let* ((conf-no (lyskom-read-conf-no
-		   (lyskom-get-string 'what-conf-to-change)
-		   '(conf) nil "" t))
-	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
+  (let* ((conf-stat (lyskom-read-conf-stat
+                     (lyskom-get-string 'what-conf-to-change)
+                     '(conf pers) nil "" t))
+         (foo
+          (let* ((type (conf-stat->conf-type conf-stat))
+                 (box (conf-type->letterbox type))
+                 (ori (conf-type->original type))
+                 (pro (conf-type->rd_prot type))
+                 (sec (conf-type->secret type)))
+            (lyskom-format-insert 'change-type-prompt
+                                  conf-stat
+                                  conf-stat
+                                  (cond
+                                   ((or box ori pro sec)
+                                    (concat
+                                     "("
+                                     (if box (lyskom-get-string 'Mailbox) "")
+                                     (if (and box (or sec ori pro)) ", " "")
+                                     (if sec (lyskom-get-string
+                                              'Protected) "")
+                                     (if (and sec (or ori pro)) ", " "")
+                                     (if ori (lyskom-get-string
+                                              'no-comments) "")
+                                     (if (and ori pro) ", " "")
+                                     (if pro (lyskom-get-string 'closed) "")
+                                     ")"))
+                                   (t "")))))
+	 (open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
-		     (j-or-n-p (lyskom-get-string 'secret-conf))))
-	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed)))
-         (anarchy (j-or-n-p (lyskom-get-string 'anonymous-allowed))))
-    (cache-del-conf-stat conf-no)
-    (if (not (blocking-do 'set-conf-type
-	       conf-no
-	       (lyskom-create-conf-type (not open)
-					(not orig)
-					secret
-					nil
-                                        anarchy
-                                        nil
-                                        nil
-                                        nil)))
+		     (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
+	 (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
+         (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed))))
+    (cache-del-conf-stat (conf-stat->conf-no conf-stat))
+    (if (not (blocking-do 
+              'set-conf-type
+              (conf-stat->conf-no conf-stat)
+              (lyskom-create-conf-type (not open)
+                                       (not orig)
+                                       secret
+                                       (conf-type->letterbox
+                                        (conf-stat->conf-type  conf-stat))
+                                       anarchy
+                                       (conf-type->rsv1
+                                        (conf-stat->conf-type conf-stat))
+                                       (conf-type->rsv2
+                                        (conf-stat->conf-type conf-stat))
+                                       (conf-type->rsv3
+                                        (conf-stat->conf-type conf-stat)))))
 	(progn (lyskom-insert-string 'nope)
 	       (lyskom-format-insert 'error-code
 				     (lyskom-get-error-text lyskom-errno)
