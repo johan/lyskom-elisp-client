@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.78 2000-08-23 10:43:38 byers Exp $
+;;;;; $Id: commands2.el,v 44.79 2000-08-28 13:32:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.78 2000-08-23 10:43:38 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.79 2000-08-28 13:32:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2157,10 +2157,13 @@ Return-value: 'no-session if there is no suitable session to switch to
       (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
      ((null faq-list) 
       (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     (t (setq text-no (lyskom-completing-read (lyskom-get-string 'text-to-del-as-faq)
-                                              (lyskom-maybe-frob-completion-table 
-                                               faq-list)
-                                              nil t))
+     (t (setq text-no
+              (if (eq 1 (length faq-list))
+                  (car faq-list)
+                (lyskom-completing-read (lyskom-get-string 'text-to-del-as-faq)
+                                        (lyskom-maybe-frob-completion-table 
+                                         faq-list)
+                                        nil t)))
         (when text-no
           (lyskom-format-insert 'deleting-faq 
                                 (string-to-int text-no)
@@ -2432,3 +2435,4 @@ The variable kom-keep-alive-interval controls the frequency of the request."
     (if (lyskom-is-member pers-no conf-no)
 	(lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
+

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: talkback.el,v 44.2 2000-08-23 10:43:53 byers Exp $
+;;;;; $Id: talkback.el,v 44.3 2000-08-28 13:32:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: talkback.el,v 44.2 2000-08-23 10:43:53 byers Exp $\n"))
+	      "$Id: talkback.el,v 44.3 2000-08-28 13:32:13 byers Exp $\n"))
 
 (defvar kom-bug-report-address "kom@lysator.liu.se")
 
@@ -96,6 +96,7 @@ Client version: %s (%s)
 LysKOM server:  %s:%S
 Server version: %s %s %S
 Current person: %S (%s)
+Command line:   %S
 
 Please describe the precise symptoms of the bug and exactly what
 actions triggered the bug. Be as detailed as possible. Do not try to
@@ -116,6 +117,7 @@ make any conclusions of your own.
                (condition-case nil
                    (uconf-stat->name (cache-get-uconf-stat lyskom-pers-no))
                  (error ""))
+               command-line-args
                ))))
   (let ((saved-place (point)))
     (insert "\n\n")

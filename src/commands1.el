@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.85 2000-08-23 10:43:36 byers Exp $
+;;;;; $Id: commands1.el,v 44.86 2000-08-28 13:32:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.85 2000-08-23 10:43:36 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.86 2000-08-28 13:32:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1094,6 +1094,101 @@ Don't ask for confirmation."
      (blocking-do 'get-conf-stat no))
    'pres))
 
+(def-kom-command kom-change-conf-faq ()
+  "Change a FAQ for a conference."
+  (interactive)
+  (let* ((conf-no (lyskom-read-conf-no
+                   (lyskom-get-string 'what-to-change-faq-you)
+                   '(conf) 
+                   nil
+                   (cons (if lyskom-current-conf
+                             (let ((tmp (blocking-do 'get-uconf-stat lyskom-current-conf)))
+                               (if tmp (uconf-stat->name tmp) ""))
+                           "") 0)
+                   t))
+         (conf-stat (when conf-no       ; Need this to make sure the conf-stat is up-to-date!
+                      (cache-del-conf-stat conf-no)
+                      (blocking-do 'get-conf-stat conf-no)))
+         (faq-list (when conf-stat
+                     (let ((tmp nil))
+                       (lyskom-traverse-aux item 
+                           (conf-stat->aux-items conf-stat)
+                         (progn
+                           (when (eq (aux-item->tag item) 14)
+                             (setq tmp (cons (cons (aux-item->data item) (aux-item->aux-no item)) tmp)))))
+                       tmp)))
+         (text-no-aux (cond ((eq (length faq-list) 1) 
+                             (car faq-list))
+                            ((> (length faq-list) 1)
+                             (lyskom-string-assoc
+                              (lyskom-completing-read 
+                               (lyskom-get-string 'text-to-change-as-faq)
+                               (lyskom-maybe-frob-completion-table 
+                                faq-list)
+                               nil t)
+                              faq-list)))))
+    (cond ((null conf-stat)
+           (lyskom-insert (lyskom-get-string 'conf-does-not-exist)))
+;          ((null text-no)
+;           (lyskom-format-insert 'conf-has-no-faq conf-stat))
+          (t (lyskom-change-conf-faq conf-stat 
+                                     (if text-no-aux (string-to-int (car text-no-aux)))
+                                     (if text-no-aux (cdr text-no-aux)))))))
+
+(defun lyskom-change-conf-faq (conf-stat text-no aux-no)
+  "Interactively edit the FAQ for CONF-STAT in TEXT-NO."
+  (cond ((null conf-stat)
+         (lyskom-insert-string 'cant-get-conf-stat))
+        ((or lyskom-is-administrator
+             (lyskom-is-supervisor (conf-stat->conf-no conf-stat) lyskom-pers-no))
+         (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                                (text-mass (get-text text-no)))
+           (let* ((str (and text-mass (text->decoded-text-mass text-mass text-stat)))
+                  (subject (if (and str (string-match "\n" str))
+                               (substring str 0 (match-beginning 0))
+                             ""
+                               ))
+                  (body (if (and str (string-match "\n" str))
+                            (substring str (match-end 0))
+                          (or str ""))))
+             (lyskom-dispatch-edit-text
+              lyskom-proc
+              (apply 'lyskom-create-misc-list
+                     (if (and text-stat text-mass)
+                         (append (lyskom-get-recipients-from-misc-list
+                                  (text-stat->misc-info-list text-stat))
+                                 (list 'comm-to (text-stat->text-no text-stat)))
+                       (list 'recpt (conf-stat->conf-no conf-stat))))
+              subject
+              body
+              'lyskom-change-conf-faq-2
+              conf-stat
+              (text-stat->text-no text-stat)
+              aux-no))))
+        (t (lyskom-format-insert 'not-supervisor-for conf-stat))))
+
+(defun lyskom-change-conf-faq-2 (text-no conf-stat old-text-no old-aux-no)
+  (cache-del-conf-stat (conf-stat->conf-no conf-stat))
+  (initiate-modify-conf-info
+   'background
+   (lambda (retval conf-stat old-text-no text-no)
+     (if retval
+         (lyskom-format-insert-before-prompt 'changed-faq-for-conf-done conf-stat old-text-no text-no)
+       (lyskom-format-insert-before-prompt 'changed-faq-for-conf-failed conf-stat 
+                                           old-text-no text-no
+                                           (lyskom-current-error))))
+   (conf-stat->conf-no conf-stat)
+   (when old-aux-no (list old-aux-no))
+   (list (lyskom-create-aux-item 
+          0 14 0 0
+          (lyskom-create-aux-item-flags nil nil nil nil
+                                        nil nil nil nil)
+          0
+          (int-to-string text-no)))
+   conf-stat
+   old-text-no
+   text-no))
+                
 
 (def-kom-command kom-change-conf-motd ()
   "Change motd for a person or a conference."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.132 2000-08-23 10:43:51 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.133 2000-08-28 13:32:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.132 2000-08-23 10:43:51 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.133 2000-08-28 13:32:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -293,6 +293,7 @@ du har läst klart allting. Kom tillbaks senare.
 ===============================================================================
 \n")
     (what-to-change-pres-you . "Vilket möte/person vill du ändra presentationen för (dig själv): ")
+    (what-to-change-faq-you . "Vilket möte vill du ändra FAQ för: ")
     (who-to-put-motd-for . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
 
     (cant-get-conf-stat . "Kan ej hämta mötesstatus för mötet.\n")
@@ -1301,6 +1302,7 @@ Uppkopplad sedan %#8s%#9s")
     (faq-in-text-aux . "FAQ i inlägg:                   %10#1n")
     (conf-to-add-faq . "Vilket möte vill du lägga till en FAQ för? ")
     (text-to-add-as-faq . "Vilken text vill du lägga till som FAQ? ")
+    (text-to-change-as-faq . "Vilken FAQ vill du ändra? ")
     (adding-faq . "Lägger till inlägg %#1n som FAQ för %#2M...")
     (conf-to-del-faq . "Vilket möte vill du ta bort en FAQ från? ")
     (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
@@ -1308,7 +1310,10 @@ Uppkopplad sedan %#8s%#9s")
     (conf-has-no-faq . "%#1M har ingen FAQ\n")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1M.\n")
-
+    (changed-faq-for-conf-done . "FAQ för %#1M ändrad till text %#3n.\n")
+    (changed-faq-for-conf-failed . "Kunde inte ändra FAQ för %#1M till text %#3n.
+%#2?b%[Text %#2n är fortfarande FAQ.
+%]%[%]%#4s")
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
 
@@ -1680,6 +1685,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-stop-keep-alive      . "Avbryt håll förbindelsen aktiv")
 
     (kom-is-person-member-of-conference . "Kontrollera (om person är) medlem (i möte)")
+    (kom-change-conf-faq      . "Ändra FAQ")
     ))
 
 (lyskom-language-var lyskom-language-codes sv

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.69 2000-08-23 10:43:54 byers Exp $
+;;;;; $Id: utilities.el,v 44.70 2000-08-28 13:32:14 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.69 2000-08-23 10:43:54 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.70 2000-08-28 13:32:14 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -842,7 +842,7 @@ name of the day of week."
     (lyskom-create-time (elt now 0)     ;sec
                         (elt now 1)     ;min
                         (elt now 2)     ;hour
-                        (1- (elt now 3))     ;mday
+                        (elt now 3)	;mday
                         (elt now 4)     ;mon
                         (- (elt now 5) 1900) ;year
                         (elt now 6)     ;wday

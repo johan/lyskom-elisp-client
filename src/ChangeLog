@@ -1,3 +1,27 @@
+2000-08-28  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-commands): Added kom-change-conf-faq.
+
+	* commands1.el (lyskom-change-conf-faq-2): New function.
+	(lyskom-change-conf-faq): New function.
+	(kom-change-conf-faq): New command.
+
+	* commands2.el (kom-del-faq): If there is only one FAQ, assume
+	that is the one to delete.
+
+Fri Aug 25 22:12:16 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	Correct definition of mday in lyskom-client-date:
+	* async.el (lyskom-format-as-personal-message): Assume correct
+ 	value of mday.
+
+	* utilities.el (lyskom-client-date): Correct setting of mday.
+
+2000-08-23  David Byers  <davby@ida.liu.se>
+
+	* talkback.el (lyskom-insert-bug-report): Added command-line-args
+	to output.
+
 2000-08-23  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release of 0.46-BETA-O

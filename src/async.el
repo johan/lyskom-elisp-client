@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.34 2000-08-15 11:06:00 byers Exp $
+;;;;; $Id: async.el,v 44.35 2000-08-28 13:32:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.34 2000-08-15 11:06:00 byers Exp $\n"))
+	      "$Id: async.el,v 44.35 2000-08-28 13:32:01 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -500,7 +500,7 @@ Non-nil NOBEEP means don't beep."
         (setq when (lyskom-format 'time-yyyy-mm-dd-hh-mm
                                   (+ (time->year when) 1900)
                                   (time->mon when)
-                                  (1+ (time->mday when))
+                                  (time->mday when)
                                   (time->hour when)
                                   (time->min when)))
       (setq when (lyskom-format 'time-hh-mm
