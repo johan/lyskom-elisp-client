@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.247 2003-05-17 15:09:20 byers Exp $
+;;;;; $Id: vars.el.in,v 44.248 2003-06-01 18:10:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.247 2003-05-17 15:09:20 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.248 2003-06-01 18:10:34 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1809,16 +1809,16 @@ conference and person buttons are not expected.")
 
     ;; URLs
 
-    ("<URL:\\s-*\\([^>]*\\)\\s-*>"
-     pseudo-url 1 1 kom-url-face lyskom-is-url)
-    ("<\\s-*\\([^>]*\\)\\s-*>"
-     pseudo-url 1 1 kom-url-face lyskom-is-url)
-
     ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      pseudo-url 0 nil kom-url-face)
 
     ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      url 0 nil kom-url-face)
+
+    ("<URL:\\s-*\\([^>]*\\)\\s-*>"
+     pseudo-url 1 1 kom-url-face lyskom-is-url)
+    ("<\\s-*\\([^>]*\\)\\s-*>"
+     pseudo-url 1 1 kom-url-face lyskom-is-url)
 
     ;; JySKom enhancements
 
@@ -3783,6 +3783,7 @@ Values other than those listed are reserved for future use."
     ("text/x-kom-basic"   . nil)
     ("x-kom/text"         . nil)  ;Archaic alias for text/x-kom-basic.
     ("x-kom/basic"        . nil)  ;Archaic alias for text/x-kom-basic.
+    ("x-kom/user-area"     . lyskom-format-x-kom/user-area)
     ("x-kom/ö\\."         . lyskom-format-ö))
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.91 2003-05-17 15:09:20 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.92 2003-06-01 18:10:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.91 2003-05-17 15:09:20 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.92 2003-06-01 18:10:34 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -123,7 +123,12 @@ this-command-keys."
          (href (or (and widget (widget-get widget ':href))
                    (and parent (widget-get parent ':href))
                    (and widget (widget-get widget 'href))
-                   (and parent (widget-get parent 'href)))))
+                   (and parent (widget-get parent 'href))))
+         (type  (get-text-property pos 'lyskom-button-type))
+         (data  (assq type lyskom-button-actions))
+         (hint (get-text-property pos 'lyskom-button-hint))
+         (act  (or (and kom-use-button-hints hint)
+                   (and data (elt data 2)))))
     (cond (href (require 'w3)
                 (w3-widget-button-click event))
           ((and do-default
@@ -132,6 +137,7 @@ this-command-keys."
            (let ((fn (lookup-key global-map (this-command-keys))))
              (when (commandp fn)
                (call-interactively fn))))
+          ((null act) (kom-popup-menu event))
           (t (lyskom-button-press pos)))))
 
 (defun kom-button-click-or-yank (event)
