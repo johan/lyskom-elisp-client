@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.13 1992-01-13 20:44:57 ceder Exp $
+;;;;; $Id: commands1.el,v 35.14 1992-01-24 23:10:36 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.13 1992-01-13 20:44:57 ceder Exp $\n"))
+	      "$Id: commands1.el,v 35.14 1992-01-24 23:10:36 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -983,7 +983,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
   (lyskom-completing-read
    'main 'lyskom-unset-conf-motd
    (lyskom-get-string 'who-to-remove-motd-for)
-   nil nil ""))
+   nil 'empty ""))
 
 
 (defun lyskom-unset-conf-motd (conf)
@@ -994,7 +994,9 @@ conf-stat."
     (lyskom-insert-string 'cant-get-conf-stat)
     (lyskom-end-of-command))
    ((numberp conf)
-    (initiate-get-conf-stat 'main 'lyskom-unset-conf-motd conf))
+    (initiate-get-conf-stat 'main 'lyskom-unset-conf-motd (if (zerop conf)
+							      lyskom-pers-no
+							    conf)))
    ((or lyskom-is-administrator
 	(lyskom-member-p (conf-stat->supervisor conf)))
     (lyskom-set-conf-motd 0 (conf-stat->conf-no conf))
