@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.5 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: deferred-insert.el,v 44.6 2003-04-05 18:14:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -103,13 +103,21 @@
 The insertion will be at (point)."
   (set-defer-info->last-viewed defer-info lyskom-last-viewed)
   ;; (goto-char (defer-info->pos defer-info))
-  (funcall (intern-soft (concat "initiate-"
+  (if (and (defer-info->call-par defer-info)
+           (listp (defer-info->call-par defer-info)))
+      (apply (intern-soft (concat "initiate-"
 				(symbol-name (defer-info->server-call
-					       defer-info)))) 
+					       defer-info))))
 	   'deferred
 	   (defer-info->handler defer-info)
-	   (defer-info->call-par defer-info)
-	   defer-info))
+           (append (defer-info->call-par defer-info) (list defer-info)))
+    (funcall (intern-soft (concat "initiate-"
+                                  (symbol-name (defer-info->server-call
+                                                 defer-info))))
+             'deferred
+             (defer-info->handler defer-info)
+             (defer-info->call-par defer-info)
+             defer-info)))
 
 (defun lyskom-replace-deferred (defer-info &rest replacement-data)
   "Replace some defered text."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.177 2003-03-16 21:50:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.178 2003-04-05 18:14:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.177 2003-03-16 21:50:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.178 2003-04-05 18:14:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1981,7 +1981,7 @@ See `kom-allow-incompleteness'."
 					(conf-stat->supervisor cs)
 					(conf-stat->super-conf cs))))
       (aset counter 3 (1+ (elt counter 3)))
-      (lyskom-format-insert "%[%#1@%5#2:m %#3c %4#4s %#5s %#2M%]\n"
+      (lyskom-format-insert "%5#2m %5#6d %#3c %4#4s %#5s %#2M\n"
                             (lyskom-default-button 'conf (conf-stat->conf-no cs))
                             cs
                             (lyskom-list-conf-membership-char (conf-stat->conf-no cs))
@@ -1992,7 +1992,8 @@ See `kom-allow-incompleteness'."
                                         (lyskom-get-string 'superconf-conf-letter) " "))
                             (cond ((conf-type->secret (conf-stat->conf-type cs)) (lyskom-get-string 'secret-conf-letter))
                                   ((conf-type->rd_prot (conf-stat->conf-type cs)) (lyskom-get-string 'protected-conf-letter))
-                                  (t " ")))
+                                  (t " "))
+                            (conf-stat->garb-nice cs))
       (sit-for 0))))
 
 

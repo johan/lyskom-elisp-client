@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.312 2003-03-16 22:21:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.313 2003-04-05 18:14:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.312 2003-03-16 22:21:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.313 2003-04-05 18:14:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -823,6 +823,8 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (pers-is-member-of-conf . "Ja, %#1P är medlem i mötet %#2M.\n")
     (pers-is-passive-member-of-conf . "Nja, %#1P är bara passiv medlem i mötet %#2M.\n")
     (pers-is-not-member-of-conf . "Nej, %#1P är inte medlem i mötet %#2M.\n")
+    (pers-is-member-of-conf-2 . "Antal olästa: %#2D (senast inne %#1s)\n")
+    (Unknown-number . "Okänt antal")
 
     ;; +++ cant seem to find where these are used:
     (name-is-not-in-conf . "%#1s är inte närvarande i något möte.\n")
@@ -4004,7 +4006,7 @@ i servern. Annars sparas det i din .emacs.")
   teckensnitt.")
     (kom-morons-face-doc . "\
   Teckensnitt för idioter och knäppskallar. De personer som räknas upp
-  i listan \"vänner och bekanta\" kommer att markeras med detta
+  i listan \"Idioter och knäppskallar\" kommer att markeras med detta
   teckensnitt.")
     (kom-presence-face-doc . "\
   Teckensnitt för närvaromeddelanden.")
