@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.4 1996-10-10 13:59:44 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.5 1997-01-31 15:48:08 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.4 1996-10-10 13:59:44 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.5 1997-01-31 15:48:08 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -209,13 +209,19 @@ lyskom-prefetch-stack."
   (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-texttree (text-no &optional queue)
+(defun lyskom-prefetch-texttree (text-no &optional queue only-new)
   "Prefetch all info about the text with number TEXT-NO and descends recursively.
 If QUEUE is non-nil, put the request on it, otherwise put it on 
-lyskom-prefetch-stack."
-  (if queue
-      (lyskom-queue-enter queue (cons 'TEXTTREE text-no))
-    (lyskom-stack-push lyskom-prefetch-stack (cons 'TEXTTREE text-no)))
+lyskom-prefetch-stack.
+
+If ONLY-NEW is non-nil and the text-stat in question is already
+prefetched the prefetch is not done."
+  (if (and only-new
+	   (cache-get-text-stat text-no))
+      nil
+    (if queue
+	(lyskom-queue-enter queue (cons 'TEXTTREE text-no))
+      (lyskom-stack-push lyskom-prefetch-stack (cons 'TEXTTREE text-no))))
   (lyskom-continue-prefetch))
   
 
@@ -560,9 +566,9 @@ Put the requests on QUEUE."
 	     (eq type 'CC-RECPT))
 	 (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
 	((eq type 'COMM-IN)
-	 (lyskom-prefetch-texttree (misc-info->comm-in misc) queue))
+	 (lyskom-prefetch-texttree (misc-info->comm-in misc) queue t))
 	((eq type 'FOOTN-IN)
-	 (lyskom-prefetch-texttree (misc-info->footn-in misc) queue))
+	 (lyskom-prefetch-texttree (misc-info->footn-in misc) queue t))
 	((eq type 'COMM-TO)
 	 (lyskom-prefetch-textauth (misc-info->comm-to misc) queue))
 	((eq type 'FOOTN-TO)
