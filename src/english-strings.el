@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.11 1996-10-24 09:47:48 byers Exp $
+;;;;; $Id: english-strings.el,v 44.12 1996-10-28 18:04:25 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.11 1996-10-24 09:47:48 byers Exp $"))
+              "$Id: english-strings.el,v 44.12 1996-10-28 18:04:25 davidk Exp $"))
 
 
 
@@ -158,8 +158,8 @@ on how to do this.")
 
     (could-not-create-you .  "LysKOM couldn't create that user.\n")
     (presentation-subject . "%#1s")
-    (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:
-Email-address:\n\nOther:\t")
+    (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:\t
+Email-address:\t\nWWW:\t\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
     (in-secret-conference . "Secret conference (%#1d).")
@@ -208,6 +208,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (somebody-else-deleted-that-conf . "Somebody else just deleted the conference.\n")
     (conf-is-deleted . "OK, %#1s is now deleted.\n")
     (you-could-not-delete . "%#1M can't be deleted by you.\n")
+    (you-have-deleted-yourself . "You have deleted yourself.\n")
 
     (what-text-to-delete . "Article to remove: ")
     (deleting-text . "Removing article %#1:n...")
@@ -1044,7 +1045,7 @@ On since %#8s%#9s")
     (kom-review-more          . "Review more")
     (kom-view-commented-text  . "Review (the) commented (article)")
     (kom-view-previous-commented-text
-     			      . "Review (the) previouls commented (article)")
+     			      . "Review (the) previously commented (article)")
     (kom-review-stack         . "Review stack")
     (kom-review-presentation  . "Review presentation")
     (kom-review-backward      . "(Review) Backwards")
@@ -1437,7 +1438,7 @@ On since %#8s%#9s")
   (define-key lyskom-customize-map "\C-c\C-a" 'lyskom-customize-apply)
 )
 
-(lyskom-language-strings 'lyskom-custom-strings 'sv
+(lyskom-language-strings lyskom-custom-strings sv
   '(
     ;;
     ;; Widget strings
