@@ -1,7 +1,9 @@
 Att göra i elisp-klienten
 =========================
 
-Buggar
+-------- Buggar
+
+prefix-kommandon änndras inte vid språkbyten.
 
 Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
 
@@ -74,7 +76,7 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
     prompten "Läsa nästa brev" i stället för "Läsa nästa
     kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
 
-Allmänna förbättringar
+-------- Allmänna förbättringar
 
     Modifiera interna datastrukturer vid utträd.
 
@@ -118,7 +120,7 @@ Allmänna förbättringar
     Reentrant blocking-do
 
 
-Fixade saker
+-------- Fixade saker
 
     Jag har satt kom-show-footnotes-immediately till nil. Det verkar
     som man inte får läsa fotnötter först då, t ex fick jag läsa
