@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.5 1997-02-05 23:46:35 davidk Exp $
+;;;;; $Id: async.el,v 44.6 1997-03-08 02:44:15 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.5 1997-02-05 23:46:35 davidk Exp $\n"))
+	      "$Id: async.el,v 44.6 1997-03-08 02:44:15 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -399,17 +399,22 @@ converted, before insertion."
             (eq 0 (string-match "^Remote-command: [0-9]+ [0-9]+\n" string))
             (eq 0 (string-match "^Auto-reply:\n" string))))
       nil
-    (lyskom-save-excursion
-     (cond
-      ((eq kom-show-personal-messages-in-buffer t)
-       (lyskom-insert-before-prompt string))
-      ((null kom-show-personal-messages-in-buffer))
-      (t
-       (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
-       (goto-char (point-max))
-       (lyskom-insert string )))
-     (if kom-pop-personal-messages
-         (display-buffer (current-buffer))))))
+    (let ((pop kom-pop-personal-messages))
+      (lyskom-save-excursion
+       (cond
+	((eq kom-show-personal-messages-in-buffer t)
+	 (lyskom-insert-before-prompt string)
+	 (if pop (display-buffer (current-buffer))))
+	((null kom-show-personal-messages-in-buffer))
+	(t
+	 (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
+	 (goto-char (point-max))
+	 (lyskom-insert string )
+	 (if pop
+	     (save-selected-window
+	       (select-window (display-buffer (current-buffer)))
+	       (goto-char (point-max))
+	       (recenter -1)))))))))
   
 
 ;;; ================================================================
