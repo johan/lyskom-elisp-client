@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.170 2002-07-23 18:28:40 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.171 2002-07-24 10:49:20 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.170 2002-07-23 18:28:40 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.171 2002-07-24 10:49:20 jhs Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1188,7 +1188,9 @@ Args: FORMAT-STRING &rest ARGS"
             (lyskom-nbutlast lyskom-overlay-pool 
                              (- (length lyskom-overlay-pool)
                                 kom-max-overlays)))
-      (mapcar 'delete-overlay old))
+      (mapcar
+       (lambda (o) (lyskom-xemacs-or-gnu (delete-extent o)
+					 (delete-overlay o))) old))
     (setq lyskom-overlay-pool (cons val lyskom-overlay-pool)))
   val))
 
