@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.154 2004-05-03 15:12:01 byers Exp $
+;;;;; $Id: utilities.el,v 44.155 2004-06-23 18:24:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.154 2004-05-03 15:12:01 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.155 2004-06-23 18:24:29 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2209,6 +2209,12 @@ suitable for use as initial input in a magic minibuffer."
 
 (defun lyskom-set-connection-time-format (val)
   "Change protocol time format to UTC if VAL is non-nil."
+  ;; Check for broken encode-time
+  (setq val (and val 
+                 (condition-case nil
+                     (not (equal (encode-time 0 0 0 1 1 1970 0)
+                                 (encode-time 0 0 0 1 1 1970 -4)))
+                   (error nil))))
   (when (or (blocking-do 'set-connection-time-format val)
             (null val))
     (lyskom-traverse-buffer-hierarchy

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.293 2004-06-09 11:06:09 qha Exp $
+;;;;; $Id: vars.el.in,v 44.294 2004-06-23 18:24:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.293 2004-06-09 11:06:09 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.294 2004-06-23 18:24:29 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3846,13 +3846,8 @@ This is currently not used."
   "Number of text-nos lyskom will fetch when fetching maps."
   local)
 
-(def-kom-var lyskom-fetch-membership-length 6
-  "Number of entries in the membership-list that is fetched at a time.
-This should be optimized depending on how often you read LysKOM and
-the activity in the first groups in you membership list.
-
-Best performance is achieved if you, when logging in, always have an unread
-article in one of the first lyskom-fetch-membership-length conferences.")
+(def-kom-var lyskom-fetch-membership-length 100
+  "Number of entries in the membership-list that is fetched at a time.")
 
 (def-kom-var lyskom-prefetch-limit 10
   "Number of prefetch requests the client will try to keep going
