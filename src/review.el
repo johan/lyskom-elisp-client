@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.8 1996-03-04 15:13:14 byers Exp $
+;;;;; $Id: review.el,v 38.9 1996-03-12 02:18:03 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.8 1996-03-04 15:13:14 byers Exp $\n"))
+	      "$Id: review.el,v 38.9 1996-03-12 02:18:03 davidk Exp $\n"))
 
 
 
@@ -330,21 +330,18 @@ instead. In this case the text TEXT-NO is first shown."
     (lyskom-end-of-command)))
 
 
-(defun kom-find-root-review ()
+(def-kom-command kom-find-root-review ()
   "Finds the root text of the tree containing the text in lyskom-current-text and
 reviews the whole tree in deep-first order."
   (interactive)
-  (lyskom-start-of-command 'kom-find-root-review)
   (lyskom-tell-internat 'kom-tell-review)
   (cond
    (lyskom-current-text
-    (lyskom-collect 'review)
-    (initiate-get-text-stat 'review nil lyskom-current-text)
-    (initiate-get-text-stat 'review nil lyskom-current-text)
-    (lyskom-use 'review 'lyskom-find-root 'lyskom-review-tree))
+    (lyskom-review-tree
+     (lyskom-find-root (blocking-do 'get-text-stat lyskom-current-text)
+		       nil)))
    (t
-    (lyskom-insert-string 'read-text-first)
-    (lyskom-end-of-command))))
+    (lyskom-insert-string 'read-text-first))))
 
 
 (defun lyskom-find-root (text-stat old-text-stat)
@@ -395,8 +392,7 @@ Text is a text-no."
     (signal 'lyskom-internal-error
 	    (list 'lyskom-review-tree
 		  "Called with incorrect argument."
-		  text))))
-  (lyskom-end-of-command))
+		  text)))))
 
 
 ;;; ================================================================

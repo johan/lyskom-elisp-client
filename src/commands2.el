@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.20 1996-03-04 15:13:02 byers Exp $
+;;;;; $Id: commands2.el,v 38.21 1996-03-12 02:17:50 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.20 1996-03-04 15:13:02 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.21 1996-03-12 02:17:50 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1182,7 +1182,8 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
    'lyskom-set-motd-2))
 
 
-(defun lyskom-set-motd-2 (text-no)
+;; Should really fix lyskom-edit text instead of the ugly IGNORE
+(defun lyskom-set-motd-2 (text-no ignore)
   "Set motd of LysKOM to the newly created text TEXT-NO."
   (lyskom-insert-before-prompt
    (lyskom-format 'setting-motd text-no))

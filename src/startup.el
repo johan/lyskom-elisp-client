@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.20 1996-03-02 21:38:22 davidk Exp $
+;;;;; $Id: startup.el,v 38.21 1996-03-12 02:18:06 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.20 1996-03-02 21:38:22 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.21 1996-03-12 02:18:06 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -116,11 +116,13 @@ See lyskom-mode for details."
 			  100)
 		       (% (server-info->version lyskom-server-info) 100))))
 	    (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
-		(lyskom-insert 
-		 (text->text-mass 
-		  (blocking-do 'get-text 
-			       (server-info->motd-of-lyskom
-				lyskom-server-info)))))
+		(let ((text (blocking-do 'get-text 
+					 (server-info->motd-of-lyskom
+					  lyskom-server-info))))
+		  (lyskom-insert 
+		   (if text
+		       (text->text-mass text)
+		     (lyskom-get-string 'lyskom-motd-was-garbed)))))
 	    ;; Can't use lyskom-end-of-command here.
 	    (setq lyskom-executing-command nil) 
 	    ;; Log in

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.10 1996-02-27 09:38:53 byers Exp $
+;;;;; $Id: completing-read.el,v 38.11 1996-03-12 02:17:53 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.10 1996-02-27 09:38:53 byers Exp $\n"))
+	      "$Id: completing-read.el,v 38.11 1996-03-12 02:17:53 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -447,6 +447,7 @@ If ONLY-ONE is non-nil only one session number will be returned."
                  (sort sessions '<))))
     (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
     (lyskom-insert (lyskom-format 'total-users (length who-info)))
+    (lyskom-scroll)
     (while (string= ""
                     (setq result (completing-read
                                   (lyskom-get-string 'resolve-session)
