@@ -1,5 +1,16 @@
 2003-01-03  David Byers  <david.byers@swipnet.se>
 
+	* swedish-strings.el (lyskom-sv-mode-map): Added prefix "a" for
+	add commands. Added bindings for add and subtract commands.
+	(lyskom-sv-mode-map): Commented out obsolesence bindings for a and
+	lv. Moved kom-rview-backward to å B from B. Cleaned up some.
+
+	* english-strings.el (lyskom-en-mode-map): Changed "A" to "h", so
+	"h" is now prefix for change commands. Added prefix "a" for add
+	and substract commands. Moved kom-review-backward to r b from B.
+	Moved a bunch of other important bindings with complete disregard
+	for all users who will surely be annoyed.
+
 	* lyskom-buttons.el (lyskom-default-button): Use default, not
 	kom-text-face for timestamp buttons since kom-text-face is no
 	more.
