@@ -33,7 +33,7 @@ för projektet så att det fortsätter att utvecklas.
 ** Det går mycket fortare att logga in än tidigare, speciellt om man
    är med i många möten och bara har olästa i en liten del av dem.
    Klienten belastar även servern i mycket mindre utsträckning
-   underinloggningsfasen.
+   under inloggningsfasen.
 
 ** Återsefunktionerna är lite mer robusta. Om man återser inlägg och
    blir avbruten av ett prioriterat möte så kommer klienten att återgå 
