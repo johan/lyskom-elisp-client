@@ -1,6 +1,10 @@
 Wed Oct  2 16:41:53 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* startup.el (lyskom): Töm minibufferten.
+
 	* lyskom-rest.el (lyskom-list-unread): Ny implementation.
+	(lyskom-binsearch): Ny funktion.
+	(lyskom-binsearch-internal): Ny funktion.
 
 Mon Sep 30 01:25:23 1996  David Kågedal  <kg@infovav.se>
 

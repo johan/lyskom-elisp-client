@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.3 1996-09-30 23:39:06 davidk Exp $
+;;;;; $Id: startup.el,v 44.4 1996-10-02 16:59:06 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.3 1996-09-30 23:39:06 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.4 1996-10-02 16:59:06 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -85,8 +85,10 @@ See lyskom-mode for details."
 	   (proc nil))
       (if (and buffer
 	       (lyskom-buffer-p buffer)
-	       (not (j-or-n-p (lyskom-get-string
-			       'start-new-session-same-server))))
+	       (not (prog1
+			(j-or-n-p (lyskom-get-string
+				   'start-new-session-same-server))
+		      (message ""))))
 	  (switch-to-buffer buffer)
 	(unwind-protect
 	    (progn
