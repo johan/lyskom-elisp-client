@@ -1,3 +1,7 @@
+Wed Nov 17 13:54:15 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-B
+
 1999-11-17  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-is-loaded): In XEmacs, set an extent on
