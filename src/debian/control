@@ -1,11 +1,11 @@
 Source: lyskom-elisp-client
 Section: misc
 Priority: optional
-Maintainer: Joel Rosdahl <joel@debian.org>
+Maintainer: Joel Rosdahl <joel@rosdahl.net>
 Standards-Version: 3.1.0
 
 Package: lyskom-elisp-client
 Architecture: all
-Depends: emacsen, emacs20 | custom | xemacs19 | xemacs20-bin | xemacs21-bin
+Depends: emacsen
 Description: Elisp client for LysKOM.
  This package is not part of the official Debian distribution.
