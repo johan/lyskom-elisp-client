@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.17 1992-01-12 05:10:03 inge Exp $
+;;;;; $Id: lyskom-rest.el,v 35.18 1992-01-24 23:11:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.17 1992-01-12 05:10:03 inge Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.18 1992-01-24 23:11:33 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -645,7 +645,8 @@ The position lyskom-last-viewed will always remain visible."
   "Insert STRING last in current buffer.
 Never scrolls but leaves the point at the end of the buffer if possible without
 scrolling. Leaves the point at the end of the window if not possible.
-If buffer is not on screen then doesn't move point."
+If buffer is not on screen then doesn't move point.
+The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   (goto-char (point-max))
   (let ((buffer-read-only nil))
     (insert (if kom-emacs-knows-iso-8859-1
