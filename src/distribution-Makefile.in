@@ -1,30 +1,31 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile.in,v 44.4 2000-09-15 12:16:44 byers Exp $
+# $Id: distribution-Makefile.in,v 44.5 2002-03-21 21:23:26 joel Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
 # ======================================================================
-# EMACS is the command used to start Emacs on your system. You need
-# Gnu Emacs 19.34 or later, or XEmacs 19.15 or 20.2 or later.
+# EMACS is the command used to start Emacs on your system. Read README
+# for information about the Emacs versions that can be used.
 # ======================================================================
 
-EMACS=@emacs@
+EMACS = @emacs@
 
 
 # ======================================================================
-# The following lines control where things go when installed
+# The following lines control where things go when installed.
+#
 # LISPDIR is where lyskom.el and lyskom.elc go
 # INFODIR is where documentation goes (if there is any)
 # ======================================================================
 
-prefix=@prefix@
-LISPDIR=@lispdir@
-INFODIR=@infodir@
+prefix = @prefix@
+LISPDIR = @lispdir@
+INFODIR = @infodir@
 
 
 # ======================================================================
 # LANGUAGE is a list of languages to compile in. Entries in the list
-# are separated by whitespace. The following # languages are available
+# are separated by whitespace. The following languages are available:
 #
 #	Name in list		Language
 #	swedish			Swedish
@@ -33,86 +34,41 @@ INFODIR=@infodir@
 # The first language in the list will be the default language.
 # ======================================================================
 
-LANGUAGES=@languages@
+LANGUAGES = @languages@
 
 
 # ======================================================================
 # ======================================================================
 #
-#		You should change nothing beyond this point
+#		You should change nothing beyond this point.
 #
 # ======================================================================
 # ======================================================================
 
-RM=/bin/rm -f
-SHELL=/bin/sh
-LANGUAGE-EL=$(LANGUAGES:=-strings.el)
-EMACS-BATCH=$(EMACS) -batch
-SOURCES	 = 	$(LANGUAGE-EL) \
-		komtypes.el \
-		clienttypes.el \
-		deferred-insert.el \
-		utilities.el \
-		completing-read.el \
-		command.el \
-		buffers.el \
-		aux-items.el \
-		mime.el \
-		prefetch.el \
-		startup.el \
-		reading.el \
-		internal.el \
-		services.el \
-		parse.el \
-		cache.el \
-		view-mode.el \
-		commands1.el \
-		commands2.el \
-		review.el \
-		edit-text.el \
-		filter.el \
-		filter-edit.el \
-		lyskom-buttons.el \
-		view-text.el \
-		async.el \
-		mship-edit.el \
-		prioritize.el \
-		flags.el \
-		messages.el \
-		ansaphone.el \
-		remote-control.el \
-		menus.el slow.el \
-		elib-string.el \
-		option-edit.el \
-		talkback.el \
-		lyskom-rest.el
-
-HEADER = 	header.el \
-		defvar.el \
-		feature.el \
-		vars.el \
-		macros.el \
-		compatibility.el \
-		language.el
-
+RM = /bin/rm -f
+SHELL = /bin/sh
+LANGUAGE-EL = $(LANGUAGES:=-strings.el)
+EMACS-BATCH = $(EMACS) -batch
+HEADER = @@HEADER@@
+SOURCES	 = @@SOURCES@@
 
 all: envcheck lyskom-@@CLIENTVERSION@@.elc
 
 envcheck:
-	$(EMACS-BATCH) -l ./envcheck.el -f lyskom-check-environment
+	$(EMACS-BATCH) -l envcheck.el -f lyskom-check-environment
 
 lyskom-@@CLIENTVERSION@@.elc: lyskom-@@CLIENTVERSION@@.el
-	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom-@@CLIENTVERSION@@.el
+	$(EMACS-BATCH) -l lpath.el -f batch-byte-compile lyskom-@@CLIENTVERSION@@.el
 
-lyskom-@@CLIENTVERSION@@.el: $(HEADER) $(SOURCES) 
-	cat $(HEADER) $(SOURCES) > lyskom-@@CLIENTVERSION@@.el
+lyskom-@@CLIENTVERSION@@.el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
+	cat $(HEADER) $(LANGUAGE-EL) $(SOURCES) >lyskom-@@CLIENTVERSION@@.el
 
 install: lyskom-@@CLIENTVERSION@@.elc
 	cp lyskom-@@CLIENTVERSION@@.el lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)
 	rm -f $(LISPDIR)/lyskom.el
-	ln -s $(LISPDIR)/lyskom-@@CLIENTVERSION@@.el $(LISPDIR)/lyskom.el
+	ln -s lyskom-@@CLIENTVERSION@@.el $(LISPDIR)/lyskom.el
 	rm -f $(LISPDIR)/lyskom.elc
-	ln -s $(LISPDIR)/lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)/lyskom.elc
+	ln -s lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)/lyskom.elc
 
 clean:
 	$(RM) lyskom-@@CLIENTVERSION@@.el

@@ -1,5 +1,3 @@
-# -*- Makefile -*-
-# $Id: Makefile,v 44.81 2002-02-24 20:28:27 joel Exp $
 # Copyright (C) 1991-2002  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM Emacs LISP client.
@@ -22,48 +20,53 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.81 2002-02-24 20:28:27 joel Exp $
+# $Id: Makefile,v 44.82 2002-03-21 21:23:26 joel Exp $
+
+# Useful targets:
 #
+#   all      - Build lyskom.el from source files and compile it with $(EMACS).
+#   verbose  - Same as above, but also print some progress messages.
+#   fast     - Separately compile each uncompiled source file with $(EMACS)
+#              and produce lyskom.elc from the results.
+#   check    - Perform test cases.
+#   release  - Make distribution archives.
 
+######################################################################
 
-# ======================================================================
-# Useful targets: all, lyskom.el lyskom.elc check verbose TAGS release
-# clean distclean install
-# ======================================================================
-
+# Version of the client.
 #
-# NOTE: If you change this file, don't forget to change the distribution 
-# makefile too!
-#
-
+# Also remember to change version number in ../doc/Makefile!
 CLIENTVERSION = 0.46.2-BETA-2
-DOCFILES=NEWS-0.46 NEWS-0.46.1
-DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
-REDHATCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
-RPMROOT = /usr/src/redhat
+######################################################################
 
-FTPDIR=/home/davby/www-pub
-#REMOTEDIR=sanna.lysator.liu.se:/lysator/ftp/pub/lyskom/elisp-client
-#FTPDIR = /usr/ftp/pub/lyskom/elisp-client
-LISPDIR = /usr/gnu/share/emacs/site-lisp
-LANGUAGES = swedish english
-DEFAULTLISPDIR=/usr/local/share/emacs/site-lisp
-DEFAULTPREFIX=/usr/local
+# Default Emacs to use for compilation by developers.
+EMACS = xemacs
 
-SHELL = /bin/sh
-RM = /bin/rm -f
-EMACS=xemacs
-EMACS-BATCH = $(EMACS) -batch
-GENERIC-CLEAN = *~ *.o core
-GENERIC-DIST-CLEAN = TAGS
+# The available languages.
+LANGUAGES = english swedish
 
-TARGET=lyskom.elc
-TARGET-EL=$(TARGET:%.elc=%.el)
+# These files are included in all distribution archives.
+DOCFILES = ../doc/NEWS-0.46 ../doc/NEWS-0.46.1
 
-LANGUAGE-EL=$(LANGUAGES:=-strings.el)
-SOURCES	 = 	$(LANGUAGE-EL) \
-		komtypes.el \
+# Default target.
+TARGET = lyskom.elc
+TARGET-EL := $(TARGET:%.elc=%.el)
+
+# These will be placed first in lyskom.el.
+HEADER = 	header.el \
+		defvar.el \
+		feature.el \
+		$(VARS-EL) \
+		macros.el \
+		compatibility.el \
+		language.el
+
+# Next come the language definitions.
+LANGUAGE-EL := $(LANGUAGES:=-strings.el)
+
+# Finally, other source files.
+SOURCES	 = 	komtypes.el \
 		clienttypes.el \
 		deferred-insert.el \
 		utilities.el \
@@ -100,148 +103,191 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		option-edit.el \
 		talkback.el \
 		lyskom-rest.el
+                # lyskom-rest.el should be the last file!
 
-HEADER = 	header.el \
-		defvar.el \
-		feature.el \
-		vars.el \
-		macros.el \
-		compatibility.el \
-		language.el
+# Included in the source distribution archive.
+EXTRA-SRCDIST = \
+	distribution-COPYING distribution-configure.in \
+	distribution-Makefile.in
+EXTRA-SRCVERBATIM = \
+	envcheck.el lpath.el autoconf.el \
+	$(DOCFILES)
 
-MISC =		envcheck.el \
-		lpath.el \
-		autoconf.el
+# Included in the non-source distribution archives.
+EXTRA-NONSRCDIST = \
+	distribution-COPYING
+EXTRA-NONSRCVERBATIM = \
+	$(DOCFILES)
 
-DISTFILES =     README \
-		COPYING \
-		Makefile.in \
-		configure.in
+# Base name of distribution packages.
+PACKAGENAME = lyskom-elisp-client
 
-DISTSRC = $(DISTFILES:%=distribution-%)
-HEADER-ELC = $(HEADER:%.el=%.elc)
-SOURCES-ELC = $(SOURCES:%.el=%.elc)
+# Default paths in the source dist Makefile.
+DEFAULTLISPDIR = /usr/local/share/emacs/site-lisp
+DEFAULTPREFIX = /usr/local
 
+ifeq ($(MAKECMDGOALS),release)
+    VARS-EL = vars.el-release
+else
+    VARS-EL = vars.el
+endif
+
+EMACS-BATCH := $(EMACS) -batch
 
 all: $(TARGET)
 
 vars.el: vars.el.in Makefile
-	rm -f vars.el
-	if test -d CVS -a x$(DO_RELEASE) = x; then \
-		sed "s/@@CLIENTVERSION@@/$(CLIENTVERSION) (from CVS; built `date +%Y-%m-%d`)/g" < vars.el.in > vars.el ; \
-	else \
-		sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < vars.el.in > vars.el ; \
-	fi
-	chmod 444 vars.el
+	rm -f $@
+	sed "s/@@CLIENTVERSION@@/$(CLIENTVERSION) (from CVS; built `date +%Y-%m-%d`)/g" <$< >$@
+	chmod 444 $@
 
-%.elc: %.el _header.el
-	$(EMACS-BATCH)  -l ./lpath.el -l ./_header.el -f batch-byte-compile $<
+vars.el-release: vars.el.in Makefile
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <$< >$@
 
-_header.el: $(HEADER)
-	cat $(HEADER) > _header.el
+$(TARGET-EL) lyskom-all-$(CLIENTVERSION).el: \
+		$(HEADER) $(LANGUAGE-EL) $(SOURCES)
+	cat $^ >$@
 
-fast: $(HEADER-ELC) $(SOURCES-ELC)
-	cat $(HEADER-ELC) $(SOURCES-ELC) > $(TARGET)
-
-$(TARGET-EL): $(HEADER) $(SOURCES)
-	if test -d CVS -a x$(DO_RELEASE) = x; then \
-		rm -f vars.el ; \
-		$(MAKE) vars.el ; \
-	fi
-	cat $(HEADER) $(SOURCES) > $(TARGET-EL)
-
-$(TARGET): $(TARGET-EL)
-	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile $(TARGET-EL)
-
-check: $(TARGET-EL)
-	$(EMACS-BATCH) -l ./lpath.el -l ./$(TARGET-EL)  -l ./check-strings.el \
-			-f lyskom-check-strings
-
-.PHONY: verbose
-.PHONY: verbose-el
+lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el $(SOURCES)
+	cat $^ >$@
 
 verbose: verbose-el $(TARGET)
 
-verbose-el: $(HEADER) $(SOURCES)
-	@echo "Building lyskom.el"
-	@echo "" > $(TARGET-EL)
-	@for i in $(HEADER) $(SOURCES) ; do \
+verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
+	cp /dev/null $@
+	for i in $^ ; do \
 		echo '(eval-when-compile (message "Compiling %s" "'$$i'"))' \
-			>> $(TARGET-EL) ;\
-		cat $$i >> $(TARGET-EL) ; \
-	done 
+			>>$@ ; \
+		cat $$i >>$@ ; \
+	    done
+
+%.elc: %.el _header.el
+	$(EMACS-BATCH) -l lpath.el -l _header.el -f batch-byte-compile $<
+
+$(TARGET): $(TARGET-EL)
+	$(EMACS-BATCH) -l lpath.el -f batch-byte-compile $<
+
+HEADER-ELC = $(HEADER:%.el=%.elc)
+LANGUAGE-ELC = $(LANGUAGE-EL:.el%.elc)
+SOURCES-ELC = $(SOURCES:%.el=%.elc)
+
+_header.el: $(HEADER)
+	cat $(HEADER) >_header.el
+
+fast: $(HEADER-ELC) $(LANGUAGE-ELC) $(SOURCES-ELC)
+	cat $^ >$(TARGET)
 
 
-TAGS: $(HEADER) $(SOURCES)
-	etags $(HEADER) $(SOURCES)
+check: $(TARGET-EL)
+	$(EMACS-BATCH) -l lpath.el -l $< -l check-strings.el \
+			-f lyskom-check-strings
 
-install: $(TARGET) $(TARGET-EL)
-	cp $(TARGET-EL) $(TARGET) $(LISPDIR)
+TAGS: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
+	etags $^
 
-release: release-files release-move
+distribution-README-%: \
+		distribution-README.begin \
+		distribution-README.install-% \
+		distribution-README.end
+	cat $^ >$@
 
-release-files: clean
-	$(MAKE) do-release-files DO_RELEASE=1
+RELEASE-DIST-FLAVOURS := src all $(LANGUAGES)
 
-do-release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
-	mkdir -p lyskom-$(CLIENTVERSION)
-	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
-	for i in $(DISTFILES) ; do \
-	    sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < distribution-$$i \
-					> lyskom-$(CLIENTVERSION)/$$i; \
-	done
-	for i in $(DOCFILES) ; do \
-		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
-	done
-	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" <lyskom-elisp-client.spec >lyskom-$(CLIENTVERSION)/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
-	( cd lyskom-$(CLIENTVERSION); \
-	autoconf ; \
-	./configure --prefix=$(DEFAULTPREFIX) --with-lispdir=$(DEFAULTLISPDIR) ; \
-	make lyskom-$(CLIENTVERSION).el )
-	chmod -R u+rw,g+r,o+r lyskom-$(CLIENTVERSION)
-	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
-	gzip -9 lyskom-$(CLIENTVERSION).tar
-	zip -R9y lyskom-$(CLIENTVERSION).zip 'lyskom-$(CLIENTVERSION)/*'
+RELEASE-DIST-ARCHIVES := \
+    $(patsubst %,$(PACKAGENAME)-%-$(CLIENTVERSION).tar.gz,$(RELEASE-DIST-FLAVOURS)) \
+    $(patsubst %,$(PACKAGENAME)-%-$(CLIENTVERSION).zip,$(RELEASE-DIST-FLAVOURS))
 
-release-move: 
-	if [ ! -z "$(REMOTEDIR)" ] ; then \
-	    scp lyskom-$(CLIENTVERSION).tar.gz $(REMOTEDIR); \
-	    scp lyskom-$(CLIENTVERSION).zip $(REMOTEDIR); \
-	else \
-		echo "Kopierade inte release-filerna till remote-system." ; \
-	fi
-	if [ -d $(FTPDIR) ]; then \
-		mv lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR) ; \
-		mv lyskom-$(CLIENTVERSION).zip $(FTPDIR) ; \
-	else \
-		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
-	fi
+release: $(VARS-EL) $(RELEASE-DIST-ARCHIVES)
+	@echo
+	@echo
+	@echo "Release archives created:"
+	@echo
+	@for i in $(RELEASE-DIST-ARCHIVES); do \
+		echo "    $$i" ; \
+	    done
+	@echo
 
-debian-package: release-files debian-build
+%.tar: %.buildstamp
+	tar cvf $@ $*
 
-debian-build: release-files
-	cp -R debian lyskom-$(CLIENTVERSION)
-	$(RM) -rf lyskom-$(CLIENTVERSION)/debian/CVS
-	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-1)/' <debian/changelog >lyskom-$(CLIENTVERSION)/debian/changelog
-	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >lyskom-$(CLIENTVERSION)/debian/rules
-	mv lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
-	cp lyskom-$(CLIENTVERSION).tar.gz lyskom-elisp-client_$(DEBIANCLIENTVERSION).orig.tar.gz
-	cd lyskom-elisp-client-$(DEBIANCLIENTVERSION) && dpkg-buildpackage
+%.gz: %
+	gzip -f --best $<
 
-redhat-packages: release-files redhat-build
+%.zip: %.buildstamp
+	zip -R9y $@ $*/*
 
-redhat-build: release-files
-	cp lyskom-$(CLIENTVERSION).tar.gz $(RPMROOT)/SOURCES/
-	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" <lyskom-elisp-client.spec >$(RPMROOT)/SPECS/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
-	rpm -ba $(RPMROOT)/SPECS/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
+############################################################
+# Source dist.
+
+RELEASE-SOURCE-SRC = $(HEADER) $(LANGUAGE-EL) $(SOURCES) $(MISC)
+RELEASE-BASE-SRC = $(PACKAGENAME)-src-$(CLIENTVERSION)
+
+$(RELEASE-BASE-SRC).buildstamp: \
+		$(RELEASE-SOURCE-SRC) $(EXTRA-SRCDIST) $(EXTRA-SRCVERBATIM) \
+		distribution-README-src
+	mkdir -p $(RELEASE-BASE-SRC)
+	cp $(RELEASE-SOURCE-SRC) $(RELEASE-BASE-SRC)
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' \
+		<distribution-README-src \
+		>$(RELEASE-BASE-SRC)/README
+	for i in $(subst distribution-,,$(EXTRA-SRCDIST)); do \
+	    sed -e 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' \
+		-e 's/@@HEADER@@/$(HEADER)/g' \
+		-e 's/@@SOURCES@@/$(SOURCES)/g' \
+		<distribution-$$i \
+		>$(RELEASE-BASE-SRC)/$$i ; \
+	    done
+	cp $(EXTRA-SRCVERBATIM) $(RELEASE-BASE-SRC)
+	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" \
+	    -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" \
+	    <$(PACKAGENAME).spec \
+	    >$(RELEASE-BASE-SRC)/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
+	cd $(RELEASE-BASE-SRC) && autoconf
+	cd $(RELEASE-BASE-SRC) && ./configure --prefix=$(DEFAULTPREFIX) \
+					      --with-lispdir=$(DEFAULTLISPDIR)
+	cd $(RELEASE-BASE-SRC) && rm config.log config.status config.cache
+	touch $@
+
+############################################################
+# Normal dist.
+
+RELEASE-BASE-NONSRC = $(PACKAGENAME)-$*-$(CLIENTVERSION)
+
+$(PACKAGENAME)-%-$(CLIENTVERSION).buildstamp: \
+		lyskom-%-$(CLIENTVERSION).el $(EXTRA-NONSRCDIST) \
+		distribution-README-nonsrc
+	mkdir -p $(RELEASE-BASE-NONSRC)
+	cp $< $(RELEASE-BASE-NONSRC)
+	sed -e 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' \
+	    -e 's/@@FLAVOUR@@/$*/g' \
+		<distribution-README-nonsrc \
+		>$(RELEASE-BASE-NONSRC)/README
+	for i in $(subst distribution-,,$(EXTRA-NONSRCDIST)); do \
+	    sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' \
+		<distribution-$$i \
+		>$(RELEASE-BASE-NONSRC)/$$i ; \
+	    done
+	cp $(EXTRA-NONSRCVERBATIM) $(RELEASE-BASE-NONSRC)
+	touch $@
+
+######################################################################
+# RPM packages
+
+REDHATCLIENTVERSION := $(subst -,.,$(CLIENTVERSION))
+RPMROOT = /usr/src/redhat
+
+redhat-packages: $(PACKAGENAME)-src-$(CLIENTVERSION).tar.gz
+	cp $< $(RPMROOT)/SOURCES/
+	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" \
+	    -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" \
+	    <$(PACKAGENAME).spec \
+	    >$(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
+	rpm -ba $(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
 
 clean:
-	$(RM) *.el.gz *.elc.gz $(TARGET-EL)
-	$(RM) -rf lyskom-$(CLIENTVERSION) \
-		  lyskom-$(CLIENTVERSION).tar \
-		  lyskom-$(CLIENTVERSION).tar.gz \
-		  lyskom-$(CLIENTVERSION).zip \
-		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
-	$(RM) vars.el *.elc $(GENERIC-CLEAN)
-	$(RM) -r build-stamp lyskom-elisp-client*.gz lyskom-elisp-client*.deb \
-		lyskom-elisp-client*.dsc lyskom-elisp-client*.changes
+	rm -f *~ *.gz *.zip *.buildstamp *.elc* _header.el $(TARGET-EL)
+	rm -rf $(PACKAGENAME)-*-$(CLIENTVERSION)* lyskom-*-$(CLIENTVERSION).el
+	rm -f vars.el vars.el-release
+	rm -f distribution-README-src distribution-README-nonsrc
+
+.PHONY: all verbose verbose-el fast check release redhat-packages clean

@@ -1,5 +1,35 @@
 2002-03-21  Joel Rosdahl  <joel@lysator.liu.se>
 
+	Fiddled with various release-related things. Fixes bugs 298, 299
+	and 300.
+
+	* Makefile: Revamped and somewhat commented. Create three
+	different kinds of distribution archives: 1. A "source" dist with
+	configure + Makefile + separate .el files; 2. A single lyskom.el
+	with all languages included; 3. A single lyskom.el with just one
+	included language. Archives are named lyskom-elisp-client-*
+	instead of lyskom-*. autoconf files config.{cache,log,status} are
+	no longer included.
+
+	* distribution-Makefile.in: Create file lists from the "developer"
+	Makefile.
+
+	* distribution-configure.in: Make English the default language.
+
+	* distribution-README: Removed.
+
+	* distribution-README.begin: New file. Common begin text for
+	source and non-source dists.
+
+	* distribution-README.end: New file. Common end text for source
+	and non-source dists.
+
+	* distribution-README.install-nonsrc: New file. Installation
+	instructions for non-source dists.
+
+	* distribution-README.install-src: New file. Installation
+	instructions for the source dist.
+
 	Added "View session status" to the person button menu and
 	grouped actions in text number buttons:
 

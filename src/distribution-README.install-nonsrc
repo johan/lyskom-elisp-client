@@ -1,0 +1,29 @@
+2.  Installation
+
+2.1 Manual installation
+
+    This procedure should work on any system, including Windows.
+
+    1. In Emacs, type `M-x b y t e - c o m p i l e - f i l e RET' and
+       give the path to the lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el contained
+       in the archive in which you found this README file.
+
+       You may see some warnings when you compile. Most of these can
+       be ignored. When compilation is done you should have a new file
+       named lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc located in the same
+       directory as lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.el.
+
+    2. Copy lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc to where you want to
+       install the client and either rename it to lyskom.elc or create
+       a symbolic link from lyskom.elc to lyskom-@@FLAVOUR@@-@@CLIENTVERSION@@.elc.
+
+       If possible, you should place it in your site-lisp directory.
+       Check the value of load-path (C-h v l o a d - p a t h RET) to
+       see possible locations.
+
+    More thorough instructions (written in Swedish) for installation
+    on Windows is available here:
+
+        http://www.lysator.liu.se/lyskom/klienter/emacslisp/win2k.html
+
+
