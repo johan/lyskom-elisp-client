@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.31 1993-04-26 19:31:01 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.1 1993-04-26 19:37:21 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.31 1993-04-26 19:31:01 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.1 1993-04-26 19:37:21 linus Exp $\n"))
 
 
 ;;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: elib-string.el,v 35.1 1991-09-15 10:05:51 linus Exp $
+;;;;; $Id: elib-string.el,v 36.1 1993-04-26 19:36:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
