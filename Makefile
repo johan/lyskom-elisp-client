@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 40.0 1996-03-26 08:26:37 byers Exp $
+# $Id: Makefile,v 41.0 1996-05-02 18:50:26 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
