@@ -1,5 +1,10 @@
 2004-02-29  David Byers  <byers@lysator.liu.se>
 
+	* lyskom-rest.el (lyskom-format-plaintext-fonts-body): Updated
+	revexp to reduce false positives.
+	(lyskom-format-plaintext-fonts-body): More features. Put / back
+	again, but only if it's near decent delimiters.
+
 	Make fontification turn-offable:
 	* option-edit.el (lyskom-customize-buffer-format): Added
 	kom-text-properties and kom-fontify-text.
