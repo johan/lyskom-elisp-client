@@ -1,3 +1,14 @@
+2003-08-28  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1128:
+	* commands2.el (kom-limit-import): Support refusing HTML import.
+
+	Fix bug 1125:
+	* edit-text.el (lyskom-edit-insert-miscs): Make more of the
+	separator line read-only, taking care (I hope) to get text
+	properties right so the read-only property does not affect the
+	subject line.
+
 2003-08-27  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el (string-to-vector): Don't just compute the

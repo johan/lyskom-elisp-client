@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.306 2003-08-25 20:02:21 byers Exp $
+;;;;; $Id: english-strings.el,v 44.307 2003-08-28 19:28:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.306 2003-08-25 20:02:21 byers Exp $"))
+              "$Id: english-strings.el,v 44.307 2003-08-28 19:28:15 byers Exp $"))
 
 
 ;;; ================================================================
@@ -926,7 +926,7 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
 Post: \\[kom-edit-send], \
 Kill: \\[kom-edit-quit], \
 Help: \\[describe-mode] ---")
-    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]%[%#6@\n%]%#3s")
+    (text-mass . "%#4s%#1s%[%#6@\n%]%[%#5@%#2s%]%[%#7@\n%]%#3s")
     (comment-to-by . "%#1s to text %#2n%#3s.\n")
     (already-sent . "You have already posted this text. Post it anyway? ")
     (subject . "Subject: ")
@@ -1937,8 +1937,10 @@ environment to one that uses \"%#2s\" to encode text.
     (confusion-what-to-mark-unread . "I can't figure out what text you want to mark as unread.\n")
     (no-comment-to-to-unread . "There is no commented text to mark as unread.\n")
 
+    (mx-refuse-import-html . "HTML")
     (mx-refuse-import-spam . "Spam")
     (mx-refuse-import-all . "All texts")
+    (abc-html . "hHTML")
     (abc-spam . "sSpam")
     (abc-everything . "aAll texts")
     (limit-import-to-conf . "Limit import to which conference? ")
