@@ -1,0 +1,48 @@
+
+                       Nyheter i lyskom.el 0.44.1
+                       ==========================
+
+Version 0.44.1 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftnp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.44.1.el.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.44.1.
+
+Denna release rättar några smärre buggar som folk har retat sig på.
+
+
+* Fitjurs och förbättringar
+
+** Hanteringen av ftp-URLer via dired klarar URLer med typecode-
+   information. Hantering av telnet-URLer klarar URLer helt enligt
+   standard, men struntar glatt i information om användarnamn och
+   lösenord.
+
+
+* Bugfixar
+
+** Completion fungerar bättre. Om man har matat in ett exakt namn och
+   trycker TAB två gånger så listar klienten alla alternativ, precis
+   som man vill att den skall göre.
+
+** När man skickar personliga meddelanden och anger en person som inte
+   är inloggad så får man "No Match", inte ett allmänt meddelande. Se
+   även variabeln kom-permissive-completion om du hellre vill få ett
+   felmeddelande om att personen inte är inloggad.
+
+
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Om man gör "Endast" kan klienten bete sig konstigt en kort stund,
+   och ibland får man inte läsa så många texter som man ville. Denna
+   bug har hängt med så länge som kommandot har funnits, men kommer 
+   antagligen att fixas till viss del (så man får läsa rätt antal
+   texter) så fort som jag har tid över. Don't hold your breath, med
+   andra ord.
+
+** Elispklienten fungerar inte under XEmacs eller Emacs 18. Frivilliga
+   att anpassa klienten får gärna anmäla sitt intresse till
+   davidk@lysator.liu.se eller byers@lysator.liu.se eller skicka brev
+   till Elispklientutvecklarnas interna möte i LysKOM på
+   kom.lysator.liu.se
