@@ -13,7 +13,7 @@
 # I -- IDOC.xx {r klientdocumentationen sharad.
 # idir -- elisp-client-*.txt {r klientdocumentationen.
 
-maillist=/usr/local/src/2kom/elisp-client/lib/mailing-do-list
+maillist=../lib/mailing-do-list
 
 set -- `getopt m: $*`
 if [ $1 != -- ]
