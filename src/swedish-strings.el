@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.47 1998-12-15 12:35:39 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.48 1999-02-11 16:27:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.47 1998-12-15 12:35:39 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.48 1999-02-11 16:27:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1092,6 +1092,12 @@ Uppkopplad sedan %#8s%#9s")
     (anonymous . "anonym")
     (Anonymous . "Anonym")
 
+    ;; Some Help
+
+    (where-is-doesnt-exist . "Kommandot %#1s finns inte")
+    (where-is-on-no-key . "%#1s finns inte på någon tangent")
+    (where-is-on-key . "%#1s finns på %#2s")
+
     ;; From aux-items.el
 
     (content-type-aux . "Innehållstyp: %#1s")
@@ -1324,6 +1330,8 @@ Innehåll:    \"%#9s\"
     (kom-change-language      . "Ändra språk")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
+
+    (kom-where-is             . "Var finns kommandot")
 
     (kom-fast-reply           . "Snabb replik")
     (kom-agree                . "Hålla med")

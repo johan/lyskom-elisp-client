@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.28 1998-07-08 11:14:26 davidk Exp $
+;;;;; $Id: commands2.el,v 44.29 1999-02-11 16:27:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.28 1998-07-08 11:14:26 davidk Exp $\n"))
+	      "$Id: commands2.el,v 44.29 1999-02-11 16:27:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1725,6 +1725,32 @@ is alive."
              (lyskom-get-string 'no-unread-lyskom-r))
           (error (lyskom-get-string 'no-unread-lyskom))))))
 
+
+;;; ============================================================
+;;; Var finns kommandot                 (kom-where-is)
+;;; Author: David Byers
+
+(def-kom-emacs-command kom-where-is (cmd)
+  "Show on which key a LysKOM command is"
+  (interactive
+   (list (lyskom-read-extended-command)))
+  (let ((w (where-is-internal cmd))
+        (msg nil))
+    (cond ((null cmd)
+           (setq msg (lyskom-format (lyskom-get-string 'where-is-doesnt-exist)
+                                    (lyskom-command-name cmd))))
+          ((null w)
+           (setq msg (lyskom-format (lyskom-get-string 'where-is-on-no-key)
+                                    (lyskom-command-name cmd))))
+          (t (setq msg (lyskom-format (lyskom-get-string 'where-is-on-key)
+                                      (lyskom-command-name cmd)
+                                      (mapconcat
+                                       (lambda (x) 
+                                         (format "`%s'" (key-description x)))
+                                       w ", ")))))
+    (if kom-where-is-running-as-kom-command
+        (lyskom-insert-before-prompt (concat msg "\n"))
+      (message msg))))
 
 ;;;============================================================
 ;;;  Visa user-arean                    (kom-show-user-area)
