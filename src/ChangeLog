@@ -1,3 +1,15 @@
+2002-03-16  Joel Rosdahl  <joel@lysator.liu.se>
+
+	Changed language behaviour: Language is now a global setting, and
+	changing it thus affects all sessions.  Fixes bugs 238 and 239.
+
+	* vars.el.in (lyskom-language): Make lyskom-language global.
+
+	* swedish-strings.el (lyskom-command): Mention that the language
+	is changed in all sessions in kom-change-language.
+
+	* english-strings.el (lyskom-command): Likewise.
+
 2002-03-12  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* language.el (lyskom-languages)

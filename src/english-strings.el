@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.174 2002-03-11 19:19:34 joel Exp $
+;;;;; $Id: english-strings.el,v 44.175 2002-03-16 10:51:37 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.174 2002-03-11 19:19:34 joel Exp $"))
+              "$Id: english-strings.el,v 44.175 2002-03-16 10:51:37 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1776,7 +1776,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-next-kom             . "Next LysKOM")
     (kom-previous-kom         . "Previous LysKOM")
     (kom-next-unread-kom      . "Next unread LysKOM")
-    (kom-change-language      . "Change language")
+    (kom-change-language      . "Change language (in all sessions)")
     (kom-calculate            . "Calculate")
     (kom-list-marks           . "List marked texts")
     (kom-where-is             . "Where (is the) command")
