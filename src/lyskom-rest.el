@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.11 1995-10-30 18:00:54 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.12 1995-11-13 16:00:42 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.11 1995-10-30 18:00:54 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.12 1995-11-13 16:00:42 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1136,9 +1136,9 @@ Args: FORMAT-STRING &rest ARGS"
      ;;
      ((= format-letter ?t)
       (setq result
-            (cond ((stringp arg) (lyskom-button-transform-text arg))
+            (cond ((stringp arg) (lyskom-format-text-body arg))
                   ((lyskom-text-p arg) 
-		   (lyskom-button-transform-text (text->text-mass arg)))
+		   (lyskom-format-text-body (text->text-mass arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error"))))))
@@ -1193,6 +1193,42 @@ Args: FORMAT-STRING &rest ARGS"
     (set-format-state->delayed-propl format-state nil))
   format-state)
 
+
+;;; ================================================================
+;;;			 Text body formatting
+
+;;; Author: David K}gedal
+;;; This should be considered an experiment
+(defvar lyskom-format-experimental nil)
+
+(defun lyskom-format-text-body (text)
+  (if lyskom-format-experimental
+      (cond
+       ((and (string-match "\\`html:" text)
+	     (condition-case e (require 'w3) (error nil)))
+	(let ((tmpbuf (generate-new-buffer "lyskom-html")))
+	  (unwind-protect
+	      (save-excursion
+		(set-buffer tmpbuf)
+		(insert (substring text 5))
+		(w3-preview-this-buffer))
+	    (kill-buffer tmpbuf))))
+       ((and (fboundp 'format-decode-buffer)
+	     (string-match "\\`enriched:" text))
+	(let ((tmpbuf (generate-new-buffer "lyskom-html")))
+	  (unwind-protect
+	      (save-excursion
+		(set-buffer tmpbuf)
+		(insert (substring text 9))
+		(format-decode-buffer 'text/enriched)
+		(buffer-string))
+	    (kill-buffer tmpbuf))))
+       (t
+	(lyskom-button-transform-text text)))
+    (lyskom-button-transform-text text)))
+    
+	    
+		  
 
 ;;; ================================================================
 ;;;                      Iso-8859-1 converting
@@ -1652,7 +1688,10 @@ user's membership in the conference."
 	    (membership->priority membership)
 	    (lyskom-create-text-list unread))
 	 lyskom-to-do-list))))
-  (lyskom-prefetch-and-print-prompt))
+  ;; This could be the problem why it sometimes hang during
+  ;; login. But I don't understand how it works. /davidk
+  (lyskom-prefetch-and-print-prompt)
+  )
 
 
 (defun lyskom-list-unread (map membership)

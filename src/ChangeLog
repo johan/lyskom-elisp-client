@@ -1,3 +1,18 @@
+Mon Nov 13 13:38:06 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-unset-conf-motd): Klarade inte tomt svar för
+	   "dig själv"
+
+Fri Nov  3 00:18:52 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands1.el
+	   (kom-view-commented-text,lyskom-view-commented-text): Gjorde
+	   blockande.
+
+Thu Nov  2 02:22:39 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-set-unread): Använd prefix
+
 Mon Oct 30 16:31:30 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (kom-text-buttons): JySKom enhanced, preliminärt.
