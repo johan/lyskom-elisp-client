@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 41.7 1996-07-27 11:39:52 byers Exp $
+;;;;; $Id: services.el,v 41.8 1996-08-02 02:20:04 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 41.7 1996-07-27 11:39:52 byers Exp $\n"))
+	      "$Id: services.el,v 41.8 1996-08-02 02:20:04 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -750,6 +750,11 @@ Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
                                  
 
 
+(defun initiate-user-active (kom-queue handler &rest data)
+  "Notify the server that the user is active
+Args: KOM-QUEUE HANDLER &rest DATA."
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 82)))
 
 
 ;;; ================================================================

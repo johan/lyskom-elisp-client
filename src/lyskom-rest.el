@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.22 1996-08-02 01:02:04 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.23 1996-08-02 02:20:02 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.22 1996-08-02 01:02:04 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.23 1996-08-02 02:20:02 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1572,6 +1572,8 @@ chosen according to this"
       (lyskom-set-last-viewed))
   (lyskom-prefetch-and-print-prompt)
   (run-hooks 'lyskom-after-command-hook)
+  (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+      (initiate-user-active 'background nil))
   (if kom-inhibit-typeahead
       (discard-input)))
 
@@ -1647,13 +1649,15 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 
     (if (not (equal prompt lyskom-current-prompt))
 	(let ((inhibit-read-only t)
-	      (prompt-text (concat
-			    (lyskom-modify-prompt
-			     (cond
-			      ((null prompt) "")
-			      ((symbolp prompt) (lyskom-get-string prompt))
-			      (t prompt)))
-			    lyskom-prompt-text))
+	      (prompt-text
+	       (if prompt
+		   (concat
+		    (lyskom-modify-prompt
+		     (cond
+		      ((symbolp prompt) (lyskom-get-string prompt))
+		      (t prompt)))
+		    lyskom-prompt-text)
+		 ""))
 	      (was-at-max (eq (point) (point-max))))
 	  (save-excursion
 	    ;; Insert the new prompt
