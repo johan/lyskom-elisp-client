@@ -7,12 +7,12 @@ Checklista för att göra en ny release
  * Se till att versionsnumret i doc/Makefile (OBS!) och src/Makefile
    är rätt
 
- * Se till att allt är incheckat
-
  * Se till att allt går att kompilera och köra. Även den engelska
    versionen.
 
  * Skriv ett ChangeLog-entry om att den nya verionen släpps.
+
+ * Se till att allt är incheckat
 
  * Uppdatera revisionsnumret och tagga med en symbol
 
