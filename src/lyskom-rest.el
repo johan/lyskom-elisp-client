@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.28 1992-08-30 18:07:41 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.29 1992-09-06 21:36:27 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.28 1992-08-30 18:07:41 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.29 1992-09-06 21:36:27 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1520,8 +1520,9 @@ One parameter - the prompt string."
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
-    (while (not (eq (setq input-char (read-char))
-		    ?\r))
+    (while (not (or (eq (setq input-char (read-char))
+			?\r)
+		    (eq input-char ?\n)))
       (progn
 	(lyskom-message prompt-str)
 	(setq input-string
