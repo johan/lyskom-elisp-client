@@ -14,6 +14,7 @@ Wed Mar  1 18:42:05 1995  David Byers  <byers@lysator.liu.se>
 	   commands2.el: defaultargument till s{nda meddelande
                          {ndringar i lyskom-view-next-text
            services.el: multiple-blocking-do
+	   async.el: support for default recipient of personal messages
 
 Thu Feb 23 21:24:25 1995  Linus Tolke Y  <linus@lysator.liu.se>
 
