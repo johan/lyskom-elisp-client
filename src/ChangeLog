@@ -1,3 +1,16 @@
+Sat Oct 28 08:27:02 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* clienttypes.el: Bytte ut en del defun mot defsubst.
+
+	* startup.el (lyskom-read-server-name): Ny funktion.
+	  (lyskom): Anv{nd den.
+
+	* vars.el.in (lyskom-server-aliases): Ny variabel som inneh}ller
+	   kortnamn f|r k{nda servrar.
+
+	* lyskom-rest.el (lyskom-mode-name-from-host): Anv{nd
+	   lyskom-server-aliases.
+
 Fri Oct 27 03:36:58 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-text): Bugfix för enradare utan \n
