@@ -313,6 +313,7 @@ Att göra i elisp-klienten
 
     Har detta att göra med lite för optimistisk cache att göra? Kanske
     bör man läsa om person-staten innan man varnar för lapp på dörren?
+    [Det gör man väl? /davidk]
 
     Använd blocking.el som innehåller en reentrant blocking-do.
 
@@ -381,6 +382,8 @@ Att göra i elisp-klienten
     ingenting är beroende av att medlemsskapslistan hämtas i
     prioritetsordning. Prefetchen måste kunna sortera in medlemsskap i
     prioritetsordning när den får dem från servern.
+
+    Det finns rester av den gamla vilkabufferten kvar i koden i cache.el.
 
 
 
