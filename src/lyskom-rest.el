@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.153 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.154 2002-04-22 05:31:23 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.153 2002-04-21 21:32:16 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.154 2002-04-22 05:31:23 ceder Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3787,7 +3787,7 @@ One parameter - the prompt string."
   (let ((languages (list kom-default-language
                          (lyskom-language-from-environment "KOMLANGUAGE")
                          (lyskom-language-from-environment "LANG")
-                         (car (last lyskom-languages)))))
+                         (car (car (last lyskom-languages))))))
     (lyskom-traverse lang languages
       (when (assq lang lyskom-languages)
         (setq kom-default-language lang

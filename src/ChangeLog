@@ -1,3 +1,9 @@
+2002-04-22  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* lyskom-rest.el: Fix language selection code.  The default case,
+	when neither of kom-default-language, KOMLANGUAGE and LANG was
+	set, was missing a "car".
+
 2002-04-21  David Byers  <david.byers@swipnet.se>
 
 	* lyskom-buttons.el (lyskom-make-button-menu): Temporarily bind
