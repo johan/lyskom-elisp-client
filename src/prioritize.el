@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.10 1998-06-14 14:15:56 byers Exp $
+;;;;; $Id: prioritize.el,v 44.11 1998-09-14 17:56:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.10 1998-06-14 14:15:56 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.11 1998-09-14 17:56:44 davidk Exp $\n"))
 
 
 
@@ -691,6 +691,7 @@ In that buffer you can use various commands to chande ordering and priorities
 of conferences you are a member of."
   (interactive)
   (lyskom-start-of-command 'kom-prioritize)
+  (lyskom-wait-for-membership)
   (let* ((buffer (current-buffer))
          (tmp-buffer (lyskom-get-buffer-create 'prioritize
                                                (concat (buffer-name buffer)
