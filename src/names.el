@@ -1,6 +1,21 @@
-;;;;; -*-coding: iso-8859-1;-*-
+;;;;; -*-coding: x-ctext;-*-
 ;;;;;
-;;;;; $Id: names.el,v 44.5 2003-04-05 19:26:12 byers Exp $
+;;;;; ================================================================
+;;;;;            _       _____    ____  _   _______   ________
+;;;;;           | |     / /   |  / __ \/ | / /  _/ | / / ____/
+;;;;;           | | /| / / /| | / /_/ /  |/ // //  |/ / / __
+;;;;;           | |/ |/ / ___ |/ _, _/ /|  // // /|  / /_/ /
+;;;;;           |__/|__/_/  |_/_/ |_/_/ |_/___/_/ |_/\____/
+;;;;;
+;;;;; This file is coded using x-ctext, since it contains both
+;;;;; iso-8859-1 and iso-8859-2. If you open the file using any
+;;;;; other coding, you'll probably screw it up.
+;;;;;
+;;;;; Look for the little x at the bottom-left of your Emacs frame!
+;;;;;
+;;;;; ================================================================
+;;;;;
+;;;;; $Id: names.el,v 44.6 2003-04-05 21:35:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.5 2003-04-05 19:26:12 byers Exp $\n"))
+	      "$Id: names.el,v 44.6 2003-04-05 21:35:12 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -2837,13 +2852,810 @@ Namnsdagar enligt någon finlandssvenskt namnlängd."
                                  (31 . ("Sylvester"))
                                  ))))
 
+(lyskom-define-namedays 'hu
+                        "Magyar"
+                        "\
+Namnsdagar ur någon ungersk namnlängd. Eftersom utvecklarna inte kan
+ungerska så är beskrivningen på svenska, med förhoppningen att någon
+som kan ungerska kommer att reta sig på den och skriva om texten på
+rätt språk."
+                        '((1 . (
+                                (1 . ("Fruzsina"))
+                                (2 . ("Ábel"))
+                                (3 . ("Genovéna" "Benjámin"))
+                                (4 . ("Titusz" "Leóna" "Angéla"))
+                                (5 . ("Simon" "Amata"))
+                                (6 . ("Boldizsár"))
+                                (7 . ("Attila" "Ramóna"))
+                                (8 . ("Gyöngyvér"))
+                                (9 . ("Marcell"))
+                                (10 . ("Melánia"))
+                                (11 . ("Ágota"))
+                                (12 . ("Ernõ"))
+                                (13 . ("Veronika"))
+                                (14 . ("Bódog"))
+                                (15 . ("Lóránt" "Lóránd"))
+                                (16 . ("Gusztáv"))
+                                (17 . ("Antal" "Antónia"))
+                                (18 . ("Piroska"))
+                                (19 . ("Sára" "Márió"))
+                                (20 . ("Fábián" "Sebestyén"))
+                                (21 . ("Ágnes"))
+                                (22 . ("Vince" "Artúr" "Anasztáz"))
+                                (23 . ("Zelma" "Rajmund"))
+                                (24 . ("Timót"))
+                                (25 . ("Pál"))
+                                (26 . ("Vanda" "Paula"))
+                                (27 . ("Angelika" "Angéla"))
+                                (28 . ("Károly" "Karola"))
+                                (29 . ("Adél"))
+                                (30 . ("Martina" "Gerda"))
+                                (31 . ("Marcella"))
+                                ))
+                          (2 . (
+                                (1 . ("Ignác"))
+                                (2 . ("Karolina" "Aida"))
+                                (3 . ("Balázs"))
+                                (4 . ("Ráhel" "Csenge" "András"))
+                                (5 . ("Ágota" "Ingrid"))
+                                (6 . ("Dorottya" "Dóra" "Ajándék" "Amanda"))
+                                (7 . ("Tódor" "Rómeó"))
+                                (8 . ("Aranka"))
+                                (9 . ("Abigél" "Alex"))
+                                (10 . ("Elvira"))
+                                (11 . ("Bertold" "Marietta" "Adolf"))
+                                (12 . ("Lívia" "Lídia"))
+                                (13 . ("Ella" "Linda"))
+                                (14 . ("Bálint" "Valentin"))
+                                (15 . ("Kolos" "Georgina"))
+                                (16 . ("Julianna" "Lilla"))
+                                (17 . ("Donát"))
+                                (18 . ("Bernadett"))
+                                (19 . ("Zsuzsanna"))
+                                (20 . ("Aladár" "Álmos" "Amata"))
+                                (21 . ("Eleonóra"))
+                                (22 . ("Gerzson"))
+                                (23 . ("Alfréd"))
+                                (24 . ("Mátyás"))
+                                (25 . ("Géza"))
+                                (26 . ("Edina"))
+                                (27 . ("Ákos" "Bátor"))
+                                (28 . ("Elemér"))
+                                ))
+                          (3 . (
+                                (1 . ("Albin" "Albina"))
+                                (2 . ("Lujza"))
+                                (3 . ("Kornélia"))
+                                (4 . ("Kázmér" "Adorján" "Adrián" "Adrienn"))
+                                (5 . ("Adorján" "Adrián" "Adrienn"))
+                                (6 . ("Leonora" "Inez"))
+                                (7 . ("Tamás"))
+                                (8 . ("Zoltán"))
+                                (9 . ("Franciska" "Fanni"))
+                                (10 . ("Ildikó"))
+                                (11 . ("Szilárd" "Aladár"))
+                                (12 . ("Gergely"))
+                                (13 . ("Krisztián" "Ajtóny"))
+                                (14 . ("Matild"))
+                                (15 . ("Kristóf"))
+                                (16 . ("Henrietta"))
+                                (17 . ("Gertrúd" "Patrik"))
+                                (18 . ("Sándor" "Ede" "Alexandra"))
+                                (19 . ("József" "Bánk"))
+                                (20 . ("Klaudia"))
+                                (21 . ("Benedek"))
+                                (22 . ("Beáta" "Izolda"))
+                                (23 . ("Emõke"))
+                                (24 . ("Gábor" "Karina"))
+                                (25 . ("Irén" "Írisz"))
+                                (26 . ("Emánuel"))
+                                (27 . ("Hajnalka"))
+                                (28 . ("Gedeon" "Johanna"))
+                                (29 . ("Aguszta"))
+                                (30 . ("Zalán" "Amade"))
+                                (31 . ("Árpád" "Ajtóny"))
+                                ))
+                          (4 . (
+                                (1 . ("Hugó"))
+                                (2 . ("Áron"))
+                                (3 . ("Buda" "Richárd"))
+                                (4 . ("Izidor"))
+                                (5 . ("Vince"))
+                                (6 . ("Vilmos" "Bíborka"))
+                                (7 . ("Herman"))
+                                (8 . ("Dénes"))
+                                (9 . ("Erhard"))
+                                (10 . ("Zsolt"))
+                                (11 . ("Leó" "Szaniszló"))
+                                (12 . ("Gyula"))
+                                (13 . ("Ida"))
+                                (14 . ("Tibor"))
+                                (15 . ("Anasztázia" "Tas"))
+                                (16 . ("Csongor"))
+                                (17 . ("Rudolf"))
+                                (18 . ("Andrea" "Ilma" "András"))
+                                (19 . ("Emma"))
+                                (20 . ("Tivadar"))
+                                (21 . ("Konrád"))
+                                (22 . ("Csilla" "Noémi"))
+                                (23 . ("Béla"))
+                                (24 . ("György"))
+                                (25 . ("Márk"))
+                                (26 . ("Ervin"))
+                                (27 . ("Zita"))
+                                (28 . ("Valéria"))
+                                (29 . ("Péter" "Albert" "Albertína"))
+                                (30 . ("Katalin" "Kitti"))
+                                ))
+                          (5 . (
+                                (1 . ("Fülöp" "Jakab" "Amarilla"))
+                                (2 . ("Zsigmond"))
+                                (3 . ("Tímea" "Irma"))
+                                (4 . ("Mónika" "Flórián"))
+                                (5 . ("Györgyi"))
+                                (6 . ("Ivett" "Frida"))
+                                (7 . ("Gizella"))
+                                (8 . ("Mihály"))
+                                (9 . ("Gergely"))
+                                (10 . ("Ármin" "Pálma"))
+                                (11 . ("Ferenc" "Adolf"))
+                                (12 . ("Pongrác"))
+                                (13 . ("Szervác" "Imola"))
+                                (14 . ("Bonifác"))
+                                (15 . ("Zsófia" "Szonja"))
+                                (16 . ("Mózes" "Botond"))
+                                (17 . ("Paszkál"))
+                                (18 . ("Erik" "Alexandra"))
+                                (19 . ("Ivó" "Milán"))
+                                (20 . ("Bernát" "Felícia"))
+                                (21 . ("Konstantin" "András"))
+                                (22 . ("Júlia" "Rita"))
+                                (23 . ("Dezsõ"))
+                                (24 . ("Eszter" "Eliza"))
+                                (25 . ("Orbán"))
+                                (26 . ("Fülöp" "Evelin" "Amanda"))
+                                (27 . ("Hella"))
+                                (28 . ("Emil" "Csanád" "Ágoston"))
+                                (29 . ("Magdolna"))
+                                (30 . ("Janka" "Zsanett"))
+                                (31 . ("Angéla" "Petronella"))
+                                ))
+                          (6 . (
+                                (1 . ("Tünde"))
+                                (2 . ("Kármen" "Anita" "Anna" "Annamária"))
+                                (3 . ("Klotild"))
+                                (4 . ("Bulcsú"))
+                                (5 . ("Fatime"))
+                                (6 . ("Norbert" "Cintia"))
+                                (7 . ("Róbert"))
+                                (8 . ("Medárd"))
+                                (9 . ("Félix" "Annabella"))
+                                (10 . ("Margit" "Gréta"))
+                                (11 . ("Barnabás"))
+                                (12 . ("Villó"))
+                                (13 . ("Antal" "Anett" "Anna"))
+                                (14 . ("Vazul"))
+                                (15 . ("Jolán" "Vid"))
+                                (16 . ("Jusztin"))
+                                (17 . ("Laura" "Alida" "Adolf" "Alina" "Alinda"))
+                                (18 . ("Arnold" "Levente"))
+                                (19 . ("Gyárfás"))
+                                (20 . ("Rafael"))
+                                (21 . ("Alajos" "Leila" "Aladár" "Aloma"))
+                                (22 . ("Paulina"))
+                                (23 . ("Zoltán"))
+                                (24 . ("Iván"))
+                                (25 . ("Vilmos"))
+                                (26 . ("János" "Pál"))
+                                (27 . ("Lászlo"))
+                                (28 . ("Levente" "Irén"))
+                                (29 . ("Péter" "Pál"))
+                                (30 . ("Pál"))
+                                ))
+                          (7 . (
+                                (1 . ("Tihamér" "Annamária"))
+                                (2 . ("Ottó"))
+                                (3 . ("Kornél" "Soma" "Anatol"))
+                                (4 . ("Ulrik"))
+                                (5 . ("Emese" "Sarolta" "Antal"))
+                                (6 . ("Csaba"))
+                                (7 . ("Apollonia"))
+                                (8 . ("Ellák"))
+                                (9 . ("Lukrécia"))
+                                (10 . ("Amália" "Alma"))
+                                (11 . ("Nóra" "Lili"))
+                                (12 . ("Izabella" "Dalma"))
+                                (13 . ("Jenõ"))
+                                (14 . ("Örs" "Stella"))
+                                (15 . ("Henrik" "Roland"))
+                                (16 . ("Valter"))
+                                (17 . ("Endre" "Elek" "Ajándék" "András"))
+                                (18 . ("Frigyes"))
+                                (19 . ("Emília"))
+                                (20 . ("Íllás"))
+                                (21 . ("Dániel" "Daniella"))
+                                (22 . ("Magdolna"))
+                                (23 . ("Lenke"))
+                                (24 . ("Kinga" "Kincsó"))
+                                (25 . ("Kristóf" "Jakab"))
+                                (26 . ("Anna" "Anikó" "Annamária"))
+                                (27 . ("Olga" "Liliana" "Ajtóny"))
+                                (28 . ("Szabolcs"))
+                                (29 . ("Márta" "Flóra"))
+                                (30 . ("Judit" "Xénia"))
+                                (31 . ("Oszkár"))
+                                ))
+                          (8 . (
+                                (1 . ("Boglárka"))
+                                (2 . ("Lehel" "Alfonz"))
+                                (3 . ("Hermina"))
+                                (4 . ("Domonkos" "Dominika"))
+                                (5 . ("Krisztina" "Afrodité"))
+                                (6 . ("Berta" "Bettína"))
+                                (7 . ("Ibolya" "Afrodité"))
+                                (8 . ("László"))
+                                (9 . ("Emõd"))
+                                (10 . ("Lõrinc"))
+                                (11 . ("Zsuzsanna" "Tiborc"))
+                                (12 . ("Klára"))
+                                (13 . ("Ipoly"))
+                                (14 . ("Marcell"))
+                                (15 . ("Mária"))
+                                (16 . ("Ábrahám"))
+                                (17 . ("Jácint" "Anasztáz"))
+                                (18 . ("Ilona"))
+                                (19 . ("Huba"))
+                                (20 . ("István"))
+                                (21 . ("Sámuel" "Hajna"))
+                                (22 . ("Menyhért" "Mirjam"))
+                                (23 . ("Bence"))
+                                (24 . ("Bertalan"))
+                                (25 . ("Lajos" "Patrícia"))
+                                (26 . ("Izsó"))
+                                (27 . ("Gáspár"))
+                                (28 . ("Ágoston"))
+                                (29 . ("Beatrix" "Erna"))
+                                (30 . ("Rózsa"))
+                                (31 . ("Erika" "Bella"))
+                                ))
+                          (9 . (
+                                (1 . ("Egyed" "Egon"))
+                                (2 . ("Rebeka" "Dorina"))
+                                (3 . ("Hilda"))
+                                (4 . ("Rozália"))
+                                (5 . ("Viktor" "Lõrinc" "Alpár"))
+                                (6 . ("Zakariás"))
+                                (7 . ("Regina"))
+                                (8 . ("Mária" "Adrienn" "Adorján" "Adrián"))
+                                (9 . ("Ádám" "András"))
+                                (10 . ("Nikolett" "Hunor"))
+                                (11 . ("Teodóra"))
+                                (12 . ("Mária"))
+                                (13 . ("Kornél" "Amata"))
+                                (14 . ("Szeréna" "Roxána"))
+                                (15 . ("Enikõ" "Melitta"))
+                                (16 . ("Edit"))
+                                (17 . ("Zsófia"))
+                                (18 . ("Diána"))
+                                (19 . ("Vilhelmina"))
+                                (20 . ("Friderika"))
+                                (21 . ("Máté" "Mirella"))
+                                (22 . ("Móric"))
+                                (23 . ("Tekla"))
+                                (24 . ("Gellért" "Mercédesz"))
+                                (25 . ("Eufrózina" "Kende"))
+                                (26 . ("Jusztina"))
+                                (27 . ("Adalbert" "Adolf" "Albertina"))
+                                (28 . ("Vencel"))
+                                (29 . ("Mihály"))
+                                (30 . ("Jeromos"))
+                                ))
+                          (10 . (
+                                 (1 . ("Malvin"))
+                                 (2 . ("Petra"))
+                                 (3 . ("Helga"))
+                                 (4 . ("Ferenc"))
+                                 (5 . ("Aurél"))
+                                 (6 . ("Brúnó" "Renáta"))
+                                 (7 . ("Amália"))
+                                 (8 . ("Koppány"))
+                                 (9 . ("Dénes"))
+                                 (10 . ("Gedeon"))
+                                 (11 . ("Brigitta"))
+                                 (12 . ("Miksa"))
+                                 (13 . ("Kálmán" "Ede"))
+                                 (14 . ("Helén"))
+                                 (15 . ("Teréz"))
+                                 (16 . ("Gál"))
+                                 (17 . ("Hedvig"))
+                                 (18 . ("Lukács"))
+                                 (19 . ("Nándor"))
+                                 (20 . ("Vendel"))
+                                 (21 . ("Orsolya"))
+                                 (22 . ("Elõd"))
+                                 (23 . ("Gyöngyi"))
+                                 (24 . ("Salamon"))
+                                 (25 . ("Blanka" "Bianka"))
+                                 (26 . ("Dömötör"))
+                                 (27 . ("Szabina"))
+                                 (28 . ("Simon" "Szimonetta"))
+                                 (29 . ("Nárcisz"))
+                                 (30 . ("Alfonz"))
+                                 (31 . ("Farkas"))
+                                 ))
+                          (11 . (
+                                 (1 . ("Marianna"))
+                                 (2 . ("Achilles"))
+                                 (3 . ("Gyõzõ"))
+                                 (4 . ("Károly"))
+                                 (5 . ("Imre"))
+                                 (6 . ("Lénárd"))
+                                 (7 . ("Rezsõ"))
+                                 (8 . ("Zsombor"))
+                                 (9 . ("Tivadar"))
+                                 (10 . ("Réka" "András"))
+                                 (11 . ("Márton"))
+                                 (12 . ("Jónás" "Renátó" "Aba"))
+                                 (13 . ("Szilvia"))
+                                 (14 . ("Alíz"))
+                                 (15 . ("Albert" "Lipót"))
+                                 (16 . ("Ödön"))
+                                 (17 . ("Hortenzia" "Gergõ"))
+                                 (18 . ("Jenõ"))
+                                 (19 . ("Erzsébet"))
+                                 (20 . ("Jolán"))
+                                 (21 . ("Olivér"))
+                                 (22 . ("Cecília"))
+                                 (23 . ("Kelemen" "Klementína"))
+                                 (24 . ("Emma"))
+                                 (25 . ("Katalin" "Alan"))
+                                 (26 . ("Virág"))
+                                 (27 . ("Virgil"))
+                                 (28 . ("Stefánia"))
+                                 (29 . ("Taksony"))
+                                 (30 . ("András" "Andor"))
+                                 ))
+                          (12 . (
+                                 (1 . ("Elza"))
+                                 (2 . ("Melinda" "Vivien"))
+                                 (3 . ("Ferenc"))
+                                 (4 . ("Borbála" "Barbara"))
+                                 (5 . ("Vilma"))
+                                 (6 . ("Miklós"))
+                                 (7 . ("Ambrus"))
+                                 (8 . ("Mária"))
+                                 (9 . ("Natália"))
+                                 (10 . ("Judit"))
+                                 (11 . ("Árpád"))
+                                 (12 . ("Gabriella"))
+                                 (13 . ("Luca" "Otília"))
+                                 (14 . ("Szilárda"))
+                                 (15 . ("Valér"))
+                                 (16 . ("Etelka" "Aletta" "Albina"))
+                                 (17 . ("Lázár" "Olimpia"))
+                                 (18 . ("Auguszta"))
+                                 (19 . ("Viola"))
+                                 (20 . ("Teofil"))
+                                 (21 . ("Tamás"))
+                                 (22 . ("Zénó"))
+                                 (23 . ("Viktória"))
+                                 (24 . ("Ádám" "Éva" "Ada" "Adél"))
+                                 (25 . ("Eugénia"))
+                                 (26 . ("István"))
+                                 (27 . ("János"))
+                                 (28 . ("Kamilla"))
+                                 (29 . ("Tamás" "Tamara"))
+                                 (30 . ("Dávid"))
+                                 (31 . ("Szilveszter"))
+                                 ))
+                          ))
+
+
+(lyskom-define-namedays 'cz
+                        "Czechia"
+                        "\
+Namnsdagar ur någon tjeckisk namnlängd. Eftersom utvecklarna inte kan
+tjeckiska så är beskrivningen på svenska, med förhoppningen att någon
+som kan tjeckiska kommer att reta sig på den och skriva om texten på
+rätt språk."
+                        '((1 . (
+                                (1 . ("Nov-Bý rok"))-A
+                                (2 . ("Karina"))
+                                (3 . ("Radmila"))
+                                (4 . ("Diana"))
+                                (5 . ("Dalimil"))
+                                (6 . ("T-Bøi králové"))-A
+                                (7 . ("Vilma"))
+                                (8 . ("-BÈestmír"))-A
+                                (9 . ("Vladan"))
+                                (10 . ("B-Bøetislav"))-A
+                                (11 . ("Bohdana"))
+                                (12 . ("Pravoslav"))
+                                (13 . ("Edita"))
+                                (14 . ("Radovan"))
+                                (15 . ("Alice"))
+                                (16 . ("Ctirad"))
+                                (17 . ("Drahoslav"))
+                                (18 . ("Vladislav"))
+                                (19 . ("Doubravka"))
+                                (20 . ("Ilona"))
+                                (21 . ("B-Bìla"))-A
+                                (22 . ("Slavom-Bír"))-A
+                                (23 . ("Zden-Bìk"))-A
+                                (24 . ("Milena"))
+                                (25 . ("Milo-B¹"))-A
+                                (26 . ("Zora"))
+                                (27 . ("Ingrid"))
+                                (28 . ("Ot-Býlie"))-A
+                                (29 . ("Zdislava"))
+                                (30 . ("Robin"))
+                                (31 . ("Marika"))
+                                ))
+                          (2 . (
+                                (1 . ("Hynek"))
+                                (2 . ("Nela"))
+                                (3 . ("Bla-B¾ej"))-A
+                                (4 . ("Jarmila"))
+                                (5 . ("Dobromila"))
+                                (6 . ("Vanda"))
+                                (7 . ("Veronika"))
+                                (8 . ("Milada"))
+                                (9 . ("Apolena"))
+                                (10 . ("Mojm-Bír"))-A
+                                (11 . ("Bo-B¾ena"))-A
+                                (12 . ("Slav-Bìna"))-A
+                                (13 . ("V-Bìnceslav"))-A
+                                (14 . ("Valent-Býn"))-A
+                                (15 . ("Ji-Bøina"))-A
+                                (16 . ("Ljuba"))
+                                (17 . ("Miloslava"))
+                                (18 . ("Gizela"))
+                                (19 . ("Patrik"))
+                                (20 . ("Old-Bøich"))-A
+                                (21 . ("Lenka"))
+                                (22 . ("Petr"))
+                                (23 . ("Svatopluk"))
+                                (24 . ("Mat-Bìj"))-A
+                                (25 . ("Liliana"))
+                                (26 . ("Dora"))
+                                (27 . ("Alexandr"))
+                                (28 . ("Lum-Bír"))-A
+                                ))
+                          (3 . (
+                                (1 . ("Alb-Bín"))-A
+                                (2 . ("Ane-B¾ka"))-A
+                                (3 . ("Kamil"))
+                                (4 . ("Stela"))
+                                (5 . ("Kazim-Bír"))-A
+                                (6 . ("Miroslav"))
+                                (7 . ("Tom-Bá¹"))-A
+                                (8 . ("Gabriela"))
+                                (9 . ("Franti-B¹ka"))-A
+                                (10 . ("Viktorie"))
+                                (11 . ("And-Bìla"))-A
+                                (12 . ("-BØehoø"))-A
+                                (13 . ("R-Bù¾ena"))-A
+                                (14 . ("Matylda" "R-Bút"))-A
+                                (15 . ("Ida"))
+                                (16 . ("Amos"))
+                                (17 . ("Vlastimil"))
+                                (18 . ("Eduard"))
+                                (19 . ("Josef"))
+                                (20 . ("Sv-Bìtlana"))-A
+                                (21 . ("Radek"))
+                                (22 . ("Leona"))
+                                (23 . ("Ivona"))
+                                (24 . ("Gabriel"))
+                                (25 . ("Mari-Bán"))-A
+                                (26 . ("Emanuel"))
+                                (27 . ("Dita"))
+                                (28 . ("So-Bòa"))-A
+                                (29 . ("Ta-B»ána"))-A
+                                (30 . ("Arno-B¹t"))-A
+                                (31 . ("Kvido"))
+                                ))
+                          (4 . (
+                                (1 . ("Hugo"))
+                                (2 . ("Erika"))
+                                (3 . ("Richard"))
+                                (4 . ("Ivana"))
+                                (5 . ("Miroslava"))
+                                (6 . ("Vendula"))
+                                (7 . ("He-Bøman" "Hermína"))-A
+                                (8 . ("Ema"))
+                                (9 . ("Du-B¹an"))-A
+                                (10 . ("Darja"))
+                                (11 . ("Izabela"))
+                                (12 . ("Julius"))
+                                (13 . ("Ale-B¹"))-A
+                                (14 . ("Vincenc"))
+                                (15 . ("Anast-Bázie"))-A
+                                (16 . ("Irena"))
+                                (17 . ("Rudolf"))
+                                (18 . ("Val-Bérie"))-A
+                                (19 . ("Rostislav"))
+                                (20 . ("Marcela"))
+                                (21 . ("Alexandra"))
+                                (22 . ("Ev-B¾enie"))-A
+                                (23 . ("Vojt-Bìch"))-A
+                                (24 . ("Ji-Bøí"))-A
+                                (25 . ("Marek"))
+                                (26 . ("Oto"))
+                                (27 . ("Jaroslav"))
+                                (28 . ("Vlastislav"))
+                                (29 . ("Robert"))
+                                (30 . ("Blahoslav"))
+                                ))
+                          (5 . (
+                                (1 . ("Sv-Bátek práce"))-A
+                                (2 . ("Zikmund"))
+                                (3 . ("Alexej"))
+                                (4 . ("Kv-Bìtoslav"))-A
+                                (5 . ("Klaudie"))
+                                (6 . ("Radoslav"))
+                                (7 . ("Stanislav"))
+                                (8 . ())
+                                (9 . ("Ctibor"))
+                                (10 . ("Bla-B¾ena"))-A
+                                (11 . ("Svatava"))
+                                (12 . ("Pankr-Bác"))-A
+                                (13 . ("Serv-Bác"))-A
+                                (14 . ("Bonif-Bác"))-A
+                                (15 . ("-B®ofie"))-A
+                                (16 . ("P-Bøemysl"))-A
+                                (17 . ("Aneta"))
+                                (18 . ("Nata-B¹a"))-A
+                                (19 . ("Ivo"))
+                                (20 . ("Zby-B¹ek"))-A
+                                (21 . ("Monika"))
+                                (22 . ("Emil"))
+                                (23 . ("Vladim-Bír"))-A
+                                (24 . ("Jana"))
+                                (25 . ("Viola"))
+                                (26 . ("Filip"))
+                                (27 . ("Valdemar"))
+                                (28 . ("Vil-Bém"))-A
+                                (29 . ("Maximili-Bán" "Maxim"))-A
+                                (30 . ("Ferdinand"))
+                                (31 . ("Kamila"))
+                                ))
+                          (6 . (
+                                (1 . ("Laura"))
+                                (2 . ("Jarmil"))
+                                (3 . ("Tamara"))
+                                (4 . ("Dalibor"))
+                                (5 . ("Dobroslav"))
+                                (6 . ("Norbert"))
+                                (7 . ("Iveta"))
+                                (8 . ("Medard"))
+                                (9 . ("Stanislava"))
+                                (10 . ("Gita"))
+                                (11 . ("Fl-Bóra"))-A
+                                (12 . ("Antonie"))
+                                (13 . ("Anton-Bín"))-A
+                                (14 . ("Vasil"))
+                                (15 . ("V-Bít"))-A
+                                (16 . ("Zbyn-Bìk"))-A
+                                (17 . ("Adolf"))
+                                (18 . ("Milan"))
+                                (19 . ("Leo-B¹"))-A
+                                (20 . ("Kv-Bìta"))-A
+                                (21 . ("Alois"))
+                                (22 . ("Pavla"))
+                                (23 . ("Zde-Bòka"))-A
+                                (24 . ("Jan"))
+                                (25 . ("Ivan"))
+                                (26 . ("Adriana"))
+                                (27 . ("Ladislav"))
+                                (28 . ("Lubom-Bír"))-A
+                                (29 . ("Petr a Pav"))
+                                (30 . ("-B©árka"))-A
+                                ))
+                          (7 . (
+                                (1 . ("Jaroslava"))
+                                (2 . ("Patricie"))
+                                (3 . ("Radom-Bír"))-A
+                                (4 . ("Prokop"))
+                                (5 . ("Cyril"))
+                                (6 . ("Jan Hus"))
+                                (7 . ("Bohuslava"))
+                                (8 . ("Nora"))
+                                (9 . ("Drahoslava"))
+                                (10 . ("Libu-B¹e"))-A
+                                (11 . ("Olga"))
+                                (12 . ("Bo-Bøek"))-A
+                                (13 . ("Mark-Béta"))-A
+                                (14 . ("Karol-Bína"))-A
+                                (15 . ("Jind-Bøich"))-A
+                                (16 . ("Lubo-B¹"))-A
+                                (17 . ("Martina"))
+                                (18 . ("Drahom-Bíra"))-A
+                                (19 . ("-BÈenìk"))-A
+                                (20 . ("Ilja"))
+                                (21 . ("V-Bítìzslav"))-A
+                                (22 . ("Magdal-Béna"))-A
+                                (23 . ("Libor"))
+                                (24 . ("Krist-Býna"))-A
+                                (25 . ("Jakub"))
+                                (26 . ("Anna"))
+                                (27 . ("V-Bìroslav"))-A
+                                (28 . ("Viktor"))
+                                (29 . ("Marta"))
+                                (30 . ("Bo-Bøivoj"))-A
+                                (31 . ("Ign-Bác"))-A
+                                ))
+                          (8 . (
+                                (1 . ("Oskar"))
+                                (2 . ("Gustav"))
+                                (3 . ("Milu-B¹e"))-A
+                                (4 . ("Dominik"))
+                                (5 . ("Milivoj"))
+                                (6 . ("Old-Bøi¹ka"))-A
+                                (7 . ("Lada"))
+                                (8 . ("Sob-Bìslav"))-A
+                                (9 . ("Roman"))
+                                (10 . ("Vav-Bøinec"))-A
+                                (11 . ("Zuzana"))
+                                (12 . ("Kl-Bára"))-A
+                                (13 . ("Alena"))
+                                (14 . ("Alan"))
+                                (15 . ("Hana"))
+                                (16 . ("J-Báchym"))-A
+                                (17 . ("Petra"))
+                                (18 . ("Helena"))
+                                (19 . ("Ludv-Bík"))-A
+                                (20 . ("Bernard"))
+                                (21 . ("Johana"))
+                                (22 . ("Bohuslav"))
+                                (23 . ("Sandra"))
+                                (24 . ("Bartolom-Bìj"))-A
+                                (25 . ("Radim"))
+                                (26 . ("Lud-Bìk"))-A
+                                (27 . ("Otakar"))
+                                (28 . ("August-Býn"))-A
+                                (29 . ())
+                                (30 . ("-B©tìpán"))-A
+                                (31 . ("Pavl-Bína"))-A
+                                ))
+                          (9 . (
+                                (1 . ("Linda" "Samuel"))
+                                (2 . ("Ad-Béla"))-A
+                                (3 . ("Bronislav"))
+                                (4 . ("Jind-Bøi¹ka"))-A
+                                (5 . ("Boris"))
+                                (6 . ("Boleslav"))
+                                (7 . ("Regina"))
+                                (8 . ("Mariana"))
+                                (9 . ("Daniela"))
+                                (10 . ("Irma"))
+                                (11 . ("Denisa"))
+                                (12 . ("Marie"))
+                                (13 . ("Lubor"))
+                                (14 . ("Radka"))
+                                (15 . ("Jolana"))
+                                (16 . ("Ludmil"))
+                                (17 . ("Nad-Bì¾da"))-A
+                                (18 . ("Kry-B¹tof"))-A
+                                (19 . ("Zita"))
+                                (20 . ("Oleg"))
+                                (21 . ("Matou-B¹"))-A
+                                (22 . ("Darina"))
+                                (23 . ("Berta"))
+                                (24 . ("Jarom-Bír"))-A
+                                (25 . ("Zlata"))
+                                (26 . ("Andrea"))
+                                (27 . ("Jon-Bá¹"))-A
+                                (28 . ("V-Báclav"))-A
+                                (29 . ("Michal"))
+                                (30 . ("Jeron-Bým"))-A
+                                ))
+                          (10 . (
+                                 (1 . ("Igor"))
+                                 (2 . ("Ol-Bívie" "Galina" "Oliver"))-A
+                                 (3 . ("Bohumil"))
+                                 (4 . ("Franti-B¹ek"))-A
+                                 (5 . ("Eli-B¹ka"))-A
+                                 (6 . ("Hanu-B¹"))-A
+                                 (7 . ("Sergej"))
+                                 (8 . ("V-Bìra"))-A
+                                 (9 . ("-B©tefan" "Sára"))-A
+                                 (10 . ("Marina"))
+                                 (11 . ("Andrej"))
+                                 (12 . ("Marcel"))
+                                 (13 . ("Ren-Báta"))-A
+                                 (14 . ("Ag-Báta"))-A
+                                 (15 . ("Tereza"))
+                                 (16 . ("Havel"))
+                                 (17 . ("Hedvika"))
+                                 (18 . ("Luk-Bá¹"))-A
+                                 (19 . ("Michaela"))
+                                 (20 . ("Vendel-Bín"))-A
+                                 (21 . ("Brigita"))
+                                 (22 . ("Sabina"))
+                                 (23 . ("Teodor"))
+                                 (24 . ("Nina"))
+                                 (25 . ("Be-Báta"))-A
+                                 (26 . ("Erik"))
+                                 (27 . ("-B©arlota" "Zoja" "Zoe"))-A
+                                 (28 . ())
+                                 (29 . ("Silvie"))
+                                 (30 . ("Tade-Bá¹"))-A
+                                 (31 . ("-B©tìpánka"))-A
+                                 ))
+                          (11 . (
+                                 (1 . ("Felix"))
+                                 (2 . ("Du-B¹ièky"))-A
+                                 (3 . ("Hubert"))
+                                 (4 . ("Karel"))
+                                 (5 . ("Miriam"))
+                                 (6 . ("Lib-Bìna"))-A
+                                 (7 . ("Saskie"))
+                                 (8 . ("Bohum-Bír"))-A
+                                 (9 . ("Bohdan"))
+                                 (10 . ("Ev-B¾en"))-A
+                                 (11 . ("MArtin"))
+                                 (12 . ("Benedikt"))
+                                 (13 . ("Tibor"))
+                                 (14 . ("S-Báva"))-A
+                                 (15 . ("Leopold"))
+                                 (16 . ("Otmar"))
+                                 (17 . ("Mahulena"))
+                                 (18 . ("Romana"))
+                                 (19 . ("Al-B¾bìta"))-A
+                                 (20 . ("Nikola"))
+                                 (21 . ("Albert"))
+                                 (22 . ("Cec-Bílie"))-A
+                                 (23 . ("Klement"))
+                                 (24 . ("Em-Bílie"))-A
+                                 (25 . ("Kate-Bøina"))-A
+                                 (26 . ("Artur"))
+                                 (27 . ("Xenie"))
+                                 (28 . ("Ren-Bé"))-A
+                                 (29 . ("Zina"))
+                                 (30 . ("Ond-Bøej"))-A
+                                 ))
+                          (12 . (
+                                 (1 . ("Iva"))
+                                 (2 . ("Blanka"))
+                                 (3 . ("Svatoslav"))
+                                 (4 . ("Barbora"))
+                                 (5 . ("Jitka"))
+                                 (6 . ("Mikul-Bá¹"))-A
+                                 (7 . ("Ambro-B¾" "Benjamín"))-A
+                                 (8 . ("Kv-Bìtoslava"))-A
+                                 (9 . ("Vratislav"))
+                                 (10 . ("Julie"))
+                                 (11 . ("Dana"))
+                                 (12 . ("Simona"))
+                                 (13 . ("Lucie"))
+                                 (14 . ("L-Býdie"))-A
+                                 (15 . ("Radan" "Radana"))
+                                 (16 . ("Alb-Bína"))-A
+                                 (17 . ("Daniel"))
+                                 (18 . ("Miloslav"))
+                                 (19 . ("Ester"))
+                                 (20 . ("Dagmar"))
+                                 (21 . ("Nat-Bálie"))-A
+                                 (22 . ("-B©imon"))-A
+                                 (23 . ("Vlasta"))
+                                 (24 . ("Adam a Eva"))
+                                 (25 . ("Bo-B¾í hod"))-A
+                                 (26 . ("-B©tìpán"))-A
+                                 (27 . ("-B®aneta"))-A
+                                 (28 . ("Bohumila"))
+                                 (29 . ("Judita"))
+                                 (30 . ("David"))
+                                 (31 . ("Silvestr"))
+                                 ))
+                          ))
+
 (lyskom-define-namedays 'fi-orthodox
                         "Finska (ortodoxa)"
                         "\
-Namnsdagar ur någon finsk ortodox namnlängd. Eftersom 
-utvecklarna inte kan finska är beskrivningen på svenska, med
-förhoppningen att någon som kan finska kommer att reta sig
-på den och skriva om texten på rätt språk."
+Namnsdagar ur någon finsk ortodox namnlängd. Eftersom utvecklarna inte
+kan finska är beskrivningen på svenska, med förhoppningen att någon
+som kan finska kommer att reta sig på den och skriva om texten på rätt
+språk."
                         '((1 . ((1 . ("Vasili" "Vilho" "Pasi"))
                                 (2 . ("Sylvester" "Tapio" "Serafim"))
                                 (3 . ("Malakia" "Harto"))

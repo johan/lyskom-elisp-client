@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.108 2003-01-07 23:43:40 qha Exp $
+# $Id: Makefile,v 44.109 2003-04-05 21:35:12 byers Exp $
 
 # Useful targets:
 #
@@ -157,18 +157,20 @@ $(TARGET-EL) lyskom-all-$(CLIENTVERSION).el: \
 		$(HEADER) $(LANGUAGE-EL) $(SOURCES)
 	rm -f $(VARS-EL)
 	$(MAKE) $(VARS-EL)
-	cat $^ >$@
+	echo ";;;;; -*-coding: x-ctext;-*-" >$@
+	cat $^ >>$@
 
 %-help.el: help-%.xml
 	$(EMACS) -batch -l help-compile.el $^ -f lyskom-help-compile-to-el
 
 lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el %-help.el $(SOURCES)
-	cat $^ >$@
+	echo ";;;;; -*-coding: x-ctext;-*-" >$@
+	cat $^ >>$@
 
 verbose: verbose-el $(TARGET)
 
 verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
-	cp /dev/null $(TARGET-EL)
+	echo ";;;;; -*-coding: x-ctext;-*-" >$(TARGET-EL)
 	for i in $^ ; do \
 		echo '(eval-when-compile (message "Compiling %s" "'$$i'"))' \
 			>>$(TARGET-EL) ; \
@@ -186,7 +188,8 @@ LANGUAGE-ELC = $(LANGUAGE-EL:.el%.elc)
 SOURCES-ELC = $(SOURCES:%.el=%.elc)
 
 _header.el: $(HEADER)
-	cat $(HEADER) >_header.el
+	echo ";;;;; -*-coding: x-ctext;-*-" >_header.el
+	cat $(HEADER) >>_header.el
 
 fast: $(HEADER-ELC) $(LANGUAGE-ELC) $(SOURCES-ELC)
 	cat $^ >$(TARGET)

@@ -1,5 +1,11 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bugs 951 and 952:
+	* Makefile: Echo x-ctext coding to all emacs lisp files created in
+	Makefile, since there is now an x-ctext file in the sources.
+
+	* names.el (hu, cz): Added hungarian and czech names.
+
 	Fix bug 664:
 	* option-edit.el (lyskom-custom-variables): Support third value
 	for kom-pop-personal-messages.
