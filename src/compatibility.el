@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.64 2003-01-06 11:18:25 byers Exp $
+;;;;; $Id: compatibility.el,v 44.65 2003-08-15 18:24:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.64 2003-01-06 11:18:25 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.65 2003-08-15 18:24:18 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -383,46 +383,6 @@ string to search in."
             (string-width (string-make-multibyte str)))
            (t (string-width str))))))
 
-
-(eval-and-compile
-  (cond ((eval-when-compile (string-match "XEmacs" (emacs-version)))
-         (defun lyskom-completing-read (prompt
-                                        table 
-                                        &optional predicate require-match
-                                        init hist def inherit-input-method)
-           (completing-read prompt table predicate require-match init hist)))
-        ((eval-when-compile (> emacs-major-version 19))
-         (fset 'lyskom-completing-read (symbol-function 'completing-read)))
-        (t 
-         (defun lyskom-completing-read (prompt
-                                        table 
-                                        &optional predicate require-match
-                                        init hist def inherit-input-method)
-           (completing-read prompt table predicate require-match init hist)))))
-
-(eval-and-compile
-  (cond ((eval-when-compile (string-match "XEmacs" (emacs-version)))
-	 (defun lyskom-read-from-minibuffer (prompt 
-					     &optional initial-contents
-					     keymap read hist default-value
-					     inherit-input-method)
-	   (read-from-minibuffer prompt
-				 initial-contents
-				 keymap
-				 read
-				 hist)))
-	((eval-when-compile (> emacs-major-version 19))
-	 (fset 'lyskom-read-from-minibuffer 
-	       (symbol-function 'read-from-minibuffer)))
-	(t (defun lyskom-read-from-minibuffer (prompt 
-					       &optional initial-contents
-					       keymap read hist default-value
-					       inherit-input-method)
-	     (read-from-minibuffer prompt
-				   initial-contents
-				   keymap
-				   read
-				   hist)))))
 
 (if (fboundp 'minibuffer-contents)
     (defalias 'lyskom-minibuffer-contents 'minibuffer-contents)

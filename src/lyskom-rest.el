@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.214 2003-08-14 15:59:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.215 2003-08-15 18:24:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.214 2003-08-14 15:59:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.215 2003-08-15 18:24:19 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3489,8 +3489,7 @@ PRED is a predicate to check entered data. It should return nil or a string. If
 it returns a string, the data is not valid and the string is used as an error 
 message."
   (let ((lyskom-verified-read-predicate pred))
-    (lyskom-with-lyskom-minibuffer
-     (lyskom-read-from-minibuffer prompt initial lyskom-verified-read-map))))
+    (lyskom-read-from-minibuffer prompt initial lyskom-verified-read-map)))
 
 
 (defun lyskom-read-num-range-or-date (low high prompt &optional initial empty default)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.140 2003-08-14 12:01:29 byers Exp $
+;;;;; $Id: utilities.el,v 44.141 2003-08-15 18:24:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.140 2003-08-14 12:01:29 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.141 2003-08-15 18:24:19 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2075,3 +2075,180 @@ reflects an override of the value by the value of TAG."
          (cdr (assq tag kom-extended-status-information)))
         (t kom-extended-status-information)))
 
+
+
+
+;;; ============================================================
+;;; Magic that allows us to clear the initial value in the
+;;; minibuffer when the user types a character.
+;;;
+;;; We can't alter the buffer contents in before-change-functions
+;;; since this can crash Gnu Emacs 20.7 (it computes positions
+;;; internally before calling before-change-functions, and if
+;;; those positions are invalid afterwards all sorts of things
+;;; can happen).
+;;;
+;;; Theory of operation:
+;;;
+;;; In the pre-command-hook, record the position of point and
+;;; the contents of the minibuffer.
+;;;
+;;; In before-change-functions, check if there is initial
+;;; input in the buffer yet -- if not we're not yet ready
+;;; to erase anything.
+;;;
+;;; In the post-command-hook, if the buffer contents have changed
+;;; since there was inital input in the buffer, erase the initial
+;;; input. If the position of point has moved, disable all the
+;;; magic (both can happen at the same time).
+;;;
+;;; We set up advice on read-from-minibuffer and completing-read
+;;; that mangles the initial input appropriately.
+;;;
+
+(defvar lyskom-minibuffer-point)
+(defvar lyskom-minibuffer-string)
+(defvar lyskom-minibuffer-do-change)
+
+(defun lyskom-magic-minibuffer-pre-command (&rest args)
+  "Save current status of the minibuffer for later magic."
+  (setq lyskom-minibuffer-point (point)
+        lyskom-minibuffer-string (buffer-string)))
+
+(defun lyskom-magic-minibuffer-before-change (&rest args)
+  "Check if the initial input has been placed in the minibuffer.
+
+This function is called at least once before the initial input
+has been placed in the minibuffer by Emacs. Most magic needs to
+be disabled until the input has been deposited."
+  (setq lyskom-minibuffer-do-change
+        (lyskom-next-property-bounds (point-min)
+                                     (point-max) 'lyskom-initial-mbc)))
+
+(defun lyskom-magic-minibuffer-post-command (&rest args)
+  "Function for use as post-command-hook in magic minibuffer.
+
+If the contents of the minibuffer have changed since initial input
+has been placed in the minibuffer, erase the initial input. This
+happens when the user enters something in the minibuffer.
+
+If point has moved, disable magic. This happens either after we
+delete the initial contents (which is OK) or after the user moves
+point without altering the buffer contents."
+  (when (and lyskom-minibuffer-do-change
+             (not (equal (buffer-string) lyskom-minibuffer-string)))
+    (let ((ranges nil)
+          (tmp nil)
+          (start (point-min)))
+      (while (setq tmp (lyskom-next-property-bounds
+                        start (point-max) 'lyskom-initial-mbc))
+        (setq ranges (cons tmp ranges)
+              start (cdr tmp)))
+      (lyskom-traverse range ranges
+        (delete-region (car range) (cdr range)))
+      (when ranges
+        (lyskom-magic-minibuffer-cancel))))
+
+    (unless (or (null lyskom-minibuffer-point)
+              (eq lyskom-minibuffer-point (point)))
+    (lyskom-magic-minibuffer-cancel)))
+
+(defun lyskom-magic-minibuffer-cancel ()
+  "Remove hooks used to make the minibuffer magic."
+  (remove-hook 'pre-command-hook 'lyskom-magic-minibuffer-pre-command)
+  (remove-hook 'post-command-hook 'lyskom-magic-minibuffer-post-command)
+  (remove-hook 'before-change-functions 'lyskom-magic-minibuffer-before-change))
+
+(defun lyskom-magic-minibuffer-mangle-initial (initial)
+  "Add text properties to INITIAL (a string or cons) so it is
+suitable for use as initial input in a magic minibuffer."
+  (cond ((null initial) nil)
+        ((stringp initial)
+         (let ((tmp (copy-sequence initial)))
+           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t) tmp)
+           tmp))
+        ((consp initial)
+         (let ((tmp (copy-sequence (car initial))))
+           (add-text-properties 0 (length tmp) '(lyskom-initial-mbc t rear-nonsticky t end-open t) tmp)
+           (cons tmp (cdr initial))))
+
+        (t initial)))
+
+
+
+;;; ------------------------------------------------------------
+;;; Gnu Emacs and XEmacs have different names for parameters.
+;;; This is stupid and makes the code below a lot uglier.
+
+(defadvice read-from-minibuffer (around lyskom-magic-minibuffer-read-from-minibuffer nil disable)
+  (let* ((initial-input (and (boundp 'initial-input) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial-input))))
+	 (initial-contents (and (boundp 'initial-contents) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial-contents))))
+	 (initial (and (boundp 'initial) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial))))
+	 (init (and (boundp 'init) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'init))))
+	 (result ad-do-it))
+    (when (stringp result)
+      (remove-text-properties 0 (length result) '(end-open nil rear-nonsticky nil lyskom-initial-mbc nil) result)
+      (unless (or (text-properties-at 0 result)
+		  (next-property-change 0 result))
+	(set-text-properties 0 (length result) nil result)))
+    result))
+
+(defadvice completing-read (around lyskom-magic-minibuffer-completing-read nil disable)
+  (let* ((initial-input (and (boundp 'initial-input) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial-input))))
+	 (initial-contents (and (boundp 'initial-contents) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial-contents))))
+	 (initial (and (boundp 'initial) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'initial))))
+	 (init (and (boundp 'init) (lyskom-magic-minibuffer-mangle-initial (symbol-value 'init))))
+	 (result ad-do-it))
+    (when (stringp result)
+      (remove-text-properties 0 (length result) '(end-open nil rear-nonsticky nil lyskom-initial-mbc nil) result)
+      (unless (or (text-properties-at 0 result)
+		  (next-property-change 0 result))
+	(set-text-properties 0 (length result) nil result)))
+    result))
+
+(defun lyskom-magic-minibuffer-add-advice ()
+  (ad-enable-advice 'read-from-minibuffer 'around 'lyskom-magic-minibuffer-read-from-minibuffer)
+  (ad-enable-advice 'completing-read 'around 'lyskom-magic-minibuffer-completing-read)
+  (ad-activate 'read-from-minibuffer)
+  (ad-activate 'completing-read)
+  )
+
+(defun lyskom-magic-minibuffer-cancel-advice ()
+  (ad-disable-advice 'read-from-minibuffer 'around 'lyskom-magic-minibuffer-read-from-minibuffer)
+  (ad-disable-advice 'completing-read 'around 'lyskom-magic-minibuffer-completing-read)
+  )
+
+(defmacro lyskom-with-magic-minibuffer (&rest forms)
+  `(let ((lyskom-minibuffer-point nil)
+         (lyskom-minibuffer-string nil)
+         (lyskom-minibuffer-do-change nil)
+         (pre-command-hook pre-command-hook)
+         (post-command-hook post-command-hook)
+         (before-change-functions before-change-functions))
+     (add-hook 'pre-command-hook 'lyskom-magic-minibuffer-pre-command)
+     (add-hook 'post-command-hook 'lyskom-magic-minibuffer-post-command)
+     (add-hook 'before-change-functions 'lyskom-magic-minibuffer-before-change)
+     (unwind-protect
+         (progn (lyskom-magic-minibuffer-add-advice)
+                ,@forms)
+       (lyskom-magic-minibuffer-cancel-advice))))
+
+
+
+
+(defun lyskom-completing-read (prompt table &optional predicate
+                                      require-match init hist def)
+  (lyskom-ignore def)
+  (lyskom-with-lyskom-minibuffer
+   (lyskom-with-magic-minibuffer
+    (or (completing-read prompt table predicate require-match init hist) def))))
+
+(defun lyskom-read-from-minibuffer (prompt 
+                                    &optional initial-contents
+                                    keymap read hist def)
+  (lyskom-ignore def)
+  (lyskom-with-lyskom-minibuffer
+   (lyskom-with-magic-minibuffer
+    (or (read-from-minibuffer prompt initial-contents keymap read hist) def))))
+
+(put 'lyskom-with-magic-minibuffer 'edebug-form-spec '(body))
