@@ -1,3 +1,13 @@
+2003-08-30  Johan Sundström  <jhs@lysator.liu.se>
+
+	* commands2.el (kom-change-language): Now always changes bindings,
+	unless explicitly overridden with an integer argument (for some
+	form of backwards compatibility for users who already have burnt
+	in "C-u x change language" into their spines by now). I have never
+	wanted to change languages without changing key bindings as well,
+	but considering it was implemented like this, someone might still
+	want to do that (hence this slight prefix awkwardness).
+
 2003-08-30  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1101:
