@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.37 1999-10-14 11:11:55 byers Exp $
+;;;;; $Id: utilities.el,v 44.38 1999-10-15 14:13:06 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.37 1999-10-14 11:11:55 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.38 1999-10-15 14:13:06 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -558,7 +558,7 @@ minutes, the seconds, the full name of the day of week, the abbreviated
 name of the day of week."
   (let ((now (decode-time)))
     (lyskom-format (or fmt 'time-yyyy-mm-dd-hh-mm)
-                   (elt now 5)
+                   (+ (elt now 5) 1900)
                    (elt now 4)
                    (elt now 3)
                    (elt now 2)
