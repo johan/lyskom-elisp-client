@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.14 1993-12-14 02:23:04 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.15 1993-12-17 14:23:58 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.14 1993-12-14 02:23:04 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.15 1993-12-17 14:23:58 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -790,6 +790,9 @@ Felmeddelande: %#1s**************************************************")
     (kom-set-motd               "S\344tt loginmeddelande")
     (kom-remove-motd            "Ta bort loginmeddelande")
     (kom-force-logout           "Kasta ut en session")
+    (kom-list-files		"Lista filarean")
+    (kom-put-file		"Ladda upp fil")
+    (kom-get-file		"Ladda ner fil")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
@@ -1145,3 +1148,19 @@ Users are encouraged to use their best sense of humor.")
     (lyskom-view-text 'main text-no)
     (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
     (lyskom-run 'main 'lyskom-end-of-command)))
+
+
+;; Vars}god sojge, en massa j{ttebra funktioner.
+
+(defun kom-put-file (filename)
+  (interactive "fVilken fil vill du ladda upp? ")
+  (copy-file filename (concat "/ftp@ftp.lysator.liu.se:/open/" 
+			      (file-name-nondirectory filename))))
+
+(defun kom-get-file (filename)
+  (interactive "sVilken fil vill du ladda ner? ")
+  (copy-file (concat "/ftp@ftp.lysator.liu.se:/open/" filename) filename))
+
+(defun kom-list-files ()
+  (interactive)
+  (list-directory "/ftp@ftp.lysator.liu.se:/open"))
