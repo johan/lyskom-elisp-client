@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.7 1996-07-08 09:46:04 byers Exp $
+;;;;; $Id: commands2.el,v 41.8 1996-07-09 08:28:19 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.7 1996-07-08 09:46:04 byers Exp $\n"))
+	      "$Id: commands2.el,v 41.8 1996-07-09 08:28:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -747,6 +747,42 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    subject))))
 
 
+
+;;; ============================================================
+;;;     kom-who-am-i - Vem är jag
+;;;
+;;; Author: David Byers
+
+(def-kom-command kom-who-am-i ()
+  "Show my name"
+  (interactive)
+  (if (and lyskom-current-conf
+           (not (zerop lyskom-current-conf)))
+      (lyskom-format-insert 'who-i-am-present 
+                            lyskom-pers-no
+                            lyskom-current-conf)
+    (lyskom-format-insert 'who-i-am-not-present lyskom-pers-no))
+
+  (lyskom-format-insert 
+   'who-i-am-server
+   lyskom-server-name
+   (if (zerop (% (server-info->version lyskom-server-info) 100))
+       (format "%d.%d"
+               (/ (server-info->version lyskom-server-info) 10000)
+               (/ (% (server-info->version lyskom-server-info) 10000) 
+                  100))
+     (format "%d.%d.%d"
+             (/ (server-info->version lyskom-server-info) 10000)
+             (/ (% (server-info->version lyskom-server-info) 10000)
+                100)
+             (% (server-info->version lyskom-server-info) 100))))
+
+  (lyskom-format-insert 'who-i-am-client
+                        lyskom-clientversion)
+
+  (lyskom-format-insert 'who-i-am-emacs
+                        (emacs-version)))
+                        
 
 
 ;;; ================================================================

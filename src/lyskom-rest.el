@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.11 1996-07-04 12:19:29 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.12 1996-07-09 08:28:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.11 1996-07-04 12:19:29 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.12 1996-07-09 08:28:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1451,8 +1451,10 @@ A symbol other than t means call it as a function."
 
 (defvar iso-8859-1-table 
   " 	
- !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	
-  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"
+
+ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	
+
+  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"
   "*This is a table of the chars corresponding value in SWASCII.
 Used by the function iso-8859-1-to-swascii function.")
 
@@ -1705,20 +1707,20 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
 
 (defun lyskom-modify-prompt (s)
   "Modify the LysKOM prompt to reflect the current state of LysKOM."
-  (let ((format-string "%s"))
-  (if (symbolp s) (setq s (lyskom-get-string s)))
-  (if lyskom-ansaphone-messages
-      (if (> (length lyskom-ansaphone-messages) 0)
-          (setq format-string 
-                (format (lyskom-get-string 'prompt-modifier-messages)
-                        format-string
-                        (length lyskom-ansaphone-messages)))))
-  (if kom-ansaphone-on
-      (setq format-string
-            (format (lyskom-get-string 'prompt-modifier-ansaphone)
-                    format-string)))
+  (let ((format-string (or kom-prompt-format "%s")))
+    (if (symbolp s) (setq s (lyskom-get-string s)))
+    (if lyskom-ansaphone-messages
+        (if (> (length lyskom-ansaphone-messages) 0)
+            (setq format-string 
+                  (format (lyskom-get-string 'prompt-modifier-messages)
+                          format-string
+                          (length lyskom-ansaphone-messages)))))
+    (if kom-ansaphone-on
+        (setq format-string
+              (format (lyskom-get-string 'prompt-modifier-ansaphone)
+                      format-string)))
 
-  (format format-string s)))
+    (format format-string s)))
 
 (defun lyskom-what-to-do ()
   "Check what is to be done. Return an atom as follows:

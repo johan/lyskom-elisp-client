@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.10 1996-07-08 09:46:36 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.11 1996-07-09 08:28:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.10 1996-07-08 09:46:36 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.11 1996-07-09 08:28:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -920,6 +920,12 @@ Text:
     (pers-popup-title . "Person %#1s")
     (url-popup-title  . "URL %#1s")
     (generic-popup-title . "%#1s")
+
+    (who-i-am-not-present . "%#1P \344 inte n\344rvarande i n\345got m\366te\n")
+    (who-i-am-present . "%#1P är närvarande i %#2M\n")
+    (who-i-am-client . "Programmet heter lyskom.el, version %#1s.\n")
+    (who-i-am-server . "Detta är %#1s, version %#2s.\n")
+    (who-i-am-emacs . "Det k\366rs under %#1s.\n")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -980,6 +986,7 @@ Text:
     (kom-review-backward        "(\305terse) Bakl\344nges")
     (kom-view-next-text		"L\344sa n\344sta inl\344gg")
     (kom-who-is-on		"Vilka \344r inloggade") 
+    (kom-who-am-i               "Var (\344r) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients		"Lista klienter")
     (kom-busy-wait		"V\344nta p\345 ett inl\344gg")
@@ -1201,6 +1208,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "ff" 'kom-filter-author)
   (define-key lyskom-mode-map "fi" 'kom-filter-text)
   (define-key lyskom-mode-map "v"  'kom-who-is-on)
+  (define-key lyskom-mode-map "J"  'kom-who-am-i)
   (define-key lyskom-mode-map "V"  'kom-busy-wait)
   (define-key lyskom-mode-map "{p" 'kom-change-presentation)
   (define-key lyskom-mode-map "{f" 'kom-filter-edit)
