@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.6 1997-07-03 09:33:00 byers Exp $
+;;;;; $Id: compatibility.el,v 44.7 1997-07-07 09:14:24 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.6 1997-07-03 09:33:00 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.7 1997-07-07 09:14:24 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -200,6 +200,13 @@ of the lyskom-provide-* functions instead."
   (or (cdr (assq sym (lyskom-xemacs-or-gnu lyskom-xemacs-keysym
                                            lyskom-gnu-keysym)))
       sym))
+
+
+;;; ============================================================
+;;; Text property and extents stuff
+;;;
+
+(lyskom-provide-function map-extents (&rest args))
 
 
 ;;; ======================================================================
