@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.13 1996-02-02 05:00:55 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.14 1996-02-05 11:46:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.13 1996-02-02 05:00:55 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.14 1996-02-05 11:46:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -390,6 +390,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (user-name . "Anv\344ndare: %30#1s\n")
 
     (read-texts . "L\344sta texter:%28#1d\n")
+    (marked-texts . "Markerade texter:%24#1d\n")
     (time-for-last-letter . "Tid f\366r senaste brev:%20#1s (st\345r det i din cache)\n")
     (superconf . "%[%#3@Superm\366te:%31#1:m%] %#4s(%#2M)\n")
     (supervisor . "%[%#3@Organisat\366r:%29#1:p%] %#4s(%#2P)\n")
@@ -579,6 +580,10 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
+    (today-time-format-string . "%#6s %02#4d:%02#5d")
+    (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
+    (today . "idag")
+    (yesterday . "igår")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
     (no-such-text-no . "Det finns ingen s\345dan text. (%#1n)\n")
