@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.103 2002-09-08 11:13:14 byers Exp $
+;;;;; $Id: edit-text.el,v 44.104 2002-09-15 23:14:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.103 2002-09-08 11:13:14 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.104 2002-09-15 23:14:16 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -443,7 +443,7 @@ so it's not as clean as it ought to be."
 (defun kom-edit-send-anonymous ()
   "Send the text anonymously to the server."
   (interactive)
-  (lyskom-edit-send 'initiate-create-anonymous-text nil))
+  (lyskom-edit-send 'initiate-create-anonymous-text t))
 
 (defun kom-edit-send ()
   "Send the text to the server."
@@ -500,6 +500,17 @@ anonymously and take actions to avoid revealing the sender."
                     (setq misc-list (apply 'lyskom-create-misc-list
                                            (nconc (elt headers 1)
 						  extra-headers)))))
+
+              ;;
+              ;; Check that we don't add ourselves to an anon text
+              ;;
+
+              (when (and is-anonymous
+                         (rassq lyskom-pers-no (cdr misc-list))
+                         (lyskom-j-or-n-p 
+                          (lyskom-get-string 'remove-self-sending-anonymous)))
+                (rplacd misc-list (delq (rassq lyskom-pers-no (cdr misc-list))
+                                        (cdr misc-list))))
 
               ;;
               ;; Run user hooks

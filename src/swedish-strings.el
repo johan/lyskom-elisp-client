@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.271 2002-09-15 22:08:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.272 2002-09-15 23:14:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.271 2002-09-15 22:08:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.272 2002-09-15 23:14:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1424,6 +1424,7 @@ Uppkopplad sedan %#8s%#9s")
     (calc-expression . "Uttryck: ")
 
     (do-send-anonymous . "Skicka in texten anonymt? ")
+    (remove-self-sending-anonymous . "Vill du ta bort dig själv som mottagare från inlägget? ")
     (anonymous . "anonym")
     (Anonymous . "Anonym")
 

@@ -1,5 +1,10 @@
 2002-09-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 722:
+	* edit-text.el (kom-edit-send-anonymous): Set is-anonymous
+	parameter to non-nil.
+	(lyskom-edit-send): Ask to remove self when sending anonymously. 
+
 	Fix bug 679:
 	* commands1.el (kom-delete-text): Nag if the user tries to delete
 	a text with comments. Rewrote the main logic.
