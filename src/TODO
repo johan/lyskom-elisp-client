@@ -67,12 +67,14 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
 
 Allmänna förbättringar
 
+    Strunta i hemliga texter vid åar.
+
     Gör inte nästa kommando efter en filtrering. Kontrollera med
     variabel.
 
     Sortera vilkaslistan efter t.ex. idletid.
     
-    Fixa klart z-initiate-get-map.
+    Fixa klart z-initiate-get-map. (BEHÖVS INTE)
 
     När man skickar in en kommentar borde klienten kolla att inga nya
     kommentarer till texten har skrivits under tiden.
