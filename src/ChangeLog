@@ -1,5 +1,9 @@
 1999-10-25  David Byers  <davby@ida.liu.se>
 
+	* startup.el (lyskom): Set process coding system decoding to
+	no-conversion or things can break. Will someone please MULEize
+	this for real?
+
 	* parse.el (lyskom-char-p): New implementation to fix spurious
 	protocol errors.
 	(lyskom-char-p): Fixed new implementation.
