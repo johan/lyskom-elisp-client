@@ -1,3 +1,17 @@
+Sat Jul 27 00:32:54 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-next-kom,kom-previous-kom): Ta bort döda
+ 	buffertar ur lyskom-sessions-with-unread(-letters).
+	(kom-next-unread-kom): Använd lyskom-buffer istället för
+ 	lyskom-proc.
+
+	* lyskom-rest.el (lyskom-set-mode-line): Använd lyskom-buffer
+ 	istället för lyskom-proc i lyskom-sessions-with-unread(-letters).
+
+	* commands2.el (kom-next-unread-kom): Fungerade inte om
+ 	current-buffer inte var en LysKOM-buffert, och det inte fanns
+ 	några olästa.
+
 Fri Jul 26 12:27:37 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* startup.el (kom-start-anew): Hantera att
