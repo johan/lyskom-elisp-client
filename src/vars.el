@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.13 1991-11-08 13:19:17 linus Exp $
+;;;;; $Id: vars.el,v 35.14 1991-11-12 22:43:58 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.13 1991-11-08 13:19:17 linus Exp $\n"))
+	      "$Id: vars.el,v 35.14 1991-11-12 22:43:58 linus Exp $\n"))
 
 
 
@@ -298,6 +298,9 @@ different packets.")
 
 (defvar lyskom-who-info-buffer nil
   "Buffer for the who info presentation.")
+
+(defvar lyskom-who-info-buffer-is-on nil
+  "Says wether we are collecting who-information or not.")
 
 
 (defvar lyskom-is-parsing t
