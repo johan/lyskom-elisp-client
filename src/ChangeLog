@@ -1,3 +1,23 @@
+2003-01-08  David Byers  <david.byers@swipnet.se>
+
+	Documetned the remaining commands:
+	* remote-control.el: Documented all commands.
+
+	* mship-edit.el: Documented all commands.
+
+	* lyskom-rest.el: Documented all commands.
+
+	* flags.el: Documented all commands.
+
+	* filter.el: Documented all commands.
+	(kom-super-jump): Use the standard prefix arguments.
+
+	* ansaphone.el: Documented all commands.
+
+	* faqs.el: Documented all commands.
+
+	* review.el: Documented all commands.
+
 2003-01-08  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* Makefile (DEBIANCLIENTVERSIONSUFFIX): New variable.

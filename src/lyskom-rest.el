@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.188 2003-01-06 11:18:26 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.189 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.188 2003-01-06 11:18:26 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.189 2003-01-08 00:33:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -361,7 +361,9 @@ by design."
 ;;;;                          Re-edit text
 
 (def-kom-command kom-re-edit-next-text ()
-  "Display a buffer containing a failed submission"
+  "Display a buffer containing a failed text submission. This pseudo
+command is only invoked from the prompt after submission of a text
+failed."
   (interactive)
   (let ((el (read-list->first lyskom-reading-list)))
     (set-read-list-del-first lyskom-reading-list)
@@ -374,7 +376,12 @@ by design."
 ;;;;                        Go to pri session
 
 (def-kom-command kom-go-to-pri-session ()
-  "Go to a prioritized session with unreads"
+  "Go to a prioritized session with unreads. This pseudo command is
+generally invoked frmo the prompt when there is a session with unread
+texts that has a higher priority than the current session.
+
+See `kom-server-priority' and `kom-server-priority-breaks' for
+settings to control session priorities."
   (interactive)
   (let ((session (lyskom-get-prioritized-session)))
     (if (or (null session)
@@ -410,7 +417,7 @@ by design."
 ;;; Modified to handle filters
 
 (def-kom-command kom-view-next-text ()
-  "Display next text (from lyskom-reading-list)."
+  "Display the next unread text. This is the most common default command."
   (interactive)
   (lyskom-tell-internat 'kom-tell-read)
   (let ((action 'next-text))
@@ -511,14 +518,12 @@ lyskom-mark-as-read."
 
 
 (def-kom-command kom-go-to-next-conf (&optional num)
-  "Go to next conf.
-Take first conf from lyskom-to-do-list and copy it to lyskom-reading-list.
-Tell server what the user is doing. If the user is reading a conf it is
-moved last on lyskom-to-do-list, with priority 0. When a prefix argument
-is given, it is interpreted as for kom-list-news; positive numbers set a
-lower bound for how many unreads you want in the conference to move to,
-a negative argument sets a lower bound instead. You end up in the first
-conference in your lyskom-to-do-list that matches the given bounds."
+  "Go to next conference with unread texts. The current conference is
+moved to the end of the list of conferences with unread texts. A
+numeric prefix argument is interpreted similar to in `kom-list-news':
+with a positive argument go to the next conference with at least that
+many unread. With a negative number, go to a conference with at most
+that many unread texts."
   (interactive "P")
   (let ((conf-stat nil)
 	(num-arg (cond
@@ -2565,7 +2570,11 @@ A list of pairs means OPTARG will be used as a key to look up the real
 
 
 (def-kom-command kom-save-text-body (text-no &optional filename)
-  "Save the body of text TEXT-NO to file FILENAME."
+  "Save the body of the selected text to a file. This command saves
+the contents of the text, without LysKOM information around it to a
+file, overwriting any previous contents.
+
+See `kom-save-text' for an alternative command."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-save-no)
                      nil))
   (cond (text-no
@@ -2610,13 +2619,16 @@ A list of pairs means OPTARG will be used as a key to look up the real
 
 
 (def-kom-command kom-save-text (arg &optional list-of-texts filename)
-  "Saves/appends the article before point to a file.
-The article is determined by a search-backward the same as backward-text 
-and then a forward-text.
-With an argument ARG the search is done over that number of texts.
-If FILENAME is nil, the name of the file is read using the minibuffer 
-and the default is taken from kom-saved-file-name the first time. Subsequent
-calls use the most recently specified file name."
+  "Append the selected texts to a file. The texts to save are
+determined by searching backwards in the buffer. A numeric prefix
+argument specifies the number of texts to save. Headers are included
+in the file.
+
+The file name to save to is read using the minibuffer, and the default
+is taken from kom-saved-file-name the first time. Subsequent calls use
+the most recently specified file name.
+
+See `kom-save-text-body' for an alternative to this command."
   (interactive "p")
   (let ((name nil))
     (save-excursion

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.23 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: filter.el,v 44.24 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.23 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: filter.el,v 44.24 2003-01-08 00:33:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -449,7 +449,12 @@ Otherwise return nil."
 ;;; 
 
 (def-kom-command kom-filter-subject (&optional subject)
-  "Interactively filter a subject. Optional SUBJECT is subject to filter."
+  "Interactively filter a subject. This creates a permanent or temporary
+filter for a single subject in one conference or all conferences.
+
+An alternative to this is `kom-super-jump'.
+
+To change existing filters, use `kom-filter-edit'."
   (interactive)
   (if (/= 0 lyskom-current-conf)
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
@@ -487,7 +492,11 @@ Otherwise return nil."
 
 
 (def-kom-command kom-filter-author ()
-  "Interactively filter an author."
+  "Interactively filter an author. This creates a permanent or
+temporary filter on a single author in one conference or all
+conferences.
+
+To change existing filters, use `kom-filter-edit'."
   (interactive)
   (let (auth-stat author conf filter action permanent)
 	(blocking-do-multiple ((text-stat (get-text-stat 
@@ -526,7 +535,10 @@ Otherwise return nil."
                           (cons 'expire (not permanent))))))))
 
 (def-kom-command kom-filter-recipient ()
-  "Interactively filter a recipient."
+  "Interactively filter a recipient. This creates a permanent or
+temporary filter on a particular recipient.
+
+To change existing filters, use `kom-filter-edit'."
   (interactive)
   (let ((conf-no (lyskom-read-conf-no 'filter-recipient
                                       '(all)
@@ -550,10 +562,19 @@ Otherwise return nil."
 ;;; Superhoppa
 ;;;
 
-(def-kom-command kom-super-jump ()
-  "Skip all texts and comments that share the subject and recipient of 
-the current text"
-  (interactive)
+(def-kom-command kom-super-jump (text-no)
+  "Skip all texts and comments that share the subject and recipient of
+the selected text. This creates a temporary filter on the subject of
+the selected text in one of its recipients. The recipient is selected
+automatically: if the current conference is a recipient, then filter
+in that conference. Otherwise filter in the first recipient that the
+user is a member of.
+
+To change existing filters, use `kom-filter-edit'.
+
+This command accepts text number prefix arguments (see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (lyskom-read-text-no-prefix-arg 'super-jump-q))
   (if (or (null lyskom-current-text)
           (zerop lyskom-current-text))
       (lyskom-insert-string 'have-to-read)
@@ -630,7 +651,11 @@ the current text"
 ;;;
 
 (def-kom-command kom-filter-text (&optional text)
-  "Interactively filter on text contents. Optional TEXT is subject to filter."
+  "Interactively filter on text contents. This creates a permanent or
+temporary filter on the contents of texts in all conferences or in a
+single conference.
+
+To change existing filters, use `kom-filter-edit'."
   (interactive)
   (if (/= 0 lyskom-current-conf)
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
@@ -670,7 +695,9 @@ the current text"
 ;;; may not be a good idea, but it works...
 
 (def-kom-command kom-list-filters ()
-  "Display all filters"
+  "Display all filters. This lists all filters in the LysKOM buffer.
+
+To change existing filters, use `kom-filter-edit'."
   (interactive)
   (let ((filters lyskom-filter-list))
     (goto-char (point-max))

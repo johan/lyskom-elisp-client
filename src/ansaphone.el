@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.11 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: ansaphone.el,v 44.12 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -44,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.11 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: ansaphone.el,v 44.12 2003-01-08 00:33:14 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -55,7 +55,11 @@
 ;;;
 
 (def-kom-command kom-change-auto-reply (&optional message)
-  "Change the default automatic reply message."
+  "Change the default automatic reply message.
+This message is sent in reply to personal messages when auto
+reply is turned on.
+
+See `kom-toggle-auto-reply'."
   (interactive)
   (let ((message (or message
                     (lyskom-read-from-minibuffer 
@@ -69,7 +73,13 @@
 
 
 (def-kom-command kom-toggle-auto-reply ()
-  "Toggle automatic replies to personal messages."
+  "Toggle automatic replies to personal messages.
+When this is turned on, replies will be sent automatically to 
+personal messages (sent with `kom-send-message'). The reply sent
+depents on `kom-ansaphone-default-reply' and `kom-ansaphone-replies'.
+
+Messages received when automatic replies are on may also be recorded.
+See `kom-ansaphone-record-messages'"
   (interactive)
   (setq kom-ansaphone-on (not kom-ansaphone-on))
   (lyskom-format-insert (lyskom-get-string 'ansaphone-state-r)
@@ -85,7 +95,10 @@
 
 
 (def-kom-command kom-list-messages ()
-  "List collected messages"
+  "List messages recorded when automatic replies are on. To erase
+recorded messages, use `kom-erase-messages'.
+
+See `kom-toggle-auto-reply' and `kom-ansaphone-record-messages'."
   (interactive)
   (if (null lyskom-ansaphone-messages)
       (lyskom-format-insert (lyskom-get-string 'ansaphone-no-messages))
@@ -104,7 +117,10 @@
 
 
 (def-kom-command kom-erase-messages ()
-  "Erase collected messages"
+  "Erase messages recorded when automatic replies are on. To list
+recorded messages, use `kom-list-messages'.
+
+See `kom-toggle-auto-reply' and `kom-ansaphone-record-messages'."
   (interactive)
   (lyskom-message "%s" (lyskom-get-string 'ansaphone-messages-gone))
   (setq lyskom-ansaphone-messages nil))

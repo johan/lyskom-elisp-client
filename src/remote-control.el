@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.9 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: remote-control.el,v 44.10 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.9 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: remote-control.el,v 44.10 2003-01-08 00:33:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -60,10 +60,17 @@
 ;;;
 
 (def-kom-command kom-remote-autoreply (&optional session-no state)
-  "Remotely turn on or off the auto-reply facility of another client.
-Optional argument SESSION-NO specifies the target session.
-Optional argument STATE can be one of 'on, 'off or nil. on means 
-turn auto-reply on, off turn it off and nil toggle its state."
+  "Remotely turn on or off the auto reply facility of another client.
+This is similar to `kom-toggle-auto-reply', but operates on another
+session.
+
+You will be prompted for which session to control. For remote control
+to work the target session must have remote control turned on, and the
+user you are logged on as must have permission to manipulate that
+session.
+
+See `kom-remote-controllers' and `kom-self-control' for settings that
+affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
@@ -89,9 +96,17 @@ turn auto-reply on, off turn it off and nil toggle its state."
 			 t)))
 
 (def-kom-command kom-remote-set-message (&optional session-no message)
-  "Remotely set the default reply message of another client.
-Optional argument SESSION-NO specifies the target session.
-Optional argument MESSAGE specifies the message."
+  "Remotely set the default auto reply message of another client. This
+is similar to `kom-change-auto-reply', but operates on another
+session.
+
+You will be prompted for which session to control. For remote control
+to work the target session must have remote control turned on, and the
+user you are logged on as must have permission to manipulate that
+session.
+
+See `kom-remote-controllers' and `kom-self-control' for settings that
+affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
@@ -109,8 +124,16 @@ Optional argument MESSAGE specifies the message."
 			 t)))
 
 (def-kom-command kom-remote-list-messages (&optional session-no)
-  "List messages collected from a remote auto-reply facility.
-Optional argument SESSION-NO specifies the target session."
+  "List messages collected from a remote auto reply facility. This is
+similar to `kom-list-messages', but operates on another session.
+
+You will be prompted for which session to control. For remote control
+to work the target session must have remote control turned on, and the
+user you are logged on as must have permission to manipulate that
+session.
+
+See `kom-remote-controllers' and `kom-self-control' for settings that
+affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
@@ -126,8 +149,16 @@ Optional argument SESSION-NO specifies the target session."
 
 
 (def-kom-command kom-remote-erase-messages (&optional session-no)
-  "Erase stored messages on a remote auto-reply facility.
-Optional argument SESSION-NO specifies the target session."
+  "Erase stored messages on a remote auto reply facility. This is
+similar to `kom-erase-messages', but operates on another session.
+
+You will be prompted for which session to control. For remote control
+to work the target session must have remote control turned on, and the
+user you are logged on as must have permission to manipulate that
+session.
+
+See `kom-remote-controllers' and `kom-self-control' for settings that
+affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no
@@ -142,8 +173,18 @@ Optional argument SESSION-NO specifies the target session."
 
 
 (def-kom-command kom-remote-quit (&optional session-no)
-  "Quit a remote client.
-Optional argument SESSION-NO specifies the target session."
+  "Quit a remote client. The difference between this command and
+`kom-force-logout' is that the latter uses server facilities to
+forcefully disconnect the session, while the former allows the client
+to cleanly disconnect from the server.
+
+You will be prompted for which session to control. For remote control
+to work the target session must have remote control turned on, and the
+user you are logged on as must have permission to manipulate that
+session.
+
+See `kom-remote-controllers' and `kom-self-control' for settings that
+affect remote control."
   (interactive)
   (setq session-no (or session-no
                        (car (lyskom-read-session-no

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.7 2003-01-04 22:49:48 byers Exp $
+;;;;; $Id: faqs.el,v 44.8 2003-01-08 00:33:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.7 2003-01-04 22:49:48 byers Exp $\n"))
+              "$Id: faqs.el,v 44.8 2003-01-08 00:33:14 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -77,13 +77,25 @@
 ;;;
 
 (def-kom-command kom-add-faq (&optional conf-no text-no)
-  "Add a FAQ to a conference"
+  "Make an existing text a FAQ of a conference. To write a new FAQ for
+a conference that doesn't have one, or change an existing FAQ, use
+`kom-change-conf-faq'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf pers) nil nil t)
                      (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
   (lyskom-add-faq conf-no text-no))
 
+
+
 (def-kom-command kom-add-server-faq (&optional text-no)
-  "Add a FAQ to the server"
+  "Make an existing text a FAQ of the server. To write a new FAQ for
+a conference that doesn't have one, or change an existing FAQ, use
+`kom-change-server-faq'.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
   (lyskom-add-faq nil text-no))
 
@@ -116,13 +128,15 @@ The text to add is passed in TEXT-NO"
                         (list aux-item))))))))
 
 (def-kom-command kom-del-server-faq ()
-  "Remove a FAQ from the server"
+  "Remove a FAQ from the server. You need administrative rights to
+do this. To add a FAQ, use `kom-add-server-faq'."
   (interactive)
   (lyskom-del-faq nil))
 
 
 (def-kom-command kom-del-faq ()
-  "Remove a FAQ from a conference"
+  "Remove a FAQ from a conference. To add a FAQ, use
+`kom-add-conf-faq'."
   (interactive)
   (let* ((conf-stat (lyskom-read-conf-stat 'conf-to-del-faq
                                            '(conf pers) nil nil t)))
@@ -169,13 +183,13 @@ The text to add is passed in TEXT-NO"
                           nil))))))))
 
 (def-kom-command kom-review-server-faq ()
-  "View the FAQs for the server"
+  "View the FAQs for the server."
   (interactive)
   (lyskom-review-faq nil (server-info->aux-item-list
                           (blocking-do 'get-server-info))))
 
 (def-kom-command kom-review-faq (&optional conf-no)
-  "View the FAQs for a conference"
+  "View the FAQs for a particular conference."
   (interactive 
    (list 
     (let* ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
@@ -222,14 +236,16 @@ The text to add is passed in TEXT-NO"
    lyskom-reading-list t))
 
 (def-kom-command kom-change-server-faq ()
-  "Change a FAQ for the server."
+  "Change a FAQ for the server. If the server doesn't have a FAQ, 
+create a new one. You need administrative rights to do this."
   (interactive)
   (lyskom-change-faq nil (lyskom-get-aux-item (server-info->aux-item-list
                                                (blocking-do 'get-server-info))
                                               14)))
 
 (def-kom-command kom-change-conf-faq ()
-  "Change a FAQ fo a conference."
+  "Change a FAQ fo a conference. If the conference doesn't have a FAQ,
+create a new FAQ."
   (interactive)
   (let* ((conf-no (lyskom-read-conf-no
                    (lyskom-get-string 'what-to-change-faq-you)
