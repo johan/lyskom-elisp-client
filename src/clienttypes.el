@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.8 1999-11-19 13:37:24 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.9 1999-12-02 22:29:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.8 1999-11-19 13:37:24 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.9 1999-12-02 22:29:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -58,6 +58,7 @@
 ;;;   FOOTN-IN    - Type containing the list of footnotes to a text
 ;;;   CONF        - Basic type of unread in a conf.
 ;;;   RE-EDIT-TEXT - Re-edit a failed submission. Buffer is in misc.
+;;;   PRI-SESSION - Go to prioritized session.
 ;;;
 ;;;   The types REVIEW-TREE, COMM-IN and FOOTN-IN are created for new for
 ;;;   every text read (recursively) when appropriate.

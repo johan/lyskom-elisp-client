@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.57 1999-11-22 14:38:55 byers Exp $
+;;;;; $Id: commands2.el,v 44.58 1999-12-02 22:29:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.57 1999-11-22 14:38:55 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.58 1999-12-02 22:29:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -262,7 +262,7 @@ otherwise: the conference is read with lyskom-completing-read."
 
         (lyskom-traverse-aux item
             (conf-stat->aux-items conf-stat)
-          (lyskom-aux-item-definition-call item 'status-print item conf-stat))
+          (lyskom-aux-item-call item 'status-print item conf-stat))
 
         (let ((mship (lyskom-try-get-membership (conf-stat->conf-no conf-stat) t)))
           (when mship
@@ -427,7 +427,7 @@ otherwise: the conference is read with lyskom-completing-read."
       
       (lyskom-traverse-aux item
           (conf-stat->aux-items conf-stat)
-        (lyskom-aux-item-definition-call item 'status-print item conf-stat))
+        (lyskom-aux-item-call item 'status-print item conf-stat))
 
       ;; "Show all conferences CONF-STAT is a member of if the user so wishes."
       (lyskom-scroll)
@@ -1464,6 +1464,7 @@ current conference to another session."
 	    (setcdr rlist cell))
 	  (setq finished t))
          ((eq type 'RE-EDIT-TEXT))
+         ((eq type 'PRI-SESSION))
 	 (t
 	  (signal 'lyskom-internal-error '("lyskom-remove-comment-chains")))))
       (-- len)))
@@ -1571,12 +1572,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 
   ;; Clean the buffer lists 
 
-  (setq lyskom-sessions-with-unread
-        (lyskom-clean-buffer-list lyskom-sessions-with-unread)
-        lyskom-sessions-with-unread-letters
-        (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
-        lyskom-buffer-list
-        (lyskom-clean-buffer-list lyskom-buffer-list))
+  (lyskom-clean-all-buffer-lists)
 
   (let ((current (lyskom-buffer-root-ancestor (current-buffer)))
         (buffer-list (symbol-value buffer-list-name))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.31 1999-11-21 15:39:58 byers Exp $
+;;;;; $Id: parse.el,v 44.32 1999-12-02 22:29:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.31 1999-11-21 15:39:58 byers Exp $\n"))
+	      "$Id: parse.el,v 44.32 1999-12-02 22:29:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -795,14 +795,15 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 
 (defun lyskom-parse-aux-item ()
   "Parse an aux-item"
-  (lyskom-create-aux-item (lyskom-parse-num)    ; aux-no
-                          (lyskom-parse-num)    ; creator
-                          (lyskom-parse-num)    ; creator
-                          (lyskom-parse-time)   ; sent-at
-                          (lyskom-parse-aux-item-flags)
-                          (lyskom-parse-num)    ; inherit-limit
-                          (lyskom-parse-raw-string) ; data
-                          ))
+  (lyskom-aux-item-after-parse
+   (lyskom-create-aux-item (lyskom-parse-num)    ; aux-no
+                           (lyskom-parse-num)    ; tag
+                           (lyskom-parse-num)    ; creator
+                           (lyskom-parse-time)   ; sent-at
+                           (lyskom-parse-aux-item-flags)
+                           (lyskom-parse-num)    ; inherit-limit
+                           (lyskom-parse-raw-string) ; data
+                           )))
 
 (defun lyskom-parse-aux-item-flags ()
   "Parse aux-item flags"

@@ -8,6 +8,17 @@ Att göra i elisp-klienten
   multibyte environment (where the strings sent from the server are in
   a multibyte charset.) They do not affect users of unibyte charsets.
 
+** Encode/decode appropriate aux-items.
+
+** Binding of f ä.
+
+** In edit-filter mode, check how subject åäö is handled.
+
+** Write code to deal with the situation where you create a filter in
+   a unibyte environment and then move to a multibyte environment, and
+   vice versa. Or make the filter code convert strings to the
+   appropriate bytedness. Maybe.
+
 ** In completing-read.el, MULEify the character comparisons.
    
 

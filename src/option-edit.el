@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.33 1999-11-22 14:39:05 byers Exp $
+;;;;; $Id: option-edit.el,v 44.34 1999-12-02 22:29:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.33 1999-11-22 14:39:05 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.34 1999-12-02 22:29:52 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -508,6 +508,14 @@ customize buffer but do not save them to the server."
     (kom-deferred-printing (toggle (on off)))
     (kom-higher-priority-breaks (choice ((const (express-break express))
                                          (const (break t))
+                                         (const (no-break nil)))))
+    (kom-server-priority-breaks (choice ((const (express-server-break express))
+                                         (const (express-server-letters-break express-letters))
+                                         (const (server-break t))
+                                         (const (letters-server-break letters))
+                                         (const (after-conf-server-break after-conf))
+                                         (const (after-conf-letters-server-break after-conf-letters))
+                                         (const (when-done-server-break when-done))
                                          (const (no-break nil)))))
     (kom-login-hook (repeat (command nil :tag command)
                             :indent 4))

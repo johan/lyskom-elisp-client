@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.72 1999-11-22 14:38:59 byers Exp $
+;;;;; $Id: english-strings.el,v 44.73 1999-12-02 22:29:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.72 1999-11-22 14:38:59 byers Exp $"))
+              "$Id: english-strings.el,v 44.73 1999-12-02 22:29:46 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1010,6 +1010,9 @@ You should set it to a better value.\n")
     (go-to-conf-of-review-prompt . "Resume reviewing texts")
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
+    (next-pri-session-prompt . "Go to prioritized LysKOM \"%#1s\"")
+    (next-unread-session-prompt . "Go to LysKOM \"%#1s\"")
+    (no-such-kom-session . "No such session with unread texts.\n")
     (the-command . "Command: %#1C")
     (error-in-login-hook . "There was an error in your kom-login-hook: %#1s\n")
 
@@ -2101,6 +2104,15 @@ Select whether to execute command or keyboard macro.")
     (express-break . "Immediately upon creation  ")
     (break .         "After current comment chain")
     (no-break .      "Efter current conference   ")
+
+    (express-server-break . "Immediately")
+    (express-server-letters-break . "Immediately if letters arrive")
+    (server-break . "After current comment chain")
+    (letters-server-break . "After current comment chain if letters arrive")
+    (after-conf-server-break . "After current conference")
+    (after-conf-letters-server-break . "After current conference if letters arrive")
+    (when-done-server-break . "After everything has been read")
+    (no-server-break . "Never")
 
     (command . "Command")
     (command-list . "Command list")
