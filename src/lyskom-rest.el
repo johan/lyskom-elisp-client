@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.5 1993-06-01 19:40:14 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.6 1993-06-23 19:24:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.5 1993-06-01 19:40:14 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.6 1993-06-23 19:24:40 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -453,8 +453,9 @@ in the current conf is placed."
 
 
 (defun lyskom-maybe-move-unread (burry)
-  "If leaving conf with unread put the unread texts list on the to-do-list.
-If the argument BURRY is non-nil then the conf is inserted last altered."
+  "Empty the reading list.
+If the argument BURRY is non-nil and there are unread artilces left in the
+reading list then the conf is inserted last in the to do list."
   (if (not (read-list-isempty lyskom-reading-list))
       (progn
 	(if burry
@@ -665,7 +666,8 @@ If prompt on screen then do the scroll if necessary.
 The strings buffered are printed before the prompt by lyskom-print-prompt."
   (cond
    ((and lyskom-executing-command
-	 (not lyskom-is-waiting))
+	 (not lyskom-is-waiting)
+	 (not (eq lyskom-is-waiting t)))
     ;; Don't insert the string until the current command is finished.
     (if (null lyskom-to-be-printed-before-prompt)
 	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
@@ -1667,7 +1669,7 @@ Other objects are converted correctly."
 ;;; silent-read was
 ;; Written by Lars Willf|r <willfor@lysator.liu.se>
 ;; Copyright and copyleft Lars Willf|r.
-;; Last modified sep 90.
+;; Last modified jun 93 by Linus Tolke
 
 (defun silent-read (prompt-str)
   "Read a string in the minibuffer without echoing.
@@ -1677,7 +1679,13 @@ One parameter - the prompt string."
   (let ((input-string "")
 	(input-char)
 	(cursor-in-echo-area t))
-    (while (not (or (eq (setq input-char (read-char))
+    (while (not (or (eq (setq input-char 
+			      (condition-case err
+				  (read-char)
+				(error (if (string= "Non-character input-event"
+						    (car (cdr err)))
+					   ?\r
+					 (signal (car err) (cdr err))))))
 			?\r)
 		    (eq input-char ?\n)))
       (progn
