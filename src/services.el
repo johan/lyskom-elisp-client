@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.10 1997-10-23 12:19:18 byers Exp $
+;;;;; $Id: services.el,v 44.11 1997-11-30 17:19:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.10 1997-10-23 12:19:18 byers Exp $\n"))
+	      "$Id: services.el,v 44.11 1997-11-30 17:19:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -339,9 +339,9 @@ Args: KOM-QUEUE HANDLER &rest DATA."
     (lyskom-send-packet kom-queue (lyskom-format-objects 23))))
 
 
-(defun initiate-mark-text (kom-queue handler
-				     text-no mark-type	
-				     &rest data)
+(defun initiate-mark-text-old (kom-queue handler
+                                         text-no mark-type	
+                                         &rest data)
   "Mark a text.
 Args: KOM-QUEUE HANDLER TEXT-NO MARK-TYPE &rest DATA.
 MARK-TYPE is currently a number, but this should maybe be
@@ -350,6 +350,27 @@ a conf-type (with several bits that are 't' or 'nil' that is)."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
     (lyskom-send-packet kom-queue (lyskom-format-objects 24 text-no mark-type))))
+
+(defun initiate-mark-text (kom-queue handler
+                                     text-no mark-type
+                                     &rest data)
+  "Mark a text.
+Args: KOM-QUEUE HANDLER TEXT-NO MARK-TYPE &rest DATA.
+MARK-TYPE is currently a number, but this should maybe be
+changed (internally in the elisp-klient) to something similar to
+a conf-type (with several bits that are 't' or 'nil' that is)."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 72 text-no mark-type))))
+
+(defun initiate-unmark-text (kom-queue handler
+                                     text-no
+                                     &rest data)
+  "Unmark a text.
+Args: KOM-QUEUE HANDLER TEXT-NO &rest DATA."
+  (lyskom-server-call
+    (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
+    (lyskom-send-packet kom-queue (lyskom-format-objects 73 text-no))))
 
 
 (defun initiate-find-next-text-no (kom-queue handler text-no &rest data)

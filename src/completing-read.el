@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.11 1997-09-21 11:42:54 byers Exp $
+;;;;; $Id: completing-read.el,v 44.12 1997-11-30 17:19:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.11 1997-09-21 11:42:54 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.12 1997-11-30 17:19:08 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -732,7 +732,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-advance (data-list)
   (lyskom-traverse 
    el data-list
-   (string-match "\\(\\s-+\\|\\S-\\|$\\)"
+   (string-match "\\([ \t]-+\\|[ \t]-\\|$\\)"
                  (aref el 2)
                  (aref el 0))
    (aset el 0 (match-end 0))))
@@ -740,7 +740,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-skip-whitespace (data-list)
   (lyskom-traverse
    el data-list
-   (string-match "\\s-*" (aref el 2) (aref el 0))
+   (string-match "[ \t]-*" (aref el 2) (aref el 0))
    (aset el 0 (match-end 0))))
 
 ;;;
@@ -750,7 +750,7 @@ the LysKOM rules of string matching."
 (defun lyskom-complete-string-advance-to-end-of-word (data-list)
   (lyskom-traverse
    el data-list
-   (aset el 0 (string-match "\\(\\s-\\|$\\)" 
+   (aset el 0 (string-match "\\([ \t]-\\|$\\)" 
                             (aref el 2)
                             (aref el 0)))))
 

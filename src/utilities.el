@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.21 1997-09-21 11:43:22 byers Exp $
+;;;;; $Id: utilities.el,v 44.22 1997-11-30 17:19:41 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.21 1997-09-21 11:43:22 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.22 1997-11-30 17:19:41 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -213,7 +213,7 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
 ;;;
 
 (defvar lyskom-default-collate-table
-  "\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~\200\201\202\203\204\205\206\207\210\211\212\213\214\215\216\217\220\221\222\223\224\225\226\227\230\231\232\233\234\235\236\237 !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIĞNOOOO\\×OUUUYYŞßAAAA[]ACEEEEIIIIğNOOOO\\÷OUUUYYşÿ"
+  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIĞNOOOO\\×OUUUYYŞßAAAA[]ACEEEEIIIIğNOOOO\\÷OUUUYYşÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
 (defsubst lyskom-unicase-char (c)

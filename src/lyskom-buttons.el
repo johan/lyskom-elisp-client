@@ -1,5 +1,5 @@
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.17 1997-10-23 12:19:05 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.18 1997-11-30 17:19:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.17 1997-10-23 12:19:05 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.18 1997-11-30 17:19:19 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -552,7 +552,7 @@ This is a LysKOM button action."
                (progn
                  (pop-to-buffer buf)
                  (lyskom-start-of-command 'kom-mark-text)
-                 (lyskom-mark-text arg nil 1))
+                 (lyskom-mark-text arg nil))
              (lyskom-end-of-command)))))
 
 (defun lyskom-button-unmark-text (buf arg text)
@@ -563,7 +563,7 @@ This is a LysKOM button action."
                (progn
                  (pop-to-buffer buf)
                  (lyskom-start-of-command 'kom-unmark-text)
-                 (lyskom-mark-text arg nil 0))
+                 (lyskom-unmark-text arg nil))
              (lyskom-end-of-command)))))
   
 

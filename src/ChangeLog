@@ -1,3 +1,86 @@
+Fri Nov 28 15:47:23 1997  David Byers  <dbyers@atp>
+
+	* commands2.el (lyskom-print-mark-summary-line): Ny funktion.
+	(kom-list-marks): Dito.
+
+	* lyskom-rest.el (lyskom-read-num-range): Klara av att returnera
+	nil om man vill. Lade till argumentet HISTORY.
+	(lyskom-read-number): Dito.
+
+	* swedish-strings.el (lyskom-message): Lade till who-send-text-to.
+
+	* commands1.el (kom-send-letter): Lägg inte till avsändaren som
+	mottagare till brev som skickas till ett möte avsändaren är medlem
+	i.
+	(kom-write-text): C-u i gör att vi frågar efter mottagare. Ett
+	numeriskt prefix väljer den avsändaren som mottagare. 
+
+	* utilities.el (lyskom-default-collate-table): Definiera space och
+	tab som samma tecken för att undvika oländiga loopar.
+
+	* completing-read.el
+	(lyskom-complete-string-advance-to-end-of-word): Hantera space
+	lite bättre.
+	(lyskom-complete-string-skip-whitespace): Dito.
+	(lyskom-complete-string-advance): Dito.
+
+	* lyskom-rest.el (lyskom-wait-for-membership): Loopa så länge
+	lyskom lyskom-membership-is-read är en siffra. Den kan vara t och
+	almost också, vilket orsakar problem med formatteringen.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Lade
+ 	till language-set-to
+	(kom-tell-phrases): Använd inte bakslaskade åttabitarstecken.
+
+	* startup.el (kom-start-anew): Flyttade visningen av motd och
+	klagomål om presentation till efter man har läst in options.
+	Flyttade val av språk till innan man visar motd.
+
+	* vars.el.in (kom-tell-phrases): defvarade kom-tell-phrases igen.
+
+	* filter-edit.el (lyskom-filter-edit-insert-entry): Gör
+	lyskom-j-or-n-p quittable.
+	(lyskom-filter-edit-quit): Dito.
+	(lyskom-filter-edit-save): Dito.
+	(lyskom-filter-edit-revert): Dito.
+
+Mon Nov 24 15:55:16 1997  David Byers  <dbyers@atp>
+
+	* commands1.el (kom-delete-text): Avmarkera inlägg som man raderar
+	om de är markerade.
+
+	* option-edit.el (lyskom-custom-variables): kom-default-mark kan
+	nu vara 0 till 255.
+
+	* commands1.el (lyskom-review-marked-texts): Använd inte 0 som
+	markering för att återse alla markerade. Använd nil.
+	(kom-review-all-marked-texts): Anpassa därefter.
+	(kom-review-marked-texts): Dito.
+
+	* lyskom-buttons.el (lyskom-button-mark-text): Använd nya
+	lyskom-mark-text. 
+	(lyskom-button-unmark-text): Använd nya lyskom-unmark-text.
+
+	* commands1.el (lyskom-unmark-text): Ny funktion.
+	(lyskom-mark-text): Använd nya initiate-mark-text. Hantera inte
+	avmarkering. 
+	(kom-mark-text): Använd nya lyskom-mark-text.
+	(kom-unmark-text): Använd nya lyskom-unmark-text.
+
+	* services.el (initiate-unmark-text): Ny funktion.
+	(initiate-mark-text-old): Bytte namn från initiate-mark-text.
+	(initiate-mark-text): Ny funktion.
+
+        * swedish-strings.el (lyskom-strings): Lade till strängar för att
+	fråga om bekräftelse av radering.
+	
+	* commands1.el (kom-delete-text): Fråga om man vill radera
+	markerade inlägg.
+	
+	* edit-text.el (lyskom-edit-send-check-recipients): Fråga inte om
+	flera mottagare om det bara finns en riktigt mottagare.
+	Extrakopiemottagare räknas inte.
+
 Fri Nov 14 09:35:02 1997  David Byers  <dbyers@atp>
 
 	* lyskom-rest.el (kom-next-command): Hajlajta raden med
