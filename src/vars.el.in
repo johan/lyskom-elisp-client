@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.194 2002-05-24 12:42:44 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.195 2002-05-25 16:35:10 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.194 2002-05-24 12:42:44 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 44.195 2002-05-25 16:35:10 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -105,15 +105,15 @@ are in the list.")
   "This is a wrapper around setq that does nothing
 if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
-         ((memq var kom-dont-read-saved-variables) nil)
-         (t (set var (eval value)))))
+         ((memq ,var kom-dont-read-saved-variables) nil)
+         (t (set ,var (eval ,value)))))
 
 (defmacro lyskom-maybe-setq-default (var value)
   "This is a wrapper around setq-default that does nothing
 if the variable is in kom-dont-read-saved-variables."
   `(cond ((eq kom-dont-read-saved-variables t) nil)
-         ((memq var kom-dont-read-saved-variables) nil)
-         (t (set-default var (eval value)))))
+         ((memq ,var kom-dont-read-saved-variables) nil)
+         (t (set-default ,var (eval ,value)))))
 
 
 ;;;; ================================================================

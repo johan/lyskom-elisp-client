@@ -1,3 +1,9 @@
+2002-05-25  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* vars.el.in (lyskom-maybe-setq): Added missing commas: we want to
+	use the supplied arguments, not the symbols "var" and "value".
+	(lyskom-maybe-setq-default): Ditto.
+
 2002-05-24  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (kom-start-anew): Don't reset the default
