@@ -1,5 +1,23 @@
+Tue Sep  3 03:39:58 1996  David Kågedal  <kg@infovav.se>
+
+	* completing-read.el (lyskom-completing-who-is-on): Använd
+ 	who-is-on-dynamic om den finns.
+	(lyskom-read-conf-get-logins): Dito.
+	(lyskom-session-from-conf): Dito.
+
+	* startup.el (lyskom-clear-vars): Gör
+ 	kom-membership-default-priority buffertlokal.
+
+	* commands1.el (lyskom-try-add-member): Tillåt prioritet 0 när man
+ 	går med i nya möten.
+
+	* lyskom-rest.el (lyskom-filter): Sätt lyskom-is-parsing med en
+ 	let istället för med setq.
+
 Mon Sep  2 08:47:36 1996  David Byers  <davby@sen2.ida.liu.se>
 
+	* Version 0.44.1 släppt.
+	
 	* completing-read.el (lyskom-read-conf-internal): Returnera t för
  	'lambda vid lite fler tillfällen, hantera try-completion på det
  	sätt som C-koden säger att det skall fungera, inte som

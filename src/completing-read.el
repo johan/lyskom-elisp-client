@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.1 1996-09-03 16:01:25 byers Exp $
+;;;;; $Id: completing-read.el,v 44.2 1996-09-03 18:42:53 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.1 1996-09-03 16:01:25 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.2 1996-09-03 18:42:53 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -63,7 +63,10 @@
   (if lyskom-completing-who-info-cache
       lyskom-completing-who-info-cache
     (setq lyskom-completing-who-info-cache
-          (listify-vector (blocking-do 'who-is-on)))))
+          (listify-vector
+	   (if use-dynamic-info
+	       (blocking-do 'who-is-on-dynamic t t 0)
+	     (blocking-do 'who-is-on))))))
 
 (defun lyskom-completing-cache-completion (string data)
   (let* ((downs (lyskom-unicase string))
@@ -194,8 +197,14 @@ A string:    A name that matched nothing in the database."
 (defun lyskom-read-conf-get-logins ()
   "Used internally by lyskom-read-conf-internal to get a list of
 persons who are logged on."
-  (mapcar (function (lambda (el) (who-info->pers-no el)))
-          (lyskom-completing-who-is-on)))
+  (let ((use-dynamic-info
+	 (cdr-safe (assq 'lyskom-dynamic-session-info-flag
+			 (buffer-local-variables
+			  (process-buffer lyskom-blocking-process))))))
+    (mapcar (if use-dynamic-info
+		(function (lambda (el) (dynamic-session-info->person el)))
+	      (function (lambda (el) (who-info->pers-no el))))
+	    (lyskom-completing-who-is-on))))
 
 
 (defun lyskom-read-conf-expand-specials (string
@@ -867,11 +876,20 @@ the LysKOM rules of string matching."
 (defun lyskom-session-from-conf (conf-no)
   (let ((who-list (lyskom-completing-who-is-on))
         (sessions nil))
-    (while who-list
-      (if (eq (who-info->pers-no (car who-list)) conf-no)
-          (setq sessions (cons (who-info->connection (car who-list))
-                               sessions)))
-      (setq who-list (cdr who-list)))
+    (if lyskom-dynamic-session-info-flag
+	(while who-list
+	  (if (eq (dynamic-session-info->person (car who-list))
+		  conf-no)
+	      (setq sessions (cons (dynamic-session-info->session
+				    (car who-list))
+				   sessions)))
+	  (setq who-list (cdr who-list)))
+      (while who-list
+	(if (eq (who-info->pers-no (car who-list))
+		conf-no)
+	    (setq sessions (cons (who-info->connection (car who-list))
+				 sessions)))
+	(setq who-list (cdr who-list))))
     (cond ((and (null sessions) kom-permissive-completion) (list (- conf-no)))
           (t sessions))))
 
