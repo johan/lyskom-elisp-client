@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.3 1997-03-08 02:46:08 davidk Exp $
+;;;;; $Id: compatibility.el,v 44.4 1997-06-29 14:19:38 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.3 1997-03-08 02:46:08 davidk Exp $\n"))
+	      "$Id: compatibility.el,v 44.4 1997-06-29 14:19:38 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -212,6 +212,8 @@ If the event did not occur over a window, or did not occur over text,
 then this returns nil.  Otherwise, it returns an index into the buffer
 visible in the event's window."
   (car (cdr (event-start e))))
+
+(lyskom-provide-function event-glyph (e))
 
 (lyskom-provide-function popup-menu (menu-desc &optional event)
   (let* ((result (x-popup-menu (or event t)

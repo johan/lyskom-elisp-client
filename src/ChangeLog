@@ -1,6 +1,32 @@
-Thu Apr 10 19:16:47 1997  David Kågedal  <kg@infovav.se>
+Sun Jun 29 12:41:14 1997  David Byers  <davby@ida.liu.se>
 
-	* utilities.el (lyskom-default-collate-table): Bytte ^Z mot \032.
+	* swedish-strings.el (lyskom-custom-strings): Lade till Lynx.
+
+	* option-edit.el (lyskom-url-viewer-widget): Lade till Lynx.
+
+	* prioritize.el (kom-prioritize-goto-priority): Fixa en prompt. 
+	(kom-prioritize-set-priority): Fixa en prompt.
+
+	* swedish-strings.el (lyskom-message): Nya strängar.
+
+	* lyskom-buttons.el (kom-popup-menu): Grokka w3s länkar.
+	(kom-button-click): Dito.
+
+	* compatibility.el (event-glyph): Lade till funktionen.
+
+	* edit-text.el (lyskom-send-experimental): Ny variabel.
+	(lyskom-send-transform-text): Använd den. Fråga om man vill skicka
+	 in formatterat. 
+
+        * lyskom-rest.el (lyskom-format-text-body): Använd w3-region
+        och fixa så  inte extents läcker till resten av bufferten. 
+        (lyskom-format-experimental): Default är påslaget. Numera en
+        lista av format som skall formateras.
+
+Fri Jun  6 10:40:51 1997  David Byers  <davby@ida.liu.se>
+
+        * commands1.el (kom-display-calendar): Började skriva. Kom inte så
+        långt.
 
 Wed May 14 13:08:50 1997  Peter Liljenberg  <petli@lysator.liu.se>
 
@@ -11,11 +37,48 @@ Wed May 14 13:08:50 1997  Peter Liljenberg  <petli@lysator.liu.se>
 	(kom-lynx-xterm-command): Ny variabel.
 	(kom-lynx-terminal-command): Ny variabel.
 
+Sun May 11 15:47:23 1997  David Byers  <davby@ida.liu.se>
+
+	* cache.el: Gör alltid i LysKOM-bufferten.
+
+Sun Apr 27 12:51:39 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-ispell-text): Ny funktion.
+
+	* swedish-strings.el, english-strings.el (kom-ispell-dictionary):
+ 	Ny variabel.
+
+	* vars.el.in (lyskom-send-text-hook): Ny variabel.
+
+	* edit-text.el (lyskom-edit-send): Anropa lyskom-send-text-hook.
+
+	* lyskom-buttons.el (lyskom-fix-pseudo-url): Ny funktion.
+	(lyskom-button-open-url): Hantera pseudo-URLer.
+	(lyskom-button-transform-text): Specialhantering av pseudourler.
+
+	* vars.el.in (lyskom-text-buttons): Känn igen trasiga URLer.
+
+Fri Apr 25 16:55:10 1997  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-send-message-minibuffer-setup-hook): Ny
+ 	funktion.
+	(lyskom-send-message-minibuffer-exit-hook): Nu funktion.
+	(lyskom-send-message): Gör inte minibuffer-setup-hook med vänner
+ 	lokal. Det fungerar inte om man laddar rsz-mini i hooken.
+
+Thu Apr 10 19:16:47 1997  David Kågedal  <kg@infovav.se>
+
+	* utilities.el (lyskom-default-collate-table): Bytte ^Z mot \032.
 
 Tue Apr  8 22:49:59 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Fråga bara om
 	man ska skicka in trots olästa kommentarer en gång.
+
+Sun Mar 30 12:56:10 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* flags.el (lyskom-save-options): Bind print-readably till t.
+	(kom-edit-options-send): Dito.
 
 Thu Mar 27 02:51:57 1997  David Kågedal  <davidk@lysator.liu.se>
 

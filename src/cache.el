@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 44.1 1997-02-07 18:07:10 byers Exp $
+;;;;; $Id: cache.el,v 44.2 1997-06-29 14:19:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.1 1997-02-07 18:07:10 byers Exp $\n"))
+	      "$Id: cache.el,v 44.2 1997-06-29 14:19:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -488,8 +488,11 @@ CACHE is the name of the variable that points to the cache."
 
 (defun lyskom-tell-server (string)
   "Tell the server what the user is doing. Args: STRING."
-  (cond
-   ((equal string lyskom-what-i-am-doing))
-   (t
-    (setq lyskom-what-i-am-doing string)
-    (initiate-change-what-i-am-doing 'background nil string))))
+  (save-excursion
+    (when lyskom-buffer
+      (set-buffer lyskom-buffer))
+    (cond
+     ((equal string lyskom-what-i-am-doing))
+     (t
+      (setq lyskom-what-i-am-doing string)
+      (initiate-change-what-i-am-doing 'background nil string)))))

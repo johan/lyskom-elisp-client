@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.5 1997-02-07 18:08:02 byers Exp $
+;;;;; $Id: prioritize.el,v 44.6 1997-06-29 14:20:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.5 1997-02-07 18:08:02 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.6 1997-06-29 14:20:02 byers Exp $\n"))
 
 
 
@@ -460,7 +460,7 @@ Asks for a priority if no prefix argument is given."
   (interactive "P")
   (let ((prio (or arg (lyskom-read-num-range 
                        0 255 
-                       (lyskom-get-string 'priority-prompt))))
+                       (lyskom-get-string 'goto-priority-prompt))))
         (where 0)
         (entry nil)
         (lineno nil))
@@ -529,17 +529,21 @@ the same as the entry above it, but to not move it."
   "Set priority of all selected conferences."
   (interactive "P")
   (set-mark-command nil)
-  (let* ((priority (or (and (integerp arg) arg)
+  (let* ((entry (lyskom-prioritize-current-entry))
+         (selected (lyskom-prioritize-get-selected))
+         (priority (or (and (integerp arg) arg)
                        (lyskom-read-num-range 
                         0 255 
-                        (lyskom-get-string 'priority-prompt) t)))
-         (entry (lyskom-prioritize-current-entry))
-         (entry-list
-          (or (lyskom-prioritize-get-selected)
-              (list entry))))
-    (while entry-list
-      (lyskom-prioritize-set-priority (car entry-list) priority)
-      (setq entry-list (cdr entry-list)))
+                        (lyskom-format
+                         (lyskom-get-string
+                          (if selected 'priority-prompt-marked
+                            'priority-prompt))
+                          (prioritize-entry->conf-stat entry))
+                         t))))
+    (setq selected (or selected entry))
+    (while selected
+      (lyskom-prioritize-set-priority (car selected) priority)
+      (setq selected (cdr selected)))
     (lyskom-prioritize-goto-entry entry)))
 
 
