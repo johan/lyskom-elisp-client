@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.31 1999-12-01 20:46:02 byers Exp $
+;;;;; $Id: compatibility.el,v 44.32 2000-01-11 10:05:05 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.31 1999-12-01 20:46:02 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.32 2000-01-11 10:05:05 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -338,6 +338,17 @@ With optional argument N, returns Nth-to-last link (default 1)."
 	  (if (< n m) (nthcdr (- m n) x) x)))
     (while (consp (cdr x)) (setq x (cdr x)))
     x))
+
+(lyskom-provide-subst plist-member (plist prop)
+  "Return non-nil if PLIST has the property PROP.
+PLIST is a property list, which is a list of the form
+\(PROP1 VALUE1 PROP2 VALUE2 ...\). PROP is a symbol.
+Unlike `plist-get', this allows you to distinguish between a missing
+property and a property with the value nil."
+      (while (and plist (not (eq (car plist) prop)))
+        (setq plist (cdr (cdr plist))))
+      (and plist t))
+
 
 ;;; ================================================================
 ;;; Faces
