@@ -74,7 +74,8 @@
                 <a href="http://joel.rosdahl.net/">Joel Rosdahl</a> <a href="mailto:joel@lysator.liu.se">&lt;joel@lysator.liu.se&gt;</a>
                 <br /><br />
                 <b>Version:</b>
-                0.47 (Augusti 2002)
+                <lang id="sv">Oktober</lang>
+		<lang id="en">October</lang>
                 <br /><br />
                 <b>Status:</b>
                 <br />
@@ -129,7 +130,7 @@
                   </tr>
                   <tr valign="top">
                     <td colspan="2">
-                      <br /><i>Version 0.47:</i>
+                      <br /><i>Version 0.47.1:</i>
                     </td>
                   </tr>
                   <tr valign="top">
@@ -137,21 +138,21 @@
                       <lang id="sv">Alla språk:</lang>
                       <lang id="en">All languages:</lang>
                     </td>
-                    <td><a href="lyskom-all-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-all-0.47.zip">zipfil</a></td>
+                    <td><a href="lyskom-all-0.47.1.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-all-0.47.1.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
                       <lang id="sv">Svenska:</lang>
                       <lang id="en">Swedish:</lang>
                     </td>
-                    <td><a href="lyskom-swedish-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-swedish-0.47.zip">zipfil</a></td>
+                    <td><a href="lyskom-swedish-0.47.1.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-swedish-0.47.1.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
                       <lang id="sv">Engelska:</lang>
                       <lang id="en">English:</lang>
                     </td>
-                    <td><a href="lyskom-english-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-english-0.47.zip">zipfil</a></td>
+                    <td><a href="lyskom-english-0.47.1.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-english-0.47.1.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
@@ -159,8 +160,8 @@
                       <lang id="en">Linux packages:</lang>
                     </td>
                     <td>
-                      <!-- a href="lyskom-elisp-client_0.47-1_all.deb" -->Debian<!-- /a --><br />
-                      <!-- a href="lyskom-elisp-client_0.47.rpm" -->RedHat RPM<!-- /a -->
+                      <!-- a href="lyskom-elisp-client_0.47.1-1_all.deb" -->Debian<!-- /a --><br />
+                      <!-- a href="lyskom-elisp-client_0.47.1.rpm" -->RedHat RPM<!-- /a -->
                     </td>
                   </tr>
                 </table>
@@ -192,6 +193,7 @@
                   <lang id="en">All NEWS files:</lang>
                 </b>
                 <br />
+                <a href="doc/NEWS-0.47.1">0.47.1</a>
                 <a href="doc/NEWS-0.47">0.47</a>
                 <a href="doc/NEWS-0.46.1">0.46.1</a>
                 <a href="doc/NEWS-0.46">0.46</a>
