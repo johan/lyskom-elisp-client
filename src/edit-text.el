@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 35.5 1991-09-16 16:18:19 linus Exp $
+;;;;; $Id: edit-text.el,v 35.6 1991-10-03 15:54:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 35.5 1991-09-16 16:18:19 linus Exp $\n"))
+	      "$Id: edit-text.el,v 35.6 1991-10-03 15:54:42 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -359,7 +359,13 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 (defun kom-edit-insert-text (no)
   "Insert the text number NO with '>' first on each line"
-  (interactive (format "N%s" (lyskom-get-string 'which-text-include)))
+  (interactive (list
+		(cond
+		 ((null current-prefix-arg)
+		  (string-to-int 
+		   (read-from-minibuffer 
+		    (format "%s" (lyskom-get-string 'which-text-include)))))
+		 ((prefix-numeric-value current-prefix-arg)))))
   (let ((buffer (current-buffer)))
     (set-buffer (process-buffer lyskom-proc))
     (initiate-get-text 'edit 'lyskom-edit-insert-commented no buffer)
