@@ -1,3 +1,44 @@
+2002-06-29  David Byers  <david.byers@swipnet.se>
+
+	* compatibility.el: Added declarations to avoid warnings about
+	set-specifier, make-specifier and color-rgb-components.
+
+	Eliminate warnings because of use of latin-unity:
+	* lyskom-rest.el (lyskom-format-text-body): Moved try-require
+	outside this function so it gets run when we load LysKOM. This
+	avoids a performance hit when the package is unavailable.
+	(latin-unity-remap-region): New declaration to avoid compiler
+	warnings.
+	(latin-unity-preferred-coding-system-list): New declaration.
+	(latin-unity-iso-8859-1-aliases): New declaration.
+	(latin-unity-cset-codesys-alist): New declaration.
+	(coding-system-property): New declaration.
+
+	Improve keyboard menus:
+	* keyboard-menu.el (lyskom-read-from-menu): Break out the code
+	that draws the menu to...
+	(lyskom-keyboard-menu-insert): New function. Format menus in as
+	many columns as possible.
+	(lyskom-keyboard-menu-format-item): New function to format a
+	single item.
+	(lyskom-read-from-menu): C-f and C-b do forward and backward. C-p
+	and C-n do up and down (not next and previous item). This means
+	navigation in the buffer is conventional. Added C-a and C-e.
+	(lyskom-keyboard-menu-up): Rewrote.
+	(lyskom-keyboard-menu-down): Rewrote.
+	(lyskom-keyboard-menu-forward): New command.
+	(lyskom-keyboard-menu-backward): New command.
+	(lyskom-keyboard-menu-beginning-of-line): New command.
+	(lyskom-keyboard-menu-end-of-line): New command.
+
+2002-06-28  David Byers  <david.byers@swipnet.se>
+
+	* keyboard-menu.el (lyskom-read-from-menu): Compute height of menu
+	window based on the contents and not the table. Display the menu
+	successfully even if there is no room to split the window. 
+	(lyskom-keyboard-menu-highlight-selected): Recenter the menu
+	window if point is not visible.
+
 2002-06-28  Ulrik Haugen  <qha@lysator.liu.se>
 
         * doc/NEWS-0.47: Updated to this point in ChangeLog in preparation
