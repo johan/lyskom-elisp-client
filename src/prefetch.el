@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.2 1996-10-03 00:21:14 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.3 1996-10-05 20:58:21 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.2 1996-10-03 00:21:14 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.3 1996-10-05 20:58:21 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -463,12 +463,13 @@ Return t if an element was prefetched, otherwise return nil."
 			    queue))
    ((eq (car request) 'MAP)
     (initiate-get-map 'prefetch 'lyskom-prefetch-map-handler
-		      (conf-stat->conf-no (nth 1 request))
-		      (nth 2 request)
+		      (conf-stat->conf-no
+		       (nth 1 request))	; conf-stat
+		      (nth 2 request)	; first-local
 		      lyskom-fetch-map-nos
-		      (nth 1 request)
-		      (+ lyskom-fetch-map-nos (nth 2 request))
-		      (nth 3 request)
+		      (nth 1 request)	; conf-stat
+		      (nth 2 request)	; first-local
+		      (nth 3 request)	; membership
 		      queue))
    ((eq (car request) 'MARKS)
     (initiate-get-marks 'prefetch 'lyskom-prefetch-marks-handler queue))
@@ -558,15 +559,18 @@ Put the requests on QUEUE."
 (defun lyskom-prefetch-membership-handler (memberships pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
-  (let ((list (listify-vector memberships)))
+  (let ((size (length memberships))
+	(i 0))
     (lyskom-add-membership-to-membership memberships)
-    (while list
-      (if (lyskom-visible-membership (car list))
-	  (lyskom-prefetch-map (membership->conf-no (car list))
-			       (1+ (membership->last-text-read (car list)))
-			       (car list)
-			       queue))
-      (setq list (cdr list)))
+    (while (< i size)
+      (let ((membership (aref memberships i)))
+	(if (lyskom-visible-membership membership)
+	    (lyskom-prefetch-map (membership->conf-no membership)
+				 (1+ (membership->last-text-read
+				      membership))
+				 membership
+				 queue)))
+      (++ i))
     (if (and (numberp lyskom-membership-is-read)
 	     (< (length memberships) lyskom-fetch-membership-length))
 	(progn
