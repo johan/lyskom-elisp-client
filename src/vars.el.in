@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.83 1999-10-13 15:50:43 byers Exp $
+;;;;; $Id: vars.el.in,v 44.84 1999-10-13 22:32:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.83 1999-10-13 15:50:43 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.84 1999-10-13 22:32:32 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -88,15 +88,6 @@ Dont change these. These are defined by the protocol.")
 t means don't read any variables. A list means don't read variables that
 are in the list.")
 
-
-;;;;;; ================================================================
-;;;;;;                    Emacs dependant variables
-;;
-;;(def-kom-var kom-emacs-knows-iso-8859-1 t
-;;  "*If non-nil then dont convert texts and other things to swascii.
-;;This variable is not saved. It should be set in your .emacs
-;;
-;;This variable is not saved in the LysKOM server.")
 
 
 ;;;; ================================================================
@@ -358,10 +349,10 @@ If this variable is nil, texts with no recipient you are a member of
 will not be shown."
   server)
 
-(def-kom-var kom-who-buffer-size-when-displaying 10
-  "Size of window to display the who-buffer.
-This is used when executing the kom-display-who-buffer command."
-  server)
+;;(def-kom-var kom-who-buffer-size-when-displaying 10
+;;  "Size of window to display the who-buffer.
+;;This is used when executing the kom-display-who-buffer command."
+;;  server)
 
 (def-kom-var kom-read-depth-first t
   "*Non-nil means read comments and footnotes to a text before other texts."
@@ -376,7 +367,8 @@ position (generally the most recent prompt) will always be visible."
 ;; Should this be set to nil if baud-rate is low?
 (def-kom-var kom-deferred-printing t
   "*Non-nil means delay printing of some information not in the cache.
-You might want to turn this off to have the old, linear behaviour.")
+You might want to turn this off to have the old, linear behaviour."
+  server)
 
 (def-kom-var lyskom-defer-indicator "[...]"
   "String to display while LysKOM is waiting for the real string.")
@@ -606,7 +598,8 @@ sender    means the sender of the last message received."
 
 (def-kom-var lyskom-filter-outgoing-messages t
   "*t if outgoing remote-control messages and automatic replies are not
-to be displayed in the buffer.")
+to be displayed in the buffer."
+  server)
 
 
 (def-kom-var kom-friends nil
@@ -813,7 +806,7 @@ executing. "
 
 (def-kom-var kom-max-buffer-size nil
   "*If non-nil, ensure that buffers won't grow any larger than this"
-  local)
+  server)
 
 (def-kom-var lyskom-print-complex-dates t
   "If non-nil, print today and yesterday using a special format.")
@@ -1678,11 +1671,11 @@ the new prompt is printed. It is not run if the text has been marked as read
 in any conference other than the person's letterbox."
   server)
 
-(def-kom-var lyskom-who-info-has-changed-hook nil
-  "Hook to run every time the who-info-buffer has changed.
-The hook is run with current-buffer the lyskom buffer, not the 
-who-info-buffer."
-  server)
+;;(def-kom-var lyskom-who-info-has-changed-hook nil
+;;  "Hook to run every time the who-info-buffer has changed.
+;;The hook is run with current-buffer the lyskom buffer, not the 
+;;who-info-buffer."
+;;  server)
 
 (def-kom-var lyskom-personal-message-hook nil
   "*Hook to run when a personal message is received.

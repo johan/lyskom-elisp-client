@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.81 1999-10-13 15:50:34 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.82 1999-10-13 22:32:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.81 1999-10-13 15:50:34 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.82 1999-10-13 22:32:24 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -808,8 +808,7 @@ The position lyskom-last-viewed will always remain visible."
 Leaves the point at the end of the buffer if possible without
 scrolling past lyskom-last-viewed (generally the most recent prompt.)
 Leaves the point at the end of the window if not possible. If buffer
-is not on screen then doesn't move point.
-The text is converted according to the value of kom-emacs-knows-iso-8859-1."
+is not on screen then doesn't move point."
   (when (symbolp string) (setq string (lyskom-get-string string)))
   (let ((was-at-max (= (save-excursion (end-of-line) (point)) (point-max))))
     (save-excursion
@@ -826,9 +825,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
 
 
 (defun lyskom-insert-at-point (string)
-  "Insert STRING in the current buffer at point.
-The text is converted according to the value of
-kom-emacs-knows-iso-8859-1."
+  "Insert STRING in the current buffer at point."
   (let ((inhibit-read-only t))
     (lyskom-do-insert string))
   (lyskom-trim-buffer))  
