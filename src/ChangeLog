@@ -1,3 +1,8 @@
+2002-03-19  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* commands2.el (lyskom-construct-summary-format-string): Removed
+	unused local variable.
+
 2002-03-16  Joel Rosdahl  <joel@lysator.liu.se>
 
 	Changed language behaviour: Language is now a global setting, and
