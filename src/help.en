@@ -1,0 +1,549 @@
+<!-- -*-mode: xml-*- -->
+<help language="sv">
+  <section id="conferences" prompt="Conferences">
+
+    <h1>Conferences</h1>
+
+    <p>
+      Every LysKOM system is organized as a set of conferences, each
+      covering a separate topic. Anybody can create a conference, but
+      you should think twice before doing so. In a mature LysKOM
+      system the conference you want to create probably already
+      exists.
+    </p>
+
+    <p>
+      Conferences can be open, closed and secret. Anyone can join and
+      read texts in all open conferences. To join a closed conference,
+      the conference administractor has to grant membership. Secret
+      conferences are secret: you can't even see them unless you're a
+      member. Most conferences are open. Closed and secret conferences
+      are much less common.
+    </p>
+
+    <p>
+      The following commands might be useful to get started:
+    </p>
+
+    <inline id="kom-list-conferences" />
+    <inline id="kom-review-presentation" />
+    <inline id="kom-add-self" />
+    <inline id="kom-go-to-conf" />
+
+    <h2>Priorities</h2>
+
+    <p>
+      Your memberships have priorities. When you log on, conferences
+      with higher priority will be presented before conferences with
+      lower priority. Use <cref id="kom-prioritize" /> to change your
+      priorities.
+    </p>
+  </section>
+
+  <section id="persons" prompt="Persons">
+    <h1>Persons</h1>
+
+    <p>
+      Every LysKOM user has a person. A person contains some
+      statistics about what the user has done (texts created, texts
+      read, logon time, and some other stuff). Every person is also
+      associated with a letterbox with the same name of the person.
+      The letterbox is essentially a regular closed conference.
+    </p>
+  </section>
+
+  <section id="texts" prompt="Texts">
+    <h1>Texts</h1>
+
+    <p>
+      The purpose of LysKOM is to communicate, and communication is
+      done through texts. Texts are simply texts written by a LysKOM
+      member.
+    </p>
+
+    <h2>Recipients</h2>
+
+    <p>
+      Every text has one or more recipients: conferences to which the
+      text has been sent. There are three kinds of recipients: regular
+      recipients, cc-recipients and bcc-recipients.
+    </p>
+
+    <p>
+      <b>Regular recipients</b> are the most common. A regular
+      recipient means that the text belongs in the specified
+      conference (or conferences). Comments to the text will
+      automatically be sent to the same set of recipients.
+    </p>
+
+    <p>
+      <b>CC recipients</b> are used when you want to send a copy of a
+      text to a conference, but don't want followups sent to that
+      conference.
+    </p>
+
+    <p>
+      <b>BCC recipients</b> are fairly unusual. To even <i>see</i> a
+      BCC recipient you have to have permission to be a member in the
+      recipient conference. This kind of recipient can be used when
+      you want to send a copy of a text to somebody's letterbox, but
+      don't want other readers to know.
+    </p>
+
+    <h2>Comments</h2>
+
+    <p>
+      A text can have comments. A thread of comments to comments to
+      comments is often called comment thread, comment chain or
+      comment tree (strictly speaking a comment thread is a path down
+      the comment tree). Anyone can write comments to any text. There
+      is not requirement that comments be sent to the same conferences
+      as the commented texts.    </p>
+
+    <h2>Special texts</h2>
+
+    <p>
+      There are three kinds of special texts: presentations, FAQs and
+      notices. A presentation is a text associated with a conference
+      or letterbox, that contains a presentation of that conference or
+      person. These are normally sent to special conferences. A FAQ is
+      a text with frequently asked questions (and answers) in a
+      particular conference. Normally, new FAQs will be displayed when
+      entering the associated conference. Notices are texts that
+      contain urgent information about a person or conference. You can
+      use a notice when you will be away from LysKOM for a while, and
+      similar occasions.
+    </p>
+  </section>
+
+  <section id="settings" prompt="Settings">
+    <h1>Settings</h1>
+
+    <p>
+      The elisp client has a large number of user-configurable
+      settings. With a few exceptions you can change these by using
+      the command <cref id="kom-customize" />.
+    </p>
+
+    <p>
+      Settings can be saved in the server or in your .emacs. Settings
+      that are saved in the server will apply only for a particular
+      user on a particular server. Settings saved in .emacs take
+      precedence over settings stored in the server.
+    </p>
+  </section>
+
+  <section id="reading" prompt="Reading texts">
+    <h1>Reading texts</h1>
+
+    <p>
+      To just read texts in the default order, simply press SPC until
+      all texts have been displayed. The elisp client will display one
+      text at a time until you have read all texts in all conferences
+      you are a member of. Use the command <cref id="kom-list-summary"
+      /> to see which texts will be shown. There are a large number of
+      more advanced commands, some of which are listed in the sections
+      mentioned below.
+    </p>
+
+    <refer id="filter" />
+    <refer id="review" />
+    <refer id="mark" />
+  </section>
+
+  <section id="filter" prompt="Avoiding certain texts">
+    <h1>Avoiding certain texts</h1>
+
+    <p>
+      Sometimes you don't want to read certain texts. In those cases
+      the following commands may be useful. Besides these, there are a
+      number of commands for filtering texts, if there is a certain
+      type of text you never want to see.
+    </p>
+
+    <inline id="kom-set-unread" />
+    <inline id="kom-jump" />
+    <inline id="kom-super-jump" />
+  </section>
+
+  <section id="mark" prompt="Remembering texts">
+    <h1>Remembering texts</h1>
+
+    <p>
+      Sometimes you might find a text that you want to remember. In
+      these cases, mark the text. A mark is really just a number from
+      0 to 255, but the elisp client supports assigning
+      easy-to-remember names to marks.
+    </p>
+
+    <inline id="kom-mark-text" />
+    <inline id="kom-unmark-text" />
+    <inline id="kom-review-all-marked-texts" />
+    <inline id="kom-review-marked-texts" />
+    <inline id="kom-list-marks" />
+  </section>
+
+  <section id="review" prompt="Finding old texts">
+    <h1>Finding old texts</h1>
+
+    <p>
+      There are a large number of commands for finding old texts. All
+      of these start with the word "Review". This is just a small
+      sampling:
+    </p>
+
+    <inline id="kom-review-by-to" />
+    <inline id="kom-review-first" />
+    <inline id="kom-review-more" />
+    <inline id="kom-review-clear" />
+    <inline id="kom-view-commented-text" />
+    <inline id="kom-review-comments" />
+    <inline id="kom-find-root-review" />
+    <inline id="kom-find-root" />
+    <inline id="kom-review-tree" />
+  </section>
+
+  <section id="writing" prompt="Writing or changing texts">
+    <h1>Writing or changing texts</h1>
+
+    <p>
+      There are three basic types of texts: texts, comments and
+      footnotes. All of them are texts, but they are associated to
+      <i>other</i> texts in different ways.
+    </p>
+
+    <h2>Texts</h2>
+
+    <p>
+      These are texts that aren't comments to other texts. They start
+      a new thread of discussion. Remember to choose a good subject
+      line when you create new texts.
+    </p>
+
+    <inline id="kom-write-text" />
+    <inline id="kom-send-letter" />
+
+    <h2>Comments</h2>
+
+    <p>
+      Comments are texts that are comments to other texts. When you
+      write a comment, check that the subject line and recipients are
+      still suitable. Personal replies are simply comments sent to
+      somebody's letterbox.
+    </p>
+
+    <inline id="kom-write-comment" />
+    <inline id="kom-private-answer" />
+
+    <h2>Footnotes</h2>
+
+    <p>
+      Footnotes are special comments that only the author of a text
+      can create. Since they are presented before regular comments,
+      they are useful when you want to clarify something you've
+      written before people start writing comments to the text.
+    </p>
+
+    <inline id="kom-write-footnote" />
+
+    <h2>Prefix argument</h2>
+
+    <p>
+      There are several ways to specify which text you want to comment
+      or write a footnote to. When you give any of the comments listed
+      above without an argument, they will apply to the most recenty
+      read text.
+    </p>
+
+    <p>
+      Sometimes you want a different text. There are a few commands
+      that apply to the next-to-most-recently read (<cref
+      id="kom-comment-previous" />, <cref
+      id="kom-private-answer-previous" />), and by using prefix
+      arguments you can specify any text to any command. Supply a
+      prefix argument as usual in Emacs by C-u followed by the
+      argument, or simply type the argument directly.
+    </p>
+
+    <p>
+      Specify text <i>N</i> by giving the text number as the prefix
+      argument. Specify the text where the cursor is by giving prefix
+      argument 0. Specify the text <i>N</i> texts back in the buffer
+      from the point where the cursor is by giving the prefix argument
+      -<i>N</i>. To get a prompt at which you can type the text
+      number, simply hit C-u before giving the command.
+    </p>
+
+    <h2>Manage recipients</h2>
+
+    <p>
+      To change the recipients on a text you have to be the author of
+      the text or administrator of the recipient you want to change.
+      Use the commands <cref id="kom-add-recipient" /> to add and
+      <cref id="kom-sub-recipient" /> to remove recipients.
+    </p>
+
+    <h2>Messages and remarks</h2>
+
+    <p>
+      Never use messages (personal, group or alarm messages) or
+      remarks in place of regular texts. It won't work and people will
+      get upset.
+    </p>
+  </section>
+
+
+  <section id="kom-list-conferences" prompt="">
+    <h3><cref id="kom-list-conferences" /></h3>
+
+    <p>
+      List conferences in LysKOM. Use this command with creative
+      arguments to find conferences that you're interested in.
+    </p>
+  </section>
+
+  <section id="kom-list-re" prompt="">
+    <h3><cref id="kom-list-re" /></h3>
+
+    <p>
+      List conferences in LysKOM. Use this command with creative
+      arguments to find conferences that you're interested in.
+    </p>
+  </section>
+
+  <section id="kom-review-presentation" prompt="">
+    <h3><cref id="kom-review-presentation" /></h3>
+
+    <p>
+      Show the presentation for a conference or person. Use this
+      command to get more information about a conference.
+    </p>
+  </section>
+
+  <section id="kom-add-self" prompt="">
+    <h3><cref id="kom-add-self" /></h3>
+
+    <p>
+      Join a conference so you can read the texts in the conference
+      and so you'll find out when new texts are created.
+    </p>
+  </section>
+
+  <section id="kom-go-to-conf" prompt="">
+    <h3><cref id="kom-go-to-conf" /></h3>
+
+    <p>
+      Go to a conference you want to read texts in. If you aren't
+      already a member of the conference, you will be asked if you
+      want to join the conference.
+    </p>
+  </section>
+
+  <section id="kom-write-footnote" prompt="">
+    <h3><cref id="kom-write-footnote" /></h3>
+
+    <p>
+      Creates a new footnote to an existing text.
+    </p>
+  </section>
+
+  <section id="kom-private-answer" prompt="">
+    <h3><cref id="kom-private-answer" /></h3>
+
+    <p>
+      Creates a private reply to the author of an existing text.
+    </p>
+  </section>
+
+  <section id="kom-write-comment" prompt="">
+    <h3><cref id="kom-write-comment" /></h3>
+
+    <p>
+      Creates a new comment to an existing text.
+    </p>
+  </section>
+
+  <section id="kom-send-letter" prompt="">
+    <h3><cref id="kom-send-letter" /></h3>
+
+    <p>
+      Creates a new letter.
+    </p>
+  </section>
+
+  <section id="kom-write-text" prompt="">
+    <h3><cref id="kom-write-text" /></h3>
+
+    <p>
+      Creates a new text that is not a comment to any other text.
+    </p>
+  </section>
+
+  <section id="kom-review-tree" prompt="">
+    <h3><cref id="kom-review-tree" /></h3>
+
+    <p>
+      Reviews the entire tree of comments under the specified text.
+    </p>
+  </section>
+
+  <section id="kom-find-root" prompt="">
+    <h3><cref id="kom-find-root" /></h3>
+
+    <p>
+      Finds the text that started the discussion that the specified
+      text is part of.
+    </p>
+  </section>
+
+  <section id="kom-find-root-review" prompt="">
+    <h3><cref id="kom-find-root-review" /></h3>
+
+    <p>
+      Reviews the entire tree of comments that the specified text is
+      part of. Essentially the same as doing <cref id="kom-find-root"
+      /> followed by <cref id="kom-review-tree" />.
+    </p>
+  </section>
+
+  <section id="kom-review-comments" prompt="">
+    <h3><cref id="kom-review-comments" /></h3>
+
+    <p>
+      Reviews all comments to the specified text, but not the comments
+      to the comments.
+    </p>
+  </section>
+
+  <section id="kom-view-commented-text" prompt="">
+    <h3><cref id="kom-view-commented-text" /></h3>
+
+    <p>
+      Reviews the text to which the specified text is a comment.
+    </p>
+  </section>
+
+  <section id="kom-review-clear" prompt="">
+    <h3><cref id="kom-review-clear" /></h3>
+
+    <p>
+      Aborts all review commands that are active.
+    </p>
+  </section>
+
+  <section id="kom-review-more" prompt="">
+    <h3><cref id="kom-review-more" /></h3>
+
+    <p>
+      Reviews more texts using the same criteria as the most recent
+      <cref id="kom-review-by-to" />, or <cref id="kom-review-first"
+      /> command.
+    </p>
+  </section>
+
+  <section id="kom-review-first" prompt="">
+    <h3><cref id="kom-review-first" /></h3>
+
+    <p>
+      Reviews the first text(s) created by a particular person sent to
+      a particular conference. Any parameter can be ignored by simply
+      not supplying a value (use zero for the number of texts) in
+      order to do things like review all texts to a particular
+      conference, the first five texts written by a particular person
+      and so forth.
+    </p>
+  </section>
+
+  <section id="kom-review-by-to" prompt="">
+    <h3><cref id="kom-review-by-to" /></h3>
+
+    <p>
+      Reviews the text(s) most recently created by a particular person
+      sent to a particular conference. Any parameter can be ignored by
+      simply not supplying a value (use zero for the number of texts)
+      in order to do things like review all texts to a particular
+      conference, the last five texts written by a particular person
+      and so forth.
+    </p>
+  </section>
+
+  <section id="kom-list-marks" prompt="">
+    <h3><cref id="kom-list-marks" /></h3>
+
+    <p>
+      Lists all texts marked with a particular mark.
+    </p>
+  </section>
+
+  <section id="kom-review-marked-texts" prompt="">
+    <h3><cref id="kom-review-marked-texts" /></h3>
+
+    <p>
+      Reviews all texts marked with a particular mark.
+    </p>
+  </section>
+
+  <section id="kom-review-all-marked-texts" prompt="">
+    <h3><cref id="kom-review-all-marked-texts" /></h3>
+
+    <p>
+      Reviews all marked texts.
+    </p>
+  </section>
+
+  <section id="kom-unmark-text" prompt="">
+    <h3><cref id="kom-unmark-text" /></h3>
+
+    <p>
+      Removes your marks from a texts.
+    </p>
+  </section>
+
+  <section id="kom-mark-text" prompt="">
+    <h3><cref id="kom-mark-text" /></h3>
+
+    <p>
+      Marks a texts. Normally this command will ask for the mark to
+      use.
+    </p>
+  </section>
+
+  <section id="kom-super-jump" prompt="">
+    <h3><cref id="kom-super-jump" /></h3>
+
+    <p>
+      Creates a filter that will skip texts that have the same subject
+      line as the specified text and are sent to the current
+      conference.
+    </p>
+  </section>
+
+  <section id="kom-jump" prompt="">
+    <h3><cref id="kom-jump" /></h3>
+
+    <p>
+      Skips all texts in the comment tree below the most recently read
+      text. This is useful when you see a text that starts a
+      discussion that you aren't interested in.
+    </p>
+  </section>
+
+  <section id="kom-set-unread" prompt="">
+    <h3><cref id="kom-set-unread" /></h3>
+
+    <p>
+      Set the number of unread texts in a particular conference. Can
+      be useful when you have lots of old texts to catch up with.
+    </p>
+  </section>
+
+  <section id="kom-prioritize" prompt="">
+    <h3><cref id="kom-prioritize" /></h3>
+
+    <p>
+      Interactively change priorities and placements of your
+      memberships. For more information, press C-h m or ? when you
+      have given the command.
+    </p>
+  </section>
+</help>

@@ -1,5 +1,22 @@
+2002-05-27  David Byers  <david.byers@swipnet.se>
+
+	* help.en: New file.
+
+	* vars.el.in: Removed lyskom-help-categories.
+
+	* swedish-strings.el: Removed help strings.
+
+	* commands2.el: Removed old help-related-commands.
+
+	New help system:
+	* help.el (lyskom-help-format-h1): Updated newline handling
+	(lyskom-help-format-h2): Same
+	(lyskom-help-format-h3): Same
+	(lyskom-help-format-cref): No newline after reference.
+
 2002-05-26  David Byers  <david.byers@swipnet.se>
 
+	New help system:
 	* help-compile.el: New file.
 
 	* help.el: New file.

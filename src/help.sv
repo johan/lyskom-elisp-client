@@ -27,6 +27,7 @@
     </p>
 
     <inline id="kom-list-conferences" />
+    <inline id="kom-list-re" />
     <inline id="kom-review-presentation" />
     <inline id="kom-add-self" />
     <inline id="kom-go-to-conf" />
@@ -36,7 +37,7 @@
     <p>
       Dina medlemskap i möten har prioriteter. Möten med högre
       prioritet kommer att presenteras före möten med lägre prioritet
-      när du loggar in. Använd <cref="kom-prioritize" /> för att
+      när du loggar in. Använd <cref id="kom-prioritize" /> för att
       prioritera möten.
     </p>
   </section>
@@ -303,8 +304,19 @@
     <h3><cref id="kom-list-conferences" /></h3>
 
     <p>
-      Lista möten som finns i systemet. Använd dessa med fantasifulla
-      sökbegrepp för att hitta möten som du är intresserad av.
+      Lista möten som finns i systemet. Använd detta kommando med
+      fantasifulla sökbegrepp för att hitta möten som du är
+      intresserad av.
+    </p>
+  </section>
+
+  <section id="kom-list-re" prompt="">
+    <h3><cref id="kom-list-re" /></h3>
+
+    <p>
+      Lista möten som finns i systemet. Använd detta kommando med
+      fantasifulla sökbegrepp för att hitta möten som du är
+      intresserad av.
     </p>
   </section>
 
@@ -525,6 +537,16 @@
       Sätter antalet olästa i aktuellt möte. Kan vara bra om man har
       många gamla inlägg att läsa ikapp eller helt enkelt inte är
       intresserad av någonting i mötet. 
+    </p>
+  </section>
+
+  <section id="kom-prioritize" prompt="">
+    <h3><cref id="kom-prioritize" /></h3>
+
+    <p>
+      Ändra interaktivt prioriteter och placeringar på dina medlemskap
+      i olika möen. Tryck C-h m eller ? när du har gett kommandot för
+      mer information.
     </p>
   </section>
 </help>
