@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.5 1996-05-12 12:28:16 byers Exp $
+;;;;; $Id: english-strings.el,v 41.6 1996-05-20 16:28:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.5 1996-05-12 12:28:16 byers Exp $"))
+              "$Id: english-strings.el,v 41.6 1996-05-20 16:28:21 davidk Exp $"))
 
 
 
@@ -1120,6 +1120,9 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "na" 'kom-view-next-new-text)
   (define-key lyskom-mode-map "nc" 'kom-go-to-next-conf)
   (define-key lyskom-mode-map "nl" 'kom-next-kom)
+  (define-key lyskom-mode-map "nu" 'kom-next-unread-kom)
+  ;; What key should this be on?
+  ;;(define-key lyskom-mode-map "fl" 'kom-previous-kom)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
   (define-key lyskom-mode-map "R"  'kom-recover)

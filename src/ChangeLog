@@ -1,3 +1,17 @@
+Mon May 20 11:29:39 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el: En bunt ändringar från Bellman.
+	(lyskom-buffer-p): Ny funktion.
+	(lyskom-update-lyskom-buffer-list): Dito.
+	(kom-next-kom): Ny implementation.
+	(kom-previous-kom): Ny funktion.
+	(kom-next-unread-kom): Ny funktion
+
+	* vars.el.in (lyskom-buffer-list): Ny variabel.
+
+	* lyskom-rest.el (backward-text): La till ett anrop till
+ 	beginning-of-line för att det inte ska bli fel i gamla Emacsar.
+
 Thu May  9 11:50:39 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * commands1.el (kom-list-clients): Lade till en kommentar.
@@ -14,6 +28,13 @@ Thu May  9 11:50:39 1996  David Byers  <davby@sen2.ida.liu.se>
     allt.
 
 Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-status-conf): Uppskjut utskrifen av
+ 	medlemmarnas namn.
+
+	* macros.el (lyskom-blocking-do-multiple): Kolla process-status.
+
+	* services.el (blocking-do): Kolla process-status.
 
 	* deferred-insert.el (lyskom-deferred-insert-conf): Gissa om det
  	är en person på ett bättre sätt.
