@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 25
+Unused-Bug-Id: 26
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -471,6 +471,22 @@ Site: doceye.ivab.se
 Associated mails:
 	aronsson: <m0pJSZh-00000zC@doceye.ivab.se>
 	mittsvar: <199401102012.VAA05602@bodil>
+End mails.
+---
+
+Id: 25
+Summary: Hantering av KOM_TEMPFAIL skall fixas.
+Version: 0.38 saknas den i
+Created: linus: Fri Jan 14 03:33:53 1994
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 3
+Last edit: linus: Fri Jan 14 03:33:53 1994
+Reported by: ceder@lysator.liu.se (Per Cederqvist)
+Site: lysator.liu.se
+Associated mails:
+	ceders: <199401132316.AAA27662@dell.lysator.liu.se>
 End mails.
 ---
 
