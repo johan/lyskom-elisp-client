@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.79 2002-08-06 15:55:37 byers Exp $
+;;;;; $Id: startup.el,v 44.80 2002-08-12 20:41:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.79 2002-08-06 15:55:37 byers Exp $\n"))
+	      "$Id: startup.el,v 44.80 2002-08-12 20:41:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -676,6 +676,7 @@ This is called at login and after prioritize and set-unread."
 
   (condition-case nil
       (progn (lyskom-update-read-faqs)
+             (lyskom-clean-read-faqs lyskom-pers-no)
              (lyskom-update-rejected-recommendations)
              (lyskom-startup-check-faqs)
              (lyskom-startup-check-recommended-memberships))
