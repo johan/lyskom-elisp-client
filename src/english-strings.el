@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.13 1996-07-23 13:16:59 byers Exp $
+;;;;; $Id: english-strings.el,v 41.14 1996-07-25 06:53:12 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.13 1996-07-23 13:16:59 byers Exp $"))
+              "$Id: english-strings.el,v 41.14 1996-07-25 06:53:12 davidk Exp $"))
 
 
 
@@ -737,8 +737,8 @@ Send a bug report.\n")
 
     ; From lyskom-rest.el:
 
-    (mode-line-unread . " Unread")
-    (mode-line-letters . " letters")
+    (mode-line-unread . " Unread ")
+    (mode-line-letters . "letters ")
 
     (error-code . "Error code %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")

@@ -1,5 +1,16 @@
 Thu Jul 25 03:01:52 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* swedish-strings.el (lyskom-strings): Gjorde om mellanslagen runt
+ 	mode-line-unread och mode-line-letters.
+
+	* english-strings.el (lyskom-strings): Dito.
+
+	* lyskom-rest.el (lyskom-set-mode-line): Flyttade en parentes,
+ 	vilket helt plötsligt fick lyskom-sessions-with-unread att börja
+ 	fungera.
+
+	* commands1.el (lyskom-quit): Saknades ett -letters.
+
 	* review.el (kom-review-last-normally-read): Bytte reverse mot
  	nreverse.
 
