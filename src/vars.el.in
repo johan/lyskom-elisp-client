@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.56 1999-02-18 16:29:51 petli Exp $
+;;;;; $Id: vars.el.in,v 44.57 1999-02-19 10:54:54 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.56 1999-02-18 16:29:51 petli Exp $\n"))
+	      "$Id: vars.el.in,v 44.57 1999-02-19 10:54:54 petli Exp $\n"))
 
 (provide 'lyskom)
 
@@ -259,7 +259,7 @@ If the text is longer (in lines) then the threshold it will be
 truncated to `kom-truncate-show-lines' length."
   server)
 
-(def-kom-var kom-truncate-show-lines nil
+(def-kom-var kom-truncate-show-lines 10
   "*How many lines to show after truncating.
 If the text is truncated by `kom-truncate-threshold', show this many
 lines.  If this is greater than the threshold, the threshold will be
