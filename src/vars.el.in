@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.229 2003-01-12 22:30:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.230 2003-01-15 00:08:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.229 2003-01-12 22:30:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.230 2003-01-15 00:08:00 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1654,7 +1654,7 @@ Values other than a list of integers are reserved for future use."
 (def-kom-var kom-dont-check-commented-authors nil
   "**A list of recipients that don't need to see comments to their texts.
 
-When writing a comment, the client checks that the author of the
+When writing a comment, the client can check that the author of the
 commented text is a member of at least one of the recipients. If that
 is not the case, the user will be offered to add the author as a
 recipient.
@@ -1931,60 +1931,152 @@ are arguments to Lynx."
   server)
 
 (def-kom-var kom-confirm-multiple-recipients 'after
-  "*Non-nil means ask the user for confirmation about recipients.
-When the user writes a comment to a text with more than one recipient
-he gets a y-or-n-p question for all recipients. 'before means check
-before opening the edit buffer. Anything else means check before
-sending the article."
+  "**Non-`nil' means ask the user for confirmation about recipients.
+
+When the user writes a comment to a text with more than one recipient,
+ask for confirmation that all recipients are relevant, or one question
+for each recipient.
+
+If this variable is set to `before', ask once for each recipient
+before opening the edit buffer.
+
+If this variable is set to `after', ask once for all recipients after
+editing the text. This is the preferred value since it is difficult to
+judge the relevance of a recipient until the text has been written.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-check-for-new-comments t
-  "*Non-nil means check that no new comments have been written to a commented
-texts since the last check. A list means check in all conferences except
-those listed. A function means call the function and check if non-nil is
-returned. The function is called with the commented text's text-stat as
-an argument."
+  "**Controls check for new comments when writing comments.
+
+When posting a comment, the client can check if the text being
+commented has unread comments. This frequently happens when several
+people attempt to answer the same question at the same time.
+
+If this variable is set to `t' check for new comments before posting a
+comment. If there are new comments, ask for confirmation before
+posting.
+
+If this variable is `nil', dont' check.
+
+If this variable is set to a function name, call the function to see
+if check should be performed. The function is called with the
+commented text's text-stat as its sole argument. If it returns
+non-`nil', the check is performed.
+
+A list of conference numbers means perform the check for all
+conferences other than those listed.
+
+All other values are reserved for future use."
   server)
 
 (def-kom-var kom-check-commented-author-membership t
-  "*Non-nil means check that the authors of the commented texts are
-members of at least one of the recipient conferences. If not, offer to
-add them as recipients."
+  "**Controls check that authors of commented texts will see a new comment.
+
+When writing a comment, the client can check that the author of the
+commented text is a member of at least one of the recipients. If that
+is not the case, the user will be offered to add the author as a
+recipient.
+
+If this variable is set to `t', perform the check. If not, don't
+perform the check.
+
+See `kom-dont-check-commented-authors' for a way to exclude certain
+authors from this check.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-inhibit-typeahead nil
-  "*If non-nil, discard keyboard input that arrives while a LysKOM command is
-executing. "
+  "**Controls how command typed while the client is busy are handled.
+
+When this variable is set to `t', input that arrives while a command
+is running will be discarded before the next prompt is shown. When set
+to `nil', that input will be handled normally.
+
+If you find yourself accidentally executing commands, it may make
+sense to set this variable to `t'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-max-buffer-size nil
-  "*If non-nil, ensure that buffers won't grow any larger than this."
+  "**Controls the maximum size of the LysKOM buffer.
+
+When this variable is set to an integer, limit the size of the LysKOM
+buffer to that many characters. When set to `nil', don't limit the
+buffer size.
+
+Before anything is deleted, `lyskom-trim-buffer-hook' (note that this
+hook variable will probably be renamed in the future). Also see
+`kom-trim-buffer-minimum' for more information.
+
+Values other than `nil' and positive integers are reserved for future
+use."
   server)
 
+(def-kom-var kom-trim-buffer-minimum 4096
+  "**The amount of text to trim from the buffer when limiting its size.
+
+To avoid cutting tiny bits from the top of the buffer all the time,
+delete this many bytes (rounded to a whole line) from the buffer at a
+time.
+
+See `kom-max-buffer-size' for information on how to limit the buffer
+size.
+
+Values other than positive integers are reserved for future use."
+  server)
+
+
 (def-kom-var kom-print-relative-dates t
-  "*If non-nil, print today's and yesterday's date as \"today\" and
-\"yesterday\" (respectively) in some places instead of the default,
-numeric format."
+  "**Controls display of relative dates.
+
+When set to `t', print today's date as \"today\" and yesterday's as
+\"yesterday\" in most places. When set to `nil', print all dates using
+the default numeric format.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-print-seconds-in-time-strings nil
-  "*If non-nil, include seconds, minutes and hours when printing
-time in some places. If nil, only include minutes and hours."
+  "**Controls display of seconds in timestamps.
+
+When set to `t', display many timestamps with seconds. When set to
+`nil', only show hours and minutes.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-show-namedays nil
-  "*Non-nil means display namedays.
-If set to t, display namedays for the selected language (if there
-are any defined). If set to a symbol, display namedays from that
-list (list available lists with M-x lyskom-list-nameday-lists)."
+  "**Controls display of namedays.
+
+When this variable is set to a non-`nil' value,`kom-display-time' can
+display names of the day.
+
+If set to `t', show the namedays for the currently selected languag
+\(if there are any). If set to a symbol, that symbol should indicate a
+list of names (use `kom-list-nameday-lists' to see a list of all
+possible lists).
+
+All values other than those listed are reserved for future use."
   server)
 
 (def-kom-var kom-ssh-relay-host nil
-  "*Host to which the session is to be tunneled through ssh through.
-For this to work, ssh to the host must succeed without asking for a
-password or passphrase.
+  "**Controls relay of LysKOM sessions through ssh.
 
-Note: Storing this variable in the LysKOM server makes no sense.")
+It is possible to automatically tunnel LysKOM sessions through ssh.
+For this to work you need to have command-line ssh installed, and
+connecting to the remote host indicated by this variable must succeed
+without asking for a password or passphrase.
+
+This variable, when set to a string, enables tunneling ssh to the host
+indicated by the value of this variable.
+
+Note that storing this variable in the LysKOM server makes no sense.
+
+Values other than strings are reserved for future use.")
 
 (def-kom-var lyskom-ssh-proxy nil
   "When non-nil, the ssh proxy used for this buffer."
@@ -1992,38 +2084,48 @@ Note: Storing this variable in the LysKOM server makes no sense.")
   protected)
 
 (def-kom-var kom-www-proxy nil
-  "*Non-nil indicates a WWW proxy to use for the connection.
-This is useful behind a firewall if the proxy supports the CONNECT
-method. 
+  "**Controls use of an HTTP proxy for the LysKOM session.
 
-If this variable is a string, it is assumed to be a proxy
-specification for all LysKOM servers. If it is a list, it is assumed
-to be a list of pairs, (SERVER . PROXY), where SERVER is the server for
-which PROXY specification is to be used. The special value t
-can be used for SERVER to indicate a default proxy.
+When this variable is set to a string, it should be the host name of
+an HTTP proxy that supports the CONNECT method. All LysKOM sessions
+will be transparently tunneled through this proxy.
 
-A proxy specification has the form \"HOST:PORT\" where HOST is the
-host name of the proxy and PORT is the port to connect to. The :PORT
-part is optional. If it is not specified, port 80 is assumed.")
+When set to a list, each element must be a pair `(SERVER . PROXY)',
+where `SERVER' is a LysKOM server and `PROXY' is the proxy to use for
+that server (or `nil' to not use a proxy). The special value `t' for
+`SERVER' indicates the proxy to use for unlisted servers.
+
+The proxy string has the form `\"HOST:PORT\"', where `HOST' is the
+proxy host and `POSRT' is the port on which the proxy is running. The
+port part is optional. If it is not specified, port 80 is assumed.
+
+Values other than those described are reserved for future use.")
 
 (def-kom-var kom-www-proxy-headers
   "User-Agent: Mozilla/4.7C-CCK-MCD  [en] (X11; I; SunOS 5.6 sun4u)"
-  "*Headers to send to the proxy when connecting to LysKOM through a WWW
-proxy. The value of this variable should either be a single string, which
-is sent verbatim to the proxy, or a list of strings which will be sent to
-the proxy separated by CRLF, or a list of elements like (NAME H1 H2 ... Hn)
-where NAME is the name of a proxy and the remaining elements are headers
-to send when connecting through that proxy.
+  "**Extra HTTP headers to use when connecting through a Proxy.
 
-Do not use this variable for proxy authentication.")
+The value of this variable should either be a single string, which is
+sent verbatim to the proxy, or a list of strings which will be sent to
+the proxy separated by CRLF, or a list of elements like `(NAME H1 H2 ... Hn)'
+where `NAME' is the name of a proxy and the remaining elements are
+headers to send when connecting through that proxy.
 
+Do not use this variable for proxy authentication.
+
+Values other than those listed are reserved for future use.")
 
 
 (def-kom-var kom-server-aliases nil
-  "*An alist mapping server names to shorter identification strings.
-You can set this in init files before loading LysKOM.
+  "**An alist mapping server names to shorter identification strings.
 
-See `kom-builtin-server-aliases' for more information.")
+Each value in this string should be of the form `(NICKNAME . SERVER)',
+where `NICKNAME' is the short name for the server `SERVER'. You can
+set this in init files before loading LysKOM.
+
+See `kom-builtin-server-aliases' for more information.
+
+Values other than those described are reserved for future use.")
 
 (def-kom-var kom-builtin-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
@@ -2038,23 +2140,60 @@ See `kom-builtin-server-aliases' for more information.")
     ("community.roxen.com" . "Roxen Community KOM")
     ("kom.ds.hj.se" . "DSKOM")
     ("kom.sno.pp.se" . "SnoppKOM"))
-  "*An alist mapping server names to shorter identification strings
-If you want to add to this list, use `kom-server-aliases' instead.")
+  "**An alist mapping server names to shorter identification strings.
+
+Each value in this string should be of the form `(NICKNAME . SERVER)',
+where `NICKNAME' is the short name for the server `SERVER'. Avoid
+setting this variable since that will override the list compiled into
+the client. Use `kom-server-aliases' instead.
+
+Values other than those described are reserved for future use.")
 
 (def-kom-var kom-ansaphone-on nil
-  "t if automatic replies to personal messages are in effect."
+  "*Controls automatic replies to personal messages.
+
+When set to `t', send automatically send replies to personal messages.
+See `kom-ansaphone-replies' and `kom-ansaphone-default-reply' for ways
+to configure the replies to send.
+
+When set to `nil', don't send automatic replies.
+
+This can be set temporarily with `kom-toggle-auto-reply'. The reply
+message can be changed temporarily with `kom-change-auto-reply'.
+
+Values other than `t' and `nil' are reserved for future use."
   local)
 
 (def-kom-var kom-silent-ansaphone nil
-  "*Non-nil if messages should not cause beeps when the ansaphone is on."
+  "**Controls beeps when automatic replies are enabled.
+
+When set to `t', don't beep or otherwise signal receipt of personal
+messages while automatic replies are enabled (see `kom-ansaphone-on').
+When set to `nil', signal receipt of personal messages as usual.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-ansaphone-record-messages t
-  "*t if messages are recorded while the ansaphone is on."
+  "**Controls recording of personal messages while automatic replies are on.
+
+When set to `t', record personal messages that are received while
+automatic replies are on. Recorded messages can be listed with
+`kom-list-messages' and erased with `kom-erase-messages'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-ansaphone-show-messages t
-  "*t if messages are to be shown when they are recorded."
+  "**Controls display or personal messages while automatic replies are on.
+
+When set to `t', personal messages received while automatic replies
+are enabled will be shown as usual. When set to `nil' the will not be
+shown. Note that if this variable is set to `nil' and
+`kom-ansaphone-record-messages' is also set to `nil', messages are
+simply discarded.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 
@@ -2068,58 +2207,109 @@ The most recent message is the first message in the list."
   local)
 
 (def-kom-var kom-remote-control t
-  "*t if LysKOM may be remotely controlled."
+  "**Enables and disable remote control.
+
+When this is set to `t', it will be possible to control the client
+from other sessions using `kom-remote-autoreply',
+`kom-remote-list-messages', `kom-remote-set-message',
+`kom-remote-erase-messages' and `kom-remote-quit' (and possibly others
+in the future). When set to `nil', remote control is disabled.
+
+See `kom-remote-controllers' and `kom-self-control' for ways to
+control access through remote control.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-remote-controllers nil 
-  "*Persons who may control LysKOM using messages. By default you can
-always control your own sessions. See kom-self-control for more
-information."
+  "**List of people who may use remote control.
+
+This should be `nil' or a list of person numbers. The persons listed
+may control the session using remote control commands (see
+`kom-remote-control' for more information).
+
+See `kom-self-control' for another variable that affects remote
+control.
+
+Values other than `nil' and a list of persons are reserved for future
+use."
   server)
 
 (def-kom-var kom-self-control t
-  "*If non-nil, remote control commands are accepted from sessions logged
-in as the same user as the current session."
+  "**Enable or disable remote control for the logged-in user.
+
+When set to `t', the user who is currently logged in may control the
+session remotely from sessions that where the same user is logged in.
+When set to `nil', only permit users listed in
+`kom-remote-controllers'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-ansaphone-replies
   '((group nil nil nil nil)
     (common nil nil nil nil))
-  "*List of automatic replies to various messages.
+  "**List of automatic replies to various messages.
 
-A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
-    MESSAGE-TYPE is one of 'personal, 'group or 'common or nil
-    SENDER is a list of integers or a single integer or nil
-    RECIPIENT is a list of integers or a single integer or nil
-    TEXT is a regular expression or nil
-    REPLY is a string or nil
+This variable determines non-default automatic replies to personal
+messages. Automatic replies are only send when `kom-ansaphone-on' is
+set to `t'.
 
-When an incoming message arrives and the auto-reply facility is on,
-this list is checked for automatic replies. The message type, sender,
-recipient and text of the incoming messages is matched against the 
-elements of this list. If a match is found, the corresponding reply is
-send. A nil in one of the message-type, sender, recipient or text
-components in the list is taken to mean a wildcard. A null reply means
-don't send a reply.
+The value of this variable is a list of rules. Each rule is a list
+with five elements: `MESSAGE-TYPE', `SENDER', `RECIPIENT', `TEXT', and
+`REPLY'. Incoming messages are compared against these rules in order.
+A message matches a rule if it matches all non-`nil' elements of the
+rule.
 
-If none of the elements match, kom-ansaphone-default-reply is sent."
+If `MESSAGE-TYPE' is non-`nil', match against the message type. Valid
+values are `personal', `group' and `common' (for alarm messages).
+
+If `SENDER' is non-`nil', match against the message sender. The value
+is either an integer (a person number) or a list of person numbers. A
+message matches if its sender is any of the listed persons.
+
+If `RECIPIENT' is non-`nil', match against the message recipient. The
+value is either an integer (a conference number) or a list of
+conference numbers. A message matches if its recipient is any of the
+listed conferences.
+
+If `TEXT' is non-`nil', match against the message text. The value is
+a regular expression. A message matches if it contains a match for the
+regular expression.
+
+If all non-`nil' components of a rule match, rule processing is
+terminated. If `REPLY' is a string, send that string as the reply. If
+`REPLY' is `nil', don't send a reply.
+
+If all rules are processed without finding a match, the value of
+`kom-ansaphone-default-reply' is sent.
+
+The default value for this variable disables automatic replies to all
+group and alarm messages."
   server)
 
 (def-kom-var kom-agree-text nil
-  "*If non-nil, the default text to use when agreeing with a text.
-This variable can be a string, function or list. If a string, the
-string is used as the message. If a function, the function is called
-and the return value is used. If a list, one of the elements is selected
-at random and used. This element may be a string, function or list."
+  "**Determines the text used in `kom-agree'.
+
+When non-`nil', this is the default text for `kom-agree'. The value
+may be a string, which is used verbatim as the default text; a
+function, which is called and should return a text to use; or a list
+whose elements must be strings, functions or lists, and from which an
+element will be chosen at random and used in the same manner as
+`kom-agree-text' itself.
+
+Values other than those described are reserved for future use."
   server)
 
 (def-kom-var kom-default-language nil
-  "*Which language to use for messages in new sessions.
-The value is a symbol whose name is the ISO 630 code for the desired
-language (e.g. sv for Swedish and en for English). Not that the languages
-available depend on how you have built the client.
+  "**The default language for LysKOM.
 
-All choices are listed in `lyskom-languages'"
+When set to non-`nil', this variable should be set to a symbol
+indicating the default language for LysKOM. The symbol name must be
+the ISO 630 code for the desired language (e.g. `sv' for Swedish and
+`en' for English). Available languages depend on how LysKOM was built.
+
+All valid choices are listed in `lyskom-languages'."
   server 
   inherited
   protected)
@@ -2149,11 +2339,6 @@ All choices are listed in `lyskom-languages'"
   "Possible command completions."
   local
   minibuffer)
-
-(def-kom-var kom-trim-buffer-minimum 4096
-  "*This number of bytes rounded to a whole line is the amount of text trimmed
-each time ." 
-  server)
 
 
 ;;; =================================================================
@@ -2225,11 +2410,24 @@ preferred name of the month."
   language-force)
 
 (def-kom-var kom-ansaphone-default-reply nil
-  "*Default message to send when the ansaphone is on."
+  "**Default message to send when automatic replies are on.
+
+The value of this variable must be a string or `nil'. When set to
+`nil', no automatic replies are generated. See `kom-ansaphone-replies'
+for a more flexible way of specifying automatic replies.
+
+Values other than strings ans `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-ispell-dictionary nil
-  "*Dictionary to use for spell checking."
+  "**Dictionary to use for spell checking.
+
+When spell checking is used when writing texts, this variable can be
+used to specify an alternate dictionary. When set to `nil', use the
+default dictionary. When set, it should be set to a string indicating
+the alternate dictionary (see `ispell-dictionary').
+
+Values other than `nil' and strings are reserved for future use."
   server
   inherited)
 
@@ -2414,29 +2612,101 @@ Also see the function \"lyskom-add-button-action\"."
   inherited)
 
 (def-kom-var kom-show-imported-envelope-sender t
-  "*If non-nil, show the envelope sender of texts imported by komimportmail."
+  "**Controls display of envelope sender of imported e-mails.
+
+When set to `t', dispaly the envelope sender of imported e-mails (if
+the importer has recorded such information).
+
+`kom-show-imported-envelope-sender' set to `t':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Sent by: root@meat.spareribs.com
+  Imported: today 00:07 by Mailman
+  External recipient: BBQ <531@kom.meat.com>
+
+`kom-show-imported-envelope-sender' set to `nil':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Imported: today 00:07 by Mailman
+  External recipient: BBQ <531@kom.meat.com>
+
+Other variables that control display of imported e-mail include
+`kom-show-imported-importer' and
+`kom-show-imported-external-recipients'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-show-imported-importer t
-  "*If non-nil, show the name of the importer of an imported text."
+  "**Controls display of the importer name in imported mail.
+
+When set to `t', display information about what imported the e-mail
+\(if the importer has recorded such information). When set to `nil',
+don't.
+
+`kom-show-imported-importer' set to `t':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Imported: today 00:07 by Mailman
+  External recipient: BBQ <531@kom.meat.com>
+
+`kom-show-imported-importer' set to `nil':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  External recipient: BBQ <531@kom.meat.com>
+
+Other variables that control display of imported e-mail include
+`kom-show-imported-importer' and
+`kom-show-imported-external-recipients'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-show-imported-external-recipients t
-  "*If non-nil, show the external recipients to an imported text."
+  "**Controls display of external recipients of imported e-mail.
+
+When set to `t', display all external recipients of each imported
+e-mail (the to and cc headers). When set to `nil', don't display these
+headers.
+
+`kom-show-imported-external-recipients' set to `t':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Imported: today 00:07 by Mailman
+  External recipient: BBQ <531@kom.meat.com>
+  External recipient: \"Mac the Hack\" <mac.hack@steak.meat.com>
+
+`kom-show-imported-external-recipients' set to `nil':
+
+  2912231 today 10:07 +0100 /41 lines/  Super-User <root@spareribs.meat.com>
+  Imported: today 00:07 by Mailman
+
+Other variables that control display of imported e-mail include
+`kom-show-imported-importer' and
+`kom-show-imported-external-recipients'.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-complete-numbers-before-names t
-  "*If non-nil, reading conference and user names accepts the special 
-forms ``m 4711'' or ``p 42'' as numeric references to conference 4711
-and person 42 instead of trying to look for an object with a matching
-name. If nil, any name matching the input will be preferred to a
-numeric reference."
+  "**Controls completion of numeric person and conference names.
+
+When set to `t', reading conference and user names accepts the special
+forms \"m 4711\" or \"p 42\" as numeric references to conference 4711 and
+person 42 instead of trying to look for an object with a matching
+name. If `nil', any name matching the input will be preferred to a
+numeric reference.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 
 (def-kom-var kom-mercial nil
-  "*When the user has seen all texts and has reached the view-time prompt,
-this string is used as the argument to lyskom-tell-server.
+  "**What you are doing when you're done reading.
+
+The value of this variable should be a string. This string is sent to
+the server as the user's current activity when everything is read.
+
 Users are encouraged to use their best sense of humor."
   server)
 
@@ -2830,22 +3100,32 @@ different packets.")
   local)
 
 (def-kom-var kom-default-session-priority 1
-  "*The default session priority.
-Only texts in conferences with a priority equal to or higher than this
-will be shown by default.
+  "**The default session priority.
 
-To set the session priority in a running session, set the variable
-lyskom-session-priority instead. The value of this variable is used
-to initialize lyskom-session-priority when a new session is started."
+Tha value of this variable must be an integer. Only texts in
+conferences with a priority equal to or higher than this will be shown
+by default.
+
+To set the session priority in a running session, use
+`kom-set-session-priority'. Setting this value directly will have no
+effect on the actual session priority.
+
+Non-integer values are reserved for future use."
   local
   server)
 
 (def-kom-var kom-server-priority -1
-  "*The default server priority.
-When kom-server-priority-breaks is set, this priority is used to decide
-when to go to a prioritized session. For a session to be prioritized its
-priority must be higher than the current session's kom-server-priority 
-and higher than the priority of whatever is currently being read."
+  "**The default server priority.
+
+The value of this variable must be an integer.
+
+When `kom-server-priority-breaks' is set to a non-`nil' value, this
+priority is used to decide when to go to a prioritized session. For a
+session to be prioritized its priority must be higher than the current
+session's `kom-server-priority' and higher than the priority of
+whatever conference is currently being read.
+
+Non-integer values are reserved for future use."
   server)
 
 
@@ -3087,7 +3367,10 @@ set to that text."
   local)
 
 (def-kom-var kom-saved-file-name (concat default-directory "kom-text")
-  "*The default file name when saving a LysKOM text."
+  "**The default filename when saving a LysKOM text.
+
+This file name is used by `kom-save-text' as the default filename
+until a new filename has been chosen."
   server)
 
 (def-kom-var lyskom-saved-file-name nil
@@ -3098,11 +3381,20 @@ set to that text."
   "*Hook to run when lyskom-mode is entered.")
 
 (def-kom-var kom-quit-hook nil
-  "*Hook to run when the LysKOM session is correctly ended."
+  "*Hook to run when the LysKOM session is ended.
+
+This hook is only run when the session ends by using `kom-quit' or
+`kom-remote-quit'. The hook is not run is the session is forecfully
+terminated."
   server-hook)
 
 (def-kom-var kom-quit-when-idle t
-  "Non-nil to automatically quit when LysKOM is full and the session is idle")
+  "Controls automatic quitting when LysKOM is full.
+
+When set to `t', automatically end the session when LysKOM is full and
+the session has been idle for a predetermined amount of time.
+
+This is currently not implemented.")
 
 (def-kom-var kom-permanent-filter-list nil
   "List of patterns to filter permanently."
@@ -3140,10 +3432,11 @@ set to that text."
   inherited)
 
 (def-kom-var kom-text-no-prompts nil
-  "*Configure which commands ask for text numbers.
-A list containing pairs of (COMMAND . VALUE). If VALUE is non-nil, COMMAND
-will prompt for text numbers. If VALUE is nil, COMMAND will use a suitable
-default value."
+  "**Determines which commands ask for text numbers.
+
+The value of this variable must be a list containing pairs of 
+`(COMMAND . VALUE)'. If `VALUE' is `t', `COMMAND' will prompt for text
+numbers. If `VALUE' is nil, `COMMAND' will use a suitable default value."
   server
   inherited)
 
@@ -3153,20 +3446,25 @@ default value."
   local)
 
 (def-kom-var kom-create-text-hook nil
-  "*Hook to run before creating a new text.
+  "**Hook to run before creating a new text.
 This hook is run just before the server call to create the text is made.
 
 The hook is currently called with the following arguments:
-MESSAGE         The message text
-MISC-LIST       The misc-info list
-AUX-LIST        The aux-item list
-BUFFER          The edit buffer
-IS-ANONYMOUS    Non-nil if the user is currently anonymous.
-&rest RESERVED  Additional arguments may be added in the future.
+
+  Argument          Contents
+  `MESSAGE'         The message text
+  `MISC-LIST'       The misc-info list
+  `AUX-LIST'        The aux-item list
+  `BUFFER'          The edit buffer
+  `IS-ANONYMOUS'    Non-nil if the user is currently anonymous.
+
+Additional arguments may be added in the future, so include 
+`&rest reserved' as the last element of the parameter list.
 
 The hook can change the message by modifying the variable
-full-message, the misc-info list by modifying misc-list and the
-aux-item list by modifying aux-list. This is not encouraged."
+`full-message', the misc-info list by modifying `misc-list' and the
+aux-item list by modifying `aux-list'. This is not encouraged and may
+break in the future."
   local-hook)
 
 (def-kom-var lyskom-create-text-hook nil
@@ -3175,10 +3473,11 @@ aux-item list by modifying aux-list. This is not encouraged."
 
 
 (def-kom-var kom-new-text-hook nil
-  "*Hook to run when a new text is created.
-This hook is run after the prompt is removed if it shall be changed but before
-the text \"Text 4711 är skapad!\" is printed in the message area. And before the
-new prompt is printed."
+  "**Hook to run when a new text is created.
+
+This hook is run after the prompt is removed if it shall be changed
+but before the text \"Text 4711 created\" is printed in the message
+area and before the new prompt is printed."
   local-hook)
 
 (def-kom-var lyskom-new-text-hook nil
@@ -3186,7 +3485,8 @@ new prompt is printed."
   local-hook)
 
 (def-kom-var kom-deleted-text-hook nil
-  "*Hook to run when a text is deleted.
+  "**Hook to run when a text is deleted.
+
 This hook is run after the prompt is removed if it shall be changed but 
 before the new prompt is printed."
   local-hook)
@@ -3196,10 +3496,12 @@ before the new prompt is printed."
   local-hook)
 
 (def-kom-var kom-new-recipient-hook nil
-  "*Hook to run when a text receives a new recipient.
-This hook is run after the prompt is removed if it shall be changed but before
-the new prompt is printed. It is not run if the text has been marked as read
-in any conference other than the person's letterbox."
+  "**Hook to run when a text receives a new recipient.
+
+This hook is run after the prompt is removed if it shall be changed
+but before the new prompt is printed. It may not run if the text has
+been marked as read in any conference other than the person's
+letterbox."
   local-hook)
 
 (def-kom-var lyskom-new-recipient-hook nil
@@ -3208,10 +3510,11 @@ in any conference other than the person's letterbox."
 
 (def-kom-var kom-personal-message-hook nil
   "*Hook to run when a personal message is received.
-When the hook is run, 'sender' is bound to the conf-stat of the sender
-of the message (or possibly nil), 'recipient' is 0 if the message is a
-public message and otherwise the conf-stat of the recipient, and
-'message' is a string that holds the message."
+
+When the hook is run, `sender' is bound to the conf-stat of the sender
+of the message (or possibly `nil'), `recipient' is 0 if the message is
+an alarm message and otherwise the conf-stat of the recipient, and
+`message' is a string that holds the message."
   local-hook)
 
 (def-kom-var lyskom-personal-message-hook nil
@@ -3236,11 +3539,6 @@ Most commands can't be interrupted by another command."
   "Sometimes set to the phase of the current high-level function being
 executed."
   local)
-
-(def-kom-var kom-low-priority -1
-  "*Priority that the current conference is set to when
-aborted. nil means don't alter priority. (This means that
-kom-go-to-next-conf might go to the same conference again.)")
 
 (def-kom-var lyskom-membership-is-read nil
   "t when the membership has been read."
@@ -3354,14 +3652,25 @@ See lyskom-compute-char-classes."
   "If non-nil allow texts without subjects.")
 
 (def-kom-var kom-w3-simplify-body t
-  "*Strip color information from body tag."
+  "**Control stripping of color information from HTML.
+
+When this variable is set to `t', strip color information from body
+tags in HTML passed to w3. This is generally a good idea. When `nil',
+don't strip color information from body tags. This is generally a bad
+idea.
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-format-html-authors '((t . t))
-  "*Controls from which authors we accept HTML.
-Each element of this list is a cons cell (PERS . VAL), where PERS is
-a person number and VAL is t or nil. If VAL is t, then we format HTML
-written by PERS. Otherwise not."
+  "**Determines from which authors we accept HTML.
+
+Each element of this list is a pair `(PERS . VAL)', where `PERS' is a
+person number and `VAL' is `t' or `nil'. If `VAL' is `t', then format
+HTML written by `PERS'. If `VAL' is `nil', don't. The special value
+`t' for `PERS' determines the default.
+
+Values other than those listed are reserved for future use." 
   server)
 
 (def-kom-var lyskom-format-special 
@@ -3451,13 +3760,15 @@ should be dynamically bound whenever it needs to be used.")
 ;;; present.
 
 (defvar kom-tell-phrases nil
-  "*A list of phrases describing what the client is doing. Each element in
-the list is a pair \(KEY . PHRASE\) where KEY is one of the keywords in
-lykom-tell-phrases-validation-keyword-list and PHRASE is the phrase to
-sent to the server then the client is doing what KEY describes.
+  "**A list of phrases describing what the client is doing. 
 
-If the value of this variable is nil, suitable defaults for the currently
-selected language will be selected.")
+Each element in the list is a pair `\(KEY . PHRASE\)' where KEY is one
+of the keywords in `lykom-tell-phrases-validation-keyword-list' and
+`PHRASE' is the phrase to sent to the server then the client is doing
+what `KEY' describes.
+
+If the value of this variable is `nil', suitable defaults for the
+currently selected language will be selected.")
 
 (defconst lyskom-tell-phrases-validation-keyword-list
   '(
@@ -3566,23 +3877,32 @@ the value of  kom-tell-phrases for fun.")
 
 
 (defvar kom-default-server nil
-  "*Setting this variable does nothing. See lyskom-default-server instead.")
+  "**Setting this variable does nothing. See `lyskom-default-server' instead.")
 
 (def-kom-var lyskom-default-server "kom.lysator.liu.se"
-  "*Default LysKOM server.")
+  "**Default LysKOM server.
+
+The value of this variable must be a string or `nil'. Instead of
+setting this variable you may set the environment variable `KOMSERVER'.") 
 
 (defvar kom-default-user-name nil
-  "*Setting this variable does nothing. See lyskom-default-user-name instead.")
+  "**Setting this variable does nothing. See `lyskom-default-user-name' instead.")
 
 (def-kom-var lyskom-default-user-name nil
-  "*Default LysKOM user name."
+  "**Default LysKOM user name.
+
+The value of this variable must be a string or `nil'. Instead of
+setting this variable you may set the environment variable `KOMNAME'." 
   local)
 
 (defvar kom-default-password nil
-  "*Setting this variable does nothing. See lyskom-default-password instead.")
+  "**Setting this variable does nothing. See `lyskom-default-password' instead.")
 
 (def-kom-var lyskom-default-password nil
-  "Default LysKOM password."
+  "Default LysKOM password.
+
+The value of this variable must be a string or `nil'. There may be an
+environment variable for this, but it shouldn't be used if there is."
   local)
 
 (def-kom-var mode-line-conf-name nil
