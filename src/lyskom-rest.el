@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.108 2000-07-30 14:28:05 jhs Exp $
+;;;;; $Id: lyskom-rest.el,v 44.109 2000-08-11 09:43:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.108 2000-07-30 14:28:05 jhs Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.109 2000-08-11 09:43:42 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -140,6 +140,10 @@
 			  (lyskom-get-error-text lyskom-errno)
 			  lyskom-errno))
   answer)
+
+(defun lyskom-current-error ()
+  "Return a string describing the current error"
+  (lyskom-format 'error-code (lyskom-get-error-text lyskom-errno) lyskom-errno))
 
 
 ;;; ----------------------------------------------------------------
@@ -1397,6 +1401,11 @@ Note that it is not allowed to use deferred insertions in the text."
                                                      (conf-stat->name arg)))
                 (conf-stat->name arg)))
 
+             ;; Argument is a conf-z-info
+             ((lyskom-conf-z-info-p arg)
+              (conf-z-info->name arg))
+
+
              ;; We have an uconf-stat
              ((lyskom-uconf-stat-p arg)
               (uconf-stat->name arg))
@@ -1424,6 +1433,8 @@ Note that it is not allowed to use deferred insertions in the text."
       (setq result
             (cond ((integerp arg) 
 		   (int-to-string arg))
+                  ((lyskom-conf-z-info-p arg)
+                   (int-to-string (conf-z-info->conf-no arg)))
                   ((lyskom-conf-stat-p arg) 
                    (int-to-string (conf-stat->conf-no arg)))
                   ((lyskom-uconf-stat-p arg)

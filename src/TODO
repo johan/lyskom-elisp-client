@@ -271,11 +271,6 @@ j-or-n-p.
 
 ** OSORTERADE
 
-    lyskom-get-texts-to är buggig. Om man återser senaste N av vem som
-    helst till ett möte och det inte finns N texter så buggar den ur. 
-    Den borde klippa till max texter i mötet.
-    FIX BY: 0.46
-
     ispell-hooken rättar ärendet i bufferten men det blir inte rättat
     i den inskickade versionen av inlägget. Kanske.
     FIX BY: 0.46

@@ -1,5 +1,33 @@
 2000-08-10  David Byers  <davby@ida.liu.se>
 
+	* commands1.el (kom-list-created-conferences): New function.
+	(lyskom-list-created-conferences-2): New function.
+
+	Kill da bottlenecks:
+	* parse.el (lyskom-parse-raw-string): Get rid of call to
+	lyskom-string-to-parse.
+
+	Improve list names:
+	* commands1.el (kom-list-conferences): Use lookup-z-name instead
+	of lookup-name.
+	(lyskom-list-conf-print): Show passive memberships as "-" in the
+	result list. Use conf-z-infos instead of conf-nos. Better error
+	messages.
+	(kom-list-re): Send conf-z-infos to lyskom-format to speed things
+	up a bit. Better error messages.
+	(kom-list-persons): Use lookup-z-name instead of lookup-name.
+	Better error messages.
+	(lyskom-list-pers-print): Use conf-z-infos instead of conf-nos to
+	speed things up a bit. 
+
+	* lyskom-rest.el (lyskom-format-aux-help): Allow conf-z-info as
+	argument to lyskom-format letters M, P, m, p.
+	(lyskom-current-error): New function.
+	
+	Cleanup of easy TODO items:
+	* aux-items.el (lyskom-print-creating-software): Print creating
+	software when current command is kom-review-noconversion.
+
 	Fix review many to conferences with few texts:
 	* review.el (lyskom-get-letters-to): Protect nthcdr from negative
 	arguments. 
