@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 38.0 1994-01-06 01:56:32 linus Exp $
+;;;;; $Id: cache.el,v 38.1 1995-10-23 11:55:15 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 38.0 1994-01-06 01:56:32 linus Exp $\n"))
+	      "$Id: cache.el,v 38.1 1995-10-23 11:55:15 byers Exp $\n"))
 
 
 
@@ -185,13 +185,16 @@ otherwise return nil"
 ;;;                         who-info cache
 
 
-(defun cache-initiate-who-info-buffer (who-info-arr)
+(defun cache-initiate-who-info-buffer (who-info-arr kombuf)
   "Sets the cache of who-info items."
   (setq lyskom-who-info-cache (list 'WHO-INFO-LIST))
   (lyskom-save-excursion
    (setq lyskom-who-info-buffer 
 	 (get-buffer-create (concat (buffer-name) "-who")))
    (set-buffer lyskom-who-info-buffer)
+   (make-local-variable 'kom-buffer)
+   (setq kom-buffer kombuf)
+   (local-set-key [mouse-2] 'kom-mouse-2)
    (erase-buffer))
   (mapcar 'cache-add-who-info
 	  (sort (lyskom-array-to-list who-info-arr)
@@ -275,10 +278,7 @@ ARG: session-info"
 	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
 				  (function
 				   (lambda (string)
-				     (insert
-				      (if kom-emacs-knows-iso-8859-1
-					  string
-					(iso-8859-1-to-swascii string))))))
+				     (insert string))))
 	   (setq max (point-max-marker))
 	   (goto-char (point-max)))
 	 (delete-char 1))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.1 1995-03-01 17:55:51 byers Exp $
+;;;;; $Id: filter.el,v 38.2 1995-10-23 11:55:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -44,16 +44,25 @@
         (t (cons (copy-tree (car l))
                  (copy-tree (cdr l))))))
 
+(defun functionp (fn)
+  "Return t if fn is callable"
+  (or (compiled-function-p fn)
+      (and (listp fn)
+           (eq 'lambda (car fn)))
+      (and (symbolp fn)
+           (symbol-function fn))))
+
 ;;;============================================================
 ;;;
 ;;; Filter pattern accessors
 ;;;
 ;;; Filters are lists with the following structure
 ;;;
-;;;   (filter [ PATTERNS ATTRIBUTES])
+;;;   (filter [ PATTERNS ATTRIBUTES FUNCTION])
 ;;;
 ;;; Where PATTERNS is a list of filter patterns and ATTRIBUTES is
-;;; an association list.
+;;; an association list. FUNCTION is a lisp function implementing
+;;; the filter.
 ;;;
 ;;; The following attributes are reserved
 ;;;
@@ -65,7 +74,8 @@
 (defun make-filter (&optional p a)
   "Creates and returns a filter structure.
 Optional P and A initialize pattern and attributes, respectively."
-  (list 'filter (vector p a)))
+  (list 'filter (vector p a
+			(lyskom-create-compile-filter-function p))))
 
 (defun copy-filter (f)
   "Create a copy of the filter F"
@@ -106,6 +116,15 @@ Returns nil if no such attribute is present."
       (set-filter->attribute-list f
        (cons (cons a v) (filter->attribute-list f))))))
 
+(defun filter->function (f)
+  "Get the function for filter F"
+  (elt (elt f 1) 2))
+
+(defun set-filter->function (f fn)
+  "Set the function for filter F to FN"
+  (aset (elt f 1) 2 fn))
+
+
 ;;;============================================================
 ;;;
 ;;;
@@ -124,7 +143,7 @@ Returns nil if no such attribute is present."
       ;;
       (while (eq lyskom-filter-hack 'invalid-value)
         (accept-process-output))
-      (filter->attribute lyskom-filter-hack 'action))))
+      lyskom-filter-hack)))
     
 (defun lyskom-filter-text-p-2 (text-stat)
   (if (null text-stat)
@@ -185,247 +204,205 @@ Returns nil if no such attribute is present."
     ;;
     ;; Do the checking
     ;;
+
     (setq lyskom-filter-hack
-          (lyskom-traverse-filter-list text-stat
-                                       author
-                                       data
-                                       subject
-                                       (text->text-mass text)
-                                       lyskom-filter-list))))
-
-(defun lyskom-traverse-filter-list (text-stat
+          (lyskom-check-filter-list text-stat
                                     author
-                                    recipient-list
+                                    data
                                     subject
-                                    text
-                                    filter-list)
-  (cond 
-   ;;
-   ;; End of filter list
-   ;;
-   ((null filter-list) nil)
+                                    (text->text-mass text)
+                                    lyskom-filter-list))))
 
-   ;;
-   ;; Error in filter list
-   ;;
-   ((not (listp filter-list))
-    (lyskom-bad-filter-list filter-list))
-
-   ;;
-   ;; Not a filter at head of list
-   ;;
-   ((not (filter-p (car filter-list)))
-    (lyskom-bad-filter-list filter-list))
-
-   ;;
-   ;; Assume valid list and filter at head
-   ;;
-   (t (or
-       (lyskom-traverse-filter-pattern text-stat
-                                       author
-                                       recipient-list
-                                       subject
-                                       text
-                                       (filter->pattern
-                                        (car filter-list))
-                                       (car filter-list))
-       (lyskom-traverse-filter-list text-stat
-                                    author
-                                    recipient-list
-                                    subject
-                                    text
-                                    (cdr filter-list))))))
+(defun lyskom-check-filter-list (text-stat
+                                 author
+                                 recipient-list
+                                 subject
+                                 text
+                                 filter-list)
+  (let (tmp)
+    (while filter-list
+      (if (functionp (filter->function (car filter-list)))
+          (setq tmp (funcall (filter->function (car filter-list))
+                             (car filter-list)
+                             author
+                             recipient-list
+                             subject
+                             text-stat
+                             text)))
+        (if tmp
+            (setq filter-list nil)
+          (setq filter-list (cdr filter-list))))
+    tmp))
 
 
-(defun lyskom-traverse-filter-pattern (text-stat
-                                       author
-                                       recipient-list
-                                       subject
-                                       text
-                                       pat
-                                       filter)
+
+
+;;;========================================
+;;;  The filter compiler.
+;;;
+
+
+(defmacro lyskom-filter-is-member (testfn arg list selector)
+  (` (let (found
+           (objlist (, list)))
+       (while (and objlist (not found))
+         (and ((, testfn) (, arg) ((, selector) (car objlist)))
+           (setq found t))
+      (setq objlist (cdr objlist)))
+    found)))
+
+
+(defun lyskom-create-compile-filter-function (pattern)
+  (if (null pattern)
+      (byte-compile '(lambda (x y) nil)))
+  (byte-compile (lyskom-create-filter-function pattern)))
+
+
+(defun lyskom-create-filter-function (pattern)
+  (` (lambda (filter author recipient-list subject text-stat text)
+       (, (cons 'and (lyskom-create-filter-function-body pattern))))))
+
+(defun lyskom-create-filter-function-body (pattern)
   (let (inverse tmp)
-    (cond 
+    (cond
      ;;
      ;; End of pattern
-     ;;
-     ((null pat) filter)
+     ;; 
+     
+     ((null pattern) '((filter->attribute filter 'action)))
 
      ;;
      ;; Bad pattern
      ;;
-     ((or (not (listp pat))
-          (not (listp (car pat))))
-      (lyskom-bad-filter-list pat))
-
+     
+     ((or (not (listp pattern))
+          (not (listp (car pattern)))) 
+      (lyskom-error 
+       "%s"
+       (lyskom-get-string 'filter-error-specification)))
+     
      ;;
      ;; Assume valid pattern
      ;;
-     (t 
-      ;;
-      ;; Key is the pattern key
-      ;; Args is the pattern arguments
-      ;;
-      (let ((key (car (car pat)))
-            (args (cdr (car pat))))
-        ;;
-        ;; If key is NOT, rebind key and args and note the negation is 
-        ;; in effect.
-        ;;
+     
+     (t
+      (let ((key (car (car pattern)))
+            (args (cdr (car pattern)))
+            (form nil))
         (if (eq key 'not)
             (if (not (listp args))
-                (progn
-                  (lyskom-bad-filter-list pat)
-                  (setq key 'dummy)
-                  (setq args nil)
-                  (setq inverse nil))
-              (progn 
-                (setq key (car args))
-                (setq args (cdr args))
-                (setq inverse t))))
-        (and
-         (progn 
-           (setq tmp
-                 (cond
-                  ((or (eq key 'author) (eq key 'author-re))
-                   (if (not (null author))
-                       (if (not (stringp args))
-                           (progn (setq inverse nil)
-                                  (lyskom-bad-filter-list pat))
-                         (string-match 
-                          (if (eq key 'author-re)
-                              args 
-                            (regexp-quote args))
-                          (conf-stat->name author)))))
-                  ((eq key 'author-no)
-                   (if (not (null author))
-                       (if (not (numberp args))
-                           (progn (setq inverse nil)
-                                  (lyskom-bad-filter-list pat))
-                         (= (conf-stat->conf-no author) args))))
-                  ((or (eq key 'recipient)
-                       (eq key 'recipient-re))
-                   (if (not (null recipient-list))
-                       (if (not (stringp args))
-                           (progn (setq inverse nil)
-                                  (lyskom-bad-filter-list pat))
-                         (lyskom-filter-match-recipients recipient-list
-                                                         (if (eq key
-                                                                 'recipient-re)
-                                                             args
-                                                           (regexp-quote args))
-                                                         'name))))
-                  ((eq key 'recipient-no)
-                   (if (not (null recipient-list))
-                       (if (not (numberp args))
-                           (progn (setq inverse nil)
-                                  (lyskom-bad-filter-list pat))
-                         (lyskom-filter-match-recipients recipient-list
-                                                         args
-                                                         'number))))
-                  ((or (eq key 'subject)
-                       (eq key 'subject-re))
-                   (if (not (stringp args))
-                       (progn (setq inverse nil)
-                              (lyskom-bad-filter-list pat))
-                     (string-match (if (eq key 'subject-re)
-                                       args
-                                     (regexp-quote args)) 
-                                   subject)))
-                  ((or (eq key 'text)
-                       (eq key 'text-re))
-                   (if (not (stringp args))
-                       (progn (setq inverse nil)
-                              (lyskom-bad-filter-list pat))
-                     (string-match (if (eq key 'text-re)
-                                       args
-                                     (regexp-quote args))
-                                   text)))
-                  ((eq key 'dummy)
-                   (setq inverse nil)
-                   nil)
-                  (t (setq inverse nil)
-                     (lyskom-bad-filter-list pat))))
-           (if inverse (not tmp) tmp))
-         (lyskom-traverse-filter-pattern text-stat
-                                         author
-                                         recipient-list
-                                         subject
-                                         text
-                                         (cdr pat)
-                                         filter)))))))
+                (lyskom-error "%s" (lyskom-get-string 'filter-error-bad-not))
+              (setq key (car args) args (cdr args) inverse t)))
+
+        (setq form
+              (cond 
+               ((eq key 'author)
+                (lyskom-filter-check-args 'stringp args)
+                (` (string-match (, (regexp-quote args))
+                                 (conf-stat->name author))))
+
+               ((eq key 'author-re)
+                (lyskom-filter-check-args 'regexpp args)
+                (` (string-match (, args)
+                                 (conf-stat->name author))))
+
+               ((eq key 'author-no)
+                (lyskom-filter-check-args 'integerp args)
+                (` (= (, args) (conf-stat->conf-no author))))
+
+               ((eq key 'recipient)
+                (lyskom-filter-check-args 'stringp args)
+                (` (lyskom-filter-is-member
+                    string-match
+                    (, (regexp-quote args))
+                    recipient-list
+                    conf-stat->name)))
+               ((eq key 'recipient-re)
+                (lyskom-filter-check-args 'regexpp args)
+                (` (lyskom-filter-is-member
+                    string-match
+                    (,  args)
+                    recipient-list
+                    conf-stat->name)))
+               ((eq key 'recipient-no)
+                (lyskom-filter-check-args 'integerp args)
+                (` (lyskom-filter-is-member
+                    =
+                    (,  args)
+                    recipient-list
+                    conf-stat->conf-no)))
+
+               ((eq key 'subject)
+                (lyskom-filter-check-args 'stringp args)
+                (` (string-match (, (regexp-quote args))
+                                 subject)))
+               ((eq key 'subject-re)
+                (lyskom-filter-check-args 'regexpp args)
+                (` (string-match (, args)
+                                 subject)))
+
+               ((eq key 'text)
+                (lyskom-filter-check-args 'stringp args)
+                (` (string-match (, (regexp-quote args))
+                                 text)))
+               ((eq key 'text-re)
+                (lyskom-filter-check-args 'regexpp args)
+                (` (string-match (, args)
+                                 text)))
+               (t (lyskom-error 
+                   (lyskom-get-string 'filter-error-unknown-key)
+                   key
+                   ))))
+        
+        (if inverse (setq form (list 'not form)))
+        (cons form (lyskom-create-filter-function-body (cdr pattern))))))))
+
+      
+
+(defun lyskom-filter-check-args (fn arg)
+  (if (not (funcall fn arg))
+      (lyskom-error (lyskom-get-string 'filter-error-key-arg)
+                    fn arg)))
+
+(defun regexpp (re)
+  (let ((result t))
+    (save-match-data
+      (condition-case nil
+          (string-match re "")
+        (error (setq result nil))))
+    result))
 
 
 
-(defun lyskom-filter-match-recipients (recipient-list pat key)
-  (cond ((null recipient-list) nil)
-        ((eq key 'name)
-         (or 
-          (string-match pat (conf-stat->name (car recipient-list)))
-          (lyskom-filter-match-recipients (cdr recipient-list) pat key)))
-        ((eq key 'number)
-         (or 
-          (= pat (conf-stat->conf-no (car recipient-list)))
-          (lyskom-filter-match-recipients (cdr recipient-list)
-                                          pat
-                                          key)))))
 
-(defun lyskom-bad-filter-list (arg)
-  (lyskom-message (lyskom-get-string 'bad-filter-list)
-                  arg)
-  (sit-for 1)
-  nil)
-
+;;;========================================
+;;;  I don't actually remember what these are for
+;;;
 
 (defun lyskom-filter-prompt (text-no prompt)
   (setq lyskom-filter-hack t)
-  (lyskom-collect 'filter)
-  (initiate-get-text-stat 'filter nil text-no)
-  (initiate-get-text 'filter nil text-no)
-  (lyskom-use 'filter 'lyskom-filter-prompt-2 prompt)
-  (while lyskom-filter-hack
-    (accept-process-output)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no))
+	(subject nil))
+    (if text-stat
+	(blocking-do-multiple 
+	 ((text (get-text text-no))
+	  (conf-stat (get-conf-stat 
+		      (text-stat->author text-stat))))
+	 (if text
+	     (progn
+	       (setq subject
+		     (if (string-match "\n" (text->text-mass text))
+			 (substring (text->text-mass text) 
+				    0
+				    (match-beginning 0))
+		       ""))
+	       (lyskom-format-insert prompt
+				     text-stat
+				     subject
+				     (or conf-stat
+					 (text-stat->author text-stat))))))))
+  (setq lyskom-filter-hack nil))
 
-
-(defun lyskom-filter-prompt-2 (text-stat text prompt)
-  (if (and text-stat text)
-      (initiate-get-conf-stat 'filter 
-                              'lyskom-filter-prompt-3
-                              (text-stat->author text-stat)
-                              text-stat text prompt)))
-
-(defun lyskom-filter-prompt-3 (conf-stat text-stat text prompt)
-  (let (author subject string start)
-    (if conf-stat
-        (setq author (conf-stat->name conf-stat))
-      (setq author (lyskom-format 'person-does-not-exist 
-                                  (text-stat->author text-stat))))
-    (setq subject
-          (progn (string-match "\n" (text->text-mass text))
-                 (substring (text->text-mass text) 0 (match-beginning 0))))
-    (setq string
-          (format (lyskom-get-string prompt)
-                  (text-stat->text-no text-stat)
-                  subject
-                  author))
-    (if (null conf-stat)
-	(lyskom-insert string)
-;;        (lyskom-insert-with-button string 
-;;                                    (int-to-string 
-;;                                     (text-stat->text-no text-stat))
-;;                                    'lyskom-button-view-text
-;;                                    (text-stat->text-no text-stat))
-      (lyskom-insert string))
-;;      (lyskom-insert-with-button string 
-;;                                  (int-to-string 
-;;                                   (text-stat->text-no text-stat))
-;;                                  'lyskom-button-view-text
-;;                                  (text-stat->text-no text-stat)
-;;                                  (regexp-quote author)
-;;                                  'lyskom-button-view-pres
-;;                                  (conf-stat->presentation conf-stat)))
-    (setq lyskom-filter-hack nil)))
-                              
 
 
 ;;;========================================
@@ -587,10 +564,9 @@ the current text"
 			  (cons 'recipient-no (conf-stat->conf-no conf-stat)))
 		    (list (cons 'action 'skip-tree)
 			  (cons 'expire t))))
-		  (lyskom-insert
-		   (lyskom-format 'super-jump
-				  lyskom-current-subject
-				  (conf-stat->name conf-stat))))))))
+		  (lyskom-format-insert 'super-jump
+					lyskom-current-subject
+					conf-stat))))))
     (lyskom-end-of-command)))
 
 
@@ -602,7 +578,7 @@ the current text"
 ;;;
 
 (defun kom-filter-text (&optional text)
-  "Interactively filter a subject. Optional TEXT is subject to filter."
+  "Interactively filter on text contents. Optional TEXT is subject to filter."
   (interactive)
   (lyskom-start-of-command 'kom-filter-text)
   (unwind-protect
@@ -615,7 +591,8 @@ the current text"
 	    (if conf-stat
 		(progn
 		  (setq text 
-			(read-from-minibuffer (lyskom-get-string 'filter-text)
+			(read-from-minibuffer (lyskom-get-string 
+					       'filter-which-text)
 					      (or text "")))
 		  (setq filter (cons (cons 'text text) filter))
 		  (setq conf (lyskom-read-conf-no
@@ -665,6 +642,6 @@ the current text"
                 (lyskom-format-filter-pattern (car filters))
                 (setq filters (cdr filters)))
               (lyskom-insert (lyskom-get-string 'view-filters-footer)))))
-      (progn (lyskom-insert "\n")
-	     (lyskom-end-of-command)))))
+      (progn (lyskom-insert "\n"))))
+  (lyskom-end-of-command))
 

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.7 1995-07-25 14:28:57 linus Exp $
+# $Id: Makefile,v 38.8 1995-10-23 11:55:09 byers Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.7 1995-07-25 14:28:57 linus Exp $
+# $Id: Makefile,v 38.8 1995-10-23 11:55:09 byers Exp $
 #
 
 CLIENTVERSION = 0.39
@@ -33,14 +33,15 @@ GENERIC-DIST-CLEAN = TAGS
 RM = /usr/gnu/bin/rm -vf
 
 # for compiling using emacs 19!
-EMACS-BATCH = emacs -batch
+EMACS=emacs
+EMACS-BATCH = $(EMACS) -batch
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
 PARTS-EL = komtypes.el clienttypes.el startup.el \
 	reading.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
-	filter.el filter-edit.el \
+	filter.el filter-edit.el lyskom-buttons.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el \
 	elib-string.el \
@@ -55,7 +56,7 @@ SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
 	reading.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
-	filter.elc filter-edit.elc \
+	filter.elc filter-edit.elc lyskom-buttons.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc \
 	elib-string.elc \
