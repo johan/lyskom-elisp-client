@@ -1,3 +1,7 @@
+Sun Oct 17 00:52:05 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-A
+
 1999-10-17  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (kom-postpone): Added RE-EDIT-TEXT read-info type.
