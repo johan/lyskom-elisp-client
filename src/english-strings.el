@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.237 2002-09-18 20:48:32 byers Exp $
+;;;;; $Id: english-strings.el,v 44.238 2002-09-19 17:33:15 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.237 2002-09-18 20:48:32 byers Exp $"))
+              "$Id: english-strings.el,v 44.238 2002-09-19 17:33:15 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1232,9 +1232,9 @@ Error message: %#1s**************************************************")
     (backward . "backward")
     (wait . "Wait a moment...\n")
     (comment . "Comment")
-    (comment-prefix . "[Cc][Oo]")
+    (comment-prefix . "\\([Cc][Oo]\\)")
     (footnote . "Footnote")
-    (footnote-prefix . "[Ff]")
+    (footnote-prefix . "\\([Ff]\\)")
     (by . " by %#1P")
     (text-created .  "Text %#1n has been created.\n")
     (text-created-anonymous .  "\
