@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.310 2003-03-16 19:59:22 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.311 2003-03-16 21:50:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.310 2003-03-16 19:59:22 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.311 2003-03-16 21:50:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -279,7 +279,7 @@ för att radera det.")
     (who-letter-to . "Vem vill du skicka brev till? ")
     (who-send-text-to . "Vart vill du skicka inlägget? ")
     (has-motd . "%#1P har en lapp på dörren:\n\n")
-    (motd-persist-q . "Vill du fortfarande skicka brevet? ")
+    (motd-persist-q . "Vill du fortfarande skriva texten? ")
 
     (who-to-add . "Vem vill du addera? ")
     (where-to-add . "Vilket möte skall han/hon adderas till? ")

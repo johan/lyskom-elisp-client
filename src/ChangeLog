@@ -1,5 +1,10 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 975:
+	* commands1.el (lyskom-write-text): New function.
+	(kom-write-text): Use it. Now letters and texts are the same.
+	(kom-send-letter): Use it. Now letters and texts are the same.
+
 	Fix bug 250:
 	* lyskom-rest.el (lyskom-check-go-to-conf): Change priority when
 	accepting an invitation.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.176 2003-03-16 19:59:22 byers Exp $
+;;;;; $Id: commands1.el,v 44.177 2003-03-16 21:50:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.176 2003-03-16 19:59:22 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.177 2003-03-16 21:50:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -496,41 +496,15 @@ as TYPE. If no such misc-info, return NIL"
 (def-kom-command kom-send-letter (&optional pers-no)
   "Send a personal letter to a person. This command is similar to
 `kom-write-text', but intended specifically for sending personal
-messages. When reading the recipient it will only allow letterboxes."
+messages.
+
+Several settings affect writing texts in general.
+`kom-write-texts-in-window' controls which window is used to write the
+comment; `kom-confirm-multiple-recipients' affects how multiple
+recipients are handled."
   (interactive)
-  (condition-case nil
-      (progn
-        (lyskom-tell-internat 'kom-tell-write-letter)
-	;; If there was a motd, which is now removed we have to
-	;; refetch the conf-stat to know that.
-        (let* ((tono (or pers-no
-                         (lyskom-read-conf-no
-                          (lyskom-get-string 'who-letter-to)
-                          '(pers) nil nil t)))
-               (conf-stat (blocking-do 'get-conf-stat tono)))
-	  (cache-del-conf-stat tono)
-          (if (if (zerop (conf-stat->msg-of-day conf-stat))
-                  t
-                (progn
-                  (recenter 1)
-                  (lyskom-format-insert 'has-motd 
-                                        conf-stat)
-                  (lyskom-view-text (conf-stat->msg-of-day conf-stat))
-                  (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
-                      t
-                    nil)))
-              (if (= tono lyskom-pers-no)
-                  (lyskom-edit-text lyskom-proc
-                                    (lyskom-create-misc-list 'RECPT tono)
-                                    "" "")
-                (lyskom-edit-text lyskom-proc
-                                  (if (lyskom-get-membership tono)
-                                      (lyskom-create-misc-list 'RECPT tono)
-                                      (lyskom-create-misc-list 
-                                       'RECPT tono
-                                       'RECPT lyskom-pers-no))
-                                  "" "")))))
-    (quit (signal 'quit nil))))
+  (lyskom-tell-internat 'kom-tell-write-letter)
+  (lyskom-write-text pers-no 'who-letter-to nil))
 
 
 ;;; ================================================================
@@ -632,9 +606,6 @@ the priority of several memberships, use `kom-prioritize' instead."
                 (lyskom-try-add-member conf-stat who pers-stat nil
                                        'change-priority-for t)
                 conf-stat who))))))
-                                                           
-                                     
-
 
 
 ;;; NOTE: This function is also called from lyskom-go-to-conf-handler
@@ -1750,7 +1721,7 @@ If NO-PROMPT is non-nil, don't print message that we have gone to conf."
 		  (lyskom-do-go-to-conf conf
 					(lyskom-get-membership
 					 (conf-stat->conf-no conf) t))
-		(lyskom-insert-string 'nope))
+		(lyskom-report-command-answer nil))
 	    (lyskom-insert-string 'no-ok))))))
 
     ;; DEBUG+++
@@ -1836,31 +1807,43 @@ Several settings affect writing texts in general.
 comment; `kom-confirm-multiple-recipients' affects how multiple
 recipients are handled."
   (interactive "P")
-  (let ((recpt (cond ((consp arg) lyskom-current-conf)
-		     ((numberp arg) arg)
-		     (t (lyskom-read-conf-no
-			 (lyskom-get-string 'who-send-text-to)
-			 '(all)
-			 nil
-                         (if (zerop lyskom-current-conf)
-                             nil
-                           (cons (conf-stat->name
-                                  (blocking-do 'get-conf-stat 
-                                               lyskom-current-conf))
-                                 0))
-			 t)))))
-    (if (or (null recpt)
-            (zerop recpt))
-	(lyskom-insert-string 'no-in-conf)
-      (lyskom-tell-internat 'kom-tell-write-text)
-      (lyskom-edit-text lyskom-proc
-                        (if (lyskom-get-membership recpt)
-                            (lyskom-create-misc-list 'RECPT recpt)
-                          (lyskom-create-misc-list 
-                           'RECPT recpt
-                           'RECPT (or (lyskom-get-send-comments-to lyskom-pers-no)
-                                      lyskom-pers-no)))
-                        "" ""))))
+  (lyskom-tell-internat 'kom-tell-write-text)
+  (lyskom-write-text arg 'who-send-text-to lyskom-current-conf))
+
+(defun lyskom-write-text (arg prompt default)
+  "Start writing a new text."
+  (when default
+    (setq default (uconf-stat->name (blocking-do 'get-uconf-stat default))))
+  (let* ((tono (or arg
+                   (lyskom-read-conf-no
+                    (lyskom-get-string prompt)
+                    '(pers conf) 
+                    nil
+                    (and default (cons default 0))
+                    t)))
+         (conf-stat (blocking-do 'get-conf-stat tono)))
+    (cache-del-conf-stat tono)
+    (if (if (zerop (conf-stat->msg-of-day conf-stat))
+            t
+          (progn
+            (recenter 1)
+            (lyskom-format-insert 'has-motd 
+                                  conf-stat)
+            (lyskom-view-text (conf-stat->msg-of-day conf-stat))
+            (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
+                t
+              nil)))
+        (if (= tono lyskom-pers-no)
+            (lyskom-edit-text lyskom-proc
+                              (lyskom-create-misc-list 'RECPT tono)
+                              "" "")
+          (lyskom-edit-text lyskom-proc
+                            (if (lyskom-get-membership tono)
+                                (lyskom-create-misc-list 'RECPT tono)
+                              (lyskom-create-misc-list 
+                               'RECPT tono
+                               'RECPT lyskom-pers-no))
+                            "" "")))))
 
 
 ;;; ================================================================
