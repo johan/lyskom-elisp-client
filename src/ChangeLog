@@ -1,3 +1,7 @@
+Sat Nov  2 19:03:57 1991  Linus Tolke Y  (linus at robin)
+
+	* commands1.el, swedish-strings.el (kom-add-copy): New command.
+
 Mon Oct 28 23:29:39 1991  Linus Tolke Y  (linus at lysator)
 
 	* commands2.el, swedish-strings.el (kom-compile-bug-report):
