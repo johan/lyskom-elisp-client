@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.66 1999-10-14 10:39:37 byers Exp $
+;;;;; $Id: english-strings.el,v 44.67 1999-10-16 22:49:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.66 1999-10-14 10:39:37 byers Exp $"))
+              "$Id: english-strings.el,v 44.67 1999-10-16 22:49:05 byers Exp $"))
 
 
 ;;; ================================================================
@@ -987,6 +987,8 @@ You should set it to a better value.\n")
     (prompt-several-messages . "(%d messages)")
     (prompt-single-message . "(%d message)")
 
+    (re-edit-text-prompt . "Edit the text that couldn't be created")
+    (text-buffer-missing . "The text buffer no longer exists.\n")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized text")
     (review-next-text-prompt . "Review next text")
@@ -3230,7 +3232,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-22 . "Secret but not read-protected")
     (error-23 . "You are not allowed to change the erson/conference flag")
     (error-24 . "Error in the dtabase. Tough luck.")
-    (error-25 . "Illegal misc-field. (Internal error)")
+    (error-25 . "Invalid recipient or comment type")
     (error-26 . "Illegal info type. (Bug in the client)")
     (error-27 . "Already recipient of this text")
     (error-28 . "Already comment to this text")

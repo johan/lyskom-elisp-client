@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.83 1999-10-14 10:39:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.84 1999-10-16 22:49:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.83 1999-10-14 10:39:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.84 1999-10-16 22:49:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -81,6 +81,8 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-}")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-Å")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-å")     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control aring)]  'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control Aring)]  'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "C-i")     'lyskom-sv-edit-insert-prefix)
@@ -766,7 +768,7 @@ Annat se \\[describe-mode] ---")
     (text-to-comment-q . "Vilket inlägg vill du kommentera? ")
     (conf-has-motd-no . "Mötet har en lapp på dörren. (%#1d)\n\n%#2s")
     (still-want-to-add . "Vill du fortfarande addera mötet? ")
-    (could-not-create-text . "\nTexten kunde ej skapas. Felet: %#2s.\n")
+    (could-not-create-text . "\nTexten kunde ej skapas. %#2s.\n")
     (no-get-text . "Du fick inte hämta texten.")
     (unknown-header . "Okänd information på raden")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
@@ -994,6 +996,8 @@ Du bör sätta den till ett bättre värde.\n")
     (prompt-several-messages . "(%d meddelanden)")
     (prompt-single-message   . "(%d meddelande)")
 
+    (re-edit-text-prompt . "Redigera texten som inte kunde skapas")
+    (text-buffer-missing . "Inläggsbufferten existerar inte längre.\n")
     (go-to-pri-conf-prompt . "Gå till nästa prioriterade möte")
     (read-pri-text-conf . "Läsa nästa prioriterade text")
     (review-next-text-prompt . "Återse nästa text")
@@ -1771,8 +1775,12 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
   (define-key lyskom-sv-mode-map (kbd "{") 'lyskom-sv-change-prefix) ; krullar
   (define-key lyskom-sv-mode-map (kbd "[") 'lyskom-sv-change-prefix)
+  (define-key lyskom-sv-mode-map [adiaeresis] 'lyskom-sv-change-prefix)
+  (define-key lyskom-sv-mode-map [Adiaeresis] 'lyskom-sv-change-prefix)
   (define-key lyskom-sv-mode-map (kbd "}") 'lyskom-sv-review-prefix)
   (define-key lyskom-sv-mode-map (kbd "]") 'lyskom-sv-review-prefix)
+  (define-key lyskom-sv-mode-map [aring] 'lyskom-sv-review-prefix)
+  (define-key lyskom-sv-mode-map [Aring] 'lyskom-sv-review-prefix)
 
 
   ;;(define-key lyskom-sv-mode-map "vi" 'vilka)
@@ -1814,6 +1822,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "l s") 'kom-membership)
   (define-key lyskom-sv-mode-map (kbd "l ä") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l Ä") 'kom-list-summary)
+  (define-key lyskom-sv-mode-map [?l adiaeresis] 'kom-list-summary)
+  (define-key lyskom-sv-mode-map [?l Adiaeresis] 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l {") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
@@ -1836,6 +1846,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "f t") 'kom-move-text)
   (define-key lyskom-sv-mode-map (kbd "f ä") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f Ä") 'kom-filter-subject)
+  (define-key lyskom-sv-mode-map [?f Adiaeresis] 'kom-filter-subject)
+  (define-key lyskom-sv-mode-map [?f adiaeresis] 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f {") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
@@ -1884,6 +1896,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-mode-map (kbd "s p") 'kom-status-person)
   (define-key lyskom-sv-mode-map (kbd "s s") 'kom-status-session)
   (define-key lyskom-sv-mode-map (kbd "s ä") 'kom-send-message)
+  (define-key lyskom-sv-mode-map [?s adiaeresis] 'kom-send-message)
+  (define-key lyskom-sv-mode-map [?s Adiaeresis] 'kom-send-message)
   (define-key lyskom-sv-mode-map (kbd "s {") 'kom-send-message)
   (define-key lyskom-sv-mode-map (kbd "s [") 'kom-send-message)
 
@@ -2095,7 +2109,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (turned-off      . "Avslaget            ")
     (number-of-times . "Några gånger")
-    (specific-spec . "Per mottager/avsändare")
+    (specific-spec . "Per mottagare/avsändare")
     (sound-file . "Ljudfil")
     (other-persons . "Alla andra")
     (selected-mark . "Markering")
@@ -3275,14 +3289,14 @@ i servern. Annars sparas det i din .emacs.")
     (error-15 . "Du kan inte använda globalt textnummer 0")
     (error-16 . "Inget sådant lokalt textnummer")
     (error-17 . "Du kan inte använda lokalt textnummer 0")
-    (error-18 . "Namnet för kort eller för långt eller innehåller felaktiga tecken")
+    (error-18 . "Namnet för kort, för långt eller innehåller felaktiga tecken")
     (error-19 . "Index utanför gränserna")
     (error-20 . "Mötet existerar redan")
     (error-21 . "Personen existerar redan")
     (error-22 . "Hemligt, men ej lässkyddat")
     (error-23 . "Du får inte ändra person/mötesflaggan")
     (error-24 . "Fel i databasen. Attans otur.")
-    (error-25 . "Otillåtet misc-fält. (Internt fel)")
+    (error-25 . "Otillåten mottagartyp eller kommentarslänk")
     (error-26 . "Otillåten infotyp. (Bug i klienten)")
     (error-27 . "Redan mottagare till denna text")
     (error-28 . "Redan kommentar till denna text")

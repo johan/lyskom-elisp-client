@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.45 1999-10-13 15:50:29 byers Exp $
+;;;;; $Id: edit-text.el,v 44.46 1999-10-16 22:49:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.45 1999-10-13 15:50:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.46 1999-10-16 22:49:03 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -480,7 +480,7 @@ so it's not as clean as it ought to be."
 If optional IS-ANONYMOUS is non-nil, assume that the text is being submitted
 anonymously and take actions to avoid revealing the sender."
   (condition-case err
-      (if (or (not lyskom-edit-text-sent) ;++MINOR checked mode-name against lyskom-edit-mode-name
+      (if (or (not lyskom-edit-text-sent)
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
 	    (let ((buffer (current-buffer))
@@ -541,7 +541,6 @@ anonymously and take actions to avoid revealing the sender."
                                  (lyskom-edit-extract-text))
                       (lyskom-edit-extract-text)))
 
-;++MINOR	      (setq mode-name "LysKOM sending")
               (lyskom-edit-sending-mode 1)
 	      (save-excursion
                 (let ((full-message
@@ -1583,9 +1582,18 @@ Point must be located on the line where the subject is."
     (beep)
     (lyskom-message "%s" (lyskom-format 'could-not-create-text lyskom-errno
 				   (lyskom-get-error-text lyskom-errno)))
+    (set-buffer lyskom-buffer)
+    (read-list-enter-first (lyskom-create-read-info 'RE-EDIT-TEXT
+                                                    nil
+                                                    256
+                                                    nil
+                                                    nil
+                                                    nil
+                                                    edit-buffer)
+                           lyskom-reading-list)
+    (lyskom-update-prompt)
     (set-buffer edit-buffer)
     (lyskom-edit-mode 1)
-;++MINOR    (setq mode-name lyskom-edit-mode-name)
     (sit-for 0))
    (is-anonymous
     (lyskom-format-insert-before-prompt 'text-created-anonymous text-no))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.49 1999-10-13 22:32:19 byers Exp $
+;;;;; $Id: commands2.el,v 44.50 1999-10-16 22:49:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.49 1999-10-13 22:32:19 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.50 1999-10-16 22:49:01 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1543,6 +1543,7 @@ current conference to another session."
 			       rlist)))
 	    (setcdr rlist cell))
 	  (setq finished t))
+         ((eq type 'RE-EDIT-TEXT))
 	 (t
 	  (signal 'lyskom-internal-error '("lyskom-remove-comment-chains")))))
       (-- len)))
