@@ -225,4 +225,9 @@ kom-lynx-terminal-command		"lynx"	nil	t
 kom-check-for-new-comments		t	t	t		
 kom-default-language		sv	t	t		
 kom-ispell-dictionary		nil	t	t		
+kom-dont-read-saved-variables		(lyskom-login-hook)	nil	t		
+lyskom-change-conf-hook		nil	nil	t		
+kom-autowrap		t	nil	t		
+kom-show-namedays		nil	nil	t		
+kom-www-proxy		nil	nil	t		
 iso-8859-1-table		" 	 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"	nil	t		
