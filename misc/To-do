@@ -46,6 +46,9 @@ Kommentar i text 92110
 Kommentar i text 92186 av Inge Wallin, ISY
 )
 
+* lyskom-connect-filter skall skrivas om s} att den klarar av ifall
+  LysKOM\n delar paket med ett annat asynkront meddelande.
+
 * H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
   conf-stat eller membership vilka delar av mappen f|r m|tet som vi
   har h{mtat och vilka delar vi saknar.  Det inneb{r ocks} att lista
