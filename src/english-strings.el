@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.4 1991-10-05 21:27:56 byers Exp $
+;;;;; $Id: english-strings.el,v 35.5 1991-10-08 14:30:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.4 1991-10-05 21:27:56 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.5 1991-10-08 14:30:08 byers Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Text follows this line, Post: C-c C-c, Kill: C-c C-k, Help: C-h m ---"
@@ -85,6 +85,7 @@ on how to do this.")
     (presentation-subject . "%#1s")
     (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:
 Email-address:\n\nOther:\t")
+    (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
 
 
@@ -176,7 +177,7 @@ Email-address:\n\nOther:\t")
 
     (who-to-remove-motd-for . "Remove note from the door of who/what: ")
 
-    (conf-all-read . "You have seen all the articles in this conference.\n")
+    (conf-all-read . "%#1s - no unread articles.\n")
     (no-in-conf . "You are not present in any conference.\n")
 
     (search-for-pers . "Enter search key (RETURN for all users) ")
