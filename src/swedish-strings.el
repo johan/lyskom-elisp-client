@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.293 2003-01-09 21:41:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.294 2003-01-12 22:30:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.293 2003-01-09 21:41:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.294 2003-01-12 22:30:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2882,6 +2882,13 @@ teckenkodning.
     (fonts . "Teckensnitt\n")
     (other-face . "Annat")
 
+    (ext-simple-command . "Enkelt kommando")
+    (ext-complex-command . "Kommando med argument")
+    (ext-complex-component . "Komanndo/argument")
+
+    (lynx-xterm . "Lynx i xterm")
+    (lynx-emacs . "Lynx i emacs terminal-mode")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3896,6 +3903,15 @@ i servern. Annars sparas det i din .emacs.")
   överlagras på standardteckensnitten i streckraderna, så de
   egenskaper som inte sätts av detta teckensnitt kommer inte att
   påverkas.") 
+    (kom-lynx-terminal-doc . "\
+  Lynx kan köras inuti Emacs eller i en xterm (eller motsvarande). Här
+  väljer du vilket.")
+    (kom-lynx-terminal-command-doc . "\
+  Kommandot som används för att starta Lynx i Emacs terminal-mode. 
+  Ska normalt vara så enkelt som \"lynx\".")
+    (kom-lynx-xterm-command-doc . "\
+  Kommandot som används för att starta Lynx i en xterm. Kommandot ska
+  starta både xterm och lynx.")
 
 
 
@@ -4095,6 +4111,9 @@ i servern. Annars sparas det i din .emacs.")
     (kom-dashed-lines-face-tag . "Streckrader runt inlägg:")
     (kom-async-text-body-face-tag . "Meddelanden:")
     (kom-async-dashed-lines-face-tag . "Streckrader runt meddelanden:")
+    (kom-lynx-terminal-command-tag . "Kommando för Lynx i Emacs:")
+    (kom-lynx-terminal-tag . "Var ska Lynx köra:")
+    (kom-lynx-xterm-command-tag . "Kommando för Lynx i xterm:")
     )
 )
 

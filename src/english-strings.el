@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.257 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: english-strings.el,v 44.258 2003-01-12 22:30:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.257 2003-01-08 00:33:14 byers Exp $"))
+              "$Id: english-strings.el,v 44.258 2003-01-12 22:30:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2775,6 +2775,13 @@ Select whether to execute command or keyboard macro.")
     (fonts . "Fonts\n")
     (other-face . "Other")
 
+    (ext-simple-command . "Simple command")
+    (ext-complex-command . "Command with arguments")
+    (ext-complex-component . "Command/argument")
+
+    (lynx-xterm . "Lynx in xterm")
+    (lynx-emacs . "Lynx in emacs terminal-mode")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3784,6 +3791,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   on other text. Properties not defined by this face will be retained. 
   For example, if you only set the weight property, the colors normally
   used will not be changed.")
+    (kom-lynx-terminal-doc . "\
+  Lynx can run inside emacs or in an xterm (or similar). This setting
+  decides which.")
+    (kom-lynx-terminal-command-doc . "\
+  This is the command to use to start Lynx in emacs terminal-mode.
+  It should be something simple, like \"lynx\".")
+    (kom-lynx-xterm-command-doc . "\
+  This is the command to use to start Lynx in an xterm. The command
+  neets to start both the terminal emulator and lynx.")
 
     ;;
     ;; Tags for variables
@@ -3906,7 +3922,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-remote-controllers-tag . "People allowed to use remove commands:")
 
     (kom-customize-format-tag . "Show documentation for all settings:")
-    (kom-default-language-tag . "Default language:  ")
+    (kom-default-language-tag . "Default language:")
     (kom-show-namedays-tag    . "Show today's names:")
     (kom-ispell-dictionary-tag . "Spelling dictionary:")
 
@@ -3982,6 +3998,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-dashed-lines-face-tag . "Dashed lines around texts:")
     (kom-async-text-body-face-tag . "Messages:")
     (kom-async-dashed-lines-face-tag . "Dashed lines around messages:")
+    (kom-lynx-terminal-command-tag . "Command to run lynx in emacs:")
+    (kom-lynx-terminal-tag . "Where to run lynx:")
+    (kom-lynx-xterm-command-tag . "Command to run lynx in xterm:")
     )
 )
 

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.228 2003-01-12 16:53:40 byers Exp $
+;;;;; $Id: vars.el.in,v 44.229 2003-01-12 22:30:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.228 2003-01-12 16:53:40 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.229 2003-01-12 22:30:44 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1628,39 +1628,102 @@ Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-friends nil
-  "*List of people whose names should be formatted using kom-friends-face.
-Also used in kom-who-is-on-and-friend. This is a list of integers (person
-numbers)."
+  "**List of friends and other nice people.
+
+The value of this variable is a list of person numbers. People listed
+here will be displayed using the face in `kom-friends-face'. They can
+also receive special treatment in other cases (see
+`kom-presence-message').
+
+See `kom-morons' for a related variable.
+
+Values other than a list of integers are reserved for future use."
   server)
 
 (def-kom-var kom-morons nil
-  "*List of people whose names should be formatted using kom-morons-face."
+  "*List of people morons and other nasty people.
+
+The value of this variable is a list of person numbers. People listed
+here will be displayed using the face in `kom-morons-face'.
+
+See `kom-friends' for a related variable.
+
+Values other than a list of integers are reserved for future use."
   server)
 
 (def-kom-var kom-dont-check-commented-authors nil
-  "*List of recipients who do not need to be added to comments that they
-might not see. Typically this list consists of import agents."
+  "**A list of recipients that don't need to see comments to their texts.
+
+When writing a comment, the client checks that the author of the
+commented text is a member of at least one of the recipients. If that
+is not the case, the user will be offered to add the author as a
+recipient.
+
+This variable lists authors who shold not be checked in this manner.
+Typically it will contain a list of import agents.
+
+Values other than a list of integers are reserved for future use."
   server
   inherited)
 
 (def-kom-var kom-smileys t
-  "*Non-`nil' means to reformat smileys in text."
+  "**Controls display of graphical smileys.
+
+When set to `t', display graphical smileys instead of `:-)' and
+similar character sequences. When set to `nil', do not display
+graphical smileys.
+
+For this to work at all you must have the `smiley' or `smiley-ems'
+installed (usually installed with Gnus) and support for graphics (part
+of XEmacs and Gnu Emacs 21.x and later).
+
+Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-text-properties t
-  "*Non-`nil' means to insert text properties in the Emacs buffer for
-various LysKOM elements.")
+  "**Controls use of text properties in LysKOM (fonts and stuff).
+
+When set to `t', the client will freely use text properties, like
+fonts. When set to `nil', the client will not use text properties.
+This will disable all font usage and clickable stuff.
+
+Values other than `t' and `nil' are reserved for future use.")
 
 (def-kom-var kom-use-button-hints t
-  "*Non-`nil' means use button hints for overriding default actions.")
+  "**Controls use of context sensitive actions on clickable areas.
+
+When set to `t', clickable areas of the same type may behave
+differently depending on what command created them. For example, in
+one case clicking a conference name may show the presentation of that
+conference and in another it will go to the conference.
+
+Values other than `t' and `nil' are reserved for future use.")
 
 (def-kom-var kom-autowrap t
-  "*Non-`nil' means auto wrap articles with discretion.
-A number means wrap articles shorter than the number (in bytes)."
+  "**Controls automatic text wrapping.
+
+When set to `t', automatically break long lines in texts. A set of
+rules attempts to limit line breaking to regular, unformatted text.
+This works most of the time, but occasionally fails (in which case
+`kom-review-noconversion' comes in handy).
+
+When set to an integer, perform automatic line breaking in text no
+longer than that many characters. 
+
+When set to `nil', do not break lines automatically at all.
+
+Values other than `t', `nil' and integers are reserved for future
+use."
   server)
 
 (def-kom-var kom-keep-alive-interval 180
-  "*The number of seconds between periodic requests used to keep the session alive"
+  "**Polling interval for `kom-keep-alive'.
+
+The command `kom-keep-alive' polls the server periodically to keep the
+connection active. This variable specifies how many seconds to wait
+between these periodic requests to the server.
+
+Values other than integers are reserved for future use."
   server)
 
 (defvar lyskom-transforming-external-text nil
@@ -1724,64 +1787,79 @@ FACE is the text face to apply to the button, or nil to use the default face.")
                                           "windows"
                                           "w3")
 
-  "*LysKOM will attempt to use URL viewers in the order specified here.
-kom-url-managers is a list of all available viewers. Note that the elements
-are all strings.
+  "**Specifies application preferences for opening URLs.
 
-When you select a URL, this list is used to determine which URL
-viewer to use in the following manner: Each element is in turn matched
-against the manager regexp for each manager in kom-url-managers, and the
-first manager found that matches is used to display the URL.
+This is a list of URL handlers to try when opening a URL. Each handler
+is associated with a set of protocols. An URL will be opened by the
+first handler in the list that is associated with the URLs protocol.
 
-See kom-url-managers for a list of all available URL viewers. See
-kom-netscape-command and kom-mosaic-command for information specific 
-to some URL viewers."
+Value values for elements in the list are:
+
+  Handler           What it does                      Handles protocols
+  \"default\"       Use `browse-url' to open URLs     All
+  \"windows\"       Microsoft Windows default         All
+  \"netscape\"      Opens URLs in Netscape/Mozilla    All
+  \"mosaic\"        Opens URLs in NCSA Mosaic         All common
+  \"lynx\"          Opens URLs in Lynx                All common
+  \"galeon\"        Opens URLs in Galeon              All common
+  \"w3\"            Opens URLs in Emacs W3            http,gopher,ftp
+  \"emacs\"         Opens URLs in Emacs               ftp,telnet,file,mailto
+  \"dired\"         Opens URLs in Emacs               ftp,file
+  \"telnet-mode\"   Opens URLs in Emacs               telnet
+  \"mail-mode\"     Opens URLs in Emacs               mailto
+
+The variable `kom-url-managers' contains a list of all handlers. 
+
+See `kom-mosaic-command', `kom-netscape-command',
+`kom-galeon-command', `kom-lynx-terminal-command',
+`kom-lynx-xterm-command', and `kom-windows-browser-command' for
+additional settings that affect opening URLs."
   server)
 
 
 (def-kom-var kom-url-managers '(("default"
-                            ".*"
-                            "Browse-URL"
-                            lyskom-view-url-browse-url)
-                           ("w3" 
-			    "\\(http\\|gopher\\|ftp\\)"
-			    "Emacs W3" 
-			    lyskom-view-url-w3)
-                           ("windows"
-                            ".*"
-                            "web browser"
-                            lyskom-view-url-windows)
-			   ("netscape"
-			    ".*"
-			    "Netscape Navigator/Mozilla"
-			    lyskom-view-url-netscape)
-			   ("\\(emacs\\|dired\\)"
-			    "\\(ftp\\|file\\)"
-			    "dired"
-			    lyskom-view-url-dired)
-			   ("\\(emacs\\|telnet-mode\\)"
-			    "telnet"
-			    "emacs telnet"
-			    lyskom-view-url-telnet)
-			   ("\\(emacs\\|mail-mode\\)"
-			    "mailto"
-			    "mail-mode"
-			    lyskom-view-url-mailmode)
-			   ("mosaic"
-			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
-			    "NCSA Mosaic"
-			    lyskom-view-url-mosaic)
-			   ("lynx"
-			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
-			    "Lynx"
-			    lyskom-view-url-lynx)
-			   ("galeon"
-			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
-			    "Galeon"
-			    lyskom-view-url-galeon))
+                                 ".*"
+                                 "Browse-URL"
+                                 lyskom-view-url-browse-url)
+                                ("w3" 
+                                 "\\(http\\|gopher\\|ftp\\)"
+                                 "Emacs W3" 
+                                 lyskom-view-url-w3)
+                                ("windows"
+                                 ".*"
+                                 "web browser"
+                                 lyskom-view-url-windows)
+                                ("netscape"
+                                 ".*"
+                                 "Netscape Navigator/Mozilla"
+                                 lyskom-view-url-netscape)
+                                ("\\(emacs\\|dired\\)"
+                                 "\\(ftp\\|file\\)"
+                                 "dired"
+                                 lyskom-view-url-dired)
+                                ("\\(emacs\\|telnet-mode\\)"
+                                 "telnet"
+                                 "emacs telnet"
+                                 lyskom-view-url-telnet)
+                                ("\\(emacs\\|mail-mode\\)"
+                                 "mailto"
+                                 "mail-mode"
+                                 lyskom-view-url-mailmode)
+                                ("mosaic"
+                                 "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+                                 "NCSA Mosaic"
+                                 lyskom-view-url-mosaic)
+                                ("lynx"
+                                 "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+                                 "Lynx"
+                                 lyskom-view-url-lynx)
+                                ("galeon"
+                                 "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+                                 "Galeon"
+                                 lyskom-view-url-galeon))
 
   "List of URL managers. Each element is a list consisting of
-(MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
+\(MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
 view a URL, kom-url-viewer-preferences is scanned, and the URL
 -manager whose MANAGER-REGEXP first matches an element in
 kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
@@ -1789,57 +1867,68 @@ the selected URL is used to view the URL by calling its VIEW-FUNCTION
 with the URL and the manager entry as arguments.")
 
 (def-kom-var kom-windows-browser-command ""
-  "*Program to run to open a URL in Windows. If it is the empty
-string, a couple of commands that are likely the work on Windows will
-be tried."
+  "**Program to open a URL in Windows. 
+
+If it is the empty string, a couple of commands that are likely to
+work on Windows will be tried."
   server)
 
 (def-kom-var kom-mosaic-command "/usr/local/bin/mosaic"
-  "*Command to run to start Mosaic."
+  "**Command to run Mosaic.
+
+Note that Mosaic uses its own special conventions to open URLs
+remotely that are probably not suitable for other browsers."
   server)
 
 (def-kom-var kom-netscape-command "netscape"
-  "*Command to run to start Netscape or Mozilla.
+  "**Command to start Netscape or Mozilla.
 
-If a string, it should be a command that starts Netscape or Mozilla 
-with no arguments. If a list, the first element must be a command 
-that starts Netscape. The remaining elements are used as arguments 
-to Netscape.
+If set to a string, it should be a command that starts Netscape or
+Mozilla with no arguments. If a list, the first element must be a
+command that starts Netscape. The remaining elements are used as
+arguments to Netscape.
 
-For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
-is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)"
+For instance, a value of `\"netscape\"' is valid, but `\"netscape -d
+host:0\"' is not. Instead, the latter should be `\(\"netscape\" \"-d\"
+\"host:0\"\)'"
   server)
 
 (def-kom-var kom-galeon-command "galeon"
-  "*Command to run to start Galeon.
+  "**Command used to run to start Galeon.
 
 If a string, it should be a command that starts Galeon with no
 arguments. If a list, the first element must be a command that starts
 Galeon. The remaining elements are used as arguments to Galeon.
 
-For instance, a value of \"galeon\" is valid, but \"galeon --display host:0\"
-is not. Instead, the latter should be \(\"galeon\" \"--display\" \"host:0\"\)"
+For instance, a value of `\"galeon\"' is valid, but `\"galeon
+--display host:0\"' is not. Instead, the latter should be
+`\(\"galeon\" \"--display\" \"host:0\"\)'"
   server)
 
 (def-kom-var kom-lynx-terminal 'xterm
-  "*Where to start Lynx.
-Valid values are 'xterm (start Lynx in an xterm) and 'terminal (start
-Lynx in Emacs terminal mode).")
+  "**Where to start Lynx when opening URLs.
+
+Valid values are `xterm' \(start Lynx in an xterm) and `terminal'
+\(start Lynx in Emacs terminal mode)."
+  server)
 
 (def-kom-var kom-lynx-xterm-command
   '("xterm" "-geometry" "90x50+100+100" "-e" "lynx")
-  "*Command to run to start Lynx in an xterm.
+  "**Command to run to start Lynx in an xterm.
+
 Must be a list of strings, where the first element is the name of the
 xterm program, and the remaining elements are arguments to the
 xterm. The last elements should be \"-e\" \"lynx\", or something similar,
-to start Lynx.")
+to start Lynx."
+  server)
 
 (def-kom-var kom-lynx-terminal-command "lynx"
-  "*Command to run Lynx in Emacs terminal mode.
+  "**Command to run Lynx in Emacs terminal mode.
 
 This can be either a string, to start Lynx with no arguments, or a
 list of strings, where the first element is the command, and the rest
-are arguments to Lynx.")
+are arguments to Lynx."
+  server)
 
 (def-kom-var kom-confirm-multiple-recipients 'after
   "*Non-nil means ask the user for confirmation about recipients.
