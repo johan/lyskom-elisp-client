@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.134 2000-08-28 15:07:11 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.135 2000-08-28 15:12:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.134 2000-08-28 15:07:11 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.135 2000-08-28 15:12:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -437,7 +437,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (client-statistics . "    Klienternas fördelning:\n")
-    (client-statistics-line . "    %=-25#1s: %#2d")
+    (client-statistics-line . "    %=-35#1s: %=4#2d")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
