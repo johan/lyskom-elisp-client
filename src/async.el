@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.12 1996-02-17 05:41:29 davidk Exp $
+;;;;; $Id: async.el,v 38.13 1996-02-17 15:35:55 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.12 1996-02-17 05:41:29 davidk Exp $\n"))
+	      "$Id: async.el,v 38.13 1996-02-17 15:35:55 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -344,11 +344,11 @@ Non-nil NOBEEP means don't beep."
                           message
                           (cond
                            ((stringp sender) sender)
-                           (sender (conf-stat->name sender))
+                           (sender  sender)
                            (t (lyskom-get-string 'unknown)))
                           (cond
                            ((stringp recipient) recipient)
-                           (recipient (conf-stat->name recipient))
+                           (recipient recipient)
                            (t (lyskom-get-string 'unknown)))
                           when)))))
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 38.9 1996-02-05 11:46:55 byers Exp $
+;;;;; $Id: view-text.el,v 38.10 1996-02-17 15:37:04 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 38.9 1996-02-05 11:46:55 byers Exp $\n"))
+	      "$Id: view-text.el,v 38.10 1996-02-17 15:37:04 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -80,7 +80,8 @@ lyskom-reading-list to read the comments to this."
 		   (lyskom-format-insert "%#1n " 
 					 text-stat)
 		   (lyskom-print-date-and-time (text-stat->creation-time
-						text-stat))
+                                        text-stat)
+                                       'time-y-m-d-h-m)
 		   (lyskom-insert 
 		    (if (= 1 (text-stat->no-of-lines text-stat))
 			(lyskom-get-string 'line)
@@ -319,13 +320,13 @@ recipients to it that the user is a member in."
            'yesterday)
           (t nil))))
 
-(defun lyskom-print-date-and-time (time)
-  "Print date and time. Arg: TIME."
+(defun lyskom-return-date-and-time (time &optional fmt)
+  "Return date and time as a string. Arg: TIME."
   (let* ((diff (lyskom-calculate-day-diff time)))
-    (lyskom-format-insert 
+    (lyskom-format
      (if (and diff lyskom-print-complex-dates)
          (intern (concat (symbol-name diff) "-time-format-string"))
-       'time-y-m-d-h-m)
+       (or fmt 'time-yyyy-mm-dd-hh-mm))
      (+ (time->year time) 1900)
      (1+ (time->mon  time))
      (time->mday time)
@@ -333,7 +334,9 @@ recipients to it that the user is a member in."
      (time->min  time)
      (and diff (lyskom-get-string diff)))))
                   
-
+(defun lyskom-print-date-and-time (time &optional fmt)
+  "Print date and time. Arg: TIME"
+  (lyskom-insert (lyskom-return-date-and-time time fmt)))
 
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
@@ -415,13 +418,13 @@ the client. That is done by lyskom-is-read."
 			(misc-info->local-no misc))
   (if (misc-info->sent-at misc)
       (lyskom-format-insert 'send-at
-			    (lyskom-return-time 
+			    (lyskom-return-date-and-time 
 			     (misc-info->sent-at misc))))
   (if (misc-info->sender misc)
 	(lyskom-insert (lyskom-format 'sent-by (misc-info->sender misc))))
   (if (misc-info->rec-time misc)
       (lyskom-format-insert 'recieved-at
-			    (lyskom-return-time (misc-info->rec-time misc)))))
+			    (lyskom-return-date-and-time (misc-info->rec-time misc)))))
 
 
 (defun lyskom-view-text-handle-saved-comments (text-stat)

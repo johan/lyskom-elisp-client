@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.15 1996-02-17 05:42:18 davidk Exp $
+;;;;; $Id: startup.el,v 38.16 1996-02-17 15:36:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.15 1996-02-17 05:42:18 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.16 1996-02-17 15:36:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -173,8 +173,9 @@ See lyskom-mode for details."
 						      'pers 'conf-no)))
 	    (if lyskom-pers-no
 		nil
-	      (let ((name (lyskom-read-conf-name (lyskom-get-string 'what-is-your-name)
-						 'pers nil "")))
+	      (let ((name (lyskom-read-conf-name
+			   (lyskom-get-string 'what-is-your-name)
+			   'pers nil "")))
 		(setq lyskom-pers-no
 		      (or (lyskom-read-conf-name-internal name 'pers 'conf-no)
 			  (lyskom-create-new-person name)))))
