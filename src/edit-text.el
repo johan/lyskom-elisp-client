@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.46 1999-10-16 22:49:03 byers Exp $
+;;;;; $Id: edit-text.el,v 44.47 1999-10-18 18:54:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.46 1999-10-16 22:49:03 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.47 1999-10-18 18:54:35 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -254,9 +254,16 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
   (if text-stat
-      (lyskom-edit-insert-commented-author 
-       (blocking-do 'get-conf-stat (text-stat->author text-stat))
-       string stream number)
+      (let ((mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
+            (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16))))
+        
+       
+
+        (lyskom-edit-insert-commented-author 
+         (if mx-from
+             (lyskom-format-mx-author mx-from mx-author)
+           (blocking-do 'get-conf-stat (text-stat->author text-stat)))
+         string stream number))
     (lyskom-edit-insert-commented-author nil string stream number)))
 
 
