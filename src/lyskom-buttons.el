@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.57 2001-10-13 13:17:54 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.58 2001-10-14 14:47:38 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.57 2001-10-13 13:17:54 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.58 2001-10-14 14:47:38 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -82,12 +82,12 @@ on such functions see the documentation for lyskom-add-button-action."
 (defun kom-previous-link (num)
   "Move the cursor to the previous active area in the LysKOM buffer."
   (interactive "p")
-  (lyskom-prev-area num 'lyskom-button-text))
+  (lyskom-prev-area num 'lyskom-button))
 
 (defun kom-next-link (num)
   "Move the cursor to the next active area in the LysKOM buffer."
   (interactive "p")
-  (lyskom-next-area num 'lyskom-button-text))
+  (lyskom-next-area num 'lyskom-button))
 
 
 (defun kom-button-press ()
@@ -402,12 +402,15 @@ the current match-data."
 
 
 	
-(defun lyskom-generate-button (type arg &optional text face menu-title)
-  "Generate the properties for a button of type TYPE with argument ARG.
-Optional argument TEXT is the button text to be saved as a property and
-FACE is the default text face for the button. Optional argument MENU-TITLE
-defines the title for the popup menu. See lyskom-default-button for more
-information."
+(defun lyskom-generate-button (type arg &optional text face menu-title
+				    subtle)
+  "Generate the properties for a button of type TYPE with argument
+ARG. Optional argument TEXT is the button text to be saved as a
+property and FACE is the default text face for the button. Optional
+argument MENU-TITLE defines the title for the popup menu. See
+lyskom-default-button for more information. Optional argument SUBTLE
+means don't set the lyskom-button property if non-nil. that means
+kom-next- and -previous-link won't notice the button"
   (let* ((persno (cond ((boundp 'lyskom-pers-no) lyskom-pers-no)
                        ((and (boundp 'lyskom-buffer) lyskom-buffer)
                         (save-excursion
@@ -461,6 +464,7 @@ information."
 		       'lyskom-buffer lyskom-buffer)))))
 
     (append (list 'rear-nonsticky t)
+	    (if (not subtle) (list 'lyskom-button t))
 	    (if the-hint
 		(cons 'lyskom-button-hint
 		      (cons the-hint props))
@@ -477,7 +481,7 @@ MENU-TITLE is a list consisting of a format string or symbol and arguments
 for the format string. The arguments are not when the menu is popped
 up."
   (and kom-text-properties
-       (let (xarg text face)
+       (let (xarg text face subtle)
 	 (cond ((eq type 'conf)
 		(cond ((lyskom-conf-stat-p arg)
 		       (if (conf-type->letterbox (conf-stat->conf-type arg))
@@ -541,14 +545,15 @@ up."
                       (t (setq xarg nil text ""))))
 
 	       ((eq type 'timestamp)
-		(setq face 'kom-text-face)
+		(setq face 'kom-text-face
+		      subtle t)
 		(cond ((null arg) (setq xarg (current-time)
 					 text (format-time-string "%Y-%m-%d %H:%M")))
 		      (t (setq xarg arg
 			       text (format-time-string "%Y-%m-%d %H:%M" arg)))))
 
 	       (t (setq xarg arg text "")))
-	 (lyskom-generate-button type xarg text face menu-title))))
+	 (lyskom-generate-button type xarg text face menu-title subtle))))
                   
 
            
