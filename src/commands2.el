@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.102 2002-01-03 15:47:39 byers Exp $
+ ;;;;; $Id: commands2.el,v 44.103 2002-02-09 20:31:24 ceder Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.102 2002-01-03 15:47:39 byers Exp $\n"))
+               "$Id: commands2.el,v 44.103 2002-02-09 20:31:24 ceder Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -2545,3 +2545,36 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
   (interactive)
   (setq kom-review-marks-texts-as-read nil))
 
+ ;;; ================================================================
+ ;;;             Jämför två texter - Compare two texts
+ ;;; Run ediff-buffers on two texts.
+
+ ;;; Author: Per Cederqvist
+
+(def-kom-command kom-compare-texts (old new)
+  "Show differences between text OLD and NEW.
+When called interactively, it will prompt for the NEW text first,
+defaulting to the last viewed texts.  The OLD text number will default
+to the first text that NEW is a comment or footnote to."
+  (interactive
+   (let* ((n (lyskom-read-text-no-prefix-arg 'diff-what-text-new t))
+	  (new-stat (blocking-do 'get-text-stat n))
+	  (o (lyskom-read-number
+	      'diff-what-text-old
+	      (if (null new-stat)
+		  (lyskom-error (lyskom-get-string 'no-such-text-no n))
+		(car (lyskom-text-stat-commented-texts new-stat))))))
+     (list o n)))
+  (let* ((old-text (blocking-do 'get-text old))
+	 (old-text-stat (blocking-do 'get-text-stat old))
+	 (new-text (blocking-do 'get-text new))
+	 (new-text-stat (blocking-do 'get-text-stat new))
+	 (old-buf (generate-new-buffer (format "%d" old)))
+	 (new-buf (generate-new-buffer (format "%d" new))))
+    (set-buffer old-buf)
+    (insert (text->decoded-text-mass old-text old-text-stat))
+    (set-buffer-modified-p nil)
+    (set-buffer new-buf)
+    (insert (text->decoded-text-mass new-text new-text-stat))
+    (set-buffer-modified-p nil)
+    (ediff-buffers old-buf new-buf)))

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.160 2002-01-21 16:16:51 qha Exp $
+;;;;; $Id: vars.el.in,v 44.161 2002-02-09 20:31:23 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.160 2002-01-21 16:16:51 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.161 2002-02-09 20:31:23 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1760,6 +1760,9 @@ is a list of vectors, where each vector specifies an item.
     kom-add-request-confirm
 
     kom-review-mail-headers
+
+    kom-compare-texts
+
     kom-become-anonymous
     kom-become-nonanonymous
 

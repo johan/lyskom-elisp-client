@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.195 2002-01-30 08:10:24 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.196 2002-02-09 20:31:23 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.195 2002-01-30 08:10:24 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.196 2002-02-09 20:31:23 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -675,6 +675,8 @@ Meddelandet du försökte sända till %#1M var:
     (multiple-choice . "Flera alternativ finns.")
     (does-not-exist . "Detta kommando finns inte.")
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
+    (diff-what-text-old . "Gammal text att jämföra: ")
+    (diff-what-text-new . "Ny text att jämföra: ")
 
 
     ;; Only people fixing bugs or receiving bug reports should
@@ -1786,6 +1788,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-add-request-confirm  . "Begär läsbekräftelse")
 
     (kom-review-mail-headers  . "Återse brevhuvud")
+    
+    (kom-compare-texts        . "Jämför två texter")
+
     (kom-become-anonymous     . "Bli anonym")
     (kom-become-nonanonymous  . "Bli icke-anonym (träd fram ur skuggorna)")
 
@@ -2180,6 +2185,10 @@ Begär att alla som läser ett visst inlägg bekräftar läsningen.")
 
     (kom-review-mail-headers  . "\
 Återse brevhuvudet för ett importerat sladdpostmeddelande.")
+
+    (kom-compare-texts        . "\
+Jämför två texter med hjälp av ediff.")
+
     (kom-become-anonymous     . "\
 Ändra klientens beteende så att du blir lite mer anonym. Det blir även
 enklare att skriva anonyma inlägg.")
