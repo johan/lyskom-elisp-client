@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.20 1996-02-17 15:36:58 byers Exp $
+;;;;; $Id: vars.el.in,v 38.21 1996-02-21 19:48:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.20 1996-02-17 15:36:58 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.21 1996-02-21 19:48:32 davidk Exp $\n"))
 
 
 
@@ -357,7 +357,7 @@ he gets a y-or-n-p question for all recipients.")
 (defvar lyskom-print-complex-dates t
   "*If non-nil, print today and yesterday using a special format.")
 
-(defvar lyskom-server-aliases
+(defvar kom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
     ("kom.ludd.luth.se" . "LuddKOM")
     ("rydkom.rydnet.lysator.liu.se" . "RydKOM")
@@ -605,6 +605,9 @@ The first element is a dummy.")
 (defvar lyskom-inhibit-minibuffer-messages nil
   "A flag indicating whether asynchronous minibuffer messages are allowed.
 If this variable is non-nil, no asynchronous messages will appear.")
+
+(defvar lyskom-is-saving nil
+  "A flag indicating whether the server is saving at the moment.")
 
 ;;; These variables control prefetch of conf-stats, text-stats and texts:
 
@@ -880,59 +883,59 @@ the value of  kom-tell-phrases  for fun.")
 	 nil
        (,@ body))))
 
+(put 'lyskom-make-face 'lisp-indent-function 1)
+
 ;;; +++ Should handle dark backgrounds better
 
 (when (eq window-system 'x)
   (if (x-display-color-p)
-      (let ((bgmode (cdr (assq 'background-mode (frame-parameters)))))
+      (let* ((bgmode (cdr (assq 'background-mode (frame-parameters))))
+	     (dark-bg (eq bgmode 'dark)))
 	(lyskom-make-face 'kom-active-face
-			  (copy-face 'default 'kom-active-face)
-			  (set-face-foreground 'kom-active-face "blue4"))
+	  (copy-face 'default 'kom-active-face)
+	  (set-face-foreground 'kom-active-face
+			       (if dark-bg "lightblue" "blue4")))
 	(lyskom-make-face 'kom-url-face
-			  (copy-face 'default 'kom-url-face)
-			  (set-face-foreground 'kom-url-face "BlueViolet"))
+	  (copy-face 'default 'kom-url-face)
+	  (set-face-foreground 'kom-url-face
+			       (if dark-bg "Moccasin" "BlueViolet")))
 	(lyskom-make-face 'kom-me-face
-			  (copy-face 'bold 'kom-me-face)
-			  (set-face-foreground 'kom-me-face "yellow")
-			  (set-face-background 'kom-me-face "black"))
+	  (copy-face 'bold 'kom-me-face)
+	  (set-face-foreground 'kom-me-face "gold")
+	  (set-face-background 'kom-me-face "black"))
 	(lyskom-make-face 'kom-highlight-face
-			  (copy-face 'highlight 'kom-highlight-face)
-			  (set-face-foreground 'kom-highlight-face 
-					       "midnight blue"))
+	  (copy-face 'highlight 'kom-highlight-face)
+	  (set-face-foreground 'kom-highlight-face 
+			       "midnight blue"))
 	(lyskom-make-face 'kom-text-face
-			  (copy-face 'default 'kom-text-face))
+	  (copy-face 'default 'kom-text-face))
 	(lyskom-make-face 'kom-subject-face
-			  (copy-face 'kom-text-face 'kom-subject-face)
-			  (set-face-foreground 'kom-subject-face
-					       "dark green"))
+	  (copy-face 'kom-text-face 'kom-subject-face)
+	  (set-face-foreground 'kom-subject-face
+			       (if dark-bg "Khaki" "dark green")))
 	(lyskom-make-face 'kom-text-no-face
-			  (copy-face 'kom-text-face 'kom-text-no-face))
+	  (copy-face 'kom-text-face 'kom-text-no-face))
 	(lyskom-make-face 'kom-presence-face
-			  (make-face 'kom-presence-face)
-			  (make-face-italic 'kom-presence-face nil t)
-			  (cond ((or (null bgmode)
-				     (eq bgmode 'dark))
-				 (set-face-foreground 'kom-presence-face 
-						      "DimGray")) 
-				((eq bgmode 'light)
-				 (set-face-foreground
-				  'kom-presence-face "LightGray")))))
+	  (make-face 'kom-presence-face)
+	  (make-face-italic 'kom-presence-face nil t)
+	  (set-face-foreground 'kom-presence-face
+			       "Gray")))
     (progn
       (lyskom-make-face 'kom-active-face
-			(copy-face 'underline 'kom-active-face))
+	(copy-face 'underline 'kom-active-face))
       (lyskom-make-face 'kom-url-face
-			(copy-face 'kom-active-face 'kom-url-face))
+	(copy-face 'kom-active-face 'kom-url-face))
       (lyskom-make-face 'kom-me-face
-			(copy-face 'highlight 'kom-me-face))
+	(copy-face 'highlight 'kom-me-face))
       (lyskom-make-face 'kom-highlight-face
-			(copy-face 'highlight 'kom-highlight-face))
+	(copy-face 'highlight 'kom-highlight-face))
       (lyskom-make-face 'kom-subject-face
-			(copy-face 'default 'kom-subject-face))
+	(copy-face 'default 'kom-subject-face))
       (lyskom-make-face 'kom-text-face
-			(copy-face 'default 'kom-subject-face))
+	(copy-face 'default 'kom-subject-face))
       (lyskom-make-face 'kom-text-no-face
-			(copy-face 'default 'kom-subject-face))
+	(copy-face 'default 'kom-subject-face))
       (lyskom-make-face 'kom-presence-face
-			(make-face 'kom-presence-face)
-			(make-face-italic 'kom-presence-face nil t)))))
+	(make-face 'kom-presence-face)
+	(make-face-italic 'kom-presence-face nil t)))))
 
