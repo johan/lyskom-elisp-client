@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.126 2000-08-11 15:00:59 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.127 2000-08-14 15:56:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.126 2000-08-11 15:00:59 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.127 2000-08-14 15:56:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -313,14 +313,17 @@ du har läst klart allting. Kom tillbaks senare.
     (no-matching-anys . "Inga personer eller möten uppfyller uttrycket \"%#1s\".\n")
     (no-confs-exist . "Det finns inga möten i databasen.\n")
     (no-pers-confs-exist . "Det finns inga möten eller personer i databasen.\n")
-    (list-confs-created-by . "Lista möten skapade av: ")
-    (list-pers-confs-created-by . "Lista möten och personer skapade av: ")
+    (list-confs-created-by . "Lista organisatörsskap för: ")
+    (listing-confs-created-by . "Organisatörsskap för %#1P\n")
+    (list-pers-confs-created-by . "Lista organisatörsskap (med brevlådor) för: ")
     (getting-all-confs . "Hämtar en lista av alla möten från servern...")
     (getting-all-pers-confs . "Hämtar en lista av alla personer och möten från servern...")
     (getting-all-confs-done . "Hämtar en lista av alla möten från servern...klart")
     (getting-all-pers-confs-done . "Hämtar en lista av alla personer och möten från servern...klart")
-    (finding-created-confs . "Söker skapade möten (%#1d av %#2d klart)")
-    (finding-created-pers-confs . "Söker skapade möten och personer (%#1d av %#2d klart)")
+    (finding-created-confs . "Söker organisatörsskap (%#1d av %#2d klart)")
+    (finding-created-pers-confs . "Söker organisatörsskap (med brevlådor) (%#1d av %#2d klart)")
+    (no-created-confs . "%#1P är inte skapare, organisatör eller supermöte för något möte.\n")
+
     (name-to-be-changed . "Ange det namn som skall ändras: ")
     (no-such-conf-or-pers . "Mötet eller personen finns ej.\n")
     (new-name . "Nytt namn: ")
@@ -1522,7 +1525,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-go-to-conf	      . "Gå till möte")
     (kom-go-to-next-conf      . "Gå till nästa möte")
     (kom-jump		      . "Hoppa över alla kommentarer")
-    (kom-list-created-conferences . "Lista skapade möten")
+    (kom-list-created-conferences . "Lista organisatörsskap")
     (kom-list-conferences     . "Lista möten") 
     (kom-list-persons	      . "Lista personer")
     (kom-list-news            . "Lista nyheter")

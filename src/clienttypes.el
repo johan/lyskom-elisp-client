@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.9 1999-12-02 22:29:40 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.10 2000-08-14 15:56:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.9 1999-12-02 22:29:40 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.10 2000-08-14 15:56:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -387,6 +387,10 @@ element will be the new first element."
 (defsubst lyskom-queue-make-empty (queue)
   "Make the queue QUEUE empty."
   (setcdr queue (cons nil nil)))
+
+(defsubst lyskom-queue-set-data (queue data)
+  (lyskom-queue-make-empty queue)
+  (setcdr queue (cons data (last data))))
 
 
 (defsubst lyskom-queue-delete-first (queue)

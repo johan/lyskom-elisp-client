@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.78 2000-08-11 10:09:36 byers Exp $
+;;;;; $Id: commands1.el,v 44.79 2000-08-14 15:56:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.78 2000-08-11 10:09:36 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.79 2000-08-14 15:56:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1407,11 +1407,18 @@ Those that you are not a member in will be marked with an asterisk."
 ;;; Author: ceder
 ;;; Rewritten: linus
 
-(def-kom-command kom-list-conferences (match)
+(def-kom-command kom-list-conferences (&optional match)
   "List all conferences whose name matches MATCH (a string).
 Those that you are not a member in will be marked with an asterisk."
-  (interactive (list (lyskom-read-string
-		      (lyskom-get-string 'search-for-conf))))
+  (interactive)
+
+  (unless kom-allow-incompleteness
+    (sit-for 0)
+    (lyskom-prefetch-all-confs))
+
+  (setq match (or match
+                  (lyskom-read-string
+                   (lyskom-get-string 'search-for-conf))))
   (let ((result (blocking-do 'lookup-z-name match 0 1)))
     (if result 
         (if (conf-z-info-list->conf-z-infos result)
@@ -1424,52 +1431,76 @@ Those that you are not a member in will be marked with an asterisk."
 (def-kom-command kom-list-created-conferences (arg)
   "List all conferences created by some person."
   (interactive "P")
+
+  (unless kom-allow-incompleteness
+    (sit-for 0)
+    (lyskom-prefetch-all-confs))
+
   (blocking-do 'get-uconf-stat lyskom-pers-no)
   (let ((pers-no (lyskom-read-conf-no 
                   (if arg 'list-pers-confs-created-by 'list-confs-created-by)
                   '(pers) 
                   nil
                   (if (cache-get-uconf-stat lyskom-pers-no)
-                      (cons (conf-stat->name (cache-get-conf-stat lyskom-pers-no)) 0)1
+                      (cons (conf-stat->name (cache-get-uconf-stat lyskom-pers-no)) 0)1
                       nil)
                   t)))
     (lyskom-message (lyskom-get-string (if arg 'getting-all-pers-confs 'getting-all-confs)))
     (let ((result (blocking-do 'lookup-z-name "" (if arg 1 0) 1)))
-      (lyskom-message (lyskom-get-string (if arg 'getting-all-pers confs-done 'getting-all-confs-done)))
+      (lyskom-message (lyskom-get-string (if arg 'getting-all-pers-confs-done 'getting-all-confs-done)))
       (if result
           (if (conf-z-info-list->conf-z-infos result)
-              (let ((counter (cons 1 (length (conf-z-info-list->conf-z-infos result)))))
-                (lyskom-traverse conf-z (conf-z-info-list->conf-z-infos result)
-                  (initiate-get-conf-stat 'main
-                                          'lyskom-list-created-conferences-2
-                                          (conf-z-info->conf-no conf-z)
-                                          counter
-                                          pers-no
-                                          arg
-                                          )
-                  )
-                (lyskom-wait-queue 'main))
+              (let ((counter (vector nil
+                                     1
+                                     (length (conf-z-info-list->conf-z-infos result))
+                                     0))
+                    (calls nil))
+                (condition-case arg
+                    (progn (lyskom-traverse conf-z (conf-z-info-list->conf-z-infos result)
+                             (setq calls (cons
+                                          (initiate-get-conf-stat 'main
+                                                                  'lyskom-list-created-conferences-2
+                                                                  (conf-z-info->conf-no conf-z)
+                                                                  counter
+                                                                  pers-no
+                                                                  arg
+                                                                  )
+                                          calls)))
+                           (lyskom-wait-queue 'main)
+                           (when (eq 0 (elt counter 3))
+                             (lyskom-format-insert 'no-created-confs pers-no))
+                           )
+                  (quit (aset counter 0 t)
+                        (lyskom-cancel-call 'main calls))))
             (lyskom-insert (lyskom-get-string (if arg 'no-pers-confs-exist 'no-confs-exist))))
         (lyskom-format-insert (lyskom-current-error))))))
 
+(defun lyskom-list-conf-membership-char (conf-no)
+  (if lyskom-membership-is-read
+      (cond ((lyskom-get-membership conf-no) ?\ )
+            ((lyskom-get-membership conf-no t) ?-)
+            (t ?*))
+    (cond ((lyskom-try-get-membership conf-no) ?\ )
+          ((lyskom-try-get-membership conf-no t) ?-)
+          (t ?\?))))
+
 (defun lyskom-list-created-conferences-2 (cs counter pers-no arg)
-  (setcar counter (1+ (car counter)))
-  (lyskom-message (lyskom-format (if arg 'finding-created-pers-confs 'finding-created-confs)
-                                 (car counter)
-                                 (cdr counter)))
-  (when (and cs (or (eq (conf-stat->creator cs) pers-no)
-                    (eq (conf-stat->supervisor cs) pers-no)
-                    (eq (conf-stat->super-conf cs) pers-no)))
-    (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#2M%]\n"
-			(lyskom-default-button 'conf (conf-stat->conf-no cs))
-                        cs
-                        (if (lyskom-get-membership (conf-stat->conf-no cs))
-                            ?\ 
-                           (if (lyskom-get-membership (conf-stat->conf-no cs) t)
-                               ?- ?*))
-                        (concat (if (eq pers-no (conf-stat->creator cs)) "C" " ")
-                                (if (eq pers-no (conf-stat->supervisor cs)) "O" " ")
-                                (if (eq pers-no (conf-stat->super-conf cs)) "S" " ")))))
+  (unless (elt counter 0)
+    (aset counter 1 (1+ (elt counter 1)))
+    (lyskom-message (lyskom-format (if arg 'finding-created-pers-confs 'finding-created-confs)
+                                   (elt counter 1)
+                                   (elt counter 2)))
+    (when (and cs (or (eq (conf-stat->creator cs) pers-no)
+                      (eq (conf-stat->supervisor cs) pers-no)
+                      (eq (conf-stat->super-conf cs) pers-no)))
+      (aset counter 3 (1+ (elt counter 3)))
+      (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#2M%]\n"
+                            (lyskom-default-button 'conf (conf-stat->conf-no cs))
+                            cs
+                            (lyskom-list-conf-membership-char (conf-stat->conf-no cs))
+                            (concat (if (eq pers-no (conf-stat->creator cs)) "C" " ")
+                                    (if (eq pers-no (conf-stat->supervisor cs)) "O" " ")
+                                    (if (eq pers-no (conf-stat->super-conf cs)) "S" " "))))))
 
 
 (defun lyskom-list-conf-print (conf-z)
@@ -1478,10 +1509,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (lyskom-format-insert "%[%#1@%4#2:m %#3c %#2M%]\n"
 			(lyskom-default-button 'conf (conf-z-info->conf-no conf-z))
 			conf-z
-			(if (lyskom-get-membership (conf-z-info->conf-no conf-z))
-			    ?\  
-                          (if (lyskom-get-membership (conf-z-info->conf-no conf-z) t)
-                              ?- ?*))))
+                        (lyskom-list-conf-membership-char (conf-z-info->conf-no conf-z))))
 
 ;;; ================================================================
 ;;;                Lista med regexpar - List regexp
