@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.102 2002-05-21 22:05:44 byers Exp $
+;;;;; $Id: utilities.el,v 44.103 2002-05-25 18:22:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.102 2002-05-21 22:05:44 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.103 2002-05-25 18:22:40 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -681,6 +681,21 @@ destructive operations on the result may affect either operand."
     (lyskom-traverse x a
       (unless (memq x b) (setq result (cons x result))))
     (nconc (nreverse result) b)))
+
+(defun lyskom-delete-duplicates (list &optional key)
+  "Removes all but one instance of each element in LIST.
+If optional argument KEY is non-nil, apply KEY to each element before
+comparison. Comparison is done with eq."
+  (let ((clist (mapcar (lambda (el)
+                         (if key
+                             (cons (funcall key el) el)
+                           (cons el el)))
+                       list))
+        (result nil))
+    (lyskom-traverse el clist
+      (unless (assq (car el) result)
+        (setq result (cons el result))))
+    (nreverse (mapcar 'cdr result))))
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.208 2002-05-22 21:40:50 byers Exp $
+;;;;; $Id: english-strings.el,v 44.209 2002-05-25 18:22:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.208 2002-05-22 21:40:50 byers Exp $"))
+              "$Id: english-strings.el,v 44.209 2002-05-25 18:22:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1643,6 +1643,7 @@ You must become an active member of the conference to enter it.\n")
     ;; Button actions
 
     (lyskom-button-view-text-action . "View text")
+    (lyskom-button-copy-text-no-action . "Copy text number")
     (lyskom-button-review-noconversion-action . "Review unconverted")
     (lyskom-button-find-root-review-action . "Review tree")
     (lyskom-button-find-root-action . "Review root text")

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.195 2002-05-25 16:35:10 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.196 2002-05-25 18:22:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.195 2002-05-25 16:35:10 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.196 2002-05-25 18:22:40 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -968,7 +968,7 @@ to some URL viewers."
   "List of URL managers. Each element is a list consisting of
 (MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
 view a URL, kom-url-viewer-preferences is scanned, and the URL
-manager whose MANAGER-REGEXP first matches an element in
+-manager whose MANAGER-REGEXP first matches an element in
 kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
 the selected URL is used to view the URL by calling its VIEW-FUNCTION
 with the URL and the manager entry as arguments.")
@@ -1313,6 +1313,7 @@ appear more than once"
      text-popup-title
      lyskom-button-view-text
      ((lyskom-button-view-text-action . lyskom-button-view-text)
+      (lyskom-button-copy-text-no-action . lyskom-button-copy-text-no)
       (lyskom-button-review-noconversion-action . lyskom-button-review-noconversion)
       (lyskom-button-find-root-review-action . lyskom-button-find-root-review)
       (lyskom-button-find-root-action . lyskom-button-find-root)

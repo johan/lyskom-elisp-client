@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.99 2002-05-07 20:12:11 byers Exp $
+;;;;; $Id: edit-text.el,v 44.100 2002-05-25 18:22:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.99 2002-05-07 20:12:11 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.100 2002-05-25 18:22:39 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -894,7 +894,9 @@ Cannot be called from a callback."
            text-no
            raw-author-list))
         (lyskom-wait-queue 'sending)
-        (setq raw-author-list (collector->value raw-author-list))
+        (setq raw-author-list (lyskom-delete-duplicates
+                               (collector->value raw-author-list)
+                               'conf-stat->conf-no))
 
         ;;
         ;; Filter the list. Remote all authors that are direct recipients
@@ -974,38 +976,38 @@ Cannot be called from a callback."
                                  (not (membership-type->passive
                                        (membership->type membership))))
                         (lyskom-traverse-break t)))
-              (setq authors-to-ask-about (cons author authors-to-ask-about)))
+              (setq authors-to-ask-about (cons author authors-to-ask-about)))))
 
-            ;;
-            ;; Now authors-to-ask-about contains all authors that we
-            ;; want to ask about. So do that.
-            ;;
+        ;;
+        ;; Now authors-to-ask-about contains all authors that we
+        ;; want to ask about. So do that.
+        ;;
 
-            (lyskom-traverse author authors-to-ask-about
-              (let ((send-comments-to
-                     (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
-                (if (and send-comments-to
-                         (string-match "^\\([0-9]+\\)"
-                                       (aux-item->data send-comments-to)))
-                    (setq send-comments-to
-                          (string-to-number
-                           (match-string 1 (aux-item->data send-comments-to))))
-                  (setq send-comments-to nil))
+        (lyskom-traverse author authors-to-ask-about
+          (let ((send-comments-to
+                 (car (lyskom-get-aux-item (conf-stat->aux-items author) 33))))
+            (if (and send-comments-to
+                     (string-match "^\\([0-9]+\\)"
+                                   (aux-item->data send-comments-to)))
+                (setq send-comments-to
+                      (string-to-number
+                       (match-string 1 (aux-item->data send-comments-to))))
+              (setq send-comments-to nil))
 
-                (when (lyskom-j-or-n-p 
-                       (lyskom-format 'add-recipient-p 
-                                      author
-                                      send-comments-to))
-                  (setq extra-headers
-                        (nconc (list (if (lyskom-j-or-n-p
-                                          (lyskom-format
-                                           'really-add-as-recpt-q
-                                           (or send-comments-to author)))
-                                         'RECPT
-                                       'CC-RECPT)
-                                     (or send-comments-to 
-                                         (conf-stat->conf-no author)))
-                               extra-headers)))))))))
+            (when (lyskom-j-or-n-p 
+                   (lyskom-format 'add-recipient-p 
+                                  author
+                                  send-comments-to))
+              (setq extra-headers
+                    (nconc (list (if (lyskom-j-or-n-p
+                                      (lyskom-format
+                                       'really-add-as-recpt-q
+                                       (or send-comments-to author)))
+                                     'RECPT
+                                   'CC-RECPT)
+                                 (or send-comments-to 
+                                     (conf-stat->conf-no author)))
+                           extra-headers)))))))
 
     extra-headers))
     

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.68 2002-04-26 21:16:12 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.69 2002-05-25 18:22:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.68 2002-04-26 21:16:12 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.69 2002-05-25 18:22:39 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -590,6 +590,12 @@ This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (goto-char (point-max))
            (kom-view arg))))
+
+(defun lyskom-button-copy-text-no (but arg text)
+  "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
+This is a LysKOM button action."
+  (kill-new text))
+
 
 (defun lyskom-button-review-noconversion (buf arg text)
   "In the LysKOM buffer BUF, view the text ARG without conversion. 

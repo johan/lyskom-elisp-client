@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.16 2002-04-25 20:56:35 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.17 2002-05-25 18:22:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.16 2002-04-25 20:56:35 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.17 2002-05-25 18:22:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -677,7 +677,6 @@ The element last pushed is first in the list."
 (defun collector-push (value collector)
   "Push VALUE onto the front of COLLECTOR's value"
   (setcdr collector (cons value (cdr collector))))
-
 
 (eval-and-compile (provide 'lyskom-clienttypes))
 
