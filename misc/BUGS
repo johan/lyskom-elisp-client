@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 18
+Unused-Bug-Id: 19
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -55,6 +55,7 @@ Currently handled by:
 Severity: 8
 Priority: 8
 Difficulty: 7
+Closed: linus: Sat Dec 11 14:29:33 1993
 Last edit: inge: Mon Aug  3 01:01:44 1992
 Reported by: Tommy Persson
 Site: 
@@ -170,6 +171,7 @@ Currently handled by:
 Severity: 2
 Priority: 5
 Difficulty: 0
+Closed: linus: Mon Dec 13 23:37:45 1993
 Last edit: linus: Thu Aug  6 04:47:13 1992
 Reported by: bellman
 Site: 
@@ -194,6 +196,7 @@ Currently handled by:
 Severity: 3
 Priority: 0
 Difficulty: 3
+Closed: linus: Tue Dec 14 00:15:04 1993
 Last edit: linus: Fri Aug  7 17:48:31 1992
 Reported by: Yf=f(Yf)
 Site: 
@@ -234,6 +237,7 @@ Currently handled by:
 Severity: 3
 Priority: 0
 Difficulty: 2
+Closed: linus: Tue Dec 14 00:15:11 1993
 Last edit: linus: Fri Aug  7 17:51:14 1992
 Reported by: Calle Dybedahl <calle>
 Site: 
@@ -340,6 +344,21 @@ Difficulty: 0
 Last edit: linus: Wed Sep  2 13:28:35 1992
 Reported by: Uwe
 Site: 
+Associated mails:
+End mails.
+---
+
+Id: 18
+Summary: Who keymap when in prioritize mode
+Version: 0.38
+Created: linus: Sat Dec 11 14:40:31 1993
+Currently handled by: 
+Severity: 1
+Priority: 1
+Difficulty: 7
+Last edit: linus: Sat Dec 11 14:40:31 1993
+Reported by: linus@lysator.liu.se
+Site: lysator
 Associated mails:
 End mails.
 ---
