@@ -1,3 +1,21 @@
+Thu Oct  3 01:30:03 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-binsearch-internal): Tro inte att två
+ 	element bara är ett.
+
+	* Rensade bort referenser till lyskom-last-conf-*.
+
+	* startup.el (lyskom-clear-vars): Gör lyskom-prefetch-in-action,
+ 	lyskom-prefetch-pending-prefetch och lyskom-prefetch-stack lokala.
+
+	* vars.el.in (lyskom-last-conf-fetched): Tog bort.
+	(lyskom-last-conf-received): Tog bort.
+	(lyskom-prefetch-limit): Flyttade från prefetch.el.
+
+	* prefetch.el (lyskom-prefetch-map-size): Tog bort
+	(lyskom-prefetch-all-conf-texts): Kommenterade bort.
+	(lyskom-prefetch-conf-texts): Kommenterade bort.
+
 Wed Oct  2 16:41:53 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Töm minibufferten.
