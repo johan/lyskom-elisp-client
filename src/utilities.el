@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.20 1997-07-29 14:53:44 byers Exp $
+;;;;; $Id: utilities.el,v 44.21 1997-09-21 11:43:22 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.20 1997-07-29 14:53:44 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.21 1997-09-21 11:43:22 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -458,3 +458,90 @@ also reads the proper X resources."
 	    (if (eq it 'off) (lyskom-modify-face 'unitalic face))
 	    (if ul (set-face-underline-p face (eq ul 'on))))))
        lyskom-faces)))
+
+
+;;; ============================================================
+;;; Keymap utilities
+
+(defun lyskom-lookup-key (keymap event &optional accept-default)
+  (if (null keymap)
+      (and accept-default 
+           (lookup-key global-map event))
+    (if (not (arrayp event))
+	(setq event (vector event)))
+    (or (lookup-key keymap event)
+        (lyskom-lookup-key (keymap-parent keymap) event accept-default))))
+
+(defun lyskom-keymap-body (keymap)
+  (setq keymap (cdr keymap))
+  (cond ((arrayp (car keymap)) (car keymap))
+        (t keymap)))
+
+(defun lyskom-keymap-realbinding (binding)
+  (while (stringp (car-safe binding))
+    (setq binding (cdr binding)))
+  binding)
+
+(defun lyskom-overlay-keymap (basemap overlay keymap &optional prefix)
+  (let ((keys (make-vector (1+ (length prefix)) nil))
+        (index (length prefix))
+        (body nil)
+        (r 0))
+
+    (while (< r (length prefix))
+      (aset keys r (aref prefix r))
+      (setq r (1+ r)))
+
+    (cond ((not (keymapp keymap)))
+          ((not (keymapp overlay)))
+          ((not (keymapp basemap)))
+
+          ((setq body (lyskom-keymap-body overlay))
+           (mapcar
+            (function
+             (lambda (element)
+               (cond ((arrayp element)
+                      (let ((len (length element)))
+                        (setq r 0)
+                        (while (< r len)
+                          (aset keys index r)
+                          (lyskom-overlay-keys keys (aref element r)
+                                               basemap overlay keymap)
+                          (setq r (1+ r)))))
+
+                     ((consp element)
+                      (when (not (eq t (car element)))
+                        (aset keys index (car element))
+                        (lyskom-overlay-keys keys
+                                             (lyskom-keymap-realbinding
+                                              (cdr element))
+                                             basemap overlay keymap)))
+
+                     (t nil))))
+            body)))))
+
+
+(defun lyskom-overlay-keys (keys binding basemap overlay keymap)
+  (let ((base-binding (lyskom-lookup-key basemap keys nil)))
+
+   ;; If the binding is a keymap or prefix and
+   ;; the binding in the base is a keymap or prefix 
+   ;; then recurse
+
+   (cond ((and (keymapp binding)
+               (keymapp base-binding))
+          (lyskom-overlay-keymap basemap binding keymap keys))
+
+   ;; If the binding is a keymap or prefix and
+   ;; we are bound in the base
+   ;; then don't recurse
+
+         ((and (keymapp binding)
+               base-binding) nil)
+
+   ;; If we are not bound in the base
+   ;; copy the binding
+
+         ((and binding
+               (null base-binding)) (define-key keymap keys binding)))))
+

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.8 1997-07-29 14:52:57 byers Exp $
+;;;;; $Id: command.el,v 44.9 1997-09-21 11:42:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -226,36 +226,40 @@ chosen according to this"
 
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
-  (message "")
-  (while (and lyskom-to-be-printed-before-prompt
-	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-    (if (not (bolp)) (lyskom-insert "\n"))
-    (lyskom-insert (car (lyskom-queue->first 
-			 lyskom-to-be-printed-before-prompt)))
-    (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
-  (setq lyskom-executing-command nil)
-  (setq lyskom-current-command nil)
-  (setq lyskom-current-prompt nil)	; Already set in s-o-c really
-  (lyskom-scroll)
-  (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
-  (if (pos-visible-in-window-p (point-max) (selected-window))
-      (lyskom-set-last-viewed))
-  (lyskom-prefetch-and-print-prompt)
-  (run-hooks 'lyskom-after-command-hook)
-  (if lyskom-idle-time-flag
-      (save-excursion (set-buffer lyskom-buffer)
-                      (initiate-user-active 'background nil)))
-  (if kom-inhibit-typeahead
-      (discard-input))
-  ;; lyskom-pending-commands should probably be a queue or a stack.
-  (when lyskom-pending-commands
-    (let ((command (car lyskom-pending-commands)))
-      (setq lyskom-pending-commands (cdr lyskom-pending-commands))
-      (if (symbolp command)
-	  (call-interactively command)
-	(eval command))))
-  (when lyskom-slow-mode
-    (buffer-enable-undo)))
+  (lyskom-save-excursion
+   (when (and (boundp 'lyskom-buffer)
+              (buffer-live-p lyskom-buffer))
+     (set-buffer lyskom-buffer))
+   (message "")
+   (while (and lyskom-to-be-printed-before-prompt
+               (lyskom-queue->first lyskom-to-be-printed-before-prompt))
+     (if (not (bolp)) (lyskom-insert "\n"))
+     (lyskom-insert (car (lyskom-queue->first 
+                          lyskom-to-be-printed-before-prompt)))
+     (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
+   (setq lyskom-executing-command nil)
+   (setq lyskom-current-command nil)
+   (setq lyskom-current-prompt nil)	; Already set in s-o-c really
+   (lyskom-scroll)
+   (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
+   (if (pos-visible-in-window-p (point-max) (selected-window))
+       (lyskom-set-last-viewed))
+   (lyskom-prefetch-and-print-prompt)
+   (run-hooks 'lyskom-after-command-hook)
+   (if lyskom-idle-time-flag
+       (save-excursion (set-buffer lyskom-buffer)
+                       (initiate-user-active 'background nil)))
+   (if kom-inhibit-typeahead
+       (discard-input))
+   ;; lyskom-pending-commands should probably be a queue or a stack.
+   (when lyskom-pending-commands
+     (let ((command (car lyskom-pending-commands)))
+       (setq lyskom-pending-commands (cdr lyskom-pending-commands))
+       (if (symbolp command)
+           (call-interactively command)
+         (eval command))))
+   (when lyskom-slow-mode
+     (buffer-enable-undo))))
 
 (provide 'lyskom-command)
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 44.2 1997-06-29 14:19:22 byers Exp $
+;;;;; $Id: cache.el,v 44.3 1997-09-21 11:42:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.2 1997-06-29 14:19:22 byers Exp $\n"))
+	      "$Id: cache.el,v 44.3 1997-09-21 11:42:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -248,7 +248,7 @@ otherwise return nil"
   (setq lyskom-who-info-cache (list 'WHO-INFO-LIST))
   (lyskom-save-excursion
    (setq lyskom-who-info-buffer 
-	 (get-buffer-create (concat (buffer-name) "-who")))
+	 (lyskom-get-buffer-create 'WHO-INFO (concat (buffer-name) "-who") t))
    (set-buffer lyskom-who-info-buffer)
    (make-local-variable 'kom-buffer)
    (setq lyskom-buffer kombuf)
