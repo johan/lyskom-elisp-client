@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.31 1997-07-02 17:46:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.32 1997-07-07 09:14:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.31 1997-07-02 17:46:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.32 1997-07-07 09:14:33 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -664,6 +664,24 @@ The position lyskom-last-viewed will always remain visible."
                     )))))))
 	
 
+(defsubst lyskom-do-insert (string)
+  ;;  (let ((start (point)))
+  (insert string)
+  ;;    (let ((bounds (next-text-property-bounds 1 (1- start) 'special-insert))
+  ;;          (next (make-marker))
+  ;;          (fn nil))
+  ;;      (while bounds
+  ;;        (set-marker next (cdr bounds))
+  ;;        (setq fn (get-text-property (car bounds) 'special-insert))
+  ;;        (remove-text-properties (car bounds) (cdr bounds)
+  ;;                                '(special-insert))
+  ;;        (funcall fn (car bounds) (cdr bounds))
+  ;;        (setq start next)
+  ;;        (setq bounds (next-text-property-bounds 1 start
+  ;;                                                'special-insert)))))
+)
+
+
 (defun lyskom-insert (string)
   "Insert STRING last in current buffer.
 Leaves the point at the end of the buffer if possible without
@@ -675,7 +693,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
     (save-excursion
       (goto-char (point-max))
       (let ((inhibit-read-only t))
-	(insert string))
+        (lyskom-do-insert string))
       (lyskom-trim-buffer))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window was-at-max)
@@ -684,12 +702,13 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
 	    (and kom-continuous-scrolling (lyskom-scroll)))))))
 
 
+
 (defun lyskom-insert-at-point (string)
   "Insert STRING in the current buffer at point.
 The text is converted according to the value of
 kom-emacs-knows-iso-8859-1."
   (let ((inhibit-read-only t))
-    (insert string))
+    (lyskom-do-insert string))
   (lyskom-trim-buffer))  
 
 
@@ -723,7 +742,7 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
       (goto-char (point-max))
       (beginning-of-line)
       (let ((inhibit-read-only t))
-	(insert string))
+	(lyskom-do-insert string))
       (goto-char oldpoint))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window
@@ -1346,11 +1365,23 @@ Note that it is not allowed to use deferred insertions in the text."
         (save-excursion
           (set-buffer tmpbuf)
           (insert (substring text 5))
+          (insert " ")                  ; So we can adjust the extents
           (w3-region (point-max) (point-min))
-          (let ((tmp (buffer-string)))
-            (set-text-properties 0 (length tmp) '(end-closed nil) tmp)
+          (let ((tmp nil))
+            (map-extents
+             (lambda (e x)
+               (if (zerop (- (extent-start-position e)
+                             (extent-end-position e)))
+                   (set-extent-endpoints e (extent-start-position e)
+                                         (1+ (extent-end-position e))))
+               (set-extent-property e 'duplicable t)
+               nil))
+            (setq tmp (buffer-string))
+            (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
             tmp))
-      (kill-buffer tmpbuf))))
+      (kill-buffer tmpbuf)
+)))
+
 
 (defun lyskom-format-enriched (text)
   (if (not (fboundp 'format-decode-buffer))
