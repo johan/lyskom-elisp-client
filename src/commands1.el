@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.131 2002-04-10 22:42:58 byers Exp $
+;;;;; $Id: commands1.el,v 44.132 2002-04-13 09:30:57 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.131 2002-04-10 22:42:58 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.132 2002-04-13 09:30:57 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -152,13 +152,17 @@
 ;;; Author: Inge Wallin
 
 
-(def-kom-command kom-review-presentation (&optional who)
-  "Review the presentation for a person or a conference."
-  (interactive)
-  (let ((conf-stat 
-         (if who
-             (blocking-do 'get-conf-stat who)
-           (lyskom-read-conf-stat 
+(def-kom-command kom-review-presentation (&optional text-no)
+  "Review the presentation for a person or a conference. If a prefix argument
+is given, the presentation of the author of that text will be shown."
+  (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
+		    (list (lyskom-read-text-no-prefix-arg
+			   'text-to-see-author-of))))
+  (let ((conf-stat
+         (if text-no
+             (blocking-do 'get-conf-stat
+	      (text-stat->author (blocking-do 'get-text-stat text-no)))
+           (lyskom-read-conf-stat
             (lyskom-get-string 'presentation-for-whom)
             '(all)
             nil "" t))))
