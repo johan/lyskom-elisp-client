@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.88 2003-04-21 16:15:17 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.89 2003-04-25 22:24:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.88 2003-04-21 16:15:17 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.89 2003-04-25 22:24:37 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -650,12 +650,12 @@ up."
 	       ((eq type 'timestamp)
 		(setq face 'default
 		      subtle t)
-		(cond ((null arg) (setq xarg (current-time)
-					;text (format-time-string "%Y-%m-%d %H:%M")
-					))
+                (cond ((null arg) (setq xarg (current-time)
+                                        ;text (format-time-string "%Y-%m-%d %H:%M")
+                                        ))
 		      (t (setq xarg arg
-			       ;text (format-time-string "%Y-%m-%d %H:%M" arg)
-			       ))))
+                               ;text (format-time-string "%Y-%m-%d %H:%M" arg)
+                               ))))
 	       (t (setq xarg arg
 			text "")))
 	 (lyskom-generate-button type xarg text face menu-title subtle))))
@@ -933,7 +933,7 @@ This is a LysKOM button action."
 ;;;	Timestamp button
 ;;;
 
-(defun lyskom-button-copy-timestamp (but arg text)
+(defun lyskom-button-copy-timestamp (buf arg text)
   "In the LysKOM buffer BUF, ignore TEXT and copy ARG to the kill ring
 after formating it as time. This is a LysKOM button action."
   (kill-new (format-time-string "%Y-%m-%d %H:%M" arg)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.319 2003-04-21 16:15:18 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.320 2003-04-25 22:24:37 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.319 2003-04-21 16:15:18 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.320 2003-04-25 22:24:37 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -120,6 +120,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-i 9")   'kom-edit-insert-digit-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-i C-l") 'kom-edit-insert-link)
+  (define-key lyskom-sv-edit-prefix (kbd "C-i C-i") 'kom-insert-last-info-nodename)
   (define-key lyskom-sv-edit-prefix (kbd "C-a")     'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-m") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a <RET>") 'kom-edit-add-recipient)
