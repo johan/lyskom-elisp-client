@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.71 2000-05-26 14:35:14 byers Exp $
+;;;;; $Id: commands1.el,v 44.72 2000-06-02 13:13:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.71 2000-05-26 14:35:14 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.72 2000-06-02 13:13:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -111,45 +111,37 @@
 ;;; Author: Inge Wallin
 
 
-(def-kom-command kom-delete-text (text-no-arg)
+(def-kom-command kom-delete-text (text-no)
   "Delete a text. Argument: TEXT-NO"
-  (interactive "P")
-  (let ((text-no (cond ((null text-no-arg) 0)
-		       ((integerp text-no-arg) text-no-arg)
-		       ((listp text-no-arg) (car text-no-arg))
-		       (t 0)))
-        (do-delete t))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-text-to-delete 
+                                                     nil 
+                                                     lyskom-current-text)))
+  (let* ((do-delete t)
+         (text-stat (blocking-do 'get-text-stat text-no))
+         (num-marks (text-stat->no-of-marks text-stat))
+         (is-marked-by-me (cache-text-is-marked text-no)))
+    (cond ((null text-stat) 
+           (lyskom-report-command-answer nil)
+           (setq do-delete nil))
 
-    (if (zerop text-no)
-	(setq text-no 
-	      (lyskom-read-number (lyskom-get-string 'what-text-to-delete)
-				  lyskom-current-text)))
-    (let* ((text-stat (blocking-do 'get-text-stat text-no))
-           (num-marks (text-stat->no-of-marks text-stat))
-           (is-marked-by-me (cache-text-is-marked text-no)))
-                          
-      (cond ((null text-stat) 
-             (lyskom-report-command-answer nil)
-             (setq do-delete nil))
-
-            ((> (text-stat->no-of-marks text-stat) 0)
-             (setq do-delete
-                   (lyskom-j-or-n-p 
-                    (lyskom-format 'delete-marked-text
-		       (if (> num-marks 0)
-			    (if is-marked-by-me
-				(if (= num-marks 1)
-				    (lyskom-get-string 'delete-marked-by-you)
-                                  (lyskom-format 'delete-marked-by-you-and-others
-                                                 (1- num-marks)))
-                              (lyskom-format 'delete-marked-by-several
-                                             num-marks))))))))
+          ((> (text-stat->no-of-marks text-stat) 0)
+           (setq do-delete
+                 (lyskom-j-or-n-p 
+                  (lyskom-format 'delete-marked-text
+                                 (if (> num-marks 0)
+                                     (if is-marked-by-me
+                                         (if (= num-marks 1)
+                                             (lyskom-get-string 'delete-marked-by-you)
+                                           (lyskom-format 'delete-marked-by-you-and-others
+                                                          (1- num-marks)))
+                                       (lyskom-format 'delete-marked-by-several
+                                                      num-marks))))))))
       (when do-delete
         (lyskom-format-insert 'deleting-text text-no)
         (when (lyskom-report-command-answer 
                (blocking-do 'delete-text text-no))
           (when is-marked-by-me
-            (lyskom-unmark-text text-no)))))))
+            (lyskom-unmark-text text-no))))))
 
 
 
@@ -160,30 +152,24 @@
 ;;; Author: Inge Wallin
 
 
-(defun kom-review-presentation (&optional who)
+(def-kom-command kom-review-presentation (&optional who)
   "Review the presentation for a person or a conference."
   (interactive)
-  (lyskom-start-of-command 'kom-review-presentation)
-  (let ((end-of-command-taken-care-of))
-    (unwind-protect
-        (let ((conf-stat 
-               (if who
-                   (blocking-do 'get-conf-stat who)
-                 (lyskom-read-conf-stat 
-                          (lyskom-get-string 'presentation-for-whom)
-                          '(all)
-                          nil "" t))))
-          (if (null conf-stat)
-              (lyskom-insert-string 'somebody-deleted-that-conf)
-            (lyskom-format-insert 'review-presentation-of
-                                  conf-stat)
-            (if (/= (conf-stat->presentation conf-stat) 0)
-                (lyskom-view-text (conf-stat->presentation conf-stat))
-              (lyskom-format-insert 'has-no-presentation
-                                    conf-stat))))
-      (if end-of-command-taken-care-of
-          nil
-        (lyskom-end-of-command)))))
+  (let ((conf-stat 
+         (if who
+             (blocking-do 'get-conf-stat who)
+           (lyskom-read-conf-stat 
+            (lyskom-get-string 'presentation-for-whom)
+            '(all)
+            nil "" t))))
+    (if (null conf-stat)
+        (lyskom-insert-string 'somebody-deleted-that-conf)
+      (lyskom-format-insert 'review-presentation-of
+                            conf-stat)
+      (if (/= (conf-stat->presentation conf-stat) 0)
+          (lyskom-view-text (conf-stat->presentation conf-stat))
+        (lyskom-format-insert 'has-no-presentation
+                              conf-stat)))))
 
 
 
@@ -193,7 +179,7 @@
 ;;; Author: Inge Wallin
 ;;; Modified by: David Kågedal, Johan Sundström
 
-(def-kom-command kom-view-commented-text (&optional text-no)
+(def-kom-command kom-view-commented-text (text-no)
   "View the commented text.
 If the current text is comment to (footnote to) several text then the first
 text is shown and a REVIEW list is built to shown the other ones. If the
@@ -207,18 +193,18 @@ optional arg TEXT-NO is present review the text that text commented instead."
     (lyskom-insert-string 'have-to-read)))
 
 
-(def-kom-command kom-view-previous-commented-text ()
+(def-kom-command kom-view-previous-commented-text (text-no)
   "View the text the previous text commented.
 If the previously viewed text is a comment to (footnote to) several
 texts then the first text is shown and a REVIEW list is built to show
 the other ones."
-  (interactive)
-  (if lyskom-previous-text
-      (progn
-        (lyskom-tell-internat 'kom-tell-read)
-        (lyskom-view-commented-text
-         (blocking-do 'get-text-stat lyskom-previous-text)))
-    (lyskom-insert-string 'confusion-what-to-view)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q nil
+                                                     lyskom-previous-text)))
+  (cond (text-no
+         (lyskom-tell-internat 'kom-tell-read)
+         (lyskom-view-commented-text
+          (blocking-do 'get-text-stat lyskom-previous-text)))
+        (t (lyskom-insert-string 'confusion-what-to-view))))
 
 (defun lyskom-view-commented-text (text-stat)
   "Handles the return from the initiate-get-text-stat, displays and builds list."
@@ -758,15 +744,16 @@ This does lyskom-end-of-command"
 
 ;;; ================================================================
 ;;;                  Kommentera - write comment
-
 ;;; Author: ???
+;;; FIXME: Does not use def-kom-command
 
 
-(defun kom-write-comment (&optional text-no)
+(defun kom-write-comment (text-no)
   "Write a comment to a text.
 If optional arg TEXT-NO is present write a comment to that text instead."
   (interactive (list 
-		(lyskom-read-text-no-prefix-arg 'what-comment-no)))
+                (let ((lyskom-current-command 'kom-write-comment))
+                  (lyskom-read-text-no-prefix-arg 'what-comment-no))))
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
@@ -786,21 +773,19 @@ If optional arg TEXT-NO is present write a comment to that text instead."
                    text-stat
                    text
                    text-no)
-              (lyskom-write-comment-soon
-               text-stat
-               text
-               text-no
-               'comment))))
+              (lyskom-write-comment-soon text-stat
+                                         text
+                                         text-no
+                                         'comment))))
         (lyskom-insert-string 'confusion-what-to-comment))
     (lyskom-end-of-command)))
 
 
-(def-kom-command kom-write-footnote (&optional text-no)
+(def-kom-command kom-write-footnote (text-no)
   "Write a footnote to a text.
 If optional arg TEXT-NO is present write a footnote to that text instead."
-  (interactive (list 
-                (lyskom-read-text-no-prefix-arg 'what-footnote-no t
-                                                'last-seen-written)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-footnote-no nil
+                                                     'last-seen-written)))
   (if text-no
       (lyskom-write-comment-soon
        (blocking-do 'get-text-stat text-no)
@@ -809,12 +794,13 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
     (lyskom-insert-string 'confusion-what-to-footnote)))
 
 
-(def-kom-command kom-comment-previous ()
+(def-kom-command kom-comment-previous (text-no)
   "Write a comment to previously viewed text."
-  (interactive)
-  (if lyskom-previous-text
-      (blocking-do-multiple ((text-stat (get-text-stat lyskom-previous-text))
-                             (text (get-text lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-comment-no nil
+                                                     lyskom-previous-text)))
+  (if text-no
+      (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                             (text (get-text text-no)))
         (when (or (null text-stat)
                   (null text)
                   (null (text-stat-find-aux text-stat 4))
@@ -826,12 +812,12 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
               (lyskom-private-answer-soon
                text-stat
                text
-               lyskom-previous-text)
-              (lyskom-write-comment-soon
-               text-stat
-               text
-               lyskom-previous-text
-               'comment))))
+               text-no)
+            (lyskom-write-comment-soon
+             text-stat
+             text
+             text-no
+             'comment))))
     (lyskom-insert-string 'confusion-what-to-comment)))
 
 
@@ -1018,16 +1004,17 @@ that text instead."
 ;;; Author: ceder
 ;;; Rewritten using blocking-do by: Linus Tolke
 
-(def-kom-command kom-private-answer-previous ()
+(def-kom-command kom-private-answer-previous (text-no)
   "Write a private answer to previously viewed text."
-  (interactive)
-  (if lyskom-previous-text
-      (blocking-do-multiple ((text-stat (get-text-stat lyskom-previous-text))
-                             (text (get-text lyskom-previous-text)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no nil
+                                                     lyskom-previous-text)))
+  (if text-no
+      (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                             (text (get-text text-no)))
         (when (or (null (text-stat-find-aux text-stat 4))
                   (lyskom-j-or-n-p 
                    (lyskom-get-string 'no-comments-q)))
-          (lyskom-private-answer-soon text-stat text lyskom-previous-text)))
+          (lyskom-private-answer-soon text-stat text text-no)))
     (lyskom-insert-string 'confusion-who-to-reply-to)))
 
 
@@ -1562,13 +1549,17 @@ If you are not member in the conference it will be flagged with an asterisk."
 (def-kom-command kom-mark-text (&optional text-no)
   "Mark the text TEXT-NO."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-mark)))
-  (lyskom-mark-text text-no))
+  (if text-no
+      (lyskom-mark-text text-no)
+    (lyskom-insert 'have-to-read)))
 
 
 (def-kom-command kom-unmark-text (&optional text-no)
   "Unmark the text TEXT-NO."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-unmark)))
-  (lyskom-unmark-text text-no))
+  (if text-no
+      (lyskom-unmark-text text-no)
+    (lyskom-insert 'have-to-read)))
 
 
 (defun lyskom-unmark-text (text-no)
@@ -2975,9 +2966,12 @@ already been prompted for a text number so TEXT-NO-ARG contains the
 actual text to do whatever on."
   (let* ((text-no (if (and text-no-is-read text-no-arg)
                       text-no-arg
-                    (lyskom-read-number prompt 
-                                        (or text-no-arg lyskom-current-text))))
-	 (text-stat (blocking-do 'get-text-stat text-no))
+                    (let ((current-prefix-arg text-no-arg))
+                      (lyskom-read-text-no-prefix-arg prompt
+                                                      nil
+                                                      lyskom-current-text))))
+
+         (text-stat (blocking-do 'get-text-stat text-no))
 	 (was-read (lyskom-text-read-p text-stat))
 
 	 ;; Only for moving
@@ -3108,8 +3102,8 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a comment should be subtracted.
         Otherwise a comment is added"
-  (let* ((text-no (lyskom-read-number prompt
-				      (or text-no-arg lyskom-current-text)))
+  (let* ((text-no (let ((current-prefix-arg text-no-arg))
+                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text)))
 	 (comment-text-no  (lyskom-read-number
 			    (lyskom-get-string
 			     (if do-add 'text-to-add-q 'text-to-remove-q))
@@ -3147,8 +3141,8 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a footnote should be subtracted.
         Otherwise a footnote is added"
-  (let* ((text-no (lyskom-read-number prompt
-				      (or text-no-arg lyskom-current-text)))
+  (let* ((text-no (let ((current-prefix-arg text-no-arg))
+                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text)))
 	 (footnote-text-no  (lyskom-read-number
 			    (lyskom-get-string
 			     (if do-add 
@@ -3175,3 +3169,4 @@ DO-ADD: NIL if a footnote should be subtracted.
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
 ;;; end: 
+Du måste läsa ett inlägg först.

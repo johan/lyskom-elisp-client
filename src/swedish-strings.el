@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.117 2000-05-31 15:35:34 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.118 2000-06-02 13:13:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.117 2000-05-31 15:35:34 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.118 2000-06-02 13:13:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1412,7 +1412,11 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (stop-keep-alive . "Data sänds inte längre för att hålla förbindelsen aktiv.")
 
     (review-noconversion-q . "Återse vilket inlägg omodifierat?")
-    (review-commented-q . "Återse vad vilket inlägg kommenterade?")
+    (review-commented-q . "Återse vilket inlägg kommenterade?")
+    (review-tree-q . "Återse alla kommentarer rekursivt för vilket inlägg?")
+    (find-root-q . "Återse urinlägget för vilken text?")
+    (find-root-review-q . "Återse träd för vilket inlägg?")
+    (review-comments-q . "Återse alla kommentarer till vilket inlägg?")
 ))
 
 
@@ -3080,7 +3084,10 @@ i servern. Annars sparas det i din .emacs.")
   hålla nätverkskopplingen till LysKOM-servern aktiv. Om din förbindelse
   kopplar ned efter en stunds inaktivitet så kan du sätta detta till ungefär 
   hälften och sedan ge kommandot \"Håll förbindelsen aktiv\".")
-
+    (kom-prompt-for-text-no-doc . "\
+  Dessa kommandon kommer alltid att fråga efter textnummer om man inte 
+  anger något explicit med prefixargument. Kommaondon som inte står med 
+  här kommer att gissa ett textnummer och inte fråga.")
 
     ;;
     ;; Tags for variables
@@ -3230,6 +3237,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång")
+    (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer")
     )
 )
 

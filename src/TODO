@@ -5,47 +5,59 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+
+ALLA SOM ANVÄNDER LYSKOM-READ-TEXT-NO-PREFIX-ARG MÅSTE VARA BEREDDA PÅ
+ATT RESULTATET ÄR NIL, VILKET DET BLIR OM MAN INTE HAR EN PROMPT MEN
+HAR DEFAULTVÄRDE PÅ TEXTNUMRET!
+
+
 Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
 meningsfullt. Följande är relevanta:
 
         Kommando                            Default     Prompt
         ------------------------------------------------------
-        Radera inlägg                       ?           Alltid
-        Återse inlägg                       Inget       Ja
-        Återse omodifierat                  SL          Nej
-        Återse urinlägget                   SL          Nej
-        Återse det kommenterade             SL          Nej
-        Återse det föregående kommen        NSL         Nej
-        Kommentera inlägget                 SL          Nej
-        Kommentera föregående inlägg        NSL         Nej
-        Fotnot till inlägg                  SS          ?
-        Personligt svar                     SL          Nej
-        Personligt svar på föregåend        NSL         Nej
-        Markera (inlägg)                    SL          ?
-        Avmarkera (inlägg)                  ?           ?
-        Addera mottagare                    SL          ?
-        Addera extra kopiemottagare         SL          ?
-        Addera för kännedom                 SL          ?
-        Subtrahera mottagare                SL          ?
-        Flytta inlägg                       SL          Ja
-        Addera kommentar                    SL          ?
-        Subtrahera kommentar                SL          ?
-        Arkivera inlägg (till fil)          SL          ?
-        Spara inläggstext (på fil)          SL          ?
-        Sätt loginmeddelande                SS          Ja
-        Kort replik                         SL          Nej
-        Hålla med                           SL          Nej
-        Addera FAQ                          SS          Ja
-        Addera fotnot                       SS          ?
-        Subtrahera fotnot                   SS          ?
-        Förhindra kommentarer               SS          ?
-        Begär personligt svar               SS          ?
-        Begär läsbekräftelse                SS          ?
-        Återse brevhuvud                    SL          Ja
+     -* Radera inlägg                       SL          Alltid
+     -* Återse inlägg                       Inget       Ja
+     -* Återse omodifierat                  SL          Nej
+      * Återse urinlägget                   SL          Nej
+      * Återse alla kommentarer             SL          Nej
+      * Återse alla kommentarer reku        SL          Nej
+      * Återse träd                         SL          Nej
+      * Återse det kommenterade             SL          Nej
+      * Återse det föregående kommen        NSL         Nej
+      * Kommentera inlägget                 SL          Nej
+      * Kommentera föregående inlägg        NSL         Nej
+      * Fotnot till inlägg                  SS          Ja
+      * Personligt svar                     SL          Nej
+      * Personligt svar på föregåend        NSL         Nej
+      * Markera (inlägg)                    SL          Ja
+      * Avmarkera (inlägg)                  SL          Ja
+     -* Addera mottagare                    SL          Ja
+     -* Addera extra kopiemottagare         SL          Ja
+     -* Addera för kännedom                 SL          Ja
+     -* Subtrahera mottagare                SL          Ja
+     -* Flytta inlägg                       SL          Ja
+     -* Addera kommentar                    SL          Ja
+     -* Subtrahera kommentar                SL          Ja
+      X Arkivera inlägg (till fil)          SL          Ja
+      * Spara inläggstext (på fil)          SL          Ja
+      X Sätt loginmeddelande                SS          Ja
+      * Kort replik                         SL          Nej
+      * Hålla med                           SL          Nej
+      * Addera FAQ                          SS          Ja
+     -* Addera fotnot                       SS          Ja
+     -* Subtrahera fotnot                   SS          Ja
+      * Förhindra kommentarer               SS          Ja
+      * Begär personligt svar               SS          Ja
+      * Begär läsbekräftelse                SS          Ja
+      * Återse brevhuvud                    SL          Nej
         ------------------------------------------------------
         SL  Senast lästa
         NSL Näst senast lästa
         SS  Senast skrivna/eget läst
+        *   Klart
+        -   Hanterar kanske inte returvärde nil 
+        X   Borde inte vara med på listan
 
 Bestäm vettig default och om kommandot skall fråga efter nummer eller
 bara anta default om man inte ger prefixargument.

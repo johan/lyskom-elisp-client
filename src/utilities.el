@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.59 2000-05-24 16:55:04 byers Exp $
+;;;;; $Id: utilities.el,v 44.60 2000-06-02 13:13:28 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.59 2000-05-24 16:55:04 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.60 2000-06-02 13:13:28 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -535,7 +535,8 @@ A number means use that text as the default."
                         (lyskom-default-value 'lyskom-current-text)))))
     (cond
      ((null current-prefix-arg)
-      (if always-read
+      (if (or always-read (memq lyskom-current-command 
+                                kom-prompt-for-text-no))
           (lyskom-read-number prompt default)
         default))
      ((or (integerp current-prefix-arg)
