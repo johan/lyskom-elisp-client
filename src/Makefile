@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 41.3 1996-05-05 22:19:35 davidk Exp $
+# $Id: Makefile,v 41.4 1996-08-02 00:37:04 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 41.3 1996-05-05 22:19:35 davidk Exp $
+# $Id: Makefile,v 41.4 1996-08-02 00:37:04 davidk Exp $
 #
 
 CLIENTVERSION = 0.42-beta
@@ -142,7 +142,6 @@ doc:
 install: installnodoc installdoc
 
 installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
-	# Lysator
 	cp lyskom.el /usr/gnu/lib/emacs/site-lisp/lyskom.el
 	cp lyskom.el /usr/local/var/elisp/lyskom.el
 	cp lyskom-$(CLIENTVERSION).elc /usr/gnu/lib/emacs/site-lisp/lyskom.elc
