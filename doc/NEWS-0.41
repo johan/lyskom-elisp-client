@@ -34,6 +34,9 @@ ett par nya finesser.
    att testa att sätta kom-delayed-printing till t och berätta om
    eventuella problem.
 
+** Nu används de särskilda anrop som finns i protokollet för att berätta för
+   servern vad klienten heter.
+
 * Bugfixar
 
 ** Återse senaste fungerar! De problem som rapporterats om detta
@@ -50,6 +53,8 @@ ett par nya finesser.
 
 ** Man kan nu trycka 'åak' direkt efter att ha skrivit en kommentar
    genom att trycka på 'k' igen.
+
+** Ett antal mindre buggar har fixats.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 

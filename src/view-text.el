@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.4 1996-04-25 15:03:33 davidk Exp $
+;;;;; $Id: view-text.el,v 40.5 1996-04-27 01:08:49 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.4 1996-04-25 15:03:33 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.5 1996-04-27 01:08:49 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -452,7 +452,7 @@ Args: TEXT-STAT of the text being read."
   "Get author of TEXT-NO and print a header line."
   ;;+++ error kommer att se annorlunda ut.
   (save-excursion
-    (goto-char (+ marker chars-to-delete))
+    (goto-char marker)
     (if text-stat
 	(let ((author (text-stat->author text-stat))
 	      (type (misc-info->type misc)))
@@ -486,9 +486,10 @@ Args: TEXT-STAT of the text being read."
       ;; We are writing the line about what comments exists and
       ;; the reference text does not exist anymore. Strange.
       nil)
-    (goto-char marker)
+    ;; (goto-char marker)
+    (delete-char chars-to-delete)
     (set-marker marker nil)
-    (delete-char chars-to-delete)))
+))
 
 
 

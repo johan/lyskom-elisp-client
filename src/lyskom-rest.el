@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.8 1996-04-25 15:03:14 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.9 1996-04-27 01:08:36 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.8 1996-04-25 15:03:14 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.9 1996-04-27 01:08:36 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -461,13 +461,12 @@ lyskom-mark-as-read."
 ;;;                        Go to next conf.
 
 
-(defun kom-go-to-next-conf ()
+(def-kom-command kom-go-to-next-conf ()
   "Go to next conf.
 Take first conf from lyskom-to-do-list and copy it to lyskom-reading-list.
 Tell server what the user is doing. If the user is reading a conf it is
 moved last on lyskom-to-do-list, with priority 0."
   (interactive)
-  (lyskom-start-of-command 'kom-go-to-next-conf)
   (lyskom-maybe-move-unread t)
   (lyskom-go-to-next-conf))
 
@@ -478,7 +477,8 @@ This differs from kom-go-to-next-conf only in the place where the yet unread
 in the current conf is placed."
   (lyskom-start-of-command 'kom-go-to-next-conf)
   (lyskom-maybe-move-unread nil)
-  (lyskom-go-to-next-conf))
+  (lyskom-go-to-next-conf)
+  (lyskom-end-of-command))
 
 
 (defun lyskom-go-to-next-conf ()
@@ -491,25 +491,24 @@ in the current conf is placed."
 	   lyskom-reading-list)
 
 	;; Tell server which conf the user is reading.
-	(if (read-info->conf-stat (read-list->first lyskom-reading-list))
-	    (let ((conf-stat (read-info->conf-stat
-			      (read-list->first lyskom-reading-list))))
-	      (lyskom-enter-conf
-	       conf-stat 
-	       (read-list->first lyskom-reading-list))
-	      (lyskom-set-mode-line conf-stat))))
+	(let ((conf-stat (read-info->conf-stat
+			  (read-list->first lyskom-reading-list))))
+	  (when conf-stat
+	    (lyskom-enter-conf
+	     conf-stat 
+	     (read-list->first lyskom-reading-list))
+	    (lyskom-set-mode-line conf-stat))))
     (lyskom-insert-string 'all-conf-unread-r)
-    (lyskom-set-mode-line (lyskom-get-string 'all-conf-unread-s)))
-  (lyskom-end-of-command))
+    (lyskom-set-mode-line (lyskom-get-string 'all-conf-unread-s))))
 
 
-(defun lyskom-maybe-move-unread (burry)
+(defun lyskom-maybe-move-unread (bury)
   "Empty the reading list.
-If the argument BURRY is non-nil and there are unread artilces left in the
+If the argument BURY is non-nil and there are unread artilces left in the
 reading list then the conf is inserted last in the to do list."
   (if (not (read-list-isempty lyskom-reading-list))
       (progn
-	(if burry
+	(if bury
 	    (let ((conf-no nil)
 		  (r 0))
 	      (while (and (not conf-no)
