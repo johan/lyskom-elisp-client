@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.3 2002-05-29 20:22:32 byers Exp $
+;;;;; $Id: help.el,v 44.4 2002-06-02 15:12:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.3 2002-05-29 20:22:32 byers Exp $\n"))
+	      "$Id: help.el,v 44.4 2002-06-02 15:12:51 byers Exp $\n"))
 
 
 
@@ -103,11 +103,11 @@
   (let ((inhibit-read-only t))
     (cond ((symbolp (car data))
            (funcall (cdr (assq (car data) lyskom-help-format-handlers)) data))
-          (t (lyskom-traverse el data
-                              (let ((tag (lyskom-help-data-get-tag el))
-                                    (data (lyskom-help-data-get-data el)))
-                                (funcall (cdr (assq tag lyskom-help-format-handlers))
-                                         el)))))))
+          (t (lyskom-traverse el 
+                 data
+               (let ((tag (lyskom-help-data-get-tag el)))
+                 (funcall (cdr (assq tag lyskom-help-format-handlers))
+                          el)))))))
 
 (defun lyskom-help-format-text-properties (data props)
   (let ((start (point-marker)))

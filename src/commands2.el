@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.136 2002-05-29 20:22:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.137 2002-06-02 15:12:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.136 2002-05-29 20:22:32 byers Exp $\n"))
+              "$Id: commands2.el,v 44.137 2002-06-02 15:12:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2930,19 +2930,18 @@ interface (i.e. symbols whose name starts with \"lyskom\")."
         (case-fold-search t))
     (mapatoms
      (lambda (atom)
-       (let ((string nil))
-         (when (and (or (boundp atom) (fboundp atom))
-                    (or (and do-all (string-match "^lyskom-" (symbol-name atom)))
-                        (string-match "^kom-" (symbol-name atom)))
-                    (or (string-match re (symbol-name atom))
-                        (and (fboundp atom)
-                             (string-match re (or (documentation atom) "")))
-                        (and (boundp atom)
-                             (string-match re (or
-                                               (documentation-property 
-                                                atom 'variable-documentation)
-                                               "")))))
-           (setq result (cons atom result))))))
+       (when (and (or (boundp atom) (fboundp atom))
+                  (or (and do-all (string-match "^lyskom-" (symbol-name atom)))
+                      (string-match "^kom-" (symbol-name atom)))
+                  (or (string-match re (symbol-name atom))
+                      (and (fboundp atom)
+                           (string-match re (or (documentation atom) "")))
+                      (and (boundp atom)
+                           (string-match re (or
+                                             (documentation-property 
+                                              atom 'variable-documentation)
+                                             "")))))
+         (setq result (cons atom result)))))
     (setq result 
           (sort result (lambda (a b)
                          (string-lessp (symbol-name a)

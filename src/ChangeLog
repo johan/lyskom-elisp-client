@@ -1,3 +1,13 @@
+2002-06-02  David Byers  <david.byers@swipnet.se>
+
+	* Release of 0.47-BETA-2
+
+2002-05-31  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 235:
+	* parse.el (lyskom-parse-unparsed): When an error is signalled
+	from a handler, delete the parsed message.
+
 2002-06-01  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* Makefile (DOCFILES): include NEWS for 0.47 instead of 0.46.
