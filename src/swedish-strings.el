@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.22 1991-12-13 19:20:37 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.23 1991-12-21 02:57:54 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.22 1991-12-13 19:20:37 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.23 1991-12-21 02:57:54 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -249,7 +249,7 @@ Lyskom-sessionen är avslutad.
 
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
     (what-mark-to-view . "Vilken markering vill du återse? ")
-    (whos-passwd . "Vem vill du {ndra lösenord f|r (dig själv)? ")
+    (whos-passwd . "Vem vill du ändra lösenord för (dig själv)? ")
     (old-passwd . "Mata in ditt lösenord: ")
     (new-passwd . "Mata in det nya lösenordet: ")
     (changing-passwd . "Ändrar lösenordet...")
@@ -400,13 +400,13 @@ Lyskom-sessionen är avslutad.
     (buggreport-compileend . "Compiling...done")
     (buggreport-description . "Detta gjorde jag:
 (Fyll i dina kommenarer)\n\n\n
-N{r du skrivit klart skall du skicka in din buggrapport till
+När du skrivit klart skall du skicka in din buggrapport till
 LysKOM-utvecklarna. Det sker antingen med email till 
-bug-lyskom@lysator.liu.se eller i Lysators LysKOM till m|tet
+bug-lyskom@lysator.liu.se eller i Lysators LysKOM till mötet
 \"LysKOM; Elispklientens buggrapporter\" eller om inget annat
 fungerar med vanligt brev till:
 Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN.
-M{rk kuvertet LysKOM buggrapport.\n\n")
+Märk kuvertet LysKOM buggrapport.\n\n")
     (buggreport-internals . "LysKOMs interna information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-emacs-version . "emacs-version:")
@@ -441,7 +441,7 @@ M{rk kuvertet LysKOM buggrapport.\n\n")
     (you-are-now . "Ok, du kör nu som %#1s.\n")
     (setting-motd . "Sätter loginmeddelandet till text %#1d.\n")
     (set-motd-success . "Du har satt ett nytt loginmeddelande.\n")
-    (set-motd-failed . "Det gick inte. Du var kanske inte administrat|r.\n")
+    (set-motd-failed . "Det gick inte. Du var kanske inte administratör.\n")
     (removing-motd . "Tar bort loginmeddelandet.\n")
     (removed-motd . "Du har tagit bort loginmeddelandet.\n")
     (who-to-throw-out . "Vilken session vill du kasta ut? ")
@@ -467,7 +467,7 @@ M{rk kuvertet LysKOM buggrapport.\n\n")
     (review-text-no . "Återse text nummer %#1d")
     (review-one-comment . "Återse en kommentar till inlägg %#1d.\n")
     (review-many-comments . "Äterse %#2d kommentarer till inlägg %#1d.\n")
-    (read-normally-read . "Hur m}nga vill du se igen?")
+    (read-normally-read . "Hur många vill du se igen?")
 
     ; From edit-text.el:
     (press-C-c-C-c . "Tryck C-c C-c för att skicka in texten.")
