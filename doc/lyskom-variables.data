@@ -1,233 +1,111 @@
-kom-emacs-knows-iso-8859-1		t	nil	t		Icke-nil betyder att Emacs förväntas förstå ISO-8859-1. nil innebär attswascii accepteras i kommandonamn med mera. Skall vara påslaget.
-kom-bury-buffers		t	t	t		Bestämmer hur bufferten hanteras när man går till ett annat KOM med NästaLysKOM och liknande funktioner. Icke-nil innebär att den aktuella buffertenläggs sist i buffertlistan när man byter LysKOM.
-kom-write-texts-in-window		nil	t	t	kom-write-textkom-write-commentkom-comment-previouskom-private-answerkom-private-answer-previouskom-prioritize-in-windowkom-edit-filters-in-windowkom-customize-in-windowkom-view-commented-in-windowkom-list-membership-in-window	Bestämmer i vilket fönster man skriver inlägg. Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
-kom-prompt-format		"%s"	t	t		
-kom-cite-string		">"	t	t		
-kom-created-texts-are-read		t	t	t		
-kom-dont-restore-window-after-editing		nil	nil	t		
-kom-default-mark		100	nil	t		
-kom-reading-puts-comments-in-pointers-last		t	t	t		
-kom-dashed-lines		t	t	t		
-kom-print-number-of-unread-on-entrance		t	t	t		
-kom-presence-messages		t	t	t		
-kom-presence-messages-in-buffer		nil	t	t		
-kom-show-where-and-what		t	t	t		
-kom-idle-hide		30	nil	t		
-kom-show-footnotes-immediately		t	t	t		
-kom-follow-comments-outside-membership		nil	t	t		
-kom-who-buffer-size-when-displaying		10	t	t		
-kom-read-depth-first		t	t	t		
-kom-continuous-scrolling		t	t	t		
-kom-deferred-printing		t	nil	t		
-kom-higher-priority-breaks		nil	t	t		
-lyskom-after-load-hook		nil	nil	t		
-lyskom-login-hook		nil	nil	t		
-kom-login-hook		nil	t	t		
-kom-do-when-done		(kom-review-all-marked-texts kom-display-time)	t	t		
-kom-page-before-command		nil	t	t		
-kom-membership-default-priority		100	t	t		
-kom-membership-default-placement		last	t	t		
-lyskom-prompt-text		" - "	t	t		
-lyskom-prompt-executing-default-command-text		". "	t	t		
-kom-show-personal-messages-in-buffer		t	t	t		
-kom-pop-personal-messages		nil	t	t		
-kom-ding-on-priority-break		1	t	t		
-kom-ding-on-wait-done		1	t	t		
-kom-ding-on-common-messages		0	t	t		
-kom-ding-on-group-messages		1	t	t		
-kom-ding-on-personal-messages		2	t	t		
-lyskom-ding-on-no-subject		2	nil	t		
-kom-audio-player		"audioplay"	nil	t		
-kom-default-message-recipient		group	t	t		
-lyskom-filter-outgoing-messages		t	nil	t		
-kom-friends		nil	t	t		
-kom-default-face-scheme		default	nil	t		
-kom-text-properties		t	nil	t		
-kom-use-button-hints		t	nil	t		
-kom-url-viewer-preferences		("emacs" "netscape" "w3")	nil	t		
-kom-mosaic-command		"/usr/local/bin/mosaic"	nil	t		
-kom-netscape-command		"netscape"	nil	t		
-kom-confirm-multiple-recipients		after	t	t		
-kom-check-commented-author-membership		t	t	t		
-kom-inhibit-typeahead		nil	t	t		
-kom-max-buffer-size		nil	nil	t		
-kom-server-aliases		(("kom.lysator.liu.se" . "LysKOM") ("kom.ludd.luth.se" . "LuddKOM") ("rydkom.rydnet.lysator.liu.se" . "RydKOM") ("kom.csd.uu.se" . "CSD-KOM") ("striterax.medio.mh.se" . "MedioKOM") ("kom.mds.mdh.se" . "MdS-KOM"))	nil	t		
-kom-ansaphone-record-messages		t	t	t		
-kom-ansaphone-show-messages		t	t	t		
-kom-remote-control		t	t	t		
-kom-remote-controllers		nil	t	t		
-kom-self-control		t	t	t		
-kom-ansaphone-replies		((group nil nil nil nil) (common nil nil nil nil))	t	t		
-lyskom-max-pending-calls		20	nil	t		
-lyskom-session-priority		0	nil	t		
-lyskom-prefetch-texts		3	t	t		
-lyskom-prefetch-conf-tresh		50	t	t		
-lyskom-prefetch-confs		10	t	t		
-lyskom-fetch-map-nos		50	t	t		
-lyskom-fetch-membership-length		6	nil	t		
-lyskom-mode-hook		nil	nil	t		
-kom-quit-hook		nil	t	t		
-lyskom-new-text-hook		nil	t	t		
-lyskom-who-info-has-changed-hook		nil	t	t		
-lyskom-personal-message-hook		nil	nil	t		
-kom-low-priority		-1	nil	t		
-lyskom-default-server		"kom.lysator.liu.se"	nil	t		
-lyskom-default-user-name		nil	nil	t		
-lyskom-header-separator		"--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"	nil	t		
-lyskom-header-subject		"Ärende: "	nil	t		
-kom-ansaphone-default-reply		"Jag läser inte LysKOM just nu. Skicka gärna ett brev i stället."	t	t		
-kom-mercial		"Väntar."	t	t		
-lyskom-edit-mode-hook		nil	nil	t		
-lyskom-edit-mode-mode-hook		nil	nil	t		
-lyskom-send-message-setup-hook		nil	nil	t		
-lyskom-send-message-exit-hook		nil	nil	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-allow-incompleteness		nil	t	t		
-kom-view-commented-in-window		other	t	t		
-kom-edit-filters-in-window		nil	t	t		
-kom-list-membership-in-window		other	t	t		
-kom-customize-format		long	t	t		
-kom-user-prompt-format		"%[%c% %m%] - "	t	t		
-kom-user-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		
-kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		
-kom-customize-in-window		nil	t	t		
-kom-prioritize-in-window		nil	t	t		
-kom-show-author-at-end		t	t	t		
-lyskom-view-text-hook		nil	nil	t		
-lyskom-send-message-hook		(lyskom-send-message-trim-newlines)	nil	t		
-lyskom-send-text-hook		nil	nil	t		
-kom-permissive-completion		t	t	t		
-kom-ding-on-new-letter		nil	t	t		
-kom-ding-on-no-subject		2	t	t		
-kom-lynx-terminal		xterm	nil	t		
-kom-lynx-xterm-command		("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		
-kom-lynx-terminal-command		"lynx"	nil	t		
-kom-check-for-new-comments		t	t	t		
-kom-default-language		sv	t	t		
-kom-ispell-dictionary		nil	t	t		
-kom-dont-read-saved-variables		nil	nil	t		
-lyskom-change-conf-hook		nil	nil	t		
-kom-autowrap		t	nil	t		
-kom-show-namedays		t	nil	t		
-kom-www-proxy		nil	nil	t		
-iso-8859-1-table		" 	 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ 	  !c#$Y|$\"c+?!-R~C+23'u$-,10?????AAAA[][CE@EEIIIIDNOOOO\\*\\UUU^YTBaaaa{}{ce`eeiiiidnoooo|/|uuu~yty"	nil	t		
+kom-emacs-knows-iso-8859-1	t, nil	t	nil	t		Icke-nil betyder att Emacs förväntas förstå ISO-8859-1. nil innebär attswascii accepteras i kommandonamn med mera. Skall vara påslaget.
+kom-bury-buffers	t, nil	t	t	t		Bestämmer hur bufferten hanteras när man går till ett annat KOM med NästaLysKOM och liknande funktioner. Icke-nil innebär att den aktuella buffertenläggs sist i buffertlistan när man byter LysKOM.
+kom-write-texts-in-window	nil, other, other, other-frame, new-frame, sträng, buffert	nil	t	t	kom-write-textkom-write-commentkom-comment-previouskom-private-answerkom-private-answer-previouskom-prioritize-in-windowkom-edit-filters-in-windowkom-customize-in-windowkom-view-commented-in-windowkom-list-membership-in-window	Bestämmer i vilket fönster man skriver inlägg. Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
+kom-cite-string	Sträng	">"	t	t		Den här variabeln skall innehålla en sträng. Strängen sätts in framförvarje citerad rad när man skriver inlägg.
+kom-created-texts-are-read	t, nil	t	t	t		Bestämmer om texter man själv skriver automatiskt skall läsmarkeras.Om man sätter kom-created-texts-are-read till t så får man inte läsasina egna texter.
+kom-dont-restore-window-after-editing		nil	nil	t		Obsolete
+kom-default-mark	nil, heltal	100	t	t		Bestämmer vilken markering som sätts när man markerar inlägg. Om denhär variabeln är satt till nil så kommer elispklienten att fråga efteren markering. Om den är satt till ett heltal så används det heltaletsom markering.
+kom-reading-puts-comments-in-pointers-last	t, nil	t	t	t		Om den här variabeln inte är nil så skrivs kommentarslänkar till entext ut efter textmassan. I annat fall skrivs kommentarslänkarna utbland headerraderna:Med kom-reading-puts-comments-in-pointers-last satt till t:@example2381925 idag 14:55 /2 rader/ David ByersMottagare: Testmöte <158>Ärende: Foo------------------------------------------------------------(2381925) -----------------------------------Kommentar i text 2381926 av David Byers@end exampleMed kom-reading-puts-comments-in-pointers-last satt till nil:@example2381925 idag 14:55 /2 rader/ David ByersMottagare: Testmöte <158>Kommentar i text 2381926 av David ByersÄrende: Foo------------------------------------------------------------(2381925) -----------------------------------@end example
+kom-dashed-lines	t, nil	t	t	t		När den här variabeln är satt till nil så visas inga streckade linjerföre och efter inläggstexten.Med kom-dashed-lines satt till t:@example    892343 1996-09-24  19:21  /2 rader/ Tycho Brahe    Mottagare: Presentation (av nya) Medlemmar    Ärende: Tycho Brahe    ------------------------------------------------------------    Astronom och upptäckare av stjärnor med hemvist på Ven.    (892343) -----------------------------------@end exampleMed kom-dashed-lines satt till nil:@example    892343 1996-09-24  19:21  /2 rader/ Tycho Brahe    Mottagare: Presentation (av nya) Medlemmar    Ärende: Tycho Brahe    Astronom och upptäckare av stjärnor med hemvist på Ven.    (892343)@end exampleDe flesta brukar ha detta påslaget.
+kom-print-number-of-unread-on-entrance	t, nil	t	t	t		När kom-print-number-of-unread-on-entrance är satt till t så visasantalet olästa man har i ett möte när man går till det.kom-print-number-of-unread-on-entrance satt till t:@example  Gå till nästa möte...  Presentation (av nya) medlemmar - 3 olästa  Läsa nästa text - @end examplekom-print-number-of-unread-on-entrance satt till nil:@example  Gå till nästa möte...  Presentation (av nya) medlemmar  Läsa nästa text - @end example
+kom-presence-messages	t, nil, lista av heltal	t	t	t		Den här variabeln styr vilka meddelanden som visas när någon loggar in eller loggar ut. t betyder att meddelanden om alla användare visas. nilbetyder att inga meddelanden visas. Om variabeln är satt till en listaav heltal så visas meddelanden endast om de personer vars nummer finnsmed i listan.
+kom-presence-messages-in-buffer	t, nil, presence	nil	t	t		Styr vilka närvaromeddelanden som visas i LysKOM-bufferten. Omkom-presence-messages-in-buffer är satt till t så visas allanärvaromeddelanden i LysKOM-bufferten. nil betyder att ingameddelanden skall visas i bufferten, och presence betyder att barainloggningar och utloggningar, men inte namnbyten, skall visas iLysKOM-bufferten. 
+kom-show-where-and-what	t, nil	t	t	t		Information i vilkalistan om varifrån en person är inloggad och vadpersonen gör visas bara om den här variabeln är satt till t.Vilkalistan med kom-show-where-and-what satt till t:@example
+kom-idle-hide	heltal	30	nil	t		Den här variabeln bestämmer hur många minuter en session kan ha varitinaktiv utan att tas bort från vilkalistan. 
+kom-show-footnotes-immediately	t, nil	t	t	t		När kom-show-footnotes-immediately är t så visas fotnoter till inläggomedelbart när man läser inlägget. Om det är nil så får man en promptför att läsa nästa fotnot.
+kom-follow-comments-outside-membership	t, nil	nil	t	t		Icke-nil innebär att elispklienten följer kommentarskedjor in i mötensom man inte är med i. Det innebär alltså att om man läser ett inläggi ett möte man är medlem i, och kommentaren ligger i ett möte man inteär med i, så kommer man ändå att få läsa kommentaren som vanligt (ochdess kommentarer och så vidare) om den här variabeln är satt till t.Om man har kom-follow-comments-outside-membership satt till nil såkommer inte sådana kommentarer att visas i den normala läsordningen.
+kom-who-buffer-size-when-displaying		10	t	t		Obsolete
+kom-read-depth-first	t, nil	t	t	t		LysKOM kan visa inlägg antingen i den ordning de skapades, eller i denordning de ligger i kommentarsträdet. Ta till exempel följande träd avinlägg:Inlägg 1002 är inte en kommentar till någonting. Inlägg 1003 och 1004är kommentarer till inlägg 1002. Inlägg 1005 och 1007 är kommentarertill inlägg 1004 och inlägg 1006 är en kommentar till inlägg 1003. Dåser kommentarsträdet ut ungefär så här:          1002 +-- 1003 --- 1006       |       +-- 1004 +-- 1005                |                +-- 1007Om man har kom-read-depth-first satt till nil så kommer de att visas iordningen 1002, 1003, 1004, 1005, 1006 och 1007. Omkom-read-depth-first är satt till t så blir det i stället 1003, 1003,1006, 1004, 1005 och 1007.
+kom-continuous-scrolling	t,nil	t	t	t		När kom-continuous-scrolling är satt till t så kommer elispklientenatt scrolla oftare än om den är satt till nil. Om variabeln är nil sålöper man en viss risk att klienten skriver ut ett inlägg nedanförfönstrets kant, och sedan väntar på mer information från servern. Medkom-continuous-scrolling satt till t kommer den att scrolla så atttexten syns medan den väntar.Det är framförallt om man sitter vid en långsam terminal som det kanvara lämpligt med kom-continuous-scrolling satt till nil.
+kom-deferred-printing	t,nil	t	nil	t		Om man sätter kom-deferred-printing till nil så kommer inteelispklienten att använda fördröjda utskrifter, och alltså gå mycketlångsammare. Den enda rimliga anledningen till att sättakom-deferred-printing till nil är om det inte fungerar (inte troligt)eller om man inte trivs med att utskrifter sker i efterhand (kanske omman har en långsam terminal.)
+kom-higher-priority-breaks	nil,t,express	nil	t	t		Styr när inlägg som kommer till prioriterade möten (möten som harhögre prioritet än det man för tillfället läser i) visas. nil innebäratt de kommer att visas först när man har läst ut det aktuella mötet,t innebär att de visas när man har läst klart aktuell kommentarskedja,och express att de visas omedelbart.
+lyskom-after-load-hook	funktioner	nil	nil	t		lyskom-after-load-hook innehåller hookar som körs precis efter man harläst in lyskom.el. Det är antagligen smartare att använda Emacsafter-load-hooks istället.
+lyskom-login-hook	funktioner	nil	nil	t		Den här variabeln innehåller hookar som körs precis när man loggar in,efter server-specifika inställningar har lästs, men innankom-login-hook körs. 
+kom-login-hook	funktioner	nil	t	t		Den här variabeln innehåller hookar som körs när man loggar in. Denfår även innehålla tangentbordsmakron. Notera att kom-login-hooksparas i servern. 
+kom-do-when-done	funktioner, tangentbordsmakron	(kom-review-all-marked-texts kom-display-time)	t	t		En lista över kommandon som skall köras när man har läst ut allting iLysKOM. Den kan innehålla symboler (som skall motsvara funktioner)eller tangentbordsmakron. Det sista elementet i listan upprepas näralla andra är färdigkörda.
+kom-page-before-command	nil, t, lista av LysKOM-kommandon	nil	t	t		Om kom-page-before-command är t så kommer elispklienten att flyttaprompten längst upp i fönstret när man ger ett kommando, så attresultatet av kommandot börjar i toppen av fönstret (ungefär som närman trycker på LFD.) Om variabeln är nil så kommer elispklienten inteatt scrolla på det här sättet. Om variabeln innehåller en lista avkommandon så kommer elispklienten enbart att scrolla när man ger ettav kommandona i listan.
+kom-membership-default-priority	nil, heltal	100	t	t		Den här variabeln styr vilken prioritet nya medlemsskap får. Ettheltal anger den prioritet som alla nya medlemsskap får, och nilinnebär att klienten frågar varje gång man går med i ett möte.
+kom-membership-default-placement	first, last, ett heltal	last	t	t		Den här variabeln styr var i medlemskapslistan nya medlemsskap hamnar.Om den är satt till first så kommer nya medlemsskap att läggas förealla gamla. last innebär att nya medlemsskap hamnar sist, och ettheltal anger en absolut position.
+lyskom-prompt-text		" - "	t	t		Obsolete
+lyskom-prompt-executing-default-command-text		". "	t	t		Obsolete
+kom-show-personal-messages-in-buffer	t, nil, en sträng eller buffert	t	t	t		Styr var personliga meddelanden visas (detta innefattar ävengruppmeddelanden och allmänna meddelanden.) Omkom-show-personal-messages-in-buffer är nil så kommer alla meddelandenatt kastas. t innebär att meddelandena skall visas i LysKOM-bufferten.Om variabeln innehåller en buffert eller sträng så anger den vilkenbuffert som meddelandet skall sättas in i.
+kom-pop-personal-messages	t, nil	nil	t	t		Om denna variabel är satt till t så kommer elispklienten automatisktatt poppa upp bufferten där personliga meddelanden visas, när detkommer meddelanden. 
+kom-ding-on-priority-break	t, nil, Sträng, Heltal, Funktion	1	t	t		Anger hur elispklienten skall pipa när det kommer inlägg till ett mötemed högre prioritet än det man för tillfället läser i.Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+kom-ding-on-wait-done	t, nil, Sträng, Heltal, Funktion	1	t	t		Anger hur elispklienten skall pipa när kommandot Vänta har gått klart.Eftersom detta kommando inte längre fungerar så är egentligen inte denhär variabeln speciellt intressant.Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+kom-ding-on-common-messages	t, nil, Sträng, Heltal, Funktion	0	t	t		Anger hur elispklienten skall pipa när det kommer allmännameddelanden. Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+kom-ding-on-group-messages	t, nil, Sträng, Heltal, Funktion	1	t	t		Anger hur elispklienten skall pipa när det kommer gruppmeddelanden.Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+kom-ding-on-personal-messages	t, nil, Sträng, Heltal, Funktion	2	t	t		Anger hur elispklienten skall pipa när det kommer personligameddelanden.Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+lyskom-ding-on-no-subject	t, nil, Sträng, Heltal, Funktion	2	nil	t		Anger hur elispklienten skall pipa om man glömmer att ange ett ärendetill ett inlägg.Ett heltal anger antal gånger som klienten skall pipa. En sträng angeren ljudfil som skall spelas (med kom-audio-player). Om variabelninnehåller en funktion så kommer funktionen att köras. Om den är t såpips det på något vis. Värdet nil eller 0 gör att det inte blir någrapip alls.
+kom-audio-player		"audioplay"	nil	t		Om man vill att något av elispklientens pip skall vara en ljudfil såmåste man även sätta den här variabeln till namnet på ett program somskall köras med ljudfilen som enda argument för att spela ljudet.
+kom-default-message-recipient	everybody, group, sender	group	t	t		Den här variabeln styr vem som blir defaultmottagare till meddelandensom man skickar. Om kom-default-message-recipient är everybody såkommer default att vara att skicka allmänna meddelanden. Värdet senderinnebär att defaultmottagare är den som skickade det senastemeddelandet man tog emot. Värdet group innebär att defaultmottagare ärden som skickade det senaste meddelandet om det var personligt ellerallmänt, och mottagaren av det senaste meddelandet om det var ettgruppmeddelande. 
+lyskom-filter-outgoing-messages	t, nil	t	nil	t		Elispklienten kan skicka meddelanden alldeles av sig själv, som svarpå frågor på andra klienter. Om den här variabeln sätts till nil såkommer dessa meddelanden att visas i LysKOM-bufferten på samma sättsom om man skickade dem manuellt.
+kom-friends	En lista av heltal	nil	t	t		Personerna vars nummer finns med i den här listan visas med ettspeciellt typsnitt i elispklienten. Den vanligaste användningen är attmarkera namn på personer som man känner väl.
+kom-default-face-scheme		default	nil	t		Den här variabeln styr val av typsnitt i elispklienten. Det finns ettantal förutbestämda kombinationer av färger och typsnitt, och den härvariabeln används för att välja vilken man vill använda. Förtillfället kan man använda något av default för standardutseented,inverse, om man har vitt-på-svart, monochrome om man har en monokromskärm, minimal för minimalt antal färger, highlight för en rättmisslyckad överstrykningspennelook.Det kan hända att elispklienten är elak och väljer något annat än manhar angett, om det man har valt inte passar på den skärm man kör på. 
+kom-text-properties	t,nil	t	nil	t		Om man sätter den här variabeln till nil så kanske man blir av medklickbara texter och annat. Antagligen kommer den möjligheten attförsvinna i framtiden.
+kom-use-button-hints	t, nil	t	nil	t		Vissa klickbara områden är lite kontextkänsliga, dvs det beror påvilket kommando som gjorde att de skrevs ut exakt vad det gör. Om mansätter den här variabeln till nil så försvinner kontextkänsligheten.
+kom-url-viewer-preferences	Lista av strängar	("emacs" "netscape" "w3")	nil	t		Den här variabeln bestämmer vilka program som används för att visaURLer. I LysKOM fungerar det så att man kan använda olika programberoende på vad för typ av URL det är frågan om. Den här listabestämmer i vilken ordning man försöker använda programmen.För tillfället kan man använda följande strängar: default, w3,netscape, dired, telnet-mode, mail-mode, emacs, mosaic, och lynx.Om man anger "default" så används Emacs browse-url, som används avalla andra program. Den kan hantera alla typer av URLer. "w3" ärEmacs-W3, och den kan hantera HTTP, Gopher och FTP. "dired" används omman vill visa FTP-bibliotek i dired. "telnet-mode" användertelnet-mode för telnet-URLer. "mail-mode" använder mail mode förmailto-URLer. "lynx" startar Lynx i ett terminalfönster inuti Emacsoch klarar alla typer av URLer. "netscape" använder Netscape ochklarar alla typer av URLer. Mosaic använder NCSA Mosaic och klararalla typer av URLer. Slutligen så kan man skriva "emacs" om man villanvända Emacs till FTP, mailto och telnet, men inte HTTP och andra"tunga" protokoll.
+kom-mosaic-command		"/usr/local/bin/mosaic"	nil	t		Om man vill använda NCSA Mosaic för att visa URLer så anger den härvariabeln vilket kommando som startar Mosaic.
+kom-netscape-command	Strängar	"netscape"	nil	t		Om man vill använda Netscape för att visa URLer så anger den härvariabeln vilket kommando som skall användas för att starta Netscape.
+kom-confirm-multiple-recipients	before, after	after	t	t		Om man sätter den här variabeln till before och försöker kommenteraett inlägg med flera mottagare så kommer elispklienten fråga för varjemottagare om de även skall få kommentaren. Det andra alternativet,after, innebär att elispklienten ställer en fråga precis när manskickar in inlägget om alla mottagarna verkligen är relevanta.
+kom-check-commented-author-membership	t, nil	t	t	t		Om man har satt den här variabeln till t och skriver en kommentar, menförfattaren till det kommenterade inte är medlem i någon av mottagarnaså frågar elispklienten om man även vill lägga till det kommenteradesförfattare som mottagare. Det här kan vara bra för att undvika att denman kommenterar inte läser det man skriver.
+kom-inhibit-typeahead	t, nil	nil	t	t		Om man trycker på tangenter med elispklienten arbetar så kommer denoftast att tolka dessa som kommandon när den åter är redo att ta emotinmatning från använaren. Om man sätter kom-inhibit-typeahead till tså kommer alla tangenttryckningar som gjordes innan prompten skrivs utatt kastas. Det fungerar inte perfekt, men det fungerar i alla fall lite.
+kom-max-buffer-size	nil, Heltal	nil	nil	t		Genom att sätta den här variabeln till ett heltal så kam man bestämmaden ungefärliga maximala storleken av LysKOM-bufferten. Om buffertenblir större än gränsen så kommer gammal information att tas bort frånbuffertens början.
+kom-server-aliases	Special	(("kom.lysator.liu.se" . "LysKOM") ("kom.ludd.luth.se" . "LuddKOM") ("rydkom.rydnet.lysator.liu.se" . "RydKOM") ("kom.csd.uu.se" . "CSD-KOM") ("striterax.medio.mh.se" . "MedioKOM") ("kom.mds.mdh.se" . "MdS-KOM"))	nil	t		Den här listan innehåller information om kända LysKOM-servrar. Den börsättas av den som installerar Emacs eller LysKOM. Varje element ilistan är ett cons-par av ( "address" . "alias" ) där address ärInternet-addressen till servern och alias är det namn den oftast gårunder. När man loggar in så används den här listan för att göraautomatisk utfyllnad av servernamn och för att ge förslag på servraratt logga in på.Man kan även logga in på servrar som inte står med i listan.
+kom-ansaphone-record-messages	t, nil	t	t	t		Om man har automatsvar på och den här variabeln är nil så kommerautomatsvararen att svara, men inte spara meddelanden som kommer in. 
+kom-ansaphone-show-messages	t, nil	t	t	t		Om man har automatsvar på och har satt den här variabeln till nil såkommer automatsvararen inte att visa meddelanden som kommer in, menden kommer att svara och spara meddelandena som vanligt.
+kom-remote-control	t, nil	t	t	t		Den här variabeln slår på och av fjärrkontrollen. Om den är satt tillnil så går det inte att fjärrstyra elispklienten, oavsett andrainställningar. Det går dock fortfarande att kasta ut sessioneneftersom det är en funktion i servern, inte i elispklienten.
+kom-remote-controllers	En lista av heltal	nil	t	t		Personerna vars nummer finns med i den här listan får fjärrstyraklienten om fjärrstyrning är påslaget.
+kom-self-control	t, nil	t	t	t		Om den här variabeln är satt till t så får den person som är inloggadi sessionen alltid fjärrstyra klienten, oavsett vadkom-remote-controllers är satt till. Fjärrstyrning måste förstås varapåsalget för att det skall fungera.
+kom-ansaphone-replies	Special	((group nil nil nil nil) (common nil nil nil nil))	t	t		Den här variabeln gör att man kan få automatsvararen att vara mycketflexibel med hur den svara på meddelanden. Se variabeldokumentationenför mer information, och var försiktig.
+lyskom-max-pending-calls	Heltal	20	nil	t		Maximalt antal anrop till servern som kan vara utstående utan svar. Omman har lyskom-max-pending-calls ute och gör ett nytt anrop så köasdet i klienten tills det har kommit ett svar från servern.
+lyskom-session-priority	Heltal	0	nil	t		Läsnivå i elispklienten. Möten som har prioritet lägre änlyskom-session-priority kommer inte att visas i den normalaläsordningen. Notera att möten med prioritet noll aldrig visas.Om man vill ändra den här variabeln under pågående session så är detbäst att använda kommandot "Sätt läsnivå".
+lyskom-prefetch-texts	Heltal	3	t	t		Antal inlägg som skall prefetchas. Den här variabeln kanske inteanvänds.
+lyskom-prefetch-conf-tresh	Heltal	50	t	t		Obsolete.
+lyskom-prefetch-confs		10	t	t		Obsolete
+lyskom-fetch-map-nos	Heltal	50	t	t		När elispklienten hämtar listor av inlägg i möten så hämtar denmaximalt lyskom-fetch-map-nos åt gången (kan man hoppas.)
+lyskom-fetch-membership-length	Heltal	6	nil	t		Antal medlemsskap som hämtas åt gången när man loggar in. Om det ärför stort så kommer inloggningen att ta längre tid.
+lyskom-mode-hook	Hook	nil	nil	t		Hook som körs när man startar lyskom-mode.
+kom-quit-hook	Hook	nil	t	t		Hook som körs när man avslutar en LysKOM-session.
+lyskom-new-text-hook	Hook	nil	t	t		Hook som körs när det kommer meddelande om ett nytt inlägg. Hookenkörs efter prompten har raderats (om den skall ändras), men innan dennya prompten skrivs ut och innan meddelande om en ny text har skrivitsut. Om hooken sätter no-message till t så kommer inget meddelande attskrivas ut.
+lyskom-who-info-has-changed-hook		nil	t	t		Obsolete.
+lyskom-personal-message-hook	Hook	nil	nil	t		Hook som körs när det kommer personliga meddelanden. När den körs såär sender bundet till meddelandets avsändare (pers-stat eller nil),recipient till mottagaren (conf-no eller 0) och message tillmeddelandetexten. Det är bättre att använda funktionenlyskom-add-personal-message-handler för att kroka in egnameddelandehanterare.
+kom-low-priority	Heltal	-1	nil	t		Prioritet som ges till det möte man är i om man går till ett annatmöte. Om man sätter detta till nil så kan kommandot Nästa möte gå tillsamma möte.
+lyskom-default-server	Sträng	"kom.lysator.liu.se"	nil	t		Defaultserver för nya sessioner.
+lyskom-default-user-name	Sträng	nil	nil	t		Användarnamn som är default för nya sessioner.
+lyskom-header-separator	Strängar	"--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"	nil	t		Den här variabeln innehåller den sträng som avskiljer inläggstextenoch headerrader när man skriver inlägg. Den är språkberoende.
+lyskom-header-subject	Strängar	"Ärende: "	nil	t		Den här variabeln innehåller headern för ärendet när man skriver nyainlägg. Den är språkberoende, och det är ingen god idé att ändra denmedan man skriver inlägg. 
+kom-ansaphone-default-reply	Strängar	"Jag läser inte LysKOM just nu. Skicka gärna ett brev i stället."	t	t		Denna variabel innehåller det svar som automatsvararen skickar. Detgår att skicka andra svar också genom att pilla på rätt variabler, mendet är lite invecklat att göra rätt, så jag tänker inte tala om hurman gör. 
+kom-mercial	Strängar	"Väntar."	t	t		Den sträng som skickas till servern när man har läst klart allainlägg. Den är språkberoende.
+lyskom-edit-mode-hook	Hook	nil	nil	t		Hook som körs när man startas lyskom-edit-mode. 
+lyskom-edit-mode-mode-hook	Hook	nil	nil	t		Hook som körs precis innan man startar lyskom-edit-mode, men efteredit-bufferten har satts i text-mode. lyskom-edit-mode-mode-hook kananvändas för att välja grundmode för edit-bufferten, om man inte villha text-mode.
+lyskom-send-message-setup-hook	Hook	nil	nil	t		Hook som körs när minibufferten precis skall användas för att läsa inett meddelande. Det finns två fördefinierade hookar,lyskom-send-message-resize-minibuffer ochlyskom-send-message-auto-fill som är trevliga att ha ilyskom-send-message-setup-hook.
+lyskom-send-message-exit-hook	Hook	nil	nil	t		Hook som körs i minibufferten precis efter man har skickat ettmeddelande (eller rättare sagt, när man trycker på RET för att skickadet.) Den används främst för att återställa hyss somlyskom-send-message-setup-hook har haft för sig.
+kom-allow-incompleteness	t, nil	nil	t	t		Om man har satt kom-allow-incompleteness till t så kan Lista Nyheterköra även om man inte har hämtat alla medlemsskap ännu, meninformationen blir ofullständig (och man kanske får meddelande omdet.) Om man har satt den här till nil så kommer Lista Nyheter attvänta tillsa alla medlemsskap är inlästa innan den visar någoninformation alls.
+kom-view-commented-in-window		other	t	t		Bestämmer i vilket fönster som det man kommenterar visas, när manåterser det från edit-bufferten.Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
+kom-edit-filters-in-window		nil	t	t		Bestämmer i vilket fönster man ändrar filter.Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
+kom-list-membership-in-window		other	t	t		Bestämmer i vilket fönster resultatet at Lista medlemsskap visas.Tillåtna värden är@table @asis@item @code{nil}LysKOM-buffertens fönster kommer att användas.@item @code{other}Ett annat fönster i samma frame kommer att användas. Om det inte redan finns ett så kommer ett nytt fönsteratt skapas.@item @code{other-frame}Ett fönster i en annan frame kommer att användas omdet finns en annan synlig frame. Finns ingen annan synlig frame så kommer något annat fönster att användas eller skapas.@item @code{new-frame}En ny frame kommer att skapas. Denna frame kommer atttas bort när man skickar in inlägget eller kastar bortdet.@item En strängOm det finns en buffert med samma namn som variabelnsvärde så kommer ett fönster som visar den buffertenatt användas, om det finns. @item En buffertOm bufferten finns så kommer ett fönster som visar denbufferten att användas, om något sådant fönster existerar.@end table
+kom-customize-format	long, short	long	t	t		Bestämmer formatet på inställningsbufferten. Om variabeln är satt tilllong så kommer alla hjälptexter att visas. Om den är satt till short så visas inte hjälptexterna.
+kom-user-prompt-format	Strängar	"%[%c% %m%] - "	t	t		Format på den normala prompten. Den här strängen kan innehålla någraspeciella styrkoder, enligt följande tabell:@table @code@item %[Skriver ut tecknet "[" om man har automatsvar på.@item %]Skriver ut tecknet "]" om man har automatsvar på.@item %cSkriver ut det kommando som körs om man trycker på space.@item % Ett procenttecken följt av ett mellanslag ersätts av ett mellanslag omdet verkar vettigt. Det är ofta lämpligt att använda efter styrkodersom kan ersättas med ingenting.@item %mSkriver ut hur många meddelanden som automatsvararen har spelat in, omden har spelat in några överhuvudtaget.@item %wSkriver ut namnet på det möte man för tillfället står i.@item %SSkriver ut serverns adress.@item %sSkriver ut serverns alias, om det finns något, annars dess adress.@item %pSkriver ut namnet på den person som är inloggad för tillfället.@item %#Skriver ut ens sessionsnummer.@item %%Ersätts av ett enda procenttecken.@end table
+kom-user-prompt-format-executing	Strängar	"%[%c% %m%]."	t	t		Format på prompten när man trycker på space. Se@xref{kom-user-prompt-format} för information om de speciellastyrkoder som kan ingå.
+kom-enabled-prompt-format		"%[%c% %m%] # "	t	t		Format på prompten när man kör i administratörsmod. Se@xref{kom-user-prompt-format} för information om de speciellastyrkoder som kan ingå.
+kom-enabled-prompt-format-executing		"%[%c% %m%]."	t	t		Format på prompten när man kör i administratörsmod och trycker påspace. Se @xref{kom-user-prompt-format} för information om despeciella styrkoder som kan ingå.
+kom-customize-in-window	Fönsterspecifikation	nil	t	t		Bestämmer i vilket fönster man gör inställningar för LysKOM.
+kom-prioritize-in-window	Fönsterspecifikation	nil	t	t		Bestämmer i vilket fönster som man prioriterar möten.
+kom-show-author-at-end	t, nil	t	t	t		Om den här variabeln är t så kommer inläggsförfattarens namn att visasi slutet av inlägget, efter inläggsnumret. Om den är satt till nil såvisas inte författarens namn.kom-show-author-at-end satt till t:@example    892342 1996-09-24  19:21  /2 rader/ Claude Shannon    Mottagare: Presentation (av nya) Medlemmar    Ärende: Claude Shannon    ------------------------------------------------------------    Informationsteoretiker    (892342) /Claude Shannon/------------------------------@end examplekom-show-author-at-end satt till nil:@example    892342 1996-09-24  19:21  /2 rader/ Claude Shannon    Mottagare: Presentation (av nya) Medlemmar    Ärende: Claude Shannon    ------------------------------------------------------------    Informationsteoretiker    (892342) -----------------------------------@end exampleOm kom-dashed-lines är nil så visas författaren på samma sätt, men destreckade linjerna finns naturligtvis inte med.
+lyskom-view-text-hook	Hook	nil	nil	t		Hook som körs precis innan en text visas. När hooken körs så ärvaribeln text bunden till textmassan och text-stat till text-statenför den text som precis skall visas.
+lyskom-send-message-hook	Hook	(lyskom-send-message-trim-newlines)	nil	t		Hook som körs precis innan man skickar iväg allmänna, grupp ellerpersonliga meddelanden. När hooken körs så är lyskom-message-stringbundet till meddelandetexten, och hooken kan ändra strängen. Omsträngen sätts till nil så kommer inte meddelandet att skickas.
+lyskom-send-text-hook	Hook	nil	nil	t		Hook som körs precis innan man skall skicka in en text. Hooken skallreturnera t om allt gick bra, och nil om texten inte skall skickas in.
+kom-permissive-completion	t, nil	t	t	t		Om den här variabeln är satt till nil så kommer inläsningen av namn påpersoner som skall vara inloggade (till exempel när man skickarmeddelanden eller gör Status (för) session) inte att tillåta att manmatar in namn på personer som inte är inloggade.
+kom-ding-on-new-letter	Pipspecifikation	nil	t	t		Bestämmer vilken ljudsignal elispklienten ger när det kommer ett nyttbrev.
+kom-ding-on-no-subject	Pipspecifikation	2	t	t		Bestämmer hur elispklienten skall pipa om man glömmer bort att skrivaett ärende när man skickar in en text. Det är fullt möjligt att denhär variabeln inte används.
+kom-lynx-terminal	xterm, terminal	xterm	nil	t		Bestämmer var Lynx startas (om Lynx överhuvudtaget startas.) Omkom-lynx-terminal är satt till xterm så kommer Lynx att startas i ennyskapad xterm. Om variabelvärdet är terminal så kommer Lynx attstartas i Emacs terminalemulator.
+kom-lynx-xterm-command	Lista av strängar	("xterm" "-geometry" "90x50+100+100" "-e" "lynx")	nil	t		Styr hur xterm startas för att köra Lynx. Första elementet i listan ärkommandot för att starta xterm. Övriga strängar ärkommandoradsargumenten till xterm.
+kom-lynx-terminal-command	Strängar	"lynx"	nil	t		Kommandot som skall köras för att start Lynx i en vanlig terminal.Värdet skall vara en lista av strängar, där det första elementet ärkommandot och övriga är kommandoradsargument.
+kom-check-for-new-comments	t, nil	t	t	t		Om man sätter kom-check-for-new-comments till t så kommerelispklienten att kontrollera att man inte har olästa kommentarer tilldet inlägg man håller på att kommentera. Detta hjälper till attförhindra att man skickar in en kommentar som innehåller precis sammasak som någon annan har skrivit.
+kom-default-language	sv, en	sv	t	t		Bestämmer vilket språk som används i elispklienten. Giltiga värdenberor på vilka språk som finns installerade, men de vanligaste är svför svenska och en för engelska. Man kan se vilka språk som ärinstallerade genom att göra Ändra språk och lista alternativen. kom-default-language skall innehålla ISO-647-koden för det språk somman vill använda.
+kom-ispell-dictionary	Strängar	nil	t	t		Om man vill att elispklienten skall använda en annan ordlista än mannormalt använder i ispell så skall ordlistan anges i denna variabel.Se dokumentationen för ispell-dictionary för information om vilkavärden variabeln får ha. Om kom-ispell-dictionary är nil så kommerelispklienten att använda ispell-dictionary istället.
+kom-dont-read-saved-variables	t, nil, Lista av variabler	nil	nil	t		Normalt så sparar elispklienten en hel del inställningar i servern,vilket gör att det är rätt futilt att sätta variablerna i sin .emacs.Genom att sätta den här variabeln till t så kan man hindra klientenfrån att använda variabler som är sparade i servern. Om man sätterkom-dont-read-saved-variables till en lista av symboler så kommerklienten inte att läsa de variablerna som finns med i listan frånservern.Det innebär alltså att om man vill ställa in till exempelkom-user-prompt-format globalt, och inte ha olika inställningar förolika servrar, så kan man göra så här i sin .emacs:@example(defvar kom-dont-read-saved-variables nil)(setq kom-dont-read-saved-variables         (cons 'kom-user-prompt-format               kom-dont-read-saved-variables))(setq kom-user-prompt-format "%[%s %c% %m%] - ")@end example
+lyskom-change-conf-hook	Hook	nil	nil	t		Hook som körs när man byter möte. Funktionerna i denna hook skall tatvå argument. Det första är mötesnumret för mötet man är i, och detandra är numret på mötet man står i begrepp att gå till.Ett användningsområde för den här variabeln är att göravariabelinställningar som är lokala för ett visst möte.
+kom-autowrap	t, nil, Heltal	t	nil	t		Variabeln kom-autowrap bestämmer hur elispklienten bryter om rader iinläggen. Om den är satt till t så kommer alla inlägg som verkarbehöva brytas om att brytas om. nil betyder att inläggen visas som deär. Om kom-autowrap är ett heltal så kommer enbart inlägg som ärkortare än variabelvärdet (i antal tecken) att brytas om.
+kom-show-namedays	t, nil	t	nil	t		Om kom-show-namedays är t så visar elispklienten vem som har namnsdagnär man gör Se tiden. Den här variabeln kommer nog att försvinnasåsmåningom. 
+kom-www-proxy	Sträng, Lista av par	nil	nil	t		Det går att köra LysKOM genom en WWW-proxy som har stöd för metodenCONNECT. Om kom-www-proxy är satt till en sträng så anger den adressentill den www-proxy som skall användas för alla LysKOM-uppkopplingar.Man kan även sätta kom-www-proxy till en lista av par. Det förstaelementet i listan är namnet på en server (eller t som innebär allaservrar), och det andra är en specifikation av en proxy, eller nil omingen proxy skall användas för servern i fråga.Specifikationen av en proxy har formen HOST:PORT, där PORT ärportnumret som skall användas. Om man utelämnar :PORT så antas port80.
