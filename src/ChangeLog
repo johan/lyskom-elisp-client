@@ -1,5 +1,10 @@
 2000-05-27  Johan Sundström  <jhs@lysator.liu.se>
 
+	* commands2.el (kom-list-news): Fixed introduced bug. Works
+	without arguments again.
+
+2000-05-27  Johan Sundström  <jhs@lysator.liu.se>
+
 	* commands2.el (kom-list-news): Now understands negative numeric
 	arguments as signifying "list conferences with at most |argument|
 	and at least one unread message in them". A prefix argument of
