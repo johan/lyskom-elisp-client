@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.54 1999-11-22 14:38:57 byers Exp $
+;;;;; $Id: edit-text.el,v 44.55 1999-12-02 22:29:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.54 1999-11-22 14:38:57 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.55 1999-12-02 22:29:44 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -210,7 +210,7 @@ footn-to	-> Fotnot till text %d."
 	(setq misc-list (cdr misc-list))))
     (mapcar (function
              (lambda (item)
-               (let ((data (lyskom-aux-item-definition-call
+               (let ((data (lyskom-aux-item-call
                             item '(edit-insert print)
                             item lyskom-pers-no)))
                  (when data
@@ -1348,10 +1348,10 @@ RECPT-TYPE is the type of recipient to add."
               (format "%%#1@%%[%s%%]%%#2s" (lyskom-get-string 'aux-item-prefix))
               (lyskom-default-button 'aux-edit-menu (cons (current-buffer)
                                                           (point-marker)))
-              (lyskom-aux-item-definition-call item 
-                                               '(edit-insert print)
-                                               item 
-                                               lyskom-pers-no))
+              (lyskom-aux-item-call item 
+                                    '(edit-insert print)
+                                    item 
+                                    lyskom-pers-no))
               "\n")))
   )
 
@@ -1540,7 +1540,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
   (let ((definitions lyskom-aux-item-definitions)
         (data nil))
     (while (and (null data) definitions)
-      (setq data (lyskom-aux-item-definition-call (car definitions) 'parse))
+      (setq data (lyskom-aux-item-call (car definitions) 'parse))
       (unless data (setq definitions (cdr definitions))))
 
     (when data

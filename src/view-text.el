@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.33 1999-11-21 15:39:59 byers Exp $
+;;;;; $Id: view-text.el,v 44.34 1999-12-02 22:30:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.33 1999-11-21 15:39:59 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.34 1999-12-02 22:30:01 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -256,7 +256,7 @@ Note that this function must not be called asynchronously."
                                (not kom-reading-puts-comments-in-pointers-last)
                                ))
                              (setq text 
-                                   (lyskom-aux-item-definition-call 
+                                   (lyskom-aux-item-call 
                                     aux
                                     'text-print
                                     aux
@@ -294,7 +294,7 @@ Note that this function must not be called asynchronously."
                                    kom-reading-puts-comments-in-pointers-last
                                ))
                              (setq text 
-                                   (lyskom-aux-item-definition-call 
+                                   (lyskom-aux-item-call 
                                     aux
                                     'text-print
                                     aux
@@ -322,9 +322,9 @@ Note that this function must not be called asynchronously."
 	       (lyskom-format-insert 'no-such-text-no text-no))
              (let ((aux-items (text-stat->aux-items text-stat)))
                (while aux-items
-                 (lyskom-aux-item-definition-call (car aux-items)
-                                                  'read-action
-                                                  text-stat)
+                 (lyskom-aux-item-call (car aux-items)
+                                       'read-action
+                                       text-stat)
                  (setq aux-items (cdr aux-items))))
              )))
     todo))

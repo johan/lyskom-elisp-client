@@ -1,3 +1,54 @@
+1999-12-02  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-what-to-do): Fix code to handle
+	kom-server-priority-breaks properly.
+
+	* option-edit.el (lyskom-custom-variables): Added
+	kom-server-priority-breaks.
+
+	* lyskom-rest.el (lyskom-set-mode-line): Use
+	lyskom-remove-unread-buffer and lyskom-add-unread-buffer.
+	(lyskom-sentinel): Use lyskom-remove-unread-buffer.
+	(lyskom-update-all-prompts): New function.
+
+	* buffers.el (lyskom-remove-buffer-from-unread-lists): New
+	function.
+
+1999-12-01  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-next-kom): Use
+	lyskom-clean-all-buffer-lists.
+
+	* commands1.el (lyskom-quit): Use lyskom-remove-buffer-from-lists.
+
+	* buffers.el (lyskom-add-unread-buffer): New function.
+
+	* command.el (lyskom-start-of-command): Use
+	lyskom-current-prompt-args.
+
+	* vars.el.in (lyskom-current-prompt-args): New variable.
+
+	* lyskom-rest.el (lyskom-update-prompt): Added
+	lyskom-current-prompt-args
+
+1999-11-23  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-server-priority): New variable.
+
+1999-11-22  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-what-to-do): Added PRI-SESSION.
+	(lyskom-next-command): Added next-pri-session.
+	(lyskom-update-prompt): Added next-pri-session. Prompts are now
+	format strings.
+	(kom-go-to-pri-session): New function.
+
+1999-11-21  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-mark-as-read): Check for null text-stat.
+
+	* services.el (initiate-create-text): Fix old version of the call.
+
 1999-12-02  David Byers  <davby@sen2.ida.liu.se>
 
 	* flags.el (lyskom-read-options-eval-get-holerith): Skip newlines

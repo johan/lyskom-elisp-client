@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.93 1999-11-25 15:57:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.94 1999-12-02 22:29:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.93 1999-11-25 15:57:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.94 1999-12-02 22:29:56 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -972,7 +972,7 @@ Skicka en bugrapport.\n")
 
     (bad-text-no-prefix . "Kan inte översätta prefix `%s' till inläggsnummer")
     (error-code . "Felkod %#2d: %#1s.\n")
-    (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt vä.
+    (error-in-kom-do-when-done . "Variabeln kom-do-when-done har ett felaktigt värde.
 Du bör sätta den till ett bättre värde.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM väntar på svar från servern. Vänta tills du får en prompt.\n")
@@ -1015,6 +1015,9 @@ Du bör sätta den till ett bättre värde.\n")
     (go-to-conf-of-review-prompt . "Återuppta återse")
     (go-to-next-conf-prompt . "Gå till nästa möte")
     (go-to-your-mailbox-prompt . "Gå till din brevlåda")
+    (next-pri-session-prompt . "Gå till prioriterat LysKOM \"%#1s\"")
+    (next-unread-session-prompt . "Gå till LysKOM \"%#1s\"")
+    (no-such-kom-session . "Det finns ingen sådan session med olästa.\n")
     (the-command . "Kommandot: %#1C")
     (error-in-login-hook . "Det fanns ett fel i din kom-login-hook: %#1s\n")
 
@@ -2147,6 +2150,15 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (express-break . "Omedelbart efter de har skapats")
     (break         . "Efter aktuell kommentarskedja  ")
     (no-break      . "Efter aktuellt möte            ")
+
+    (express-server-break . "Omedelbart")
+    (express-server-letters-break . "Omedelbart om det kommer brev")
+    (server-break . "Efter aktuell kommentarskedja")
+    (letters-server-break . "Efter aktuell kommentarskedja om det kommer brev")
+    (after-conf-server-break . "Efter aktuellt möte")
+    (after-conf-letters-server-break . "Efter aktuellt möte när det kommer brev")
+    (when-done-server-break . "När allt är utläst")
+    (no-server-break . "Aldrig")
 
     (command . "Kommando")
     (command-list . "Kommandolista")

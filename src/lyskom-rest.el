@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.93 1999-11-22 14:39:03 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.94 1999-12-02 22:29:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.93 1999-11-22 14:39:03 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.94 1999-12-02 22:29:50 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -252,6 +252,8 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
       (kom-view-next-text))
      ((eq lyskom-command-to-do 'reedit-text)
       (kom-re-edit-next-text))
+     ((eq lyskom-command-to-do 'next-pri-session)
+      (kom-go-to-pri-session))
      ((eq lyskom-command-to-do 'next-conf)
       (kom-go-to-next-conf))
      ((eq lyskom-command-to-do 'next-pri-conf)
@@ -316,6 +318,20 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
     (if (buffer-live-p (read-info->misc el))
         (lyskom-display-buffer (read-info->misc el))
       (lyskom-format-insert 'text-buffer-missing))))
+
+
+;;;; ================================================================
+;;;;                        Go to pri session
+
+(def-kom-command kom-go-to-pri-session ()
+  "Go to a prioritized session with unreads"
+  (interactive)
+  (let ((session (lyskom-get-prioritized-session)))
+    (if (or (null session)
+            (eq session (current-buffer))
+            (not (buffer-live-p session)))
+        (lyskom-insert 'no-such-kom-session)
+      (lyskom-switch-to-kom-buffer session))))
 
 
 ;;;; ================================================================
@@ -680,17 +696,11 @@ CONF can be a a conf-stat or a string."
 			 0 27)))
       
       (if (zerop total-unread)
-	  (setq lyskom-sessions-with-unread
-		(delq lyskom-buffer lyskom-sessions-with-unread))
-	(or (memq lyskom-buffer lyskom-sessions-with-unread)
-	    (setq lyskom-sessions-with-unread
-		  (cons lyskom-buffer lyskom-sessions-with-unread))))
+          (lyskom-remove-unread-buffer lyskom-buffer)
+        (lyskom-add-unread-buffer lyskom-buffer))
       (if (zerop letters)
-	  (setq lyskom-sessions-with-unread-letters
-		(delq lyskom-buffer lyskom-sessions-with-unread-letters))
-	(or (memq lyskom-buffer lyskom-sessions-with-unread-letters)
-	    (setq lyskom-sessions-with-unread-letters
-		  (cons lyskom-buffer lyskom-sessions-with-unread-letters))))
+          (lyskom-remove-unread-buffer lyskom-buffer t)
+        (lyskom-add-unread-buffer lyskom-buffer t))
     (force-mode-line-update)))
 
 
@@ -2292,6 +2302,14 @@ positions are counted from 0, as they are."
 ;;;                             To-do
 
 
+(defun lyskom-update-all-prompts (&optional force-prompt-update)
+  "Update the prompts in all buffers"
+  (save-excursion
+    (lyskom-traverse buffer lyskom-buffer-list
+      (set-buffer buffer)
+      (lyskom-update-prompt force-prompt-update))
+    (lyskom-set-default 'lyskom-need-prompt-update nil)))
+
 (defun lyskom-update-prompt (&optional force-prompt-update)
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
@@ -2300,109 +2318,126 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	       lyskom-dont-change-prompt))
       nil
     (let ((to-do (lyskom-what-to-do))
-	  (prompt nil))
+          (prompt nil)
+          (prompt-args nil))
       (setq lyskom-command-to-do to-do)
       (cond
 
        ((eq to-do 'next-pri-conf)
-	(setq prompt 'go-to-pri-conf-prompt)
-	(or (eq lyskom-current-prompt prompt)
-	    (lyskom-beep kom-ding-on-priority-break)))
+        (setq prompt 'go-to-pri-conf-prompt)
+        (or (eq lyskom-current-prompt prompt)
+            (lyskom-beep kom-ding-on-priority-break)))
 
        ((eq to-do 'reedit-text)
-        (setq prompt 're-edit-text-prompt)
-        (or (eq lyskom-current-prompt prompt)))
+        (setq prompt 're-edit-text-prompt))
 
+       ((and (eq to-do 'next-pri-session)
+             (lyskom-get-prioritized-session))
+        (if (and (read-list-isempty lyskom-reading-list)
+                 (read-list-isempty lyskom-to-do-list))
+            (setq prompt 'next-unread-session-prompt)
+          (setq prompt 'next-pri-session-prompt))
+        (setq prompt-args 
+              (save-excursion
+                (set-buffer (lyskom-get-prioritized-session))
+                (list
+                 (or (cdr (lyskom-string-assoc lyskom-server-name 
+                                               kom-server-aliases))
+                     lyskom-server-name)))))
 
        ((eq to-do 'next-pri-text)
-	(setq prompt 'read-pri-text-conf)
-	(or (eq lyskom-current-prompt prompt)
-	    (lyskom-beep kom-ding-on-priority-break)))
+        (setq prompt 'read-pri-text-conf)
+        (or (eq lyskom-current-prompt prompt)
+            (lyskom-beep kom-ding-on-priority-break)))
 
        ((eq to-do 'next-text)
-	(setq prompt
-	      (let ((read-info (read-list->first lyskom-reading-list)))
-		(cond
-		 ((eq 'REVIEW (read-info->type read-info))
-		  'review-next-text-prompt)
-		 ((eq 'REVIEW-TREE (read-info->type read-info))
-		  'review-next-comment-prompt)
-		 ((eq 'REVIEW-MARK (read-info->type read-info))
-		  'review-next-marked-prompt)
-		 ;; The following is not really correct. The text to be
-		 ;; read might be in another conference.
-		 ((= lyskom-current-conf lyskom-pers-no)
-		  'read-next-letter-prompt)
-		 ((eq 'FOOTN-IN (read-info->type read-info))
-		  'read-next-footnote-prompt)
-		 ((eq 'COMM-IN (read-info->type read-info))
-		  'read-next-comment-prompt)
-		 (t
-		  'read-next-text-prompt)))))
+        (setq prompt
+              (let ((read-info (read-list->first lyskom-reading-list)))
+                (cond
+                 ((eq 'REVIEW (read-info->type read-info))
+                  'review-next-text-prompt)
+                 ((eq 'REVIEW-TREE (read-info->type read-info))
+                  'review-next-comment-prompt)
+                 ((eq 'REVIEW-MARK (read-info->type read-info))
+                  'review-next-marked-prompt)
+                 ;; The following is not really correct. The text to be
+                 ;; read might be in another conference.
+                 ((= lyskom-current-conf lyskom-pers-no)
+                  'read-next-letter-prompt)
+                 ((eq 'FOOTN-IN (read-info->type read-info))
+                  'read-next-footnote-prompt)
+                 ((eq 'COMM-IN (read-info->type read-info))
+                  'read-next-comment-prompt)
+                 (t
+                  'read-next-text-prompt)))))
 
        ((eq to-do 'next-conf)
-	(setq prompt
-	      (cond
-	       ((eq 'REVIEW-MARK 
-		    (read-info->type (read-list->first lyskom-to-do-list)))
-		'go-to-conf-of-marked-prompt)
+        (setq prompt
+              (cond
+               ((eq 'REVIEW-MARK 
+                    (read-info->type (read-list->first lyskom-to-do-list)))
+                'go-to-conf-of-marked-prompt)
                ((eq 'REVIEW
                     (read-info->type (read-list->first lyskom-to-do-list)))
                 'go-to-conf-of-review-prompt)
                ((eq 'REVIEW-TREE 
                     (read-info->type (read-list->first lyskom-to-do-list)))
                 'go-to-conf-of-review-tree-prompt)
-	       ((/= lyskom-pers-no
-		    (conf-stat->conf-no
-		     (read-info->conf-stat (read-list->first
-					    lyskom-to-do-list))))
-		'go-to-next-conf-prompt)
-	       (t
-		'go-to-your-mailbox-prompt))))
+               ((/= lyskom-pers-no
+                    (conf-stat->conf-no
+                     (read-info->conf-stat (read-list->first
+                                            lyskom-to-do-list))))
+                'go-to-next-conf-prompt)
+               (t
+                'go-to-your-mailbox-prompt))))
     
        ((eq to-do 'when-done)
-	(if (not lyskom-is-writing)
-	    (lyskom-tell-server kom-mercial))
-	(setq prompt
-	      (let ((command (lyskom-what-to-do-when-done t)))
-		(cond			    
-		 ((lyskom-command-name command))
-		 ((and (stringp command)
-		       (lyskom-command-name (key-binding command))))
-		 (t (lyskom-format 'the-command command))))))
+        (if (not lyskom-is-writing)
+            (lyskom-tell-server kom-mercial))
+        (setq prompt
+              (let ((command (lyskom-what-to-do-when-done t)))
+                (cond			    
+                 ((lyskom-command-name command))
+                 ((and (stringp command)
+                       (lyskom-command-name (key-binding command))))
+                 (t (lyskom-format 'the-command command))))))
      
        ((eq to-do 'unknown)		;Pending replies from server.
-	(setq prompt nil))
+        (setq prompt nil))
      
-       (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
+       (t (message "%s" to-do)
+          (setq prompt "???")))
 
       (when (or force-prompt-update
                 (not (equal prompt lyskom-current-prompt)))
-	  (let ((inhibit-read-only t)
-		(prompt-text
-		 (if prompt
-                     (lyskom-modify-prompt
-                      (cond
-                       ((symbolp prompt) (lyskom-get-string prompt))
-                       (t prompt)))
-		   ""))
-		(was-at-max (eq (point) (point-max))))
-	    (save-excursion
-	      ;; Insert the new prompt
-	      (goto-char (point-max))
-	      (beginning-of-line)
-              (when lyskom-slow-mode
-                (add-text-properties 0 (length prompt-text)
-                                     '(read-only t rear-nonsticky t)
-				     prompt-text))
-	      (insert-string prompt-text)
-	      ;; Delete the old prompt
-	      (if lyskom-current-prompt
-		  (delete-region (point) (point-max))))
-	    (if was-at-max (goto-char (point-max)))
+        (let ((inhibit-read-only t)
+              (prompt-text
+               (if prompt
+                   (lyskom-modify-prompt
+                    (apply 'lyskom-format
+                           (cond
+                            ((symbolp prompt) (lyskom-get-string prompt))
+                            (t prompt))
+                           prompt-args))
+                 ""))
+              (was-at-max (eq (point) (point-max))))
+          (save-excursion
+            ;; Insert the new prompt
+            (goto-char (point-max))
+            (beginning-of-line)
+            (when lyskom-slow-mode
+              (add-text-properties 0 (length prompt-text)
+                                   '(read-only t rear-nonsticky t)
+                                   prompt-text))
+            (insert-string prompt-text)
+            ;; Delete the old prompt
+            (if lyskom-current-prompt
+                (delete-region (point) (point-max))))
+          (if was-at-max (goto-char (point-max)))
 	  
-	    (setq lyskom-current-prompt prompt)
-            (setq lyskom-current-prompt-text prompt-text))))
+          (setq lyskom-current-prompt prompt)
+          (setq lyskom-current-prompt-args prompt-args)
+          (setq lyskom-current-prompt-text prompt-text))))
     (lyskom-set-mode-line)))
 
 (defun lyskom-modify-prompt (s &optional executing)
@@ -2521,6 +2556,31 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
       (setq data (cdr data)))
     result))
 
+(defun lyskom-get-prioritized-session ()
+  "Get the session to go to if we are doing an auto-goto-session"
+  (let ((session-list (if (or (eq kom-server-priority-breaks 'express-letters)
+                              (eq kom-server-priority-breaks 'letters)
+                              (eq kom-server-priority-breaks 'after-conf-letters))
+                          lyskom-sessions-with-unread-letters
+                        lyskom-sessions-with-unread))
+        (session nil)
+        (saved-priority nil))
+    (while session-list
+      (condition-case nil
+          (save-excursion
+            (set-buffer (car session-list))
+            (when (or (null saved-priority)
+                      (> kom-server-priority saved-priority))
+              (setq session (car session-list)
+                    saved-priority kom-server-priority)))
+        (error nil))
+      (setq session-list (cdr session-list)))
+    session))
+
+
+    
+    
+
 (defun lyskom-what-to-do ()
   "Check what is to be done. Return an atom as follows:
 	next-pri-text	There is a text with higher priority to be read.
@@ -2529,8 +2589,49 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	next-conf	There are texts on lyskom-to-do-list.
         reedit-text     There is an edit buffer with an error.
 	when-done	There are no unread texts.
+        next-pri-session There is a session with unreads.
 	unknown	        There are pending replies."
   (cond
+
+   ;; If session breaks are one ... and ...
+   ;;   there is a session with higher priority ... and ...
+   ;;   it's not the current session ... and ...
+   ;;   we either have express breaks or we're at the end of a comment chain
+   ;;   the priority of the other session is higher than what we're reading
+
+   ((let* ((pri-session (lyskom-get-prioritized-session))
+           (type (unless (read-list-isempty lyskom-reading-list)
+                   (read-info->type (read-list->first lyskom-reading-list))))
+           (pri (unless (read-list-isempty lyskom-reading-list) 
+                  (read-info->priority (read-list->first lyskom-reading-list))))
+           (pri-session-pri (save-excursion (when (and pri-session pri)
+                                              (set-buffer pri-session)
+                                              kom-server-priority))))
+      (and (not (eq pri-session (current-buffer)))
+           (or (and (or (eq kom-server-priority-breaks 'express) 
+                        (eq kom-server-priority-breaks 'express-letters) )
+                    pri-session
+                    (or (null pri) (> pri-session-pri pri)))
+               (and (eq kom-server-priority-breaks 'when-done)
+                    pri-session
+                    (read-list-isempty lyskom-reading-list)
+                    (read-list-isempty lyskom-to-do-list))
+               (and (or (eq kom-server-priority-breaks t)
+                        (eq kom-server-priority-breaks 'letters))
+                    pri-session
+                    (or (null type)
+                        (eq type 'CONF)
+                        (eq type 'REVIEW)
+                        (eq type 'REVIEW-MARK))
+                    (or (null pri) (> pri-session-pri pri)))
+               (and (or (eq kom-server-priority-breaks 'after-conf)
+                        (eq kom-server-priority-breaks 'after-conf-letters))
+                    pri-session
+                    (read-list-isempty lyskom-reading-list)
+                    (or (null pri) (> pri-session-pri pri)))
+               )))
+    'next-pri-session)
+
    ((and kom-higher-priority-breaks
 	 (not (read-list-isempty lyskom-reading-list))
 	 (not (read-list-isempty lyskom-to-do-list))
@@ -3056,6 +3157,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 
       (setq lyskom-quit-flag (or lyskom-quit-flag quit-flag))
       (setq quit-flag nil)
+      (when lyskom-need-prompt-update
+        (lyskom-update-all-prompts))
       ;; Restore selected buffer and match data.
       (store-match-data old-match-data)
       (when (buffer-live-p lyskom-filter-old-buffer)
@@ -3067,10 +3170,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 
 (defun lyskom-sentinel (proc sentinel)
   "Handles changes in the lyskom-process."
-  (setq lyskom-sessions-with-unread
-	(delq proc lyskom-sessions-with-unread))
-  (setq lyskom-sessions-with-unread-letters
-	(delq proc lyskom-sessions-with-unread-letters))
+  (lyskom-remove-unread-buffer proc)
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
   (lyskom-format-insert 'closed-connection sentinel 
@@ -3217,7 +3317,9 @@ Other objects are converted correctly."
    (int-to-string (aux-item->tag item))                     " "
    (lyskom-prot-a-format-aux-item-flags (aux-item->flags item))    " "
    (int-to-string (aux-item->inherit-limit item))           " "
-   (lyskom-prot-a-format-raw-string (cons 'raw-text (aux-item->data item)))))
+   (lyskom-prot-a-format-raw-string (cons 'raw-text 
+                                          (lyskom-aux-item-output-data 
+                                           item)))))
 
 (defun lyskom-prot-a-format-aux-item-flags (flags)
   "Format AUX-ITEM-FLAGS for output to the server."

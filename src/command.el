@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.21 1999-11-22 21:30:52 byers Exp $
+;;;;; $Id: command.el,v 44.22 1999-12-02 22:29:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.21 1999-11-22 21:30:52 byers Exp $\n"))
+	      "$Id: command.el,v 44.22 1999-12-02 22:29:41 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -262,9 +262,13 @@ chosen according to this"
             (delete-region (point) (point-max)))))
     (lyskom-insert (lyskom-modify-prompt 
                     (cond ((stringp lyskom-current-prompt) 
-                           lyskom-current-prompt)
+                           (apply 'lyskom-format 
+                                  lyskom-current-prompt
+                                  lyskom-current-prompt-args))
                           ((symbolp lyskom-current-prompt)
-                           (lyskom-get-string lyskom-current-prompt))
+                           (apply 'lyskom-format 
+                                  (lyskom-get-string lyskom-current-prompt)
+                                  lyskom-current-prompt-args))
                           (t (format "%S" lyskom-current-prompt)))
                     t)))
   (setq mode-line-process (lyskom-get-string 'mode-line-working))

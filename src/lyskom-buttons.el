@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.34 1999-11-21 15:39:53 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.35 1999-12-02 22:29:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.34 1999-11-21 15:39:53 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.35 1999-12-02 22:29:48 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1012,7 +1012,7 @@ depending on the value of `kom-lynx-terminal'."
         (progn
           (lyskom-start-of-command nil)
           (unwind-protect
-              (let ((data (lyskom-aux-item-definition-call 
+              (let ((data (lyskom-aux-item-call 
                            aux
                            'info 
                            aux

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.10 1999-11-19 13:37:18 byers Exp $
+;;;;; $Id: buffers.el,v 44.11 1999-12-02 22:29:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.10 1999-11-19 13:37:18 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.11 1999-12-02 22:29:39 byers Exp $\n"))
 
 
 ;;;;
@@ -182,7 +182,8 @@ the children object"
         lyskom-sessions-with-unread-letters
         (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
         lyskom-buffer-list
-        (lyskom-clean-buffer-list lyskom-buffer-list)))
+        (lyskom-clean-buffer-list lyskom-buffer-list))
+  (lyskom-set-default 'lyskom-need-prompt-update t))
 
 (defun lyskom-clean-buffer-list (buffers)
   "Remove all dead buffers from BUFFERS"
@@ -197,12 +198,29 @@ the children object"
     "Remove BUFFER from all internal lists.
 If BUFFER is not specified, assume the current buffer"
   (unless buffer (setq buffer (current-buffer)))
-  (setq lyskom-sessions-with-unread
-        (delq buffer lyskom-sessions-with-unread))
-  (setq lyskom-sessions-with-unread-letters
-        (delq buffer lyskom-sessions-with-unread-letters))  
+  (lyskom-remove-unread-buffer buffer)  
   (setq lyskom-buffer-list
-        (delq buffer lyskom-buffer-list)))
+        (delq buffer lyskom-buffer-list))
+  (lyskom-set-default 'lyskom-need-prompt-update t))
+
+(defun lyskom-remove-unread-buffer (buffer &optional letters-only)
+  (unless letters-only
+    (setq lyskom-sessions-with-unread
+          (delq buffer lyskom-sessions-with-unread)))
+  (setq lyskom-sessions-with-unread-letters
+        (delq buffer lyskom-sessions-with-unread-letters))
+  (lyskom-set-default 'lyskom-need-prompt-update t))
+  
+
+(defun lyskom-add-unread-buffer (buffer &optional letters)
+  (unless (memq buffer lyskom-sessions-with-unread)
+    (setq lyskom-sessions-with-unread
+          (cons buffer lyskom-sessions-with-unread)))
+  (unless (or (null letters)
+              (memq buffer lyskom-sessions-with-unread-letters))
+    (setq lyskom-sessions-with-unread-letters
+          (cons buffer lyskom-sessions-with-unread-letters)))
+  (lyskom-set-default 'lyskom-need-prompt-update t))
 
 (defvar lyskom-associated-buffer-list nil
   "List of (CATEGORY . BUFFER-LIST) listing all buffers of various
