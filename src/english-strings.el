@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.43 1999-06-10 13:36:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.44 1999-06-10 13:49:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.43 1999-06-10 13:36:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.44 1999-06-10 13:49:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1531,7 +1531,7 @@ Contents:     \"%#9s\"
 
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-mode-map (kbd (lyskom-keyd 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-en-mode-map "*" 'kom-button-press)
   (define-key lyskom-en-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.18 1999-06-10 13:36:20 byers Exp $
+;;;;; $Id: services.el,v 44.19 1999-06-10 13:49:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.18 1999-06-10 13:36:20 byers Exp $\n"))
+	      "$Id: services.el,v 44.19 1999-06-10 13:49:47 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1086,7 +1086,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
   "Set server info."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
-    (lyskom-send-packed kom-queue (lyskom-format-objects 79
+    (lyskom-send-packet kom-queue (lyskom-format-objects 79
                                                          0
                                                          conf-pres-conf
                                                          pers-pres-conf
