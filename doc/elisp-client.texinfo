@@ -19,7 +19,7 @@
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
 
 @ifinfo
-$Id: elisp-client.texinfo,v 38.2 1995-10-25 09:13:43 davidk Exp $
+$Id: elisp-client.texinfo,v 38.3 1996-02-23 16:02:43 byers Exp $
 @end ifinfo
 
 @iftex
@@ -54,6 +54,7 @@ $Id: elisp-client.texinfo,v 38.2 1995-10-25 09:13:43 davidk Exp $
 @author Linus Tolke @file{linus@@lysator.liu.se}
 @author Per Cederqvist @file{ceder@@lysator.liu.se}
 @author Inge Wallin @file{ingwa@@isy.liu.se} eller @file{inge@@lysator.liu.se}
+@author David Byers @file{byers@@lysator.liu.se}
 
 @page
 Copyright @copyright{} 1991,1992,1993,1994 Lysator
@@ -89,6 +90,7 @@ Lysator vid Linköpings Tekniska Högskola --- LiTH.
 Den som för tillfället arbetar mest med LysKOMs emacslispklient är:
 
 Linus Tolke --- @file{linus@@lysator.liu.se}
+David Byers --- @file{byers@@lysator.liu.se}
 
 Andra mer eller mindre aktiva personer är:
 
@@ -153,6 +155,7 @@ Köra LysKOM
 
 * Prompten::			Hur LysKOMs prompt fungerar.
 * Scrollning::			Hur LysKOM scrollar och varför.
+* Filtrering::                  Hur du väljer bort vissa inlägg.
 * Kommandon::			Vilka kommandon finns och vad gör de.
 
 * Administratörskommandon::	Administratörskommandon
@@ -180,6 +183,7 @@ Kommandon
 * Ändra personuppgifter::	
 * Ändra mötesuppgifter::	
 * Meddelande::			Meddelande
+* Filtrera::                    Kommandon för att filtrera inlägg.
 * Prioritera::			Kommando för att prioritera om möten.
 
 * Ändra inställningarna::	
@@ -484,6 +488,7 @@ författaren av inlägget att flytta inlägget om det hamnat fel men oftast
 @menu
 * Prompten::			Hur LysKOMs prompt fungerar.
 * Scrollning::			Hur LysKOM scrollar och varför.
+* Filtrering::                  Hur du väljer bort vissa inlägg.
 * Kommandon::			Vilka kommandon finns och vad gör de.
 
 * Administratörskommandon::	Administratörskommandon
@@ -507,14 +512,52 @@ surrogat för den egentliga klienten och att det som du nu kör är en
 alfarelease.
 
 
-@node Scrollning, Kommandon, Prompten, Köra LysKOM
+@node Scrollning, Filtrering, Prompten, Köra LysKOM
 @comment  node-name,  next,  previous,  up
 @section Scrollning
 
 Om inte allt ryms på skärmsidan så syns en procentsats i mode-raden.
 Tryck på mellanslag när du läst klart så scrollas nästa sida fram.
 
-@node Kommandon, Administratörskommandon, Scrollning, Köra LysKOM
+
+@node Filtrering, Kommandon, Scrollning, Köra LysKOM
+@comment node-name, next, previous, up
+@section Filtrering
+
+För att hantera den stora mängd information som kan finnas i LysKOM
+finns funktioner för att filtrera inlägg. Filtrering innebär att inlägg
+med vissa egenskaper inte visas.
+
+LysKOMs filtreringsfunktioner är mycket flexibla, och tillåter filter
+som fritt kombinerar författare, ärende, textinnehåll och mottagare,
+angivna som text, med reguljära uttryck eller, för författare och
+mottagare, nummer. Varje del i ett filter kan omfatta alla inlägg som
+antingen uppfyller eller inte uppfyller villkoren.
+
+Filtreringen kan göras på tre olika sätt:
+
+@table @asis
+@item Visa inte
+Visa första raden i inläggshuvudet och lista kommentarer till
+inlägget. Denna filtermetod är mest användbar om man vill välja om man
+skall se vissa inlägg i en diskussion.
+
+@item Hoppa över
+Hoppa över texten och hämta nästa text i läslistan. Endast ett
+meddelande om att inlägget har hoppats över visas. Denna metod är
+användbar om man aldrig vill se vissa inlägg i en diskussion.
+
+@item Hoppa över kommentarer
+Som hoppa över, men hoppar dessutom över alla kommentarer under
+inlägget. Denna metod är användbar om man helt vill undvika vissa
+diskussioner.
+
+@end table
+
+Filter är antingen tillfälliga eller permanenta. Tillfälliga filter
+försvinner när du avslutar Emacs.
+
+@node Kommandon, Administratörskommandon, Filtrering, Köra LysKOM
 @comment  node-name,  next,  previous,  up
 @section Kommandon
 
@@ -559,6 +602,7 @@ förra versionen.
 * Ändra personuppgifter::	
 * Ändra mötesuppgifter::	
 * Meddelande::			Meddelande
+* Filtrera::                    Kommandon för att filtrera inlägg.
 * Prioritera::			Kommando för att prioritera om möten.
 
 * Ändra inställningarna::	
@@ -620,6 +664,13 @@ osv. För att undvika att detta kommando jobbar för evigt läsmarkerar
 och söker klienten bara rekursivt vidare om kommentaren i varje steg
 är nyare än det kommenterade inlägget.
 
+@item @kbd{H}
+@itemx @code{Superhoppa}
+@findex Superhoppa
+@kindex H
+Skapa ett filter som hoppar över alla texter i det aktuella mötet med
+samma ärenderad som den senast lästa texten. Detta kommando är bra om
+man vill hoppa över alla grenar i en gamma diskussion.
 
 @item @kbd{e}
 @itemx @code{Endast läsa senaste}
@@ -1458,7 +1509,90 @@ skickar iväg det till mottagarna.
 
 @end table
 
-@node Prioritera, Ändra inställningarna, Meddelande, Kommandon
+@node Filtrera, Prioritera, Meddelande, Kommandon
+@comment node-name, next, previous, up
+@subsection Filtrera
+@comment byers
+
+@table @asis
+
+@item @kbd{ff}
+@itemx @code{Filtrera Författare}
+@findex Filtrera Författare
+@kindex ff
+Lägger till ett filter som tar bort alla inlägg av en viss
+person. Frågar efter författare, möte och typ av filtrering.
+
+@item @code{fä}
+@itemx @code{Filtrera Ärende}
+@findex Filtrera Ärende
+@kindex fä
+Lägger till ett filter som tar bort alla inlägg med en viss
+ärenderad. Frågar efter ärende, möte och typ av filtrering.
+
+@item @kbd{ft}
+@itemx @code{Filtrera Text}
+@findex Filtrera Text
+@kindex ft
+Lägger till ett filter som tar bort alla inlägg som innehåller en viss
+text. Frågar efter text, möte och typ av filtrering.
+
+@item @kbd{äf}
+@itemx @code{Ändra Filter}
+@findex Ändra Filter
+@kindex äf
+Poppar upp en ny buffert som listar alla filter. I den här bufferten har
+man tillgång till speciella kommandon för att ändra, ta bort och lägga
+till nya filter. De kommandon som finns är:
+
+@table @asis
+
+@item @kbd{n, C-n}
+Flytta markören till nästa rad i listan.
+
+@item @kbd{p, C-p}
+Flytta markören till föregående rad i listan.
+
+@item @kbd{N, M-n}
+Flytta markören till nästa filter i listan.
+
+@item @kbd{P, M-p}
+Flytta markören till föregående filter i listan.
+
+@item @kbd{>, M->}
+Flytta markören till slutet av sista filtret i listan.
+
+@item @kbd{<, M-<}
+Flytta markören till första raden av första filtret i listan.
+
+@item @kbd{d, C-d}
+Radera den rad markören står på.
+
+@item @kbd{D, M-d}
+Radera det filter markören står i.
+
+@item @kbd{i}
+Lägg till en rad i ett filter. Frågar efter filterfunktion.
+
+@item @kbd{I, M-i}
+Lägg till ett filter. Frågar efter filtertyp och tidsbegränsning.
+
+@item @kbd{a}
+Byt filtertyp. Kommandot växlar mellan alla tillgängliga alternativ.
+
+@item @kbd{t}
+Byt tidsbegränsning (bara mellan permanent och tillfällig).
+
+@item @kbd{s}
+Spara filterlistan.
+
+@item @kbd{q}
+Avsluta.
+
+@end table
+@end table
+
+@node Prioritera, Ändra inställningarna, Filtrera, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Prioritera
 
@@ -1974,6 +2108,25 @@ Antalet rader som Vilkabufferten skall visas med när man ger kommandot
 @code{Visa vilkalistan}. @xref{Vilkabufferten} och 
 @ref{Annat, Visa vilkalistan}.
 
+
+@item @code{kom-text-buttons}
+@itemx @code{(Komplicerad)} (@code{elisp})
+@vindex kom-text-buttons
+En lista med sökmönser som används för att skapa aktiva områden i
+texten. Värdet skall vara en lista av listor med formen
+@example
+(regexp action arg)
+@end example
+där REGEXP är en regexp som eftersöks i texten, ACTION är funktionen som
+skall anropas vid musklick och ARG är ett extra argument till
+funktionen. En knapp skapas på texten som matchar hela REGEXP, eller om
+REGEXP innehåller en @code{\(\)}-konstruktion, den text som matchas av
+den första sådana konstruktionen.
+
+@item{kom-mosaic-command}
+@itemx @code{"/usr/local/bin/mosaic"} (@code{elisp})
+@vindex kom-mosaic-command
+Variabeln anger var mosaic finns.
 
 @item @code{kom-do-when-starting}
 @itemx @code{nil} (@code{elisp})
