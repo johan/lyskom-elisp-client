@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.30 2000-08-16 14:21:15 byers Exp $
+;;;;; $Id: completing-read.el,v 44.31 2000-08-23 10:43:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.30 2000-08-16 14:21:15 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.31 2000-08-23 10:43:40 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -533,7 +533,7 @@ function work as a name-to-conf-stat translator."
 (defun lyskom-completing-match-string (string name)
   "Return non-nil if STRING matches NAME using LysKOM completion rules."
   (string-match (concat "^"
-                        (replace-in-string (lyskom-unicase (lyskom-completing-strip-name string))
+                        (replace-in-string (regexp-quote (lyskom-unicase (lyskom-completing-strip-name string)))
                                   "\\s-+" "\\\\S-*\\\\s-+")
                         "\\s-*")
                 (lyskom-completing-strip-name (lyskom-unicase name))))
@@ -1014,9 +1014,10 @@ the LysKOM rules of string matching."
       (lyskom-scroll)
       (while (string= ""
                       (lyskom-with-lyskom-minibuffer
-                       (setq result (completing-read
+                       (setq result (lyskom-completing-read
 				    (lyskom-get-string 'resolve-session)
-				    who-info
+				    (lyskom-maybe-frob-completion-table 
+				     who-info)
 				    nil
 				    t
 				    (car (car who-info))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.29 2000-05-31 13:41:05 byers Exp $
+;;;;; $Id: command.el,v 44.30 2000-08-23 10:43:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.29 2000-05-31 13:41:05 byers Exp $\n"))
+	      "$Id: command.el,v 44.30 2000-08-23 10:43:34 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -209,7 +209,7 @@
 	 (alternatives (mapcar 
 			(lambda (pair)
 			  (cons 
-                           (lyskom-maybe-recode-string (cdr pair))
+			   (cdr pair)
 			   (car pair)))
 			(lyskom-get-strings lyskom-commands
 					    'lyskom-command)))
@@ -228,16 +228,17 @@
                    (lyskom-get-string 'extended-command))))
 
     (lyskom-with-lyskom-minibuffer
-     (setq name (completing-read prompt
-                                 alternatives 
-                                 ;; lyskom-is-administrator is buffer-local and
-                                 ;; must be evalled before the call to 
-                                 ;; completing-read
-                                 ;; Yes, this is not beautiful
-                                 (list 'lambda '(alternative)	     
-                                       (list 'lyskom-ok-command 'alternative
-                                             lyskom-is-administrator))
-                                 t nil 'lyskom-command-history)))
+     (setq name (lyskom-completing-read prompt
+                                        (lyskom-maybe-frob-completion-table
+                                         alternatives)
+                                        ;; lyskom-is-administrator is buffer-local and
+                                        ;; must be evalled before the call to 
+                                        ;; completing-read
+                                        ;; Yes, this is not beautiful
+                                        (list 'lambda '(alternative)	     
+                                              (list 'lyskom-ok-command 'alternative
+                                                    lyskom-is-administrator))
+                                        t nil 'lyskom-command-history)))
     (cdr (lyskom-string-assoc name alternatives))))
 
 (defun lyskom-start-of-command (function &optional may-interrupt)

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: talkback.el,v 44.1 2000-08-17 17:26:14 byers Exp $
+;;;;; $Id: talkback.el,v 44.2 2000-08-23 10:43:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: talkback.el,v 44.1 2000-08-17 17:26:14 byers Exp $\n"))
+	      "$Id: talkback.el,v 44.2 2000-08-23 10:43:53 byers Exp $\n"))
 
 (defvar kom-bug-report-address "kom@lysator.liu.se")
 

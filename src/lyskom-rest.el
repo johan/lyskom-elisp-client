@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.115 2000-08-21 14:20:55 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.116 2000-08-23 10:43:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.115 2000-08-21 14:20:55 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.116 2000-08-23 10:43:47 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3540,6 +3540,7 @@ One parameter - the prompt string."
   (define-key lyskom-modeline-keymap (kbd (lyskom-keys 'button3)) 'kom-modeline-select-unread-kom))
 
 
+(defvar frame-icon-title-format)
 (if lyskom-is-loaded
     nil
 

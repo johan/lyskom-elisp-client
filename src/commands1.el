@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.84 2000-08-17 17:26:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.85 2000-08-23 10:43:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.84 2000-08-17 17:26:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.85 2000-08-23 10:43:36 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1483,7 +1483,8 @@ Those that you are not a member in will be marked with an asterisk."
                                   (goto-char (point-max))
                                 (and kom-continuous-scrolling (lyskom-scroll)))))))
                   (quit (aset counter 0 t)
-                        (lyskom-cancel-call 'main calls))))
+                        (lyskom-cancel-call 'main calls)
+                        (signal 'quit nil))))
             (lyskom-insert (lyskom-get-string (if arg 'no-pers-confs-exist 'no-confs-exist))))
         (lyskom-format-insert (lyskom-current-error))))))
 

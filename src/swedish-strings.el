@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.131 2000-08-21 12:29:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.132 2000-08-23 10:43:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.131 2000-08-21 12:29:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.132 2000-08-23 10:43:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -726,7 +726,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 
     ;; From review.el:
     (no-review-done . "Du måste återse innan du kan återse mer.\n")
-    (not-reviewing . "Du måste håller inte på att återse något nu.\n")
+    (not-reviewing . "Du håller inte på att återse något nu.\n")
     (review-how-many . "Återse hur många?")
     (review-how-many-more . "Återse ytterligare hur många?")
     (latest-n . "senaste %#1d")

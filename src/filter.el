@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.14 2000-08-10 11:42:55 byers Exp $
+;;;;; $Id: filter.el,v 44.15 2000-08-23 10:43:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.14 2000-08-10 11:42:55 byers Exp $\n"))
+	      "$Id: filter.el,v 44.15 2000-08-23 10:43:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -428,13 +428,14 @@ invalid-value until a filter action has been selected.")
   (let ((completion-ignore-case t))
     (car
      (rassoc
-      (completing-read (lyskom-get-string 'filter-action)
-                       (lyskom-reverse-pairs 
-                        lyskom-filter-actions)
-                       nil
-                       nil
-                       (cdr (car lyskom-filter-actions))
-                       t)
+      (lyskom-completing-read (lyskom-get-string 'filter-action)
+                              (lyskom-maybe-frob-completion-table
+                               (lyskom-reverse-pairs 
+                                lyskom-filter-actions))
+                              nil
+                              nil
+                              (cdr (car lyskom-filter-actions))
+                              t)
       lyskom-filter-actions))))
 
 
