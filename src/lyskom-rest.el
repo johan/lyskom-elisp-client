@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.142 2002-03-03 16:22:42 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.143 2002-03-12 20:59:52 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.142 2002-03-03 16:22:42 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.143 2002-03-12 20:59:52 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -943,7 +943,15 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
       (goto-char (point-max))
       (beginning-of-line)
       (let ((inhibit-read-only t))
-	(lyskom-do-insert string))
+        ;; Some (all?) xemacsen adds the text-properties on the prompt
+        ;; to text inserted before it. We don't want this, so insert a
+        ;; blank and remove all text-properties from it, insert the
+        ;; text before the blank and finally remove the blank.
+        (insert " ")
+        (backward-char)
+        (remove-text-properties (point) (+ (point) 1) (text-properties-at (point)))
+	(lyskom-do-insert string)
+        (delete-char 1))
       (goto-char oldpoint))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window

@@ -1,3 +1,9 @@
+2002-03-12  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-insert-before-prompt): don't let xemacs
+	add the text-properties of the prompt to all text inserted before
+	the prompt (fixes bug 421).
+
 2002-03-11  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* english-strings.el (lyskom-message): Changed last-log-in to say
@@ -473,8 +479,8 @@
 
 2001-10-14  Ulrik Haugen  <qha@lysator.liu.se>
 
-	* lyskom-buttons.el (kom-previous-link, kom-next-link): look
-	for property lyskom-button in stead of lyskom-button-text.
+	* lyskom-buttons.el (kom-previous-link, kom-next-link): look for
+	property lyskom-button instead of lyskom-button-text.
 	(lyskom-generate-button): new arg sublte, callers changed.
 
 2001-10-13  Ulrik Haugen  <qha@lysator.liu.se>
