@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.20 1992-03-07 19:43:44 willfor Exp $
+;;;;; $Id: lyskom-rest.el,v 35.21 1992-03-24 02:06:22 willfor Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.20 1992-03-07 19:43:44 willfor Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.21 1992-03-24 02:06:22 willfor Exp $\n"))
 
 
 ;;;; ================================================================
@@ -219,7 +219,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
     (lyskom-set-last-viewed)))
 
 
-;;; Author: Per Cederqvist
+;;; Author: Lars Willf|r
 
 (defun kom-next-command ()
   "Run next command or scroll one page."
@@ -241,28 +241,30 @@ Related variables are kom-tell-phrases and lyskom-commands.")
     (lyskom-scroll)))
 
 
+;;; Author: Per Cederqvist
+
 (defun lyskom-next-command ()
-  "Run next command or scroll (at most) NO-OF-LINES lines."
+  "Run next command."
   (let ((doing-default-command t))
-  (cond
-   ((eq lyskom-command-to-do 'next-pri-text)
-    (lyskom-view-priority-text))
-   ((eq lyskom-command-to-do 'next-text)
-    (kom-view-next-text))
-   ((eq lyskom-command-to-do 'next-conf)
-    (kom-go-to-next-conf))
-   ((eq lyskom-command-to-do 'next-pri-conf)
-    (lyskom-go-to-pri-conf))
-   ((eq lyskom-command-to-do 'when-done)
-    (let ((command (lyskom-what-to-do-when-done)))
-      (cond
-       ((stringp command)
-	(execute-kbd-macro command))
-       (t (call-interactively command)))))
-   ((eq lyskom-command-to-do 'unknown)
-    (lyskom-insert
-     (lyskom-get-string 'wait-for-server)))
-   (t (signal 'lyskom-internal-error '(kom-next-command))))))
+    (cond
+     ((eq lyskom-command-to-do 'next-pri-text)
+      (lyskom-view-priority-text))
+     ((eq lyskom-command-to-do 'next-text)
+      (kom-view-next-text))
+     ((eq lyskom-command-to-do 'next-conf)
+      (kom-go-to-next-conf))
+     ((eq lyskom-command-to-do 'next-pri-conf)
+      (lyskom-go-to-pri-conf))
+     ((eq lyskom-command-to-do 'when-done)
+      (let ((command (lyskom-what-to-do-when-done)))
+	(cond
+	 ((stringp command)
+	  (execute-kbd-macro command))
+	 (t (call-interactively command)))))
+     ((eq lyskom-command-to-do 'unknown)
+      (lyskom-insert
+       (lyskom-get-string 'wait-for-server)))
+     (t (signal 'lyskom-internal-error '(kom-next-command))))))
 
 
 ;;; ================================================================
@@ -956,8 +958,12 @@ lyskom-is-waiting nil.
       (if (not lyskom-no-prompt)
 	  (let ((buffer-read-only nil))
 	    (goto-char (point-max))
-	    (delete-char (- (length lyskom-prompt-text ))))))
+	    (delete-char (- (length lyskom-prompt-text))))))
     (lyskom-insert lyskom-prompt-executing-default-command-text))
+  (if (pos-visible-in-window-p (point-max))
+      (save-excursion
+	(goto-char (point-max))
+	(lyskom-set-last-viewed)))
   (setq lyskom-executing-command t)
   (lyskom-insert "\n")
   (if (and (eq (window-buffer (selected-window))
