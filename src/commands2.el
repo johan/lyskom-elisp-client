@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.92 2001-04-25 12:31:37 byers Exp $
+;;;;; $Id: commands2.el,v 44.93 2001-04-25 20:57:18 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.92 2001-04-25 12:31:37 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.93 2001-04-25 20:57:18 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -960,10 +960,10 @@ on one line."
 The summary contains the date, number of lines, author and subject of the text
 on one line."
   (let ((time (lyskom-current-server-time))
-	(author-width (/ (- (lyskom-window-width) 22) 3)))
+	(author-width (/ (- (lyskom-window-width) 27) 3)))
     
     ;; Start fetching all text-stats and text to list them.
-    (lyskom-format-insert (concat "%-8#1s%-6#2s%-4#3s %-"
+    (lyskom-format-insert (concat "%-7#1s %-10#2s %-4#3s %-"
 				  (int-to-string author-width)
 				  "#4s  %#5s\n")
 			  (lyskom-get-string 'Texts)
@@ -987,9 +987,11 @@ on one line."
 
 (defun lyskom-print-summary-line (text-stat text text-no year mon mday)
   "Handle the info, fetch the author and print it.
-Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
-The year and day is there to be able to choose format on the day.
-Format is 23:29 if the text is written today. Otherwise 04-01."
+Args: TEXT-STAT TEXT TEXT-NO YEAR MON MDAY.
+
+The year, mon and mday are there to be able to choose format on the
+day.  Format is HH:MM(:SS) if the text is written today, otherwise
+YYYY-MM-DD."
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
@@ -999,22 +1001,19 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
            (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
            (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
            (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-	   ;; length of the number %%%%%% :8
-	   ;; length for time is: 6
+           (author-and-subj-width (max 0
+                                       (- (lyskom-window-width) 27)))
            (time (or (lyskom-mx-date-to-time mx-date)
                      (text-stat->creation-time text-stat)))
 	   (time (if (and (= year (time->year time))
 			  (= mon (time->mon time))
                           (= mday (time->mday time)))
-		     (format "%02d:%02d" (time->hour time)
-			     		 (time->min time))
-		   (format "%02d-%02d" (time->mon time)
-			   	       (time->mday time))))
-	   ;; length for lines is: 4
+                     (lyskom-format-time 'time time)
+                   (lyskom-format-time 'timeformat-yyyy-mm-dd time)))
 	   ;; We split the rest between author and subject
-	   (namelen (/ (- (lyskom-window-width) 22) 3))
-	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
-	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
+	   (namelen (/ author-and-subj-width 3))
+	   (subjlen (- author-and-subj-width namelen))
+	   (format-string (concat "%=-7#1n %-10#2s %3#3d  %=-"
 				  (int-to-string namelen)
 				  "#4P  %[%#5@%=-"
 				  (int-to-string subjlen)
@@ -1050,14 +1049,14 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
         (time (lyskom-current-server-time))
         (author-width (max 0
                            (/ (- (lyskom-window-width)
-                                 23
+                                 28
                                  (lyskom-max-mark-width))
                               3))))
 
     ;; Start fetching all text-stats and text to list them.
     (lyskom-format-insert (concat "%-"
-                                  (int-to-string (1+ (lyskom-max-mark-width)))
-                                  "#6s%-8#1s%-6#2s%-4#3s %-"
+                                  (int-to-string (lyskom-max-mark-width))
+                                  "#6s %-7#1s %-10#2s %-4#3s %-"
 				  (int-to-string author-width)
 				  "#4s  %#5s\n")
 			  (lyskom-get-string 'Texts)
@@ -1066,8 +1065,6 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			  (lyskom-get-string 'Author)
 			  (lyskom-get-string 'Subject)
                           (lyskom-get-string 'mark-type))
-;    (lyskom-insert (make-string (1- (window-width)) ?-))
-;    (lyskom-insert "\n")
     (lyskom-traverse
 	mark marks
       (when (or (null which-mark)
@@ -1081,15 +1078,15 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
           (lyskom-print-mark-summary-line mark text-stat text text-no 
                                      (time->year time) (time->yday time))
           (sit-for 0))))
-;    (lyskom-insert (make-string (1- (window-width)) ?-))
-;    (lyskom-insert "\n")
     ))
 
 (defun lyskom-print-mark-summary-line (mark text-stat text text-no year day)
   "Handle the info, fetch the author and print it.
 Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
+
 The year and day is there to be able to choose format on the day.
-Format is 23:29 if the text is written today. Otherwise 04-01."
+Format is HH:MM(:SS) if the text is written today, otherwise
+YYYY-MM-DD."
   (lyskom-format-insert (format "%%-%d#1s " (lyskom-max-mark-width))
                         (mark->symbolic-mark-type mark))
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
@@ -1100,22 +1097,17 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   (subject (substring txt 0 eos))
            (author-and-subj-width (max 0
                                        (- (lyskom-window-width)
-                                          23
+                                          28
                                           (lyskom-max-mark-width))))
-	   ;; length of the number: 8
-	   ;; length for time: 6
 	   (time (text-stat->creation-time text-stat))
 	   (time (if (and (= year (time->year time))
 			  (= day (time->yday time)))
-		     (format "%02d:%02d" (time->hour time)
-			     		 (time->min time))
-		   (format "%02d-%02d" (time->mon time)
-			   	       (time->mday time))))
-	   ;; length for lines: 5
+                     (lyskom-format-time 'time time)
+                   (lyskom-format-time 'timeformat-yyyy-mm-dd time)))
 	   ;; We split the rest between author and subject
 	   (namelen (/ author-and-subj-width 3))
 	   (subjlen (- author-and-subj-width namelen))
-	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
+	   (format-string (concat "%=-7#1n %-10#2s %3#3d  %=-"
 				  (int-to-string namelen)
 				  "#4P  %[%#5@%=-"
 				  (int-to-string subjlen)

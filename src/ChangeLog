@@ -1,5 +1,10 @@
 2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
 
+	* commands2.el (kom-list-marks): Wider date/time field.
+	(lyskom-print-mark-summary-line): Ditto.
+	(lyskom-list-summary): Ditto.
+	(lyskom-print-summary-line): Ditto.
+
 	* swedish-strings.el (lyskom-message): "Gå ur" --> "Utträd ur".
 
 	* swedish-strings.el (lyskom-custom-strings): Spelling.
