@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.179 2002-04-14 15:15:51 byers Exp $
+;;;;; $Id: vars.el.in,v 44.180 2002-04-14 21:52:00 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.179 2002-04-14 15:15:51 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.180 2002-04-14 21:52:00 ceder Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1016,7 +1016,7 @@ Do not use this variable for proxy authentication.")
     ("com.lysator.liu.se" . "LysCOM (LysKOM in English)")
     ("kom.ludd.luth.se" . "LuddKOM")
     ("kom.hem.liu.se" . "RydKOM")
-    ("kom.update.uu.se" . "CSD-KOM")
+    ("kom.update.uu.se" . "UppKOM")
     ("kom.mds.mdh.se" . "MdS-KOM")
     ("kom.stacken.kth.se" . "TokKOM")
     ("com.helsinki.fi" . "HesaKOM")
