@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.72 2000-06-02 13:13:18 byers Exp $
+;;;;; $Id: commands1.el,v 44.73 2000-06-02 13:51:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.72 2000-06-02 13:13:18 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.73 2000-06-02 13:51:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -113,35 +113,35 @@
 
 (def-kom-command kom-delete-text (text-no)
   "Delete a text. Argument: TEXT-NO"
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-text-to-delete 
-                                                     nil 
-                                                     lyskom-current-text)))
-  (let* ((do-delete t)
-         (text-stat (blocking-do 'get-text-stat text-no))
-         (num-marks (text-stat->no-of-marks text-stat))
-         (is-marked-by-me (cache-text-is-marked text-no)))
-    (cond ((null text-stat) 
-           (lyskom-report-command-answer nil)
-           (setq do-delete nil))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-text-to-delete)))
+  (if text-no
+      (let* ((do-delete t)
+             (text-stat (blocking-do 'get-text-stat text-no))
+             (num-marks (text-stat->no-of-marks text-stat))
+             (is-marked-by-me (cache-text-is-marked text-no)))
+        (cond ((null text-stat) 
+               (lyskom-report-command-answer nil)
+               (setq do-delete nil))
 
-          ((> (text-stat->no-of-marks text-stat) 0)
-           (setq do-delete
-                 (lyskom-j-or-n-p 
-                  (lyskom-format 'delete-marked-text
-                                 (if (> num-marks 0)
-                                     (if is-marked-by-me
-                                         (if (= num-marks 1)
-                                             (lyskom-get-string 'delete-marked-by-you)
-                                           (lyskom-format 'delete-marked-by-you-and-others
-                                                          (1- num-marks)))
-                                       (lyskom-format 'delete-marked-by-several
-                                                      num-marks))))))))
-      (when do-delete
-        (lyskom-format-insert 'deleting-text text-no)
-        (when (lyskom-report-command-answer 
-               (blocking-do 'delete-text text-no))
-          (when is-marked-by-me
-            (lyskom-unmark-text text-no))))))
+              ((> (text-stat->no-of-marks text-stat) 0)
+               (setq do-delete
+                     (lyskom-j-or-n-p 
+                      (lyskom-format 'delete-marked-text
+                                     (if (> num-marks 0)
+                                         (if is-marked-by-me
+                                             (if (= num-marks 1)
+                                                 (lyskom-get-string 'delete-marked-by-you)
+                                               (lyskom-format 'delete-marked-by-you-and-others
+                                                              (1- num-marks)))
+                                           (lyskom-format 'delete-marked-by-several
+                                                          num-marks))))))))
+        (when do-delete
+          (lyskom-format-insert 'deleting-text text-no)
+          (when (lyskom-report-command-answer 
+                 (blocking-do 'delete-text text-no))
+            (when is-marked-by-me
+              (lyskom-unmark-text text-no)))))
+    (lyskom-insert 'confusion-what-to-delete)))
 
 
 
@@ -190,7 +190,7 @@ optional arg TEXT-NO is present review the text that text commented instead."
 	(lyskom-tell-internat 'kom-tell-read)
 	(lyskom-view-commented-text
 	 (blocking-do 'get-text-stat text-no)))
-    (lyskom-insert-string 'have-to-read)))
+    (lyskom-insert-string 'confusion-what-to-view)))
 
 
 (def-kom-command kom-view-previous-commented-text (text-no)
@@ -777,7 +777,7 @@ If optional arg TEXT-NO is present write a comment to that text instead."
                                          text
                                          text-no
                                          'comment))))
-        (lyskom-insert-string 'confusion-what-to-comment))
+        (lyskom-insert-string 'confusion-who-to-reply-to))
     (lyskom-end-of-command)))
 
 
@@ -1551,7 +1551,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-mark)))
   (if text-no
       (lyskom-mark-text text-no)
-    (lyskom-insert 'have-to-read)))
+    (lyskom-insert 'confusion-what-to-mark)))
 
 
 (def-kom-command kom-unmark-text (&optional text-no)
@@ -1559,7 +1559,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-unmark)))
   (if text-no
       (lyskom-unmark-text text-no)
-    (lyskom-insert 'have-to-read)))
+    (lyskom-insert 'confusion-what-to-unmark)))
 
 
 (defun lyskom-unmark-text (text-no)
@@ -2951,6 +2951,9 @@ command argument."
                                          default-to
                                          default-from t))))))
 
+;;; NOTE: If you add an action you need to add an foo-action-name
+;;;       string to the strings files.
+
 (defun lyskom-add-sub-recipient (text-no-arg
 				 prompt
 				 action
@@ -2964,111 +2967,112 @@ conference to add, remove or move from, CONF2 is thee conference to
 move to (for move) and a non-nil TEXT-NO-IS-READ means that the user has
 already been prompted for a text number so TEXT-NO-ARG contains the 
 actual text to do whatever on."
-  (let* ((text-no (if (and text-no-is-read text-no-arg)
-                      text-no-arg
-                    (let ((current-prefix-arg text-no-arg))
-                      (lyskom-read-text-no-prefix-arg prompt
-                                                      nil
-                                                      lyskom-current-text))))
+  (let ((text-no (if (and text-no-is-read text-no-arg)
+                     text-no-arg
+                   (let ((current-prefix-arg text-no-arg))
+                     (lyskom-read-text-no-prefix-arg prompt)))))
+    (if text-no
+        (let* ((text-stat (blocking-do 'get-text-stat text-no))
+               (was-read (lyskom-text-read-p text-stat))
 
-         (text-stat (blocking-do 'get-text-stat text-no))
-	 (was-read (lyskom-text-read-p text-stat))
+               ;; Only for moving
+               (conf-to-move-from (if (eq action 'move)
+                                      (lyskom-read-conf-stat
+                                       (lyskom-get-string 'who-to-move-from-q)
+                                       '(all)
+                                       nil
+                                       (cons (if conf2 (conf-stat->name conf2) "") 0)
+                                       t)))
 
-	 ;; Only for moving
-	 (conf-to-move-from (if (eq action 'move)
-				(lyskom-read-conf-stat
-				 (lyskom-get-string 'who-to-move-from-q)
-				 '(all)
-				 nil
-				 (cons (if conf2 (conf-stat->name conf2) "") 0)
-                                 t)))
+               (conf-to-add-to (lyskom-read-conf-stat
+                                (lyskom-get-string
+                                 (cond ((eq action 'add-rcpt) 'who-to-add-q)
+                                       ((eq action 'add-copy) 'who-to-add-copy-q)
+                                       ((eq action 'add-bcc)  'who-to-add-bcc-q)
+                                       ((eq action 'sub) 'who-to-sub-q)
+                                       ((eq action 'move) 'who-to-move-to-q)
+                                       (t (lyskom-error "internal error"))))
+                                '(all)
+                                nil
+                                (cons (if conf (conf-stat->name conf) "") 0)
+                                t))
+               (result nil))
 
-	 (conf-to-add-to (lyskom-read-conf-stat
-			  (lyskom-get-string
-			   (cond ((eq action 'add-rcpt) 'who-to-add-q)
-				 ((eq action 'add-copy) 'who-to-add-copy-q)
-                                 ((eq action 'add-bcc)  'who-to-add-bcc-q)
-				 ((eq action 'sub) 'who-to-sub-q)
-				 ((eq action 'move) 'who-to-move-to-q)
-				 (t (lyskom-error "internal error"))))
-			  '(all)
-			  nil
-			  (cons (if conf (conf-stat->name conf) "") 0)
-                          t))
-	 (result nil))
+          ;; Confirm add a full recipient
 
-    ;; Confirm add a full recipient
+          (when (and (eq action 'add-rcpt)
+                     conf-to-add-to
+                     (not (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q conf-to-add-to) t)))
+            (setq action 'add-copy))
 
-    (when (and (eq action 'add-rcpt)
-               conf-to-add-to
-               (not (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q conf-to-add-to) t)))
-      (setq action 'add-copy))
+          (setq result
+                (cond ((eq action 'add-rcpt)
+                       (lyskom-format-insert 'adding-name-as-recipient 
+                                             conf-to-add-to
+                                             text-stat)
+                       (setq lyskom-last-added-rcpt
+                             (conf-stat->conf-no conf-to-add-to))
+                       (blocking-do 'add-recipient
+                                    text-no 
+                                    (conf-stat->conf-no conf-to-add-to)
+                                    'recpt))
 
-    (setq result
-	  (cond ((eq action 'add-rcpt)
-		 (lyskom-format-insert 'adding-name-as-recipient 
-				       conf-to-add-to
-				       text-stat)
-		 (setq lyskom-last-added-rcpt
-		       (conf-stat->conf-no conf-to-add-to))
-		 (blocking-do 'add-recipient
-			      text-no 
-			      (conf-stat->conf-no conf-to-add-to)
-			      'recpt))
+                      ((eq action 'add-copy)
+                       (lyskom-format-insert 'adding-name-as-copy
+                                             conf-to-add-to
+                                             text-stat)
+                       (setq lyskom-last-added-ccrcpt
+                             (conf-stat->conf-no conf-to-add-to))
+                       (blocking-do 'add-recipient
+                                    text-no
+                                    (conf-stat->conf-no conf-to-add-to)
+                                    'cc-recpt))
 
-		((eq action 'add-copy)
-		 (lyskom-format-insert 'adding-name-as-copy
-				       conf-to-add-to
-				       text-stat)
-		 (setq lyskom-last-added-ccrcpt
-		       (conf-stat->conf-no conf-to-add-to))
-		 (blocking-do 'add-recipient
-			      text-no
-			      (conf-stat->conf-no conf-to-add-to)
-			      'cc-recpt))
-
-                ((eq action 'add-bcc)
-		 (lyskom-format-insert 'adding-name-as-copy
-				       conf-to-add-to
-				       text-stat)
-		 (setq lyskom-last-added-bccrcpt
-		       (conf-stat->conf-no conf-to-add-to))
-		 (blocking-do 'add-recipient
-			      text-no
-			      (conf-stat->conf-no conf-to-add-to)
-			      'bcc-recpt))
+                      ((eq action 'add-bcc)
+                       (lyskom-format-insert 'adding-name-as-copy
+                                             conf-to-add-to
+                                             text-stat)
+                       (setq lyskom-last-added-bccrcpt
+                             (conf-stat->conf-no conf-to-add-to))
+                       (blocking-do 'add-recipient
+                                    text-no
+                                    (conf-stat->conf-no conf-to-add-to)
+                                    'bcc-recpt))
                  
 
-		((eq action 'sub)
-		 (lyskom-format-insert 'remove-name-as-recipient
-				       conf-to-add-to
-				       text-stat)
-		 (blocking-do 'sub-recipient
-			      text-no
-			      (conf-stat->conf-no conf-to-add-to)))
+                      ((eq action 'sub)
+                       (lyskom-format-insert 'remove-name-as-recipient
+                                             conf-to-add-to
+                                             text-stat)
+                       (blocking-do 'sub-recipient
+                                    text-no
+                                    (conf-stat->conf-no conf-to-add-to)))
 
-		((eq action 'move)
-		 (lyskom-format-insert 'moving-name
-				       conf-to-move-from
-				       conf-to-add-to
-				       text-stat)
-		 (setq lyskom-last-added-rcpt
-		       (conf-stat->conf-no conf-to-add-to))
-		 (blocking-do-multiple
-		     ((add (add-recipient
-			    text-no 
-			    (conf-stat->conf-no conf-to-add-to)
-			    'recpt))
-		      (sub (sub-recipient
-			    text-no
-			    (conf-stat->conf-no conf-to-move-from))))
-		   (and add sub)))
+                      ((eq action 'move)
+                       (lyskom-format-insert 'moving-name
+                                             conf-to-move-from
+                                             conf-to-add-to
+                                             text-stat)
+                       (setq lyskom-last-added-rcpt
+                             (conf-stat->conf-no conf-to-add-to))
+                       (blocking-do-multiple
+                           ((add (add-recipient
+                                  text-no 
+                                  (conf-stat->conf-no conf-to-add-to)
+                                  'recpt))
+                            (sub (sub-recipient
+                                  text-no
+                                  (conf-stat->conf-no conf-to-move-from))))
+                         (and add sub)))
 			      
 		
-		(t (lyskom-error "internal error"))))
-    (cache-del-text-stat text-no)
-    (if was-read (lyskom-mark-as-read (blocking-do 'get-text-stat text-no)))
-    (lyskom-report-command-answer result)))
+                      (t (lyskom-error "internal error"))))
+          (cache-del-text-stat text-no)
+          (if was-read (lyskom-mark-as-read (blocking-do 'get-text-stat text-no)))
+          (lyskom-report-command-answer result))
+      (lyskom-format-insert 'confusion-what-to-add-sub-recipient
+                            (lyskom-get-string (intern (concat (symbol-name action)
+                                                               "-action-name")))))))
 
 
 
@@ -3102,23 +3106,27 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a comment should be subtracted.
         Otherwise a comment is added"
-  (let* ((text-no (let ((current-prefix-arg text-no-arg))
-                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text)))
-	 (comment-text-no  (lyskom-read-number
-			    (lyskom-get-string
-			     (if do-add 'text-to-add-q 'text-to-remove-q))
-			    (if (eq text-no lyskom-current-text)
-				nil
-			      lyskom-current-text))))
-    (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
-			  comment-text-no
-			  text-no)
-    (cache-del-text-stat text-no)
-    (cache-del-text-stat comment-text-no)
-    (lyskom-report-command-answer 
-     (blocking-do (if do-add 'add-comment 'sub-comment)
-		  comment-text-no
-		  text-no))))
+  (let ((text-no (let ((current-prefix-arg text-no-arg))
+                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text))))
+    (if text-no
+        (let* ((comment-text-no  (lyskom-read-number
+                                  (lyskom-get-string
+                                   (if do-add 'text-to-add-q 'text-to-remove-q))
+                                  (if (eq text-no lyskom-current-text)
+                                      nil
+                                    lyskom-current-text))))
+          (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
+                                comment-text-no
+                                text-no)
+          (cache-del-text-stat text-no)
+          (cache-del-text-stat comment-text-no)
+          (lyskom-report-command-answer 
+           (blocking-do (if do-add 'add-comment 'sub-comment)
+                        comment-text-no
+                        text-no)))
+      (lyskom-format-insert (if do-add 
+                                'confusion-what-to-add-comment-to
+                              'confusion-what-to-sub-comment-from)))))
 
 (def-kom-command kom-add-footnote (text-no-arg)
   "Add a text as a footnote to another text."
@@ -3141,25 +3149,29 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a footnote should be subtracted.
         Otherwise a footnote is added"
-  (let* ((text-no (let ((current-prefix-arg text-no-arg))
-                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text)))
-	 (footnote-text-no  (lyskom-read-number
-			    (lyskom-get-string
-			     (if do-add 
-                                 'text-to-add-footn-q 
-                               'text-to-remove-footn-q))
-			    (if (eq text-no lyskom-current-text)
-				nil
-			      lyskom-current-text))))
-    (lyskom-format-insert (if do-add 'add-footnote-to 'sub-footnote-to)
-			  footnote-text-no
-			  text-no)
-    (cache-del-text-stat text-no)
-    (cache-del-text-stat footnote-text-no)
-    (lyskom-report-command-answer 
-     (blocking-do (if do-add 'add-footnote 'sub-footnote)
-		  footnote-text-no
-		  text-no))))
+  (let ((text-no (let ((current-prefix-arg text-no-arg))
+                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text))))
+    (if text-no
+        (let* ((footnote-text-no  (lyskom-read-number
+                                   (lyskom-get-string
+                                    (if do-add 
+                                        'text-to-add-footn-q 
+                                      'text-to-remove-footn-q))
+                                   (if (eq text-no lyskom-current-text)
+                                       nil
+                                     lyskom-current-text))))
+          (lyskom-format-insert (if do-add 'add-footnote-to 'sub-footnote-to)
+                                footnote-text-no
+                                text-no)
+          (cache-del-text-stat text-no)
+          (cache-del-text-stat footnote-text-no)
+          (lyskom-report-command-answer 
+           (blocking-do (if do-add 'add-footnote 'sub-footnote)
+                        footnote-text-no
+                        text-no)))
+      (lyskom-insert (if do-add 
+                         'confusion-what-to-add-footnote-to
+                       'confusion-what-to-sub-footnote-from)))))
 
 
 

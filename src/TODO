@@ -10,15 +10,18 @@ ALLA SOM ANVÄNDER LYSKOM-READ-TEXT-NO-PREFIX-ARG MÅSTE VARA BEREDDA PÅ
 ATT RESULTATET ÄR NIL, VILKET DET BLIR OM MAN INTE HAR EN PROMPT MEN
 HAR DEFAULTVÄRDE PÅ TEXTNUMRET!
 
+Kontrollera alla användningar av (lyskom-insert 'have-to-read). En del
+borde vara egna strängar.
+
 
 Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
 meningsfullt. Följande är relevanta:
 
         Kommando                            Default     Prompt
         ------------------------------------------------------
-     -* Radera inlägg                       SL          Alltid
-     -* Återse inlägg                       Inget       Ja
-     -* Återse omodifierat                  SL          Nej
+      * Radera inlägg                       SL          Alltid
+      * Återse inlägg                       SL          Ja
+      * Återse omodifierat                  SL          Nej
       * Återse urinlägget                   SL          Nej
       * Återse alla kommentarer             SL          Nej
       * Återse alla kommentarer reku        SL          Nej
@@ -32,21 +35,21 @@ meningsfullt. Följande är relevanta:
       * Personligt svar på föregåend        NSL         Nej
       * Markera (inlägg)                    SL          Ja
       * Avmarkera (inlägg)                  SL          Ja
-     -* Addera mottagare                    SL          Ja
-     -* Addera extra kopiemottagare         SL          Ja
-     -* Addera för kännedom                 SL          Ja
-     -* Subtrahera mottagare                SL          Ja
-     -* Flytta inlägg                       SL          Ja
-     -* Addera kommentar                    SL          Ja
-     -* Subtrahera kommentar                SL          Ja
+      * Addera mottagare                    SL          Ja
+      * Addera extra kopiemottagare         SL          Ja
+      * Addera för kännedom                 SL          Ja
+      * Subtrahera mottagare                SL          Ja
+      * Flytta inlägg                       SL          Ja
+      * Addera kommentar                    SL          Ja
+      * Subtrahera kommentar                SL          Ja
       X Arkivera inlägg (till fil)          SL          Ja
       * Spara inläggstext (på fil)          SL          Ja
       X Sätt loginmeddelande                SS          Ja
       * Kort replik                         SL          Nej
       * Hålla med                           SL          Nej
       * Addera FAQ                          SS          Ja
-     -* Addera fotnot                       SS          Ja
-     -* Subtrahera fotnot                   SS          Ja
+      * Addera fotnot                       SS          Ja
+      * Subtrahera fotnot                   SS          Ja
       * Förhindra kommentarer               SS          Ja
       * Begär personligt svar               SS          Ja
       * Begär läsbekräftelse                SS          Ja
