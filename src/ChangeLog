@@ -1,4 +1,12 @@
+Mon May 11 03:50:07 1992  Linus Tolke Y  (linus@robin)
+
+	* clienttypes.el, cache.el, view-text.el (textpointers): removed
+	  the special pointer-representation of the texts. They are now
+	  deleted from the cache when read.
+
 Mon May  4 02:38:59 1992  Linus Tolke Y  (linus@robert)
+
+	* Distribuerat version 0.34.5	 	03:06
 
 	* cache.el (lyskom-set-who-info-buffer-2): Use a new insert
 	  function that converts the data in the who-info buffer according

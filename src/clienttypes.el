@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 35.4 1992-01-22 00:04:02 inge Exp $
+;;;;; $Id: clienttypes.el,v 35.5 1992-05-11 01:54:29 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 35.4 1992-01-22 00:04:02 inge Exp $\n"))
+	      "$Id: clienttypes.el,v 35.5 1992-05-11 01:54:29 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -317,77 +317,6 @@ element will be the new first element."
 	(setcdr first nil)))
   read-list)    
 	  
-
-;;; ================================================================
-;;;                       textpointers
-
-;;; Constructor:
-
-(defun lyskom-create-textpointers (text-no
-				   start-subject
-				   end-subject
-				   start-text
-				   end-text)
-  "Create a textpointers from all parameters."
-  (cons
-   'TEXTPOINTERS
-   (vector text-no start-subject end-subject start-text end-text 
-	   )))
-
-
-;;; Selectors:
-
-(defun textpointers->text-no (textpointers)
-  "Get text-no from textpointers."
-  (elt (cdr textpointers) 0))
-
-(defun textpointers->start-subject (textpointers)
-  "Get start-subject from textpointers."
-  (elt (cdr textpointers) 1))
-
-(defun textpointers->end-subject (textpointers)
-  "Get end-subject from textpointers."
-  (elt (cdr textpointers) 2))
-
-(defun textpointers->start-text (textpointers)
-  "Get start-text from textpointers."
-  (elt (cdr textpointers) 3))
-
-(defun textpointers->end-text (textpointers)
-  "Get end-text from textpointers."
-  (elt (cdr textpointers) 4))
-
-
-;;; Modifiers:
-
-(defun set-textpointers->text-no (textpointers newval)
-  "Set text-no in textpointers to NEWVAL."
-  (aset (cdr textpointers) 0 newval))
-
-(defun set-textpointers->start-subject (textpointers newval)
-  "Set start-subject in textpointers to NEWVAL."
-  (aset (cdr textpointers) 1 newval))
-
-(defun set-textpointers->end-subject (textpointers newval)
-  "Set end-subject in textpointers to NEWVAL."
-  (aset (cdr textpointers) 2 newval))
-
-(defun set-textpointers->start-text (textpointers newval)
-  "Set start-text in textpointers to NEWVAL."
-  (aset (cdr textpointers) 3 newval))
-
-(defun set-textpointers->end-text (textpointers newval)
-  "Set end-text in textpointers to NEWVAL."
-  (aset (cdr textpointers) 4 newval))
-
-
-
-;;; Predicate:
-
-(defun lyskom-textpointers-p (object)
-  "Return t if OBJECT is a textpointers."
-  (eq (car-safe object) 'TEXTPOINTERS))
-
 
 ;;; ================================================================
 ;;;                      A simple queue
