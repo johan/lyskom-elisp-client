@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.341 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.342 2004-11-12 14:24:18 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.341 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.342 2004-11-12 14:24:18 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -772,6 +772,7 @@ The message you were sending to %#1M was:
 
     (session-list-unreads-in-confs . 
 			      "You have %#2?z%[%#2d unread letter%#2?d%[%]%[s%], in total %]%[%]%#3d unread text%#3?d%[%]%[s%] in %#4d conference%#4?d%[%]%[s%] in %#1s.\n")
+    (session-list-no-unread-in . "You have no unread texts in %#1s.\n")
 
     (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")
     (you-have-unreads-special . "You have %#1d uncommented text%#1?d%[%]%[s%] in %#2M\n")
