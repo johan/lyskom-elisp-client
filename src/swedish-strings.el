@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.3 1996-09-25 17:29:54 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.4 1996-09-30 23:39:09 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.3 1996-09-25 17:29:54 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.4 1996-09-30 23:39:09 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -367,7 +367,11 @@ P\345 denna dag, \345r 1973, grundades Lysator, och det var en stor dag
 i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
 
 
-    (total-users . "    Sammanlagt %#1d aktiva anv\344ndare.\n")
+    (total-users . "    Sammanlagt %#1d anv\344ndare.\n")
+    (total-visible-users . "    Sammanlagt %#1d synliga anv\344ndare.\n")
+    (total-active-users . "    Sammanlagt %#1d aktiva anv\344ndare.\n")
+    (total-visible-active-users
+     . "    Sammanlagt %#1d synliga aktiva anv\344ndare.\n")
     (who-to-add-q . "Vilket m\366te/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket m\366te/person vill du addera som kopiemottagare? ")
     (who-to-sub-q . "Vilket m\366te/person vill du subtrahera som mottagare? ")
