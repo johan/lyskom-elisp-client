@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.41 1999-02-18 16:29:38 petli Exp $
+;;;;; $Id: english-strings.el,v 44.42 1999-05-05 14:38:37 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.41 1999-02-18 16:29:38 petli Exp $"))
+              "$Id: english-strings.el,v 44.42 1999-05-05 14:38:37 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -316,6 +316,8 @@ and you have finished reading. Please come back later.
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
+    (new-paren . "New parenthesis: ")
+    (no-paren-in-name . "The name doesn't contain a parenthesis.\n")
     (who-to-change-supervisor-for . "Change supervisor of who/what? ")
     (new-supervisor . "New supervisor: ")
     (text-to-mark . "Mark which article? ")
@@ -1231,6 +1233,7 @@ Contents:     \"%#9s\"
     (kom-write-text           . "Write (an) article")
     (kom-send-letter          . "Write (a) letter")
     (kom-change-name          . "Change name")
+    (kom-change-parenthesis   . "Change parenthesis")
     (kom-change-password      . "Change password")
     (kom-change-supervisor    . "Change supervisor")
     (kom-change-presentation  . "Change presentation")
