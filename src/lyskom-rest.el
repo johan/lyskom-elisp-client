@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.12 1995-11-13 16:00:42 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.13 1995-11-16 23:31:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.12 1995-11-13 16:00:42 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.13 1995-11-16 23:31:50 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2008,6 +2008,7 @@ then a newline is printed after the name instead."
 	  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
 	  (setq inhibit-quit nil)	;We are allowed to break here.
 	  (cond
+	   ((not (string-match "\n" output)))
 	   ((null lyskom-is-parsing)	;Parse one reply at a time.
 	    (setq lyskom-is-parsing t)
 	    (unwind-protect
