@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.28 2000-06-10 23:16:34 joel Exp $
+;;;;; $Id: review.el,v 44.29 2000-06-14 08:47:47 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.28 2000-06-10 23:16:34 joel Exp $\n"))
+	      "$Id: review.el,v 44.29 2000-06-14 08:47:47 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1231,6 +1231,7 @@ text is shown and a REVIEW list is built to shown the other ones."
       (if (blocking-do 'get-text-stat (car all-text-nos))
           (setq text-nos (cons (car all-text-nos) text-nos)))
       (setq all-text-nos (cdr all-text-nos)))
+    (setq text-nos (nreverse text-nos))
 
     (if text-nos
 	(progn
