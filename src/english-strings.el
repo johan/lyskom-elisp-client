@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.291 2003-07-28 20:02:34 byers Exp $
+;;;;; $Id: english-strings.el,v 44.292 2003-08-02 22:08:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.291 2003-07-28 20:02:34 byers Exp $"))
+              "$Id: english-strings.el,v 44.292 2003-08-02 22:08:37 byers Exp $"))
 
 
 ;;; ================================================================
@@ -165,9 +165,6 @@ below:\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
 The message that was supposed to be shown after login has disappeared.
 Please contact the LysKOM administrator.\n")
-    (presentation-encouragement .
-"You have not written a presentation. Please write a presentation by using
-the command Ap. If you do not want to write a presentations, please type fk.\n")
 
     (first-greeting . "%#1s
 This appears to be the first time you use LysKOM. Welcome!
@@ -1933,7 +1930,25 @@ environment to one that uses \"%#2s\" to encode text.
     (text-has-no-comments . "Text %#1n has no comments\n")
     (text-has-no-footnotes . "Text %#1n has no footnotes\n")
     (set-message-flag-q . "Accept group messages to %#1M? ")
-    ))
+
+    (why-you-got-no-presentation . "\
+
+%#1@\
+========================================================================
+You do not have a presentation%#2?z%[ but you've written %#2d texts%]%[%]
+
+Use the command \"Change presentation\" to write or change your 
+presentation.
+
+
+%[%#4F\
+Your presentations serves to give other users of %#3s some information
+about who you are, and this contributes to the sense of community in
+%#3s. This message will be repeated at random intervals until you have
+written a presentation.%]
+========================================================================
+
+")    ))
 
 
 (lyskom-language-var local lyskom-month-names en

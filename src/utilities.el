@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.136 2003-07-27 22:31:58 byers Exp $
+;;;;; $Id: utilities.el,v 44.137 2003-08-02 22:08:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.136 2003-07-27 22:31:58 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.137 2003-08-02 22:08:39 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1952,3 +1952,37 @@ Any whitespace and newlines in TEXT will be ignored."
     (let ((text (replace-in-string text "\\s-+" "")))
       (or (string-match "^\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$" text)
           (string-match "^\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$"  text)))))
+
+
+(defun lyskom-get-server-alias (&optional name)
+  "Return the alias for server NAME."
+  (let ((lyskom-both-server-aliases (append kom-server-aliases
+                                            kom-builtin-server-aliases)))
+
+    (or (cdr (lyskom-string-assoc (or name lyskom-server-name)
+                                  lyskom-both-server-aliases))
+        name
+        lyskom-server-name)))
+
+(defun lyskom-nag-about-presentation (&optional harder)
+  (unless kom-dont-complain-about-missing-presentation
+    (blocking-do-multiple
+        ((pers-stat (get-pers-stat (or lyskom-pers-no 0)))
+         (conf-stat (get-conf-stat (or lyskom-pers-no 0))))
+      (when (and pers-stat conf-stat
+                 (or harder
+                     (eq (random 
+                          (max 3 (- 20
+                                    (pers-stat->no-of-created-texts pers-stat)
+                                    (* 5 (pers-stat->created-confs pers-stat))
+                                    (* 2 (pers-stat->created-persons pers-stat)))))
+                         1))
+                 (null (blocking-do 'get-text-stat 
+                                    (conf-stat->presentation conf-stat))))
+        (lyskom-beep 2)
+        (lyskom-format-insert 'why-you-got-no-presentation
+                              `(face ,kom-warning-face)
+                              (pers-stat->no-of-created-texts pers-stat)
+                              (lyskom-get-server-alias)
+                              72)
+        (sit-for (if harder 0 1))))))

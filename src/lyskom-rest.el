@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.209 2003-07-30 19:34:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.210 2003-08-02 22:08:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.209 2003-07-30 19:34:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.210 2003-08-02 22:08:38 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1142,6 +1142,7 @@ back, and works even if from has the property."
 (defun lyskom-do-insert (string)
   (let ((start (point)))
     (insert string)
+    (lyskom-do-special-inserts start (point) 'lyskom-fill)
     (lyskom-do-special-inserts start (point) 'lyskom-overlay)
     (lyskom-do-special-inserts start (point) 'special-insert)
 ))
@@ -1707,12 +1708,14 @@ Deferred insertions are not supported."
          )))
 
      ((= format-letter ?F)
-      (setq result 
-            (if (lyskom-conf-stat-p arg)
-                (let ((face (conf-stat-find-aux arg 9))
-                      (string (copy-sequence "X")))
-                  (lyskom-maybe-add-face-to-string face string))
-              " ")))
+      (set-format-state->delayed-propl
+       format-state
+       (cons (vector (length (format-state->result format-state))
+                     `(lyskom-fill ((lambda (start end width)
+                                      (let ((fill-column (or width (- (window-width 8)))))
+                                        (fill-region start end))) . ,arg))
+                     (format-state->depth format-state))
+             (format-state->delayed-propl format-state))))
 
      ;;
      ;;  Format a conference or person name by retrieving information
