@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 38.12 1996-03-02 21:38:29 davidk Exp $
+;;;;; $Id: view-text.el,v 38.13 1996-03-12 07:29:28 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 38.12 1996-03-02 21:38:29 davidk Exp $\n"))
+	      "$Id: view-text.el,v 38.13 1996-03-12 07:29:28 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -323,9 +323,10 @@ recipients to it that the user is a member in."
 
 (defun lyskom-return-date-and-time (time &optional fmt)
   "Return date and time as a string. Arg: TIME."
-  (let* ((diff (lyskom-calculate-day-diff time)))
+  (let* ((diff (and lyskom-print-complex-dates
+		    (lyskom-calculate-day-diff time))))
     (lyskom-format
-     (if (and diff lyskom-print-complex-dates)
+     (if diff
          (intern (concat (symbol-name diff) "-time-format-string"))
        (or fmt 'time-yyyy-mm-dd-hh-mm))
      (+ (time->year time) 1900)

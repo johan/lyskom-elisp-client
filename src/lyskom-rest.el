@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.28 1996-03-02 21:38:17 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.29 1996-03-12 07:29:20 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.28 1996-03-02 21:38:17 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.29 1996-03-12 07:29:20 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -300,8 +300,9 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 
 (defun kom-initial-digit-view ()
   (interactive)
-  (if (boundp 'unread-command-event)
-      (setq unread-command-event last-command-event)
+  (if (boundp 'unread-command-events)
+      (setq unread-command-events (cons last-command-event
+                                        unread-command-events))
     (setq unread-command-char last-command-char))
   (call-interactively 'kom-view nil))
 
