@@ -1,3 +1,8 @@
+Tue Aug 20 22:58:03 1991  Linus Tolke Y  (linus at lysator)
+
+	* vars.el, flags.el (lyskom-elisp-variables,
+	  lyskom-read-options-eval): Till{gg av en lyskom-login-hook.
+
 Tue Aug 20 19:15:07 1991  Per Cederqvist  (ceder at lysator)
 
 	* commands1.el (lyskom-print-who-is-on, lyskom-print-who-info)

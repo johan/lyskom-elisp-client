@@ -207,6 +207,7 @@ If successful then set the buffer not-modified. Else print a warning."
 
 	(setq lyskom-do-when-starting kom-do-when-starting)
 	(setq lyskom-do-when-done kom-do-when-done)
+	(run-hooks 'lyskom-login-hook)
 	;; Remove not found user-areas
 	(let ((pos lyskom-other-clients-user-areas))
 	  (if pos
