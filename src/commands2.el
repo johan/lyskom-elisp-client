@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.65 2000-05-19 10:35:44 byers Exp $
+;;;;; $Id: commands2.el,v 44.66 2000-05-26 10:49:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.65 2000-05-19 10:35:44 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.66 2000-05-26 10:49:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -955,6 +955,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;;; Author: David Byers
 
 (def-kom-command kom-list-marks (&optional which-mark)
+  "List texts marked with a particular mark number."
   (interactive "P")
   (when (not (numberp which-mark))
     (setq which-mark (lyskom-read-num-range 

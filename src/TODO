@@ -5,6 +5,53 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
+meningsfullt. Följande är relevanta:
+
+        Radera inlägg
+        Återse inlägg
+        Återse omodifierat
+        Återse urinlägget
+        Återse det kommenterade
+        Återse det föregående kommenterade
+        Kommentera inlägget
+        Kommentera föregående inlägg
+        Fotnot till inlägg
+        Personligt svar
+        Personligt svar på föregående inlägg
+        Markera (inlägg)
+        Avmarkera (inlägg)
+        Addera mottagare
+        Addera extra kopiemottagare
+        Addera för kännedom
+        Subtrahera mottagare
+        Flytta inlägg
+        Addera kommentar
+        Subtrahera kommentar
+        Arkivera inlägg (till fil)
+        Spara inläggstext (på fil)
+        Sätt loginmeddelande
+        Kort replik
+        Hålla med
+        Addera FAQ
+        Addera fotnot
+        Subtrahera fotnot
+        Förhindra kommentarer
+        Begär personligt svar
+        Begär läsbekräftelse
+        Återse brevhuvud
+
+Bestäm vettig default och om kommandot skall fråga efter nummer eller
+bara anta default om man inte ger prefixargument.
+
+
+Gör så att lyskom-read-text-no-prefix-arg vet vilket kommando som
+håller på köras. Ge det ett extra argument för kommandot och fixa
+def-kom-command så att den patchar interactive-specen om den
+innehåller ett anrop till lyskom-read-text-no-arg.
+
+
+
 Det vore trevligt om "Arkivera inlägg (till fil)" fanns i kontextmenyn
 för inläggsnummer också, samt om man kunde ställa in en defaultpath
 till funktionen, helst också per KOM.
@@ -30,15 +77,10 @@ till funktionen, helst också per KOM.
 
 * SHOWSTOPPERS
 
-** I startup.el så görs en get-collate-table. Skydda anropet från
-   servrar som inte har get-collate-table.
-
-** Defaultcollatetabellen verkar vara trasig. Den mappar inte om ø och 
-   vänner rätt.
-
-** I XEmacs (minst) blir historielistan i addera mottagare
-   uppercasead. Någonstans verkar det göras en destruktiv
-   lyskom-unicasing eller upcase av strängen.
+** Radbrytningen gör lite fel. Om man har en rad med :/ i så stoppar
+   den radbrytningen. Egentligen så borde kanske en rad som bara
+   består av icke-bokstäver avsluta aktuellt stycke och kanske vara
+   sitt eget stycke också.
 
 ** Martin, hade vissa problem med inställningarna. User-arean såg OK
    ut och han säger att problemen försvann när han skrev en
