@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.1 1996-03-29 03:05:13 davidk Exp $
+;;;;; $Id: review.el,v 40.2 1996-04-04 11:54:58 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,14 +37,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.1 1996-03-29 03:05:13 davidk Exp $\n"))
+	      "$Id: review.el,v 40.2 1996-04-04 11:54:58 byers Exp $\n"))
 
 
 
 (defun lyskom-intersection (a b)
   "Returns as a list the intersection of list A and list B.
 The order of the list a is kept."
-  (let ((list (list)))
+  (let ((list nil))
     (while a
       (if (memq (car a) b)
 	  (setq list (cons (car a) list)))
@@ -59,8 +59,25 @@ The order of the list a is kept."
 ;;; ================================================================
 ;;;              ]terse av, till - Review by X to Conference Y.
 
-;;; Author: Linus Tolke
+;;; Author: Linus Tolke, David Kågedal, David Byers
 
+
+
+(def-kom-command kom-review-first (&optional count)
+  "Reviews all articles of author that is written to conference recipient.
+If return is given instead of an author then all authors to that conference is
+shown. If return is given instead of conference then all conferences for that
+person is chosen.
+If a negative numeric argument is given then only the last COUNT articles are 
+chosen. If the argument is positive then the first -COUNT articles are chosen.
+If the argument is zero the all articles are chosen.
+No argument is equivalent to COUNT 1.
+The defaults for this command is the conference that you are in."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-review)
+  (lyskom-review-by-to (- (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'review-how-many) 1)))))
 
 
 (def-kom-command kom-review-by-to (&optional count)
@@ -73,180 +90,295 @@ chosen. If the argument is negative then the first -COUNT articles are chosen.
 If the argument is zero the all articles are chosen.
 No argument is equivalent to COUNT 1.
 The defaults for this command is the conference that you are in."
-  (interactive "p")
-  (lyskom-tell-internat 'kom-tell-review)
-  (let* ((info (progn
-		 (if (and (listp count)
-			  (integerp (car count))
-			  (null (cdr count)))
-		     (setq count (car count)))
-		 (cond
-		  ((zerop count) 
-		   (setq count nil)
-		   (lyskom-get-string 'everybody))
-		  ((> count 0)
-		   (lyskom-format 'latest-n count))
-		  ((< count 0)
-		   (lyskom-format 'first-n (- count))))))
-	 (by (lyskom-read-conf-no (lyskom-format 'info-by-whom info)
-				  'pers 'empty nil t))
-	 (to (lyskom-read-conf-no (lyskom-format 'info-to-conf info)
-				  'all 
-				  ;; If person is not given we must give
-				  ;; conf
-				  (not (zerop by))
-				  (if (zerop lyskom-current-conf)
-				      ""
-				    (conf-stat->name
-				     (blocking-do 'get-conf-stat
-						  lyskom-current-conf)))
-				  t)))
+  (interactive "P")
+  (lyskom-review-by-to (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'review-how-many) 1))))
+  
+
+
+(defun lyskom-review-by-to (count)
+  "Common function for kom-review-by-to and kom-review-first"
+  (let* ((info (progn (if (and (listp count)
+                               (integerp (car count))
+                               (null (cdr count)))
+                          (setq count (car count)))
+                      (cond ((zerop count) 
+                             (setq count nil)
+                             (lyskom-get-string 'everybody))
+                            ((> count 0)
+                             (lyskom-format 'latest-n count))
+                            ((< count 0)
+                             (lyskom-format 'first-n
+                                            (- count))))))
+         (by (lyskom-read-conf-no 
+              (lyskom-format 'review-info (lyskom-format 'info-by-whom info))
+              'pers 'empty nil t))
+         (to (lyskom-read-conf-no 
+              (lyskom-format 'review-info
+                             (lyskom-format 'info-to-conf info))
+              'all 
+              ;; If person is not given we must give
+              ;; conf
+              (not (zerop by))
+              (if (zerop lyskom-current-conf)
+                  ""
+                (conf-stat->name
+                 (blocking-do 'get-conf-stat
+                              lyskom-current-conf)))
+              t)))
 
     ;; Since we fetch everything anyway we don't need to do this.  If
     ;; we later choose to fetch all in small chunks we will have to do
     ;; this then.
     (if (not (zerop to))
-	(cache-del-conf-stat to))
+        (cache-del-conf-stat to))
     (if (not (zerop by)) 
-	(cache-del-pers-stat by))
+        (cache-del-pers-stat by))
     (let* ((info-by (if (zerop by) 
-			(lyskom-get-string 'anybody)
-		      (blocking-do 'get-conf-stat by)))
-	   (info-to (if (zerop to)
-			(lyskom-get-string 'all-confs)
-		      (blocking-do 'get-conf-stat to))))
+                        (lyskom-get-string 'anybody)
+                      (blocking-do 'get-conf-stat by)))
+           (info-to (if (zerop to)
+                        (lyskom-get-string 'all-confs)
+                      (blocking-do 'get-conf-stat to))))
       (lyskom-format-insert 'review-info-by-to
-			    info
-			    info-by
-			    info-to))
+                            info
+                            info-by
+                            info-to))
 
     (let ((list (lyskom-get-texts-by-to by to count)))
       (if list
-	  (read-list-enter-read-info (lyskom-create-read-info
-				      'REVIEW
-				      nil
-				      (lyskom-get-current-priority)
-				      (lyskom-create-text-list list)
-				      nil t)
-				     lyskom-reading-list t)
+          (read-list-enter-read-info (lyskom-create-read-info
+                                      'REVIEW
+                                      nil
+                                      (lyskom-get-current-priority)
+                                      (lyskom-create-text-list list)
+                                      nil t)
+                                     lyskom-reading-list t)
       	(lyskom-insert-string 'no-such-text)))))
 
-	
-(defun lyskom-get-texts-by-to (by to count)
-  "Get a list of COUNT text numbers written by BY in conference TO."
 
-  ;; THIS FUNCTION DOES NOT WORK AT THE MOMENT
-  
-  ;; Now we have 
-  ;; - the person number in by
-  ;; - the conf number in to
-  ;; - the number of interesting texts in count (if negative, then 
-  ;;   count from the beginning.
-  ;;
-  ;; What we have to do is fetch and merge the list of texts until we 
-  ;; have found count texts.
-  
-  ;; Lets do the very simple thing: 
-  ;; - Fetch the whole lists. If its to slow, fix it!
-  ;;   (the calls wont get very big, at least not during get-map
-  ;;    because the initiate-get-map itself splits the call) (sure?)
-  
-;;;  I'll finish this some day /davidk
-;;;  In the meantime we'll use the old, inefficient code
-;;;  
-;;;  (let* ((texts nil)
-;;;	 (exhausted nil)
-;;;	 (persstat (if (zerop by) nil (blocking-do 'get-pers-stat by)))
-;;;	 (confstat (if (zerop to) nil (blocking-do 'get-conf-stat to)))
-;;;	 (phigh (pers-stat->no-of-created-texts persstat))
-;;;	 (plow (pers-stat->first-created-text persstat))
-;;;	 (pmark (if persstat (if (< count 0) plow phigh)))
-;;;	 (chigh (conf-stat->no-of-texts confstat))
-;;;	 (clow (conf-stat->first-local-no confstat))
-;;;	 (cmark (if confstat (if (< count 0) clow chigh))))
-    
-;;;    (while (and (not exhausted)
-;;;		(not (zerop count)))
-;;;      (let* ((found-by (or (zerop by)
-;;;			   (lyskom-remove-zeroes
-;;;			    (listify-vector
-;;;			     (map->text-nos
-;;;			      (if (< count 0)
-;;;				  (blocking-do 'get-created-texts by
-;;;					       pmark (+ pmark 10))
-;;;				(blocking-do 'get-created-texts by
-;;;					     (- pmark 10) pmark)))))))
-;;;	     (found-to (or (zerop to)
-;;;			   (lyskom-remove-zeroes
-;;;			    (listify-vector
-;;;			     (map->text-nos
-;;;			      (if (< count 0)
-;;;				  (blocking-do 'get-map to
-;;;					       cmark (+ cmark 10))
-;;;				(blocking-do 'get-map to
-;;;					     (- cmark 10) cmark)))))))
-;;;	     (list (cond
-;;;		    ((zerop by) found-to)
-;;;		    ((zerop to) found-by)
-;;;		    ;; This will get them in the correct order
-;;;		    (t (lyskom-intersection found-by found-to)))))
-		     
-;;;	;; Cut out the part we want, the beginning or the end...
-;;;	(cond
-;;;	 ((> count 0)
-;;;	  (while (> (length list) count)
-;;;	    (setq list (cdr list)))
-;;;	  (setq count (- count (length list))
-;;;		pmark (- pmark 10)
-;;;		cmark (- cmark 10)
-;;;		texts (nconc texts list)))
-;;;	 ((< count 0)
-;;;	  (setq list (nfirst (- count) list))
-;;;	  (setq count (+ count (length list))
-;;;		pmark (+ pmark 10)
-;;;		cmark (+ cmark 10)
-;;;		texts (nconc list texts))))
-;;;	(setq exhausted (and (or (< pmark plow) (< phigh pmark))
-;;;			     (or (< cmark clow) (< chigh cmark))))))
-;;;    texts)
+;;; ================================================================
+;;; lyskom-get-texts-by-to
+;;; Author: David Byers
+;;;
+;;; Call lyskom-get-texts-by, lyskom-get-texts-to or 
+;;; lyskom-get-texts-by-and-to to get NUM texts by person 
+;;; BY to conference TO.
+;;;
 
-  (let* ((found-by (or (zerop by)
-		       (lyskom-remove-zeroes
-			(append
-			 (map->text-nos
-			  (blocking-do 'get-created-texts by
-				       0 lyskom-max-int)) nil))))
-	 (found-to (or (zerop to)
-		       (lyskom-remove-zeroes
-			(append
-			 (map->text-nos
-			  (blocking-do 'get-map to
-				       0 lyskom-max-int)) nil))))
-	 (list (cond
-		((zerop by) found-to)
-		((zerop to) found-by)
-		;; This will get them in the correct order
-		(t (lyskom-intersection found-by found-to)))))
-		     
-    (if list
-	(progn
-	  ;; Cut out the part we want, the beginning or the end...
-	  (cond
-	   ((> count 0)
-	    (while (> (length list) count)
-	      (setq list (cdr list))))
-	   ((< count 0)
-	    (setq list (nfirst (- count) list))))
-	  (read-list-enter-read-info
-	   (lyskom-create-read-info
-	    'REVIEW
-	    nil
-	    (lyskom-get-current-priority)
-	    (lyskom-create-text-list list)
-	    nil t)
-	   lyskom-reading-list t))
-      (lyskom-insert-string 'no-such-text))))
-	
+
+(defun lyskom-get-texts-by-to (by to num)
+  "Get NUM texts writteb by person number BY in conference number TO
+Args: BY TO NUM"
+    (cond ((and (zerop by) 
+                (zerop to)) nil)
+          ((zerop to) (lyskom-get-texts-by by num))
+          ((zerop by) (lyskom-get-texts-to to num))
+          (t (lyskom-get-texts-by-and-to by to num))))
+
+
+
+;;; ================================================================
+;;; lyskom-get-texts-by-and-to
+;;; Author: David Byers
+;;;
+;;; Conceptual algorithm:
+;;;
+;;; Get a segment from the start or end of the person's map of created
+;;; texts and the conference's map of texts whose intersection
+;;; contains at least NUM texts. Calculate the intersection and return
+;;; the NUM first or last texts in the intersection.
+;;;
+;;; Real algorithm:
+;;;
+;;; In each iteration, get INCREMENT new texts from the person's map
+;;; (call these BY) and the conference's map (call these TO).
+;;; Calculate the intersection between TO and all previous BYs (call
+;;; these BY1, BY2 ... BYi) and prepend this to the result list. Next
+;;; calculate the intersection between BY and all previous TOs (call
+;;; these TO1, TO2 ... TOi) and concatenate the result to the
+;;; corresponding element in the result list. At this point, the
+;;; concatenation of all elements of the result list will be the
+;;; intersection between the concatenation of all BYi's and all TOi's.
+;;; 
+;;; When the intersection is large enough, concatenate the results in
+;;; the proper order and return NUM texts from the beginning or end of
+;;; the results.
+;;;
+;;; The tricky iteration ensures that we don't do any redundant
+;;; intersection calculations. 
+;;;
+
+(defun lyskom-get-texts-by-and-to (persno confno num)
+  "Get NUM texts written by person PERSNO with conference CONFNO as a
+recipient. 
+Args: persno confno num"
+  (let* ((persstat (blocking-do 'get-pers-stat persno))
+         (confstat (blocking-do 'get-conf-stat confno))
+         (result-list nil)
+         (by-list nil)
+         (to-list nil)
+         (result-size 0)
+         (by nil)
+         (to nil)
+         (increment 30)
+         (plow (pers-stat->first-created-text persstat))
+         (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
+         (pmark (if (< num 0) plow phigh))
+         (clow (conf-stat->first-local-no confstat))
+         (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
+         (cmark (if (< num 0) clow chigh)))
+
+    (while (and (<= pmark phigh)
+                (<= cmark chigh)
+                (>= pmark plow)
+                (>= cmark clow)
+                (> (abs num) result-size))
+      (setq by (lyskom-remove-zeroes
+                (listify-vector
+                 (map->text-nos
+                  (blocking-do 'get-created-texts
+                            (pers-stat->pers-no persstat)
+                            (if (< num 0)
+                                pmark
+                              (- pmark (1- increment)))
+                            increment))))
+            to (lyskom-remove-zeroes
+                (listify-vector
+                 (map->text-nos
+                  (blocking-do 'get-map
+                            (conf-stat->conf-no confstat)
+                            (if (< num 0)
+                                cmark
+                              (- cmark (1- increment)))
+                            increment)))))
+      ;;
+      ;;    Add intersection between new TO and old BYs
+      ;;    to the results list.
+      ;;
+
+      (setq result-list
+            (cons (apply 'nconc
+                         (mapcar 
+                          (function
+                           (lambda (x)
+                             (lyskom-intersection to x)))
+                          by-list))
+                  result-list))
+
+      ;;
+      ;;    Add new BY and TO to the by-list and to-list
+      ;;
+
+      (setq by-list (cons by by-list)
+            to-list (cons to to-list))
+      
+
+      ;;
+      ;;    Add intersections between new BY and all TOs
+      ;;
+
+      (setq result-list
+            (mapcar2 (function
+                      (lambda (x y)
+                        (lyskom-intersection y
+                         (nconc x by))))
+                     result-list
+                     to-list))
+
+      (setq result-size (apply '+ (mapcar 'length result-list)))
+
+      ;;
+      ;;    Adjust the marks
+      ;;
+
+      (if (> num 0)
+          (setq pmark (- pmark increment)
+                cmark (- cmark increment))
+        (setq pmark (+ pmark increment)
+              cmark (+ cmark increment))))
+
+    ;;
+    ;;  Extract results
+    ;;
+
+    (setq result-list
+          (apply 'nconc (if (< num 0)
+                            (nreverse result-list)
+                          result-list)))
+
+    (if (> num 0)
+        (nthcdr (- (length result-list) num) result-list)
+      (nfirst (- (length result-list) (- num))  result-list))))
+
+
+;;; ===============================================================
+;;; lyskom-get-texts-generic
+;;; Author: David Byers
+;;;
+;;; This function gets NUM texts from the start or end of a map.
+;;; It works by fetching INCREMENT texts at a time, removing zeroes
+;;; and appending to what it already has. INCREMENT starts out as the
+;;; number of texts still to go, but is incremented each time no
+;;; new texts are returned (when only zeroes are returned)
+;;;
+
+(defun lyskom-get-texts-generic (objnum num low high get-operation)
+  "From object OBJNUM (a person or conference number) get NUM texts.
+  LOW is the lowest local text number and HIGH the highest in the
+  conference or person map. GET-OPERATION is the blocking-do operation
+  to use to get texts (get-map or get-created-texts)."
+  (let* ((result nil)
+         (increment (abs num))
+         (mark (if (< num 0) low high)))
+
+    (while (and (<= mark high)
+                (>= mark low)
+                (> (abs num) (length result)))
+      (let ((found (lyskom-remove-zeroes
+                    (listify-vector
+                     (map->text-nos
+                      (blocking-do get-operation
+                                   objnum
+                                   (if (< num 0)
+                                       mark
+                                     (- mark (1- increment)))
+                                   increment))))))
+        (if (> num 0)
+            (setq result (nconc found result)
+                  mark (- mark increment)
+                  increment (- (abs num) (length result)))
+          (setq result (nconc result found)
+                mark (+ mark increment)))
+        (if (null found)
+            (setq increment (min 150 (* increment 2)))
+          (setq increment (- (abs num) (length result))))))
+
+    (if (> num 0)
+        (nthcdr (- (length result) num) result)
+      (nfirst (- num)  result))))
+
+
+(defun lyskom-get-texts-by (persno num)
+  "Get NUM texts written by PERSNO. Args: persno num"
+  (let* ((persstat (blocking-do 'get-pers-stat persno))
+         (plow (pers-stat->first-created-text persstat))
+         (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat)))))
+    (lyskom-get-texts-generic persno num plow phigh 'get-created-texts)))
+
+
+(defun lyskom-get-texts-to (confno num)
+  "From CONFNO get NUM texts."
+  (let* ((confstat (blocking-do 'get-conf-stat confno))
+         (clow (conf-stat->first-local-no confstat))
+         (chigh (1- (+ clow (conf-stat->no-of-texts confstat)))))
+    (lyskom-get-texts-generic confno num clow chigh 'get-map)))
+
+
+
+
+
 
 
 (defun kom-review-backward ()
@@ -558,8 +690,3 @@ text is shown and a REVIEW list is built to shown the other ones."
       (lyskom-format-insert 'no-such-text)))
   (lyskom-end-of-command))
       
-(defun nfirst (n list)
-  "Return a list of the N first elements of LIST."
-  (if (or (<= n 0) (not list))
-      nil
-    (cons (car list) (nfirst (1- n) (cdr list)))))

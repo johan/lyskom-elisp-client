@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 40.2 1996-04-02 16:18:51 byers Exp $
+# $Id: Makefile,v 40.3 1996-04-04 11:54:34 byers Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 40.2 1996-04-02 16:18:51 byers Exp $
+# $Id: Makefile,v 40.3 1996-04-04 11:54:34 byers Exp $
 #
 
 CLIENTVERSION = 0.41-beta
@@ -90,7 +90,10 @@ lyskom.elc: lyskom.el
 
 # Only testing
 .PHONY: verbose
-verbose: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
+verbose: verbose-el lyskom.elc
+
+.PHONY: verbose-el
+verbose-el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 	@echo "Building lyskom.el"
 	@echo "" > lyskom.el
 	@for i in $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) ; do \

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.1 1996-04-02 16:19:50 byers Exp $
+;;;;; $Id: english-strings.el,v 40.2 1996-04-04 11:54:45 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 40.1 1996-04-02 16:19:50 byers Exp $"))
+	      "$Id: english-strings.el,v 40.2 1996-04-04 11:54:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -245,6 +245,7 @@ Send a letter to  %#2P to apply for membership.")
     (confusion-who-to-reply-to . "I can't figure out which article you want to write a private reply to.\n")
     (confusion-what-to-answer-to . "I can't figure out which article you want write a reply to.")
     (quit-in-spite-of-unsent . "You have an unsent article. Do you really want to quit? ")
+    (confusion-what-to-view . "I can't figure out which article you want to view.\n")
     (really-quit . "Do you really want to quit LysKOM? ")
     (session-ended . "
 --------------------------------------------
@@ -522,6 +523,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-session-priority . "Set reading level:")
 
     ; From review.el:
+    (review-how-many . "Review how many articles: ")
     (latest-n . "last %#1d")
     (first-n . "first %#1d")
     (info-by-whom . "%#1s by whom: ")
@@ -531,7 +533,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (no-get-conf . "You are not allowed to access that conferene.\n")
     (no-get-pers . "You are not allowed to access that user.\n")
     (no-review-info . "You are not allowed to review %#1s\n")
-    (review-info . "Review %#1s\n")
+    (review-info . "Review %#1s")
     (you-review . "You are now reviewing %#1s.\n")
     (read-text-first . "You must read a article first.\n")
     (cannot-read-last-text . "You cannot review the last read article.\n")
@@ -895,6 +897,7 @@ Text:
     (kom-review-next            "Review next")
     (kom-find-root              "Review original (article)")
     (kom-review-by-to           "Review last")
+    (kom-review-first           "Review first")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-review-stack           "Review stack")
     (kom-review-presentation    "Review presentation")
@@ -1105,6 +1108,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "ru" 'kom-review-noconversion)
   (define-key lyskom-mode-map "ro" 'kom-find-root)
   (define-key lyskom-mode-map "rl" 'kom-review-by-to)
+  (define-key lyskom-mode-map "rf" 'kom-review-first)
   (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "rs" 'kom-review-stack)
