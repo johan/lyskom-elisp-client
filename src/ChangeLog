@@ -1,5 +1,18 @@
 2003-04-26  Ulrik Haugen  <qha@lysator.liu.se>
 
+My previous attempt to fix bug 1022 was incomplete, trying to repair it I
+realised how it should be done.
+
+	* lyskom-rest.el (lyskom-modify-prompt): Don't "use current-time
+	instead of lyskom-current-client-time".
+
+	* lyskom-buttons.el (lyskom-default-button): Use
+	lyskom-current-client-time instead of current-time.
+	(lyskom-button-copy-timestamp): Use lyskom-format-time instead of
+	format-time-string.
+
+2003-04-26  Ulrik Haugen  <qha@lysator.liu.se>
+
 	* swedish-strings.el (lyskom-sv-edit-mode-map) english-strings.el
 	(lyskom-en-edit-mode-map): Added binding for
 	kom-insert-last-info-nodename.
