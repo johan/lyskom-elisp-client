@@ -1443,7 +1443,7 @@ then a newline is printed after the name instead."
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
 	(old-match-data (match-data))
-	(old-buffer (current-bufer)))
+	(old-buffer (current-buffer)))
     (unwind-protect
 	(progn
 
