@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.179 2001-08-21 22:03:48 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.180 2001-08-23 22:36:46 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.179 2001-08-21 22:03:48 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.180 2001-08-23 22:36:46 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -709,6 +709,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (conf-to-check-mship-of . "...i vilket möte? ")
     (conf-is-empty . "Mötet %#1M är tomt.\n")
     (pers-is-member-of-conf . "Ja, %#1P är medlem i mötet %#2M.\n")
+    (pers-is-passive-member-of-conf . "Nja, %#1P är bara passiv medlem i mötet %#2M.\n")
     (pers-is-not-member-of-conf . "Nej, %#1P är inte medlem i mötet %#2M.\n")
 
     ;; +++ cant seem to find where these are used:

@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.96 2001-05-24 12:02:34 byers Exp $
+ ;;;;; $Id: commands2.el,v 44.97 2001-08-23 22:36:49 ceder Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.96 2001-05-24 12:02:34 byers Exp $\n"))
+               "$Id: commands2.el,v 44.97 2001-08-23 22:36:49 ceder Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -2456,9 +2456,13 @@ the text on one line."
          (conf-no
           (or conf-no
               (lyskom-read-conf-no (lyskom-get-string 'conf-to-check-mship-of)
-                                   '(all) nil nil t))))
-    (if (lyskom-is-member conf-no pers-no)
-        (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
+                                   '(all) nil nil t)))
+	 (mship (lyskom-is-member conf-no pers-no)))
+    (if mship
+	(if (membership-type->passive (membership->type mship))
+	    (lyskom-format-insert 'pers-is-passive-member-of-conf
+				  pers-no conf-no)
+	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no))
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
 (def-kom-command kom-help ()
