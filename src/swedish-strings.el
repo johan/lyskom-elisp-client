@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.55 1999-06-13 15:01:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.56 1999-06-14 14:19:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.55 1999-06-13 15:01:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.56 1999-06-14 14:19:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -530,7 +530,7 @@ Ditt meddelande till %#2M:
 ")
     (message-sent-to-all
      . "================================================================
-Ditt allmänna meddelande löd:
+Ditt alarmmeddelande löd:
 
 %#1t
 ----------------------------------------------------------------
@@ -802,7 +802,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
 
     (message-broadcast . 
 		       "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Allmänt meddelande från %#1P (%#3s):
+Alarmmeddelande från %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
@@ -2451,7 +2451,7 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-show-personal-messages-in-buffer-doc . "\
   Denna inställning bestämmer var personliga meddelanden, gruppmeddelanden
-  och allmänna meddelanden visas. Meddelanden kan antingen visas i 
+  och alarmmeddelanden visas. Meddelanden kan antingen visas i 
   LysKOM-bufferten, kastas bort helt eller visas i en namngiven buffert.")
 
 
@@ -2645,7 +2645,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ding-on-new-letter-tag        . "När det kommer brev:               ")
     (kom-ding-on-priority-break-tag    . "När det kommer prioriterade inlägg:")
     (kom-ding-on-wait-done-tag         . "När man har väntat klart:          ")
-    (kom-ding-on-common-messages-tag   . "Vid allmänna meddelanden:          ")
+    (kom-ding-on-common-messages-tag   . "Vid alarmmeddelanden:              ")
     (kom-ding-on-group-messages-tag    . "Vid gruppmeddelanden:              ")
     (kom-ding-on-personal-messages-tag . "Vid personliga meddelanden:        ")
     (kom-ding-on-no-subject-tag     . "När ärenderad saknas:              ")
