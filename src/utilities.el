@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.85 2001-05-24 12:02:36 byers Exp $
+;;;;; $Id: utilities.el,v 44.86 2001-05-30 13:02:21 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.85 2001-05-24 12:02:36 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.86 2001-05-30 13:02:21 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -593,6 +593,11 @@ The value is actually the element of LIST whose car equals KEY."
 ;;; ============================================================
 ;;; Prefix arguments
 
+(defun lyskom-read-text-no-prompt-p (command)
+  "Return non-nil if the COMMAND should prompt for a text number."
+  (let ((check (assq command kom-text-no-prompts)))
+    (if check (cdr check) (memq command lyskom-text-no-prompts-defaults))))
+
 (defun lyskom-read-text-no-prefix-arg (prompt &optional always-read default)
   "Call in interactive list to read text-no.
 If optional argument ALWAYS-READ is non-nil the user is prompted if an
@@ -621,7 +626,7 @@ number means use that text as the default."
     (cond
      ((null current-prefix-arg)
       (if (or always-read
-              (memq lyskom-current-command kom-prompt-for-text-no)
+              (lyskom-read-text-no-prompt-p lyskom-current-command)
               (null default))
           (lyskom-read-number prompt default)
         default))

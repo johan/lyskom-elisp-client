@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.40 2000-11-18 12:19:45 joel Exp $
+;;;;; $Id: command.el,v 44.41 2001-05-30 13:02:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.40 2000-11-18 12:19:45 joel Exp $\n"))
+	      "$Id: command.el,v 44.41 2001-05-30 13:02:17 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -201,10 +201,13 @@
      (fnc (call-interactively fnc))
      (t (kom-next-command)))) )
 
-(defun lyskom-read-extended-command (&optional prefix-arg)
+(defun lyskom-read-extended-command (&optional prefix-arg prompt)
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
+         (base-prompt (cond ((null prompt) (lyskom-get-string 'extended-command))
+                            ((symbolp prompt) (lyskom-get-string prompt))
+                            (t prompt)))
 	 (alternatives (mapcar 
 			(lambda (pair)
 			  (cons 
@@ -223,8 +226,8 @@
                  (format "%d " (car prefix-arg)))
                 (t nil)))
          (prompt (if prefix-text
-                     (concat prefix-text (lyskom-get-string 'extended-command))
-                   (lyskom-get-string 'extended-command))))
+                     (concat prefix-text base-prompt)
+                   base-prompt)))
 
     (lyskom-with-lyskom-minibuffer
      (setq name (lyskom-completing-read prompt

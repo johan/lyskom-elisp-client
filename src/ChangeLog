@@ -1,3 +1,24 @@
+2001-05-30  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-customize-buffer-format): Add
+	kom-text-no-prompts.
+	(lyskom-custom-variables): Add kom-text-no-prompts.
+	(lyskom-widget-functions): Add cons widget type.
+	(lyskom-cons-widget): New function.
+
+	* command.el (lyskom-read-extended-command): Added prompt
+	argument.
+
+2001-05-29  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-text-no-prompts): New variable.
+	(lyskom-text-no-prompts-defaults): New variable
+	(kom-prompt-for-text-no): Removed this variable.
+
+	* utilities.el (lyskom-read-text-no-prompt-p): New function
+	abstracts text-no prompting configuration.
+	(lyskom-read-text-no-prefix-arg): Use it.
+
 2001-05-30  Joel Rosdahl  <joel@rosdahl.net>
 
 	* swedish-strings.el (lyskom-message): New string:
