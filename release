@@ -101,7 +101,10 @@ q1=""
 while [ ! "$q1" ] ; do
     ask "Har du skrivit ett ChangeLog-entry för releasen" nej
     if [ "$no" ] ; then
-        askedit src/ChangeLog
+      ask "Vill du editera $1" ja
+      if [ "$yes" ] ; then
+        (cd src; emacs -nw -q -f add-change-log-entry)
+      fi
     else
         q1="X"
     fi
@@ -144,7 +147,7 @@ fi
 
 echo "Checkar in för säkerhets skull..."
 if ( set -x; cvs commit -m "Synkning inför release av $version" ) ; then
-    ;
+    echo "Incheckning klar"
 else
     ask "Fortsätt trots att incheckningen inte gick bra" nej
     if [ "$no" ] ; then
@@ -155,7 +158,7 @@ fi
 if [ "$revision" ] ; then
     echo "Uppdaterar revisionsnumret..."
     if ( set -x; cvs commit -r $version ) ; then
-        ;
+        echo "Revisionsnumret är uppdaterat"
     else
         ask "Fortsätt trots att revisionsändringen inte gick bra" nej
         if [ "$no" ] ; then
