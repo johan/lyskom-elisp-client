@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.13 1997-10-23 12:19:12 byers Exp $
+;;;;; $Id: parse.el,v 44.14 1998-02-24 22:51:56 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.13 1997-10-23 12:19:12 byers Exp $\n"))
+	      "$Id: parse.el,v 44.14 1998-02-24 22:51:56 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -91,8 +91,9 @@ Return nil, or signal lyskom-protocol-error if the
 first non-white character was not equal to CHAR."
   (if (/= char (lyskom-parse-nonwhite-char))
       (signal 'lyskom-protocol-error
-	      (list "Expecting " char " but got "
-		    (char-after (1- lyskom-parse-pos))))
+	      (list (concat
+		     "Expecting " (char-to-string char) " but got "
+		     (char-to-string (char-after (1- lyskom-parse-pos))))))
     nil))
 
 
@@ -123,9 +124,8 @@ Signal lyskom-protocol-error if the next token is not a number."
     (goto-char (point-max))
     (signal 'lyskom-parse-incomplete nil))
    (t (signal 'lyskom-protocol-error
-              (list "Expected number, got " (lyskom-string-to-parse)))))
-
-)
+              (list (concat "Expected number, got "
+			    (lyskom-string-to-parse)))))))
 
 
 (defun lyskom-parse-string ()
@@ -319,7 +319,8 @@ result is assigned to the element."
 	(lyskom-expect-char ?})))
      (t					;Error.
       (signal 'lyskom-protocol-error (list 'lyskom-parse-misc-info-list
-					   "Expected * or {, got " char))))))
+					   "Expected * or {, got "
+					   (char-to-string char)))))))
 
 
 (defun lyskom-parse-misc-info-list-sub (n)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.13 1997-10-24 10:50:20 davidk Exp $
+;;;;; $Id: command.el,v 44.14 1998-02-24 22:51:48 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.13 1997-10-24 10:50:20 davidk Exp $\n"))
+	      "$Id: command.el,v 44.14 1998-02-24 22:51:48 davidk Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -288,7 +288,7 @@ chosen according to this"
       (progn
 	(if (pos-visible-in-window-p (1- (point-max)))
 	    (goto-char (point-max)))
-        (sit-for 0))) 
+	(sit-for 0)))
                                         ;  (lyskom-scroll)
   (run-hooks 'lyskom-before-command-hook)
   (if kom-page-before-command           ;Nice with dumb terminals.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.10 1997-09-10 13:15:21 byers Exp $
+;;;;; $Id: prefetch.el,v 44.11 1998-02-24 22:51:58 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.10 1997-09-10 13:15:21 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.11 1998-02-24 22:51:58 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -143,6 +143,7 @@ This is used to prevent the prefetch code to reenter itself.")
 ;;; +++ THIS DOES NOT WORK CURRENTLY
 (defun lyskom-reset-prefetch ()
   "Reset the prefetch system."
+  ;; (lyskom-wait-queue 'prefetch)
   (lyskom-setup-prefetch))
 
 
