@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.35 1998-06-14 14:15:38 byers Exp $
+;;;;; $Id: commands1.el,v 44.36 1998-07-23 15:46:22 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.35 1998-06-14 14:15:38 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.36 1998-07-23 15:46:22 petli Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2293,9 +2293,10 @@ Uses Protocol A version 9 calls"
 	(len (length who-info-list))
 	(i 0)
 	(res nil))
+    (setq members (mapcar 'member->conf-no
+			  (append (member-list->members members))))
     (while (< i len)
-      (if (lyskom-conf-no-list-member (who-info->pers-no (aref who-info-list i))
-				      members)
+      (if (memq (who-info->pers-no (aref who-info-list i)) members)
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
@@ -2307,9 +2308,10 @@ Uses Protocol A version 9 calls"
 	(len (length who-info-list))
 	(i 0)
 	(res nil))
+    (setq members (mapcar 'member->conf-no
+			  (append (member-list->members members))))
     (while (< i len)
-      (if (lyskom-conf-no-list-member (dynamic-session-info->person (aref who-info-list i))
-				      members)
+      (if (memq (dynamic-session-info->person (aref who-info-list i)) members)
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
