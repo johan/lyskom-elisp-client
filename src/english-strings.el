@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.178 2002-04-07 22:22:10 qha Exp $
+;;;;; $Id: english-strings.el,v 44.179 2002-04-09 23:07:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.178 2002-04-07 22:22:10 qha Exp $"))
+              "$Id: english-strings.el,v 44.179 2002-04-09 23:07:57 byers Exp $"))
 
 
 ;;; ================================================================
@@ -508,10 +508,10 @@ Read all about it at http://www.lysator.liu.se/history/")
     (error-not-recipient . "%#2M is not a recipient of text %#1n.\n")
 
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
-    (text-to-add-q . "Add which text as a comment? ")
-    (text-to-remove-q . "Remove which text as a comment? ")
-    (text-to-add-footn-q . "Add which text as a footnote? ")
-    (text-to-remove-footn-q . "Remove which text as a footnote? ")
+    (text-to-add-q . "Add which text as a comment to %#1n? ")
+    (text-to-remove-q . "Remove which text as a comment from %#1n? ")
+    (text-to-add-footn-q . "Add which text as a footnote to %#1n? ")
+    (text-to-remove-footn-q . "Remove which text as a footnote from %#1n? ")
     (add-comment-to . "Adding text %#1n as a comment to text %#2n...")
     (sub-comment-to . "Removing text %#1n as a comment to text %#2n...")
     (add-footnote-to . "Adding text %#1n as a footnote to text %#2n...")
@@ -3064,7 +3064,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-friends-doc . "\
   The users named in this list will be displayed using a special face in
-  the LysKOM buffer.")
+  the LysKOM buffer. These users are also listed with the command Which 
+  friends (and may be used in other similar commands).")
 
     (kom-morons-doc . "\
   The users named in this list will be displayed using a warning face in

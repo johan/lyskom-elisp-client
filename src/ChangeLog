@@ -1,3 +1,39 @@
+2002-04-10  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in (kom-server-aliases): Changed sno.pp.se to
+	kom.sno.pp.se.
+
+	* commands1.el (kom-add-footnote): Read prefix arg here and not in
+	lyskom-add-sub-footnote.
+	(kom-sub-footnote): Same here.
+	(lyskom-add-sub-footnote): Don't read prefix arg here. Removed
+	prompt argument.
+	(lyskom-add-sub-footnote): Do completion on footnote number.
+	(lyskom-add-sub-comment): Do completion on comment number.
+	(lyskom-add-sub-footnote): Use current text as default text to
+	add/remove only if applicable. If there is only one completion,
+	use that. If the current text is in the completions, use it. If we
+	are adding, use the current text unless it is the one we are
+	adding/removing to/from.
+	(lyskom-add-sub-comment): Dito.
+
+2002-04-09  David Byers  <david.byers@swipnet.se>
+
+	* commands1.el (lyskom-add-sub-footnote): Show text number we are
+	removing from or adding to in the prompt (important when using
+	prefix args to this command).
+	(lyskom-add-sub-comment): Show text number we are removing from or
+	adding to in the prompt (important when using prefix args to this
+	command).
+	(kom-add-comment): Read prefix arg here and not in
+	lyskom-add-sub-comment.
+	(kom-sub-comment): Same here.
+	(lyskom-add-sub-comment): Don't read prefix arg here. Removed
+	prompt argument.
+
+	* lyskom-rest.el (lyskom-read-number): Added completions parameter
+	to this function.
+
 2002-04-08  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-rest.el: When running GNU Emacs let Emacs look up the

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.211 2002-04-07 22:22:10 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.212 2002-04-09 23:07:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.211 2002-04-07 22:22:10 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.212 2002-04-09 23:07:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -497,10 +497,10 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (error-not-recipient . "%#2M är inte mottagare till inlägg %#1n.\n")
 
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
-    (text-to-add-q . "Vilket inlägg vill du addera som kommentar? ")
-    (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar? ")
-    (text-to-add-footn-q . "Vilket inlägg vill du addera som fotnot? ")
-    (text-to-remove-footn-q . "Vilket inlägg vill du subtrahera som fotnot? ")
+    (text-to-add-q . "Vilket inlägg vill du addera som kommentar till %#1n? ")
+    (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar från %#1n? ")
+    (text-to-add-footn-q . "Vilket inlägg vill du addera som fotnot till %#1n? ")
+    (text-to-remove-footn-q . "Vilket inlägg vill du subtrahera som fotnot från %#1n? ")
     (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...") ;
     (sub-comment-to . "Subtraherar text %#1n som kommentar till text %#2n...")
     (add-footnote-to . "Adderar text %#1n som fotnot till text %#2n...") ;
@@ -3513,7 +3513,8 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-friends-doc . "\
   Namnen på personerna i denna lista kommer att visas med ett speciellt 
-  utseende i LysKOM-bufferten.")
+  utseende i LysKOM-bufferten. Kommandot Vilka vänner är inloggade (och
+  andra liknande kommandon) använder också denna lista.")
 
     (kom-morons-doc . "\
   Namnen på personerna i denna lista kommer att visas med ett varnande 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.144 2002-04-07 22:35:21 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.145 2002-04-09 23:07:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.144 2002-04-07 22:35:21 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.145 2002-04-09 23:07:57 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3036,31 +3036,41 @@ If NILDEFAULT is non-nil, return nil if the user enters an empty string"
     number))
 
 
-(defun lyskom-read-number (&optional prompt default history nildefault)
+(defun lyskom-read-number (&optional prompt default history nildefault completions)
   "Read a number from the minibuffer. Optional arguments: PROMPT DEFAULT
 If DEFAULT is non-nil, it is written within parenthesis after the prompt.
 DEFAULT could also be of the type which (interactive P) generates.
 If NILDEFAULT is non-null then typing return will cause the function 
 to return nil."
-  (let ((numdefault (cond ((null default) nil)
-			  ((integerp default) default)
-			  ((listp default) (car default))
-			  (t nil)))
-	(number nil)
-	(numstr nil)
-        (done nil))
-    (while (not done)
-      (setq numstr
-	    (prog1
-		(lyskom-read-string
-		 (concat (cond ((null prompt) (lyskom-get-string 'give-a-number))
+  (let* ((numdefault (cond ((null default) nil)
+                           ((integerp default) default)
+                           ((listp default) (car default))
+                           (t nil)))
+         (prompt (concat (cond ((null prompt) (lyskom-get-string 'give-a-number))
                                ((symbolp prompt) (lyskom-get-string prompt))
                                (t prompt))
 			 (if numdefault 
 			     (format " (%d) " numdefault)
-			   " "))
-                 nil
-                 history)))
+			   " ")))
+         (number nil)
+         (numstr nil)
+         (done nil))
+    (while (not done)
+      (setq numstr
+	    (prog1
+                (if completions
+                    (lyskom-completing-read prompt
+                                            (mapcar (lambda (x) (list (number-to-string x) x))
+                                                    completions)
+                                            nil
+                                            nil
+                                            nil
+                                            history
+                                            (when default (number-to-string default)))
+                  (lyskom-read-string
+                   prompt
+                   nil
+                   history))))
       (cond ((and (string= numstr "") numdefault)
 	     (setq number numdefault done t))
             ((and (string= numstr "") nildefault)
