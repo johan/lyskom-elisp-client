@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.143 2001-07-30 22:20:27 qha Exp $
+;;;;; $Id: english-strings.el,v 44.144 2001-08-09 22:06:12 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.143 2001-07-30 22:20:27 qha Exp $"))
+              "$Id: english-strings.el,v 44.144 2001-08-09 22:06:12 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1530,7 +1530,7 @@ You must become an active member of the conference to enter it.\n")
 
     (lyskom-button-view-text-action . "View text")
     (lyskom-button-review-noconversion-action . "Review unconverted")
-    (lyskom-button-review-tree-action . "Review tree")
+    (lyskom-button-find-root-review-action . "Review tree")
     (lyskom-button-find-root-action . "Review root text")
     (lyskom-button-comment-text-action . "Write commend")
     (lyskom-button-private-comment-text-action . "Write personal reply")
