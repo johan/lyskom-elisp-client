@@ -1,3 +1,28 @@
+1999-10-17  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-postpone): Added RE-EDIT-TEXT read-info type.
+
+	* clienttypes.el (set-read-info->misc): Add misc field to read-info.
+	(read-info->misc): Same here.
+	(lyskom-create-read-info): Same here.
+
+	* lyskom-rest.el (lyskom-what-to-do): Add support for re-edit text.
+	(kom-re-edit-next-text): New function.
+	(lyskom-next-command): Add support for re-edit text.
+	(lyskom-update-prompt): Add support for re-edit text.
+
+1999-10-16  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el (lyskom-ding-widget): Turned-off is zero, not
+	nil to make the per sender option avalable in Gnu Emacs.
+
+	* swedish-strings.el (lyskom-custom-strings): Fixed speling eror.
+
+1999-10-15  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): Bind aring and
+	adiaeresis.
+
 1999-10-15  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-client-date-string): Print year correctly.

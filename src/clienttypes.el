@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.6 1998-06-02 12:14:15 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.7 1999-10-16 22:49:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.6 1998-06-02 12:14:15 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.7 1999-10-16 22:49:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -57,6 +57,7 @@
 ;;;   COMM-IN     - Type containing the list of comments to a text
 ;;;   FOOTN-IN    - Type containing the list of footnotes to a text
 ;;;   CONF        - Basic type of unread in a conf.
+;;;   RE-EDIT-TEXT - Re-edit a failed submission. Buffer is in misc.
 ;;;
 ;;;   The types REVIEW-TREE, COMM-IN and FOOTN-IN are created for new for
 ;;;   every text read (recursively) when appropriate.
@@ -72,7 +73,7 @@
 				conf-stat
 				priority
 				text-list
-				&optional comm-to forward)
+				&optional comm-to forward misc)
   "Create a read-info from all parameters."
   ;; The last nil is for the unfetched-texts pair (first . last)
   ;; This field is only applicable in read-infos of type CONF where
@@ -80,7 +81,7 @@
   ;; yet been fetched.
   (cons
    'READ-INFO
-   (vector type conf-stat priority text-list comm-to forward nil)))
+   (vector type conf-stat priority text-list comm-to forward nil misc)))
 
 (defsubst read-info->type (read-info)
   "Get type from read-info."
@@ -110,6 +111,10 @@
   "Get forward from read-info."
   (elt (cdr read-info) 6))
 
+(defsubst read-info->misc (read-info)
+  "Get forward from read-info."
+  (elt (cdr read-info) 7))
+
 (defsubst set-read-info->type (read-info newval)
   "Set type in read-info to NEWVAL."
   (aset (cdr read-info) 0 newval))
@@ -137,6 +142,10 @@
 (defsubst set-read-info->unfetched-texts (read-info newval)
   "Set forward in read-info to NEWVAL."
   (aset (cdr read-info) 6 newval))
+
+(defsubst set-read-info->misc (read-info newval)
+  "Set forward in read-info to NEWVAL."
+  (aset (cdr read-info) 7 newval))
 
 
 (defsubst lyskom-read-info-p (object)

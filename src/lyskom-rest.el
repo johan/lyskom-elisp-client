@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.83 1999-10-14 10:39:40 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.84 1999-10-16 22:49:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.83 1999-10-14 10:39:40 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.84 1999-10-16 22:49:07 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -250,6 +250,8 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
       (lyskom-view-priority-text))
      ((eq lyskom-command-to-do 'next-text)
       (kom-view-next-text))
+     ((eq lyskom-command-to-do 'reedit-text)
+      (kom-re-edit-next-text))
      ((eq lyskom-command-to-do 'next-conf)
       (kom-go-to-next-conf))
      ((eq lyskom-command-to-do 'next-pri-conf)
@@ -301,6 +303,19 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 	(lyskom-format-insert 'review-text-no text-no)
 	(lyskom-view-text text-no))
     (lyskom-end-of-command)))
+
+
+;;;; ================================================================
+;;;;                          Re-edit text
+
+(def-kom-command kom-re-edit-next-text ()
+  "Display a buffer containing a failed submission"
+  (interactive)
+  (let ((el (read-list->first lyskom-reading-list)))
+    (set-read-list-del-first lyskom-reading-list)
+    (if (buffer-live-p (read-info->misc el))
+        (lyskom-display-buffer (read-info->misc el))
+      (lyskom-format-insert 'text-buffer-missing))))
 
 
 ;;;; ================================================================
@@ -2288,6 +2303,11 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	(or (eq lyskom-current-prompt prompt)
 	    (lyskom-beep kom-ding-on-priority-break)))
 
+       ((eq to-do 'reedit-text)
+        (setq prompt 're-edit-text-prompt)
+        (or (eq lyskom-current-prompt prompt)))
+
+
        ((eq to-do 'next-pri-text)
 	(setq prompt 'read-pri-text-conf)
 	(or (eq lyskom-current-prompt prompt)
@@ -2500,6 +2520,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	next-pri-conf	There is a conference with higher priority to be read.
 	next-text	There are texts on lyskom-reading-list.
 	next-conf	There are texts on lyskom-to-do-list.
+        reedit-text     There is an edit buffer with an error.
 	when-done	There are no unread texts.
 	unknown	        There are pending replies."
   (cond
@@ -2518,6 +2539,10 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	   1)
        'next-pri-conf
       'next-pri-text))
+   ((and (not (read-list-isempty lyskom-reading-list))
+         (eq (read-info->type (read-list->first lyskom-reading-list)) 
+             'RE-EDIT-TEXT))
+    'reedit-text)
    ((not (read-list-isempty lyskom-reading-list))
     'next-text)
    ((not (read-list-isempty lyskom-to-do-list))
