@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.38 2000-09-15 12:16:43 byers Exp $
+;;;;; $Id: command.el,v 44.39 2000-10-10 13:04:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.38 2000-09-15 12:16:43 byers Exp $\n"))
+	      "$Id: command.el,v 44.39 2000-10-10 13:04:39 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -391,7 +391,7 @@ and back of the string."
 		 t))))))
 
 
-(defun lyskom-start-of-command (function &optional may-interrupt)
+(defun lyskom-start-of-command (function &optional may-interrupt dead-ok)
   "This function is run at the beginning of every LysKOM command.
 It moves the cursor one line down, and +++ later it will tell the server
 that the previous text has been read.
@@ -402,6 +402,9 @@ command name in lyskom-commands and writes this in the message buffer.
 
 If optional argument MAY-INTERRUPT is present and non-nil,
 don't signal an error if this call is interrupting another command.
+
+If optional DEAD-OK is non-nil, don't signal an error if the session 
+has been closed.
 
 Special: if lyskom-is-waiting then we are allowed to break if we set 
 lyskom-is-waiting nil.
@@ -415,8 +418,9 @@ chosen according to this"
              (and (null lyskom-proc) (null lyskom-buffer)))
          (lyskom-error "%s" (lyskom-get-string 'not-lyskom-buffer)))
 
-        ((or (not lyskom-proc)
-             (memq (process-status lyskom-proc) '(closed signal exited nil)))
+        ((and (not dead-ok)
+              (or (not lyskom-proc)
+                  (memq (process-status lyskom-proc) '(closed signal exited nil))))
       (lyskom-error "%s" (lyskom-get-string 'dead-session))))
 
   (if (and lyskom-is-waiting
