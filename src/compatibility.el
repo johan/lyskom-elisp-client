@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.48 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: compatibility.el,v 44.49 2002-03-02 20:35:20 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.48 2002-02-24 20:23:26 joel Exp $\n"))
+	      "$Id: compatibility.el,v 44.49 2002-03-02 20:35:20 joel Exp $\n"))
 
 
 ;;; ======================================================================
@@ -564,6 +564,14 @@ Otherwise treat \\ in NEWTEXT string as special:
   "T of OBJECT is an editor buffer that has not been deleted."
   (and (bufferp object)
        (buffer-name object)))
+
+;;; ======================================================================
+;;; Platform-specific stuff
+
+(lyskom-provide-function w32-shell-execute (&rest args)
+  "Dummy function that raises an error."
+  (error "w32-shell-execute undefined"))
+
 
 ;;; Local Variables:
 ;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)

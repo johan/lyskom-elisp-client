@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.170 2002-02-28 18:43:13 joel Exp $
+;;;;; $Id: english-strings.el,v 44.171 2002-03-02 20:35:20 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.170 2002-02-28 18:43:13 joel Exp $"))
+              "$Id: english-strings.el,v 44.171 2002-03-02 20:35:20 joel Exp $"))
 
 
 ;;; ================================================================
@@ -3071,6 +3071,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   found in LysKOM. If the first browser in the list cannot handle the type
   of URL being opened, then the next browser is tried, and so on.")
 
+    (kom-windows-browser-command-doc . "\
+  This setting specifies the command to use to start a web browser
+  under Windows. If empty, a couple of commands that are likely the
+  work on Windows will be tried.")
+
     (kom-mosaic-command-doc . "\
   This setting specifies the command to use to start NCSA Mosaic.")
 
@@ -3444,6 +3449,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-friends-tag . "Friends and other special people:")
     (kom-morons-tag . "Morons and other \"special\" people:")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
+    (kom-windows-browser-command-tag . "Command to start a web browser on Windows:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
     (kom-netscape-command-tag . "Command to start Netscape Navigator:")
     (kom-galeon-command-tag . "Command to start Galeon:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.62 2002-02-24 20:23:27 joel Exp $
+;;;; $Id: lyskom-buttons.el,v 44.63 2002-03-02 20:35:20 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.62 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.63 2002-03-02 20:35:20 joel Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -921,23 +921,53 @@ after formating it as time. This is a LysKOM button action."
 (defun lyskom-view-url-windows (url manager)
   "View the URL URL in Microsoft Windows. MANGER is the URL manager.
 Fall back on Netscape if not running in Microsoft Windows."
-  (cond ((memq window-system '(win32 mswindows w32))
-         (let ((programs '("start"
-                           "explorer"
-                           "C:\\Program Files\\Netscape\\Communicator\\Program\\netscape.exe"
-                           "C:\\Program Files\\Netscape\\Navigator\\Program\\netscape.exe")))
-           (while programs
-             (condition-case nil
-                 (progn
-                   (start-process (car programs) 
-                                  nil
-                                  (car programs)
-                                  url)
-                   (lyskom-url-manager-starting manager)
-                   (setq programs nil))
-               (error (setq programs (cdr programs)))))))
-                                
-        (t (lyskom-view-url-netscape url manager))))
+  (cond
+   ((memq window-system '(win32 mswindows w32))
+    (cond
+     ((and (boundp 'kom-windows-browser-command)
+           (and (not (null kom-windows-browser-command))
+                (not (eq (length kom-windows-browser-command) 0))))
+      ;; Explicit given file name of browser, so complain to user if
+      ;; the value is bad.
+      (if (not (file-executable-p kom-windows-browser-command))
+          (error (concat "Not an executable file: %s;"
+                         " kom-windows-browser-command has a bad value")
+                 kom-windows-browser-command))
+
+      (condition-case nil
+          (progn
+            (start-process "Browser"
+                           nil
+                           kom-windows-browser-command
+                           url)
+            (lyskom-url-manager-starting manager))
+        (error (error (concat "Failed starting browser using"
+                              " kom-windows-browser-command"
+                              " (%s)")
+                      kom-windows-browser-command))))
+     ((not (memq 'w32-shell-execute lyskom-compatibility-definitions))
+      (w32-shell-execute "open" url)
+      (lyskom-url-manager-starting manager))
+      ;;(lyskom-message "Webb via [%s \"%s\" \"%s\"] ..."
+      ;;                "w32-shell-execute" "open" url))
+     (t (let ((programs (list
+                         "start"
+                         "explorer"
+                         (concat "C:\\Program Files\\Netscape"
+                           "\\Communicator\\Program\\netscape.exe")
+                         (concat "C:\\Program Files\\Netscape"
+                                 "\\Navigator\\Program\\netscape.exe"))))
+          (while programs
+            (condition-case nil
+                (progn
+                  (start-process (car programs)
+                                 nil
+                                 (car programs)
+                                 url)
+                  (lyskom-url-manager-starting manager)
+                  (setq programs nil))
+              (error (setq programs (cdr programs)))))))))
+   (t (lyskom-view-url-netscape url manager))))
 
 
 (defun lyskom-view-url-netscape (url manager)

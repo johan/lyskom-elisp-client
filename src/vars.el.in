@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.164 2002-02-25 18:17:09 joel Exp $
+;;;;; $Id: vars.el.in,v 44.165 2002-03-02 20:35:21 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.164 2002-02-25 18:17:09 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.165 2002-03-02 20:35:21 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -869,6 +869,12 @@ manager whose MANAGER-REGEXP first matches an element in
 kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
 the selected URL is used to view the URL by calling its VIEW-FUNCTION
 with the URL and the manager entry as arguments.")
+
+(def-kom-var kom-windows-browser-command ""
+  "*Program to run to open a URL in Windows. If it is the empty
+string, a couple of commands that are likely the work on Windows will
+be tried."
+  server)
 
 (def-kom-var kom-mosaic-command "/usr/local/bin/mosaic"
   "*Command to run to start Mosaic."
