@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.9 1993-08-11 09:48:35 linus Exp $
+;;;;; $Id: commands2.el,v 36.10 1993-08-20 07:34:59 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.9 1993-08-11 09:48:35 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.10 1993-08-20 07:34:59 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -245,7 +245,7 @@ Calls initiate-get-conf-stat and prints using lyskom-status-conf."
 (defun lyskom-status-conf-2 (conf-stat)
   "Show all members of CONF-STAT if the user so wishes."
   (lyskom-scroll)
-  (if (null (j-or-n-p (lyskom-get-string 'show-members-list-also-q)))
+  (if (null (lyskom-j-or-n-p (lyskom-get-string 'show-members-list-also-q)))
       (lyskom-end-of-command)
     (initiate-get-members 'main 'lyskom-status-conf-3
 			  (conf-stat->conf-no conf-stat)
@@ -410,7 +410,7 @@ is the one we are interested in."
 (defun lyskom-status-pers-3 (conf-stat)
   "Show all conferences CONF-STAT is a member of if the user so wishes."
   (lyskom-scroll)
-  (if (null (j-or-n-p (lyskom-get-string 'show-membership-list-also-q)))
+  (if (null (lyskom-j-or-n-p (lyskom-get-string 'show-membership-list-also-q)))
       (lyskom-end-of-command)
     (initiate-get-membership 'main 'lyskom-status-pers-4
 			     (conf-stat->conf-no conf-stat)
@@ -1207,7 +1207,7 @@ Args: SUPER-CONF CONF_STAT TYPE"
   "Shutdown the LysKOM server."
   (interactive)
   (lyskom-start-of-command 'kom-shutdown-server)
-  (if (ja-or-nej-p (lyskom-get-string 'really-shutdown))
+  (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-shutdown))
       (progn
 	(lyskom-insert-string 'closing-server)
 	(initiate-shutdown 'main 'lyskom-handle-command-answer 0))

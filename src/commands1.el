@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.12 1993-08-16 17:02:48 linus Exp $
+;;;;; $Id: commands1.el,v 36.13 1993-08-20 07:34:44 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.12 1993-08-16 17:02:48 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.13 1993-08-20 07:34:44 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -85,7 +85,7 @@
 CONF can be either a conf-no or a conf-stat."
   (cond					;+++ error handling should be better
    ((lyskom-conf-stat-p conf)
-    (if (ja-or-nej-p
+    (if (lyskom-ja-or-nej-p
 	 (lyskom-format 'confirm-delete-pers-or-conf
 			(if (conf-type->letterbox (conf-stat->conf-type 
 						   conf))
@@ -250,7 +250,7 @@ as TYPE. If no such misc-info, return NIL"
 		  (recenter 0)
 		  (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
 		  (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))
-		  (if (j-or-n-p (lyskom-get-string 'motd-persist-q))
+		  (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
 		      t
 		    (lyskom-end-of-command)
 		    nil)))
@@ -774,7 +774,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 						  (car (cdr data))))))))
 	    (let ((new-data nil))
 	      (while data
-		(if (j-or-n-p (lyskom-format 'comment-keep-recpt-p
+		(if (lyskom-j-or-n-p (lyskom-format 'comment-keep-recpt-p
 					     (conf-stat->name (car data))))
 		    (setq new-data (cons (car data) new-data)))
 		(setq data (cdr data)))
@@ -917,10 +917,11 @@ If optional argument is non-nil then dont ask for confirmation."
   (cond
    ((and (lyskom-count-down-edits)
 	 (display-buffer (car lyskom-list-of-edit-buffers))
-	 (not (ja-or-nej-p (lyskom-get-string 'quit-in-spite-of-unsent))))
+	 (not (lyskom-ja-or-nej-p
+	       (lyskom-get-string 'quit-in-spite-of-unsent))))
     (lyskom-end-of-command))
    ((or arg
-	(ja-or-nej-p (lyskom-get-string 'really-quit))
+	(lyskom-ja-or-nej-p (lyskom-get-string 'really-quit))
 	)
     (initiate-logout 'main nil)
     (set-process-sentinel lyskom-proc nil)
@@ -1105,7 +1106,7 @@ Allowed conferences are conferences and the mailboxes you are member of."
 	  (lyskom-format-insert 'not-member-of-conf
 				(conf-stat->name conf))
 	  (lyskom-scroll)
-	  (if (j-or-n-p (lyskom-get-string 'want-become-member))
+	  (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
 	      (lyskom-add-member-2 (conf-stat->conf-no conf)
 				   lyskom-pers-no
 				   'lyskom-fixup-and-go-to-conf

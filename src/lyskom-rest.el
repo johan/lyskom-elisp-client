@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.7 1993-08-16 17:03:18 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.8 1993-08-20 07:35:15 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.7 1993-08-16 17:03:18 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.8 1993-08-20 07:35:15 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1409,23 +1409,18 @@ If quit is typed it executes lyskom-end-of-command."
 
 
 (defun lyskom-read-string (prompt &optional initial)
-  "Read a string from the minibuffer. Arguments: PROMPT INITIAL
-If quit is typed it executes lyskom-end-of-command."
-  (let ((quit t))
-    (unwind-protect
-	(prog1
-	    (read-string (if kom-emacs-knows-iso-8859-1
-			     prompt
-			   (iso-8859-1-to-swascii prompt))
-			 initial)
-	  (setq quit nil))
-      (if quit
-	  (lyskom-end-of-command)))))
+  "Read a string from the minibuffer. Arguments: PROMPT INITIAL"
+  (read-string (if kom-emacs-knows-iso-8859-1
+		   prompt
+		 (iso-8859-1-to-swascii prompt))
+	       initial))
 
 
 
 (defun ja-or-nej-p (prompt &optional initial-input)
-  "Same as yes-or-no-p but in swedish."
+  "Same as yes-or-no-p but language-dependent.
+Uses lyskom-message, lyskom-read-string to do interaction and
+lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (let ((answer "")
 	(nagging nil))
     (while (not (or (string-match (lyskom-get-string 'yes-regexp) answer)
@@ -1441,7 +1436,9 @@ If quit is typed it executes lyskom-end-of-command."
 
 
 (defun j-or-n-p (prompt)
-  "Same as y-or-n-p but in swedish."
+  "Same as y-or-n-p but language-dependent.
+Uses lyskom-message, lyskom-read-string to do interaction and
+lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (let ((input-char ?a)
 	(cursor-in-echo-area t)
 	(nagging nil))
@@ -1458,6 +1455,27 @@ If quit is typed it executes lyskom-end-of-command."
     (char-in-string input-char (lyskom-get-string 'y-instring))))
 
   
+;;; lyskom-j-or-n-p, lyskom-ja-or-no-p
+;;; These versions perform lyskom-end-of-command if quit is signalled
+;; Author: Linus Tolke
+
+(defun lyskom-j-or-n-p (prompt)
+  "Same as j-or-n-p but performs lyskom-end-of-command if quit."
+  (condition-case error
+      (j-or-n-p prompt)
+    (quit (lyskom-end-of-command)
+	  (signal 'quit "In lyskom-j-or-n-p"))))
+
+
+(defun lyskom-ja-or-nej-p (prompt &optional initial-input)
+  "Same as ja-or-nej-p but performs lyskom-end-of-command if quit."
+  (condition-case error
+      (ja-or-nej-p prompt initial-input)
+    (quit (lyskom-end-of-command)
+	  (signal 'quit "In lyskom-j-or-n-p"))))
+
+
+
 (defun lyskom-membership-< (a b)
   "Retuns t if A has a higher priority than B. A and B are memberships."
   (> (membership->priority a)
