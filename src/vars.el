@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.17 1991-12-18 03:35:29 linus Exp $
+;;;;; $Id: vars.el,v 35.18 1992-01-27 17:45:15 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.17 1991-12-18 03:35:29 linus Exp $\n"))
+	      "$Id: vars.el,v 35.18 1992-01-27 17:45:15 ceder Exp $\n"))
 
 
 
@@ -403,7 +403,9 @@ conf-stats from server.")
   "If non-nil then this is the condition for the waiting to be stopped.
 If t however just meaning user is waiting for a text with prompt.
 It is a form that will be evaluated (using eval) every time the asynchronous
-message \"new text\" is received.")
+message \"new text\" is received.
+
+This is used by the command kom-busy-wait.")
 
 (defvar lyskom-current-conf 0
   "Current conference. 0 means user is not reading any conf.")
