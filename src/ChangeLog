@@ -1,3 +1,8 @@
+2001-10-18  Kent Engström  <kent@ceres.unit.liu.se>
+
+ 	* vars.el.in (kom-server-aliases): change dskom.studkar.hj.se to
+	kom.ds.hj.se. 
+
 2001-10-16  Kent Engström  <kent@lysator.liu.se>
 
  	* vars.el.in (kom-server-aliases): add dskom.studkar.hj.se as DSKOM.
