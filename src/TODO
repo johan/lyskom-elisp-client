@@ -10,7 +10,7 @@ Buggar
 
     Prefetchhanteringen buggar. Om man går ur ett möte, går med i ett
     möte, och går ur det igen, allt utan att göra något annat, så får
-    man ingen prompt. lyskom-last-conf-done hamnar i osynk.
+    man ingen prompt. lyskom-last-conf-done hamnar i osynk. (FIXAT)
 
     sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
     ut en session i ett ikonifierat fönster. Eller kanske till och med
@@ -26,6 +26,10 @@ Buggar
     M-> i prioritera-bufferten. Text 1320736.
 
     Det har hänt att call-info har blivit nil i lyskom-parse-error.
+
+    lyskom-add-membership gör membership-listan sorterad, vilket inte
+    prefetch-koden är gjord för. Alltså borde det kunna bli problem
+    att gå med i möten om man ger dem fel prioritet.
 
 Allmänna förbättringar
 
