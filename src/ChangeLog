@@ -1,3 +1,13 @@
+2001-09-06  Joel Rosdahl  <joel@rosdahl.net>
+
+	* vars.el.in (lyskom-personal-message-hook): Fixed documentation.
+
+	* messages.el (lyskom-handle-personal-message): Ditto.
+
+	* async.el (lyskom-show-personal-message): Ditto.
+	(lyskom-insert-personal-message): Ditto.
+	(lyskom-format-as-personal-message): Ditto.
+
 2001-08-31  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* review.el (kom-review-more): ignore prefix arg unless it's
