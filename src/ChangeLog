@@ -1,3 +1,7 @@
+Thu May 27 16:17:18 1993  Linus Tolke Y  (linus@bodil)
+
+	* Distribuerat version 0.36	 	16.00
+
 Tue May 25 17:47:28 1993  Linus Tolke Y  (linus@bodil)
 
 	* completing-read.el, edit-text.el: Keymaps look different in
