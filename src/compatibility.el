@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.13 1997-09-10 13:14:55 byers Exp $
+;;;;; $Id: compatibility.el,v 44.14 1998-03-12 18:54:53 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.13 1997-09-10 13:14:55 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.14 1998-03-12 18:54:53 davidk Exp $\n"))
 
 
 ;;; ======================================================================
@@ -132,6 +132,7 @@ of the lyskom-provide-* functions instead."
          (, xemacs-form)
        (, gnu-form))))
 
+(put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
 
 ;;; ======================================================================
 ;;; ======================================================================
