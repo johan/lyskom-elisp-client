@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.43 1999-08-22 16:04:46 byers Exp $
+;;;;; $Id: commands2.el,v 44.44 1999-08-23 09:51:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.43 1999-08-22 16:04:46 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.44 1999-08-23 09:51:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1816,7 +1816,8 @@ Return-value: 'no-session if there is no suitable session to switch to
                             (and ori (lyskom-get-string 'no-comments))
                             (and pro (lyskom-get-string 'closed))
                             (and ano (lyskom-get-string 'allow-anon))
-                            (and ope (lyskom-get-string 'allow-secret))))))
+                            (and ope (lyskom-get-string 'allow-secret))))
+                ", "))
     (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member) t))
 	   (secret (if (not open)
 		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf) t)))
