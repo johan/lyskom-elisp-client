@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.97 2000-08-11 09:43:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.98 2000-08-11 15:00:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.97 2000-08-11 09:43:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.98 2000-08-11 15:00:52 byers Exp $"))
 
 
 ;;; ================================================================
@@ -765,6 +765,10 @@ Text %#1n has more than one root but only one of the trees will be shown.\n")
     (anonymous-aux-flag . "anonymous")
     (inherit-aux-flag  . "inherited")
     (aux-item-prefix . "> ")
+    (comment-item-prefix . "#\\s-*")
+    (text-no-comment . "%#1d %#2s /%#3d line%#3?d%[%]%[s%]/ %#4P %#5?b%[ [anonymous]%]%[%]\n")
+    (cant-fcc-text-file-error . "Unable to save text %#1n to \"%#2s\" (%#3s: %#4s).\n")
+    (cant-fcc-text . "Unable to save text %#1n to \"%#2s\" (%#3s).\n")
 
     (header-subject . "Subject: ")
     (header-separator . "\\<lyskom-edit-mode-map>\
@@ -1467,6 +1471,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-mark-text-action . "Mark text")
     (lyskom-button-unmark-text-action . "Unmark text")
     (lyskom-button-save-text-action . "Save archive copy")
+    (lyskom-button-save-text-body-action . "Save text body")
     (lyskom-button-view-conf-presentation-action . "View presentation")
     (lyskom-button-view-conf-status-action . "View conference status")
     (lyskom-button-goto-conf-action . "Go to conference")
@@ -2193,6 +2198,7 @@ Select whether to execute command or keyboard macro.")
     (off . "Off")
     (yes . "Yes")
     (no . "No ")
+    (to-file . "To file:")
     (max-text-length . "For texts shorter than: ")
 
     (friends . "Friends and other special people")
@@ -3128,6 +3134,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   bar of all windows whose active buffer belongs to a LysKOM session
   with unread texts. The title bar may not be updated unless the
   window is open.")
+    (kom-created-texts-are-saved-doc . "\
+  If this variable is set to a file name, all texts you write will be 
+  saved to that file. Texts that could not be created are not saved.")
 
     ;;
     ;; Tags for variables
@@ -3265,22 +3274,23 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-long-lines-tag . "Long dashed lines:")
     (kom-postpone-default-tag . "Default number of texts to postpone:")
     (kom-allow-incompleteness-tag . "Allow incomplete information about unread texts:")
-    (kom-smileys-tag . "Show smileys graphically")
-    (kom-ignore-message-senders-tag . "Don't show messages from")
-    (kom-ignore-message-recipients-tag . "Don't show messages to")
-    (kom-text-footer-dash-length-tag . "Text footer length")
-    (kom-text-header-dash-length-tag . "Length of dashed line before text")
-    (kom-show-personal-message-date-tag . "Show date and time of messages")
-    (kom-w3-simplify-body-tag . "Display HTML without document colors")
-    (kom-mercial-tag . "Text do display when all is read")
-    (kom-server-priority-tag . "Session priority")
-    (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM")
-    (kom-complete-numbers-before-names-tag . "Read conference numbers before names")
-    (kom-keep-alive-interval-tag . "Keep connection alive interval")
-    (kom-prompt-for-text-no-tag . "Commands that prompt for text numbers")
-    (kom-saved-file-name-tag . "File to archive texts in")
-    (kom-follow-attachments-tag . "Read imported attachments as texts")
-    (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar")
+    (kom-smileys-tag . "Show smileys graphically:")
+    (kom-ignore-message-senders-tag . "Don't show messages from:")
+    (kom-ignore-message-recipients-tag . "Don't show messages to:")
+    (kom-text-footer-dash-length-tag . "Text footer length:")
+    (kom-text-header-dash-length-tag . "Length of dashed line before text:")
+    (kom-show-personal-message-date-tag . "Show date and time of messages:")
+    (kom-w3-simplify-body-tag . "Display HTML without document colors:")
+    (kom-mercial-tag . "Text do display when all is read:")
+    (kom-server-priority-tag . "Session priority:")
+    (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM:")
+    (kom-complete-numbers-before-names-tag . "Read conference numbers before names:")
+    (kom-keep-alive-interval-tag . "Keep connection alive interval:")
+    (kom-prompt-for-text-no-tag . "Commands that prompt for text numbers:")
+    (kom-saved-file-name-tag . "File to archive texts in:")
+    (kom-follow-attachments-tag . "Read imported attachments as texts:")
+    (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar:")
+    (kom-created-texts-are-saved-tag . "Save created texts:")
     )
 )
 

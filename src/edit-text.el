@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.65 2000-06-04 20:41:48 ceder Exp $
+;;;;; $Id: edit-text.el,v 44.66 2000-08-11 15:00:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.65 2000-06-04 20:41:48 ceder Exp $\n"))
+	      "$Id: edit-text.el,v 44.66 2000-08-11 15:00:50 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -597,6 +597,21 @@ anonymously and take actions to avoid revealing the sender."
                       (setq lyskom-dont-change-prompt t))
                   (setq lyskom-is-writing nil)
                   (lyskom-tell-internat 'kom-tell-send)
+                  (run-hook-with-args 'lyskom-create-text-hook
+                              full-message
+                              misc-list
+                              (if (not is-anonymous)
+                                  (cons (lyskom-create-aux-item
+                                         0 15 0 0
+                                         (lyskom-create-aux-item-flags
+                                          nil nil nil nil nil nil nil nil)
+                                         0 (concat "lyskom.el "
+                                                   lyskom-clientversion))
+                                        aux-list)
+                                aux-list)
+                              buffer
+                              is-anonymous)
+
                   (funcall send-function
                            'sending
                            'lyskom-create-text-handler
@@ -1473,8 +1488,11 @@ to lyskom-edit-replace-headers"
       (goto-char (point-min))
       (setq start (point-marker))
       (set-marker-insertion-type start t)
-      (search-forward (substitute-command-keys
-                       (lyskom-get-string 'header-separator)))
+      (re-search-forward (concat "^"
+                                 (regexp-quote
+                                  (substitute-command-keys
+                                   (lyskom-get-string 'header-separator)))
+                                  "$"))
       (end-of-line)
       (setq end (point-marker))
       (goto-char (point-min))
@@ -1513,8 +1531,11 @@ easy to use the result in a call to `lyskom-create-misc-list'."
         (aux nil))
     (save-restriction
       ;; Narrow to headers
-      (search-forward (substitute-command-keys
-		       (lyskom-get-string 'header-separator)))
+      (re-search-forward (concat "^"
+                                 (regexp-quote
+                                  (substitute-command-keys
+                                   (lyskom-get-string 'header-separator)))
+                                 "$"))
       (beginning-of-line)
       (narrow-to-region (point-min) (point))
       (goto-char (point-min))
@@ -1543,6 +1564,9 @@ easy to use the result in a call to `lyskom-create-misc-list'."
                   (setq aux (cons item aux))
                 (signal 'lyskom-unknown-header
                         (list 'unknown-header (point))))))
+
+           ((lyskom-looking-at (lyskom-get-string 'comment-item-prefix))
+            nil)
 
 	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))
@@ -1594,10 +1618,12 @@ Point must be located on the line where the subject is."
   "Get text as a string."
   (save-excursion
     (goto-char (point-min))
-    (if (not (search-forward 
-              (substitute-command-keys
-               (lyskom-get-string 'header-separator)) 
-              nil (point-max)))
+    (if (not (re-search-forward (concat "^"
+                                        (regexp-quote
+                                         (substitute-command-keys
+                                          (lyskom-get-string 'header-separator)))
+                                         "$")
+                                nil (point-max)))
 	(signal 'lyskom-internal-error
 		"Altered lyskom-header-separator line.")
       (buffer-substring (1+ (point))
@@ -1614,9 +1640,11 @@ Point must be located on the line where the subject is."
   (save-excursion
     (beginning-of-line)
     (and (lyskom-looking-at (lyskom-get-string 'aux-item-prefix))
-         (search-forward 
-          (substitute-command-keys
-           (lyskom-get-string 'header-separator)) 
+         (re-search-forward (concat "^"
+                                    (regexp-quote
+                                     (substitute-command-keys
+                                      (lyskom-get-string 'header-separator)))
+                                    "$")
           nil (point-max)))))
 
 
@@ -1646,11 +1674,22 @@ Point must be located on the line where the subject is."
     (set-buffer edit-buffer)
     (lyskom-edit-mode 1)
     (sit-for 0))
-   (is-anonymous
-    (lyskom-format-insert-before-prompt 'text-created-anonymous text-no))
-   (t
-    (lyskom-insert-before-prompt
-     (lyskom-format 'text-created  text-no))
+   (t 
+    (if is-anonymous
+        (lyskom-format-insert-before-prompt 'text-created-anonymous text-no)
+      (lyskom-insert-before-prompt (lyskom-format 'text-created  text-no)))
+
+    ;; Save the text
+
+    (when kom-created-texts-are-saved
+      (when (buffer-live-p edit-buffer)
+        (initiate-get-conf-stat 'background 
+                                'lyskom-edit-fcc-text
+                                lyskom-pers-no
+                                (save-excursion (set-buffer edit-buffer)
+                                                (buffer-string))
+                                text-no
+                                is-anonymous)))
 
     ;; Immediately mark the text as read if kom-created-texts-are-read is set
     ;; and we are not sending the text anonymously.
@@ -1671,8 +1710,9 @@ Point must be located on the line where the subject is."
 
     ;; Record the text number
 
-    (lyskom-setq-default lyskom-last-written text-no)
-    (lyskom-setq-default lyskom-last-seen-written text-no)
+    (unless is-anonymous
+      (lyskom-setq-default lyskom-last-written text-no)
+      (lyskom-setq-default lyskom-last-seen-written text-no))
 
     ;; Select the old configuration.
 
@@ -1688,8 +1728,7 @@ Point must be located on the line where the subject is."
       ;; Apply handler.
 
       (set-buffer lyskom-buffer)
-      (if hnd
-	  (apply hnd text-no dta)))
+      (if hnd (apply hnd text-no dta)))
     
     ;; Kill the edit-buffer.
 
@@ -1698,6 +1737,60 @@ Point must be located on the line where the subject is."
      (delete-auto-save-file-if-necessary))
     (kill-buffer edit-buffer)
 )))
+
+(defun lyskom-edit-fcc-text (conf-stat text text-no is-anonymous)
+  (condition-case arg
+      (let ((start 1) (end 0))
+        (save-excursion
+          (set-buffer (lyskom-get-buffer-create 'fcc "*kom*-fcc"))
+          (erase-buffer)
+          (insert text)
+          (goto-char (point-min))
+          (when (re-search-forward
+                 (concat "^"
+                         (regexp-quote
+                          (substitute-command-keys
+                           (lyskom-get-string 'header-separator)))
+                         "$")
+                 nil t)
+            (goto-char (match-beginning 0))
+            (delete-region (match-beginning 0) (match-end 0))
+            (insert (make-string kom-text-header-dash-length ?-))
+            (forward-line 1)
+            (beginning-of-line)
+            (setq start (point)))
+          (goto-char (point-min))
+          (when (re-search-forward "\\(\\s-\\|[\n\r]\\)+\\'" nil t)
+            (delete-region (match-beginning 0) (match-end 0)))
+          (goto-char (point-max))
+          (setq end (point))
+          (insert (lyskom-format "\n(%#1n) %#2s\n\n"
+                                 text-no
+                                 (make-string (- kom-text-footer-dash-length
+                                                 (lyskom-string-width (int-to-string text-no)) 
+                                                 3) ?-)))
+          (goto-char (point-min))
+          (lyskom-format-insert-at-point 'text-no-comment 
+                                         text-no
+                                         (lyskom-return-date-and-time
+                                          (lyskom-client-date))
+                                         (count-lines start end)
+                                         conf-stat
+                                         is-anonymous)
+          (append-to-file (point-min)
+                          (point-max)
+                          (expand-file-name kom-created-texts-are-saved))))
+    (file-error (message "%S" arg)(lyskom-format-insert-before-prompt 'cant-fcc-text-file-error
+                                                    text-no
+                                                    kom-created-texts-are-saved
+                                                    (elt arg 1)
+                                                    (elt arg 2)
+                                                    ))
+    (error (lyskom-format-insert-before-prompt 'cant-fcc-text 
+                                               text-no
+                                               kom-created-texts-are-saved
+                                               (error-message-string arg)))))
+                          
 
 
 (defun lyskom-edit-show-commented (text text-stat editing-buffer window)

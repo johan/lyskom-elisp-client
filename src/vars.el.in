@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.111 2000-08-11 09:43:48 byers Exp $
+;;;;; $Id: vars.el.in,v 44.112 2000-08-11 15:01:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.111 2000-08-11 09:43:48 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.112 2000-08-11 15:01:02 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -181,6 +181,12 @@ enabled mode."
 (def-kom-var kom-cite-string ">"
   "*String to insert before each line of a commented text."
   server)
+
+(def-kom-var kom-created-texts-are-saved nil
+  "*If non-nil, save all created texts to a file. 
+The value of this variable is the file name on which to save new texts."
+  server
+  inherited)
 
 (def-kom-var kom-created-texts-are-read t
   "*Non-nil means automatically mark texts that you create as read."
@@ -1089,6 +1095,7 @@ at random and used. This element may be a string, function or list."
       (lyskom-button-mark-text-action . lyskom-button-mark-text)
       (lyskom-button-unmark-text-action . lyskom-button-unmark-text)
       (lyskom-button-save-text-action . lyskom-button-save-text)
+      (lyskom-button-save-text-body-action . lyskom-button-save-text-body)
       )
      nil
      ;; ((nil lyskom-print-text footer lyskom-button-comment-text))
@@ -1882,27 +1889,44 @@ set to that text."
   "List of patterns that are filtered."
   local)
 
+(def-kom-var lyskom-create-text-hook nil
+  "Hook to run before creating a new text.
+This hook is run just before the server call to create the text is made.
+
+The hook is currently called with the following arguments:
+MESSAGE         The message text
+MISC-LIST       The misc-info list
+AUX-LIST        The aux-item list
+BUFFER          The edit buffer
+IS-ANONYMOUS    Non-nil if the user is currently anonymous.
+&rest RESERVED  Additional arguments may be added in the future.
+
+The hook can change the message by modifying the variable
+full-message, the misc-info list my modifying misc-list and the
+aux-item list by modifying aux-list. This is not encouraged."
+  local-hook)
+
+
+
 (def-kom-var lyskom-new-text-hook nil
-  "*Hook to run when a new text is created.
+  "Hook to run when a new text is created.
 This hook is run after the prompt is removed if it shall be changed but before
 the text Text 4711 är skapad! is printed in the message area. And before the
-new prompt is printed.
-If the text: Text 4711 är skapad! should not be printed then the hook should 
-set the local variable no-message non-nil."
-  server)
+new prompt is printed."
+  local-hook)
 
 (def-kom-var lyskom-deleted-text-hook nil
-  "*Hook to run when a text is deleted.
+  "Hook to run when a text is deleted.
 This hook is run after the prompt is removed if it shall be changed but 
 before the new prompt is printed."
-  server)
+  local-hook)
 
 (def-kom-var lyskom-new-recipient-hook nil
-  "*Hook to run when a text gains a new recipient.
+  "Hook to run when a text gains a new recipient.
 This hook is run after the prompt is removed if it shall be changed but before
 the new prompt is printed. It is not run if the text has been marked as read
 in any conference other than the person's letterbox."
-  server)
+  local-hook)
 
 ;;(def-kom-var lyskom-who-info-has-changed-hook nil
 ;;  "Hook to run every time the who-info-buffer has changed.
