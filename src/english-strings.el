@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.147 2001-08-21 22:03:46 qha Exp $
+;;;;; $Id: english-strings.el,v 44.148 2001-08-23 22:36:48 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.147 2001-08-21 22:03:46 qha Exp $"))
+              "$Id: english-strings.el,v 44.148 2001-08-23 22:36:48 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -535,6 +535,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-to-check-mship-of . "...for what conference? ")
     (conf-is-empty . "The conference %#1M is empty.\n")
     (pers-is-member-of-conf . "Yes, %#1P is a member of the conference %#2M.\n")
+    (pers-is-passive-member-of-conf . "Well, %#1P is only a passive member of the conference %#2M.\n")
     (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
 
     ; From commands2.el:

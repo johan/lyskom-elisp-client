@@ -1,3 +1,10 @@
+2001-08-24  Per Cederqvist  <ceder@moria>
+
+	* commands2.el (kom-is-person-member-of-conference): Differentiate
+	between active and passive memberships.
+	* english-strings.el, swedish-strings.el (lyskom-message): Added
+	pers-is-passive-member-of-conf.
+
 2001-08-22  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-set-last-viewed): set lyskom-last-viewed
