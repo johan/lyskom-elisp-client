@@ -1,5 +1,5 @@
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.16 1997-09-21 11:43:05 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.17 1997-10-23 12:19:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.16 1997-09-21 11:43:05 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.17 1997-10-23 12:19:05 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -920,3 +920,79 @@ depending on the value of `kom-lynx-terminal'."
 
 (defun lyskom-button-send-mail (to)
   (mail nil to))
+
+;;;
+;;;     aux-item buttons
+;;;
+
+(defun lyskom-button-delete-aux (bug arg text)
+  (let ((aux nil))
+    (cond ((aux-item-p arg))
+          ((listp arg)
+           (let ((items (cond ((eq 'text (car arg))
+                               (text-stat->aux-items 
+                                (blocking-do 'get-text-stat (elt arg 1))))
+                              ((eq 'conf (car arg))
+                               (conf-stat->aux-items 
+                                (blocking-do 'get-conof-stat (elt arg 1))))
+                              (t nil))))
+             (while items
+               (when (eq (aux-item->aux-no (car items)) (elt arg 2))
+                 (setq aux (car items))
+                 (setq items nil))
+               (setq items (cdr items))))))
+
+    (when aux
+      (lyskom-start-of-command nil)
+      (unwind-protect
+          (progn
+            (if (blocking-do (cond ((eq 'text (car arg)) 'modify-text-info)
+                                   ((eq 'conf (car arg)) 'modify-conf-info))
+                             (elt arg 1)
+                             (list (aux-item->aux-no aux))
+                             nil)
+                (cond ((eq 'text (car arg)) (cache-del-text-stat (elt arg 1)))
+                      ((eq 'conf (car arg)) (cache-del-conf-stat (elt arg 1))))
+              (lyskom-report-command-answer nil)))
+        (lyskom-end-of-command)))))
+          
+
+(defun lyskom-button-info-aux (buf arg text)
+  (pop-to-buffer buf)
+  (let ((aux nil))
+    (cond ((aux-item-p arg))
+          ((listp arg) 
+           (let ((items (cond ((eq 'text (car arg))
+                               (text-stat->aux-items 
+                                (blocking-do 'get-text-stat (elt arg 1))))
+                              ((eq 'conf (car arg))
+                               (conf-stat->aux-items 
+                                (blocking-do 'get-conof-stat (elt arg 1))))
+                              (t nil))))
+             (while items
+               (when (eq (aux-item->aux-no (car items)) (elt arg 2))
+                 (setq aux (car items))
+                 (setq items nil))
+               (setq items (cdr items))))))
+              
+    (if aux
+        (progn
+          (lyskom-start-of-command nil)
+          (unwind-protect
+              (let ((data (lyskom-aux-item-definition-call 
+                           aux
+                           'info 
+                           aux
+                           (cond ((eq 'text (car arg)) 
+                                  (lyskom-format 'text-no (elt arg 1)))
+                                 ((eq 'conf (car arg))
+                                  (lyskom-format 'conference-no
+                                                 (blocking-do 'get-conf-stat
+                                                              (elt arg 1))))
+                                 (t "????")))))
+                (if data
+                    (lyskom-insert data)
+                  (lyskom-format-insert 'aux-item-no-info)))
+            (lyskom-end-of-command)))
+      (lyskom-format-insert 'cant-get-aux-item))))
+           

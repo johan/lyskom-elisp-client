@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.26 1997-09-21 15:55:25 byers Exp $
+;;;;; $Id: edit-text.el,v 44.27 1997-10-23 12:18:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.26 1997-09-21 15:55:25 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.27 1997-10-23 12:18:58 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -170,7 +170,7 @@ Does lyskom-end-of-command."
 
 
 
-(defun lyskom-edit-insert-miscs (misc-list subject body)
+(defun lyskom-edit-insert-miscs (misc-list subject body &optional aux-list)
   "Insert MISC-LIST into header of text.
 recpt		-> Mottagare: <%d> %s.
 cc-recpt	-> Extra kopia: <%d> %s.
@@ -207,6 +207,16 @@ footn-to	-> Fotnot till text %d."
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
+    (mapcar (function
+             (lambda (item)
+               (let ((data (lyskom-aux-item-definition-call
+                            item '(edit-insert print)
+                            item nil lyskom-pers-no)))
+                 (when data
+                   (lyskom-princ
+                    (concat (lyskom-get-string 'aux-item-prefix) data "\n")
+                    where-put-misc)))))
+            aux-list)
     (princ (lyskom-format 'text-mass subject 
 			  (substitute-command-keys
 			   (lyskom-get-string 'header-separator))
@@ -462,11 +472,17 @@ so it's not as clean as it ought to be."
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
 	    (let ((buffer (current-buffer))
-		  headers misc-list subject message)
+		  (headers nil)
+                  (misc-list nil)
+                  (subject nil)
+                  (message nil)
+                  (aux-list nil))
 
 	      (save-excursion
 		(setq headers (lyskom-edit-parse-headers)
-		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
+		      misc-list (apply 'lyskom-create-misc-list 
+                                       (elt headers 1))
+                      aux-list (elt headers 2)
 		      subject (car headers)))
 
               ;;
@@ -535,6 +551,7 @@ so it's not as clean as it ought to be."
                          'lyskom-create-text-handler
                          full-message
                          misc-list
+                         aux-list
                          buffer))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
@@ -926,7 +943,7 @@ text is a member of some recipient of this text."
       (let* ((buffer (current-buffer))
              (window (selected-window))
              (headers (condition-case nil
-                          (cdr (lyskom-edit-parse-headers))
+                          (elt (lyskom-edit-parse-headers) 1)
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
         (while headers
@@ -951,7 +968,6 @@ text is a member of some recipient of this text."
 ;;;
 ;;;  Author: Anders Gertz
 ;;;  Changed by: Linus Tolke
-
 
 (defun kom-edit-add-comment ()
   "Adds a text as commented to the text being edited."
@@ -1009,8 +1025,9 @@ CC recipients."
                             (if (eq (car x) 'recpt) 
                                 (cons 'cc-recpt (cdr x))
                               x)))
-                         (cdr (lyskom-edit-translate-miscs (cdr tmp)))))))
-      (lyskom-edit-replace-miscs subject miscs)
+                         (cdr (lyskom-edit-translate-headers (elt tmp 1))))))
+           (aux-list (elt tmp 2)))
+      (lyskom-edit-replace-headers subject miscs aux-list)
       (lyskom-edit-insert-misc-conf conf-stat
                                     (lyskom-get-string 'recipient)
                                     (point-min-marker)
@@ -1054,16 +1071,182 @@ CC recipients."
                (lyskom-edit-insert-misc-conf conf-stat string
                                              insert-at nil))))))))))
 
+(defun kom-edit-add-cross-reference ()
+  (interactive)
+  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
+                            (cons (lyskom-get-string 'person) 'pers)
+                            (cons (lyskom-get-string 'text) 'text)))
+         (completion-ignore-case t)
+         (type (cdr (lyskom-string-assoc
+                     (completing-read (lyskom-get-string 'xref-type)
+                                      completions nil t)
+                     completions)))
+         (obj nil)
+         (prompt nil)
+         (item nil))
+    (cond 
+     ((eq type 'text)
+      (setq prompt (lyskom-get-string 'which-text-to-xref))
+      (while (null obj)
+        (setq obj (blocking-do 'get-text-stat
+                               (lyskom-read-number prompt)))
+        (setq prompt (lyskom-get-string 'which-text-to-xref-err )))
+      (setq item
+            (lyskom-create-aux-item 0 3 0 0 
+                                    (lyskom-create-aux-item-flags
+                                     nil nil nil nil nil nil nil nil)
+                                    0 (format "T%d"
+                                              (text-stat->text-no obj)))))
 
+     ((eq type 'conf)
+      (setq prompt (lyskom-get-string 'which-conf-to-xref))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-no prompt '(conf) nil nil t))
+        (setq item
+              (lyskom-create-aux-item 0 3 0 0
+                                      (lyskom-create-aux-item-flags
+                                       nil nil nil nil nil nil nil nil)
+                                      0 (format "C%d" obj)))))
+        
+     ((eq type 'pers)
+      (setq prompt (lyskom-get-string 'which-pers-to-xref))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-no prompt '(pers) nil nil t))
+        (setq item
+              (lyskom-create-aux-item 0 3 0 0
+                                      (lyskom-create-aux-item-flags
+                                       nil nil nil nil nil nil nil nil)
+                                      0 (format "P%d" obj)))))
+        
+     (t nil))
+
+    (lyskom-edit-insert-aux-item item)))
+
+(defun kom-edit-add-read-confirm-request ()
+  (interactive)
+  (lyskom-edit-insert-aux-item
+   (lyskom-create-aux-item 0 6 0 0
+                           (lyskom-create-aux-item-flags
+                            nil nil nil nil nil nil nil nil)
+                           0 "")))
+
+(defun kom-edit-add-no-comments ()
+  (interactive)
+  (lyskom-edit-insert-aux-item
+   (lyskom-create-aux-item 0 4 0 0
+                           (lyskom-create-aux-item-flags
+                            nil nil nil nil nil nil nil nil)
+                           0 "")))
+
+(defun kom-edit-add-personal-comments ()
+  (interactive)
+  (lyskom-edit-insert-aux-item
+   (lyskom-create-aux-item 0 5 0 0
+                           (lyskom-create-aux-item-flags
+                            nil nil nil nil nil nil nil nil)
+                           0 "")))
+  
+    
+
+
+
+(defun lyskom-edit-insert-aux-item (item)
+  "Insert the aux item ITEM in the current buffer"
+  (save-excursion
+    (goto-char (point-min))
+    (re-search-forward
+     (concat "^"
+             (regexp-quote
+              (substitute-command-keys
+               (lyskom-get-string 'header-separator)))
+             "$")
+     nil t)
+    (beginning-of-line)
+    (forward-line -1)
+    (insert
+     (concat (lyskom-format
+              (format "%%#1@%%[%s%%]%%#2s" (lyskom-get-string 'aux-item-prefix))
+              (lyskom-default-button 'aux-edit-menu (cons (current-buffer)
+                                                          (point-marker)))
+              (lyskom-aux-item-definition-call item 
+                                               '(edit-insert print)
+                                               item 
+                                               lyskom-pers-no))
+              "\n")))
+  )
+
+
+(defun lyskom-edit-toggle-secret-aux (buf arg text)
+  (interactive)
+  (lyskom-save-excursion
+    (set-buffer (car arg))
+    (goto-char (cdr arg))
+    (lyskom-edit-toggle-aux-item-flag buf arg text 'secret)))
+
+(defun lyskom-edit-toggle-anonymous-aux (buf arg text)
+  (interactive)
+  (save-excursion
+    (set-buffer (car arg))
+    (goto-char (cdr arg))
+    (lyskom-edit-toggle-aux-item-flag buf arg text 'anonymous)))
+
+(defun lyskom-edit-toggle-inherit-aux (buf arg text)
+  (interactive)
+  (save-excursion
+    (set-buffer (car arg))
+    (goto-char (cdr arg))
+    (lyskom-edit-toggle-aux-item-flag buf arg text 'inherit)))
+
+(defun lyskom-edit-delete-aux (buf arg text)
+  (interactive)
+  (save-excursion
+    (set-buffer (car arg))
+    (goto-char (cdr arg))
+    (beginning-of-line)
+    (delete-region (point) (save-excursion (forward-line 1) (point)))))
+
+
+(defun lyskom-edit-insert-aux-item-flags (flags)
+  (save-excursion
+    (let ((str (mapconcat 'identity
+                          (delq nil
+                                (list
+                                 (and (aux-item-flags->secret flags)
+                                      (lyskom-get-string 'secret-aux-flag))
+                                 (and (aux-item-flags->anonymous flags)
+                                      (lyskom-get-string 'anonymous-aux-flag))
+                                 (and (aux-item-flags->inherit flags)
+                                      (lyskom-get-string 'inherit-aux-flag))))
+                          ", ")))
+      (when (not (string= str ""))
+          (end-of-line)
+          (insert (format " [%s]" str))))))
+
+
+(defun lyskom-edit-toggle-aux-item-flag (buf arg text flag)
+  (beginning-of-line)
+  (let ((flags (lyskom-edit-extract-aux-item-flags)))
+    (when (re-search-forward "\\s-?\\[[^]]*\\]\\s-*$" 
+                             (save-excursion (end-of-line) (point)) t)
+      (delete-region (match-beginning 0) (match-end 0)))
+    (funcall (intern (format "set-aux-item-flags->%s" flag))
+             flags
+             (not
+              (funcall (intern (format "aux-item-flags->%s" flag)) flags)))
+    (lyskom-edit-insert-aux-item-flags flags)))
+
+
+
+  
 
 ;;; ================================================================
 ;;;   Help functions for the functions bound to keyboard sequences 
 ;;;                       in lyskom-edit-mode.
 
 
-(defun lyskom-edit-translate-miscs (misc-list)
+(defun lyskom-edit-translate-headers (misc-list)
   "Translate result of lyskom-edit-parse-header to something we can send
-to lyskom-edit-replace-miscs"
+to lyskom-edit-replace-headers"
   (let ((result nil))
     (while misc-list
       (setq result (cons (cons (car misc-list) (car (cdr misc-list)))
@@ -1071,7 +1254,7 @@ to lyskom-edit-replace-miscs"
       (setq misc-list (cdr (cdr misc-list))))
     (cons 'MISC-LIST (nreverse result))))
 
-(defun lyskom-edit-replace-miscs (subject misc-list)
+(defun lyskom-edit-replace-headers (subject misc-list aux-list)
   "Replace all headers with SUBJECT and MISC-LIST"
   (save-excursion
     (let ((start nil)
@@ -1084,7 +1267,7 @@ to lyskom-edit-replace-miscs"
       (end-of-line)
       (setq end (point-marker))
       (goto-char (point-min))
-      (lyskom-edit-insert-miscs misc-list subject "")
+      (lyskom-edit-insert-miscs misc-list subject "" aux-list)
       (delete-region start end)
       (goto-char end)
       (delete-char 1))))
@@ -1114,8 +1297,9 @@ and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
 either 'recpt, 'cc-recpt, 'comm-to or 'footn-to. This is to make it
 easy to use the result in a call to `lyskom-create-misc-list'."
   (goto-char (point-min))
-  (let ((result (cons nil nil)))	; The car will be replaced by
-					; the real subject
+  (let ((misc nil)
+        (subject nil)
+        (aux nil))
     (save-restriction
       ;; Narrow to headers
       (search-forward (substitute-command-keys
@@ -1125,26 +1309,67 @@ easy to use the result in a call to `lyskom-create-misc-list'."
       (goto-char (point-min))
       (while (< (point) (point-max))
 	(let ((case-fold-search t)
-	      n)
+	      (n nil))
 	  (cond
 	   ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
-	    (nconc result (list 'recpt n)))
+	    (setq misc (nconc misc (list 'recpt n))))
 	   ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
-	    (nconc result (list 'cc-recpt n)))
+	    (setq misc (nconc misc (list 'cc-recpt n))))
 	   ((setq n (lyskom-looking-at-header 'blank-carbon-copy-prefix
                                               'angled))
-	    (nconc result (list 'bcc-recpt n)))
+	    (setq misc (nconc misc (list 'bcc-recpt n))))
 	   ((setq n (lyskom-looking-at-header 'comment-prefix t))
-	    (nconc result (list 'comm-to n)))
+	    (setq misc (nconc misc (list 'comm-to n))))
 	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
-	    (nconc result (list 'footn-to n)))
+	    (setq misc (nconc misc (list 'footn-to n))))
 	   ((lyskom-looking-at-header 'header-subject nil)
-	    (setcar result (lyskom-edit-extract-subject)))
-	   (t
-	    (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
-	(forward-line 1)))
-    result))
+	    (setq subject (lyskom-edit-extract-subject)))
 
+           ((looking-at (lyskom-get-string 'aux-item-prefix))
+            (goto-char (match-end 0))
+            (let ((item (lyskom-edit-parse-aux-item)))
+              (if item
+                  (setq aux (cons item aux))
+                (signal 'lyskom-unknown-header
+                        (list 'unknown-header (point))))))
+
+	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
+	(forward-line 1)))
+    (list subject misc aux)))
+
+(defun lyskom-edit-parse-aux-item ()
+  (let ((definitions lyskom-aux-item-definitions)
+        (data nil))
+    (while (and (null data) definitions)
+      (setq data (lyskom-aux-item-definition-call (car definitions) 'parse))
+      (unless data (setq definitions (cdr definitions))))
+
+    (when data
+      (lyskom-create-aux-item 0 (lyskom-aux-item-definition->number
+                                 (car definitions))
+                              0 0 (lyskom-edit-extract-aux-item-flags) 0
+                              data))))
+
+(defun lyskom-edit-extract-aux-item-flags ()
+  (if (looking-at ".*\\[\\([^]]*\\)\\]\\s-*$")
+    (let ((flag-strings (match-string 1))
+          (start 0)
+          (flag nil)
+          (flags (lyskom-create-aux-item-flags 
+                  nil nil nil nil nil nil nil nil))
+          (case-fold-search t))
+      (while (string-match "\\s-*\\(\\w+\\)\\s-*" flag-strings start)
+        (setq flag (match-string 1 flag-strings))
+        (setq start (match-end 0))
+        (cond ((string-match (lyskom-get-string 'secret-aux-flag) flag)
+               (set-aux-item-flags->secret flags t))
+              ((string-match (lyskom-get-string 'anonymous-aux-flag) flag)
+               (set-aux-item-flags->anonymous flags t))
+              ((string-match (lyskom-get-string 'inherit-aux-flag) flag)
+               (set-aux-item-flags->inherit flags t))
+              (t nil)))
+      flags)
+    (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)))
 
 
 (defun lyskom-edit-extract-subject ()
@@ -1176,7 +1401,18 @@ Point must be located on the line where the subject is."
 			  (forward-char 1)
 			  (point))))))
 
-  
+
+(defun lyskom-edit-on-aux-item ()
+  "Return non-nil if point is on the same line as an aux-item"
+  (save-excursion
+    (beginning-of-line)
+    (and (looking-at (lyskom-get-string 'aux-item-prefix))
+         (search-forward 
+          (substitute-command-keys
+           (lyskom-get-string 'header-separator)) 
+          nil (point-max)))))
+
+
 (defun lyskom-create-text-handler (text-no edit-buffer)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)

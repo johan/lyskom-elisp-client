@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.12 1997-10-10 13:12:44 byers Exp $
+;;;;; $Id: parse.el,v 44.13 1997-10-23 12:19:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.12 1997-10-10 13:12:44 byers Exp $\n"))
+	      "$Id: parse.el,v 44.13 1997-10-23 12:19:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -234,6 +234,7 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
   (let ((to-parse (lyskom-string-to-parse)))
     (cond
      ((string-match "\\`{" to-parse)	;Array/list?
+        (lyskom-parse-nonwhite-char)
         (lyskom-skip-array))
      ((string-match "\\`*" to-parse)	;Empty array/list?
         (lyskom-parse-nonwhite-char))	;Simply skip it.
@@ -513,6 +514,17 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-num)
    (lyskom-parse-num)
    (lyskom-parse-num)
+   (lyskom-parse-num)
+   (lyskom-parse-aux-item-list)))
+
+(defun lyskom-parse-server-info-old ()
+  "Parse info about the server."
+  (lyskom-create-server-info
+   (lyskom-parse-num)
+   (lyskom-parse-num)
+   (lyskom-parse-num)
+   (lyskom-parse-num)
+   (lyskom-parse-num)
    (lyskom-parse-num)))
 
 
@@ -598,6 +610,28 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   (lyskom-create-mark
    (lyskom-parse-num)			;Text-no
    (lyskom-parse-num)))			;Mark-type
+
+(defun lyskom-parse-aux-item-list ()
+  "Parse an aux-item list"
+  (listify-vector
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-aux-item)))
+
+(defun lyskom-parse-aux-item ()
+  "Parse an aux-item"
+  (lyskom-create-aux-item (lyskom-parse-num)    ; aux-no
+                          (lyskom-parse-num)    ; creator
+                          (lyskom-parse-num)    ; creator
+                          (lyskom-parse-time)   ; sent-at
+                          (lyskom-parse-aux-item-flags)
+                          (lyskom-parse-num)    ; inherit-limit
+                          (lyskom-parse-string) ; data
+                          ))
+
+(defun lyskom-parse-aux-item-flags ()
+  "Parse aux-item flags"
+  (apply 'lyskom-create-aux-item-flags
+         (lyskom-parse-bitstring
+          '(nil nil nil nil nil nil nil nil))))
   
 
 ;;;================================================================
@@ -616,6 +650,33 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
     	(cache-add-static-session-info session info))
     info))
     
+
+(defun lyskom-parse-conf-stat-old (conf-no)
+  "Parse a conf-stat, add add it in the cache.
+Retuns the conf-stat. Args: CONF-NO."
+  (let
+      ((conf-stat (lyskom-create-conf-stat
+		   conf-no		;conf-no (supplied by
+					; initiate-get-conf-stat)
+		   (lyskom-parse-string) ;name
+		   (lyskom-parse-conf-type) ;conf-type
+		   (lyskom-parse-time)	;creation-time
+		   (lyskom-parse-time)	;last-written
+		   (lyskom-parse-num)	;creator
+		   (lyskom-parse-num)	;presentation
+		   (lyskom-parse-num)	;supervisor
+		   (lyskom-parse-num)	;permitted-submitters
+		   (lyskom-parse-num)	;super-conf
+		   (lyskom-parse-num)	;msg-of-day
+		   (lyskom-parse-num)	;garb-nice
+		   (lyskom-parse-num)	;no-of-members
+		   (lyskom-parse-num)	;first-local-no
+		   (lyskom-parse-num)))) ;no-of-texts
+    
+    (lyskom-save-excursion
+     (set-buffer lyskom-buffer)
+     (cache-add-conf-stat conf-stat))
+    conf-stat))
 
 (defun lyskom-parse-conf-stat (conf-no)
   "Parse a conf-stat, add add it in the cache.
@@ -637,7 +698,10 @@ Retuns the conf-stat. Args: CONF-NO."
 		   (lyskom-parse-num)	;garb-nice
 		   (lyskom-parse-num)	;no-of-members
 		   (lyskom-parse-num)	;first-local-no
-		   (lyskom-parse-num)))) ;no-of-texts
+		   (lyskom-parse-num)   ;no-of-texts
+                   (lyskom-parse-num)   ;expire
+                   (lyskom-parse-aux-item-list)
+                   )))
     
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
@@ -690,7 +754,7 @@ Retuns the pers-stat. Args: PERS-NO."
     pers-stat))
 
 
-(defun lyskom-parse-text-stat (text-no)
+(defun lyskom-parse-text-stat-old (text-no)
   "Parse a text-stat and add it in the cache. 
 Args: TEXT-NO. Value: text-stat."
   (let
@@ -702,6 +766,25 @@ Args: TEXT-NO. Value: text-stat."
 		   (lyskom-parse-num)	;no-of-chars
 		   (lyskom-parse-num)	;no-of-marks
 		   (lyskom-parse-misc-info-list)))) ;misc-info-list
+    (lyskom-save-excursion
+     (set-buffer lyskom-buffer)
+     (cache-add-text-stat text-stat))
+    text-stat))
+
+(defun lyskom-parse-text-stat (text-no)
+  "Parse a text-stat and add it in the cache. 
+Args: TEXT-NO. Value: text-stat."
+  (let
+      ((text-stat (lyskom-create-text-stat
+		   text-no
+		   (lyskom-parse-time)	;creation-time
+		   (lyskom-parse-num)	;author
+		   (lyskom-parse-num)	;no-of-lines
+		   (lyskom-parse-num)	;no-of-chars
+		   (lyskom-parse-num)	;no-of-marks
+		   (lyskom-parse-misc-info-list)  ;misc-info-list
+                   (lyskom-parse-aux-item-list)
+                   )))
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
      (cache-add-text-stat text-stat))

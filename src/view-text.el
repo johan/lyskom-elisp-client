@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.11 1997-09-28 11:38:49 byers Exp $
+;;;;; $Id: view-text.el,v 44.12 1997-10-23 12:19:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.11 1997-09-28 11:38:49 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.12 1997-10-23 12:19:33 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -154,6 +154,33 @@ Note that this function must not be called asynchronously."
 			   (lyskom-print-header-comm (misc-info->footn-to misc)
 						     misc))
 			  )))
+
+                     ;;
+                     ;; Print aux-items that go in the header
+                     ;;
+
+                     (let ((text nil))
+                       (lyskom-traverse-aux aux
+                                            (text-stat->aux-items text-stat)
+                         (when (and
+                             (or (eq (lyskom-aux-item-definition-field aux
+                                                                 'print-when)
+                                     'header)
+                              (and (eq (lyskom-aux-item-definition-field aux
+                                                                  'print-when)
+                                       'comment)
+                               (not kom-reading-puts-comments-in-pointers-last)
+                               ))
+                             (setq text 
+                                   (lyskom-aux-item-definition-call 
+                                    aux
+                                    'print
+                                    aux
+                                    text-stat)))
+                           (lyskom-insert text)
+                           (lyskom-insert "\n"))))
+
+
 		     (let ((num-marks (text-stat->no-of-marks text-stat))
 			   (is-marked-by-me (cache-text-is-marked
 					     (text-stat->text-no text-stat))))
@@ -176,6 +203,28 @@ Note that this function must not be called asynchronously."
 					mark-as-read text-no))
 		   
 		   
+                   (let ((text nil))
+                       (lyskom-traverse-aux aux
+                                            (text-stat->aux-items text-stat)
+                         (when (and
+                             (or (eq (lyskom-aux-item-definition-field aux
+                                                                 'print-when)
+                                     'footer)
+                              (and (eq (lyskom-aux-item-definition-field aux
+                                                                  'print-when)
+                                       'comment)
+                                   kom-reading-puts-comments-in-pointers-last
+                               ))
+                             (setq text 
+                                   (lyskom-aux-item-definition-call 
+                                    aux
+                                    'print
+                                    aux
+                                    text-stat)))
+                           (lyskom-insert text)
+                           (lyskom-insert "\n"))))
+
+
 		   (if kom-reading-puts-comments-in-pointers-last
 		       (lyskom-view-text-handle-saved-comments text-stat))
 		   
@@ -192,7 +241,14 @@ Note that this function must not be called asynchronously."
 						 conf-stat mark-as-read
 						 priority build-review-tree)))
 		   )
-	       (lyskom-format-insert 'no-such-text-no text-no)))))
+	       (lyskom-format-insert 'no-such-text-no text-no))
+             (let ((aux-items (text-stat->aux-items text-stat)))
+               (while aux-items
+                 (lyskom-aux-item-definition-call (car aux-items)
+                                                  'read-action
+                                                  text-stat)
+                 (setq aux-items (cdr aux-items))))
+             )))
     todo))
 	  
 	  
@@ -506,6 +562,7 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                                                         kom-text-footer-format
                                                         format-flags))))
 
+
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
   "Print a text. The header must already be printed.
 Print an error message if TEXT-STAT or TEXT is nil.
@@ -536,7 +593,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
             (lyskom-insert "\n"))
           ;; (setq t1 (point-max))
           (let ((lyskom-current-function-phase 'body))
-            (lyskom-format-insert "%#1t" body))
+            (lyskom-format-insert "%#1t" (cons text-stat body)))
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
@@ -544,7 +601,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
               (lyskom-insert 
                "------------------------------------------------------------\n")
             (lyskom-insert "\n"))
-          (lyskom-format-insert "%#1t" str)
+          (lyskom-format-insert "%#1t" (cons text-stat str))
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.23 1997-09-21 11:43:16 byers Exp $
+;;;;; $Id: startup.el,v 44.24 1997-10-23 12:19:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.23 1997-09-21 11:43:16 byers Exp $\n"))
+	      "$Id: startup.el,v 44.24 1997-10-23 12:19:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -181,23 +181,14 @@ connect %s:%d HTTP/1.0\r\n\
 					   "lyskom.el" lyskom-clientversion)
 
 	      (setq lyskom-server-info (blocking-do 'get-server-info))
-	      (setq
-	       lyskom-server-version
-	       (list (/ (server-info->version lyskom-server-info) 10000)
-		     (/ (% (server-info->version lyskom-server-info) 10000)
-			100)
-		     (% (server-info->version lyskom-server-info) 100)))
+              (setq lyskom-server-version-info (blocking-do 'get-version-info))
+              (when (null lyskom-server-version-info)
+                (lyskom-error 'too-old-server))
+
 	      (lyskom-setup-client-for-server-version)
 	      (lyskom-format-insert 
 	       'connection-done
-	       (if (zerop (elt lyskom-server-version 2))
-		   (format "%d.%d"
-			   (elt lyskom-server-version 0)
-			   (elt lyskom-server-version 1))
-		 (format "%d.%d.%d"
-                         (elt lyskom-server-version 0)
-                         (elt lyskom-server-version 1)
-                         (elt lyskom-server-version 2))))
+	       (version-info->software-version lyskom-server-version-info))
 	      (if (not (zerop (server-info->motd-of-lyskom
 			       lyskom-server-info)))
 		  (let ((text (blocking-do 'get-text 
@@ -227,54 +218,73 @@ connect %s:%d HTTP/1.0\r\n\
 	    (unless reused-buffer (kill-buffer buffer))))))))
 
 
-(defun lyskom-setup-client-check-version (spec version)
-  (let ((relation (elt spec 0))
-        (major (elt spec 1))
-        (minor (elt spec 2))
-        (revision (elt spec 3)))
-    (cond ((eq relation '=)
-           (and (or (null major) (= major (elt version 0)))
-                (or (null minor) (= minor (elt version 1)))
-                (or (null revision) (= revision (elt version 2)))))
-          ((eq relation '>=)
-           (or (and (= (elt version 0) major)
-                    (= (elt version 1) minor)
-                    (>= (elt version 2) revision))
-               (and (= (elt version 0) major)
-                    (> (elt version 1) minor))
-               (and (> (elt version 0) major))))
-          ((eq relation '<)
-           (or (and (= (elt version 0) major)
-                    (= (elt version 1) minor)
-                    (< (elt version 2) revision))
-               (and (= (elt version 0) major)
-                    (< (elt version 1) minor))
-               (and (< (elt version 0) major)))))))
-
-
 (defun lyskom-setup-client-for-server-version ()
- "Set up the supports list and flags for the current server. See
-variable documentation for lyskom-server-feautres"
-  (let ((result nil)
-        (flags nil))
-    (mapcar (function
-             (lambda (spec)
-               (let ((spec-version (elt spec 0))
-                     (plist (elt spec 1)))
-                 (if (and (lyskom-setup-client-check-version 
-                           spec-version
-                           lyskom-server-version))
-                     (mapcar
-                      (function
-                       (lambda (x)
-                         (cond ((consp x) (setq result (cons x result)))
-                               ((symbolp x) (setq flags (cons x flags)))
-                               (t (setq result (cons (cons x t) 
-                                                     result))))))
-                      plist)))))
-            lyskom-server-features)
-    (mapcar (function (lambda (x) (set x t))) flags)
-    (setq lyskom-server-supports result)))
+  "Setup flags according to protocol versions."
+  (mapcar
+   (function
+    (lambda (spec)
+      (let ((version (car spec))
+            (flags (cdr spec)))
+        (when (>= (version-info->protocol-version lyskom-server-version-info)
+                  version)
+          (mapcar
+           (function
+            (lambda (flag)
+              (cond ((symbolp flag) (set flag t))
+                    ((consp flag) (set (car flag) (cdr flag)))
+                    (t nil))))
+           flags)))))
+   lyskom-server-features))
+
+
+;;;(defun lyskom-setup-client-check-version (spec version)
+;;;  (let ((relation (elt spec 0))
+;;;        (major (elt spec 1))
+;;;        (minor (elt spec 2))
+;;;        (revision (elt spec 3)))
+;;;    (cond ((eq relation '=)
+;;;           (and (or (null major) (= major (elt version 0)))
+;;;                (or (null minor) (= minor (elt version 1)))
+;;;                (or (null revision) (= revision (elt version 2)))))
+;;;          ((eq relation '>=)
+;;;           (or (and (= (elt version 0) major)
+;;;                    (= (elt version 1) minor)
+;;;                    (>= (elt version 2) revision))
+;;;               (and (= (elt version 0) major)
+;;;                    (> (elt version 1) minor))
+;;;               (and (> (elt version 0) major))))
+;;;          ((eq relation '<)
+;;;           (or (and (= (elt version 0) major)
+;;;                    (= (elt version 1) minor)
+;;;                    (< (elt version 2) revision))
+;;;               (and (= (elt version 0) major)
+;;;                    (< (elt version 1) minor))
+;;;               (and (< (elt version 0) major)))))))
+
+
+;;;(defun lyskom-setup-client-for-server-version ()
+;;; "Set up the supports list and flags for the current server. See
+;;;variable documentation for lyskom-server-feautres"
+;;;  (let ((result nil)
+;;;        (flags nil))
+;;;    (mapcar (function
+;;;             (lambda (spec)
+;;;               (let ((spec-version (elt spec 0))
+;;;                     (plist (elt spec 1)))
+;;;                 (if (and (lyskom-setup-client-check-version 
+;;;                           spec-version
+;;;                           lyskom-server-version))
+;;;                     (mapcar
+;;;                      (function
+;;;                       (lambda (x)
+;;;                         (cond ((consp x) (setq result (cons x result)))
+;;;                               ((symbolp x) (setq flags (cons x flags)))
+;;;                               (t (setq result (cons (cons x t) 
+;;;                                                     result))))))
+;;;                      plist)))))
+;;;            lyskom-server-features)
+;;;    (mapcar (function (lambda (x) (set x t))) flags)
+;;;    (setq lyskom-server-supports result)))
                                              
                                                                  
 
@@ -490,7 +500,7 @@ WANT-PERSONS is t for persons, nil for confs."
 	nil)
        (t
 	;; Entered the same password twice
-	(let ((new-person (blocking-do 'create-person name password)))
+	(let ((new-person (blocking-do 'create-person name password nil)))
 	  (if (null new-person)
 	      (lyskom-insert-string 'could-not-create-you)
 	    ;; Raise a flag so the user will be added to the
