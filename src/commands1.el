@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.64 2000-02-08 13:09:05 byers Exp $
+;;;;; $Id: commands1.el,v 44.65 2000-04-29 06:03:17 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.64 2000-02-08 13:09:05 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.65 2000-04-29 06:03:17 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -188,22 +188,24 @@
 
 
 ;;; ================================================================
-;;;          ]terse det kommenterade - View commented text
+;;;          Återse det kommenterade - View commented text
 
 ;;; Author: Inge Wallin
-;;; Modified by: David K}gedal
+;;; Modified by: David Kågedal, Johan Sundström
 
-(def-kom-command kom-view-commented-text ()
+(def-kom-command kom-view-commented-text (&optional text-no)
   "View the commented text.
 If the current text is comment to (footnote to) several text then the first
-text is shown and a REVIEW list is built to shown the other ones."
-  (interactive)
-  (if lyskom-current-text
-      (progn
-	(lyskom-tell-internat 'kom-tell-read)
-	(lyskom-view-commented-text
-	 (blocking-do 'get-text-stat lyskom-current-text)))
-    (lyskom-insert-string 'have-to-read)))
+text is shown and a REVIEW list is built to shown the other ones. If the
+optional arg TEXT-NO is present review the text that text commented instead."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
+  (let ((text-no (or text-no lyskom-current-text)))
+    (if text-no
+	(progn
+	  (lyskom-tell-internat 'kom-tell-read)
+	  (lyskom-view-commented-text
+	   (blocking-do 'get-text-stat text-no)))
+      (lyskom-insert-string 'have-to-read))))
 
 
 (def-kom-command kom-view-previous-commented-text ()
@@ -2233,7 +2235,7 @@ If MARK-NO is nil, review all marked texts."
 (def-kom-command kom-who-is-on (&optional arg)
   "Display a list of all connected users.
 The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negativ, invisible sessions are also shown.
+prefix is negative, invisible sessions are also shown.
 
 If the prefix is 0, all visible sessions are shown."
   (interactive "P")
@@ -2252,7 +2254,7 @@ If the prefix is 0, all visible sessions are shown."
 (def-kom-command kom-who-is-on-in-conference (&optional arg)
   "Display a list of all connected users in CONF.
 The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negativ, invisible sessions are also shown.
+prefix is negative, invisible sessions are also shown.
 
 If the prefix is 0, all visible sessions are shown."
   (interactive "P")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.23 1999-11-19 13:38:48 byers Exp $
+;;;;; $Id: review.el,v 44.24 2000-04-29 06:03:18 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.23 1999-11-19 13:38:48 byers Exp $\n"))
+	      "$Id: review.el,v 44.24 2000-04-29 06:03:18 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1270,24 +1270,15 @@ text is shown and a REVIEW list is built to shown the other ones."
       (lyskom-format-insert 'no-such-text))))
 
 
-;; Review a non-converted text
-;; Author: Linus Tolke
- 
+;;; ============================================================
+;;;        Återse omodifierat - Review a non-converted text
+
+;;; Author: Linus Tolke
+;;; Modified by: Johan Sundström
 
 (defun kom-review-noconversion (&optional text-no)
-  "Displays the last read text without any conversion."
-  (interactive (list 
-		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
-		 ((and (listp current-prefix-arg) 
-		       (integerp (car current-prefix-arg)) 
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
-		 (t
-		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
+  "Displays TEXT-NO or the last read text without any conversion."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-noconversion-q)))
   (lyskom-start-of-command 'kom-review-noconversion)
   (let ((lyskom-format-special nil)
         (kom-smileys nil)
