@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.3 1991-09-16 19:26:37 linus Exp $
+# $Id: Makefile,v 35.4 1991-09-24 19:32:25 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -37,4 +37,4 @@ elisp-client.txt: elisp-client
 
 clean:
 	$(RM) $(GENERIC-CLEAN) elisp-client elisp-client.txt
-
+	$(RM) *.aux *.dvi *.fn *.ky *.log *.pg *.tp *.vr
