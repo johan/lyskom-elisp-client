@@ -1,5 +1,13 @@
 2004-02-29  David Byers  <byers@lysator.liu.se>
 
+	Make fontification turn-offable:
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-text-properties and kom-fontify-text.
+	(lyskom-custom-variables): Same here.
+
+	* vars.el.in (kom-fontify-text): New variable.
+	(kom-text-properties): Make server-stored by default.
+
 	Better fontification code:
 	* lyskom-rest.el: (lyskom-format-plaintext-fonts-body): New macro.
 	For internal use only.

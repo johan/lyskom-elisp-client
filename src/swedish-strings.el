@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.369 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.370 2004-02-29 22:09:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.369 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.370 2004-02-29 22:09:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -4311,6 +4311,14 @@ ta fram menyer.")
   Om den här inställningen är påslagen så kommer kommandona \"Lista
   nya möten\" och \"Lista nya personer\" automatiskt markera nya
   möten och personer som kända.")
+    (kom-text-properties-doc . "\
+  Om den här inställningen är på så kommer klienten att använda olika
+  typsnitt och färger till olika saker. Till exempel kommer textnummer
+  och annat man kan klicka på att visas med en avvikande färg.")
+    (kom-fontify-text-doc . "\
+  Om den här inställningen är på så kommer fet och kursiv stil att
+  användas i inläggstext. Till exempel så kommer ord och fraser
+  omgivna av understrykningstecken att visas med kursiv text.")
 
     ;;
     ;; Tags for variables
@@ -4519,6 +4527,8 @@ ta fram menyer.")
     (kom-highlight-conferences-tag . "Färgläggning av namn:")
     (kom-netscape-variant-tag . "Var ska Netscape/Mozilla öppna URLer:")
     (kom-auto-confirm-new-conferences-tag . "Markera alltid nya möten och personer som kända:")
+    (kom-text-properties-tag . "Använd typsnitt och färger:")
+    (kom-fontify-text-tag . "Visa fetstil och kursiv text i inlägg:")
     )
 )
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.104 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: option-edit.el,v 44.105 2004-02-29 22:09:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.104 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.105 2004-02-29 22:09:25 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -215,6 +215,8 @@
     [kom-show-imported-importer]
     [kom-show-imported-external-recipients]
     [kom-show-imported-envelope-sender]
+    [kom-text-properties]
+    [kom-fontify-text]
     [kom-smileys]
     [kom-w3-simplify-body]
     [kom-format-html-authors]
@@ -902,6 +904,8 @@ All key bindings:
                                    (const (new-window-netscape new-window))
                                    (const (new-tab-netscape new-tab)))))
     (kom-auto-confirm-new-conferences (toggle (yes no)))
+    (kom-text-properties (toggle (yes no)))
+    (kom-fontify-text (toggle (yes no)))
 ))
 
 (defvar lyskom-widget-functions 

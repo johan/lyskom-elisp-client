@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.327 2004-02-29 15:12:48 byers Exp $
+;;;;; $Id: english-strings.el,v 44.328 2004-02-29 22:09:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.327 2004-02-29 15:12:48 byers Exp $"))
+              "$Id: english-strings.el,v 44.328 2004-02-29 22:09:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -4188,6 +4188,14 @@ up menus.")
   If this setting is on, the commands \"List new conferences\" and
   \"List new users\" will automatically mark new conferences and
   users as known.")
+    (kom-text-properties-doc . "\
+  If this setting is on, the client will display different types of
+  things using different fonts and colors. For example, text numbers
+  and other clickable things will be displayed using a special color.")
+    (kom-fontify-text-doc . "\
+  If this setting is on, words and phrases that are delimited by
+  special characters will be shown in bold or italics. For example,
+  words delimited by asterisks will be shown bold.")
 
     ;;
     ;; Tags for variables
@@ -4397,6 +4405,8 @@ up menus.")
     (kom-highlight-conferences-tag . "Display of names::")
     (kom-netscape-variant-tag . "Where Netscape/Mozilla opens URLs:")
     (kom-auto-confirm-new-conferences-tag . "Always mark new conferences as known:")
+    (kom-text-properties-tag . "Use fonts and colors:")
+    (kom-fontify-text-tag . "Bold and italic fonts in texts:")
     )
 )
 

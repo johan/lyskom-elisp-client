@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.287 2004-02-29 15:12:50 byers Exp $
+;;;;; $Id: vars.el.in,v 44.288 2004-02-29 22:09:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.287 2004-02-29 15:12:50 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.288 2004-02-29 22:09:26 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2072,7 +2072,18 @@ When set to `t', the client will freely use text properties, like
 fonts. When set to `nil', the client will not use text properties.
 This will disable all font usage and clickable stuff.
 
-Values other than `t' and `nil' are reserved for future use.")
+Values other than `t' and `nil' are reserved for future use."
+  server)
+
+(def-kom-var kom-fontify-text t
+  "**Controls whether plaintext messages are fontified.
+
+When set to `t', the client will make words and phrases delimited by
+asterisks bold, and words and phrases delimited by underscore italic.
+Other similar features may be added in the future.
+
+Values other than `t' or `nil' are reserved for future use."
+  server)
 
 
 (def-kom-var kom-use-button-hints t
