@@ -16,7 +16,7 @@
     Om du hittar ett fel i elispklienten och inte klarar att rätta det
     själv, använd M-x kom-bug-report för att rapportera det. Du kan
     även lägga in buggar i <URL:http://bugzilla.lysator.liu.se/>.
-    Buggar bilr omhändertagna i mån av tid, ork och lust. Färdiga
+    Buggar blir omhändertagna i mån av tid, ork och lust. Färdiga
     patchar blir inlagda mycket snabbare.
 
 
@@ -60,7 +60,7 @@
     den ordningen) för att bestämma defaultspråk.
 
 *** Första gången man loggar in så sätts språket globalt
-    (tangenmappningar och allt) baserat på kom-default-language. Vid
+    (tangentmappningar och allt) baserat på kom-default-language. Vid
     efterföljande inloggningar så sker detta inte.
 
 *** Defaultspråk har ändrats från svenska till engelska.
@@ -145,7 +145,7 @@
 *** FAQer till ett möte visas som om de vore kommentarer till
     mötespresentationen.
 
-*** När FAQer listat så visas även ärenderaden.
+*** När FAQer listas så visas även ärenderaden.
 
 *** Man kan sätta och läsa FAQer på servern.
 
@@ -192,9 +192,9 @@
 ** Redigering av inlägg
 
 *** Stöd för att enkelt lägga in länkar av typen <möte 6090:
-    Elispklient 0.46.2 (betatestarmöte)>, <person 273: KOM-trollet>
-    och <text 44: Programspr}k - syntax och semantik> genom att trycka
-    C-c C-i C-l vid editering av inlägg.
+    Elispklient 0.47 (betatestarmöte)>, <person 273: KOM-trollet> och
+    <text 44: Programspr}k - syntax och semantik> genom att trycka C-c
+    C-i C-l vid editering av inlägg.
 
 *** Man kan lägga till, ta bort och ändra typ på mottagare och
     tilläggsinformation genom att använda musen.
@@ -236,8 +236,8 @@
 *** kom-highlight-text-body anger om inläggstexter ska visas med ett
     alternativt utseende.
 
-*** kom-highlight-fist-line anger om första raden i inläggshuvudet ska
-    visas med ett alternativt utseende.
+*** kom-highlight-first-line anger om första raden i inläggshuvudet
+    ska visas med ett alternativt utseende.
 
 *** kom-highlight-dashed-lines anger om streckraderna före och efter
     inlägg skall visas med ett alternativt utseende.
@@ -295,7 +295,8 @@
 *** "Vilka vänner (är inloggade)" visar vilka personer i vänner-listan
     som är inloggade för tillfället.
 
-*** "Vilka (är inloggade i) möte"
+*** "Vilka (är inloggade i) möte" visar vilka personer som är
+    närvarande i LysKOM och är medlemmar i ett visst möte.
 
 *** "Filtrera mottagare" skapar filter baserat på ett inläggs
     mottagare. Använd för att filtrera alla inlägg som har ett visst
@@ -347,7 +348,7 @@
    tidsangivelser bör vara korrigerade.
 
 ** Start av Netscape är lite säkrare (förr kunde den konsumera
-   oändilgt mycket processortid).
+   oändligt mycket processortid).
 
 ** Klickningar när man kör långsamma kommandon fungerar bättre.
 
