@@ -1,3 +1,135 @@
+Wed Sep 25 12:14:48 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el, swedish-strings.el (lyskom-strings): Använd
+ 	%C i the-command.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Hantera format-letter C
+ 	(för kommandon och kbd-macros.) Hantera format-letter S (för allt.)
+
+	* macros.el (set-keymap-parent): Ny funktion.
+
+	* review.el (lyskom-get-texts-globally): Hantera att eftersökt
+ 	inlägg inte finns.
+
+Tue Sep 24 13:23:40 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el (lyskom-strings): Fixade mismatchande
+ 	formatsträngar.
+
+	* review.el (kom-review-next): Definiera med def-kom-command.
+	(kom-review-clear): Dito.
+	(kom-review-stack): Dito.
+	(kom-review-last-normally-read): Dito.
+
+	* prioritize.el (kom-prioritize-quit): Använd
+ 	lyskom-undisplay-buffer.
+	(kom-prioritize): Använd lyskom-associate-buffer mfl.
+
+	* edit-text.el (lyskom-dispatch-edit-text): Bufferthantering via
+ 	lyskom-display-bufffer och vänner. Använd lyskom-buffer, inte
+ 	lyskom-proc.
+	(lyskom-edit-mode): Skapa inte lyskom-proc. Det görs av
+ 	lyskom-associate-buffer.
+	(lyskom-dispatch-edit-text): Använd lyskom-buffer, inte
+ 	lyskom-proc.
+	(lyskom-edit-insert-miscs): Dito.
+	(lyskom-edit-send): Dito.
+	(lyskom-edit-send): Dito.
+	(lyskom-edit-send-check-recipients): Dito.
+	(kom-edit-insert-text): Dito.
+	(lyskom-edit-get-commented): Dito.
+	(lyskom-edit-add-recipient/copy): Dito.
+	(lyskom-create-text-handler): Dito.
+
+Mon Sep 23 15:57:36 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* parse.el (lyskom-parse-bitstring): Ny funktion.
+	(lyskom-parse-conf-type): Skrev om så den använder
+ 	parse-bitstring.
+	(lyskom-parse-privs): Dito.
+	(lyskom-parse-flags): Dito.
+	(lyskom-parse-session-flags): Dito.
+	(lyskom-maybe-parse-1-or-0): Tog bort funktionen.
+
+Sun Sep 22 11:00:58 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* review.el (lyskom-last-review-by): Ny variabel.
+	(lyskom-last-review-to): Dito.
+	(lyskom-last-review-num): Dito.
+	(lyskom-last-review-pmark): Dito.
+	(lyskom-last-review-cmark): Dito.
+	(lyskom-last-review-saved-result-list): Dito.
+	(lyskom-last-review-saved-by-list): Dito.
+	(lyskom-last-review-saved-to-list): Dito.
+	(lyskom-last-review-saved-result-size): Dito.
+	(lyskom-last-review-saved-smallest): Dito.
+	(lyskom-last-review-saved-largest): Dito.
+	(lyskom-have-review): Dito.
+
+	* english-strings,swedish-strings.el (lyskom-strings): Lade till
+ 	review-more-info-by-to, no-review-done och review-how-many-more.
+
+	* review.el (lyskom-get-texts-globally): Lade till parametern
+ 	again så man kan fortsätta återse.
+	(lyskom-get-texts-by-and-to): Dito.
+	(lyskom-get-texts-by): Dito.
+	(lyskom-get-texts-to): Dito.
+	(lyskom-review-by-to): Hämta inte conf-stattar för att skriva ut
+ 	vad man återser.
+	(kom-review-more): Ny funktion.
+
+Thu Sep 19 09:31:44 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-complete-string): Fixade så man inte
+ 	får SPC i slutet av completion fullt så ofta.
+	(lyskom-completing-use-dynamic-info): Ny variabel.
+	(lyskom-completing-who-is-on): Använd
+ 	lyskom-completing-use-dynamic-info istf use-dynamic-info.
+	(lyskom-read-conf-get-logins): Dito.
+
+	* commands1.el (lyskom-add-member-by-no): Använd
+ 	blocking-do-multiple.
+	(lyskom-try-add-member): Ändrade tillbaka (igen!) så man inte kan
+ 	bli passiv medlem när man adderas till ett möte.
+
+	* utilities.el (lyskom-undisplay-buffer): Ny funktion.
+	(lyskom-associate-buffer): Ny funktion.
+	(lyskom-display-buffer): Ny funktion.
+	(lyskom-protected-variables): Ny variabel
+	(lyskom-default-symbol-value): Ny funktion
+
+Mon Sep 16 16:02:23 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-protect-environment): Nytt makro.
+	(lyskom-inherited-variables): Ny variabel.
+	(lyskom-delete-frame-hook): Ny funktion.
+	(lyskom-reset-window-configuration-hook): Ny funktion.
+
+Sun Sep 15 19:44:43 1996  David Byers  <davby@sen15.ida.liu.se>
+
+	* edit-text.el (lyskom-dispatch-edit-text): Gjorde så att
+ 	new-frame fungerar
+
+Sat Sep 14 10:15:16 1996  David Byers  <davby@sen15.ida.liu.se>
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): Ändrade
+ 	nedre gräns i priority-q till 1.
+
+	* lyskom-rest.el (lyskom-next-command): Hantera vektorer från
+ 	lyskom-what-to-do-when-done så man kan ha vektorer som innehåll i
+ 	kom-do-when-done.
+
+Sun Sep  8 13:19:16 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* vars.el.in (kom-permissive-completion): Gjorde `t' till
+ 	defaultvärde.
+
+Fri Sep  6 10:39:56 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-read-extended-command): Satte
+ 	EMPTY-parametern till `t', inte `nil' i
+ 	lyskom-read-extended-command.
+
 Fri Sep  6 20:22:53 1996  David Kågedal  <kg@infovav.se>
 
 	* completing-read.el (lyskom-completing-who-is-on): Kolla bara den

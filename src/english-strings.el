@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.2 1996-09-24 22:04:10 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.3 1996-09-25 17:29:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.2 1996-09-24 22:04:10 davidk Exp $"))
+              "$Id: english-strings.el,v 44.3 1996-09-25 17:29:31 byers Exp $"))
 
 
 
@@ -107,7 +107,7 @@ Help: \\[describe-mode] ---")
 (defvar lyskom-swascii-header-subject nil
   "The swascii version of lyskom-header-subject.")
 
-(defconst lyskom-missing-strings
+(defconst lyskom-strings-missing
   '(cgdag sixjune holdnose))
 
 (defconst lyskom-strings 
@@ -213,7 +213,6 @@ Be ashamed of being You! You have a very good reason.\n\n")
 
     (have-to-read . "You must read an article first.\n")
 
-    (review-text-no . "Review article %#1n.\n")
     (no-comment-to . "There is no commented article.\n")
 
     (who-letter-to . "Send a letter to whom: ")
@@ -223,7 +222,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (who-to-add . "Whom do you want to add: ")
     (where-to-add . "To which conference: ")
     (where-to-add-self . "Join which conference: ")
-    (priority-q . "Conference priority? (0 (low) - 255 (high)) ")
+    (priority-q . "Conference priority? (1 (low) - 255 (high)) ")
     (done . "done.\n")
     (nope . "didn't work.\n")
 
@@ -333,7 +332,7 @@ and you have finished reading. Please come back later.
     (not-member-of-conf . "You are not a member of %#1M.\n")
     (about-to-change-name-from . "%#1M\n")
     (change-name-done . "Done. New name: %[%#2@%#1:M%].\n")
-    (change-name-nope . "You could't change the name to %#1s.\nError code %#3d. %#2s.\n")
+    (change-name-nope . "Couldn't change name to %#1s. Error code %#3d. %#2s.\n")
     (change-supervisor-from-to . "Change supervisor of %#1M to %#2P...")
     (change-supervisor-nope . 
      "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1M?\n")
@@ -570,7 +569,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (set-session-priority . "Set reading level:")
 
     ; From review.el:
+    (no-review-done . "You need to review something before you can review more.\n")
     (review-how-many . "Review how many: ")
+    (review-how-many-more . "Review how many more: ")
     (latest-n . "last %#1d")
     (first-n . "first %#1d")
     (info-by-whom . "%#1s by whom: ")
@@ -582,11 +583,15 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (no-review-info . "You are not allowed to review %#1s\n")
     (review-info . "Review %#1s")
     (review-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
+    (review-more-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
+    (review-rest . "the rest")
+    (review-more . "%#1d more")
     (you-review . "You are now reviewing %#1s.\n")
     (read-text-first . "You must read a article first.\n")
     (cannot-read-last-text . "You cannot review the last read article.\n")
     (review-n-texts . "Review %#1d articles.\n")
     (review-marked . "Review %#1d marked articles.\n")
+    (review-text-no . "Review article %#1n\n")
     (review-one-comment . "Review one comment to article %#1n.\n")
     (review-many-comments . "Review %#2d comments to article %#1n.\n")
     (read-normally-read . "How many articles to you want to review: ")
@@ -796,7 +801,7 @@ You should set it to a better value.\n")
     (go-to-conf-of-marked-prompt . "Review next marked")
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
-    (the-command . "Command:%#1s")
+    (the-command . "Command: %#1C")
     (error-in-login-hook . "There was an error in your kom-login-hook: %#1s\n")
 
     (give-a-number . "Enter a number: ")
@@ -850,8 +855,7 @@ Error message: %#1s**************************************************")
     (filter-error-bad-not . "Error in the filter specification after 'not'")
     (filter-error-unknown-key . "The filter key '%S' is unknown.")
     (filter-error-key-arg . "Bad filter data (%S %S)")
-    (filter-tree
-     . "Skipping article %#1n \"%#2r\" by %#3P and all its comments.\n")
+    (filter-tree . "Skipping article %#1n \"%#2r\" by %#3P and all its comments.\n")
     (filter-text . "Skipping article %#1n \"%#2r\" by %#3P.\n")
     (filter-permanent . "Permanent? ")
     (filter-action . "Filter how: ")
@@ -1019,6 +1023,7 @@ On since %#8s%#9s")
     (kom-review-by-to           "Review last")
     (kom-review-first           "Review first")
     (kom-review-all             "Review all")
+    (kom-review-more            "Review more")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-view-previous-commented-text
      				"Review (the) previouls commented (article)")
@@ -1141,7 +1146,7 @@ On since %#8s%#9s")
 Cf. paragraph-start.")
 
 
-(defconst lyskom-missing-bindings nil)
+(defconst lyskom-keybindings-missing nil)
 
 (if lyskom-mode-map
     nil
@@ -1248,6 +1253,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "rl" 'kom-review-by-to)
   (define-key lyskom-mode-map "rf" 'kom-review-first)
   (define-key lyskom-mode-map "rA" 'kom-review-all)
+  (define-key lyskom-mode-map "rM" 'kom-review-more)
   (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "rs" 'kom-review-stack)

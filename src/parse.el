@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.0 1996-08-30 14:47:27 davidk Exp $
+;;;;; $Id: parse.el,v 44.1 1996-09-25 17:29:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.0 1996-08-30 14:47:27 davidk Exp $\n"))
+	      "$Id: parse.el,v 44.1 1996-09-25 17:29:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -57,6 +57,14 @@
     (cond ((null start) "")
 	  (t (substring string start)))))
 
+(defun lyskom-parse-skip-rest-of-token ()
+  "Skip to the next whitespace"
+  (let ((c (lyskom-parse-char)))
+    (while (not (or (= c ?\ )
+                    (= c ?\n)
+                    (= c ?\t)
+                    (= c ?\r)))
+      (setq c (lyskom-parse-char)))))
 
 (defun lyskom-parse-nonwhite-char ()
   "Get next character, skipping whitespace, from lyskom-unparsed-buffer and
@@ -180,20 +188,37 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 		      lyskom-parse-pos
 		      (buffer-string)))))))
 
-(defun lyskom-maybe-parse-1-or-0 ()
-  "Parse next char and return t if it was 1, nil if it was 0 or 'space if
-it was whitespace. Signal lyskom-protocol-error if it was anything else.
-Signal lyskom-parse-incomplete if there was nothing to parse."
-  (let ((char (lyskom-parse-char)))
-    (cond 
-     ((eq char ?0) nil)
-     ((eq char ?1) t)
-     ((or (eq char ? ) (eq char ?\t) (eq char ?\n) (eq char ?\r))
-      'space)
-     (t (signal 'lyskom-protocol-error
-		(list 'lyskom-parse-1-or-0 char
-		      lyskom-parse-pos
-		      (buffer-string)))))))
+
+(defun lyskom-parse-bitstring (default)
+  "Parse a generic bit string"
+  (let ((result nil)
+        (char (lyskom-parse-nonwhite-char)))
+    (while default
+      (cond ((= char ?0) (setq result (cons nil result)
+                                default (cdr default)
+                                char (lyskom-parse-char)))
+
+            ((= char ?1) (setq result (cons t result)
+                                default (cdr default)
+                                char (lyskom-parse-char)))
+            ((or (= char ?\ )
+                 (= char ?\t) 
+                 (= char ?\n)
+                 (= char ?\r)) 
+             (while default
+               (setq result (cons (car default) result))
+               (setq default (cdr default))))
+
+            (t (signal 'lyskom-protocol-error
+                       (list 'lyskom-parse-bitstring char
+                             lyskom-parse-pos
+                             (buffer-string))))))
+    (if (not (or (= char ?\ )
+                 (= char ?\t) 
+                 (= char ?\n)
+                 (= char ?\r)))
+        (lyskom-parse-skip-rest-of-token))
+    (nreverse result)))
 
 
 
@@ -277,56 +302,21 @@ result is assigned to the element."
 
 (defun lyskom-parse-conf-type ()
   "Parse a conf-type. No args."
-  (let ((rd_prot (lyskom-parse-1-or-0))
-         (original (lyskom-parse-1-or-0))
-         (secret (lyskom-parse-1-or-0))
-         (letterbox (lyskom-parse-1-or-0))
-         (anarchy (lyskom-maybe-parse-1-or-0)))
-  (lyskom-create-conf-type rd_prot
-                           original
-                           secret
-                           letterbox
-                           (eq anarchy t)
-                           (and (not (eq anarchy 'space))
-                                (lyskom-parse-1-or-0))
-                           (and (not (eq anarchy 'space))
-                                (lyskom-parse-1-or-0))
-                           (and (not (eq anarchy 'space))
-                                (lyskom-parse-1-or-0)))))
-
-
+  (apply 'lyskom-create-conf-type (lyskom-parse-bitstring 
+                                   '(nil nil nil nil t nil nil nil))))
+          
 (defun lyskom-parse-privs ()
   "Parse privileges. No args."
-  (lyskom-create-privs
-   (lyskom-parse-1-or-0)		;wheel 
-   (lyskom-parse-1-or-0)		;admin 
-   (lyskom-parse-1-or-0)		;statistic 
-   (lyskom-parse-1-or-0)		;create_pers 
-   (lyskom-parse-1-or-0)		;create_conf 
-   (lyskom-parse-1-or-0)		;change_name 
-   (lyskom-parse-1-or-0)		;flg7 /* For future use. */
-   (lyskom-parse-1-or-0)		;flg8 
-   (lyskom-parse-1-or-0)		;flg9 
-   (lyskom-parse-1-or-0)		;flg10 
-   (lyskom-parse-1-or-0)		;flg11 
-   (lyskom-parse-1-or-0)		;flg12 
-   (lyskom-parse-1-or-0)		;flg13 
-   (lyskom-parse-1-or-0)		;flg14 
-   (lyskom-parse-1-or-0)		;flg15 
-   (lyskom-parse-1-or-0)))		;flg16 
+  (apply 'lyskom-create-privs
+         (lyskom-parse-bitstring
+          '(nil nil nil t t t nil nil nil nil nil nil nil nil nil nil))))
 
 
 (defun lyskom-parse-flags ()
   "Parse Personal_flags. No args."
-  (lyskom-create-flags
-   (lyskom-parse-1-or-0)			;unread_is_secret
-   (lyskom-parse-1-or-0)		;flg2 
-   (lyskom-parse-1-or-0)		;flg3 
-   (lyskom-parse-1-or-0)		;flg4 
-   (lyskom-parse-1-or-0)		;flg5 
-   (lyskom-parse-1-or-0)		;flg6 
-   (lyskom-parse-1-or-0)		;flg7 
-   (lyskom-parse-1-or-0)))		;flg8 
+  (apply 'lyskom-create-flags
+         (lyskom-parse-bitstring
+          '(nil nil nil nil nil nil nil nil))))
 
 	
 (defun lyskom-parse-misc-info-list ()
@@ -569,17 +559,12 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 
 ;; prot-A.txt says that this should allow more or less flags than
 ;; specified, but I can't figure out how. /davidk
+
 (defun lyskom-parse-session-flags ()
   "Parse session-flags."
-  (lyskom-create-session-flags
-   (lyskom-parse-1-or-0)		;invisible
-   (lyskom-parse-1-or-0)		;user_active_used
-   (lyskom-parse-1-or-0)		;user_absent
-   (lyskom-parse-1-or-0)		;flg4 
-   (lyskom-parse-1-or-0)		;flg5 
-   (lyskom-parse-1-or-0)		;flg6 
-   (lyskom-parse-1-or-0)		;flg7 
-   (lyskom-parse-1-or-0)))		;flg8 
+  (apply 'lyskom-create-session-flags
+         (lyskom-parse-bitstring
+          '(nil nil nil nil nil nil nil nil))))
 
 	
 (defun lyskom-parse-dynamic-session-info ()

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.3 1996-09-08 20:14:51 davidk Exp $
+;;;;; $Id: completing-read.el,v 44.4 1996-09-25 17:29:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.3 1996-09-08 20:14:51 davidk Exp $\n"))
+       "$Id: completing-read.el,v 44.4 1996-09-25 17:29:24 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -52,6 +52,7 @@
 (defvar lyskom-completing-lookup-name-cache nil
   "Temporary cache of server queries")
 
+(defvar lyskom-completing-use-dynamic-info)
 
 (defun lyskom-completing-clear-cache ()
   (setq lyskom-completing-who-info-cache nil)
@@ -64,7 +65,8 @@
       lyskom-completing-who-info-cache
     (setq lyskom-completing-who-info-cache
           (listify-vector
-	   (if (or (and (lyskom-is-in-minibuffer) use-dynamic-info)
+	   (if (or (and (lyskom-is-in-minibuffer) 
+                        lyskom-completing-use-dynamic-info)
 		   lyskom-dynamic-session-info-flag)
 	       (blocking-do 'who-is-on-dynamic t t 0)
 	     (blocking-do 'who-is-on))))))
@@ -198,11 +200,11 @@ A string:    A name that matched nothing in the database."
 (defun lyskom-read-conf-get-logins ()
   "Used internally by lyskom-read-conf-internal to get a list of
 persons who are logged on."
-  (let ((use-dynamic-info
+  (let ((lyskom-completing-use-dynamic-info
 	 (cdr-safe (assq 'lyskom-dynamic-session-info-flag
 			 (buffer-local-variables
 			  (process-buffer lyskom-blocking-process))))))
-    (mapcar (if use-dynamic-info
+    (mapcar (if lyskom-completing-use-dynamic-info
 		(function (lambda (el) (dynamic-session-info->person el)))
 	      (function (lambda (el) (who-info->pers-no el))))
 	    (lyskom-completing-who-is-on))))
@@ -557,18 +559,25 @@ the LysKOM rules of string matching."
        ;;
 
        ((eq (aref next-char-state 0) 'match)
-        (setq last-event-worth-noting 'match)
-        (if (and (eq (aref next-char-state 1) ?\ )
-                 (or (eq (symbol-value current-state) 'start-of-word)
-                     (eq (symbol-value current-state) 'start-of-string)))
-            (lyskom-complete-string-advance data-list)
+        (if (eq (aref next-char-state 1) ?\ )
+            (progn
+              (cond ((or (eq (symbol-value current-state) 'start-of-word)
+                         (eq (symbol-value current-state) 'start-of-string))
+                     nil)
+                    ((eq last-event-worth-noting 'mismatch)
+                     (lyskom-complete-string-accumulate current-accumulator
+                                                        'SPC))
+                    (t
+                     (lyskom-complete-string-accumulate current-accumulator
+                                                        ?\ )))
+              (set current-state 'start-of-word)
+              (lyskom-complete-string-advance data-list))
           (progn
+            (set current-state 'in-a-word)
             (lyskom-complete-string-accumulate current-accumulator
-                                        (aref next-char-state 1))
-            (if (eq (aref next-char-state 1) ?\ )
-                (set current-state 'start-of-word)
-              (set current-state 'in-a-word))
-            (lyskom-complete-string-advance data-list))))
+                                               (aref next-char-state 1))
+            (lyskom-complete-string-advance data-list)))
+        (setq last-event-worth-noting 'match))
        
        ;;
        ;; Case two, a match of two open-paren expressions Increase
@@ -638,7 +647,7 @@ the LysKOM rules of string matching."
        ((and (eq (aref next-char-state 0) 'space-mismatch)
              (or (eq (symbol-value current-state) 'start-of-string)
                  (eq (symbol-value current-state) 'start-of-word)))
-        (setq last-event-worth-noting 'nil)
+        (setq last-event-worth-noting nil)
         (lyskom-complete-string-skip-whitespace data-list))
 
        ;;
@@ -649,6 +658,7 @@ the LysKOM rules of string matching."
        ((and (or (eq (aref next-char-state 0) 'mismatch)
                  (eq (aref next-char-state 0) 'space-mismatch))
              (zerop paren-depth))
+        (setq last-event-worth-noting 'mismatch)
         (if (or (eq (symbol-value current-state) 'start-of-word)
                 (eq (symbol-value current-state) 'start-of-string))
             (setq done t)
@@ -658,7 +668,6 @@ the LysKOM rules of string matching."
                   (lyskom-complete-string-accumulate current-accumulator 
                                                      'HERE)
                   (setq have-here t)))
-            (setq last-event-worth-noting 'mismatch)
             (lyskom-complete-string-advance-to-end-of-word data-list)
             (set current-state 'in-a-word))))
 
@@ -689,10 +698,8 @@ the LysKOM rules of string matching."
     ;; string out of it.
     ;;
 
-    (if (eq last-event-worth-noting 'mismatch)
-        (while (and main-accumulator
-                    (eq (car main-accumulator) ?\ ))
-          (setq main-accumulator (cdr main-accumulator))))
+    (if (eq (car main-accumulator) 'SPC)
+        (setq main-accumulator (cdr main-accumulator)))
 
     (setq main-accumulator (nreverse main-accumulator))
 
@@ -708,7 +715,7 @@ the LysKOM rules of string matching."
           (index 0))
       (lyskom-traverse
        el main-accumulator
-       (aset tmp index el)
+       (aset tmp index (if (eq el 'SPC) 32 el))
        (setq index (1+ index)))
       tmp)))
 
