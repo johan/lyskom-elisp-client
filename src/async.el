@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.31 2000-05-04 11:56:33 byers Exp $
+;;;;; $Id: async.el,v 44.32 2000-05-23 12:06:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.31 2000-05-04 11:56:33 byers Exp $\n"))
+	      "$Id: async.el,v 44.32 2000-05-23 12:06:36 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -346,7 +346,7 @@ according to the value of FLAG."
   "Visa p} kommandoraden vem som loggat in."
   (let ((server (or (cdr (lyskom-string-assoc lyskom-server-name
                                               kom-server-aliases))
-                    "KOM")))
+                    lyskom-server-name)))
     (cond
      ((lyskom-is-in-minibuffer))
      ((lyskom-show-presence (conf-stat->conf-no conf-stat)
@@ -378,7 +378,7 @@ according to the value of FLAG."
   "Visa p} kommandoraden vem som loggat ut."
   (let ((server (or (cdr (lyskom-string-assoc lyskom-server-name
                                               kom-server-aliases))
-                    "KOM")))
+                    lyskom-server-name)))
   (cond
    ((lyskom-is-in-minibuffer))
    ((lyskom-show-presence (conf-stat->conf-no conf-stat) 

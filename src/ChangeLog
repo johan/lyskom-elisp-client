@@ -1,3 +1,42 @@
+2000-05-23  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-w3-region): Remove compiler warning about 
+	unreferenced variable.
+	(lyskom-do-insert): Same here.
+
+	* flags.el (lyskom-save-options): Remove compiler warning about
+	unreferenced variable.
+
+	* utilities.el (lyskom-unicase-char): Use
+	lyskom-encode-coding-char.
+
+	* compatibility.el (lyskom-encode-coding-char): New function/macro.
+	
+	* async.el (lyskom-show-logged-in-person): Print server name, not
+	KOM if the server is not in kom-server-aliases.
+	(lyskom-show-logged-out-person): Same here.
+
+	* commands1.el (lyskom-info-line-format-string): Compute field
+	widths correctly, even for very wide windows.
+
+2000-05-22  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-complete-string): Construct the final
+	string by using concat rather than filling the chars of a vector
+	by hand. The losing MULE implementation will fail if you say
+	something like (aset string 0 ?å) because å is multibyte and aset
+	will only set one *byte*.
+
+2000-05-19  David Byers  <davby@sen2.ida.liu.se>
+
+	* startup.el (lyskom): Get the collate table from the
+	server. Note: thie needs to be protected so it isn't called on
+	servers that don't have the call!
+
+	* utilities.el (lyskom-unicase-char): Encode the char using server
+	default coding system. Otherwise this will not work with multibyte
+	latin1 chars in Gnu Emacs. ELUM wercS.
+
 2000-05-19  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in: Reinstated changes lost between 44.98 and 44.99.

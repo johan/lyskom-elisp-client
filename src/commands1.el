@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.68 2000-05-19 10:35:41 byers Exp $
+;;;;; $Id: commands1.el,v 44.69 2000-05-23 12:06:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.68 2000-05-19 10:35:41 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.69 2000-05-23 12:06:38 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2259,7 +2259,7 @@ Uses Protocol A version 8 calls"
 			      (lyskom-get-string 'is-doing)))
     
     (lyskom-insert
-     (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
+     (concat (make-string (- (lyskom-window-width) 1) ?-) "\n"))
     
     (while who-list
       (let* ((who-info (car who-list))
@@ -2282,7 +2282,7 @@ Uses Protocol A version 8 calls"
 	     (concat "(" (who-info->doing-what who-info) ")"))))
       (setq who-list (cdr who-list)))
       
-      (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+      (lyskom-insert (concat (make-string (- (lyskom-window-width) 1) ?-)
 			     "\n"))
       (lyskom-insert (lyskom-format 'total-visible-users total-users
                                     (lyskom-client-date-string 
@@ -2350,7 +2350,7 @@ Uses Protocol A version 9 calls"
 			      (lyskom-get-string 'active-last)))
     
     (lyskom-insert
-     (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
+     (concat (make-string (- (lyskom-window-width) 1) ?-) "\n"))
     
     (while who-list
       (let* ((who-info (car who-list))
@@ -2435,7 +2435,7 @@ Uses Protocol A version 9 calls"
 	
 	(setq who-list (cdr who-list))))
     
-    (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+    (lyskom-insert (concat (make-string (- (lyskom-window-width) 1) ?-)
 			   "\n"))
     (lyskom-insert (lyskom-format
 		    (cond ((and wants-invisibles (zerop idle-hide))
@@ -2579,14 +2579,13 @@ Uses Protocol A version 9 calls"
 (defun lyskom-info-line-format-string (prefixlen type1 type2)
   "Return a format string suitable for inserting who-info lines etc."
   (let* ((plen (or prefixlen 7))
-	 (adj1 (+ plen 2))
-         (adj2 (+ adj1 1)))
+         (width (- (lyskom-window-width) plen 2)))
     (concat "%" (int-to-string plen) "#1s"
 	    "%=-"
-	    (int-to-string (/ (* 37 (- (lyskom-window-width) adj1)) 73))
+	    (int-to-string (/ width 2))
 	    "#2" type1
 	    " %=-"
-	    (int-to-string (/ (* 37 (- (lyskom-window-width) adj2)) 73))
+	    (int-to-string (+ (/ width 2) (% width 2)))
 	    "#3" type2
 	    "\n")))
     

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.56 2000-05-04 13:57:43 byers Exp $
+;;;;; $Id: utilities.el,v 44.57 2000-05-23 12:06:47 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.56 2000-05-04 13:57:43 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.57 2000-05-23 12:06:47 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -277,7 +277,7 @@ of \(current-time\)."
 ;;;
 
 (defvar lyskom-default-collate-table
-  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
+  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
 (defsubst lyskom-maybe-recode-string (s)
@@ -290,9 +290,12 @@ of \(current-time\)."
 
 (defsubst lyskom-unicase-char (c)
   "Smash case and diacritical marks on c." 
-  (if (< (char-to-int c) (length lyskom-default-collate-table))
+  (if (< (char-to-int c) (length lyskom-collate-table))
       (aref lyskom-collate-table (char-to-int c))
-    c))
+    (setq c (lyskom-encode-coding-char c lyskom-server-coding-system))
+    (if (and c (< (char-to-int c) (length lyskom-collate-table)))
+	(aref lyskom-collate-table (char-to-int c))
+      c)))
 
 (defun lyskom-unicase (s)
   "Smash case and diacritical marks of all chars in s." 

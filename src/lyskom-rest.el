@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.100 2000-03-21 15:21:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.101 2000-05-23 12:06:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.100 2000-03-21 15:21:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.101 2000-05-23 12:06:44 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -841,7 +841,7 @@ The position lyskom-last-viewed will always remain visible."
             (setq start next)
             (setq bounds (next-text-property-bounds 1 start
                                                     'special-insert))))
-      (error nil))))
+      (error (lyskom-ignore var)))))
 
 
 
@@ -1701,7 +1701,7 @@ in lyskom-messages."
           (w3-region start end)
           (w3-finish-drawing)
           (add-text-properties (point-min) (point-max) '(end-closed nil))))
-      (error nil))))
+      (error (lyskom-ignore var)))))
 
 
 (defun lyskom-format-html (text)
