@@ -25,6 +25,8 @@
 
 	* commands2.el: Removed some erroneous indentation.
 
+	Fixed bug 387:
+
 	* lyskom-buttons.el (lyskom-view-url-windows): Rewritten (based on
 	work by Klaus Zeuge).
 
