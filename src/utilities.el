@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.103 2002-05-25 18:22:40 byers Exp $
+;;;;; $Id: utilities.el,v 44.104 2002-06-03 21:48:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.103 2002-05-25 18:22:40 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.104 2002-06-03 21:48:20 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -930,7 +930,9 @@ in lyskom-face-schemes."
         (unless (equal (lyskom-color-values (cdr (assq 'expected-background properties)))
                        (lyskom-color-values background))
           (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face)
-          (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))))))
+          (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face)
+          (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face)
+          (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))))))
 
 
 (defun lyskom-face-resource (face-name attr type)

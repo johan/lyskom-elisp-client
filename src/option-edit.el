@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.72 2002-05-21 22:05:43 byers Exp $
+;;;;; $Id: option-edit.el,v 44.73 2002-06-03 21:48:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.72 2002-05-21 22:05:43 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.73 2002-06-03 21:48:20 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -185,6 +185,8 @@
     [kom-highlight-first-line]
     [kom-highlight-dashed-lines]
     [kom-highlight-text-body]
+    [kom-async-highlight-dashed-lines]
+    [kom-async-highlight-text-body]
     "\n"
     [kom-dashed-lines]
     [kom-long-lines]
@@ -489,6 +491,8 @@ customize buffer but do not save them to the server."
     (kom-highlight-first-line (toggle (on off)))
     (kom-highlight-dashed-lines (toggle (on off)))
     (kom-highlight-text-body (toggle (on off)))
+    (kom-async-highlight-dashed-lines (toggle (on off)))
+    (kom-async-highlight-text-body (toggle (on off)))
     (kom-personal-messages-in-window (open-window))
     (kom-write-texts-in-window (open-window))
     (kom-list-membership-in-window (open-window))

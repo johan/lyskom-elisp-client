@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.246 2002-05-28 20:56:45 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.247 2002-06-03 21:48:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.246 2002-05-28 20:56:45 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.247 2002-06-03 21:48:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3566,6 +3566,12 @@ i servern. Annars sparas det i din .emacs.")
     (kom-highlight-text-body-doc . "\
   Om detta är påslaget så visas inläggstexter med ett annorlunda utseende
   än normal text.")
+    (kom-async-highlight-dashed-lines-doc . "\
+  Om detta är påslaget så visas raderna före och efter personliga, grupp-
+  och alarmmeddelanden med ett annorlunda utseende än normal text.")
+    (kom-async-highlight-text-body-doc . "\
+  Om detta är påslaget så visas personliga, grupp- och alarmmeddelanden 
+  med ett annorlunda utseende än normal text.")
     (kom-edit-hide-add-button-doc . "\
   Om detta är påslaget så kommer knappen [Addera...] att visas efter
   mottagare och tilläggsinformation när man skriver inlägg.")
@@ -3741,6 +3747,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-highlight-first-line-tag . "Annorlunda bakgrundsfärg på första raden:")
     (kom-highlight-dashed-lines-tag . "Annorlunda bakgrundsfärg före och efter inläggstexten:")
     (kom-highlight-text-body-tag . "Annorlunda bakgrundsfärg på inläggstexten:")
+    (kom-async-highlight-dashed-lines-tag . "Annorlunda bakgrundsfärg före och efter meddelanden:")
+    (kom-async-highlight-text-body-tag . "Annorlunda bakgrundsfärg på meddelanden:")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     )
 )
