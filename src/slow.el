@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: slow.el,v 44.2 1996-10-08 12:20:55 nisse Exp $
+;;;;; $Id: slow.el,v 44.3 1996-10-11 11:21:14 nisse Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -72,7 +72,8 @@ If the completion was not exact it returns nil."
 	 (completion-ignore-case t)
 	 (alternatives (mapcar (function (lambda (pair)
 					   (cons (cdr pair) (car pair))))
-			       (lyskom-get-strings lyskom-commands 'command)))
+			       (lyskom-get-strings
+				lyskom-commands 'lyskom-command)))
 	 (completes (and text (all-completions text alternatives)))
 	 (command nil))
     (cond
