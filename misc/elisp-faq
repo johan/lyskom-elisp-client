@@ -1,316 +1,314 @@
-Detta dokument kommer jag att konvertera till iso-8858-1
-teckenupps{ttningen n{r en emacs p} lysator till}ter mig att editera
-s}dana dokument.
+-*- swedish-iso -*-
+OSF Ofta ställda frågor för elispklienten.
 
-OSF Ofta st{llda fr}gor f|r elispklienten.
+Författare: Linus Tolke
+Inspirationskälla: Lyskom, Lyskom frågor (&) svar; Elispklienten.
+Detta möte heter från 31 juni 1992: Lyskom frågor (och) svar.
 
-F|rfattare: Linus Tolke
-Inspirationsk{lla: Lyskom, Lyskom fr}gor och svar; Elispklienten.
+Frågor sammanställning:
 
-Fr}gor sammanst{llning:
-
-Allm{nna fr}gor:
-a1: Vad {r LysKOM?
-a2: Vad {r elispklienten?
+Allmänna frågor:
+a1: Vad är LysKOM?
+a2: Vad är elispklienten?
 a3: Var finns den att hitta?
-a4: Vad finns det f|r typ av dokumentation?
+a4: Vad finns det för typ av dokumentation?
 
 Konfigurering:
-c1: Varf|r st}r det att vissa L{ser, V{ntar, ]terser?
-c2: Varf|r st}r det att vissa \gnar igenom inl{ggen, R{ttar tentor,
-    [ter pizza, Hade gl|mt vad som skrivits tidigare?
-c3: Hur {ndrar man sin kom-mercial?
-c4: Hur {ndrar man de andra meddelandena?
+c1: Varför står det att vissa Läser, Väntar, Återser?
+c2: Varför står det att vissa Ögnar igenom inläggen, Rättar tentor,
+    Äter pizza, Hade glömt vad som skrivits tidigare?
+c3: Hur ändrar man sin kom-mercial?
+c4: Hur ändrar man de andra meddelandena?
 
-d1: Kan jag f} saker att h{nda automatiskt n{r jag startar lyskom?
-d2: Kan jag f} saker att h{nda automatiskt n{r jag loggat in?
-d3: Hur kan jag s{tta vilka default-promptar jag skall f} n{r jag har
-    l{st ut allt. 
+d1: Kan jag få saker att hända automatiskt när jag startar lyskom?
+d2: Kan jag få saker att hända automatiskt när jag loggat in?
+d3: Hur kan jag sätta vilka default-promptar jag skall få när jag har
+    läst ut allt. 
 
 Vid editering:
-e1: Kan jag f} saker att h{nda automatiskt n{r jag b|rjar skriva en
+e1: Kan jag få saker att hända automatiskt när jag börjar skriva en
   : kommentar?
-e2: Hur g|r jag f|r att binda speciella tangenter f|r att skriva en
+e2: Hur gör jag för att binda speciella tangenter för att skriva en
     kommentar?
 
-f1: Hur g|r jag f|r att beh}lla lyskom-bufferten p} sk{rmen medan jag
-    skriver en kommentar, ett inl{gg eller ett brev?
+f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag
+    skriver en kommentar, ett inlägg eller ett brev?
 
-M|ten:
-g1: Hur g|r man f|r att {ndra typen p} ett m|te?
+Möten:
+g1: Hur gör man för att ändra typen på ett möte?
 
-Fr}gor om inl{gg:
-i1: Hur anger man F|r k{nnedomsmottagare?
+Frågor om inlägg:
+i1: Hur anger man För kännedomsmottagare?
 
 Konstigheter:
-k1: Varf|r tar det s} l}ng tid att logga in?
-k2: Varf|r tar det s} l}ng tid att g|ra endast?
-k3: Varf|r sorterar elisp-klienten om m|tena i samma ordning som n{r
-    jag g}r in i lyskom varje g}ng jag g|r endast?
-k4: Varf|r st{mmer inte antalet ol{sta inl{gg n{r jag g|r status
-    person som n{r jag g|r lista nyheter?
-k5: Varf|r {r antalet ol{sta i vissa m|ten negativt n{r man g|r
+k1: Varför tar det så lång tid att logga in?
+k2: Varför tar det så lång tid att göra endast?
+k3: Varför sorterar elisp-klienten om mötena i samma ordning som när
+    jag går in i lyskom varje gång jag gör endast?
+k4: Varför stämmer inte antalet olästa inlägg när jag gör status
+    person som när jag gör lista nyheter?
+k5: Varför är antalet olästa i vissa möten negativt när man gör
     status?
 
-Lappar p} d|rrar:
-l1: Varf|r f}r jag Du har en lapp p} d|rren, det finns ingen s}dan
-    text n{r jag loggar in?
+Lappar på dörrar:
+l1: Varför får jag Du har en lapp på dörren, det finns ingen sådan
+    text när jag loggar in?
 
 Markering:
-m1: Vad inneb{r markering?
-m2: Kan man markera inl{gg p} olika s{tt?
-m3: Hur g|r jag f|r att markera inl{gg p} ett annat s{tt?
-m4: Hur g|r jag f|r att }terse inl{gg markerade p} ett visst s{tt?
-m5: Vilken markering anv{nder sig elispklienten normalt av?
+m1: Vad innebär markering?
+m2: Kan man markera inlägg på olika sätt?
+m3: Hur gör jag för att markera inlägg på ett annat sätt?
+m4: Hur gör jag för att återse inlägg markerade på ett visst sätt?
+m5: Vilken markering använder sig elispklienten normalt av?
 
 Personer:
-p1: Varf|r finns det tv} statuskommandon: Status m|te och status person?
+p1: Varför finns det två statuskommandon: Status möte och status person?
 
 Sessionen:
-s1: Kan jag }terstarta sessionen efter det att jag g}tt ur lyskom?
+s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?
 
 Systemet:
 t1: Hur och till vem skickar jag buggrapporter?
 
 Maskinspecifika saker:
-u1: Varf|r kan jag inte k|ra elisplienten p} en dec-station.
+u1: Varför kan jag inte köra elisplienten på en dec-station.
 
-Vad h{nder med LysKOM i framtiden:
-v1: Protokoll B, vad {r det?
-v2: Vad kommer att ing} i protokoll B?
+Vad händer med LysKOM i framtiden:
+v1: Protokoll B, vad är det?
+v2: Vad kommer att ingå i protokoll B?
 
 Historia:
-|1: Varf|r skrevs elisp-klienten?
+ö1: Varför skrevs elisp-klienten?
 
 
-Fr}gor och svar:
+Frågor och svar:
 
-Allm{nna fr}gor:
-a1: Vad {r LysKOM?
+Allmänna frågor:
+a1: Vad är LysKOM?
 
-LysKOM {r ett konferenssystem som {r inspirerat av KOM, det
+LysKOM är ett konferenssystem som är inspirerat av KOM, det
 konferenssystem som skapades av QZ i Stockholm. Orsaken till att
-LysKOM skrevs var att det KOMsystem Lysators medlemmar hade tillg}ng
-till lades ner. QZ-KOM gick att k|ra p} DEC-10 och DEC-20-maskiner och
-den sista DEC-20-maskinen p} LiTH som studenterna hade tillg}ng till
-s}ldes och f|rsvann. KOM hade blivit vanebildande f|r en del och det
-bed|mdes att en ers{ttning var n|dv{ndig.
+LysKOM skrevs var att det KOMsystem Lysators medlemmar hade tillgång
+till lades ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och
+den sista DEC-20-maskinen på LiTH som studenterna hade tillgång till
+såldes och försvann. KOM hade blivit vanebildande för en del och det
+bedömdes att en ersättning var nödvändig.
 
-a2: Vad {r elispklienten?
+a2: Vad är elispklienten?
 
-Elispklienten {r den f|rsta fungerande klienten till lyskom, det {r
-dessutom den f|r tillf{llet mest kompletta. Den {r skriven helt i
-elisp och k|r under gnu-emacs (testad minst i versionerna 18.51,
-18.55, 18.57 och 18.58).
+Elispklienten är den första fungerande klienten till lyskom, det är
+dessutom den för tillfället mest kompletta. Den är skriven helt i
+elisp och kör under gnu-emacs (testad minst i versionerna 18.51,
+18.55, 18.57 och 18.58, epoch 4.0, lucid-emacs 19.1 och 19.2).
 
 a3: Var finns den att hitta?
 
-Elispklienten kan du h{mta med anonym ftp fr}n lysator:
+Elispklienten kan du hämta med anonym ftp från lysator:
 host: ftp.lysator.liu.se
 dir: /pub/lyskom/elisp-client/
-filnamn: lyskom-0.34.3.el.Z (vanliga klienten)
-filnamn: lyskom-0.34.3.elc.Z (byte-kompilerad version av klienten)
-filnamn: englist-lyskom-0.34.3.elc.Z
+filnamn: lyskom-0.34.6.el.Z (vanliga klienten)
+filnamn: lyskom-0.34.6.elc.Z (byte-kompilerad version av klienten)
+filnamn: englist-lyskom-0.34.6.elc.Z
 
-a4: Vad finns det f|r typ av dokumentation?
+a4: Vad finns det för typ av dokumentation?
 
-Dokumentation finns p} latexinfo format. Eftersom jag inte f}tt den
-igenom latex s} har jag inte lagt upp den f|r anonym ftp. D{remot har
-den g}tt igenom info-genereringsprogrammet och du kan allts} h{mta den
-antingen som info-fil: elisp-client-0.34.4.info eller som ren textfil
-elisp-client-0.34.3.txt fr}n samma dir som du h{mtar klienten.
+Dokumentation finns på latexinfo format. Eftersom jag inte fått den
+igenom latex så har jag inte lagt upp den för anonym ftp. Däremot har
+den gått igenom info-genereringsprogrammet och du kan alltså hämta den
+antingen som info-fil: elisp-client-0.34.6.info eller som ren textfil
+elisp-client-0.34.6.txt från samma dir som du hämtar klienten.
 
 
-Konfigurering: (Om du inte f|rst}r beskrivningarna av hur du skall
-g|ra olika saker s} skall du inte g|ra dem.)
+Konfigurering: (Om du inte förstår beskrivningarna av hur du skall
+göra olika saker så skall du inte göra dem.)
 
-c1: Varf|r st}r det att vissa L{ser, V{ntar, ]terser?
+c1: Varför står det att vissa Läser, Väntar, Återser?
 
-Specifikationen f|r LysKOM s{ger att klienten kan tala om f|r servern
-vad den tror att anv{ndaren g|r. Detta kan vara en godtycklig text.
+Specifikationen för LysKOM säger att klienten kan tala om för servern
+vad den tror att användaren gör. Detta kan vara en godtycklig text.
 
-Elispklienten har valt att tala om att anv{ndaren L{ser n{r hon l{ser,
-V{ntar n{r hon v{ntar och ]terser n{r hon }terser mfl.
+Elispklienten har valt att tala om att användaren Läser när hon läser,
+Väntar när hon väntar och Återser när hon återser mm.
 
-Elispklienten har dessutom valt att hela tiden skriva ut p}
-message-raden vad personer i samma m|te just nu sysslar med. (dvs n{r
+Elispklienten har dessutom valt att hela tiden skriva ut på
+message-raden vad personer i samma möte just nu sysslar med. (dvs när
 deras klienter skickar meddelanden.)
 
-c2: Varf|r st}r det att vissa \gnar igenom inl{ggen, R{ttar tentor,
-    [ter pizza, Hade gl|mt vad som skrivits tidigare?
+c2: Varför står det att vissa Ögnar igenom inläggen, Rättar tentor,
+    Äter pizza, Hade glömt vad som skrivits tidigare?
 
-Eftersom det st}r klienten fritt att s{nda in vilket meddelande som
-helst har vi gjort s} att meddelandet som talar om vad man g|r n{r man
-l{st ut alla m|ten {r v{ldigt l{tt att {ndra. Det ligger i variabeln
-kom-mercial och det {r en str{ng.
+Eftersom det står klienten fritt att sända in vilket meddelande som
+helst har vi gjort så att meddelandet som talar om vad man gör när man
+läst ut alla möten är väldigt lätt att ändra. Det ligger i variabeln
+kom-mercial och det är en sträng.
 
-c3: Hur {ndrar man sin kom-mercial?
+c3: Hur ändrar man sin kom-mercial?
 
-M-x set-variable <RET> kom-mercial <RET> "R{ttar tentor." <RET>
+M-x set-variable <RET> kom-mercial <RET> "Rättar tentor." <RET>
 
-c4: Hur {ndrar man de andra meddelandena?
+c4: Hur ändrar man de andra meddelandena?
 
-Det finns en assoc-lista i variabeln kom-tell-phrases som best}r av
-symboler och texter som klienten skickar till servern n{r kommandona
-med samma namn som symbolen utf|rs. Det {r bara att {ndra denna.
+Det finns en assoc-lista i variabeln kom-tell-phrases som består av
+symboler och texter som klienten skickar till servern när kommandona
+med samma namn som symbolen utförs. Det är bara att ändra denna.
 
 Varning: Om du tar bort saker ur denna lista kan det bli problem om
-inte klienten hittar symbolen den s|ker efter.
+inte klienten hittar symbolen den söker efter.
 
-d1: Kan jag f} saker att h{nda automatiskt n{r jag startar lyskom?
+d1: Kan jag få saker att hända automatiskt när jag startar lyskom?
 
 Ja, lyskomklienten skapar en emacsmode med de flesta vanliga
-defaulten. Bl.a. k|rs lyskom-mode-hook n{r man startar lyskom.
+defaulten. Bl.a. körs lyskom-mode-hook när man startar lyskom.
 
-d2: Kan jag f} saker att h{nda automatiskt n{r jag loggat in?
+d2: Kan jag få saker att hända automatiskt när jag loggat in?
 
-Ja, l{s dokumentationen f|r kom-do-when-starting.
+Ja, läs dokumentationen för kom-do-when-starting.
 
-d3: Hur kan jag s{tta vilka default-promptar jag skall f} n{r jag har
-    l{st ut allt.
+d3: Hur kan jag sätta vilka default-promptar jag skall få när jag har
+    läst ut allt.
 
-Default {r att f|rst f} prompten ]terse alla markerade - och sedan 
+Default är att först få prompten Återse alla markerade - och sedan 
 Se tiden.
-L{s dokumentationen f|r kom-do-when-done.
+Läs dokumentationen för kom-do-when-done.
 
 
 Vid editering:
-e1: Kan jag f} saker att h{nda automatiskt n{r jag b|rjar skriva en
+e1: Kan jag få saker att hända automatiskt när jag börjar skriva en
     kommentar?
 
-Ja, editeringsmoden {r en vanlig emacs-mode s} tillvida att den k|r
-lyskom-edit-mode-hook n{r man startar den.
+Ja, editeringsmoden är en vanlig emacs-mode så tillvida att den kör
+lyskom-edit-mode-hook när man startar den.
 
-e2: Hur g|r jag f|r att binda speciella tangenter f|r att skriva en
+e2: Hur gör jag för att binda speciella tangenter för att skriva en
     kommentar?
 
-Eftersom lyskom-edit-mode g|r vissa speciella tangentbortsbindningar
-och har en hel del buffertlokala variabler kan man inte v{lja en helt
+Eftersom lyskom-edit-mode gör vissa speciella tangentbortsbindningar
+och har en hel del buffertlokala variabler kan man inte välja en helt
 ny mode i lyskom-edit-mode-hook (i princip alla moder rensar ju alla
-lokala variabler). Vill man att lyskom-edit-mode skall f} andra
-grundinst{llningar som byggs p} skall man s{tta
-lyskom-edit-mode-mode-hook som k|rs innan de speciella bindningarna
-g|rs.
+lokala variabler). Vill man att lyskom-edit-mode skall få andra
+grundinställningar som byggs på skall man sätta
+lyskom-edit-mode-mode-hook som körs innan de speciella bindningarna
+görs.
 
 
-f1: Hur g|r jag f|r att beh}lla lyskom-bufferten p} sk{rmen medan jag
-    skriver en kommentar, ett inl{gg eller ett brev?
+f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag
+    skriver en kommentar, ett inlägg eller ett brev?
 
-Du talar om f|r elisp-klienten att du vill att den skall anv{nda det
-andra f|nstret/skapa ett nytt f|nster f|r att skriva i genom att s{tta
+Du talar om för elisp-klienten att du vill att den skall använda det
+andra fönstret/skapa ett nytt fönster för att skriva i genom att sätta
 variabeln kom-write-texts-in-window till other.
 
 (setq kom-write-texts-in-window 'other) i din .emacs till exempel.
 
 
-M|ten:
-g1: Hur g|r man f|r att {ndra typen p} ett m|te?
+Möten:
+g1: Hur gör man för att ändra typen på ett möte?
 
-Det g|r du inte med elisp-klienten.
+Det gör du inte med elisp-klienten.
 
 
-Fr}gor om inl{gg:
-i1: Hur anger man F|r k{nnedomsmottagare?
+Frågor om inlägg:
+i1: Hur anger man För kännedomsmottagare?
 
-Det finns inte n}gon s}dan m|jlighet. Anv{nd Mottagare eller Extra
+Det finns inte någon sådan möjlighet. Använd Mottagare eller Extra
 kopiemottagare:
 
 Konstigheter:
-k1: Varf|r tar det s} l}ng tid att logga in?
+k1: Varför tar det så lång tid att logga in?
 
-Lokalt p} din maskin sparas ingen som helst information om vilka
-texter du l{st eller vilka m|ten du {r medlem i. Allt detta h{mtas
-nytt varje g}ng du loggar in. Dessutom h{mtas en lista p} alla texter
-du har markerat (f|r att du skall kunna f} fram texten Markerat av
-dig. eller Markerat av dig och 5 andra. n{r du l{ser).
+Lokalt på din maskin sparas ingen som helst information om vilka
+texter du läst eller vilka möten du är medlem i. Allt detta hämtas
+nytt varje gång du loggar in. Dessutom hämtas en lista på alla texter
+du har markerat (för att du skall kunna få fram texten Markerat av
+dig. eller Markerat av dig och 5 andra. när du läser).
 
-Det som tar l{ngst tid {r antabligen vilka m|ten du {r medlem i och
-listan |ver ol{sta inl{gg i dessa m|tena.
+Det som tar längst tid är antabligen vilka möten du är medlem i och
+listan över olästa inlägg i dessa mötena.
 
-k2: Varf|r tar det s} l}ng tid att g|ra endast?
-k3: Varf|r sorterar elisp-klienten om m|tena i samma ordning som n{r
-    jag g}r in i lyskom varje g}ng jag g|r endast?
+k2: Varför tar det så lång tid att göra endast?
+k3: Varför sorterar elisp-klienten om mötena i samma ordning som när
+    jag går in i lyskom varje gång jag gör endast?
 
-Endast {r f|r tillf{llet lite korkat implementerat. Det finns n{mligen
-ett anrop till servern som g|r just endast. Detta anv{nder sig
-klienten av och sedan g|r den det som {r l{ttast: H{mtar om all din
-information fr}n b|rjan igen (som n{r du loggade in).
+Endast är för tillfället lite korkat implementerat. Det finns nämligen
+ett anrop till servern som gör just endast. Detta använder sig
+klienten av och sedan gör den det som är lättast: Hämtar om all din
+information från början igen (som när du loggade in).
 
-k4: Varf|r st{mmer inte antalet ol{sta inl{gg n{r jag g|r status
-    person som n{r jag g|r lista nyheter?
+k4: Varför stämmer inte antalet olästa inlägg när jag gör status
+    person som när jag gör lista nyheter?
 
-Antalet ol{sta du f}r fram med lista nyheter {r det antal som klienten
-k{nner till. (Alla dessa ligger som nummer i listor.)
+Antalet olästa du får fram med lista nyheter är det antal som klienten
+känner till. (Alla dessa ligger som nummer i listor.)
 
-Antalet ol{sta n{r du g|r status person ber{knas ur en ganska simpel
-formel: Det sista skrivna inl{gget i m|tet - Det sista du l{ste i
-m|tet. Har du g}tt med i ett m|te efter det att inl{gg plockats bort
-d{rifr}n och sedan inte l{st n}got d{r s} har det sista du l{ste i
-m|tet mycket l{gre nummer {n det sista skrivna inl{gget i m|tet.
+Antalet olästa när du gör status person beräknas ur en ganska simpel
+formel: Det sista skrivna inlägget i mötet - Det sista du läste i
+mötet. Har du gått med i ett möte efter det att inlägg plockats bort
+därifrån och sedan inte läst något där så har det sista du läste i
+mötet mycket lägre nummer än det sista skrivna inlägget i mötet.
 
-k5: Varf|r {r antalet ol{sta i vissa m|ten negativt n{r man g|r
+k5: Varför är antalet olästa i vissa möten negativt när man gör
     status?
 
-Antalet ol{sta n{r du g|r status person ber{knas ur en ganska simpel
-formel: Det sista skrivna inl{gget i m|tet - Det sista du l{ste i
-m|tet. Har du g}tt med i ett m|te efter det att inl{gg plockats bort
-d{rifr}n och sedan inte l{st n}got d{r s} har det sista du l{ste i
-m|tet mycket l{gre nummer {n det sista skrivna inl{gget i m|tet.
+Antalet olästa när du gör status person beräknas ur en ganska simpel
+formel: Det sista skrivna inlägget i mötet - Det sista du läste i
+mötet. Har du gått med i ett möte efter det att inlägg plockats bort
+därifrån och sedan inte läst något där så har det sista du läste i
+mötet mycket lägre nummer än det sista skrivna inlägget i mötet.
 
-Informationen om vilket som {r det sista skrivna inl{gget i ett visst
-m|te ligger i klienten sparad hos m|tet och uppdateras f|r varje
-inl{gg som skrivs. Informationen om vilket det sista inl{gg du l{ste
-ligger i klienten sparad hos personen och uppdateras bara om du {ndrar
+Informationen om vilket som är det sista skrivna inlägget i ett visst
+möte ligger i klienten sparad hos mötet och uppdateras för varje
+inlägg som skrivs. Informationen om vilket det sista inlägg du läste
+ligger i klienten sparad hos personen och uppdateras bara om du ändrar
 namn.
 
 
-Lappar p} d|rrar:
-l1: Varf|r f}r jag Du har en lapp p} d|rren, det finns ingen s}dan
-    text n{r jag loggar in?
+Lappar på dörrar:
+l1: Varför får jag Du har en lapp på dörren, det finns ingen sådan
+    text när jag loggar in?
 
-Du har tagit bort lappen p} fel s{tt. Du skall anv{nda kommandot 
-"Ta bort lapp p} d|rren" f|r att ta bort en lapp. Det du m}ste g|ra
-f|r att fixa detta {r att anv{nda kommandot "Ta bort lapp p} d|rren"
+Du har tagit bort lappen på fel sätt. Du skall använda kommandot 
+"Ta bort lapp på dörren" för att ta bort en lapp. Det du måste göra
+för att fixa detta är att använda kommandot "Ta bort lapp på dörren"
 och ta bort den obefintliga lappen.
 
 
 Markering:
-m1: Vad inneb{r markering?
+m1: Vad innebär markering?
 
-Markering {r ett s{tt f|r dig att spara inl{gget. Markerade inl{gg
+Markering är ett sätt för dig att spara inlägget. Markerade inlägg
 rensas inte bort av systemet.
 
-m2: Kan man markera inl{gg p} olika s{tt?
+m2: Kan man markera inlägg på olika sätt?
 
 Ja.
 
-m3: Hur g|r jag f|r att markera inl{gg p} ett annat s{tt?
+m3: Hur gör jag för att markera inlägg på ett annat sätt?
 
-S{tt variabeln kom-default-mark till nil s} f}r du en fr}ga varje
-g}ng du markerar ett inl{gg. Alternativen {r heltalen 1-255.
+Sätt variabeln kom-default-mark till nil så får du en fråga varje
+gång du markerar ett inlägg. Alternativen är heltalen 1-255.
 
-m4: Hur g|r jag f|r att }terse inl{gg markerade p} ett visst s{tt?
+m4: Hur gör jag för att återse inlägg markerade på ett visst sätt?
 
-Anv{nd kommandot ]terse markerade (}m) ist{llet f|r ]terse alla
-markerade (}am).
+Använd kommandot Återse markerade (åm) istället för Återse alla
+markerade (åam).
 
-m5: Vilken markering anv{nder sig elispklienten normalt av?
+m5: Vilken markering använder sig elispklienten normalt av?
 
 100.
 
 
 
 Personer:
-p1: Varf|r finns det tv} statuskommandon: Status m|te och status person?
+p1: Varför finns det två statuskommandon: Status möte och status person?
 
 Om du tittar noggrannare ser du att de ger helt olika information.
-Status m|te f|r en person talar om n{r personen skapades, n{r n}gon
+Status möte för en person talar om när personen skapades, när någon
 sist skickade ett brev till denne medan Status person talar om hur
-mycket inl{gg personen skrivit, hur l{nge han har varit inne i LysKOM.
+mycket inlägg personen skrivit, hur länge han har varit inne i LysKOM.
 
 
 Sessionen:
-s1: Kan jag }terstarta sessionen efter det att jag g}tt ur lyskom?
+s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?
 
 Nej.
 
@@ -318,31 +316,31 @@ Nej.
 Systemet:
 t1: Hur och till vem skickar jag buggrapporter?
 
-Buggrapporter skickas till bug-lyskom@lysator.liu.se. Se till att f}
-med all vital information, enklast genom att k|ra funktionen
+Buggrapporter skickas till bug-lyskom@lysator.liu.se. Se till att få
+med all vital information, enklast genom att köra funktionen
 kom-compile-bug-report och skicka den bufferten.
 
-Ifall buggen {r reproducerbar och du har tid s} g|r dessutom f|ljande:
-- G} till l{get precis innan du gav kommandot som orsakade buggen.
-- S{tt variabeln: lyskom-debug-communications-to-buffer till t.
-- S{tt variabeln: debug-on-error till t.
+Ifall buggen är reproducerbar och du har tid så gör dessutom följande:
+- Gå till läget precis innan du gav kommandot som orsakade buggen.
+- Sätt variabeln: lyskom-debug-communications-to-buffer till t.
+- Sätt variabeln: debug-on-error till t.
 - Provocera fram buggen.
-- K|r kom-compile-bug-report. Det skall g} bra att g|ra i *Backtrace*
-  bufferten ifall du fick en s}dan.
-- Skicka in denna nya bufferten ist{llet. Den kan inneh}lla lite mer
+- Kör kom-compile-bug-report. Det skall gå bra att göra i *Backtrace*
+  bufferten ifall du fick en sådan.
+- Skicka in denna nya bufferten istället. Den kan innehålla lite mer
   information.
 
 
 Maskinspecifika saker:
-u1: Varf|r kan jag inte k|ra elisplienten p} en dec-station.
+u1: Varför kan jag inte köra elisplienten på en dec-station.
 
-string-to-int fungerar inte p} samma s{tt. (Antagligen beroende p} att
-atoi inte fungerar p} samma s{tt).
+string-to-int fungerar inte på samma sätt. (Antagligen beroende på att
+atoi inte fungerar på samma sätt).
 
-H{r {r en patch som kan l{ggas i .emacs eller liknande:
+Här är en patch som kan läggas i .emacs eller liknande:
 
 ;;;; fix to make string-to-int behave the same on DECstation as on sun
-(if (= 0 (string-to-int "\n17"))
+(if (= 0 (string-to-int "Ön17"))
     (progn
       (fset 'string-to-int-orig (symbol-function 'string-to-int))
       (defun string-to-int (string)
@@ -351,52 +349,52 @@ Skip leading spaces and newlines."
         (if (length string)
             (let ((i 0)
                   (c (aref string 0)))
-              (while (or (= c ?\n) (= c ?\ ))
+              (while (or (= c ?Ön) (= c ?Ö ))
                 (setq i (1+ i))                                                                 (setq c (aref string i)))
               (string-to-int-orig (substring string i)))
           0))))
 
 
-Vad h{nder med LysKOM i framtiden:
-v1: Protokoll B, vad {r det?
-LysKOM jobbar som sagt med server-klient modell. Protokollet {r enkelt
-men inneh}ller en del speciella saker typ asynkrona anrop fr}n b}da
-h}llen... Den ursprungliga specen gjordes snabbt eftersom vi snabbt
-ville f} ett fungerande system. Tyv{rr fick det en del brister och vi
-best{mde oss f|r att g|ra om allt fr}n scratch. Detta omgjorda
-protokoll {r protokoll B. Tyv{rr s} {r det ursprungliga protokollet s}
-pass bra att det g}r l}ngsamt med utvecklingen.
+Vad händer med LysKOM i framtiden:
+v1: Protokoll B, vad är det?
+LysKOM jobbar som sagt med server-klient modell. Protokollet är enkelt
+men innehåller en del speciella saker typ asynkrona anrop från båda
+hållen... Den ursprungliga specen gjordes snabbt eftersom vi snabbt
+ville få ett fungerande system. Tyvärr fick det en del brister och vi
+bestämde oss för att göra om allt från scratch. Detta omgjorda
+protokoll är protokoll B. Tyvärr så är det ursprungliga protokollet så
+pass bra att det går långsamt med utvecklingen.
 
-v2: Vad kommer att ing} i protokoll B?
-* Textdelar (Lars Aronsson Lysator inl{gg 58964):
-I Protokoll B mellan klient och server kommer varje INL[GG att best}
-av det vanliga HUVUDET och av en INL[GGSKROPP. Den senare kommer att
-best} av en f|ljd av KROPPSDELAR. Varje kroppsdel har en datatyp och
+v2: Vad kommer att ingå i protokoll B?
+* Textdelar (Lars Aronsson Lysator inlägg 58964):
+I Protokoll B mellan klient och server kommer varje INLÄGG att bestå
+av det vanliga HUVUDET och av en INLÄGGSKROPP. Den senare kommer att
+bestå av en följd av KROPPSDELAR. Varje kroppsdel har en datatyp och
 en dataarea. Typerna kan vara t.ex. ISO 8859-1 text, Sun SPARC ljudfil
 eller en grafisk bild. I Protokoll B blir det i de flesta fall fel att
-tala om "text", "textstatus", "textnummer" etc. Ordet "text" b|r d}
-ers{ttas med ordet "inl{gg".
+tala om "text", "textstatus", "textnummer" etc. Ordet "text" bör då
+ersättas med ordet "inlägg".
 
 Historia:
-|1: Varf|r skrevs elisp-klienten?
+ö1: Varför skrevs elisp-klienten?
 
-Ur: En sl| implementat|rs bek{nnelser av ceder (Per Cederqvist)
+Ur: En slö implementatörs bekännelser av ceder (Per Cederqvist)
 
-En g}ng i tidernas begynnelse (f|r lite drygt ett }r sen) (Detta
-skrevs ursprungligen i november 1991) beh|vde jag testa
-LysKOM-servern. Jag hade k|rt r}tt med telnet direkt mot porten, men
-det blev jobbigt efter ett tag. Jag best{mde mig f|r att skriva ett
-litet elispprogram f|r att kunna testa servern.
+En gång i tidernas begynnelse (för lite drygt ett år sen) (Detta
+skrevs ursprungligen i november 1991) behövde jag testa
+LysKOM-servern. Jag hade kört rått med telnet direkt mot porten, men
+det blev jobbigt efter ett tag. Jag bestämde mig för att skriva ett
+litet elispprogram för att kunna testa servern.
 
-Mitt m}l var fr}n b|rjan att testa servern (och att programmera n}got
-annat {n servern - det hade blivit m}nga rader C-kod under v}ren och
-sommaren, och n{stan alla h|rde till servern). Jag skrev elispkoden
-med m}let att f} det att fungera hj{lpligt s} fort som m|jligt, inte
-att g|ra den korrekt och komplett.
+Mitt mål var från början att testa servern (och att programmera något
+annat än servern - det hade blivit många rader C-kod under våren och
+sommaren, och nästan alla hörde till servern). Jag skrev elispkoden
+med målet att få det att fungera hjälpligt så fort som möjligt, inte
+att göra den korrekt och komplett.
 
 ---
-N{r klienten v{l fungerade var det alldeles f|r kul att skriva nya
-funktioner till den f|r att man skulle kunna l}ta bli s} sedan dess
-har det bara blivit mer och mer och f|r tillf{llet {r det den mest
-kompletta LysKOMklient som finns. Nackdelen: l}ngsamhet kan l{tt
-}tg{rdas genom att k|ra p} en snabbare maskin. 
+När klienten väl fungerade var det alldeles för kul att skriva nya
+funktioner till den för att man skulle kunna låta bli så sedan dess
+har det bara blivit mer och mer och för tillfället är det den mest
+kompletta LysKOMklient som finns. Nackdelen: långsamhet kan lätt
+åtgärdas genom att köra på en snabbare maskin. 
