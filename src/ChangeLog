@@ -1,3 +1,8 @@
+Sat Dec 18 14:29:42 1993  Linus Tolke Y  (linus@bodil)
+
+	* lyskom-rest.el, review.el (kom-view, kom-review-*): They are now
+	  sending messages to the server that we are reviewing.
+
 Fri Dec 17 15:22:03 1993  Linus Tolke Y  (linus@varg)
 
 	* commands2.el (kom-send-message): Now completing among persons

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 36.1 1993-04-26 19:37:59 linus Exp $
+;;;;; $Id: review.el,v 36.2 1993-12-19 18:01:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 36.1 1993-04-26 19:37:59 linus Exp $\n"))
+	      "$Id: review.el,v 36.2 1993-12-19 18:01:38 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -58,6 +58,7 @@ No argument is equivalent to COUNT 1.
 The defaults for this command is the conference that you are in."
   (interactive "p")
   (lyskom-start-of-command 'kom-review-by-to)
+  (lyskom-tell-internat 'kom-tell-review)
   (if (and (listp count)
 	   (integerp (car count))
 	   (null (cdr count)))
@@ -404,6 +405,7 @@ instead. In this case the text TEXT-NO is first shown."
 		 (t
 		  (signal 'lyskom-internat-error '(kom-review-tree))))))
   (lyskom-start-of-command 'kom-review-tree)
+  (lyskom-tell-internat 'kom-tell-review)
   (if text-no
       (progn
 	(initiate-get-text-stat 'main 'lyskom-follow-comments text-no
@@ -419,6 +421,7 @@ instead. In this case the text TEXT-NO is first shown."
   "Finds the root text of the tree containing the text in lyskom-current-text."
   (interactive)
   (lyskom-start-of-command 'kom-find-root)
+  (lyskom-tell-internat 'kom-tell-review)
   (cond
    (lyskom-current-text 
     (lyskom-collect 'review)
@@ -442,6 +445,7 @@ and then runs lyskom-end-of-command."
 reviews the whole tree in deep-first order."
   (interactive)
   (lyskom-start-of-command 'kom-find-root-review)
+  (lyskom-tell-internat 'kom-tell-review)
   (cond
    (lyskom-current-text
     (lyskom-collect 'review)
@@ -517,6 +521,7 @@ the lyskom-reading-list to the beginning. i.e by moving all other types to the
 end."
   (interactive)
   (lyskom-start-of-command 'kom-review-next)
+  (lyskom-tell-internat 'kom-tell-review)
   (let ((len (read-list-length lyskom-reading-list))
 	(finished nil))
     (while (and (not finished)
@@ -602,7 +607,7 @@ If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
   (interactive)
   (lyskom-start-of-command 'kom-review-comments)
-  (lyskom-tell-internat 'kom-tell-read)
+  (lyskom-tell-internat 'kom-tell-review)
   (initiate-get-text-stat 'read 'lyskom-review-comments
 			  lyskom-current-text))
 
@@ -652,6 +657,7 @@ text is shown and a REVIEW list is built to shown the other ones."
    (list 
     (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
   (lyskom-start-of-command 'kom-review-last-normally-read)
+  (lyskom-tell-internat 'kom-tell-review)
   (let* ((text-nos (reverse (nfirst no lyskom-normally-read-texts))))
     (if text-nos
 	(progn
