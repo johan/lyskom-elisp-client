@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.110 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.111 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.110 2004-10-23 14:01:37 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.111 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -190,6 +190,7 @@
     [kom-review-priority]
     [kom-server-priority]
     [kom-server-priority-breaks]
+    [kom-session-nickname]
     "\n"
     [kom-read-depth-first]
     [kom-reading-puts-comments-in-pointers-last]
@@ -563,7 +564,6 @@ All key bindings:
 (defun lyskom-custom-string (s)
   (lyskom-get-string s 'lyskom-custom-strings))
 
-
 (defvar lyskom-custom-variables-missing '(kom-permanent-filter-list
                                           kom-quit-hook 
                                           lyskom-last-known-conf-no
@@ -671,6 +671,11 @@ All key bindings:
                                          (const (after-conf-letters-server-break after-conf-letters))
                                          (const (when-done-server-break when-done))
                                          (const (no-server-break nil)))))
+    (kom-session-nickname (choice ((const (automatic-session-name nil))
+				   (string nil 
+					   :tag given-session-name
+					   :help-echo select-buffer))))			 
+
     (kom-login-hook (repeat (command nil :tag command)
                             :indent 4))
     (kom-do-when-done (repeat (choice ((command nil :tag command)

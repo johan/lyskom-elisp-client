@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.340 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.341 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.340 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.341 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -769,6 +769,9 @@ The message you were sending to %#1M was:
     (only-error . "Something went wrong. Sorry.\n")
     
     (lp--only-last . "Number of text to read: ")
+
+    (session-list-unreads-in-confs . 
+			      "You have %#2?z%[%#2d unread letter%#2?d%[%]%[s%], in total %]%[%]%#3d unread text%#3?d%[%]%[s%] in %#4d conference%#4?d%[%]%[s%] in %#1s.\n")
 
     (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")
     (you-have-unreads-special . "You have %#1d uncommented text%#1?d%[%]%[s%] in %#2M\n")
@@ -2134,6 +2137,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-list-conferences     . "List conferences") 
     (kom-list-persons         . "List users")
     (kom-list-news            . "List news")
+    (kom-list-sessions        . "List sessions")
     (kom-list-re              . "List (using) regexps")
     (kom-membership           . "List memberships")
     ;; (kom-list-marks	      . "List marks")
@@ -2676,6 +2680,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-mode-map (kbd "R")  'kom-recover)
   (define-key lyskom-en-mode-map (kbd "T")  'kom-display-time)
 
+  (define-key lyskom-en-list-prefix (kbd "k") 'kom-list-sessions)
   (define-key lyskom-en-list-prefix (kbd "m") 'kom-list-marks)
   (define-key lyskom-en-list-prefix (kbd "c") 'kom-list-conferences)
   (define-key lyskom-en-list-prefix (kbd "n") 'kom-list-news)
@@ -3080,6 +3085,9 @@ Select whether to execute command or keyboard macro.")
     (messages-in-lyskom-buffer . "In the LysKOM buffer")
     (discard-messages .          "Nowhere - discard them")
     (in-named-buffer .           "In a named buffer:")
+
+    (automatic-session-name . "Automatic")
+    (given-session-name . "Use specified:")
 
     (everybody-rcpt . "Everybody                                ")
     (group-rcpt .     "The recipient of the last group message  ")
@@ -3989,6 +3997,10 @@ up menus.")
   This text is shown in the list of users when you have finished reading
   everything.")
 
+    (kom-session-nickname-doc . "\
+  How the session name is determined. This is the name displayed in the 
+  mode line and by List sessions.")
+
     (kom-server-priority-doc . "\
   Priority of this LysKOM session. The client can prompt you to go to
   a session with unread texts when a text arrives in a session with a
@@ -4426,6 +4438,7 @@ up menus.")
     (kom-show-personal-message-date-tag . "Show date and time of messages:")
     (kom-w3-simplify-body-tag . "Display HTML without document colors:")
     (kom-mercial-tag . "Text to display when all is read:")
+    (kom-session-nickname-tag . "How session name is determined:")
     (kom-server-priority-tag . "Session priority:")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM:")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names:")

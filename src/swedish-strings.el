@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.383 2004-10-31 15:37:26 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.384 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.383 2004-10-31 15:37:26 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.384 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -773,6 +773,9 @@ Meddelandet du försökte sända till %#1M var:
     (only-error . "Något gick galet. Ledsen.\n")
 
     (lp--only-last . "Antal texter att läsa: ")
+
+    (session-list-unreads-in-confs . 
+			      "Du har %#2?z%[%#2d olästa brev och totalt %]%[%]%#3d oläst%#3?d%[%]%[a%] i %#4d möte%#4?d%[%]%[n%] i %#1s.\n")
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")
     (you-have-unreads-special . "Du har %#1d okommentera%#1?d%[t%]%[de%] inlägg i %#2M\n")
@@ -2161,6 +2164,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-list-conferences     . "Lista möten") 
     (kom-list-persons	      . "Lista personer")
     (kom-list-news            . "Lista nyheter")
+    (kom-list-sessions        . "Lista sessioner")
     (kom-list-re              . "Lista (med) regexpar")
     (kom-membership	      . "Lista medlemskap")
     (kom-postpone	      . "Uppskjuta läsning")
@@ -2748,6 +2752,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-next-prefix (kbd "l") 'kom-next-kom)
   (define-key lyskom-sv-next-prefix (kbd "o") 'kom-next-unread-kom)
 
+  (define-key lyskom-sv-list-prefix (kbd "k") 'kom-list-sessions)
   (define-key lyskom-sv-list-prefix (kbd "M") 'kom-list-marks)
   (define-key lyskom-sv-list-prefix (kbd "m") 'kom-list-conferences)
   (define-key lyskom-sv-list-prefix (kbd "n") 'kom-list-news)
@@ -3184,6 +3189,9 @@ Nuvarande rättigheter för %#1P (%#1p):
     (messages-in-lyskom-buffer . "I LysKOM-bufferten  ")
     (discard-messages .          "Ingenstans          ")
     (in-named-buffer .           "I namngiven buffert:")
+
+    (automatic-session-name . "Automatiskt")
+    (given-session-name . "Använd angivet:")
 
     (everybody-rcpt .       "Alla                              ")
     (group-rcpt .           "Senaste gruppmeddelandes mottagare")
@@ -4099,6 +4107,10 @@ ta fram menyer.")
     (kom-mercial-doc . "\
   Denna text visas i vilkalistan då du har läst färdigt alla möten.")
 
+    (kom-session-nickname-doc . "\
+  Hur sessionsnamn bestäms. Detta är det namn som visas i mode-raden och
+  av Lista sessioner.")
+
     (kom-server-priority-doc . "\
   Prioritet för sessionen. Sessioner med hög prioritet kan avbryta andra
   sessioner, beroende på inställningen av YYY.")
@@ -4538,7 +4550,8 @@ ta fram menyer.")
     (kom-show-personal-message-date-tag . "Visa datum för alla meddelanden:")
     (kom-w3-simplify-body-tag . "Visa HTML utan standardfärger:")
     (kom-mercial-tag . "Text när allt är utläst:")
-    (kom-server-priority-tag . "Sessionsprioritet:")
+    (kom-session-nickname-tag . "Hur bestäms sessionsnamn:")
+    (kom-server-priority-tag . "Sessionsprioritet:")   
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa:")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn:")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång:")

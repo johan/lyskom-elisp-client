@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.108 2004-11-03 12:48:04 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.109 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.108 2004-11-03 12:48:04 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.109 2004-11-11 21:17:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -632,9 +632,13 @@ shown to other users."
             (unless lyskom-dont-read-user-area
               (setq ignored-user-area-vars (lyskom-read-options)))
 
-	    (if (not kom-remember-password)
+	    (unless kom-remember-password
 		(setq lyskom-default-password nil))
 
+	    ;Update mode-line string if needed (as early as possible).
+
+	    (lyskom-mode-name-from-host) 
+	    
             (when (or session-priority kom-default-session-priority)
               (setq lyskom-session-priority
                     (or session-priority kom-default-session-priority)))
@@ -901,8 +905,10 @@ Functions and variables beginning with lyskom- are not intended for the user
 to see, set of call."
   (interactive)
   (lyskom-clear-vars)
+  (lyskom-mode-name-from-host)
   (setq mode-line-buffer-identification
-	(list (concat (lyskom-mode-name-from-host) ": ") 'mode-line-conf-name))
+	; Must start with a string to be handled properly, it seems.
+	(list "" 'mode-line-server-name  ": " 'mode-line-conf-name))
 
   (setq major-mode 'lyskom-mode)
   (setq mode-name "LysKOM")

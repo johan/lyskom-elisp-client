@@ -1,5 +1,36 @@
 2004-11-11  Pontus Freyhult  <pont@soua.net>
 
+	Fix bug 279, implement list sessions (with extras):
+	* vars.el.in (kom-session-nickname): New variable.
+	(mode-line-server-name): New variable.
+
+	* english-strings.el, swedish-strings.el (local):
+	Added session-list-unreads-in-conf.
+	(global): Added kom-list-sessions.
+	(lyskom-{sv,en}-list-prefix): Bound kom-list-sessions to l k. 
+	(lyskom-custom-strings): Added automatic-session-name and 
+	given-session-name. Added kom-session-nickname-doc and 
+	kom-session-nickname-tag.
+
+	* startup.el (kom-start-anew): Cosmetical if not -> unless.
+	Call lyskom-mode-name-from-host after variables are read from
+	server.
+
+	* startup.el (lyskom-mode): Use mode-line-server-name in
+	mode-line-buffer-identification.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-session-nickname.
+	(lyskom-custom-variables): Dito.	
+
+	* lyskom-rest.el (lyskom-set-mode-line): Call 
+	lyskom-mode-name-from-host.
+	(lyskom-session-nickname): New function.
+	(lyskom-mode-name-from-host): Use lyskom-session-nickname, update
+	mode-line-server-name.
+
+	* commands2.el (kom-list-sessions): New command.
+
 	Handle UTF-8 postings created by Rasmus Stens Weblatte:
 	* mime.el (lyskom-mime-decode-content-type): Allow whitespace
 	after ";" in content-types.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.210 2004-07-19 20:11:57 byers Exp $
+;;;;; $Id: commands2.el,v 44.211 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.210 2004-07-19 20:11:57 byers Exp $\n"))
+              "$Id: commands2.el,v 44.211 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -747,6 +747,57 @@ send. If DONTSHOW is non-nil, don't display the sent message."
           )))))
 
 
+
+(def-kom-command kom-list-sessions ()
+  "List current LysKOM sessions and unread messages for each sessions."
+  (interactive)
+  (let ((total-letters 0)
+	(total-texts 0)
+	(total-confs 0)
+	(buflist (buffer-list))
+	(session-list nil))
+    (lyskom-save-excursion
+     (lyskom-traverse buf buflist
+       (when (lyskom-buffer-p buf)
+	 (set-buffer buf)
+	 (let ((letters 0)
+	       (texts 0)
+	       (confs 0))
+	   (lyskom-traverse entry (lyskom-list-news)
+	     (unless (zerop (car entry)) ; Ignore confs with 0 unread
+	       (setq texts (+ (car entry)
+			      texts))
+	       (setq confs (1+ confs))
+	       (when (= (conf-stat->conf-no (cdr entry))
+			lyskom-pers-no)
+		 (setq letters (+ (car entry)
+				  letters)))))
+
+	   (setq total-texts (+ texts 
+				total-texts))
+	   (setq total-letters (+ letters
+				total-letters))
+	   (setq total-confs (+ confs
+				 total-confs))
+
+	   (setq session-list (append (list (list (lyskom-session-nickname) 
+						  (lyskom-format "%#1P" lyskom-pers-no)
+						  texts 
+						  letters 
+						  confs
+						  kom-server-priority))
+				      session-list))))))
+
+    (sort session-list (lambda (s1 s2)
+			 (< (nth 5 s1)
+			    (nth 5 s2))))
+    (lyskom-traverse session session-list
+      (lyskom-format-insert 'session-list-unreads-in-confs
+			    (nth 0 session)
+			    (nth 3 session)
+			    (nth 2 session)
+			    (nth 4 session)
+			    ))))
 
 ;;; ================================================================
 ;;;                 Lista Nyheter - List News
