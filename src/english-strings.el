@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.75 1999-12-03 15:33:19 byers Exp $
+;;;;; $Id: english-strings.el,v 44.76 2000-01-10 23:35:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.75 1999-12-03 15:33:19 byers Exp $"))
+              "$Id: english-strings.el,v 44.76 2000-01-10 23:35:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -371,6 +371,7 @@ and you have finished reading. Please come back later.
     (text-to-delete-comment-from . "Remove comment from which text:")
     (text-to-add-footnote-to . "Add footnote to which text:")
     (text-to-delete-footnote-from . "Remove footnote from which text:")
+    (text-has-no-recipients-r . "Text %#1n has no recipients\n")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M...")
@@ -430,6 +431,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
+    (really-add-as-recpt-q . "Send future comments to the test to %#1M too? ") 
     (who-to-sub-q . "Remove who/what as a recipient? ")
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
@@ -1021,6 +1023,8 @@ You should set it to a better value.\n")
 
     (yes-regexp . "\\`[yY][eE][sS]\\'")
     (no-regexp . "\\`[nN][oO]\\'")
+    (yes-string . "Yes")
+    (no-string . "No")
     (yes-or-no-nag . "Answer yes or no.")
     (yes-or-no . "(yes or no) ")
 
