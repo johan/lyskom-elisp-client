@@ -1011,3 +1011,59 @@ det vara mer {n en text i listan.
 (146772) -----------------------------------
 Kommentar i text 146786 av Mats \hrman
 Kommentar i text 146946 av Chrisp
+
+172407 1992-02-01  15:06  /4 rader/ \ystein Tvedten, IFI (aka Lancelot)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <259>
+[rende: HmmM
+------------------------------------------------------------
+Hvorfor kan jeg ikke ta s-p (Status person) p} "Person 563" ? Jeg f}r
+opp Marvin's status....
+
+/\T er nyskjerrig
+(172407) -----------------------------------
+Kommentar i text 172408 
+Kommentar i text 172612 av Linus Tolke Y
+
+172612 1992-02-02  18:14  /13 rader/ Linus Tolke Y
+Kommentar till text 172407 av \ystein Tvedten, IFI (aka Lancelot)
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <260>
+[rende: HmmM
+------------------------------------------------------------
+Det beror p} att "Person 563" {r namnet p} person 133 i LysKOM. 
+
+G|r status p} person 133 ist{llet.
+
+Anledningen till att det {r s} h{r {r att Person 133 i
+LysKOM, f|r |gonblicket med namnet "Person 563", g|r allt
+f|r att sabotera kom-gemenskapen genom att:
+ 1. [ndra namn hela tiden (f|retr{desvis till namn som
+    st{ller till besv{r f|r Marvin) 
+    (Exempel: Marwin (argsnurfen) .. och nu Person 563)
+ 2. Skapa testidentiteter som saboterar f|r andra personer.
+
+Det b{sta du kan g|ra {r att ignorera personen ifr}ga.
+(172612) -----------------------------------
+Kommentar i text 172614 av Mattias Olofsson (vtp bm ESSP)
+
+172758 1992-02-02  23:28  /3 rader/ Elak Typing (USCH!)
+Mottagare: LysKOM (-) \vrigt <465>
+Markerad av dig.
+[rende: lyskom.el`
+------------------------------------------------------------
+Varf|r beh|vs tv} status-kommandon i lyskom.el, dels s p, dels s m?
+M}nga andra kommandon struntar ju i som det {r en person eller ett
+m|te som adderas, subtraheras, manipuleras.
+(172758) -----------------------------------
+Kommentar i text 172762 av Inge Wallin, ISY
+
+172762 1992-02-02  23:34  /4 rader/ Inge Wallin, ISY
+Kommentar till text 172758 av Elak Typing (USCH!)
+Mottagare: LysKOM (-) \vrigt <467>
+Markerad av dig.
+[rende: lyskom.el`
+------------------------------------------------------------
+Status m|te och status person ger lite olika information om man
+applicerar det p} en person.  Ett m|te kan man inte applicera Status
+person p}, men varje person har en brevl}da (=m|te) s} det omv{nda g}r
+bra.
+(172762) -----------------------------------
