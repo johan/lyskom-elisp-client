@@ -1,4 +1,14 @@
+2004-02-23  David Byers  <byers@lysator.liu.se>
+
+	Further reduce the likelihood of sending alarm messages
+	unintentionally:
+	* commands2.el (lyskom-interactive-send-message): New function.
+	(kom-send-alarm): Use it.
+	(kom-send-message): Use it.
+
 2004-02-22  David Byers  <byers@lysator.liu.se>
+
+	* NEWS-0.48: Updated to here.
 
 	Clean up for XEmacs:
 	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.325 2004-02-22 16:31:01 byers Exp $
+;;;;; $Id: english-strings.el,v 44.326 2004-02-23 19:37:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.325 2004-02-22 16:31:01 byers Exp $"))
+              "$Id: english-strings.el,v 44.326 2004-02-23 19:37:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -718,7 +718,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-to-send-message-to . "Send message to whom? (%#1s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
     (his-total-unread . "\n%#1M has %#2d unread texts (plus %#3d in passive memberships).\n")
-    (message-prompt . "Message: ")
+    (message-prompt . "Message%#1?z%[%]%[ (till alla inloggade)%]: ")
     (message-sent-to-user . "\
 %[%#3$================================================================
 %]%[%#4$Your message for %#2M:
@@ -752,7 +752,12 @@ Read all about it at http://www.lysator.liu.se/history/")
 -------------------------------------------------------------------------------
 %]")
     (message-use-alarm-instead . "Use %#1s to send alarm messages.\n")
-    (message-all-info . "Send alarm\n")
+    (message-all-info . "\
+%#1@Send alarm message to all users.
+
+%[%#3FConsider using \"%#2C\" to send your message to a specific
+conference or user.%]
+")
     (message-recipient-info . "Send message to %#1M\n")
     (message-nope .
      "Unable to send message. %#3s\
