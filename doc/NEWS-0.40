@@ -7,6 +7,9 @@ Nästa version kommer att dröja om ingen upptäcker fler stora fel eller
 listar ut varför emacs hänger sig ibland. Vem vet, kanske kommer nästa
 version att heta 1.0?
 
+Den som uppgraderar från 0.38 till 0.39 eller 0.40 bör läsa den text
+som finns i slutet av den här filen.
+
 
 * Fitjurs och förbättringar
 
@@ -30,7 +33,6 @@ version att heta 1.0?
    innehålla enbart heltal.
 
 
-
 * Ny färghantering (se lyskom-face-schemes och lyskom-set-face-scheme)
 
 ** Man får välja (via en variabel) ett uppsättning faces till LysKOM.
@@ -41,6 +43,10 @@ version att heta 1.0?
 ** Det finns tre nya faces, kom-text-no-face som används för
    textnummer, kom-friends-face som används för valbara användare och
    kom-first-line-face som används för första raden i inläggshuvudet.
+
+** Om kom-subject-line-face är samma som default eller är odefinierad
+   så kommer den inte att användas alls. Detta gör att man får "rätt"
+   face på inläggsnummer och URLer i ärendet också.
 
 ** Funktionen lyskom-set-face-scheme kan användas för att byta färg
    och typsnittsschema.
@@ -57,8 +63,6 @@ version att heta 1.0?
 
 * Bugfixar
 
-** Formatering av strängar sätter inte längre properties på padding.
-
 ** Filterhanteringen förbättrad. Vissa kanska ovanliga kombinationer av
    tillstånd i klient och server kunde få filterevaluatorn att hänga.
    Det problemet är åtgärdat.
@@ -71,9 +75,11 @@ version att heta 1.0?
 
 ** Lista filter fungerar även i en skrivskyddad buffert.
 
+** Formatering av strängar sätter inte längre properties på padding.
+
 ** KOMSERVER slås numera upp i kom-server-aliases
 
-** Engelska strängarna uppdaterade.
+** Flera engelska strängar korrigerade.
 
 ** lyskom-beep är mer bakåtkompatibel.
 
@@ -81,7 +87,7 @@ version att heta 1.0?
    har eliminerats..
 
 
-* Välkända buggar som inte behöver rapporteras igen
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
 ** Elispklienten hänger fortfarande ibland men vi vet inte varför. Det
    är numera lite enklare att avbryta och några hängningar har
@@ -106,3 +112,38 @@ version att heta 1.0?
 
 ** Komplettering av användare är långsamt. Den här buggen har inte så
    hög prioritet.
+
+
+
+Migrering från 0.38 till nyare versioner
+----------------------------------------
+
+Prioritera om möten med prioritet 0 till en högre prioritet. I
+framtiden (och delvis redan nu) så kommer prioritet 0 att betyda
+passivt medlemsskap (man läser inte mötet men servern minns vad man
+har läst tidigare).
+
+Vissa variabler skall ha nya värden. Följande variabler är av
+speciellt intresse (se dokumentationen för respektive variabel i Ändra
+variabler eller med C-h v):
+
+kom-ding-on-personal-messages (sätt till siffra, antal pip)
+kom-ding-on-group-messages (sätt till siffra, antal pip)
+kom-ding-on-common-messages (sätt till siffra, antal pip)
+
+LysKOM använder andra hookar än förr. Numera används i första hand
+kom-login-hook, lyskom-after-load-hook och lyskom-mode-hook.
+kom-login-hook lagras i servern och körs när en session loggar in.
+lyskom-after-load-hook körs när lyskom.elc har laddats in i Emacs.
+lyskom-mode-hook körs när man går in i lyskom-mode. Saker som
+kom-do-when-starting och liknande finns inte längre. Om din LysKOM
+inte beter sig som du förväntar vid inloggningen så kan det vara så
+att du använder en hook som inte längre finns.
+
+Om du har gjort egen färgsättning i elispklienten så fär du göra om.
+Färger som definieras i .emacs kommer att skrivas över. Definiera i
+stället om färgerna i lyskom-after-load-hook. Se dokumentationen av
+kom-default-face-scheme och lyskom-face-schemes för mer information. 
+
+Hanteringen av färger kan nog ändras igen om vi kommer på ett
+smidigare sätt att göra det.
