@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile.in,v 44.6 2002-06-03 21:48:19 byers Exp $
+# $Id: distribution-Makefile.in,v 44.7 2002-06-13 22:31:12 qha Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -47,7 +47,7 @@ LANGUAGES = @languages@
 
 RM = /bin/rm -f
 SHELL = /bin/sh
-LANGUAGE-EL = $(LANGUAGES:=-strings.el)
+LANGUAGE-EL = $(LANGUAGES:=-strings.el) $(LANGUAGES:=-help.el)
 EMACS-BATCH = $(EMACS) -batch
 HEADER = @@HEADER@@
 SOURCES	 = @@SOURCES@@
