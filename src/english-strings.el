@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.16 1996-07-29 09:16:59 byers Exp $
+;;;;; $Id: english-strings.el,v 41.17 1996-08-02 00:21:54 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.16 1996-07-29 09:16:59 byers Exp $"))
+              "$Id: english-strings.el,v 41.17 1996-08-02 00:21:54 davidk Exp $"))
 
 
 
@@ -790,6 +790,7 @@ Send a bug report.\n")
     (person-is-anonymous . "Anonymous user")
 
     (process-signal . "Signal from the process.")
+    (dead-session . "No active LysKOM session.")
     (closed-connection . "
 **************************************************
 LysKOM session killed abnormallly
