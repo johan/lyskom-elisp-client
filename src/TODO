@@ -5,6 +5,9 @@ Att göra i elisp-klienten
 
 * SHOWSTOPPERS
 
+** Man kan inte addera mottagare som har lapp på dörren i
+   edit-bufferten.
+
 ** Martin, hade vissa problem med inställningarna. User-arean såg OK
    ut och han säger att problemen försvann när han skrev en
    presentation för sin person Martin;. User-arean finns i 4730269.
