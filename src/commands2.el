@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 40.0 1996-03-26 08:30:51 byers Exp $
+;;;;; $Id: commands2.el,v 40.1 1996-04-02 16:19:15 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 40.0 1996-03-26 08:30:51 byers Exp $\n"))
+	      "$Id: commands2.el,v 40.1 1996-04-02 16:19:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -467,23 +467,18 @@ otherwise: the conference is read with lyskom-completing-read."
 
          ((and (eq kom-default-message-recipient 'group)
                lyskom-last-group-message-recipient)
-          (if (string-match "^19" emacs-version)
-              (cons lyskom-last-group-message-recipient 0)))
+          (cons lyskom-last-group-message-recipient 0))
 
-	 ((or (and (eq kom-default-message-recipient 'group)
-		   (null lyskom-last-group-message-recipient))
-	      (and (eq kom-default-message-recipient 'sender)
-		   lyskom-last-personal-message-sender))
-          (if (string-match "^19" emacs-version)
-              (cons lyskom-last-personal-message-sender 0)
-            lyskom-last-personal-message-sender))
+         ((or (and (eq kom-default-message-recipient 'group)
+                   (null lyskom-last-group-message-recipient))
+              (and (eq kom-default-message-recipient 'sender)
+                   lyskom-last-personal-message-sender))
+          (cons lyskom-last-personal-message-sender 0))
 
          (t 
-	  (if lyskom-last-personal-message-sender
-	      (if (string-match "^19" emacs-version)
-		  (cons lyskom-last-personal-message-sender 0)
-		lyskom-last-personal-message-sender)
-	    ""))) t))
+          (if lyskom-last-personal-message-sender
+              (cons lyskom-last-personal-message-sender 0)
+            ""))) t))
    message))
   
 
@@ -650,7 +645,7 @@ When a text is received the new text is displayed."
 	      (signal 'quit nil))))
     (lyskom-end-of-command))
   ;; We are done waiting
-  (ding)
+  (lyskom-beep kom-ding-on-wait-done)
   (if (read-list-isempty lyskom-reading-list)
       (kom-go-to-next-conf))
   (kom-next-command))
@@ -831,72 +826,80 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   "Prints a short list of alternatives when you don't know what you can do."
   (interactive)
   (let* ((tohere (cond
-		  ((stringp (this-command-keys))
-		   (substring (this-command-keys) 0 -1))
-		  (t			;This is the case in the lucid-emacs.
-		   (let* ((tck (this-command-keys))
-			  (newvec (make-vector (1- (length tck)) nil))
-			  (r 0))
-		     (while (< r (length newvec))
-		       (aset newvec r (aref tck r))
-		       (++ r))
-		     newvec))))
-	 (binding (key-binding tohere))
-	 (keymap (cond
-		  ((and (symbolp binding)
-			(fboundp binding))
-		   (symbol-function binding))
-		  (t binding)))
-	 (keylis (cond
-		  ((fboundp 'map-keymap)
-		   (and keymap
-			(let (list)
-			  (map-keymap
-			   (function
-			    (lambda (event function)
-			      (setq list (cons (cons event function) list))))
-			   keymap t)
-			  (nreverse list))))
-		  ((vectorp keymap)
-		   (let ((lis nil)
-			 (r 0))
-		     (while (< r (length keymap))
-		       (if (aref keymap r)
-			   (setq lis (cons (cons r (aref keymap r))
-					   lis)))
-		       (++ r))
-		     (nreverse lis)))
-		  (t
-		   (cdr keymap))))
-	 (text (format "\n%s: \n%s\n"
-		       (mapconcat 'single-key-description tohere " ")
-		       (mapconcat
-			(function
-			 (lambda (arg)
-			   (format "%s - %s" 
-				   (if (fboundp 'map-keymap)
-				       (if (symbolp (car arg))
-					   (format "%s" (car arg))
-					 (format "%c" (car arg)))
-				     (format "%c" (car arg)))
-				   (or (lyskom-command-name (cdr arg))
-				       (and (keymapp (cdr arg))
-					    (lyskom-get-string 'multiple-choice))
-				       (cdr arg)))))
-			keylis
-			"\n")))
-	 next-char)
+                  ((stringp (this-command-keys))
+                   (substring (this-command-keys) 0 -1))
+                  (t                    ;This is the case in the lucid-emacs.
+                   (let* ((tck (this-command-keys))
+                          (newvec (make-vector (1- (length tck)) nil))
+                          (r 0))
+                     (while (< r (length newvec))
+                       (aset newvec r (aref tck r))
+                       (++ r))
+                     newvec))))
+         (binding (key-binding tohere))
+         (keymap (cond
+                  ((and (symbolp binding)
+                        (fboundp binding))
+                   (symbol-function binding))
+                  (t binding)))
+         (keylis (lyskom-help-get-keylist keymap))
+         (text (format "\n%s: \n%s\n"
+                       (mapconcat 'single-key-description tohere " ")
+                       (mapconcat
+                        (function
+                         (lambda (arg)
+                           (format "%s - %s" 
+                                   (if (fboundp 'map-keymap)
+                                       (if (symbolp (car arg))
+                                           (format "%s" (car arg))
+                                         (format "%c" (car arg)))
+                                     (format "%c" (car arg)))
+                                   (or (lyskom-command-name (cdr arg))
+                                       (and (keymapp (cdr arg))
+                                            (lyskom-get-string 'multiple-choice))
+                                       (cdr arg)))))
+                        keylis
+                        "\n")))
+         next-char)
     (if (eq major-mode 'lyskom-mode)
-	(progn
-	  (lyskom-insert text)
-	  (lyskom-end-of-command))
+        (progn
+          (lyskom-insert text)
+          (lyskom-end-of-command))
       (with-output-to-temp-buffer "*Help*"
-	(princ text)))))
+        (princ text)))))
+
+
+(defun lyskom-help-get-keylist (keymap)
+  (cond
+   ((fboundp 'map-keymap)
+    (and keymap
+         (let (list)
+           (map-keymap
+            (function
+             (lambda (event function)
+               (setq list (cons (cons event function) list))))
+            keymap t)
+           (nreverse list))))
+   ((vectorp keymap)
+    (let ((lis nil)
+          (r 0))
+      (while (< r (length keymap))
+        (if (aref keymap r)
+            (setq lis (cons (cons r (aref keymap r))
+                            lis)))
+        (++ r))
+      (nreverse lis))) 
+   (t
+    (cdr keymap))))
+
+
+
+
 ;    (setq next-char (read-char))
 ;    (cond
 ;     ((commandp (key-binding (concat tohere (char-to-string next-char))))
 ;      (command-execute (concat tohere (char-to-string next-char))))
-;     (t (lyskom-message (lyskom-get-string 'does-not-exist))))
+;     (t (lyskom-message "%s" (lyskom-get-string 'does-not-exist))))
 
 
 ;;; ================================================================
@@ -909,26 +912,26 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   "This command should make it easier to include the correct info in a buggreport"
   (interactive)
   (let* ((curbuf (current-buffer))
-	 (old-buf (condition-case ()
-			    debugger-old-buffer
-			  (void-variable (current-buffer))))
-	 (repname "*lyskom-bugreport*"))
+         (old-buf (if (boundp 'debugger-old-buffer)
+                      (symbol-value 'debugger-old-buffer)
+                    (current-buffer)))
+         (repname "*lyskom-bugreport*"))
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compilestart))
     (set-buffer old-buf)
     (cond
      ((condition-case error
-	  (eq old-buf (process-buffer lyskom-proc))
-	(error nil)))
+          (eq old-buf (process-buffer lyskom-proc))
+        (error nil)))
      ((condition-case error
-	  (save-excursion
-	    (set-buffer (process-buffer lyskom-proc))
-	    (set-buffer lyskom-unparsed-buffer)
-	    (eq old-buf (current-buffer)))
-	(error nil))
+          (save-excursion
+            (set-buffer (process-buffer lyskom-proc))
+            (set-buffer lyskom-unparsed-buffer)
+            (eq old-buf (current-buffer)))
+        (error nil))
       (set-buffer (process-buffer lyskom-proc)))
      (t
       (error "I dont know what buffer you are running lyskom in (%s)?" 
-	     old-buf)))
+             old-buf)))
     (with-output-to-temp-buffer repname
       (princ (lyskom-get-string 'buggreport-description))
       (princ (lyskom-get-string 'buggreport-internals))
@@ -944,49 +947,48 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (print system-type)
       (princ (lyskom-get-string 'buggreport-ctl-arrow-doc))
       (print (condition-case error
-		 (documentation-property 'ctl-arrow 'variable-documentation)
-	       (error)))
+                 (documentation-property 'ctl-arrow 'variable-documentation)
+               (error)))
 
       (princ (lyskom-get-string 'buggreport-unparsed))
       (print (save-excursion
-	       (set-buffer lyskom-unparsed-buffer)
-	       (goto-char (point-min))
-	       (forward-line 10)
-	       (buffer-substring (point-min) (point))))
-      (if (condition-case ()
-	      debugger-old-buffer
-	    (void-variable nil))
-	  (princ (lyskom-format 'buggreport-backtrace
-				(save-excursion
-				  (set-buffer curbuf)
-				  (buffer-substring (point-min) 
-						    (point-max))))))
+               (set-buffer lyskom-unparsed-buffer)
+               (goto-char (point-min))
+               (forward-line 10)
+               (buffer-substring (point-min) (point))))
+      (if (and (boundp 'debugger-old-buffer) 
+               (symbol-value 'debugger-old-buffer))
+          (princ (lyskom-format 'buggreport-backtrace
+                                (save-excursion
+                                  (set-buffer curbuf)
+                                  (buffer-substring (point-min) 
+                                                    (point-max))))))
       (if lyskom-debug-communications-to-buffer
-	  (progn
-	    (princ (lyskom-get-string 'buggreport-communications))
-	    (print (save-excursion
-		     (set-buffer lyskom-debug-communications-to-buffer-buffer)
-		     (buffer-substring (point-min) (point-max))))))
+          (progn
+            (princ (lyskom-get-string 'buggreport-communications))
+            (print (save-excursion
+                     (set-buffer lyskom-debug-communications-to-buffer-buffer)
+                     (buffer-substring (point-min) (point-max))))))
       (princ (lyskom-get-string 'buggreport-all-kom-variables))
       (mapatoms
        (function
-	(lambda (symbol)
-	  (and (boundp symbol)
-	       (string-match "^\\(kom-\\|lyskom-\\)" (symbol-name symbol))
-	       (not (string-match "-cache$\\|^kom-dict$\\|^lyskom-strings$\
+        (lambda (symbol)
+          (and (boundp symbol)
+               (string-match "^\\(kom-\\|lyskom-\\)" (symbol-name symbol))
+               (not (string-match "-cache$\\|^kom-dict$\\|^lyskom-strings$\
 \\|-map$\\|^lyskom-commands$\\|^lyskom-swascii"
-				  (symbol-name symbol)))
-	       (progn
-		 (terpri)
-		 (princ (symbol-name symbol))
-		 (princ ":")
-		 (print (symbol-value symbol))))))))
+                                  (symbol-name symbol)))
+               (progn
+                 (terpri)
+                 (princ (symbol-name symbol))
+                 (princ ":")
+                 (print (symbol-value symbol))))))))
     
     (save-excursion
       (set-buffer repname)
       (goto-char (point-min))
       (replace-regexp "byte-code(\".*\""
-		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
+                      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
     (lyskom-message "%s" (lyskom-get-string 'buggreport-compileend))))
 
 (fset 'kom-compile-bug-report (symbol-function 'kom-bug-report))
@@ -1143,14 +1145,12 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 ;;; Author: Inge Wallin
 
 
-;; This function relies on lyskom-edit-text calling lyskom-end-of-command
-(defun kom-set-motd ()
+(def-kom-command kom-set-motd ()
   "Set the message of the day for LysKOM."
   (interactive)
-  (lyskom-start-of-command 'kom-set-motd)
   (if (server-info->motd-of-lyskom lyskom-server-info)
       (initiate-get-text 'main 'lyskom-set-motd
-			 (server-info->motd-of-lyskom lyskom-server-info))
+                         (server-info->motd-of-lyskom lyskom-server-info))
     (lyskom-set-motd nil)))
 
 
@@ -1162,34 +1162,35 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
    lyskom-proc
    (lyskom-create-misc-list)
    (if (and old-motd-text
-	    (string-match "\n" (text->text-mass old-motd-text)))
+            (string-match "\n" (text->text-mass old-motd-text)))
        (substring (text->text-mass old-motd-text) 0 (1- (match-end 0)))
      "")
    (if (and old-motd-text
-	    (string-match "\n" (text->text-mass old-motd-text)))
+            (string-match "\n" (text->text-mass old-motd-text)))
        (substring (text->text-mass old-motd-text) (match-end 0))
      "")
    'lyskom-set-motd-2))
 
 
 ;; Should really fix lyskom-edit text instead of the ugly IGNORE
+
 (defun lyskom-set-motd-2 (text-no ignore)
   "Set motd of LysKOM to the newly created text TEXT-NO."
   (lyskom-insert-before-prompt
    (lyskom-format 'setting-motd text-no))
   (initiate-set-motd-of-lyskom 'background 'lyskom-set-motd-3
-			       text-no text-no))
+                               text-no text-no))
 
 
 (defun lyskom-set-motd-3 (result text-no)
   "Handle the return from the initiate-set-motd-of-lyskom call."
   (if result
       (progn
-	(lyskom-insert-before-prompt
-	 (lyskom-get-string (if (zerop text-no)
-				'removed-motd 
-			      'set-motd-success)))
-	(set-server-info->motd-of-lyskom lyskom-server-info text-no))
+        (lyskom-insert-before-prompt
+         (lyskom-get-string (if (zerop text-no)
+                                'removed-motd 
+                              'set-motd-success)))
+        (set-server-info->motd-of-lyskom lyskom-server-info text-no))
     (lyskom-insert-before-prompt
      (lyskom-get-string 'set-motd-failed))))
 
@@ -1286,9 +1287,11 @@ This sets the variable kom-session-priority and refetches all
 membership info."
   (interactive "P")
   (let ((pri (or priority
-		 (lyskom-read-number (lyskom-get-string
-				      'set-session-priority)
-				     100))))
+		 (lyskom-read-num-range 0
+                                255
+                                (lyskom-get-string 'set-session-priority)
+                                t
+                                100))))
     (setq lyskom-session-priority pri)
     (lyskom-refetch)))
 

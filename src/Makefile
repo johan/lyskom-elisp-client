@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 40.1 1996-03-26 14:13:49 byers Exp $
+# $Id: Makefile,v 40.2 1996-04-02 16:18:51 byers Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,10 +22,10 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 40.1 1996-03-26 14:13:49 byers Exp $
+# $Id: Makefile,v 40.2 1996-04-02 16:18:51 byers Exp $
 #
 
-CLIENTVERSION = 0.40.1
+CLIENTVERSION = 0.41-beta
 
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
@@ -37,7 +37,7 @@ EMACS=emacs
 EMACS-BATCH = $(EMACS) -batch
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
-PARTS-EL = komtypes.el clienttypes.el startup.el \
+PARTS-EL = komtypes.el clienttypes.el utilities.el startup.el \
 	reading.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
@@ -52,7 +52,7 @@ SWEDISH-EL = swedish-strings.el
 SWEDISH-ELC = swedish-strings.elc
 ENGLISH-EL = english-strings.el
 ENGLISH-ELC = english-strings.elc
-SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
+SRC-ELC = komtypes.elc clienttypes.elc utilities.elc startup.elc \
 	reading.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
@@ -87,6 +87,16 @@ lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 
 lyskom.elc: lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
+
+# Only testing
+.PHONY: verbose
+verbose: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
+	@echo "Building lyskom.el"
+	@echo "" > lyskom.el
+	@for i in $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) ; do \
+		echo '(eval-when-compile (message "Compiling %s" "'$$i'"))' >> lyskom.el ;\
+		cat $$i >> lyskom.el ; \
+	done 
 
 # For fast compiling
 .PHONY: fast

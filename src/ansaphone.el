@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: ansaphone.el,v 40.0 1996-03-26 08:30:34 byers Exp $
+;;;;; $Id: ansaphone.el,v 40.1 1996-04-02 16:18:54 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,15 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 40.0 1996-03-26 08:30:34 byers Exp $\n"))
-
-
-(defvar lyskom-ansaphone-messages nil
-  "Messages collected by the automatic reply facility.
-The most recent message is the first message in the list.")
-
-(defvar lyskom-ansaphone-when-set (current-time-string)
-  "Time when the auto-reply facility was enabled.")
+	      "$Id: ansaphone.el,v 40.1 1996-04-02 16:18:54 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -100,7 +92,7 @@ The most recent message is the first message in the list.")
 (def-kom-command kom-erase-messages ()
   "Erase collected messages"
   (interactive)
-  (lyskom-message (lyskom-get-string 'ansaphone-messages-gone))
+  (lyskom-message "%s" (lyskom-get-string 'ansaphone-messages-gone))
   (setq lyskom-ansaphone-messages nil))
 
 

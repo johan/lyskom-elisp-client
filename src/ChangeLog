@@ -1,3 +1,78 @@
+Tue Apr  2 15:15:11 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * Blev av med alla kompilatorvarningar genom att ta bort
+    kompatibilitetskod för Emacs 18 och Lucid Emacs.
+
+    * lyskom-rest: Tog bort kompatibilitetskod i kom-initial-digit-view.
+
+    * prioritize.el: Tog bort referenser till kom-buffer.
+
+    * macros.el: Lade till kompatibilitetsbindning av frame-width.
+
+    * flags.el: Lade till dummydefinition av original-user-variable-p så
+    en kompilatorvarning försvann.
+
+    * utilities.el: Lade till regexpp.
+
+    * filter.el: Dokumenterade lyskom-filter-hack. Använd
+    lyskom-apo-timeous-s och lyskom-apo-timeout-ms i lyskom-filter-text-p.
+    Skydda anrop till filterfunktionerne i lyskom-check-filter-list med
+    condition-case för att undvika otrevligheter. Fixade bug i kompilering
+    av tomma filter. Flyttade regexpp till utilities.el. Använd
+    def-kom-command till användarkommandon.
+
+    * completing-read.el: Lade till hantering af typen conflogin för alla
+    inloggade personer eller möten. Tog bort emacs 18-kompatibilitet i
+    anrop till completing-read.
+
+    * edit-text.el: lyskom-edit-text anropar inte längre
+    lyskom-end-of-command. Tog bort Emacs 18.55-kompatibilitet från anrop
+    till processs-kill-without-query. Tog bort variabeln kom-buffer. Tog
+    bort kompatibilitet med Emacs 18 och Lucid emacs från
+    kom-edit-insert-digit-text. Anropar alltid lyskom-send-transform-text
+    när texter skickas in. Införde kom-cite-string som i stället för ">"
+    framför kommentarer. Flyttade sit-for i lyskom-edit-get-commented för
+    att få bort momentana markörförflyttningar vid insättning av
+    kommenterad text.
+
+    * commands1.el: Gjorde om alla kommentarfunktioner med def-kom-command
+    och tog bort explicita lyskom-end-of-command.
+
+    * commands2.el: Tog bort lite kompatibilitet med Emacs 18. Använd
+    lyskom-beep för att pipa när vänta avslutas.
+    (kom-set-session-priority): Använd lyskom-read-num-range. Skrev om
+    referenser till debugger-old-buffer för att slippa
+    kompileringsvarningar. 
+
+Mon Apr  1 14:57:53 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * commands1.el: Prioritet sätts mellan 1 och 255, aldrig till noll.
+    Man blir inte längree erbjuden att skriva presentation till hemliga
+    möten. Fixade några formatsträngar. Använde def-kom-command på några
+    fler ställen.
+
+    * english-strings.el: Nya appreciation och abuse strängar (från
+    misc/F}-uppmuntran).
+
+    * cache.el: Ersatte anrop till eval med anrop till symbol-value.
+
+    * internal.el (lyskom-check-call): Skydda anrop till kom-queue-resume
+    med unwind-protect.
+
+    * lyskom-rest.el (lyskom-insert-before-prompt): Flytta inte point vid
+    insert. Det är *irriterande*. lyskom-modify-prompt: Lade in antal
+    inspelade meddelanden i prompten (om man har några).
+
+    * utilities.el, filter-edit.el, macros.el, filter.el: Flyttade några
+    funktioner till utilities.el.
+
+    * Anrop till lyskom-message har nu en korrekt formatsträng som första
+    argument.
+
+    * lyskom-rest.el (lyskom-print-prompt): Sätt lyskom-is-waiting till
+    nil om man inte är vid sista prompten. lyskom-is-waiting måste vara
+    nil om asynkrona texter skall sparas och inte skrivas ut.
+
 Fri Mar 29 03:26:34 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* review.el (lyskom-review-comments,kom-review-comments): Skrev om

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 40.0 1996-03-26 08:30:43 byers Exp $
+;;;;; $Id: clienttypes.el,v 40.1 1996-04-02 16:19:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,10 +34,9 @@
 ;;;; Authors: Linus Tolke and Inge Wallin
 ;;;;
 
-
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 40.0 1996-03-26 08:30:43 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 40.1 1996-04-02 16:19:03 byers Exp $\n"))
 
 
 ;;; ================================================================

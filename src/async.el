@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 40.1 1996-03-29 03:07:24 davidk Exp $
+;;;;; $Id: async.el,v 40.2 1996-04-02 16:18:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 40.1 1996-03-29 03:07:24 davidk Exp $\n"))
+	      "$Id: async.el,v 40.2 1996-04-02 16:18:57 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -324,7 +324,7 @@ Non-nil NOBEEP means don't beep."
                                         ; messages. Should it be?
                                         ; /davidk
 	       (eq recipient 0))	; Public message
-           (lyskom-beep (if (not nobeep) kom-ding-on-common-messages 0))
+           (if (not nobeep) (lyskom-beep kom-ding-on-common-messages))
            (lyskom-format 'message-broadcast
                           (cond
                            ((stringp sender) sender)
@@ -333,7 +333,7 @@ Non-nil NOBEEP means don't beep."
                           message
                           when))
           ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
-           (lyskom-beep (if (not nobeep) kom-ding-on-personal-messages 0))
+           (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages))
            (lyskom-format 'message-from
                           (cond
                            ((stringp sender) sender)
@@ -342,7 +342,7 @@ Non-nil NOBEEP means don't beep."
                           message
                           when))
           (t                            ; Group message
-           (lyskom-beep (if (not nobeep) kom-ding-on-group-messages 0))
+           (if (not nobeep) (lyskom-beep kom-ding-on-group-messages))
            (lyskom-format 'message-from-to
                           message
                           (cond
@@ -375,9 +375,9 @@ converted, before insertion."
       (t
        (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
        (goto-char (point-max))
-       (insert (if kom-emacs-knows-iso-8859-1
-                   string
-                 (iso-8859-1-to-swascii string)))))
+       (lyskom-insert (if kom-emacs-knows-iso-8859-1
+                          string
+                        (iso-8859-1-to-swascii string)))))
      (if kom-pop-personal-messages
          (display-buffer (current-buffer))))))
   

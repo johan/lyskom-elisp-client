@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 40.0 1996-03-26 08:32:05 byers Exp $
+;;;;; $Id: services.el,v 40.1 1996-04-02 16:20:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 40.0 1996-03-26 08:32:05 byers Exp $\n"))
+	      "$Id: services.el,v 40.1 1996-04-02 16:20:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -662,14 +662,6 @@ Args: KOM-QUEUE HANDLER CONF-NO TEXT-NO &rest DATA"
 
 (defvar lyskom-blocking-return nil
   "Return from blocking-do.")
-
-(defvar lyskom-blocking-process nil
-  "The process the where the lyskom-session is.
-If blocking-do is called from a buffer that is no well-connected to the 
-lyskom-session, i.e. the lyskom-proc variable is not set, then this variable
-has to be set for the blocking-do to be able to know what process to send
-questions to. This is the case when called from the minibuffer when 
-completing.")
 
 (defun blocking-return (retval)
   "Sets blocking variable."

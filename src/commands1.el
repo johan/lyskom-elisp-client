@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.1 1996-03-29 03:05:10 davidk Exp $
+;;;;; $Id: commands1.el,v 40.2 1996-04-02 16:19:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -30,10 +30,9 @@
 ;;;; This file contains the code for some of the high level commands.
 ;;;;
 
-
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.1 1996-03-29 03:05:10 davidk Exp $\n"))
+	      "$Id: commands1.el,v 40.2 1996-04-02 16:19:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -96,10 +95,9 @@
 ;;; Author: Inge Wallin
 
 
-(defun kom-delete-text (text-no-arg)
+(def-kom-command kom-delete-text (text-no-arg)
   "Delete a text. Argument: TEXT-NO"
   (interactive "P")
-  (lyskom-start-of-command 'kom-delete-text)
   (let ((text-no (cond ((null text-no-arg) 0)
 		       ((integerp text-no-arg) text-no-arg)
 		       ((listp text-no-arg) (car text-no-arg))
@@ -109,7 +107,7 @@
 	      (lyskom-read-number (lyskom-get-string 'what-text-to-delete)
 				  lyskom-current-text)))
     (lyskom-format-insert 'deleting-text text-no)
-    (lyskom-handle-command-answer (blocking-do 'delete-text text-no))))
+    (lyskom-report-command-answer (blocking-do 'delete-text text-no))))
 
 
 ;;; ================================================================
@@ -213,12 +211,11 @@ as TYPE. If no such misc-info, return NIL"
 ;;; Author: Inge Wallin
 ;;; Rewritten using read-conf-no by Linus Tolke (4=>1)
 
-(defun kom-send-letter (&optional pers-no)
+(def-kom-command kom-send-letter (&optional pers-no)
   "Send a personal letter to a person or a conference."
   (interactive)
   (condition-case error
       (progn
-        (lyskom-start-of-command 'kom-send-letter)
         (lyskom-tell-internat 'kom-tell-write-letter)
         (let* ((tono (or pers-no
                          (lyskom-read-conf-no
@@ -234,7 +231,6 @@ as TYPE. If no such misc-info, return NIL"
                   (lyskom-view-text (conf-stat->msg-of-day conf-stat))
                   (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
                       t
-                    (lyskom-end-of-command)
                     nil)))
               (if (= tono lyskom-pers-no)
                   (lyskom-edit-text lyskom-proc
@@ -244,8 +240,7 @@ as TYPE. If no such misc-info, return NIL"
                                   (lyskom-create-misc-list 'recpt tono
                                                            'recpt lyskom-pers-no)
                                   "" "")))))
-    (quit (lyskom-end-of-command)
-          (signal 'quit "Quitting in letter"))))
+    (quit (signal 'quit "Quitting in letter"))))
 
 
 ;;; ================================================================
@@ -322,10 +317,10 @@ Returns t if it was possible, otherwise nil."
 	       100			; When adding someone else
 	     (if (and (numberp kom-membership-default-priority)
 		      (< kom-membership-default-priority 256)
-		      (>= kom-membership-default-priority 0))
+		      (> kom-membership-default-priority 0))
 		 kom-membership-default-priority
 	       (lyskom-read-num-range
-		0 255 (lyskom-get-string 'priority-q)))))
+		1 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
@@ -558,12 +553,16 @@ Add the person creating and execute lyskom-end-of-command."
   "Starts editing a presentation for the newly created conference.
 This does lyskom-end-of-command"
   (lyskom-tell-internat 'kom-tell-conf-pres)
-  (lyskom-dispatch-edit-text lyskom-proc
-			     (lyskom-create-misc-list
-			      'recpt
-			      (server-info->conf-pres-conf lyskom-server-info))
-			     conf-name ""
-			     'lyskom-set-presentation conf-no))
+  (let ((conf (blocking-do 'get-conf-stat conf-no)))
+    (if (and conf
+             (not (conf-type->secret (conf-stat->conf-type conf))))
+        (lyskom-dispatch-edit-text lyskom-proc
+                                   (lyskom-create-misc-list
+                                    'recpt
+                                    (server-info->conf-pres-conf 
+                                     lyskom-server-info))
+                                   conf-name ""
+                                   'lyskom-set-presentation conf-no))))
 
 
 (defun lyskom-set-presentation (text-no conf-no)
@@ -609,17 +608,18 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 			    (if text-no 
 				(format " (%d)" text-no)
 			      "")))
-  (if text-no
-      (lyskom-write-comment-soon
-       (blocking-do 'get-text-stat text-no)
-       (blocking-do 'get-text text-no)
-       text-no
-       'comment)
-    (lyskom-insert-string 'confusion-what-to-comment)
+  (unwind-protect
+      (if text-no
+          (lyskom-write-comment-soon
+           (blocking-do 'get-text-stat text-no)
+           (blocking-do 'get-text text-no)
+           text-no
+           'comment)
+        (lyskom-insert-string 'confusion-what-to-comment))
     (lyskom-end-of-command)))
 
 
-(defun kom-write-footnote (&optional text-no)
+(def-kom-command kom-write-footnote (&optional text-no)
   "Write a footnote to a text.
 If optional arg TEXT-NO is present write a footnote to that text instead."
   (interactive (list 
@@ -632,27 +632,23 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 		  (lyskom-read-number (lyskom-get-string 'what-comment-no)))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
-  (lyskom-start-of-command 'kom-write-footnote)
   (if text-no
       (lyskom-write-comment-soon
        (blocking-do 'get-text-stat text-no)
        (blocking-do 'get-text text-no)
        text-no 'footnote)
-    (lyskom-insert-string 'confusion-what-to-footnote)
-    (lyskom-end-of-command)))
+    (lyskom-insert-string 'confusion-what-to-footnote)))
 
 
-(defun kom-comment-previous ()
+(def-kom-command kom-comment-previous ()
   "Write a comment to previously viewed text."
   (interactive)
-  (lyskom-start-of-command 'kom-comment-previous)
   (if lyskom-previous-text
       (lyskom-write-comment-soon 
        (blocking-do 'get-text-stat lyskom-previous-text)
        (blocking-do 'get-text lyskom-previous-text)
        lyskom-previous-text 'comment)
-    (lyskom-insert-string 'confusion-what-to-comment)
-    (lyskom-end-of-command)))
+    (lyskom-insert-string 'confusion-what-to-comment)))
 
 
 (defun lyskom-write-comment-soon (text-stat text text-no type)
@@ -662,8 +658,7 @@ TYPE is either 'comment or 'footnote."
    ;; Text not found?
    ((or (null text-stat)
 	(null text))
-    (lyskom-format-insert 'cant-read-textno text-no)
-    (lyskom-end-of-command))
+    (lyskom-format-insert 'cant-read-textno text-no))
    ;; Give header.
    ((string-match "\n" (text->text-mass text))
     (lyskom-write-comment text-stat
@@ -679,32 +674,31 @@ TYPE is either 'comment or 'footnote."
 The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
   (if (null text-stat)
       (progn
-	(lyskom-insert-string 'confusion-what-to-comment)
-	(lyskom-end-of-command))
+        (lyskom-insert-string 'confusion-what-to-comment))
     (let ((ccrep))
       (lyskom-tell-internat (if (eq type 'comment)
-				'kom-tell-write-comment
-			      'kom-tell-write-footnote))
+                                'kom-tell-write-comment
+                              'kom-tell-write-footnote))
       (let (data)
-	(mapcar 
-	 (function
-	  (lambda (misc-info)
-	    (cond
-	     ((eq 'RECPT (misc-info->type misc-info))
-	      (setq data 
-		    (cons (blocking-do 'get-conf-stat 
-				       (misc-info->recipient-no misc-info))
-			  data)))
-	     ((and (eq type 'footnote)
-		   (eq 'CC-RECPT (misc-info->type misc-info)))
-	      (setq ccrep (cons (misc-info->recipient-no misc-info) 
-				ccrep))
-	      (setq data (cons (blocking-do 'get-conf-stat
-					    (misc-info->recipient-no misc-info))
-			       data))))))
-	 (text-stat->misc-info-list text-stat))
-	(lyskom-comment-recipients data lyskom-proc text-stat
-				   subject type ccrep)))))
+        (mapcar 
+         (function
+          (lambda (misc-info)
+            (cond
+             ((eq 'RECPT (misc-info->type misc-info))
+              (setq data 
+                    (cons (blocking-do 'get-conf-stat 
+                                       (misc-info->recipient-no misc-info))
+                          data)))
+             ((and (eq type 'footnote)
+                   (eq 'CC-RECPT (misc-info->type misc-info)))
+              (setq ccrep (cons (misc-info->recipient-no misc-info) 
+                                ccrep))
+              (setq data (cons (blocking-do 'get-conf-stat
+                                            (misc-info->recipient-no misc-info))
+                               data))))))
+         (text-stat->misc-info-list text-stat))
+        (lyskom-comment-recipients data lyskom-proc text-stat
+                                   subject type ccrep)))))
 
 
 (defun lyskom-comment-recipients (data lyskom-proc text-stat
@@ -719,7 +713,7 @@ TYPE is info whether this is going to be a comment of footnote.
 CCREP is a list of all recipients that are going to be cc-recipients."
 
   (condition-case x
-      ;; Catch any quits and run lyskom-end-of-command.
+      ;; Catch any quits
       (progn
 	;; Filter multiple recipients through y-or-n-p.
 	(if (and kom-confirm-multiple-recipients (> (length data) 1)
@@ -770,8 +764,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 			    recver
 			    subject "")))
 
-    (quit (lyskom-end-of-command)
-	  (signal 'quit "quit in lyskom-comment-recipients"))))
+    (quit (signal 'quit "quit in lyskom-comment-recipients"))))
 
 
 ;;; ================================================================
@@ -781,7 +774,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 ;;; Rewritten using blocking-do by: Linus Tolke
 
 
-(defun kom-private-answer (&optional text-no)
+(def-kom-command kom-private-answer (&optional text-no)
   "Write a private answer to the current text.
 If optional arg TEXT-NO is present write a private answer to
 that text instead."
@@ -795,14 +788,12 @@ that text instead."
 		  (lyskom-read-number (lyskom-get-string 'what-private-no)))
 		 (t
 		  (signal 'lyskom-internal-error '(kom-private-answer))))))
-  (lyskom-start-of-command 'kom-private-answer)
   (if text-no
       (lyskom-private-answer-soon
        (blocking-do 'get-text-stat text-no)
        (blocking-do 'get-text text-no)
        text-no)
-    (lyskom-insert-string 'confusion-who-to-reply-to)
-    (lyskom-end-of-command)))
+    (lyskom-insert-string 'confusion-who-to-reply-to)))
 
 
 (defun lyskom-private-answer-soon (text-stat text text-no)
@@ -813,16 +804,14 @@ that text instead."
 				 (substring (text->text-mass text)
 					    0 (match-beginning 0)))
 	(lyskom-private-answer text-stat ""))
-    (lyskom-format-insert 'no-such-text-no text-no)
-    (lyskom-end-of-command)))
+    (lyskom-format-insert 'no-such-text-no text-no)))
 
 
 (defun lyskom-private-answer (text-stat subject)
   "Write a private answer. Args: TEXT-STAT SUBJECT."
   (if (null text-stat)
       (progn
-	(lyskom-insert-string 'confusion-what-to-answer-to)
-	(lyskom-end-of-command))
+	(lyskom-insert-string 'confusion-what-to-answer-to))
     (progn
       (lyskom-tell-internat 'kom-tell-write-reply)
       (lyskom-edit-text lyskom-proc
@@ -839,16 +828,14 @@ that text instead."
 ;;; Author: ceder
 ;;; Rewritten using blocking-do by: Linus Tolke
 
-(defun kom-private-answer-previous ()
+(def-kom-command kom-private-answer-previous ()
   "Write a private answer to previously viewed text."
   (interactive)
-  (lyskom-start-of-command 'kom-private-answer-previous)
   (if lyskom-previous-text
       (lyskom-private-answer-soon-prev
        (blocking-do 'get-text-stat lyskom-previous-text)
        (blocking-do 'get-text lyskom-previous-text))
-    (lyskom-insert-string 'confusion-who-to-reply-to)
-    (lyskom-end-of-command)))
+    (lyskom-insert-string 'confusion-who-to-reply-to)))
 
 (defun lyskom-private-answer-soon-prev (text-stat text)
   "Write a private answer to TEXT-STAT, TEXT."
@@ -1120,10 +1107,10 @@ Args: CONF-STAT MEMBERSHIP"
 ;;; Author: ???
 
 
-(defun kom-write-text ()
+(def-kom-command kom-write-text ()
   "write a text."
   (interactive)
-  (lyskom-start-of-command 'kom-write-text)
+;  (lyskom-start-of-command 'kom-write-text)
   (if (zerop lyskom-current-conf)
       (progn
 	(lyskom-insert-string 'no-in-conf)
@@ -1183,7 +1170,7 @@ Those that you are not a member in will be marked with an asterisk."
 If you are not member in the conference it will be flagged with an asterisk."
   (if (not conf-stat)
       nil
-    (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4M%]\n"
+    (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4:M%]\n"
 			  (lyskom-default-button 'conf conf-stat)
 			  conf-stat
 			  (if (lyskom-member-p (conf-stat->conf-no conf-stat))
@@ -1316,19 +1303,17 @@ MARK:   A number that is used as the mark."
 ;;; Author: Inge Wallin
 
 
-(defun kom-review-marked-texts ()
+(def-kom-command kom-review-marked-texts ()
   "Review marked texts with a certain mark."
   (interactive)
-  (lyskom-start-of-command 'kom-review-marked-texts)
   (lyskom-review-marked-texts 
    (lyskom-read-num-range 
     1 255 (lyskom-get-string 'what-mark-to-view) t)))
 
 
-(defun kom-review-all-marked-texts ()
+(def-kom-command kom-review-all-marked-texts ()
   "Review all marked texts"
   (interactive)
-  (lyskom-start-of-command 'kom-review-all-marked-texts)
   (lyskom-review-marked-texts 0))
 
 
@@ -1355,8 +1340,7 @@ If MARK-NO == 0, review all marked texts."
 			(lyskom-create-text-list text-list) 
 			nil t)))
 	(read-list-enter-read-info read-info lyskom-reading-list t)
-	(read-list-enter-read-info read-info lyskom-to-do-list t))))
-  (lyskom-end-of-command))
+	(read-list-enter-read-info read-info lyskom-to-do-list t)))))
 
 
 ;;; ================================================================
@@ -1542,10 +1526,7 @@ the window width."
   (let ((win (get-buffer-window (current-buffer))))
     (cond
      (win (window-width win))
-     ((fboundp 'frame-width)
-      (frame-width))
-     (t
-      (screen-width)))))
+     (t (frame-width)))))
 
 
 (defun lyskom-return-username (who-info)
@@ -1658,31 +1639,25 @@ footnotes) to it as read in the server."
 ;;; Based on code by Inge Wallin
 
 
-(defun kom-add-recipient (text-no-arg)
+(def-kom-command kom-add-recipient (text-no-arg)
   "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil,
 the user has used a prefix command argument."
   (interactive "P")
-  (lyskom-start-of-command 'kom-add-recipient)
-  (unwind-protect
-      (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
+  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
 	(lyskom-add-sub-recipient text-no-arg
-				  (lyskom-get-string 'text-to-add-recipient)
-				  'add-rcpt
-				  conf))
-    (lyskom-end-of-command)))
+                              (lyskom-get-string 'text-to-add-recipient)
+                              'add-rcpt
+                              conf)))
 
-(defun kom-add-copy (text-no-arg)
+(def-kom-command kom-add-copy (text-no-arg)
   "Add a cc recipient to a text. If the argument TEXT-NO-ARG is non-nil,
 the user has used a prefix command argument."
   (interactive "P")
-  (lyskom-start-of-command 'kom-add-copy)
-  (unwind-protect
-      (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
+  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
 	(lyskom-add-sub-recipient text-no-arg
-				  (lyskom-get-string 'text-to-add-copy)
-				  'add-copy
-				  conf))
-    (lyskom-end-of-command)))
+                              (lyskom-get-string 'text-to-add-copy)
+                              'add-copy
+                              conf)))
 
 (defun kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
