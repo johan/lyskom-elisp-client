@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.75 2001-01-28 12:49:29 joel Exp $
+;;;;; $Id: edit-text.el,v 44.76 2001-03-15 22:21:55 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.75 2001-01-28 12:49:29 joel Exp $\n"))
+	      "$Id: edit-text.el,v 44.76 2001-03-15 22:21:55 joel Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1281,56 +1281,9 @@ RECPT-TYPE is the type of recipient to add."
 
 (defun kom-edit-add-cross-reference ()
   (interactive)
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
-         (completion-ignore-case t)
-         (type (cdr (lyskom-string-assoc
-                     (lyskom-completing-read (lyskom-get-string 'xref-type)
-                                             (lyskom-maybe-frob-completion-table 
-                                              completions)
-                                             nil t)
-                     completions)))
-         (obj nil)
-         (prompt nil)
-         (item nil))
-    (cond 
-     ((eq type 'text)
-      (setq prompt (lyskom-get-string 'which-text-to-xref))
-      (while (null obj)
-        (setq obj (blocking-do 'get-text-stat
-                               (lyskom-read-number prompt)))
-        (setq prompt (lyskom-get-string 'which-text-to-xref-err )))
-      (setq item
-            (lyskom-create-aux-item 0 3 0 0 
-                                    (lyskom-create-aux-item-flags
-                                     nil nil nil nil nil nil nil nil)
-                                    0 (format "T%d"
-                                              (text-stat->text-no obj)))))
-
-     ((eq type 'conf)
-      (setq prompt (lyskom-get-string 'which-conf-to-xref))
-      (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(conf) nil nil t))
-        (setq item
-              (lyskom-create-aux-item 0 3 0 0
-                                      (lyskom-create-aux-item-flags
-                                       nil nil nil nil nil nil nil nil)
-                                      0 (format "C%d" obj)))))
-        
-     ((eq type 'pers)
-      (setq prompt (lyskom-get-string 'which-pers-to-xref))
-      (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(pers) nil nil t))
-        (setq item
-              (lyskom-create-aux-item 0 3 0 0
-                                      (lyskom-create-aux-item-flags
-                                       nil nil nil nil nil nil nil nil)
-                                      0 (format "P%d" obj)))))
-        
-     (t nil))
-
-    (lyskom-edit-insert-aux-item item)))
+  (let ((item (lyskom-read-cross-reference-and-get-aux-item)))
+    (when item
+      (lyskom-edit-insert-aux-item item))))
 
 (defun kom-edit-add-read-confirm-request ()
   (interactive)

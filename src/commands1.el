@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.98 2001-02-20 20:43:52 joel Exp $
+;;;;; $Id: commands1.el,v 44.99 2001-03-15 22:21:54 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.98 2001-02-20 20:43:52 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.99 2001-03-15 22:21:54 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3504,7 +3504,83 @@ DO-ADD: NIL if a footnote should be subtracted.
                          'confusion-what-to-add-footnote-to
                        'confusion-what-to-sub-footnote-from)))))
 
+;;; ================================================================
+;;;                 Addera referens - Add cross reference
 
+;;; Author: Joel Rosdahl
+
+(def-kom-command kom-add-cross-reference (text-no-arg)
+  "Add a cross reference to a text."
+  (interactive "P")
+  (lyskom-add-cross-reference text-no-arg
+                              (lyskom-get-string
+                               'text-to-add-cross-reference-to)))
+
+(defun lyskom-add-cross-reference (text-no-arg prompt)
+  "Get the number of the text that is going to have a cross reference
+added to it, ask the user about cross reference type and value, and
+add the cross reference.
+
+Arguments:
+  TEXT-NO-ARG: An argument as gotten from (interactive \"P\").
+  PROMPT: A string that is used when prompting for a text number."
+  (let ((text-no (let ((current-prefix-arg text-no-arg))
+                   (lyskom-read-text-no-prefix-arg prompt
+                                                   nil
+                                                   lyskom-current-text)))
+        (aux-item (lyskom-read-cross-reference-and-get-aux-item)))
+    (when (and text-no aux-item)
+      (cache-del-text-stat text-no)
+      (lyskom-report-command-answer
+       (blocking-do 'modify-text-info
+                    text-no
+                    nil
+                    (list aux-item))))))
+
+(defun lyskom-read-cross-reference-and-get-aux-item ()
+  "Query user about cross reference type and value, and return the
+corresponding aux-item."
+  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
+                            (cons (lyskom-get-string 'person) 'pers)
+                            (cons (lyskom-get-string 'text) 'text)))
+         (completion-ignore-case t)
+         (type (cdr (lyskom-string-assoc
+                     (lyskom-completing-read
+                      (lyskom-get-string 'xref-type)
+                      (lyskom-maybe-frob-completion-table
+                       completions)
+                      nil
+                      t)
+                     completions)))
+         (obj nil)
+         (prompt nil)
+         (char nil))
+    (cond
+     ((eq type 'text)
+      (setq prompt (lyskom-get-string 'which-text-to-xref))
+      (while (null obj)
+        (setq obj (text-stat->text-no
+                   (blocking-do 'get-text-stat
+                                (lyskom-read-number prompt))))
+        (setq prompt (lyskom-get-string 'which-text-to-xref-err )))
+      (setq char "T"))
+     ((eq type 'conf)
+      (setq prompt (lyskom-get-string 'which-conf-to-xref))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-no prompt '(conf) nil nil t)))
+      (setq char "C"))
+     ((eq type 'pers)
+      (setq prompt (lyskom-get-string 'which-pers-to-xref))
+      (while (null obj)
+        (setq obj (lyskom-read-conf-no prompt '(pers) nil nil t)))
+      (setq char "P")))
+
+    (when obj
+      (lyskom-create-aux-item 0 3 0 0
+                              (lyskom-create-aux-item-flags
+                               nil nil nil nil nil nil nil nil)
+                              0
+                              (format "%s%d" char obj)))))
 
 
 

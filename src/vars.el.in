@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.129 2001-01-03 22:03:05 qha Exp $
+;;;;; $Id: vars.el.in,v 44.130 2001-03-15 22:22:00 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.129 2001-01-03 22:03:05 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.130 2001-03-15 22:22:00 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1323,6 +1323,7 @@ Users are encouraged to use their best sense of humor."
     kom-move-text
     kom-add-comment
     kom-sub-comment
+    kom-add-cross-reference
     kom-add-member
     kom-sub-member
     kom-change-conf-motd
@@ -1905,6 +1906,7 @@ set to that text."
     kom-move-text
     kom-add-comment
     kom-sub-comment
+    kom-add-cross-reference
     kom-save-text-body
     kom-add-footnote
     kom-sub-footnote

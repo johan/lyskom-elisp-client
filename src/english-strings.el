@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.124 2001-03-15 20:23:45 joel Exp $
+;;;;; $Id: english-strings.el,v 44.125 2001-03-15 22:21:56 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.124 2001-03-15 20:23:45 joel Exp $"))
+              "$Id: english-strings.el,v 44.125 2001-03-15 22:21:56 joel Exp $"))
 
 
 ;;; ================================================================
@@ -394,6 +394,7 @@ and you have finished reading. Please come back later.
     (text-to-delete-comment-from . "Remove comment from which text:")
     (text-to-add-footnote-to . "Add footnote to which text:")
     (text-to-delete-footnote-from . "Remove footnote from which text:")
+    (text-to-add-cross-reference-to . "Add cross reference to which text:")
     (text-has-no-recipients-r . "Text %#1n has no recipients\n")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
@@ -1401,8 +1402,7 @@ Contents:     \"%#9s\"
     (default-agree-string . "I agree")
     (what-agree-no . "Agree with which text? ")
 
-
-    ;; Aux-item stuff from edit-text
+    ;; Cross-reference stuff
 
     (person . "User")
     (conference . "Conference")
@@ -1413,6 +1413,8 @@ Contents:     \"%#9s\"
     (which-text-to-xref-err . "Text not found. Add reference to text: ")
     (which-pers-to-xref . "Add reference to user: ")
     (which-conf-to-xref . "Add reference to conference: ")
+
+    ;; Aux-item stuff from edit-text
 
     (no-comments-q . "The author doesn't want comments. Comment anyway? ")
     (private-answer-q . "The author wants private replies. Write private reply? ")
@@ -1633,6 +1635,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-move-text            . "Move text")
     (kom-add-comment          . "Add comment")
     (kom-sub-comment          . "Remove comment")
+    (kom-add-cross-reference  . "Add cross reference")
     (kom-add-member           . "Add (a) member")
     (kom-sub-member           . "Remove (a) member")
     (kom-change-conf-motd     . "(Post) notice (on the) conference")

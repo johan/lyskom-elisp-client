@@ -1,5 +1,23 @@
 2001-03-15  Joel Rosdahl  <joel@rosdahl.net>
 
+	* vars.el.in (lyskom-commands): Added kom-add-cross-reference.
+	(kom-prompt-for-text-no): Added kom-add-cross-reference.
+
+	* swedish-strings.el (lyskom-message): Added
+	text-to-add-cross-reference-to string.
+	(lyskom-command): Added kom-add-cross-reference.
+
+	* english-strings.el (lyskom-message): Added
+	text-to-add-cross-reference-to string.
+	(lyskom-command): Added kom-add-cross-reference.
+
+	* edit-text.el (kom-edit-add-cross-reference): Use
+	lyskom-read-cross-reference-and-get-aux-item.
+
+	* commands1.el (kom-add-cross-reference): New function.
+	(lyskom-add-cross-reference): New function.
+	(lyskom-read-cross-reference-and-get-aux-item): New function.
+
 	* Makefile: Include build date in client version if built from a
 	checked-out CVS module.  Somewhat crude, but maybe nice.
 
