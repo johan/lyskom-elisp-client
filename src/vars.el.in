@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.231 2003-01-15 00:42:12 byers Exp $
+;;;;; $Id: vars.el.in,v 44.232 2003-03-13 21:11:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.231 2003-01-15 00:42:12 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.232 2003-03-13 21:11:53 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -133,6 +133,18 @@ if the variable is in kom-dont-read-saved-variables."
 
 
 ;;; User flags
+
+(def-kom-var kom-show-sync-messages nil
+  "**Controls display of database saving message.
+
+When this variable is set to `t', the client will show a message in
+the echo area when the LysKOM server signals that it is saving the
+database. When set to `nil', no message is shown (the mode line is
+changed regardless of the setting of this variable).
+
+Values other than `t' and `nil' are reserved for future use."
+  server)
+
 
 (def-kom-var kom-text-links
   '((t ("\\<bug[ \t\n]+\\([0-9]+\\)\\>"
@@ -1635,6 +1647,27 @@ the same way normal messages are shown when sent.
 Values other than `t' and `nil' are reserved for future use."
   server)
 
+(def-kom-var kom-highlight-conferences 
+  '((kom-friends . kom-friends-face)
+    (kom-morons  . kom-morons-face)
+    (lyskom-pers-no . kom-me-face))
+  "**How to highlight conference an person names.
+
+The value of this variable is an alist whose keys are matched against
+conference numbers and whose values are the names of faces to use for
+matching conferences.
+
+The following values are legal for keys:
+
+    Value       Meaning
+    Symbol      If the value is a list, matches if the conference
+                number is in the list. If the value is an integer,
+                matches if the conference number matches the integer.
+    List        Matches if the conference number is in the list.
+
+All other values are reserved for future use."
+  server)
+
 (def-kom-var kom-friends nil
   "**List of friends and other nice people.
 
@@ -2454,6 +2487,7 @@ Values other than `nil' and strings are reserved for future use."
      ((lyskom-button-view-text-action . lyskom-button-view-text)
       (lyskom-button-copy-text-no-action . lyskom-button-copy-text-no)
       (lyskom-button-review-noconversion-action . lyskom-button-review-noconversion)
+      (lyskom-button-review-converted-action . lyskom-button-review-converted)
       (lyskom-button-find-root-review-action . lyskom-button-find-root-review)
       (lyskom-button-find-root-action . lyskom-button-find-root)
       (lyskom-button-review-comments-action . lyskom-button-review-comments)
@@ -2758,6 +2792,7 @@ Users are encouraged to use their best sense of humor."
     kom-review-clear
     kom-review-last-normally-read
     kom-review-noconversion
+    kom-review-converted
     kom-review-next
     kom-find-root
     kom-review-by-to

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.129 2003-01-08 18:50:21 byers Exp $
+;;;;; $Id: utilities.el,v 44.130 2003-03-13 21:11:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.129 2003-01-08 18:50:21 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.130 2003-03-13 21:11:53 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -525,6 +525,25 @@ the resulting string may be narrower than END-COLUMN."
       (if padding
 	  (concat head-padding str tail-padding)
 	str))))
+
+
+(defun lyskom-buffer-display-message (string &optional buffer)
+  (let* ((inhibit-read-only t)
+         (buffer (or buffer (current-buffer)))
+         (window (cdr 
+                  (assoc (selected-frame)
+                         (mapcar (lambda (x) (cons (window-frame x) x))
+                                 (get-buffer-window-list buffer))))))
+    (erase-buffer)
+    (unless window (setq window (display-buffer buffer)))
+    (select-window window)
+    (delete-other-windows window)
+    (insert (make-string (/ (window-height window) 3) ?\n))
+    (insert string)
+    (center-region (point-min) (point-max))
+    (goto-char (point-min))
+    (fundamental-mode)
+    (toggle-read-only t)))
 
 
 (eval-and-compile
@@ -1253,9 +1272,9 @@ Returns nil if there is no send-comments-to set.
 
 Ïf WANT-TYPE is set, return as a conf (RECPT . TYPE), wher RECPT
 is the conference to use and TYPE is the type of recipient (numeric)."
-  (let* ((conf-stat (if (lyskom-conf-stat-p conf-no)
-                        conf-no
-                      (blocking-do 'get-conf-stat conf-no)))
+  (let* ((conf-stat (if (numberp conf-no)
+                        (blocking-do 'get-conf-stat conf-no)
+                      conf-no))
          (send-comments-to
           (and conf-stat 
                (car (lyskom-get-aux-item (conf-stat->aux-items conf-stat) 33))))

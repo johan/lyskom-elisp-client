@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.298 2003-03-04 16:27:53 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.299 2003-03-13 21:11:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.298 2003-03-04 16:27:53 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.299 2003-03-13 21:11:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1639,6 +1639,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (start-keep-alive . "Sänder data med %#1d sekunders mellanrum för att hålla förbindelsen aktiv.")
     (stop-keep-alive . "Data sänds inte längre för att hålla förbindelsen aktiv.")
 
+    (review-converted-q . "Återse vilket inlägg konverterat?")
     (review-noconversion-q . "Återse vilket inlägg omodifierat?")
     (review-commented-q . "Återse vilket inlägg kommenterade?")
     (review-tree-q . "Återse alla kommentarer rekursivt för vilket inlägg?")
@@ -1687,6 +1688,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (lyskom-button-view-text-action . "Återse texten")
     (lyskom-button-copy-text-no-action . "Kopiera inläggsnumret")
+    (lyskom-button-review-converted-action . "Återse konverterat")
     (lyskom-button-review-noconversion-action . "Återse omodifierat")
     (lyskom-button-find-root-review-action . "Återse träd")
     (lyskom-button-find-root-action . "Återse urinlägget")
@@ -1781,7 +1783,7 @@ Ignorerar följande variabler i dina inställningar:
 
 Variablerna är inte registrerade LysKOM-variabler och kan därför inte
 läsas från servern. Du kan ta bort variablerna från servern genom att
-ge kommandot \"Spara variabler\".\n\n")
+ge kommandot \"Spara inställningar\".\n\n")
 
     (unknown-aux-item . "Okänd tilläggsinformation")
     (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
@@ -1879,6 +1881,7 @@ teckenkodning.
     (reading-settings-from-done . "Läser inställningar från %s...klart")
 
     (super-jump-q . "Superhoppa vilket inlägg? ")
+    (conf-list-legend . "* Ej medlem; - Passiv medlem\n")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -1941,6 +1944,7 @@ teckenkodning.
     (kom-review-clear         . "Återse hoppa")
     (kom-review-last-normally-read
      			      . "Återse igen")
+    (kom-review-converted     . "Återse konverterat")
     (kom-review-noconversion  . "Återse omodifierat")
     (kom-review-next          . "Återse nästa")
     (kom-find-root	      . "Återse urinlägget")
@@ -2491,6 +2495,7 @@ teckenkodning.
   (define-key lyskom-sv-review-prefix (kbd "i") 'kom-review-last-normally-read)
   (define-key lyskom-sv-review-prefix (kbd "n") 'kom-review-next)
   (define-key lyskom-sv-review-prefix (kbd "o") 'kom-review-noconversion)
+  (define-key lyskom-sv-review-prefix (kbd "v") 'kom-review-converted)
   (define-key lyskom-sv-review-prefix (kbd "r") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "u") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "s") 'kom-review-by-to)
@@ -2898,6 +2903,13 @@ teckenkodning.
 
     (lynx-xterm . "Lynx i xterm")
     (lynx-emacs . "Lynx i emacs terminal-mode")
+
+    (morons . "Idioter och knäppskallar")
+    (friends . "Vänner och bekanta")
+    (me . "Mig själv och ingen annan")
+    (highlight-conferences . "Möten:")
+    (highlight-face . "Utseende:")
+    (highlight-conflist . "Möteslista")
 
     ;;
     ;; Misc doc strings
@@ -3922,6 +3934,13 @@ i servern. Annars sparas det i din .emacs.")
     (kom-lynx-xterm-command-doc . "\
   Kommandot som används för att starta Lynx i en xterm. Kommandot ska
   starta både xterm och lynx.")
+    (kom-show-sync-messages-doc . "\
+  Om denna inställning är påslagen så kommer klienten att visa ett
+  meddelande i ekoarean nät servern signallerar att den håller på
+  spara databasen.")
+    (kom-highlight-conferences-doc . "\
+  Denna inställning styr hur mötesnamn färgläggs. För varje val
+  kan ett utseende anges. Utseendena är namn på faces i Emacs.")
 
 
 
@@ -4124,6 +4143,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-lynx-terminal-command-tag . "Kommando för Lynx i Emacs:")
     (kom-lynx-terminal-tag . "Var ska Lynx köra:")
     (kom-lynx-xterm-command-tag . "Kommando för Lynx i xterm:")
+    (kom-show-sync-messages-tag . "Visa databasen-sparar-meddelanden:")
+    (kom-highlight-conferences-tag . "Färgläggning av namn:")
     )
 )
 

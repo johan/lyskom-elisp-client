@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.53 2003-01-06 14:08:47 byers Exp $
+;;;;; $Id: async.el,v 44.54 2003-03-13 21:11:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.53 2003-01-06 14:08:47 byers Exp $\n"))
+	      "$Id: async.el,v 44.54 2003-03-13 21:11:51 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -127,7 +127,8 @@ this function shall be with current-buffer the BUFFER."
       (lyskom-save-excursion
        (set-buffer buffer)
        ;; I removed the test for kom-presence-messages /david
-       (if (not (lyskom-is-in-minibuffer))
+       (if (and (not (lyskom-is-in-minibuffer))
+                kom-show-sync-messages)
 	   (lyskom-message "%s" (lyskom-get-string 'database-sync)))
        (setq mode-line-process (lyskom-get-string 'mode-line-saving))
        (setq lyskom-is-saving t)

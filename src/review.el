@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.47 2003-03-08 20:50:53 ceder Exp $
+;;;;; $Id: review.el,v 44.48 2003-03-13 21:11:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.47 2003-03-08 20:50:53 ceder Exp $\n"))
+	      "$Id: review.el,v 44.48 2003-03-13 21:11:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1403,6 +1403,28 @@ This command accepts text number prefix arguments \(see
             (cache-del-text-stat text-no))
         (lyskom-view-text text-no))
     (lyskom-insert 'confusion-what-to-view)))
+
+;;; ============================================================
+;;;        Återse konverterat - Review a text converted
+
+(def-kom-command kom-review-converted (text-no)
+  "Displays the selected text with all conversions enabled, even if
+some or all of them have are disabled by current settings.
+
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-converted-q)))
+  (if text-no
+      (let ((lyskom-format-special nil)
+            (kom-smileys t)
+            (kom-autowrap t)
+            (kom-format-html-authors '((t . t))))
+        (unless kom-review-uses-cache
+          (cache-del-text-stat text-no))
+        (lyskom-view-text text-no))
+    (lyskom-insert 'confusion-what-to-view)))
+
+
 
 
 

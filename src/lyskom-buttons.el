@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.81 2003-01-05 21:37:07 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.82 2003-03-13 21:11:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.81 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.82 2003-03-13 21:11:52 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -475,11 +475,34 @@ kom-next- and -previous-link won't notice the button"
                       numarg)
                  (list 'face 
                        (or face
-                           (cond ((eq persno numarg) kom-me-face)
-                                 ((memq numarg kom-friends) kom-friends-face)
-                                 ((memq numarg kom-morons) kom-morons-face)
-                                 (t kom-active-face)))
-
+                           (or 
+                            (lyskom-traverse el kom-highlight-conferences
+                              (cond ((and (symbolp (car el))
+                                          (boundp (car el))
+                                          (listp (symbol-value (car el)))
+                                          (memq numarg (symbol-value (car el))))
+                                     (lyskom-traverse-break
+                                      (cond ((facep (cdr el)) (cdr el))
+                                            ((and (symbolp (cdr el))
+                                                  (boundp (cdr el)))
+                                             (symbol-value (cdr el))))))
+                                    ((and (symbolp (car el))
+                                          (boundp (car el))
+                                          (eq numarg (symbol-value (car el))))
+                                     (lyskom-traverse-break
+                                      (cond ((facep (cdr el)) (cdr el))
+                                            ((and (symbolp (cdr el))
+                                                  (boundp (cdr el)))
+                                             (symbol-value (cdr el))))))
+                                    ((and (listp (car el))
+                                          (memq numarg (car el)))
+                                     (lyskom-traverse-break
+                                      (cond ((facep (cdr el)) (cdr el))
+                                            ((and (symbolp (cdr el))
+                                                  (boundp (cdr el)))
+                                             (symbol-value (cdr el)))))))
+                              nil)
+                            kom-active-face))
                        'mouse-face kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
@@ -635,6 +658,14 @@ Last argument TEXT is ignored. This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (goto-char (point-max))
            (kom-review-noconversion arg))))
+
+(defun lyskom-button-review-converted (buf arg text)
+  "In the LysKOM buffer BUF, view the text ARG converted. 
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (goto-char (point-max))
+           (kom-review-converted arg))))
 
 (defun lyskom-button-find-root-review (buf arg text)
   "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
