@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 43.0 1996-08-07 16:41:06 davidk Exp $
+;;;;; $Id: services.el,v 43.1 1996-08-09 20:56:41 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 43.0 1996-08-07 16:41:06 davidk Exp $\n"))
+	      "$Id: services.el,v 43.1 1996-08-09 20:56:41 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -619,6 +619,7 @@ Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
 	   (lyskom-check-call kom-queue)))))
 
 
+;; who-is-on is obsoleted by who-is-on-dynamic (83) i protocol version 9
 (defun initiate-who-is-on (kom-queue handler &rest data)
   "Ask server who is on.
 Args: KOM-QUEUE HANDLER &rest DATA"
@@ -644,7 +645,7 @@ Args: KOM-QUEUE HANDLER RECIPIENT MESSAGE &rest DATA."
 
 
 (defun initiate-get-session-info (kom-queue handler session-no &rest data)
-  "Ask server about info about a session.
+  "Ask server for info about a session.
 Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
   (lyskom-call kom-queue lyskom-ref-no handler data
 	       'lyskom-parse-session-info)
@@ -770,6 +771,33 @@ Args: KOM-QUEUE HANDLER &rest DATA"
 Args: KOM-QUEUE HANDLER &rest DATA."
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
   (lyskom-send-packet kom-queue (lyskom-format-objects 82)))
+
+
+(defun initiate-who-is-on-dynamic (kom-queue handler want-visible
+					     want-invisible active-last
+					     &rest data)
+  "Ask server who is on.
+Args: KOM-QUEUE HANDLER WANT-VISIBLE WANT-INVISIBLE ACTIVE_LAST &rest DATA"
+  (lyskom-call kom-queue lyskom-ref-no handler data
+	       'lyskom-parse-dynamic-session-info-list)
+  (lyskom-send-packet kom-queue (lyskom-format-objects
+				 83 want-visible want-invisible active-last)))
+
+
+(defun initiate-get-static-session-info (kom-queue handler session-no
+						   &rest data)
+  "Ask server for info about a session.
+Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
+  (let ((info (cache-get-static-session-info session-no)))
+    (cond
+     ((null info)			; Not cached
+      (lyskom-call kom-queue lyskom-ref-no handler data
+		   'lyskom-parse-static-session-info session-no)
+      (lyskom-send-packet kom-queue (lyskom-format-objects
+				     84 session-no)))
+     (t					; Cached
+      (lyskom-call-add kom-queue 'PARSED info handler data)
+      (lyskom-check-call kom-queue))))) ;This might call the handler.
 
 
 ;;; ================================================================

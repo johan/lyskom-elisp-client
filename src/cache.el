@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 43.0 1996-08-07 16:39:01 davidk Exp $
+;;;;; $Id: cache.el,v 43.1 1996-08-09 20:56:25 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 43.0 1996-08-07 16:39:01 davidk Exp $\n"))
+	      "$Id: cache.el,v 43.1 1996-08-09 20:56:25 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -215,6 +215,28 @@ otherwise return nil"
 	    (setcar marks nil)
 	    (setq found t))
 	(setq marks (cdr marks))))))
+
+
+;;; ================================================================
+;;;                 Static-session-info cache
+
+
+(defun cache-get-static-session-info (session)
+  "Get static-session-info for session SESSION, or nil if nothing is cached."
+  (let ((tx (cache-assoc session lyskom-static-session-info-cache)))
+    (cond
+     ((static-session-info-p tx) tx))))
+
+  
+(defun cache-add-static-session-info (session info)
+  "Insert INFO in the cache."
+  (cache-add session info 'lyskom-static-session-info-cache))
+
+
+(defun cache-del-static-session-info (session)
+  "Delete a text from the cache. Args: SESSION."
+  (cache-del session 'lyskom-static-session-info-cache))
+
 
 
 ;;; ================================================================
