@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.208 2002-03-21 19:44:51 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.209 2002-03-23 19:54:53 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.208 2002-03-21 19:44:51 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.209 2002-03-23 19:54:53 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -535,7 +535,9 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (who-is-present-in-what-conference . "Vilka närvarande i vilket möte: ")
     (who-is-active-and-member . "Visar endast medlemmar i %#1M.\n")
     (who-is-active-and-present . "Visar endast medlemmar närvarande i %#1M.\n")
-    
+
+    (personal-comment-to-anonymous . "Det går inte att skriva ett personligt svar till ett anonymt inlägg.\n")
+
     ;; From commands2.el:
 
     (your-memberships . "Ditt medlemskap i olika KOM-möten:\n")

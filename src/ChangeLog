@@ -1,3 +1,16 @@
+2002-03-23  Joel Rosdahl  <joel@lysator.liu.se>
+
+	Fix bug 422:
+
+	* commands1.el (lyskom-private-answer): Print informative text if
+	replying to Anonymous user.
+
+	* english-strings.el, swedish-strings.el (lyskom-message): Added
+	personal-comment-to-anonymous string.
+
+	* commands1.el (lyskom-private-answer-soon-prev): Removed unused
+	function.
+
 2002-03-21  Joel Rosdahl  <joel@lysator.liu.se>
 
 	Fiddled with various release-related things. Fixes bugs 298, 299

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.127 2002-03-03 16:22:43 ceder Exp $
+;;;;; $Id: commands1.el,v 44.128 2002-03-23 19:54:52 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.127 2002-03-03 16:22:43 ceder Exp $\n"))
+	      "$Id: commands1.el,v 44.128 2002-03-23 19:54:52 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1101,36 +1101,37 @@ that text instead."
 
 (defun lyskom-private-answer (text-stat subject)
   "Write a private answer. Args: TEXT-STAT SUBJECT."
-  (if (null text-stat)
-      (progn
-	(lyskom-insert-string 'confusion-what-to-answer-to))
-    (progn
-      (lyskom-tell-internat 'kom-tell-write-reply)
-      (cache-del-conf-stat (text-stat->author text-stat))
-      (let* ((conf-stat (blocking-do 'get-conf-stat
-                                     (text-stat->author text-stat))))
-        (if (if (zerop (conf-stat->msg-of-day conf-stat))
-                t
-              (progn
-                (recenter 1)
-                (lyskom-format-insert 'has-motd 
-                                      conf-stat)
-                (lyskom-view-text (conf-stat->msg-of-day conf-stat))
-                (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
-                    t
-                  nil)))
-            (if (= (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-edit-text lyskom-proc
-                                  (lyskom-create-misc-list 'recpt 
-                                                           (text-stat->author text-stat))
-                                  "" "")
-              (lyskom-edit-text lyskom-proc
-                                (lyskom-create-misc-list
-                                 'comm-to (text-stat->text-no text-stat)
-                                 'recpt (text-stat->author text-stat)
-                                 'recpt lyskom-pers-no)
-                                subject ""))))
-      )))
+  (cond ((null text-stat)
+         (lyskom-insert-string 'confusion-what-to-answer-to))
+        ((= (text-stat->author text-stat) 0)
+         (lyskom-insert-string 'personal-comment-to-anonymous))
+        (t
+         (lyskom-tell-internat 'kom-tell-write-reply)
+         (cache-del-conf-stat (text-stat->author text-stat))
+         (let* ((conf-stat (blocking-do 'get-conf-stat
+                                        (text-stat->author text-stat))))
+           (if (if (zerop (conf-stat->msg-of-day conf-stat))
+                   t
+                 (progn
+                   (recenter 1)
+                   (lyskom-format-insert 'has-motd
+                                         conf-stat)
+                   (lyskom-view-text (conf-stat->msg-of-day conf-stat))
+                   (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
+                       t
+                     nil)))
+               (if (= (text-stat->author text-stat) lyskom-pers-no)
+                   (lyskom-edit-text lyskom-proc
+                                     (lyskom-create-misc-list
+                                      'recpt
+                                      (text-stat->author text-stat))
+                                     "" "")
+                 (lyskom-edit-text lyskom-proc
+                                   (lyskom-create-misc-list
+                                    'comm-to (text-stat->text-no text-stat)
+                                    'recpt (text-stat->author text-stat)
+                                    'recpt lyskom-pers-no)
+                                   subject "")))))))
 
 
 ;;; ================================================================
@@ -1151,15 +1152,6 @@ that text instead."
                    (lyskom-get-string 'no-comments-q)))
           (lyskom-private-answer-soon text-stat text text-no)))
     (lyskom-insert-string 'confusion-who-to-reply-to)))
-
-
-(defun lyskom-private-answer-soon-prev (text-stat text)
-  "Write a private answer to TEXT-STAT, TEXT."
-  (let ((str (text->decoded-text-mass text text-stat)))
-  (if (string-match "\n" str)
-      (lyskom-private-answer text-stat
-			     (substring str 0 (match-beginning 0)))
-    (lyskom-private-answer text-stat ""))))
 
 
 ;;; ================================================================

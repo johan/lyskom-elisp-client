@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.176 2002-03-21 19:44:51 joel Exp $
+;;;;; $Id: english-strings.el,v 44.177 2002-03-23 19:54:52 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.176 2002-03-21 19:44:51 joel Exp $"))
+              "$Id: english-strings.el,v 44.177 2002-03-23 19:54:52 joel Exp $"))
 
 
 ;;; ================================================================
@@ -546,6 +546,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (who-is-present-in-what-conference . "Who present in which conference: ")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
     (who-is-active-and-present . "Only members present in %#1M are shown.\n")
+
+    (personal-comment-to-anonymous . "It is not possible to write a personal comment to an anonymous text.\n")
 
     ;; Used for kom-is-person-member-of-conference:
     (pers-to-check-mship-for . "Whose membership do you want to check? ") ;-)
