@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.86 2003-04-06 21:07:38 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.87 2003-04-20 11:50:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.86 2003-04-06 21:07:38 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.87 2003-04-20 11:50:55 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -581,7 +581,7 @@ up."
                       ((lyskom-uconf-stat-p arg)
 		       (if (conf-type->letterbox (uconf-stat->conf-type arg))
 			   (setq type 'pers))
-		       (setq xarg (conf-z-info->conf-no arg)
+		       (setq xarg (uconf-stat->conf-no arg)
 			     text (uconf-stat->name arg)))
                       ((lyskom-conf-z-info-p arg)
                        (if (conf-type->letterbox (conf-z-info->conf-type arg))
@@ -610,7 +610,7 @@ up."
                        (setq xarg arg
                              text (conf-z-info->name arg)))
 		      ((lyskom-pers-stat-p arg)
-		       (setq xarg (conf-z-info->conf-no arg)
+		       (setq xarg (pers-stat->pers-no arg)
 			     text (or (conf-stat->name
                                        (cache-get-conf-stat
                                         (pers-stat->pers-no arg)))
