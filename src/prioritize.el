@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 40.1 1996-04-02 16:20:22 byers Exp $
+;;;;; $Id: prioritize.el,v 40.2 1996-04-29 11:59:13 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -22,120 +22,531 @@
 ;;;;;
 ;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
 ;;;;;
-;;; ================================================================
-;;;              Prioritera medlemsskap - Prioritize membership
+;;;; ================================================================
+;;;;
+;;;; File: prioritize.el
+;;;; Author: David Byers
+;;;;
+;;;;
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 40.1 1996-04-02 16:20:22 byers Exp $\n"))
+	      "$Id: prioritize.el,v 40.2 1996-04-29 11:59:13 byers Exp $\n"))
 
 
 
 
-;;; Author: Per Cederqvist and Linus Tolke (some code from kom-membership)
+;;; ================================================================
+;;; Global variables
+;;;
 
 
-(defvar lyskom-prioritize-stack nil
-  "List of killed conferences.
-Each entry consists of a marker.
-Only used by lyskom-prioritize-mode.")
 
-(defvar lyskom-prioritize-buffer nil
-  "Used by kom-prioritize to remember which buffer the LysKOM session is in.
-Only used by lyskom-prioritize-mode.")
+(defvar lyskom-prioritize-mode-line '("" 
+                                      mode-line-modified
+                                      mode-line-buffer-identification
+                                      "   "
+                                      global-mode-string
+                                      "   %[("
+                                      mode-name
+                                      mode-line-process
+                                      minor-mode-alist
+                                      ")%] "
+                                      lyskom-prioritize-mode-line-selected
+                                      "--"
+                                      (-3 . "%p")
+                                      "-%-"))
+
+(defvar lyskom-prioritize-get-conf-stat-hack nil
+  "Can't touch this...")
+
+(defvar lyskom-prioritize-entry-list nil
+  "List of entries to be prioritized.")
+
+(defvar lyskom-prioritize-selection nil
+  "List of selected entries in the prioritization list.")
+
+(defvar lyskom-prioritize-mode-line-selected ""
+  "String showing number of selected entries.")
 
 
-(defun lyskom-prioritize-marker (pos)
-  "Return a marker that points to the second character on the current line."
+
+;;; ================================================================
+;;; Data types
+;;;
+
+(defun make-prioritize-entry (prio conf-stat)
+  (vector prio conf-stat nil nil))
+
+(defun prioritize-entry->priority (el)
+  (aref el 0))
+
+(defun prioritize-entry->name (el)
+  (conf-stat->name (aref el 1)))
+
+(defun prioritize-entry->conf-stat (el)
+  (aref el 1))
+
+(defun prioritize-entry->selected (el)
+  (aref el 2))
+
+(defun set-prioritize-entry->priority (el prio)
+  (aset el 0 prio))
+
+(defun set-prioritize-entry->conf-stat (el conf)
+  (aset el 1 conf))
+
+(defun set-prioritize-entry->selected (el marks)
+  (aset el 2 marks))
+
+
+
+;;; ================================================================
+;;; Utility functions
+;;;
+
+(defun lyskom-prioritize-remove-from-list (elem l)
+  "Destructively emove the element at index ELEM from the list L."
+  (if (> elem (length l))
+      (error "Args out of range: %S, %d" l elem))
+  (if (= 0 elem) 
+      (cdr l)
+    (setcdr (nthcdr (1- elem) l)
+            (nthcdr (1+ elem) l))
+    l))
+
+(defun lyskom-prioritize-add-to-list (elem data l)
+  "At the position ELEM, add DATA to the list L using side effects."
+  (if (> elem (length l))
+      (error "Args out of range: %S, %d" l elem))
+  (if (= 0 elem)
+      (cons data l)
+    (setcdr (nthcdr (1- elem) l)
+            (cons data (nthcdr elem l)))
+    l))
+
+(defun lyskom-prioritize-move-element (from to l)
+  "Move element from position FROM to position TO in list L using side-fx."
+  (setq from (1- from))
+  (setq to (1- to))
+  (let ((elem (if (< from 0) nil (elt l from))))
+    (lyskom-prioritize-add-to-list 
+     to
+     elem
+     (lyskom-prioritize-remove-from-list from l))))
+
+
+(defun lyskom-prioritize-current-entry ()
+  "Get the entry on the line containing point."
+  (lyskom-prioritize-get-entry-from-no
+   (- (1+ (count-lines 1 (point)))
+      lyskom-prioritize-header-lines)))
+
+(defun lyskom-prioritize-get-entry-from-no (no)
+  "Get entry number NO from the prioritize list."
+  (elt lyskom-prioritize-entry-list (1- no)))
+
+
+(defun lyskom-prioritize-get-no-from-entry (entry)
+  "Get the index of entry ENTRY in the prioritize list."
+  (1+ (- (length lyskom-prioritize-entry-list)
+         (length (memq entry lyskom-prioritize-entry-list)))))
+
+
+(defun lyskom-prioritize-get-selected ()
+  "Get a list of all selected entries."
+  lyskom-prioritize-selection)
+
+
+(defun lyskom-prioritize-goto-entry (entry)
+  "Go to the line containing ENTRY."
+  (goto-line (+ lyskom-prioritize-header-lines
+                (lyskom-prioritize-get-no-from-entry entry)))
+  (beginning-of-line))
+
+(defun lyskom-prioritize-redraw-entry (entry)
+  "Redraw the prioritize entry ENTRY in the buffer"
   (save-excursion
-    (goto-char pos)
-    (beginning-of-line)
-    (forward-char 2)
-    (point-marker)))
+    (let ((lineno (+ lyskom-prioritize-header-lines
+                     (lyskom-prioritize-get-no-from-entry entry)))
+          (inhibit-read-only t))
+      (goto-line lineno)
+      (delete-region (save-excursion (beginning-of-line) (point))
+                     (save-excursion (end-of-line) (point)))
+      (insert (lyskom-prioritize-format-entry entry)))))
 
-(defun kom-prioritize ()
-  "Re-prioritize all conferences you are a member in.
-Show memberships last visited, priority, unread and name in a buffer.
-In that buffer you can use \\[kom-prioritize-kill], \\[kom-prioritize-yank]
-\\[kom-prioritize-move-up] and \\[kom-prioritize-move-down]
-to move conferences and \\[kom-prioritize-set-priority] to alter the priority."
+
+(defun lyskom-prioritize-format-entry (entry)
+  "Return a string representation of the prioritize entry ENTRY"
+  (lyskom-format "%#1s %3#2s   %#3M"
+                 (if (prioritize-entry->selected entry) "*" " ")
+                 (if (= 0 (prioritize-entry->priority entry))
+                     "-" (format "%d" (prioritize-entry->priority entry)))
+                 (prioritize-entry->conf-stat entry)))
+
+
+(defun lyskom-prioritize-redraw-buffer ()
+  "Update the entire buffer contents"
+  (save-excursion
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert lyskom-prioritize-header)
+      (mapcar (function 
+               (lambda (el)
+                 (insert (concat (lyskom-prioritize-format-entry el)
+                                 "\n"))))
+              lyskom-prioritize-entry-list))))
+
+
+(defun lyskom-prioritize-move-entry (from to &optional dontset forceup)
+  (let ((buffer-read-only nil))
+    (if (/= from to)
+        (let ((entry (lyskom-prioritize-get-entry-from-no from))
+              (after nil)
+              (before nil)
+              (start (1+ (count-lines 1 (point)))))
+          (if (null entry) (error (lyskom-get-string 
+                                   'cant-move-nothing-nowhere)))
+
+          ;;
+          ;; Move the entry in the prioritize list
+          ;;
+
+          (setq lyskom-prioritize-entry-list
+                (lyskom-prioritize-move-element from to
+                                                lyskom-prioritize-entry-list))
+
+          (if (not dontset)
+              (progn
+                (setq after (lyskom-prioritize-get-entry-from-no (1+ to))
+                      before (lyskom-prioritize-get-entry-from-no (1- to)))
+
+                (if (> from to)
+                    (if (and after
+                             (/= (prioritize-entry->priority after)
+                                 (prioritize-entry->priority entry)))
+                        (set-prioritize-entry->priority 
+                         entry
+                         (prioritize-entry->priority after)))
+                  (if (and before
+                           (/= (prioritize-entry->priority before)
+                               (prioritize-entry->priority entry)))
+                      (set-prioritize-entry->priority 
+                       entry
+                       (prioritize-entry->priority before))))))
+
+          ;;
+          ;; Update the buffer
+          ;;
+
+          (goto-line (+ from lyskom-prioritize-header-lines))
+          (delete-region (save-excursion (beginning-of-line) (point))
+                         (1+ (save-excursion (end-of-line) (point))))
+          (goto-line (+ to lyskom-prioritize-header-lines))
+          (insert (concat (lyskom-prioritize-format-entry entry)
+                          "\n"))
+          (goto-line start))
+      (if forceup
+          (lyskom-prioritize-redraw-entry 
+           (lyskom-prioritize-get-entry-from-no from))))))
+
+
+(defun lyskom-prioritize-update-selection (entry arg)
+  (setq lyskom-prioritize-selection
+        (let (result)
+          (mapcar (function (lambda (x)
+                              (if (prioritize-entry->selected x)
+                                  (setq result (cons x result)))))
+                  lyskom-prioritize-entry-list)
+          (nreverse result)))
+  (lyskom-prioritize-update-mode-line))
+
+
+(defun lyskom-prioritize-select (entry arg)
+  (set-prioritize-entry->selected entry arg)
+  (lyskom-prioritize-update-selection entry arg))
+
+
+
+;;; ================================================================
+;;; User commands
+;;;
+
+(defun kom-prioritize-select (&optional arg)
+  "Select the record on the line containing point.
+If ARG is null, toggle selection. Positive arg means always select and
+negative arg means always deselect"
+  (interactive "P")
+  (let ((entry (lyskom-prioritize-current-entry)))
+    (cond ((or (not (integerp arg))
+               (= arg 0))
+           (if (prioritize-entry->selected entry)
+               (lyskom-prioritize-select entry nil)
+             (lyskom-prioritize-select entry t))
+           (lyskom-prioritize-redraw-entry entry))
+          
+          ((> arg 0)
+           (if (not (prioritize-entry->selected entry))
+               (progn
+                 (lyskom-prioritize-select entry t)
+                 (lyskom-prioritize-redraw-entry entry))))
+          ((< arg 0)
+           (if (prioritize-entry->selected entry)
+               (progn
+                 (lyskom-prioritize-select entry nil)
+                 (lyskom-prioritize-redraw-entry entry)))))))
+
+
+
+(defun kom-prioritize-next-line (arg)
+  "Move forward ARG lines."
+  (interactive "p")
+  (forward-line arg)
+  (let* ((entry (lyskom-prioritize-current-entry)))
+    
+    (if (< (count-lines 1 (point)) lyskom-prioritize-header-lines)
+        (goto-line (1+ lyskom-prioritize-header-lines)))
+
+    (if (> (lyskom-prioritize-get-no-from-entry entry)
+           (length lyskom-prioritize-entry-list))
+        (goto-line (+ lyskom-prioritize-header-lines
+                      (length lyskom-prioritize-entry-list))))
+
+    (setq entry (lyskom-prioritize-current-entry))))
+
+
+(defun kom-prioritize-previous-line (arg)
+  "Move backward ARG lines."
+  (interactive "p")
+  (kom-prioritize-next-line (- arg)))
+
+
+(defun kom-prioritize-beginning ()
+  "Move to the beginning of the entry list."
   (interactive)
-  (lyskom-start-of-command 'kom-prioritize)
-  (if lyskom-membership-is-read
-      nil
-    (signal 'lyskom-internal-error '(membership-isnt-read kom-prioritize)))
-  (lyskom-collect 'priority)
-  (initiate-get-membership 'priority nil lyskom-pers-no)
-  (initiate-get-pers-stat 'priority nil lyskom-pers-no)
-  (lyskom-use 'priority 'lyskom-prioritize-1))
+  (set-mark (point))
+  (goto-line (1+ lyskom-prioritize-header-lines)))
 
 
-(defun lyskom-prioritize-1 (membership-list pers-stat)
-  "Set up buffer for kom-prioritize. Args: MEMBERSHIP-LIST PERS-STAT."
-  (cond
-   ((null membership-list)
-    (lyskom-insert-string 'cannot-get-membership)
-    (lyskom-end-of-command))
-   ((null pers-stat)
-    (lyskom-insert-string 'cannot-get-pers-stat)
-    (lyskom-end-of-command))
-   (t
-    (let ((buffer (current-buffer))
-	  (tmp-buffer (get-buffer-create (concat (buffer-name (current-buffer))
-						 "-prioritize")))
-	  (pers-no lyskom-pers-no))
-      (set-buffer tmp-buffer)
-
-      (make-local-variable 'lyskom-prioritize-buffer)
-      (make-local-variable 'lyskom-prioritize-stack)
-      (make-local-variable 'lyskom-pers-no)
-      (setq lyskom-prioritize-buffer buffer)
-      (setq lyskom-prioritize-stack nil)
-      (setq lyskom-pers-no pers-no)
-
-      (lyskom-prioritize-mode)
-
-      (let ((buffer-read-only nil))
-	(erase-buffer)
-	(lyskom-insert-string 'your-membship))
-      
-      (set-buffer buffer)		;initiate-* must be done in 
-					;LysKOM buffer.
-      (lyskom-traverse
-       memb-ship membership-list
-       (initiate-get-conf-stat 'priority 'lyskom-prioritize-2
-			       (membership->conf-no memb-ship)
-			       tmp-buffer))
-      (lyskom-run 'priority 'lyskom-prioritize-3 tmp-buffer)))))
+(defun kom-prioritize-end ()
+  "Move to the end of the entry list."
+  (interactive)
+  (set-mark (point))
+  (goto-line (+ lyskom-prioritize-header-lines
+                (length lyskom-prioritize-entry-list))))
 
 
-(defun lyskom-prioritize-2 (conf-stat buffer)
-  "Insert info about a conference last in prioritize-buffer.
-Args: CONF-STAT BUFFER."
-   (let ((membership (lyskom-get-membership-in-conf
-		      (conf-stat->conf-no conf-stat))))
-     (lyskom-save-excursion
-      (set-buffer buffer)
-      (goto-char (point-max))
-      (let ((buffer-read-only nil))
-	(lyskom-format-insert 'prio-row
-			      (membership->priority membership)
-			      conf-stat
-			      conf-stat)))))
+(defun kom-prioritize-goto-priority (arg)
+  "Move to the first entry with priority ARG.
+Asks for a priority if no prefix argument is given."
+  (interactive "P")
+  (let ((prio (or arg (lyskom-read-num-range 
+                       0 255 
+                       (lyskom-get-string 'priority-prompt))))
+        (where 0)
+        (entry nil)
+        (lineno nil))
+    (while (< where (length lyskom-prioritize-entry-list))
+      (setq entry (lyskom-prioritize-get-entry-from-no where))
+      (if (<= (prioritize-entry->priority entry) prio)
+          (setq lineno where
+                where (length lyskom-prioritize-entry-list))
+        (setq where (1+ where))))
+    (if lineno
+        (goto-line (+ lineno lyskom-prioritize-header-lines))
+      (goto-line (+ lyskom-prioritize-header-lines where)))))
 
 
-(defun lyskom-prioritize-3 (buffer)
-  "Show lyskom-prioritize-buffer. Args: BUFFER."
-  (lyskom-end-of-command)
-  (switch-to-buffer buffer)
-  (goto-char (point-max))
-  (let ((buffer-read-only nil))		;So that you can move a conference
-    (insert "  "))			;to the last line.
-  (goto-char (point-min))
-  (forward-line 2))
+(defun kom-prioritize-move-up (arg)
+  "Move current entry up ARG steps.
+If the entry is at the top of a priority group, change its priority to
+the same as the entry above it, but to not move it."
+  (interactive "p")
+  (let ((entry (lyskom-prioritize-current-entry)))
+    (beginning-of-line)
+    (while (> arg 0)
+      (let* ((start (lyskom-prioritize-get-no-from-entry entry))
+             (target (1- start))
+             (before (if (>= target 1)
+                         (lyskom-prioritize-get-entry-from-no target)
+                       nil)))
+        (cond ((null before) (error (lyskom-get-string 'beginning-of-list)))
+              ((> (prioritize-entry->priority before)
+                  (prioritize-entry->priority entry))
+               (set-prioritize-entry->priority 
+                entry
+                (prioritize-entry->priority before))
+               (lyskom-prioritize-redraw-entry entry))
+              (t (lyskom-prioritize-move-entry start target)
+                 (forward-line -1)))
+        (setq arg (1- arg))))))
 
-  
+
+(defun kom-prioritize-move-down (arg)
+  "Move current-entry down ARG steps.
+If the entry is at the top of a priority group, change its priority to
+the same as the entry above it, but to not move it."
+  (interactive "p")
+  (let ((entry (lyskom-prioritize-current-entry)))
+    (beginning-of-line)
+    (while (> arg 0)
+      (let* ((start (lyskom-prioritize-get-no-from-entry entry))
+             (target (1+ start))
+             (after (if (<= target (length lyskom-prioritize-entry-list))
+                        (lyskom-prioritize-get-entry-from-no target)
+                      nil)))
+        (cond ((null after) (error (lyskom-get-string 'end-of-list)))
+              ((< (prioritize-entry->priority after)
+                  (prioritize-entry->priority entry))
+               (set-prioritize-entry->priority 
+                entry
+                (prioritize-entry->priority after))
+               (lyskom-prioritize-redraw-entry entry))
+              (t (lyskom-prioritize-move-entry start target)
+                 (forward-line 1)))
+        (setq arg (1- arg))))))
+
+
+(defun kom-prioritize-set-priority (arg)
+  "Set priority of all selected conferences."
+  (interactive "P")
+  (set-mark-command nil)
+  (let* ((priority (or (and (integerp arg) arg)
+                       (lyskom-read-num-range 
+                        0 255 
+                        (lyskom-get-string 'priority-prompt) t)))
+         (entry (lyskom-prioritize-current-entry))
+         (entry-list
+          (or (lyskom-prioritize-get-selected)
+              (list entry))))
+    (while entry-list
+      (lyskom-prioritize-set-priority (car entry-list) priority)
+      (setq entry-list (cdr entry-list)))
+    (lyskom-prioritize-goto-entry entry)))
+
+
+
+(defun lyskom-prioritize-set-priority (entry priority)
+  (let ((list lyskom-prioritize-entry-list)
+        (target nil))
+    
+    (cond ((= (prioritize-entry->priority entry) priority) nil)
+
+          ;;
+          ;; Moving up
+          ;; Find the LAST ENTRY with EQUAL or HIGHER priority
+          ;;
+
+          ((> priority (prioritize-entry->priority entry))
+           (while list
+             (cond ((>= (prioritize-entry->priority (car list))
+                        priority)
+                    (setq list (cdr list)))
+                   (t (setq target (1+
+                                    (- (length lyskom-prioritize-entry-list)
+                                       (length list))))
+                      (setq list nil))))
+           (if (null target)
+               (setq target 1))
+           (set-prioritize-entry->priority entry priority)
+           (lyskom-prioritize-move-entry
+            (lyskom-prioritize-get-no-from-entry entry)
+            target t t))
+
+          ;;
+          ;; Moving down
+          ;; Find the FIRST ENTRY with EQUAL or LOWER priority
+          ;;
+          
+          ((< priority (prioritize-entry->priority entry))
+           (while list
+             (cond ((> (prioritize-entry->priority (car list)) priority)
+                    (setq list (cdr list)))
+                   (t (setq target (- (length lyskom-prioritize-entry-list)
+                                       (length list)))
+                      (setq list nil))))
+           (if (null target)
+               (setq target (length lyskom-prioritize-entry-list)))
+           (set-prioritize-entry->priority entry priority)
+           (lyskom-prioritize-move-entry
+            (lyskom-prioritize-get-no-from-entry entry)
+            target t t)))))
+
+            
+
+(defun kom-prioritize-reprioritize ()
+  "Reprioritize all entries with a given priority."
+  (interactive)
+  (let* ((tmp (lyskom-prioritize-current-entry))
+         (default (if tmp (prioritize-entry->priority tmp) nil))
+         (prio-from (lyskom-read-num-range
+                     0 255 
+                     (lyskom-get-string 'reprioritize-from)
+                     t default))
+         (prio-to (lyskom-read-num-range
+                   0 255
+                   (lyskom-get-string 'reprioritize-to)
+                   t))
+         (buffer-read-only nil)
+         (where 1)
+         (elem nil))
+
+    (if (and prio-from prio-to)
+        (progn
+          (while (<= where (length lyskom-prioritize-entry-list))
+            (setq elem (lyskom-prioritize-get-entry-from-no where))
+            (if (= (prioritize-entry->priority elem) prio-from)
+                (set-prioritize-entry->priority elem prio-to))
+            (setq where (1+ where)))
+          (lyskom-prioritize-sort-entries)
+          (lyskom-prioritize-redraw-buffer)
+          (kom-prioritize-goto-priority prio-to)))))
+
+
+(defun kom-prioritize-yank ()
+  "Move all marked entries to before point."
+  (interactive)
+  (let* ((old-entry (lyskom-prioritize-current-entry))
+        (entry-list (lyskom-prioritize-get-selected))
+        (prio (prioritize-entry->priority old-entry))
+        (from nil)
+        (to nil)
+        (start (car entry-list)))
+    (cond ((null entry-list) nil)
+          (t
+           (while entry-list
+             (setq from (lyskom-prioritize-get-no-from-entry (car entry-list)))
+             (setq to (lyskom-prioritize-get-no-from-entry 
+                       (lyskom-prioritize-current-entry)))
+             (if (< from to)
+                 (setq to (1- to)))
+             (set-prioritize-entry->priority (car entry-list) prio)
+             (lyskom-prioritize-move-entry from to t t)
+             (setq entry-list (cdr entry-list))
+             (lyskom-prioritize-goto-entry old-entry))
+           (lyskom-prioritize-goto-entry start)))))
+
+(defun kom-prioritize-save ()
+  "Save changes in the prioritization buffer."
+  (interactive)
+  (lyskom-prioritize-tell-server))
+
+(defun kom-prioritize-quit ()
+  "Quit from the prioritization mode."
+  (interactive)
+  (lyskom-prioritize-tell-server)
+  (bury-buffer)
+  (switch-to-buffer lyskom-buffer))
+
+
+
+;;; ======================================================================
+;;; LysKOM User command
+;;; LysKOM Prioritize mode and related functions
+;;;
+
+
 (defun lyskom-get-membership-in-conf (conf-no)
   "Returns membership for a persons membership in CONF-NO."
   (let ((l lyskom-membership))
@@ -143,19 +554,138 @@ Args: CONF-STAT BUFFER."
       (setq l (cdr l)))
     (if (not l)
 	(signal 'lyskom-internal-error
-		'(membership-is-currupt lyskom-get-membership-in-conf)))
+		'(membership-is-corrupt lyskom-get-membership-in-conf)))
     (car l)))
+
+
+
+(defun kom-prioritize ()
+  "Re-prioritize all conferences you are a member in.
+Show memberships last visited, priority, unread and name in a buffer.
+In that buffer you can use various commands to chande ordering and priorities 
+of conferences you are a member of."
+  (interactive)
+  (lyskom-start-of-command 'kom-prioritize)
+  (let* ((buffer (current-buffer))
+         (tmp-buffer (get-buffer-create (concat (buffer-name buffer)
+                                               "-prioritize"))))
+    (unwind-protect
+        (progn
+          (if lyskom-membership-is-read
+              nil
+            (signal 'lyskom-internal-error
+                    '(membership-isnt-read kom-prioritize)))
+          (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
+                (membership-list (blocking-do 'get-membership lyskom-pers-no)))
+            (cond ((null membership-list)
+                   (lyskom-insert (lyskom-get-string 'cannot-get-membership)))
+                  ((null pers-stat)
+                   (lyskom-insert (lyskom-get-string 'cannot-get-pers-stat)))
+                  (t
+                   (let* ((pers-no lyskom-pers-no)
+                          (string (concat (lyskom-mode-name-from-host)
+                                          " prioritize: "
+                                          lyskom-server-name)))
+                     (set-buffer tmp-buffer)
+                     (make-local-variable 'lyskom-buffer)
+                     (make-local-variable 'lyskom-pers-no)
+                     (make-local-variable 'lyskom-prioritize-entry-list)
+                     (setq lyskom-prioritize-entry-list nil)
+                     (setq lyskom-buffer buffer)
+                     (setq lyskom-pers-no pers-no)
+
+                     (setq mode-line-buffer-identification string)
+
+                     (lyskom-prioritize-mode)
+
+                     (set-buffer buffer)
+
+
+                     (setq lyskom-prioritize-get-conf-stat-hack nil)
+
+                     (lyskom-traverse memb-ship membership-list
+                       (initiate-get-conf-stat
+                        'prioritize
+                        'lyskom-prioritize-handle-get-conf-stat
+                        (membership->conf-no memb-ship)
+                        tmp-buffer))
+                       (lyskom-run 
+                        'prioritize
+                        'lyskom-prioritize-handle-get-conf-stat-done)
+                       
+                       ;;
+                       ;;   Wait until all conf-stats have been handled
+                       ;;
+
+                       (while (and (null lyskom-prioritize-get-conf-stat-hack)
+                                   (not lyskom-quit-flag))
+                         (accept-process-output nil
+                                                lyskom-apo-timeout-s
+                                                lyskom-apo-timeout-ms))
+                       (if lyskom-quit-flag
+                           (progn
+                             (setq lyskom-quit-flag nil)
+                             (lyskom-insert-before-prompt
+                              (lyskom-get-string 'interrupted))
+                             (signal 'quit nil))))
+
+
+                     (lyskom-save-excursion
+                      (switch-to-buffer tmp-buffer)
+                      (setq lyskom-prioritize-entry-list
+                            (nreverse lyskom-prioritize-entry-list))
+                      (lyskom-prioritize-sort-entries)
+                      (lyskom-prioritize-redraw-buffer)
+                      (goto-char (point-max))
+                      (let ((buffer-read-only nil))
+                        (insert "  "))
+                      (lyskom-prioritize-goto-entry
+                       (lyskom-prioritize-get-entry-from-no 1)))))))
+      (progn
+        (set-buffer buffer)
+        (lyskom-end-of-command)))))
+
+
+(defun lyskom-prioritize-handle-get-conf-stat (conf-stat buffer)
+  (let ((tmp (make-prioritize-entry
+              (membership->priority 
+               (lyskom-get-membership-in-conf 
+                (conf-stat->conf-no 
+                 conf-stat)))
+              conf-stat)))
+    (save-excursion
+      (set-buffer buffer)
+      (setq lyskom-prioritize-entry-list 
+            (cons tmp lyskom-prioritize-entry-list)))))
+
+(defun lyskom-prioritize-handle-get-conf-stat-done ()
+  (setq lyskom-prioritize-get-conf-stat-hack t))
+          
+
+
+(defun lyskom-prioritize-sort-entries ()
+  "Sort the prioritization entry list."
+  (setq lyskom-prioritize-entry-list
+        (sort lyskom-prioritize-entry-list
+              (function (lambda (x y)
+                          (> (prioritize-entry->priority x)
+                             (prioritize-entry->priority y))))))
+  (save-excursion
+    (set-buffer lyskom-buffer)
+    (setq lyskom-membership (sort lyskom-membership
+                                  'lyskom-membership-<))))
+
 
 
 (defun lyskom-prioritize-mode ()
   "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
 
 Commands:
-\\[kom-prioritize-kill]\tMove conference on current line to stack.
-\\[kom-prioritize-yank]\tInsert conference from stack before then current line.
-\\[kom-prioritize-set-priority]\tAlter the priority of the conference.
 \\[kom-prioritize-move-up]\tMove conference on current line one line up.
 \\[kom-prioritize-move-down]\tMove conference on current line one line down.
+\\[kom-prioritize-set-priority]\tAlter the priority of the conference.
+\\[kom-prioritize-save]\tSave changes to priorities.
+\\[kom-prioritize-repriorize]\tChange one priority to another.
 \\[kom-prioritize-quit]\tReturn to LysKOM.
 
 All bindings:
@@ -163,205 +693,64 @@ All bindings:
 Entry to this mode runs lyskom-prioritize-mode-hook."
   (interactive)
   (setq major-mode 'lyskom-prioritize-mode)
-  (setq mode-name "LysKOM prioritize")
+  (setq mode-name "Prioritize")
+  (make-local-variable 'lyskom-prioritize-entry-list)
+  (make-local-variable 'lyskom-prioritize-mode-line-selected)
+  (make-local-variable 'lyskom-prioritize-selection)
+  (setq lyskom-prioritize-mode-line-selected "")
+  (setq lyskom-prioritize-selection nil)
+  (setq lyskom-prioritize-entry-list nil)
+  (setq mode-line-format lyskom-prioritize-mode-line)
+  (lyskom-prioritize-update-mode-line)
   (setq buffer-read-only t)
   (use-local-map lyskom-prioritize-mode-map)
   (run-hooks 'lyskom-prioritize-mode-hook))
 
 
-(defun kom-prioritize-kill (count)
-  "\"Kill\" conference on current line.
-If optional prefix argument COUNT is present that many conferences
-are killed. A killed conference is marked with a '-' in the first
-column, and can be inserted at another line with \\[kom-prioritize-yank]."
-  (interactive "P")
-  (beginning-of-line)
-  (cond
-   ((< (count-lines (point-min) (point)) 2) 		;In header?
-    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
-   ((< (count-lines (point) (point-max)) 2)
-    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
-   ((null count)			;Take care of interactive argument.
-    (setq count 1))
-   ((numberp count))
-   ((and (listp count)
-	 (numberp (car count))
-	 (null (cdr count)))
-    (setq count (car count)))
-   (t (signal 'lyskom-internal-error '(kom-prioritize-yank))))
-  (while (and (> count 0)		;Repeat count times.
-	      (re-search-forward
-	       "^ "			;Find first line without kill flag.
-	       (- (point-max) 6)
-	       'foo))		;Stop at end of buffer if none found.
-    (beginning-of-line)
-    (setq lyskom-prioritize-stack	;Push a marker to this line.
-	  (cons (lyskom-prioritize-marker (point))
-		lyskom-prioritize-stack))
-    (let ((buffer-read-only nil))	;Set kill-flag.
-      (delete-char 1)
-      (insert "-"))
-    (beginning-of-line)
-    (-- count)))			;... and repeat.
-  
-    
 
-(defun kom-prioritize-yank (&optional count)
-  "Yank topmost conference from stack before current line.
-If optional prefix argument COUNT is present yank that many
-conferences (or as many as is on the stack, whichever is less)."
-  (interactive "P")
-  (cond
-   ((null lyskom-prioritize-stack)
-    (lyskom-error "%s" (lyskom-get-string 'all-confs-popped)))
-   ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
-   ((null count)			;Interactive...
-    (setq count 1))
-   ((numberp count))
-   ((and (listp count)
-	 (numberp (car count))
-	 (null (cdr count)))
-    (setq count (car count)))
-   (t (signal 'lyskom-internal-error '(kom-prioritize-yank))))
-  (while (and (> count 0)		;Repeat count times...
-	      lyskom-prioritize-stack)	;...or until stack is empty.
-    (beginning-of-line)
-    (lyskom-prioritize-move
-     (car lyskom-prioritize-stack)	;Move from top-of-stack
-     (lyskom-prioritize-marker (point))) ;to current line.
-    (setq lyskom-prioritize-stack	;Pop from stack.
-	  (cdr lyskom-prioritize-stack))
-    (-- count))) 
+(defun lyskom-prioritize-update-mode-line ()
+  (setq lyskom-prioritize-mode-line-selected
+        (cond ((= (length (lyskom-prioritize-get-selected)) 0)
+               (lyskom-get-string 'no-selection))
+               (t (format (lyskom-get-string 'selection)
+                          (length (lyskom-prioritize-get-selected))))))
+  (force-mode-line-update))
 
 
-(defun lyskom-prioritize-move (from to)
-  "Move a line from position FROM to position TO.
-FROM and TO should be markers that points to the second characters
-on the lines. Leaves point at the beginning of the moved line."
-  (cond
-   ((not (and (markerp from) (markerp to)))
-    (signal 'lyskom-internal-error
-	    '("lyskom-prioritize-move called without marker.")))
-   (t
-    ;;Store line to move in 'line'.
 
-    (let* ((start (progn (goto-char from)
-			 (beginning-of-line)
-			 (point)))
-	   (end (progn (end-of-line)
-		       (1+ (point))))
-	   (line (prog1 (buffer-substring start end)
-		   (let ((buffer-read-only nil))
-		     (delete-region start end)))))
-      ;;Insert 'line'.
-      (goto-char to)
-      (beginning-of-line)
-      (let ((buffer-read-only nil))
-	(insert line)
-	(beginning-of-line 0)		;Move back to the newly inserted line.
-	(delete-char 1)			;Clear kill-flag.
-	(insert " ")))
-    (beginning-of-line)
 
-    ;; Tell the server what we have done.
-    ;; (Should also tell the cache to avoid refetching everything).
+;;; ================================================================
+;;; Saving changes
+;;;
 
-    (save-excursion
-      (let ((posnr (- (count-lines (point-min) (point))
-		      2))
-	    (prio (read (current-buffer)))
-	    (conf-no (read (current-buffer))))
-	(set-buffer lyskom-prioritize-buffer)
-	(initiate-add-member 'priority 'lyskom-prioritize-handler
-			     conf-no lyskom-pers-no prio posnr))))))
-
+(defun lyskom-prioritize-tell-server (&optional entry)
+  "Tell the server about the changes. If optional arg ENTRY is given, 
+only tell server about that entry." 
+  (cond ((null entry)
+         (mapcar (function 
+                  (lambda (x)
+                    (if x
+                        (lyskom-prioritize-tell-server x))))
+                 lyskom-prioritize-entry-list))
+        
+        (t (let* ((conf-stat (prioritize-entry->conf-stat entry))
+                  (conf-no (conf-stat->conf-no conf-stat))
+                  (entry-number 
+                   (1- (lyskom-prioritize-get-no-from-entry entry))))
+             (save-excursion
+               (set-buffer lyskom-buffer)
+               (set-membership->priority 
+                (lyskom-get-membership-in-conf conf-no)
+                (prioritize-entry->priority entry))
+               (initiate-add-member 'priority
+                                    'lyskom-prioritize-handler
+                                    conf-no
+                                    lyskom-pers-no
+                                    (prioritize-entry->priority entry)
+                                    entry-number))))))
+                 
+      
 
 (defun lyskom-prioritize-handler (res)
   "Arg: RES. Barf if RES is nil."
   (or res (lyskom-error "%s" (lyskom-get-string 'prio-died))))
-
-
-(defun kom-prioritize-quit ()
-  "Reselect LysKOM buffer."
-  (interactive)
-  (let ((buffer lyskom-prioritize-buffer))
-    (bury-buffer)			;Should maybe kill buffer?
-    (switch-to-buffer buffer)
-    (lyskom-start-of-command "" t)
-    (lyskom-insert-string 'wait)
-    (lyskom-refetch)
-    (lyskom-end-of-command)))			;The internal structures SHOULD be
-					;updated when one move around the
-					;conferences in the prioritize-buffer,
-					;but it is simpler to do it this way...
-
-
-(defun kom-prioritize-set-priority ()
-  "Change priority of conference on current line."
-  (interactive)
-  (beginning-of-line)
-  (cond
-   ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
-   ((zerop (count-lines (point) (point-max)))
-    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
-   (t
-    (save-excursion
-      (let
-	  ((new-prio (lyskom-read-num-range
-		      0 255 (lyskom-get-string 'new-priority)))
-	   (posnr (- (count-lines (point-min) (point))
-		     2))
-	   (prio (read (current-buffer)))
-	   (conf-no (read (current-buffer))))
-	(beginning-of-line)
-	(let ((buffer-read-only nil))
-	  (delete-char 6)		;Write new priority on display.
-	  (insert (lyskom-format 'new-prio new-prio)))
-	(beginning-of-line)
-	(set-buffer lyskom-prioritize-buffer)
-	;; Tell the server the new priority.
-	(initiate-add-member 'priority 'lyskom-prioritize-handler
-			     conf-no lyskom-pers-no new-prio posnr)
-	;; Tell the cache the new priority.
-	;; (Should sort the membership-list also).
-	(set-membership->priority (lyskom-get-membership-in-conf conf-no)
-				  new-prio))))))
-
-
-(defun kom-prioritize-move-up (&optional count reverse)
-  "Move current line up one line.
-If optional prefix-arg COUNT move COUNT lines instead.
-If optional argument REVERSE is non-nil move line down instead."
-  (interactive "P")
-  (beginning-of-line)
-  (cond
-   ((< (count-lines (point-min) (point)) 2)
-    (lyskom-error "%s" (lyskom-get-string 'too-high-goto-2)))
-   ((zerop (count-lines (point) (point-max)))
-    (lyskom-error "%s" (lyskom-get-string 'too-low-go-up)))
-   ((null count)
-    (setq count 1))
-   ((numberp count))
-   ((and (listp count)
-	 (numberp (car count))
-	 (null (cdr count)))
-    (setq count (car count))))
-  (if reverse (setq count (- count)))
-  (if (< count 0) (-- count))
-  (let ((from (lyskom-prioritize-marker (point))))
-    (forward-line (- count))
-    (cond
-     ((< (count-lines (point-min) (point)) 2)
-      (goto-char (point-min))
-      (forward-line 2)))
-    (lyskom-prioritize-move from (lyskom-prioritize-marker (point)))))
-
-
-(defun kom-prioritize-move-down (&optional count)
-  "Move current line down one line.
-If optional prefix-arg COUNT move COUNT lines instead."
-  (interactive "P")
-  (kom-prioritize-move-up count t))
-

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.3 1996-04-25 15:03:24 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 40.4 1996-04-29 11:59:29 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.3 1996-04-25 15:03:24 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.4 1996-04-29 11:59:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -329,7 +329,14 @@ du har l\344st klart allting. Kom tillbaks senare.
     (no-marked-texts . "Du har inga markerade inl\344gg.\n")
     (no-marked-texts-mark . 
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
-    (time-is . "Klockan \344r %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(enligt servern).\n")
+    (time-is . "Klockan \344r %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(enligt servern).")
+
+    (xmaseve . "\nJulafton! Har du öppnat dina julklappar än?")
+    (xmasday . "Juldagen.")
+    (newyearday . "Gott nytt %#1d!")
+    (newyearevelate . "Mindre än en timme kvar...")
+    (newyeareve . "Gott nytt år!")
+
     (total-users . "    Sammanlagt %#1d anv\344ndare.\n")
     (who-to-add-q . "Vilket m\366te/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket m\366te/person vill du addera som kopiemottagare? ")
@@ -668,6 +675,16 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
 
     ; From prioritize.el:
+
+    (cant-move-nothing-nowhere . "Kan inte flytta ingenting någonstans.")
+    (priority-prompt . "Ny prioritet: ")
+    (beginning-of-list . "B\366rjan av listan")
+    (end-of-list . "Slutet av listan")
+    (reprioritize-from . "Prioritera om fr\345n: ")
+    (reprioritize-to . "Prioritera om till: ")
+    (no-selection . "Ingen markerad")
+    (selection . "%d markerade")
+
     (cannot-get-membership . "Kan ej h\344mta medlemsskap f\366r dig.")
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
     (your-priorities . " Prioritet  M\366tesnamn
@@ -1233,51 +1250,66 @@ Cf. paragraph-start.")
 (defvar lyskom-prioritize-mode-map nil
   "Keymap used in lyskom-prioritize-mode.")
 
-(if lyskom-prioritize-mode-map
-    nil
-  (setq lyskom-prioritize-mode-map (make-keymap))
-  (suppress-keymap lyskom-prioritize-mode-map)
-  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
-  (define-key lyskom-prioritize-mode-map " "    'next-line)
-  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
-  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
-  (define-key lyskom-prioritize-mode-map "p"     'kom-prioritize-set-priority)
-  (define-key lyskom-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "q"     'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "S"     'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
-  (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
-)
-
-
-;;; (defvar lyskom-prioritize-mode-map nil
-;;;  "Keymap used in lyskom-prioritize-mode.")
-;;;
-;;;(if lyskom-prioritize-mode-map 
+;;;(if lyskom-prioritize-mode-map
 ;;;    nil
 ;;;  (setq lyskom-prioritize-mode-map (make-keymap))
 ;;;  (suppress-keymap lyskom-prioritize-mode-map)
 ;;;  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
-;;;  (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
-;;;  (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
-;;;  (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
-;;;  (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
-;;;  (define-key lyskom-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
-;;;  (define-key lyskom-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
-;;;  (define-key lyskom-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
-;;;  (define-key lyskom-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
-;;;  (define-key lyskom-prioritize-mode-map "u" 'kom-prioritize-move-up)
-;;;  (define-key lyskom-prioritize-mode-map "d" 'kom-prioritize-move-down)
-;;;  (define-key lyskom-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
-;;;  (define-key lyskom-prioritize-mode-map "\M->" 'kom-prioritize-end)
-;;;  (define-key lyskom-prioritize-mode-map "r" 'kom-prioritize-reprioritize)
-;;;  (define-key lyskom-prioritize-mode-map "g" 'kom-prioritize-goto-priority)
-;;;  (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-set-priority)
-;;;  (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
-;;;  (define-key lyskom-prioritize-mode-map "\C-x\C-x" 'exchange-point-and-mark)
-;;;  (define-key lyskom-prioritize-mode-map [C-SPC] 'set-mark-command)
-;;;  (define-key lyskom-prioritize-mode-map "*" 'kom-prioritize-mark))
+;;;  (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
+;;;  (define-key lyskom-prioritize-mode-map " "    'next-line)
+;;;  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
+;;;  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
+;;;  (define-key lyskom-prioritize-mode-map "p"     'kom-prioritize-set-priority)
+;;;  (define-key lyskom-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
+;;;  (define-key lyskom-prioritize-mode-map "q"     'kom-prioritize-quit)
+;;;  (define-key lyskom-prioritize-mode-map "S"     'kom-prioritize-quit)
+;;;  (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
+;;;  (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
+;;;)
+
+(if lyskom-prioritize-mode-map 
+    nil
+  (setq lyskom-prioritize-mode-map (make-keymap))
+  (suppress-keymap lyskom-prioritize-mode-map)
+  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-prioritize-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-prioritize-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map " " 'kom-prioritize-select)
+  (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map "n" 'kom-prioritize-next-line)
+  (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
+  (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
+  (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-previous-line)
+  (define-key lyskom-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
+  (define-key lyskom-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
+  (define-key lyskom-prioritize-mode-map "u" 'kom-prioritize-move-up)
+  (define-key lyskom-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
+  (define-key lyskom-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
+  (define-key lyskom-prioritize-mode-map "d" 'kom-prioritize-move-down)
+  (define-key lyskom-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
+  (define-key lyskom-prioritize-mode-map "\M->" 'kom-prioritize-end)
+  (define-key lyskom-prioritize-mode-map "r" 'kom-prioritize-reprioritize)
+  (define-key lyskom-prioritize-mode-map "g" 'kom-prioritize-goto-priority)
+  (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-set-priority)
+  (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-save)
+  (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
+  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank))
+
+
+(defvar lyskom-prioritize-header-lines 2
+  "Number of lines in the header of the prioritization buffer")
+
+(defvar lyskom-prioritize-header 
+" Prio   M\366te
+-----------------------------------------------------------------------------
+"
+  "Header for the reprioritization buffer")
+
+
+
 
   
 ;;;; ============================================================
@@ -1310,7 +1342,7 @@ This variable is stored in the LysKOM server.")
       ("Personligt svar" . lyskom-button-private-comment-text)
       ("Markera texten" . lyskom-button-mark-text)
       ("Avmarkera texten" . lyskom-button-unmark-text))
-     nil)
+     ((nil lyskom-print-text footer lyskom-button-comment-text)))
     (conf 
      conf-text
      lyskom-button-view-conf-presentation

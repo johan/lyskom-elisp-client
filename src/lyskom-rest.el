@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.12 1996-04-29 04:36:05 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.13 1996-04-29 11:59:07 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.12 1996-04-29 04:36:05 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.13 1996-04-29 11:59:07 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -737,10 +737,10 @@ The position lyskom-last-viewed will always remain visible."
 
 (defun lyskom-insert (string)
   "Insert STRING last in current buffer.
-Scrolls as long as the last viewed line (lyskom-last-viewed) remains
-on screen. Leaves the point at the end of the buffer if possible,
-otherwise the point is left at the end of the window. If buffer is not
-on screen then doesn't move point.
+Leaves the point at the end of the buffer if possible without
+scrolling past lyskom-last-viewed (generally the most recent prompt.)
+Leaves the point at the end of the window if not possible. If buffer
+is not on screen then doesn't move point.
 The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   (goto-char (point-max))
   (let ((buffer-read-only nil))
@@ -1526,6 +1526,8 @@ chosen according to this"
       (progn
         (setq lyskom-is-waiting nil)
         (lyskom-end-of-command)))
+
+  (setq lyskom-is-waiting nil)
   (if (and lyskom-executing-command (not may-interrupt))
       (lyskom-error "%s" (lyskom-get-string 'wait-for-prompt)))
   (if (not (and (boundp 'lyskom-doing-default-command)
@@ -1584,7 +1586,9 @@ chosen according to this"
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
   (lyskom-prefetch-and-print-prompt)
-  (run-hooks 'lyskom-after-command-hook))
+  (run-hooks 'lyskom-after-command-hook)
+  (if kom-inhibit-typeahead
+      (discard-input)))
 
 
 (defun lyskom-print-prompt ()
@@ -1597,13 +1601,11 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
      
      ((eq to-do 'next-pri-conf)
       (lyskom-insert-string (lyskom-modify-prompt 'go-to-pri-conf-prompt))
-      (lyskom-beep kom-ding-on-priority-break)
-      (setq lyskom-is-waiting nil))
+      (lyskom-beep kom-ding-on-priority-break))
 
      ((eq to-do 'next-pri-text)
       (lyskom-insert-string (lyskom-modify-prompt 'read-pri-text-conf))
-      (lyskom-beep kom-ding-on-priority-break)
-      (setq lyskom-is-waiting nil))
+      (lyskom-beep kom-ding-on-priority-break))
 
      ((eq to-do 'next-text)
       (lyskom-insert
@@ -1622,8 +1624,7 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
             (lyskom-get-string 'read-next-footnote-prompt))
            ((eq 'COMM-IN (read-info->type read-info))
             (lyskom-get-string 'read-next-comment-prompt))
-           (t (lyskom-get-string 'read-next-text-prompt))))))
-      (setq lyskom-is-waiting nil))
+           (t (lyskom-get-string 'read-next-text-prompt)))))))
 
      ((eq to-do 'next-conf)
       (lyskom-insert
@@ -1637,14 +1638,11 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
                (read-info->conf-stat (read-list->first
                                       lyskom-to-do-list))))
           (lyskom-get-string 'go-to-next-conf-prompt))
-         (t (lyskom-get-string 'go-to-your-mailbox-prompt)))))
-      (setq lyskom-is-waiting nil))
+         (t (lyskom-get-string 'go-to-your-mailbox-prompt))))))
 
      ((eq to-do 'when-done)
       (if (not lyskom-is-writing)
-	  (lyskom-tell-server kom-mercial))
-      (setq lyskom-is-waiting t) ; +++ I don't quite get it. Why is
-                                        ; this variable set here?
+          (lyskom-tell-server kom-mercial))
       (lyskom-insert
        (lyskom-modify-prompt
         (let ((command (lyskom-what-to-do-when-done t)))

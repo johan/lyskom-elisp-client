@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 40.4 1996-04-27 01:08:45 davidk Exp $
+;;;;; $Id: startup.el,v 40.5 1996-04-29 11:59:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 40.4 1996-04-27 01:08:45 davidk Exp $\n"))
+	      "$Id: startup.el,v 40.5 1996-04-29 11:59:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -162,13 +162,10 @@ See lyskom-mode for details."
   "Start as a new person."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
+  (lyskom-completing-clear-cache)
   (let ((old-me lyskom-pers-no))
     (unwind-protect
         (progn
-	  ;; Clera this cache, so lyskom-read-conf-name-internal won't
-	  ;; be confused later
-	  (lyskom-completing-clear-cache)
-	  
           (if lyskom-first-time-around
               nil
             (lyskom-tell-internat 'kom-tell-login))
@@ -181,7 +178,7 @@ See lyskom-mode for details."
                 (setq lyskom-pers-no
                       (lyskom-read-conf-name-internal lyskom-default-user-name
                                                       'pers 'conf-no)))
-	    (if lyskom-pers-no
+            (if lyskom-pers-no
                 nil
               (let ((name (lyskom-read-conf-name
                            (lyskom-get-string 'what-is-your-name)
@@ -197,7 +194,7 @@ See lyskom-mode for details."
 
 		  ;; DEBUG
 		  (if (null conf-stat)
-		      (lyskom-insert "+++ You don't exist. Go away!\n"))
+		      (lyskom-insert "You don't exist. Go away.\n"))
 
                   (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
                   (setq lyskom-first-time-around nil)
