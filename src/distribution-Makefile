@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.1 1997-07-07 15:25:13 byers Exp $
+# $Id: distribution-Makefile,v 44.2 1997-07-11 14:17:07 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -17,7 +17,7 @@ EMACS=emacs
 # INFODIR is where documentation goes (if there is any)
 # ======================================================================
 
-LISPDIR=/usr/gnu/share/emacs/site-list
+LISPDIR=/usr/gnu/share/emacs/site-lisp
 INFODIR=/usr/gnu/info
 
 
@@ -100,7 +100,7 @@ lyskom.el: $(HEADER) $(SOURCES)
 	cat $(HEADER) $(SOURCES) > lyskom.el
 
 install: all
-	cp lykom.el lyskom.elc $(LISPDIR)
+	cp lyskom.el lyskom.elc $(LISPDIR)
 
 clean:
 	$(RM) lyskom.el

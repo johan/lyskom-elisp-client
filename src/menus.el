@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.10 1997-07-11 08:54:02 byers Exp $
+;;;;; $Id: menus.el,v 44.11 1997-07-11 14:17:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -238,12 +238,33 @@
           (lyskom-get-menu-category menu-category))
   (setq lyskom-current-menu-category (list menu-category)))
 
+;;;
+;;; This function would have been completely unnecessary if Gnu Emacs
+;;; didn't carry around an ancient version of popup-menu that is
+;;; completely incompatible with XEmacs version of the same function. 
+;;; Sometimes I hate elisp.
+;;;
 
-		   
+(defun lyskom-do-popup-menu (menu event)
+  "Pop up a menu"
+  (lyskom-xemacs-or-gnu 
+   (popup-menu menu event)
+   (let* ((result (nreverse (x-popup-menu (or event t)
+                                          (list menu)))))
+     (cond ((listp (car result)) 
+            (apply (car (car result))
+                   (cdr (car result))))
+           ((commandp (car result))
+            (call-interactively (car (nreverse result))))
+           ((functionp (car result))
+            (funcall (car result)))
+           (t nil)))))
+
+
 (defun lyskom-background-menu (pos event)
   "Pop up a menu with LysKOM commands and execute the selected command."
   (let* ((menu lyskom-popup-menu)
-	 (result (popup-menu menu event)))))
+	 (result (lyskom-do-popup-menu menu event)))))
 
 
 
