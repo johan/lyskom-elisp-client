@@ -1,5 +1,10 @@
-all:
+all: binaries
+
+binaries:
 	(cd src; ${MAKE})
+
+includes:;
+libraries:;
 
 install:
 	echo elisp-client not installed (do that manually)
