@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.11 1997-09-21 11:43:13 byers Exp $
+;;;;; $Id: parse.el,v 44.12 1997-10-10 13:12:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.11 1997-09-21 11:43:13 byers Exp $\n"))
+	      "$Id: parse.el,v 44.12 1997-10-10 13:12:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -263,7 +263,10 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
   "Parse a vector with LEN elements.
 Each element is parsed by PARSER, a function that takes no arguments."
   (cond
-   ((zerop len) (lyskom-expect-char ?*))
+   ((zerop len) (if (lyskom-char-p ?*)
+                    (lyskom-expect-char ?*)
+                  (lyskom-expect-char ?\{)
+                  (lyskom-expect-char ?\})))
    ((lyskom-char-p ?*) (lyskom-expect-char ?*))
    (t (lyskom-expect-char ?{)
       (prog1

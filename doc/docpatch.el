@@ -1,4 +1,5 @@
-(defconst lyskom-doc-filename "elisp-client")
+(setq delete-old-versions t)
+(defconst lyskom-doc-filename "lyskom")
 
 (defvar lyskom-fn-doc nil)
 (defvar lyskom-var-doc nil)
@@ -6,7 +7,7 @@
 (defun lyskom-doc-patch ()
   (setq lyskom-fn-doc (lyskom-doc-load-db "lyskom-commands.data"))
   (setq lyskom-var-doc (lyskom-doc-load-db "lyskom-variables.data"))
-  (find-file (concat lyskom-doc-filename ".in")
+  (find-file (concat lyskom-doc-filename ".in"))
   (lyskom-doc-patch-fn)
   (lyskom-doc-patch-var)
   (write-file (concat lyskom-doc-filename ".texinfo"))
@@ -54,13 +55,21 @@
                           is-user-variable
                           xref
                           doc-string)
-  (format "\n@item @code{%s}\n@vindex %s\n@itemx @code{%s}%s\n\n%s\n"
+  (format "
+
+@item @code{%s}
+@itemx @i{%s, defaultvärde: @samp{%s}}
+@vindex %s
+%s
+"
           var-name
-          var-name
+          (lyskom-doc-symbol is-server-variable
+                             '((t .   "Sparas i LysKOM-servern")
+                               (nil . "Sparas inte i servern")))
           default-value
-          (lyskom-doc-symbol is-server-variable '((t . " (sparas i servern)")
-                                                  (nil . "")))
-          (replace-in-string doc-string "" "\n")))
+          var-name
+          (replace-in-string doc-string "" "\n")
+          ))
 
 
 (defun lyskom-doc-transform-key-list (keybindings)

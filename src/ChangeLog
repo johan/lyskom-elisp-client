@@ -1,3 +1,7 @@
+Tue Oct  7 12:30:30 1997  David Byers  <davby@ida.liu.se>
+
+	* parse.el (lyskom-parse-vector): Klara att parsea 0 { }. 
+
 Wed Oct  1 14:30:39 1997  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (kom-server-aliases): Lade till TokKOM
