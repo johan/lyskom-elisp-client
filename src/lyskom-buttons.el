@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 38.5 1996-02-01 09:36:59 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 38.6 1996-02-18 05:51:26 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -113,6 +113,8 @@
 
            (let* ((menu (cons title (cons (cons "" actl) nil)))
                   (result (x-popup-menu event menu)))
+	     ;; The menu code seems to leave a mouse event behind
+	     (read-event)
              (if result
                  (funcall result buf arg text)))))))
          
