@@ -1,3 +1,8 @@
+Wed Aug 28 22:06:21 1991  Linus Tolke Y  (linus at lysator)
+
+	* internal.el (lyskom-apply-handler): h{r f}ngade vi quit utan att
+	  }terskapa det igen.
+
 Wed Aug 28 05:18:27 1991  Per Cederqvist  (ceder at lysator)
 
 	* commands2.el (lyskom-status-pers-2), swedish-strings.el
