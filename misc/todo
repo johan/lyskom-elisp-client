@@ -1,4 +1,4 @@
-* R{tt buffer n{r vi exekverar lyskom-do-when-starting.
+* read-list-enter-read-info skall vara iterativ, inte rekursiv.
 
 * Lappar p} d|rrar f|r m|ten.
 
