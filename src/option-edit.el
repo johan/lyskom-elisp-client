@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.113 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.114 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.113 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.114 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -208,6 +208,7 @@
     [kom-saved-file-name]
     [kom-default-mark]
     [kom-symbolic-marks-alist]
+    [kom-membership-default-message-flag]
     [kom-membership-default-priority]
     [kom-membership-default-placement]
     [kom-unsubscribe-makes-passive]
@@ -708,6 +709,10 @@ All key bindings:
                       :help-echo select-priority
                       :format "%[%t%] (%v)"
                       :size 0))))
+    (kom-membership-default-message-flag
+     (choice ((const (ask-every-time ask))
+              (const (yes t))
+              (const (no nil)))))
     (kom-show-personal-messages-in-buffer
      (choice ((const (messages-in-lyskom-buffer t))
               (const (discard-messages nil))

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.312 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.313 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.312 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.313 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1935,6 +1935,17 @@ Values other than `t' and `nil' are reserved for future use."
 If set to a valid priority (integer from 0 to 255) then new
 conferences are read with this priority. When set to the symbol `ask',
 the client will ask for a priority when joining new conferences.
+
+Values other than those listed are reserved for future use."
+  server)
+
+(def-kom-var kom-membership-default-message-flag 'ask
+  "**Default message flag when joining a new conference.
+
+If set to `nil', messages will not be received for new conferences,
+if set to `t', messages will be received. When set to the symbol `ask',
+the client will ask if you want to receive messages when you join new 
+conferences.
 
 Values other than those listed are reserved for future use."
   server)

@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.392 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.393 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.392 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.393 2005-01-12 11:42:14 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -3921,6 +3921,10 @@ ta fram menyer.")
   I annat fall kommer klienten att fråga för varje nytt medlemskap vilken
   prioritet det skall ha.")
 
+    (kom-membership-default-message-flag-doc . "\
+  Detta bestämmer om gruppmeddelanden tas emot i möten man går med i. `Ja'  
+  betyder att gruppmeddelanden tas emot, `Nej' att meddelanden inte tas
+  emot. `Fråga varje gång' att klienten frågar när du går med i möten.")
 
     (kom-show-personal-messages-in-buffer-doc . "\
   Denna inställning bestämmer var personliga meddelanden, gruppmeddelanden
@@ -4494,6 +4498,8 @@ ta fram menyer.")
 "Visa fotnoter omedelbart:                 ")
     (kom-membership-default-priority-tag . 
 "Prioritet för nya medlemskap:             ")
+    (kom-membership-default-message-flag-tag . 
+"Mottag gruppmeddelanden för nya medlemskap: ")
     (kom-dashed-lines-tag . 
 "Streckade linjer kring inläggstexten:     ")
     (kom-autowrap-tag . 

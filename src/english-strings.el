@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.348 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.349 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.348 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.349 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3803,10 +3803,16 @@ up menus.")
 
 
     (kom-membership-default-priority-doc . "\
-  This specifies the how the initial priority of a conference is set when
+  This specifies how the initial priority of a conference is set when
   you first become a member. If it is a number between 1 and 255, that is
   the priority assigned. If it is something else, LysKOM will ask for a 
   priority every time you become a member of a conference.")
+
+    (kom-membership-default-message-flag-doc . "\
+  This specifies if group messages are received for conferences you join.
+  `Yes' means group messages are received, `No' that they aren't and 
+  `Ask every time' that the client will ask every time you become a member
+  of a conference.")
 
     (kom-show-personal-messages-in-buffer-doc . "\
   This setting specifies how personal, group and public messages are shown.
@@ -4372,6 +4378,8 @@ up menus.")
 "Show footnotes immediately:                       ")
     (kom-membership-default-priority-tag . 
 "Default priority for new memberships:             ")
+   (kom-membership-default-message-flag-tag . 
+"Receive group messages for new memberships:       ")
     (kom-dashed-lines-tag . 
 "Dashed lines around the text body:                ")
     (kom-autowrap-tag . 

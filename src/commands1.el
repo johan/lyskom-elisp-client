@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.222 2005-01-09 22:08:59 byers Exp $
+;;;;; $Id: commands1.el,v 44.223 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.222 2005-01-09 22:08:59 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.223 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -672,9 +672,11 @@ be called from a callback."
                                        0 (pers-stat->no-of-confs pers-stat)
                                        (lyskom-format 'where-on-list-q
                                                       (lyskom-membership-length)))))))
-               (message-flag (if mship-type
-                                 (membership-type->message-flag mship-type)
-                               (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q whereto))))
+               (message-flag (or (when mship-type
+				   (membership-type->message-flag mship-type))
+				 (when (eq 'ask kom-membership-default-message-flag)
+				   (lyskom-j-or-n-p (lyskom-format 'set-message-flag-q whereto)))
+				 kom-membership-default-message-flag))
 
                (mship-type (or mship-type
                                (lyskom-create-membership-type (not self) nil nil message-flag

@@ -1,3 +1,23 @@
+2005-01-12  Pontus Freyhult  <pont@soua.net>
+
+	Fix bug 1402:
+	* english-strings.el, swedish-strings.el (lyskom-custom-strings): 
+	Added kom-membership-default-message-flag-tag and
+	kom-membership-default-message-flag-doc.
+
+	* english-strings.el (lyskom-custom-strings): Fixed typo for
+	kom-membership-default-priority-doc.
+
+	* option-edit.el (lyskom-custom-variables): Added 
+	kom-membership-default-message-flag.
+	(lyskom-customize-buffer-format): Dito.
+
+	* vars.el.in (kom-membership-default-message-flag): New variable.
+
+	* commands1.el (lyskom-add-member): Use 
+	kom-membership-default-message-flag.
+
+
 2005-01-11  Pontus Freyhult  <pont@soua.net>
 
 	Applied patch from calle@lysator.liu.se, fixes bug 1487:
