@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 43.0 1996-08-07 16:38:45 davidk Exp $
+# $Id: Makefile,v 43.1 1996-08-07 20:00:58 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 43.0 1996-08-07 16:38:45 davidk Exp $
+# $Id: Makefile,v 43.1 1996-08-07 20:00:58 davidk Exp $
 #
 
 CLIENTVERSION = 0.42
@@ -163,32 +163,17 @@ wc:
 TAGS: $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 	etags $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 
-doc:
-	(cd ../doc ; $(MAKE) elisp-client elisp-client.txt ; )
-
-release: installatftp
-	( cd ../doc; $(MAKE) release )
-
-install: installatlysator installdoc
-
-installatlysator: lyskom.elc lyskom.el
+install: lyskom.elc lyskom.el
 	cp lyskom.el lyskom.elc $(LISPDIR)
 
-installatftp: lyskom-$(CLIENTVERSION).el.gz english-lyskom-$(CLIENTVERSION).el.gz
+release: lyskom-$(CLIENTVERSION).el.gz english-lyskom-$(CLIENTVERSION).el.gz
 	cp lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
 	cp english-lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
-	cp ../doc/NEWS-$(CLIENTVERSION) $(FTPDIR)
 
-# This is now the responsability of the Makefile in the doc-dir.
-installdoc: doc
-	( cd ../doc; $(MAKE) install )
-
-smallclean:
-	$(RM) lyskom-$(CLIENTVERSION).el.gz lyskom-$(CLIENTVERSION).elc.gz
-	$(RM) lyskom-$(CLIENTVERSION).elc lyskom.el lyskom.elc
-
-clean: smallclean
+clean:
+	$(RM) *.el.gz *.elc.gz lyskom.el english-lyskom.el
+	$(RM) *lyskom-$(CLIENTVERSION).*
 	$(RM) *~ *.elc $(GENERIC-CLEAN)
 
 distclean: clean
-	$(RM) $(GENERIC-DIST-CLEAN) Topdir.make */Topdir.make vars.el
+	$(RM) $(GENERIC-DIST-CLEAN) vars.el
