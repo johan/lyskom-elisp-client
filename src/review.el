@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.45 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: review.el,v 44.46 2003-01-09 00:43:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.45 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: review.el,v 44.46 2003-01-09 00:43:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -103,7 +103,7 @@ conference. This can also be accomplished by using `kom-review-by-to'
 and specifying zero texts.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
@@ -116,7 +116,7 @@ performed with `kom-review-by-to'. The review will be resumed where
 the previous review finished.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive "P")
   (if (not lyskom-have-review)
@@ -177,7 +177,7 @@ texts, review the last N texts instead of the first (you can use
 `kom-review-by-to' instead.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive "P")
   (lyskom-tell-internat 'kom-tell-review)
@@ -195,7 +195,7 @@ texts, review the last N texts instead of the first (you can use
 `kom-review-first' instead.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive "P")
   (lyskom-review-by-to (or count
@@ -980,7 +980,7 @@ oldest to newest, review newest to oldest instead. When reviewing
 newest to oldest, change to oldest to newest.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive)
   (cond
@@ -1017,7 +1017,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg').
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-tree-q)))
   (lyskom-tell-internat 'kom-tell-review)
@@ -1043,7 +1043,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg').
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-q)))
   (lyskom-tell-internat 'kom-tell-review)
@@ -1083,7 +1083,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg').
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-review-q)))
   (lyskom-tell-internat 'kom-tell-review)
@@ -1191,7 +1191,7 @@ review priorities are set, and the setting of
 `kom-higher-priority-breaks'.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
@@ -1219,7 +1219,7 @@ all review-related functions."
 read commands that have been suspended by reviewing.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive)
   (if (read-list->all-entries lyskom-reading-list)
@@ -1258,7 +1258,7 @@ all review-related functions."
   "Cancel all active and suspended review commands.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive)
   (let ((found nil))
@@ -1291,7 +1291,7 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg').
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q)))
   (lyskom-tell-internat 'kom-tell-review)
@@ -1359,7 +1359,7 @@ After reviewing a number of texts, this will show the N texts
 read prior to that.
 
 See `kom-review-uses-cache', `kom-review-priority' and
-`kom-review-marks-texts-read' for information on settings that affect
+`kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive 
    (list 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.8 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: faqs.el,v 44.9 2003-01-09 00:43:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.8 2003-01-08 00:33:14 byers Exp $\n"))
+              "$Id: faqs.el,v 44.9 2003-01-09 00:43:26 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -136,7 +136,7 @@ do this. To add a FAQ, use `kom-add-server-faq'."
 
 (def-kom-command kom-del-faq ()
   "Remove a FAQ from a conference. To add a FAQ, use
-`kom-add-conf-faq'."
+`kom-add-faq'."
   (interactive)
   (let* ((conf-stat (lyskom-read-conf-stat 'conf-to-del-faq
                                            '(conf pers) nil nil t)))
