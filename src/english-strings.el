@@ -1,5 +1,6 @@
+
 ;;;;;
-;;;;; $Id: english-strings.el,v 36.4 1993-05-22 21:06:23 linus Exp $
+;;;;; $Id: english-strings.el,v 36.5 1993-08-19 19:39:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -29,14 +30,14 @@
 ;;;;
 ;;;; This file contains all strings in the LysKOM elisp client.
 ;;;; Language:     English.
-;;;;
+;;;; Matches version 36.11 of swedish-strings.el
 ;;;; ================================================================
 ;;;;
 
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 36.4 1993-05-22 21:06:23 linus Exp $\n"))
+	      "$Id: english-strings.el,v 36.5 1993-08-19 19:39:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -64,6 +65,7 @@
   (define-key lyskom-edit-mode-map "\C-crc"	'kom-edit-show-commented)
   (define-key lyskom-edit-mode-map "\C-ci?"	'lyskom-help)
   (define-key lyskom-edit-mode-map "\C-cic"	'kom-edit-insert-commented)
+  (define-key lyskom-edit-mode-map "\C-ci\C-y"	'kom-edit-insert-commented)
   (define-key lyskom-edit-mode-map "\C-ci1"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci2"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci3"	'kom-edit-insert-digit-text)
@@ -107,7 +109,7 @@ Help: \\[describe-mode] ---")
     (connection-done . "Connection established. Server version is %#1s.\n\n")
     (what-is-your-name . "What is your name? ")
     (password . "Your Password? ")
-    (wrong-password . "Incorrect password\n")
+    (wrong-password . "Password incorrect\n")
     (are-logged-in . "You are now logged on. Please wait...\n")
     (you-have-motd . "\nYou have a note on the door:\n\n")
     (presentation-encouragement .
@@ -116,7 +118,7 @@ Help: \\[describe-mode] ---")
     (first-greeting . "%#1s
 This appears to be the first time you use LysKOM. Welcome!
 Please make sure you have spelled your name correctly. You should use your
-full name and organization, eg. \"Joe Hacker, MIT\". If you spelled your name
+full name and organisation, eg. \"Joe Hacker, MIT\". If you spelled your name
 incorrectly, or you wish to change it, answer 'no' to the question below.
 
 For the time being the LysKOM server stores most of the information so that
@@ -191,6 +193,10 @@ Email-address:\n\nOther:\t")
     (done . "done.\n")
     (nope . "didn't work.\n")
 
+    (cant-find-supervisor . "Can't find supervisor of %#1s.\n")
+    (is-read-protected-contact-supervisor . "%#1s \344r closed.
+Send a letter to  %#2s to be granted membership.")
+
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
 
     (who-to-exclude . "Whom do you want to unsubscribe: ")
@@ -205,11 +211,14 @@ Email-address:\n\nOther:\t")
     (anyone-member . "May anyone subscribe? ")
     (secret-conf . "Secret conference? ")
     (comments-allowed . "Are comments permitted? ")
+    (what-comment-no . "Comment article number: ")
     (confusion-what-to-comment . "I can't figure out which article you want to comment.\n")
     (confusion-what-to-footnote . "I can't figure out to which article you want to write a footnote to.\n")
+    (what-private-no . "Private reply to article number: ")
 
     (confusion-who-to-reply-to . "I can't figure out which article you want to write a private reply to.\n")
     (confusion-what-to-answer-to . "I can't figure out which article you want write a reply to.")
+    (quit-in-spite-of-unsent . "You have an unsent article. Do you really want to quit? ")
     (really-quit . "Do you really want to quit LysKOM? ")
     (session-ended . "
 --------------------------------------------
@@ -219,7 +228,7 @@ Email-address:\n\nOther:\t")
     (what-to-change-pres-you . "Change presentation of what/who (yourself): ")
     (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
-    (cant-get-conf-stat . "Cannot get the status for that conference.")
+    (cant-get-conf-stat . "Cannot get the status of that conference.")
     (go-to-conf-p . "Go to conference: ")
     (want-become-member . "Subscribe? ")
     (no-ok . "Okiedokie, whatever you say.\n")
@@ -234,8 +243,8 @@ Email-address:\n\nOther:\t")
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
-    (who-to-change-supervisor-for . "Change organizer of who/what: ")
-    (new-supervisor . "New organizer: ")
+    (who-to-change-supervisor-for . "Change supervisor of who/what: ")
+    (new-supervisor . "New supervisor: ")
     (text-to-mark . "Mark which article: ")
     (text-to-unmark . "Unmark which article: ")
     (what-mark . "Set which mark: ")
@@ -260,30 +269,30 @@ Email-address:\n\nOther:\t")
     (text-to-add-comment-to . "Add comment to which article: ")
     (text-to-delete-comment-from . "Remove comment from which article: ")
 
-    (where-on-list-q . "Placement on your list? (0-%#1d) ")
+    (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Subscribe to %#1s...")
     (add-member-in . "Adding %#1s as a subscriber to %#2s...")
     (unsubscribe-to . "Unsubscribe from %#1s...")
 
     (exclude-from . "Unsubscribing %#1s from %#2s...")
 
-    (unsubscribe-failed . "\nDidn't work. Perhaps %#1s didn't subscribe to %#2s?\n")
+    (unsubscribe-failed . "\nDidn't work. Perhaps %#1s doesn't subscribe to %#2s?\n")
 
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\nError: %#2d.\n")
     (created-conf-no-name . "Conference number %#1d %#2s has been created.\n")
     (cant-read-textno . "You are not permitted to read article %#1d")
 
-    (not-supervisor-for . "You are not the organizer of %#1s.\n")
-    (not-supervisor-for . "You are not the organizer of %#1s.\n")
+    (not-supervisor-for . "You are not the supervisor of %#1s.\n")
+    (not-supervisor-for . "You are not the supervisor of %#1s.\n")
     (go-to-conf . "Go to conference %#1s.\n")
     (cant-go-to-his-mailbox . "You are not permitted to go to %#1ss mailbox.\n")
     (not-member-of-conf . "You don't subscribe to %#1s.\n")
     (change-name-done . "\nDone. New name: %#1s.\n")
-    (change-name-nope . "\nDidn't work. Perhaps somebody else is already named %#1s?\n")
-    (change-supervisor-from-to . "Change organizer for %#1s to %#2s...")
+    (change-name-nope . "\nDidn't work. Error code %#3d. %#2s.\n")
+    (change-supervisor-from-to . "Change supervisor of %#1s to %#2s...")
     (change-supervisor-nope . 
-     "\nDidn't work. Perhaps you are not permitted to change the organizer for %#1s?\n")
+     "\nDidn't work. Perhaps you are not permitted to change the supervisor of %#1s?\n")
     
     (no-marked-texts . "You have no marked articles.\n")
     (no-marked-texts-mark . 
@@ -328,7 +337,7 @@ Email-address:\n\nOther:\t")
     (no-of-motd . "Note on the door in article: %13#1d\n")
     (superconf-is-no-name . "Superconference:       %19#1d %#2s\n")
     (permitted-submitters-no-name . "Admitted authors:%25#1d %#2s\n")
-    (supervisor-is-no-name . "Organizer:     %27#1d %#2s\n")
+    (supervisor-is-no-name . "Supervisor:     %27#1d %#2s\n")
     (presentation-no . "Presentation:    %25#1d\n")
     (conf-has-motd . "\n%#1s has a note on the door:\n")
 
@@ -354,7 +363,7 @@ Email-address:\n\nOther:\t")
     (read-texts . "Articles read:%28#1d\n")
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
     (superconf . "Superconference:%26#1d %#2s\n")
-    (supervisor . "Organizer:%32#1d %#2s\n")
+    (supervisor . "Supervisor:%32#1d %#2s\n")
     (member-of-confs . "Subscribed to (conferences):%14#1d\n")
     (presentation . "Presentation:    %25#1d\n")
     (show-membership-list-also-q . "List subscriptions? ")
@@ -404,11 +413,16 @@ Your public message:
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
-    (buggreport-compilestart . "Compiling...")
-    (buggreport-compileend . "Compiling...done")
+    (buggrepport-compilestart . "Creating bug report...")
+    (buggrepport-compileend . "Creating bug report...done")
     (buggreport-description . "This is what I was doing:
 (Fill in your comments below)\n\n\n
-When you have completed writing this, send you r bug report to the LysKOM
+Among the information below are the 100 most recently pressed keys from
+your emacs. If you recently logged on, you password may be contained in
+this list. If that is the case, change the characters corresponding to
+your password to asterisks.
+
+When you have completed writing this, send your bug report to the LysKOM
 developers. You can do this either by email to bug-lyskom@lysator.liu.se or
 through Lysator's LysKOM in the conference \"LysKOM; Elispkilentens
 buggrapporter\", or if nothing else works, you can send a normal letter to
@@ -493,7 +507,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (added-carbon-copy . "Carbon copy to conference: ")
     (conf-has-motd-no . "The conference has a note on the door. (%#1d)\n\n%#2s")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
-    (could-not-create-text . "\nCouldn't create the article. Error: %#1d.\n")
+    (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
     (no-get-text . "You were not permitted to retreive the article.")
 
 
@@ -532,7 +546,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
     (name-has-changed-to-name . "%#1s has changed name to %#2s")
     (name-has-changed-to-name-r . "%#1s has changed name to %#2s\n")
-    (you-changed-name-to . "You have now changed name to %#1s.\n")
+    (you-changed-name-to . "You have now changed your name to %#1s.\n")
     (database-sync . "Synching database.")
     (lyskom-is-full . "\
 ===========================================================
@@ -724,7 +738,7 @@ Error message: %#1s**************************************************")
     (kom-send-letter		"Write (a) letter")
     (kom-change-name		"Change name")
     (kom-change-password        "Change password")
-    (kom-change-supervisor	"Change organizer")
+    (kom-change-supervisor	"Change supervisor")
     (kom-change-presentation	"Change presentation")
     (kom-get-appreciation       "(Please) pat my head")
     (kom-get-abuse              "(Please) kick my butt")
@@ -814,7 +828,9 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "U"  'kom-unmark-text)
   (define-key lyskom-mode-map "na" 'kom-view-next-new-text)
   (define-key lyskom-mode-map "nc" 'kom-go-to-next-conf)
+  (define-key lyskom-mode-map "nl" 'kom-bext-kom)
   (define-key lyskom-mode-map "q"  'kom-quit)
+  (define-key lyskom-mode-map "z"  'kom-bury)
   (define-key lyskom-mode-map "R"  'kom-recover)
   (define-key lyskom-mode-map "t"  'kom-display-time)
   (define-key lyskom-mode-map "fp" 'kom-get-appreciation)
@@ -894,8 +910,9 @@ Cf. paragraph-start.")
 
 
 ;;; To coders of the elisp-client:
-;;; You not only have to change the text here, you also have to change 
-;;; in vars.el if you want add/rename/remove one of these.
+;;; You not only have to change the text here, you also have to modify
+;;; kom-tell-phrases-validation-list in vars.el if you add or remove
+;;; one of these.
 
 (defconst kom-tell-phrases
   '(
@@ -915,7 +932,8 @@ Cf. paragraph-start.")
     (kom-tell-regret		"Decides to throw away the article.")
     (kom-tell-review		"Is reviewing.")
     (kom-tell-change-name       "Takes on a new name.")
-    (kom-tell-change-supervisor "Changes the organizer for something.")
+    (kom-tell-change-supervisor "Changes the supervisor of something.")
+    (kom-tell-next-lyskom	"Moves to a different LysKOM.")
     )
   "These texts are used as arguments to lyskom-tell-server.
 The variable kom-mercial defaults to kom-tell-wait.")
@@ -947,12 +965,12 @@ Users are encouraged to use their best sense of humor.")
     (14 . "There is no article with that number")
     (15 . "You cannot use global article number 0")
     (16 . "There is no article with that local number")
-    (17 . "You cannot user local article number 0")
-    (18 . "Illegal characters in name")
+    (17 . "You cannot use local article number 0")
+    (18 . "Name too short, to long or containing illegal characters")
     (19 . "Index out of bounds")
     (20 . "The conference already exists")
     (21 . "The user already exists")
-    (22 . "Secret, but not read-protected")
+    (22 . "Secret but not read-protected")
     (23 . "You are not permitted to change the erson/conference flag")
     (24 . "Error in the dtabase. Tough luck.")
     (25 . "Illegal misc-field. (Internal error)")
@@ -1065,3 +1083,5 @@ Users are encouraged to use their best sense of humor.")
     (lyskom-view-text 'main text-no)
     (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
     (lyskom-run 'main 'lyskom-end-of-command)))
+
+
