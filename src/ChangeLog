@@ -1,5 +1,8 @@
 2003-05-04  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1024:
+	* names.el (fi-orthodox): More fixes.
+
 	Fix bug 1032:
 	* command.el (lyskom-read-extended-command): Do not permit null
 	input.
