@@ -1,3 +1,25 @@
+2001-07-31  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-galeon): ... and the other
+	files in this entry: Applied patch in 6818352 from
+	<person 70:Calle Dybedahl (on a mission from Goddess)>:
+	New function for viewing a URL in Galeon.
+
+	* vars.el.in (kom-url-managers): See above.
+	(kom-galeon-command): See above.
+
+	* swedish-strings.el (lyskom-custom-strings): See above.
+	(lyskom-custom-strings): See above.
+	(lyskom-custom-strings): See above.
+
+	* option-edit.el (lyskom-customize-buffer-format): See above.
+	(lyskom-custom-variables): See above.
+	(lyskom-url-viewer-widget): See above.
+
+	* english-strings.el (lyskom-custom-strings): See above.
+	(lyskom-custom-strings): See above.
+	(lyskom-custom-strings): See above.
+
 2001-07-11  Christer Ekholm  <che@init.se>
 
 	* swedish-strings.el, swedish-strings.el (lyskom-message): New

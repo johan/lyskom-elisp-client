@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.142 2001-07-11 20:10:13 byers Exp $
+;;;;; $Id: english-strings.el,v 44.143 2001-07-30 22:20:27 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.142 2001-07-11 20:10:13 byers Exp $"))
+              "$Id: english-strings.el,v 44.143 2001-07-30 22:20:27 qha Exp $"))
 
 
 ;;; ================================================================
@@ -2360,6 +2360,7 @@ Select whether to execute command or keyboard macro.")
     (emacs-telnet-viewer . "Emacs Telnet mode (telnet)")
     (mosaic-viewer . "NCSA Mosaic (all)")
     (lynx-viewer          . "Lynx (all)")
+    (galeon-viewer        . "Galeon (all)")
 
     (dont-check . "Don't ask for confirmation")
     (check-before-open . "Confirm before writing the text")
@@ -2990,6 +2991,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-netscape-command-doc . "\
   This setting specifies the command to use to start Netscape.")
 
+    (kom-galeon-command-doc . "\
+  This setting specifies the command to use to start Galeon.")
+
     (kom-inhibit-typeahead-doc . "\
   Key presses are usually buffered while LysKOM is busy, and are executed
   as soon as possible. With this setting off, LysKOM discards any key presses
@@ -3352,6 +3356,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
     (kom-netscape-command-tag . "Command to start Netscape Navigator:")
+    (kom-galeon-command-tag . "Command to start Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symbolic mark types:")
 
