@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 35.2 1991-09-15 10:05:45 linus Exp $
+;;;;; $Id: flags.el,v 35.3 1991-09-29 04:12:18 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 35.2 1991-09-15 10:05:45 linus Exp $\n"))
+	      "$Id: flags.el,v 35.3 1991-09-29 04:12:18 ceder Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -153,7 +153,9 @@ If successful then set the buffer not-modified. Else print a warning."
 
 
 (defun lyskom-read-options ()
-  "Reads the user-area and sets the variables according to the choises."
+  "Reads the user-area and sets the variables according to the choises.
+Also run lyskom-login-hook (regardless of whether the person has a userarea
+or not."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (initiate-get-pers-stat 'options 'lyskom-read-options-2 lyskom-pers-no)))
@@ -165,7 +167,9 @@ If successful then set the buffer not-modified. Else print a warning."
       (progn 
 	  (setq lyskom-other-clients-user-areas)
 	  (if (zerop (pers-stat->user-area pers-stat))
-	      (setq lyskom-do-when-starting kom-do-when-starting)
+	      (prog1
+		  (setq lyskom-do-when-starting kom-do-when-starting)
+		(run-hooks 'lyskom-login-hook))
 	    (initiate-get-text 'options 'lyskom-read-options-eval
 			       (pers-stat->user-area pers-stat))))
     (lyskom-insert-string 'you-dont-exist)))
