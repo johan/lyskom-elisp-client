@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.81 2000-08-15 10:32:24 byers Exp $
+;;;;; $Id: commands1.el,v 44.82 2000-08-16 14:21:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.81 2000-08-15 10:32:24 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.82 2000-08-16 14:21:13 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1499,13 +1499,18 @@ Those that you are not a member in will be marked with an asterisk."
                       (eq (conf-stat->supervisor cs) pers-no)
                       (eq (conf-stat->super-conf cs) pers-no)))
       (aset counter 3 (1+ (elt counter 3)))
-      (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#2M%]\n"
+      (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#5s %#2M%]\n"
                             (lyskom-default-button 'conf (conf-stat->conf-no cs))
                             cs
                             (lyskom-list-conf-membership-char (conf-stat->conf-no cs))
-                            (concat (if (eq pers-no (conf-stat->creator cs)) "C" " ")
-                                    (if (eq pers-no (conf-stat->supervisor cs)) "O" " ")
-                                    (if (eq pers-no (conf-stat->super-conf cs)) "S" " "))))))
+                            (concat (if (eq pers-no (conf-stat->creator cs)) (lyskom-get-string 'created-conf-letter) " ")
+                                    (if (eq pers-no (conf-stat->supervisor cs)) (lyskom-get-string 'supervisor-conf-letter) " ")
+                                    (if (and (conf-type->original (conf-stat->conf-type cs))
+                                             (eq pers-no (conf-stat->super-conf cs)))
+                                        (lyskom-get-string 'superconf-conf-letter) " "))
+                            (cond ((conf-type->secret (conf-stat->conf-type cs)) (lyskom-get-string 'secret-conf-letter))
+                                  ((conf-type->rd_prot (conf-stat->conf-type cs)) (lyskom-get-string 'protected-conf-letter))
+                                  (t " "))))))
 
 
 (defun lyskom-list-conf-print (conf-z)
@@ -2969,224 +2974,212 @@ footnotes) to it as read in the server."
 ;;;                 Addera mottagare - Add recipient
 ;;;             Subtrahera mottagare - Subtract recipient
 
-;;; Author: David Byers, David Kågedal and Johan Sundström
-;;; Based on code by Inge Wallin
-
-
-;(macroexpand '(lyskom-sub-recipient 1 2))
-
-(defmacro lyskom-defmacro-lyskom-add-sub-rcpt (name action description)
-  "Defines a macro lyskom-NAME (text-no conf) for calling
-lyskom-add-sub-recipient in a more readable fashion."
-  `(defmacro
-     ,(intern (concat "lyskom-" (symbol-name name)))
-     (text-no conf)
-     ,(concat description " a text TEXT-NO.")
-     (list 'lyskom-add-sub-recipient text-no ',action conf)))
-
-(lyskom-defmacro-lyskom-add-sub-rcpt add-recipient 'add-rcpt
-				     "Add a recipient CONF to")
-(lyskom-defmacro-lyskom-add-sub-rcpt sub-recipient 'sub
-				     "Subtract a recipient (of any type) CONF from")
-(lyskom-defmacro-lyskom-add-sub-rcpt add-copy 'add-copy
-				     "Add a cc (carbon copy) recipient CONF to")
-(lyskom-defmacro-lyskom-add-sub-rcpt add-bcc 'add-bcc
-				     "Add a bcc (blind carbon copy) recipient CONF to")
+;;; Author: David Byers
 
 (def-kom-command kom-add-recipient (text-no)
   "Add a recipient to a text."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-recipient)))
-  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
-    (lyskom-add-recipient text-no conf)))
+  (lyskom-add-helper text-no 
+                     'lyskom-last-added-rcpt 
+                     'who-to-add-q
+                     'adding-name-as-recipient
+                     'recpt))
 
 (def-kom-command kom-add-copy (text-no)
-  "Add a cc (carbon copy) recipient to a text."
+  "Add a recipient to a text."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-copy)))
-  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
-	(lyskom-add-copy text-no conf)))
+  (lyskom-add-helper text-no 
+                     'lyskom-last-added-ccrcpt 
+                     'who-to-add-copy-q
+                     'adding-name-as-copy
+                     'cc-recpt))
 
 (def-kom-command kom-add-bcc (text-no)
-  "Add a bcc (blind carbon copy) recipient to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-bcc)))
-  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-bccrcpt)))
-    (lyskom-add-bcc text-no conf)))
+  "Add a recipient to a text."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-copy)))
+  (lyskom-add-helper text-no 
+                     'lyskom-last-added-bccrcpt
+                     'who-to-add-bcc-q
+                     'adding-name-as-copy
+                     'bcc-recpt))
 
-(def-kom-command kom-sub-recipient (text-no)
-  "Subtract a recipient from a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-recipient)))
-  (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
-    (lyskom-sub-recipient text-no conf)))
-
-(def-kom-command kom-move-text (text-no)
-  "Subtract a recipient from a text and add another."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-move)))
-  (let* ((text-stat (blocking-do 'get-text-stat text-no))
-         default-recpt found)
-
-    (lyskom-traverse misc-item
-        (text-stat->misc-info-list text-stat)
-      (when (memq (misc-info->type misc-item)
-                  '(RECPT CC-RECPT BCC-RECPT))
-        (when (not found)
-          (setq default-recpt (misc-info->recipient-no misc-item)
-                found (eq (misc-info->type misc-item) 'RECPT)))
-        (when (eq (misc-info->recipient-no misc-item) lyskom-current-conf)
-          (setq default-recpt lyskom-current-conf found t))))
-
-    (cond ((null text-stat)
-           (lyskom-format-insert 'no-such-text-no text-no))
-          ((null default-recpt)
-           (lyskom-format-insert 'text-has-no-recipients-r text-no))
-          (t (blocking-do-multiple
-                 ((default-from (get-conf-stat default-recpt))
-                  (default-to (get-conf-stat
-                               (or lyskom-last-added-rcpt
-                                   lyskom-current-conf))))
-               (lyskom-add-sub-recipient text-no
-                                         'move
-                                         default-to
-                                         default-from))))))
-
-(defvar lyskom-add-sub-recipient-action)
-(defvar lyskom-add-sub-recipient-source-conf)
-(defvar lyskom-add-sub-recipient-target-conf)
+(defvar lyskom-add-recipient-type)
+(defvar lyskom-add-recipient-target)
+(defvar lyskom-add-recipient-text)
 
 (defun lyskom-verify-add-recipient ()
-  "Make sure the user really does mean to add a recipient
+    "Make sure the user really does mean to add a recipient
 conference instead of just adding a carbon copy as he most likely
-ought to. Useful as a lyskom-add-sub-recipient-hook only."
-  (when (and
-	 (eq lyskom-add-sub-recipient-action 'add-rcpt)
-	 lyskom-add-sub-recipient-target-conf
-	 (not
-	  (lyskom-j-or-n-p
-	   (lyskom-format
-	    'really-add-as-recpt-q
-	    lyskom-add-sub-recipient-target-conf)
-	   t)))
-    (setq lyskom-add-sub-recipient-action 'add-copy)))
+ought to. Useful as a lyskom-add-recipient-hook only."
+    (when (eq lyskom-add-recipient-type 'recpt)
+      (unless (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q
+                                              lyskom-add-recipient-target)
+                               t)
+        (setq lyskom-add-recipient-type 'cc-recpt))))
 
-;;; NOTE: If you add an action you need to add a foo-action-name
-;;;       string to the strings files.
 
-(defun lyskom-add-sub-recipient (text-no action conf
-				 &optional conf2)
-  "Add or remove a recipient.
-TEXT-NO is the text being operated on; ACTION is what to do (one of
-add-rcpt, add-copy, add-bcc, sub or move), CONF is the conference to
-add, remove or move from, CONF2 is the conference to move to (for
-move)."
-  (if text-no
-      (let* ((text-stat (blocking-do 'get-text-stat text-no))
-	     (was-read (lyskom-text-read-p text-stat))
+(defun lyskom-add-helper (text-no last-variable who-prompt doing-prompt type)
+  (let* ((conf (blocking-do 'get-conf-stat (lyskom-default-value last-variable)))
+         (target (lyskom-read-conf-stat
+                  (lyskom-get-string who-prompt)
+                  '(all) 
+                  nil 
+                  (cons (if conf (conf-stat->name conf) "") 0)
+                  t)))
 
-	     ;; Only for moving
-	     (lyskom-add-sub-recipient-source-conf
-	      (when (eq action 'move)
-		(lyskom-read-conf-stat
-		 (lyskom-get-string 'who-to-move-from-q)
-		 '(all)
-		 nil
-		 (cons (if conf2 (conf-stat->name conf2) "") 0)
-		 t)))
+    (when (and target text-no)
 
-	     (lyskom-add-sub-recipient-target-conf
-	      (lyskom-read-conf-stat
-	       (lyskom-get-string
-		(cond ((eq action 'add-rcpt) 'who-to-add-q)
-		      ((eq action 'add-copy) 'who-to-add-copy-q)
-		      ((eq action 'add-bcc)  'who-to-add-bcc-q)
-		      ((eq action 'sub) 'who-to-sub-q)
-		      ((eq action 'move) 'who-to-move-to-q)
-		      (t (lyskom-error "internal error"))))
-	       '(all)
-	       nil
-	       (cons (if conf (conf-stat->name conf) "") 0)
-	       t))
+      (let ((lyskom-add-recipient-text text-no)
+            (lyskom-add-recipient-type type)
+            (lyskom-add-recipient-target target))
 
-	     (lyskom-add-sub-recipient-action action)
-	     (result nil))
+        (run-hooks 'lyskom-add-recipient-hook)
 
-	; hooks for doing nasty questions like "really sure about adding conf?"
-	(run-hooks 'lyskom-add-sub-recipients-hook)
+        (when (and target text-no)
+          (lyskom-set-default last-variable (conf-stat->conf-no target))
+          (lyskom-format-insert doing-prompt target text-no)
+          (lyskom-move-recipient text-no nil target type))))))
 
-	(setq result
-	      (cond ((eq lyskom-add-sub-recipient-action 'add-rcpt)
-		     (lyskom-format-insert 'adding-name-as-recipient
-					   lyskom-add-sub-recipient-target-conf
-					   text-stat)
-		     (setq lyskom-last-added-rcpt
-			   (conf-stat->conf-no
-			    lyskom-add-sub-recipient-target-conf))
-		     (blocking-do 'add-recipient
-				  text-no
-				  (conf-stat->conf-no
-				   lyskom-add-sub-recipient-target-conf)
-				  'recpt))
+(def-kom-command kom-sub-recipient (text-no)
+  "Remove a recipient from text TEXT-NO."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-recipient)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+    (if text-stat
+        (let ((recipients (lyskom-text-recipients text-stat)))
+          (if recipients
+              (let* ((conf (cond ((memq lyskom-current-conf recipients)
+                                  (blocking-do 'get-conf-stat lyskom-current-conf))
+                                 ((car recipients) (blocking-do 'get-conf-stat (car recipients)))))
+                     (source (lyskom-read-conf-stat
+                              (lyskom-get-string 'who-to-sub-q)
+                              (list (cons 'restrict recipients))
+                              nil
+                              (cons (if conf (conf-stat->name conf) "") 0)
+                              t)))
+                (when source
+                  (lyskom-format-insert 'remove-name-as-recipient source text-no)
+                  (lyskom-move-recipient text-no source nil nil)
+                  ))
+            (lyskom-format-insert 'text-has-no-recipients-r text-no)))
+      (lyskom-format-insert 'no-such-text-no text-no))))
 
-		    ((eq lyskom-add-sub-recipient-action 'add-copy)
-		     (lyskom-format-insert 'adding-name-as-copy
-					   lyskom-add-sub-recipient-target-conf
-					   text-stat)
-		     (setq lyskom-last-added-ccrcpt
-			   (conf-stat->conf-no
-			    lyskom-add-sub-recipient-target-conf))
-		     (blocking-do 'add-recipient
-				  text-no
-				  (conf-stat->conf-no
-				   lyskom-add-sub-recipient-target-conf)
-				  'cc-recpt))
+(def-kom-command kom-move-text (text-no)
+  "Move text TEXT-NO from one conference to another."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-move)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+    (if text-stat
+        (let* ((recipients (lyskom-text-recipients text-stat t))
+               (default-recpt (or (car (assq lyskom-current-conf recipients))
+                                  (car (rassq 'RECPT recipients))
+                                  (car (car recipients)))))
+          (if (null default-recpt)
+              (lyskom-format-insert 'text-has-no-recipients-r text-no)
+            (blocking-do-multiple ((default-from (get-conf-stat default-recpt))
+                                   (default-to (get-conf-stat
+                                                (or lyskom-last-added-rcpt
+                                                    lyskom-current-conf))))
+              (let ((source (lyskom-read-conf-stat 'who-to-move-from-q
+                                                   (list
+                                                    (cons 'restrict
+                                                          (mapcar 'car
+                                                                  recipients)))
+                                                   nil
+                                                   (cons (if default-from
+                                                             (conf-stat->name default-from)
+                                                           "") 0)
+                                                   t))
+                    (target (lyskom-read-conf-stat 'who-to-move-to-q
+                                                   '(all)
+                                                   nil
+                                                   (cons (if default-to
+                                                             (conf-stat->name default-from)
+                                                           "") 0)
+                                                   t)))
+                (when (and source target)
+                  (lyskom-format-insert 'moving-name source target text-stat)
+                  (lyskom-move-recipient text-no source target 'recpt))))))
+      (lyskom-format-insert 'no-such-text-no text-no))))
+         
 
-		    ((eq lyskom-add-sub-recipient-action 'add-bcc)
-		     (lyskom-format-insert 'adding-name-as-copy
-					   lyskom-add-sub-recipient-target-conf
-					   text-stat)
-		     (setq lyskom-last-added-bccrcpt
-			   (conf-stat->conf-no
-			    lyskom-add-sub-recipient-target-conf))
-		     (blocking-do 'add-recipient
-				  text-no
-				  (conf-stat->conf-no
-				   lyskom-add-sub-recipient-target-conf)
-				  'bcc-recpt))
 
-		    ((eq lyskom-add-sub-recipient-action 'sub)
-		     (lyskom-format-insert 'remove-name-as-recipient
-					   lyskom-add-sub-recipient-target-conf
-					   text-stat)
-		     (blocking-do 'sub-recipient
-				  text-no
-				  (conf-stat->conf-no
-				   lyskom-add-sub-recipient-target-conf)))
 
-		    ((eq lyskom-add-sub-recipient-action 'move)
-		     (lyskom-format-insert 'moving-name
-					   lyskom-add-sub-recipient-source-conf
-					   lyskom-add-sub-recipient-target-conf
-					   text-stat)
-		     (setq lyskom-last-added-rcpt
-			   (conf-stat->conf-no
-			    lyskom-add-sub-recipient-target-conf))
-		     (blocking-do-multiple
-			 ((add (add-recipient
-				text-no
-				(conf-stat->conf-no
-				 lyskom-add-sub-recipient-target-conf)
-				'recpt))
-			  (sub (sub-recipient
-				text-no
-				(conf-stat->conf-no
-				 lyskom-add-sub-recipient-source-conf))))
-		       (and add sub)))
+(defun lyskom-move-recipient (text-no source target type)
+  "Remove TEXT-NO from SOURCE and add it to TARGET as TYPE.
+This is the internal function for moving texts around. SOURCE or TARGET
+may be nil. TYPE is ignored if TARGET is nil.
 
-		    (t (lyskom-error "internal error"))))
-	(cache-del-text-stat text-no)
-	(if was-read (lyskom-mark-as-read (blocking-do 'get-text-stat text-no)))
-	(lyskom-report-command-answer result))
-    (lyskom-format-insert 'confusion-what-to-add-sub-recipient
-			  (lyskom-get-string (intern (concat (symbol-name action)
-							     "-action-name"))))))
+Calls lyskom-report-command-answer to report the result, to callers
+must have printed something without a newline at the end of the buffer."
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+    (if text-stat
+        (let* ((was-read (lyskom-text-read-p text-stat))
+               (add-result (if target
+                               (blocking-do 'add-recipient
+                                            text-no
+                                            (conf-stat->conf-no target)
+                                            type)
+                             t))
+               (add-errno lyskom-errno)
+               (sub-result (if (and source add-result)
+                               (blocking-do 'sub-recipient
+                                            text-no
+                                            (conf-stat->conf-no source)) 
+                             t))
+               (sub-errno lyskom-errno))
 
+          (when (null add-result)
+
+            ;; Can't add to target. Explain why. We have not removed from the
+            ;; source conference, so no need to add it back
+
+            (cond ((eq add-errno 27) ; already-recipient
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-already-recipient text-stat target)
+                   )
+                  ((eq add-errno 33) ; recipient-limit
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-recipient-limit text-stat)
+                   )
+                  ((eq add-errno 12) ; permission-denied
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-permission-denied-add-recpt text-stat target)
+                   )
+                  ((eq add-errno 11) ; access-denied
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-access-denied-add-recpt text-stat target)
+                   )
+                  (t (lyskom-report-command-answer nil add-errno))) 
+            )
+
+          (when (null sub-result)
+            ;; Can't sub from souce. Explain why.
+            (when target
+              (blocking-do 'sub-recipient text-no (conf-stat->conf-no source)))
+            (cond ((eq sub-errno 30) ;not-recipient
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-not-recipient text-stat source)
+                   )
+                  ((eq sub-errno 12) ; permission-denied
+                   (lyskom-insert-string 'nope)
+                   (lyskom-format-insert 'error-permission-denied-sub-recpt
+                                         text-stat
+                                         source)
+                   )
+                  (t (lyskom-report-command-answer nil sub-errno)))
+            )
+
+          (when (and add-result sub-result)
+            (lyskom-report-command-answer t))
+
+          ;; If the text was read prior to the move, it is afterwards too.
+          (cache-del-text-stat text-no)
+          (when (and add-result target was-read)
+            (lyskom-mark-as-read (blocking-do 'get-text-stat text-no)))
+
+
+          (and add-result sub-result))
+      (lyskom-format-insert 'no-such-text-no text-no)
+      nil)))
 
 
 

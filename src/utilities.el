@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.66 2000-07-28 20:23:11 jhs Exp $
+;;;;; $Id: utilities.el,v 44.67 2000-08-16 14:21:24 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.66 2000-07-28 20:23:11 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.67 2000-08-16 14:21:24 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1040,3 +1040,20 @@ Cannot be called from a callback."
                                    collector)
         (lyskom-wait-queue (or queue 'background))
         (car (collector->value collector)))))
+
+(defun lyskom-text-recipients (text-stat &optional want-types)
+  "Return the list of recipients for TEXT-STAT.
+If WANT-TYPES is non-nil then the result is an assoc list where the 
+car of each element is the recipient number and the cdr is the type."
+  (let ((result nil))
+    (lyskom-traverse misc (text-stat->misc-info-list text-stat)
+      (when (or (eq (misc-info->type misc) 'RECPT)
+                (eq (misc-info->type misc) 'CC-RECPT)
+                (eq (misc-info->type misc) 'BCC-RECPT))
+        (if want-types
+            (setq result (cons (cons (misc-info->recipient-no misc)
+                                     (misc-info->type misc))
+                               result))
+          (setq result (cons (misc-info->recipient-no misc)
+                             result)))))
+    (nreverse result)))

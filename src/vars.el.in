@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.112 2000-08-11 15:01:02 byers Exp $
+;;;;; $Id: vars.el.in,v 44.113 2000-08-16 14:21:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.112 2000-08-11 15:01:02 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.113 2000-08-16 14:21:26 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -482,14 +482,14 @@ This is a list of commands that are executed after we have logged in but before
 any command is accepted from the keyboard. See also lyskom-login-hook."
   server)
 
-(def-kom-var lyskom-add-sub-recipients-hook '(lyskom-verify-add-recipient)
-  "*Hook that is called when adding and removing recipients. When the
-hooks are called, lyskom-add-sub-recipient-action is bound to the
-action in progress, lyskom-add-sub-recipient-source-conf to the
-conference being moved from (when lyskom-add-sub-recipient-action is
-'move) and lyskom-add-sub-recipient-target-conf to the conference
-being moved to/added to/subtracted from. See also
-`lyskom-add-sub-recipient'."
+(def-kom-var lyskom-add-recipient-hook '(lyskom-verify-add-recipient)
+  "*Hook that is called when adding recipients. 
+When the hooks are called, lyskom-add-sub-recipient-type is bound to
+the recipient type (recpt, cc-recpt or bcc-recpt),
+lyskom-add-recipient-target is the conference being added as a
+recipient and lyskom-add-recipient-text. 
+
+The hook may modify any of these values."
   local-hook)
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.127 2000-08-14 15:56:33 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.128 2000-08-16 14:21:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.127 2000-08-14 15:56:33 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.128 2000-08-16 14:21:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -446,6 +446,13 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
     (remove-name-as-recipient .
 			      "Subtraherar %#1M som mottagare från text %#2n...")
+    (error-recipient-limit . "Text %#1n har för många mottagare.\n")
+    (error-already-recipient . "%#2M är redan mottagare till inlägg %#1n.\n")
+    (error-permission-denied-add-recpt . "Bara författaren till %#1n eller organisatören för %#2M kan ändra mottagartyp.\n")
+    (error-permission-denied-sub-recpt . "Bara författaren till %#1n eller organisatören för %#2M kan subtrahera mottagare.\n")
+    (error-access-denied-add-recpt . "Du får inte addera inlägg till %#2M.\n")
+    (error-not-recipient . "%#2M är inte mottagare till inlägg %#1n.\n")
+
     (moving-name . "Flyttar text %#3n från %#1M till %#2M...")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar? ")
     (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar? ")
@@ -494,7 +501,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (status-record . "Status för möte %#1M (%#2m) %#3s\n\n")
     (change-type-prompt . "Ändra mötestyp för möte %#1M (%#2m) %#3s\n")
     (Mailbox . "Brevlåda")
-    (Protected . "Skyddat")
+    (Protected . "Hemligt")
     (no-comments . "original")
     (closed . "slutet")
     (allow-anon . "anonymt ok")
@@ -1267,6 +1274,12 @@ Uppkopplad sedan %#8s%#9s")
     (anonymous . "anonym")
     (Anonymous . "Anonym")
 
+    (secret-conf-letter . "H")
+    (protected-conf-letter . "S")
+    (created-conf-letter . "S")
+    (superconf-conf-letter . "M")
+    (supervisor-conf-letter . "O")
+
     ;; Some Help
 
     (where-is-doesnt-exist . "Kommandot %#1s finns inte")
@@ -1517,7 +1530,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-slow-mode            . "Långsamma kommandon")
     (kom-quick-mode           . "Snabba kommandon")
     (kom-send-message         . "Sända meddelande")
-    (kom-send-alarm           . "Skicka alarmmeddelande")
+    (kom-send-alarm           p. "Skicka alarmmeddelande")
     (kom-create-conf	      . "Skapa möte")
     (kom-delete-conf          . "Utplåna")
     (kom-delete-text          . "Radera inlägg")
