@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.18 1996-10-20 02:56:54 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.19 1996-10-21 00:59:24 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.18 1996-10-20 02:56:54 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.19 1996-10-21 00:59:24 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -118,10 +118,11 @@
 
 (defun lyskom-get-error-text (errno)
   "Get a string which is the error ERRNO in plain text."
-  (let ((pair (assoc errno lyskom-error-texts)))
-    (if pair 
-	(cdr pair)
-      (lyskom-format 'error-not-found errno))))
+  (or
+   (lyskom-get-string-internal (intern (concat "error-"
+					       (number-to-string errno)))
+			       'lyskom-error-texts)
+   (lyskom-format 'error-not-found errno)))
 
 (defun lyskom-report-command-answer (answer)
   "Handles a void return from call to the server."
@@ -2300,8 +2301,11 @@ One parameter - the prompt string."
 ;;; This code removed (lyskom-tell-phrases-validate)
 
 
+;;
+(lyskom-set-language lyskom-language)
+
 ;; Build the menus
-(lyskom-build-menus)
+;; (lyskom-build-menus)
 
 
 (or (memq 'lyskom-unread-mode-line global-mode-string)

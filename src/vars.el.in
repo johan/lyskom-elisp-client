@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.12 1996-10-20 02:57:17 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.13 1996-10-21 00:59:37 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.12 1996-10-20 02:57:17 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.13 1996-10-21 00:59:37 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -736,6 +736,8 @@ hint.
 Also see the function \"lyskom-add-button-action\".
 
 This variable is not saved in the LysKOM server.")
+
+(put 'lyskom-button-actions 'lyskom-language-force t)
 
 (defvar kom-mercial nil
   "*When the user has seen all texts and has reached the view-time prompt,

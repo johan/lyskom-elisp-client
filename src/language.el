@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.4 1996-10-20 02:56:51 davidk Exp $
+;;;;; $Id: language.el,v 44.5 1996-10-21 00:59:20 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,8 +41,7 @@
 (defvar lyskom-language-symbols nil
   "Symbols with language data bound to them")
 
-(defvar lyskom-language-categories nil
-  "Categories used")
+;;; Variables
 
 (defvar lyskom-language-vars nil
   "A list of all language-dependent variables.")
@@ -66,7 +65,62 @@
 
 (put 'lyskom-language-var 'lisp-indent-function 2)
 
-(defun lyskom-language-strings (category language alist)
+(defun lyskom-set-language-vars (language)
+  (mapcar
+   (function
+    (lambda (var)
+      (if (or (not (symbol-value var))
+	      (get var 'lyskom-language-force))
+	  (set var (eval (cdr (assq language
+				    (get var 'lyskom-language-var))))))))
+   lyskom-language-vars))
+
+;;; Keymaps
+
+(defvar lyskom-language-keymaps nil
+  "A list of all language-dependent variables.")
+
+(defun lyskom-language-keymap-internal (keymap language langmap)
+  "Defines a language-local variable value."
+  ;; If the "real" keymap has no value, set it to an empty keymap
+  (if (eval keymap)
+      nil
+    (set keymap (make-sparse-keymap)))
+  ;; Add it to the list of keymaps
+  (or (memq keymap lyskom-language-keymaps)
+      (setq lyskom-language-keymaps
+	    (cons keymap lyskom-language-keymaps)))
+  ;; Modify the property list
+  (let* ((alist (get keymap 'lyskom-language-keymap))
+	 (entry (assq language alist)))
+    (if entry
+	(setcdr entry langmap)
+      (put keymap 'lyskom-language-keymap
+	   (cons (cons language langmap) alist)))))
+
+(defmacro lyskom-language-keymap (keymap language langmap)
+  (list 'lyskom-language-keymap-internal
+	(list 'quote keymap)
+	(list 'quote language)
+	(list 'quote langmap)))
+
+(put 'lyskom-language-keymap 'lisp-indent-function 2)
+
+(defun lyskom-set-language-keymaps (language)
+  (mapcar
+   (function
+    (lambda (map)
+      (setcdr (symbol-value map)
+	      (eval (cdr (assq language
+			       (get map 'lyskom-language-keymap)))))))
+   lyskom-language-keymaps))
+
+;;; String catalogs
+
+(defvar lyskom-language-categories nil
+  "Categories used")
+
+(defun lyskom-language-strings-internal (category language alist)
   "Associates names to symbols.
 
 CATEGORY and LANGUAGE determines what kind of association to
@@ -89,6 +143,12 @@ create. ALIST is a mapping from symbols to strings."
 			  (put symbol category
 			       (cons (cons language string) llist))))))
 	  alist))
+
+(defmacro lyskom-language-strings (category language alist)
+  (list 'lyskom-language-strings-internal
+	(list 'quote category)
+	(list 'quote language)
+	alist)) 
 
 (put 'lyskom-language-strings 'lisp-indent-function 2)
 
@@ -138,6 +198,18 @@ if 'lyskom-menu is not found."
 		       (let ((info (get symbol category)))
 			 (if info (cons symbol (mapcar 'car info))))))
 		    lyskom-language-symbols)))
+
+
+(defun lyskom-define-language (language name)
+  ;; Do nothing for now
+  )
+
+(defun lyskom-set-language (language)
+  "Set the current language to LANGUAGE."
+  (setq lyskom-language language)
+  (lyskom-set-language-vars language)
+  (lyskom-set-language-keymaps language)
+  (lyskom-build-menus)) 
 
 			      
 (provide 'lyskom-language)

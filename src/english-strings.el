@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.9 1996-10-20 02:56:48 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.10 1996-10-21 00:59:17 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,57 +35,58 @@
 ;;;; Translation from swedish-strings.el: David Byers
 ;;;;
 
+(require 'lyskom-vars "vars")
+(require 'lyskom-language "language")
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.9 1996-10-20 02:56:48 davidk Exp $"))
+              "$Id: english-strings.el,v 44.10 1996-10-21 00:59:17 davidk Exp $"))
 
 
 
 ;;; ================================================================
 ;;; lyskom-edit-mode-map                             English version
 
-(defvar lyskom-edit-mode-map nil
-  "Mode map for LysKOM edit.")
+(defvar lyskom-en-edit-mode-map nil)
+(lyskom-language-keymap lyskom-edit-mode-map en lyskom-en-edit-mode-map)
 
 ;;; Set the keymap for lyskom-edit-mode
 
-(defvar lyskom-edit-prefix nil
-  "Mode-map for lyskom edit mode")
+(defvar lyskom-sv-edit-prefix nil)
 
-(if lyskom-edit-mode-map
+(if lyskom-en-edit-mode-map
     nil
-  (setq lyskom-edit-mode-map (make-sparse-keymap))
+  (setq lyskom-en-edit-mode-map (make-sparse-keymap))
   (define-prefix-command 'lyskom-edit-prefix)
   (define-prefix-command 'lyskom-edit-review-prefix)
   (define-prefix-command 'lyskom-edit-insert-prefix)
-  (define-key lyskom-edit-mode-map "\C-c"	'lyskom-edit-prefix)
-  (define-key lyskom-edit-mode-map "\C-c?"	'lyskom-help)
-  (define-key lyskom-edit-mode-map "\C-cr"	'lyskom-edit-review-prefix)
-  (define-key lyskom-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
-  (define-key lyskom-edit-mode-map "\C-c\C-c"	'kom-edit-send)
-  (define-key lyskom-edit-mode-map "\C-ck"	'kom-edit-quit)
-  (define-key lyskom-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
-  (define-key lyskom-edit-mode-map "\C-cr?"	'lyskom-help)
-  (define-key lyskom-edit-mode-map "\C-crc"	'kom-edit-show-commented)
-  (define-key lyskom-edit-mode-map "\C-ci?"	'lyskom-help)
-  (define-key lyskom-edit-mode-map "\C-cic"	'kom-edit-insert-commented)
-  (define-key lyskom-edit-mode-map "\C-ci\C-y"	'kom-edit-insert-commented)
-  (define-key lyskom-edit-mode-map "\C-ci1"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci2"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci3"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci4"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci5"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci6"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci7"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
-  (define-key lyskom-edit-mode-map "\C-ci "	'kom-edit-insert-text)
+  (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-edit-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-cr"	'lyskom-edit-review-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
+  (define-key lyskom-en-edit-mode-map "\C-ck"	'kom-edit-quit)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
+  (define-key lyskom-en-edit-mode-map "\C-cr?"	'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-crc"	'kom-edit-show-commented)
+  (define-key lyskom-en-edit-mode-map "\C-ci?"	'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-cic"	'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-mode-map "\C-ci\C-y"	'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-mode-map "\C-ci1"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci2"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci3"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci4"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci5"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci6"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci7"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-ci "	'kom-edit-insert-text)
   (define-prefix-command 'lyskom-edit-add-prefix)
-  (define-key lyskom-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
-  (define-key lyskom-edit-mode-map "\C-car" 'kom-edit-add-recipient)
-  (define-key lyskom-edit-mode-map "\C-cac" 'kom-edit-add-copy)
-  (define-key lyskom-edit-mode-map "\C-ca?" 'lyskom-help))
+  (define-key lyskom-en-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-car" 'kom-edit-add-recipient)
+  (define-key lyskom-en-edit-mode-map "\C-cac" 'kom-edit-add-copy)
+  (define-key lyskom-en-edit-mode-map "\C-ca?" 'lyskom-help))
 
 
 ;;(defvar lyskom-header-separator
@@ -111,7 +112,7 @@
   '(cgdag sixjune holdnose))
 
 ;;; Formely known as lyskom-strings
-(lyskom-define-language 'lyskom-message 'en 
+(lyskom-language-strings lyskom-message en 
   '(
     ; From vars.el: 
     ; From komtypes.el: nil
@@ -992,7 +993,7 @@ On since %#8s%#9s")
 
 
 ;;; Formely known as lyskom-commands
-(lyskom-define-language 'lyskom-command 'en
+(lyskom-language-strings lyskom-command en
   '(
     (describe-mode            . "Help")
     (kom-slow-mode            . "Long commands")
@@ -1090,9 +1091,6 @@ On since %#8s%#9s")
     (kom-set-motd             . "Change login message")
     (kom-remove-motd          . "Remove login message")
     (kom-force-logout         . "Kill session")
-    (kom-list-files           . "List files")
-    (kom-put-file             . "Put file")
-    (kom-get-file             . "Get file")
     (kom-filter-author        . "Filter author")
     (kom-filter-subject       . "Filter subject")
     (kom-super-jump           . "Super jump")
@@ -1116,7 +1114,7 @@ On since %#8s%#9s")
     (kom-status-session . "Status (of a) session")
     ))
 
-(lyskom-define-language 'lyskom-menu 'en
+(lyskom-language-strings lyskom-menu en
   '((lyskom    . "LysKOM")
     (read      . "Read")
     (dont-read . "Jump")
@@ -1139,15 +1137,13 @@ On since %#8s%#9s")
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
 
-(defvar lyskom-onoff-table
-  '(("on" . on) ("off" . off))
-  "A completion table for on and off selections.")
+(lyskom-language-var lyskom-onoff-table en
+  '(("on" . on) ("off" . off)))
 
-(defvar lyskom-filter-predicate-list
-      '(("=" . nil) ("!=" . t))
-      "A list of legal filter comparison predicates.")
+(lyskom-language-var lyskom-filter-predicate-list en
+      '(("=" . nil) ("!=" . t)))
 
-(defvar lyskom-filter-what
+(lyskom-language-var lyskom-filter-what en
       '((author . "Author")
         (author-no . "Author (number)")
         (author-re . "Author (regexp)")
@@ -1157,14 +1153,12 @@ On since %#8s%#9s")
         (recipient-no . "Recipient (number)")
         (recipient-re . "Recipient (regexp)")
         (text . "Contents")
-        (text . "Contents (regexp)"))
-      "A list of legal filter conditions and their textual representation.")
+        (text . "Contents (regexp)")))
 
-(defvar lyskom-filter-actions
+(lyskom-language-var lyskom-filter-actions en
       '((skip-text . "Skip")
         (dontshow . "Don't show")
-        (skip-tree . "Skip comments"))
-      "A list of legal filter actions an their textual representation.")
+        (skip-tree . "Skip comments")))
                                
 ;;(defvar lyskom-swascii-filter-actions nil
 ;;  "The swascii-versions of lyskom-filter-actions.")
@@ -1172,17 +1166,19 @@ On since %#8s%#9s")
 ;;  "The swascii version of lyskom-filter-what")
 
 
-(defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ line\\(s\\)?/ "
-  "Regexp matching beginning of a article in LysKOM buffer.
-Cf. paragraph-start.")
+(lyskom-language-var lyskom-text-start en
+  "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ line\\(s\\)?/ ")
 
 
 (defconst lyskom-keybindings-missing nil)
 
-(if lyskom-mode-map
+(defvar lyskom-en-mode-map nil)
+(lyskom-language-keymap lyskom-mode-map en lyskom-en-mode-map)
+
+(if lyskom-en-mode-map
     nil
-  (setq lyskom-mode-map (make-keymap))
-  (suppress-keymap lyskom-mode-map)
+  (setq lyskom-en-mode-map (make-keymap))
+  (suppress-keymap lyskom-en-mode-map)
   (define-prefix-command 'lyskom-review-prefix)
   (define-prefix-command 'lyskom-change-prefix)
   (define-prefix-command 'lyskom-next-prefix)
@@ -1190,120 +1186,120 @@ Cf. paragraph-start.")
   (define-prefix-command 'lyskom-filter-get-prefix)
   (define-prefix-command 'lyskom-S-prefix)
   (define-prefix-command 'lyskom-previous-prefix)
-  (define-key lyskom-mode-map "A" 'lyskom-change-prefix)
-  (define-key lyskom-mode-map "r" 'lyskom-review-prefix)
-  (define-key lyskom-mode-map "f" 'lyskom-filter-get-prefix)
-  (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
-  (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
-  (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
-  (define-key lyskom-mode-map "b" 'lyskom-previous-prefix)
+  (define-key lyskom-en-mode-map "A" 'lyskom-change-prefix)
+  (define-key lyskom-en-mode-map "r" 'lyskom-review-prefix)
+  (define-key lyskom-en-mode-map "f" 'lyskom-filter-get-prefix)
+  (define-key lyskom-en-mode-map "n" 'lyskom-next-prefix)
+  (define-key lyskom-en-mode-map "l" 'lyskom-list-prefix)
+  (define-key lyskom-en-mode-map "s" 'lyskom-S-prefix)
+  (define-key lyskom-en-mode-map "b" 'lyskom-previous-prefix)
 
-  (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
-  (define-key lyskom-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
-  (define-key lyskom-mode-map "\C-i" 'kom-next-link)
-  (define-key lyskom-mode-map "\M-\C-i" 'kom-previous-link)
+  (define-key lyskom-en-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-en-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-en-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)
+  (define-key lyskom-en-mode-map "\M-\C-i" 'kom-previous-link)
 
   ;; These should be first in order to be last in the menu of alternatives.
-  (define-key lyskom-mode-map "A?" 'lyskom-help)
-  (define-key lyskom-mode-map "r?" 'lyskom-help)
-  (define-key lyskom-mode-map "f?" 'lyskom-help)
-  (define-key lyskom-mode-map "n?" 'lyskom-help)
-  (define-key lyskom-mode-map "l?" 'lyskom-help)
-  (define-key lyskom-mode-map "s?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "A?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "r?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "f?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "n?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "l?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "s?" 'lyskom-help)
   
 
-  (define-key lyskom-mode-map "o" 'kom-set-unread)
-  (define-key lyskom-mode-map "x" 'kom-extended-command)
-  (define-key lyskom-mode-map " " 'kom-next-command)
-  (define-key lyskom-mode-map "\n" 'kom-page-next-command)
-  (define-key lyskom-mode-map "\r" 'kom-line-next-command)
+  (define-key lyskom-en-mode-map "o" 'kom-set-unread)
+  (define-key lyskom-en-mode-map "x" 'kom-extended-command)
+  (define-key lyskom-en-mode-map " " 'kom-next-command)
+  (define-key lyskom-en-mode-map "\n" 'kom-page-next-command)
+  (define-key lyskom-en-mode-map "\r" 'kom-line-next-command)
 
-  (define-key lyskom-mode-map "?"  'describe-mode)
-  (define-key lyskom-mode-map "m"  'kom-send-letter)
-  (define-key lyskom-mode-map "g"  'kom-go-to-conf)
-  (define-key lyskom-mode-map "a"  'kom-write-text)
-  (define-key lyskom-mode-map "c"  'kom-write-comment)
-  (define-key lyskom-mode-map "C"  'kom-comment-previous)
-  (define-key lyskom-mode-map "F"  'kom-write-footnote)
-  (define-key lyskom-mode-map "p"  'kom-private-answer)
-  (define-key lyskom-mode-map "P"  'kom-private-answer-previous)
-  (define-key lyskom-mode-map "j"  'kom-jump)
-  (define-key lyskom-mode-map "J"  'kom-super-jump)
-  (define-key lyskom-mode-map "lc" 'kom-list-conferences)
-  (define-key lyskom-mode-map "ln" 'kom-list-news)
-  (define-key lyskom-mode-map "lu" 'kom-list-persons)
-  (define-key lyskom-mode-map "lr" 'kom-list-re)
-  (define-key lyskom-mode-map "ls" 'kom-membership)
-  (define-key lyskom-mode-map "la" 'kom-list-summary)
-  (define-key lyskom-mode-map "lf" 'kom-list-filters)
-  (define-key lyskom-mode-map "S"  'kom-add-self)
-  (define-key lyskom-mode-map "M"  'kom-mark-text)
-  (define-key lyskom-mode-map "U"  'kom-unmark-text)
-  (define-key lyskom-mode-map "na" 'kom-view-next-new-text)
-  (define-key lyskom-mode-map "nc" 'kom-go-to-next-conf)
-  (define-key lyskom-mode-map "nl" 'kom-next-kom)
-  (define-key lyskom-mode-map "nu" 'kom-next-unread-kom)
-  (define-key lyskom-mode-map "bl" 'kom-previous-kom)
-  (define-key lyskom-mode-map "q"  'kom-quit)
-  (define-key lyskom-mode-map "z"  'kom-bury)
-  (define-key lyskom-mode-map "R"  'kom-recover)
-  (define-key lyskom-mode-map "t"  'kom-display-time)
-  (define-key lyskom-mode-map "fp" 'kom-get-appreciation)
-  (define-key lyskom-mode-map "fk" 'kom-get-abuse)
-  (define-key lyskom-mode-map "fs" 'kom-filter-subject)
-  (define-key lyskom-mode-map "fa" 'kom-filter-author)
-  (define-key lyskom-mode-map "fc" 'kom-filter-text)
-  (define-key lyskom-mode-map "w"  'kom-who-is-on)
-  (define-key lyskom-mode-map "I"  'kom-who-am-i)
-  (define-key lyskom-mode-map "W"  'kom-busy-wait)
-  (define-key lyskom-mode-map "Ap" 'kom-change-presentation)
-  (define-key lyskom-mode-map "Af" 'kom-filter-edit)
-  (define-key lyskom-mode-map "Am" 'kom-change-auto-reply)
-  (define-key lyskom-mode-map "r " 'kom-view)
-  (define-key lyskom-mode-map "r0" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r1" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r2" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r3" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r4" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r5" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r6" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r7" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r8" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "r9" 'kom-initial-digit-view)
-  (define-key lyskom-mode-map "rc" 'kom-view-commented-text)
-  (define-key lyskom-mode-map "rC" 'kom-view-previous-commented-text)
-  (define-key lyskom-mode-map "ra?" 'lyskom-help)
-  (define-key lyskom-mode-map "rac" 'kom-review-comments)
-  (define-key lyskom-mode-map "rar" 'kom-review-tree)
-  (define-key lyskom-mode-map "rj" 'kom-review-clear)
-  (define-key lyskom-mode-map "rn" 'kom-review-next)
-  (define-key lyskom-mode-map "ru" 'kom-review-noconversion)
-  (define-key lyskom-mode-map "ro" 'kom-find-root)
-  (define-key lyskom-mode-map "rl" 'kom-review-by-to)
-  (define-key lyskom-mode-map "rf" 'kom-review-first)
-  (define-key lyskom-mode-map "rA" 'kom-review-all)
-  (define-key lyskom-mode-map "rM" 'kom-review-more)
-  (define-key lyskom-mode-map "rg" 'kom-review-last-normally-read)
-  (define-key lyskom-mode-map "B"  'kom-review-backward)
-  (define-key lyskom-mode-map "rs" 'kom-review-stack)
-  (define-key lyskom-mode-map "rp" 'kom-review-presentation)
-  (define-key lyskom-mode-map "rr" 'kom-find-root-review)
-  (define-key lyskom-mode-map "rm" 'kom-review-marked-texts)
-  (define-key lyskom-mode-map "ram" 'kom-review-all-marked-texts)
-  (define-key lyskom-mode-map "ra " 'kom-review-all)
-  (define-key lyskom-mode-map "sc" 'kom-status-conf)
-  (define-key lyskom-mode-map "su" 'kom-status-person)
-  (define-key lyskom-mode-map "ss" 'kom-status-session)
+  (define-key lyskom-en-mode-map "?"  'describe-mode)
+  (define-key lyskom-en-mode-map "m"  'kom-send-letter)
+  (define-key lyskom-en-mode-map "g"  'kom-go-to-conf)
+  (define-key lyskom-en-mode-map "a"  'kom-write-text)
+  (define-key lyskom-en-mode-map "c"  'kom-write-comment)
+  (define-key lyskom-en-mode-map "C"  'kom-comment-previous)
+  (define-key lyskom-en-mode-map "F"  'kom-write-footnote)
+  (define-key lyskom-en-mode-map "p"  'kom-private-answer)
+  (define-key lyskom-en-mode-map "P"  'kom-private-answer-previous)
+  (define-key lyskom-en-mode-map "j"  'kom-jump)
+  (define-key lyskom-en-mode-map "J"  'kom-super-jump)
+  (define-key lyskom-en-mode-map "lc" 'kom-list-conferences)
+  (define-key lyskom-en-mode-map "ln" 'kom-list-news)
+  (define-key lyskom-en-mode-map "lu" 'kom-list-persons)
+  (define-key lyskom-en-mode-map "lr" 'kom-list-re)
+  (define-key lyskom-en-mode-map "ls" 'kom-membership)
+  (define-key lyskom-en-mode-map "la" 'kom-list-summary)
+  (define-key lyskom-en-mode-map "lf" 'kom-list-filters)
+  (define-key lyskom-en-mode-map "S"  'kom-add-self)
+  (define-key lyskom-en-mode-map "M"  'kom-mark-text)
+  (define-key lyskom-en-mode-map "U"  'kom-unmark-text)
+  (define-key lyskom-en-mode-map "na" 'kom-view-next-new-text)
+  (define-key lyskom-en-mode-map "nc" 'kom-go-to-next-conf)
+  (define-key lyskom-en-mode-map "nl" 'kom-next-kom)
+  (define-key lyskom-en-mode-map "nu" 'kom-next-unread-kom)
+  (define-key lyskom-en-mode-map "bl" 'kom-previous-kom)
+  (define-key lyskom-en-mode-map "q"  'kom-quit)
+  (define-key lyskom-en-mode-map "z"  'kom-bury)
+  (define-key lyskom-en-mode-map "R"  'kom-recover)
+  (define-key lyskom-en-mode-map "t"  'kom-display-time)
+  (define-key lyskom-en-mode-map "fp" 'kom-get-appreciation)
+  (define-key lyskom-en-mode-map "fk" 'kom-get-abuse)
+  (define-key lyskom-en-mode-map "fs" 'kom-filter-subject)
+  (define-key lyskom-en-mode-map "fa" 'kom-filter-author)
+  (define-key lyskom-en-mode-map "fc" 'kom-filter-text)
+  (define-key lyskom-en-mode-map "w"  'kom-who-is-on)
+  (define-key lyskom-en-mode-map "I"  'kom-who-am-i)
+  (define-key lyskom-en-mode-map "W"  'kom-busy-wait)
+  (define-key lyskom-en-mode-map "Ap" 'kom-change-presentation)
+  (define-key lyskom-en-mode-map "Af" 'kom-filter-edit)
+  (define-key lyskom-en-mode-map "Am" 'kom-change-auto-reply)
+  (define-key lyskom-en-mode-map "r " 'kom-view)
+  (define-key lyskom-en-mode-map "r0" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r1" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r2" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r3" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r4" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r5" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r6" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r7" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r8" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r9" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "rc" 'kom-view-commented-text)
+  (define-key lyskom-en-mode-map "rC" 'kom-view-previous-commented-text)
+  (define-key lyskom-en-mode-map "ra?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "rac" 'kom-review-comments)
+  (define-key lyskom-en-mode-map "rar" 'kom-review-tree)
+  (define-key lyskom-en-mode-map "rj" 'kom-review-clear)
+  (define-key lyskom-en-mode-map "rn" 'kom-review-next)
+  (define-key lyskom-en-mode-map "ru" 'kom-review-noconversion)
+  (define-key lyskom-en-mode-map "ro" 'kom-find-root)
+  (define-key lyskom-en-mode-map "rl" 'kom-review-by-to)
+  (define-key lyskom-en-mode-map "rf" 'kom-review-first)
+  (define-key lyskom-en-mode-map "rA" 'kom-review-all)
+  (define-key lyskom-en-mode-map "rM" 'kom-review-more)
+  (define-key lyskom-en-mode-map "rg" 'kom-review-last-normally-read)
+  (define-key lyskom-en-mode-map "B"  'kom-review-backward)
+  (define-key lyskom-en-mode-map "rs" 'kom-review-stack)
+  (define-key lyskom-en-mode-map "rp" 'kom-review-presentation)
+  (define-key lyskom-en-mode-map "rr" 'kom-find-root-review)
+  (define-key lyskom-en-mode-map "rm" 'kom-review-marked-texts)
+  (define-key lyskom-en-mode-map "ram" 'kom-review-all-marked-texts)
+  (define-key lyskom-en-mode-map "ra " 'kom-review-all)
+  (define-key lyskom-en-mode-map "sc" 'kom-status-conf)
+  (define-key lyskom-en-mode-map "su" 'kom-status-person)
+  (define-key lyskom-en-mode-map "ss" 'kom-status-session)
 
   ;; Running in buffer
 
-  (define-key lyskom-mode-map "\033p" 'backward-text)
-  (define-key lyskom-mode-map "\033n" 'forward-text)
-  (define-key lyskom-mode-map "sa" 'kom-save-text)
+  (define-key lyskom-en-mode-map "\033p" 'backward-text)
+  (define-key lyskom-en-mode-map "\033n" 'forward-text)
+  (define-key lyskom-en-mode-map "sa" 'kom-save-text)
 
-  (define-key lyskom-mode-map "\C-?" 'scroll-down)
+  (define-key lyskom-en-mode-map "\C-?" 'scroll-down)
   )
 
 
@@ -1311,46 +1307,44 @@ Cf. paragraph-start.")
 ;;; Keymap for filter editing
 ;;;
 
-(defvar lyskom-filter-edit-map nil
-  "Keymap for LysKOM filter edit")
+(lyskom-language-var lyskom-filter-edit-map en nil)
 
-(if lyskom-filter-edit-map ()
-  (setq lyskom-filter-edit-map (make-keymap))
-  (suppress-keymap lyskom-filter-edit-map)
-  (define-key lyskom-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
-  (define-key lyskom-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
-  (define-key lyskom-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-filter-edit-map "q" 'lyskom-filter-edit-quit)
-  (define-key lyskom-filter-edit-map "x" 'lyskom-filter-edit-expunge)
-  (define-key lyskom-filter-edit-map "s" 'lyskom-filter-edit-save)
-  (define-key lyskom-filter-edit-map "g" 'lyskom-filter-edit-revert)
-  (define-key lyskom-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
-  (define-key lyskom-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
-  (define-key lyskom-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
-  (define-key lyskom-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
+(defvar lyskom-en-filter-edit-map nil)
+(lyskom-language-keymap lyskom-filter-edit-map en lyskom-en-filter-edit-map)
+
+(if lyskom-en-filter-edit-map ()
+  (setq lyskom-en-filter-edit-map (make-keymap))
+  (suppress-keymap lyskom-en-filter-edit-map)
+  (define-key lyskom-en-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
+  (define-key lyskom-en-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
+  (define-key lyskom-en-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map "q" 'lyskom-filter-edit-quit)
+  (define-key lyskom-en-filter-edit-map "x" 'lyskom-filter-edit-expunge)
+  (define-key lyskom-en-filter-edit-map "s" 'lyskom-filter-edit-save)
+  (define-key lyskom-en-filter-edit-map "g" 'lyskom-filter-edit-revert)
+  (define-key lyskom-en-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
+  (define-key lyskom-en-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
+  (define-key lyskom-en-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-en-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
   )
-
-
-(defvar lyskom-prioritize-mode-map nil
-  "Keymap used in lyskom-prioritize-mode.")
 
 
 ;;;(if lyskom-prioritize-mode-map
@@ -1369,50 +1363,51 @@ Cf. paragraph-start.")
 ;;;  (define-key lyskom-prioritize-mode-map "d"     'kom-prioritize-move-down)
 ;;;)
 
-(if lyskom-prioritize-mode-map 
+(defvar lyskom-en-prioritize-mode-map nil)
+(lyskom-language-keymap lyskom-filter-edit-map en lyskom-en-filter-edit-map)
+
+(if lyskom-en-prioritize-mode-map 
     nil
-  (setq lyskom-prioritize-mode-map (make-keymap))
-  (suppress-keymap lyskom-prioritize-mode-map)
-  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
-  (define-key lyskom-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
-  (define-key lyskom-prioritize-mode-map [mouse-3] 'kom-mouse-null)
-  (define-key lyskom-prioritize-mode-map "*" 'kom-key-mouse-2)
-  (define-key lyskom-prioritize-mode-map "?" 'kom-prioritize-help)
-  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-select)
-  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
-  (define-key lyskom-prioritize-mode-map " " 'kom-prioritize-select)
-  (define-key lyskom-prioritize-mode-map "\C-m" 'kom-prioritize-next-line)
-  (define-key lyskom-prioritize-mode-map "\C-j" 'kom-prioritize-next-line)
-  (define-key lyskom-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
-  (define-key lyskom-prioritize-mode-map "\M-\C-?" 'kom-prioritize-deselect-all)
-  (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
-  (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
-  (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
-  (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
-  (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-previous-line)
-  (define-key lyskom-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
-  (define-key lyskom-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
-  (define-key lyskom-prioritize-mode-map "u" 'kom-prioritize-move-up)
-  (define-key lyskom-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
-  (define-key lyskom-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
-  (define-key lyskom-prioritize-mode-map "d" 'kom-prioritize-move-down)
-  (define-key lyskom-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
-  (define-key lyskom-prioritize-mode-map "\M->" 'kom-prioritize-end)
-  (define-key lyskom-prioritize-mode-map "r" 'kom-prioritize-reprioritize)
-  (define-key lyskom-prioritize-mode-map "g" 'kom-prioritize-goto-priority)
-  (define-key lyskom-prioritize-mode-map "p" 'kom-prioritize-set-priority)
-  (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-save)
-  (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
+  (setq lyskom-en-prioritize-mode-map (make-keymap))
+  (suppress-keymap lyskom-en-prioritize-mode-map)
+  (define-key lyskom-en-prioritize-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-en-prioritize-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-en-prioritize-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-prioritize-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-en-prioritize-mode-map "?" 'kom-prioritize-help)
+  (define-key lyskom-en-prioritize-mode-map "\C-k" 'kom-prioritize-select)
+  (define-key lyskom-en-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
+  (define-key lyskom-en-prioritize-mode-map " " 'kom-prioritize-select)
+  (define-key lyskom-en-prioritize-mode-map "\C-m" 'kom-prioritize-next-line)
+  (define-key lyskom-en-prioritize-mode-map "\C-j" 'kom-prioritize-next-line)
+  (define-key lyskom-en-prioritize-mode-map "\C-?" 'kom-prioritize-previous-line)
+  (define-key lyskom-en-prioritize-mode-map "\M-\C-?" 'kom-prioritize-deselect-all)
+  (define-key lyskom-en-prioritize-mode-map [down] 'kom-prioritize-next-line)
+  (define-key lyskom-en-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
+  (define-key lyskom-en-prioritize-mode-map [up] 'kom-prioritize-previous-line)
+  (define-key lyskom-en-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
+  (define-key lyskom-en-prioritize-mode-map "p" 'kom-prioritize-previous-line)
+  (define-key lyskom-en-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
+  (define-key lyskom-en-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
+  (define-key lyskom-en-prioritize-mode-map "u" 'kom-prioritize-move-up)
+  (define-key lyskom-en-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
+  (define-key lyskom-en-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
+  (define-key lyskom-en-prioritize-mode-map "d" 'kom-prioritize-move-down)
+  (define-key lyskom-en-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
+  (define-key lyskom-en-prioritize-mode-map "\M->" 'kom-prioritize-end)
+  (define-key lyskom-en-prioritize-mode-map "r" 'kom-prioritize-reprioritize)
+  (define-key lyskom-en-prioritize-mode-map "g" 'kom-prioritize-goto-priority)
+  (define-key lyskom-en-prioritize-mode-map "p" 'kom-prioritize-set-priority)
+  (define-key lyskom-en-prioritize-mode-map "s" 'kom-prioritize-save)
+  (define-key lyskom-en-prioritize-mode-map "q" 'kom-prioritize-quit)
 )
 
-(defvar lyskom-prioritize-header-lines 2
-  "Number of lines in the header of the prioritization buffer")
+(lyskom-language-var lyskom-prioritize-header-lines en 2)
 
-(defvar lyskom-prioritize-header 
+(lyskom-language-var lyskom-prioritize-header en 
 " Prio   Conference
 -----------------------------------------------------------------------------
-"
-  "Header for the reprioritization buffer")
+")
 
 
 ;;;; ============================================================
@@ -1421,11 +1416,8 @@ Cf. paragraph-start.")
 ;;;; yet. People who know how to use it are smart enough to do it
 ;;;; right.
 
-(defvar kom-ansaphone-default-reply 
-  "I am not reading LysKOM right not. Please write a letter instead."
-  "*Default message to send when the ansaphone is on.
-
-This variable is stored in the LysKOM server.")
+(lyskom-language-var kom-ansaphone-default-reply en 
+  "I am not reading LysKOM right not. Please write a letter instead.")
         
 
 ;;;; ============================================================
@@ -1434,7 +1426,7 @@ This variable is stored in the LysKOM server.")
 ;;;; symbols, but for now they'll stay here.
 
 
-(defvar lyskom-button-actions
+(lyskom-language-var lyskom-button-actions en
   '((text
      text-text
      lyskom-button-view-text
@@ -1471,33 +1463,7 @@ This variable is stored in the LysKOM server.")
      lyskom-button-open-url
      (("Open" . lyskom-button-open-url)
       ("Copy" . lyskom-button-copy-url))
-     nil))
-
-"This variable defines valid button types in LysKOM. Each element is a
-list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).
-TYPE is the button type the entry defines
-LABEL is a textual representation for the button type, used in menu titles. If
-      it is a symbol, that symbol will be looked up using lyskom-get-string.
-DEFAULT is the default action to take on a click. It must be a function.
-ACTIONS are other possible actions. The format of this entry is described 
-        below.
-HINTS is a list of hints to override the default action. This is described 
-      below.
-
-The ACTIONS entry is used to construct a pop-up menu. It is a list consisting 
-of lists with the format (STRING . FUNCTION). STRING is the menu label and
-FUNCTION is the function to call when the menu item is selected.
-
-The HINTS entry is used to generate hints that the default action should be 
-overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
-as interactive LysKOM command and HINT is a function to call. When a button
-is generated while the command COMMAND is being executed, HINT is used as a 
-hint for a new default action. The user has the option to ignore or used the 
-hint.
-
-Also see the function \"kom-add-button-action\".
-
-This variable is not saved in the LysKOM server.")
+     nil)))
 
 
 ;;;; ================================================================
@@ -1515,110 +1481,84 @@ This variable is not saved in the LysKOM server.")
 ;;; kom-tell-phrases-validation-list in vars.el if you add or remove
 ;;; one of these.
 
-(defconst kom-tell-phrases
-  '(
-    (kom-tell-silence		"") ; Why ?
-    (kom-tell-send		"Is trying to post an article.")
-    (kom-tell-login		"Is entering LysKOM.")
-    (kom-tell-read		"Is reading.")
-    (kom-tell-1st-pres		"Is writing the first presentation.")
-    (kom-tell-write-comment	"Is writing a comment.")
-    (kom-tell-write-footnote	"Is writing a footnote.")
-    (kom-tell-write-letter	"Is writing a letter.")
-    (kom-tell-write-reply	"Is writing a personal reply.")
-    (kom-tell-write-text	"Is writing an article.")
-    (kom-tell-conf-pres		"Is writing the presentation for a new conference.")
-    (kom-tell-recover		"Is restarting KOM. Sigh.")
-    (kom-tell-wait		"Is waiting.")
-    (kom-tell-regret		"Decides to throw away the article.")
-    (kom-tell-review		"Is reviewing.")
-    (kom-tell-change-name       "Takes on a new name.")
-    (kom-tell-change-supervisor "Changes the supervisor of something.")
-    (kom-tell-next-lyskom	"Moves to a different LysKOM.")
-    )
-  "These texts are used as arguments to lyskom-tell-server.
-The variable kom-mercial defaults to kom-tell-wait.")
+(lyskom-language-strings kom-tell-phrases en
+  '((kom-tell-silence		. "") ; Why ?
+    (kom-tell-send		. "Is trying to post an article.")
+    (kom-tell-login		. "Is entering LysKOM.")
+    (kom-tell-read		. "Is reading.")
+    (kom-tell-1st-pres		. "Is writing the first presentation.")
+    (kom-tell-write-comment	. "Is writing a comment.")
+    (kom-tell-write-footnote	. "Is writing a footnote.")
+    (kom-tell-write-letter	. "Is writing a letter.")
+    (kom-tell-write-reply	. "Is writing a personal reply.")
+    (kom-tell-write-text	. "Is writing an article.")
+    (kom-tell-conf-pres		. "Is writing the presentation for a new conference.")
+    (kom-tell-recover		. "Is restarting KOM. Sigh.")
+    (kom-tell-wait		. "Is waiting.")
+    (kom-tell-regret		. "Decides to throw away the article.")
+    (kom-tell-review		. "Is reviewing.")
+    (kom-tell-change-name       . "Takes on a new name.")
+    (kom-tell-change-supervisor . "Changes the supervisor of something.")
+    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")))
 
 
 ;; Placed here because this must NOT be evaluated before 
 ;; kom-tell-phrases is defined:
 
-(defvar kom-mercial (car (cdr (assoc 'kom-tell-wait kom-tell-phrases)))
-  "*When the user has seen all articles and has reached the view-time prompt,
-this string is used as the argument to lyskom-tell-server.
-Users are encouraged to use their best sense of humor.
-
-This variable is stored in the LysKOM server.")
+(lyskom-language-var kom-mercial en (car (cdr (assoc 'kom-tell-wait kom-tell-phrases))))
 
 
-(defconst lyskom-error-texts
-  '((0 . "No error")
-    (2 . "Not yet implemented")
-    (3 . "No longer implemented")
-    (4 . "Wrong password")
-    (5 . "String too long")
-    (6 . "You have not logged on")
-    (7 . "Nobody may enter LysKOM at this time")
-    (8 . "You attempted to use conference number 0")
-    (9 . "Undefined or secret conference")
-    (10 . "Undefined or secret user")
-    (11 . "No read or write permission")
-    (12 . "Illegal operation")
-    (13 . "You are not a member of that conference")
-    (14 . "There is no article with that number")
-    (15 . "You cannot use global article number 0")
-    (16 . "There is no article with that local number")
-    (17 . "You cannot use local article number 0")
-    (18 . "Name too short, to long or containing illegal characters")
-    (19 . "Index out of bounds")
-    (20 . "The conference already exists")
-    (21 . "The user already exists")
-    (22 . "Secret but not read-protected")
-    (23 . "You are not allowed to change the erson/conference flag")
-    (24 . "Error in the dtabase. Tough luck.")
-    (25 . "Illegal misc-field. (Internal error)")
-    (26 . "Illegal info type. (Bug in the client)")
-    (27 . "Already recipient of this article")
-    (28 . "Already comment to this article")
-    (29 . "Already footnote to this article")
-    (30 . "Not a recipient of this article")
-    (31 . "Not a comment to this article")
-    (32 . "Not a footnote to this article")
-    (33 . "Too many recipients")
-    (34 . "Too many commentsp")
-    (35 . "Too many footnotes")
-    (36 . "Too many marks")
-    (37 . "You are not the author of that article")
-    (38 . "You cannot connect to the server")
-    (39 . "Out of memory")
-    (40 . "The server is gone crazy")
-    (41 . "The client thinks that the server says that it does not understand the client")
-    (42 . "No such session")
-    (43 . "Invalid regular expression")
-    (44 . "Can't unmark an article that was not marked")
-    (45 . "Temorary lossage. Please try again later")
-    (46 . "Sending huge messages to the server is not a nice thing to do")
-    (47 . "Anonymous texts are not accepted by all recipients"))
-  "All the errors reported from the server in plain text.")
+(lyskom-language-strings lyskom-error-texts en
+  '((error-0 . "No error")
+    (error-2 . "Not yet implemented")
+    (error-3 . "No longer implemented")
+    (error-4 . "Wrong password")
+    (error-5 . "String too long")
+    (error-6 . "You have not logged on")
+    (error-7 . "Nobody may enter LysKOM at this time")
+    (error-8 . "You attempted to use conference number 0")
+    (error-9 . "Undefined or secret conference")
+    (error-10 . "Undefined or secret user")
+    (error-11 . "No read or write permission")
+    (error-12 . "Illegal operation")
+    (error-13 . "You are not a member of that conference")
+    (error-14 . "There is no article with that number")
+    (error-15 . "You cannot use global article number 0")
+    (error-16 . "There is no article with that local number")
+    (error-17 . "You cannot use local article number 0")
+    (error-18 . "Name too short, to long or containing illegal characters")
+    (error-19 . "Index out of bounds")
+    (error-20 . "The conference already exists")
+    (error-21 . "The user already exists")
+    (error-22 . "Secret but not read-protected")
+    (error-23 . "You are not allowed to change the erson/conference flag")
+    (error-24 . "Error in the dtabase. Tough luck.")
+    (error-25 . "Illegal misc-field. (Internal error)")
+    (error-26 . "Illegal info type. (Bug in the client)")
+    (error-27 . "Already recipient of this article")
+    (error-28 . "Already comment to this article")
+    (error-29 . "Already footnote to this article")
+    (error-30 . "Not a recipient of this article")
+    (error-31 . "Not a comment to this article")
+    (error-32 . "Not a footnote to this article")
+    (error-33 . "Too many recipients")
+    (error-34 . "Too many commentsp")
+    (error-35 . "Too many footnotes")
+    (error-36 . "Too many marks")
+    (error-37 . "You are not the author of that article")
+    (error-38 . "You cannot connect to the server")
+    (error-39 . "Out of memory")
+    (error-40 . "The server is gone crazy")
+    (error-41 . "The client thinks that the server says that it does not understand the client")
+    (error-42 . "No such session")
+    (error-43 . "Invalid regular expression")
+    (error-44 . "Can't unmark an article that was not marked")
+    (error-45 . "Temorary lossage. Please try again later")
+    (error-46 . "Sending huge messages to the server is not a nice thing to do")
+    (error-47 . "Anonymous texts are not accepted by all recipients")))
 
 
      
-;; A bag of goodies for sojge. 
-
-(defun kom-put-file (filename)
-  (interactive "fWhich file do you want to upload? ")
-  (copy-file filename (concat "/ftp@ftp.lysator.liu.se:/open/" 
-			      (file-name-nondirectory filename))))
-
-(defun kom-get-file (filename)
-  (interactive "sWhich file do you want to download? ")
-  (copy-file (concat "/ftp@ftp.lysator.liu.se:/open/" filename) filename))
-
-(defun kom-list-files ()
-  (interactive)
-  (list-directory "/ftp@ftp.lysator.liu.se:/open"))
-
-
 (provide 'lyskom-strings)
 
 ;;; english-strings ends here
