@@ -1,5 +1,5 @@
 Version: 1 -*- bugtrack -*-
-Unused-Bug-Id: 29
+Unused-Bug-Id: 44
 Note: This is the header of a bugtrack file.
 Note: If you see this, it means that there are
 Note: no *known* bugs to track.
@@ -537,4 +537,527 @@ Associated mails:
 	buggrapport: <9401242325.AA01962@calypso.pt.hk-r.se>
 End mails.
 ---
+
+Id: 29
+Summary: Justering i konverteringen till 7-bitarsmod
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:04:42 1995
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 0
+Last edit: linus: Fri Jan  6 18:05:21 1995
+Reported by: Sojge
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+397415 1993-08-18  16:45  /4 rader/ 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Mottagare: LysKOM; Elispklientens buggrapporter <185>
+Markerad av dig.
+Ärende: 
+------------------------------------------------------------
+Tecknen « och » (som jag tror är << respektive >>) visas av
+lyskom.el båda två som frågetecken i sjubitsläge.
+Det vore trevligare om < och >, eller möjligen " och ", användes
+istället.
+(397415) -----------------------------------
+Återse nästa markerade - 
+
+Återse nästa markerade. 
+398745 1993-08-20  16:18  /4 rader/ 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Mottagare: LysKOM; Elispklientens buggrapporter <187>
+Markerad av dig.
+Ärende: dear sincer sir
+------------------------------------------------------------
+Bugg: tyska dubbel-S (ß) visas som versalt B på en SIS
+      E47-terminal. Dubbel-S och B har inget med varandra att gÖra.
+
+Önskemål: visa dubbel-S (ß) som två "ss" istället.
+(398745) -----------------------------------
+Återse nästa markerade - 
+
+Id: 30
+Summary: Tidsangivelser relativt dagens dag
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:06:21 1995
+Currently handled by: 
+Severity: 4
+Priority: 0
+Difficulty: 3
+Last edit: linus: Fri Jan  6 18:06:31 1995
+Reported by: Nixon
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+407368 1993-09-09  12:13  /9 rader/ Nixon (längtar ständigt norrut)
+Mottagare: LysKOM Elispklient; diskussion och idéer <5632>
+Markerad av dig.
+Ärende: 4711      I morgon /1 rad/ Nixon (V{nsterflummare)
+------------------------------------------------------------
+Det h{r har kanske diskuterats f|rut:
+
+I Linus-KOM kunde ett inl{ggshuvud se ut s} h{r:
+
+407361 Idag        11:58  /29 rader/ Peter Eriksson LYSATOR
+
+Himla smidigt om man, som jag, har lite sv}rt att h}lla reda p}
+dagens datum. Ide' till n{sta klientversion?
+/Nixon
+(407368) -----------------------------------
+
+Id: 31
+Summary: Hangs after failing to create a conf.
+Version: ??
+Created: linus: Fri Jan  6 18:08:45 1995
+Currently handled by: 
+Severity: 9
+Priority: 0
+Difficulty: 7
+Last edit: linus: Fri Jan  6 18:08:54 1995
+Reported by: Meta
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+424875 1993-10-01  14:56  /11 rader/ MeTa, (nu med ISY-konto igen!)
+Mottagare: LysKOM; Elispklientens buggrapporter <197>
+Mottagare: MeTa, (nu med ISY-konto igen!) <1475>
+    Mottaget: 1993-10-01 14:56
+Markerad av dig.
+Ärende: 
+------------------------------------------------------------
+Följande verkar inget vidare:
+
+Se tiden - Skapa möte
+Mötet "Ej närvarande i något möte." kunde ej skapas.
+Felkod: 20.
+
+
+
+Och sedan måste jag trycka 'r'. Varför?
+
+Jag vet att mötesnamnet krockade med "Ej n{rvarande i n}got m|te."
+(424875) -----------------------------------
+Återse nästa markerade - 
+
+Id: 32
+Summary: Scrollning till slutet av texten n{r en ny text skapas
+Version: 0.37
+Created: linus: Fri Jan  6 18:09:53 1995
+Currently handled by: 
+Severity: 9
+Priority: 2
+Difficulty: 3
+Last edit: linus: Fri Jan  6 18:10:03 1995
+Reported by: pd
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+449239 1993-11-01  02:18  /11 rader/ pd
+Mottagare: LysKOM; Elispklientens buggrapporter <202>
+Mottagare: pd <472>
+    Mottaget: 1993-11-01 02:18
+Markerad av dig.
+Ärende: Scrollstrul
+------------------------------------------------------------
+Jag har alldeles nyligen b|rjat anv{nda 0.37. Tidigare anv{nde jag
+0.34.6.
+Elispklienten f}r numera f|r sig att scrolla till slutet av texten
+varje g}ng en text skapas (vilket jag f}r meddelande om p} modraden),
+vilket {r r{tt irriterande om det {r en l}ng text jag h}ller p} att
+l{sa.
+
+Kan man st{nga av meddelanden om att texter skapas? Jag vill helst
+bara veta att mina egna texter skapas. Alla andras f}r jag ju {nd} se
+vid tillf{lle, s} jag {r r{tt ointresserad av att f} veta att dom
+skapas n{r dom skapas.
+(449239) -----------------------------------
+Återse nästa markerade - 
+
+Id: 33
+Summary: Ladda upp/ner fil
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:12:00 1995
+Currently handled by: 
+Severity: 2
+Priority: 9
+Difficulty: 0
+Last edit: linus: Fri Jan  6 18:12:09 1995
+Reported by: Sojge
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+498572 1994-01-08  17:49  /5 rader/ 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Mottagare: LysKOM Elispklient; diskussion och idéer <5739>
+Markerad av dig.
+Ärende: Ny version av LysKOM elisp-klienten 0.38 ute nu.
+------------------------------------------------------------
+Kanske kommandona hellre borde heta
+	Ladda upp fil från lokal maskin
+	Ladda ner fil till lokal maskin
+
+eller så, dvs ha med riktning och källa och/eller mål.
+(498572) -----------------------------------
+Återse nästa markerade - 
+
+Id: 34
+Summary: St{nga av visandet av ol{sta i alla bufferter med en variabel.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:14:48 1995
+Currently handled by: 
+Severity: 3
+Priority: 0
+Difficulty: 0
+Last edit: linus: Fri Jan  6 18:14:58 1995
+Reported by: Christer Ekholm, Ludd
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+501406 1994-01-11  08:19  /36 rader/ Christer Ekholm, Ludd
+Mottagare: LysKOM Elispklient; diskussion och idéer <5771>
+Markerad av dig.
+Ärende: "Ol{sta" |verallt.
+------------------------------------------------------------
+Jag skulle vilja kunna stänga av det genom att bara sätta en variabel.
+
+Förslag:
+
+*** lyskom-rest.el.~1~  Tue Jan 11 08:08:50 1994
+--- lyskom-rest.el      Tue Jan 11 08:18:04 1994
+***************
+*** 1808,1813 ****
+--- 1807,1815 ----
+        (setq alist (cdr alist)))
+      clist))
+  
++ (defvar lyskom-inhibit-mode-line-unread nil
++   "If non nil, don't show mode-line-unread")
++ 
+  (defun lyskom-tell-phrases-validate ()
+    "Attempts to validate the value of kom-tell-phrases
+  from the value of kom-tell-phrases-internal."
+***************
+*** 1827,1833 ****
+  
+  (run-hooks 'lyskom-init-hook)
+  
+! (or (assq 'lyskom-sessions-with-unread minor-mode-alist)
+      (setq minor-mode-alist 
+          (cons (list 'lyskom-sessions-with-unread 
+                      (let ((str (lyskom-get-string 'mode-line-unread)))
+--- 1829,1836 ----
+  
+  (run-hooks 'lyskom-init-hook)
+  
+! (or lyskom-inhibit-mode-line-unread
+!     (assq 'lyskom-sessions-with-unread minor-mode-alist)
+      (setq minor-mode-alist 
+          (cons (list 'lyskom-sessions-with-unread 
+                      (let ((str (lyskom-get-string 'mode-line-unread)))
+(501406) -----------------------------------
+Återse nästa markerade - 
+
+Id: 35
+Summary: Se |ver hanteringen av buffertnamn.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:16:21 1995
+Currently handled by: 
+Severity: 0
+Priority: 2
+Difficulty: 1
+Last edit: linus: Fri Jan  6 18:17:04 1995
+Reported by: Richard Levitte
+Site: LysKOM
+Associated mails:
+End mails.
+---
+
+510982 1994-01-23  01:53  /20 rader/ Richard Levitte - GNU on VMS hacker
+Mottagare: LysKOM; Elispklientens buggrapporter <210>
+Markerad av dig.
+Ärende: KOM i multipla buffertar?
+------------------------------------------------------------
+Det har idag hänt att jag har hoppat in i och ut ur KOM flera gånger
+från samma Emacs-session.  Då händer varje gång detta mycket
+irriterande fenomen:
+
+	Första gången:	bufferten *kom* skapas
+	Andra gången:	bufferten *kom*<2> skapas
+	Tredje gången:	bufferten *kom*<3> skapas
+	Fjärde gången:	bufferten *kom*<4> skapas
+	Femte gången:	bufferten *kom*<5> skapas
+
+Jag blir tvunegn att gå in i buffer-menyn för att ta bort de gamla
+KOM-buffertarna.  Är det verkligen tänkt att det ska vara så?
+
+(Jaja, jag inser att det "bara" är version 0.38 (nej, jag har inte
+fiskat upp 0.38.1, har det fixats där?), men ändå!)
+
+Apropå:  emacs-version = "18.59.xx"
+	 system-type = vax-vms	(men det har ju knappast betydelse).
+
+Richard Levitte - VMS GNU Emacs hacker
+(510982) -----------------------------------
+Kommentar i text 511180 av 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Återse nästa markerade - 
+
+Id: 36
+Summary: Hantering av buffertar som shell-moden.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:17:26 1995
+Currently handled by: 
+Severity: 0
+Priority: 0
+Difficulty: 5
+Last edit: linus: Fri Jan  6 18:18:15 1995
+Reported by: Sojge
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+511180 1994-01-23  16:52  /10 rader/ 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Kommentar till text 510982 av Richard Levitte - GNU on VMS hacker
+Mottagare: LysKOM Elispklient; diskussion och idéer <5822>
+Markerad av dig.
+Ärende: KOM i multipla buffertar?
+------------------------------------------------------------
+Fler önskemål för lyskom.el:
+  M-x lyskom RET
+
+om man har noll aktiva sessioner: fråga efter server, skapa ny session 
+om man har en aktiv session: välj den
+om man har flera: fråga efter session eller ny server
+
+För att skapa session nummer två: C-u M-x lyskom RET
+
+Vid frågan om server: ge lista med kända servers
+(511180) -----------------------------------
+Kommentar i text 511725 av MeTa, (nu med ISY-konto igen!)
+Återse nästa markerade - 
+
+Id: 37
+Summary: Extra fr}ga om man verkligen vill hoppa
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:19:02 1995
+Currently handled by: 
+Severity: 1
+Priority: 0
+Difficulty: 1
+Last edit: linus: Fri Jan  6 18:19:09 1995
+Reported by: ceder
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+542423 1994-02-26  02:37  /6 rader/ (Vilande) i}m-läsare (åt) ceder (Våren och värmen är här!)
+Extra kopia: LysKOM; Elispklientens buggrapporter <212>
+Mottagare: Inlägg }t mig <189554>
+Markerad av dig.
+Ärende: Ture kör vi!
+------------------------------------------------------------
+Vad är detta?!? En uppmaning att hoppa!?! I IÅM! Fy skäms!
+
+Jag har faktistk hoppat två gånger i kväll av misstag. "h" sitter
+alldeles för nära "j" på tangentbordet. Man borde få en y-or-n-p-fråga
+när man hoppar. Om man är i Inlägg åt mig borde man få en
+yes-or-no-p-fråga.
+(542423) -----------------------------------
+Återse nästa markerade - 
+
+Id: 38
+Summary: KOMNAMEhanteringen fungerar d}ligt
+Version: 0.38
+Created: linus: Fri Jan  6 18:21:26 1995
+Currently handled by: 
+Severity: 2
+Priority: 2
+Difficulty: 5
+Last edit: linus: Fri Jan  6 18:21:40 1995
+Reported by: pd
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+582801 1994-03-31  13:21  /2 rader/ pd
+Mottagare: LysKOM; Elispklientens buggrapporter <224>
+Mottagare: Frågor och svar <5507>
+Markerad av dig.
+Ärende: KOMNAME
+------------------------------------------------------------
+Enligt k{llkoden till 0.38 plockas KOMNAME fram, men anv{nds v{rdet?
+Jag f}r alltid en fr}ga om vad jag heter n{r jag startar lyskom.el.
+(582801) -----------------------------------
+
+Id: 39
+Summary: Addera mottagare n{r mottagaren har en lapp p} d|rren.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:26:22 1995
+Currently handled by: 
+Severity: 4
+Priority: 0
+Difficulty: 2
+Last edit: linus: Fri Jan  6 18:28:31 1995
+Reported by: Jonas S Karlsson
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+679853 1994-07-28  19:14  /3 rader/ Jonas S Karlsson (!)
+Mottagare: LysKOM; Elispklientens buggrapporter <248>
+Mottagare: Konspirationsteorier <476>
+    Sänt:     1994-07-28 20:15
+    Sänt av Jonas Nilsson, Ronneby
+Markerad av dig.
+Ärende: 
+------------------------------------------------------------
+Skriv godtyckligt inlägg, gör "C-c a m" dvs addera mottagare
+skriv "365" dvs sojge, skiten hänger sig totalt, det går inte ens att
+göra close på emacsen!!!
+(679853) -----------------------------------
+Återse nästa markerade - 
+
+Id: 40
+Summary: Hanteringen av den skrivna inl{ggstextmassan {r lite k{nslig
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:29:18 1995
+Currently handled by: 
+Severity: 2
+Priority: 0
+Difficulty: 7
+Last edit: linus: Fri Jan  6 18:29:24 1995
+Reported by: W (Stefan Wrammerfors)
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+748610 1994-10-23  02:41  /10 rader/ W (Stefan Wrammerfors)
+Mottagare: LysKOM; Elispklientens buggrapporter <261>
+Markerad av dig.
+Ärende: Hej hopp
+------------------------------------------------------------
+  Jag skulle skriva ett inl{gg och skrev i [renderaden f|r hand direkt
+i inl{gget (t ex Ärende:Hej hopp) och d} gick det inte att s{nda iv{g
+det med C-c C-c, utan man fick bara det kryptiska meddelandet:
+ Search failed: " \\(.*\\)" vilket naturligtvis betyder att det m}ste
+vara ett mellanslag mellan "Ärende:" och "hej hopp". Om man senare i
+sin text r}kar ha ett kolon f|ljt av mellanslag tar den detta som 
+[renderaden vilket kan ge en intressant effekt.
+    /W
+LysKOM elisp-klient version 0.38.1.
+Uppkopplingen klar. Serverns versionsnummer är 1.6.4.
+(748610) -----------------------------------
+Återse nästa markerade - 
+
+Id: 41
+Summary: Ingen varning f|r att servern justerar mottagaren om man skickar till skrivskyddade m|ten.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:32:30 1995
+Currently handled by: 
+Severity: 7
+Priority: 0
+Difficulty: 8
+Last edit: linus: Fri Jan  6 18:32:36 1995
+Reported by: Leif Stensson, Lysator (avvaxad)
+Site: LysKOM
+Associated mails:
+End mails.
+---
+
+790900 1994-12-05  23:20  /13 rader/ Leif Stensson, Lysator (avvaxad)
+Mottagare: LysKOM; Elispklientens buggrapporter <268>
+Kommentar till text 790871 av Leif Stensson, Lysator (avvaxad)
+Extra kopia: Linus Tolke Y <7605>
+    Mottaget: 1994-12-06 18:40
+Markerad av dig.
+Ärende: Aha!
+------------------------------------------------------------
+Gnypp! N{r jag g|r 'k' p} det d{r inl{gget blir "Linus Tolke Y"
+mottagare; men det {r ju "Ur}ldriga vitsar" som ska vara mottagare,
+eller l{mpligt uppf|ljarm|te. Om jag ist{llet f|rs|ker skriva en
+fotnot fr}gar klienten om "Pl|tsliga insikter!" ska vara mottagare,
+och sedan om "Ur}ldriga vitsar" ska vara mottagare; men sedan blir
+det "Linus Tolke Y" som blir mottagare i alla fall.
+
+Det f|rsta {r bara ett konstigt valt superm|te, men det andra {r v{l
+en bugg i klienten? Ska inte fotnoten skrivas i samma m|ten som det
+som den {r fotnot till (s} borde det vara, och s} verkar det vara
+avsett, om man g}r efter hur extra-kopie-mottagare hanteras)?
+
+(Klientversion: 1.6.6.)
+(790900) -----------------------------------
+Återse nästa markerade - 
+
+Id: 42
+Summary: Klienter h{nger sig vid {ndra presentation
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:33:40 1995
+Currently handled by: 
+Severity: 9
+Priority: 2
+Difficulty: 8
+Last edit: linus: Fri Jan  6 18:34:29 1995
+Reported by: Sojge
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+793995 1994-12-08  02:11  /8 rader/ 365000,,000000 (betyder) SOJGE (som är) Klaus Zeuge
+Mottagare: LysKOM; Elispklientens buggrapporter <269>
+Markerad av dig.
+Ärende: 0.38.1, Ä p C-g
+------------------------------------------------------------
+
+Tryck på
+	Ä p C-g
+
+verkar kräva
+	a Återstarta kom RET
+
+inan man fÅr en ny prompt.
+(793995) -----------------------------------
+Återse nästa markerade - 
+
+Id: 43
+Summary: B{ttre hantering av inl{gg som redan {r l{sta i ett annat m|te.
+Version: 0.38.1
+Created: linus: Fri Jan  6 18:35:15 1995
+Currently handled by: 
+Severity: 1
+Priority: 0
+Difficulty: 9
+Last edit: linus: Fri Jan  6 18:35:21 1995
+Reported by: Lisa Hallingström (Här&Nu!)
+Site: LysKOM
+Associated mails:
+End mails.
+---
+Återse nästa markerade. 
+793866 1994-12-08  01:34  /4 rader/ Lisa Hallingström (Här&Nu!)
+Mottagare: LysKOM frågor (och) svar <1204>
+Markerad av dig.
+Ärende: Hoppande inlägg
+------------------------------------------------------------
+När jag skickar ett inlägg till ett annat möte får jag läsa om det i
+detta nya möte - men inte förrän nästa session! Varför? Finns det
+någon variabel jag kan ställa om för att fixa detta, eller krävs det
+omhack i elispklienten (som jag kör)?
+(793866) -----------------------------------
+Återse nästa markerade - 
 

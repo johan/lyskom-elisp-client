@@ -1,3 +1,8 @@
+Funktioner att skriva om:
+	kom-list-news (har att g|ra med den nya cachningen...)
+b|rjat	}terse senaste (nytt s{tt att l{sa personer)
+	subtrahera, uttr{da (nytt s{tt att l{sa personer)
+
 * N{r man l{gger till mottagare borde den kolla om m|tet {r
   skrivskyddat och i s} fall l{gga in superm|tet...
 
@@ -80,6 +85,7 @@ Linus: R{cker inte ceders uppdelning av anropen?
   l}ngt vi f}r skrolla.
 
 * Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
+Klart.
 
 * Snabbare g} till m|te.
 
