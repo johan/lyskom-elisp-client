@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.16 1992-02-28 23:39:46 ceder Exp $
+;;;;; $Id: commands1.el,v 35.17 1992-03-06 16:02:02 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.16 1992-02-28 23:39:46 ceder Exp $\n"))
+	      "$Id: commands1.el,v 35.17 1992-03-06 16:02:02 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1753,18 +1753,19 @@ footnotes) to it as read in the server."
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-recipient)
-  (lyskom-add-sub-recipient text-no-arg 
-			    (lyskom-get-string 'text-to-add-recipient)
-			    t))
+  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-last-added-rcpt
+			  text-no-arg 
+			  (lyskom-get-string 'text-to-add-recipient)
+			  t))
 
 (defun kom-add-copy (text-no-arg)
   "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil, 
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-copy)
-  (lyskom-add-sub-recipient text-no-arg 
-			    (lyskom-get-string 'text-to-add-copy)
-			    'copy))
+  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-last-added-ccrcpt
+			  text-no-arg (lyskom-get-string 'text-to-add-copy)
+			  'copy))
 
 
 (defun kom-sub-recipient (text-no-arg)
@@ -1772,18 +1773,27 @@ the user has used a prefix command argument."
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-sub-recipient)
-  (lyskom-add-sub-recipient text-no-arg
-			    (lyskom-get-string 'text-to-delete-recipient)
-			    nil))
+  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-current-conf
+			  text-no-arg 
+			  (lyskom-get-string 'text-to-delete-recipient)
+			  nil))
+
+(defun lyskom-add-sub-rcpt (conf text-no-arg prompt do-add)
+  "Second part of the add/subtract recipient. Fixes default."
+  (if conf				;+++ annan felhantering
+      (lyskom-add-sub-recipient text-no-arg prompt do-add 
+				(conf-stat->name conf))
+    (lyskom-add-sub-recipient text-no-arg prompt do-add)))
 
 
-(defun lyskom-add-sub-recipient (text-no-arg prompt do-add)
+(defun lyskom-add-sub-recipient (text-no-arg prompt do-add &optional default)
   "Get the number of the text that is to be added or subtracted a recipient
 to/from 
 Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a recipient should be subtracted.
-        Otherwise a recipient is added"
+        Otherwise a recipient is added
+DEFAULT: The default conference to be prompted for."
   (let ((text-no (cond ((null text-no-arg) lyskom-current-text)
 		       (t text-no-arg))))
     (setq text-no (lyskom-read-number prompt text-no))
@@ -1794,7 +1804,7 @@ DO-ADD: NIL if a recipient should be subtracted.
        (lyskom-get-string 'who-to-add-copy-q))
       (do-add (lyskom-get-string 'who-to-add-q))
       (t (lyskom-get-string 'who-to-sub-q)))
-     nil nil "" text-no do-add)))
+     nil nil (or default "") text-no do-add)))
 
 
 (defun lyskom-add-sub-recipient-2 (conf-stat text-no do-add)
@@ -1810,7 +1820,10 @@ DO-ADD: NIL if a recipient should be subtracted.
 	 'main 'lyskom-handle-command-answer
 	 text-no (conf-stat->conf-no conf-stat) (if (eq do-add 'copy)
 						    'cc-recpt
-						  'recpt)))
+						  'recpt))
+	(if (eq do-add 'copy) 
+	    (setq lyskom-last-added-ccrcpt (conf-stat->conf-no conf-stat))
+	  (setq lyskom-last-added-rcpt (conf-stat->conf-no conf-stat))))
     (lyskom-format-insert 'remove-name-as-recipient
 			  (conf-stat->name conf-stat)
 			  text-no)
