@@ -1,3 +1,57 @@
+2002-04-21  David Byers  <david.byers@swipnet.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Temporarily bind
+	lyskom-language to lyskom-global-language to avoid changing
+	language in the popup menu.
+
+	* check-strings.el (lcs-check-language-vars): New function.
+	(lyskom-check-strings): Check for missing language-specific
+	variables.
+
+	* english-strings.el: Added lyskom-unread-title-format
+	and lyskom-unread-mode-line.
+
+	Better default language selection:
+	* option-edit.el (lyskom-mark-association): Changed help-echo to
+	default-help-echo.
+	(lyskom-name): Same here.
+	(lyskom-command): Same here.
+
+	* lyskom-rest.el (lyskom-is-loaded): Get default language from
+	environment variables KOMLANGUAGE or LANG, if they are set and
+	kom-default-language was not. Otherwise 
+	(lyskom-language-from-environment): New function.
+
+	* language.el (lyskom-define-language): Don't set language here.
+	It will be set in lyskom-rest.el.
+
+	Better language switching:
+	* startup.el (kom-start-anew): Pass scope parameter to
+	lyskom-set-language. 
+
+	* commands2.el (kom-change-language): Pass scope parameter to
+	lyskom-set-language.
+
+	* language.el (lyskom-language-strings): Added SCOPE parameter.
+	(lyskom-get-string-internal): Honor scope in
+	lyskom-language-strings.
+	(lyskom-language-var): Added SCOPE parameter.
+	(lyskom-set-language-vars): Added SCOPE parameter. Honor scope
+	when setting language-specific variables.
+
+	* vars.el.in (lyskom-language): Made this setting buffer-local
+	again.
+
+	Cleanup mapcars and macro definitions:
+	* language.el (lyskom-set-language-vars): Removed function before
+	lambda.
+	(lyskom-set-language-keymaps): Same here.
+	(lyskom-get-strings): Same here.
+	(lyskom-string-check-category): Same here.
+	(lyskom-language-var): Use backquote for macro definition.
+	(lyskom-language-keymap): Ditto.
+	(lyskom-language-strings): Ditto.
+
 2002-04-20  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	Implemented "View diff"/"Se diff":
@@ -8,12 +62,48 @@
 
 	* swedish-strings.el (lyskom-command): Added kom-diff-texts.
 	(lyskom-help-strings): Ditto.
-	
+
 	* english-strings.el (lyskom-command): Added kom-diff-texts.
 
 	* compatibility.el (make-temp-file): Provide it if it is missing.
 
 2002-04-20  David Byers  <david.byers@swipnet.se>
+
+	Support context-sensitive error reporting:
+	* vars.el.in (lyskom-error-codes): New variable.
+
+	* lyskom-rest.el (lyskom-insert-error): Added error-descriptions
+	parameter for context-sensitive error reporting.
+	(lyskom-report-command-answer): Added error-descriptions
+	parameter.
+	(lyskom-get-error-text): Added error-descriptions parameter.
+
+	Fix bug 467:
+	* lyskom-rest.el (lyskom-prot-a-format-aux-item-flags): Rename
+	reserved1 to dont-garb as per the specification.
+
+	* komtypes.el (aux-item-flags): Renamed reserved1 field to
+	dont-garb, as per the specification.
+
+	* english-strings.el, swedish-strings.el: Changed aux-item flag
+	"reserved1" to "dont-garb".
+
+	Support send-comments-to:
+	* commands2.el (kom-redirect-comments): New command.
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Completely
+	rewrite checking of commented author. 
+
+	Clean up the code:
+	* lyskom-rest.el (lyskom-prot-a-format-misc-item): Changed case of
+	all pseudo misc-info types to UPPERCASE to match real misc-infos.
+
+	* edit-text.el: Changed case of all pseudo misc-info types to
+	UPPERCASE to match real misc-infos. Changed explicit lists of
+	recipient types to lyskom-recpt-types-list.
+
+	* All files: Changed case of all pseudo misc-info types to
+	UPPERCASE to match real misc-infos.
 
 	Move binding of 'a' to 'x' in the swedish keymaps:
 	* commands2.el (kom-obsolete-extended-command-binding): New
@@ -385,6 +475,7 @@
 	--with-default-language.
 
 2002-03-24  Joel Rosdahl  <joel@lysator.liu.se>
+
 	* Release of 0.46.2-BETA-2 (approximately: there was originally no
 	ChangeLog entry for this release). This entry was added after the
 	fact by David Byers.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.65 2002-04-14 15:15:50 byers Exp $
+;;;;; $Id: startup.el,v 44.66 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.65 2002-04-14 15:15:50 byers Exp $\n"))
+	      "$Id: startup.el,v 44.66 2002-04-21 21:32:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -555,7 +555,7 @@ shown to other users."
       (if login-successful
 	  (progn (clear-all-caches)
                  (unless (eq lyskom-language kom-default-language)   
-                   (when (lyskom-set-language kom-default-language)
+                   (when (lyskom-set-language kom-default-language 'local)
                      (lyskom-format-insert-before-prompt 
                       'language-set-to
                       (lyskom-language-name kom-default-language)))))

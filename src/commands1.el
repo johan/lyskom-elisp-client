@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.138 2002-04-20 14:10:13 ceder Exp $
+;;;;; $Id: commands1.el,v 44.139 2002-04-21 21:32:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.138 2002-04-20 14:10:13 ceder Exp $\n"))
+	      "$Id: commands1.el,v 44.139 2002-04-21 21:32:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -415,14 +415,14 @@ as TYPE. If no such misc-info, return NIL"
                     nil)))
               (if (= tono lyskom-pers-no)
                   (lyskom-edit-text lyskom-proc
-                                    (lyskom-create-misc-list 'recpt tono)
+                                    (lyskom-create-misc-list 'RECPT tono)
                                     "" "")
                 (lyskom-edit-text lyskom-proc
                                   (if (lyskom-get-membership tono)
-                                      (lyskom-create-misc-list 'recpt tono)
+                                      (lyskom-create-misc-list 'RECPT tono)
                                       (lyskom-create-misc-list 
-                                       'recpt tono
-                                       'recpt lyskom-pers-no))
+                                       'RECPT tono
+                                       'RECPT lyskom-pers-no))
                                   "" "")))))
     (quit (signal 'quit nil))))
 
@@ -856,7 +856,7 @@ This does lyskom-end-of-command"
     (if conf
         (lyskom-dispatch-edit-text lyskom-proc
                                    (lyskom-create-misc-list
-                                    'recpt
+                                    'RECPT
                                     (server-info->conf-pres-conf 
                                      lyskom-server-info))
                                    conf-name ""
@@ -1057,8 +1057,8 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 	(let* ((member nil)
 	       (recver (lyskom-create-misc-list
 			(cond 
-			 ((eq type 'comment) 'comm-to)
-			 ((eq type 'footnote) 'footn-to)
+			 ((eq type 'comment) 'COMM-TO)
+			 ((eq type 'footnote) 'FOOTN-TO)
 			 (t (signal 'lyskom-internal-error
 				    (list "Unknown comment type" type))))
 			(text-stat->text-no text-stat)))
@@ -1075,9 +1075,9 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 		      (append recver
 			      (list
 			       (cons (cond
-                                      ((memq confno ccrep) 'cc-recpt)
-                                      ((memq confno bccrep) 'bcc-recpt)
-                                      (t 'recpt))
+                                      ((memq confno ccrep) 'CC-RECPT)
+                                      ((memq confno bccrep) 'BCC-RECPT)
+                                      (t 'RECPT))
                                      commno))))
 		(if (lyskom-get-membership commno)
 		    (setq member t))
@@ -1087,7 +1087,7 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 	  ;; any of the recipients.
 	  (when (not member)
 	      (setq recver (append recver
-				   (list (cons 'recpt lyskom-pers-no)))))
+				   (list (cons 'RECPT lyskom-pers-no)))))
 	  (lyskom-edit-text lyskom-proc 
 			    recver
 			    subject "")))
@@ -1154,12 +1154,12 @@ that text instead."
                (lyskom-edit-text lyskom-proc
                                  (if (= (text-stat->author text-stat) lyskom-pers-no)
                                      (lyskom-create-misc-list
-                                      'recpt
+                                      'RECPT
                                       (text-stat->author text-stat))
                                    (lyskom-create-misc-list
-                                    'comm-to (text-stat->text-no text-stat)
-                                    'recpt (text-stat->author text-stat)
-                                    'recpt lyskom-pers-no))
+                                    'COMM-TO (text-stat->text-no text-stat)
+                                    'RECPT (text-stat->author text-stat)
+                                    'RECPT lyskom-pers-no))
                                  subject ""))))))
 
 
@@ -1301,9 +1301,9 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
               (append
                (lyskom-get-recipients-from-misc-list
                 (text-stat->misc-info-list text-stat))
-               (list 'comm-to
+               (list 'COMM-TO
                      (conf-stat->presentation conf-stat)))
-            (list 'recpt
+            (list 'RECPT
                   (cond
                    ((eq type 'motd)
                     (server-info->motd-conf lyskom-server-info))
@@ -1602,7 +1602,7 @@ Args: CONF-STAT MEMBERSHIP"
 	(lyskom-insert-string 'no-in-conf)
       (lyskom-tell-internat 'kom-tell-write-text)
       (lyskom-edit-text lyskom-proc
-                        (lyskom-create-misc-list 'recpt
+                        (lyskom-create-misc-list 'RECPT
                                                  recpt)
                         "" ""))))
 
@@ -3610,7 +3610,7 @@ footnotes) to it as read in the server."
                      'lyskom-last-added-rcpt 
                      'who-to-add-q
                      'adding-name-as-recipient
-                     'recpt))
+                     'RECPT))
 
 (def-kom-command kom-add-copy (text-no)
   "Add a recipient to a text."
@@ -3619,7 +3619,7 @@ footnotes) to it as read in the server."
                      'lyskom-last-added-ccrcpt 
                      'who-to-add-copy-q
                      'adding-name-as-copy
-                     'cc-recpt))
+                     'CC-RECPT))
 
 (def-kom-command kom-add-bcc (text-no)
   "Add a recipient to a text."
@@ -3628,7 +3628,7 @@ footnotes) to it as read in the server."
                      'lyskom-last-added-bccrcpt
                      'who-to-add-bcc-q
                      'adding-name-as-copy
-                     'bcc-recpt))
+                     'BCC-RECPT))
 
 (defun lyskom-add-helper (text-no last-variable who-prompt doing-prompt type)
   (let* ((conf (blocking-do 'get-conf-stat (lyskom-default-value last-variable)))
@@ -3641,11 +3641,11 @@ footnotes) to it as read in the server."
 
     (when (and target text-no)
 
-      (when (and (eq type 'recpt)
+      (when (and (eq type 'RECPT)
                  kom-confirm-add-recipients
                  (not (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q
                                                       target))))
-        (setq type 'cc-recpt 
+        (setq type 'CC-RECPT 
               doing-prompt 'adding-name-as-copy))
 
       (lyskom-set-default last-variable (conf-stat->conf-no target))
@@ -3722,7 +3722,7 @@ The value of RECIPIENTS should be the result of a call to
                 (lyskom-format-insert 'moving-name source target text-stat)
                 (lyskom-set-default 'lyskom-last-added-rcpt (conf-stat->conf-no target))
                 (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
-                (lyskom-move-recipient text-no source target 'recpt)))))
+                (lyskom-move-recipient text-no source target 'RECPT)))))
       (lyskom-format-insert 'no-such-text-no text-no))))
          
 

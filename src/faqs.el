@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.2 2002-04-14 21:39:54 byers Exp $
+;;;;; $Id: faqs.el,v 44.3 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.2 2002-04-14 21:39:54 byers Exp $\n"))
+              "$Id: faqs.el,v 44.3 2002-04-21 21:32:16 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless (lyskom-faq-is-read conf-no text-no)
@@ -307,8 +307,8 @@ The text to add is passed in TEXT-NO"
                     (if (and text-stat text-mass)
                         (append (lyskom-get-recipients-from-misc-list
                                  (text-stat->misc-info-list text-stat))
-                                (list 'comm-to (text-stat->text-no text-stat)))
-                      (list 'recpt (conf-stat->conf-no conf-stat))))
+                                (list 'COMM-TO (text-stat->text-no text-stat)))
+                      (list 'RECPT (conf-stat->conf-no conf-stat))))
              subject
              body
              'lyskom-change-faq-2

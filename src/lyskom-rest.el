@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.152 2002-04-17 19:26:23 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.153 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.152 2002-04-17 19:26:23 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.153 2002-04-21 21:32:16 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -123,31 +123,42 @@
 
 
 
-(defun lyskom-get-error-text (errno)
+(defun lyskom-get-error-text (errno &optional error-descriptions)
   "Get a string which is the error ERRNO in plain text."
-  (or
-   (lyskom-get-string-internal (intern (concat "error-"
-					       (number-to-string errno)))
-			       'lyskom-error-texts)
-   (lyskom-format 'error-not-found errno)))
+  (let ((custom-error
+         (or (cdr (assq errno error-descriptions))
+             (cdr (assq (car (rassq errno lyskom-error-codes))
+                        error-descriptions)))))
+    (if custom-error
+        (lyskom-get-string custom-error)
+      (or
+       (lyskom-get-string-internal (intern (concat "error-"
+                                                   (number-to-string errno)))
+                                   'lyskom-error-texts)
+       (lyskom-format 'error-not-found errno)))))
 
-(defun lyskom-report-command-answer (answer &optional errno)
+(defun lyskom-report-command-answer (answer &optional errno error-descriptions)
   "Handles a void return from call to the server."
   (if answer 
       (lyskom-insert-string 'done)
     (lyskom-insert-string 'nope)
-    (lyskom-insert-error errno))
+    (lyskom-insert-error errno nil error-descriptions))
   answer)
 
-(defun lyskom-insert-error (&optional errno err-stat)
+(defun lyskom-insert-error (&optional errno err-stat error-descriptions)
   "Insert an error message describing ERRNO and ERR-STAT.
 If ERRNO and ERR-STAT are not supplied, use lyskom-errno and
 lyskom-err-stat instead.  If only ERRNO is supplied, use the empty
-string for ERR-STAT."
+string for ERR-STAT.
+
+If ERROR-DESCRIPTIONS is supplied, it should be an alist with error numbers
+as the cars and error descriptions (symbols) as the cdr. The symbol will
+be used to get a description of the corresponding error."
   (lyskom-format-insert 'error-code
-			(lyskom-get-error-text (or errno lyskom-errno))
-			(or errno lyskom-errno)
-			(or err-stat (if errno "" lyskom-err-stat))))
+                        (lyskom-get-error-text (or errno lyskom-errno)
+                                               error-descriptions)
+                        (or errno lyskom-errno)
+                        (or err-stat (if errno "" lyskom-err-stat))))
 
 (defun lyskom-current-error ()
   "Return a string describing the current error"
@@ -3597,7 +3608,7 @@ Other objects are converted correctly."
    (lyskom-prot-a-format-bool (aux-item-flags->inherit flags))
    (lyskom-prot-a-format-bool (aux-item-flags->secret flags))
    (lyskom-prot-a-format-bool (aux-item-flags->anonymous flags))
-   (lyskom-prot-a-format-bool (aux-item-flags->reserved1 flags))
+   (lyskom-prot-a-format-bool (aux-item-flags->dont-garb flags))
    (lyskom-prot-a-format-bool (aux-item-flags->reserved2 flags))
    (lyskom-prot-a-format-bool (aux-item-flags->reserved3 flags))
    (lyskom-prot-a-format-bool (aux-item-flags->reserved4 flags))))
@@ -3642,11 +3653,11 @@ Other objects are converted correctly."
   "Format a misc-item for output to the server."
   (format "%d %d"
 	  (cond
-	   ((eq (car misc-item) 'recpt) 0)
-	   ((eq (car misc-item) 'cc-recpt) 1)
-	   ((eq (car misc-item) 'comm-to) 2)
-	   ((eq (car misc-item) 'footn-to) 4)
-           ((eq (car misc-item) 'bcc-recpt) 
+	   ((eq (car misc-item) 'RECPT) 0)
+	   ((eq (car misc-item) 'CC-RECPT) 1)
+	   ((eq (car misc-item) 'COMM-TO) 2)
+	   ((eq (car misc-item) 'FOOTN-TO) 4)
+           ((eq (car misc-item) 'BCC-RECPT) 
             (if (lyskom-have-feature bcc-misc) 15 1)))
 	  (cdr misc-item)))
 
@@ -3761,15 +3772,38 @@ One parameter - the prompt string."
 
 (defvar icon-title-format)
 (defvar frame-icon-title-format)
+
+(defun lyskom-language-from-environment (var)
+  (let ((tmp (getenv var)))
+    (and tmp 
+         (string-match "^\\([a-z]+\\)" tmp)
+         (intern (match-string 1 tmp)))))
+
+
 (if lyskom-is-loaded
     nil
+
+  ;; Set up default language
+  (let ((languages (list kom-default-language
+                         (lyskom-language-from-environment "KOMLANGUAGE")
+                         (lyskom-language-from-environment "LANG")
+                         (car (last lyskom-languages)))))
+    (lyskom-traverse lang languages
+      (when (assq lang lyskom-languages)
+        (setq kom-default-language lang
+              lyskom-language lang
+              lyskom-global-language lang)
+        (lyskom-traverse-break))))
+
   (setq-default lyskom-collate-table lyskom-default-collate-table)
   ;; We should set lyskom-char-classes to
   ;;     (lyskom-compute-char-classes lyskom-collate-table))
   ;; but that currently fails under Emacs 20.7, because
   ;; lyskom-default-collate-table isn't set properly.
   (setq-default lyskom-char-classes nil)
-  (lyskom-set-language lyskom-language)
+  (lyskom-set-language lyskom-language 'local)
+  (lyskom-set-language lyskom-language 'global)
+
   (unless (or (memq 'lyskom-unread-mode-line global-mode-string)
               (rassq 'lyskom-unread-mode-line global-mode-string))
     (lyskom-xemacs-or-gnu

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.20 2002-04-10 19:23:24 byers Exp $
+;;;;; $Id: komtypes.el,v 44.21 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.20 2002-04-10 19:23:24 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.21 2002-04-21 21:32:16 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -673,7 +673,7 @@ Both vectors should be of the same length."
 ;;;                              aux-item
 
 (def-komtype aux-item-flags deleted inherit secret anonymous
-  reserved1 reserved2 reserved3 reserved4)
+  dont-garb reserved2 reserved3 reserved4)
 
 (def-komtype aux-item aux-no 
                        tag

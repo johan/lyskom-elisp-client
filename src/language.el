@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.23 2002-03-13 20:48:59 joel Exp $
+;;;;; $Id: language.el,v 44.24 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -44,38 +44,49 @@ Each entry is a pair (SYMBOL . (NAME NAME ...)) where symbol is the symbol
 used for identification, and the NAMEs are names of the language.")
 
 (defvar lyskom-language-categories nil
-  "Categories of language-specific variables.")
+  "Categories of language-specific variables.
+Each element is a cons cell (NAME . SCOPE), where NAME is the name of
+the category and SCOPE is its scope (global or local).")
 
 (defvar lyskom-language-vars nil
-  "A list of all language-dependent variables.")
+  "A list of all language-dependent variables.
+Each element is a cons cell (NAME . SCOPE), where NAME is the name of
+the category and SCOPE is its scope (global or local).")
 
-(defun lyskom-language-var-internal (var language val)
+
+(defun lyskom-language-var-internal (scope var language val)
   "Defines a language-local variable value."
-  (or (memq var lyskom-language-vars)
+  (or (assq var lyskom-language-vars)
       (setq lyskom-language-vars
-	    (cons var lyskom-language-vars)))
+	    (cons (cons var scope) lyskom-language-vars)))
   (let* ((alist (get var 'lyskom-language-var))
 	 (entry (assq language alist)))
     (if entry
 	(setcdr entry val)
       (put var 'lyskom-language-var (cons (cons language val) alist)))))
 
-(defmacro lyskom-language-var (var language val)
-  (list 'lyskom-language-var-internal
-	(list 'quote var)
-	(list 'quote language)
-	(list 'quote val)))
+(defmacro lyskom-language-var (scope var language val)
+  `(lyskom-language-var-internal ',scope
+                                 ',var
+                                 ',language
+                                 ',val))
 
 (put 'lyskom-language-var 'lisp-indent-function 2)
 
-(defun lyskom-set-language-vars (language)
+(defun lyskom-set-language-vars (language scope)
+  "Set language-specific variables to values for LANGUAGE.
+SCOPE must be one of global or local, and specifies the scope of the change.
+If SCOPE is global, change all variables, even those that affect multiple
+sessions."
   (mapcar
-   (function
-    (lambda (var)
-      (if (or (not (symbol-value var))
-	      (get var 'lyskom-language-force))
-	  (set var (eval (cdr (assq language
-				    (get var 'lyskom-language-var))))))))
+   (lambda (spec)
+     (let ((var (car spec))
+           (var-scope (cdr spec)))
+       (when (or (eq scope 'global) (eq var-scope 'local))
+         (when (or (not (symbol-value var))
+                   (get var 'lyskom-language-force))
+           (set var (eval (cdr (assq language
+                                     (get var 'lyskom-language-var)))))))))
    lyskom-language-vars))
 
 ;;; Keymaps
@@ -102,21 +113,19 @@ used for identification, and the NAMEs are names of the language.")
 	   (cons (cons language langmap) alist)))))
 
 (defmacro lyskom-language-keymap (keymap language langmap)
-  (list 'lyskom-language-keymap-internal
-	(list 'quote keymap)
-	(list 'quote language)
-	(list 'quote langmap)))
+  `(lyskom-language-keymap-internal ',keymap
+                                    ',language
+                                    ',langmap))
 
 (put 'lyskom-language-keymap 'lisp-indent-function 2)
 
 (defun lyskom-set-language-keymaps (language)
   (mapcar
-   (function
-    (lambda (map)
-      (set-keymap-parent (symbol-value map)
-                         (eval (cdr (assq language
-                                          (get map
-                                               'lyskom-language-keymap)))))))
+   (lambda (map)
+     (set-keymap-parent (symbol-value map)
+                        (eval (cdr (assq language
+                                         (get map
+                                              'lyskom-language-keymap))))))
    lyskom-language-keymaps))
 
 ;(defun lyskom-set-language-keymaps (language)
@@ -130,37 +139,44 @@ used for identification, and the NAMEs are names of the language.")
 
 ;;; String catalogs
 
-(defun lyskom-language-strings-internal (category language alist)
+(defun lyskom-language-strings-internal (scope category language alist)
   "Associates names to symbols.
-
-CATEGORY and LANGUAGE determines what kind of association to
-create. ALIST is a mapping from symbols to strings."
+See documentation of lyskom-language-strings for information on the 
+parameters to this function."
   ;; Record category
-  (or (memq category lyskom-language-categories)
+  (or (assq category lyskom-language-categories)
       (setq lyskom-language-categories
-	    (cons category lyskom-language-categories)))
+	    (cons (cons category scope) lyskom-language-categories)))
   (let ((record (get category 'lyskom-language-symbols)))
-    (mapcar (function (lambda (pair)
-			(let* ((symbol (car pair))
-			       (string (cdr pair))
-			       (llist (get symbol category))
-			       (entry (assq language llist)))
-			  ;; Record symbol
-			  (or (memq symbol record)
-			      (setq record
-				    (cons symbol record)))
-			  (if entry
-			      (setcdr entry string)
-			    (put symbol category
-				 (cons (cons language string) llist))))))
+    (mapcar (lambda (pair)
+              (let* ((symbol (car pair))
+                     (string (cdr pair))
+                     (llist (get symbol category))
+                     (entry (assq language llist)))
+                ;; Record symbol
+                (or (memq symbol record)
+                    (setq record (cons symbol record)))
+                (if entry
+                    (setcdr entry string)
+                  (put symbol category (cons (cons language string) llist)))))
 	    alist)
     (put category 'lyskom-language-symbols record)))
 
-(defmacro lyskom-language-strings (category language alist)
-  (list 'lyskom-language-strings-internal
-	(list 'quote category)
-	(list 'quote language)
-	alist))
+(defmacro lyskom-language-strings (scope category language alist)
+  "Define a category of strings.
+SCOPE is the scope of language-specificity. If it is global, then these
+strings apply globally and will not be altered by changing the session
+language.
+
+CATEGORY is the name of the category.
+
+LANGUAGE is the language, a symbol denoting the ISO639 language code.
+
+ALIST is the list of strings."
+  `(lyskom-language-strings-internal ',scope
+                                     ',category
+                                     ',language
+                                     ,alist))
 
 (defun lyskom-language-missing-string-internal (category string languages)
   (let ((old-missing (assq 'lyskom-missing-languages (get string category))))
@@ -195,7 +211,10 @@ assoc list."
                            "")))
 
 (defsubst lyskom-get-string-internal (symbol category)
-    (cdr (assq lyskom-language (get symbol category))))
+    (cdr (assq (if (eq (cdr (assq category lyskom-language-categories)) 'local)
+                   lyskom-language
+                 lyskom-global-language)
+               (get symbol category))))
 
 (defsubst lyskom-get-string-error (function symbol category)
   (signal 'lyskom-internal-error
@@ -227,8 +246,8 @@ If kom-long-lines is set, return the long form of the string, if it exists."
 
 according to CATEGORY and lyskom-language. Kind of inverse to
 lyskom-define-language."
-  (mapcar (function (lambda (symbol)
-		      (cons symbol (lyskom-get-string symbol category))))
+  (mapcar (lambda (symbol)
+            (cons symbol (lyskom-get-string symbol category)))
 	  symbols))
 
 (defun lyskom-get-menu-string (symbol)
@@ -244,10 +263,9 @@ if 'lyskom-menu is not found."
 
 (defun lyskom-string-check-category (category)
   "Returns list of names for the category, and their supported languages"
-  (mapcar (function
-	   (lambda (symbol)
-	     (let ((info (get symbol category)))
-	       (if info (cons symbol (mapcar 'car info))))))
+  (mapcar (lambda (symbol)
+            (let ((info (get symbol category)))
+              (if info (cons symbol (mapcar 'car info)))))
 	  (get category 'lyskom-language-symbols)))
 
 
@@ -256,10 +274,6 @@ if 'lyskom-menu is not found."
     (if match
 	(setcdr match names)
       (setq lyskom-languages (cons (cons language names) lyskom-languages))))
-  (unless (and lyskom-language
-               kom-default-language)
-    (setq lyskom-language language)
-    (setq kom-default-language language))
   (put language 'lyskom-language-coding coding))
 
 (defun lyskom-language-coding (language)
@@ -274,21 +288,24 @@ if 'lyskom-menu is not found."
         (lyskom-format (cdr (assq '-- lyskom-language-codes))
                        (symbol-name language)))))
 
-(defun lyskom-set-language (language)
+(defun lyskom-set-language (language scope)
   "Set the current language to LANGUAGE."
   (cond ((not (assq language lyskom-languages))
          (lyskom-format-insert-before-prompt 'language-not-loaded
                                              (lyskom-language-name language))
          nil)
-        (t (setq lyskom-language language)
-           (lyskom-set-language-vars language)
-           (lyskom-set-language-keymaps language)
-           (lyskom-update-menus)
-           (lyskom-update-prompt t)
-           (lyskom-update-command-completion)
-           t)))
+        (t 
+         (cond ((eq scope 'local) 
+                (setq lyskom-language language))
+               ((eq scope 'global) 
+                (setq lyskom-global-language language)
+                (lyskom-set-language-keymaps language)))
+         (lyskom-set-language-vars language scope)
+         (when (eq scope 'global) (lyskom-update-menus))
+         (lyskom-update-prompt t)
+         (lyskom-update-command-completion)
+         t)))
 
-			      
 (eval-and-compile (provide 'lyskom-language))
 
 ;;; language.el ends here

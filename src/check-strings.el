@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.14 2002-04-13 15:01:27 byers Exp $
+;;;;; $Id: check-strings.el,v 44.15 2002-04-21 21:32:15 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -36,6 +36,7 @@
       (lcs-setup-message-buffer))
 
   (lcs-message t "Checking variables")
+  (lcs-check-language-vars)
   (lcs-check-lyskom-commands (mapcar 'car
                                      (lcs-all-category-string
                                       'lyskom-command)))
@@ -44,7 +45,7 @@
   (lcs-check-key-bindings (mapcar 'car (lcs-all-category-string
                                         'lyskom-command))
                           'lyskom-mode-map)
-  (mapcar 'lcs-check-category lyskom-language-categories)
+  (mapcar (lambda (x) (lcs-check-category (car x))) lyskom-language-categories)
 
   (lcs-message t "Checking customizeable variables")
   (lcs-check-customize-variables)
@@ -54,6 +55,22 @@
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
+
+(defun lcs-check-language-vars ()
+  "Check that all language-specific variables exist in all languages"
+  (mapcar (lambda (var)
+            (setq var (car var))
+            (let ((missing 
+                   (delq nil 
+                         (mapcar
+                          (lambda (lang)
+                            (setq lang (car lang))
+                            (unless (assq lang (get var 'lyskom-language-var))
+                              lang))
+                          lyskom-languages))))
+              (when missing
+                (lcs-message nil "(%s) Missing languages: %s" var missing))))
+          lyskom-language-vars))
 
 (defun lcs-check-lyskom-commands (commands)
   "Check the lyskom-commands variable"

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.30 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: services.el,v 44.31 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.30 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: services.el,v 44.31 2002-04-21 21:32:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -476,9 +476,9 @@ Args: KOM-QUEUE HANDLER TEXT-NO CONF-NO TYPE &rest DATA."
     (lyskom-send-packet 
      kom-queue
      (lyskom-format-objects 30 text-no conf-no
-                            (cond ((eq type 'recpt) 0)
-                                  ((eq type 'cc-recpt) 1)
-                                  ((eq type 'bcc-recpt) 
+                            (cond ((eq type 'RECPT) 0)
+                                  ((eq type 'CC-RECPT) 1)
+                                  ((eq type 'BCC-RECPT) 
                                    (if (lyskom-have-feature bcc-misc)
                                        15 1)))))))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.66 2002-04-20 14:52:52 byers Exp $
+;;;;; $Id: option-edit.el,v 44.67 2002-04-21 21:32:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.66 2002-04-20 14:52:52 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.67 2002-04-21 21:32:16 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1304,7 +1304,7 @@ customize buffer but do not save them to the server."
 (define-widget 'lyskom-name 'default
   "A LysKOM person"
   ':format "%[[*]%] %v"
-  ':help-echo (lyskom-custom-string 'change-this-name)
+  ':default-help-echo 'change-this-name
   ':value 0
   ':lyskom-predicate '(pers)
   ':action 'lyskom-widget-name-action
@@ -1372,7 +1372,7 @@ customize buffer but do not save them to the server."
 (define-widget 'lyskom-command 'default
   "A LysKOM command"
   ':format "%[%t%] %v"
-  ':help-echo (lyskom-custom-string 'select-command)
+  ':default-help-echo 'select-command
   ':value 'kom-display-time
   ':action 'lyskom-widget-command-action
   ':value-create 'lyskom-widget-command-value-create
@@ -1595,7 +1595,7 @@ customize buffer but do not save them to the server."
   :tag "Mark association"
   :format "%[%t%] %v\n"
   :value '("..." . 0)
-  :help-echo (lyskom-custom-string 'change-this-name)
+  :default-help-echo 'change-this-name
   :match 'lyskom-widget-mark-association-match
   :validate 'lyskom-widget-mark-association-validate
   :action 'lyskom-widget-mark-association-action
