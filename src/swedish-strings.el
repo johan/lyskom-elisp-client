@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.236 2002-04-28 14:06:25 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.237 2002-04-28 17:15:03 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.236 2002-04-28 14:06:25 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.237 2002-04-28 17:15:03 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1311,7 +1311,7 @@ Text:
     (who-i-am-emacs . "Det körs under %#1s%#2?b%[ (MULE)%]%[%].\n")
 
     (no-such-session-r . "Det finns ingen sådan session. Personen kanske inte är inloggad.\n")
-    (person-not-logged-in-r . "%#1P är inte inloggad.\n")
+    (person-not-logged-in-r . "%#1P %#2?b%[har inte varit inloggad sedan %#2s%]%[är inte inloggad%].\n")
     (session-status . "Session %#1d är %#2P <%#2p>
 %#5s %#7s %#4M
 Kör %#6D från %#3s\n")
