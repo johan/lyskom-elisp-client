@@ -1,5 +1,15 @@
 2003-06-01  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 587:
+	* lyskom-rest.el (lyskom-format-x-kom/user-area): New function.
+
+	* view-text.el (lyskom-print-text): Special patch for user area
+	(which has no subject line).
+
+	* flags.el (lyskom-get-holerith): New function that does what
+	lyskom-read-options-eval-get-holerith does, but does it without
+	side effects in lyskom-options-text.
+
 	Fix bug 1046:
 	* option-edit.el (lyskom-customize-mode): New major mode.
 	(kom-customize): Use it.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.73 2003-04-07 05:24:45 jhs Exp $
+;;;;; $Id: view-text.el,v 44.74 2003-06-01 19:01:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.73 2003-04-07 05:24:45 jhs Exp $\n"))
+	      "$Id: view-text.el,v 44.74 2003-06-01 19:01:47 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -805,7 +805,9 @@ blocking-do."
 Print an error message if TEXT-STAT or TEXT is nil.
 Mark the text as read if (and only if) MARK-AS-READ is non-nil.
 Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
-  (let ((lyskom-current-function 'lyskom-print-text))
+  (let* ((lyskom-current-function 'lyskom-print-text)
+         (cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
+         (content-type (and cti (aux-item->data (car cti)))))
     (cond
      ((or (null text)
           (null text-stat))
@@ -821,7 +823,8 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 	     body)
 
         (cond
-         ((string-match "\n" str)
+         ((and (string-match "\n" str)
+               (not (equal "x-kom/user-area" content-type)))
           (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
           (setq body (substring str (match-end 0)))
           (lyskom-insert-string 'head-Subject)

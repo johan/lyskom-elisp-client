@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.201 2003-04-25 23:00:25 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.202 2003-06-01 19:01:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.201 2003-04-25 23:00:25 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.202 2003-06-01 19:01:46 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2186,6 +2186,66 @@ in lyskom-messages."
            (if kom-text-properties
                (lyskom-button-transform-text (buffer-string) text-stat)
              (buffer-substring (point-min) (1- (point-max))))))))
+
+(defun lyskom-get-holerith-list (text &optional no-coding)
+  "Assume that TEXT is a list of holerith strings. Return those strings."
+  (let (result tmp)
+    (while (string-match "\\S-" text)
+      (setq tmp (lyskom-get-holerith text no-coding))
+      (setq result (cons (car tmp) result)
+            text (cdr tmp)))
+    result))
+
+(defun lyskom-get-holerith-assoc (text &optional no-coding)
+  "Assume that TEXT is a list of holerith strings. Return those strings."
+  (let (result tmp key value)
+    (while (string-match "\\S-" text)
+      (setq tmp (lyskom-get-holerith text no-coding))
+      (setq key (car tmp) text (cdr tmp))
+      (setq tmp (lyskom-get-holerith text no-coding))
+      (setq value (car tmp) text (cdr tmp))
+      (setq result (cons (cons key value) result)))
+    (nreverse result)))
+
+(defun lyskom-split-user-area (text)
+  "Return the user area split into components."
+  (let ((tmp (lyskom-get-holerith text t)))
+    (nreverse (mapcar2 'cons  
+                       (lyskom-get-holerith-list (car tmp) t)
+                       (lyskom-get-holerith-list (cdr tmp) t)))))
+
+(defun lyskom-format-x-kom/user-area-data (data)
+  (let* ((values (lyskom-get-holerith-assoc data t))
+         (maxlen (apply 'max (mapcar (lambda (el) (length (car el))) values)))
+         (fs (format "%%-%ds%%s" (+ maxlen 2))))
+    (mapconcat (lambda (el) (format fs
+                                    (concat (car el) ": ")
+                                    (cdr el))) values "\n")))
+
+
+(defun lyskom-format-x-kom/user-area (text text-stat)
+;  (condition-case nil
+      (let ((tmpbuf (lyskom-generate-new-buffer "lyskom-user-area"))
+            (result "")
+            (user-area (lyskom-split-user-area text)))
+        (while user-area
+          (let ((key (car (car user-area)))
+                (data (cdr (car user-area))))
+            (setq user-area (cdr user-area))
+            (setq result
+                  (concat result
+                          key "\n" (make-string (length key) ?=) "\n\n"
+                          (cond ((equal key "common")
+                                 (lyskom-format-x-kom/user-area-data data))
+                                ((equal key "elisp")
+                                 (lyskom-format-x-kom/user-area-data data))
+                                (t data))
+                          (if user-area "\n\n\n" "")))))
+        result)
+
+
+;    (error (concat "Unable to parse user area\n\n" text)))
+)
 
 
 
