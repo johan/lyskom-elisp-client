@@ -7,6 +7,11 @@
     Anyone who creates buffers needs to know this. All developers
     should.
 
+    TODO:
+
+    Mention that you have to define -in-window variables.
+
+
 
     The elisp client uses special functions for managing buffers,
     implemented in buffers.el. These should (almost) always be used in

@@ -13,6 +13,12 @@
 
 
 
+    TODO:
+
+    Describe how to add a variable to the customization buffer.
+
+
+
     Variables should be named kom-something or lyskom-something. The
     kom prefix is for variables that the user is expected to play
     with. These should also be available in the customization buffer.
