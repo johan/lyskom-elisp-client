@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.221 2003-01-01 02:53:17 byers Exp $
+;;;;; $Id: vars.el.in,v 44.222 2003-01-01 23:32:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.221 2003-01-01 02:53:17 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.222 2003-01-01 23:32:45 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1001,9 +1001,6 @@ numbers)."
 might not see. Typically this list consists of import agents."
   server
   inherited)
-
-(def-kom-var kom-default-face-scheme nil  
-  "*Face scheme to use per default for new logins.")
 
 (def-kom-var kom-smileys t
   "*Non-nil means to reformat smileys in text."
@@ -2875,186 +2872,6 @@ the value of  kom-tell-phrases for fun.")
 (def-kom-var mode-line-conf-name nil
   "Conf name that is present on the mode-line."
   local)
-
-;;
-;; Set up default faces in case no face scheme is selected
-;;
-
-(def-kom-var lyskom-faces
-  '(kom-active-face kom-url-face kom-me-face kom-highlight-face
-		    kom-text-face kom-subject-face kom-text-no-face
-		    kom-friends-face kom-morons-face kom-presence-face
-		    kom-first-line-face kom-warning-face kom-mark-face
-                    kom-text-body-face kom-dashed-lines-face 
-                    kom-async-text-body-face kom-async-dashed-lines-face
-                    kom-dim-face)
-  "This is a list of the faces that LysKOM uses.")
-
-(defvar kom-face-schemes nil
-  "*Setting this variable does nothing. See lyskom-face-schemes instead.")
-
-(def-kom-var lyskom-face-schemes
-  '((default
-     (kom-active-face default "blue4" nil)
-     (kom-url-face default "BlueViolet" nil)
-     (kom-me-face bold "blue3" "lavender")
-     (kom-highlight-face highlight nil)
-     (kom-text-face default nil nil)
-     (kom-subject-face default nil nil)
-     (kom-text-no-face kom-active-face nil nil)
-     (kom-friends-face default "blue3" "lavender")
-     (kom-morons-face default "blue3" "yellow")
-     (kom-presence-face italic "dim gray" nil)
-     (kom-mark-face bold "blue3" "lavender")
-     (kom-warning-face bold "red" nil)
-     (kom-first-line-face bold nil nil)
-     (kom-dim-face default "gray" nil)
-     (kom-dashed-lines-face nil nil "#e8e8ff")
-     (kom-text-body-face nil nil "#f8f8ff")
-     (kom-async-dashed-lines-face nil nil "#e8ffe8")
-     (kom-async-text-body-face nil nil "#f8fff8")
-     (property expected-background "white")
-     )
-    (bark
-     (kom-active-face default "Gold" "Black")
-     (kom-mark-face default "White" nil)
-     (kom-url-face default "Gold" "Black")
-     (kom-me-face default "Gold" "Black")
-     (kom-highlight-face default "PaleGreen" nil)
-     (kom-text-face default nil nil)
-     (kom-subject-face default "Gold" nil)
-     (kom-text-no-face default nil nil)
-     (kom-presence-face default "Gold" nil)
-     (kom-first-line-face bold nil nil)
-     (kom-dashed-lines-face nil nil "#0a0a0a")
-     (kom-async-text-body-face nil nil "#181818")
-     (kom-async-dashed-lines-face nil nil "#0a0a0a")
-     (kom-text-body-face nil nil "#181818")
-     (kom-dim-face nil "DarkSlateGray")
-     (kom-friends-face nil "Gold" "Black")
-     (kom-morons-face nil "Gold" "Black")
-     (kom-warning-face bold "Red" nil)
-     (property expected-background "black")
-     )
-    (black-and-tan
-      (kom-active-face default "#602000" nil)
-      (kom-url-face default "#800040" nil)
-      (kom-me-face bold "#602000" "#f0f0e0")
-      (kom-highlight-face highlight nil nil)
-      (kom-text-face default nil nil)
-      (kom-subject-face default nil nil)
-      (kom-text-no-face kom-active-face nil nil)
-      (kom-friends-face default "#602000" "#f0f0e0")
-      (kom-morons-face default "#602000" "#ffffc0")
-      (kom-presence-face italic "grey" nil)
-      (kom-mark-face bold "#602000" "#f0f0e0")
-      (kom-warning-face bold "red" nil)
-      (kom-first-line-face bold nil nil)
-      (kom-dim-face default "gray" nil)
-      (kom-text-body-face nil nil "#f8f8f0")
-      (kom-dashed-lines-face nil nil "#f0f0e0")
-      (kom-async-text-body-face nil nil "#f8f8f0")
-      (kom-async-dashed-lines-face nil nil "#f0f0e0")
-      (property expected-background "white")
-      )
-    (inverse
-     (kom-active-face default "lightblue" nil)
-     (kom-url-face default "Moccasin" nil)
-     (kom-me-face bold "gold" "black")
-     (kom-highlight-face highlight nil nil)
-     (kom-text-face default nil nil)
-     (kom-subject-face default "Khaki" nil)
-     (kom-text-no-face kom-active-face nil nil)
-     (kom-friends-face default "red" nil)
-     (kom-morons-face default "yellow" nil)
-     (kom-presence-face italic "grey" nil)
-     (kom-mark-face default "gold" "black")
-     (kom-warning-face bold "red" nil)
-     (kom-first-line-face bold nil nil)
-     (kom-dim-face default "gray" nil)
-     (kom-dashed-lines-face nil nil "#101010")
-     (kom-text-body-face nil nil "#080808")
-     (kom-async-dashed-lines-face nil nil "#101030")
-     (kom-async-text-body-face nil nil "#000020")
-     (property expected-background "black")
-     )
-    (monochrome
-     (kom-text-body-face nil nil nil)
-     (kom-async-dashed-lines-face nil nil nil)
-     (kom-async-text-body-face nil nil nil)
-     (kom-dashed-lines-face nil nil nil)
-     (kom-active-face default nil nil)
-     (kom-url-face default nil nil)
-     (kom-me-face bold nil nil)
-     (kom-highlight-face highlight nil nil)
-     (kom-text-face default nil nil)
-     (kom-subject-face default nil nil)
-     (kom-text-no-face kom-active-face nil nil)
-     (kom-friends-face underline nil nil)
-     (kom-morons-face strikethrough nil nil)
-     (kom-presence-face italic nil nil)
-     (kom-mark-face bold nil "black")
-     (kom-warning-face bold nil nil)
-     (kom-first-line-face bold nil nil)
-     (kom-dim-face default nil nil)
-     (property expected-background "white")
-     )
-    (minimal
-     (kom-active-face default nil nil)
-     (kom-url-face default nil nil)
-     (kom-me-face default nil "lavender")
-     (kom-highlight-face highlight nil nil)
-     (kom-text-face default nil nil)
-     (kom-subject-face default nil nil)
-     (kom-text-no-face default nil nil)
-     (kom-friends-face default nil "alice blue")
-     (kom-morons-face default nil "red")
-     (kom-presence-face italic "dim gray" nil)
-     (kom-mark-face default nil "black")
-     (kom-warning-face bold nil nil)
-     (kom-first-line-face nil nil nil)
-     (kom-dashed-lines-face nil nil nil)
-     (kom-text-body-face nil nil nil)
-     (kom-async-dashed-lines-face nil nil nil)
-     (kom-async-text-body-face nil nil nil)
-     (kom-dim-face default nil nil)
-     (property expected-background "white")
-     )
-    (highlight
-     (kom-active-face    default   nil          "aliceblue")
-     (kom-url-face       default   nil          "yellow")
-     (kom-me-face        bold      "darkblue"   "thistle")
-     (kom-highlight-face highlight nil          nil)
-     (kom-text-face      default   nil          nil)
-     (kom-text-no-face   default   nil          nil)
-     (kom-friends-face   default   "darkblue"   "thistle")
-     (kom-morons-face    strikethrough   "red"        "seagreen")
-     (kom-subject-face   default   nil          nil)
-     (kom-presence-face  italic    "dim gray"   nil)
-     (kom-mark-face      bold      "darkblue"   "thistle")
-     (kom-warning-face   bold      "yellow"     "red")
-     (kom-first-line-face nil  nil          "lavender")
-     (kom-dashed-lines-face nil  nil          "lavender")
-     (kom-text-body-face nil nil "#f8f8ff")
-     (kom-async-dashed-lines-face nil  nil          "lavender")
-     (kom-async-text-body-face nil nil "#f8f8ff")
-     (kom-dim-face       default   "gray"       nil)
-     (property expected-background "white")
-     ))
-  "*Face schemes for LysKOM.
-
-This variable is an association list that defines the face and color
-schemes in LysKOM. The car of each element is the scheme key, a
-symbol, and the cdr is a list of face definitions. Each face
-definition in turn is a list of four elements: the face name, the base
-face, foreground color and background color. When LysKOM defines a
-face from such a specification, the base face is first copied (unless
-it is nil) and then the foreground and background colors are set. If
-it permissible to substitute nil for any element except the face name.
-
-For instance, (kom-me-face bold \"yellow\" \"red\") will cause kom-me-face
-to be bold with yellow text on a red background."
-)
 
 
 ;;; ============================================================

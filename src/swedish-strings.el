@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.286 2003-01-01 03:27:11 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.287 2003-01-01 23:32:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.286 2003-01-01 03:27:11 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.287 2003-01-01 23:32:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1835,14 +1835,6 @@ ge kommandot \"Spara variabler\".\n\n")
     (keyboard-cancel . "Avbryt")
     (keyboard-menu-help . "(välj: C-n, C-p; bekräfta: RET)")
     (customize-help . "Se början av bufferten för mer information")
-
-    (missing-faces . "\
-Ditt teckensnittsschema \"%#1s\" saknar följande inställningar:
-
-    %#2s
-
-Använder standardteckensnittet för dessa inställningar.
-")
 
     (no-mule-warning . "\
 

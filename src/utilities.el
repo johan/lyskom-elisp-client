@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.124 2003-01-01 02:53:17 byers Exp $
+;;;;; $Id: utilities.el,v 44.125 2003-01-01 23:32:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.124 2003-01-01 02:53:17 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.125 2003-01-01 23:32:45 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -53,7 +53,7 @@
                      (boundp 'enable-multibyte-characters)
                      (not enable-multibyte-characters))
             (lyskom-format-insert 'no-mule-warning
-                                  '(face kom-warning-face)
+                                  `(face ,kom-warning-face)
                                   ))
 
           ;; Check coding system
@@ -65,7 +65,7 @@
             (lyskom-format-insert 'coding-system-mismatch-warning
                                   (symbol-value (car coding-category-list))
                                   lyskom-server-coding-system
-                                  '(face kom-warning-face)
+                                  `(face ,kom-warning-face)
                                   ))
           )
       (error nil)
@@ -1077,85 +1077,71 @@ for strings."
 
 
 
-(defun lyskom-set-face-scheme (scheme)
-  "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
-in lyskom-face-schemes."
-  (let ((tmp (assoc scheme lyskom-face-schemes))
-        (properties nil)
-        (set-faces nil)
-        (background (or (face-background 'default)
-                        (frame-property (selected-frame) 'background-color))))
-    (when (and tmp
-               (fboundp 'copy-face)
-               (fboundp 'lyskom-set-face-foreground)
-               (fboundp 'lyskom-set-face-background))
-
-
-      ;; If we have a background color, then compute the highlight colors
-
-      (when background
-        (lyskom-set-face-background 'lyskom-strong-highlight-face
-                                    (lyskom-get-color-highlight (lyskom-color-values background) 0.05))
-        (lyskom-set-face-background 'lyskom-weak-highlight-face
-                                    (lyskom-get-color-highlight (lyskom-color-values background) 0.025)))
-
-      ;; Traverse face specifications in the face scheme
-
-      (lyskom-traverse spec (cdr tmp)
-        (if (eq 'property (car spec))
-            (setq properties (cons (cons (elt spec 1) (elt spec 2)) properties))
-          (if (elt spec 1) (lyskom-copy-face (elt spec 1) (elt spec 0)) (make-face (elt spec 0)))
-          (when (elt spec 2) (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-          (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))
-          (setq set-faces (cons (elt spec 0) set-faces))))
-
-      ;; Check that the background color of the default face is what
-      ;; the face scheme expects. If not, copy the computed highlight
-      ;; faces to the real highlight faces.
-
-      (let ((expected-background
-             (or (null background)
-                 (null (assq 'expected-background properties))
-                 (equal (lyskom-color-values 
-                         (cdr (assq 'expected-background properties)))
-                        (lyskom-color-values background)))))
-         (unless (and (memq 'kom-dashed-lines-face set-faces)
-                      expected-background)
-           (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face))
-
-         (unless (and (memq 'kom-text-body-face set-faces)
-                      expected-background)
-           (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))
-
-         (unless (and (memq 'kom-async-dashed-lines-face set-faces)
-                      expected-background)
-           (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face))
-
-         (unless (and (memq 'kom-async-text-body-face set-faces)
-                      expected-background)
-           (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
-
-         (setq set-faces (append set-faces
-                                 (list 'kom-dashed-lines-face
-                                       'kom-text-body-face
-                                       'kom-async-dashed-lines-face
-                                       'kom-async-text-body-face))))
-
-        ;; Check that we've set all faces. If not, copy the default face and post a message
-
-        (let ((unset-faces nil))
-          (lyskom-traverse face-name lyskom-faces
-            (unless (memq face-name set-faces)
-              (setq unset-faces (cons face-name unset-faces))
-              (copy-face 'default face-name)))
-
-          (when unset-faces
-            (lyskom-format-insert-before-prompt 
-             'missing-faces
-             (symbol-name scheme)
-             (mapconcat 'symbol-name
-                        unset-faces
-                        "\n    ")))))))
+;;FACE  (defun lyskom-set-face-scheme (scheme)
+;;FACE    "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
+;;FACE  in lyskom-face-schemes."
+;;FACE    (let ((tmp (assoc scheme lyskom-face-schemes))
+;;FACE          (properties nil)
+;;FACE          (set-faces nil)
+;;FACE          (background (or (face-background 'default)
+;;FACE                          (frame-property (selected-frame) 'background-color))))
+;;FACE      (when (and tmp
+;;FACE                 (fboundp 'copy-face)
+;;FACE                 (fboundp 'lyskom-set-face-foreground)
+;;FACE                 (fboundp 'lyskom-set-face-background))
+;;FACE  
+;;FACE  
+;;FACE        ;; If we have a background color, then compute the highlight colors
+;;FACE  
+;;FACE        (when background
+;;FACE          (lyskom-set-face-background 'lyskom-strong-highlight-face
+;;FACE                                      (lyskom-get-color-highlight (lyskom-color-values background) 0.05))
+;;FACE          (lyskom-set-face-background 'lyskom-weak-highlight-face
+;;FACE                                      (lyskom-get-color-highlight (lyskom-color-values background) 0.025)))
+;;FACE  
+;;FACE        ;; Traverse face specifications in the face scheme
+;;FACE  
+;;FACE        (lyskom-traverse spec (cdr tmp)
+;;FACE          (if (eq 'property (car spec))
+;;FACE              (setq properties (cons (cons (elt spec 1) (elt spec 2)) properties))
+;;FACE            (if (elt spec 1) (lyskom-copy-face (elt spec 1) (elt spec 0)) (make-face (elt spec 0)))
+;;FACE            (when (elt spec 2) (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
+;;FACE            (when (elt spec 3) (lyskom-set-face-background (elt spec 0) (elt spec 3)))
+;;FACE            (setq set-faces (cons (elt spec 0) set-faces))))
+;;FACE  
+;;FACE        ;; Check that the background color of the default face is what
+;;FACE        ;; the face scheme expects. If not, copy the computed highlight
+;;FACE        ;; faces to the real highlight faces.
+;;FACE  
+;;FACE        (let ((expected-background
+;;FACE               (or (null background)
+;;FACE                   (null (assq 'expected-background properties))
+;;FACE                   (equal (lyskom-color-values 
+;;FACE                           (cdr (assq 'expected-background properties)))
+;;FACE                          (lyskom-color-values background)))))
+;;FACE           (unless (and (memq 'kom-dashed-lines-face set-faces)
+;;FACE                        expected-background)
+;;FACE             (copy-face 'lyskom-strong-highlight-face 'kom-dashed-lines-face))
+;;FACE  
+;;FACE           (unless (and (memq 'kom-text-body-face set-faces)
+;;FACE                        expected-background)
+;;FACE             (copy-face 'lyskom-weak-highlight-face 'kom-text-body-face))
+;;FACE  
+;;FACE           (unless (and (memq 'kom-async-dashed-lines-face set-faces)
+;;FACE                        expected-background)
+;;FACE             (copy-face 'lyskom-strong-highlight-face 'kom-async-dashed-lines-face))
+;;FACE  
+;;FACE           (unless (and (memq 'kom-async-text-body-face set-faces)
+;;FACE                        expected-background)
+;;FACE             (copy-face 'lyskom-weak-highlight-face 'kom-async-text-body-face))
+;;FACE  
+;;FACE           (setq set-faces (append set-faces
+;;FACE                                   (list 'kom-dashed-lines-face
+;;FACE                                         'kom-text-body-face
+;;FACE                                         'kom-async-dashed-lines-face
+;;FACE                                         'kom-async-text-body-face))))
+;;FACE  
+;;FACE  )))
 
 
 (defun lyskom-face-resource (face-name attr type)
@@ -1184,34 +1170,34 @@ in lyskom-face-schemes."
                face)
     (error nil)))
 
-(defun lyskom-setup-faces ()
-  "Initalize the faces in the LysKOM client.
-This sets the face scheme according to `kom-default-face-scheme', and
-also reads the proper X resources."
-  (unless kom-default-face-scheme
-    (setq kom-default-face-scheme
-	  (condition-case nil
-	      (cond ((eq (lyskom-device-class) 'mono) 'monochrome)
-		    ((eq (lyskom-background-mode) 'dark)
-		     'inverse)
-		    (t 'default))
-	    (error 'default))))  
-  (lyskom-set-face-scheme kom-default-face-scheme)
-  (if (eq (console-type) 'x)
-      (lyskom-traverse face lyskom-faces
-        (let* ((face-name (symbol-name face))
-               (fg (lyskom-face-resource face-name "Foreground" 'string))
-               (bg (lyskom-face-resource face-name "Background" 'string))
-               (bl (lyskom-face-resource face-name "Bold" 'boolean))
-               (it (lyskom-face-resource face-name "Italic" 'boolean))
-               (ul (lyskom-face-resource face-name "Underline" 'boolean)))
-          (if fg (set-face-foreground face fg))
-          (if bg (set-face-background face bg))
-          (if (eq bl 'on) (lyskom-modify-face 'bold face))
-          (if (eq bl 'off) (lyskom-modify-face 'unbold face))
-          (if (eq it 'on) (lyskom-modify-face 'italic face))
-          (if (eq it 'off) (lyskom-modify-face 'unitalic face))
-          (if ul (set-face-underline-p face (eq ul 'on)))))))
+;;FACE  (defun lyskom-setup-faces ()
+;;FACE    "Initalize the faces in the LysKOM client.
+;;FACE  This sets the face scheme according to `kom-default-face-scheme', and
+;;FACE  also reads the proper X resources."
+;;FACE    (unless kom-default-face-scheme
+;;FACE      (setq kom-default-face-scheme
+;;FACE  	  (condition-case nil
+;;FACE  	      (cond ((eq (lyskom-device-class) 'mono) 'monochrome)
+;;FACE  		    ((eq (lyskom-background-mode) 'dark)
+;;FACE  		     'inverse)
+;;FACE  		    (t 'default))
+;;FACE  	    (error 'default))))  
+;;FACE    (lyskom-set-face-scheme kom-default-face-scheme)
+;;FACE    (if (eq (console-type) 'x)
+;;FACE        (lyskom-traverse face lyskom-faces
+;;FACE          (let* ((face-name (symbol-name face))
+;;FACE                 (fg (lyskom-face-resource face-name "Foreground" 'string))
+;;FACE                 (bg (lyskom-face-resource face-name "Background" 'string))
+;;FACE                 (bl (lyskom-face-resource face-name "Bold" 'boolean))
+;;FACE                 (it (lyskom-face-resource face-name "Italic" 'boolean))
+;;FACE                 (ul (lyskom-face-resource face-name "Underline" 'boolean)))
+;;FACE            (if fg (set-face-foreground face fg))
+;;FACE            (if bg (set-face-background face bg))
+;;FACE            (if (eq bl 'on) (lyskom-modify-face 'bold face))
+;;FACE            (if (eq bl 'off) (lyskom-modify-face 'unbold face))
+;;FACE            (if (eq it 'on) (lyskom-modify-face 'italic face))
+;;FACE            (if (eq it 'off) (lyskom-modify-face 'unitalic face))
+;;FACE            (if ul (set-face-underline-p face (eq ul 'on)))))))
 
 
 ;;; ============================================================
@@ -1601,6 +1587,15 @@ Returns a list (YEAR MONTH DATE) corresponding to the user's input."
 Years below this are considered in the 21st century. Years above this
 in the 20th century")
 
+(defun lyskom-all-prefixes (s)
+  "Return part of a regular expression matching all prefixes of S.
+The value returned does not include the parens before at either ends of the expression."
+  (let ((result nil)
+        (i 1))
+    (while (<= i (length s))
+      (setq result (cons (substring s 0 i) result) i (1+ i)))
+    (mapconcat 'regexp-quote result "\\|")))
+
 (defun lyskom-parse-date (arg)
   "Parse ARG (a string) as a date.
 Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
@@ -1612,19 +1607,19 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
                                "\\)"))
          (y-regexp (concat "\\("
                              (mapconcat (lambda (el)
-                                          (regexp-quote (lyskom-get-string el)))
+                                          (lyskom-all-prefixes (lyskom-get-string el)))
                                         '(years year)
                                         "\\|")
                              "\\)"))
          (m-regexp (concat "\\("
                              (mapconcat (lambda (el)
-                                          (regexp-quote (lyskom-get-string el)))
+                                          (lyskom-all-prefixes (lyskom-get-string el)))
                                         '(months month)
                                         "\\|")
                              "\\)"))
          (d-regexp (concat "\\("
                              (mapconcat (lambda (el)
-                                          (regexp-quote (lyskom-get-string el)))
+                                          (lyskom-all-prefixes (lyskom-get-string el)))
                                         '(days day)
                                         "\\|")
                              "\\)"))
@@ -1645,7 +1640,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
           ((string-match "70.*16.*01" test-date) (setq di 2 mi 3 yi 1)))
 
     ;; Match various variants
-    (cond ((string-match "^\\([0-9][0-9][0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)$" arg)
+    (cond ((string-match "^\\s-*\\([0-9][0-9][0-9][0-9]?\\)\\s-*[ -./]\\s-*\\([0-9][0-9]?\\)\\s-*[ -./]\\s-*\\([0-9][0-9]?\\)\\s-*$" arg)
            ;; YYYY-MM-DD
            (setq year (string-to-int (match-string 1 arg))
                  month (string-to-int (match-string (if (> mi di) 3 2) arg))
@@ -1653,7 +1648,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
            (when (> month 12) (setq month day day month))
            )
 
-          ((string-match "^\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9][0-9][0-9]?\\)$" arg)
+          ((string-match "^\\s-*\\([0-9][0-9]?\\)\\s-*[ -./]\\s-*\\([0-9][0-9]?\\)\\s-*[ -./]\\s-*\\([0-9][0-9][0-9][0-9]?\\)\\s-*$" arg)
            ;; MM-DD-YYYY
            (setq year (string-to-int (match-string 3 arg))
                  month (string-to-int (match-string (if (> mi di) 2 1) arg))
@@ -1661,7 +1656,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
            (when (> month 12) (setq month day day month))
            )
 
-          ((string-match "^\\([0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)$" arg)
+          ((string-match "^\\s-*\\([0-9][0-9]\\)\\s-*[ -./]\\s-*\\([0-9][0-9]?\\)\\s-*[ -./]\\s-*\\([0-9][0-9]?\\)\\s-*$" arg)
            ;; Ambiguous:
            ;; YY/MM/DD, YY/DD/MM, MM/DD/YY, DD/MM/YY
            (setq year (string-to-int (match-string yi arg))
@@ -1670,7 +1665,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
            (when (> month 12) (setq month day day month))
            )
 
-          ((string-match "^\\([0-9][0-9]\\)/\\([0-9][0-9]\\)$" arg)
+          ((string-match "^\\s-*\\([0-9][0-9]\\)\\s-*/\\s-*\\([0-9][0-9]\\)\\s-*$" arg)
            ;; Ambiguous:
            ;; MM/DD       Euro
            ;; DD/MM       US
@@ -1682,28 +1677,28 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
                    (t (setq month a day b))))
            )
 
-          ((string-match (format "^\\([0-9][0-9]?\\) %s \\([0-9][0-9][0-9][0-9]\\)$" month-regexp) arg)
+          ((string-match (format "^\\s-*\\([0-9][0-9]?\\)\\s-*%s\\s-*\\([0-9][0-9][0-9][0-9]\\)\\s-*$" month-regexp) arg)
            ;; DD Month YYYY
            (setq day (string-to-int (match-string 1 arg))
                  month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
                  year (string-to-int (match-string 3 arg)))
            )
 
-          ((string-match (format "^%s \\([0-9][0-9]?\\), \\([0-9][0-9][0-9]?[0-9]?\\)$" month-regexp) arg)
+          ((string-match (format "^\\s-*%s \\([0-9][0-9]?\\),\\s-*\\([0-9][0-9][0-9]?[0-9]?\\)\\s-*$" month-regexp) arg)
            ;; Month DD, YYYY
            (setq day (string-to-int (match-string 2 arg))
                  month (cdr (lyskom-string-assoc (match-string 1 arg) lyskom-month-names))
                  year (string-to-int (match-string 3 arg)))
            )
 
-          ((string-match (format "^\\([0-9][0-9]?\\) %s, \\([0-9][0-9][0-9]?[0-9]?\\)$" month-regexp) arg)
+          ((string-match (format "^\\s-*\\([0-9][0-9]?\\) %s,\\s-*\\([0-9][0-9][0-9]?[0-9]?\\)\\s-*$" month-regexp) arg)
            ;; DD Month, YYYY
            (setq day (string-to-int (match-string 1 arg))
                  month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
                  year (string-to-int (match-string 3 arg)))
            )
 
-          ((string-match (format "^%s,? \\([0-9][0-9][0-9][0-9]\\)$" month-regexp) arg)
+          ((string-match (format "^\\s-*%s,?\\s-*\\([0-9][0-9][0-9][0-9]\\)\\s-*$" month-regexp) arg)
            ;; Ambiguous:
            ;; Month YYYY
            (setq day 1
@@ -1711,7 +1706,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
                  year (string-to-int (match-string 2 arg)))
            )
 
-          ((string-match (format "^%s \\([0-9][0-9]?\\)$" month-regexp) arg)
+          ((string-match (format "^\\s-*%s \\([0-9][0-9]?\\)\\s-*$" month-regexp) arg)
            ;; Ambiguous:
            ;; Month DD, Month YY
            (setq month (cdr (lyskom-string-assoc (match-string 1 arg) lyskom-month-names))
@@ -1720,21 +1715,21 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
            (when (> day 31) (setq day 1 year day))
            )
 
-          ((string-match (format "^\\([0-9][0-9]?\\) %s$" month-regexp) arg)
+          ((string-match (format "^\\s-*\\([0-9][0-9]?\\) %s\\s-*$" month-regexp) arg)
            ;; DD Month
            (setq day (string-to-int (match-string 1 arg))
                  month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
                  year current-year)
            )
 
-          ((string-match (format "^-\\([0-9]+\\) %s$" y-regexp) arg)
+          ((string-match (format "^\\s-*-?\\([0-9]+\\)\\s-*%s\\s-*$" y-regexp) arg)
            ;; -NN years
            (setq year (- current-year (string-to-int (match-string 1 arg)))
                  day current-day
                  month current-month)
            )
 
-          ((string-match (format "^-\\([0-9]+\\) %s$" m-regexp) arg)
+          ((string-match (format "^\\s-*-?\\([0-9]+\\)\\s-*%s\\s-*$" m-regexp) arg)
            ;; -NN months
            (setq year current-year month current-month day current-day)
            (let ((count (string-to-int (match-string 1 arg))))
@@ -1747,7 +1742,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
            (setq day (lyskom-adjust-day-for-date year month day))
            )
 
-          ((string-match (format "^-\\([0-9]+\\) %s$" d-regexp) arg)
+          ((string-match (format "^\\s-*-?\\([0-9]+\\)\\s-*%s\\s-*$" d-regexp) arg)
            ;; -NN days
            ;; Theres probably an off-by-one error in this code on year transitions
            ;; but I really don't care.
@@ -1761,7 +1756,7 @@ Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
                  (setq day (- day count) count 0))))
            (setq day (lyskom-adjust-day-for-date year month day))
            )
-          ((string-match "^\\([0-9][0-9][0-9][0-9]?\\)$" arg)
+          ((string-match "^\\s-*\\([0-9][0-9][0-9][0-9]?\\)\\s-*$" arg)
            ;; YYYY goes last because the pattern is the most general
            (setq year (string-to-int (match-string 0 arg)) month 1 day 1)
            )

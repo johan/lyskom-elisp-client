@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.84 2002-12-16 23:50:23 qha Exp $
+;;;;; $Id: startup.el,v 44.85 2003-01-01 23:32:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.84 2002-12-16 23:50:23 qha Exp $\n"))
+	      "$Id: startup.el,v 44.85 2003-01-01 23:32:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -240,7 +240,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      (setq lyskom-server-name host)
 	      (setq lyskom-server-port port)
 	      (setq lyskom-proc proc)
-	      (lyskom-setup-faces)
+	      (lyskom-setup-faces-for-buffer)
               (lyskom-check-configuration)
 	      (lyskom-insert
 	       (lyskom-format 'try-connect lyskom-clientversion host))
@@ -308,14 +308,14 @@ clients of the event. See lyskom-mode for details on lyskom."
                              (make-string kom-text-header-dash-length ?-)
                            "")
                          (when kom-highlight-dashed-lines
-                           '(face kom-dashed-lines-face)))
+                           `(face ,kom-dashed-lines-face)))
 
                         (lyskom-format-insert "%#2$%#1t\n"
                                               str
                                               (when kom-highlight-text-body
-                                                '(face kom-text-body-face))
+                                                `(face ,kom-text-body-face))
                                               (when kom-highlight-text-body
-                                                '(face kom-text-body-face)))
+                                                `(face ,kom-text-body-face)))
 
                         (lyskom-format-insert
                          "%#2$%#1s\n"
@@ -330,7 +330,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                           kom-text-footer-format
                           lyskom-last-text-format-flags)
                          (when kom-highlight-dashed-lines
-                           '(face kom-dashed-lines-face)))
+                           `(face ,kom-dashed-lines-face)))
                         ))))
 
 	      ;; Can't use lyskom-end-of-command here.

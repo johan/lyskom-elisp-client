@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.69 2002-12-31 00:22:11 byers Exp $
+;;;;; $Id: view-text.el,v 44.70 2003-01-01 23:32:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.69 2002-12-31 00:22:11 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.70 2003-01-01 23:32:45 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -138,7 +138,7 @@ Note that this function must not be called asynchronously."
                     (when (eq filter 'dontshow)
                       (lyskom-get-string 'filtered))
                     (when kom-highlight-first-line
-                      '(face kom-first-line-face)))
+                      `(face ,kom-first-line-face)))
 
 		   (set-marker start nil)
 
@@ -861,7 +861,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                (make-string kom-text-header-dash-length ?-)
              "")
            (when kom-highlight-dashed-lines
-             '(face kom-dashed-lines-face)))
+             `(face ,kom-dashed-lines-face)))
 
           ;; (setq t1 (point-max))
 
@@ -882,13 +882,13 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
             (lyskom-format-insert "%#2$%#1t\n" 
                                   (cons text-stat body)
                                   (and kom-highlight-text-body
-                                       '(face kom-text-body-face)))
+                                       `(face ,kom-text-body-face)))
             )
 
 	  ;; Indicate that the text was truncated
 	  (if truncated
               (lyskom-signal-reformatted-text
-               '(reformat-truncated . (face kom-warning-face))))
+               `(reformat-truncated . (face ,kom-warning-face))))
 
 
           ;; (setq t2 (point-max))
@@ -900,11 +900,11 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                (make-string kom-text-header-dash-length ?-)
              "")
            (when kom-highlight-dashed-lines
-             '(face kom-dashed-lines-face)))
+             `(face ,kom-dashed-lines-face)))
           (lyskom-format-insert "%#2$%#1t\n"
                                 (cons text-stat str)
                                 (and kom-highlight-text-body
-                                       '(face kom-text-body-face)))
+                                       `(face ,kom-text-body-face)))
           (setq lyskom-current-subject "")))
         (sit-for 0)
         (let* ((lyskom-current-function-phase 'footer)
@@ -919,7 +919,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                 (lyskom-format-insert "%#2$%#1s\n"
                                       lyskom-defer-indicator
                                       (when kom-highlight-dashed-lines
-                                        '(face kom-dashed-lines-face)))
+                                        `(face ,kom-dashed-lines-face)))
                 (lyskom-defer-insertion
                  (lyskom-create-defer-info
                   'get-conf-stat
@@ -951,7 +951,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
                 kom-text-footer-format
                 lyskom-last-text-format-flags)
                (when kom-highlight-dashed-lines
-                 '(face kom-dashed-lines-face))))))
+                 `(face ,kom-dashed-lines-face))))))
         (if mark-as-read
             (lyskom-mark-as-read text-stat))
         (setq lyskom-previous-text lyskom-current-text)
