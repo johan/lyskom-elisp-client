@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.211 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands2.el,v 44.212 2004-11-12 07:57:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.211 2004-11-11 21:17:11 _cvs_pont_lyskomelisp Exp $\n"))
+              "$Id: commands2.el,v 44.212 2004-11-12 07:57:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -764,7 +764,8 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 	       (texts 0)
 	       (confs 0))
 	   (lyskom-traverse entry (lyskom-list-news)
-	     (unless (zerop (car entry)) ; Ignore confs with 0 unread
+	     (unless (or (not entry) ; Happens sometimes
+			 (zerop (car entry))) ; Ignore confs with 0 unread
 	       (setq texts (+ (car entry)
 			      texts))
 	       (setq confs (1+ confs))
@@ -778,7 +779,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 	   (setq total-letters (+ letters
 				total-letters))
 	   (setq total-confs (+ confs
-				 total-confs))
+				total-confs))
 
 	   (setq session-list (append (list (list (lyskom-session-nickname) 
 						  (lyskom-format "%#1P" lyskom-pers-no)
@@ -788,9 +789,15 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 						  kom-server-priority))
 				      session-list))))))
 
-    (sort session-list (lambda (s1 s2)
-			 (< (nth 5 s1)
-			    (nth 5 s2))))
+    (setq session-list
+	  (sort session-list (lambda (s1 s2)
+			       (if (= (nth 5 s1) ; Same priority?
+				      (nth 5 s2))
+				   (string< (nth 0 s1) 
+					    (nth 0 s2)) ; Sort on name
+				 (< (nth 5 s1) ; Different priority - sort on that
+				    (nth 5 s2))))))
+
     (lyskom-traverse session session-list
       (lyskom-format-insert 'session-list-unreads-in-confs
 			    (nth 0 session)
