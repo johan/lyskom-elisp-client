@@ -1,3 +1,10 @@
+2000-05-01  Johan Sundtström  <jhs@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-buglist): Bugfixed, somewhat
+	improved regarding the matcher regexps, but most of all commented
+	-- it still uses thing-at-point-looking-at for no good reason,
+	though.
+
 2000-04-29  Johan Sundström  <jhs@lysator.liu.se>
 
 	* utilities.el (lyskom-read-text-no-prefix-arg): Minor code
