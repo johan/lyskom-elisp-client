@@ -1,3 +1,6 @@
+* a[ndra namn RET p 5 RET ^g
+  ^G tas inte om hand snyggt. lyskom-end-of-command blir aldrig k|rd.
+
 * Trunkera detta m|te ur kommentarskedjan. (Tommy)
 
 * Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
