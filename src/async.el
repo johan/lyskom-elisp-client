@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.23 1999-10-09 16:13:17 byers Exp $
+;;;;; $Id: async.el,v 44.24 1999-10-09 16:54:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.23 1999-10-09 16:13:17 byers Exp $\n"))
+	      "$Id: async.el,v 44.24 1999-10-09 16:54:39 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -475,8 +475,9 @@ Non-nil NOBEEP means don't beep."
   (let ((lyskom-last-text-format-flags nil))
     (if (null when)
         (setq when (current-time-string)))
-    (if (not (string= (substring when 0 10)
-                      (substring (current-time-string) 0 10)))
+    (if (or kom-show-personal-message-date
+            (not (string= (substring when 0 10)
+                          (substring (current-time-string) 0 10))))
         (setq when (substring when 4 19))
       (setq when (substring when 11 19)))
 

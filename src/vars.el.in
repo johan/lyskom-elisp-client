@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.79 1999-10-09 16:13:30 byers Exp $
+;;;;; $Id: vars.el.in,v 44.80 1999-10-09 16:54:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.79 1999-10-09 16:13:30 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.80 1999-10-09 16:54:42 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -586,6 +586,10 @@ to call."
 
 (def-kom-var kom-ignore-message-recipients nil
   "*List of recipients you do not want group messages to."
+  server)
+
+(def-kom-var kom-show-personal-message-date t
+  "*Show date on personal messages is non-nil."
   server)
 
 (def-kom-var kom-default-message-recipient 'group
