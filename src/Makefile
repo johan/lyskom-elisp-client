@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.10 1991-10-05 18:15:27 linus Exp $
+# $Id: Makefile,v 35.11 1991-10-08 17:11:18 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.10 1991-10-05 18:15:27 linus Exp $
+# $Id: Makefile,v 35.11 1991-10-08 17:11:18 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.10  1991-10-05 18:15:27  linus
+# Revision 35.11  1991-10-08 17:11:18  linus
+# Splitting the makefile install entries to make it easier to install without doc.
+#
+# Revision 35.10  1991/10/05  18:15:27  linus
 # Now handles the english version of the client also.
 #
 # Revision 35.9  1991/09/26  14:02:16  linus
@@ -133,8 +136,9 @@ tags:
 doc:
 	(cd ../doc ; make elisp-client elisp-client.txt ; )
 
+install: installnodoc installdoc
 
-install: lyskom.elc lyskom.el doc
+installnodoc: lyskom.elc lyskom.el
 	cp lyskom.elc /usr/local/lib/elisp/lyskom.elc
 	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
 	(VER=`grep "lyskom-clientversion " vars.el | \
@@ -145,7 +149,11 @@ install: lyskom.elc lyskom.el doc
 	 cp lyskom.el lyskom-$${VER}.el;\
 	 compress lyskom-$${VER}.el;\
 	 cp lyskom-$${VER}.el.Z /usr/local/ftp/pub/lyskom/elisp-client;\
-	 mv lyskom-$${VER}.el.Z ../old-versions/;\
+	 mv lyskom-$${VER}.el.Z ../old-versions/;)
+
+installdoc: doc
+	(VER=`grep "lyskom-clientversion " vars.el | \
+	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp ../doc/elisp-client ../doc/elisp-client.txt .;\
 	 compress elisp-client elisp-client.txt;\
 	 mv elisp-client.Z \
