@@ -1,5 +1,10 @@
 2001-04-21  Joel Rosdahl  <joel@rosdahl.net>
 
+	* english-strings.el (lyskom-command): Better description of
+	kom-delete-conf.
+
+	* swedish-strings.el (lyskom-command): Ditto.
+
 	* option-edit.el (lyskom-widget-string-action): Nicer prompt
 	strings.
 	(lyskom-widget-number-action): Ditto.
