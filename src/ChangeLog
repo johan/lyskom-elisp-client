@@ -1,5 +1,9 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 250:
+	* lyskom-rest.el (lyskom-check-go-to-conf): Change priority when
+	accepting an invitation.
+
 	Fix bug 839:
 	* commands1.el (kom-add-self): Don't re-add self.
 
