@@ -1,5 +1,26 @@
 2003-08-14  David Byers  <byers@lysator.liu.se>
 
+	Update NEWS file:
+	* NEWS-0.48: Updated to here.
+
+	Don't show nil in message area when silently saving settings:
+	* flags.el (lyskom-save-options): Support nil message properly.
+	(lyskom-save-options-2): Ditto.
+	(lyskom-save-options-3): Ditto.
+
+	Suppoert non-interactive use of kom-list-new-conferences etc:
+	* vars.el.in (kom-auto-confirm-new-conferences): New variable.
+
+	* commands2.el (lyskom-list-new-conferences): Support
+	auto-confirmation.
+
+	* lyskom-rest.el (lyskom-do-format): Better error reoprting
+	(report argument number and actual argument).
+	(lyskom-format-aux-help): Provide data for error reporting.
+
+	* faqs.el (kom-list-server-faqs): Updated documentation.
+
+	New commands:
 	* services.el (initiate-first-unused-conf-no): New function.
 	(initiate-first-unused-text-no): New function.
 	(initiate-find-next-conf-no): New function.
@@ -273,7 +294,7 @@
 	* lyskom-rest.el (lyskom-check-go-to-conf): Ask for message-flag
 	when de-passivating a membership.
 
-	Some more work for kom-handle-membership: 
+	Some more work for kom-handle-membership:
 	* mship-edit.el (lp--create-buffer): Made the header and footer
 	adapt to the window width like the contents do.
 	(lp--toggle-passive): New command. Also added binding.
@@ -283,7 +304,7 @@
 
 	* lyskom-rest.el (lyskom-list-unread-mapping): Removed unused
 	variable.
-	(lyskom-format-aux-help): Added format directie l.
+	(lyskom-format-aux-help): Added format directive l.
 	(lyskom-format-aux): Support arbitrary pad characters.
 
 2003-07-27  David Byers  <byers@lysator.liu.se>
@@ -343,7 +364,6 @@
 	predicate to lyskom-read-conf-internal.
 	(lyskom-read-conf): Support integer argument in initial. Default
 	to placing point at the start of input.
-
 
 	Fix bug 1036:
 	* commands2.el (kom-change-message-flag): Nwe command.

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.258 2003-08-14 14:16:56 byers Exp $
+;;;;; $Id: vars.el.in,v 44.259 2003-08-14 15:59:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.258 2003-08-14 14:16:56 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.259 2003-08-14 15:59:25 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -121,6 +121,17 @@ if the variable is in kom-dont-read-saved-variables."
 
 
 ;;; User flags
+
+(def-kom-var kom-auto-confirm-new-conferences nil
+  "**Determines behavior of `kom-list-new-conferences' and `kom-list-new-persons'.
+
+When this variable is set to `t', `kom-list-new-conferences' and
+`kom-list-new-persons' will automatically mark all listed conferences
+and persons as known. When set to `nil', these commands will ask for
+confirmation before marking the listed conferences and persons as known.
+
+Values other than `t' and `nil' are reserved for future use."
+  server)
 
 (def-kom-var kom-dont-complain-about-missing-presentation nil
   "*Controls whether the client complains when you don't have
