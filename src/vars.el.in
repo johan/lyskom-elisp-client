@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.10 1996-07-09 08:28:49 byers Exp $
+;;;;; $Id: vars.el.in,v 41.11 1996-07-15 19:31:52 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.10 1996-07-09 08:28:49 byers Exp $\n"
+  "$Id: vars.el.in,v 41.11 1996-07-15 19:31:52 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -135,6 +135,14 @@ This variable is stored in the LysKOM server.")
 
 (defvar kom-show-footnotes-immediately t
   "*Non-nil means show footnotes immediately following the text.
+
+This variable is stored in the LysKOM server.")
+
+(defvar kom-follow-comments-outside-membership nil
+  "*Show comments in conferences you are not a member of.
+
+If this variable is nil, texts with no recipient you are a member of
+will not be shown.
 
 This variable is stored in the LysKOM server.")
 
@@ -611,6 +619,7 @@ This variable is not saved in the LysKOM server.")
     kom-ansaphone-record-messages
     kom-ansaphone-show-messages
     kom-show-footnotes-immediately
+    kom-follow-comments-outside-membership
     kom-friends
     lyskom-fetch-map-nos
     lyskom-new-text-hook
