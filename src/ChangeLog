@@ -1,3 +1,23 @@
+2001-08-23  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* commands1.el (kom-who-is-on-and-friend,
+	lyskom-select-friends-from-who-list): new commands.
+	(lyskom-who-is-on-8, lyskom-who-is-on-9): new arg;
+	show-friends-only.
+
+	* english-strings.el, swedish-strings.el (lyskom-command): added
+	kom-who-is-on-and-friend.
+
+	* english-strings.el (lyskom-en-mode-map): kom-who-is-on is on
+	"w l", kom-who-is-on-in-conference is on "w c",
+	kom-who-is-present-in-conference is on "w a" and
+	kom-who-is-on-and-friend is on "w f".
+
+	* swedish-strings.el (lyskom-sv-mode-map): kom-who-is-on is on
+	"v i", kom-who-is-on-in-conference is on "v m",
+	kom-who-is-present-in-conference is on "v a" and
+	kom-who-is-on-and-friend is on "v v".
+
 2001-08-24  Per Cederqvist  <ceder@moria>
 
 	* commands2.el (kom-is-person-member-of-conference): Differentiate

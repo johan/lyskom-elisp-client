@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.119 2001-08-16 18:28:05 teddy Exp $
+;;;;; $Id: commands1.el,v 44.120 2001-08-23 22:49:09 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.119 2001-08-16 18:28:05 teddy Exp $\n"))
+	      "$Id: commands1.el,v 44.120 2001-08-23 22:49:09 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2763,19 +2763,45 @@ If the prefix is 0, all visible sessions are shown."
       (lyskom-no-users
        (lyskom-insert (lyskom-get-string 'null-who-info))))))
 
-(defun lyskom-who-is-on-8 (&optional conf-stat show-present-only)
+;;; ================================================================
+;;;                Vilka vänner (är inloggade) - What friends are on
+
+;;; Author: Ulrik Haugen
+
+(def-kom-command kom-who-is-on-and-friend (&optional arg)
+  "Display a list of all connected users in kom-friends.
+The prefix arg controls the idle limit of the sessions showed. If the
+prefix is negative, invisible sessions are also shown.
+
+If the prefix is 0, all visible sessions are shown."
+  (interactive "P")
+  (condition-case nil
+      (if (lyskom-have-feature dynamic-session-info)
+	  (lyskom-who-is-on-9 arg nil nil t)
+	(lyskom-who-is-on-8 nil nil t))
+    (lyskom-no-users
+     (lyskom-insert (lyskom-get-string 'null-who-info)))))
+
+(defun lyskom-who-is-on-8 (&optional conf-stat show-present-only
+				     show-friends-only)
   "Display a list of all connected users.
 Uses Protocol A version 8 calls"
   (let* ((who-info-list (blocking-do 'who-is-on))
-	 (who-list (sort (cond (show-present-only
-				(lyskom-who-is-present-check-membership-8 who-info-list conf-stat))
-			       (conf-stat
-				(lyskom-who-is-on-check-membership-8 who-info-list conf-stat))
-			       (t
-				(listify-vector who-info-list)))
-			 (function (lambda (who1 who2)
-				     (< (who-info->connection who1)
-					(who-info->connection who2))))))
+	 (who-list (sort
+		    (funcall (if show-friends-only
+				 #'lyskom-select-friends-from-who-list
+			       #'identity)
+			     (cond (show-present-only
+				    (lyskom-who-is-present-check-membership-8
+				     who-info-list conf-stat))
+				   (conf-stat
+				    (lyskom-who-is-on-check-membership-8
+				     who-info-list conf-stat))
+				   (t
+				    (listify-vector who-info-list))))
+			     (function (lambda (who1 who2)
+					 (< (who-info->connection who1)
+					    (who-info->connection who2))))))
 	 (total-users (length who-list))
 	 (session-width (1+ (length (int-to-string
 				     (who-info->connection
@@ -2833,7 +2859,8 @@ Uses Protocol A version 8 calls"
                                      'timeformat-day-yyyy-mm-dd-hh-mm-ss)))))
 
 
-(defun lyskom-who-is-on-9 (arg &optional conf-stat show-present-only)
+(defun lyskom-who-is-on-9 (arg &optional conf-stat show-present-only
+			       show-friends-only)
   "Display a list of all connected users.
 Uses Protocol A version 9 calls"
   (let* ((wants-invisibles (or (and (numberp arg) (< arg 0))
@@ -2845,12 +2872,18 @@ Uses Protocol A version 9 calls"
                             (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
 				     't wants-invisibles (* idle-hide 60)))
-	 (who-list (sort (cond (show-present-only
-				(lyskom-who-is-present-check-membership-9 who-info-list conf-stat))
-			       (conf-stat
-				(lyskom-who-is-on-check-membership-9 who-info-list conf-stat))
-			       (t
-				(listify-vector who-info-list)))
+	 (who-list (sort	
+		    (funcall (if show-friends-only
+				 #'lyskom-select-friends-from-who-list
+			       #'identity)
+			     (cond (show-present-only
+				    (lyskom-who-is-present-check-membership-9
+				     who-info-list conf-stat))
+				   (conf-stat
+				    (lyskom-who-is-on-check-membership-9
+				     who-info-list conf-stat))
+				   (t
+				    (listify-vector who-info-list))))
 			 (function
 			  (lambda (who1 who2)
 			    (< (dynamic-session-info->session who1)
@@ -3062,6 +3095,21 @@ Uses Protocol A version 9 calls"
 	  (setq res (cons (aref who-info-list i) res)))
       (setq i (1+ i)))
     res))
+
+(defun lyskom-select-friends-from-who-list (who-list)
+  "Returns a list of friends in WHO-LIST"
+  (let ((result nil))
+    (while (not (endp who-list))
+      (when (memq (dynamic-session-info->person (car who-list))
+		  kom-friends)
+	(setq result (cons (car who-list) result)))
+      (setq who-list (cdr who-list)))
+    result))
+
+;;    (dolist (who-info who-list result)
+;;      (when (memq (dynamic-session-info->person who-info)
+;;		  kom-friends)
+;;	(setq result (cons who-info result))))))
 
 (defun lyskom-insert-deferred-session-info (session-info defer-info)
   (if session-info
