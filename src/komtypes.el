@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 38.1 1995-02-23 20:41:49 linus Exp $
+;;;;; $Id: komtypes.el,v 38.2 1995-10-25 09:37:54 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 38.1 1995-02-23 20:41:49 linus Exp $\n"))
+	      "$Id: komtypes.el,v 38.2 1995-10-25 09:37:54 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -255,17 +255,6 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 
 				
 				
-;;;; ================================================================
-;;;; This field is just simulation of a field in the conf-stat
-;;;; that not yet exist.
-
-(defsubst conf-stat->comm-conf (conf-stat)
-  (if (and (conf-type->original (conf-stat->conf-type conf-stat))
-	   (not (zerop (conf-stat->super-conf conf-stat))))
-      (conf-stat->super-conf conf-stat)
-    (conf-stat->conf-no conf-stat)))
-
-
 ;;; ================================================================
 ;;;                         Conf-list
 
@@ -634,10 +623,6 @@ Both vectors should be of the same length."
 
 ;;; Constructors:
 
-(defsubst lyskom-create-empty-misc-info ()
-  "Create an empty misc-info."
-  (lyskom-create-misc-info nil nil nil nil nil nil nil nil nil nil))
-
 (defsubst lyskom-create-misc-info (type
 				recipient-no
 				local-no
@@ -654,6 +639,10 @@ TYPE is one of RECPT, CC-RECPT COMM-TO COMM-IN FOOTN-TO or FOOTN-IN."
    'MISC-INFO
    (vector type recipient-no local-no rec-time comm-to comm-in 
 	   footn-to footn-in sender sent-at )))
+
+(defsubst lyskom-create-empty-misc-info ()
+  "Create an empty misc-info."
+  (lyskom-create-misc-info nil nil nil nil nil nil nil nil nil nil))
 
 
 ;;; Selectors:
@@ -1572,6 +1561,17 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 (defsubst lyskom-server-info-p (object)
   "Return t if OBJECT is a server-info."
   (eq (car-safe object) 'SERVER-INFO))
+
+
+;;;; ================================================================
+;;;; This field is just simulation of a field in the conf-stat
+;;;; that not yet exist.
+
+(defsubst conf-stat->comm-conf (conf-stat)
+  (if (and (conf-type->original (conf-stat->conf-type conf-stat))
+	   (not (zerop (conf-stat->super-conf conf-stat))))
+      (conf-stat->super-conf conf-stat)
+    (conf-stat->conf-no conf-stat)))
 
 
 ;;; ================================================================
