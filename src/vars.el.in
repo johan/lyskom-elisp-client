@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.189 2002-04-28 11:50:35 byers Exp $
+;;;;; $Id: vars.el.in,v 44.190 2002-04-29 21:57:35 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.189 2002-04-28 11:50:35 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.190 2002-04-29 21:57:35 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1132,7 +1132,8 @@ at random and used. This element may be a string, function or list."
   server)
 
 (def-kom-var kom-default-language nil
-  "*Which language to use for messages in new sessions."
+  "*Which language to use for messages in new sessions.
+All choices are listed in `lyskom-languages'"
   server 
   inherited
   protected)
