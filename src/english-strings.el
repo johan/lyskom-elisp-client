@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.347 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.348 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.347 2005-01-11 07:35:52 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.348 2005-01-11 15:00:13 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1486,6 +1486,8 @@ On since %#8s%#9s")
 
     (reformat-deswascii . "was swascii")
 
+    (reformat-rot13 . "rot13")
+
     (need-library . "The \"%#1s\" package is required for this command.\n")
     (calc-expression . "Expression: ")
 
@@ -1717,6 +1719,7 @@ You must become an active member of the conference to enter it.\n")
 
     (review-converted-q . "Review which text converted?")
     (review-noconversion-q . "Review which text unconverted?")
+    (review-rot13-q . "Review which text in rot13?")
     (unread-commented-q . "Mark the commented for which text as unread?")
     (review-commented-q . "Review the commented for which text?")
 
@@ -1776,6 +1779,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-copy-text-no-action . "Copy text number")
     (lyskom-button-review-converted-action . "Review converted")
     (lyskom-button-review-noconversion-action . "Review unconverted")
+    (lyskom-button-review-rot13-action . "Review rot13")
     (lyskom-button-find-root-review-action . "Review tree")
     (lyskom-button-find-root-action . "Review root text")
     (lyskom-button-comment-text-action . "Write comment")
@@ -2192,6 +2196,7 @@ Change privileges for %#1P (%#1p)...")
      			      . "Review all cross references")
     (kom-review-converted     . "Review converted")
     (kom-review-noconversion  . "Review unconverted")
+    (kom-review-rot13         . "Review rot13")
     (kom-review-next          . "Review next")
     (kom-find-root            . "Review original (text)")
     (kom-review-by-to         . "Review last")
@@ -2791,6 +2796,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-review-prefix (kbd "n") 'kom-review-next)
   (define-key lyskom-en-review-prefix (kbd "u") 'kom-review-noconversion)
   (define-key lyskom-en-review-prefix (kbd "v") 'kom-review-converted)
+  (define-key lyskom-en-review-prefix (kbd "3") 'kom-review-rot13)
   (define-key lyskom-en-review-prefix (kbd "o") 'kom-find-root)
   (define-key lyskom-en-review-prefix (kbd "l") 'kom-review-by-to)
   (define-key lyskom-en-review-prefix (kbd "f") 'kom-review-first)

@@ -1,5 +1,28 @@
 2005-01-11  Pontus Freyhult  <pont@soua.net>
 
+	Applied patch from calle@lysator.liu.se, fixes bug 1487:
+	* english-strings.el (lyskom-message): Added reformat-rot13, 
+	review-rot13-q and lyskom-button-review-rot13-action.
+	(lyskom-command): Added kom-review-rot13.
+
+	* swedish-strings.el (lyskom-message): Added reformat-rot13, 
+	review-rot13-q and lyskom-button-review-rot13-action.
+	(lyskom-command): Added kom-review-rot13.
+
+	* view-text.el (lyskom-rot13-string): New function.
+	(lyskom-filter-rot13): Dito.
+
+	* lyskom-buttons.el (lyskom-button-review-rot13): New button
+	action.
+
+	* menus.el (lyskom-menu-template): Added kom-review-rot13.
+
+	* review.el (kom-review-rot13): New function.
+
+	* vars.el.in (lyskom-button-actions): Added rot13 review action.
+	(lyskom-commands): Added kom-review-rot13.
+
+	Fix for bug 1491:
 	* english-strings.el, swedish-strings.el: 
 	(lyskom-custom-strings): Added kom-relogin-inhibit-commands-tag
 	and kom-relogin-inhibit-commands-doc.

@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.391 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.392 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.391 2005-01-11 07:35:53 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.392 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1528,6 +1528,8 @@ Uppkopplad sedan %#8s%#9s")
 
     (reformat-deswascii . "var swascii")
 
+    (reformat-rot13 . "rot13")
+
     (need-library . "Paketet \"%#1s\" behövs för att utföra detta kommando.\n")
     (calc-expression . "Uttryck: ")
 
@@ -1760,6 +1762,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (review-converted-q . "Återse vilket inlägg konverterat?")
     (review-noconversion-q . "Återse vilket inlägg omodifierat?")
+    (review-rot13-q . "Återse vilket inlägg i rot13?")
     (unread-commented-q . "Oläsmarkera vilket inläggs kommenterade?")
     (review-commented-q . "Återse vilket inlägg kommenterade?")
     (unread-tree-q . "Oläsmarkera alla kommentarer rekursivt för vilket inlägg?")
@@ -1819,6 +1822,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-copy-text-no-action . "Kopiera inläggsnumret")
     (lyskom-button-review-converted-action . "Återse konverterat")
     (lyskom-button-review-noconversion-action . "Återse omodifierat")
+    (lyskom-button-review-rot13-action . "Återse rot13")
     (lyskom-button-find-root-review-action . "Återse träd")
     (lyskom-button-find-root-action . "Återse urinlägget")
     (lyskom-button-comment-text-action . "Kommentera texten")
@@ -2227,6 +2231,7 @@ Nuvarande rättigheter för %#1P (%#1p):
      			      . "Återse alla korsreferenser")
     (kom-review-converted     . "Återse konverterat")
     (kom-review-noconversion  . "Återse omodifierat")
+    (kom-review-rot13         . "Återse rot13")
     (kom-review-next          . "Återse nästa")
     (kom-find-root	      . "Återse urinlägget")
     (kom-review-by-to         . "Återse senaste")
@@ -2894,6 +2899,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-review-prefix (kbd "n") 'kom-review-next)
   (define-key lyskom-sv-review-prefix (kbd "o") 'kom-review-noconversion)
   (define-key lyskom-sv-review-prefix (kbd "v") 'kom-review-converted)
+  (define-key lyskom-sv-review-prefix (kbd "3") 'kom-review-rot13)
   (define-key lyskom-sv-review-prefix (kbd "r") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "u") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "s") 'kom-review-by-to)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.61 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: review.el,v 44.62 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.61 2005-01-09 01:16:02 byers Exp $\n"))
+	      "$Id: review.el,v 44.62 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1773,9 +1773,22 @@ This command accepts text number prefix arguments \(see
         (lyskom-view-text text-no))
     (lyskom-insert 'confusion-what-to-view)))
 
+;;; ============================================================
+;;;        Återse rot13 - Review a text rot13:ed
 
+(def-kom-command kom-review-rot13 (text-no)
+  "Displays the selected text rot13:ed.
 
-
+This command accepts text number prefix arguments \(see
+`lyskom-read-text-no-prefix-arg')."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-rot13-q)))
+  (if text-no
+      (let ((kom-view-text-hook kom-view-text-hook))
+        (unless kom-review-uses-cache (cache-del-text-stat text-no))
+	(add-hook 'kom-view-text-hook 'lyskom-filter-rot13 nil t)
+        (lyskom-view-text text-no)
+	)
+    (lyskom-insert 'confusion-what-to-view)))
 
 (defun lyskom-review-get-priority ()
   "Get the priority to use for reviewing texts."

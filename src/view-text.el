@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.81 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: view-text.el,v 44.82 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.81 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: view-text.el,v 44.82 2005-01-11 15:00:14 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -419,7 +419,27 @@ when put in your `kom-view-text-hook'."
 	  (set-text->text-mass lyskom-view-text-text (substring body 0 sign))
 	  (lyskom-signal-reformatted-text 'reformat-signature))))))
 
+
 ;(add-hook 'kom-view-text-hook 'lyskom-filter-signature-hook)
+
+; review-rot13
+
+(defun lyskom-rot13-string (s)
+  (mapconcat 
+   (lambda (c)
+     (cond
+      ((and (>= c ?a) (<= c ?z)) (string (+ ?a (% (+ 13 (- c ?a)) 26))))
+      ((and (>= c ?A) (<= c ?Z)) (string (+ ?A (% (+ 13 (- c ?A)) 26))))
+      (t (string c))))
+   s ""))
+
+(defun lyskom-filter-rot13 ()
+  "Encrypts everything with rot-13. Least useless when put in your `kom-view-text-hook'."
+  (set-text->text-mass lyskom-view-text-text 
+		       (lyskom-rot13-string 
+			(text->text-mass lyskom-view-text-text)))
+  (lyskom-signal-reformatted-text 'reformat-rot13))
+
 
 (defun lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1 ()
   "Display r{ksm|rg}s as räksmörgås unless the text is an imported mail
