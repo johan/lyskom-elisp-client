@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.38 1998-05-08 13:58:53 petli Exp $
+;;;;; $Id: english-strings.el,v 44.39 1998-06-02 12:14:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.38 1998-05-08 13:58:53 petli Exp $"))
+              "$Id: english-strings.el,v 44.39 1998-06-02 12:14:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -326,8 +327,8 @@ and you have finished reading. Please come back later.
     (new-passwd-again . "Repeat the new password for confirmation: ")
     (what-mark-to-view . "Review which mark? ")
     (whos-passwd . "Change password for whom? (yourself) ")
-    (old-passwd . "Your old password: ")
-    (new-passwd . "Your new password: ")
+    (old-passwd . "Your current password: ")
+    (new-passwd . "The new password: ")
     (changing-passwd . "Changing password...")
     (retype-dont-match . "You didn't reenter the same passwrod. Try again.\n")
     (palindrome . "(a palindrome!) ")

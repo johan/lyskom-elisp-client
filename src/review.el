@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.13 1998-02-22 11:06:11 nisse Exp $
+;;;;; $Id: review.el,v 44.14 1998-06-02 12:15:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.13 1998-02-22 11:06:11 nisse Exp $\n"))
+	      "$Id: review.el,v 44.14 1998-06-02 12:15:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))

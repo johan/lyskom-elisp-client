@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.11 1998-02-24 22:51:58 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.12 1998-06-02 12:15:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.11 1998-02-24 22:51:58 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.12 1998-06-02 12:15:07 byers Exp $\n"))
 
 
 ;;; ================================================================

@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.5 1997-07-15 10:22:54 byers Exp $
+;;;;; $Id: check-strings.el,v 44.6 1998-06-02 12:14:15 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;

@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: envcheck.el,v 1.5 1997-09-16 10:19:22 byers Exp $
+;;;;; $Id: envcheck.el,v 1.6 1998-06-02 12:14:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

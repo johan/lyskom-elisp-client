@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.3 1997-10-23 12:19:03 byers Exp $
+;;;;; $Id: komtypes.el,v 44.4 1998-06-02 12:14:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.3 1997-10-23 12:19:03 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.4 1998-06-02 12:14:49 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list

@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: copyright,v 44.1 1997-02-07 18:09:17 byers Exp $
+;;;;; $Id: copyright,v 44.2 1998-06-02 12:14:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,5 +34,5 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: copyright,v 44.1 1997-02-07 18:09:17 byers Exp $\n"))
+	      "$Id: copyright,v 44.2 1998-06-02 12:14:32 byers Exp $\n"))
 
