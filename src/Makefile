@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.11 1991-10-08 17:11:18 linus Exp $
+# $Id: Makefile,v 35.12 1991-12-18 04:13:37 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.11 1991-10-08 17:11:18 linus Exp $
+# $Id: Makefile,v 35.12 1991-12-18 04:13:37 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.11  1991-10-08 17:11:18  linus
+# Revision 35.12  1991-12-18 04:13:37  linus
+# $(MAKE)
+#
+# Revision 35.11  1991/10/08  17:11:18  linus
 # Splitting the makefile install entries to make it easier to install without doc.
 #
 # Revision 35.10  1991/10/05  18:15:27  linus
@@ -134,7 +137,7 @@ tags:
 	etags $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 
 doc:
-	(cd ../doc ; make elisp-client elisp-client.txt ; )
+	(cd ../doc ; $(MAKE) elisp-client elisp-client.txt ; )
 
 install: installnodoc installdoc
 
