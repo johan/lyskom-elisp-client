@@ -1,3 +1,8 @@
+2001-05-11  Johan Sundström  <jhs@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-fcc-text): Bugfix; don't swarm the
+	place with *kom*-fcc buffers. Thanks, David.
+
 2001-05-10  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-fill-message): Protect the filling loop
@@ -61,7 +66,7 @@
 	* async.el (lyskom-parse-async): Update name of conference in
 	kom-handle-membership buffer when async name change happens.
 
-Thu Apr 26 13:10:48 2001  Johan Sundström  <jhs@idonex.se>
+2001-04-26  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands1.el (lyskom-get-least-used-mark-types-alist): Bugfix;
 	lyskom-set-alist isn't a destructive operation!

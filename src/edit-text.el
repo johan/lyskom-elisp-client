@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.77 2001-04-23 21:39:43 joel Exp $
+;;;;; $Id: edit-text.el,v 44.78 2001-05-11 12:23:16 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.77 2001-04-23 21:39:43 joel Exp $\n"))
+	      "$Id: edit-text.el,v 44.78 2001-05-11 12:23:16 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1698,7 +1698,7 @@ Point must be located on the line where the subject is."
   (condition-case arg
       (let ((start 1) (end 0))
         (save-excursion
-          (set-buffer (lyskom-get-buffer-create 'fcc "*kom*-fcc"))
+          (set-buffer (lyskom-get-buffer-create 'fcc "*kom*-fcc" t))
           (erase-buffer)
           (insert text)
           (goto-char (point-min))
