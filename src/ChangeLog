@@ -1,4 +1,8 @@
-2003-04-05  David Byers  <david.byers@swipnet.se>
+2003-04-05  David Byers  <byers@lysator.liu.se>
+
+	* Changed my e-mail address to one I actually read.
+
+2003-04-05  David Byers  <byers@lysator.liu.se>
 
 	Fix bugs 951 and 952:
 	* Makefile: Echo x-ctext coding to all emacs lisp files created in
@@ -50,7 +54,7 @@
 	* commands1.el (lyskom-list-created-conferences-2): Show garb-nice
 	in listing.
 
-2003-03-16  David Byers  <david.byers@swipnet.se>
+2003-03-16  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 815:
 	* commands2.el (lyskom-send-message): Print the correct error code
@@ -192,7 +196,7 @@
 	* review.el (kom-unread-all): New command.
 	(kom-unread-first): New command
 
-2003-03-15  David Byers  <david.byers@swipnet.se>
+2003-03-15  David Byers  <byers@lysator.liu.se>
 
 	Work on bug 984:
 	* review.el (kom-unread-last-normally-read): New command.
@@ -226,7 +230,7 @@
 
 	* services.el (initiate-mark-as-unread): New function.
 
-2003-03-13  David Byers  <david.byers@swipnet.se>
+2003-03-13  David Byers  <byers@lysator.liu.se>
 
 	Some work on bug 983:
 	* option-edit.el (lyskom-custom-variables): Added
@@ -260,11 +264,11 @@
 
 	* async.el (lyskom-parse-async): Use it.
 
-2003-03-11  David Byers  <david.byers@swipnet.se>
+2003-03-11  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el (lyskom-buffer-display-message): New function.
 
-2003-02-09  David Byers  <david.byers@swipnet.se>
+2003-02-09  David Byers  <byers@lysator.liu.se>
 
 	
 	* lyskom-buttons.el (lyskom-generate-button): Use
@@ -322,7 +326,7 @@
 
 	* swedish-strings.el (local): Spelling fix.
 
-2003-01-15  David Byers  <david.byers@swipnet.se>
+2003-01-15  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Minor fixes to documentation.
 
@@ -333,17 +337,17 @@
 	* vars.el.in (kom-low-priority): Removed this variable. It is
 	unused.
 
-2003-01-14  David Byers  <david.byers@swipnet.se>
+2003-01-14  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: More documentation updates.
 	Evidently the insanity won't end today.
 
-2003-01-13  David Byers  <david.byers@swipnet.se>
+2003-01-13  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: More documentation
 	updates. Will the insanity never end?
 
-2003-01-12  David Byers  <david.byers@swipnet.se>
+2003-01-12  David Byers  <byers@lysator.liu.se>
 
 	* option-edit.el (lyskom-custom-variables): Changed
 	kom-galeon-command, kom-netscape-command and kom-mosaic-command to
@@ -357,12 +361,12 @@
 	* lyskom-rest.el (lyskom-beep): List arguments were not handled
 	correctly (the default key, t, was not used).
 
-2003-01-11  David Byers  <david.byers@swipnet.se>
+2003-01-11  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Documented some more variables. Variables that have
 	been documented properly have "**" at the start of the docstring.
 
-2003-01-09  David Byers  <david.byers@swipnet.se>
+2003-01-09  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Started working on variable documentation.
 
@@ -373,7 +377,7 @@
 	* lyskom-rest.el (lyskom-format-format): Added format-letter % so
 	the sequence %% works.
 
-2003-01-08  David Byers  <david.byers@swipnet.se>
+2003-01-08  David Byers  <byers@lysator.liu.se>
 
 	* filter.el (kom-super-jump): Fixed problem with prefix arg.
 
@@ -391,7 +395,7 @@
 	* utilities.el (lyskom-month-limits): Wrong number of days for
 	July. Fixed.
 
-2003-01-08  David Byers  <david.byers@swipnet.se>
+2003-01-08  David Byers  <byers@lysator.liu.se>
 
 	Documetned the remaining commands:
 	* remote-control.el: Documented all commands.
@@ -417,7 +421,7 @@
 	(debian-packages): Use DEBIANCLIENTVERSIONSUFFIX to suffix the
 	client version.
 
-2003-01-07  David Byers  <david.byers@swipnet.se>
+2003-01-07  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 962:
 	* edit-text.el (lyskom-edit-send-check-recipients): Use
@@ -438,7 +442,7 @@
 	documentation". I intend to generate the english command reference
 	from the source code.
 
-2003-01-06  David Byers  <david.byers@swipnet.se>
+2003-01-06  David Byers  <byers@lysator.liu.se>
 
 	Started working on a command reference manual:
 	* commands1.el: Wrote user documentation for all commands in the
@@ -502,7 +506,7 @@
 	include passive members.
 	(lyskom-who-is-on-check-membership-8): Ditto.
 
-2003-01-05  David Byers  <david.byers@swipnet.se>
+2003-01-05  David Byers  <byers@lysator.liu.se>
 
 	* I have cleaned up all over the place. There are no ChangeLog
 	entries for most of the changes. Changes include: converting types
@@ -609,7 +613,7 @@
 	member of, bcc user is a member of, other recipient, other cc,
 	other bcc.
 
-2003-01-04  David Byers  <david.byers@swipnet.se>
+2003-01-04  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 961:
 	* faqs.el (lyskom-faq-is-read): Handle server FAQs correctly so
@@ -618,7 +622,7 @@
 	(lyskom-get-unread-faqs): If conf-stat is nil, set conf-no to
 	zero.
 
-2003-01-03  David Byers  <david.byers@swipnet.se>
+2003-01-03  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 823:
 	* commands1.el (kom-write-text): Ask for recipient by default. Old
@@ -659,7 +663,7 @@
 	* async.el (lyskom-format-as-personal-message): Get generated
 	faces if the user hasn't selected any specific faces.
 
-2003-01-02  David Byers  <david.byers@swipnet.se>
+2003-01-02  David Byers  <byers@lysator.liu.se>
 
 	Implement face customization:
 	* faces.el (lyskom-setup-faces-for-buffer): Don't muck with the
@@ -686,7 +690,7 @@
 	* faces.el: Fixed bug in call to defface that worked in Gnu Emacs
 	but not in XEmacs.
 
-2003-01-01  David Byers  <david.byers@swipnet.se>
+2003-01-01  David Byers  <byers@lysator.liu.se>
 
 	Work on new face code:
 	* view-text.el (lyskom-view-text): Send evaluated face properties
@@ -777,7 +781,7 @@
 	* utilities.el (lyskom-read-date): New function.
 
 
-2002-12-31  David Byers  <david.byers@swipnet.se>
+2002-12-31  David Byers  <byers@lysator.liu.se>
 
 	Implement date parsing (for bug 291):
 	* utilities.el (lyskom-parse-date): Implemented the remaining
@@ -847,7 +851,7 @@
 	documentation.  Let "bug X" link to the Bugzilla of Lysator by
 	default, so that we have a good sample value.
 
-2002-12-30  David Byers  <david.byers@swipnet.se>
+2002-12-30  David Byers  <byers@lysator.liu.se>
 
 	Improve kom-list-summary:
 	* commands2.el (lyskom-print-summary-line): Print deep comment
@@ -882,14 +886,14 @@
 	(sv-1901): New nameday list.
 	(sv-1986): New nameday list.
 
-2002-12-22  David Byers  <david.byers@swipnet.se>
+2002-12-22  David Byers  <byers@lysator.liu.se>
 
 	Work on bug 946:
 	* commands2.el (lyskom-do-list-summary): Display texts in comment
 	order with indentation.
 	(lyskom-print-summary-line): Support indentation.
 
-2002-12-18  David Byers  <david.byers@swipnet.se>
+2002-12-18  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-button-transform-text): Added
 	text-stat argument.
@@ -903,7 +907,7 @@
 
 	* view-text.el: Send the text-stat when formatting subject.
 
-2002-12-17  David Byers  <david.byers@swipnet.se>
+2002-12-17  David Byers  <byers@lysator.liu.se>
 
 	Work on bug 753:
 	* flags.el (lyskom-read-options): Added optional buffer argument
@@ -926,7 +930,7 @@
 	(lyskom-show-logged-out-person): Use both kom-server-aliases and
 	kom-builtin-server-aliases.
 
-2002-12-16  David Byers  <david.byers@swipnet.se>
+2002-12-16  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 701:
 	* utilities.el (lyskom-get-ancestors-of-text): Provide completions
@@ -949,7 +953,7 @@
 	(lyskom-text-buttons): Added bugzilla links.
 	(lyskom-button-actions): Added bugzilla links.
 
-2002-12-13  David Byers  <david.byers@swipnet.se>
+2002-12-13  David Byers  <byers@lysator.liu.se>
 
 	Bug 915:
 	* vars.el.in (kom-builtin-server-aliases): Renamed from
@@ -973,14 +977,14 @@
 	* vars.el.in (kom-url-transformation-rules): Improved the
 	Aftonbladet regexp.
 
-2002-12-11  David Byers  <david.byers@swipnet.se>
+2002-12-11  David Byers  <byers@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-sv-mode-map): Define swedish chars
 	using all possible methods.
 
 	* macros.el (lyskom-try-define-key): New macro.
 
-2002-12-09  David Byers  <david.byers@swipnet.se>
+2002-12-09  David Byers  <byers@lysator.liu.se>
 
 	Work on bug 924:
 	* vars.el.in (kom-show-namedays): Updated documentation.
@@ -1002,7 +1006,7 @@
 	* lyskom-buttons.el (lyskom-transform-url): New function.
 	(lyskom-button-open-url): Use lyskom-transform-url.
 
-2002-11-26  David Byers  <david.byers@swipnet.se>
+2002-11-26  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 880 and related problems:
 	* commands1.el (lyskom-read-mark-type): Ditto.
@@ -1010,7 +1014,7 @@
 	* lyskom-rest.el (lyskom-read-number): Permit whitespace around
 	the input.
 
-2002-11-21  David Byers  <david.byers@swipnet.se>
+2002-11-21  David Byers  <byers@lysator.liu.se>
 
 	Fix compiler warnings for 21.3:
 	* lyskom-buttons.el (lyskom-generate-button): Protect call to car
@@ -1047,12 +1051,12 @@
 
 	* Release of 0.47.1
 
-2002-10-23  David Byers  <david.byers@swipnet.se>
+2002-10-23  David Byers  <byers@lysator.liu.se>
 
 	* keyboard-menu.el (lyskom-keyboard-menu-keys-for-string): Guard
 	use of default-keyboard-coding-system.
 
-2002-10-20  David Byers  <david.byers@swipnet.se>
+2002-10-20  David Byers  <byers@lysator.liu.se>
 
 	* autoconf.el (extract-site-lisp-dir): Fixed regexp for site-lisp
 	directory.
@@ -1072,12 +1076,12 @@
 	* async.el (lyskom-async-new-recipient): Use
 	kom-mark-read-texts-as-read-in-new-recipient. 
 
-2002-10-19  David Byers  <david.byers@swipnet.se>
+2002-10-19  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (kom-created-texts-are-read): Changed default value
 	of kom-created-texts-are-read.
 
-2002-10-16  David Byers  <david.byers@swipnet.se>
+2002-10-16  David Byers  <byers@lysator.liu.se>
 
 	* doc/NEWS-0.47.1: Updated to here.
 
@@ -1087,14 +1091,14 @@
 	* commands1.el (kom-change-parenthesis): Print error message if
 	name contains more than one parenthesis.
 
-2002-09-21  David Byers  <david.byers@swipnet.se>
+2002-09-21  David Byers  <byers@lysator.liu.se>
 
 	Make review commands fail more gracefully:
 	* review.el (lyskom-cant-review-error): Set error-message
 	property.
 	(lyskom-review-error): Set error-conditions property.
 
-2002-09-20  David Byers  <david.byers@swipnet.se>
+2002-09-20  David Byers  <byers@lysator.liu.se>
 
 	More fixes for bug 619:
 	* commands1.el (lyskom-list-conf-print): Increased field length
@@ -1116,7 +1120,7 @@
 
 	* Release of 0.47.1-BETA-2
 
-2002-09-19  David Byers  <david.byers@swipnet.se>
+2002-09-19  David Byers  <byers@lysator.liu.se>
 
 	* english-strings.el (local): Added server-has-motd, which was
 	missing.
@@ -1126,7 +1130,7 @@
 	* swedish-strings.el, english-strings.el: Added missing group in
 	regexps comment-prefix and footnote-prefix.
 
-2002-09-18  David Byers  <david.byers@swipnet.se>
+2002-09-18  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 762:
 	* commands2.el (kom-set-motd): Rewrote using blocking commands.
@@ -1149,11 +1153,11 @@
 	write-region since the parameter lists in Gnu Emacs and XEmacs
 	differed.
 
-2002-09-17  David Byers  <david.byers@swipnet.se>
+2002-09-17  David Byers  <byers@lysator.liu.se>
 
 	* Release av 0.47.1-BETA-1
 
-2002-09-16  David Byers  <david.byers@swipnet.se>
+2002-09-16  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (lyskom-old-farts-text-prompt-strategy): Added this
 	as alias for kom-old-farts-text-prompt-strategy.
@@ -1167,7 +1171,7 @@
 	* commands1.el (kom-delete-text): Nag if the user tries to delete
 	a text with comments. Rewrote the main logic.
 
-2002-09-15  David Byers  <david.byers@swipnet.se>
+2002-09-15  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 733:
 	* utilites.el (lyskom-read-text-no-prefix-arg): Moved cond branch
@@ -1197,7 +1201,7 @@
 	conferences separately. Show passive memberships in gray.
 	(kom-status-conf): Show passive members in gray.
 
-2002-09-14  David Byers  <david.byers@swipnet.se>
+2002-09-14  David Byers  <byers@lysator.liu.se>
 
 	Start fixing bug 750:
 	* lyskom-buttons.el (kom-button-press): Handle missing default
@@ -1216,7 +1220,7 @@
 	y-or-n-p sort of.
 
 >>>>>>> 44.678
-2002-09-12  David Byers  <david.byers@swipnet.se>
+2002-09-12  David Byers  <byers@lysator.liu.se>
 
 	* english-strings.el,swedish-strings.el: Fixed speling error for
 	ssh-closing (was ssh-closnig).
@@ -1226,7 +1230,7 @@
 	non-nil before trying to use it. Otherwise this function will die
 	and we will call lyskom-end-of-command in kom-quit.
 
-2002-09-11  David Byers  <david.byers@swipnet.se>
+2002-09-11  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (kom-old-farts-text-prompt-strategy): Renamed from
 	lyskom-old-farts-text-prompt-strategy. This is the name that
@@ -1245,7 +1249,7 @@
 	* lyskom-buttons.el (lyskom-view-url-windows): Post starting
 	messages before attempting to start the process.
 
-2002-09-10  David Byers  <david.byers@swipnet.se>
+2002-09-10  David Byers  <byers@lysator.liu.se>
 
 	* mime.el (lyskom-mime-string-charset): Deal with not having any
 	coding systems at all (happens in non-multibyte emacsen).
@@ -1255,7 +1259,7 @@
 	* swedish-strings.el, english-strings.el: Fixed typos and
 	spelling errors.
 
-2002-09-08  David Byers  <david.byers@swipnet.se>
+2002-09-08  David Byers  <byers@lysator.liu.se>
 
 	* Makefile (lyskom-%-$(CLIENTVERSION).el): Copy help strings into
 	single-language-version files.
@@ -1272,7 +1276,7 @@
 
 	* Released 0.47
 
-2002-09-07  David Byers  <david.byers@swipnet.se>
+2002-09-07  David Byers  <byers@lysator.liu.se>
 
 	* commands2.el (kom-change-conf-type): allow-secret was inversely
 	displayed.
@@ -1280,7 +1284,7 @@
 	* vars.el.in (lyskom-face-schemes): kom-first-line-face for
 	inverse should be the same as for default.
 
-2002-08-18  David Byers  <david.byers@swipnet.se>
+2002-08-18  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in (kom-extended-status-information): Changed default
 	value to nil, 'cos for the most part extended status information
@@ -1305,19 +1309,19 @@
 	and y-instring modified to make j-or-n-p behave more like
 	y-or-n-p.
 
-2002-08-13  David Byers  <david.byers@swipnet.se>
+2002-08-13  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-clean-read-faqs-1): Fixed negated
 	condition that cause read *existing* FAQs to be marked as unread.
 
-2002-08-12  David Byers  <david.byers@swipnet.se>
+2002-08-12  David Byers  <byers@lysator.liu.se>
 
 	* startup.el (lyskom-refetch): Call lyskom-clean-read-faqs.
 
 	* lyskom-rest.el (lyskom-startup-clean-read-faqs): New function. 
 	(lyskom-startup-clean-read-faqs-1): New function.
 
-2002-08-09  David Byers  <david.byers@swipnet.se>
+2002-08-09  David Byers  <byers@lysator.liu.se>
 
 	Better font handling:
 	* utilities.el (lyskom-set-face-scheme): Set faces for overlays
@@ -1335,7 +1339,7 @@
 	* parse.el (lyskom-parse-unparsed): Force an update of the mode
 	line when the server stops saving.
 
-2002-08-06  David Byers  <david.byers@swipnet.se>
+2002-08-06  David Byers  <byers@lysator.liu.se>
 
 	String "Olästa" in frame title was truncated in Emacs 21:
 	* lyskom-rest.el (lyskom-make-lyskom-unread-title-format): Use
@@ -1373,7 +1377,7 @@
 
 	* Release of 0.47-BETA-4
 
-2002-08-05  David Byers  <david.byers@swipnet.se>
+2002-08-05  David Byers  <byers@lysator.liu.se>
 
 	Bug 662:
 	* async.el (lyskom-add-new-text): When we get a new text in the
@@ -1383,7 +1387,7 @@
 	* english-strings.el (lyskom-en-prioritize-mode-map): Use kbd for
 	all bindings (how did we ever miss this).
 
-2002-08-01  David Byers  <david.byers@swipnet.se>
+2002-08-01  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 685:
 	* flags.el (lyskom-read-options): The return value is now nil on
@@ -1393,7 +1397,7 @@
 	* startup.el (kom-start-anew): Don't accept empty string as a
 	name.
 
-2002-07-30  David Byers  <david.byers@swipnet.se>
+2002-07-30  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 675:
 	* startup.el (lyskom-setup-ssh-relay): Set LC_ALL before starting
@@ -1416,7 +1420,7 @@
 	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use caar or
 	cdar.
 
-2002-07-29  David Byers  <david.byers@swipnet.se>
+2002-07-29  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el: Removed lyskom-pick-text-no-strategy-alist.
 
@@ -1428,7 +1432,7 @@
 	* english-strings.el, swedigh-strings.el: Added binding of S-TAB
 	wherever we bound M-TAB.
 
-2002-07-26  David Byers  <david.byers@swipnet.se>
+2002-07-26  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 661:
 	* utilities.el (lyskom-set-face-scheme): Warn when faces are
@@ -1449,11 +1453,11 @@
 
 	* vars.el.in (lyskom-ignored-user-area-vars): Moved here.
 
-2002-07-24  David Byers  <david.byers@swipnet.se>
+2002-07-24  David Byers  <byers@lysator.liu.se>
 
 	* Release of 0.46-BETA-3
 
-2002-07-24  David Byers  <david.byers@swipnet.se>
+2002-07-24  David Byers  <byers@lysator.liu.se>
 
 	* doc/NEWS-0.47: Updated to here for imminent release of
 	0.42-BETA-3.
@@ -1466,7 +1470,7 @@
 
 	* lyskom-rest.el (lyskom-limited-make-overlay): XEmacs compat fix.
 
-2002-07-23  David Byers  <david.byers@swipnet.se>
+2002-07-23  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-limited-make-overlay): New function
 	limits the number of overlays created.
@@ -1476,7 +1480,7 @@
 	* vars.el.in (kom-max-overlays): New variable.
 	(lyskom-overlay-pool): New variable.
 
-2002-07-22  David Byers  <david.byers@swipnet.se>
+2002-07-22  David Byers  <byers@lysator.liu.se>
 
 	* mime.el (lyskom-mime-string-charset): Smarter selection of
 	coding system for Gnu Emacs. We still use our list whenever
@@ -1487,12 +1491,12 @@
 	computing a suitable default. That way we get a default value in
 	the prompt (which is a good thing).
 
-2002-07-21  David Byers  <david.byers@swipnet.se>
+2002-07-21  David Byers  <byers@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Support
 	recipient type in send-comments-to.
 
-2002-07-20  David Byers  <david.byers@swipnet.se>
+2002-07-20  David Byers  <byers@lysator.liu.se>
 
 	* english-strings.el,swedish-strings.el: Add "Mozilla" in all
 	places where we say "Netscape".
@@ -1501,7 +1505,7 @@
 	netscape use the same settings.
 	(kom-url-managers): Say "Mozilla" in netscape manager.
 
-2002-07-18  David Byers  <david.byers@swipnet.se>
+2002-07-18  David Byers  <byers@lysator.liu.se>
 
 	* tree-edit.el (tree-edit-compute-prefix): Made nonrecursive.
 	(tree-edit-compute-prefix-internal): Removed.
@@ -1514,7 +1518,7 @@
 	* utilities.el (lyskom-pick-text-no-strategy-alist): Correct
 	strategy for kom-private-answer-previous.
 
-2002-06-30  David Byers  <david.byers@swipnet.se>
+2002-06-30  David Byers  <byers@lysator.liu.se>
 
 	Temporary fix:
 	* commands1.el (lyskom-list-pers-print): Allocate five characters
@@ -1604,7 +1608,7 @@
 	* compatibility.el (lyskom-color-values): Negated the condition
 	under which this is defined.
 
-2002-06-29  David Byers  <david.byers@swipnet.se>
+2002-06-29  David Byers  <byers@lysator.liu.se>
 
 	* compatibility.el: Added declarations to avoid warnings about
 	set-specifier, make-specifier and color-rgb-components.
@@ -1637,7 +1641,7 @@
 	(lyskom-keyboard-menu-beginning-of-line): New command.
 	(lyskom-keyboard-menu-end-of-line): New command.
 
-2002-06-28  David Byers  <david.byers@swipnet.se>
+2002-06-28  David Byers  <byers@lysator.liu.se>
 
 	* keyboard-menu.el (lyskom-read-from-menu): Compute height of menu
 	window based on the contents and not the table. Display the menu
@@ -1654,7 +1658,7 @@
 	for unification if latin-unity is available.
 	(lyskom-unity-text): new function.
 
-2002-06-26  David Byers  <david.byers@swipnet.se>
+2002-06-26  David Byers  <byers@lysator.liu.se>
 
 	* keyboard-menu.el: New file.
 	(lyskom-read-from-menu): Main function.
@@ -1665,7 +1669,7 @@
 	* lyskom-buttons.el (lyskom-keyboard-menu): Use
 	lyskom-read-from-menu.
 
-2002-06-23  David Byers  <david.byers@swipnet.se>
+2002-06-23  David Byers  <byers@lysator.liu.se>
 
 	Try to fix bug 429 (sort of):
 	* command.el (lyskom-command-minibuffer-local-completion-map): New
@@ -1680,7 +1684,7 @@
 	lyskom-complete-command-word.
 	(lyskom-command-minibuffer-local-must-match-map): Same here.
 
-2002-06-22  David Byers  <david.byers@swipnet.se>
+2002-06-22  David Byers  <byers@lysator.liu.se>
 
         * doc/NEWS-0.47: Updated to this point in ChangeLog in preparation
 	for release of 0.47-BETA-3 some time soon.
@@ -1693,7 +1697,7 @@
 	(lyskom): Use lyskom-open-network-stream to open network
 	connections.
 
-2002-06-14  David Byers  <david.byers@swipnet.se>
+2002-06-14  David Byers  <byers@lysator.liu.se>
 
 	* review.el (kom-toggle-mark-as-read-prefix): New function toggles
 	state of kom-review-marks-as-read and then runs one single command
@@ -1726,7 +1730,7 @@
 	help-compile in the source packages as they don't include a
 	"lyskom.el".
 
-2002-06-13  David Byers  <david.byers@swipnet.se>
+2002-06-13  David Byers  <byers@lysator.liu.se>
 
 	Hopefully did the right thing to Debian packages wrt bug 575:
 	* debian/rules: Removed references to help-compile.el and the help
@@ -1751,7 +1755,7 @@
 	* Makefile (EXTRA-SRCVERBATIM): name the help files by their
 	actual names after renaming.
 
-2002-06-12  David Byers  <david.byers@swipnet.se>
+2002-06-12  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 575:
 	* Makefile (%-hep.el): New target to convert help XML files to
@@ -1795,7 +1799,7 @@
 	* utilities.el (lyskom-viewing-noconversion): New function.
 
 
-2002-06-11  David Byers  <david.byers@swipnet.se>
+2002-06-11  David Byers  <byers@lysator.liu.se>
 
 	* flags.el (lyskom-save-options): Set content-type på user-arean
 	till x-kom/user-area (dock utan charset).
@@ -1813,7 +1817,7 @@
 	options for kom-server-priority-breaks. Used to be no-break, which
 	is wrong.
 
-2002-06-09  David Byers  <david.byers@swipnet.se>
+2002-06-09  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 583:
 	* flags.el (lyskom-read-options-eval): New variable
@@ -1831,7 +1835,7 @@
 	(lyskom-show-logged-out-person): Same.
 	(lyskom-show-changed-person): Same.
 
-2002-06-08  David Byers  <david.byers@swipnet.se>
+2002-06-08  David Byers  <byers@lysator.liu.se>
 
 	* mime.el (lyskom-charset-alist): Added iso-8859-15 to
 	lyskom-charset-alist. This will eliminate problems where
@@ -1839,7 +1843,7 @@
 	would use escape sequences for characters that existed in both
 	charsets.
 
-2002-06-07  David Byers  <david.byers@swipnet.se>
+2002-06-07  David Byers  <byers@lysator.liu.se>
 
 	* help-sv.xml: New file, renamed from help.sv.
 
@@ -1858,7 +1862,7 @@
 	* help.el (lyskom-help-format-section): New.
 	(lyskom-help-format-refer): Make cross-references clickable.
 
-2002-06-06  David Byers  <david.byers@swipnet.se>
+2002-06-06  David Byers  <byers@lysator.liu.se>
 
 	Fix some problems with help:
 	* help.el (lyskom-help-format-list): Fixed so it works.
@@ -1874,13 +1878,13 @@
 	(lyskom-help-parse-help-file): Added optional attributes to bogus
 	toplevel syntax specification.
 
-2002-06-05  David Byers  <david.byers@swipnet.se>
+2002-06-05  David Byers  <byers@lysator.liu.se>
 
 	* flags.el (lyskom-maybe-set-var-from-string): Refuse to set
 	variables from the user area that are not specified as
 	server-stored LysKOM variables.
 
-2002-06-03  David Byers  <david.byers@swipnet.se>
+2002-06-03  David Byers  <byers@lysator.liu.se>
 
 	* commands2.el (lyskom-send-message): Use new faces for dashed
 	lines and message bodies.
@@ -1898,11 +1902,11 @@
 	* distribution-Makefile.in (lyskom-@@CLIENTVERSION@@.elc): Load
 	help-compile.el when compiling.
 
-2002-06-02  David Byers  <david.byers@swipnet.se>
+2002-06-02  David Byers  <byers@lysator.liu.se>
 
 	* Release of 0.47-BETA-2
 
-2002-05-31  David Byers  <david.byers@swipnet.se>
+2002-05-31  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 235:
 	* parse.el (lyskom-parse-unparsed): When an error is signalled
@@ -1913,7 +1917,7 @@
 	* Makefile (DOCFILES): include NEWS for 0.47 instead of 0.46.
 	(EXTRA-SRCVERBATIM): include help-compile.el, help.en, help.sv.
 
-2002-05-29  David Byers  <david.byers@swipnet.se>
+2002-05-29  David Byers  <byers@lysator.liu.se>
 
         * NEWS-0.47: Updated to this point in history in preparation for
 	next BETA release.
@@ -1930,13 +1934,13 @@
 	* view-mode.el (lyskom-view-mode-map): Bind = to
 	kom-menu-button-press, as in other modes.
 
-2002-05-28  David Byers  <david.byers@swipnet.se>
+2002-05-28  David Byers  <byers@lysator.liu.se>
 
 	* help-compile.el (lyskom-help-parse-string): Fixed search for end
 	tag so it doesn't cause a stack overflow in the 20.7 regexp
 	matcher.
 
-2002-05-27  David Byers  <david.byers@swipnet.se>
+2002-05-27  David Byers  <byers@lysator.liu.se>
 
 	* commands2.el (kom-change-language): Show which language we just
 	set.
@@ -1967,7 +1971,7 @@
 	(lyskom-help-format-h3): Same
 	(lyskom-help-format-cref): No newline after reference.
 
-2002-05-26  David Byers  <david.byers@swipnet.se>
+2002-05-26  David Byers  <byers@lysator.liu.se>
 
 	New help system:
 	* help-compile.el: New file.
@@ -1987,7 +1991,7 @@
 
 	* macros.el (defmacro): New macro (only exists during compile).
 
-2002-05-25  David Byers  <david.byers@swipnet.se>
+2002-05-25  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 528:
 	* lyskom-buttons.el (lyskom-button-copy-text-no): New function.
@@ -2023,7 +2027,7 @@
 	fetched from CVS.  Previously, the build date was only updated i
 	Makefile or vars.el.in had been changed.
 
-2002-05-22  David Byers  <david.byers@swipnet.se>
+2002-05-22  David Byers  <byers@lysator.liu.se>
 
 	More work on 468:
 	* commands2.el (kom-compare-texts): Use ediff-diff-program and
@@ -2081,7 +2085,7 @@
 	* utilities.el (lyskom-get-color-highlight): Handle the case of
 	the color parameter being nil.
 
-2002-05-21  David Byers  <david.byers@swipnet.se>
+2002-05-21  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 561:
 	* lyskom-rest.el (lyskom-get-error-text): Renamed call to
@@ -2124,7 +2128,7 @@
 	* commands1.el (kom-move-text-tree): Fix bug that caused only
 	every other text to be moved.
 
-2002-05-08  David Byers  <david.byers@swipnet.se>
+2002-05-08  David Byers  <byers@lysator.liu.se>
 
 	Bug 516:
 	* menus.el (lyskom-define-menu-xemacs): Handle hline items in the
@@ -2147,7 +2151,7 @@
 	* english-strings.el (lyskom-en-mode-map): Bind fr till
 	kom-filter-recipient.
 
-2002-05-07  David Byers  <david.byers@swipnet.se>
+2002-05-07  David Byers  <byers@lysator.liu.se>
 
         Every KOM client needs color model conversion code:
 	* utilities.el (lyskom-string-to-rgb): New function.
@@ -2157,13 +2161,13 @@
 	(lyskom-get-color-highlight): New function.
 	(lyskom-string-to-rgb): New function.
 
-2002-05-06  David Byers  <david.byers@swipnet.se>
+2002-05-06  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el (lyskom-unicase): Get the length from the converted
 	string and not the string, because for some reason they don't come
 	out the same every time (and this is *probably* an Emacs bug).
 
-2002-05-05  David Byers  <david.byers@swipnet.se>
+2002-05-05  David Byers  <byers@lysator.liu.se>
 
 	* commands2.el (kom-compare-texts): Catch the file-error that
 	occurs when the external diff command is missing.
@@ -2256,7 +2260,7 @@
 	* commands2.el (kom-obsolete-extended-command-binding): Be
 	annoying both ways.
 
-2002-05-01  David Byers  <david.byers@swipnet.se>
+2002-05-01  David Byers  <byers@lysator.liu.se>
 
 	* commands1.el (kom-move-text-tree): New command, innit?
 
@@ -2290,7 +2294,7 @@
 	(lyskom-filter): Limit size of *kom*-replies to
 	lyskom-debug-communications-limit.
 
-2002-04-29  David Byers  <david.byers@swipnet.se>
+2002-04-29  David Byers  <byers@lysator.liu.se>
 
 	Fix bug where changing presentation of FAQ lost recipients:
 	* commands1.el (lyskom-get-recipients-from-misc-list): Don't
@@ -2331,7 +2335,7 @@
 	* swedish-strings.el, english-strings.el (lyskom-message): 
 	Added text-to-see-author-status-of.
 
-2002-04-28  David Byers  <david.byers@swipnet.se>
+2002-04-28  David Byers  <byers@lysator.liu.se>
 
 	* view-text.el (lyskom-format-mx-author): If mx-author is the
 	empty string, pretend that it is nil.
@@ -2354,7 +2358,7 @@
 
 	* vars.el.in (lyskom-face-schemes): Added scheme "bark".
 
-2002-04-28  David Byers  <david.byers@swipnet.se>
+2002-04-28  David Byers  <byers@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-fcc-text): Delete the add button when
 	fcc-ing texts.
@@ -2368,7 +2372,7 @@
 	* commands2.el (kom-obsolete-extended-command-binding): Use ding
 	if the user invokes this command.
 
-2002-04-27  David Byers  <david.byers@swipnet.se>
+2002-04-27  David Byers  <byers@lysator.liu.se>
 
 	* Release of 0.47-BETA-1
 
@@ -2410,7 +2414,7 @@
 	* commands1.el (lyskom-who-is-on-9, lyskom-who-is-on-8): print
 	who-is-friend if given non-nil show-friends-only.
 
-2002-04-26  David Byers  <david.byers@swipnet.se>
+2002-04-26  David Byers  <byers@lysator.liu.se>
 
 	* option-edit.el (lyskom-custom-variables): Added
 	kom-edit-hide-add-button. 
@@ -2448,7 +2452,7 @@
 	function.
 	(kom-menu-button-press-or-self-insert-command): New function.
 
-2002-04-25  David Byers  <david.byers@swipnet.se>
+2002-04-25  David Byers  <byers@lysator.liu.se>
 
 	* view-text.el (lyskom-print-text): Use kom-highlight-text-body to
 	control highlighting text body. Use kom-highlight-first-line to
@@ -2472,7 +2476,7 @@
 	Only set end positions for overlays that were created at the
 	current format-state depth.
 
-2002-04-24  David Byers  <david.byers@swipnet.se>
+2002-04-24  David Byers  <byers@lysator.liu.se>
 
 	* header.el: Added a check for obsolete read-kbd-macro (found in
 	macedit.el which is installed with the calc package in XEmacs).
@@ -2505,7 +2509,7 @@
 	* commands2.el (kom-change-language): Added prefix parameter to
 	make global changes.
 
-2002-04-23  David Byers  <david.byers@swipnet.se>
+2002-04-23  David Byers  <byers@lysator.liu.se>
 
 	Alternate text background color:
 	* utilities.el (lyskom-set-face-scheme): Don't always copy default
@@ -2514,7 +2518,7 @@
 	* view-text.el (lyskom-print-text): Optionally use
 	kom-text-background-face on texts.
 
-2002-04-22  David Byers  <david.byers@swipnet.se>
+2002-04-22  David Byers  <byers@lysator.liu.se>
 
 	Alternate text background color:
 	* vars.el.in (kom-color-text-background): New variable.
@@ -2535,7 +2539,7 @@
 	when neither of kom-default-language, KOMLANGUAGE and LANG was
 	set, was missing a "car".
 
-2002-04-21  David Byers  <david.byers@swipnet.se>
+2002-04-21  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el (lyskom-make-button-menu): Temporarily bind
 	lyskom-language to lyskom-global-language to avoid changing
@@ -2604,7 +2608,7 @@
 
 	* compatibility.el (make-temp-file): Provide it if it is missing.
 
-2002-04-20  David Byers  <david.byers@swipnet.se>
+2002-04-20  David Byers  <byers@lysator.liu.se>
 
 	Support context-sensitive error reporting:
 	* vars.el.in (lyskom-error-codes): New variable.
@@ -2704,7 +2708,7 @@
 	* vars.el.in (kom-server-aliases): Changed "CSD-KOM" to "UppKOM",
 	as requested by Thorild Selén.
 
-2002-04-14  David Byers  <david.byers@swipnet.se>
+2002-04-14  David Byers  <byers@lysator.liu.se>
 
 	* faqs.el (lyskom-check-for-read-faqs): Handle missing FAQ texts
 	better.
@@ -2728,7 +2732,7 @@
 	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
 	New function.
 
-2002-04-13  David Byers  <david.byers@swipnet.se>
+2002-04-13  David Byers  <byers@lysator.liu.se>
 
 	Handle conference recommendations:
 	* lyskom-rest.el (lyskom-check-go-to-conf): Don't do stuff for
@@ -2836,7 +2840,7 @@
 	(lyskom-unread-title-format): Made these variables language
 	dependent.
 
-2002-04-11  David Byers  <david.byers@swipnet.se>
+2002-04-11  David Byers  <byers@lysator.liu.se>
 
 	* aux-items.el (lyskom-print-faq-for-conf): Show FAQ for server
 	correctly.
@@ -2880,7 +2884,7 @@
 	* english-strings.el: Changed "extra information" to "auxiliary
 	information".
 
-2002-04-10  David Byers  <david.byers@swipnet.se>
+2002-04-10  David Byers  <byers@lysator.liu.se>
 
 	Implemented command to create arbitrary aux-items:
 	* commands2.el (kom-status-conf): Show unknown aux-items.
@@ -2970,7 +2974,7 @@
 	adding/removing to/from.
 	(lyskom-add-sub-comment): Dito.
 
-2002-04-09  David Byers  <david.byers@swipnet.se>
+2002-04-09  David Byers  <byers@lysator.liu.se>
 
 	Completion on kom-sub-comment and kom-sub-footnote:
 	* commands1.el (lyskom-add-sub-footnote): Show text number we are
