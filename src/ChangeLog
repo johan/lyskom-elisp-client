@@ -1,3 +1,7 @@
+Wed Aug 16 16:55:56 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-M
+
 2000-08-16  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (lyskom-list-created-conferences-2): Show if
