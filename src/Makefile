@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.87 2002-05-07 20:12:11 byers Exp $
+# $Id: Makefile,v 44.88 2002-05-24 11:55:00 ceder Exp $
 
 # Useful targets:
 #
@@ -148,6 +148,8 @@ vars.el-release: vars.el.in Makefile
 
 $(TARGET-EL) lyskom-all-$(CLIENTVERSION).el: \
 		$(HEADER) $(LANGUAGE-EL) $(SOURCES)
+	rm -f $(VARS-EL)
+	$(MAKE) $(VARS-EL)
 	cat $^ >$@
 
 lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el $(SOURCES)

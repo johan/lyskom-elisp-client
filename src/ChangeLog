@@ -1,3 +1,10 @@
+2002-05-24  Per Cederqvist  <ceder@ingate.com>
+
+	* Makefile: Force re-creation of $(VARS-EL) when lyskom.el is
+	created, so that the build date is updated when a new version is
+	fetched from CVS.  Previously, the build date was only updated i
+	Makefile or vars.el.in had been changed.
+
 2002-05-22  David Byers  <david.byers@swipnet.se>
 
 	More work on 468:
