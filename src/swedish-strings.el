@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.19 1991-11-27 22:31:27 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 35.20 1991-12-01 01:50:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.19 1991-11-27 22:31:27 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.20 1991-12-01 01:50:33 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -231,7 +231,7 @@ Lyskom-sessionen är avslutad.
 
     (who-to-remove-motd-for . "Vilket möte/person vill du ta bort lapp på dörr för: ")
 
-    (conf-all-read . "%#1s - inga ol{sta.\n")
+    (conf-all-read . "%#1s - inga olästa.\n")
     (no-in-conf . "Du är inte närvarande i något möte.\n")
 
     (search-for-pers . "Ange sökvillkor (RETURN för alla personer) ")
