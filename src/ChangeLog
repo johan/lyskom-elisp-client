@@ -1,9 +1,13 @@
 Fri Sep 26 11:18:57 1997  David Byers  <davby@ida.liu.se>
 
-	* vars.el.in (kom-footer-format): Ny variabel.
+	* vars.el.in (kom-text-footer-format): Ny variabel.
 
-	* view-text.el (lyskom-transform-footer-format): Ny funktion.
-	(lyskom-deferred-insert-footer): Använd lyskom-footer-format.
+	* view-text.el (lyskom-format-text-footer): Ny funktion.
+
+	* vars.el.in (kom-text-footer-format): Ny variabel.
+
+	* view-text.el (lyskom-deferred-insert-footer): Använd
+ 	lyskom-format-text-footer.
 
 	* lyskom-rest.el (lyskom-fill-message): Bryt inte stycken där alla
  	rader börjar med ett ord och ett kolon.

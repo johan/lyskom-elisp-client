@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.9 1997-09-10 13:15:39 byers Exp $
+;;;;; $Id: view-text.el,v 44.10 1997-09-27 11:41:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.9 1997-09-10 13:15:39 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.10 1997-09-27 11:41:48 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -405,26 +405,106 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
   "Print date and time. Arg: TIME"
   (lyskom-insert (lyskom-return-date-and-time time fmt)))
 
+(defun lyskom-format-text-footer (text author author-name format format-flags)
+  "Format the footer of a text."
+  (let* ((result "")
+         (start 0)
+         (format-letter nil)
+         (field-width nil)
+         (kom-deferred-printing nil)
+         (have-author (and format (string-match "%=?[0-9]*P" format))))
+
+    (if (null format)
+        (lyskom-format
+         (cond ((and kom-dashed-lines kom-show-author-at-end)
+                "(%#1n) /%#2P/%#3s%#4s")
+               (kom-dashed-lines
+                "(%#1n) %#3s%#4s")
+               (kom-show-author-at-end
+                "(%#1n) /%#2P/")
+               (t
+                "(%#1n)"))
+         text
+         (or author author-name)
+         (if kom-show-author-at-end
+             (if (> (length author-name) 42)
+                 ""
+               (make-string (- 42 (length author-name)) ?-))
+           "------------------------------------------")
+         (if format-flags
+             (lyskom-get-string format-flags)
+           ""))
+
+      (while (string-match "%\\(=?-?[0-9]+\\)?\\([-nPpf% ]\\)" format start)
+        (setq result (concat result (substring format start 
+                                               (match-beginning 0))))
+        (setq format-letter (aref format (match-beginning 2)))
+        (setq field-width (match-string 1 format))
+        (when (null field-width) (setq field-width ""))
+        (setq start (match-end 0))
+        (setq result
+              (concat 
+               result
+               (cond
+                ((eq format-letter ?p)
+                 (lyskom-format (format "%%%s#1p" field-width) author))
+
+                ((eq format-letter ?P)
+                 (lyskom-format (format "%%%s#1P" field-width) 
+                                (or author author-name)))
+
+                ((eq format-letter ?n)
+                 (lyskom-format (format "%%%s#1n" field-width) 
+                                (text-stat->text-no text)))
+
+                ((eq format-letter ?f)
+                 (if format-flags
+                     (lyskom-format (format "%%%s#1s" field-width) 
+                                    (lyskom-get-string format-flags))
+                   ""))
+
+                ((eq format-letter ?-)
+                 (let ((width 
+                        (cond ((null field-width) 42)
+                              ((string= "" field-width) 42)
+                              ((eq ?= (aref field-width 0))
+                               (string-to-int (substring field-width 1)))
+                              (t (string-to-int field-width)))))
+                 
+                   (lyskom-format 
+                    (format "%%%s#1s" field-width)
+                    (if have-author
+                        (if (< (length author-name) width)
+                            (make-string (- width (length author-name)) ?-)
+                          "")
+                      (make-string width ?-)))))
+
+                ((eq format-letter ?%)
+                 "%")
+                (t (concat "%" field-width (make-string 1 format-letter))))))
+        )
+      (setq result (concat result (substring format start)))
+      (if (string-match "[ \t]+\\'" result)
+          (substring result 0 (match-beginning 0))
+        result))))
+
+
+
 (defun lyskom-deferred-insert-footer (conf-stat defer-info)
   "Insert the name of a conference at a previously reserved place."
-  (let* ((name (cond (conf-stat (conf-stat->name conf-stat))
+  (let* ((text-stat (elt (defer-info->data defer-info) 0))
+         (format-flags (elt (defer-info->data defer-info) 1))
+         (name (cond (conf-stat (conf-stat->name conf-stat))
                       ((= (defer-info->call-par defer-info) 0)
                        (lyskom-get-string 'person-is-anonymous))
                       (t (lyskom-format 'person-does-not-exist
-                                        (defer-info->call-par defer-info)))))
-         (dashes (if (> 42 (length name))
-                     (make-string (- 42 (length name)) ?-)
-                   ""))
-         (text (lyskom-format "/%[%#3@%#1P%]/%#2s%#4s"
-                              (or conf-stat name)
-                              dashes
-                              (text-properties-at
-                               (defer-info->pos defer-info))
-                              (if (defer-info->data defer-info)
-                                  (lyskom-get-string
-                                   (defer-info->data defer-info))
-                                ""))))
-    (lyskom-replace-deferred defer-info text)))
+                                        (defer-info->call-par defer-info))))))
+    (lyskom-replace-deferred defer-info 
+                             (lyskom-format-text-footer text-stat
+                                                        conf-stat
+                                                        name
+                                                        kom-text-footer-format
+                                                        format-flags))))
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
   "Print a text. The header must already be printed.
@@ -470,47 +550,37 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
             (cache-del-text (text->text-no text)))
         (sit-for 0)
         (let ((lyskom-current-function-phase 'footer))
-          (cond (kom-dashed-lines
-                 (lyskom-format-insert "\n(%#1n) " (text->text-no text))
-                 (if (not kom-show-author-at-end)
-                     (progn
-                       (lyskom-format-insert
-                        "-----------------------------------%#1s\n"
-                        (if lyskom-last-text-format-flags
-                            (lyskom-get-string lyskom-last-text-format-flags)
-                          "")))
-                   (if kom-deferred-printing
-                       (progn
-                         (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
-                         (lyskom-defer-insertion
-                          (lyskom-create-defer-info 
-                           'get-conf-stat
-                           (text-stat->author text-stat)
-                           'lyskom-deferred-insert-footer
-                           (set-marker
-                            (make-marker)
-                             (- (point-max)
-                                (length lyskom-defer-indicator)
-                                1))
-                           (length lyskom-defer-indicator)
-                           "%#1s"
-                           lyskom-last-text-format-flags)))
-                     (let* ((conf-stat (blocking-do 
-                                        'get-conf-stat
-                                        (text-stat->author text-stat)))
-                            (name (lyskom-format "%#1P" conf-stat)))
-                       (lyskom-format-insert 
-                        "/%#1P/%#2s\n"
-                        conf-stat
-                        (if (> 42 (length name))
-                            (make-string (- 42 (length name)) ?-)
-                          ""))))))
-                (t (lyskom-format-insert
-                    (if kom-show-author-at-end 
-                        "\n(%#1n) /%#2P/\n"
-                      "\n(%#1n)\n")
-                    (text->text-no text)
-                    (text-stat->author text-stat)))))
+          (lyskom-insert "\n")
+          (if kom-deferred-printing
+              (progn
+                (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+                (lyskom-defer-insertion
+                 (lyskom-create-defer-info
+                  'get-conf-stat
+                  (text-stat->author text-stat)
+                  'lyskom-deferred-insert-footer
+                  (set-marker (make-marker)
+                              (- (point-max) 
+                                 (length lyskom-defer-indicator)
+                                 1))
+                  (length lyskom-defer-indicator)
+                  "%#1s"
+                  (list text-stat lyskom-last-text-format-flags))))
+            (let* ((conf-stat (blocking-do 'get-conf-stat 
+                                           (text-stat->author text-stat)))
+                   (author-name
+                    (or (conf-stat->name conf-stat)
+                        (and (eq (text-stat->author text-stat) 0)
+                             (lyskom-get-string 'person-is-anonymous))
+                        (lyskom-format 'person-does-not-exist
+                                       (text-stat->author text-stat)))))
+              (lyskom-insert (lyskom-format-text-footer 
+                              text-stat
+                              conf-stat
+                              author-name
+                              kom-text-footer-format
+                              lyskom-last-text-format-flags)))
+            (lyskom-insert "\n")))
         (if mark-as-read
             (lyskom-mark-as-read text-stat))
         (setq lyskom-previous-text lyskom-current-text)
