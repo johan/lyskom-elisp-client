@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.53 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: review.el,v 44.54 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.53 2003-08-02 20:21:46 byers Exp $\n"))
+	      "$Id: review.el,v 44.54 2003-08-16 16:58:46 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -844,12 +844,12 @@ Args: persno confno num &optional again pstart cstart"
           ;;
 
           (setq result-list
-                (mapcar2 (function
-                          (lambda (x y)
-                            (lyskom-intersection y
-                                                 (nconc x by))))
-                         result-list
-                         to-list))
+                (lyskom-mapcar2 (function
+                                 (lambda (x y)
+                                   (lyskom-intersection y
+                                                        (nconc x by))))
+                                result-list
+                                to-list))
 
           (setq result-size (apply '+ (mapcar 'length result-list)))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: keyboard-menu.el,v 44.5 2003-01-01 23:32:44 byers Exp $
+;;;;; $Id: keyboard-menu.el,v 44.6 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: keyboard-menu.el,v 44.5 2003-01-01 23:32:44 byers Exp $\n"))
+	      "$Id: keyboard-menu.el,v 44.6 2003-08-16 16:58:45 byers Exp $\n"))
 
 (defvar lyskom-keyboard-menu-menu)
 (defvar lyskom-keyboard-menu-buffer)
@@ -82,7 +82,7 @@ Like read-event in Gnu Emacs or next-command-event in XEmacs."
     (mapcar (lambda (s)
               (lyskom-xemacs-or-gnu
                s
-               (encode-coding-string 
+               (lyskom-encode-coding-string 
                 s 
                 (and (boundp 'default-keyboard-coding-system)
                      default-keyboard-coding-system))))
@@ -280,7 +280,7 @@ Returns the selected string."
                              (eq c ?\r)
                              (eq c ?\n))
                          (setq result lyskom-keyboard-menu-selection))
-                        ((and (characterp c)
+                        ((and (lyskom-characterp c)
                               (assoc (make-string 1 c) 
                                      lyskom-keyboard-menu-menu))
                          (if kom-keyboard-menu-immediate-selection

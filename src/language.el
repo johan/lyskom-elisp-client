@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.29 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: language.el,v 44.30 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -126,7 +126,7 @@ sessions."
 (defun lyskom-set-language-keymaps (language)
   (mapcar
    (lambda (map)
-     (set-keymap-parent (symbol-value map)
+     (lyskom-set-keymap-parent (symbol-value map)
                         (eval (cdr (assq language
                                          (get map
                                               'lyskom-language-keymap))))))
@@ -252,7 +252,7 @@ lyskom-define-language."
 
 Looks for the 'lyskom-menu category, or 'lyskom-command
 if 'lyskom-menu is not found."
-  (encode-coding-string 
+  (lyskom-encode-coding-string 
     (or (lyskom-try-get-string symbol 'lyskom-menu)
         (lyskom-try-get-string symbol 'lyskom-command)
         (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu))

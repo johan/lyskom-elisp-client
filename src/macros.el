@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.31 2003-04-21 16:15:18 byers Exp $
+;;;;; $Id: macros.el,v 44.32 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.31 2003-04-21 16:15:18 byers Exp $\n"))
+	      "$Id: macros.el,v 44.32 2003-08-16 16:58:46 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -208,12 +208,33 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
 ;;;
 
 (eval-and-compile (defvar lyskom-expected-unresolved-functions nil))
+(eval-and-compile (defvar lyskom-expected-unresolved-functions-temp nil))
 
 (defmacro lyskom-external-function (fn)
-  (` (eval-when-compile
+  `(eval-when-compile
        (setq lyskom-expected-unresolved-functions
-             (cons (quote (, fn))
-                   lyskom-expected-unresolved-functions)))))
+             (cons ',fn lyskom-expected-unresolved-functions))))
+
+(defmacro lyskom-with-external-functions (fns &rest body)
+  "Ignore warnings about unresolved functions FNS when compiling BODY."
+  `(progn (eval-when-compile
+            (setq lyskom-expected-unresolved-functions-temp
+                  (cons (delq nil
+                              (mapcar (lambda (fn)
+                                        (if (assq fn byte-compile-unresolved-functions)
+                                            nil
+                                          fn))
+                                      ',fns))
+                        lyskom-expected-unresolved-functions-temp)))
+          ,@body
+          (eval-when-compile
+            (mapcar (lambda (fn) (and fn (setq byte-compile-unresolved-functions
+                                               (delq (assq fn byte-compile-unresolved-functions)
+                                                     byte-compile-unresolved-functions))))
+                    (car lyskom-expected-unresolved-functions-temp))
+            (setq lyskom-expected-unresolved-functions-temp
+                  (cdr lyskom-expected-unresolved-functions-temp)))))
+
 
 (defmacro lyskom-end-of-compilation ()
   (` 
@@ -231,13 +252,7 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
                                               byte-compile-unresolved-functions)
                                         byte-compile-unresolved-functions))))
                      lyskom-expected-unresolved-functions)
-             (mapcar (function (lambda (x)
-                                 (setq byte-compile-unresolved-functions
-                                       (delq
-                                        (assq x
-                                              byte-compile-unresolved-functions)
-                                        byte-compile-unresolved-functions))))
-                     lyskom-compatibility-definitions)))
+             ))
        (if lyskom-compatibility-definitions
            (message "Compatibility definitions: %s"
                     (mapconcat '(lambda (sym)
@@ -331,4 +346,5 @@ the current buffer, and its value is copied from the LysKOM buffer."
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
 ;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 0)
 ;;; eval: (put 'lyskom-ignore-errors 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-with-external-functions 'lisp-indent-hook 1)
 ;;; end: 

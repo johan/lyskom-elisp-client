@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.39 2003-08-14 15:59:24 byers Exp $
+;;;;; $Id: flags.el,v 44.40 2003-08-16 16:58:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.39 2003-08-14 15:59:24 byers Exp $\n"))
+	      "$Id: flags.el,v 44.40 2003-08-16 16:58:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -147,21 +147,21 @@ settings and save them to your emacs init file."
 			     (lyskom-mime-charset-coding-system
 			      (lyskom-mime-string-charset data)))
 			    (val (condition-case nil
-				     (encode-coding-string data coding)
+				     (lyskom-encode-coding-string data coding)
 				   (error nil))))
                        (lyskom-ignore val)
 		       (if (and val nil)
 			   (format "%dC%s%dH%s"
-				   (string-bytes (symbol-name coding))
+				   (lyskom-string-bytes (symbol-name coding))
 				   (symbol-name coding)
-				   (string-bytes val)
+				   (lyskom-string-bytes val)
 				   val)
 			 (setq data
-			       (encode-coding-string 
+			       (lyskom-encode-coding-string 
 				data
 				(or lyskom-server-coding-system 'raw-text)))
 			 (format "%dH%s"
-				 (string-bytes data)
+				 (lyskom-string-bytes data)
 				 data)))))
 	   lyskom-elisp-variables
 	   "\n")))
@@ -370,7 +370,7 @@ Returns a list of variables that were ignored."
         (setq lyskom-options-text (substring lyskom-options-text
                                              (+ start len)))
         (condition-case nil
-            (decode-coding-string name coding)
+            (lyskom-decode-coding-string name coding)
           (error name))))))
 
 (defun lyskom-get-holerith (string &optional no-coding)
@@ -401,7 +401,7 @@ If optional NO-CODING is set, assume the string has internal coding."
       (let ((name (substring string start (+ start len))))
         (setq string (substring string (+ start len)))
         (condition-case nil
-            (cons (decode-coding-string name coding) string)
+            (cons (lyskom-decode-coding-string name coding) string)
           (error (cons name string)))))))
 
 (defun lyskom-maybe-set-var-from-string (var string &optional type)

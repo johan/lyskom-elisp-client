@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.215 2003-08-15 18:24:19 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.216 2003-08-16 16:58:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,9 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.215 2003-08-15 18:24:19 byers Exp $\n"))
-
-(lyskom-external-function find-face)
+	      "$Id: lyskom-rest.el,v 44.216 2003-08-16 16:58:46 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1136,7 +1134,8 @@ back, and works even if from has the property."
                          nil))
             (error (apply 'message "%S" val)))
           (setq start next)
-          (setq bounds (next-text-property-bounds 1 (1- start) sym))))
+          (setq bounds (lyskom-next-property-bounds
+                        (1- start) (point-max) sym))))
     (error (lyskom-ignore var))))
 
 (defun lyskom-do-insert (string)
@@ -1554,7 +1553,7 @@ Deferred insertions are not supported."
      ((= format-letter ?l)
       (setq result 
             (cond ((or (integerp arg)
-                       (characterp arg))
+                       (lyskom-characterp arg))
                    (make-string pad-length arg))
                   ((stringp arg)
                    (let ((count (/ pad-length (length arg)))) 
@@ -1643,8 +1642,8 @@ Deferred insertions are not supported."
      ;;  it into the result list
      ;;
      ((= format-letter ?c)
-      (setq result (cond ((integerp arg) (char-to-string (int-to-char arg)))
-                         ((characterp arg) (char-to-string arg))
+      (setq result (cond ((integerp arg) (char-to-string (lyskom-int-to-char arg)))
+                         ((lyskom-characterp arg) (char-to-string arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error (expected char)"
@@ -2131,86 +2130,81 @@ Deferred insertions are not supported."
 ;;; ================================================================
 ;;;			 Text body formatting
 
-(lyskom-external-function w3-fetch)
-(lyskom-external-function w3-region)
-(lyskom-external-function smiley-region)
-(lyskom-external-function latin-unity-remap-region)
 
 (lyskom-try-require 'latin-unity)
+(lyskom-with-external-functions (smiley-region latin-unity-remap-region)
+  (defun lyskom-format-text-body (text &optional text-stat)
+    "Format a text for insertion. Does parsing of special markers in the text."
+    (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))
+           (content-type (cond (ct-item (aux-item->data ct-item))
+                               ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
+                                     (match-beginning 1))
+                                (match-string 1 text))
+                               (t nil)))
+           (fn (and content-type
+                    (cdr 
+                     (let ((tmp lyskom-format-special)
+                           (result nil)
+                           (case-fold-search t))
+                       (while tmp
+                         (when (eq 0 (string-match 
+                                      (if (stringp (car (car tmp)))
+                                          (car (car tmp))
+                                        (symbol-name (car (car tmp))))
+                                      content-type))
+                           (setq result (car tmp))
+                           (setq tmp nil))
+                         (setq tmp (cdr tmp)))
+                       result))))
+           (formatted (and fn (funcall fn text text-stat))))
 
-(defun lyskom-format-text-body (text &optional text-stat)
-  "Format a text for insertion. Does parsing of special markers in the text."
-  (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))
-         (content-type (cond (ct-item (aux-item->data ct-item))
-                             ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
-                                   (match-beginning 1))
-                              (match-string 1 text))
-                             (t nil)))
-         (fn (and content-type
-                  (cdr 
-                   (let ((tmp lyskom-format-special)
-                         (result nil)
-                         (case-fold-search t))
-                     (while tmp
-                       (when (eq 0 (string-match 
-                                    (if (stringp (car (car tmp)))
-                                        (car (car tmp))
-                                      (symbol-name (car (car tmp))))
-                                    content-type))
-                         (setq result (car tmp))
-                         (setq tmp nil))
-                       (setq tmp (cdr tmp)))
-                     result))))
-         (formatted (and fn (funcall fn text text-stat))))
+      ;;    (when (eq t lyskom-last-text-format-flags)
+      ;;      (lyskom-signal-reformatted-text
+      ;;       (if content-type
+      ;;           (lyskom-format 'reformat-generic content-type)
+      ;;         nil)))
 
-;;    (when (eq t lyskom-last-text-format-flags)
-;;      (lyskom-signal-reformatted-text
-;;       (if content-type
-;;           (lyskom-format 'reformat-generic content-type)
-;;         nil)))
+      (cond (formatted formatted)
+            (t (let ((tmp (if kom-text-properties
+                              (lyskom-button-transform-text
+                               (lyskom-fill-message text)
+                               text-stat)
+                            (lyskom-fill-message text))))
+                 (when (and kom-smileys
+                            (fboundp 'smiley-region))
+                   (add-text-properties 0 
+                                        (length tmp) 
+                                        '(special-insert lyskom-postprocess-text)
+                                        tmp))
+                 (when (fboundp 'latin-unity-remap-region)
+                   (add-text-properties 0
+                                        (length tmp)
+                                        '(special-insert lyskom-unity-text)
+                                        tmp))
+                 tmp)))))
 
-    (cond (formatted formatted)
-          (t (let ((tmp (if kom-text-properties
-                            (lyskom-button-transform-text
-                             (lyskom-fill-message text)
-                             text-stat)
-                          (lyskom-fill-message text))))
-               (when (and kom-smileys
-                          (fboundp 'smiley-region))
-                 (add-text-properties 0 
-                                      (length tmp) 
-                                      '(special-insert lyskom-postprocess-text)
-                                      tmp))
-              (when (fboundp 'latin-unity-remap-region)
-                (add-text-properties 0
-                                     (length tmp)
-                                     '(special-insert lyskom-unity-text)
-                                     tmp))
-               tmp)))))
+  (defun lyskom-postprocess-text (start end &rest args)
+    (condition-case nil
+        (smiley-region start (min (point-max) (1+ end)))
+      (error nil)))
 
-(defun lyskom-postprocess-text (start end &rest args)
-  (condition-case nil
-      (smiley-region start (min (point-max) (1+ end)))
-    (error nil)))
+  (defvar latin-unity-preferred-coding-system-list)
+  (defvar latin-unity-iso-8859-1-aliases)
+  (defvar latin-unity-cset-codesys-alist)
 
-(defvar latin-unity-preferred-coding-system-list)
-(defvar latin-unity-iso-8859-1-aliases)
-(defvar latin-unity-cset-codesys-alist)
-(lyskom-external-function coding-system-property)
-
-(defun lyskom-unity-text (start end &rest args)
-  (condition-case nil
-      (let ((codesys (car latin-unity-preferred-coding-system-list)))
-       (when (memq codesys latin-unity-iso-8859-1-aliases)
-         (setq codesys 'iso-8859-1))
-       (let ((gr (or (car (rassq codesys latin-unity-cset-codesys-alist))
-                     (and codesys
-                          (eq (coding-system-type codesys) 'iso2022)
-                          (coding-system-property codesys 'charset-g1)))))
-         (when gr
-           (latin-unity-remap-region start (min (point-max) (1+ end))
-                                     gr nil t))))
-    (error nil)))
+  (defun lyskom-unity-text (start end &rest args)
+    (condition-case nil
+        (let ((codesys (car latin-unity-preferred-coding-system-list)))
+          (when (memq codesys latin-unity-iso-8859-1-aliases)
+            (setq codesys 'iso-8859-1))
+          (let ((gr (or (car (rassq codesys latin-unity-cset-codesys-alist))
+                        (and codesys
+                             (eq (lyskom-coding-system-type codesys) 'iso2022)
+                             (lyskom-coding-system-property codesys 'charset-g1)))))
+            (when gr
+              (latin-unity-remap-region start (min (point-max) (1+ end))
+                                        gr nil t))))
+      (error nil))))
 
 
 
@@ -2221,25 +2215,25 @@ in lyskom-messages."
       (setq lyskom-last-text-format-flags (cons how lyskom-last-text-format-flags))))
 
 
-(lyskom-external-function w3-finish-drawing)
-(defun lyskom-w3-region (start end &rest args)
-  (unwind-protect
-    (condition-case var
-      (save-restriction
-        (let ((buffer-read-only nil))
-          (setq start (set-marker (make-marker) start))
-          (setq end (set-marker (make-marker) end))
-          (narrow-to-region start end)
-          (when kom-w3-simplify-body
-            (save-excursion
-              (let ((case-fold-search t))
-                (goto-char start)
-                (while (re-search-forward "<body[^>]*>" end t)
-                  (replace-match "<body>")))))
-          (w3-region start end)
-          (w3-finish-drawing)
-          (add-text-properties (point-min) (point-max) '(end-closed nil))))
-      (error (lyskom-ignore var)))))
+(lyskom-with-external-functions (w3-fetch w3-region w3-finish-drawing)
+  (defun lyskom-w3-region (start end &rest args)
+    (unwind-protect
+        (condition-case var
+            (save-restriction
+              (let ((buffer-read-only nil))
+                (setq start (set-marker (make-marker) start))
+                (setq end (set-marker (make-marker) end))
+                (narrow-to-region start end)
+                (when kom-w3-simplify-body
+                  (save-excursion
+                    (let ((case-fold-search t))
+                      (goto-char start)
+                      (while (re-search-forward "<body[^>]*>" end t)
+                        (replace-match "<body>")))))
+                (w3-region start end)
+                (w3-finish-drawing)
+                (add-text-properties (point-min) (point-max) '(end-closed nil))))
+          (error (lyskom-ignore var))))))
 
 
 (defun lyskom-format-html (text text-stat)
@@ -2316,7 +2310,7 @@ in lyskom-messages."
 (defun lyskom-split-user-area (text)
   "Return the user area split into components."
   (let ((tmp (lyskom-get-holerith text t)))
-    (mapcar2 'cons  
+    (lyskom-mapcar2 'cons  
              (lyskom-get-holerith-list (car tmp) t)
              (lyskom-get-holerith-list (cdr tmp) t))))
 
@@ -2406,10 +2400,10 @@ in lyskom-messages."
   "Minimum number of lines in a brick.")
 
 (defun lyskom-fill-message-initial-wrap (current-line-length pos)
-  (cond ((and (< (char-to-int (char-after pos))
+  (cond ((and (< (lyskom-char-to-int (char-after pos))
                  (length lyskom-line-start-chars))
               (not (aref lyskom-line-start-chars 
-                         (char-to-int 
+                         (lyskom-char-to-int 
                           (char-after pos)))))
          nil)
         ((> current-line-length fill-column) t)
@@ -2629,10 +2623,10 @@ in lyskom-messages."
 
                ((and in-paragraph
                      (or (not (looking-at single-line-regexp))
-                         (and (< (char-to-int (char-after (match-beginning 1)))
+                         (and (< (lyskom-char-to-int (char-after (match-beginning 1)))
                                  (length lyskom-line-start-chars))
                               (not (aref lyskom-line-start-chars
-                                         (char-to-int 
+                                         (lyskom-char-to-int 
                                           (char-after
                                            (match-beginning 1))))))))
                 (setq wrap-paragraph nil))
@@ -2763,12 +2757,12 @@ A list of pairs means OPTARG will be used as a key to look up the real
 
 (defun lyskom-face-default-p (f1)
   "Return t if f1 is undefined or the default face."
-  (lyskom-xemacs-or-gnu (or (not (find-face f1))
-                            (face-equal (find-face f1)
-                                        (find-face 'default)))
+  (lyskom-xemacs-or-gnu (or (not (lyskom-find-face f1))
+                            (face-equal (lyskom-find-face f1)
+                                        (lyskom-find-face 'default)))
                         (or (not (facep f1))
                             (face-equal f1 'default))))
-		  
+
 
 ;;;; ================================================================
 ;;;;                         Running in buffer 
@@ -3470,7 +3464,7 @@ VECTOR has to be sorted with regard to <."
   (let* ((val (lyskom-minibuffer-contents))
          (err (funcall lyskom-verified-read-predicate val)))
     (if err
-        (minibuffer-message (format " [%s]" err))
+        (lyskom-minibuffer-message (format " [%s]" err))
       (exit-minibuffer))))
 
 (defvar lyskom-verified-read-map nil)
@@ -3833,7 +3827,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                   (save-excursion
                     (set-buffer (get-buffer-create "*kom*-replies"))
                     (goto-char (point-max))
-                    (princ (string-as-unibyte output) (current-buffer))
+                    (princ (lyskom-string-as-unibyte output) (current-buffer))
                     (lyskom-debug-limit-buffer)))
 
 	      (if lyskom-debug-communications-to-buffer
@@ -3844,7 +3838,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                     (lyskom-debug-insert proc "From " output)))
 
 	      (set-buffer (process-buffer proc))
-	      (princ (string-as-unibyte output) lyskom-unparsed-marker)
+	      (princ (lyskom-string-as-unibyte output) lyskom-unparsed-marker)
 	      ;;+++lyskom-string-skip-whitespace
 	      (if quit-flag		; We are allowed to break here.
 		  (setq inhibit-quit nil)) ; This will break
@@ -4125,11 +4119,11 @@ Other objects are converted correctly."
 
   
 (defun lyskom-prot-a-format-string (string)
-  (let ((tmp (encode-coding-string string lyskom-server-coding-system)))
-    (string-as-unibyte (format "%dH%s" (string-bytes tmp) tmp))))
+  (let ((tmp (lyskom-encode-coding-string string lyskom-server-coding-system)))
+    (lyskom-string-as-unibyte (format "%dH%s" (lyskom-string-bytes tmp) tmp))))
 
 (defun lyskom-prot-a-format-raw-string (string)
-  (string-as-unibyte (format "%dH%s" (string-bytes (cdr string)) 
+  (lyskom-string-as-unibyte (format "%dH%s" (lyskom-string-bytes (cdr string)) 
 			     (cdr string))))
 
 
@@ -4306,7 +4300,7 @@ One parameter - the prompt string."
           (mapcar 
            (function
             (lambda (x)
-              (aset tmp (char-to-int x) t)))
+              (aset tmp (lyskom-char-to-int x) t)))
            (lyskom-maybe-recode-string lyskom-line-start-chars-string 'iso-8859-1 t))
           tmp))
 
