@@ -1,3 +1,8 @@
+Wed Aug 14 17:03:17 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Testa inte
+ 	lyskom-dont-change-prompt här.
+
 Wed Aug 14 13:19:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* swedish-strings.el,english-strings.el (lyskom-strings): Lade
