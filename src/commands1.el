@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.9 1993-07-28 18:28:11 linus Exp $
+;;;;; $Id: commands1.el,v 36.10 1993-08-09 11:32:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.9 1993-07-28 18:28:11 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.10 1993-08-09 11:32:33 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -238,28 +238,32 @@ as TYPE. If no such misc-info, return NIL"
 (defun kom-send-letter ()
   "Send a personal letter to a person or a conference."
   (interactive)
-  (lyskom-start-of-command 'kom-send-letter)
-  (lyskom-tell-internat 'kom-tell-write-letter)
-  (let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to) 'all))
-	 (conf-stat (blocking-do 'get-conf-stat tono)))
-    (if (if (zerop (conf-stat->msg-of-day conf-stat))
-	    t
-	  (progn
-	    (recenter 0)
-	    (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
-	    (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))
-	    (if (j-or-n-p (lyskom-get-string 'motd-persist-q))
-		t
-	      (lyskom-end-of-command)
-	      nil)))
-	(if (= tono lyskom-pers-no)
-	    (lyskom-edit-text lyskom-proc
-			      (lyskom-create-misc-list 'recpt tono)
-			      "" "")
-	  (lyskom-edit-text lyskom-proc
-			    (lyskom-create-misc-list 'recpt tono
-						     'recpt lyskom-pers-no)
-			    "" "")))))
+  (condition-case error
+      (progn
+	(lyskom-start-of-command 'kom-send-letter)
+	(lyskom-tell-internat 'kom-tell-write-letter)
+	(let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to) 'all))
+	       (conf-stat (blocking-do 'get-conf-stat tono)))
+	  (if (if (zerop (conf-stat->msg-of-day conf-stat))
+		  t
+		(progn
+		  (recenter 0)
+		  (lyskom-format-insert 'has-motd (conf-stat->name conf-stat))
+		  (lyskom-view-text 'main (conf-stat->msg-of-day conf-stat))
+		  (if (j-or-n-p (lyskom-get-string 'motd-persist-q))
+		      t
+		    (lyskom-end-of-command)
+		    nil)))
+	      (if (= tono lyskom-pers-no)
+		  (lyskom-edit-text lyskom-proc
+				    (lyskom-create-misc-list 'recpt tono)
+				    "" "")
+		(lyskom-edit-text lyskom-proc
+				  (lyskom-create-misc-list 'recpt tono
+							   'recpt lyskom-pers-no)
+				  "" "")))))
+    (quit (lyskom-end-of-command)
+	  (signal 'quit "Quitting in letter"))))
 
 
 ;;; ================================================================
