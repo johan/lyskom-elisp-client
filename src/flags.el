@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 43.0 1996-08-07 16:40:04 davidk Exp $
+;;;;; $Id: flags.el,v 43.1 1996-08-08 11:33:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 43.0 1996-08-07 16:40:04 davidk Exp $\n"))
+	      "$Id: flags.el,v 43.1 1996-08-08 11:33:16 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -173,7 +173,11 @@
 ;			    (concat common-block "----------\n" elisp-block)
 			    (lyskom-create-misc-list) optbuf)))
    (t
-    (lyskom-edit-options-done t (current-buffer)))))
+    (let ((optbuf (current-buffer)))
+      (set-buffer lyskom-buffer)
+      (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
+      (lyskom-insert-string 'no-changes)
+      (lyskom-edit-options-done t optbuf)))))
 
 
 (defun lyskom-edit-options-send (text-no optbuf)
