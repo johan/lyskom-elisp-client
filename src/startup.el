@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.3 1995-02-23 20:42:25 linus Exp $
+;;;;; $Id: startup.el,v 38.4 1995-03-01 17:56:07 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.3 1995-02-23 20:42:25 linus Exp $\n"))
+	      "$Id: startup.el,v 38.4 1995-03-01 17:56:07 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -80,6 +80,7 @@ See lyskom-mode for details."
 	  (lyskom-mode)			;Clearing lyskom-default...
 	  (setq lyskom-default-user-name username)
 	  (setq lyskom-default-password password)
+	  (setq lyskom-server-name host)
 	  (setq lyskom-proc proc)
 	  (lyskom-insert
 	   (lyskom-format 'try-connect lyskom-clientversion host))
@@ -430,6 +431,7 @@ to see, set of call."
 	(replies-buffer lyskom-unparsed-buffer)
 	(replies-marker lyskom-unparsed-marker)
 	(server-info lyskom-server-info)
+	(server-name lyskom-server-name)
 	)
     (kill-all-local-variables)
     (make-local-variable 'lyskom-blocking-return)
@@ -447,6 +449,7 @@ to see, set of call."
     (make-local-variable 'lyskom-text-cache)
     (make-local-variable 'lyskom-text-mass-cache)
     (make-local-variable 'lyskom-server-info)
+    (make-local-variable 'lyskom-server-name)
     (make-local-variable 'lyskom-default-user-name)
     (make-local-variable 'lyskom-default-password)
     (make-local-variable 'lyskom-who-info-cache)
@@ -488,6 +491,7 @@ to see, set of call."
     (make-local-variable 'lyskom-output-queue)
     (make-local-variable 'lyskom-options-done)
     (make-local-variable 'lyskom-list-of-edit-buffers)
+    (make-local-variable 'lyskom-filter-list)
     (setq lyskom-proc proc)
     (setq lyskom-pers-no pers-no)
     (setq lyskom-membership membership)
@@ -496,6 +500,7 @@ to see, set of call."
     (setq lyskom-unparsed-buffer replies-buffer)
     (setq lyskom-unparsed-marker replies-marker)
     (setq lyskom-server-info server-info)
+    (setq lyskom-server-name server-name)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
     (setq lyskom-list-of-edit-buffers nil)
