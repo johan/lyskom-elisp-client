@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.6 1997-07-02 17:47:05 byers Exp $
+;;;;; $Id: review.el,v 44.7 1997-07-12 13:11:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.6 1997-07-02 17:47:05 byers Exp $\n"))
+	      "$Id: review.el,v 44.7 1997-07-12 13:11:28 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -1112,7 +1112,9 @@ text is shown and a REVIEW list is built to shown the other ones."
 		 (t
 		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
   (lyskom-start-of-command 'kom-review-noconversion)
-  (let ((kom-emacs-knows-iso-8859-1 t))
+  (let ((kom-emacs-knows-iso-8859-1 t)
+        (lyskom-format-special nil)
+        (kom-autowrap nil))
     (ignore kom-emacs-knows-iso-8859-1)
     (lyskom-view-text text-no))
   (lyskom-end-of-command))

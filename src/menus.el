@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.11 1997-07-11 14:17:22 byers Exp $
+;;;;; $Id: menus.el,v 44.12 1997-07-12 13:11:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -226,6 +226,8 @@
   (if (not (boundp 'lyskom-current-menu-category))
       (setq lyskom-current-menu-category (list menu-category))
     (add-to-list 'lyskom-current-menu-category menu-category)))
+
+(eval-when-compile (defvar default-menubar nil))
 
 (defun lyskom-set-menus-xemacs (menu-category)
   "Update the menus"

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.7 1997-03-13 08:27:58 byers Exp $
+;;;;; $Id: view-text.el,v 44.8 1997-07-12 13:11:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.7 1997-03-13 08:27:58 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.8 1997-07-12 13:11:46 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -57,7 +57,8 @@ Note that this function must not be called asynchronously."
                      (lyskom-filter-text-p text-no)))
         (start nil)
         (end nil)
-        (todo nil))
+        (todo nil)
+        (lyskom-last-text-format-flags nil))
     (cond ((eq filter 'skip-text) (lyskom-filter-prompt text-no 'filter-text)
 	   (setq todo 'next-text)
 	   (lyskom-mark-as-read (blocking-do 'get-text-stat text-no))
@@ -409,11 +410,15 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
          (dashes (if (> 42 (length name))
                      (make-string (- 42 (length name)) ?-)
                    ""))
-         (text (lyskom-format "/%[%#3@%#1P%]/%#2s"
+         (text (lyskom-format "/%[%#3@%#1P%]/%#2s%#4s"
                               (or conf-stat name)
                               dashes
                               (text-properties-at
-                               (defer-info->pos defer-info)))))
+                               (defer-info->pos defer-info))
+                              (if (defer-info->data defer-info)
+                                  (lyskom-get-string
+                                   (defer-info->data defer-info))
+                                ""))))
     (lyskom-replace-deferred defer-info text)))
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
@@ -463,7 +468,12 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
           (cond (kom-dashed-lines
                  (lyskom-format-insert "\n(%#1n) " (text->text-no text))
                  (if (not kom-show-author-at-end)
-                     (lyskom-insert "-----------------------------------\n")
+                     (progn
+                       (lyskom-format-insert
+                        "-----------------------------------%#1s\n"
+                        (if lyskom-last-text-format-flags
+                            (lyskom-get-string lyskom-last-text-format-flags)
+                          "")))
                    (if kom-deferred-printing
                        (progn
                          (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
@@ -478,7 +488,8 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
                                 (length lyskom-defer-indicator)
                                 1))
                            (length lyskom-defer-indicator)
-                           "%#1s")))
+                           "%#1s"
+                           lyskom-last-text-format-flags)))
                      (let* ((conf-stat (blocking-do 
                                         'get-conf-stat
                                         (text-stat->author text-stat)))

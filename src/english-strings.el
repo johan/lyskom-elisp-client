@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.21 1997-07-11 08:53:55 byers Exp $
+;;;;; $Id: english-strings.el,v 44.22 1997-07-12 13:11:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.21 1997-07-11 08:53:55 byers Exp $"))
+              "$Id: english-strings.el,v 44.22 1997-07-12 13:11:09 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1013,6 +1013,10 @@ On since %#8s%#9s")
     (send-formatted . "Send as formatted text? ")
     (changing-language-to . "Changing to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
+
+    (reformat-html . "(HTML)")
+    (reformat-enriched . "(Enriched)")
+    (reformat-filled . "(Filled)")
     ))
 
 
@@ -1938,6 +1942,11 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 
   Most people have this turned on.")
 
+    (kom-autowrap-doc . "\
+  With this setting turned on, LysKOM will attempt to fill any paragraphs
+  containing lines that are wider than the screen. Paragraphs that appear
+  to have been preformatted by the author are exempt from this treatment.")
+
     (kom-show-author-at-end-doc . "\
   When this is turned on the name of the author will be shown at the end
   of the article text. The name is also shown before the text as usual.
@@ -2228,6 +2237,8 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 "Default priority for new memberships:            ")
     (kom-dashed-lines-tag . 
 "Dashed lines around the article body:            ")
+    (kom-autowrap-tag . 
+"Fill wide paragraphs before displaying:          ")
     (kom-show-author-at-end-tag .
 "Show the name of the author after the body:      ")
 
