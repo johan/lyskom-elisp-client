@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.2 1996-05-05 22:19:53 davidk Exp $
+;;;;; $Id: completing-read.el,v 41.3 1996-05-12 12:28:12 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.2 1996-05-05 22:19:53 davidk Exp $\n"))
+       "$Id: completing-read.el,v 41.3 1996-05-12 12:28:12 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -187,7 +187,10 @@ Logins is a list of conf-nos (only significant when PREDICATE is logins)."
       (and (eq predicate 'conflogin)
            (or (not (conf-type->letterbox
                      (conf-stat->conf-type cs)))
-               (memq (conf-stat->conf-no cs) logins)))))
+               (memq (conf-stat->conf-no cs) logins)))
+      (and (eq predicate 'persnone)
+           (or (null cs)
+               (conf-type->letterbox (conf-stat->conf-type cs))))))
 
 
 (defun lyskom-read-conf-name-internal (string predicate all)
@@ -198,6 +201,8 @@ PREDICATE is one of:
 * confs only conferences
 * pers only persons
 * logins only persons that are logged in right now.
+* conflogin union of confs and logins
+* persnone only existing persons and strings that are not prefixes of existing persons.
 If third argument ALL is t then we are called from all-completions.
 If third argument ALL is nil then we are called from try-completion.
 If third argument ALL is 'conf-no then we are called from lyskom name
@@ -209,7 +214,7 @@ to conf-no translator."
                        (eq predicate 'conflogin))
                    (lyskom-completing-lookup-name string)))
          (nos (listify-vector (conf-list->conf-nos list)))
-         (parlist (if (memq predicate '(pers confs conflogin))
+         (parlist (if (memq predicate '(pers confs conflogin persnone))
                       (let ((nos nos)
                             (typs (listify-vector 
                                    (conf-list->conf-types list)))
@@ -237,7 +242,7 @@ to conf-no translator."
                                            (conf-type->letterbox (cdr par)))
                                               (list (car par)))))
                                       parlist)))
-                      ((eq predicate 'pers)
+                      ((memq predicate  '(pers persnone))
                        (apply 'append
                               (mapcar (function
                                        (lambda (par)
@@ -323,7 +328,9 @@ to conf-no translator."
      ;; to a prefix that was also a match, which would be accepted!
      ;;
      ((eq all 'lambda)
-      (= (length mappedlist) 1))
+      (or (= (length mappedlist) 1)
+          (and (null mappedlist)
+               (eq predicate 'persnone))))
      
      ;;
      ;; Called from all-completions. Returns a list of all possible
@@ -344,7 +351,10 @@ to conf-no translator."
                                                                predicate
                                                                logins)))
             (cons string names)
-          names)))
+          (if (and (eq predicate 'persnone)
+                   (null names))
+              (list string)
+            names))))
 	    
      ;;
      ;; No completions available on the string and we were called from
@@ -393,7 +403,9 @@ to conf-no translator."
                (if (string= string (car (car strings)))
                    t                       ; Exact
                  (car (car strings))))
-              (t (lyskom-try-complete-partials string strings))))))))
+              (t (or (lyskom-try-complete-partials string strings)
+                     (and (eq predicate 'persnone)
+                          (list string))))))))))
 
 
 (defun lyskom-try-complete-partials (string alist)

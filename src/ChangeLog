@@ -1,3 +1,18 @@
+Thu May  9 11:50:39 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * commands1.el (kom-list-clients): Lade till en kommentar.
+
+    * services.el (initiate-find-next-text-no): Ny funktion.
+    (initiate-find-previous-text-no): Ny funktion.
+
+    * swedish-strings.el,english-strings.el (lyskom-strings): Lade till
+    cant-review-everything.
+
+    * review.el (lyskom-get-texts-globally): Ny funktion.
+    (lyskom-get-texts-by-to): Anropa lyskom-get-texts-globally för att
+    åtserse globalt. (lyskom-review-by-to): Tillåt återse av alla till
+    allt.
+
 Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* deferred-insert.el (lyskom-deferred-insert-conf): Gissa om det
@@ -20,6 +35,12 @@ Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
 	* deferred-insert.el (lyskom-replace-deferred): Var lite mer
 	defensiv i scrollningen. Dvs. scrolla aldrig.
 
+Tue May  7 11:00:46 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * review.el (lyskom-review-by-to): Använd blocking-do-multiple för att
+    snabba upp första utskriften. (lyskom-get-texts-by-and-to): Använd
+    blocking-do-multiple för att skynda på uppstarten.
+
 Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-start-of-command): Hoppa till slutet på
@@ -32,7 +53,6 @@ Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (kom-page-next-command): Dito.
 	(kom-view,lyskom-start-of-command): Dito.
-
 
 	* lyskom-rest.el (lyskom-insert): Försökte göra så att den inte
  	hoppar ner så ofta.
@@ -65,6 +85,21 @@ Mon May  6 00:27:19 1996  David Kågedal  <davidk@lysator.liu.se>
 	* deferred-insert.el (lyskom-replace-deferred): Gjorde om till en
  	funktion.
 	(lyskom-deferred-insert-conf): Gör om därefter.
+
+Sun May  5 12:53:49 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * remote-control.el (lyskom-remote-list-messages-1): Lista i rätt
+    ordning. En fatal bug rättad. (lyskom-remote-list-messages): Lista
+    meddelanden i rätt ordning. (lyskom-remote-erase-messages): Rättade en
+    fatal bug.
+
+    * completing-read.el (lyskom-read-conf-name-internal): Lade till
+    predikatet persnone för att stöda ändringen i kom-start-anew.
+    (lyskom-read-conf-name-internal-verify-type): Lade till predikatet
+    persnone.
+
+    * startup.el (kom-start-anew): kom-start-anew läser in personnamn så
+    att gamla personer har prioritet över nya.
 
 Sun May  5 03:18:19 1996  David Kågedal  <davidk@lysator.liu.se>
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.4 1996-05-07 13:37:29 davidk Exp $
+;;;;; $Id: commands1.el,v 41.5 1996-05-12 12:28:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.4 1996-05-07 13:37:29 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.5 1996-05-12 12:28:06 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1409,6 +1409,7 @@ If MARK-NO == 0, review all marked texts."
     ((nil  4 30 nil nil nil) . cgdag)
     ((nil  6  6 nil nil nil) . sixjune)
     ((nil  8 15 nil nil nil) . holdnose)
+    ((nil  3 29 nil nil nil) . lysbday)
 ))
 
 
@@ -1534,6 +1535,9 @@ If MARK-NO == 0, review all marked texts."
 			     "\n"))
       (lyskom-insert (lyskom-format 'total-users total-users))))
 
+;;; =====================================================================
+;;;                 Lista klienter - List clients
+;;; Author: David Kågedal
 
 		 
 (def-kom-command kom-list-clients ()
