@@ -2212,3 +2212,42 @@ Allts} m}ste man s{tta om den efter}t.
 
 lyskom-init-hook {r b{st att anv{nda.
 (68853) -----------------------------------
+
+89832 1991-08-17  15:21  /2 rader/ Per Ekman
+Mottagare: LysKOM Erfarenhetsutbyte <1675>
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <37>
+    Sänt:     1991-08-17 21:04
+    Sänt av Linus Tolke Y
+Ärende: R}gade m}tt
+------------------------------------------------------------
+Gah! Lyskom l}ter mig inte markera inl{gg l{ngre. Nu vill jag ha en ny
+version av klienten! :-)/2
+(89832) -----------------------------------
+Kommentar i text 89932 av Linus Tolke Y
+Kommentar i text 89964 av Linus Tolke Y
+
+89964 1991-08-17  21:08  /19 rader/ Linus Tolke Y
+Kommentar till text 89832 av Per Ekman
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <38>
+Ärende: Varför får inte jag markera inlägg längre?
+------------------------------------------------------------
+`kom-default-mark'		`100'     
+     
+     Om denna flagga {r icke-nil s} m}ste den vara ett nummer mellan 1
+				    ^^^^^
+     och 255. Det {r den markering som klienten s{tter. [r den nil
+     d{remot s} fr}gar klienten efter vilken markering vi skall ha.
+
+och 
+
+kom-default-mark's value is nil
+
+Documentation:
+*If non-nil (must be an integer) then the user is not asked for type of mark.
+	     ^^^^
+
+
+Variabeln kom-default-mark får inte ha värdet t utan det måste vara
+ett nummer mellan 1 och 255.
+Hur skall vi göra för att detta skall framgå tydligare? (Det behövs)
+(89964) -----------------------------------
