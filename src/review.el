@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 40.4 1996-04-25 15:03:20 davidk Exp $
+;;;;; $Id: review.el,v 40.5 1996-04-29 11:59:17 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,19 +37,20 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 40.4 1996-04-25 15:03:20 davidk Exp $\n"))
+	      "$Id: review.el,v 40.5 1996-04-29 11:59:17 byers Exp $\n"))
 
 
 
 (defun lyskom-intersection (a b)
   "Returns as a list the intersection of list A and list B.
 The order of the list a is kept."
-  (let ((list nil))
-    (while a
-      (if (memq (car a) b)
-	  (setq list (cons (car a) list)))
-      (setq a (cdr a)))
-    (nreverse list)))
+  (if (or a b)
+      (let ((list nil))
+        (while a
+          (if (memq (car a) b)
+              (setq list (cons (car a) list)))
+          (setq a (cdr a)))
+        (nreverse list))))
 
 (defun lyskom-remove-zeroes (a)
   "Returns a copy of list where all zeroes are removed."
@@ -181,42 +182,58 @@ Args: BY TO NUM"
 
 ;;; ================================================================
 ;;; lyskom-get-texts-by-and-to
-;;; Author: David K}gedal
-
-(defmacro lyskom-bat-advance-by-list ()
-  (` (if (cdr by-list)
-	 (setq by-list (cdr by-list))
-       (setq by-list (nreverse
-		      (lyskom-remove-zeroes
-		       (listify-vector
-			(map->text-nos
-			 (blocking-do 'get-created-texts
-				      (pers-stat->pers-no persstat)
-				      (if (< num 0)
-					  pmark
-					(- pmark (1- increment)))
-				      increment))))))
-       (if (> num 0)
-	   (setq pmark (- pmark increment))
-	 (setq pmark (+ pmark increment))))))
-
-(defmacro lyskom-bat-advance-to-list ()
-  (` (if (cdr to-list)
-	 (setq to-list (cdr to-list))
-       (setq to-list (nreverse
-		      (lyskom-remove-zeroes
-		       (listify-vector
-			(map->text-nos
-			 (blocking-do 'get-map
-				      (conf-stat->conf-no confstat)
-				      (if (< num 0)
-					  cmark
-					(- cmark (1- increment)))
-				      increment))))))
-       (if (> num 0)
-	   (setq cmark (- cmark increment))
-	 (setq cmark (+ cmark increment))))))
-
+;;; Author: David Byers
+;;;
+;;; Note: We can't assume that the conference's map of texts is
+;;; sorted. If we could, it would be possible to simplify this
+;;; function considerably without making it slower. 
+;;;
+;;; Problem: Construct part of the intersection between the user's
+;;; created texts (the by-list) and the texts in a conference (the
+;;; to-list) without bogging down the client, server or network and
+;;; do it quickly!
+;;;
+;;; Idea: Construct the intersection incrementally without doing more
+;;; work comparing things than we would if we had the full maps to
+;;; start with.
+;;;
+;;; Solution: Get one segment of the by-list (call the nth segment
+;;; by_n) and to-list (call the nth segment to_n) at a time until we
+;;; are done or until both are exhausted. 
+;;;
+;;; In each iteration do the following: Calculate the intersection
+;;; between to_n with each of the previous by_i leaving r_n:
+;;;         r_n = \prod_{i=1}^{n-1} by_i \cap to_n
+;;; where \prod denotes list concatenation. Next calculate the
+;;; intersection of by_n with each to_i 0<i<n in turn, concatenating
+;;; the result to the corresponding r_i:
+;;;         r_i \larrow r_i * (by_n \cap to_i) ; 0<i<n
+;;; At this point, the concatenation of all r_n, \prod r_n, is the
+;;; result of the intersection between the segments of the by-list and
+;;; to-list we have retreived so far.
+;;;
+;;; If the total size of the result equals or exceeds the size we
+;;; requested, finish the loop and return the results.
+;;;
+;;;
+;;; Althogh the solution may seem a bit complicated, it's really not
+;;; that bad once you think about how it's done. The good thing about
+;;; it is that it does as little work as possible comparing elements.
+;;; The bad part is that it constructs a little too many new cons
+;;; cells, although reversing most of the lists does help.
+;;;
+;;;
+;;; +++ FIXME: In some cases this function can take a long time. If
+;;; the total number of texts in the conference is low, but they were
+;;; written a long time ago, we'll be scanning the user's map
+;;; uselessly for a long time. The same is true if the user's map is
+;;; small and the conference gets lots of traffic. In some cases it
+;;; maight actually be faster to look at and filter the text-stats in
+;;; the smaller map. The fact that the user's map _is_ sorted in
+;;; ascending order might also be a source for some sort of
+;;; optimization.
+;;;
+;;;
 
 (defun lyskom-get-texts-by-and-to (persno confno num)
   "Get NUM texts written by person PERSNO with conference CONFNO as a
@@ -237,40 +254,92 @@ Args: persno confno num"
          (clow (conf-stat->first-local-no confstat))
          (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
          (cmark (if (< num 0) clow chigh)))
-    ;; Initialize by-list and to-list
-    (lyskom-bat-advance-to-list)
-    (lyskom-bat-advance-by-list)
 
-    ;; The real work below
-    (while (and (< result-size num)
-		by-list
-		to-list)
-      (cond (;; We have found a text in both lists. Then we add it to
-	     ;; result-list and move on.
-	     (= (car by-list) (car to-list))
-	     (setq result-list (cons (car by-list) result-list))
-	     (lyskom-bat-advance-to-list)
-	     (lyskom-bat-advance-by-list)
-	     (++ result-size))
+    (while (and (or (and (<= pmark phigh)
+                         (>= pmark plow))
+                    (and (<= cmark chigh)
+                         (>= cmark clow)))
+                (> (abs num) result-size))
+      (setq by (and (<= pmark phigh)
+                    (>= pmark plow)
+                    (lyskom-remove-zeroes
+                     (listify-vector
+                      (map->text-nos
+                       (blocking-do 'get-created-texts
+                                    (pers-stat->pers-no persstat)
+                                    (if (< num 0)
+                                        pmark
+                                      (max 0 (- pmark (1- increment))))
+                                    increment)))))
+            to (and (<= cmark chigh)
+                    (>= cmark clow)
+                    (lyskom-remove-zeroes
+                     (listify-vector
+                      (map->text-nos
+                       (blocking-do 'get-map
+                                    (conf-stat->conf-no confstat)
+                                    (if (< num 0)
+                                        cmark
+                                      (max 0 (- cmark (1- increment))))
+                                    increment))))))
+      ;;
+      ;;    Add intersection between new TO and old BYs
+      ;;    to the results list.
+      ;;
 
-	    ;; We know that the first text on to-list can't be on
-	    ;; by-list. So we skip it and move on.
-	    ((or (and (< num 0) (> (car by-list) (car to-list)))
-		 (and (> num 0) (< (car by-list) (car to-list))))
-	     (lyskom-bat-advance-to-list))
+      (setq result-list
+            (cons (apply 'nconc
+                         (mapcar 
+                          (function
+                           (lambda (x)
+                             (lyskom-intersection to x)))
+                          by-list))
+                  result-list))
 
-	    ;; We know that the first text on by-list can't be on
-	    ;; to-list. So we skip it and move on.
-	    (t
-	     (lyskom-bat-advance-by-list))))
-    
-    ;; If we were searching from lower numbers, the resulting list
-    ;; will be reversed.
-    (if (< num 0)
-	(setq result-list (nreverse result-list)))
+      ;;
+      ;;    Add new BY and TO to the by-list and to-list
+      ;;
 
-    result-list))
+      (setq by-list (cons by by-list)
+            to-list (cons to to-list))
       
+
+      ;;
+      ;;    Add intersections between new BY and all TOs
+      ;;
+
+      (setq result-list
+            (mapcar2 (function
+                      (lambda (x y)
+                        (lyskom-intersection y
+                         (nconc x by))))
+                     result-list
+                     to-list))
+
+      (setq result-size (apply '+ (mapcar 'length result-list)))
+
+      ;;
+      ;;    Adjust the marks
+      ;;
+
+      (if (> num 0)
+          (setq pmark (- pmark increment)
+                cmark (- cmark increment))
+        (setq pmark (+ pmark increment)
+              cmark (+ cmark increment))))
+
+    ;;
+    ;;  Extract results
+    ;;
+
+    (setq result-list
+          (apply 'nconc (if (< num 0)
+                            (nreverse result-list)
+                          result-list)))
+
+    (if (> num 0)
+        (nthcdr (- (length result-list) num) result-list)
+      (nfirst (- (length result-list) (- num))  result-list))))      
 
 
 ;;; ===============================================================
@@ -324,8 +393,45 @@ Args: persno confno num"
   "Get NUM texts written by PERSNO. Args: persno num"
   (let* ((persstat (blocking-do 'get-pers-stat persno))
          (plow (pers-stat->first-created-text persstat))
-         (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat)))))
-    (lyskom-get-texts-generic persno num plow phigh 'get-created-texts)))
+         (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
+         (new-data t)
+         (remaining num)
+         (result-list nil))
+
+    ;;  +++
+    ;;  Get segments of the user's map until we have enough results
+    ;;  FIXME: The code in lyskom-get-texts-generic should be moved to
+    ;;  lyskom-get-texts-by and lyskom-get-texts-to so lyskom-get-texts-to
+    ;;  could be a little more efficient. Now it will call 
+    ;;  lyskom-get-texts-generic with a remaining of one way too often.
+    ;;
+
+    (while (and new-data
+                (< (length result-list) (abs num)))
+      (setq new-data
+            (lyskom-get-texts-generic persno 
+                                      remaining
+                                      plow
+                                      phigh
+                                      'get-created-texts))
+      (if new-data
+          (progn
+            (if (< num 0)
+                (setq plow (+ plow (length new-data)))
+              (setq phigh (- phigh (length new-data))))
+
+            (mapcar
+             (function
+              (lambda (x) (initiate-get-text-stat 'main nil x)))
+             new-data)
+            (lyskom-wait-queue 'main)
+            (while new-data
+              (if (cache-get-text-stat (car new-data))
+                  (setq result-list (cons (car new-data) result-list)))
+              (setq new-data (cdr new-data)))
+            (setq remaining (- num (length result-list)))
+            (setq new-data t))))
+    (nreverse result-list)))
 
 
 (defun lyskom-get-texts-to (confno num)
@@ -586,8 +692,13 @@ If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
   (interactive)
   (lyskom-tell-internat 'kom-tell-review)
-  (let* ((text-stat (blocking-do 'get-text-stat lyskom-current-text))
-	 (misc-info-list (and text-stat
+  (lyskom-review-comments
+   (blocking-do 'get-text-stat lyskom-current-text)))
+
+
+(defun lyskom-review-comments (text-stat)
+  "Handles the return from the initiate-get-text-stat, displays and builds list."
+  (let* ((misc-info-list (and text-stat
 			      (text-stat->misc-info-list text-stat)))
 	 (misc-infos (and misc-info-list
 			  (append (lyskom-misc-infos-from-list 

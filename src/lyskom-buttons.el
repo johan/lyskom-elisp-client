@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 40.1 1996-04-02 16:20:08 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 40.2 1996-04-29 11:59:02 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -239,6 +239,32 @@ the current match-data."
   (elt el 4))
 
 
+(defun lyskom-get-button-hint (hints)
+  "Get the hint to be used right now (if any) from HINTS"
+  (let ((result nil)
+        (hint nil))
+    (while (and hints (null result))
+      (setq hint (car hints))
+      (setq hints (cdr hints))
+      (cond ((null (car hint)) 
+             (if (and (eq lyskom-current-function
+                          (elt hint 1))
+                      (or (null (elt hint 2))
+                          (eq lyskom-current-function-phase
+                              (elt hint 2))))
+                 (setq result (elt hint 3))))
+              ((listp (car hint))
+               (if (and lyskom-executing-command
+                        (memq lyskom-current-command (car hint)))
+                   (setq result (cdr hint))))
+              ((symbolp (car hint))
+               (if (and lyskom-executing-command
+                        lyskom-current-command
+                        (eq lyskom-current-command (car hint)))
+                   (setq result (cdr hint))))))
+    result))
+
+
 	
 (defun lyskom-generate-button (type arg &optional text face)
   "Generate the properties for a button of type TYPE with argument ARG.
@@ -255,6 +281,7 @@ FACE is the default text face for the button."
                        (t nil)))
          (data (assq type lyskom-button-actions))
          (hints (and data (elt data 4)))
+         (the-hint (lyskom-get-button-hint hints))
          (props 
           (cond ((and (or (eq type 'conf) 
                           (eq type 'pers))
@@ -290,12 +317,10 @@ FACE is the default text face for the button."
 		       'lyskom-button-type type
 		       'lyskom-button-arg arg
 		       'lyskom-buffer lyskom-buffer)))))
-    (if (and lyskom-executing-command
-             lyskom-current-command
-             (assq lyskom-current-command hints))
+
+    (if the-hint
         (cons 'lyskom-button-hint
-              (cons (cdr (assq lyskom-current-command hints))
-                    props))
+              (cons the-hint props))
       props)))
       
         

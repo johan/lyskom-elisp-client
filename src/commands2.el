@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 40.1 1996-04-02 16:19:15 byers Exp $
+;;;;; $Id: commands2.el,v 40.2 1996-04-29 11:58:52 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 40.1 1996-04-02 16:19:15 byers Exp $\n"))
+	      "$Id: commands2.el,v 40.2 1996-04-29 11:58:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -764,7 +764,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   ;; We split the rest between author and subject
 	   (namelen (/ (- (lyskom-window-width) 22) 3))
 	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
-	   (author-name (lyskom-format "%#1:M" (text-stat->author text-stat))))
+	   (author-name (lyskom-format "%#1:P" (text-stat->author text-stat))))
       (lyskom-format-insert 'summary-line
 			    text-no
 			    time
