@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.96 2000-07-28 12:15:45 byers Exp $
+;;;;; $Id: english-strings.el,v 44.97 2000-08-11 09:43:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.96 2000-07-28 12:15:45 byers Exp $"))
+              "$Id: english-strings.el,v 44.97 2000-08-11 09:43:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -326,6 +326,21 @@ and you have finished reading. Please come back later.
     (search-for-pers . "Enter search key (RETURN for all users): ")
     (search-for-conf . "Enter search key (RETURN for all conferences): ")
     (search-re . "Enter search regexp: ")
+
+    (no-matching-confs . "No conferences match \"%#1s\".\n")
+    (no-matching-perss . "No persons match \"%#1s\".\n")
+    (no-matching-anys . "No persons or conferences match \"%#1s\".\n")
+    (no-confs-exist . "There are no conferences in the database.\n")
+    (no-pers-confs-exist . "There are no persons or conferences in the database.\n")
+    (list-confs-created-by . "List conferences created by: ")
+    (list-pers-confs-created-by . "List persons and conferences created by: ")
+    (getting-all-confs . "Retrieving a list of all conferences from the server...")
+    (getting-all-pers-confs . "Retrieving a list of all persons and conferences from the server...")
+    (getting-all-confs-done . "Retrieving a list of all conferences from the server...done")
+    (getting-all-pers-confs-done . "Retrieving a list of all persons and conferences from the server...done")
+    (finding-created-confs . "Finding created persons and conferences (%#1d av %#2d klart)")
+    (finding-created-pers-confs . "Finding created persons and conferences (%#1d av %#2d klart)")
+
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
@@ -1499,6 +1514,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-go-to-conf           . "Go (to) conference")
     (kom-go-to-next-conf      . "(Go to) next conference")
     (kom-jump                 . "Skip (all) comments")
+    (kom-list-created-conferences     . "List created conferences") 
     (kom-list-conferences     . "List conferences") 
     (kom-list-persons         . "List users")
     (kom-list-news            . "List news")
