@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.104 2000-02-25 23:47:40 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.105 2000-03-11 15:11:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.104 2000-02-25 23:47:40 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.105 2000-03-11 15:11:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1365,6 +1365,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (passive-mt-type . "passiv")
     (secret-mt-type . "hemlig")
 
+    (Invitation-mt-type . "inbjuden")
+    (Passive-mt-type . "passiv")
+    (Secret-mt-type . "hemlig")
+
     (not-author-try-anyway-p . "Du är inte författare till inlägget. Vill du försöka ändå? ")
     (what-no-comments-no . "Vilken text vill du inte ha kommentarer till: ")
     (adding-no-comments . "Begär att inte få kommentarer till inlägg %#1n...")
@@ -2065,6 +2069,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
   (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'kom-mouse-null)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
   (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)

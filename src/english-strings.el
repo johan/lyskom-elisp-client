@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.78 2000-02-25 23:47:35 byers Exp $
+;;;;; $Id: english-strings.el,v 44.79 2000-03-11 15:11:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.78 2000-02-25 23:47:35 byers Exp $"))
+              "$Id: english-strings.el,v 44.79 2000-03-11 15:11:05 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2006,14 +2006,23 @@ You must become an active member of the conference to enter it.\n")
 (if lyskom-en-customize-map
     nil
   (setq lyskom-en-customize-map (make-sparse-keymap))
-  (define-key lyskom-en-customize-map "\t" 'widget-forward)
-  (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
-  (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "TAB") 'widget-forward)
+  (define-key lyskom-sv-customize-map (kbd "M-TAB") 'widget-backward)
+  (define-key lyskom-sv-customize-map (kbd "C-i") 'widget-forward)
+  (define-key lyskom-sv-customize-map (kbd "M-C-i") 'widget-backward)
+  (define-key lyskom-sv-customize-map (kbd "C-m") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'kom-mouse-null)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
-  (define-key lyskom-en-customize-map "\C-c\C-c" 'lyskom-customize-save-and-quit)
-  (define-key lyskom-en-customize-map "\C-c\C-k" 'lyskom-customize-quit)
-  (define-key lyskom-en-customize-map "\C-c\C-s" 'lyskom-customize-save)
-  (define-key lyskom-en-customize-map "\C-c\C-a" 'lyskom-customize-apply)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
+  (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
+  (define-key lyskom-sv-customize-map (kbd "C-c C-k") 'lyskom-customize-quit)
+  (define-key lyskom-sv-customize-map (kbd "C-c C-s") 'lyskom-customize-save)
+  (define-key lyskom-sv-customize-map (kbd "C-c C-a") 'lyskom-customize-apply)
+  (define-key lyskom-sv-customize-map (kbd "?") 'lyskom-customize-help)
 )
 
 (lyskom-language-strings lyskom-custom-strings en
