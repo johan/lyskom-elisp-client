@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.108 2002-07-13 14:30:38 jhs Exp $
+;;;;; $Id: utilities.el,v 44.109 2002-07-13 14:43:31 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.108 2002-07-13 14:30:38 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.109 2002-07-13 14:43:31 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -619,6 +619,9 @@ non-negative integer and 0 means the given text-no."
 (defun lyskom-get-last-read-text (&optional arg prompt default constraint)
   (lyskom-default-value 'lyskom-current-text))
 
+(defun lyskom-get-previous-text (&optional arg prompt default constraint)
+  lyskom-previous-text)
+
 (defun lyskom-get-text-at-point (&optional arg prompt default constraint)
   (or (lyskom-text-at-point)
        (lyskom-get-string 'no-text-at-point)))
@@ -673,7 +676,9 @@ non-negative integer and 0 means the given text-no."
 	    (lyskom-error (lyskom-get-string 'bad-text-no-prefix) arg)))))))
 
 (defconst lyskom-old-farts-text-prompt-strategy
-  '((t . ((t   . lyskom-get-last-read-text)
+  '((kom-comment-previous . ((t   . lyskom-get-previous-text)
+			     (nil . lyskom-get-previous-text)))
+    (t . ((t   . lyskom-get-last-read-text)
 	  (nil . lyskom-get-last-read-text)
 	  (0   . lyskom-get-text-at-point)
 	  (-     lyskom-get-text-above-point (lambda (&optional args) 1))
@@ -689,7 +694,9 @@ non-negative integer and 0 means the given text-no."
    kom buffer.")
 
 (defvar lyskom-pick-text-no-strategy-alist
-      '((t . ((t   . lyskom-get-text-at-point) ; default for prompts
+      '((kom-comment-previous . ((t   . lyskom-get-previous-text)
+				 (nil . lyskom-get-previous-text)))
+	(t . ((t   . lyskom-get-text-at-point) ; default for prompts
 	      (nil . lyskom-get-text-at-point) ; no prefix arg
 	      (0   . lyskom-prompt-for-text-no)
 	      (-     lyskom-get-text-above-point (lambda (&optional arg) 1))

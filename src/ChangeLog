@@ -1,5 +1,13 @@
 2002-07-13  Johan Sundström  <jhs@lysator.liu.se>
 
+	* utilities.el (lyskom-pick-text-no-strategy-alist): Behave as it
+	used to; comment the last but one seen text when no prefix
+	argument was given. Fixes bug 625.
+
+	(lyskom-get-previous-text): New support function.
+
+2002-07-13  Johan Sundström  <jhs@lysator.liu.se>
+
 	* lyskom-rest.el (kom-view): Hopefully my last plusp sin.
 
 2002-07-13  Johan Sundström  <jhs@lysator.liu.se>
