@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 41.6 1996-08-07 15:50:52 davidk Exp $
+# $Id: Makefile,v 41.7 1996-08-07 16:25:19 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,10 +22,10 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 41.6 1996-08-07 15:50:52 davidk Exp $
+# $Id: Makefile,v 41.7 1996-08-07 16:25:19 davidk Exp $
 #
 
-CLIENTVERSION = 0.42-beta
+CLIENTVERSION = 0.42
 
 SHELL = /bin/sh
 
@@ -128,6 +128,25 @@ $(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 elc-files: $(HEADER-ELC) $(PARTS-ELC) 
 
 
+lyskom-$(CLIENTVERSION).elc: lyskom.elc
+	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
+
+lyskom.elc-compatibility: lyskom.el
+	$(EMACS-BATCH) -l ./compatibility.el -f batch-byte-compile lyskom.el
+	mv lyskom.elc lyskom.elc-compatibility
+
+lyskom-$(CLIENTVERSION).el.gz: lyskom.el
+	gzip -9 < lyskom.el > lyskom-$(CLIENTVERSION).el.gz
+
+lyskom-$(CLIENTVERSION).elc.gz: lyskom-$(CLIENTVERSION).elc
+	gzip -9 < lyskom-$(CLIENTVERSION).elc > lyskom-$(CLIENTVERSION).elc.gz
+
+
+english-lyskom-$(CLIENTVERSION).el.gz: english-lyskom.el
+	gzip -9 < english-lyskom.el > english-lyskom-$(CLIENTVERSION).el.gz
+
+
+
 #Detta kr{ver gnu-make. Tyv{rr funkade inte $(SRC-ELC)-prylen l{ngre ner alls.
 #Kanske denna $(SRC-ELC) pryl fungerar.
 #$(SRC-ELC) :%.elc: %.el macros.elc
@@ -147,27 +166,17 @@ TAGS: $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 doc:
 	(cd ../doc ; $(MAKE) elisp-client elisp-client.txt ; )
 
-lyskom-$(CLIENTVERSION).elc: lyskom.elc
-	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
+release: installatftp
+	( cd ../doc; $(MAKE) release )
 
-lyskom.elc-compatibility: lyskom.el
-	$(EMACS-BATCH) -l ./compatibility.el -f batch-byte-compile lyskom.el
-	mv lyskom.elc lyskom.elc-compatibility
-
-lyskom-$(CLIENTVERSION).el.gz: lyskom.el
-	gzip -9 < lyskom.el > lyskom-$(CLIENTVERSION).el.gz
-
-lyskom-$(CLIENTVERSION).elc.gz: lyskom-$(CLIENTVERSION).elc
-	gzip -9 < lyskom-$(CLIENTVERSION).elc > lyskom-$(CLIENTVERSION).elc.gz
-
-install: installatlysator installatftp installdoc
+install: installatlysator installdoc
 
 installatlysator: lyskom.elc lyskom.el
 	cp lyskom.el lyskom.elc $(LISPDIR)
 
 installatftp: lyskom-$(CLIENTVERSION).el.gz english-lyskom-$(CLIENTVERSION).el.gz
-	mv lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
-	mv english-lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
+	cp lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
+	cp english-lyskom-$(CLIENTVERSION).el.gz $(FTPDIR)
 	cp ../doc/NEWS-$(CLIENTVERSION) $(FTPDIR)
 
 # This is now the responsability of the Makefile in the doc-dir.
