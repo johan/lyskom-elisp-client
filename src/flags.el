@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 43.2 1996-08-10 11:56:09 byers Exp $
+;;;;; $Id: flags.el,v 43.3 1996-08-24 21:58:23 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 43.2 1996-08-10 11:56:09 byers Exp $\n"))
+	      "$Id: flags.el,v 43.3 1996-08-24 21:58:23 ceder Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -328,7 +328,9 @@ If successful then set the buffer not-modified. Else print a warning."
 	(while (> (length lyskom-options-text) 2)
 	  (setq working (lyskom-read-options-eval-get-holerith))
 	  (cond
-	   ((= r common-no)
+	   ;; Note that common-no may be nil here, so the comparison
+	   ;; cannot be performed with '=.
+	   ((equal r common-no)
 	    (let ((lyskom-options-text working)
 		  name gname value)
 	      (while (> (length lyskom-options-text) 2)
@@ -346,7 +348,9 @@ If successful then set the buffer not-modified. Else print a warning."
 		    (setq lyskom-global-non-boolean-variables
 			  (cons name lyskom-global-non-boolean-variables))))
 		(lyskom-set-var-from-string name value))))
-	   ((= r elisp-no)
+	   ;; Note that elisp-no may be nil here, so the comparison
+	   ;; cannot be performed with '=.
+	   ((equal r elisp-no)
 	    (let ((lyskom-options-text working)
 		  name value)
 	      (while (> (length lyskom-options-text) 2)
