@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.74 2001-01-28 21:20:53 joel Exp $
+# $Id: Makefile,v 44.75 2001-02-25 16:26:36 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.74 2001-01-28 21:20:53 joel Exp $
+# $Id: Makefile,v 44.75 2001-02-25 16:26:36 joel Exp $
 #
 
 
@@ -170,7 +170,7 @@ TAGS: $(HEADER) $(SOURCES)
 install: $(TARGET) $(TARGET-EL)
 	cp $(TARGET-EL) $(TARGET) $(LISPDIR)
 
-release: release-files release-move release-cleanup
+release: release-files release-move
 
 release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	mkdir lyskom-$(CLIENTVERSION)
@@ -182,6 +182,7 @@ release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	for i in $(DOCFILES) ; do \
 		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
 	done
+	sed -e "s/#CLIENTVERSION#/$(CLIENTVERSION)/" -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" <lyskom-elisp-client.spec >lyskom-$(CLIENTVERSION)/lyskom-elisp-client-$(REDHATCLIENTVERSION).spec
 	( cd lyskom-$(CLIENTVERSION); \
 	autoconf ; \
 	./configure --prefix=$(DEFAULTPREFIX) --with-lispdir=$(DEFAULTLISPDIR) ; \
@@ -190,12 +191,6 @@ release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar
 	zip -R9y lyskom-$(CLIENTVERSION).zip 'lyskom-$(CLIENTVERSION)/*'
-
-release-cleanup:
-	$(RM) -rf lyskom-$(CLIENTVERSION) \
-		  lyskom-$(CLIENTVERSION).tar.gz \
-		  lyskom-$(CLIENTVERSION).zip \
-		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 
 release-move: 
 	if [ ! -z "$(REMOTEDIR)" ] ; then \
@@ -211,7 +206,7 @@ release-move:
 		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
 	fi
 
-debian-package: release-files debian-build release-cleanup
+debian-package: release-files debian-build
 
 debian-build: release-files
 	cp -R debian lyskom-$(CLIENTVERSION)
@@ -222,7 +217,7 @@ debian-build: release-files
 	cp lyskom-$(CLIENTVERSION).tar.gz lyskom-elisp-client_$(DEBIANCLIENTVERSION).orig.tar.gz
 	cd lyskom-elisp-client-$(DEBIANCLIENTVERSION) && dpkg-buildpackage
 
-redhat-packages: release-files redhat-build release-cleanup
+redhat-packages: release-files redhat-build
 
 redhat-build: release-files
 	cp lyskom-$(CLIENTVERSION).tar.gz $(RPMROOT)/SOURCES/
@@ -237,4 +232,5 @@ clean:
 		  lyskom-$(CLIENTVERSION).zip \
 		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 	$(RM) *~ *.elc $(GENERIC-CLEAN)
-	$(RM) -r build-stamp lyskom-elisp-client*
+	$(RM) -r build-stamp lyskom-elisp-client*.gz lyskom-elisp-client*.deb \
+		lyskom-elisp-client*.dsc lyskom-elisp-client*.changes
