@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.2 1996-09-24 22:00:19 davidk Exp $
+;;;;; $Id: check-strings.el,v 44.3 1996-09-25 17:29:18 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
 ;;;;  This file is used for checking swedish-strings.el and
 ;;;;  english-strings.el. Run using
 ;;;;
-;;;;  emacs -batch -l check-strings.el -f lyskom-check-strings
+;;;;  emacs -batch -l check-strings.el -f run
 ;;;;
 ;;;;
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.0 1996-08-30 14:47:50 davidk Exp $
+;;;;; $Id: review.el,v 44.1 1996-09-25 17:29:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,13 +37,31 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.0 1996-08-30 14:47:50 davidk Exp $\n"))
+	      "$Id: review.el,v 44.1 1996-09-25 17:29:50 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
      '(error lyskom-error lyskom-review-error))
 (put 'lyskom-review-error 'error-message
      "Review error")
+
+
+;;; ======================================================================
+;;; State-saving variables
+;;;
+
+(defvar lyskom-last-review-by nil)
+(defvar lyskom-last-review-to nil)
+(defvar lyskom-last-review-num nil)
+(defvar lyskom-last-review-pmark nil)
+(defvar lyskom-last-review-cmark nil)
+(defvar lyskom-last-review-saved-result-list nil)
+(defvar lyskom-last-review-saved-by-list nil)
+(defvar lyskom-last-review-saved-to-list nil)
+(defvar lyskom-last-review-saved-result-size 0)
+(defvar lyskom-last-review-saved-smallest nil)
+(defvar lyskom-last-review-saved-largest nil)
+(defvar lyskom-have-review nil)
 
 
 (defun lyskom-intersection (a b)
@@ -65,7 +83,7 @@ The order of the list a is kept."
 ;;; ================================================================
 ;;;              ]terse av, till - Review by X to Conference Y.
 
-;;; Author: David Byers, David Kågedal, Linus Tolke
+;;; Author: David Byers
 
 
 (def-kom-command kom-review-all ()
@@ -74,6 +92,57 @@ The order of the list a is kept."
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to 0))
 
+
+(def-kom-command kom-review-more (&optional count)
+  "Review more articlies using the same critera as the last review."
+  (interactive "P")
+  (if (not lyskom-have-review)
+      (lyskom-format-insert 'no-review-done)
+    (let* ((count (lyskom-read-number
+                   (lyskom-get-string 'review-how-many-more)
+                   (abs lyskom-last-review-num)))
+           (info (progn (if (and (listp count)
+                                 (integerp (car count))
+                                 (null (cdr count)))
+                            (setq count (car count)))
+                        (cond ((zerop count) 
+                               (setq count nil)
+                               (lyskom-get-string 'review-rest))
+                              ((> count 0)
+                               (lyskom-format (lyskom-get-string 'review-more)
+                                              count)))))
+           (by lyskom-last-review-by)
+           (to lyskom-last-review-to))
+
+      (lyskom-format-insert 'review-more-info-by-to
+                            info
+                            (if (zerop by)
+                                (lyskom-get-string 'anybody)
+                              by)
+                            (if (zerop to)
+                                (lyskom-get-string 'all-confs)
+                              to))
+    
+      (condition-case arg
+          (let ((list (lyskom-get-texts-by-to by to count t)))
+            (setq lyskom-last-review-num 
+                  (if (< lyskom-last-review-num 0)
+                      (- count)
+                    count))
+            (if list
+                (read-list-enter-read-info (lyskom-create-read-info
+                                            'REVIEW
+                                            nil
+                                            (lyskom-get-current-priority)
+                                            (lyskom-create-text-list list)
+                                            nil t)
+                                           lyskom-reading-list t)
+              (lyskom-insert-string 'no-such-text)))
+        (lyskom-review-error (if arg
+                                 nil
+                               (lyskom-insert-string 'no-such-text)))))))
+
+                       
 
 (def-kom-command kom-review-first (&optional count)
   "Reviews all articles of author that is written to conference recipient.
@@ -146,16 +215,27 @@ The defaults for this command is the conference that you are in."
     (if (not (zerop by)) 
         (cache-del-pers-stat by))
 
-    (blocking-do-multiple ((info-by (get-conf-stat by))
-                           (info-to (get-conf-stat to)))
-      (lyskom-format-insert 'review-info-by-to
-                            info
-                            (if (zerop by)
-                                (lyskom-get-string 'anybody)
-                              info-by)
-                            (if (zerop to)
-                                (lyskom-get-string 'all-confs)
-                              info-to)))
+    (lyskom-format-insert 'review-info-by-to
+                          info
+                          (if (zerop by)
+                              (lyskom-get-string 'anybody)
+                            by)
+                          (if (zerop to)
+                              (lyskom-get-string 'all-confs)
+                            to))
+
+    (setq lyskom-last-review-by by)
+    (setq lyskom-last-review-to to)
+    (setq lyskom-last-review-num count)
+    (setq lyskom-last-review-pmark nil)
+    (setq lyskom-last-review-cmark nil)
+    (setq lyskom-last-review-saved-result-list nil)
+    (setq lyskom-last-review-saved-by-list nil)
+    (setq lyskom-last-review-saved-to-list nil)
+    (setq lyskom-last-review-saved-result-size 0)
+    (setq lyskom-last-review-saved-smallest nil)
+    (setq lyskom-last-review-saved-largest nil)
+    (setq lyskom-have-review t)
 
     (condition-case arg
         (let ((list (lyskom-get-texts-by-to by to count)))
@@ -183,14 +263,15 @@ The defaults for this command is the conference that you are in."
 ;;;
 
 
-(defun lyskom-get-texts-by-to (by to num)
-  "Get NUM texts writteb by person number BY in conference number TO
+(defun lyskom-get-texts-by-to (by to num &optional again)
+  "Get NUM texts written by person number BY in conference number TO
 Args: BY TO NUM"
+
   (cond ((and (zerop by) 
-              (zerop to)) (lyskom-get-texts-globally num))
-        ((zerop to) (lyskom-get-texts-by by num))
-        ((zerop by) (lyskom-get-texts-to to num))
-        (t (lyskom-get-texts-by-and-to by to num))))
+              (zerop to)) (lyskom-get-texts-globally num again))
+        ((zerop to) (lyskom-get-texts-by by num again))
+        ((zerop by) (lyskom-get-texts-to to num again))
+        (t (lyskom-get-texts-by-and-to by to num again))))
 
 
 ;;; ============================================================
@@ -234,24 +315,32 @@ This function signals an error if review is impossible"
 ;;; Author: Per Cederquist, David Byers
 ;;;
 
-(defun lyskom-get-texts-globally (num)
-  "Get the last NUM texts created in LysKOM"
-  (if (null num)
-      (progn
-        (lyskom-format-insert 'cant-review-everything)
-        (signal 'lyskom-cant-review-error t)))
+(defun lyskom-get-texts-globally (num &optional again)
+  "Get the last NUM texts created in LysKOM. If AGAIN is non-nil, keep
+going from where we were before."
+  (cond ((and again (null num))
+         (setq num lyskom-last-review-num))
+        ((and again (< lyskom-last-review-num 0)) 
+         (setq num (- num)))
+        ((null num) 
+         (lyskom-format-insert 'cant-review-everything)
+         (signal 'lyskom-cant-review-error t)))
+
   (let ((result nil)
-        (textno (if (< num 0)
-                    1
-                  (lyskom-maxint)))
+        (textno (cond (again lyskom-last-review-cmark)
+                      ((< num 0) 1)
+                      (t (lyskom-maxint))))
         (op (if (< num 0)
                 'find-next-text-no
               'find-previous-text-no)))
 
     (while (and (not (eq textno 0))
+                (not (null textno))
                 (< (length result) (abs num)))
       (setq textno (blocking-do op textno))
-      (setq result (cons textno result)))
+      (if textno
+          (setq result (cons textno result))))
+    (setq lyskom-last-review-cmark textno)
     (if (< num 0)
         (nreverse result)
       result)))
@@ -316,31 +405,46 @@ This function signals an error if review is impossible"
 ;;; intersection. 
 ;;;
 
-(defun lyskom-get-texts-by-and-to (persno confno num)
+(defun lyskom-get-texts-by-and-to (persno confno num 
+                                          &optional again pstart cstart)
   "Get NUM texts written by person PERSNO with conference CONFNO as a
-recipient. 
-Args: persno confno num"
+recipient. If optional AGAIN is non-nil, continue from where we were.
+Args: persno confno num &optional again pstart cstart"
   (blocking-do-multiple ((persstat (get-pers-stat persno))
                          (confstat (get-conf-stat confno)))
     (lyskom-check-review-access confstat persstat)
 
-    (let* ((result-list nil)
-           (by-list nil)
-           (to-list nil)
-           (result-size 0)
+    (cond ((and again (null num)) (setq num lyskom-last-review-num))
+          ((and again (< lyskom-last-review-num 0) (setq num (- num)))))
+
+    (let* ((result-list (if again
+                            lyskom-last-review-saved-result-list
+                          nil))
+           (by-list (if again
+                        lyskom-last-review-saved-by-list
+                      nil))
+           (to-list (if again 
+                            lyskom-last-review-saved-to-list 
+                          nil))
+           (result-size (if again
+                            lyskom-last-review-saved-result-size
+                          0))
            (by nil)
            (to nil)
            (increment lyskom-fetch-map-nos)
-           (plow (pers-stat->first-created-text persstat))
+           (plow (or pstart (pers-stat->first-created-text persstat)))
            (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
-           (pmark (if (and num (< num 0)) plow phigh))
-           (clow (conf-stat->first-local-no confstat))
+           (pmark (cond (again lyskom-last-review-pmark)
+                        ((and num (< num 0)) plow)
+                        (t phigh)))
+           (clow (or cstart (conf-stat->first-local-no confstat)))
            (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
-           (cmark (if (and num (< num 0)) clow chigh))
-           (smallest nil)
-           (largest nil)
+           (cmark (cond (again lyskom-last-review-cmark)
+                        ((and num (< num 0)) clow)
+                        (t chigh)))
+           (smallest (if again lyskom-last-review-saved-smallest nil))
+           (largest (if again lyskom-last-review-saved-largest nil))
            (abort-loop nil))
-
 
       (if (null num)
           (setq num (1+ phigh)))
@@ -461,6 +565,13 @@ Args: persno confno num"
 
       )
 
+      (setq lyskom-last-review-pmark pmark)
+      (setq lyskom-last-review-cmark cmark)
+      (setq lyskom-last-review-saved-by-list by-list)
+      (setq lyskom-last-review-saved-to-list to-list)
+      (setq lyskom-last-review-saved-smallest smallest)
+      (setq lyskom-last-review-saved-largest largest)
+
       ;;
       ;;  Extract results
       ;;
@@ -470,9 +581,31 @@ Args: persno confno num"
                               (nreverse result-list)
                             result-list)))
 
+      ;;
+      ;;  Save discarded results and return retained results
+      ;;
+
       (if (> num 0)
-          (nthcdr (- (length result-list) num) result-list)
-        (nfirst (- num)  result-list)))))
+          (progn
+            (setq lyskom-last-review-saved-result-list
+                  (nfirst (- (length result-list) num) result-list))
+            (setq lyskom-last-review-saved-result-size
+                  (length  lyskom-last-review-saved-result-list))
+            (setq lyskom-last-review-saved-result-list
+                  (cons lyskom-last-review-saved-result-list
+                        (make-list (- (length by-list) 1) nil)))
+            (nthcdr (- (length result-list) num) result-list))
+
+        (progn
+            (setq lyskom-last-review-saved-result-list 
+                  (nthcdr (- num) result-list))
+            (setq lyskom-last-review-saved-result-size
+                  (length lyskom-last-review-saved-result-list))
+            (setq lyskom-last-review-saved-result-list
+                  (cons lyskom-last-review-saved-result-list
+                        (make-list (- (length by-list) 1) nil)))
+            (nfirst (- num) result-list))))))
+
 
 
 ;;; ===============================================================
@@ -488,16 +621,23 @@ Args: persno confno num"
 ;;; are not readable, hence the added complexity in that function.
 ;;;
 
-(defun lyskom-get-texts-by (persno num)
+(defun lyskom-get-texts-by (persno num &optional again pstart)
   "Get NUM texts written by PERSNO. Args: persno num"
   (let ((persstat (blocking-do 'get-pers-stat persno)))
     (lyskom-check-review-access t persstat)
 
-    (let* ((plow (pers-stat->first-created-text persstat))
+    (cond ((and again (null num)) (setq num lyskom-last-review-num))
+          ((and again (< lyskom-last-review-num 0)) (setq num (- num))))
+
+    (let* ((plow (or pstart (pers-stat->first-created-text persstat)))
            (phigh (1- (+ plow (pers-stat->no-of-created-texts persstat))))
-           (result nil)
+           (result (if again
+                       lyskom-last-review-saved-result-list
+                     nil))
            (increment (if num (abs num)))
-           (mark (if (and num (< num 0)) plow phigh))
+           (mark (cond (again lyskom-last-review-pmark)
+                        ((and num (< num 0)) plow)
+                        (t phigh)))
            (collector nil)
            (found nil)
            (start nil)
@@ -557,26 +697,39 @@ Args: persno confno num"
             (setq increment (min lyskom-fetch-map-nos (* increment 2)))
           (setq increment (- (abs num) (length result)))))
 
+      (setq lyskom-last-review-pmark mark)
+
       (if (> num 0)
-          (nthcdr (- (length result) num) result)
-        (nfirst (- num)  result)))))
+          (progn
+            (setq lyskom-last-review-saved-result-list 
+                  (nfirst (- (length result) num) result))
+            (nthcdr (- (length result) num) result))
+        (progn
+          (setq lyskom-last-review-saved-result-list
+                (nthcdr (- num) result))
+          (nfirst (- num)  result))))))
 
 
 
-(defun lyskom-get-texts-to (confno num)
+(defun lyskom-get-texts-to (confno num &optional again cstart)
   "From CONFNO get NUM texts."
   (let ((confstat (blocking-do 'get-conf-stat confno)))
 
     (lyskom-check-review-access confstat t)
 
-    (let* ((clow (conf-stat->first-local-no confstat))
+    (cond ((and again (null num)) (setq num lyskom-last-review-num))
+          ((and again (< lyskom-last-review-num 0)) (setq num (- num))))
+
+    (let* ((clow (or cstart (conf-stat->first-local-no confstat)))
            (chigh (1- (+ clow (conf-stat->no-of-texts confstat))))
-           (result nil)
+           (result (if again 
+                       lyskom-last-review-saved-result-list
+                     nil))
            (start nil)
            (increment (and num (abs num)))
-           (mark (if (and num (< num 0)) clow chigh)))
-
-
+           (mark (cond (again lyskom-last-review-cmark)
+                       ((and num (< num 0)) clow)
+                       (t chigh))))
 
       (if (null num)
           (setq num (1+ chigh)
@@ -613,16 +766,27 @@ Args: persno confno num"
               (setq increment (min lyskom-fetch-map-nos (* increment 2)))
             (setq increment (- (abs num) (length result))))))
 
+      (setq lyskom-last-review-cmark mark)
+
       (if (> num 0)
-          (nthcdr (- (length result) num) result)
-        (nfirst (- num)  result)))))
+          (progn
+            (setq lyskom-last-review-saved-result-list 
+                  (nfirst (- (length result) num) result))
+            (nthcdr (- (length result) num) result))
+        (progn
+          (setq lyskom-last-review-saved-result-list
+                (nthcdr (- num) result))
+          (nfirst (- num)  result))))))
 
 
-(defun kom-review-backward ()
+;;; ============================================================
+;;;                 Återse baklänges
+;;;
+
+(def-kom-command kom-review-backward ()
   "Toggles the reviewing order.
 If reading forward then starts reading backward and the other way round."
   (interactive)
-  (lyskom-start-of-command 'kom-review-backward)
   (cond
    ((and (not (read-list-isempty lyskom-reading-list))
 	 (or (eq (read-info->type (read-list->first lyskom-reading-list))
@@ -640,8 +804,7 @@ If reading forward then starts reading backward and the other way round."
 						   'forward
 						 'backward)))))
    (t
-    (lyskom-insert-string 'illegal-command)))
-  (lyskom-end-of-command)) 
+    (lyskom-insert-string 'illegal-command))))
 
 
 ;;; ================================================================
@@ -763,12 +926,11 @@ Text is a text-no."
 ;;; Author: Linus Tolke
 
 
-(defun kom-review-next ()
+(def-kom-command kom-review-next ()
   "Resumes an interupted review by moving all review and review-tree entries in
 the lyskom-reading-list to the beginning. i.e by moving all other types to the
 end."
   (interactive)
-  (lyskom-start-of-command 'kom-review-next)
   (lyskom-tell-internat 'kom-tell-review)
   (let ((len (read-list-length lyskom-reading-list))
 	(finished nil))
@@ -780,8 +942,7 @@ end."
 		 (not (eq type 'REVIEW-MARK)))
 	    (read-list-rotate lyskom-reading-list)
 	  (setq finished t)))
-      (setq len (1- len))))
-  (lyskom-end-of-command))
+      (setq len (1- len)))))
 
 
 ;;; ================================================================
@@ -790,10 +951,9 @@ end."
 ;;; Author: Linus
 
 
-(defun kom-review-stack ()
+(def-kom-command kom-review-stack ()
   "Displays the review-stack."
   (interactive)
-  (lyskom-start-of-command 'kom-review-stack)
   (mapcar
    (function
     (lambda (info)
@@ -810,8 +970,7 @@ end."
 	    (lyskom-format-insert 'review-many-comments cto un)))
 	 ((eq type 'REVIEW-MARK)
 	  (lyskom-format-insert 'review-marked un))))))
-   (read-list->all-entries lyskom-reading-list))
-  (lyskom-end-of-command))
+   (read-list->all-entries lyskom-reading-list)))
 
 
 ;;; ================================================================
@@ -820,10 +979,9 @@ end."
 ;;; Author: Linus Tolke
 
 
-(defun kom-review-clear ()
+(def-kom-command kom-review-clear ()
   "Deletes all review-types from the lyskom-reading-list and lyskom-to-do-list."
   (interactive)
-  (lyskom-start-of-command 'kom-review-clear)
   (if (not (read-list-isempty lyskom-reading-list))
       (while (or (eq (read-info->type (read-list->first lyskom-reading-list))
 		     'REVIEW)
@@ -839,8 +997,7 @@ end."
 		     'REVIEW-TREE)
 		 (eq (read-info->type (read-list->first lyskom-to-do-list))
 		     'REVIEW-MARK))
-	(set-read-list-del-first lyskom-to-do-list)))
-  (lyskom-end-of-command))
+	(set-read-list-del-first lyskom-to-do-list))))
 
 
 ;;; ================================================================
@@ -897,12 +1054,11 @@ text is shown and a REVIEW list is built to shown the other ones."
 ;;; Author: Linus Tolke
 
 
-(defun kom-review-last-normally-read (no)
+(def-kom-command kom-review-last-normally-read (no)
   "Reviews the NO last normally read texts."
   (interactive 
    (list 
     (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
-  (lyskom-start-of-command 'kom-review-last-normally-read)
   (lyskom-tell-internat 'kom-tell-review)
   (let* ((text-nos (nreverse (nfirst no lyskom-normally-read-texts))))
     (if text-nos
@@ -916,6 +1072,31 @@ text is shown and a REVIEW list is built to shown the other ones."
 		lyskom-current-text)
 	       lyskom-reading-list t))
 	  (lyskom-view-text (car text-nos)))
-      (lyskom-format-insert 'no-such-text)))
-  (lyskom-end-of-command))
+      (lyskom-format-insert 'no-such-text))))
       
+;;; ============================================================
+;;;         Återse senaste dagarnas inlägg
+;;;
+;;; Author: David Byers
+
+;;;
+;;; Algorithm:
+;;;
+;;; Binärsökning i mappen efter inlägg med rätt datum.
+;;;
+;;; Utilityfunktioner: Beräkna diff i dagar mellan två datum.
+;;;                    Subtrahera n dagar från ett datum.
+;;;
+;;; Användarkommandot: Återse N inlägg av person X till Y från DATE
+;;;                    
+;;; Hitta index i X och Y där det sökta datumet börjar
+;;; Låt de vanliga återsefunktionerna accepter cmin och pmin som
+;;; parametrar så de kan söka igenom en del av en map.
+;;;
+;;; Problem med binärsökning i mapparna är hålen. Det finns risk att
+;;; man försöker binärsöka bland en massa nollor, och det lär ta tid.
+;;; I de fallen får man nog göra get-next-text eller get-previous-text
+;;; för att få ett riktigt textnummer att titta på. Risk: att man
+;;; tittar på samma text två gånger och går i loop.
+;;;
+

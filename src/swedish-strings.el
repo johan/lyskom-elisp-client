@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.2 1996-09-24 22:04:14 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.3 1996-09-25 17:29:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.2 1996-09-24 22:04:14 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.3 1996-09-25 17:29:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -112,7 +112,7 @@ Annat se \\[describe-mode] ---")
 (defvar lyskom-swascii-header-subject nil
   "The swascii version of lyskom-header-subject.")
 
-(defconst lyskom-missing-strings '())
+(defconst lyskom-strings-missing '())
 
 (defconst lyskom-strings 
   '(
@@ -210,7 +210,6 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
 
     (have-to-read . "Du m\345ste l\344sa ett inl\344gg f\366rst.\n")
 
-    (review-text-no . "\305terse text nummer %#1n.\n")
     (no-comment-to . "Det finns inget kommenterat inl\344gg att titta p\345.\n")
 
     (who-letter-to . "Vem vill du skicka brev till? ")
@@ -220,7 +219,7 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
     (who-to-add . "Vem vill du addera? ")
     (where-to-add . "Vilket m\366te skall han/hon adderas till? ")
     (where-to-add-self . "Vilket m\366te vill du bli medlem i? ")
-    (priority-q . "Prioritet p\345 m\366tet? (0 (l\345g) - 255 (h\366g)) ")
+    (priority-q . "Prioritet p\345 m\366tet? (1 (l\345g) - 255 (h\366g)) ")
     (done . "klart.\n")
     (nope . "Det gick inte.\n")
 
@@ -592,7 +591,9 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (set-session-priority . "S\344tt l\344sniv\345: ")
 
     ; From review.el:
+    (no-review-done . "Du m\345ste \345terse innan du han \345terse mer.\n")
     (review-how-many . "\305terse hur m\345nga: ")
+    (review-how-many-more . "\305terse ytterligare hur m\345nga: ")
     (latest-n . "senaste %#1d")
     (first-n . "f\366rsta %#1d")
     (info-by-whom . "%#1s av vem: ")
@@ -606,11 +607,15 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 ;; +++
     (review-info . "\305terse %#1s")
     (review-info-by-to . "\305terse %#1s av %#2P till %#3M fram\345t.\n")
+    (review-more-info-by-to . "\305terse %#1s av %#2P till %#3M fram\345t.\n")
+    (review-rest . "resten")
+    (review-more . "nästa %#1d")
     (you-review . "Du \345terser nu %#1s.\n")
     (read-text-first . "Du m\345ste l\344sa en text f\366rst.\n")
     (cannot-read-last-text . "Du kan inte l\344sa den senast l\344sta texten.\n")
     (review-n-texts . "\305terse %#1d inl\344gg.\n")
     (review-marked . "\305terse %#1d markerade.\n")
+    (review-text-no . "\305terse text nummer %#1n\n")
     (review-one-comment . "\305terse en kommentar till inl\344gg %#1n.\n")
     (review-many-comments . "\304terse %#2d kommentarer till inl\344gg %#1n.\n")
     (read-normally-read . "Hur m\345nga vill du se igen?")
@@ -821,7 +826,7 @@ Du b\366r s\344tta den till ett b\344ttre v\344rde.\n")
     (go-to-conf-of-marked-prompt . "\305terse (n\344sta) markerade")
     (go-to-next-conf-prompt . "G\345 till n\344sta m\366te")
     (go-to-your-mailbox-prompt . "G\345 till din brevl\345da")
-    (the-command . "Kommandot:%#1s")
+    (the-command . "Kommandot: %#1C")
     (error-in-login-hook . "Det fanns ett fel i din kom-login-hook: %#1s\n")
 
     (give-a-number . "Mata in ett tal: ")
@@ -1043,6 +1048,7 @@ Uppkopplad sedan %#8s%#9s")
     (kom-review-next            "\305terse n\344sta")
     (kom-find-root		"\305terse urinl\344gget")
     (kom-review-by-to           "\305terse senaste")
+    (kom-review-more            "\305terse fler inlägg")
     (kom-review-first           "\305terse f\366rsta")
     (kom-review-all             "\305terse alla")
     (kom-view-commented-text    "\305terse det kommenterade")
@@ -1166,7 +1172,7 @@ Uppkopplad sedan %#8s%#9s")
 Cf. paragraph-start.")
 
 
-(defconst lyskom-missing-bindings '(lyskom-previous-prefix))
+(defconst lyskom-keybindings-missing '(lyskom-previous-prefix))
 
 (if lyskom-mode-map
     nil
@@ -1315,6 +1321,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}r" 'kom-find-root)
   (define-key lyskom-mode-map "}u" 'kom-find-root)
   (define-key lyskom-mode-map "}s" 'kom-review-by-to)
+  (define-key lyskom-mode-map "}y" 'kom-review-more)
   (define-key lyskom-mode-map "}A" 'kom-review-all)
   (define-key lyskom-mode-map "}f" 'kom-review-first)
   (define-key lyskom-mode-map "}l" 'kom-review-stack)

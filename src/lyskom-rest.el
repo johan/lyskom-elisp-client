@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.2 1996-09-03 18:42:57 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.3 1996-09-25 17:29:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.2 1996-09-03 18:42:57 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.3 1996-09-25 17:29:36 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -189,7 +189,7 @@ assoc list."
 				(list 'lambda '(alternative)
 				      (list 'lyskom-ok-command 'alternative
 					    lyskom-is-administrator))
-				"" nil))
+				t nil))
 	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
 			     (if kom-emacs-knows-iso-8859-1
 				 lyskom-commands
@@ -275,7 +275,8 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
      ((eq lyskom-command-to-do 'when-done)
       (let ((command (lyskom-what-to-do-when-done)))
 	(cond
-	 ((stringp command)
+	 ((or (stringp command)
+              (vectorp command))
 	  (execute-kbd-macro command))
 	 (t (call-interactively command)))))
      ((eq lyskom-command-to-do 'unknown)
@@ -1056,6 +1057,25 @@ Note that it is not allowed to use deferred insertions in the text."
      ((= format-letter ?%)
       (setq result "%")) 
      
+     ;;
+     ;;  Format a command name somewhat specially
+     ;;
+     ((= format-letter ?C)
+      (setq result (cond ((stringp arg) arg)
+                         ((vectorp arg) 
+                          (mapconcat 'single-key-description
+                                     (append arg nil) " "))
+                         ((symbolp arg)
+                          (or (car (cdr (assq arg lyskom-commands)))
+                              (princ arg)))
+                         (t (format "%S" arg)))))
+
+     ;;
+     ;;  Format a sexp by princing it. Sort of.
+     ;;
+     ((= format-letter ?S)
+      (setq result (format "%S" arg)))
+
      ;;
      ;;  Format a text property array indicator by retreiving the
      ;;  properties from the argument list and adding a start of 
