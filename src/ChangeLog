@@ -1,5 +1,7 @@
 1999-06-26  David Byers  <davby@ida.liu.se>
 
+	*  Release 0.46-EBTA-4
+
 	* prefetch.el, startup.el, async.el: Use get-unread-confs to get
 	memberships in confs with unreads before 
 
