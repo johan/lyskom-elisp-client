@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.2 1995-02-23 20:42:32 linus Exp $
+;;;;; $Id: swedish-strings.el,v 38.3 1995-03-01 17:56:12 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.2 1995-02-23 20:42:32 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.3 1995-03-01 17:56:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -393,7 +393,7 @@ Lyskom-sessionen \344r avslutad.
     (not-allowed-see-confs . "Du f\345r inte se vilka m\366ten %#1s \344r medlem i.\n")
     (is-member-of . "\n%#1s \344r medlem i f\366ljande m\366ten:\n")
     (membership-list-header . "Senast inne         Osett  Namn\n\n")
-    (who-to-send-message-to . "Vem vill du skicka meddelandet till? (Alla) ")
+    (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%s) ")
     (his-total-unread . "\n%#1s har totalt %#2d ol\344sta.\n")
     (message-prompt . "Meddelande: ")
     (message-sent-to-user . 
@@ -630,6 +630,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
     ; From flags.el:
     (saving-settings . "Sparar inst\344llningarna")
     (hang-on . "V\344nta ett tag...\n")
+    (could-not-save-options . "Kunde ej spara inst\344llningarna.\n")
     (could-not-create-area . "Kunde ej skapa texten.\n")
     (could-not-set-user-area . "Kunde ej st\344lla om user-arean. Servern s\344ger felmeddelande: %#1d\n")
     (you-dont-exist . "Du finns inte.\n")
@@ -708,6 +709,44 @@ Felmeddelande: %#1s**************************************************")
     (footnote . "Fotnot")
     (by . " av %#1s")
     (text-created .  "Text nummer %#1d \344r skapad.\n")
+    (starting-mosaic . "Startar Mosaic...")
+    (super-jump . "Filtrerar \344rende \"%#1s\" i m\366te \"%#2s\"\n")
+    (filtered . "[Filtrerad]")
+    (bad-filter-list . "Fel i filtereingslistan n\344ra %s.")
+    (invalid-filter-list . "Fel i filtreringslistan.")
+    (filter-tree . "Hoppar \366ver text %d \"%s\" av %s och dess kommentarstr\344d.\n")
+    (filter-text . "Hoppar \366ver text %d \"%s\" av %s.\n")
+    (filter-permanent . "Permanent? ")
+    (filter-action . "Hur vill du filtrera? ")
+    (filter-in-conf . "I vilket m\366te (Alla)? ")
+    (filter-subject . "Filtrera vilket \344rende? ")
+    (filter-which-text . "Filtrera inl\344gg som inneh\345ller: ")
+    (filter-author . "Filtrera vilken författare? ")
+    (permanent . "(permanent)")
+    (temporary . "(tillf\344llig)")
+    (filter-edit-buffer-name . "*LysKOM Filter Edit*")
+    (filter-edit-empty-list . "Listan \344r tom")
+    (filter-edit-start-of-list . "Listans b\366rjan")
+    (filter-edit-end-of-list . "Listans slut")
+    (filter-edit-filter-how . "Hur vill du filtrera? ")
+    (filter-edit-filter-what . "Vad vill du filtrera? ")
+    (filter-edit-bad-argument . "Felaktig inmatning: %s")
+    (filter-edit-outside-entry . "Kan inte utf\366ra kommandot utanf\366r ett filter")
+    (filter-edit-outside-list . "Kan inte utf\366ra operationen utanf\366r listan")
+    (filter-edit-end-of-pattern . "Filtrets slut")
+    (filter-edit-save-p . "Spara f\366r\344ndringar? ")
+    (filter-edit-remove-empty . "Tomma filter g\366r att alla texter filtreras. Vill du ta bort dessa? ")
+    (filter-edit-restart-p . "Du har gjort \344ndringar. Vill du verkligen b\366rja om? ")
+    (filter-edit-help . "p Upp, n Ned, i Ny rad, M-i Nytt filter, d Radera rad, M-d Radera filter")
+    (filter-edit-header . "\304ndra filter f\366r \"%s\"\n")
+    (filter-edit-saving . "Sparar \344ndringarna...")
+    (filter-edit-saving-done . "Sparar \344ndringarna...klart")
+    (filter-edit-saving-error . "Kunde inte spara \344ndringarna!")
+    (filter-edit-insert-pred . "%#1s (=,!=): ")
+    (filter-edit-insert-arg . "%#1s %#2s (vad): ")
+    (no-filters . "Inga filter har definierats.\n")
+    (view-filters-header . "\nAktiva filter:\n\n")
+    (view-filters-footer . "")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -805,12 +844,46 @@ Felmeddelande: %#1s**************************************************")
     (kom-list-files		"Lista filarean")
     (kom-put-file		"Ladda upp fil")
     (kom-get-file		"Ladda ner fil")
+    (kom-filter-author  "Filtrera f\366rfattare")
+    (kom-filter-subject "Filtrera \344rende")
+    (kom-filter-text    "Filtrera inneh\345ll")
+    (kom-super-jump     "Superhoppa")
+    (kom-filter-edit    "\304ndra filter")
+    (kom-list-filters   "Lista filter")
+    (kom-show-user-area "Visa user-arean")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
 (defvar lyskom-swascii-commands nil
   "The swascii-versions of lyskom-commands.")
 
+(defvar lyskom-filter-predicate-list
+      '(("=" . nil) ("!=" . t))
+      "A list of legal filter comparison predicates.")
+
+(defvar lyskom-filter-what
+      '((author . "F\366rfattare")
+        (author-no . "F\366rfattare (nummer)")
+        (author-re . "F\366rfattare (regexp)")
+        (subject . "\304rende")
+        (subject-re . "\304rende (regexp)")
+        (recipient . "Mottagare")
+        (recipient-no . "Mottagare (nummer)")
+        (recipient-re . "Mottagare (regexp)")
+        (text . "Inneh\345ll")
+        (text . "Inneh\345ll (regexp)"))
+      "A list of legal filter conditions and their textual representation.")
+
+(defvar lyskom-filter-actions
+      '((dontshow . "Visa inte")
+        (skip-text . "Hoppa \366ver")
+        (skip-tree . "Hoppa \366ver kommentarer"))
+      "A list of legal filter actions an their textual representation.")
+                               
+(defvar lyskom-swascii-filter-actions nil
+  "The swascii-versions of lyskom-filter-actions.")
+(defvar lyskom-swascii-filter-what nil
+  "The swascii version of lyskom-filter-what")
 
 (defvar lyskom-text-start "
 [0-9]+ 199[0-9]-[0-1][0-9]-[0-3][0-9] +[0-2][0-9]:[0-5][0-9]  /[0-9]+ rad\\(er\\)?/ "
@@ -826,8 +899,10 @@ Cf. paragraph-start.")
   (define-prefix-command 'lyskom-change-prefix)
   (define-prefix-command 'lyskom-next-prefix)
   (define-prefix-command 'lyskom-list-prefix)
-  (define-prefix-command 'lyskom-get-prefix)
+;  (define-prefix-command 'lyskom-get-prefix)
   (define-prefix-command 'lyskom-S-prefix)
+  (define-prefix-command 'lyskom-filter-get-prefix)
+
   (define-key lyskom-mode-map "{" 'lyskom-change-prefix) ; krullar
   (define-key lyskom-mode-map "[" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "}" 'lyskom-review-prefix)
@@ -841,7 +916,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "\033}" 'lyskom-review-prefix)
   (define-key lyskom-mode-map "\033]" 'lyskom-review-prefix) 
 
-  (define-key lyskom-mode-map "f" 'lyskom-get-prefix)
+  (define-key lyskom-mode-map "f" 'lyskom-filter-get-prefix)
   (define-key lyskom-mode-map "n" 'lyskom-next-prefix)
   (define-key lyskom-mode-map "l" 'lyskom-list-prefix)
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
@@ -854,8 +929,11 @@ Cf. paragraph-start.")
 	(define-key lyskom-mode-map [?\345] 'lyskom-review-prefix)
 	(define-key lyskom-mode-map [?\305] 'lyskom-review-prefix)
 
+	(define-key lyskom-mode-map [?f ?\344] 'kom-filter-subject)
+	(define-key lyskom-mode-map [?f ?\304] 'kom-filter-subject)
 	(define-key lyskom-mode-map [?l ?\344] 'kom-list-summary)
 	(define-key lyskom-mode-map [?l ?\304] 'kom-list-summary)
+	(define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
 	))
 	;(define-key lyskom-mode-map "vi" 'vilka)
 
@@ -885,6 +963,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "p"  'kom-private-answer)
   (define-key lyskom-mode-map "P"  'kom-private-answer-previous)
   (define-key lyskom-mode-map "h"  'kom-jump)
+  (define-key lyskom-mode-map "H"  'kom-super-jump)
   (define-key lyskom-mode-map "lm" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
   (define-key lyskom-mode-map "lp" 'kom-list-persons)
@@ -895,6 +974,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "l\304" 'kom-list-summary)
   (define-key lyskom-mode-map "l\033{" 'kom-list-summary) ; 7(8)-bit emacs
   (define-key lyskom-mode-map "l\033[" 'kom-list-summary)
+  (define-key lyskom-mode-map "lf" 'kom-list-filters)
   (define-key lyskom-mode-map "m"  'kom-add-self)
   (define-key lyskom-mode-map "M"  'kom-mark-text)
   (define-key lyskom-mode-map "A"  'kom-unmark-text)
@@ -904,13 +984,22 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "S"  'kom-quit)
   (define-key lyskom-mode-map "q"  'kom-quit)
   (define-key lyskom-mode-map "z"  'kom-bury)
-  ;; (define-key lyskom-mode-map "r"  'kom-recover)
+  (define-key lyskom-mode-map "R"  'kom-recover)
   (define-key lyskom-mode-map "t"  'kom-display-time)
   (define-key lyskom-mode-map "fu" 'kom-get-appreciation)
   (define-key lyskom-mode-map "fs" 'kom-get-abuse)
+  (define-key lyskom-mode-map "f{" 'kom-filter-subject)
+  (define-key lyskom-mode-map "f[" 'kom-filter-subject)
+  (define-key lyskom-mode-map "f\344" 'kom-filter-subject)
+  (define-key lyskom-mode-map "f\304" 'kom-filter-subject)
+  (define-key lyskom-mode-map "f\033{" 'kom-filter-subject)
+  (define-key lyskom-mode-map "f\033[" 'kom-filter-subject)
+  (define-key lyskom-mode-map "ff" 'kom-filter-author)
+  (define-key lyskom-mode-map "fi" 'kom-filter-text)
   (define-key lyskom-mode-map "v"  'kom-who-is-on)
   (define-key lyskom-mode-map "V"  'kom-busy-wait)
   (define-key lyskom-mode-map "{p" 'kom-change-presentation)
+  (define-key lyskom-mode-map "{f" 'kom-filter-edit)
   (define-key lyskom-mode-map "} " 'kom-view)
   (define-key lyskom-mode-map "}0" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "}1" 'kom-initial-digit-view)
@@ -951,6 +1040,46 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "\C-?" 'scroll-down)
 )
 
+;;;==============================================================
+;;; Keymap for filter editing
+;;;
+
+(defvar lyskom-filter-edit-map nil
+  "Keymap for LysKOM filter edit")
+
+(if lyskom-filter-edit-map ()
+  (setq lyskom-filter-edit-map (make-keymap))
+  (suppress-keymap lyskom-filter-edit-map)
+  (define-key lyskom-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
+  (define-key lyskom-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
+  (define-key lyskom-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-filter-edit-map "q" 'lyskom-filter-edit-quit)
+  (define-key lyskom-filter-edit-map "x" 'lyskom-filter-edit-expunge)
+  (define-key lyskom-filter-edit-map "s" 'lyskom-filter-edit-save)
+  (define-key lyskom-filter-edit-map "g" 'lyskom-filter-edit-revert)
+  (define-key lyskom-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
+  (define-key lyskom-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
+  (define-key lyskom-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
+  )
 
 
 (defvar lyskom-prioritize-mode-map nil

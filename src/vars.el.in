@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.3 1995-02-23 20:42:41 linus Exp $
+;;;;; $Id: vars.el.in,v 38.4 1995-03-01 17:56:17 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.3 1995-02-23 20:42:41 linus Exp $\n"))
+	      "$Id: vars.el.in,v 38.4 1995-03-01 17:56:17 byers Exp $\n"))
 
 
 
@@ -178,6 +178,31 @@ kom-show-personal-messages-in-buffer decides which buffer to pop.")
   "*Non-nil means ding as personal messages arrive.
 Non-nil and non-t means only ding when they really are personal.")
 
+(defvar kom-send-message-to-last-sender t
+  "*Non-nil means default recipient of personal messages is the sender of
+the last message received. Nil means default is everybody.")
+
+(defvar kom-text-buttons
+  '(("[0-9][0-9][0-9][0-9][0-9]*" lyskom-button-view-text nil)
+    ("\\(\\(ftp\\|gopher\\|http\\|news\\|wais\\):/*[^:/*:*[^/]*/\\S-*\\)"
+     lyskom-button-follow-url nil))
+  "*List of patterns to make buttons from in text bodies. Each pattern 
+consists of (REGEXP ACTION ARG).
+REGEXP is a regular expression that is matched with the text body of each
+article. If REGEXP contains a \\( \\) pair, the text between the first such
+pair will become a button. If there is no \\( \\), the entire match becomes
+a button.
+ACTION is the name of a Lisp function to call when the button is clicked.
+This function is called with WHERE (the point clicked) and ARG (below) as
+arguments.
+ARG is an argument to pass to ACTION.")    
+
+(defvar kom-url-viewer 'mosaic
+  "*Specifies which viewer to use to view URLs. One of mosaic or w3.")
+
+(defvar kom-mosaic-command "/usr/local/bin/mosaic"
+  "*Command to run to start Mosaic")
+
 (defvar kom-confirm-multiple-recipients t
   "*Non-nil means ask the user for confirmation about recipients.
 When the user writes a comment to a text with more than one recipient
@@ -196,6 +221,7 @@ he gets a y-or-n-p question for all recipients.")
   kom-who-buffer-size-when-displaying
   kom-write-texts-in-window
   kom-quit-hook
+  kom-permanent-filter-list
   lyskom-fetch-map-nos
   lyskom-new-text-hook
   lyskom-prefetch-conf-tresh 
@@ -324,6 +350,8 @@ different packets.")
 (defvar lyskom-server-info nil
   "Info about the server")
 
+(defvar lyskom-server-name ""
+  "The name of the server")
 
 (defvar lyskom-conf-cache nil
   "Cache of conference statuses.")
@@ -484,6 +512,15 @@ This is used by the command kom-busy-wait.")
 (defvar kom-quit-hook nil
   "Hook to run when the LysKOM session is correctly ended.")
 
+(defvar kom-permanent-filter-list nil
+  "*List of patterns to filter permanently")
+
+(defvar kom-session-filter-list nil
+  "List of patterns to filter during this session")
+
+(defvar lyskom-filter-list nil
+  "List of patterns that are filtered.")
+
 (defvar lyskom-new-text-hook nil
   "*Hook to run when a new text is created.
 This hook is run after the prompt is removed if it shall be changed but before
@@ -539,6 +576,12 @@ unread texts in list-unread.")
 
 (defvar lyskom-is-administrator nil
   "This variable is t if the user is in administrator mode and nil otherwise.")
+
+(defvar lyskom-emacs19-p nil
+  "This variable is t if LysKOM is running in Emacs 19")
+
+(defvar lyskom-last-personal-message-sender ""
+  "Name of sender of last personal message received")
 
 
 ;;;; lyskom-tell-phrases-validation-keyword-list

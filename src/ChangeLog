@@ -1,3 +1,20 @@
+Wed Mar  1 18:42:05 1995  David Byers  <byers@lysator.liu.se>
+
+	*  Fler {ndringar gjorda.
+	   view-text.el: fler argument till lyskom-view-text
+	   lyskom-rest.el: konvertering av nya stränglistor till swascii
+	   vars.el.in: nya variabler
+	   startup.el: spara servernamnet i en variabel
+	   flags.el: ny funktion f|r att spara user-arean fr}n en funktion
+	   filter.el: ny fil
+	   filter-edit.el: ny fil
+	   Makefile: ta med ignore-edit och ignore
+	   swedish-strings.el: nya str{ngar och keymappar
+	   english-strings.el: samma
+	   commands2.el: defaultargument till s{nda meddelande
+                         {ndringar i lyskom-view-next-text
+           services.el: multiple-blocking-do
+
 Thu Feb 23 21:24:25 1995  Linus Tolke Y  <linus@lysator.liu.se>
 
 	* Flera {ndringar gjorda med f|ljande m}l (jag borde ha checkat in
