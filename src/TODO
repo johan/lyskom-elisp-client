@@ -1,6 +1,7 @@
 Att göra i elisp-klienten
 =========================
 
+
 -------- Buggar
 
 När man har utplånat sig själv, och tryckt C-g vid loginprompten som
@@ -62,7 +63,7 @@ parallella prefetcher på samma möte.
     Det är knepigt att avmarkera raderade texter, eftersom man inte
     får se textnumret.
     
-    lyskom-read-session-no hittar inte osynliga sessioner.
+lyskom-read-session-no hittar inte osynliga sessioner. [FIXAT?]
 
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
@@ -87,17 +88,11 @@ fixat det.
 
     Fotnoter som visas på en gång filtreras inte. [verkar fixat]
 
-    lyskom-add-membership gör membership-listan sorterad, vilket inte
-    prefetch-koden är gjord för. Alltså borde det kunna bli problem
-    att gå med i möten om man ger dem fel prioritet.
-
     När jag ska läsa en kommentar till ett brev i min brevlåda så blir
     prompten "Läsa nästa brev" i stället för "Läsa nästa
     kommentar". Kommentaren ligger inte i brevlådan. (LÅGPRIORITET)
 
 -------- Allmänna förbättringar
-
-    Modifiera interna datastrukturer vid utträd.
 
     Strunta i hemliga texter vid åar.
 
@@ -106,8 +101,6 @@ fixat det.
 
     Sortera vilkaslistan efter t.ex. idletid.
     
-    Fixa klart z-initiate-get-map. (BEHÖVS INTE)
-
     När man skickar in en kommentar borde klienten kolla att inga nya
     kommentarer till texten har skrivits under tiden.
 
@@ -128,8 +121,9 @@ fixat det.
     Visa fotnoter på ett bättre sätt.
 
     Presentationer ska ha samma mottagare som tidigare
-    presentationer. Kommandot kom-review-comments visar fotnoter sist,
-    inte först.
+    presentationer.
+
+Kommandot kom-review-comments visar fotnoter sist, inte först.
 
     Det skulle vara bra om skönsvärde för att skriva fotnot vore den
     senaste text man själv skrev, inte den senaste man läste.
@@ -141,7 +135,15 @@ fixat det.
 
 -------- Fixade saker
 
-    Endast gör fel ibland. [FIXAT]
+Fixa klart z-initiate-get-map. [BEHÖVS INTE]
+
+Modifiera interna datastrukturer vid utträd. [FIXAT]
+
+lyskom-add-membership gör membership-listan sorterad, vilket inte
+prefetch-koden är gjord för. Alltså borde det kunna bli problem att gå
+med i möten om man ger dem fel prioritet. [FIXAT]
+
+Endast gör fel ibland. [FIXAT]
 
     Jag har satt kom-show-footnotes-immediately till nil. Det verkar
     som man inte får läsa fotnötter först då, t ex fick jag läsa
