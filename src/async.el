@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.37 2001-01-03 22:02:45 qha Exp $
+;;;;; $Id: async.el,v 44.38 2001-04-23 21:39:40 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.37 2001-01-03 22:02:45 qha Exp $\n"))
+	      "$Id: async.el,v 44.38 2001-04-23 21:39:40 joel Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -491,21 +491,15 @@ WHEN, if given, is the time when the message arrived. It must be a lyskom
 time structure.
 Non-nil NOBEEP means don't beep."
   (let ((lyskom-last-text-format-flags nil)
-        (now (lyskom-client-date)))
-    (when (null when) (setq when (lyskom-client-date)))
+        (now (lyskom-current-client-time)))
+    (when (null when) (setq when (lyskom-current-client-time)))
     (if (or kom-show-personal-message-date
             (not (eq (time->mday when) (time->mday now)))
             (not (eq (time->mon when) (time->mon now)))
             (not (eq (time->year when) (time->year now))))
-        (setq when (lyskom-format 'time-yyyy-mm-dd-hh-mm
-                                  (+ (time->year when) 1900)
-                                  (time->mon when)
-                                  (time->mday when)
-                                  (time->hour when)
-                                  (time->min when)))
-      (setq when (lyskom-format 'time-hh-mm
-                                (time->hour when)
-                                (time->min when))))
+        (setq when (let ((kom-print-relative-dates nil))
+                     (lyskom-format-time 'date-and-time when)))
+      (setq when (lyskom-format-time 'time when)))
 
     (setq nobeep (or nobeep (and kom-ansaphone-on
                                  kom-silent-ansaphone)))

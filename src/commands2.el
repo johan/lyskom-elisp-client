@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.90 2001-04-01 13:18:33 joel Exp $
+;;;;; $Id: commands2.el,v 44.91 2001-04-23 21:39:42 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.90 2001-04-01 13:18:33 joel Exp $\n"))
+	      "$Id: commands2.el,v 44.91 2001-04-23 21:39:42 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -127,11 +127,12 @@ MAP may be nil if there are no new texts."
     (goto-char (point-max))
     (let ((lyskom-executing-command 'kom-membership)
           (lyskom-current-command 'kom-membership)
-          (inhibit-read-only t))
+          (inhibit-read-only t)
+          (kom-print-seconds-in-time-strings nil))
       (lyskom-format-insert 'memberships-line
-                            (lyskom-return-date-and-time
-                             (membership->last-time-read
-                              membership))
+                            (lyskom-format-time 'date-and-time
+                                                (membership->last-time-read
+                                                 membership))
                             (membership->priority membership)
                             (cond
                              ((null map) 0)
@@ -159,7 +160,8 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((conf-no
 	 (or conf-no
 	     (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-				  '(all) nil nil t))))
+				  '(all) nil nil t)))
+        (kom-print-seconds-in-time-strings nil))
     (cache-del-conf-stat conf-no)
     (cache-del-uconf-stat conf-no)
     (blocking-do-multiple ((conf-stat (get-conf-stat conf-no))
@@ -200,7 +202,8 @@ otherwise: the conference is read with lyskom-completing-read."
                                     "\n"
                                   "")))
         (lyskom-format-insert 'created-at
-                              (lyskom-return-date-and-time
+                              (lyskom-format-time
+                               'date-and-time
                                (conf-stat->creation-time conf-stat)))
         (lyskom-format-insert 'members
                               (conf-stat->no-of-members conf-stat))
@@ -224,7 +227,8 @@ otherwise: the conference is read with lyskom-completing-read."
                               (1- (+ (conf-stat->no-of-texts conf-stat)
                                      (conf-stat->first-local-no conf-stat))))
         (lyskom-format-insert 'last-text-time
-                              (lyskom-return-date-and-time
+                              (lyskom-format-time
+                               'date-and-time
                                (conf-stat->last-written conf-stat)))
         (lyskom-format-insert 'no-of-motd
                               (conf-stat->msg-of-day conf-stat))
@@ -297,7 +301,8 @@ otherwise: the conference is read with lyskom-completing-read."
                              (lyskom-insert-string 'secret-membership)
                            (lyskom-insert 
                             (format "%17s"
-                                    (lyskom-return-date-and-time
+                                    (lyskom-format-time
+                                     'date-and-time
                                      (membership->last-time-read membership))))
                            (let ((unread (- (+ (conf-stat->first-local-no
                                                 conf-stat)
@@ -318,7 +323,8 @@ otherwise: the conference is read with lyskom-completing-read."
                                         (not (eq (member->pers-no member)
                                                  (member->created-by member))))
                                (lyskom-format-insert 'conf-membership-line-2
-                                                     (lyskom-return-date-and-time
+                                                     (lyskom-format-time
+                                                      'date-and-time
                                                       (member->created-at member))
                                                      (member->created-by member)))
                              )))))
@@ -345,6 +351,7 @@ otherwise: the conference is read with lyskom-completing-read."
          (or pers-no
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
                                   '(pers) nil "" t)))
+        (kom-print-seconds-in-time-strings nil)
 	conf-stat
 	pers-stat)
     (cache-del-conf-stat pers-no)
@@ -360,7 +367,8 @@ otherwise: the conference is read with lyskom-completing-read."
 			    conf-stat
 			    conf-stat)
       (lyskom-format-insert 'created-time
-			    (lyskom-return-date-and-time
+			    (lyskom-format-time
+                             'date-and-time
 			     (conf-stat->creation-time conf-stat)))
 
       (lyskom-format-insert 'created-confs
@@ -385,7 +393,8 @@ otherwise: the conference is read with lyskom-completing-read."
 				(mod (floor time 60) 60)
 				(round (mod time 60)))))
       (lyskom-format-insert 'last-log-in
-			    (lyskom-return-date-and-time
+			    (lyskom-format-time
+                             'date-and-time
 			     (pers-stat->last-login pers-stat)))
       (lyskom-format-insert 'user-name
 			    (pers-stat->username pers-stat))
@@ -395,7 +404,8 @@ otherwise: the conference is read with lyskom-completing-read."
           (lyskom-format-insert 'marked-texts
 				(pers-stat->no-of-marks pers-stat)))
       (lyskom-format-insert 'time-for-last-letter
-			    (lyskom-return-date-and-time
+			    (lyskom-format-time
+                             'date-and-time
 			     (conf-stat->last-written conf-stat)))
 
       (let ((superconf (conf-stat->super-conf conf-stat)))
@@ -460,7 +470,8 @@ otherwise: the conference is read with lyskom-completing-read."
 		   (lyskom-insert-string 'secret-membership)
 		 (lyskom-insert 
 		  (format "%17s"
-			  (lyskom-return-date-and-time
+			  (lyskom-format-time
+                           'date-and-time
 			   (membership->last-time-read membership))))
 		 (let ((unread (- (+ (conf-stat->first-local-no
 				      member-conf-stat)
@@ -485,7 +496,8 @@ otherwise: the conference is read with lyskom-completing-read."
                               (not (eq (conf-stat->conf-no conf-stat)
                                        (membership->created-by membership))))
                      (lyskom-format-insert 'pers-membership-line-2
-                                           (lyskom-return-date-and-time
+                                           (lyskom-format-time
+                                            'date-and-time
                                             (membership->created-at membership))
                                            (membership->created-by membership)))
 
@@ -947,7 +959,7 @@ on one line."
   "List a summary of the texts in TEXTS.
 The summary contains the date, number of lines, author and subject of the text
 on one line."
-  (let ((time (blocking-do 'get-time))
+  (let ((time (lyskom-current-server-time))
 	(author-width (/ (- (lyskom-window-width) 22) 3)))
     
     ;; Start fetching all text-stats and text to list them.
@@ -996,7 +1008,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
                           (= mday (time->mday time)))
 		     (format "%02d:%02d" (time->hour time)
 			     		 (time->min time))
-		   (format "%02d-%02d" (1+ (time->mon time))
+		   (format "%02d-%02d" (time->mon time)
 			   	       (time->mday time))))
 	   ;; length for lines is: 4
 	   ;; We split the rest between author and subject
@@ -1035,7 +1047,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (let ((marks
          (sort (listify-vector (blocking-do 'get-marks))
                (lambda (a b) (< (mark->mark-type a) (mark->mark-type b)))))
-        (time (blocking-do 'get-time))
+        (time (lyskom-current-server-time))
         (author-width (max 0
                            (/ (- (lyskom-window-width)
                                  23
@@ -1097,7 +1109,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			  (= day (time->yday time)))
 		     (format "%02d:%02d" (time->hour time)
 			     		 (time->min time))
-		   (format "%02d-%02d" (1+ (time->mon time))
+		   (format "%02d-%02d" (time->mon time)
 			   	       (time->mday time))))
 	   ;; length for lines: 5
 	   ;; We split the rest between author and subject

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.57 2000-12-29 17:27:45 qha Exp $
+;;;;; $Id: startup.el,v 44.58 2001-04-23 21:39:49 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.57 2000-12-29 17:27:45 qha Exp $\n"))
+	      "$Id: startup.el,v 44.58 2001-04-23 21:39:49 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -127,12 +127,11 @@ See lyskom-mode for details."
 		     (set-buffer buffer)
                      (setq reused-buffer t)
 		     (goto-char (point-max))
-		     (let ((time (lyskom-current-time)))
-		       (lyskom-insert
-			(format (lyskom-get-string 'new-session-in-buffer)
-				(lyskom-format-time
-				 (apply 'lyskom-create-time time))))
-		       (setq name (buffer-name buffer))))
+                     (lyskom-insert
+                      (format (lyskom-get-string 'new-session-in-buffer)
+                              (lyskom-format-time
+                               'timeformat-day-yyyy-mm-dd-hh-mm-ss)))
+                     (setq name (buffer-name buffer)))
 		    (t
 		     (setq buffer (lyskom-generate-new-buffer host))
 		     (setq name (buffer-name buffer))))

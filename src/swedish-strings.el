@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.161 2001-04-21 18:07:19 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.162 2001-04-23 21:39:49 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.161 2001-04-21 18:07:19 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.162 2001-04-23 21:39:49 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -426,7 +426,6 @@ Gå ur mötet en gång till för gå ur helt.\n")
     (weekdays-short . ["sön" "mån" "tis" "ons" "tor" "fre" "lör" "sön"])
     (time-is . "Det är %#1s%#2s (enligt servern).")
     (time-is-week . "Det är %#1s%#2s, vecka %#3d (enligt servern).")
-    (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "\nJulafton! Har du öppnat dina julklappar än?")
     (xmasday . "Juldagen.\nDu har väl varit i julottan?")
@@ -829,17 +828,20 @@ Annat se \\[describe-mode] ---")
     (marked-by-you-and-others . "Markerad av dig (typ: %#2s) och %#1?d%[någon annan%]%[%#1d andra%].\n")
     (marked-by-several . "Markerad av %#1d person%#1?d%[%]%[er%].\n")
 
-    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+    (timeformat-day-yyyy-mm-dd-hh-mm-ss . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
+    (timeformat-yyyy-mm-dd-hh-mm-ss . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
+    (timeformat-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+    (timeformat-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
+    (timeformat-hh-mm-ss . "%02#4d:%02#5d:%02#6d")
+    (timeformat-hh-mm . "%02#4d:%02#5d")
 
-    ;; used by lyskom-print-time
-    (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
-    (time-hh-mm . "%02#1d:%02#2d")
-    (today-time-format-string . "%#6s %02#4d:%02#5d")
-    (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
+    (format-time-date-and-time . "%#1s %#2s")
+    (format-time-just-date . "%#1s")
+    (format-time-just-time . "%#2s")
     (today . "idag")
     (yesterday . "igår")
+
     (no-such-text-no . "Det finns inget sådant inlägg. (%#1:n)\n")
-    (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
     (text-created-at . "Skapad: %#1s\n")
     (text-imported-at . "Importerad: %#1s\n")
     (text-imported-at-by . "Importerad: %#1s av %#2P\n")
@@ -3258,7 +3260,15 @@ i servern. Annars sparas det i din .emacs.")
   för stor innan text i bufferten raderas. Variablen ska vara ett heltal,
   default är 4096.")
     (kom-dont-check-commented-authors-doc . "")
-
+    (kom-print-relative-dates-doc . "\
+  Tidsangivelsen för inlägg (och en del andra saker) kommer att bli
+  \"idag\" alternativt \"igår\" om denna inställning är påslagen och
+  inlägget skrevs idag alternativt igår. Om den är avslagen kommer ett
+  absolut datum alltid att visas.")
+    (kom-print-seconds-in-time-strings-doc . "\
+  Om denna inställning är påslagen kommer en del tidsangivelser (till
+  exempel för visade inlägg och sända meddelanden) att inkludera
+  sekunder.")
 
 
     ;;
@@ -3419,6 +3429,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-confirm-add-recipients-tag . "Fråga om kommentarer skall sändas till nya mottagare:")
     (kom-trim-buffer-minimum-tag . "Minsta storlek av LysKOM-bufferten som tas bort:")
     (kom-dont-check-commented-authors-tag . "Författare som inte kontrolleras:")
+    (kom-print-relative-dates-tag . "Visa relativa datumangivelser:")
+    (kom-print-seconds-in-time-strings-tag . "Inkludera sekunder i tidsangivelser:")
     )
 )
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.54 2001-04-21 17:53:50 joel Exp $
+;;;;; $Id: option-edit.el,v 44.55 2001-04-23 21:39:47 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.54 2001-04-21 17:53:50 joel Exp $\n"))
+	      "$Id: option-edit.el,v 44.55 2001-04-23 21:39:47 joel Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -64,6 +64,8 @@
     [kom-default-language]
     [kom-show-namedays]
     [kom-show-week-number]
+    [kom-print-relative-dates]
+    [kom-print-seconds-in-time-strings]
     "\n"
     [kom-idle-hide]
     [kom-show-where-and-what]
@@ -676,6 +678,8 @@ customize buffer but do not save them to the server."
     (kom-trim-buffer-minimum (number))
     (kom-dont-check-commented-authors (repeat (person nil 
                                                       :tag name) :indent 4))
+    (kom-print-relative-dates (toggle (yes no)))
+    (kom-print-seconds-in-time-strings (toggle (yes no)))
 ))
 
 (defvar lyskom-widget-functions 

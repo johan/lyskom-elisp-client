@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.132 2001-04-21 16:21:46 joel Exp $
+;;;;; $Id: vars.el.in,v 44.133 2001-04-23 21:39:51 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.132 2001-04-21 16:21:46 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.133 2001-04-23 21:39:51 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -902,8 +902,16 @@ executing. "
   "*If non-nil, ensure that buffers won't grow any larger than this."
   server)
 
-(def-kom-var lyskom-print-complex-dates t
-  "If non-nil, print today and yesterday using a special format.")
+(def-kom-var kom-print-relative-dates t
+  "*If non-nil, print today's and yesterday's date as \"today\" and
+\"yesterday\" (respectively) in some places instead of the default,
+numeric format."
+  server)
+
+(def-kom-var kom-print-seconds-in-time-strings nil
+  "*If non-nil, include seconds, minutes and hours when printing
+time in some places. If nil, only include minutes and hours."
+  server)
 
 (def-kom-var kom-show-namedays nil
   "*Non-nil means display namedays when running in Swedish.

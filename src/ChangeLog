@@ -1,3 +1,123 @@
+2001-04-23  Joel Rosdahl  <joel@rosdahl.net>
+
+	Clean-up of time handling and time formatting functions.
+	Essentially, lyskom-format-time, lyskom-client-date-string and
+	lyskom-return-date-and-time have been replaced with a single
+	function: lyskom-format-time.  Also, the internal time
+	representation now has years that are relative to year 0 and
+	months that start with 1 for January.
+
+	* view-text.el (lyskom-return-date-and-time): Removed.
+	(lyskom-print-date-and-time): Removed.
+
+	* utilities.el (lyskom-current-time): Removed.
+	(lyskom-client-date): Removed.
+	(lyskom-client-date-string): Removed.
+
+	* swedish-strings.el (lyskom-message): New timeformat-* strings.
+
+	* english-strings.el (lyskom-message): Ditto.
+
+	* vars.el.in (kom-print-seconds-in-time-strings): New variable.
+
+	* vars.el.in (kom-print-relative-dates): Renamed
+	lyskom-print-complex-dates to kom-print-relative-dates.
+
+	* lyskom-rest.el (lyskom-save-text): Ditto.
+
+	* edit-text.el (lyskom-edit-fcc-text): Inhibit
+	kom-print-relative-dates.
+
+	* commands2.el (lyskom-memb-received): Inhibit
+	kom-print-seconds-in-time-strings.
+	(kom-status-conf): Ditto.
+	(kom-status-person): Ditto.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-print-relative-dates and kom-print-seconds-in-time strings.
+	(lyskom-custom-variables): Ditto.
+
+	* swedish-strings.el (lyskom-custom-strings): Ditto.
+
+	* english-strings.el (lyskom-custom-strings): Ditto.
+
+	* komtypes.el (lyskom-create-time): Added docstring note.
+
+	* view-text.el (lyskom-calculate-day-diff): Use "new" time type.
+	(lyskom-mx-date-to-time): Ditto.
+
+	* parse.el (lyskom-parse-time): Ditto.
+
+	* mship-edit.el (lp--format-entry-expansion): Ditto.
+
+	* commands2.el (lyskom-print-summary-line): Ditto.
+	(lyskom-print-mark-summary-line): Ditto.
+
+	* commands1.el (kom-display-time): Ditto.
+	(lyskom-nameday): Ditto.
+
+	* commands1.el (lyskom-format-time): Removed.
+
+	* utilities.el (lyskom-format-time): New function.
+
+	* view-text.el (lyskom-view-text): Use new lyskom-format-time.
+	(lyskom-print-header-recpt): Ditto.
+	(lyskom-print-header-comm): Ditto.
+
+	* startup.el (lyskom): Ditto.
+
+	* remote-control.el (lyskom-remote-handler): Ditto.
+	(lyskom-remote-set-message): Ditto.
+	(lyskom-remote-autoreply): Ditto.
+	(lyskom-remote-list-messages-1): Ditto.
+	(lyskom-remote-erase-messages): Ditto.
+	(lyskom-remote-quit): Ditto.
+
+	* mship-edit.el (lp--format-entry): Ditto.
+	(lp--format-entry-expansion): Ditto.
+
+	* lyskom-rest.el (lyskom-sentinel): Ditto.
+
+	* edit-text.el (lyskom-edit-fcc-text): Ditto.
+
+	* commands2.el (lyskom-memb-received): Ditto.
+	(kom-status-conf): Ditto.
+	(kom-status-person): Ditto.
+
+	* commands1.el (lyskom-who-is-on-8): Ditto.
+	(lyskom-who-is-on-9): Ditto.
+	(lyskom-insert-deferred-session-info-since): Ditto.
+	(kom-list-clients): Ditto.
+	(lyskom-status-session-9): Ditto.
+
+	* commands1.el (kom-display-time): Ditto.
+
+	* aux-items.el (lyskom-aux-item-info): Ditto.
+	(lyskom-print-read-confirm): Ditto.
+
+	* async.el (lyskom-format-as-personal-message): Ditto.
+
+	* ansaphone.el (kom-toggle-auto-reply): Ditto.
+
+	* utilities.el (lyskom-current-server-time): New function.
+
+	* commands1.el (kom-display-time): Use lyskom-current-server-time.
+	(lyskom-nameday): Ditto.
+
+	* commands2.el (lyskom-list-summary): Ditto.
+	(kom-list-marks): Ditto.
+
+	* utilities.el (lyskom-current-client-time): New function.
+	(lyskom-client-date): Removed.
+
+	* ansaphone.el (lyskom-ansaphone-record-message): Use
+	lyskom-current-client-time.
+
+	* parse.el (lyskom-parse-member-old): Ditto.
+	(lyskom-parse-membership-old): Ditto.
+
+	* async.el (lyskom-format-as-personal-message): Ditto.
+
 2001-04-22  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands1.el (lyskom-get-least-used-mark-types-alist): New

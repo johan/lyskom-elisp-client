@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.131 2001-04-21 18:07:18 joel Exp $
+;;;;; $Id: english-strings.el,v 44.132 2001-04-23 21:39:44 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.131 2001-04-21 18:07:18 joel Exp $"))
+              "$Id: english-strings.el,v 44.132 2001-04-23 21:39:44 joel Exp $"))
 
 
 ;;; ================================================================
@@ -439,7 +439,6 @@ Leave the conference again to unsubscribe completely.\n")
     (weekdays-short . ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"])
     (time-is . "The time is %#1s%#2s (according to the server).")
     (time-is-week . "The time is %#1s%#2s, week %#3d (according to the server).")
-    (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "Christmas eve!\nYou didn't open any gifts early, did you?")
     (xmasday . "Christmas day.\nDid you get any nice gifts this year?")
@@ -830,17 +829,20 @@ Help: \\[describe-mode] ---")
     (marked-by-you-and-others . "Marked by you (type: %#2s) and %#1?d%[someone else%]%[%#1d others%].\n")
     (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
 
-    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+    (timeformat-day-yyyy-mm-dd-hh-mm-ss . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
+    (timeformat-yyyy-mm-dd-hh-mm-ss . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
+    (timeformat-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+    (timeformat-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
+    (timeformat-hh-mm-ss . "%02#4d:%02#5d:%02#6d")
+    (timeformat-hh-mm . "%02#4d:%02#5d")
 
-; used by lyskom-print-time
-    (time-y-m-d-h-m . "%4#1d %02#3d/%02#2d  %02#4d:%02#5d ")
-    (time-hh-mm . "%02#1d:%02#2d")
-    (today-time-format-string . "%#6s %02#4d:%02#5d")
-    (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
+    (format-time-date-and-time . "%#1s %#2s")
+    (format-time-just-date . "%#1s")
+    (format-time-just-time . "%#2s")
     (today . "today")
     (yesterday . "yesterday")
+
     (no-such-text-no . "The text doesn't exist. (%#1:n)\n")
-    (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
     (text-created-at . "Created: %#1s\n")
     (text-imported-at . "Imported: %#1s\n")
     (text-imported-at-by . "Imported: %#1s by %#2P\n")
@@ -3218,6 +3220,14 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   the default is 4096.")
 
     (kom-dont-check-commented-authors-doc . "")
+    (kom-print-relative-dates-doc . "\
+  The time fields of texts (and a couple of other things) will be
+  \"today\" or \"yesterday\" if this setting is on and the text was
+  written today or yesterday, respectively. If it is off, absolute
+  dates will always be shown.")
+    (kom-print-seconds-in-time-strings-doc . "\
+  If this setting is on, some time strings (for example the creation
+  time of texts and sent messages) will include seconds.")
 
 
     ;;
@@ -3378,6 +3388,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-confirm-add-recipients-tag . "Ask if comments should be sent to new recipients:")
     (kom-trim-buffer-minimum-tag . "How small parts of the LysKOM buffer are trimmed:")
     (kom-dont-check-commented-authors-tag . "Authors not to check:")
+    (kom-print-relative-dates-tag . "Show relative dates:")
+    (kom-print-seconds-in-time-strings-tag . "Include seconds in time strings:")
     )
 )
 
