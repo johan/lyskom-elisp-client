@@ -1,0 +1,80 @@
+
+                      Nyheter i lyskom.el 0.47.1
+                      ==========================
+
+    Version 0.47 av elispklienten innehåller ett stort antal bugfixar
+    och ny funktionalitet. Den finns att hämta på följande adress:
+
+      <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>
+      <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+    Filen heter lyskom-0.47.tar.gz, och en kopia av den text du läser
+    just nu finns under namnet NEWS-0.47.1 i tar-arkivet. Det finns
+    även en zip-fil för folk som sitter med system som inte förstår
+    tar-filer.
+
+    Det finns viktig information i NEWS-0.47 som också ingåt i
+    tar-arkivet och zip-filen.
+
+
+    Version 0.47.1 rättar ett antal fel och kommer med några smärre
+    förbättringar gentemot 0.47. Alla bör uppgradera eftersom en del
+    av felen var rätt allvarliga.
+
+
+
+* Features och förbättringar
+
+** När man skickar in inlägg anonymt och ens brevlåda är mottagare
+   till inlägget så får man en fråga om man vill ta bort sin brevlåda
+   från mottagarlistan (bug 722).
+
+** Radera inlägg visar en stor varning och frågar två gånger om man
+   verkligen vill radera inlägg, förutsatt att inlägget har
+   kommentarer (bug 679).
+
+** Status (för) person räknar olästa inlägg i möten med passiva
+   medlemskap separat (bug 746).
+
+** Status (för) person och Status (för) möte visar passiva medlemskap
+   i en blekare färg än aktiva medlemskap.
+
+** Man får en meny när man trycker "*" utan på tilläggsinformation
+   medan man skriver inlägg. (bug 750).
+
+
+** Bättre användargränssnitt för Lista (med) regexpar (bug 752).
+
+* Bugfixar
+
+** Man kan ge kommandon som arbetar på inlägg innan man har läst något
+   utan att det kommer upp ett felmeddelande (bug 733).
+
+** Flera kommandon, bland annat Fotnot till inlägg, som arbetade på
+   fel inlägg väljer nu rätt inlägg.
+
+** Man kan läsa HTML-inlägg i XEmacs även med alternativa
+   inläggsbakgrunder påslagna (bug 739).
+
+** Prompten tas bort om man gör Avsluta och inte använder ssh-proxy
+   (bug 745).
+
+** Funktion i Emacs utan multibyteteckenstöd men med MULE-funktioner
+   är återställd.
+
+** Fönstertiteln i Windows saknar en ful ruta (bug 738).
+
+** Bättre ledtexter när man öppnar URLer på Windows (bug 717).
+
+** Addera lapp på dörren har nu rätt ledtexter (bug 728, patch från
+   Per Starbäck).
+
+** Variabeln kom-bury-buffers används även när man byter LysKOM på
+   grund av att man har kom-server-priority-breaks satt (bug 717,
+   patch från Christer Ekholm).
+
+** Bytte namn från lyskom-old-farts-text-prompt-strategy till
+   kom-old-farts-text-prompt-strategy. Det gamla variabelnamnet
+   fungerar dock fortfarande.
+
+** Flera stavfel rättade.

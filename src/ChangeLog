@@ -1,4 +1,11 @@
+2002-09-17  David Byers  <david.byers@swipnet.se>
+
+	* Release av 0.47.1-BETA-1
+
 2002-09-16  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in (lyskom-old-farts-text-prompt-strategy): Added this
+	as alias for kom-old-farts-text-prompt-strategy.
 
 	Fix bug 722:
 	* edit-text.el (kom-edit-send-anonymous): Set is-anonymous
@@ -11,7 +18,7 @@
 
 2002-09-15  David Byers  <david.byers@swipnet.se>
 
-	Fix problem when calling kom-view before reading anything:
+	Fix bug 733:
 	* utilites.el (lyskom-read-text-no-prefix-arg): Moved cond branch
 	for prompting when there is no prefix argument to the first
 	branch so that errors occurring when looking for texts for a
