@@ -1,5 +1,14 @@
 2002-09-14  David Byers  <david.byers@swipnet.se>
 
+	Start fixing bug 750:
+	* lyskom-buttons.el (kom-button-press): Handle missing default
+	action by showing the keyboard menu.
+
+	* vars.el.in (lyskom-button-actions): Removed default action for
+	aux-edit-menu.
+	(lyskom-button-actions): Removed no-op default action for
+	add-recipient-or-xref.
+
 	Fix bug 752:
 	* commands1.el (kom-list-re): Use lyskom-a-or-b-or-c-p to choose
 	what to search in.
