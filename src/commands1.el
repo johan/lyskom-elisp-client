@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.95 2000-12-31 21:47:29 byers Exp $
+;;;;; $Id: commands1.el,v 44.96 2001-01-01 23:43:57 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.95 2000-12-31 21:47:29 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.96 2001-01-01 23:43:57 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1209,9 +1209,7 @@ Don't ask for confirmation."
   (let* ((info (car misc-list))
 	 (type (misc-info->type info)))
     (cond ((null misc-list) '())
-	  ((or (eq type 'RECPT)
-	       (eq type 'CC-RECPT)
-               (eq type 'BCC-RECPT))
+	  ((member type '(RECPT CC-RECPT BCC-RECPT))
 	   (append (list (intern (downcase (symbol-name type)))
 			 (misc-info->recipient-no info))
 		   (lyskom-get-recipients-from-misc-list
@@ -1601,9 +1599,9 @@ Those that you are not a member in will be marked with an asterisk."
     (lyskom-message (lyskom-format (if arg 'finding-created-pers-confs 'finding-created-confs)
                                    (elt counter 1)
                                    (elt counter 2)))
-    (when (and cs (or (eq (conf-stat->creator cs) pers-no)
-                      (eq (conf-stat->supervisor cs) pers-no)
-                      (eq (conf-stat->super-conf cs) pers-no)))
+    (when (and cs (member pers-no (list (conf-stat->creator cs)
+					(conf-stat->supervisor cs)
+					(conf-stat->super-conf cs))))
       (aset counter 3 (1+ (elt counter 3)))
       (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#5s %#2M%]\n"
                             (lyskom-default-button 'conf (conf-stat->conf-no cs))
@@ -3175,8 +3173,7 @@ footnotes) to it as read in the server."
 	misc
 	(text-stat->misc-info-list text-stat)
       (cond
-       ((and (or (eq (misc-info->type misc) 'COMM-IN)
-		 (eq (misc-info->type misc) 'FOOTN-IN))
+       ((and (member (misc-info->type misc) '(COMM-IN FOOTN-IN))
 	     (> (if (eq (misc-info->type misc)
 			'COMM-IN)
 		    (misc-info->comm-in misc)
