@@ -5,12 +5,16 @@ Att göra i elisp-klienten
 
 * SHOWSTOPPERS
 
+** 
+
 ** Man får illegal consp nil i processfiltret när man går med i eller
    ändrar prioritet på ett möte ibland. Sällan. Jag gick med i
    programmering i TokKOM med kom-handle-membership uppe. När jag
    tryckte + så blev det fel. Tror det är i callbacken. Det verkar
    vara timingberoende och cacheberoende på något vis. Jag har fått
    det på andra sätt också.
+
+   Händer ibland när man loggar in också.
 
 ** Inställningsbufferten är buggig. Om man har en inställning i
    servern och markerar att den skall sparas i .emacs så sparas
