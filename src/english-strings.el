@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.335 2004-10-17 14:24:13 byers Exp $
+;;;;; $Id: english-strings.el,v 44.336 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.335 2004-10-17 14:24:13 byers Exp $"))
+              "$Id: english-strings.el,v 44.336 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1442,6 +1442,8 @@ On since %#8s%#9s")
     (reformat-html . "HTML")
     (reformat-enriched . "enriched")
     (reformat-filled . "filled")
+    (reformat-image . "image")
+    (image-no-show . "< The image cannot be shown. >")
 
     (reformat-truncated . "truncated")
 
@@ -4106,6 +4108,9 @@ up menus.")
     (kom-format-html-authors-doc . "\
   This setting controls which authors' HTML messages that the client will
   attempt to format.")
+    (kom-format-show-images-doc . "\
+  This setting controls if texts marked as images are treated
+  specially or handled as normal texts.") 
     (kom-keyboard-menu-immediate-selection-doc . "\
   This setting controls whether keyboard shortcuts in text-based context
   menus require confirmation with return or not. With this on you have
@@ -4419,6 +4424,7 @@ up menus.")
     (kom-async-highlight-text-body-tag . "Color message backgrounds:")
     (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
     (kom-format-html-authors-tag . "Format HTML-messages per author:")
+    (kom-format-show-images-tag . "Show texts with images as images:")
     (kom-keyboard-menu-immediate-selection-tag . "Shortcuts in text menus require confirmation:")
     (kom-max-overlays-tag . "Maximum number of overlays:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.106 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: option-edit.el,v 44.107 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.106 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.107 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -220,6 +220,7 @@
     [kom-smileys]
     [kom-w3-simplify-body]
     [kom-format-html-authors]
+    [kom-format-show-images]
     "\n"
     [kom-max-overlays]
     [kom-highlight-first-line]
@@ -836,6 +837,7 @@ All key bindings:
                                                      (const (all-others t) :format "%t\n"))
                                                     :format "%[%v%]")
                                             (toggle (yes no) :tag format-html)))))
+    (kom-format-show-images (toggle (on off)))
     (kom-bury-buffers (toggle (on off)))
     (kom-ansaphone-replies (ansaphone))
     (kom-complete-numbers-before-names (toggle (on off)))

@@ -1,3 +1,21 @@
+2004-10-19  Pontus Freyhult  <pont@soua.net>
+
+	Handle texts with content-type image/something:
+	* english-strings.el, swedish-strings.el: 
+	(lyskom-message): Added reformat-image and image-no-show.
+	(lyskom-custom-strings): Added kom-format-show-images-doc and
+	kom-format-show-images-tag.
+
+	* lyskom-rest.el (lyskom-format-image): New function.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-format-show-images.
+	(lyskom-custom-variables): Dito.
+
+	* vars.el.in (kom-format-show-images): New variable.
+	(lyskom-format-special): Use lyskom-format-image for
+	texts with content-type starting with image.
+	
 2004-10-17  David Byers  <byers@lysator.liu.se>
 
 	* mship-edit.el (lp--mode): Added mode documentation.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.243 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.244 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.243 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.244 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2233,7 +2233,33 @@ in lyskom-messages."
 (defun lyskom-format-html-w3m (text text-stat)
   (lyskom-format-html text text-stat 'w3m 'lyskom-w3m-region))
 
-
+(defun lyskom-format-image (text text-stat)
+  (if kom-format-show-images
+      (let ((cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
+	    (content-type (and cti (aux-item->data (car cti))))
+	    (msg "")
+	    (imagetype (intern 
+			; FIXME: Can the media type contain more than letters and -?
+			(string-replace-match "^.*/\\([-a-zA-Z]*\\)\\(.\\|\n\\)*" 
+					      content-type "\\1")))
+	    (imagedata text))
+	(condition-case nil
+	    (lyskom-xemacs-or-gnu
+	     (set-extent-end-glyph ; XEmacs
+	      (make-extent (point) (point-max))
+	      (make-glyph
+	       (make-image-instance (vector imagetype :data imagedata))))
+	     (if (not (and (fboundp 'display-images-p) ; GNU Emacs
+			   (fboundp 'put-image) 
+			   (fboundp 'create-image)
+			   (display-images-p)
+			   (put-image (create-image imagedata imagetype t) 
+				      (point-max))))
+		 (setq msg (lyskom-get-string 'image-no-show))))
+		; Errors just marks it as a no show
+	  (error (setq msg (lyskom-get-string 'image-no-show)))) 
+	(lyskom-signal-reformatted-text 'reformat-image)
+	msg)))
 
 (defun lyskom-format-enriched (text text-stat)
   (if (not (fboundp 'format-decode-buffer))
