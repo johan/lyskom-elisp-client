@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.7 1991-10-04 12:03:26 linus Exp $
+;;;;; $Id: vars.el,v 35.8 1991-10-05 17:31:56 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.7 1991-10-04 12:03:26 linus Exp $\n"))
+	      "$Id: vars.el,v 35.8 1991-10-05 17:31:56 linus Exp $\n"))
 
 
 
@@ -86,9 +86,8 @@ used then no message is printed.")
   "*If t, lyskom prints information about what other people are doing in buffer.
 All printing is done just before the prompt.
 If nil no messages are printed.
-If presence then messages about people logging in, out and people changing name
-is printed.")
-
+If 'presence then messages about people logging in, out and people 
+changing name is printed.")
 
 (defvar kom-show-where-and-what t
   "*Non-nil means kom-who-is-on shows from which machine the user is running
