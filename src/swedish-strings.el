@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.129 2000-08-16 15:39:37 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.130 2000-08-17 17:26:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.129 2000-08-16 15:39:37 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.130 2000-08-17 17:26:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -313,16 +313,16 @@ du har läst klart allting. Kom tillbaks senare.
     (no-matching-anys . "Inga personer eller möten uppfyller uttrycket \"%#1s\".\n")
     (no-confs-exist . "Det finns inga möten i databasen.\n")
     (no-pers-confs-exist . "Det finns inga möten eller personer i databasen.\n")
-    (list-confs-created-by . "Lista organisatörsskap för: ")
-    (listing-confs-created-by . "Organisatörsskap för %#1P\n\
+    (list-confs-created-by . "Lista ägda möten för: ")
+    (listing-confs-created-by . "Ägda möten för %#1P\n\
     S=Skapat, O=Organisatör, M=Brevlåda som supermöte; S=Slutet, H=Hemligt\n")
-    (list-pers-confs-created-by . "Lista organisatörsskap (med brevlådor) för: ")
+    (list-pers-confs-created-by . "Lista ägda möten (med brevlådor) för: ")
     (getting-all-confs . "Hämtar en lista av alla möten från servern...")
     (getting-all-pers-confs . "Hämtar en lista av alla personer och möten från servern...")
     (getting-all-confs-done . "Hämtar en lista av alla möten från servern...klart")
     (getting-all-pers-confs-done . "Hämtar en lista av alla personer och möten från servern...klart")
-    (finding-created-confs . "Söker organisatörsskap (%#1d av %#2d klart)")
-    (finding-created-pers-confs . "Söker organisatörsskap (med brevlådor) (%#1d av %#2d klart)")
+    (finding-created-confs . "Söker ägda möten (%#1d av %#2d klart)")
+    (finding-created-pers-confs . "Söker ägda möten (med brevlådor) (%#1d av %#2d klart)")
     (no-created-confs . "%#1P är inte skapare, organisatör eller supermöte för något möte.\n")
 
     (name-to-be-changed . "Ange det namn som skall ändras: ")
@@ -1219,9 +1219,9 @@ Text:
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
     (who-i-am-present . "%#1P är närvarande i %#2M\n")
-    (who-i-am-client . "Programmet heter lyskom.el, version %#1s.\n")
+    (who-i-am-client . "Programmet heter lyskom.el, version %#1s%#2?b%[ (MULE)%]%[%].\n")
     (who-i-am-server . "Detta är %#1s, version %#2s.\n")
-    (who-i-am-emacs . "Det körs under %#1s.\n")
+    (who-i-am-emacs . "Det körs under %#1s%#2?b%[ (MULE)%]%[%].\n")
 
     (no-such-session-r . "Det finns ingen sådan session. Personen kanske inte är inloggad.\n")
     (person-not-logged-in-r . "%#1P är inte inloggad.\n")
@@ -1539,7 +1539,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-go-to-conf	      . "Gå till möte")
     (kom-go-to-next-conf      . "Gå till nästa möte")
     (kom-jump		      . "Hoppa över alla kommentarer")
-    (kom-list-created-conferences . "Lista organisatörsskap")
+    (kom-list-created-conferences . "Lista ägda möten")
     (kom-list-conferences     . "Lista möten") 
     (kom-list-persons	      . "Lista personer")
     (kom-list-news            . "Lista nyheter")
@@ -2899,7 +2899,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-permissive-completion-doc . "\
   Om detta är påslaget så kommer TAB bara att fylla ut namn på inloggade
   personer när kommandot bara kan utföras på inloggade personer (till
-  exempel Status (för) session och Sända messelande.) Om det är avslaget
+  exempel Status (för) session och Sända meddelande.) Om det är avslaget
   kommer TAB att fylla ut även med namn på personer som inte är inloggade.")
 
 

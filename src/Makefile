@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.57 2000-08-16 18:02:16 kent Exp $
+# $Id: Makefile,v 44.58 2000-08-17 17:26:01 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.57 2000-08-16 18:02:16 kent Exp $
+# $Id: Makefile,v 44.58 2000-08-17 17:26:01 byers Exp $
 #
 
 
@@ -95,6 +95,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		menus.el slow.el \
 		elib-string.el \
 		option-edit.el \
+		talkback.el \
 		lyskom-rest.el
 
 HEADER = 	defvar.el \
