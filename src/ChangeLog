@@ -1,3 +1,29 @@
+2005-01-09  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el (kom-move-text-tree): Handle missing text in the
+	tree.
+	(lyskom-move-recipient): Add leave-cc argument.
+
+	* lyskom-rest.el (lyskom-a-or-b-or-c-p): Display chosen option
+	when just pressing RET. Show default choice in bold. Compact
+	display a bit.
+
+	* commands1.el (kom-move-text-tree): Use lyskom-a-or-b-or-c-p to
+	ask about what to do. Support a null source (useful to just add a
+	recipient, not remove anything).
+
+	* NEWS-0.48: Updated to here.
+
+	* commands2.el (kom-list-sessions): Docstring fixes.
+
+	* vars.el.in (kom-default-server): No default server in default
+	build.
+	Variois docstring fixes.
+
+	* mship-edit.el (lp--show-hide-read-memberships): Toggle filter.
+	(lp--show-hide-passive-memberships): Ditto.
+	(lp--mode): Fixed key binding references in docstring.
+
 2005-01-08  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Documentation updates in preparation for generating
@@ -39,7 +65,7 @@
 
 	* swedish-strings.el (lyskom-sv-mode-map): Added keybindings for
 	unaccelerated < and >.
-	
+
 	* english-strings.el (lyskom-en-mode-map): Ditto.
 
 2004-12-06  Pontus Freyhult  <pont@soua.net>
@@ -85,12 +111,12 @@
 
 2004-11-12  Pontus Freyhult  <pont@soua.net>
 
-        * commands2.el (kom-list-sessions): Use session-list-no-unread-in
+	* commands2.el (kom-list-sessions): Use session-list-no-unread-in
 	if there are no texts in the session.
 
 	* english-strings.el, swedish-strings.el (local):
 	Added session-list-no-unread-in.
-	
+
 	* commands2.el (kom-modeline-select-unread-kom): Use 
 	lyskom-session-nickname.
 	(kom-status-server): Dito.
@@ -98,10 +124,10 @@
 	* lyskom-rest.el (lyskom-session-nickname): Take additional argument
 	if the nick name is to be put in the mode line.
 	(lyskom-mode-name-from-host): Pass mode-line arg.
-	
+
 	* async.el (lyskom-show-logged-in-person): Use lyskom-session-nickname.
 	(lyskom-show-logged-out-person): Dito.
-	
+
 	* utilities.el (lyskom-get-server-alias): Deleted (almost) unused
 	function.
 	(lyskom-nag-about-presentation): Use lyskom-session-nickname instead.
@@ -113,7 +139,7 @@
 	* commands2.el (kom-list-sessions): Sort first on priority, 
 	then on session name. Corrected bad usage of sort.
 	Handle nil entries in lyskom-list-news result.
-	
+
 	* swedish-strings.el (local): Corrected singular form for 
 	unread letters in session-list-unreads-in-conf.
 
@@ -163,9 +189,10 @@
 	(lyskom-default-password): Dito.
 	(kom-default-user-name): Dito.
 	(lyskom-default-user-name): Dito.
+
 	* startup.el (lyskom): Use kom-default-server, kom-default-user-name
 	and kom-default-password.
-	
+
 	* commands1.el (kom-view-commented-text): Cleanup (progn removal),
 	inhibit immediate display of footnotes.
 
@@ -176,16 +203,16 @@
 	(lp--postpone): New function.
 	(lp--set-unread): New function.
 	(lp--toggle-message-flag, lp--toggle-invitiation,
-	 lp--toggle-secret, lp--toggle-passive): Use
+	lp--toggle-secret, lp--toggle-passive): Use
 	lp--selected-or-current-arg and lp--toggle-flag.
 
-	* english-strings.el, swedish-strings.el (local):
+	* english-strings.el, swedish-strings.el (lyskom-messages):
 	Added lp--only-last and lp-skipping-missing-meeting. 
 	Changed lp-footer-help.
-	(global): Added lp--set-unread.
+	(lyskom-menu): Added lp--set-unread.
 	(lyskom-prioritize-mode-map): Added keyboard mappings
 	for lp--postpone and lp--set-unread.
-	
+
 2004-10-29  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--entry-set-background): Use 
@@ -198,7 +225,7 @@
 	(color-specifier-p): New alias.
 	(face-background): Reverted previous change, alias again.
 	(face-foreground): Reverted previous change, alias again.
-	
+
 2004-10-29  Pontus Freyhult  <pont@pontus.its.uu.se>
 
 	* lyskom-rest.el (lyskom-format-image): Disabled run time 
@@ -210,7 +237,7 @@
 
 2004-10-29  Pontus Freyhult  <pont@soua.net>
 
-	* lyskom-rest.el (lyskom-format-image): Bugix: Used let instead
+	* lyskom-rest.el (lyskom-format-image): Bugfix: Used let instead
 	of let*.
 
 2004-10-28  David Byers  <byers@lysator.liu.se>
@@ -263,7 +290,7 @@
 	kom-show-imported-message-id.
 	(lyskom-custom-variables): Dito.	
 
-	*vars.el.in (kom-show-imported-message-id): New variable.
+	* vars.el.in (kom-show-imported-message-id): New variable.
 	(kom-show-imported-external-recipients): Changed documentation
 	(added kom-show-imported-message-id as "see also").
 
@@ -279,7 +306,7 @@
 	* startup.el (kom-start-anew): Handle the case of 
 	lyskom-default-user-name being an integer.
 
-	*vars.el.in (kom-relogin-behaviour): New variable.
+	* vars.el.in (kom-relogin-behaviour): New variable.
 	(lyskom-default-user-name): Changed documentation.
 
 	* english-strings.el, swedish-strings.el: 

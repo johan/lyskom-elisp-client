@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.309 2005-01-09 01:16:03 byers Exp $
+;;;;; $Id: vars.el.in,v 44.310 2005-01-09 22:09:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.309 2005-01-09 01:16:03 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.310 2005-01-09 22:09:01 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -356,6 +356,10 @@ the priority among links that match the same text is undefined."
                                      lyskom-default-conference-current))
                          (save last-added-rcpt))
                         (who-to-move-to-q
+                         (default . ((lyskom-default-conference-saved last-added-rcpt)
+                                     lyskom-default-conference-current))
+                         (save last-added-rcpt))
+                        (who-to-add-q
                          (default . ((lyskom-default-conference-saved last-added-rcpt)
                                      lyskom-default-conference-current))
                          (save last-added-rcpt)))
@@ -1838,7 +1842,7 @@ reattach. When set to `nil', the client will not attempt to reattach."
 
 When this is set to `t', the client will store the password for the 
 current session as a buffert local variable. This can be used in
-conjunction with kom-relogin-behaviour to reattach dead sessions
+conjunction with `kom-relogin-behaviour' to reattach dead sessions
 automatically."
   server)
 
@@ -4400,7 +4404,7 @@ Values other than `t' and `nil' are reserved for future use."
   server)
 
 (def-kom-var kom-format-show-images t 
-  "**Control in-line display of images.
+  "**Controls in-line display of images.
 
 When set to `t', attempt to display images in-line. When set to `nil', 
 images are handled as normal texts.
@@ -4646,8 +4650,11 @@ the value of  kom-tell-phrases for fun.")
 ;;;          Externally defined variables (environment)
 
 
-(def-kom-var kom-default-server "kom.lysator.liu.se"
+(def-kom-var kom-default-server nil
   "**Default LysKOM server.
+
+Use this server to log in to LysKOM. Can be overridden by the
+`KOMSERVER' environment variable.
 
 The value of this variable must be a string or `nil'."
   local)
@@ -4664,7 +4671,9 @@ The value of this variable must be a string, indicating the
 default user name, an integer indicating the conference number or 
 `nil' to indicate no default. If set to an integer, log in as the
 user with that conference number. If set to a string, log in as the 
-user with that name."
+user with that name.
+
+Overrides the environment variable `KOMNAME'."
   local)
 
 (def-kom-var lyskom-default-user-name nil
@@ -4675,8 +4684,8 @@ user with that name."
 (def-kom-var kom-default-password nil
   "**Default LysKOM password.
 
-The value of this variable must be a string or `nil'. There may be an
-environment variable for this, but it shouldn't be used if there is."
+The value of this variable must be a string or `nil'. Overrides the 
+environment variable `KOMPASSWORD' \(which should never be used)."
   local)
 
 (def-kom-var lyskom-default-password nil

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.214 2004-11-12 16:17:17 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands2.el,v 44.215 2005-01-09 22:09:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.214 2004-11-12 16:17:17 _cvs_pont_lyskomelisp Exp $\n"))
+              "$Id: commands2.el,v 44.215 2005-01-09 22:09:00 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -749,7 +749,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 
 
 (def-kom-command kom-list-sessions ()
-  "List current LysKOM sessions and unread messages for each sessions."
+  "List current LysKOM sessions and unread messages for each session.
+
+See `kom-session-nickname' for a setting that affects display."
   (interactive)
   (let ((total-letters 0)
 	(total-texts 0)

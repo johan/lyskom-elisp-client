@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.52 2005-01-09 01:16:02 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.53 2005-01-09 22:09:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.52 2005-01-09 01:16:02 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.53 2005-01-09 22:09:00 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -1699,21 +1699,21 @@ See `kom-prioritize-in-window'."
 (defun lp--mode ()
   "\\<lyskom-prioritize-mode-map>Mode for prioritizing conferences in LysKOM.
 
-\[lp--move-up] moves a single conference up in the list.
-\[lp--mode-down] moves a single conference down in the list.
+\\[lp--move-up] moves a single conference up in the list.
+\\[lp--mode-down] moves a single conference down in the list.
 
 SPC toggles the selection of a single membership.
-\[lp--select-region] selects all conferences between point and mark.
-\[lp--select-priority] selects all conferences with a certain priority.
-\[lp--deselect-region] clears the selection.
+\\[lp--select-region] selects all conferences between point and mark.
+\\[lp--select-priority] selects all conferences with a certain priority.
+\\[lp--deselect-region] clears the selection.
 
-\[lp--yank] moves all selected conferences to where point is in the list.
-\[lp--set-priority] changes the priority of all selected conferences.
+\\[lp--yank] moves all selected conferences to where point is in the list.
+\\[lp--set-priority] changes the priority of all selected conferences.
 
-\[lp--toggle-passive] makes passive memberships active and vice versa.
-\[lp--toggle-invitation] toggles the invitation flag of a membership.
-\[lp--toggle-secret] makes secret memberships non-secret and vice versa.
-\[lp--toggle-message-flag] toggles reception of group messages for that conference.
+\\[lp--toggle-passive] makes passive memberships active and vice versa.
+\\[lp--toggle-invitation] toggles the invitation flag of a membership.
+\\[lp--toggle-secret] makes secret memberships non-secret and vice versa.
+\\[lp--toggle-message-flag] toggles reception of group messages for that conference.
 
 Changes take effect immediately.
 
@@ -1880,22 +1880,21 @@ With prefix arg, removes any such filter that has been applied."
 
 
 (defun lp--show-hide-read-memberships (arg)
-  "Hide memberships that contain only read texts.
-With prefix argument, remove any such filters."
+  "Toggle display of memberships with no unread texts."
   (interactive "P")
-  (if arg
+
+  (if (lp--entry-filter-active 'lp--entry-filter-read)
       (lp--del-entry-filter 'lp--entry-filter-read)
-  (unless (lp--entry-filter-active 'lp--entry-filter-read)
-    (lp--add-entry-filter 'lp--entry-filter-read))))
+    (lp--add-entry-filter 'lp--entry-filter-read)))
+
 
 (defun lp--show-hide-passive-memberships (arg)
-  "Hide passive memberships.
-With prefix argument, remove any such filters."
+  "Toggle display of passive memberships."
   (interactive "P")
-  (if arg
+
+  (if (lp--entry-filter-active 'lp--entry-filter-passive)
       (lp--del-entry-filter 'lp--entry-filter-passive)
-    (unless (lp--entry-filter-active 'lp--entry-filter-passive)
-      (lp--add-entry-filter 'lp--entry-filter-passive))))
+    (lp--add-entry-filter 'lp--entry-filter-passive)))
 
 
 
