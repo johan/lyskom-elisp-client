@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.9 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: mime.el,v 44.10 2004-02-29 15:12:49 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.9 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: mime.el,v 44.10 2004-02-29 15:12:49 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -118,10 +118,25 @@
       data)))
 
 (defun lyskom-mime-decode-content-type (data)
-  (string-match "^\\([^;]*\\)\\(;.*charset=\\([^;]*\\)\\)?" data)
-  (cons (match-string 1 data)
-        (if (match-string 3 data)
-            (intern (match-string 3 data))
-          nil)))
+  (let ((content-type nil)
+        (params nil)
+        (start 0))
+
+  (when (string-match "^[^;]*" data)
+    (setq content-type (match-string 0 data))
+    (setq start (match-end 0)))
+
+  (while (string-match ";\\([^=;]*\\)\\(=\\([^;]*\\)\\)" data start)
+    (let ((param-name (intern (match-string 1 data)))
+          (param-value (match-string 3 data)))
+      (when (and (memq param-name '(charset format))
+                 param-value)
+        (setq param-value (intern param-value)))
+
+      (setq params (cons (cons param-name (or param-value t)) params)))
+    (setq start (match-end 0)))
+
+  (cons content-type params)))
+
 
 (provide 'lyskom-mime)

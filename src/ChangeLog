@@ -1,5 +1,57 @@
+2004-02-29  David Byers  <byers@lysator.liu.se>
+
+	* macros.el (lyskom-mime-content-type-get): Moved here from
+	mime.el.
+	(lyskom-mime-content-type): Moved here from mime.el.
+
+	Fix bug 744 (I think):
+	* flags.el (lyskom-save-options): Save unknown variables too.
+	(lyskom-save-options): Encode variable names too. Despite them
+	being all ASCII, Emacs will sometimes think one is a multibyte
+	string, and then convert everything back to multibyte format,
+	which will break the user area. Refuse to save if any part of the
+	user area is a multibyte string.
+
+	Don't throw away contents of unknown variables:
+	* vars.el.in (lyskom-saved-unknown-variables): New variable.
+	(lyskom-settings-version): New variable.
+
+	* flags.el (kom-copy-options): Don't discard unknown variables.
+
+	* startup.el (kom-start-anew): Tell the user that unknown
+	variables may be due to changing client versions (if settings were
+	saved in a different version than we're running right now).
+
+	* flags.el (kom-save-options): Accept prefix argument to delete
+	unknown variables.
+
+	* async.el (lyskom-async-new-user-area): Tell the user when
+	re-reading settings from the server. Don't discard unknown
+	variables.
+
+	* flags.el (lyskom-read-options-eval): The list of ignored
+	variables is an alist of name and value.
+
+	* startup.el (kom-start-anew): lyskom-read-flags now returns a
+	alist for ignored variables. Don't discard unknown variables.
+
+2004-02-28  David Byers  <byers@lysator.liu.se>
+
+	Prepare for dealing with format=flowed texts:
+	* komtypes.el (text->decoded-text-mass): Use new content-type
+	functions and format.
+
+	* edit-text.el (lyskom-edit-send): Use new content-type functions
+	and format.
+
+	* mime.el (lyskom-mime-decode-content-type): Rewrote to handle
+	arbitrary parameters to the content type.
+	(lyskom-mime-content-type): New function.
+	(lyskom-mime-content-type-get): New function.
+
 2004-02-27  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1281 and related issues:
 	* commands1.el (kom-write-comment): Use new def-kom-command
 	features.
 	(kom-private-answer): Ditto.

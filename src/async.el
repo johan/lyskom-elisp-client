@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.61 2004-02-12 21:07:51 byers Exp $
+;;;;; $Id: async.el,v 44.62 2004-02-29 15:12:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.61 2004-02-12 21:07:51 byers Exp $\n"))
+	      "$Id: async.el,v 44.62 2004-02-29 15:12:48 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -334,7 +334,12 @@ this function shall be with current-buffer the BUFFER."
   (when (and need-reread
              new-user-area
              (not (zerop new-user-area)))
-    (initiate-get-text 'follow 'lyskom-read-options-eval new-user-area)))))
+    (initiate-get-text 'follow (lambda (text)
+                                 (when text
+                                   (lyskom-format-insert-before-prompt 'reading-settings-from-server)
+                                   (setq lyskom-saved-unknown-variables
+                                    (lyskom-read-options-eval text))))
+                       new-user-area)))))
 
 
 (defun lyskom-async-forced-leave-conf (conf-stat conf-no)

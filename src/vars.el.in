@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.286 2004-02-23 19:37:40 byers Exp $
+;;;;; $Id: vars.el.in,v 44.287 2004-02-29 15:12:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.286 2004-02-23 19:37:40 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.287 2004-02-29 15:12:50 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3385,6 +3385,10 @@ Users are encouraged to use their best sense of humor."
 (defconst lyskom-clientversion "@@CLIENTVERSION@@"
   "Version of the LysKOM elisp client.")
 
+(def-kom-var lyskom-settings-version lyskom-clientversion
+  "Version of saved settings."
+  server)
+
 (defvar lyskom-max-int 8388607
   "The largest int Emacs, and thus this LysKOM client, can handle.")
 
@@ -3538,6 +3542,11 @@ This is not buffer-local.")
 (def-kom-var lyskom-other-clients-user-areas nil
   "Contains the parts of the user areas of unknown clients.
 The area is a pair: name . info (both strings)."
+  local)
+
+(def-kom-var lyskom-saved-unknown-variables nil
+  "Variables read from the user area that this client version
+knows nothing about and that will be saved back unaltered."
   local)
 
 (def-kom-var lyskom-pending-calls nil
