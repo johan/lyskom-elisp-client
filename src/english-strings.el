@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.103 2000-08-21 15:19:48 byers Exp $
+;;;;; $Id: english-strings.el,v 44.104 2000-08-28 13:32:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.103 2000-08-21 15:19:48 byers Exp $"))
+              "$Id: english-strings.el,v 44.104 2000-08-28 13:32:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -311,6 +311,7 @@ and you have finished reading. Please come back later.
 ===============================================================================
 \n")
     (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
+    (what-to-change-faq-you . "Change FAQ for which conference: ")
     (who-to-put-motd-for . "Post notice on who/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
@@ -1298,6 +1299,7 @@ On since %#8s%#9s")
     (faq-in-text-aux . "FAQ in text:                 %10#1n")
     (conf-to-add-faq . "Which conference to you want to add a FAQ for? ")
     (text-to-add-as-faq . "Which text is the new FAQ? ")
+    (text-to-change-as-faq . "Which FAQ do you want to change? ")
     (adding-faq . "Adding text %#1n as a FAQ for %#2M...")
     (conf-to-del-faq . "Which conference do you want to remove a FAQ from? ")
     (text-to-del-as-faq . "Which text do you want to remove as FAQ? ")
@@ -1305,6 +1307,10 @@ On since %#8s%#9s")
     (conf-has-no-faq . "%#1M has no FAQ\n")
     (view-which-faq . "View FAQ for which conference? ")
     (review-faq-for-r . "View FAQ for %#1M.\n")
+    (changed-faq-for-conf-done . "FAQ for %#1M changed to text %#3n.\n")
+    (changed-faq-for-conf-failed . "Unable to change FAQ for %#1M to text %#3n.
+%#2?b%[Text %#2n is still the FAQ.
+%]%[%]%#4s")
     
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
@@ -1677,6 +1683,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-stop-keep-alive      . "Stop keeping connection alive")
 
     (kom-is-person-member-of-conference . "Check (if person is a) member (of conference)")
+    (kom-change-conf-faq      . "Change FAQ")
     ))
 
 (lyskom-language-var lyskom-language-codes en

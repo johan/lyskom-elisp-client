@@ -44,12 +44,16 @@
     You need an Emacs. The client appears to work with the following
     versions of Emacs:
 
-    * XEmacs version 21.1 and 21.2
+    * XEmacs version 20.4, 21.1 and 21.2.
     * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.5 and newer
+    * Gnu Emacs version 20.5 and newer [2]
 
     [1] You'll have to replace the included custom package, and if you 
         use Gnus, you may have to update that as well.
+
+    [2] It should be possible to run the client in Gnu Emacs 20.2 and
+        later, but you may experience some problems. Column alignment
+        is known to fail in version 20.2.
 
     You need to have a recent version of the custom package installed.
     The custom.el file that is bundled with Gnu Emacs 19.34 and older
@@ -60,7 +64,9 @@
     need. 
 
     Custom is not longer distributed as a separate package, but it may
-    still be available at <URL:http://www.dina.kvl.dk/~abraham/custom/>. 
+    be available at <URL:http://www.dina.kvl.dk/~abraham/custom/>. An
+    old version is available in the elisp-client ftp directory at
+    <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>.
 
     If you have a version of Gnus installed that uses the old custom
     package, it's time to upgrade. The latest version of Gnus is
@@ -77,9 +83,8 @@
 2.  What should I have
 
     LysKOM can use w3 for displaying HTML and calc for performing
-    calculations. You don't really need any of these packages, but
-    they're so useful in their own right that you might as well make
-    sure you have them.
+    calculations. Neither package is required, but since they are
+    useful in their own right you might as well install them anyway.
 
     At the time of writing this, the latest version of W3 is 4.0. It
     is available from <URL:http://www.cs.indiana.edu/elisp/w3/w3.html>
