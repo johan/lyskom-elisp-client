@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.38 1999-06-28 13:45:29 byers Exp $
+;;;;; $Id: commands2.el,v 44.39 1999-06-28 16:09:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.38 1999-06-28 13:45:29 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.39 1999-06-28 16:09:56 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2069,8 +2069,7 @@ is alive."
   "Add a FAQ to a conference"
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
                      (lyskom-read-number 'text-to-add-as-faq)))
-  (let ((text (blocking-do 'get-text-stat text-no))
-        (current-faqs nil))
+  (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)
       (lyskom-format-insert 'adding-faq text-no conf-no)
