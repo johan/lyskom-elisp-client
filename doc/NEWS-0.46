@@ -2,17 +2,25 @@
                        Nyheter i lyskom.el 0.46
                        ========================
 
-    Version 0.46-PRE-1 som är första publika release av elispklienten
-    sedan 1997 finns nu tillgänglig på följande URL. Betrakta detta
-    som en publik betarelease. Den verkar stabil men har säkert en del
-    allvarliga fel.
+    Version 0.46 som är den första publika releasen av elispklienten
+    sedan 1997 finns nu tillgänglig på följande URL.
 
        <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
-    Filen heter lyskom-0.46-PRE-1.tar.gz, och en kopia av den text du
+    Filen heter lyskom-0.46.tar.gz, och en kopia av den text du
     läser just nu finns under namnet NEWS-0.46 samt under namnet
     NEWS-0.46 i tar-arkivet.
 
+    Den här releasen är inte hårdtestad för stabilitet, men verkar
+    fungera bättre än alla tidigare versioner (även om det bergis
+    finns en och annan som tycker att 0.38.2 var bättre). 
+
+    Om du hittar ett fel i elispklienten och inte klarar av att rätta
+    den själv, använd M-x kom-bug-report för att rapportera den. 
+    Buggar blir omhändertagna i mån av tid, ork och lust. Färdiga
+    patchar blir inlagda mycket snabbare.
+
+    
 
 
                          ====================
@@ -26,19 +34,31 @@
     för multibytetecken påslaget. Detta är tvärt emot rekommendationen
     för 0.45. Klienten fungerar antagligen med multibyteteckenstödet
     avslaget, men du kan få smärre problem eftersom det finns buggar i
-    Emacs som syns när man inte har multibyteteckenstödet på.
+    Emacs som märks när man inte har multibyteteckenstödet på.
 
     Titta i dina inställningar (filen .emacs i din hemkatalog). Om du
     hittar "(standard-display-european 1)" eller något liknande
     (första ordet börjar med standard-display eller ettan är något
     annat) så skall du ta bort detta. Detta anrop har varit markerat
-    som föråldrat i flera års versioner av Emacs.
+    som föråldrat i flera år.
 
-    Om du använder Unix, se till att omgivningsvariabeln LC_CTYPE är
-    satt rätt. Oftast skall det vara något i stil med iso_8859_1.
+    Du behöver tala om för Emacs vilken typ av teckenuppsättning du
+    skall använda. För de flesta så betyder det ISO-8859-1. Se först
+    till att omgivningsvariabeln LC_CTYPE är satt rätt. Oftast skall
+    det vara något i stil med iso_8859_1. Det brukar räcka med att
+    sätta LC_CTYPE, men om du fortfarande har problem (svenska tecken
+    visas som frågetecken eller numeriska koder) så kan du ange
+    språkomgivning genom att använda set-language-environment,
+    antingen interaktivt med M-x eller genom att skriva
+    (set-language-environment 'latin-1) i .emacs.
 
-    Starta inte Emacs med flaggan --unibyte. Det kan ställa till
-    problem för dig på samma sätt som standard-display-european.
+    Om du inte har någon särskild anledning att slå av Emacs stöd för
+    multibytetecken så är det oftast bäst att låta bli. Se till att
+    omgivningsvariabeln EMACS_UNIBYTE inte är satt, att du inte
+    startar Emacs med flaggan --unibyte och att du inte anropar
+    standard-display-european (eller annan standard-display-funktion)
+    eller set-buffer-multibyte i din .emacs.
+
 
 
     Kompilering
@@ -49,14 +69,10 @@
     bug. It's a feature. Felmeddelandet man får om man inte kompilerar
     är kryptiskt.
 
-    Kompilera för den version av Emacs som du tänker använda. Om du
-    kompilerar med Gnu Emacs 19.34 så borde resultatet fungera i alla
-    versioner av Emacs sedan 19.34, men säker kan man aldrig vara, och
-    dessutom kommer klienten att gå långsammare än den egentligen
-    behöver.
-
-                            David Byers     <byers@lysator.liu.se>
-                            Johan Sundström   <jhs@lysator.liu.se>
+    Kompilera för den version av Emacs som du tänker använda. Det
+    finns kontroller som skall hindra att man försöker köra klienten i
+    en version av Emacs som inte är kompatibel med den man kompilerade
+    i.
 
 
 
@@ -64,7 +80,55 @@
 
 ** Nya kommandon
 
+*** Addera FAQ
+*** Addera fotnot
+*** Arkivera inlägg (till fil) [ersätter Spara text]
+*** Avbryt håll förbindelsen aktiv
+*** Begär läsbekräftelse
+*** Begär personligt svar
+*** Bli anonym
+*** Bli icke-anonym (träd fram ur skuggorna)
+*** Förhindra kommentarer
+*** Håll förbindelsen aktiv
+*** Hålla med
+*** Kontrollera (om person) är medlem (i möte)
+*** Lista markeringar
+*** Lista ägda möten
+*** Snabb replik
+*** Spara inläggstext (på fil)
+*** Subtrahera fotnot
+*** Ta bort FAQ
+*** Var finns kommandot
+*** Vilka är inloggade i möte
+*** Ändra FAQ
+*** Ändra mötestyp
+*** Ändra parentes
+*** Ändra prioritet
+*** Återse FAQ
+*** Återse brevhuvud
+
+
 ** Nya variabler
+
+*** kom-agree-text
+*** kom-created-texts-are-saved
+*** kom-default-session-priority
+*** kom-ignore-message-senders
+*** kom-keep-alive-interval
+*** kom-long-lines
+*** kom-morons
+*** kom-postpone-default
+*** kom-server-priority
+*** kom-server-priority-breaks
+*** kom-show-imported-envelope-sender
+*** kom-show-imported-external-recipients
+*** kom-show-imported-importer
+*** kom-silent-ansaphone
+*** kom-text-footer-dash-length
+*** kom-text-header-dash-length
+*** kom-truncate-show-lines
+*** kom-truncate-threshold
+*** kom-w3-simlify-body
 
 
 * Försämringar
@@ -150,6 +214,13 @@
     sitter på C-c C-b i edit-moden. Om du inte vet vad det här är så
     lär du inte behöva det.
 
+*** Om variabeln kom-created-texts-are-saved är satt till ett giltigt
+    filnamn så sparas alla inlägg man skapar till den filen. Inlägg
+    som av en eller annan anledning inte kunde skapas sparas inte.
+
+*** Hooken lyskom-create-text-hook anropas innan inlägg skickas till
+    servern.
+
 
 ** Läsa inlägg
 
@@ -173,11 +244,17 @@
 *** Brev importerade med komimportmail (eller ekvivalenta importörer)
     visas snyggt.
 
+*** Man kan ange att man inte vill läsa bilagor till importerade mail
+    som kommentarer genom att sätta kom-follow-attachments till något
+    annat än nil. Då läsmarkeras bilagor automatiskt utan att man
+    läser dem. Den här funktionen kommer troligen att ändras i någon
+    senare version av elispklienten.
+
 *** Nytt kommando: Återse brevhuvud visar alla headerrader för ett
     importerat mail (förutsatt att en vettig importör används).
 
 *** Nytt kommando: Spara inläggstext (på fil) sparar inläggstexten,
-    utan ärenterad, till en fil och tar bort allt som fanns i filen
+    utan ärenderad, till en fil och tar bort allt som fanns i filen
     innan. Användbart för att spara bilagor till e-mail.
 
 *** Nytt kommando: Arkivera inlägg (till fil) ersätter Spara text (på
@@ -189,6 +266,11 @@
     importörens namn), kom-show-imported-external-recipients (visa to,
     cc och reply-to) och kom-show-imported-envelope-sender (visa
     "envelope sender") styr vad som visas.
+
+*** Superhoppa går att använda på tomma ärenderader.
+
+*** Endast läsa senaste fortsätter i mötet man står i även om det är
+    det möte man gör endast i.
 
 *** Elispklienten borde klara av multibytetecken i inlägg. Specifikt
     så klarar den inlägg kodade med us-ascii, iso-8859-1, iso-8859-2,
@@ -228,11 +310,15 @@
 *** De flesta återse-kommandon försöker nu inte återse inlägg som inte
     kan läsas.
 
+*** Återse omodifierat visar även extra information i inläggeshuvudet
+    (bland annat skapande klient). Mängden information som visas är
+    inte fixerad och kommer att ändras med tiden.
+
 ** Markeringar
 
-*** Lista markeringar ger en lista av alla markerade inlägg. Ett
-    numeriskt prefixargument väljer vilken markeringstyp man vill
-    lista.
+*** Nytt kommando: Lista markeringar. Ger en lista av alla markerade
+    inlägg. Ett numeriskt prefixargument väljer vilken markeringstyp
+    man vill lista.
 
 *** Om man försöker radera ett inlägg som någon har markerat så frågar
     klienten om man vill radera det ändå.
@@ -253,6 +339,14 @@
     finnas för att mötet skall visa. Anger man noll så kommer alla
     möten att visas. Anger man ett värde under noll, visas alla möten
     med som mest så många olästa.
+
+*** Nytt kommando: Lista ägda möten. Kommandot listar möten som en
+    angiven person har skapat, är organisatör för eller är orginamöte
+    och har personens brevlåda som supermöte. Med prefixargument så
+    listas även personer.
+
+*** Nytt kommando: Kontrollera (om person är) medlem (i möte). Tar
+    reda på om en viss person är med i ett visst möte.
 
 *** Nytt kommando: Ändra mötestyp. Man kan ändra mötestype (hemligt,
     skrivskyddat med mera) i efterhand.
@@ -363,7 +457,7 @@
     en proxy som stänger av förbindelsen om den ser ut att vara
     inaktiv. Kommandot Håll förbindelsen aktiv gör att elispklienten
     pratar lite med servern med jämna mellanrum så att det ser ut som
-    om den arbetar. Variabeln kom-keep-alive-internal är relevant i
+    om den arbetar. Variabeln kom-keep-alive-interval är relevant i
     sammanhanget.
 
 *** Roxen Community KOM finns med i kom-server-aliases.
@@ -442,11 +536,17 @@
 
 ** Diverse blandat och allmänt
 
+*** Klienten är överlag mycket snabbare. Det gäller speciellt de
+    tillfällen där den har mycket data från servern att ta hand om.
+    Det har lett till att man kan lista alla personer och möten i
+    servern utan att det tar flera timmar.
+
 *** Negativt prefixargument till de flesta funktioner som vill ha
     textnummer betyder texten N steg tillbaks i bufferten. Till
     exempel skall "K" vara samma som "- 1 k" när man står sist i
-    bufferten. Prefixargument noll betyder att klienten alltid skall
-    prompta efter ett inläggsnummer. Ett positivt prefixargument anger
+    bufferten. Prefixargument noll betyder texten som markören står i
+    och prefixargument C-u betyder att klienten alltid skall prompta
+    efter ett inläggsnummer. Ett positivt prefixargument anger
     textnumret direkt.
 
 *** Precis som man kan markera personer man gillar med variabeln
@@ -491,6 +591,12 @@
     saker som standard-display-european. Det fungerar dock bäst med
     multibyteteckenstödet påslaget (till skillnad från 0.45).
 
+*** Hooken lyskom-trim-buffer-hook andopas när klienten raderar
+    sessionsbufferten för att den har blivit för stor. Funktionen
+    lyskom-garb-lyskom-buffer-to-file kan användas som hookfunktion
+    för att spara raderade bitar till fil. Filnamnet är hårdkodat till
+    ~/<buffer>-history där <buffer> är LysKOM-buffertens namn.
+
 
 ** Tilläggsinformation
 
@@ -524,10 +630,10 @@
      bekräfta varje gång inlägget visas (tills man har bekräftat det
      förstås.)
 
-**** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ och Återse
-     FAQ (bunden till å q) används för att manipulera och läsa FAQer.
-     Servern raderar aldrig en FAQ automatiskt, oavsett hur gammal den
-     är.
+**** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ, Ändra FAQ
+     och Återse FAQ (bunden till å q) används för att manipulera och
+     läsa FAQer. Servern raderar aldrig en FAQ automatiskt, oavsett
+     hur gammal den är.
 
 **** Man kan skriva korta repliker till inlägg. Dessa är tänkta att
      ersätta vissa typer av "adderingsmöten" som finns i flera
@@ -653,4 +759,4 @@
 ** Bättre hantering av mottagare när det kommenterade/fotnoterade
    ligger i ett originalmöte.
 
-** Massor av andra osorterade saker.
+** MASSOR av andra osorterade saker som jag inte orkar skriva upp.
