@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.34 1998-12-15 12:35:25 byers Exp $
+;;;;; $Id: edit-text.el,v 44.35 1999-02-11 16:27:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.34 1998-12-15 12:35:25 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.35 1999-02-11 16:27:26 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -472,8 +472,8 @@ so it's not as clean as it ought to be."
   (interactive)
    (if (and (lyskom-default-value 'lyskom-is-anonymous)
             (lyskom-j-or-n-p 'do-send-anonymous t))
-  (lyskom-edit-send 'initiate-create-anonymous-text t)
-       (lyskom-edit-send 'initiate-create-text nil)))
+       (lyskom-edit-send 'initiate-create-anonymous-text t)
+     (lyskom-edit-send 'initiate-create-text nil)))
 
 (defun lyskom-edit-send (send-function &optional never-mark-as-read)
   "Send the text to the server by calling SEND-FUNCTION."
@@ -1418,14 +1418,10 @@ Point must be located on the line where the subject is."
   "Get text as a string."
   (save-excursion
     (goto-char (point-min))
-    (if (not (or (re-search-forward 
-		  (substitute-command-keys
-		   (lyskom-get-string 'header-separator))
-		  nil (point-max))
-		 (search-forward 
-		  (substitute-command-keys
-		   (lyskom-get-string 'header-separator)) 
-		  nil (point-max))))
+    (if (not (search-forward 
+              (substitute-command-keys
+               (lyskom-get-string 'header-separator)) 
+              nil (point-max)))
 	(signal 'lyskom-internal-error
 		"Altered lyskom-header-separator line.")
       (buffer-substring (1+ (point))
@@ -1473,7 +1469,7 @@ Point must be located on the line where the subject is."
     
     (cond
      ((and kom-created-texts-are-read
-           never-mark-as-read)
+           (not never-mark-as-read))
       (lyskom-is-read text-no)
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)

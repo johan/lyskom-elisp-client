@@ -1,3 +1,13 @@
+1999-01-09  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-where-is): Nytt kommando.
+
+1999-01-04  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-extract-text): Gör inte
+	re-search-forward för att hitta separatorn. Det är fel om man har
+	regexp-magiska tecken i strängen.
+
 1999-01-01  Per Cederqvist  <ceder@lysator.liu.se>
 
 	* parse.el (lyskom-skip-array): Glöm inte att skippa det
