@@ -1,3 +1,18 @@
+Sat Sep 13 15:31:51 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-commented): Hämta
+ 	kom-cite-string mha lyskom-default-value.
+
+Fri Sep 12 12:25:37 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-create-text-handler): Spara senast skrivna
+ 	text.
+
+	* commands1.el (kom-write-footnote): Smartare defaulttext.
+
+	* swedish-strings.el,english-strings.el (lyskom-message): Lade
+ 	till what-footnote-no
+
 Wed Sep 10 11:23:33 1997  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-replace-miscs): Ny funktion.

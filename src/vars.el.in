@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.32 1997-09-10 13:15:32 byers Exp $
+;;;;; $Id: vars.el.in,v 44.33 1997-09-13 16:07:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.32 1997-09-10 13:15:32 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.33 1997-09-13 16:07:21 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1350,7 +1350,7 @@ with the unparsed bytes. This variable is used to prevent reparsing before
 the string is complete.
 This variable is buffer-local in the unparsed-buffer.")
 
-(def-kom-var lyskom-last-viewed 0
+(def-kom-var lyskom-last-viewed 0       ;
   "Postition of the first char of the last line that the user has had
 time to view. This is normally the pos of the first char of the prompt."
   local)
@@ -1467,6 +1467,10 @@ This is used by the command kom-busy-wait."
 
 (def-kom-var lyskom-current-text nil
   "Text-no of current text. nil means no text is current."
+  local)
+
+(def-kom-var lyskom-last-written nil
+  "Text-no of last text written. nil means no text written."
   local)
 
 (def-kom-var lyskom-previous-text nil

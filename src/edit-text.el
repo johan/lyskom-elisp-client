@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.22 1997-09-10 13:14:58 byers Exp $
+;;;;; $Id: edit-text.el,v 44.23 1997-09-13 16:07:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.22 1997-09-10 13:14:58 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.23 1997-09-13 16:07:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -454,7 +454,9 @@ Based on ispell-message."
                           (match-beginning 0)
                         (point-max)))
                      (t (min (point-max) (funcall ispell-message-text-end))))))
-             (cite-regexp (regexp-quote kom-cite-string))
+             (cite-regexp 
+              (regexp-quote
+               (lyskom-default-value 'kom-cite-string)))
              (cite-regexp-start (concat "^[ \t]*$\\|" cite-regexp))
              (cite-regexp-end (concat "^\\(" cite-regexp "\\)"))
              (old-case-fold-search case-fold-search)
@@ -1048,6 +1050,11 @@ Point must be located on the line where the subject is."
     
     (set-buffer edit-buffer)		;Need local variables.
 
+    ;; Record the text number
+
+    (lyskom-setq-default lyskom-last-written text-no)
+
+
     ;; Select the old configuration.
 
     (let ((hnd lyskom-edit-handler)
@@ -1110,7 +1117,7 @@ The text is inserted in the buffer with '>' first on each line."
           (insert te)
           (while (<= pb (point))
             (beginning-of-line)
-            (insert (or kom-cite-string 62))
+            (insert (or (lyskom-default-value 'kom-cite-string) 62))
             (forward-line -1)
             )))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
