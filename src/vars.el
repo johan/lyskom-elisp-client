@@ -145,6 +145,7 @@ otherwise => the new conf is entered after all conferences.")
   lyskom-who-info-has-changed-hook
   lyskom-prompt-text
   lyskom-prompt-executing-default-command-text
+  lyskom-login-hook
   )
   "Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")
@@ -381,6 +382,10 @@ set the local variable no-message non-nil.")
 (defvar lyskom-who-info-has-changed-hook nil
   "*Hook to run every time the who-info-buffer has changed.
 The hook is run with current-buffer the lyskom buffer, not the who-info-buffer.")
+
+(defvar lyskom-login-hook nil
+  "*Hook to run when we have logged in. Other purposes than kom-do-when-starting.
+This could be set in the user-area.")
 
 (defvar lyskom-executing-command t
   "Non-nil means the client is executing a command.
