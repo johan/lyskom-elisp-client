@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.57 2001-11-04 21:57:05 jhs Exp $
+;;;;; $Id: view-text.el,v 44.58 2002-01-30 08:10:24 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.57 2001-11-04 21:57:05 jhs Exp $\n"))
+	      "$Id: view-text.el,v 44.58 2002-01-30 08:10:24 jhs Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -424,10 +424,42 @@ when put in your `lyskom-view-text-hook'."
 
 ;(add-hook 'lyskom-view-text-hook 'lyskom-filter-signature-hook)
 
+(defun lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1 ()
+    "Display r{ksm|rg}s as räksmörgås (unless \"å o\"; converting
+][\\}{| but not ^~@`. Yet another useful function to put in your
+`lyskom-view-text-hook'."
+    ;; First the hard part - should we patch the text
+    ;; in the text object?
+    (if (not (equal lyskom-current-command
+		    'kom-review-noconversion))
+	;; Yes, modify the text from the text-object (stored in mod)
+	(let* ((mod (aref (cdr lyskom-view-text-text) 1))
+	       (brk (string-match "\n" mod))
+	       (sbj (if brk (substring mod 0 brk) mod))
+	       (txt (if brk (substring mod (1+ brk)) ""))
+	       (tbl '((?\] . ?\305)          ; Å
+		      (?\[ . ?\304)          ; Ä
+		      (?\\ . ?\326)          ; Ö
+		      (?\} . ?\345)          ; å
+		      (?\{ . ?\344)          ; ä
+		      (?\| . ?\366))))       ; ö
+	  (when (and (not (string-match "[\200-\377]" txt))
+		     (or (string-match "[A-Za-z][][\\}{|]" txt)
+			 (string-match "[][\\}{|][A-Za-z]" txt)
+			 (string-match "[A-Za-z] +[][\\}{|]" txt)))
+	    (lyskom-signal-reformatted-text 'reformat-deswascii)
+	    (while (string-match "\\([][\\}{|]\\)" txt)
+	      (let ((old-char (aref (match-string 1 txt) 0)))
+		(aset txt (match-beginning 1) (cdr (assoc old-char tbl)))))
+	    (aset (cdr lyskom-view-text-text) 1
+		  (if brk (concat sbj "\n" txt) sbj))))))
+
+;(add-hook 'lyskom-view-text-hook 'lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1)
 
 
 
-(defun lyskom-follow-comments (text-stat conf-stat 
+
+(defun lyskom-follow-comments (text-stat conf-stat
 					 mark-as-read priority review-tree)
   "Arrange so that all comments and footnotes to this text will be read.
 This will essentially fix the reading list and issue calls for the cache to be
