@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.16 2000-08-29 16:15:01 byers Exp $
+;;;;; $Id: buffers.el,v 44.17 2000-09-03 02:56:31 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.16 2000-08-29 16:15:01 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.17 2000-09-03 02:56:31 qha Exp $\n"))
 
 
 ;;;;
@@ -182,6 +182,13 @@ the children object"
 
 (add-hook 'kill-buffer-hook
           'lyskom-buffer-hierarchy-kill-hook)
+(add-hook 'kill-buffer-hook
+	  '(lambda ()
+	     (when (eq major-mode 'lyskom-mode)
+	       (let ((lyskom-trim-buffer-delete-to
+		      (point-max)))
+		 (run-hooks 'lyskom-trim-buffer-hook))))
+	  nil t)
 (add-hook 'kill-buffer-query-functions
           'lyskom-buffer-hierarchy-query-kill-function)
 
