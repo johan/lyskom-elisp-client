@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.23 1996-08-02 02:20:02 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.24 1996-08-05 00:18:36 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.23 1996-08-02 02:20:02 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.24 1996-08-05 00:18:36 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1581,99 +1581,101 @@ chosen according to this"
 (defun lyskom-update-prompt ()
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
-  (let ((to-do (lyskom-what-to-do))
-	(prompt nil))
-    (setq lyskom-command-to-do to-do)
-    (cond
+  (if lyskom-dont-change-prompt
+      nil
+    (let ((to-do (lyskom-what-to-do))
+	  (prompt nil))
+      (setq lyskom-command-to-do to-do)
+      (cond
      
-     ((eq to-do 'next-pri-conf)
-      (setq prompt 'go-to-pri-conf-prompt)
-      (or (eq lyskom-current-prompt prompt)
-	  (lyskom-beep kom-ding-on-priority-break)))
+       ((eq to-do 'next-pri-conf)
+	(setq prompt 'go-to-pri-conf-prompt)
+	(or (eq lyskom-current-prompt prompt)
+	    (lyskom-beep kom-ding-on-priority-break)))
 
-     ((eq to-do 'next-pri-text)
-      (setq prompt 'read-pri-text-conf)
-      (or (eq lyskom-current-prompt prompt)
-	  (lyskom-beep kom-ding-on-priority-break)))
+       ((eq to-do 'next-pri-text)
+	(setq prompt 'read-pri-text-conf)
+	(or (eq lyskom-current-prompt prompt)
+	    (lyskom-beep kom-ding-on-priority-break)))
 
-     ((eq to-do 'next-text)
-      (setq prompt
-	    (let ((read-info (read-list->first lyskom-reading-list)))
+       ((eq to-do 'next-text)
+	(setq prompt
+	      (let ((read-info (read-list->first lyskom-reading-list)))
+		(cond
+		 ((eq 'REVIEW (read-info->type read-info))
+		  'review-next-text-prompt)
+		 ((eq 'REVIEW-TREE (read-info->type read-info))
+		  'review-next-comment-prompt)
+		 ((eq 'REVIEW-MARK (read-info->type read-info))
+		  'review-next-marked-prompt)
+		 ;; The following is not really correct. The text to be
+		 ;; read might be in another conference.
+		 ((= lyskom-current-conf lyskom-pers-no)
+		  'read-next-letter-prompt)
+		 ((eq 'FOOTN-IN (read-info->type read-info))
+		  'read-next-footnote-prompt)
+		 ((eq 'COMM-IN (read-info->type read-info))
+		  'read-next-comment-prompt)
+		 (t
+		  'read-next-text-prompt)))))
+
+       ((eq to-do 'next-conf)
+	(setq prompt
 	      (cond
-	       ((eq 'REVIEW (read-info->type read-info))
-	        'review-next-text-prompt)
-	       ((eq 'REVIEW-TREE (read-info->type read-info))
-		'review-next-comment-prompt)
-	       ((eq 'REVIEW-MARK (read-info->type read-info))
-		'review-next-marked-prompt)
-	       ;; The following is not really correct. The text to be
-	       ;; read might be in another conference.
-	       ((= lyskom-current-conf lyskom-pers-no)
-		'read-next-letter-prompt)
-	       ((eq 'FOOTN-IN (read-info->type read-info))
-		'read-next-footnote-prompt)
-	       ((eq 'COMM-IN (read-info->type read-info))
-		'read-next-comment-prompt)
+	       ((eq 'REVIEW-MARK 
+		    (read-info->type (read-list->first lyskom-to-do-list)))
+		'go-to-conf-of-marked-prompt)
+	       ((/= lyskom-pers-no
+		    (conf-stat->conf-no
+		     (read-info->conf-stat (read-list->first
+					    lyskom-to-do-list))))
+		'go-to-next-conf-prompt)
 	       (t
-		'read-next-text-prompt)))))
-
-     ((eq to-do 'next-conf)
-      (setq prompt
-	    (cond
-	     ((eq 'REVIEW-MARK 
-		  (read-info->type (read-list->first lyskom-to-do-list)))
-	      'go-to-conf-of-marked-prompt)
-	     ((/= lyskom-pers-no
-		  (conf-stat->conf-no
-		   (read-info->conf-stat (read-list->first
-					  lyskom-to-do-list))))
-	      'go-to-next-conf-prompt)
-	     (t
-	      'go-to-your-mailbox-prompt))))
+		'go-to-your-mailbox-prompt))))
     
-     ((eq to-do 'when-done)
-      (if (not lyskom-is-writing)
-	  (lyskom-tell-server kom-mercial))
-      (setq prompt
-	    (let ((command (lyskom-what-to-do-when-done t)))
-	      (cond			    
-	       ((lyskom-command-name command))
-	       ((and (stringp command)
-		     (lyskom-command-name (key-binding command))))
-	       (t (lyskom-format 'the-command command))))))
+       ((eq to-do 'when-done)
+	(if (not lyskom-is-writing)
+	    (lyskom-tell-server kom-mercial))
+	(setq prompt
+	      (let ((command (lyskom-what-to-do-when-done t)))
+		(cond			    
+		 ((lyskom-command-name command))
+		 ((and (stringp command)
+		       (lyskom-command-name (key-binding command))))
+		 (t (lyskom-format 'the-command command))))))
      
-     ((eq to-do 'unknown)		;Pending replies from server.
-      (setq prompt nil))
+       ((eq to-do 'unknown)		;Pending replies from server.
+	(setq prompt nil))
      
-     (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
+       (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
 
-    (if (not (equal prompt lyskom-current-prompt))
-	(let ((inhibit-read-only t)
-	      (prompt-text
-	       (if prompt
-		   (concat
-		    (lyskom-modify-prompt
-		     (cond
-		      ((symbolp prompt) (lyskom-get-string prompt))
-		      (t prompt)))
-		    lyskom-prompt-text)
-		 ""))
-	      (was-at-max (eq (point) (point-max))))
-	  (save-excursion
-	    ;; Insert the new prompt
-	    (goto-char (point-max))
-	    (beginning-of-line)
-	    (insert-string
-	     (if kom-emacs-knows-iso-8859-1
-		 prompt-text
-	       (iso-8859-1-to-swascii prompt-text)))
-	    ;; Delete the old prompt
-	    (if lyskom-current-prompt
-		(delete-region (point) (point-max))))
-	  (if was-at-max (goto-char (point-max)))
+      (if (not (equal prompt lyskom-current-prompt))
+	  (let ((inhibit-read-only t)
+		(prompt-text
+		 (if prompt
+		     (concat
+		      (lyskom-modify-prompt
+		       (cond
+			((symbolp prompt) (lyskom-get-string prompt))
+			(t prompt)))
+		      lyskom-prompt-text)
+		   ""))
+		(was-at-max (eq (point) (point-max))))
+	    (save-excursion
+	      ;; Insert the new prompt
+	      (goto-char (point-max))
+	      (beginning-of-line)
+	      (insert-string
+	       (if kom-emacs-knows-iso-8859-1
+		   prompt-text
+		 (iso-8859-1-to-swascii prompt-text)))
+	      ;; Delete the old prompt
+	      (if lyskom-current-prompt
+		  (delete-region (point) (point-max))))
+	    (if was-at-max (goto-char (point-max)))
 	  
-	  (setq lyskom-current-prompt prompt))))
-  (lyskom-set-mode-line))
+	    (setq lyskom-current-prompt prompt))))
+    (lyskom-set-mode-line)))
 
 
 (defun lyskom-modify-prompt (s)
