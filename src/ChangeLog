@@ -1,5 +1,11 @@
 2002-09-11  David Byers  <david.byers@swipnet.se>
 
+	* vars.el.in (kom-old-farts-text-prompt-strategy): Renamed from
+	lyskom-old-farts-text-prompt-strategy. This is the name that
+	appears in the documentation.
+	(lyskom-face-schemes): Bakgrunden för meddelanden ändrad till
+	gröna toner. Det passar bättre ihop med det blå.
+
 	Speculative fix for bug 738:
 	* utilities.el (lyskom-recode-string-for-title): Recode string in
 	win32. This should fix the problem.

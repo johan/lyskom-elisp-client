@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.207 2002-09-08 11:13:14 byers Exp $
+;;;;; $Id: vars.el.in,v 44.208 2002-09-11 19:31:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.207 2002-09-08 11:13:14 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.208 2002-09-11 19:31:55 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -122,7 +122,7 @@ if the variable is in kom-dont-read-saved-variables."
 
 ;;; User flags
 
-(defconst lyskom-old-farts-text-prompt-strategy
+(defconst kom-old-farts-text-prompt-strategy
   '((kom-comment-previous . ((t   . lyskom-get-previous-text)
 			     (nil . lyskom-get-previous-text)))
     (t . ((t   . lyskom-get-last-read-text)
@@ -2849,8 +2849,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#e8e8ff")
      (kom-text-body-face nil nil "#f8f8ff")
-     (kom-async-dashed-lines-face nil nil "#ffe8e8")
-     (kom-async-text-body-face nil nil "#fff8f8")
+     (kom-async-dashed-lines-face nil nil "#e8ffe8")
+     (kom-async-text-body-face nil nil "#f8fff8")
      (property expected-background "white")
      )
     (bark
