@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.192 2003-03-03 08:45:06 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.193 2003-03-15 18:25:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.192 2003-03-03 08:45:06 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.193 2003-03-15 18:25:23 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -355,6 +355,47 @@ by design."
                (lyskom-view-text text-no))
               (t (lyskom-insert 'confusion-what-to-view))))
     (lyskom-end-of-command)))
+
+(defun kom-initial-digit-unread ()
+  (interactive)
+  (setq unread-command-events (cons last-command-event
+                                    unread-command-events))
+  (call-interactively 'kom-mark-unread nil))
+
+(def-kom-command kom-mark-unread (text-no)
+  "MAke a single text unread. This command is functional only on servers
+that support making text unread."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'unread-text-q)))
+  (lyskom-format-insert 'marking-text-unread text-no)
+  (lyskom-report-command-answer (lyskom-mark-unread text-no)))
+
+(defun lyskom-mark-unread (text-no)
+  "Mark text TEXT-NO in all conferences.
+Returns non-nil if successful."
+  (let ((text-stat (blocking-do 'get-text-stat text-no))
+        (conf-list nil))
+    (and text-stat
+         (not (lyskom-traverse misc-info (text-stat->misc-info-list text-stat)
+                (when (memq (misc-info->type misc-info) lyskom-recpt-types-list)
+                  (let* ((mship (lyskom-get-membership (misc-info->recipient-no misc-info)))
+                         (recipient (and mship (blocking-do 'get-conf-stat (misc-info->recipient-no misc-info)))))
+                    (when (and mship recipient)
+                      (if (not (blocking-do 'mark-as-unread
+                                            (misc-info->recipient-no misc-info)
+                                            (misc-info->local-no misc-info)))
+                          (lyskom-traverse-break 'error)
+                        (when (lyskom-visible-membership mship)
+                          (unless (read-list-enter-text text-no 
+                                                        recipient
+                                                        lyskom-to-do-list)
+                            (let ((info (lyskom-create-read-info
+                                         'CONF
+                                         recipient
+                                         (membership->priority mship)
+                                         (lyskom-create-text-list (list text-no)))))
+                              (read-list-enter-read-info info lyskom-to-do-list)
+                              (if (= lyskom-current-conf (conf-stat->conf-no recipient))
+                                  (read-list-enter-read-info info lyskom-reading-list))))))))))))))
 
 
 ;;;; ================================================================

@@ -1,3 +1,16 @@
+2003-03-15  David Byers  <david.byers@swipnet.se>
+
+	Work on bug 984:
+	* lyskom-rest.el (kom-initial-digit-unread): New command.
+
+	* vars.el.in (lyskom-text-no-prompts-defaults): Added
+	kom-mark-unread.
+
+	* lyskom-rest.el (lyskom-mark-unread): New function.
+	(kom-mark-unread): New command.
+
+	* services.el (initiate-mark-as-unread): New function.
+
 2003-03-13  David Byers  <david.byers@swipnet.se>
 
 	Some work on bug 983:
