@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.60 2001-11-18 23:27:25 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.61 2001-11-27 10:41:05 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.60 2001-11-18 23:27:25 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.61 2001-11-27 10:41:05 jhs Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -651,7 +651,35 @@ This is a LysKOM button action."
         (t (unwind-protect
                (progn (pop-to-buffer buf)
                       (kom-save-text-body arg))))))
-  
+
+(defun lyskom-button-review-comments (buf arg text)
+  "In the LysKOM buffer BUF, review comments to the the text ARG.
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-review-comments arg))))
+
+(defun lyskom-button-review-tree (buf arg text)
+  "In the LysKOM buffer BUF, recursively review comments to the the text ARG.
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-review-tree arg))))
+
+(defun lyskom-button-write-footnote (buf arg text)
+  "In the LysKOM buffer BUF, write a footnote to the the text ARG.
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-write-footnote arg))))
+
+(defun lyskom-button-fast-reply (buf arg text)
+  "In the LysKOM buffer BUF, make a remark to the the text ARG.
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-fast-reply arg))))
+
 
 (defun lyskom-button-view-conf-presentation (buf arg text)
   "In the LysKOM buffer BUF, view the presentation of ARG. 
