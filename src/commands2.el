@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.27 1998-06-14 14:15:43 byers Exp $
+;;;;; $Id: commands2.el,v 44.28 1998-07-08 11:14:26 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.27 1998-06-14 14:15:43 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.28 1998-07-08 11:14:26 davidk Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1544,7 +1544,10 @@ membership info."
 
 
 (defun lyskom-buffer-p (buf &optional may-be-dead)
-  ;; Returns non-nil if BUF is an active LysKOM buffer
+  "Returns non-nil if BUF is an active LysKOM buffer
+If optional second argument MAY-BE-DEAD is non-nil, this function returns t
+whether the session is alive or not. Otherwise it checks that the session
+is alive."
   (when (buffer-live-p buf)
     (save-excursion
       (set-buffer buf)
