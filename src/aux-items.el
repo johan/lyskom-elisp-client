@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.7 1999-06-11 12:21:25 byers Exp $
+;;;;; $Id: aux-items.el,v 44.8 1999-06-13 15:00:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.7 1999-06-11 12:21:25 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.8 1999-06-13 15:00:52 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -118,49 +118,50 @@
 ;;; ======================================================================
 
 (def-aux-item content-type 1
-  (print-when . never)  
+  (text-print-when . never) 
   (parse . lyskom-parse-content-type)
-  (print . lyskom-print-content-type)
+  (text-print . lyskom-print-content-type)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item fast-reply 2
-  (print-when . footer)
+  (text-print-when . footer)
   (parse . nil)
-  (print . lyskom-print-fast-reply)
+  (text-print . lyskom-print-fast-reply)
   (info . lyskom-aux-item-info))
 
 (def-aux-item cross-reference 3
-  (print-when . comment)
+  (status-print . lyskom-status-print-cross-reference)
+  (text-print-when . comment)
   (parse . lyskom-parse-cross-reference)
-  (print . lyskom-print-cross-reference)
+  (text-print . lyskom-print-cross-reference)
   (edit-insert . lyskom-edit-insert-cross-reference)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item no-comments 4
-  (print-when . footer)
+  (text-print-when . footer)
   (parse . lyskom-parse-no-comments)
-  (print . lyskom-print-no-comments)
+  (text-print . lyskom-print-no-comments)
   (edit-insert . lyskom-edit-insert-no-comments)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item personal-comment 5
-  (print-when . footer)
+  (text-print-when . footer)
   (parse . lyskom-parse-personal-comments)
-  (print . lyskom-print-personal-comments)
+  (text-print . lyskom-print-personal-comments)
   (edit-insert . lyskom-edit-insert-personal-comments)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item request-confirmation 6
-  (print-when . header)
+  (text-print-when . header)
   (parse . lyskom-parse-request-confirmation)
-  (print . lyskom-print-request-confirmation)
+  (text-print . lyskom-print-request-confirmation)
   (edit-insert . lyskom-edit-insert-request-confirmation)
   (info  . lyskom-aux-item-info)
   (read-action . lyskom-request-confirmation-action))
 
 (def-aux-item read-confirm 7
-  (print-when . header)
-  (print . lyskom-print-read-confirm)
+  (text-print-when . header)
+  (text-print . lyskom-print-read-confirm)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item redirect 8
@@ -172,8 +173,8 @@
   (info  . lyskom-aux-item-info))
 
 (def-aux-item alternate-name 10
-  (print-when . header)
-  (print . lyskom-print-alternate-name)
+  (text-print-when . header)
+  (text-print . lyskom-print-alternate-name)
   (info  . lyskom-aux-item-info))
 
 (def-aux-item pgp-signature 11
@@ -184,6 +185,57 @@
 
 (def-aux-item e-mail-address 13
   (info  . lyskom-aux-item-info))
+
+(def-aux-item faq-text 14
+  (info . lyskom-aux-item-info)
+  (status-print . lyskom-status-print-faq-text))
+
+(def-aux-item creating-software 15
+  (info . lyskom-aux-item-info)
+  (text-print-when . header)
+  (text-print . lyskom-print-creating-software))
+
+(def-aux-item mx-author 16
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-from 17
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-reply-to 18
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-to 19
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-cc 20
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-date 21
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-message-id 22
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-in-reply-to 23
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-misc 24
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-allow-filter 25
+  (info . lyskom-aux-item-info))
+
+(def-aux-item mx-reject-forward 26
+  (info . lyskom-aux-item-info))
+
+(def-aux-item notify-comments 27
+  (info . lyskom-aux-item-info))
+
+(def-aux-item faq-for-conf 28
+  (text-print . lyskom-print-faq-for-conf)
+  (text-print-when . header)
+  (info . lyskom-aux-item-info))
+
 
 
 
@@ -287,6 +339,34 @@
                              )))
      (lyskom-aux-item-terminating-button item obj)
      )))
+
+(defun lyskom-status-print-cross-reference (item &optional obj pers)
+  (lyskom-insert 
+   (concat
+    (cond ((string-match "^P\\([0-9]+\\)" (aux-item->data item))
+           (lyskom-format 'cross-reference-pers-status-aux 
+                          (string-to-int 
+                           (match-string 1 (aux-item->data item)))
+                          (aux-item->creator pers)
+                          ))
+          ((string-match "^C\\([0-9]+\\)" (aux-item->data item))
+           (lyskom-format 'cross-reference-conf-status-aux 
+                          (string-to-int 
+                           (match-string 1 (aux-item->data item)))
+                          pers
+                          ))
+          ((string-match "^T\\([0-9]+\\)" (aux-item->data item))
+           (lyskom-format 'cross-reference-text-status-aux 
+                          (string-to-int 
+                           (match-string 1 (aux-item->data item)))
+                          (aux-item->creator pers)
+                          ))
+          (t (lyskom-format 'strange-cross-reference-status 
+                            (aux-item->data item)
+                            (aux-item->creator pers)
+                            )))
+    (lyskom-aux-item-terminating-button item obj)
+    "\n")))  
 
 (defun lyskom-parse-no-comments ()
   (and (looking-at (lyskom-get-string 'no-comments-regexp))
@@ -396,8 +476,25 @@
 
 
 (defun lyskom-print-alternate-name (item &optional obj)
-  (concat "Alternate: " (aux-item->data item) " "
+  (concat "[" (aux-item->data item) "] "
           (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-status-print-faq-text (item &optional obj)
+  (lyskom-insert 
+   (concat 
+    (lyskom-format 'faq-in-text-aux (string-to-int (aux-item->data item)))
+    (lyskom-aux-item-terminating-button item obj)
+    "\n")))
+
+(defun lyskom-print-faq-for-conf (item &optional obj)
+  (concat 
+   (lyskom-format 'faq-for-conf-aux (string-to-int (aux-item->data item)))
+   (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-print-creating-software (item &optional obj)
+  concat
+  (lyskom-format 'creating-software-aux (aux-item->data item))
+  (lyskom-aux-item-terminating-button item obj))
 
 
 (provide 'lyskom-aux-items)
