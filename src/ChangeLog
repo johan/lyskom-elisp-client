@@ -1,3 +1,7 @@
+Tue Mar 19 00:03:23 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* async.el (lyskom-parse-async): Ignorera kom-presence-messages.
+
 Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
 
 	* services.el, lyskom-rest.el, lyskom-buttons.el, view-text.el,

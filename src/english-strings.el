@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 39.2 1996-03-18 15:43:06 byers Exp $
+;;;;; $Id: english-strings.el,v 39.3 1996-03-18 23:34:02 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 39.2 1996-03-18 15:43:06 byers Exp $"))
+	      "$Id: english-strings.el,v 39.3 1996-03-18 23:34:02 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -657,7 +657,8 @@ Group message to %#3M from %#2P (%#4s):
     (could-not-set-user-area . "Couldn't alter the user-area. The server says error: %#1d\n")
     (you-dont-exist . "You don't exist. Go away.\n")
     (error-in-options . "There was an error in one of your variables (%#1s)
-It is set to nil instead. Send a bug report.\n")
+It was set to \"%#2s\" in the user area. It is set to nil instead.
+Send a bug report.\n")
 
     ; From elib-string.el:
     ; No entries.
