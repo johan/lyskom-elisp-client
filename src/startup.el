@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.106 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.107 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.106 2004-10-19 15:13:07 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.107 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -541,9 +541,11 @@ shown to other users."
                        lyskom-default-user-name)
                   ;; This is nil if we can't find a unique match.
                   (setq new-me
-                        (conf-z-info->conf-no
+			(if (integerp lyskom-default-user-name)
+			    lyskom-default-user-name
+			(conf-z-info->conf-no
                          (lyskom-lookup-conf-by-name lyskom-default-user-name
-                                                     '(pers)))))
+                                                     '(pers))))))
               (if new-me
                   nil
                 (let ((name nil))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.53 2004-07-19 11:53:42 byers Exp $
+;;;;; $Id: command.el,v 44.54 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.53 2004-07-19 11:53:42 byers Exp $\n"))
+	      "$Id: command.el,v 44.54 2004-10-19 18:42:03 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ======================================================================
@@ -590,7 +590,11 @@ chosen according to this"
         ((and (not dead-ok)
               (or (not lyskom-proc)
                   (memq (process-status lyskom-proc) '(closed signal exited nil))))
-      (lyskom-error "%s" (lyskom-get-string 'dead-session))))
+	 (if (or (eq t kom-relogin-behaviour)
+		 (and (eq 'ask kom-relogin-behaviour) 
+		      (lyskom-j-or-n-p (lyskom-get-string 'resurrect-session))))
+	     (lyskom lyskom-server-name lyskom-pers-no)
+      (lyskom-error "%s" (lyskom-get-string 'dead-session)))))
 
   (if (and lyskom-is-waiting
            (listp lyskom-is-waiting))
