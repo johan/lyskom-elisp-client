@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.82 2001-04-25 19:41:53 joel Exp $
+;;;;; $Id: utilities.el,v 44.83 2001-04-25 21:11:34 joel Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.82 2001-04-25 19:41:53 joel Exp $\n"))
+	      "$Id: utilities.el,v 44.83 2001-04-25 21:11:34 joel Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -423,11 +423,11 @@ All other characters are unique."
 	    (setq cls-to-strings (cons (list cls str) cls-to-strings)))))
       (let ((res nil))
 	(while cls-to-strings
-	  (let ((lst (cdar cls-to-strings)))
+	  (let ((lst (cdr (car cls-to-strings))))
 	    (if (> (length lst) 1)
 		(while lst
 		  (setq res (cons (cons (string-to-char (car lst))
-					(cdar cls-to-strings))
+					(cdr (car cls-to-strings)))
 				  res))
 		  (setq lst (cdr lst)))))
 	  (setq cls-to-strings (cdr cls-to-strings)))
